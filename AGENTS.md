@@ -3,9 +3,17 @@
 Handoff brief for any coding agent (Claude, Kimi, opencode, etc). **Read this before writing code.**
 `CLAUDE.md` imports this file (`@AGENTS.md`), so there is nothing to keep in sync — edit this file only.
 
-Repo: `C:\Users\Sonnaya\Rs3Equilibrium`
+Local: `C:\Users\Sonnaya\Rs3Equilibrium`
+Remote: `https://github.com/sonnaya2/Equilibrium` — **public**, default branch `main` (there is no `master`)
+Live: `https://equilibrium-ruddy.vercel.app` — Vercel project `equilibrium`, scope `ever-sense`
 Author: Sonnaya2
 Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
+
+**Deploys are automatic**: the Vercel project is git-connected, so any push to `main` ships to
+production. Verify `npm run build` and `npm test` locally before pushing — there is no staging gate.
+The repo is public, so never commit secrets; git identity here is the noreply address
+(`299354192+sonnaya2@users.noreply.github.com`), set repo-locally because GitHub blocks pushes that
+would publish the private address.
 
 ---
 
@@ -74,6 +82,33 @@ EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 - **Analysis** — damage distribution, crit split, Damage Potential, ability-tick breakdown, modifier
   pipeline, equipment contribution, DPL, on-hit damage, proc contribution, expected value.
 - **Rotation** — separate tab, tick-based ability timeline simulator (see Rotation engine below).
+
+---
+
+## Map route — 3D, and the project's main technical risk
+
+The Map is **genuinely 3D**: a stylised 3D Gielinor with selectable regions that visibly lock/unlock as
+the build changes. It is the app's signature surface and its single largest bundle and performance risk,
+so it is fenced off from the rest of the app.
+
+- **Stack**: `three` + `@react-three/fiber` (v10) + `@react-three/drei`. Next 13.1+ transpiles `three`
+  natively — do **not** add `next-transpile-modules`.
+- **Isolation is mandatory.** The `<Canvas>` and everything under it is a client component
+  (`"use client"`), loaded from the Map route via `next/dynamic` with `ssr: false` behind a real
+  skeleton. Nothing outside `app/map/` may import from the 3D bundle. If `three` shows up in the
+  shared chunk, that's a bug — every other route must stay static and light.
+- **Region geometry is data, not art.** Region shapes/positions live in `data/league/regions.json`
+  alongside the rest of the region model, so the map and the Build planner read one source. The 3D
+  layer renders that data; it must not hardcode a region list of its own.
+- **The map is a view over build state, never its own store.** Selecting a region on the map and
+  selecting it in Build > Regions mutate the same state and must stay in sync automatically.
+- **Non-negotiable fallback.** Ship a 2D fallback for WebGL-unavailable, mobile-constrained, and
+  `prefers-reduced-motion` users. Region planning must be fully completable without the 3D map ever
+  loading — the 3D is the good version of the experience, not a dependency of it.
+- **Budgets**: the 3D chunk stays lazy and out of first load; no gen-AI textures; no idle
+  `requestAnimationFrame` burn when the scene is static (`frameloop="demand"` where it fits).
+- Ship the 2D fallback first, then layer the 3D on top of the same data and state. That ordering means
+  a stalled 3D effort never blocks the planner.
 
 ---
 
@@ -198,8 +233,14 @@ combat/
                necromancy/{souls,necrosis,conjures,abilities,effects}.ts
   shared/      prayers.ts potions.ts perks.ts vulnerability.ts poison.ts slayer.ts equipment.ts
   rotation/    timeline.ts state.ts actions.ts simulate.ts
-  data/        abilities/ items/ perks/ prayers/
+  league/      ruleset.ts        (Equilibrium modifiers, layered on — never merged into core)
+  target/      genericTarget.ts  (generic target only; no boss-specific anything)
+  data/        typed accessor over the root `data/` store — NOT a second copy of the JSON
 ```
+
+Root `data/combat/*.json` and `data/league/*.json` are the single canonical stores, written by the sync
+scripts. `src/combat/data/` only reads and types them. Never materialize a parallel copy under
+`src/combat/` — one store, one source of truth.
 
 Core calc code has **zero React dependency**.
 

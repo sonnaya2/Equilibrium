@@ -347,6 +347,34 @@
       "freshness": "2026-06-15_live",
       "source": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
       "confidence": "confirmed_live_official"
+    },
+    {
+      "skill": "Runecrafting",
+      "method": "Eternal magic weapon imbuing",
+      "method_region": "multi_region_altar_access",
+      "level_range": "100+ wands/orbs; 104+ staves",
+      "xp_rate": "not optimizer-grade",
+      "intensity": "lower-input weapon imbuing",
+      "notes": "110 Runecrafting added weapon imbuing as a less click-intensive alternative to altar running. The Wiki training page publishes estimates but explicitly flags the section as needing additional verification, so the planner keeps the method without ranking the rate.",
+      "freshness": "2025_update_current_method_rate_warning",
+      "source": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+      "confidence": "confirmed_wiki_method_rate_not_normalized"
+    },
+    {
+      "skill": "Runecrafting",
+      "method": "Time runes",
+      "method_region": "anachronia",
+      "location": "Time altar, north-west Anachronia",
+      "level_range": "100+ altar access; higher-level throughput benefits apply through 110",
+      "xp_rate": "not optimizer-grade",
+      "requirements": [
+        "100 Runecrafting",
+        "Enchanted key"
+      ],
+      "notes": "Time runes are the 110-era top rune unlock and the altar is region-locked to Anachronia geography. Old training tables still include removed Demonic Skull assumptions, so no current League XP/h is stored here.",
+      "freshness": "current_wiki_location_stale_rate_tables",
+      "source": "https://runescape.wiki/w/Runecrafting_altars",
+      "confidence": "confirmed_wiki_method_rate_not_normalized"
     }
   ]
 }

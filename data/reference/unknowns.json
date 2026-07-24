@@ -108,6 +108,20 @@
       "key": "boss_specific_guides",
       "status": "intentionally_out_of_scope_for_first_pass",
       "reason": "Initial scrape is focused on region value, unlock dependencies and combat system mechanics rather than copying boss rotations/guides. Boss drop/unlock data should still be added later."
+    },
+    {
+      "key": "equilibrium_ed4_zamorak_region",
+      "status": "unresolved_cross_boundary",
+      "known": "Base-game ED4 starts below Senntisten, but the final portal chain reaches the Wilderness Crater / Zamorak arena. The planner currently treats Senntisten as working Misthalin and Wilderness geography as Forinthry.",
+      "missing": [
+        "Equilibrium rule for ED4 entry from a locked region",
+        "whether direct/freedom-mode Zamorak access bypasses the dungeon locality",
+        "whether the boss arena inherits Forinthry or the dungeon entrance region"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Portal_(The_Zamorakian_Undercity)",
+        "https://runescape.wiki/w/Update:Introducing:_Zamorak,_Lord_of_Chaos"
+      ]
     }
   ]
 }

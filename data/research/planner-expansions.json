@@ -967,5 +967,62 @@
       "source_url": "https://runescape.wiki/w/Solak",
       "confidence": "confirmed_wiki_plus_official_region_example"
     }
-  ]
+  ],
+  "runecrafting_110_progression": {
+    "update_date": "2025-03-03",
+    "level_cap": 110,
+    "source_url": "https://runescape.wiki/w/2025_Runecrafting_update",
+    "source_type": "runescape_wiki",
+    "unlocks": [
+      {
+        "name": "Time rune / Time altar",
+        "level": 100,
+        "region": "anachronia",
+        "location": "north-west coast of Anachronia",
+        "requirements": [
+          "100 Runecrafting (unboostable)",
+          "Enchanted key"
+        ],
+        "notes": "The Time altar does not use a talisman. Time runes support the 110 Runecrafting spell additions.",
+        "source_url": "https://runescape.wiki/w/Runecrafting_altars",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Eternal magic wand/orb imbuing",
+        "level": 100,
+        "region": "multi_region_altar_access",
+        "notes": "Inert eternal-magic weapons can be imbued with essence at most normal Runecrafting altars, creating usable tier-85-to-90 magic weapons while training Runecrafting. Exact best League route depends on selected altar access and essence supply.",
+        "source_url": "https://runescape.wiki/w/2025_Runecrafting_update",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Eternal magic staff imbuing",
+        "level": 104,
+        "region": "multi_region_altar_access",
+        "notes": "The inert staff is Fletched from eternal magic logs, then imbued at Runecrafting altars. Elemental/catalytic altar bonuses change progress at higher Runecrafting levels.",
+        "source_url": "https://runescape.wiki/w/Eternal_magic_staff_(inert)",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Expansive pouch",
+        "level": 105,
+        "region": "global_if_prerequisite_pouches_available",
+        "capacity": 70,
+        "notes": "Non-degrading 70-essence pouch made from the previous pouch progression; it holds more essence than the older pouches combined and materially improves altar-running throughput.",
+        "source_url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+        "confidence": "confirmed_wiki_item_current_rate_tables_not_used"
+      },
+      {
+        "name": "Masterwork staff",
+        "level": 110,
+        "region": "cross_region_material_chain",
+        "tier": 100,
+        "magic_requirement": 99,
+        "notes": "Craftable at a Runecrafting altar. The completed staff has tier-100 accuracy/damage and Masterworked Mending, healing 2% of Magic damage dealt. Its equipment-essence material chain creates meaningful cross-region pressure in a no-trading League.",
+        "source_url": "https://runescape.wiki/w/Comparison_of_high-level_magic_weapons",
+        "confidence": "confirmed_wiki_material_chain_not_fully_region_normalized"
+      }
+    ],
+    "training_warning": "The current Wiki Runecrafting training page still carries incomplete-rate warnings and legacy Demonic Skull figures in parts of its tables. Preserve the methods, but do not promote its XP/hour values to optimizer-grade Equilibrium rates without a current benchmark."
+  }
 }

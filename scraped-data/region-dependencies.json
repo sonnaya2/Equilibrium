@@ -114,5 +114,28 @@
         "https://runescape.wiki/w/Catalyst_League/Tasks"
       ]
     }
+  ],
+  "cross_boundary_cases": [
+    {
+      "content": "The Zamorakian Undercity / Zamorak, Lord of Chaos",
+      "system": "Elite Dungeon 4 / boss access",
+      "planner_status": "unresolved_cross_boundary",
+      "entry_side": {
+        "working_region": "misthalin",
+        "location": "Senntisten",
+        "confidence": "working_senntisten_misthalin_taxonomy"
+      },
+      "final_arena_side": {
+        "geographic_region": "forinthry",
+        "location": "Wilderness Crater / portal to Zamorak",
+        "confidence": "confirmed_wiki_geography"
+      },
+      "planner_rule": "Do not mark ED4/Zamorak as requiring only Misthalin or only Forinthry until Equilibrium publishes how cross-boundary dungeon/arena access is resolved. Preserve both sides as a dependency warning.",
+      "source_urls": [
+        "https://runescape.wiki/w/Portal_(The_Zamorakian_Undercity)",
+        "https://runescape.wiki/w/Update:Introducing:_Zamorak,_Lord_of_Chaos"
+      ],
+      "evidence_note": "The Undercity entrance/escape returns to Senntisten, while its portal chain reaches the Wilderness Crater and Zamorak. This is a real base-game boundary split, not a guess."
+    }
   ]
 }

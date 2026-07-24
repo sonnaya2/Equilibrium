@@ -17,7 +17,7 @@
     "regions": "high-value content, upgrade chains, altar access and regional unique drops mapped; boundary unknowns stay explicit",
     "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
     "training": "all 29 named RS3 skills surface in the browser; PvME-backed combat candidates and high-value region-sensitive routes are mapped without recycling stale combat XP tables",
-    "runecrafting": "altar locations and major access requirements mapped; Zanaris/Cosmic uses a historical Catalyst Misthalin working taxonomy pending Equilibrium-specific confirmation",
+    "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and Masterwork staff cross-region pressure; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention, Scavenging and major regional component sources mapped",
     "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic level milestones and relic acquisition-region dependencies mapped; uncertain League boundaries stay explicit",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
@@ -34,7 +34,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 62
+    "trainingMethods": 64
   },
   "regions": [
     {
@@ -2219,12 +2219,30 @@
             "verifiedAt": "2026-07-24"
           },
           "regionId": "anachronia"
+        },
+        {
+          "name": "Time altar / 110 Runecrafting",
+          "category": "Runecrafting progression / time-rune spell infrastructure",
+          "detail": "Location: north-west coast of Anachronia · Unlocks: Time runes, 110 Runecrafting spell/resource progression",
+          "requirements": [
+            "100 Runecrafting",
+            "Enchanted key"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Runecrafting_altars",
+            "title": "Time altar / 110 Runecrafting",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
         }
       ],
       "trainingMethodIds": [
         "agility:anachronia-full-course",
         "farming:ranch-out-of-time",
         "firemaking:sharp-shell-shards",
+        "runecrafting:time-runes",
         "runecrafting:time-runes-through-the-abyss"
       ],
       "hardRules": [],
@@ -3629,6 +3647,32 @@
           }
         },
         {
+          "id": "runecrafting:eternal-magic-weapon-imbuing",
+          "skill": "Runecrafting",
+          "method": "Eternal magic weapon imbuing",
+          "levelRange": "100+ wands/orbs; 104+ staves",
+          "xpRate": "not optimizer-grade",
+          "intensity": "lower-input weapon imbuing",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region_altar_access"
+          ],
+          "note": "110 Runecrafting added weapon imbuing as a less click-intensive alternative to altar running. The Wiki training page publishes estimates but explicitly flags the section as needing additional verification, so the planner keeps the method without ranking the rate.",
+          "warning": "",
+          "freshness": "2025_update_current_method_rate_warning",
+          "confidence": "confirmed_wiki_method_rate_not_normalized",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Eternal magic weapon imbuing",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
           "id": "runecrafting:imbuing-eternal-magic-weapons",
           "skill": "Runecrafting",
           "method": "Imbuing eternal magic weapons",
@@ -3677,6 +3721,35 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
             "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "runecrafting:time-runes",
+          "skill": "Runecrafting",
+          "method": "Time runes",
+          "levelRange": "100+ altar access; higher-level throughput benefits apply through 110",
+          "xpRate": "not optimizer-grade",
+          "intensity": "",
+          "location": "Time altar, north-west Anachronia",
+          "requirements": [
+            "100 Runecrafting",
+            "Enchanted key"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "Time runes are the 110-era top rune unlock and the altar is region-locked to Anachronia geography. Old training tables still include removed Demonic Skull assumptions, so no current League XP/h is stored here.",
+          "warning": "",
+          "freshness": "current_wiki_location_stale_rate_tables",
+          "confidence": "confirmed_wiki_method_rate_not_normalized",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Runecrafting_altars",
+            "title": "Time runes",
             "verifiedAt": "2026-07-24"
           }
         },

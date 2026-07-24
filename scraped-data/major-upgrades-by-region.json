@@ -430,6 +430,21 @@
           "Double Escape"
         ],
         "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Time altar / 110 Runecrafting",
+        "category": "Runecrafting progression / time-rune spell infrastructure",
+        "requirements": [
+          "100 Runecrafting",
+          "Enchanted key"
+        ],
+        "location": "north-west coast of Anachronia",
+        "unlocks": [
+          "Time runes",
+          "110 Runecrafting spell/resource progression"
+        ],
+        "source_url": "https://runescape.wiki/w/Runecrafting_altars",
+        "confidence": "confirmed_wiki"
       }
     ],
     "misthalin": [
@@ -547,6 +562,21 @@
       ],
       "planner_rule": "Do not claim this tool requires all three regions because alternate Dragon mattock acquisition exists, but region choices strongly affect how practical the chain is.",
       "confidence": "confirmed_wiki_components_region_analysis_partial"
+    },
+    {
+      "name": "Masterwork staff",
+      "category": "tier-100 Magic weapon / 110 Runecrafting",
+      "requirements": [
+        "110 Runecrafting",
+        "99 Magic"
+      ],
+      "region_pressure": [
+        "The staff is assembled at a Runecrafting altar, so the final crafting action is not tied to one elective region.",
+        "Its equipment-essence/material chain draws on other high-level magic gear and therefore can create cross-region dependencies in a no-trading League.",
+        "Do not assign a mandatory region set until the full material chain is normalized against Equilibrium quest/region access."
+      ],
+      "source_url": "https://runescape.wiki/w/Comparison_of_high-level_magic_weapons",
+      "confidence": "confirmed_wiki_cross_region_material_chain_partial"
     }
   ]
 }

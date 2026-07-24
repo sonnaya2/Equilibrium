@@ -1,0 +1,43 @@
+# One-shot audit validator. Remove after AUDIT_RECONCILE_PASS.txt lands on the target branch.
+name: Validate audit reconciliation once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/validate-audit-reconcile-once.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: validate-audit-reconcile-once
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit-reconcile-current-main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run normalize:data
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Record pass on audit branch
+        run: |
+          printf 'normalize:data + typecheck + tests + build + e2e passed\nvalidated_branch_head=%s\n' "$(git rev-parse HEAD)" > AUDIT_RECONCILE_PASS.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add AUDIT_RECONCILE_PASS.txt
+          git commit -m "Record reconciled audit validation pass"
+          git push origin HEAD:audit-reconcile-current-main

@@ -10,6 +10,7 @@ on:
       - "scripts/normalize-scraped-data.mjs"
       - "scripts/sync-reference-data.mjs"
       - "scripts/sync-planner-expansions.mjs"
+      - "scripts/audit-progression-enrichment.mjs"
       - "package.json"
       - ".github/workflows/normalize-data.yml"
   workflow_dispatch:
@@ -38,6 +39,10 @@ jobs:
 
       - run: npm ci
       - run: npm run normalize:data
+      - run: npm run audit:progression
+      - run: npm run audit:enrichment
+      - run: npm run audit:references
+      - run: npm run audit:boundaries
 
       - name: Commit generated data
         shell: bash

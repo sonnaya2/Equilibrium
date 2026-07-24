@@ -1,0 +1,72 @@
+name: Merge progression enrichment once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/merge-progression-enrichment-once.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: merge-progression-enrichment-once
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Recover validated donor from closed PR history
+        run: |
+          git fetch origin refs/pull/21/merge
+          git show FETCH_HEAD:scraped-data/progression-unlocks.json > /tmp/harvest-progression.json
+          git show FETCH_HEAD:scraped-data/planner-expansions.json > /tmp/harvest-planner.json
+
+      - name: Merge and validate
+        run: |
+          validate() {
+            node scripts/merge-progression-enrichment.mjs /tmp/harvest-progression.json /tmp/harvest-planner.json
+            npm run normalize:data
+            npm run audit:progression
+            node scripts/audit-progression-enrichment.mjs
+            npm run audit:references
+            npm run audit:boundaries
+            npm run typecheck
+            npm test
+            npm run build
+          }
+
+          validate
+
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            git reset --hard origin/main
+            validate
+          fi
+
+      - name: Commit only from the validated main head
+        run: |
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "main advanced after validation; refusing stale write"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/merge-progression-enrichment-once.yml
+          git add scraped-data/progression-unlocks.json scraped-data/planner-expansions.json data/reference/progression-unlocks.json data/research/planner-expansions.json data/research/catalog.json
+          git commit -m "Merge verified progression and consumable enrichment"
+          git push origin HEAD:main

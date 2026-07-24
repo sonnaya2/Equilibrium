@@ -1,81 +1,82 @@
 # Equilibrium
 
-Companion webapp for RuneScape 3's **Leagues II: Equilibrium** (launches 10 Aug 2026): a region map,
-complete task tracker, build planning across relics, blessings, gear and perks, and a from-scratch
-combat engine for the current post-2026 game covering damage, rotations and progression.
+A fan-made companion for **RuneScape 3: Leagues II — Equilibrium**, launching 10 August 2026.
 
-Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
+The idea is simple: pick regions, work out what they actually give you, plan Relics and Blessings, keep track of tasks, and have current RS3 combat math in the same place instead of bouncing between a pile of tabs.
 
-Read `AGENTS.md` before writing code - it is the spec, this file is just the map.
+This is a side project, not a Jagex product. RuneScape is a trademark of Jagex Ltd.
 
-## Status
+## Where it is now
 
-Research/data ingestion is active. The Data route reads the audited region/skill snapshot, sourced media lives
-under `assets/`, and the quest catalog is generated from revision-pinned RuneScape Wiki data. Unrevealed League
-values and unresolved region boundaries stay explicit rather than being filled with guesses.
+The region map and build state are working, the data browser is backed by the checked-in research set, and the quest catalog is generated from revision-pinned RuneScape Wiki data. The combat engine is being rebuilt around the post-2026 game rather than carrying old formulas forward.
 
-## Commands
+The Equilibrium task page is deliberately sparse right now. Jagex has published the point values, but not the full task list, so the app does not make up placeholder tasks just to look finished.
+
+The same rule applies everywhere else: unknown League numbers stay unknown.
+
+## Sources
+
+For normal RS3 game data, the RuneScape Wiki is the default reference. Rows that came specifically from PvME or RS Analysis keep those sources. Fresh League reveals and patch values can point straight to Jagex until the Wiki catches up.
+
+Generated quest records keep their Wiki page and revision. Harvested game media keeps its source page, retrieval URL and local hash. Geographic quest inference never counts as an official League auto-completion; those are kept in a separate Jagex-only overlay.
+
+See `/sources` in the app for the source list.
+
+## Local development
 
 ```text
-npm run dev          # local dev server
-npm run build        # production build (what Vercel runs)
-npm run typecheck    # tsc --noEmit
-npm test             # vitest
-npm run sync:combat  # combat data sync scaffold
-npm run sync:league  # League data sync scaffold
-npm run sync:assets  # harvest sourced RS3 / League media + provenance manifest
-npm run sync:quests  # rebuild the full quest/region catalog from the RuneScape Wiki
-npm run sync:quests:auto  # apply official Jagex region auto-completion lists when published
+npm ci
+npm run dev
 ```
 
-Node runs the data scripts directly; no ts-node/tsx wrapper is required for the existing TypeScript sync scripts,
-and the asset/quest harvesters are plain `.mjs`.
-
-## Layout
+Useful checks:
 
 ```text
-app/                 App Router routes: Overview / Map / Tasks / Build / Combat / Data (+ /sources)
-src/combat/          combat engine, zero React dependency
-  core/ pipeline/ styles/{melee,ranged,magic,necromancy}/ shared/ rotation/ league/ target/ data/
-src/league/          Equilibrium domain model (regions, relics, blessings, tasks)
-src/research/        normalized audited research browser layer
+npm run typecheck
+npm test
+npm run test:e2e
+npm run build
+```
+
+Data jobs:
+
+```text
+npm run normalize:data   # rebuild app-facing data from scraped-data/
+npm run sync:combat      # combat data sync
+npm run sync:league      # League data sync
+npm run sync:assets      # refresh sourced RS3 / League media
+npm run sync:quests      # rebuild quest/region data from the RuneScape Wiki
+npm run sync:quests:auto # apply official Jagex auto-completion lists when they exist
+```
+
+## Repo layout
+
+```text
+app/                 Next.js routes
+src/combat/          combat engine; no React dependency
+src/league/          Equilibrium region / Relic / Blessing / task model
+src/research/        typed access to the research catalog
 src/lib/             localStorage persistence
 src/components/      shared UI
-data/combat/         canonical combat JSON store
-data/league/         League data + generated quest catalog / region rules / official auto-quest overlay
-scraped-data/        source-oriented research snapshots, provenance, post-its and unresolved facts
-assets/              local sourced game-media archive + generated provenance manifest
-scripts/             combat/League sync plus asset and quest harvesters
+
+data/combat/         canonical combat JSON
+data/league/         canonical League data + generated quest data
+data/research/       app-facing research catalog
+scraped-data/        source-oriented research and unresolved notes
+assets/              sourced game media + provenance manifest
+scripts/             data, quest and asset sync jobs
 ```
 
-`src/combat/data/` is the typed accessor layer over the root `data/` store, so there is one copy of the
-JSON rather than two.
-
-## Data provenance
-
-Game facts and media keep source links. `assets/manifest.generated.json` records the exact file/source page,
-direct retrieval URL and local hash for every harvested binary. `data/league/quests.json` stores the source URL
-and Wiki revision for every quest. Official Equilibrium quest auto-completions are a separate Jagex-only overlay;
-geographic inference never marks a quest auto-completed.
+`data/` is the app-facing source of truth. `scraped-data/` is where source-oriented research lives before it is normalized. `src/combat/data/` is a typed accessor layer, not another hand-maintained copy of the JSON.
 
 ## Deployment
 
-Vercel, zero config. No env vars, no backend, no database - static JSON plus `localStorage`. Nothing in
-the production build reads secrets or performs live game-data fetches; sync workflows update the checked-in data.
+The app deploys on Vercel from `main`. There is no backend or account system here; builds use checked-in JSON and browser `localStorage`, and the sync jobs update the repository rather than fetching game data at runtime.
 
-## Agent skills
+## Contributing
 
-Project skills in `.claude/skills/`:
-
-- `combat-math` - the current-game combat model and the source-verification workflow. Load before
-  touching `src/combat/`.
-- `data-sync` - scrapers, the `SourceReference` contract, staleness reporting, source precedence.
-- `league-data` - Equilibrium domain model, and the rule that countdown-post numbers stay provisional.
-
-UI and copy work uses the globally installed skills rather than anything repo-local: `no-slop-ui`
-(law), `ui-humanizer` and `text-humanizer` (surgery), `bot-audit` (pre-ship check), plus
-`human-grade`, `frontend-design`, `dataviz` and `find-docs`.
+Read `AGENTS.md` before changing the app. The repo also has project-specific guidance for combat math, League data and data sync under `.claude/skills/`.
 
 ## Credits
 
-RuneScape Wiki, RS Analysis, PvME, leagues.build (UX inspiration only), and Jagex. See `/sources`.
+RuneScape Wiki, RS Analysis, PvME, Jagex, and leagues.build for UX inspiration only.

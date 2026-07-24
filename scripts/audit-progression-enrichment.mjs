@@ -19,6 +19,7 @@ for (const id of [
   "dungeoneering:bonecrusher-current",
   "dungeoneering:charming-imp-current",
   "dungeoneering:herbicide-current",
+  "dungeoneering:scroll-of-restoration",
   "anachronia:slayer-lodge",
   "anachronia:player-lodge",
   "farms:combat-perk-state",
@@ -43,6 +44,8 @@ for (const [id, tokens, level] of [
   const row = byId(progression.account_unlocks, id);
   if (row?.token_cost !== tokens || row?.dungeoneering_level !== level) fail(`${id} is not using the 11-May-2026 reward table`);
 }
+const restoration = byId(progression.account_unlocks, "dungeoneering:scroll-of-restoration");
+if (restoration?.token_cost !== 20000 || restoration?.dungeoneering_level !== 44 || restoration?.archaeology_level !== 44 || !restoration?.effect?.includes("2%")) fail("Scroll of Restoration remaster values drifted");
 const vitality = byId(progression.account_unlocks, "anachronia:totem-of-vitality");
 if (vitality.maximum_life_points_percent !== 25 || vitality.maximum_extra_life_points !== 1500) fail("Totem of Vitality drifted");
 const reaper = byId(progression.account_unlocks, "pvm:reaper-crew");
@@ -65,6 +68,9 @@ for (const id of [
   "dungeoneering:split-dragontooth-necklace-current",
   "dungeoneering:demon-horn-necklace-current",
   "dungeoneering:amulet-of-zealots-current",
+  "dungeoneering:chaotic-grimoire",
+  "dungeoneering:ruinous-weapons",
+  "dungeoneering:occultist-necromancy-necklaces",
 ]) if (!byId(progression.equipment_models, id)) fail(`missing equipment progression ${id}`);
 const enchantments = byId(progression.equipment_models, "zamorakian-slivers:enchantments");
 if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !== "unresolved_cross_boundary") fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
@@ -81,6 +87,19 @@ const demonHorn = byId(progression.equipment_models, "dungeoneering:demon-horn-n
 if (demonHorn?.token_cost !== 35000 || demonHorn?.dungeoneering_level !== 75 || demonHorn?.prayer_level !== 90) fail("Demon horn remaster values drifted");
 const zealots = byId(progression.equipment_models, "dungeoneering:amulet-of-zealots-current");
 if (zealots?.token_cost !== 40000 || zealots?.dungeoneering_level !== 38 || zealots?.prayer_level !== 48) fail("Amulet of zealots remaster values drifted");
+const grimoire = byId(progression.equipment_models, "dungeoneering:chaotic-grimoire");
+if (grimoire?.token_cost !== 150000 || grimoire?.dungeoneering_level !== 60 || grimoire?.page?.token_cost !== 5000 || !grimoire?.active_effect?.includes("+7%")) fail("Chaotic grimoire remaster values drifted");
+const ruinous = byId(progression.equipment_models, "dungeoneering:ruinous-weapons");
+if (ruinous?.dungeoneering_level !== 90 || ruinous?.shared_properties?.damage_tier !== 90 || ruinous?.shared_properties?.accuracy_tier !== 100 || ruinous?.shared_properties?.warpbane_damage_bonus_percent !== 12 || (ruinous?.weapons || []).length !== 8) fail("Ruinous weapon family core values drifted");
+const ruinousCosts = Object.fromEntries((ruinous?.weapons || []).map((row) => [row.name, row.token_cost]));
+for (const [name, cost] of [["Ruinous guard", 750000], ["Ruinous lantern", 250000], ["Ruinous maul", 1000000], ["Ruinous staff", 1000000], ["Ruinous crossbow", 750000], ["Ruinous off-hand crossbow", 250000]]) {
+  if (ruinousCosts[name] !== cost) fail(`${name} token cost drifted`);
+}
+const occultist = byId(progression.equipment_models, "dungeoneering:occultist-necromancy-necklaces");
+const occultistBase = Object.fromEntries((occultist?.base_rewards || []).map((row) => [row.name, row]));
+if (occultistBase["Occultist's undead necklace"]?.token_cost !== 6500 || occultistBase["Occultist's revival necklace"]?.token_cost !== 15500) fail("Occultist base necklace costs drifted");
+const hex = (occultist?.upgrade_chain || []).find((row) => row.name === "Occultist's hex necklace");
+if (hex?.chaotic_remnant?.token_cost !== 100000 || hex?.chaotic_remnant?.dungeoneering_level !== 60 || !JSON.stringify(hex?.region_pressure ?? []).includes("asgarnia")) fail("Occultist hex cross-region chain drifted");
 
 for (const id of [
   "herblore:overload-chain",

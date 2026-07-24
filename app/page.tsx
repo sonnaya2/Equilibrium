@@ -3,19 +3,19 @@ import { Page } from "@/components/Page";
 import { Pips } from "@/components/Pips";
 
 const STATUS: [string, string][] = [
-  ["Launch", "10 Aug 2026, on dedicated league worlds. Free-to-play worlds included."],
-  ["Reveals", "Relic and blessing details publish daily from 28 Jul through launch."],
-  ["Character", "Fresh league character, separate from your main account."],
-  ["Trading", "Disabled between players for this league."],
-  ["Rewards", "Sent to a nominated account when the league ends."],
+  ["Launch", "10 Aug 2026 on dedicated League worlds."],
+  ["Reveals", "New Relic and Blessing details are being published through launch."],
+  ["Character", "You start fresh on a League character separate from the main game."],
+  ["Trading", "Player-to-player trading is disabled."],
+  ["Rewards", "Final rewards go to the account you nominate."],
 ];
 
 const SURFACES = [
-  ["/map", "Map", "Pick your six regions, see what each one gates."],
-  ["/tasks", "Tasks", "League task tracker with points toward relic tiers."],
-  ["/build", "Build", "Regions, relics, blessings and gear in one plan."],
-  ["/combat", "Combat", "Damage calculator and rotation sim with league modifiers."],
-  ["/data", "Data", "Record counts, sync dates, and sources per dataset."],
+  ["/map", "Map", "Plan your 3 elective region picks and see what each one opens up."],
+  ["/tasks", "Tasks", "Track League tasks and the points that drive progression."],
+  ["/build", "Build", "Keep regions, Relics, Blessings and gear in one plan."],
+  ["/combat", "Combat", "Current RS3 damage math with League modifiers layered on top."],
+  ["/data", "Data", "Browse the game data behind the planner and follow its sources."],
 ] as const;
 
 export default function OverviewPage() {
@@ -26,8 +26,8 @@ export default function OverviewPage() {
           Leagues II: Equilibrium
         </h1>
         <p className="mt-1 max-w-prose text-sm text-parch-300">
-          Planner and combat calculator for the league. Numbers go in when the Wiki confirms
-          them; until then the fields stay empty.
+          Current game data comes from the Wiki. Fresh League reveals use Jagex until the Wiki catches up.
+          Anything that has not been published stays blank.
         </p>
       </header>
 
@@ -35,7 +35,7 @@ export default function OverviewPage() {
         <section className="panel md:col-span-2">
           <div className="panel-head flex items-center justify-between">
             League status
-            <span className="tag">Provisional</span>
+            <span className="tag">Pre-launch</span>
           </div>
           <dl className="panel-body space-y-3">
             {STATUS.map(([label, text]) => (
@@ -81,10 +81,10 @@ export default function OverviewPage() {
           <tbody>
             <tr>
               <td className="font-medium text-parch-50">Regions</td>
-              <td>6 of 11 unlockable</td>
+              <td>2 start + Karamja + 3 picks</td>
               <td>
-                Misthalin and Havenhythe fixed, Karamja at the first milestone, then 3 of the
-                remaining 8.
+                Misthalin and Havenhythe start open. Karamja follows the first milestone, then you choose
+                3 of the remaining 8 regions.
               </td>
             </tr>
             <tr>
@@ -94,7 +94,7 @@ export default function OverviewPage() {
                   <Pips total={7} mode="structure" label="7 relic tiers" /> 7 tiers
                 </span>
               </td>
-              <td>Return from Leagues: Catalyst, rebalanced. Each tier adds passive bonuses.</td>
+              <td>League Points unlock each tier. Only revealed choices appear in the planner.</td>
             </tr>
             <tr>
               <td className="font-medium text-parch-50">Blessings</td>
@@ -104,21 +104,19 @@ export default function OverviewPage() {
                 </span>
               </td>
               <td>
-                One path per tier: <span className="text-order-400">Order</span>,{" "}
-                <span className="text-chaos-400">Chaos</span>,{" "}
-                <span className="text-balance-400">Balance</span>. Majority path sets the god tier
-                blessing at tiers 4 and 8. Three resets.
+                Order, Chaos or Balance choices feed into God Tier Blessings at tiers 4 and 8. Up to 3
+                resets are available during the League.
               </td>
             </tr>
             <tr>
               <td className="font-medium text-parch-50">Tasks</td>
               <td>Easy to Master</td>
-              <td>10–400 league points each, gated by unlocked regions.</td>
+              <td>10 / 30 / 80 / 200 / 400 League Points by tier.</td>
             </tr>
             <tr>
-              <td className="font-medium text-parch-50">League points</td>
+              <td className="font-medium text-parch-50">League Points</td>
               <td>Earned from tasks</td>
-              <td>Drive the trophy tier and relic tier unlocks.</td>
+              <td>Set trophy progress and unlock Relic tiers.</td>
             </tr>
           </tbody>
         </table>

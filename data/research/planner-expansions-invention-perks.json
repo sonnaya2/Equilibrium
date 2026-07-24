@@ -5,14 +5,51 @@
     {
       "perk": "Biting 4",
       "role": "advanced armour damage perk",
-      "representative_recipe": ["7 Noxious", "1 Direct", "1 Blade"],
+      "representative_recipe": [
+        "7 Noxious",
+        "1 Direct",
+        "1 Blade"
+      ],
       "recipe_result": "virtually guaranteed in the current PvME recipe",
       "important_combinations": [
-        {"perk": "Biting 4 Crystal Shield 1", "components": ["7 Noxious", "2 Faceted"]},
-        {"perk": "Biting 4 Dragon Slayer", "components": ["7 Noxious", "2 Dragonfire"]},
-        {"perk": "Biting 4 Lucky 1", "components": ["7 Noxious", "1 Fortunate", "1 Silent"]},
-        {"perk": "Biting 4 Reflexes", "components": ["7 Noxious", "1 Dextrous", "1 Harnessed"]},
-        {"perk": "Biting 4 Undead Slayer", "components": ["7 Noxious", "1 Undead", "1 Living"]}
+        {
+          "perk": "Biting 4 Crystal Shield 1",
+          "components": [
+            "7 Noxious",
+            "2 Faceted"
+          ]
+        },
+        {
+          "perk": "Biting 4 Dragon Slayer",
+          "components": [
+            "7 Noxious",
+            "2 Dragonfire"
+          ]
+        },
+        {
+          "perk": "Biting 4 Lucky 1",
+          "components": [
+            "7 Noxious",
+            "1 Fortunate",
+            "1 Silent"
+          ]
+        },
+        {
+          "perk": "Biting 4 Reflexes",
+          "components": [
+            "7 Noxious",
+            "1 Dextrous",
+            "1 Harnessed"
+          ]
+        },
+        {
+          "perk": "Biting 4 Undead Slayer",
+          "components": [
+            "7 Noxious",
+            "1 Undead",
+            "1 Living"
+          ]
+        }
       ],
       "planner_value": "Noxious supply is the dominant gate; secondary combinations add Tirannwn, Asgarnia, clue, Ports/Kandarin, Kandarin or Morytania pressure depending on the chosen companion perk.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -21,12 +58,39 @@
     {
       "perk": "Crackling 4",
       "role": "advanced armour damage perk",
-      "representative_recipe": ["4 Vintage", "3 Explosive"],
+      "representative_recipe": [
+        "4 Vintage",
+        "3 Explosive"
+      ],
       "important_combinations": [
-        {"perk": "Crackling 4 Relentless 3", "components": ["4 Vintage", "3 Explosive"]},
-        {"perk": "Crackling 4 Relentless 5", "components": ["8 Vintage"], "warning": "rare/expensive outcome; not a baseline planner assumption"},
-        {"perk": "Crackling 4 Undead Slayer", "components": ["7 Explosive", "1 Undead", "1 Living"]},
-        {"perk": "Crackling 4 Ultimatums 4", "components": ["9 Explosive"]}
+        {
+          "perk": "Crackling 4 Relentless 3",
+          "components": [
+            "4 Vintage",
+            "3 Explosive"
+          ]
+        },
+        {
+          "perk": "Crackling 4 Relentless 5",
+          "components": [
+            "8 Vintage"
+          ],
+          "warning": "rare/expensive outcome; not a baseline planner assumption"
+        },
+        {
+          "perk": "Crackling 4 Undead Slayer",
+          "components": [
+            "7 Explosive",
+            "1 Undead",
+            "1 Living"
+          ]
+        },
+        {
+          "perk": "Crackling 4 Ultimatums 4",
+          "components": [
+            "9 Explosive"
+          ]
+        }
       ],
       "planner_value": "Links high-level Archaeology Vintage supply to Fremennik hand-cannon/Explosive supply; Undead Slayer adds Morytania pressure.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -35,14 +99,56 @@
     {
       "perk": "Impatient 4",
       "role": "advanced armour adrenaline perk",
-      "representative_recipe": ["4 Zamorak", "3 Zaros"],
-      "low_level_alternative": ["7 Zamorak", "2 Saradomin"],
+      "representative_recipe": [
+        "4 Zamorak",
+        "3 Zaros"
+      ],
+      "low_level_alternative": [
+        "7 Zamorak",
+        "2 Saradomin"
+      ],
       "important_combinations": [
-        {"perk": "Impatient 4 Devoted 2", "components": ["4 Zamorak", "3 Zaros"]},
-        {"perk": "Impatient 4 Dragon Slayer", "components": ["6 Zaros", "1 Zamorak", "2 Dragonfire"]},
-        {"perk": "Impatient 4 Hoarding", "components": ["6 Zamorak", "2 Fortunate", "1 Zaros"]},
-        {"perk": "Impatient 4 Reflexes", "components": ["6 Zaros", "1 Zamorak", "1 Dextrous", "1 Harnessed"]},
-        {"perk": "Impatient 4 Undead Slayer", "components": ["6 Zaros", "1 Zamorak", "1 Undead", "1 Living"]}
+        {
+          "perk": "Impatient 4 Devoted 2",
+          "components": [
+            "4 Zamorak",
+            "3 Zaros"
+          ]
+        },
+        {
+          "perk": "Impatient 4 Dragon Slayer",
+          "components": [
+            "6 Zaros",
+            "1 Zamorak",
+            "2 Dragonfire"
+          ]
+        },
+        {
+          "perk": "Impatient 4 Hoarding",
+          "components": [
+            "6 Zamorak",
+            "2 Fortunate",
+            "1 Zaros"
+          ]
+        },
+        {
+          "perk": "Impatient 4 Reflexes",
+          "components": [
+            "6 Zaros",
+            "1 Zamorak",
+            "1 Dextrous",
+            "1 Harnessed"
+          ]
+        },
+        {
+          "perk": "Impatient 4 Undead Slayer",
+          "components": [
+            "6 Zaros",
+            "1 Zamorak",
+            "1 Undead",
+            "1 Living"
+          ]
+        }
       ],
       "planner_value": "Asgarnia is unusually efficient because Nex/GWD1 can cover Zaros, Zamorak and Saradomin component families; companion perks can then add clue, Kandarin, Asgarnia or Morytania dependencies.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -51,7 +157,9 @@
     {
       "perk": "Enhanced Devoted 4",
       "role": "advanced armour defensive perk",
-      "representative_recipe": ["8 Faceted"],
+      "representative_recipe": [
+        "8 Faceted"
+      ],
       "planner_value": "Creates a direct Tirannwn/Lletya crystal-seed component sink in a self-sufficient account.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current_recipe"
@@ -59,12 +167,47 @@
     {
       "perk": "Invigorating 4",
       "role": "armour adrenaline/basic-attack support perk",
-      "representative_recipe": ["7 Culinary", "1 Organic", "1 Enhancing"],
+      "representative_recipe": [
+        "7 Culinary",
+        "1 Organic",
+        "1 Enhancing"
+      ],
       "important_combinations": [
-        {"perk": "Invigorating 4 Crystal Shield 1", "components": ["6 Oceanic", "1 Culinary", "2 Faceted"]},
-        {"perk": "Invigorating 4 Lucky 1/2", "components": ["6 Oceanic", "1 Culinary", "1 Fortunate", "1 Silent"]},
-        {"perk": "Invigorating 4 Reflexes", "components": ["6 Culinary", "1 Oceanic", "1 Dextrous", "1 Harnessed"]},
-        {"perk": "Invigorating 4 Undead Slayer", "components": ["6 Oceanic", "1 Culinary", "1 Undead", "1 Living"]}
+        {
+          "perk": "Invigorating 4 Crystal Shield 1",
+          "components": [
+            "6 Oceanic",
+            "1 Culinary",
+            "2 Faceted"
+          ]
+        },
+        {
+          "perk": "Invigorating 4 Lucky 1/2",
+          "components": [
+            "6 Oceanic",
+            "1 Culinary",
+            "1 Fortunate",
+            "1 Silent"
+          ]
+        },
+        {
+          "perk": "Invigorating 4 Reflexes",
+          "components": [
+            "6 Culinary",
+            "1 Oceanic",
+            "1 Dextrous",
+            "1 Harnessed"
+          ]
+        },
+        {
+          "perk": "Invigorating 4 Undead Slayer",
+          "components": [
+            "6 Oceanic",
+            "1 Culinary",
+            "1 Undead",
+            "1 Living"
+          ]
+        }
       ],
       "planner_value": "Base Invigorating is broadly craftable, but advanced combinations can become Player-Owned Ports/Oceanic bottlenecks with additional Tirannwn, clue, Kandarin or Morytania pressure.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -73,12 +216,40 @@
     {
       "perk": "Lucky 6",
       "role": "armour defensive perk",
-      "representative_recipe": ["7 Silent"],
+      "representative_recipe": [
+        "7 Silent"
+      ],
       "important_combinations": [
-        {"perk": "Lucky 6 Absorbative 1", "components": ["7 Silent", "2 Fungal"]},
-        {"perk": "Lucky 4 Absorbative 2", "components": ["5 Silent", "4 Fungal"]},
-        {"perk": "Lucky 6 Hoarding", "components": ["6 Silent", "2 Fortunate", "1 Pious"]},
-        {"perk": "Lucky 6 Undead Slayer", "components": ["7 Silent", "1 Undead", "1 Living"]}
+        {
+          "perk": "Lucky 6 Absorbative 1",
+          "components": [
+            "7 Silent",
+            "2 Fungal"
+          ]
+        },
+        {
+          "perk": "Lucky 4 Absorbative 2",
+          "components": [
+            "5 Silent",
+            "4 Fungal"
+          ]
+        },
+        {
+          "perk": "Lucky 6 Hoarding",
+          "components": [
+            "6 Silent",
+            "2 Fortunate",
+            "1 Pious"
+          ]
+        },
+        {
+          "perk": "Lucky 6 Undead Slayer",
+          "components": [
+            "7 Silent",
+            "1 Undead",
+            "1 Living"
+          ]
+        }
       ],
       "planner_value": "Silent is primarily a Player-Owned Ports dependency; combinations can add Morytania fungal/undead supply or clue-scroll Fortunate pressure.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -87,9 +258,19 @@
     {
       "perk": "Turtling 4",
       "role": "shield/defensive utility perk",
-      "representative_recipe": ["6 Historic", "3 Evasive"],
+      "representative_recipe": [
+        "6 Historic",
+        "3 Evasive"
+      ],
       "important_combinations": [
-        {"perk": "Turtling 3 Taunting", "components": ["2 Knightly", "Historic", "Evasive"]}
+        {
+          "perk": "Turtling 3 Taunting",
+          "components": [
+            "2 Knightly",
+            "Historic",
+            "Evasive"
+          ]
+        }
       ],
       "planner_value": "Turns low-level Archaeology Historic supply into a practical defensive perk; Knightly combinations additionally value Asgarnia's White Knight equipment access.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -98,9 +279,18 @@
     {
       "perk": "Ultimatums 4",
       "role": "armour ultimate-adrenaline perk",
-      "representative_recipe": ["9 Explosive"],
+      "representative_recipe": [
+        "9 Explosive"
+      ],
       "important_combinations": [
-        {"perk": "Ultimatums + Dragon Slayer variants", "components": ["Dragonfire", "Shifting", "Explosive"]}
+        {
+          "perk": "Ultimatums + Dragon Slayer variants",
+          "components": [
+            "Dragonfire",
+            "Shifting",
+            "Explosive"
+          ]
+        }
       ],
       "planner_value": "Explosive gives Fremennik/Keldagrim pressure, while Dragon Slayer combinations can add Asgarnia Dragonfire plus Desert/Forinthry Shifting supply.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -122,7 +312,11 @@
       "component": "Faceted",
       "invention_level_to_use": 55,
       "region": "tirannwn",
-      "primary_sources": ["charged crystal teleport seeds from Lletya elves", "crystal tools", "crystal flasks"],
+      "primary_sources": [
+        "charged crystal teleport seeds from Lletya elves",
+        "crystal tools",
+        "crystal flasks"
+      ],
       "planner_value": "Feeds Enhanced Devoted 4 and several Biting/Impatient/Invigorating defensive combinations. PvME explicitly recommends Lletya elves as a cheap self-source route.",
       "source_url": "https://runescape.wiki/w/Faceted_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -153,7 +347,10 @@
     {
       "component": "Zaros",
       "region": "asgarnia",
-      "primary_sources": ["Nex equipment", "Ancient defenders"],
+      "primary_sources": [
+        "Nex equipment",
+        "Ancient defenders"
+      ],
       "planner_value": "Core Impatient 4 component family. Canonical GWD1/Ancient Prison geography places the normal self-source route in Asgarnia.",
       "source_url": "https://runescape.wiki/w/Zaros_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -162,7 +359,10 @@
     {
       "component": "Undead",
       "region": "morytania",
-      "primary_sources": ["Malevolent equipment", "Linza's equipment"],
+      "primary_sources": [
+        "Malevolent equipment",
+        "Linza's equipment"
+      ],
       "planner_value": "Feeds Undead Slayer combinations across Biting, Crackling, Impatient, Invigorating and Lucky setups.",
       "source_url": "https://runescape.wiki/w/Undead_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -180,8 +380,14 @@
     },
     {
       "component": "Rumbling",
-      "region_options": ["desert", "account_or_unresolved_raids"],
-      "primary_sources": ["Drygore weapons from Kalphite King", "Raids armour"],
+      "region_options": [
+        "desert",
+        "account_or_unresolved_raids"
+      ],
+      "primary_sources": [
+        "Drygore weapons from Kalphite King",
+        "Raids armour"
+      ],
       "planner_value": "Desert gives a defensible self-source through Drygores. Raids armour is retained as an alternate source without inventing an Equilibrium locality for Mazcab.",
       "source_url": "https://runescape.wiki/w/Rumbling_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -190,7 +396,10 @@
     {
       "component": "Seren",
       "region": "tirannwn",
-      "primary_sources": ["attuned crystal equipment", "crystal equipment"],
+      "primary_sources": [
+        "attuned crystal equipment",
+        "crystal equipment"
+      ],
       "planner_value": "Tirannwn crystal progression supplies a distinct rare-component family in addition to Faceted/Crystal materials.",
       "source_url": "https://runescape.wiki/w/Seren_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -198,8 +407,14 @@
     },
     {
       "component": "Shifting",
-      "region_options": ["desert", "forinthry"],
-      "primary_sources": ["Khopesh of the Kharidian", "Chaotic weapons"],
+      "region_options": [
+        "desert",
+        "forinthry"
+      ],
+      "primary_sources": [
+        "Khopesh of the Kharidian",
+        "Chaotic weapons"
+      ],
       "planner_value": "Desert can source Shifting through Kharidian khopesh progression; Forinthry can source it through Daemonheim/chaotic equipment. Useful for Ultimatums/Dragon Slayer variants.",
       "source_url": "https://runescape.wiki/w/Shifting_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -208,7 +423,10 @@
     {
       "component": "Bandos",
       "region": "asgarnia",
-      "primary_sources": ["Bandos equipment", "Bandos-aligned God Wars Dungeon equipment"],
+      "primary_sources": [
+        "Bandos equipment",
+        "Bandos-aligned God Wars Dungeon equipment"
+      ],
       "planner_value": "Feeds Genocidal combinations and shares Asgarnia's GWD1 component-farming ecosystem.",
       "source_url": "https://runescape.wiki/w/Bandos_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",

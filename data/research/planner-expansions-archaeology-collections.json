@@ -66,9 +66,15 @@
       "collector": "Soran, Emissary of Zaros",
       "first_reward": "Seal of the Praefectus Praetorio",
       "relic_power": "Unexpected Diplomacy",
-      "artifact_regions": ["misthalin"],
-      "collector_regions": ["misthalin"],
-      "required_regions": ["misthalin"],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
       "path": "Complete Zarosian I, then offer the seal to the mysterious monolith.",
       "source_url": "https://runescape.wiki/w/Zarosian_I",
       "secondary_source_url": "https://runescape.wiki/w/Unexpected_Diplomacy",
@@ -80,10 +86,19 @@
       "collector": "Sir Atcha",
       "first_reward": "Lock of hair",
       "relic_power": "Berserker's Fury",
-      "artifact_regions": ["morytania"],
-      "collector_regions": ["asgarnia"],
-      "additional_item_regions": ["morytania"],
-      "required_regions": ["morytania", "asgarnia"],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "additional_item_regions": [
+        "morytania"
+      ],
+      "required_regions": [
+        "morytania",
+        "asgarnia"
+      ],
       "path": "Excavate the Everlight artefacts in Morytania, hand the collection to Sir Atcha in Falador/Asgarnia for the Lock of hair, then combine it with the Barrows-sourced Amulet of the forsaken to form Dharok's Memento.",
       "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_I",
       "confidence": "confirmed_wiki_cross_region"
@@ -94,11 +109,23 @@
       "collector": "Lowse",
       "first_reward": "King Oberon's moonshroom spores",
       "relic_power": "Pharm Ecology",
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "handoff_regions": ["unresolved_zanaris"],
-      "required_regions": ["kandarin", "asgarnia", "unresolved_zanaris"],
-      "quest_overlay": ["A Fairy Tale III - Battle at Ork's Rift"],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "handoff_regions": [
+        "unresolved_zanaris"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia",
+        "unresolved_zanaris"
+      ],
+      "quest_overlay": [
+        "A Fairy Tale III - Battle at Ork's Rift"
+      ],
       "path": "Complete the Stormguard collection for Lowse at Armadyl's Tower, then take the spores to the Fairy Queen in Zanaris for Queen Mab's Moonstone.",
       "source_url": "https://runescape.wiki/w/Lowse%3A_Armadylean_I",
       "secondary_source_url": "https://runescape.wiki/w/King_Oberon%27s_moonshroom_spores",
@@ -110,11 +137,27 @@
       "collector": "Wise Old Man",
       "first_reward": "Koschei's needle",
       "relic_power": "Deathless",
-      "artifact_regions": ["morytania", "kandarin"],
-      "collector_regions": ["misthalin"],
-      "handoff_regions": ["fremennik"],
-      "required_regions": ["morytania", "kandarin", "misthalin", "fremennik"],
-      "quest_overlay": ["Koschei's Troubles", "Ritual of the Mahjarrat", "Blood Runs Deep"],
+      "artifact_regions": [
+        "morytania",
+        "kandarin"
+      ],
+      "collector_regions": [
+        "misthalin"
+      ],
+      "handoff_regions": [
+        "fremennik"
+      ],
+      "required_regions": [
+        "morytania",
+        "kandarin",
+        "misthalin",
+        "fremennik"
+      ],
+      "quest_overlay": [
+        "Koschei's Troubles",
+        "Ritual of the Mahjarrat",
+        "Blood Runs Deep"
+      ],
       "path": "Complete Wise Am the Music Man for Koschei's needle, then return it to Koschei/Kharshai to receive Koschei's Death Egg and unlock Deathless at the monolith.",
       "source_url": "https://runescape.wiki/w/Wise_Old_Man%3A_Wise_Am_the_Music_Man",
       "secondary_source_url": "https://runescape.wiki/w/Koschei%27s_needle",
@@ -126,9 +169,15 @@
       "collector": "Sharrigan",
       "first_reward": "Kaladanda",
       "relic_power": "Death Note",
-      "artifact_regions": ["anachronia"],
-      "collector_regions": ["anachronia"],
-      "required_regions": ["anachronia"],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
       "path": "Complete Dragonkin III using Orthen artefacts and offer Kaladanda to the mysterious monolith.",
       "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_III",
       "confidence": "confirmed_wiki"
@@ -139,9 +188,16 @@
       "collector": "Sharrigan",
       "first_reward": "Pastkeeper's tapestry",
       "relic_power": "Spirit Weaver",
-      "artifact_regions": ["forinthry"],
-      "collector_regions": ["anachronia"],
-      "required_regions": ["forinthry", "anachronia"],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "forinthry",
+        "anachronia"
+      ],
       "path": "Excavate the Daemonheim collection, hand it to Sharrigan at Anachronia base camp, then offer the Pastkeeper's tapestry to the monolith.",
       "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_VI",
       "secondary_source_url": "https://runescape.wiki/w/Pastkeeper%27s_tapestry",
@@ -153,9 +209,16 @@
       "collector": "Sir Atcha",
       "first_reward": "Petasos",
       "relic_power": "Inspire Effort",
-      "artifact_regions": ["morytania"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["morytania", "asgarnia"],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "morytania",
+        "asgarnia"
+      ],
       "path": "Complete the Everlight collection and hand it to Sir Atcha in Falador/Asgarnia; Petasos unlocks Inspire Effort at the monolith.",
       "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_IV",
       "confidence": "confirmed_wiki_cross_region"
@@ -167,30 +230,65 @@
       "collection": "Zarosian I",
       "archaeology_level": 25,
       "repeat_reward": "20 pylon batteries",
-      "required_regions": ["misthalin"],
+      "required_regions": [
+        "misthalin"
+      ],
       "planner_value": "Early repeatable Kharid-et pylon progression.",
       "source_url": "https://runescape.wiki/w/Zarosian_I",
       "confidence": "confirmed_wiki"
     },
     {
       "id": "armadylean-blueprint-fragments",
-      "collections": ["Armadylean I", "Armadylean II", "Armadylean III"],
-      "archaeology_levels": [81, 98, 118],
-      "repeat_rewards": ["50 torn blueprint fragments", "75 torn blueprint fragments", "150 torn blueprint fragments"],
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "collections": [
+        "Armadylean I",
+        "Armadylean II",
+        "Armadylean III"
+      ],
+      "archaeology_levels": [
+        81,
+        98,
+        118
+      ],
+      "repeat_rewards": [
+        "50 torn blueprint fragments",
+        "75 torn blueprint fragments",
+        "150 torn blueprint fragments"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
       "planner_value": "Repeatable Stormguard-to-Lowse route for Howl's workshop blueprint fragments and Ancient Invention progression.",
       "source_url": "https://runescape.wiki/w/Torn_blueprint_fragments_%28Howl%27s_workshop%29",
       "confidence": "confirmed_wiki_cross_region"
     },
     {
       "id": "warforge-goblin-tetracompasses",
-      "collections": ["Green Gobbo Goodies I", "Green Gobbo Goodies II", "Green Gobbo Goodies III", "Red Rum Relics I", "Red Rum Relics II", "Red Rum Relics III"],
+      "collections": [
+        "Green Gobbo Goodies I",
+        "Green Gobbo Goodies II",
+        "Green Gobbo Goodies III",
+        "Red Rum Relics I",
+        "Red Rum Relics II",
+        "Red Rum Relics III"
+      ],
       "repeat_reward": "Tetracompass piece",
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
       "planner_value": "Warforge artefacts are excavated in Kandarin, while General Wartface/Bentnoze collection turn-ins use Goblin Village in Asgarnia.",
       "source_url": "https://runescape.wiki/w/Green_Gobbo_Goodies_I",
       "secondary_source_url": "https://runescape.wiki/w/Tetracompass_%28unpowered%29",
@@ -201,9 +299,16 @@
       "collection": "Dragonkin V",
       "archaeology_level": 77,
       "repeat_reward": "2 large Dungeoneering token boxes",
-      "artifact_regions": ["forinthry"],
-      "collector_regions": ["anachronia"],
-      "required_regions": ["forinthry", "anachronia"],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "forinthry",
+        "anachronia"
+      ],
       "planner_value": "Repeatable Dungeoneering-token route whose excavation and collector live in different planner regions.",
       "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_V",
       "confidence": "confirmed_wiki_cross_region"
@@ -213,9 +318,16 @@
       "collection": "Dragonkin VI",
       "archaeology_level": 87,
       "repeat_reward": "Dungeoneering Wildcard and 2 large Dungeoneering token boxes",
-      "artifact_regions": ["forinthry"],
-      "collector_regions": ["anachronia"],
-      "required_regions": ["forinthry", "anachronia"],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "forinthry",
+        "anachronia"
+      ],
       "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_VI",
       "confidence": "confirmed_wiki_cross_region"
     },
@@ -224,9 +336,16 @@
       "collection": "Dragonkin VII",
       "archaeology_level": 113,
       "repeat_reward": "Tetracompass piece and 5,772 chronotes",
-      "artifact_regions": ["forinthry"],
-      "collector_regions": ["anachronia"],
-      "required_regions": ["forinthry", "anachronia"],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "forinthry",
+        "anachronia"
+      ],
       "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_VII",
       "secondary_source_url": "https://runescape.wiki/w/Tetracompass_%28unpowered%29",
       "confidence": "confirmed_wiki_cross_region"
@@ -237,8 +356,13 @@
       "target_dataset": "planner-expansions-slayer",
       "target_relic": "Berserker's Fury",
       "field": "acquisition_regions",
-      "old_value": ["morytania"],
-      "recommended_value": ["morytania", "asgarnia"],
+      "old_value": [
+        "morytania"
+      ],
+      "recommended_value": [
+        "morytania",
+        "asgarnia"
+      ],
       "reason": "Everlight artefacts and the Barrows amulet are Morytania, but the Saradominist I collection must be handed to Sir Atcha in Falador/Asgarnia to obtain the Lock of hair.",
       "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_I",
       "confidence": "confirmed_wiki_correction"
@@ -250,7 +374,10 @@
       "release_date": "2026-06-15",
       "dig_site": "Moonrise",
       "region": "havenhythe",
-      "dig_site_requirements": ["52 Archaeology", "Secrets of Amberfell"],
+      "dig_site_requirements": [
+        "52 Archaeology",
+        "Secrets of Amberfell"
+      ],
       "unlock_summary": "Complete one of the two Moonrise collections and combine its relic reward with Expensive spices.",
       "effect_summary": "Eating food heals 100 additional life points and no longer drains adrenaline.",
       "planner_value": "Current 2026 combat-support relic available from the starting Havenhythe region once the quest/dig-site requirements are satisfied.",

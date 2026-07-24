@@ -20,7 +20,10 @@
       "region": "multi_region_archaeology",
       "collection_before_discovery": true,
       "scavenging_available": false,
-      "current_perk_examples": ["Precise 6: 9 Historic", "Turtling 4 combinations use Historic"],
+      "current_perk_examples": [
+        "Precise 6: 9 Historic",
+        "Turtling 4 combinations use Historic"
+      ],
       "planner_value": "The cheap PvME starter Precise 6 route directly consumes Archaeology output, making restored artefacts a combat-power resource in a no-trading League.",
       "source_url": "https://runescape.wiki/w/Ancient_Invention",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -44,7 +47,12 @@
       "region": "multi_region_archaeology",
       "collection_before_discovery": true,
       "scavenging_available": false,
-      "current_perk_examples": ["Eruptive 4: 8 Timeworn", "Aftershock 4 Eruptive 2: 6 Ilujankan + 3 Timeworn", "Caroming 4 Eruptive 2: 6 Shadow + 3 Timeworn", "Lunging 4 Eruptive 2: 6 Avernic + 3 Timeworn"],
+      "current_perk_examples": [
+        "Eruptive 4: 8 Timeworn",
+        "Aftershock 4 Eruptive 2: 6 Ilujankan + 3 Timeworn",
+        "Caroming 4 Eruptive 2: 6 Shadow + 3 Timeworn",
+        "Lunging 4 Eruptive 2: 6 Avernic + 3 Timeworn"
+      ],
       "planner_value": "A major high-level combat-perk bottleneck that cannot be bypassed by Scavenging; selected Archaeology access therefore directly affects advanced weapon perk practicality.",
       "source_url": "https://runescape.wiki/w/Ancient_Invention",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -54,27 +62,41 @@
   "archaeology_disassembly_bands": [
     {
       "archaeology_level_band": "5-70",
-      "ancient_component_result": ["~80%: 20 Historic", "~18%: 5 Classic", "~1%: 1 Timeworn", "~1%: 1 Vintage"],
+      "ancient_component_result": [
+        "~80%: 20 Historic",
+        "~18%: 5 Classic",
+        "~1%: 1 Timeworn",
+        "~1%: 1 Vintage"
+      ],
       "planner_note": "Low-level restored artefacts are the strong Historic/Classic route. Results are guaranteed ancient-material rolls in addition to normal Invention materials.",
       "source_url": "https://runescape.wiki/w/Artefacts",
       "confidence": "confirmed_wiki"
     },
     {
       "archaeology_level_band": "71-90",
-      "ancient_component_result": ["50%: 2 Timeworn", "50%: 2 Vintage"],
+      "ancient_component_result": [
+        "50%: 2 Timeworn",
+        "50%: 2 Vintage"
+      ],
       "planner_note": "Higher-level artefacts switch away from the Historic/Classic-heavy distribution.",
       "source_url": "https://runescape.wiki/w/Artefacts",
       "confidence": "confirmed_wiki"
     },
     {
       "archaeology_level_band": "91-110",
-      "ancient_component_result": ["50%: 4 Timeworn", "50%: 4 Vintage"],
+      "ancient_component_result": [
+        "50%: 4 Timeworn",
+        "50%: 4 Vintage"
+      ],
       "source_url": "https://runescape.wiki/w/Artefacts",
       "confidence": "confirmed_wiki"
     },
     {
       "archaeology_level_band": "111-120",
-      "ancient_component_result": ["50%: 8 Timeworn", "50%: 8 Vintage"],
+      "ancient_component_result": [
+        "50%: 8 Timeworn",
+        "50%: 8 Vintage"
+      ],
       "source_url": "https://runescape.wiki/w/Artefacts",
       "confidence": "confirmed_wiki"
     }
@@ -82,67 +104,109 @@
   "current_perk_component_dependencies": [
     {
       "perk": "Precise 6",
-      "components": ["9 Historic"],
-      "region_pressure": ["multi-region Archaeology"],
+      "components": [
+        "9 Historic"
+      ],
+      "region_pressure": [
+        "multi-region Archaeology"
+      ],
       "recipe_context": "PvME starter weapon perk",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Eruptive 4",
-      "components": ["8 Timeworn"],
-      "region_pressure": ["high-level Archaeology supply"],
+      "components": [
+        "8 Timeworn"
+      ],
+      "region_pressure": [
+        "high-level Archaeology supply"
+      ],
       "recipe_context": "PvME starter weapon perk",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Aftershock 4 Eruptive 2",
-      "components": ["6 Ilujankan", "3 Timeworn"],
-      "region_pressure": ["desert for Vindicta/Ilujankan supply", "high-level Archaeology for Timeworn"],
+      "components": [
+        "6 Ilujankan",
+        "3 Timeworn"
+      ],
+      "region_pressure": [
+        "desert for Vindicta/Ilujankan supply",
+        "high-level Archaeology for Timeworn"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Caroming 4 Eruptive 2",
-      "components": ["6 Shadow", "3 Timeworn"],
-      "region_pressure": ["desert for Gregorovic/Shadow supply", "high-level Archaeology for Timeworn"],
+      "components": [
+        "6 Shadow",
+        "3 Timeworn"
+      ],
+      "region_pressure": [
+        "desert for Gregorovic/Shadow supply",
+        "high-level Archaeology for Timeworn"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Caroming 4 Aftershock 1",
-      "components": ["7 Shadow", "2 Ilujankan"],
-      "region_pressure": ["desert supplies both rare-component families through Heart of Gielinor"],
+      "components": [
+        "7 Shadow",
+        "2 Ilujankan"
+      ],
+      "region_pressure": [
+        "desert supplies both rare-component families through Heart of Gielinor"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Caroming 4 Planted Feet",
-      "components": ["6 Shadow", "3 Cywir"],
-      "region_pressure": ["desert supplies both Shadow and Cywir components through Heart of Gielinor"],
+      "components": [
+        "6 Shadow",
+        "3 Cywir"
+      ],
+      "region_pressure": [
+        "desert supplies both Shadow and Cywir components through Heart of Gielinor"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Lunging 4",
-      "components": ["6 Avernic"],
-      "region_pressure": ["desert for Twin Furies/Avernic supply"],
+      "components": [
+        "6 Avernic"
+      ],
+      "region_pressure": [
+        "desert for Twin Furies/Avernic supply"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current"
     },
     {
       "perk": "Flanking 4",
-      "components": ["9 Clockwork"],
-      "region_pressure": ["asgarnia has a direct Dwarf multicannon supply route; other clockwork sources remain possible"],
+      "components": [
+        "9 Clockwork"
+      ],
+      "region_pressure": [
+        "asgarnia has a direct Dwarf multicannon supply route; other clockwork sources remain possible"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "secondary_source_url": "https://runescape.wiki/w/Clockwork_components",
       "confidence": "cross_checked"
     },
     {
       "perk": "Absorbative 4",
-      "components": ["8 Fungal"],
-      "region_pressure": ["morytania for Ganodermic/Polypore supply"],
+      "components": [
+        "8 Fungal"
+      ],
+      "region_pressure": [
+        "morytania for Ganodermic/Polypore supply"
+      ],
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
       "confidence": "pvme_current_region_from_wiki_supply"
     }
@@ -166,7 +230,9 @@
       "region": "fremennik",
       "natural_source": "Hand cannons from the Chaos Dwarf Battlefield / Keldagrim progression",
       "example_return": "An augmented hand cannon disassembles for 7 Explosive components",
-      "requirements": ["Forgiveness of a Chaos Dwarf for the battlefield in normal-game progression"],
+      "requirements": [
+        "Forgiveness of a Chaos Dwarf for the battlefield in normal-game progression"
+      ],
       "historical_catalyst_evidence": "Catalyst classified Keldagrim under Fremennik: Mainland.",
       "source_url": "https://runescape.wiki/w/Explosive_components",
       "secondary_source_url": "https://runescape.wiki/w/Augmented_hand_cannon",
@@ -189,7 +255,10 @@
       "invention_level_to_use": 55,
       "region": "asgarnia",
       "natural_source": "Dwarf multicannon supply through the Dwarven Mine/Asgarnia route",
-      "alternate_sources": ["Crafted clockwork items", "Gizmos and gizmo shells"],
+      "alternate_sources": [
+        "Crafted clockwork items",
+        "Gizmos and gizmo shells"
+      ],
       "planner_value": "Directly feeds the current PvME Flanking 4 recipe.",
       "source_url": "https://runescape.wiki/w/Clockwork_components",
       "confidence": "confirmed_wiki_supply_region_from_canonical_Asgarnia_boundary"

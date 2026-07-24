@@ -3,21 +3,297 @@
   "purpose": "Common and uncommon Invention materials that appear in current PvME combat perk recipes. This is intentionally not a full low-tier material catalog; it records only materials that create a meaningful self-supply consideration for the planner.",
   "taxonomy_source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material",
   "materials": [
-    {"material":"Direct components","rarity":"uncommon","current_recipe_uses":["Biting 4 representative recipe"],"self_source_routes":["battleaxes, spears and hastae","pickaxes and mattocks","weapon shops and self-smithing"],"planner_classification":"global_with_asgarnia_efficient_shop_route","region_note":"The Warriors' Guild/Burthorpe route can make Asgarnia convenient, but Direct components are available from many weapon/tool sources and are not an Asgarnia gate.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Direct","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/invention-basics/","confidence":"wiki_material_pvme_self_source_guidance"},
-    {"material":"Blade parts","rarity":"common","current_recipe_uses":["Biting 4 representative recipe"],"self_source_routes":["steel-or-better darts","adamant javelins","adamant-or-better melee salvage","smithable bladed weapons"],"planner_classification":"global_smithing_and_salvage_supply","planner_note":"Blade parts are common enough that they should be modeled as a supply requirement, not a region-selection reason.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Blade","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/invention-basics/","confidence":"wiki_material_pvme_self_source_guidance"},
-    {"material":"Evasive components","rarity":"uncommon","current_recipe_uses":["Turtling 4","several lower-cost defensive perk combinations"],"self_source_routes":["dragonhide armour"],"planner_classification":"global_crafting_combat_supply","planner_note":"Dragonhide supply is broad enough that Evasive should not be hard-gated to one region.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Evasive","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/invention-basics/","confidence":"wiki_material_pvme_self_source_guidance"},
-    {"material":"Dextrous components","rarity":"uncommon","current_recipe_uses":["Reflexes combinations","Mobile/Demon Slayer style combinations where Dextrous is selected"],"self_source_routes":["yew-or-better shortbows","salamanders","crossbow-stock/limb families as secondary sources"],"planner_classification":"global_fletching_hunter_supply","planner_note":"Dextrous is normally a production/farming bottleneck rather than an elective-region gate.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Dextrous","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/invention-basics/","confidence":"wiki_material_pvme_self_source_guidance"},
-    {"material":"Organic parts","rarity":"common","current_recipe_uses":["Invigorating 4 representative recipe"],"self_source_routes":["cooked fish and other food","herbs/leaves","mementos and remains"],"planner_classification":"global_food_and_farming_supply","current_example":"Fish and chips, added with Havenhythe in March 2026, disassembles primarily into Organic parts and can also roll Enhancing and Living components.","planner_note":"Havenhythe has a convenient current example, but Organic parts are far too broad to count as a Havenhythe-exclusive benefit.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Organic","secondary_source_url":"https://runescape.wiki/w/Fish_and_chips","confidence":"confirmed_wiki_global_supply"},
-    {"material":"Enhancing components","rarity":"uncommon","current_recipe_uses":["Invigorating 4 representative recipe"],"self_source_routes":["orbs","potions and flasks","food/herb disassembly categories at low rates"],"planner_classification":"global_crafting_herblore_supply","planner_note":"Enhancing is a routine production material; track quantity pressure but do not award a region unless a League-specific source becomes materially dominant.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Enhancing","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/invention-basics/","confidence":"wiki_material_pvme_self_source_guidance"},
-    {"material":"Living components","rarity":"uncommon","current_recipe_uses":["Biting 4 Undead Slayer","Crackling 4 Undead Slayer","Impatient 4 Undead Slayer","Invigorating 4 Undead Slayer","Lucky 6 Undead Slayer"],"self_source_routes":["food and herbs","fish/produce disassembly categories"],"planner_classification":"global_food_and_farming_supply","current_example":"Fish and chips has a 1/100 Living-component slot in its food disassembly table.","planner_note":"The paired Undead component is the region-sensitive half of these recipes; Living itself is broadly sourced.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Living","secondary_source_url":"https://runescape.wiki/w/Fish_and_chips","confidence":"confirmed_wiki_global_supply"},
-    {"material":"Pious components","rarity":"uncommon","current_recipe_uses":["Lucky 6 Hoarding and related Hoarding combinations"],"self_source_routes":["bones and remains","ashes"],"planner_classification":"global_combat_prayer_necromancy_byproduct","source_rates":["bones/remains category: 2/100 Pious per non-junk material slot","ashes category: 1/100 Pious per non-junk material slot"],"planner_note":"Pious is naturally generated alongside combat/Prayer/Necromancy loops and should not be represented as a region gate.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Pious","secondary_source_url":"https://runescape.wiki/w/Category:Disassemble_category/bones","confidence":"confirmed_wiki_global_supply"},
-    {"material":"Subtle components","rarity":"uncommon","current_recipe_uses":["Mobile combinations across Biting, Equilibrium, Impatient, Invigorating, Turtling and Ultimatums","Absorbative 4 Crystal Shield 1"],"self_source_routes":["scimitars","whips","defenders/reprisers/rebounders"],"planner_classification":"global_melee_equipment_supply","planner_note":"Subtle is a frequent Mobile-combination ingredient but is broadly self-sourceable; it should affect component stock, not region selection by itself.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Subtle","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/perks/","confidence":"confirmed_wiki_source_family_pvme_current_recipe_use"},
-    {"material":"Flexible parts","rarity":"common","current_recipe_uses":["Equilibrium 4 Mobile","Demon Slayer Mobile and related Mobile combinations"],"self_source_routes":["bows","whips","Summoning pouches"],"planner_classification":"global_fletching_summoning_supply","planner_note":"Flexible parts are common and widely available. Their presence in Mobile recipes is a production requirement, not a hard region dependency.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Flexible","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/perks/","confidence":"confirmed_wiki_source_family_pvme_current_recipe_use"},
-    {"material":"Healthy components","rarity":"uncommon","current_recipe_uses":["Biting 2 Venomblood variants"],"self_source_routes":["food","herbs","potions and flasks","crystal tree blossoms"],"planner_classification":"global_food_herblore_supply","current_example":"Fish and chips can roll Healthy components at 1/100 in its food disassembly table.","planner_note":"Healthy supply overlaps routine food/Herblore loops and is not a useful elective-region gate.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Healthy","secondary_source_url":"https://runescape.wiki/w/Fish_and_chips","confidence":"confirmed_wiki_global_supply"},
-    {"material":"Variable components","rarity":"uncommon","current_recipe_uses":["Clear Headed 4 and utility perk combinations"],"self_source_routes":["miscellaneous/default disassembly items","clothing","defender pieces","harralander or tarromin tar as practical self-made examples"],"planner_classification":"global_miscellaneous_supply","planner_note":"Variable is intentionally modeled as a broad miscellaneous material rather than assigned to the location of any one efficient item source.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Variable","secondary_source_url":"https://runescape.wiki/w/Harralander_tar","confidence":"confirmed_wiki_global_supply"},
-    {"material":"Connector parts","rarity":"common","current_recipe_uses":["Planted Feet Mobile and other utility combinations"],"self_source_routes":["crossbows and stocks","jewellery","claws","whips","hatchets"],"planner_classification":"global_crafting_fletching_equipment_supply","planner_note":"Connector is a common material with many source families; keep it in recipe accounting but out of region scoring.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Connector","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/perks/","confidence":"confirmed_wiki_source_family_pvme_current_recipe_use"},
-    {"material":"Imbued components","rarity":"uncommon","current_recipe_uses":["Ultimatums 4 Energising 2 variants","Energising/Crackling utility recipes"],"self_source_routes":["staves","wands","gizmos and gizmo shells"],"planner_classification":"global_magic_equipment_supply","planner_note":"Imbued is a magic-equipment disassembly requirement, not a single-region bottleneck.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Imbued","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/perks/","confidence":"confirmed_wiki_source_family_pvme_current_recipe_use"},
-    {"material":"Precise components","rarity":"uncommon","current_recipe_uses":["Precise/Eruptive variants and lower-cost weapon perk combinations"],"self_source_routes":["shieldbows","shortbows","spears and hastae","wands"],"planner_classification":"global_fletching_weapon_supply","planner_note":"Precise can be farmed through broad bow/weapon production; record the material need without making a region claim.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Precise","secondary_source_url":"https://pvme.io/pvme-guides/invention-and-perks/perks/","confidence":"confirmed_wiki_source_family_pvme_current_recipe_use"},
-    {"material":"Base parts","rarity":"common","current_recipe_uses":["Dragon Slayer Undead Slayer"],"self_source_routes":["bolts and bolt tips","weapons with hilts","shields","pickaxes","wands","warhammers and maces"],"planner_classification":"global_equipment_and_fletching_supply","region_note":"White Knight and Burthorpe shop routes can make Asgarnia efficient, but Base parts have hundreds of sources and are not an Asgarnia gate.","source_url":"https://runescape.wiki/w/Calculator:Disassembly_by_material/Base","confidence":"confirmed_wiki_global_supply"}
+    {
+      "material": "Direct components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Biting 4 representative recipe"
+      ],
+      "self_source_routes": [
+        "battleaxes, spears and hastae",
+        "pickaxes and mattocks",
+        "weapon shops and self-smithing"
+      ],
+      "planner_classification": "global_with_asgarnia_efficient_shop_route",
+      "region_note": "The Warriors' Guild/Burthorpe route can make Asgarnia convenient, but Direct components are available from many weapon/tool sources and are not an Asgarnia gate.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Direct",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "confidence": "wiki_material_pvme_self_source_guidance"
+    },
+    {
+      "material": "Blade parts",
+      "rarity": "common",
+      "current_recipe_uses": [
+        "Biting 4 representative recipe"
+      ],
+      "self_source_routes": [
+        "steel-or-better darts",
+        "adamant javelins",
+        "adamant-or-better melee salvage",
+        "smithable bladed weapons"
+      ],
+      "planner_classification": "global_smithing_and_salvage_supply",
+      "planner_note": "Blade parts are common enough that they should be modeled as a supply requirement, not a region-selection reason.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Blade",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "confidence": "wiki_material_pvme_self_source_guidance"
+    },
+    {
+      "material": "Evasive components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Turtling 4",
+        "several lower-cost defensive perk combinations"
+      ],
+      "self_source_routes": [
+        "dragonhide armour"
+      ],
+      "planner_classification": "global_crafting_combat_supply",
+      "planner_note": "Dragonhide supply is broad enough that Evasive should not be hard-gated to one region.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Evasive",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "confidence": "wiki_material_pvme_self_source_guidance"
+    },
+    {
+      "material": "Dextrous components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Reflexes combinations",
+        "Mobile/Demon Slayer style combinations where Dextrous is selected"
+      ],
+      "self_source_routes": [
+        "yew-or-better shortbows",
+        "salamanders",
+        "crossbow-stock/limb families as secondary sources"
+      ],
+      "planner_classification": "global_fletching_hunter_supply",
+      "planner_note": "Dextrous is normally a production/farming bottleneck rather than an elective-region gate.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Dextrous",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "confidence": "wiki_material_pvme_self_source_guidance"
+    },
+    {
+      "material": "Organic parts",
+      "rarity": "common",
+      "current_recipe_uses": [
+        "Invigorating 4 representative recipe"
+      ],
+      "self_source_routes": [
+        "cooked fish and other food",
+        "herbs/leaves",
+        "mementos and remains"
+      ],
+      "planner_classification": "global_food_and_farming_supply",
+      "current_example": "Fish and chips, added with Havenhythe in March 2026, disassembles primarily into Organic parts and can also roll Enhancing and Living components.",
+      "planner_note": "Havenhythe has a convenient current example, but Organic parts are far too broad to count as a Havenhythe-exclusive benefit.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Organic",
+      "secondary_source_url": "https://runescape.wiki/w/Fish_and_chips",
+      "confidence": "confirmed_wiki_global_supply"
+    },
+    {
+      "material": "Enhancing components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Invigorating 4 representative recipe"
+      ],
+      "self_source_routes": [
+        "orbs",
+        "potions and flasks",
+        "food/herb disassembly categories at low rates"
+      ],
+      "planner_classification": "global_crafting_herblore_supply",
+      "planner_note": "Enhancing is a routine production material; track quantity pressure but do not award a region unless a League-specific source becomes materially dominant.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Enhancing",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "confidence": "wiki_material_pvme_self_source_guidance"
+    },
+    {
+      "material": "Living components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Biting 4 Undead Slayer",
+        "Crackling 4 Undead Slayer",
+        "Impatient 4 Undead Slayer",
+        "Invigorating 4 Undead Slayer",
+        "Lucky 6 Undead Slayer"
+      ],
+      "self_source_routes": [
+        "food and herbs",
+        "fish/produce disassembly categories"
+      ],
+      "planner_classification": "global_food_and_farming_supply",
+      "current_example": "Fish and chips has a 1/100 Living-component slot in its food disassembly table.",
+      "planner_note": "The paired Undead component is the region-sensitive half of these recipes; Living itself is broadly sourced.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Living",
+      "secondary_source_url": "https://runescape.wiki/w/Fish_and_chips",
+      "confidence": "confirmed_wiki_global_supply"
+    },
+    {
+      "material": "Pious components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Lucky 6 Hoarding and related Hoarding combinations"
+      ],
+      "self_source_routes": [
+        "bones and remains",
+        "ashes"
+      ],
+      "planner_classification": "global_combat_prayer_necromancy_byproduct",
+      "source_rates": [
+        "bones/remains category: 2/100 Pious per non-junk material slot",
+        "ashes category: 1/100 Pious per non-junk material slot"
+      ],
+      "planner_note": "Pious is naturally generated alongside combat/Prayer/Necromancy loops and should not be represented as a region gate.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Pious",
+      "secondary_source_url": "https://runescape.wiki/w/Category:Disassemble_category/bones",
+      "confidence": "confirmed_wiki_global_supply"
+    },
+    {
+      "material": "Subtle components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Mobile combinations across Biting, Equilibrium, Impatient, Invigorating, Turtling and Ultimatums",
+        "Absorbative 4 Crystal Shield 1"
+      ],
+      "self_source_routes": [
+        "scimitars",
+        "whips",
+        "defenders/reprisers/rebounders"
+      ],
+      "planner_classification": "global_melee_equipment_supply",
+      "planner_note": "Subtle is a frequent Mobile-combination ingredient but is broadly self-sourceable; it should affect component stock, not region selection by itself.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Subtle",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "confirmed_wiki_source_family_pvme_current_recipe_use"
+    },
+    {
+      "material": "Flexible parts",
+      "rarity": "common",
+      "current_recipe_uses": [
+        "Equilibrium 4 Mobile",
+        "Demon Slayer Mobile and related Mobile combinations"
+      ],
+      "self_source_routes": [
+        "bows",
+        "whips",
+        "Summoning pouches"
+      ],
+      "planner_classification": "global_fletching_summoning_supply",
+      "planner_note": "Flexible parts are common and widely available. Their presence in Mobile recipes is a production requirement, not a hard region dependency.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Flexible",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "confirmed_wiki_source_family_pvme_current_recipe_use"
+    },
+    {
+      "material": "Healthy components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Biting 2 Venomblood variants"
+      ],
+      "self_source_routes": [
+        "food",
+        "herbs",
+        "potions and flasks",
+        "crystal tree blossoms"
+      ],
+      "planner_classification": "global_food_herblore_supply",
+      "current_example": "Fish and chips can roll Healthy components at 1/100 in its food disassembly table.",
+      "planner_note": "Healthy supply overlaps routine food/Herblore loops and is not a useful elective-region gate.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Healthy",
+      "secondary_source_url": "https://runescape.wiki/w/Fish_and_chips",
+      "confidence": "confirmed_wiki_global_supply"
+    },
+    {
+      "material": "Variable components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Clear Headed 4 and utility perk combinations"
+      ],
+      "self_source_routes": [
+        "miscellaneous/default disassembly items",
+        "clothing",
+        "defender pieces",
+        "harralander or tarromin tar as practical self-made examples"
+      ],
+      "planner_classification": "global_miscellaneous_supply",
+      "planner_note": "Variable is intentionally modeled as a broad miscellaneous material rather than assigned to the location of any one efficient item source.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Variable",
+      "secondary_source_url": "https://runescape.wiki/w/Harralander_tar",
+      "confidence": "confirmed_wiki_global_supply"
+    },
+    {
+      "material": "Connector parts",
+      "rarity": "common",
+      "current_recipe_uses": [
+        "Planted Feet Mobile and other utility combinations"
+      ],
+      "self_source_routes": [
+        "crossbows and stocks",
+        "jewellery",
+        "claws",
+        "whips",
+        "hatchets"
+      ],
+      "planner_classification": "global_crafting_fletching_equipment_supply",
+      "planner_note": "Connector is a common material with many source families; keep it in recipe accounting but out of region scoring.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Connector",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "confirmed_wiki_source_family_pvme_current_recipe_use"
+    },
+    {
+      "material": "Imbued components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Ultimatums 4 Energising 2 variants",
+        "Energising/Crackling utility recipes"
+      ],
+      "self_source_routes": [
+        "staves",
+        "wands",
+        "gizmos and gizmo shells"
+      ],
+      "planner_classification": "global_magic_equipment_supply",
+      "planner_note": "Imbued is a magic-equipment disassembly requirement, not a single-region bottleneck.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Imbued",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "confirmed_wiki_source_family_pvme_current_recipe_use"
+    },
+    {
+      "material": "Precise components",
+      "rarity": "uncommon",
+      "current_recipe_uses": [
+        "Precise/Eruptive variants and lower-cost weapon perk combinations"
+      ],
+      "self_source_routes": [
+        "shieldbows",
+        "shortbows",
+        "spears and hastae",
+        "wands"
+      ],
+      "planner_classification": "global_fletching_weapon_supply",
+      "planner_note": "Precise can be farmed through broad bow/weapon production; record the material need without making a region claim.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Precise",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "confirmed_wiki_source_family_pvme_current_recipe_use"
+    },
+    {
+      "material": "Base parts",
+      "rarity": "common",
+      "current_recipe_uses": [
+        "Dragon Slayer Undead Slayer"
+      ],
+      "self_source_routes": [
+        "bolts and bolt tips",
+        "weapons with hilts",
+        "shields",
+        "pickaxes",
+        "wands",
+        "warhammers and maces"
+      ],
+      "planner_classification": "global_equipment_and_fletching_supply",
+      "region_note": "White Knight and Burthorpe shop routes can make Asgarnia efficient, but Base parts have hundreds of sources and are not an Asgarnia gate.",
+      "source_url": "https://runescape.wiki/w/Calculator:Disassembly_by_material/Base",
+      "confidence": "confirmed_wiki_global_supply"
+    }
   ]
 }

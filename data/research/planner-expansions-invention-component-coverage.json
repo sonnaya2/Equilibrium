@@ -10,7 +10,10 @@
       "component": "Ascended",
       "invention_level_to_use": 99,
       "planner_classification": "global_high_level_combat_with_optional_kandarin_route",
-      "primary_sources": ["Sirenic equipment", "Ascension crossbows and grips"],
+      "primary_sources": [
+        "Sirenic equipment",
+        "Ascension crossbows and grips"
+      ],
       "planner_value": "The family is legitimate but is not a clean elective-region gate: Sirenic supply is distributed, while Ascension equipment provides an optional Kandarin route through the Monastery of Ascension.",
       "source_url": "https://runescape.wiki/w/Ascended_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -30,7 +33,10 @@
       "component": "Culinary",
       "invention_level_to_use": 45,
       "planner_classification": "quest_progression_not_hard_region",
-      "primary_sources": ["Kitchen weaponry", "Culinaromancer's gloves"],
+      "primary_sources": [
+        "Kitchen weaponry",
+        "Culinaromancer's gloves"
+      ],
       "planner_value": "Current PvME Invigorating recipes consume Culinary components. Culinaromancer gloves depend on Recipe for Disaster progression, so the official Equilibrium quest-auto-completion overlay should be applied before turning this into a manual regional gate.",
       "source_url": "https://runescape.wiki/w/Culinary_components_(blueprint)",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -40,7 +46,10 @@
       "component": "Knightly",
       "invention_level_to_use": 34,
       "planner_classification": "asgarnia_efficient_nonexclusive",
-      "primary_sources": ["White equipment", "Black equipment"],
+      "primary_sources": [
+        "White equipment",
+        "Black equipment"
+      ],
       "planner_value": "Asgarnia has an efficient White Knight equipment route, but black equipment makes Knightly components nonexclusive. This matters for combinations such as Turtling 3 Taunting without pretending Asgarnia is mandatory.",
       "source_url": "https://runescape.wiki/w/Knightly_components",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
@@ -51,8 +60,19 @@
       "invention_level_to_use": 79,
       "release_date": "2025-05-12",
       "planner_classification": "global_craft_and_runecrafting_supply_rate_research_incomplete",
-      "primary_source_classes": ["upgraded smithing equipment", "runecrafting tiaras and talismans", "eternal-wood equipment and storage"],
-      "confirmed_examples": ["Fire tiara", "Blood tiara", "Law tiara", "Eternal magic wood box", "Eternal magic shortbow Mk. 2", "Primal platebody + 5"],
+      "primary_source_classes": [
+        "upgraded smithing equipment",
+        "runecrafting tiaras and talismans",
+        "eternal-wood equipment and storage"
+      ],
+      "confirmed_examples": [
+        "Fire tiara",
+        "Blood tiara",
+        "Law tiara",
+        "Eternal magic wood box",
+        "Eternal magic shortbow Mk. 2",
+        "Primal platebody + 5"
+      ],
       "planner_value": "Manufactured is a real rare component and participates directly in current Equilibrium perk recipes. The Wiki confirms many source items but still marks several special disassembly chances as under research, so the planner records source classes without inventing a per-item drop rate.",
       "source_url": "https://runescape.wiki/w/Manufactured_components_(blueprint)",
       "secondary_source_url": "https://runescape.wiki/w/Equilibrium",

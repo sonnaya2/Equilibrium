@@ -1,3 +1,6 @@
+import { Page } from "@/components/Page";
+import { PageHeading } from "@/components/Heading";
+
 const CREDITS = [
   {
     name: "RuneScape Wiki",
@@ -28,24 +31,27 @@ const CREDITS = [
 
 export default function SourcesPage() {
   return (
-    <section>
-      <h1 className="font-mono text-xs tracking-[0.2em] text-brass-400">SOURCES &amp; CREDITS</h1>
-      <p className="mt-3 max-w-prose text-sm text-parch-300">
-        Every combat number in this tool is meant to trace back to a source. If a figure here disagrees
-        with the game, the source reference attached to it is the place to start.
-      </p>
-      <dl className="mt-6 space-y-5">
+    <Page>
+      <PageHeading
+        title="Sources & credits"
+        note="Every combat number in this tool traces back to a source. When a figure disagrees with the game, the source reference attached to it is the place to start."
+      />
+      <dl>
         {CREDITS.map((c) => (
-          <div key={c.name}>
+          <div key={c.name} className="border-b border-stone-800 py-3 last:border-b-0">
             <dt className="text-sm">
-              <a href={c.url} className="text-brass-400 hover:underline" rel="noreferrer noopener">
+              <a
+                href={c.url}
+                className="font-medium text-parch-50 transition-colors duration-150 hover:text-brass-300"
+                rel="noreferrer noopener"
+              >
                 {c.name}
               </a>
             </dt>
-            <dd className="max-w-prose text-sm text-parch-300">{c.note}</dd>
+            <dd className="mt-0.5 max-w-prose text-sm text-parch-300">{c.note}</dd>
           </div>
         ))}
       </dl>
-    </section>
+    </Page>
   );
 }

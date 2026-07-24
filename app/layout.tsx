@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Cinzel } from "next/font/google";
 import "./globals.css";
+import { Nav } from "@/components/Nav";
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "RS3 Equilibrium",
@@ -8,42 +16,22 @@ export const metadata: Metadata = {
     "Planner and combat calculator for RuneScape 3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
 };
 
-const NAV = [
-  ["/", "Overview"],
-  ["/map", "Map"],
-  ["/tasks", "Tasks"],
-  ["/build", "Build"],
-  ["/combat", "Combat"],
-  ["/data", "Data"],
-] as const;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen font-sans antialiased">
-        <header className="border-b border-stone-750">
-          <nav className="mx-auto flex max-w-6xl items-baseline gap-6 px-4 py-3">
-            <Link href="/" className="font-mono text-sm tracking-[0.2em] text-brass-400">
-              EQUILIBRIUM
+    <html lang="en" className={cinzel.variable}>
+      <body className="flex min-h-screen flex-col bg-stone-950 font-sans text-parch-50 antialiased">
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <footer className="border-t border-stone-750">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-2 px-4 py-4 text-xs text-parch-500">
+            <span>
+              Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex
+              Ltd.
+            </span>
+            <Link href="/sources" className="text-parch-300 transition-colors duration-150 hover:text-parch-50">
+              Sources &amp; credits
             </Link>
-            <ul className="flex gap-4 text-sm text-parch-300">
-              {NAV.map(([href, label]) => (
-                <li key={href}>
-                  <Link href={href} className="hover:text-parch-50">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="mx-auto max-w-6xl px-4 py-8 text-xs text-parch-300">
-          <Link href="/sources" className="hover:text-parch-50">
-            Sources &amp; Credits
-          </Link>
-          <span className="px-2">·</span>
-          Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
+          </div>
         </footer>
       </body>
     </html>

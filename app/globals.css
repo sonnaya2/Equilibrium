@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Placeholder base only. Real visual direction is a later pass: load no-slop-ui
+   before touching this file, then ui-humanizer for surgery. */
+@theme {
+  --color-parch-50: #e8e3d6;
+  --color-parch-300: #a99f88;
+  --color-stone-750: #23211d;
+  --color-stone-850: #171613;
+  --color-stone-950: #0e0d0b;
+  --color-brass-400: #c9a227;
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Consolas", monospace;
+}
+
+html,
+body {
+  background: var(--color-stone-950);
+  color: var(--color-parch-50);
+}

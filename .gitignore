@@ -1,0 +1,102 @@
+# Dependencies / build
+node_modules/
+.next/
+/out/
+/dist/
+/build/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+.turbo/
+.cache/
+.eslintcache
+
+# NOTE: build/ out/ and data/ are anchored with a leading slash on purpose.
+# app/build/ and app/data/ are App Router routes - an unanchored pattern
+# would silently untrack them.
+
+# ---------------------------------------------------------------------------
+# Secrets / env - never commit real credentials
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+.env*.local
+.env.vercel
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*credentials*
+*service-account*.json
+.npmrc
+!.npmrc.example
+.netrc
+certificates/
+
+# IDE / personal agent state
+.vscode/
+.idea/
+.cursor/
+.cursor
+.agents/
+.grok/
+*.kate-swp
+
+# Claude project configuration is tracked.
+# Only machine-specific state and mutable local work stay untracked.
+CLAUDE.local.md
+TASKS.local.md
+.claude/settings.local.json
+.claude/memory/
+.claude/transcripts/
+.claude/sessions/
+.claude/worktrees/
+
+# Agent install scaffolding - not project documentation
+README-FIRST.md
+CHANGES.md
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local scratch / scraped intermediates.
+# Canonical datasets under data/combat/ and data/league/ ARE tracked - only
+# raw scraper dumps and caches stay out.
+/scratch/
+/exports/
+/logs/
+.wiki-cache/
+data/**/*.raw.json
+data/**/.cache/
+
+# Playwright / E2E artifacts
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Vercel CLI (deploy metadata / project link)
+.vercel
+
+# Local design mockups
+design-previews/
+
+# Yarn PnP (defensive; this repo uses npm)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions

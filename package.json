@@ -1,0 +1,29 @@
+{
+  "name": "rs3-equilibrium",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "sync:combat": "node scripts/sync-combat-data.ts",
+    "sync:league": "node scripts/sync-league-data.ts"
+  },
+  "dependencies": {
+    "next": "^16.2.11",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

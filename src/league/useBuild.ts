@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
 import {
   emptyBuild,
@@ -11,25 +11,48 @@ import {
   type RegionId,
 } from "./index";
 
-export function useBuild() {
-  const [build, setBuild] = useState<BuildState>(emptyBuild);
-  const [loaded, setLoaded] = useState(false);
+/**
+ * One shared build store for the whole app — map, planner, build, and combat
+ * all read and mutate this single instance. Module-local state is only ever
+ * written client-side (user actions, localStorage hydrate); server renders
+ * always see the empty build.
+ */
 
-  // localStorage is client-only; hydrate after mount so server and first client render agree.
+let state: BuildState = emptyBuild();
+let hydrated = false;
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function setState(next: BuildState) {
+  state = next;
+  saveState(STORAGE_KEY, next);
+  listeners.forEach((l) => l());
+}
+
+export function useBuild() {
+  // Server snapshot stays the empty build so hydration matches; real state
+  // loads from localStorage after mount.
+  const build = useSyncExternalStore(subscribe, () => state, emptyBuild);
+  const [loaded, setLoaded] = useState(hydrated);
+
   useEffect(() => {
-    setBuild(normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
+    if (!hydrated) {
+      hydrated = true;
+      setState(normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
+    }
     setLoaded(true);
   }, []);
-
-  const update = (next: BuildState) => {
-    setBuild(next);
-    saveState(STORAGE_KEY, next);
-  };
 
   return {
     build,
     loaded,
-    toggleRegion: (id: RegionId) => update(toggleElective(build, id)),
-    resetBuild: () => update(emptyBuild()),
+    toggleRegion: (id: RegionId) => setState(toggleElective(build, id)),
+    resetBuild: () => setState(emptyBuild()),
   };
 }

@@ -141,15 +141,30 @@ input:focus-visible {
     color: var(--color-parch-300);
   }
 
-  /* Region names floating over the 3D map. */
-  .map-label {
-    font-size: 11px;
-    letter-spacing: 0.05em;
+  /* Hover chip over a region marker on the 3D map. */
+  .map-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 3px 8px;
     white-space: nowrap;
     user-select: none;
+    background: rgba(14, 13, 11, 0.88);
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+  }
+
+  .map-chip-name {
+    font-size: 11px;
+    letter-spacing: 0.05em;
     color: var(--color-parch-50);
-    text-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.9),
-      0 0 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .map-chip-state {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-parch-300);
   }
 }

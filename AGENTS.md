@@ -88,9 +88,10 @@ EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 
 ## Map route — 3D, and the project's main technical risk
 
-The Map is **genuinely 3D**: a stylised 3D Gielinor with selectable regions that visibly lock/unlock as
-the build changes. It is the app's signature surface and its single largest bundle and performance risk,
-so it is fenced off from the rest of the app.
+The Map is **genuinely 3D**: the official league region map (`public/map/league-map.jpg`, from Jagex's
+reveal post — credited under the map) rendered as a flat plane in a 3D scene, with selectable region
+markers that visibly lock/unlock as the build changes. It is the app's signature surface and its single
+largest bundle and performance risk, so it is fenced off from the rest of the app.
 
 - **Stack**: `three` + `@react-three/fiber` (v9) + `@react-three/drei`. Next 13.1+ transpiles `three`
   natively — do **not** add `next-transpile-modules`.
@@ -98,11 +99,13 @@ so it is fenced off from the rest of the app.
   (`"use client"`), loaded from the Map route via `next/dynamic` with `ssr: false` behind a real
   skeleton. Nothing outside `app/map/` may import from the 3D bundle. If `three` shows up in the
   shared chunk, that's a bug — every other route must stay static and light.
-- **Region geometry is data, not art.** Region shapes/positions live in `data/league/regions.json`
-  alongside the rest of the region model, so the map and the Build planner read one source. The 3D
-  layer renders that data; it must not hardcode a region list of its own.
-- **The map is a view over build state, never its own store.** Selecting a region on the map and
-  selecting it in Build > Regions mutate the same state and must stay in sync automatically.
+- **Region overlay is data, not art.** Marker positions/display names live in
+  `src/map/data/regionAnchors.ts` (our measured overlay on the map texture); gameplay facts stay in
+  `data/league/regions.json` and join by id. The 3D layer renders that data; it must not hardcode a
+  region list of its own.
+- **The map is a view over build state, never its own store.** `src/league/useBuild.ts` is one shared
+  store — selecting a region on the map, in the planner, or in Build mutates the same state and stays
+  in sync automatically.
 - **Non-negotiable fallback.** Ship a 2D fallback for WebGL-unavailable, mobile-constrained, and
   `prefers-reduced-motion` users. Region planning must be fully completable without the 3D map ever
   loading — the 3D is the good version of the experience, not a dependency of it.

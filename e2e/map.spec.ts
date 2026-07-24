@@ -50,5 +50,5 @@ test("region detail joins against verified data", async ({ page }) => {
 
 test("wilderness shows the Daemonheim hard rule", async ({ page }) => {
   await page.getByRole("button", { name: /^Wilderness/ }).click();
-  await expect(page.getByText(/Daemonheim \(Dungeoneering\) is only available with this region/)).toBeVisible();
+  await expect(page.getByText(/Dungeoneering\/Daemonheim as unavailable/)).toBeVisible();
 });

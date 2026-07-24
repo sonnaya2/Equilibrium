@@ -8,7 +8,7 @@ import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
 /**
  * RenderPipeline + MRT selective bloom: only the emissive channel blooms,
- * so unlocked gem-light swells without washing the terrain out.
+ * so unlocked gem-light swells without washing the map texture out.
  * useFrame priority 1 takes over rendering from R3F.
  */
 export function Effects() {

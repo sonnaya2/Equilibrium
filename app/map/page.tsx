@@ -2,6 +2,7 @@ import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
 import { MapLoader } from "@/map/MapLoader";
 import { RegionPlanner, type PlannerRegion } from "@/map/RegionPlanner";
+import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { getResearchCatalog } from "@/research/catalog";
 import type { RegionId } from "@/league";
 
@@ -15,13 +16,15 @@ export default function MapPage() {
   const catalog = getResearchCatalog();
   const plannerRegions: PlannerRegion[] = catalog.regions.map((r) => ({
     id: r.id as RegionId,
-    name: r.name,
+    // In-game display names (Wilderness, Kharidian Desert, …) are our overlay
+    // data in regionAnchors; the catalog keeps the short data names.
+    name: REGION_ANCHOR_BY_ID.get(r.id as RegionId)?.name ?? r.name,
     availability: r.availability as PlannerRegion["availability"],
     areas: r.areas,
     content: r.content.map((c) => ({ name: c.name, kind: c.kind, confidence: c.confidence })),
     hardRules: r.hardRules,
     warnings: r.warnings,
-    sourceTitle: r.source?.title ?? null,
+    sourceCount: (r.source ? 1 : 0) + r.content.filter((c) => c.source).length,
     verifiedAt: r.source?.verifiedAt ?? null,
   }));
 
@@ -51,7 +54,9 @@ export default function MapPage() {
           <tbody>
             {catalog.regions.map((region) => (
               <tr key={region.id}>
-                <td className="font-medium text-parch-50">{region.name}</td>
+                <td className="font-medium text-parch-50">
+                  {REGION_ANCHOR_BY_ID.get(region.id as RegionId)?.name ?? region.name}
+                </td>
                 <td>{accessLabel(region.availability)}</td>
                 <td>{region.areas.join(" · ") || "—"}</td>
                 <td className="num">{region.training.length}</td>

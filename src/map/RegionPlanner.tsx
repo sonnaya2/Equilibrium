@@ -22,7 +22,8 @@ export interface PlannerRegion {
   content: Array<{ name: string; kind: string; confidence: string }>;
   hardRules: string[];
   warnings: string[];
-  sourceTitle: string | null;
+  /** Region-level source plus every content-level source. */
+  sourceCount: number;
   verifiedAt: string | null;
 }
 
@@ -180,7 +181,8 @@ export function RegionPlanner({ regions }: { regions: PlannerRegion[] }) {
             ))}
 
             <p className="num mt-4 text-xs text-parch-500">
-              {detail.sourceTitle ?? "No source"} · verified {detail.verifiedAt ?? "never"}
+              {detail.sourceCount} source{detail.sourceCount === 1 ? "" : "s"} · verified{" "}
+              {detail.verifiedAt ?? "never"}
             </p>
           </div>
         </section>

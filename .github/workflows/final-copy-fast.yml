@@ -1,0 +1,54 @@
+name: Final copy fast pass
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/final-copy-fast.yml
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Finish public data copy
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'src/components/ResearchBrowser.tsx';
+          let s = fs.readFileSync(path, 'utf8');
+          const pairs = [
+            ['if (!normalized || normalized === "unclassified") return "Unclassified";', 'if (!normalized || normalized === "unclassified") return "Not checked";'],
+            ['if (normalized.includes("current_2026_content")) return "Current 2026 content";', 'if (normalized.includes("current_2026_content")) return "Current";'],
+            ['Skills with mapped methods/content', 'Skills here'],
+            ['No skill tags yet.', 'No skills listed yet.'],
+            ['No fixed region dependency listed yet.', 'No single region requirement listed yet.']
+          ];
+          for (const [from, to] of pairs) {
+            if (!s.includes(from)) throw new Error(`Missing copy target: ${from}`);
+            s = s.replace(from, to);
+          }
+          fs.writeFileSync(path, s);
+          NODE
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/ResearchBrowser.tsx
+          git commit -m "Finish human copy pass"
+          git pull --rebase origin main
+          git push origin HEAD:main

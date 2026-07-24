@@ -241,6 +241,47 @@
       "source_url": "https://runescape.wiki/w/Extinction/Quick_guide",
       "confidence": "confirmed_wiki",
       "league_treatment": "Base-game quest/item dependency only. Apply any Equilibrium passive that replaces this route after base progression."
+    },
+    {
+      "id": "the-dig-site:codex-ultimatus-current-abilities",
+      "quest": "The Dig Site",
+      "category": "combat abilities",
+      "region_hint": "misthalin",
+      "unlocks": [
+        {
+          "name": "Shadow Tendrils",
+          "type": "ability",
+          "style": "Ranged",
+          "level_requirement": 75
+        },
+        {
+          "name": "Smoke Tendrils",
+          "type": "ability",
+          "style": "Magic",
+          "level_requirement": 75
+        },
+        {
+          "name": "Ice Asylum",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 91
+        }
+      ],
+      "historical_removed_unlocks": [
+        {
+          "name": "Blood Tendrils",
+          "style": "Melee",
+          "removed_at": "2026-03-02",
+          "reason": "Removed during Combat Style Modernisation; older Dig Site/Codex pages may still list the historical four-ability reward."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Quests/Rewards",
+        "https://runescape.wiki/w/Abilities",
+        "https://runescape.wiki/w/Blood_Tendrils_(status)"
+      ],
+      "confidence": "confirmed_current_wiki_post_2026_with_stale_quest_page_guard",
+      "league_treatment": "Resolve The Dig Site through the official Equilibrium auto-quest overlay before manually gating these three current abilities. Do not restore Blood Tendrils as an Equilibrium unlock unless Jagex explicitly reintroduces it."
     }
   ],
   "account_unlocks": [

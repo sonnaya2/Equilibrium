@@ -1,3 +1,4 @@
+# One-shot audit pass; remove after the generated data commit lands.
 name: Ground truth cleanup
 
 on:
@@ -39,7 +40,6 @@ jobs:
           const catalystTasks = 'https://runescape.wiki/w/Catalyst_League/Tasks';
           const moonrise = 'https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise';
 
-          // Region facts and live Havenhythe content.
           const regions = load('scraped-data/regions.json');
           regions.scope_note = 'High-value region dependency map for Equilibrium. Official Equilibrium examples are used where published; older Catalyst locality labels are retained only as clearly marked League precedent for boundaries that Equilibrium has not published yet.';
 
@@ -99,7 +99,6 @@ jobs:
           asgarnia.boundary_rule = 'Use Asgarnia for Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. Equilibrium explicitly places God Wars Dungeon in Asgarnia; Catalyst also grouped Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia.';
           save('scraped-data/regions.json', regions);
 
-          // Replace user-only boundary evidence with public League sources.
           const deps = load('scraped-data/region-dependencies.json');
           deps.purpose = 'Hard region requirements and working boundary rules used by the planner. Current Equilibrium sources take priority; Catalyst is used only as historical League evidence where the new League has not published a finer boundary.';
           deps.boundary_overrides = [{
@@ -136,7 +135,6 @@ jobs:
           delete deps.user_reference;
           save('scraped-data/region-dependencies.json', deps);
 
-          // Live Moonrise unlocks.
           const upgrades = load('scraped-data/major-upgrades-by-region.json');
           upgrades.regions.havenhythe = upgrades.regions.havenhythe || [];
           const moonriseUpgrade = {
@@ -154,7 +152,6 @@ jobs:
           else upgrades.regions.havenhythe[upgradeIndex] = moonriseUpgrade;
           save('scraped-data/major-upgrades-by-region.json', upgrades);
 
-          // Region-sensitive training rows.
           const audit = load('scraped-data/training-current-audit.json');
           for (const row of audit.methods || []) {
             if (row.skill === 'Construction' && row.method === 'Fort Forinthry reinforcement') {
@@ -181,7 +178,6 @@ jobs:
           }
           save('scraped-data/training-high-value.json', high);
 
-          // Source manifest: make Moonrise a first-class source.
           const sources = load('scraped-data/sources.json');
           if (!sources.sources.some((s) => s.id === 'moonrise_official_2026_06_15')) {
             sources.sources.push({
@@ -195,7 +191,6 @@ jobs:
           }
           save('scraped-data/sources.json', sources);
 
-          // Unknowns: distinguish a working League mapping from an official Equilibrium confirmation.
           const unknowns = load('scraped-data/unknowns.json');
           const boundary = unknowns.items.find((x) => x.key === 'equilibrium_region_boundaries');
           if (boundary) {
@@ -215,7 +210,6 @@ jobs:
           index.next_ingest_priority.push('Resolve The Arc/Wushanko boundary and confirm Equilibrium-specific locality handling for City of Um and Fort Forinthry');
           save('scraped-data/index.json', index);
 
-          // Keep the research notes sourced and readable.
           const postits = load('scraped-data/postits.json');
           postits.purpose = 'Source-linked notes for facts that are still moving or need another check before they become normal app data.';
           postits.rules = [

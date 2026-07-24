@@ -30,7 +30,7 @@ function availabilityLabel(value: string): string {
 
 function confidenceLabel(value: string): string {
   const normalized = value.toLowerCase();
-  if (!normalized || normalized === "unclassified") return "Unclassified";
+  if (!normalized || normalized === "unclassified") return "Not checked";
   if (normalized.includes("stale")) return "Needs update";
   if (normalized.includes("unresolved")) return "Unresolved";
   if (normalized.includes("incomplete")) return "Incomplete";
@@ -40,7 +40,7 @@ function confidenceLabel(value: string): string {
   if (normalized.includes("confirmed_official")) return "Jagex";
   if (normalized.includes("inferred_region") || normalized.includes("region_inferred")) return "Region inferred";
   if (normalized.includes("base_game")) return "Base game";
-  if (normalized.includes("current_2026_content")) return "Current 2026 content";
+  if (normalized.includes("current_2026_content")) return "Current";
   return value.replaceAll("_", " ");
 }
 
@@ -176,9 +176,9 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           </div>
         </div>
         <div>
-          <h3 className="text-xs font-medium text-parch-300">Skills with mapped methods/content</h3>
+          <h3 className="text-xs font-medium text-parch-300">Skills here</h3>
           <div className="mt-2 border-t border-stone-750">
-            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-sm text-parch-50">{skill}</div>) : <div className="py-2 text-sm text-parch-300">No skill tags yet.</div>}
+            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-sm text-parch-50">{skill}</div>) : <div className="py-2 text-sm text-parch-300">No skills listed yet.</div>}
           </div>
         </div>
       </section>
@@ -264,7 +264,7 @@ function SkillDetail({ skill }: { skill: ResearchSkill }) {
         <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{skill.name}</h2>
         <div className="mt-1 text-xs text-parch-300">{skill.methods.length} methods · {skill.regions.length} regions</div>
         <p className="mt-3 text-sm leading-6 text-parch-300">
-          {skill.regions.length ? `Relevant regions: ${cleanText(skill.regions.join(", "))}.` : "No fixed region dependency listed yet."} Rates are before Equilibrium XP multipliers.
+          {skill.regions.length ? `Relevant regions: ${cleanText(skill.regions.join(", "))}.` : "No single region requirement listed yet."} Rates are before Equilibrium XP multipliers.
         </p>
       </header>
       <MethodTable methods={skill.methods} />

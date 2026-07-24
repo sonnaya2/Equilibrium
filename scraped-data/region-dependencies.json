@@ -1,14 +1,24 @@
 {
   "snapshot_date": "2026-07-24",
-  "purpose": "Canonical hard region requirements, boundary overrides, and aliases used by planners. These override looser geographic tagging elsewhere in the dataset.",
+  "purpose": "Hard region requirements and working boundary rules used by the planner. Current Equilibrium sources take priority; Catalyst is used only as historical League evidence where the new League has not published a finer boundary.",
   "boundary_overrides": [
     {
       "content": "northern Asgarnia route",
       "required_region": "asgarnia",
-      "includes": ["Burthorpe", "Death Plateau", "Trollheim", "Troll Stronghold", "God Wars Dungeon approach"],
-      "planner_rule": "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
-      "confidence": "user_confirmed_from_region_map",
-      "evidence_note": "The user supplied the working Equilibrium region map and explicitly confirmed this boundary for planner use."
+      "includes": [
+        "Burthorpe",
+        "Death Plateau",
+        "Trollheim",
+        "Troll Stronghold",
+        "God Wars Dungeon approach"
+      ],
+      "planner_rule": "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
+      "confidence": "official_equilibrium_plus_historical_league_taxonomy",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "evidence_note": "Equilibrium explicitly lists God Wars Dungeon under Asgarnia. Catalyst locality labels also put Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia."
     }
   ],
   "dependencies": [
@@ -16,25 +26,32 @@
       "content": "Daemonheim",
       "system": "Dungeoneering",
       "required_region": "forinthry",
-      "required_region_aliases": ["Wilderness", "Wildy"],
+      "required_region_aliases": [
+        "Wilderness",
+        "Wildy"
+      ],
       "hard_requirement": true,
-      "planner_rule": "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region.",
-      "confidence": "confirmed_official_region_mapping_plus_user_correction"
+      "planner_rule": "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region.",
+      "confidence": "confirmed_official_equilibrium",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+      ]
     },
     {
       "content": "northern Asgarnia route",
       "system": "regional boundary",
       "required_region": "asgarnia",
-      "required_region_aliases": ["Trollheim", "Troll Stronghold"],
+      "required_region_aliases": [
+        "Trollheim",
+        "Troll Stronghold"
+      ],
       "hard_requirement": true,
-      "planner_rule": "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it.",
-      "confidence": "user_confirmed_from_region_map"
+      "planner_rule": "Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary.",
+      "confidence": "official_equilibrium_plus_historical_league_taxonomy",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ]
     }
-  ],
-  "user_reference": {
-    "url": "https://miro.com/app/board/uXjVHUhqsR0=/",
-    "type": "region-planning board",
-    "fetch_status": "not accessible from current scraper environment",
-    "note": "The user supplied screenshots from the board in chat. Only explicit boundaries visible or directly stated by the user are treated as planner rules; do not infer hidden board contents."
-  }
+  ]
 }

@@ -14,6 +14,24 @@
         "category": "skilling power",
         "notes": "Starting-region access to 2026 Big Game Hunter and other Hunter content makes high-level Hunter progression available without spending an elective region slot.",
         "confidence": "confirmed_official"
+      },
+      {
+        "name": "Moonrise Dig Site",
+        "category": "Archaeology / Necromancy support",
+        "location": "Moonrise, Havenhythe",
+        "requirements": [
+          "52 Archaeology",
+          "Secrets of Amberfell"
+        ],
+        "unlocks": [
+          "15 artefacts across 2 collections",
+          "5 mysteries",
+          "Hungry Like the Wolf relic power",
+          "Necromancy ritual ring"
+        ],
+        "notes": "Released 15 June 2026. This is live Havenhythe progression, not a future-roadmap item.",
+        "source_url": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
+        "confidence": "confirmed_official"
       }
     ],
     "karamja": [
@@ -34,14 +52,23 @@
       {
         "name": "God Wars Dungeon 1 equipment",
         "category": "combat gear",
-        "examples": ["Bandos equipment", "Armadyl equipment", "Subjugation equipment", "Godsword components"],
+        "examples": [
+          "Bandos equipment",
+          "Armadyl equipment",
+          "Subjugation equipment",
+          "Godsword components"
+        ],
         "2026_change": "GWD1 killcount now persists after leaving and is capped at 200.",
         "confidence": "confirmed_region_example_with_base_game_drop_mapping"
       },
       {
         "name": "Nex equipment",
         "category": "combat gear",
-        "examples": ["Torva", "Pernix", "Virtus"],
+        "examples": [
+          "Torva",
+          "Pernix",
+          "Virtus"
+        ],
         "tier": 80,
         "confidence": "confirmed_wiki"
       },
@@ -49,7 +76,11 @@
         "name": "Invention Guild",
         "category": "skill unlock infrastructure",
         "location": "north-east of Falador",
-        "base_game_requirements": ["80 Crafting", "80 Divination", "80 Smithing"],
+        "base_game_requirements": [
+          "80 Crafting",
+          "80 Divination",
+          "80 Smithing"
+        ],
         "league_warning": "Do not mark Asgarnia mandatory for Invention until Jagex reveals whether Equilibrium auto-completes/unlocks the tutorial globally.",
         "confidence": "confirmed_base_game_region_behavior_unresolved"
       }
@@ -59,8 +90,16 @@
         "name": "Ancient Invention",
         "category": "Invention upgrade",
         "source": "Stormguard Citadel Dig Site / Howl's Floating Workshop",
-        "requirements": ["95 Archaeology for workshop mystery"],
-        "unlocks": ["Ancient weapon gizmo", "Ancient armour gizmo", "Ancient tool gizmo", "Ancient tools blueprints", "XP Capacitor blueprint"],
+        "requirements": [
+          "95 Archaeology for workshop mystery"
+        ],
+        "unlocks": [
+          "Ancient weapon gizmo",
+          "Ancient armour gizmo",
+          "Ancient tool gizmo",
+          "Ancient tools blueprints",
+          "XP Capacitor blueprint"
+        ],
         "confidence": "confirmed_wiki_content_region_inferred"
       },
       {
@@ -80,14 +119,24 @@
       {
         "name": "Lunar spellbook",
         "category": "Magic/skilling utility",
-        "examples": ["Telekinetic Grind", "Bake Pie", "Plank Make and other Lunar utility depending quest unlock treatment"],
+        "examples": [
+          "Telekinetic Grind",
+          "Bake Pie",
+          "Plank Make and other Lunar utility depending quest unlock treatment"
+        ],
         "league_relevance": "Several very fast artisan training methods depend on Lunar spells, making Fremennik more valuable than its boss list alone suggests.",
         "confidence": "base_game_confirmed_equilibrium_quest_autocomplete_pending"
       },
       {
         "name": "Dagannoth Kings uniques",
         "category": "combat/skilling gear",
-        "examples": ["Berserker ring", "Warrior ring", "Archers' ring", "Seers' ring", "Dragon hatchet"],
+        "examples": [
+          "Berserker ring",
+          "Warrior ring",
+          "Archers' ring",
+          "Seers' ring",
+          "Dragon hatchet"
+        ],
         "source": "Waterbirth Island",
         "confidence": "confirmed_wiki"
       }
@@ -97,13 +146,19 @@
         "name": "Daemonheim / Dungeoneering",
         "category": "entire skill/infrastructure dependency",
         "hard_region_requirement": true,
-        "aliases": ["Wilderness", "Wildy"],
+        "aliases": [
+          "Wilderness",
+          "Wildy"
+        ],
         "confidence": "confirmed_official_region_mapping_plus_user_correction"
       },
       {
         "name": "Chaotic equipment",
         "category": "Dungeoneering reward gear",
-        "examples": ["Chaotic weapons", "Chaotic kiteshield"],
+        "examples": [
+          "Chaotic weapons",
+          "Chaotic kiteshield"
+        ],
         "base_game_requirement": "80 Dungeoneering and relevant combat skill requirements",
         "league_relevance": "Catalyst tasks explicitly treated equipping chaotic equipment as Wilderness: Daemonheim content, reinforcing the dependency mapping.",
         "confidence": "confirmed_wiki_historical_and_region_mapping"
@@ -126,14 +181,26 @@
       {
         "name": "God Wars Dungeon 2 weapon and anima-core progression",
         "category": "combat gear",
-        "examples": ["Dragon Rider lance", "Wand of the Cywir elders", "Orb of the Cywir elders", "Shadow glaives", "Blade of Avaryss", "Blade of Nymora", "Anima core equipment"],
+        "examples": [
+          "Dragon Rider lance",
+          "Wand of the Cywir elders",
+          "Orb of the Cywir elders",
+          "Shadow glaives",
+          "Blade of Avaryss",
+          "Blade of Nymora",
+          "Anima core equipment"
+        ],
         "2026_change": "Best GWD2 boss drop rates are now available immediately; reputation no longer gates drop rates and the reputation cap is 2,000.",
         "confidence": "confirmed_wiki_and_official_archive"
       },
       {
         "name": "Telos weapon progression",
         "category": "high-end combat weapons",
-        "examples": ["Seren godbow", "Staff of Sliske", "Zaros godsword"],
+        "examples": [
+          "Seren godbow",
+          "Staff of Sliske",
+          "Zaros godsword"
+        ],
         "location_group": "Heart of Gielinor",
         "confidence": "confirmed_wiki_content_region_inferred"
       },
@@ -153,8 +220,14 @@
       {
         "name": "Red sandstone",
         "category": "flask/Herblore infrastructure",
-        "locations": ["Oo'glog", "Sophanem"],
-        "2026_changes": ["daily cap removed in the DailyScape Overhaul", "rock hitpoints reduced 50% in the July Mid-Game Rebalance"],
+        "locations": [
+          "Oo'glog",
+          "Sophanem"
+        ],
+        "2026_changes": [
+          "daily cap removed in the DailyScape Overhaul",
+          "rock hitpoints reduced 50% in the July Mid-Game Rebalance"
+        ],
         "confidence": "confirmed_wiki_and_official_archive"
       }
     ],
@@ -162,7 +235,11 @@
       {
         "name": "Noxious weapons",
         "category": "tier-90 weapons",
-        "examples": ["Noxious scythe", "Noxious longbow", "Noxious staff"],
+        "examples": [
+          "Noxious scythe",
+          "Noxious longbow",
+          "Noxious staff"
+        ],
         "source": "Araxxor/Araxxi",
         "confidence": "confirmed_wiki"
       },
@@ -188,7 +265,12 @@
       {
         "name": "Crystal mattock",
         "category": "augmentable Archaeology tool",
-        "requirements": ["70 Archaeology", "Dragon mattock", "4,000 harmonic dust", "Prifddinas/Plague's End in base game"],
+        "requirements": [
+          "70 Archaeology",
+          "Dragon mattock",
+          "4,000 harmonic dust",
+          "Prifddinas/Plague's End in base game"
+        ],
         "confidence": "confirmed_wiki"
       },
       {
@@ -201,7 +283,12 @@
       {
         "name": "Solak / Lost Grove rewards",
         "category": "high-end combat upgrades",
-        "examples": ["Blightbound crossbow", "Off-hand Blightbound crossbow", "Erethdor's grimoire", "Torn grimoire pages"],
+        "examples": [
+          "Blightbound crossbow",
+          "Off-hand Blightbound crossbow",
+          "Erethdor's grimoire",
+          "Torn grimoire pages"
+        ],
         "notes": "The Lost Grove is an official Tirannwn Equilibrium example; Solak's current wiki drop table contains these rewards.",
         "confidence": "confirmed_official_region_example_plus_confirmed_wiki_drops"
       }
@@ -224,19 +311,31 @@
       {
         "name": "Raksha ability upgrades",
         "category": "ability codices",
-        "examples": ["Greater Ricochet", "Greater Chain", "Divert"],
+        "examples": [
+          "Greater Ricochet",
+          "Greater Chain",
+          "Divert"
+        ],
         "confidence": "confirmed_wiki"
       },
       {
         "name": "Raksha boot upgrades",
         "category": "combat boots",
-        "examples": ["Fleeting boots", "Laceration boots", "Blast diffusion boots", "Shadow spike upgrades to tier 90"],
+        "examples": [
+          "Fleeting boots",
+          "Laceration boots",
+          "Blast diffusion boots",
+          "Shadow spike upgrades to tier 90"
+        ],
         "confidence": "confirmed_wiki"
       },
       {
         "name": "Anachronia Agility codex-page progression",
         "category": "movement ability upgrades",
-        "examples": ["Double Surge", "Double Escape"],
+        "examples": [
+          "Double Surge",
+          "Double Escape"
+        ],
         "confidence": "confirmed_wiki"
       }
     ]
@@ -245,7 +344,11 @@
     {
       "name": "Mattock of Time and Space",
       "category": "Archaeology tool",
-      "requirements": ["Crystal mattock", "Imcando mattock", "energised meteorite shard"],
+      "requirements": [
+        "Crystal mattock",
+        "Imcando mattock",
+        "energised meteorite shard"
+      ],
       "region_pressure": [
         "Dragon mattock is directly farmable from Anachronia BGH, though tetracompasses provide another route.",
         "Crystal mattock requires Prifddinas/Tirannwn resources.",

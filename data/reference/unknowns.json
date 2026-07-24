@@ -51,14 +51,13 @@
     {
       "key": "equilibrium_region_boundaries",
       "status": "needs_launch_validation",
-      "known": "The working planner taxonomy maps City of Um / Underworld to Misthalin using Catalyst's region-task precedent, and Fort Forinthry to Forinthry/Wilderness from its physical location. These are planning mappings, not Equilibrium-specific official confirmations.",
+      "known": "Catalyst's task taxonomy grouped both City of Um and Fort Forinthry under Misthalin. Equilibrium explicitly places Daemonheim in Forinthry/Wilderness. We use those as the working planner mappings without presenting Catalyst locality labels as new-League confirmation.",
       "missing": [
-        "official Equilibrium confirmation of City of Um / Necromancy mapping",
+        "official Equilibrium confirmation of the City of Um / Underworld locality",
+        "official Equilibrium confirmation of the Fort Forinthry locality",
         "The Arc / Wushanko mapping",
-        "cross-border teleports",
-        "instances whose entrances and arenas lie in different conceptual regions",
-        "global hubs",
-        "quest-instanced exceptions"
+        "cross-border teleports and global hubs",
+        "quest-instanced or entrance/arena boundary exceptions"
       ]
     },
     {

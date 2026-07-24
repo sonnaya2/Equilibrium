@@ -1,11 +1,11 @@
 {
   "snapshot_date": "2026-07-24",
-  "purpose": "Small source-linked research notes for facts or gaps that should stay visible while the normalized datasets evolve. These are not authoritative game records; each note points to the source that should be rechecked before promotion into canonical data.",
+  "purpose": "Source-linked notes for facts that are still moving or need another check before they become normal app data.",
   "rules": [
-    "Every factual note needs at least one source URL.",
-    "Unknown League values stay unknown; Catalyst history is context, never an Equilibrium default.",
-    "Official Jagex beats current Wiki, which beats current experimentally verified community research when sources disagree.",
-    "Asgarnia is the canonical region name throughout this project."
+    "Every factual note needs a source URL.",
+    "Unknown Equilibrium values stay unknown; Catalyst is useful precedent, not a default for the new League.",
+    "Use the RuneScape Wiki for settled game data. Keep PvME or RS Analysis when a row came from them. Use Jagex directly for new reveals and patches until the Wiki catches up.",
+    "Asgarnia is the only public region name used for its planner area."
   ],
   "notes": [
     {
@@ -18,7 +18,11 @@
       "source_urls": [
         "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
       ],
-      "promote_to": ["scraped-data/equilibrium.json", "data/league/relics.json", "data/league/blessings.json"]
+      "promote_to": [
+        "scraped-data/equilibrium.json",
+        "data/league/relics.json",
+        "data/league/blessings.json"
+      ]
     },
     {
       "id": "quest-autocomplete-watch",
@@ -30,7 +34,10 @@
       "source_urls": [
         "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
       ],
-      "promote_to": ["data/league/quests.json", "data/league/equilibrium-auto-quests.json"]
+      "promote_to": [
+        "data/league/quests.json",
+        "data/league/equilibrium-auto-quests.json"
+      ]
     },
     {
       "id": "asgarnia-boundary",
@@ -38,11 +45,30 @@
       "priority": "critical",
       "status": "locked_for_working_map",
       "title": "Asgarnia boundary",
-      "body": "Use Asgarnia as the single planner region name for the full mapped area containing Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach.",
+      "body": "Keep Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach in one Asgarnia planner region. Equilibrium explicitly puts God Wars Dungeon in Asgarnia; Catalyst locality labels support the northern route.",
       "source_urls": [
-        "https://miro.com/app/board/uXjVHUhqsR0=/"
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
       ],
-      "promote_to": ["scraped-data/regions.json"]
+      "promote_to": [
+        "scraped-data/regions.json"
+      ]
+    },
+    {
+      "id": "fort-forinthry-misthalin",
+      "kind": "planner_rule",
+      "priority": "high",
+      "status": "working_league_precedent",
+      "title": "Fort Forinthry uses Misthalin for now",
+      "body": "Catalyst consistently filed Fort Forinthry tasks under Misthalin. Use that locality for planning until Equilibrium publishes a different boundary; do not infer Forinthry solely from the fort being beside the Wilderness.",
+      "source_urls": [
+        "https://runescape.wiki/w/Catalyst_League/Tasks",
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+      ],
+      "promote_to": [
+        "data/league/quest-region-rules.json",
+        "scraped-data/regions.json"
+      ]
     },
     {
       "id": "daemonheim-forinthry",
@@ -50,12 +76,14 @@
       "priority": "critical",
       "status": "locked_for_working_map",
       "title": "Daemonheim belongs to Forinthry",
-      "body": "Treat Daemonheim and Dungeoneering access as requiring the Forinthry/Wilderness region in the working Equilibrium map.",
+      "body": "Daemonheim and normal Dungeoneering access require Forinthry/Wilderness. The Equilibrium reveal names Daemonheim directly under Forinthry.",
       "source_urls": [
-        "https://miro.com/app/board/uXjVHUhqsR0=/",
-        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered"
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
       ],
-      "promote_to": ["scraped-data/region-dependencies.json", "data/league/regions.json"]
+      "promote_to": [
+        "scraped-data/region-dependencies.json",
+        "data/league/regions.json"
+      ]
     },
     {
       "id": "catalyst-is-history",
@@ -83,7 +111,9 @@
         "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
         "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation"
       ],
-      "promote_to": ["data/combat"]
+      "promote_to": [
+        "data/combat"
+      ]
     },
     {
       "id": "midgame-rebalance",
@@ -95,7 +125,10 @@
       "source_urls": [
         "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance"
       ],
-      "promote_to": ["scraped-data/midgame-rebalance-2026-07-20.json", "scraped-data/training-current-audit.json"]
+      "promote_to": [
+        "scraped-data/midgame-rebalance-2026-07-20.json",
+        "scraped-data/training-current-audit.json"
+      ]
     },
     {
       "id": "aura-overhaul",
@@ -107,7 +140,9 @@
       "source_urls": [
         "https://secure.runescape.com/m=news/patch-notes-aura-overhaul"
       ],
-      "promote_to": ["data/combat"]
+      "promote_to": [
+        "data/combat"
+      ]
     },
     {
       "id": "havenhythe-current",
@@ -115,11 +150,15 @@
       "priority": "medium",
       "status": "active",
       "title": "Havenhythe is live 2026 content",
-      "body": "Havenhythe content should be sourced from current pages and 2026 updates rather than old world-map assumptions; its training and progression value is still changing as the rollout finishes.",
+      "body": "Havenhythe is still receiving 2026 content. Moonrise is already live, so do not leave it tagged as an upcoming dig site.",
       "source_urls": [
-        "https://runescape.wiki/w/Havenhythe"
+        "https://runescape.wiki/w/Havenhythe",
+        "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise"
       ],
-      "promote_to": ["scraped-data/regions.json", "scraped-data/training-current-audit.json"]
+      "promote_to": [
+        "scraped-data/regions.json",
+        "scraped-data/training-current-audit.json"
+      ]
     },
     {
       "id": "training-stale-warning",
@@ -133,7 +172,9 @@
         "https://runescape.wiki/w/Divination_training",
         "https://runescape.wiki/w/Pay-to-play_Runecrafting_training"
       ],
-      "promote_to": ["scraped-data/training-current-audit.json"]
+      "promote_to": [
+        "scraped-data/training-current-audit.json"
+      ]
     },
     {
       "id": "asset-provenance",
@@ -147,7 +188,9 @@
         "https://rs.runescape.com/leagues",
         "https://secure.runescape.com/m=news/the-road-ahead"
       ],
-      "promote_to": ["assets/manifest.generated.json"]
+      "promote_to": [
+        "assets/manifest.generated.json"
+      ]
     }
   ]
 }

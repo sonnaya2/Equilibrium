@@ -12,42 +12,77 @@
       "key": "equilibrium_blessing_effects",
       "status": "unrevealed",
       "known": "Eight combat Blessing tiers exist, following Order/Balance/Chaos choices; tiers 4 and 8 resolve into god-aligned effects based on prior choices.",
-      "missing": ["individual node names", "exact numerical effects", "task requirements per tier", "how quickly each region can complete the tree"]
+      "missing": [
+        "individual node names",
+        "exact numerical effects",
+        "task requirements per tier",
+        "how quickly each region can complete the tree"
+      ]
     },
     {
       "key": "equilibrium_passive_xp_multiplier_curve",
       "status": "unrevealed_or_not_normalized",
       "known": "The League includes accelerated progression and passive Relic-tier bonuses.",
-      "missing": ["exact XP multiplier at every tier", "exact drop-rate multiplier curve", "exact passive unlock thresholds"]
+      "missing": [
+        "exact XP multiplier at every tier",
+        "exact drop-rate multiplier curve",
+        "exact passive unlock thresholds"
+      ]
     },
     {
       "key": "equilibrium_region_unlock_thresholds",
       "status": "partially_revealed",
       "known": "Misthalin and Havenhythe start unlocked. Karamja unlocks after the first task milestone. Players then choose three elective regions.",
-      "missing": ["exact milestone/point/task thresholds for all three elective region unlocks"]
+      "missing": [
+        "exact milestone/point/task thresholds for all three elective region unlocks"
+      ]
     },
     {
       "key": "equilibrium_region_quest_autocomplete_lists",
       "status": "unrevealed",
       "known": "Unlocking a region auto-completes many quests to expose its core content, with Prifddinas and Menaphos given as examples.",
-      "missing": ["per-region quest list", "quest rewards granted vs skipped", "partial quest state behavior", "cross-region quest dependencies"]
+      "missing": [
+        "per-region quest list",
+        "quest rewards granted vs skipped",
+        "partial quest state behavior",
+        "cross-region quest dependencies"
+      ]
     },
     {
       "key": "equilibrium_region_boundaries",
       "status": "needs_launch_validation",
-      "known": "The working planner taxonomy maps City of Um / Underworld to Misthalin using Catalyst's region-task precedent, and Fort Forinthry to Forinthry/Wilderness from its physical location. These are planning mappings, not Equilibrium-specific official confirmations.",
-      "missing": ["official Equilibrium confirmation of City of Um / Necromancy mapping", "The Arc / Wushanko mapping", "cross-border teleports", "instances whose entrances and arenas lie in different conceptual regions", "global hubs", "quest-instanced exceptions"]
+      "known": "Catalyst's task taxonomy grouped both City of Um and Fort Forinthry under Misthalin. Equilibrium explicitly places Daemonheim in Forinthry/Wilderness. We use those as the working planner mappings without presenting Catalyst locality labels as new-League confirmation.",
+      "missing": [
+        "official Equilibrium confirmation of the City of Um / Underworld locality",
+        "official Equilibrium confirmation of the Fort Forinthry locality",
+        "The Arc / Wushanko mapping",
+        "cross-border teleports and global hubs",
+        "quest-instanced or entrance/arena boundary exceptions"
+      ]
     },
     {
       "key": "equilibrium_drop_tables",
       "status": "unrevealed_or_needs_scrape",
-      "missing": ["League-specific drop modifiers", "region-specific unavailable drops", "bad-luck mitigation changes", "boss unique rate multipliers"]
+      "missing": [
+        "League-specific drop modifiers",
+        "region-specific unavailable drops",
+        "bad-luck mitigation changes",
+        "boss unique rate multipliers"
+      ]
     },
     {
       "key": "equilibrium_tasks",
       "status": "not_yet_scraped",
       "known": "Task values are Easy 10, Medium 30, Hard 80, Elite 200, Master 400.",
-      "missing": ["full task list", "region tag", "skill tag", "prerequisites", "estimated time", "routing value", "Blessing Task subset"]
+      "missing": [
+        "full task list",
+        "region tag",
+        "skill tag",
+        "prerequisites",
+        "estimated time",
+        "routing value",
+        "Blessing Task subset"
+      ]
     },
     {
       "key": "post_2026_training_rates",
@@ -58,7 +93,15 @@
       "key": "combat_optimizer_grade_magic_and_ranged_tables",
       "status": "partial",
       "known": "High-level modernised identities and several major ability/ammunition changes are captured.",
-      "missing": ["full current ability table", "all cooldowns", "all adrenaline costs/gains", "all hit ranges", "weapon-specific overrides", "special attacks", "2026 hotfix history"]
+      "missing": [
+        "full current ability table",
+        "all cooldowns",
+        "all adrenaline costs/gains",
+        "all hit ranges",
+        "weapon-specific overrides",
+        "special attacks",
+        "2026 hotfix history"
+      ]
     },
     {
       "key": "boss_specific_guides",

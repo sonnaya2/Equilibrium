@@ -45,6 +45,7 @@
         "Draynor Village"
       ],
       "skills": [
+        "Construction",
         "Divination",
         "Necromancy",
         "Thieving"
@@ -73,17 +74,42 @@
             "title": "Pale wisps near Draynor",
             "verifiedAt": "2026-07-24"
           }
+        },
+        {
+          "name": "Fort Forinthry",
+          "kind": "Construction / Slayer hub",
+          "detail": "Working League mapping: Catalyst consistently filed Fort Forinthry tasks under Misthalin. Equilibrium has not published a different locality boundary yet.",
+          "confidence": "historical_league_taxonomy_pending_equilibrium_confirmation",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+            "title": "Fort Forinthry",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "City of Um / Underworld",
+          "kind": "Necromancy",
+          "detail": "Working League mapping: Catalyst filed City of Um tasks under Misthalin. Equilibrium-specific locality handling is still unannounced.",
+          "confidence": "historical_league_taxonomy_pending_equilibrium_confirmation",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+            "title": "City of Um / Underworld",
+            "verifiedAt": "2026-07-24"
+          }
         }
       ],
       "upgrades": [],
       "trainingMethodIds": [
+        "construction:fort-forinthry-reinforcement",
         "necromancy:combat-rituals-progression",
         "necromancy:rituals",
         "thieving:safecracking-misthalin"
       ],
       "hardRules": [],
       "warnings": [
-        "Exact handling of City of Um/Necromancy content has not yet been published."
+        "Catalyst grouped City of Um and Fort Forinthry under Misthalin. Keep that as the working League taxonomy until Equilibrium publishes a different boundary."
       ],
       "source": {
         "source": "jagex",
@@ -105,7 +131,9 @@
         "Blighted Cave",
         "Eastfold Farm",
         "Highweald Forest",
-        "Shrine of Inanna"
+        "Shrine of Inanna",
+        "Amberfell",
+        "Moonrise Dig Site"
       ],
       "skills": [
         "Archaeology",
@@ -224,14 +252,14 @@
           }
         },
         {
-          "name": "First Age dig site",
+          "name": "Moonrise Dig Site",
           "kind": "Archaeology",
-          "detail": "announced for summer 2026; not treated as live until a release source is captured",
-          "confidence": "announced_not_yet_confirmed_live",
+          "detail": "Live since 15 June 2026. Moonrise adds 15 artefacts across two collections, five mysteries, a relic power and a Necromancy ritual ring.",
+          "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Havenhythe",
-            "title": "First Age dig site",
+            "url": "https://runescape.wiki/w/Archaeology_training",
+            "title": "Archaeology training",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -286,6 +314,23 @@
             "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
             "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
             "publishedAt": "2026-07-23",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "havenhythe"
+        },
+        {
+          "name": "Moonrise Dig Site",
+          "category": "Archaeology / Necromancy support",
+          "detail": "Released 15 June 2026. This is live Havenhythe progression, not a future-roadmap item. · Location: Moonrise, Havenhythe · Unlocks: 15 artefacts across 2 collections, 5 mysteries, Hungry Like the Wolf relic power, Necromancy ritual ring",
+          "requirements": [
+            "52 Archaeology",
+            "Secrets of Amberfell"
+          ],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Moonrise_Dig_Site",
+            "title": "Moonrise Dig Site",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "havenhythe"
@@ -617,12 +662,12 @@
         "thieving:safecracking-asgarnia"
       ],
       "hardRules": [
-        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
-        "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it."
+        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
+        "Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary."
       ],
       "warnings": [
         "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
-        "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks."
+        "Use Asgarnia for Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. Equilibrium explicitly places God Wars Dungeon in Asgarnia; Catalyst also grouped Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia."
       ],
       "source": {
         "source": "jagex",
@@ -883,7 +928,6 @@
       ],
       "skills": [
         "Agility",
-        "Construction",
         "Dungeoneering",
         "Mining",
         "Prayer",
@@ -1003,7 +1047,6 @@
       "trainingMethodIds": [
         "agility:wilderness-course",
         "combat-styles:abyss-afk-combat-training",
-        "construction:fort-forinthry-reinforcement",
         "dungeoneering:daemonheim-floors",
         "mining:primal-ores",
         "prayer:chaos-altar",
@@ -1011,7 +1054,7 @@
         "runecrafting:time-runes-through-the-abyss"
       ],
       "hardRules": [
-        "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
+        "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region."
       ],
       "warnings": [
         "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
@@ -1895,7 +1938,7 @@
       "id": "construction",
       "name": "Construction",
       "regions": [
-        "Forinthry"
+        "Misthalin"
       ],
       "methods": [
         {
@@ -1937,12 +1980,12 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "forinthry"
+            "misthalin"
           ],
           "note": "",
-          "warning": "",
+          "warning": "Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping.",
           "freshness": "2026-07-20_official",
-          "confidence": "confirmed_official_with_wiki_region_mapping",
+          "confidence": "confirmed_official_method_working_league_region_taxonomy",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Construction_training",

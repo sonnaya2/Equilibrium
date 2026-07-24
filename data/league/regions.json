@@ -14,7 +14,7 @@
       ],
       "hardRules": [],
       "warnings": [
-        "Exact handling of City of Um/Necromancy content has not yet been published."
+        "Catalyst grouped City of Um and Fort Forinthry under Misthalin. Keep that as the working League taxonomy until Equilibrium publishes a different boundary."
       ],
       "source": {
         "source": "jagex",
@@ -36,7 +36,9 @@
         "Blighted Cave",
         "Eastfold Farm",
         "Highweald Forest",
-        "Shrine of Inanna"
+        "Shrine of Inanna",
+        "Amberfell",
+        "Moonrise Dig Site"
       ],
       "hardRules": [],
       "warnings": [],
@@ -92,12 +94,12 @@
         "God Wars Dungeon"
       ],
       "hardRules": [
-        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
-        "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it."
+        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
+        "Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary."
       ],
       "warnings": [
         "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
-        "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks."
+        "Use Asgarnia for Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. Equilibrium explicitly places God Wars Dungeon in Asgarnia; Catalyst also grouped Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia."
       ],
       "source": {
         "source": "jagex",
@@ -163,7 +165,7 @@
         "Daemonheim"
       ],
       "hardRules": [
-        "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
+        "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region."
       ],
       "warnings": [
         "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."

@@ -216,6 +216,14 @@
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
       "authority": "canonical_with_page_warning"
+    },
+    {
+      "id": "moonrise_official_2026_06_15",
+      "title": "Digging up the past at Moonrise",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-06-15",
+      "url": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
+      "authority": "official_game_update"
     }
   ]
 }

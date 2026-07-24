@@ -310,14 +310,15 @@
     {
       "skill": "Construction",
       "method": "Fort Forinthry reinforcement",
-      "method_region": "forinthry",
+      "method_region": "misthalin",
       "level_range": "Fort progression; Eternal reinforcement from 105",
       "xp_event": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
       "intensity": "long AFK windows; active hotspots improve rate",
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_with_wiki_region_mapping",
-      "location": "Fort Forinthry, south-eastern Wilderness"
+      "confidence": "confirmed_official_method_working_league_region_taxonomy",
+      "location": "Fort Forinthry, south-eastern Wilderness",
+      "region_warning": "Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping."
     }
   ]
 }

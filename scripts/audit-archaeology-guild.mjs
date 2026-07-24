@@ -42,6 +42,8 @@ for (const expected of expectedLoadouts) {
 const training = await wikiSource("Archaeology training");
 const guildmaster = await wikiSource("Qualification - Guildmaster");
 const presetUpdate = await wikiSource("Update:Relic Presets & February Mini Strike - This Week In RuneScape");
+const fixate = await wikiSource("Fixate");
+const masterOutfit = await wikiSource("Master archaeologist's outfit");
 
 assertContains(presetUpdate.content, "first two presets", "Relic preset update");
 assertContains(presetUpdate.content, "80,000 Chronotes", "Relic preset update");
@@ -78,6 +80,19 @@ for (const expected of expectedShopRows) {
   assertContains(training.content, String(expected.cost), `Archaeology training:${expected.name} cost`);
 }
 
+const fixateRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-master-outfit");
+if (!fixateRow) throw new Error("Missing master-outfit Fixate infrastructure row");
+if (fixateRow.daily_energy !== 3) throw new Error("Master-outfit Fixate daily energy must be 3");
+assertContains(fixate.content, "3", "Fixate daily energy");
+assertContains(fixate.content, "master archaeologist's outfit", "Fixate outfit requirement");
+assertContains(masterOutfit.content, "Fixate", "Master archaeologist outfit Fixate unlock");
+
+const tokenRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-charge-token");
+if (!tokenRow) throw new Error("Missing Fixate charge-token infrastructure row");
+if (tokenRow.planner_classification !== "supplemental_non_core_supply") {
+  throw new Error("Fixate charge tokens must remain supplemental rather than deterministic planner supply");
+}
+
 console.log(
-  `Archaeology Guild audit passed: ${expectedLoadouts.length} loadout stages, ${expectedShopRows.length} shop upgrades`,
+  `Archaeology Guild audit passed: ${expectedLoadouts.length} loadout stages, ${expectedShopRows.length} shop upgrades, Fixate ${fixateRow.daily_energy}/day`,
 );

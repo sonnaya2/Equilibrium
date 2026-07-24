@@ -6,6 +6,7 @@
     "catalyst.json": "Catalyst League historical progression and relic baseline",
     "combat-2026.json": "Post-March-2026 combat system modernisation and aura transition",
     "regions.json": "Region-gated content and high-value unlock map",
+    "region-dependencies.json": "Canonical hard region requirements and region aliases for planner logic",
     "training-methods.json": "Training methods tagged by likely Equilibrium region and freshness",
     "2026-changes.json": "Chronology of 2026 progression/combat changes relevant to League planning",
     "unknowns.json": "Unrevealed or unresolved facts that must not be guessed",

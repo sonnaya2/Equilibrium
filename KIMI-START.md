@@ -103,35 +103,50 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 - Never hardcode a game value into a component when a canonical JSON record can own it.
 - Preserve `SourceReference`, confidence/freshness, `verified`, and unresolved-state metadata all the way to the consumer. Do not make provisional data look confirmed.
 - Generated files stay generated. Integrate them; do not manually rewrite them to make the UI easier.
+- **Do not use old research branches as data sources.** The unique Slayer/Invention/Archaeology payload from `agent/invention-data-pass` was salvaged onto `main`; current `data/` + `scraped-data/` + the readers below are the handoff.
+
+### Research feeds already on `main` — use these first
+
+- **Base planner research:** `data/research/planner-expansions.json` — combat candidates, Runecrafting access, base Invention/Archaeology progression and regional drops.
+- **Slayer:** `src/research/slayerPlanner.ts` over `planner-expansions-slayer*.json` — 29 deduplicated high-value, collection-log and boundary-sensitive routes. Preserve the explicit stale/rebenchmark warnings on old PvME metrics.
+- **Invention:** `src/research/inventionPlanner.ts` over `planner-expansions-invention-*.json` — current rare-component taxonomy coverage, Ancient Invention/Archaeology links, perk-family material pressure, utility recipes and non-region bottlenecks.
+- **Archaeology:** `src/research/archaeologyPlanner.ts` over `planner-expansions-archaeology-*.json` — collection rewards and repeatable progression data in addition to the base relic/dig-site table.
+- **Combat seed:** `data/combat/ability-audit-2026-07-24.json` — current post-modernisation Magic/Ranged records. RS Analysis is a model/calculation cross-check, not a source of settings-dependent sample damage constants.
+- **Permanent unlocks:** `data/reference/progression-unlocks.json` — composed current quest/activity/account/equipment dependencies, including post-2026 removals and acquisition changes. Apply Equilibrium overlays separately.
+- **Region boundaries:** `data/league/regions.json` + `data/league/region-dependencies.json` — hard rules, historical working mappings and unresolved external/cross-boundary destinations are deliberately distinct.
+- `npm run normalize:data` regenerates the research mirrors; `npm run audit:supplements` protects the salvaged Slayer/Invention/Archaeology datasets.
 
 ### Integrate now
 
 - [ ] **Quest catalog:** wire the current `data/league/quests.json` dataset into the places that need quest/region dependency data. It already contains **281 quest-list entries**, primary-region grouping and recursive required-region grouping. Keep this distinct from official League auto-completion.
 - [ ] **Official auto-quest overlay:** make consumers read `data/league/equilibrium-auto-quests.json` as a separate overlay. It is currently awaiting official per-region lists, so the correct current behavior is an honest empty overlay — not inferred auto-completions.
-- [ ] **Research/Data browser:** ensure `data/research/catalog.json` is the source for every region/skill row exposed on `/data`. Do not hardcode catalog counts in UI copy; new rows added by the data pass should appear without component edits.
+- [ ] **Research/Data browser:** ensure `data/research/catalog.json` is the source for every base region/skill row exposed on `/data`, then expose the specialist Slayer/Invention/Archaeology readers without copying their records into another catalog. Do not hardcode counts in UI copy.
 - [ ] **Region content payloads:** consume the canonical region fields for areas, important content, upgrades, requirements, training-method IDs, warnings and sources. Do not maintain a parallel region-content list in UI code.
 - [x] **Relics:** the build planner now consumes all records from `data/league/relics.json` generically. Unrevealed tiers stay visible as unknown and later reveal records can flow through without another Tier-1-only rewrite.
 - [x] **Blessings:** all eight records from `data/league/blessings.json` now pass through to the planner with reveal state, choices payload, verification and source URL preserved. Do not invent node rendering before the published choice schema exists.
 - [ ] **Tasks:** keep the Tasks UI/store bound to `data/league/tasks.json`. The file currently has tier metadata but zero task records. Treat Medium/Hard/Elite point values as provisional until an Equilibrium-specific source confirms them. Do not fabricate rows or scrape tasks. **Blocked on an actual normalized task-row schema; once records exist, build the purpose-made consumer from those real fields.**
-- [ ] **Unknown-state handling:** use `data/reference/unknowns.json` to keep unrevealed or unresolved League facts visibly unresolved. This includes region boundaries, XP/drop curves, unlock thresholds, task data and League-specific drop behavior.
+- [ ] **Unknown-state handling:** use `data/reference/unknowns.json` and region dependency status to keep unrevealed or unresolved League facts visibly unresolved. This includes region boundaries, XP/drop curves, unlock thresholds, task data and League-specific drop behavior.
+- [ ] **Slayer planner feed:** consume `getAllSlayerMethods()` / region filtering from `src/research/slayerPlanner.ts` in region/skill planning. Do not rank stale-warning PvME KPH as current combat performance.
+- [ ] **Invention planner feed:** consume `src/research/inventionPlanner.ts` for self-supply/component/perk pressure. Keep global/account bottlenecks global instead of inventing a region gate because one convenient source exists in a region.
+- [ ] **Archaeology planner feed:** consume `src/research/archaeologyPlanner.ts` for collection/repeatable value alongside the existing base Archaeology progression/relic records.
 
 ### Consume these as the research pass adds them
 
-- [ ] **Region-value additions:** `data/research/planner-expansions.json` now has sourced combat/training spots, unique drops, Runecrafting altars/access, Invention unlocks/material loops and Archaeology progression. Wire those records into the existing region/skill views; do not research replacements in this queue.
-- [ ] **Training updates:** when current post-2026 rates/methods are added to the canonical research data, expose them through the existing skill/region method tables and preserve stale/current warnings. Do not independently benchmark or search for replacements.
+- [ ] **Region-value additions:** the base and specialist planner datasets are now committed and normalized. Feed them into existing region/skill/build views through the readers above; do not research replacements in this queue.
+- [ ] **Training updates:** when current post-2026 rates/methods are added to canonical research data, expose them through existing skill/region method tables and preserve stale/current warnings. Do not independently benchmark or search for replacements.
 - [ ] **League progression constants:** when exact XP multipliers, drop-rate multipliers, passive thresholds and elective-region unlock thresholds land in canonical League data, connect planner/progression calculations to those fields rather than duplicating constants.
 - [ ] **League drop metadata:** when sourced region availability, unique-drop modifiers, bad-luck rules or League-specific drop modifiers are added, connect them to region/build views. Do not build boss guides or research drop rates yourself.
-- [ ] **Combat tables:** when the data pass adds/updates current ability, cooldown, adrenaline, hit-range, weapon override, special-attack, prayer/potion/perk or 2026-hotfix records under `data/combat/`, wire the typed combat accessors/engine to them. Do not re-scrape PvME, RS Analysis, the Wiki or Jagex from this queue.
-- [ ] **Permanent unlock graph:** the permanent-unlock data is now exposed on `/data`; the remaining job is planner/domain consumption. Use `data/reference/progression-unlocks.json` for base-game quest/account/equipment gates, then apply official Equilibrium auto-quest/relic overrides separately. `data/research/reference-site-harvest.json` is research/architecture context, not UI copy or a second source of game constants.
+- [ ] **Combat tables:** start from `data/combat/ability-audit-2026-07-24.json` plus current `data/combat/modernisation-2026.json`; wire only records the engine actually models and keep future record-level sync additive. Do not re-scrape PvME, RS Analysis, the Wiki or Jagex from this queue.
+- [ ] **Permanent unlock graph:** the permanent-unlock data is already exposed on `/data`; the remaining job is planner/domain consumption. Use `data/reference/progression-unlocks.json` for base-game quest/account/equipment/activity gates, then apply official Equilibrium auto-quest/relic overrides separately. `data/research/reference-site-harvest.json` is research/architecture context, not UI copy or a second source of game constants.
 
 ### Current-main consumer holes — fix these before doing more data work
 
 - [x] **Relic reveal pass-through:** `app/build/page.tsx` now passes every relic tier, reveal state, verification and source metadata into `BuildPlanner` instead of extracting Tier 1 only.
 - [x] **Blessing reveal pass-through:** `app/build/page.tsx` now preserves each Blessing tier's choice payload, source URL and verification state. Unrevealed tiers remain unknown.
 - [ ] **Task-record consumer:** intentionally not fabricated while `data/league/tasks.json.records` is empty. When normalized rows arrive, render/filter/search those actual fields and preserve the current honest empty state when the array is empty.
-- [ ] **Planner-expansion adapter:** add one typed accessor/join for `data/research/planner-expansions.json` keyed by stable record ID plus region/skill. Feed the sourced combat-training spots, Runecrafting access, Invention/Archaeology progression and unique-drop rows into the existing region/skill/build views. Do not copy those rows into component-local arrays.
-- [ ] **Provenance pass-through — remaining:** relic/blessing tier source URLs and verification now reach the planner, and tier sources are rendered. Finish this for planner-expansion rows and any later normalized choice/task rows; do not flatten sourced records into unsourced prose.
-- [ ] **Region-domain runtime derivation:** a contract test now fails if `src/league` IDs or availability groups drift from `data/league/regions.json`. Kimi still owns the runtime cleanup: keep the compile-time `RegionId` union if useful, but derive starting/automatic/elective grouping from canonical region records instead of maintaining the grouping twice.
+- [ ] **Base planner-expansion adapter:** add the typed join/accessor for `data/research/planner-expansions.json` keyed by stable record ID plus region/skill. **Do not rebuild the specialist adapters** — Slayer, Invention and Archaeology already have dedicated typed readers under `src/research/`.
+- [ ] **Provenance pass-through — remaining:** relic/blessing tier source URLs and verification reach the planner. Preserve source/confidence/warning state from the base and specialist planner records through any view model; do not flatten sourced records into unsourced prose.
+- [ ] **Region-domain runtime derivation:** a contract test fails if `src/league` IDs or availability groups drift from `data/league/regions.json`. Kimi still owns the runtime cleanup: keep the compile-time `RegionId` union if useful, but derive starting/automatic/elective grouping from canonical region records instead of maintaining the grouping twice.
 
 ### Kimi stop condition
 
@@ -146,7 +161,7 @@ If a checkbox requires a fact that is not already present in `data/`, **stop tha
 - **Cloning.** rs-analysis.xyz, pvme.io and leagues.build are for lessons, not markup. Take the facts and
   the math; write our own components and our own words.
 - **Stale combat data.** Pre-March-2026 values are wrong by default. PvME is for discovering that a
-  mechanic exists, not for its current number.
+  mechanic exists, not for its current number unless the specific current page/value has been independently validated.
 - **Merging the League ruleset into base combat.** It stays a separate layer that can be switched off.
 - **Collapsing rounding.** `floor(A) → mod → floor(B)` is not `floor(A×B)`.
 - **3D leaking into the shared bundle**, which would make every other route pay for a route most visits

@@ -50,6 +50,27 @@ jobs:
         run: npm run audit:progression
       - name: Audit reference research corpus
         run: npm run audit:references
+      - name: Audit Masterwork staff region chain
+        run: npm run audit:masterwork
       - run: npm run typecheck
-      - run: npm test
+      - name: Run unit tests
+        id: unit-tests
+        shell: bash
+        run: |
+          set +e
+          npm test > vitest.log 2>&1
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            tail -n 120 vitest.log
+            exit "$status"
+          fi
+          cat vitest.log
+      - name: Upload unit-test failure log
+        if: failure() && steps.unit-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-failure
+          path: vitest.log
+          if-no-files-found: error
+          retention-days: 3
       - run: npm run build

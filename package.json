@@ -6,6 +6,7 @@
     "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-planner-expansions.mjs",
     "audit:progression": "node scripts/audit-progression-unlocks.mjs",
     "audit:references": "node scripts/audit-reference-harvest.mjs",
+    "audit:masterwork": "node scripts/audit-masterwork-staff-chain.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

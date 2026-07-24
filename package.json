@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "sync:combat": "node scripts/sync-combat-data.ts",
     "sync:league": "node scripts/sync-league-data.ts"
   },

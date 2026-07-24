@@ -6,11 +6,12 @@ Handoff brief for any coding agent (Claude, Kimi, opencode, etc). **Read this be
 Local: `C:\Users\Sonnaya\Rs3Equilibrium`
 Remote: `https://github.com/sonnaya2/Equilibrium` — **public**, default branch `main` (there is no `master`)
 Live: `https://equilibrium-ruddy.vercel.app` — Vercel project `equilibrium`, scope `ever-sense`
+Vercel CLI: linked to `ever-sense/equilibrium` (`.vercel/`, gitignored); git-connected to `sonnaya2/Equilibrium`
 Author: Sonnaya2
 Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
 
 **Deploys are automatic**: the Vercel project is git-connected, so any push to `main` ships to
-production. Verify `npm run build` and `npm test` locally before pushing — there is no staging gate.
+production. Verify `npm run build`, `npm test`, and `npm run test:e2e` (Playwright; boots the dev server itself) locally before pushing — there is no staging gate.
 The repo is public, so never commit secrets; git identity here is the noreply address
 (`299354192+sonnaya2@users.noreply.github.com`), set repo-locally because GitHub blocks pushes that
 would publish the private address.
@@ -91,7 +92,7 @@ The Map is **genuinely 3D**: a stylised 3D Gielinor with selectable regions that
 the build changes. It is the app's signature surface and its single largest bundle and performance risk,
 so it is fenced off from the rest of the app.
 
-- **Stack**: `three` + `@react-three/fiber` (v10) + `@react-three/drei`. Next 13.1+ transpiles `three`
+- **Stack**: `three` + `@react-three/fiber` (v9) + `@react-three/drei`. Next 13.1+ transpiles `three`
   natively — do **not** add `next-transpile-modules`.
 - **Isolation is mandatory.** The `<Canvas>` and everything under it is a client component
   (`"use client"`), loaded from the Map route via `next/dynamic` with `ssr: false` behind a real

@@ -30,7 +30,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 62
+    "trainingMethods": 61
   },
   "regions": [
     {
@@ -44,10 +44,9 @@
         "Draynor Village"
       ],
       "skills": [
-        "Divination training",
+        "Divination",
         "Necromancy",
-        "Thieving",
-        "skilling"
+        "Thieving"
       ],
       "content": [
         {
@@ -58,19 +57,19 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Varrock_Dig_Site",
-            "title": "Varrock Dig Site",
+            "title": "Varrock Dig Site / early Archaeology",
             "verifiedAt": "2026-07-24"
           }
         },
         {
           "name": "Pale wisps near Draynor",
-          "kind": "Divination training",
+          "kind": "Divination",
           "detail": "",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pale_wisp",
-            "title": "Pale wisp",
+            "url": "https://runescape.wiki/w/Divination_training",
+            "title": "Divination training",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -102,13 +101,15 @@
         "Wendlewick",
         "Hollow Hill",
         "Blighted Cave",
-        "Eastfold Farm"
+        "Eastfold Farm",
+        "Highweald Forest",
+        "Shrine of Inanna"
       ],
       "skills": [
         "Archaeology",
         "Fishing",
         "Hunter",
-        "Slayer monster",
+        "Slayer",
         "Summoning"
       ],
       "content": [
@@ -119,7 +120,7 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ivar%2C_King_of_Bones",
+            "url": "https://runescape.wiki/w/Ivar,_King_of_Bones",
             "title": "Ivar, King of Bones",
             "verifiedAt": "2026-07-24"
           }
@@ -131,28 +132,28 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Silverquill%2C_the_Dreadhog",
+            "url": "https://runescape.wiki/w/Silverquill,_the_Dreadhog",
             "title": "Silverquill, the Dreadhog",
             "verifiedAt": "2026-07-24"
           }
         },
         {
           "name": "Sanguine Crawler",
-          "kind": "Slayer monster",
+          "kind": "Slayer",
           "detail": "Slayer 35",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sanguine_Crawler",
-            "title": "Sanguine Crawler",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
             "verifiedAt": "2026-07-24"
           }
         },
         {
           "name": "Havenhythe Big Game Hunter",
           "kind": "Hunter",
-          "detail": "Introduced with Hunter 110 and advertised as the best Hunter XP in the game.",
-          "confidence": "confirmed_official",
+          "detail": "The 2026 Hunter update describes the Havenhythe encounters as the highest Hunter experience rates.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hunter_training",
@@ -163,7 +164,7 @@
         {
           "name": "Birdhouses",
           "kind": "Hunter",
-          "detail": "5-101",
+          "detail": "Eight birdhouse plots are spread around Havenhythe; they use logs, clockwork and seeds and are harvested after a passive catch period.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -175,7 +176,7 @@
         {
           "name": "Clockwork box traps",
           "kind": "Hunter",
-          "detail": "",
+          "detail": "Lower-intensity box trapping; traps can hold multiple creatures depending on Hunter level. · Level 55",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -187,7 +188,7 @@
         {
           "name": "Black chinchompas",
           "kind": "Hunter",
-          "detail": "",
+          "detail": "Level 73",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -197,10 +198,22 @@
           }
         },
         {
-          "name": "Fish farming / Giant Crayfish",
+          "name": "Fish farming",
           "kind": "Fishing",
-          "detail": "45-84+",
-          "confidence": "confirmed_official",
+          "detail": "Havenhythe fish-farm progression spans levels 45-84, ending with giant crayfish at the farm.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Giant crayfish fishing",
+          "kind": "Fishing",
+          "detail": "Wild giant crayfish spots require level 82 Fishing; the fish-farm giant-crayfish stage is level 84.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
@@ -211,8 +224,8 @@
         {
           "name": "First Age dig site",
           "kind": "Archaeology",
-          "detail": "",
-          "confidence": "current_2026_content",
+          "detail": "announced for summer 2026; not treated as live until a release source is captured",
+          "confidence": "announced_not_yet_confirmed_live",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Archaeology_training",
@@ -223,11 +236,11 @@
         {
           "name": "Apex Hide Armour",
           "kind": "upgrade",
-          "detail": "",
-          "confidence": "confirmed_official",
+          "detail": "Tier 85-90 progression · Ranged",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Apex_Hide_Armour",
+            "url": "https://runescape.wiki/w/Apex_hide_armour",
             "title": "Apex Hide Armour",
             "verifiedAt": "2026-07-24"
           }
@@ -235,12 +248,12 @@
         {
           "name": "Masterwork Ranged Armour materials",
           "kind": "upgrade",
-          "detail": "",
-          "confidence": "confirmed_official",
+          "detail": "Hunter and Crafting progression from Havenhythe feeds tier-100 masterwork ranged equipment. · Tier 100 · Ranged",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Havenhythe",
-            "title": "Havenhythe",
+            "url": "https://runescape.wiki/w/Masterwork_ranged_equipment",
+            "title": "Masterwork Ranged Armour materials",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -254,8 +267,8 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Apex_Hide_Armour",
-            "title": "Apex Hide Armour",
+            "url": "https://runescape.wiki/w/Apex_hide_armour",
+            "title": "Apex hide armour",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "havenhythe"
@@ -305,18 +318,18 @@
         "TzHaar area"
       ],
       "skills": [
-        "Slayer master"
+        "Slayer"
       ],
       "content": [
         {
           "name": "Duradel",
-          "kind": "Slayer master",
+          "kind": "Slayer",
           "detail": "100 combat, 50 Slayer",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Duradel",
-            "title": "Duradel",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -408,7 +421,6 @@
         "God Wars Dungeon"
       ],
       "skills": [
-        "God Wars Dungeon 1",
         "Invention",
         "Smithing",
         "Summoning",
@@ -434,7 +446,7 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Kree'arra",
+            "url": "https://runescape.wiki/w/Kree%27arra",
             "title": "Kree'arra",
             "verifiedAt": "2026-07-24"
           }
@@ -458,7 +470,7 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/K'ril_Tsutsaroth",
+            "url": "https://runescape.wiki/w/K%27ril_Tsutsaroth",
             "title": "K'ril Tsutsaroth",
             "verifiedAt": "2026-07-24"
           }
@@ -478,7 +490,7 @@
         {
           "name": "Artisans' Workshop burial smithing",
           "kind": "Smithing",
-          "detail": "Among the fastest Smithing XP methods; expensive and consumes the armour.",
+          "detail": "Burial equipment is available in the Falador workshop from 40 Smithing and is a high-throughput Smithing route when materials allow.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -566,7 +578,7 @@
         {
           "name": "Nex equipment",
           "category": "combat gear",
-          "detail": "Torva, Pernix, Virtus · Tier 80",
+          "detail": "Tier 80 · Torva, Pernix, Virtus",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -580,8 +592,12 @@
         {
           "name": "Invention Guild",
           "category": "skill unlock infrastructure",
-          "detail": "",
-          "requirements": [],
+          "detail": "Do not mark Asgarnia mandatory for Invention until Jagex reveals whether Equilibrium auto-completes/unlocks the tutorial globally. · Location: north-east of Falador",
+          "requirements": [
+            "80 Crafting",
+            "80 Divination",
+            "80 Smithing"
+          ],
           "confidence": "confirmed_base_game_region_behavior_unresolved",
           "source": {
             "source": "runescape-wiki",
@@ -649,7 +665,7 @@
         {
           "name": "Hall of Memories",
           "kind": "Divination",
-          "detail": "",
+          "detail": "level 95 afk: 205000 · level 95 2tick: 310000 · high end with boosts: 400k+",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -661,8 +677,8 @@
         {
           "name": "Deep Sea Fishing Hub",
           "kind": "Fishing",
-          "detail": "",
-          "confidence": "confirmed_official",
+          "detail": "68+ hub; Fishing Frenzy 94+; sailfish 97+",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
@@ -687,7 +703,7 @@
         {
           "name": "Ancient Invention",
           "category": "Invention upgrade",
-          "detail": "Source: Stormguard Citadel Dig Site / Howl's Floating Workshop",
+          "detail": "Unlocks: Ancient weapon gizmo, Ancient armour gizmo, Ancient tool gizmo, Ancient tools blueprints, XP Capacitor blueprint · Source: Stormguard Citadel Dig Site / Howl's Floating Workshop",
           "requirements": [
             "95 Archaeology for workshop mystery"
           ],
@@ -763,18 +779,19 @@
       "skills": [
         "Cooking",
         "Crafting",
-        "Herblore"
+        "Herblore",
+        "Magic"
       ],
       "content": [
         {
           "name": "Lunar spellbook and Lunar utility",
-          "kind": "combat/skilling magic",
-          "detail": "",
+          "kind": "Magic",
+          "detail": "The spellbook is largely utility/skilling focused and includes spells used by several fast artisan routes.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Lunar_spellbook",
-            "title": "Lunar spellbook",
+            "url": "https://runescape.wiki/w/Pay-to-play_Magic_training",
+            "title": "Pay-to-play Magic training",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -940,7 +957,9 @@
           "name": "Chaotic equipment",
           "category": "Dungeoneering reward gear",
           "detail": "Catalyst tasks explicitly treated equipping chaotic equipment as Wilderness: Daemonheim content, reinforcing the dependency mapping. · Chaotic weapons, Chaotic kiteshield",
-          "requirements": [],
+          "requirements": [
+            "80 Dungeoneering and relevant combat skill requirements"
+          ],
           "confidence": "confirmed_wiki_historical_and_region_mapping",
           "source": {
             "source": "runescape-wiki",
@@ -953,7 +972,7 @@
         {
           "name": "Primal ore / high-level Mining",
           "category": "skilling progression",
-          "detail": "Source: Daemonheim Peninsula and Daemonheim",
+          "detail": "Level 100+ Mining · Source: Daemonheim Peninsula and Daemonheim",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -1018,8 +1037,7 @@
         "Crafting",
         "Prayer",
         "Runecrafting",
-        "Summoning",
-        "skilling"
+        "Summoning"
       ],
       "content": [
         {
@@ -1041,7 +1059,7 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Het's_Oasis",
+            "url": "https://runescape.wiki/w/Het%27s_Oasis",
             "title": "Het's Oasis",
             "verifiedAt": "2026-07-24"
           }
@@ -1078,7 +1096,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
-            "title": "Sophanem Slayer Dungeon",
+            "title": "Sophanem Slayer Dungeon / The Magister",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1101,7 +1119,7 @@
         {
           "name": "Telos weapon progression",
           "category": "high-end combat weapons",
-          "detail": "Seren godbow, Staff of Sliske, Zaros godsword",
+          "detail": "Location: Heart of Gielinor · Seren godbow, Staff of Sliske, Zaros godsword",
           "requirements": [],
           "confidence": "confirmed_wiki_content_region_inferred",
           "source": {
@@ -1143,7 +1161,7 @@
         {
           "name": "Red sandstone",
           "category": "flask/Herblore infrastructure",
-          "detail": "",
+          "detail": "daily cap removed in the DailyScape Overhaul, rock hitpoints reduced 50% in the July Mid-Game Rebalance · Locations: Oo'glog, Sophanem",
           "requirements": [],
           "confidence": "confirmed_wiki_and_official_archive",
           "source": {
@@ -1196,7 +1214,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Araxxor",
-            "title": "Araxxor",
+            "title": "Araxxor / Araxxi",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1310,8 +1328,7 @@
         "Mining",
         "Prayer",
         "Summoning",
-        "Woodcutting",
-        "high-level hub"
+        "Woodcutting"
       ],
       "content": [
         {
@@ -1346,7 +1363,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Prifddinas",
-            "title": "Prifddinas",
+            "title": "Crystal equipment and Prifddinas skilling content",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1388,7 +1405,7 @@
         {
           "name": "Crystal sandstone",
           "category": "combination-potion flask infrastructure",
-          "detail": "daily cap removed; sandstone mining was further accelerated in July",
+          "detail": "daily cap removed; sandstone mining was further accelerated in July · Location: Ithell district / Prifddinas",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -1449,8 +1466,7 @@
         "Farming",
         "Firemaking",
         "Hunter",
-        "Runecrafting",
-        "skilling"
+        "Runecrafting"
       ],
       "content": [
         {
@@ -1509,7 +1525,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ranch_Out_of_Time",
-            "title": "Ranch Out of Time",
+            "title": "Herby Werby / Ranch Out of Time",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1518,7 +1534,7 @@
         {
           "name": "Dragon mattock",
           "category": "Archaeology tool progression",
-          "detail": "Source: Anachronia Big Game Hunter",
+          "detail": "Drop rate: 1/101 per dinosaur in the base game · Source: Anachronia Big Game Hunter",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -1532,7 +1548,7 @@
         {
           "name": "Terrasaur maul components",
           "category": "melee weapon progression",
-          "detail": "Source: tier-3 Anachronia Big Game Hunter",
+          "detail": "Base drop rate: 1/1000 for the relevant piece from its tier-3 dinosaur · Source: tier-3 Anachronia Big Game Hunter",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -1623,6 +1639,11 @@
           "levelRange": "90+",
           "xpRate": "189473.7",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -1644,6 +1665,11 @@
           "levelRange": "85+",
           "xpRate": "162000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -1665,6 +1691,11 @@
           "levelRange": "85+",
           "xpRate": "210000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "anachronia"
           ],
@@ -1686,6 +1717,11 @@
           "levelRange": "77-97+",
           "xpRate": "77: 102857.1 · 82: 120000 · 87: 137142.9 · 92: 154285.7 · 97: 171428.6",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],
@@ -1707,6 +1743,11 @@
           "levelRange": "65+",
           "xpRate": "70114.3",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "desert"
           ],
@@ -1728,6 +1769,11 @@
           "levelRange": "52+",
           "xpRate": "51390",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry"
           ],
@@ -1756,6 +1802,11 @@
           "levelRange": "1-120",
           "xpRate": "varies heavily by level/site",
           "intensity": "AFK to active depending on Time Sprite usage",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi-region"
           ],
@@ -1784,6 +1835,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -1812,6 +1868,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -1842,6 +1903,11 @@
           "levelRange": "94+",
           "xpRate": "",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "player_owned_house_global_with_resource_dependency"
           ],
@@ -1863,6 +1929,11 @@
           "levelRange": "Fort progression; Eternal reinforcement from 105",
           "xpRate": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
           "intensity": "long AFK windows; active hotspots improve rate",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry_inferred"
           ],
@@ -1893,6 +1964,11 @@
           "levelRange": "85+ Cooking; 65 Magic for the spell",
           "xpRate": "comparable to shark or better; exact no-trading League throughput depends on pie supply",
           "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Bake Pie",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "fremennik"
           ],
@@ -1914,6 +1990,11 @@
           "levelRange": "mid-level alternative",
           "xpRate": "not normalized",
           "intensity": "bank-standing / local supply loop",
+          "location": "Neitiznot yak pen",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "fremennik"
           ],
@@ -1946,6 +2027,11 @@
           "levelRange": "20-99+",
           "xpRate": "200000-550000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_if_materials_available"
           ],
@@ -1967,6 +2053,11 @@
           "levelRange": "40-99+",
           "xpRate": "300000-450000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_if_materials_available"
           ],
@@ -1988,6 +2079,11 @@
           "levelRange": "",
           "xpRate": "400000+",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Telekinetic Grind",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region_dependency",
             "fremennik",
@@ -2019,6 +2115,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -2049,6 +2150,11 @@
           "levelRange": "70+",
           "xpRate": "level 70 2tick: 140000 · level 80 2tick: 170000 · level 85 2tick: 205000 · level 90 2tick: 245000 · level 95 2tick: 310000 · level 95 afk: 205000 · level 99 with outfit scrimshaw and corehunting: 400000+",
           "intensity": "AFK to very active depending on method",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -2079,6 +2185,11 @@
           "levelRange": "1-120",
           "xpRate": "2026 remaster rebalanced floor XP and made in-dungeon actions contribute; optimizer-grade rates still need post-remaster extraction.",
           "intensity": "active",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry"
           ],
@@ -2110,6 +2221,11 @@
           "levelRange": "17+ core system",
           "xpRate": "time-gated animal growth; high time-efficiency rather than continuous XP/h",
           "intensity": "periodic",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -2131,6 +2247,11 @@
           "levelRange": "high-level Farming",
           "xpRate": "time-gated; exact Equilibrium value pending",
           "intensity": "periodic",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "anachronia"
           ],
@@ -2161,6 +2282,11 @@
           "levelRange": "100+",
           "xpRate": "662400",
           "intensity": "active line fires",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_if_materials_available"
           ],
@@ -2182,6 +2308,11 @@
           "levelRange": "87+",
           "xpRate": "410000",
           "intensity": "AFK up to roughly 3 minutes per batch",
+          "location": "Anachronia Dinosaur Farm / 'Accidental' Fletching and Firemaking",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "anachronia"
           ],
@@ -2212,6 +2343,11 @@
           "levelRange": "94+",
           "xpRate": "285000",
           "intensity": "very active",
+          "location": "Deep Sea Fishing Hub",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -2233,6 +2369,11 @@
           "levelRange": "97+",
           "xpRate": "90000",
           "intensity": "low-to-medium",
+          "location": "Deep Sea Fishing Hub",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -2261,6 +2402,11 @@
           "levelRange": "high-level / primal progression",
           "xpRate": "900000",
           "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_if_materials_available"
           ],
@@ -2282,6 +2428,11 @@
           "levelRange": "103+ for primal bolts",
           "xpRate": "975000",
           "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_if_materials_available"
           ],
@@ -2312,6 +2463,11 @@
           "levelRange": "",
           "xpRate": "roughly 3900000 for harralander tar in the current guide's high-speed example",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Telekinetic Grind",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region_dependency",
             "fremennik"
@@ -2343,6 +2499,11 @@
           "levelRange": "5-101",
           "xpRate": "not normalized yet",
           "intensity": "periodic/passive route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "havenhythe"
           ],
@@ -2364,6 +2525,11 @@
           "levelRange": "55+",
           "xpRate": "not normalized yet",
           "intensity": "lower-intensity trapping",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "havenhythe"
           ],
@@ -2385,6 +2551,11 @@
           "levelRange": "high-level, up to 110",
           "xpRate": "Jagex describes it as the best Hunter XP in the game; exact reliable post-launch rate table still needs capture.",
           "intensity": "active",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "havenhythe"
           ],
@@ -2415,6 +2586,15 @@
           "levelRange": "",
           "xpRate": "",
           "intensity": "",
+          "location": "",
+          "requirements": [
+            "80 Crafting",
+            "80 Divination",
+            "80 Smithing"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia_for_initial_guild_access_unless_league_autounlocks"
           ],
@@ -2443,6 +2623,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -2474,6 +2659,11 @@
           "levelRange": "97+",
           "xpRate": "190000",
           "intensity": "",
+          "location": "Uncharted Isles / The Arc",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "arc_unresolved"
           ],
@@ -2495,6 +2685,11 @@
           "levelRange": "89-97+",
           "xpRate": "180000",
           "intensity": "AFK",
+          "location": "Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],
@@ -2516,6 +2711,11 @@
           "levelRange": "100+",
           "xpRate": "250000+ from roughly level 105 with recommended setup",
           "intensity": "",
+          "location": "Daemonheim / Daemonheim Peninsula",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": true,
           "regionHints": [
             "forinthry"
           ],
@@ -2546,6 +2746,11 @@
           "levelRange": "1-120",
           "xpRate": "current training guide exists, but Equilibrium region access for City of Um and ritual infrastructure has not yet been publicly mapped.",
           "intensity": "varies",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "unresolved"
           ],
@@ -2567,11 +2772,16 @@
           "levelRange": "90-120 for fastest ritual-centric training",
           "xpRate": "",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "misthalin_likely_city_of_um"
           ],
           "note": "Current guide identifies high-level rituals as the fastest training method and combat as the slower AFK alternative.",
-          "warning": "",
+          "warning": "City of Um is expected to fall under Misthalin but Jagex has not yet published the exact Equilibrium boundary/quest treatment. Keep this inferred until revealed.",
           "freshness": "",
           "confidence": "confirmed_wiki_method_region_inferred",
           "source": {
@@ -2600,6 +2810,11 @@
           "levelRange": "",
           "xpRate": "dragon bones: 403200 · dragonkin bones: 896000 · dinosaur bones: 952000 · frost dragon bones: 1008000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry"
           ],
@@ -2621,6 +2836,11 @@
           "levelRange": "",
           "xpRate": "294000",
           "intensity": "",
+          "location": "Hefin Cathedral, Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],
@@ -2642,6 +2862,11 @@
           "levelRange": "",
           "xpRate": "dragon bones: 1184400 · dragonkin bones: 2632000 · dinosaur bones: 2796500 · frost dragon bones: 2961000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "Het's Oasis",
+          "hardRegionRequirement": false,
           "regionHints": [
             "global_once_supplied",
             "desert"
@@ -2664,6 +2889,11 @@
           "levelRange": "",
           "xpRate": "prayer with morytania legs 4: 400000 · prayer without: 266000 · combat style: 600000 · constitution: 200000 · firemaking: 270000 · farming with seedicide: 140000",
           "intensity": "",
+          "location": "Darkmeyer",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "morytania"
           ],
@@ -2692,6 +2922,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -2724,6 +2959,11 @@
           "levelRange": "9+",
           "xpRate": "Legacy guide ranges are retained only as a baseline because the guide is missing 110 Runecrafting data and still references the old Demonic Skull boost.",
           "intensity": "active movement",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry"
           ],
@@ -2745,6 +2985,11 @@
           "levelRange": "100+",
           "xpRate": "staff at 106: 287600 · wands or orbs: 245600",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "materials_and_altar_dependent"
           ],
@@ -2766,6 +3011,11 @@
           "levelRange": "90+",
           "xpRate": "legacy guide lists ~226800 base XP/h before old Demonic Skull assumptions; re-benchmark for 2026 League use",
           "intensity": "AFK charging + active craft trips",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "desert"
           ],
@@ -2787,6 +3037,11 @@
           "levelRange": "105+",
           "xpRate": "520000",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "forinthry_plus_anachronia_dependency"
           ],
@@ -2815,6 +3070,11 @@
           "levelRange": "",
           "xpRate": "",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -2845,6 +3105,11 @@
           "levelRange": "40+ workshop guild; best materials at high Smithing",
           "xpRate": "Can exceed 1,000,000 XP/h; ideal high-end setups can exceed 4,000,000 XP/h off Double XP according to current guide.",
           "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia"
           ],
@@ -2873,6 +3138,11 @@
           "levelRange": "1-120",
           "xpRate": "not normalized",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "multi_region"
           ],
@@ -2906,6 +3176,11 @@
           "levelRange": "high-level",
           "xpRate": "not normalized",
           "intensity": "fast bank/obelisk loop",
+          "location": "Prifddinas, Amlodd district",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],
@@ -2927,6 +3202,11 @@
           "levelRange": "89+",
           "xpRate": "11700000",
           "intensity": "very active speed method",
+          "location": "Taverley summoning obelisk",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia"
           ],
@@ -2948,6 +3228,11 @@
           "levelRange": "general pouch training",
           "xpRate": "not normalized",
           "intensity": "bank/obelisk loop",
+          "location": "Menaphos Merchant district",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "desert"
           ],
@@ -2969,6 +3254,11 @@
           "levelRange": "all pouch tiers as materials allow",
           "xpRate": "not normalized",
           "intensity": "active",
+          "location": "Havenhythe near Wendlewick",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "havenhythe"
           ],
@@ -3001,6 +3291,11 @@
           "levelRange": "76-83",
           "xpRate": "up to ~400000 XP/h, ~500000 with flashing safes",
           "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia"
           ],
@@ -3022,6 +3317,11 @@
           "levelRange": "83-90",
           "xpRate": "up to ~575000 XP/h, ~600000 with flashing safes",
           "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin"
           ],
@@ -3043,6 +3343,11 @@
           "levelRange": "62-76",
           "xpRate": "up to ~300000 XP/h",
           "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "misthalin"
           ],
@@ -3074,6 +3379,11 @@
           "levelRange": "94-100",
           "xpRate": "130000-133000",
           "intensity": "",
+          "location": "Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],
@@ -3095,6 +3405,11 @@
           "levelRange": "100+",
           "xpRate": "300000+ with boosts according to the current training summary",
           "intensity": "",
+          "location": "Piscatoris Hunter area; Havenhythe also contains a nursery interaction for eternal magic trees",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "kandarin_inferred"
           ],
@@ -3116,6 +3431,11 @@
           "levelRange": "96+",
           "xpRate": "about 300000 at 99 when continuously cutting; guide reports more than 776000 at 110 with a stacked boosted setup",
           "intensity": "",
+          "location": "Uncharted Isles / The Arc",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "arc_unresolved"
           ],
@@ -3137,6 +3457,11 @@
           "levelRange": "68-99",
           "xpRate": "86000-126000; up to about 151000 at 99 with Voice of Seren",
           "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
           "regionHints": [
             "tirannwn"
           ],

@@ -8,11 +8,31 @@
     "purpose_in_dataset": "Historical baseline for comparing League II progression, relic power, XP multipliers and task economy. Do not assume Catalyst mechanics carry into Equilibrium."
   },
   "task_points": {
-    "easy": {"count": 229, "points_each": 10, "total": 2290},
-    "medium": {"count": 279, "points_each": 30, "total": 8370},
-    "hard": {"count": 277, "points_each": 80, "total": 22160},
-    "elite": {"count": 297, "points_each": 200, "total": 59400},
-    "master": {"count": 35, "points_each": 400, "total": 14000},
+    "easy": {
+      "count": 229,
+      "points_each": 10,
+      "total": 2290
+    },
+    "medium": {
+      "count": 279,
+      "points_each": 30,
+      "total": 8370
+    },
+    "hard": {
+      "count": 277,
+      "points_each": 80,
+      "total": 22160
+    },
+    "elite": {
+      "count": 297,
+      "points_each": 200,
+      "total": 59400
+    },
+    "master": {
+      "count": 35,
+      "points_each": 400,
+      "total": 14000
+    },
     "task_count": 1117,
     "maximum_points": 106220,
     "confidence": "confirmed_wiki"
@@ -29,7 +49,11 @@
         "The Archaeology Guild Shop is fully available.",
         "Necromancy rituals grant +400% souls."
       ],
-      "relic_choices": ["Excavator", "Divine Woodcutter", "Animal Wrangler"]
+      "relic_choices": [
+        "Excavator",
+        "Divine Woodcutter",
+        "Animal Wrangler"
+      ]
     },
     {
       "tier": 2,
@@ -42,7 +66,11 @@
         "Slayer task size can be chosen at the minimum or maximum amount.",
         "Slayer and Reaper points are multiplied by 5."
       ],
-      "relic_choices": ["Golden Footed", "Five Finger Discount", "Farming Frenzy"]
+      "relic_choices": [
+        "Golden Footed",
+        "Five Finger Discount",
+        "Farming Frenzy"
+      ]
     },
     {
       "tier": 3,
@@ -52,7 +80,11 @@
         "Movement ability cooldowns are reduced to 4.8 seconds.",
         "Dive is automatically unlocked."
       ],
-      "relic_choices": ["Fairy's Flight", "Assassin's Insight", "Voidwalker"]
+      "relic_choices": [
+        "Fairy's Flight",
+        "Assassin's Insight",
+        "Voidwalker"
+      ]
     },
     {
       "tier": 4,
@@ -63,7 +95,11 @@
         "All tool-belt items are unlocked.",
         "Gate of Elidinis access is enabled, although Soul Searching is still needed for its surrounding area."
       ],
-      "relic_choices": ["Production Master", "Rejuvenated", "Clue Connoisseur"]
+      "relic_choices": [
+        "Production Master",
+        "Rejuvenated",
+        "Clue Connoisseur"
+      ]
     },
     {
       "tier": 5,
@@ -75,7 +111,12 @@
         "Zemouregal & Vorkath and Amascut become available without their normal quest requirements.",
         "The Sage can swap spellbooks and prayer books."
       ],
-      "relic_choices": ["Barbarism", "Crit Happens", "Bombardment", "Soulbourne"]
+      "relic_choices": [
+        "Barbarism",
+        "Crit Happens",
+        "Bombardment",
+        "Soulbourne"
+      ]
     },
     {
       "tier": 6,
@@ -87,7 +128,10 @@
         "All Seren spells and prayers are unlocked.",
         "Ring of vigour becomes a passive effect."
       ],
-      "relic_choices": ["Banker's Note", "Perkfection"]
+      "relic_choices": [
+        "Banker's Note",
+        "Perkfection"
+      ]
     },
     {
       "tier": 7,
@@ -97,7 +141,11 @@
         "Rare items are 6x as common as the base game.",
         "Advance Time can be used without limit."
       ],
-      "relic_choices": ["Ascension", "Specialist", "Everlasting Faith"]
+      "relic_choices": [
+        "Ascension",
+        "Specialist",
+        "Everlasting Faith"
+      ]
     }
   ],
   "selected_relic_effects": {
@@ -137,7 +185,9 @@
       "confidence": "confirmed_wiki_partial"
     },
     "Fairy's Flight": {
-      "effects": ["Provides a reusable teleport interface for fairy rings, spirit trees and farming patches."],
+      "effects": [
+        "Provides a reusable teleport interface for fairy rings, spirit trees and farming patches."
+      ],
       "confidence": "confirmed_wiki"
     },
     "Soulbourne": {
@@ -177,5 +227,9 @@
     "Equilibrium is advertised as faster to enter its high-power state, with more auto-completed quests and earlier combat power.",
     "Catalyst aura-era assumptions are legacy because the 2026 Aura Overhaul removed the aura system."
   ],
-  "source_ids": ["catalyst_guide_wiki", "catalyst_tasks_wiki", "catalyst_transcript_wiki"]
+  "source_ids": [
+    "catalyst_guide_wiki",
+    "catalyst_tasks_wiki",
+    "catalyst_transcript_wiki"
+  ]
 }

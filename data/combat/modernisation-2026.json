@@ -3,7 +3,14 @@
   "release": {
     "name": "Combat Style Modernisation",
     "date": "2026-03-02",
-    "scope": ["Melee", "Ranged", "Magic", "Necromancy parity", "combat auras", "120 combat skill caps"],
+    "scope": [
+      "Melee",
+      "Ranged",
+      "Magic",
+      "Necromancy parity",
+      "combat auras",
+      "120 combat skill caps"
+    ],
     "design_direction": "Bring the original combat styles closer to Necromancy's clarity and modern design while preserving distinct identities and reducing action-bar/keybind bloat.",
     "confidence": "confirmed_wiki"
   },
@@ -128,7 +135,14 @@
       }
     ],
     "removed_or_retired_legacy_examples": [
-      "Slice", "Havoc", "Smash", "Sever", "Destroy", "Quake", "Blood Tendrils", "Frenzy"
+      "Slice",
+      "Havoc",
+      "Smash",
+      "Sever",
+      "Destroy",
+      "Quake",
+      "Blood Tendrils",
+      "Frenzy"
     ],
     "confidence": "confirmed_wiki"
   },
@@ -169,7 +183,21 @@
     "confidence": "confirmed_wiki_partial"
   },
   "combat_auras_disabled_on_2026_03_02": [
-    "Knock Out", "Brawler", "Runic Accuracy", "Sharpshooter", "Ancestor Spirits", "Berserker", "Maniacal", "Reckless", "Dark Magic", "Regeneration", "Aegis", "Mahjarrat", "Inspiration", "Equilibrium", "Invigorate"
+    "Knock Out",
+    "Brawler",
+    "Runic Accuracy",
+    "Sharpshooter",
+    "Ancestor Spirits",
+    "Berserker",
+    "Maniacal",
+    "Reckless",
+    "Dark Magic",
+    "Regeneration",
+    "Aegis",
+    "Mahjarrat",
+    "Inspiration",
+    "Equilibrium",
+    "Invigorate"
   ],
   "aura_overhaul_follow_up": {
     "date": "2026-04-13",
@@ -179,5 +207,9 @@
     "league_relevance": "Do not import Catalyst guides that assume Berserker/Maniacal/Reckless, Vampyrism aura, Penance aura, aura refreshes, or aura timing into Equilibrium planning.",
     "confidence": "confirmed_official_and_patch_archive"
   },
-  "source_ids": ["combat_modernisation_wiki", "combat_patch_1_wiki", "combat_patch_2_wiki"]
+  "source_ids": [
+    "combat_modernisation_wiki",
+    "combat_patch_1_wiki",
+    "combat_patch_2_wiki"
+  ]
 }

@@ -65,9 +65,14 @@ const WIKI_TRAINING_SOURCES = {
   Woodcutting: ["Pay-to-play Woodcutting training", "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"],
 };
 
+const ACTUAL_SKILLS = new Set(Object.keys(WIKI_TRAINING_SOURCES));
+
 const ENTITY_SOURCE_OVERRIDES = {
   "Varrock Dig Site / early Archaeology": ["Varrock Dig Site", "https://runescape.wiki/w/Varrock_Dig_Site"],
   "Pale wisps near Draynor": ["Pale wisp", "https://runescape.wiki/w/Pale_wisp"],
+  "Havenhythe Big Game Hunter": ["2026 Hunter update", "https://runescape.wiki/w/Hunter_update"],
+  "Apex Hide Armour": ["Apex hide armour", "https://runescape.wiki/w/Apex_hide_armour"],
+  "Masterwork Ranged Armour materials": ["Masterwork ranged armour", "https://runescape.wiki/w/Masterwork_ranged_armour"],
   "Fish farming / Giant Crayfish": ["Giant crayfish", "https://runescape.wiki/w/Giant_crayfish"],
   "Artisans' Workshop burial smithing": ["Artisans' Workshop", "https://runescape.wiki/w/Artisans%27_Workshop"],
   "Safecracking route": ["Safecracking", "https://runescape.wiki/w/Safecracking"],
@@ -78,14 +83,19 @@ const ENTITY_SOURCE_OVERRIDES = {
   "Herby Werby / Ranch Out of Time": ["Ranch Out of Time", "https://runescape.wiki/w/Ranch_Out_of_Time"],
   "God Wars Dungeon 1 equipment": ["God Wars Dungeon", "https://runescape.wiki/w/God_Wars_Dungeon"],
   "Nex equipment": ["Nex", "https://runescape.wiki/w/Nex"],
+  "Ancient Invention": ["Ancient Invention", "https://runescape.wiki/w/Ancient_Invention"],
+  "Lunar spellbook": ["Lunar spellbook", "https://runescape.wiki/w/Lunar_spellbook"],
   "Dagannoth Kings uniques": ["Dagannoth Kings", "https://runescape.wiki/w/Dagannoth_Kings"],
   "Daemonheim / Dungeoneering": ["Daemonheim", "https://runescape.wiki/w/Daemonheim"],
   "Primal ore / high-level Mining": ["Primal ore", "https://runescape.wiki/w/Primal_ore"],
   "Abyss access": ["Abyss", "https://runescape.wiki/w/Abyss"],
   "God Wars Dungeon 2 weapon and anima-core progression": ["Heart of Gielinor", "https://runescape.wiki/w/Heart_of_Gielinor"],
   "Telos weapon progression": ["Telos, the Warden", "https://runescape.wiki/w/Telos,_the_Warden"],
+  "Powder of burials": ["Powder of burials", "https://runescape.wiki/w/Powder_of_burials"],
   "Vyres / Sunspear multi-skill training": ["Vyrewatch", "https://runescape.wiki/w/Vyrewatch"],
+  "Crystal mattock": ["Crystal mattock", "https://runescape.wiki/w/Crystal_mattock"],
   "Solak / Lost Grove rewards": ["Solak", "https://runescape.wiki/w/Solak"],
+  "Dragon mattock": ["Dragon mattock", "https://runescape.wiki/w/Dragon_mattock"],
   "Terrasaur maul components": ["Terrasaur maul", "https://runescape.wiki/w/Terrasaur_maul"],
   "Raksha ability upgrades": ["Raksha", "https://runescape.wiki/w/Raksha"],
   "Raksha boot upgrades": ["Raksha", "https://runescape.wiki/w/Raksha"],
@@ -119,7 +129,9 @@ function sourceFromId(id, fallbackTitle) {
 }
 
 function sourceFromUrl(url, title) {
-  return url?.startsWith("http") ? sourceReference({ url, title }, title) : null;
+  return typeof url === "string" && url.startsWith("http")
+    ? sourceReference({ url, title }, title)
+    : null;
 }
 
 function wikiTrainingSource(skill) {
@@ -188,9 +200,7 @@ function wikiEntitySource(name) {
   const override = ENTITY_SOURCE_OVERRIDES[name];
   if (override) return sourceFromUrl(override[1], override[0]);
 
-  if (
-    /\s\/\s|\b(progression|route|access|materials|content|rewards|upgrades|uniques)\b/i.test(name)
-  ) {
+  if (/\s\/\s|\b(progression|route|access|materials|content|rewards|upgrades|uniques)\b/i.test(name)) {
     return null;
   }
 
@@ -233,9 +243,14 @@ function normalizeTraining(record) {
       "xp_event",
     ]),
     intensity: text(record.intensity),
+    location: text(record.location),
+    requirements: list(record.requirements).map(String),
+    requiredUnlock: text(record.required_unlock),
+    resourceSource: text(record.resource_source),
+    hardRegionRequirement: Boolean(record.hard_region_requirement),
     regionHints: regionHints(record),
     note: notes.join(" · "),
-    warning: text(record.warning),
+    warning: text(record.warning || record.region_warning),
     freshness: first(record, ["freshness", "status"]),
     confidence: text(record.confidence, "unclassified"),
     source,
@@ -285,13 +300,14 @@ function regionWikiFallback(region) {
 }
 
 function contentSource(region, raw, name, kind) {
-  const direct = sourceFromUrl(raw?.source, name);
+  const direct = sourceFromUrl(raw?.source_url || raw?.source, name);
   if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;
 
   const skillWiki = wikiTrainingSource(kind);
   if (skillWiki) return skillWiki;
 
-  return wikiEntitySource(name) || regionWikiFallback(region) || leagueRegionSource(region);
+  if (direct?.source === "runescape-wiki") return direct;
+  return wikiEntitySource(name) || regionWikiFallback(region) || direct || leagueRegionSource(region);
 }
 
 function normalizeContent(region, raw, fallbackKind) {
@@ -309,8 +325,13 @@ function normalizeContent(region, raw, fallbackKind) {
   const kind = first(raw, ["skill", "type", "group"]) || fallbackKind;
   const detail = [
     first(raw, ["note", "notes", "level_range", "base_game_requirements"]),
-    compact(raw.upgrade_examples),
+    raw.unlock_level ? `Level ${raw.unlock_level}` : "",
     raw.slayer_level ? `Slayer ${raw.slayer_level}` : "",
+    raw.tier ? `Tier ${raw.tier}` : "",
+    text(raw.style),
+    raw.xp_rates ? compact(raw.xp_rates) : "",
+    compact(raw.upgrade_examples),
+    text(raw.status),
   ].filter(Boolean).join(" · ");
 
   return {
@@ -322,24 +343,46 @@ function normalizeContent(region, raw, fallbackKind) {
   };
 }
 
+function upgradeSource(regionId, raw, name) {
+  const direct = sourceFromUrl(raw.source_url || raw.source, name);
+  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;
+  if (direct?.source === "runescape-wiki") return direct;
+  return wikiEntitySource(name) || direct || leagueRegionSource({ id: regionId });
+}
+
 function normalizeUpgrade(regionId, raw) {
   const name = text(raw.name, "Unnamed upgrade");
   const detail = [
     text(raw.notes),
     text(raw.league_relevance),
+    text(raw.league_warning),
     text(raw["2026_change"]),
-    compact(raw.examples),
+    compact(raw["2026_changes"]),
+    raw.level ? `Level ${raw.level}` : "",
     raw.tier ? `Tier ${raw.tier}` : "",
-    raw.source ? `Source: ${text(raw.source)}` : "",
+    raw.location ? `Location: ${compact(raw.location)}` : "",
+    raw.locations ? `Locations: ${compact(raw.locations)}` : "",
+    raw.location_group ? `Location: ${compact(raw.location_group)}` : "",
+    raw.unlocks ? `Unlocks: ${compact(raw.unlocks)}` : "",
+    raw.examples ? compact(raw.examples) : "",
+    raw.drop_rate ? `Drop rate: ${compact(raw.drop_rate)}` : "",
+    raw.base_drop_rate ? `Base drop rate: ${compact(raw.base_drop_rate)}` : "",
+    raw.source && !String(raw.source).startsWith("http") ? `Source: ${text(raw.source)}` : "",
   ].filter(Boolean).join(" · ");
+
+  const requirements = [
+    ...list(raw.requirements).map(String),
+    ...list(raw.base_game_requirements).map(String),
+    text(raw.base_game_requirement),
+  ].filter(Boolean);
 
   return {
     name,
     category: text(raw.category, "upgrade"),
     detail,
-    requirements: list(raw.requirements).map(String),
+    requirements: [...new Set(requirements)],
     confidence: text(raw.confidence, "unclassified"),
-    source: wikiEntitySource(name) || leagueRegionSource({ id: regionId }),
+    source: upgradeSource(regionId, raw, name),
     regionId,
   };
 }
@@ -364,10 +407,8 @@ const normalizedRegions = rawRegions.regions.map((region) => {
     region.boundary_rule,
   ].filter(Boolean);
   const skills = [...new Set([
-    ...methods.filter((method) => method.skill !== "Combat styles").map((method) => method.skill),
-    ...content
-      .map((row) => row.kind)
-      .filter((kind) => kind && !kind.includes("/") && !["content", "combat", "boss", "bossing", "progression", "upgrade"].includes(kind.toLowerCase())),
+    ...methods.filter((method) => ACTUAL_SKILLS.has(method.skill)).map((method) => method.skill),
+    ...content.map((row) => row.kind).filter((kind) => ACTUAL_SKILLS.has(kind)),
   ])].sort();
 
   return {
@@ -389,7 +430,7 @@ const normalizedRegions = rawRegions.regions.map((region) => {
 
 const skillMap = new Map();
 for (const method of allTraining) {
-  if (method.skill === "Combat styles") continue;
+  if (!ACTUAL_SKILLS.has(method.skill)) continue;
   const existing = skillMap.get(method.skill) || [];
   existing.push(method);
   skillMap.set(method.skill, existing);
@@ -495,7 +536,7 @@ write("data/research/catalog.json", {
     revealedBlessingTiers: blessingTiers.filter((tier) => tier.revealed).length,
     publishedTasks: 0,
     skills: normalizedSkills.length,
-    trainingMethods: allTraining.length,
+    trainingMethods: allTraining.filter((method) => ACTUAL_SKILLS.has(method.skill)).length,
   },
   regions: normalizedRegions,
   skills: normalizedSkills,
@@ -512,5 +553,5 @@ write("data/research/sources.json", {
 });
 
 console.log(
-  `DATA NORMALIZE\nRegions: ${normalizedRegions.length}   Relic tiers: ${relicTiers.length}   Blessing tiers: ${blessingTiers.length}   Skills: ${normalizedSkills.length}   Training methods: ${allTraining.length}`,
+  `DATA NORMALIZE\nRegions: ${normalizedRegions.length}   Relic tiers: ${relicTiers.length}   Blessing tiers: ${blessingTiers.length}   Skills: ${normalizedSkills.length}   Training methods: ${allTraining.filter((method) => ACTUAL_SKILLS.has(method.skill)).length}`,
 );

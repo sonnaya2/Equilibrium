@@ -23,6 +23,11 @@ export interface ResearchTrainingMethod {
   levelRange: string;
   xpRate: string;
   intensity: string;
+  location: string;
+  requirements: string[];
+  requiredUnlock: string;
+  resourceSource: string;
+  hardRegionRequirement: boolean;
   regionHints: string[];
   note: string;
   warning: string;

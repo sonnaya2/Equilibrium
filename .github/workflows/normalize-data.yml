@@ -3,7 +3,8 @@ name: Normalize data
 on:
   push:
     branches:
-      - normalize-scraped-data
+      - main
+      - "ui-data-pass-*"
     paths:
       - "scraped-data/**"
       - "scripts/normalize-scraped-data.mjs"

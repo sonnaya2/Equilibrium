@@ -51,8 +51,8 @@ function freshnessLabel(value: string): string {
   if (normalized === "2026_current" || normalized === "current" || normalized === "current_wiki") return "Current";
   if (normalized.includes("2026-07-20")) return "Jul 20, 2026";
   if (normalized.includes("2026_remastered")) return "2026 remaster";
-  if (normalized.includes("stale")) return "Needs update";
   if (normalized.includes("current_page_stale_xp_tables")) return "Current page; rates stale";
+  if (normalized.includes("stale")) return "Needs update";
   if (normalized.includes("current_content_region_confirmed")) return "Current";
   if (normalized.includes("current_wiki_main_game_ceiling")) return "Current main-game ceiling";
   return value.replaceAll("_", " ");
@@ -67,6 +67,9 @@ function methodAccess(method: ResearchTrainingMethod): string {
     .replaceAll("multi_region", "multiple regions")
     .replaceAll("global_if_materials_available", "global if materials are available")
     .replaceAll("global_once_supplied", "global once supplied")
+    .replaceAll("player_owned_house_global_with_resource_dependency", "player-owned house; materials region-dependent")
+    .replaceAll("materials_and_altar_dependent", "materials and altar dependent")
+    .replaceAll("arc_unresolved", "The Arc; League access unresolved")
     .replaceAll("_inferred", " (inferred)")
     .replaceAll("_likely_", " likely ")
     .replaceAll("_", " ");
@@ -95,13 +98,14 @@ function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
 
   return (
     <div className="overflow-x-auto border-t border-stone-750">
-      <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+      <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
         <thead className="text-xs text-parch-300">
           <tr className="border-b border-stone-750">
             <th className="py-2 pr-4 font-medium">Method</th>
             <th className="py-2 pr-4 font-medium">Level</th>
             <th className="py-2 pr-4 font-medium">Base rate / throughput</th>
-            <th className="py-2 pr-4 font-medium">Access</th>
+            <th className="py-2 pr-4 font-medium">Where</th>
+            <th className="py-2 pr-4 font-medium">Needs</th>
             <th className="py-2 pr-4 font-medium">Status</th>
             <th className="py-2 font-medium">Source</th>
           </tr>
@@ -111,13 +115,25 @@ function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
             <tr key={method.id} className="border-b border-stone-750/70 align-top">
               <td className="py-3 pr-4">
                 <div className="font-medium text-parch-50">{cleanText(method.method)}</div>
-                <div className="mt-0.5 text-xs text-parch-300">{method.skill}</div>
+                <div className="mt-0.5 text-xs text-parch-300">
+                  {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
+                </div>
                 {method.note ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300">{cleanText(method.note)}</div> : null}
                 {method.warning ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300/80">{cleanText(method.warning)}</div> : null}
               </td>
               <td className="py-3 pr-4 text-parch-300">{method.levelRange || "—"}</td>
-              <td className="py-3 pr-4 font-mono text-xs leading-5 text-parch-50">{method.xpRate || "not listed"}</td>
-              <td className="py-3 pr-4 text-xs leading-5 text-parch-300">{methodAccess(method)}</td>
+              <td className="max-w-[250px] py-3 pr-4 font-mono text-xs leading-5 text-parch-50">{method.xpRate || "not listed"}</td>
+              <td className="max-w-[230px] py-3 pr-4 text-xs leading-5 text-parch-300">
+                {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
+                <div className={method.location ? "mt-1" : ""}>{methodAccess(method)}</div>
+                {method.hardRegionRequirement ? <div className="mt-1 text-parch-50">region required</div> : null}
+              </td>
+              <td className="max-w-[240px] py-3 pr-4 text-xs leading-5 text-parch-300">
+                {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
+                {method.requirements.length ? <div className="mt-1">{method.requirements.join(" · ")}</div> : null}
+                {method.resourceSource ? <div className="mt-1">Supply: {cleanText(method.resourceSource)}</div> : null}
+                {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "—" : null}
+              </td>
               <td className="py-3 pr-4 text-xs leading-5 text-parch-300">
                 <div>{freshnessLabel(method.freshness)}</div>
                 <div className="mt-0.5 text-[11px] text-parch-300/70">{confidenceLabel(method.confidence)}</div>
@@ -139,13 +155,10 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{cleanText(region.name)}</h2>
             <div className="mt-1 text-xs text-parch-300">
-              {availabilityLabel(region.availability)} · {region.training.length} training methods · {region.upgrades.length} upgrades
+              {availabilityLabel(region.availability)} · {region.content.length} content rows · {region.training.length} training methods · {region.upgrades.length} upgrades
             </div>
           </div>
-          <div className="flex items-center gap-3 text-xs text-parch-300">
-            <span>{region.verified ? "Wiki source" : "Boundary not fully confirmed"}</span>
-            <SourceLink source={region.source} />
-          </div>
+          <div className="text-xs text-parch-300"><SourceLink source={region.source} /></div>
         </div>
       </header>
 
@@ -156,7 +169,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         </section>
       ) : null}
 
-      <section className="grid gap-5 py-5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.55fr)]">
+      <section className="grid gap-5 py-5 lg:grid-cols-2">
         <div>
           <h3 className="text-xs font-medium text-parch-300">Areas</h3>
           <div className="mt-2 border-t border-stone-750">
@@ -164,12 +177,21 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           </div>
         </div>
         <div>
-          <h3 className="text-xs font-medium text-parch-300">Notes</h3>
+          <h3 className="text-xs font-medium text-parch-300">Skills with mapped methods/content</h3>
           <div className="mt-2 border-t border-stone-750">
-            {region.warnings.length ? region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-2 text-xs leading-5 text-parch-300">{cleanText(warning)}</p>) : <p className="py-2 text-xs text-parch-300">Nothing region-specific yet.</p>}
+            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-sm text-parch-50">{skill}</div>) : <div className="py-2 text-sm text-parch-300">No skill tags yet.</div>}
           </div>
         </div>
       </section>
+
+      {region.warnings.length ? (
+        <section className="pb-5">
+          <h3 className="text-xs font-medium text-parch-300">Notes</h3>
+          <div className="mt-2 border-t border-stone-750">
+            {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-2 text-xs leading-5 text-parch-300">{cleanText(warning)}</p>)}
+          </div>
+        </section>
+      ) : null}
 
       <section className="pb-5">
         <div className="mb-2 flex items-baseline justify-between gap-4">
@@ -177,7 +199,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           <span className="text-xs text-parch-300">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto border-t border-stone-750">
-          <table className="w-full min-w-[780px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[820px] border-collapse text-left text-sm">
             <thead className="text-xs text-parch-300">
               <tr className="border-b border-stone-750">
                 <th className="py-2 pr-4 font-medium">Content</th>
@@ -192,7 +214,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                 <tr key={`${row.name}-${index}`} className="border-b border-stone-750/70 align-top">
                   <td className="py-2.5 pr-4 text-parch-50">{cleanText(row.name)}</td>
                   <td className="py-2.5 pr-4 text-xs text-parch-300">{row.kind}</td>
-                  <td className="py-2.5 pr-4 text-xs leading-5 text-parch-300">{row.detail ? cleanText(row.detail) : "—"}</td>
+                  <td className="max-w-xl py-2.5 pr-4 text-xs leading-5 text-parch-300">{row.detail ? cleanText(row.detail) : "—"}</td>
                   <td className="py-2.5 pr-4 text-[11px] text-parch-300">{confidenceLabel(row.confidence)}</td>
                   <td className="py-2.5 text-xs"><SourceLink source={row.source} /></td>
                 </tr>
@@ -209,14 +231,14 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         </div>
         <div className="border-t border-stone-750">
           {region.upgrades.length ? region.upgrades.map((upgrade) => (
-            <div key={upgrade.name} className="grid gap-1 border-b border-stone-750/70 py-3 md:grid-cols-[minmax(180px,0.32fr)_minmax(0,1fr)_120px_100px] md:gap-5">
+            <div key={upgrade.name} className="grid gap-1 border-b border-stone-750/70 py-3 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5">
               <div>
                 <div className="text-sm font-medium text-parch-50">{cleanText(upgrade.name)}</div>
                 <div className="mt-0.5 text-xs text-parch-300">{upgrade.category}</div>
               </div>
               <div className="text-xs leading-5 text-parch-300">
                 {upgrade.detail ? cleanText(upgrade.detail) : "No details yet."}
-                {upgrade.requirements.length ? <div className="mt-1">Requires: {upgrade.requirements.join(", ")}</div> : null}
+                {upgrade.requirements.length ? <div className="mt-1 text-parch-50">Requires: {upgrade.requirements.join(" · ")}</div> : null}
               </div>
               <div className="text-[11px] text-parch-300">{confidenceLabel(upgrade.confidence)}</div>
               <div className="text-xs md:text-right"><SourceLink source={upgrade.source} /></div>
@@ -251,6 +273,20 @@ function SkillDetail({ skill }: { skill: ResearchSkill }) {
   );
 }
 
+function methodSearchText(method: ResearchTrainingMethod): string {
+  return [
+    method.method,
+    method.skill,
+    method.location,
+    method.requiredUnlock,
+    method.resourceSource,
+    ...method.requirements,
+    ...method.regionHints,
+    method.note,
+    method.warning,
+  ].join(" ");
+}
+
 export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
   const [mode, setMode] = useState<Mode>("region");
   const [query, setQuery] = useState("");
@@ -260,16 +296,25 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
 
   const filteredRegions = useMemo(() => {
     if (!normalizedQuery) return catalog.regions;
-    return catalog.regions.filter((region) => [region.name, region.id, ...region.aliases, ...region.skills, ...region.areas].join(" ").toLowerCase().includes(normalizedQuery));
+    return catalog.regions.filter((region) => [
+      region.name,
+      region.id,
+      ...region.aliases,
+      ...region.skills,
+      ...region.areas,
+      ...region.content.flatMap((row) => [row.name, row.kind, row.detail]),
+      ...region.upgrades.flatMap((row) => [row.name, row.category, row.detail, ...row.requirements]),
+      ...region.training.map(methodSearchText),
+    ].join(" ").toLowerCase().includes(normalizedQuery));
   }, [catalog.regions, normalizedQuery]);
 
   const filteredSkills = useMemo(() => {
     if (!normalizedQuery) return catalog.skills;
-    return catalog.skills.filter((skill) => [skill.name, ...skill.regions, ...skill.methods.map((method) => method.method)].join(" ").toLowerCase().includes(normalizedQuery));
+    return catalog.skills.filter((skill) => [skill.name, ...skill.regions, ...skill.methods.map(methodSearchText)].join(" ").toLowerCase().includes(normalizedQuery));
   }, [catalog.skills, normalizedQuery]);
 
-  const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? catalog.regions[0];
-  const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? catalog.skills[0];
+  const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? filteredRegions[0] ?? catalog.regions[0];
+  const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? filteredSkills[0] ?? catalog.skills[0];
 
   return (
     <section>
@@ -301,7 +346,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
         </div>
         <label className="ml-auto flex min-w-[240px] flex-1 items-center gap-2 border-b border-stone-750 px-1 py-1 md:max-w-sm">
           <span className="text-xs text-parch-300">Search</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={mode === "region" ? "region, skill, area" : "skill, method, region"} className="min-w-0 flex-1 bg-transparent text-sm text-parch-50 outline-none placeholder:text-parch-300/55" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={mode === "region" ? "region, boss, item, skill" : "skill, method, location"} className="min-w-0 flex-1 bg-transparent text-sm text-parch-50 outline-none placeholder:text-parch-300/55" />
         </label>
       </div>
 

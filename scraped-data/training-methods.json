@@ -110,7 +110,7 @@
       "method": "Ranch Out of Time",
       "region": "anachronia",
       "level_range": "high-level Farming",
-      "xp_rate": "time-gated; exact equilibrium value pending",
+      "xp_rate": "time-gated; exact Equilibrium value pending",
       "intensity": "periodic",
       "freshness": "current",
       "confidence": "inferred_region"
@@ -170,13 +170,75 @@
     },
     {
       "skill": "Agility",
-      "method": "Anachronia Agility Course",
+      "method": "Anachronia full course",
       "region": "anachronia",
-      "level_range": "high-level",
-      "xp_rate": "~184985 XP/h is an older wiki benchmark; verify against July 2026 rebalancing before using as final League value.",
+      "level_range": "85+",
+      "xp_rate": 210000,
+      "xp_rate_unit": "approx XP/h",
       "intensity": "active laps",
-      "freshness": "needs_2026_verification",
-      "confidence": "legacy_reference_only"
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
+    },
+    {
+      "skill": "Agility",
+      "method": "Advanced Barbarian Outpost course",
+      "region": "kandarin",
+      "level_range": "90+",
+      "xp_rate": 189473.7,
+      "xp_rate_unit": "approx XP/h",
+      "intensity": "active laps",
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
+    },
+    {
+      "skill": "Agility",
+      "method": "Hefin course",
+      "region": "tirannwn",
+      "level_range": "77-99+",
+      "xp_rate": {
+        "77": 102857.1,
+        "82": 120000,
+        "87": 137142.9,
+        "92": 154285.7,
+        "97": 171428.6
+      },
+      "xp_rate_unit": "approx XP/h by level unlock",
+      "intensity": "laps",
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
+    },
+    {
+      "skill": "Agility",
+      "method": "Advanced Gnome Stronghold course",
+      "region": "kandarin",
+      "level_range": "85+",
+      "xp_rate": 162000,
+      "xp_rate_unit": "approx XP/h",
+      "intensity": "active laps",
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
+    },
+    {
+      "skill": "Agility",
+      "method": "Het's Oasis course",
+      "region": "desert",
+      "level_range": "65+",
+      "xp_rate": 70114.3,
+      "xp_rate_unit": "approx XP/h",
+      "intensity": "laps",
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
+    },
+    {
+      "skill": "Agility",
+      "method": "Wilderness course",
+      "region": "forinthry",
+      "level_range": "52+",
+      "xp_rate": 51390,
+      "xp_rate_unit": "approx XP/h",
+      "intensity": "active laps",
+      "freshness": "2026-07-20_rebalance",
+      "confidence": "confirmed_official_archive"
     },
     {
       "skill": "Necromancy",

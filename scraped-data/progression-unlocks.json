@@ -1,0 +1,183 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Base-game permanent unlocks that materially change a League build. These are dependency edges, not boss guides or a second combat-values table.",
+  "policy": {
+    "base_game_first": "Record the normal-game requirement here, then apply official Equilibrium quest auto-completion, relics, blessings or passives as a separate overlay.",
+    "no_stale_values": "Do not copy old damage or XP values into this graph. Numeric combat values belong in current combat data.",
+    "region_rule": "A quest location is not automatically a hard League region requirement. Keep geography as a hint unless Equilibrium or a prior League taxonomy gives usable evidence.",
+    "dedupe_rule": "Boss and regional codex drops stay in the regional upgrade/reward datasets. This file owns dependency state, not a duplicate drop table."
+  },
+  "quest_unlocks": [
+    {
+      "id": "the-world-wakes:combat-ultimates",
+      "quest": "The World Wakes",
+      "category": "combat abilities",
+      "unlocks": [
+        {"name": "Balanced Strike", "type": "ability", "style": "Melee"},
+        {"name": "Death's Swiftness", "type": "ability", "style": "Ranged"},
+        {"name": "Sunshine", "type": "ability", "style": "Magic"},
+        {"name": "Natural Instinct", "type": "ability", "style": "Defence"},
+        {"name": "Guthix's Blessing", "type": "ability", "style": "Constitution"}
+      ],
+      "source_url": "https://runescape.wiki/w/The_World_Wakes",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Resolve the base-game quest dependency against the official Equilibrium auto-quest overlay before gating these abilities."
+    },
+    {
+      "id": "temple-at-senntisten:ancient-curses",
+      "quest": "The Temple at Senntisten",
+      "category": "prayer book",
+      "unlocks": [{"name": "Ancient Curses", "type": "prayer_book"}],
+      "source_url": "https://runescape.wiki/w/Ancient_Curses",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Base-game quest dependency only. Equilibrium auto-completion may satisfy it."
+    },
+    {
+      "id": "desert-treasure:ancient-magicks",
+      "quest": "Desert Treasure",
+      "category": "spellbook",
+      "unlocks": [{"name": "Ancient Magicks", "type": "spellbook"}],
+      "source_url": "https://runescape.wiki/w/Ancient_Magicks",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Base-game quest dependency only. Do not infer the final League region requirement from the quest name; use the official auto-quest overlay when published."
+    },
+    {
+      "id": "lunar-diplomacy:lunar-spellbook",
+      "quest": "Lunar Diplomacy",
+      "category": "spellbook and regional utility",
+      "region_hint": "fremennik",
+      "unlocks": [
+        {"name": "Lunar spellbook", "type": "spellbook"},
+        {"name": "Lunar Isle", "type": "area"},
+        {"name": "Astral altar", "type": "runecrafting_access"}
+      ],
+      "source_url": "https://runescape.wiki/w/Lunar_Diplomacy",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik is the useful planning hint because Lunar Isle is an official Fremennik-region example. Resolve the quest itself through Equilibrium auto-completion before treating it as a manual gate."
+    },
+    {
+      "id": "dream-mentor:lunar-spells",
+      "quest": "Dream Mentor",
+      "category": "Lunar spell additions",
+      "region_hint": "fremennik",
+      "unlocks": [
+        {"name": "Monster Examine", "type": "spell", "book": "Lunar"},
+        {"name": "Humidify", "type": "spell", "book": "Lunar"},
+        {"name": "Hunter Kit", "type": "spell", "book": "Lunar"},
+        {"name": "Stat Spy", "type": "spell", "book": "Lunar"},
+        {"name": "Superglass Make", "type": "spell", "book": "Lunar"},
+        {"name": "Dream", "type": "spell", "book": "Lunar"},
+        {"name": "Plank Make", "type": "spell", "book": "Lunar"},
+        {"name": "Spin Flax", "type": "spell", "book": "Lunar"},
+        {"name": "Spellbook Swap", "type": "spell", "book": "Lunar"}
+      ],
+      "source_url": "https://runescape.wiki/w/Dream_Mentor/Quick_guide",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "These are extra Lunar spells on top of Lunar Diplomacy. Resolve both quests against the official Equilibrium auto-quest overlay."
+    },
+    {
+      "id": "city-of-senntisten:ancient-spells",
+      "quest": "City of Senntisten",
+      "category": "Ancient Magicks spell additions",
+      "unlocks": [
+        {"name": "Smoke Cloud", "type": "spell", "style": "Magic"},
+        {"name": "Animate Dead", "type": "spell", "style": "Magic"},
+        {"name": "Exsanguinate", "type": "spell", "style": "Magic"},
+        {"name": "Incite Fear", "type": "spell", "style": "Magic"}
+      ],
+      "source_url": "https://runescape.wiki/w/City_of_Senntisten",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Base-game quest dependency only. Resolve against official Equilibrium quest auto-completion before gating these spells."
+    },
+    {
+      "id": "the-light-within:seren-spells-prayers",
+      "quest": "The Light Within",
+      "category": "spell and prayer additions",
+      "unlocks": [
+        {"name": "Seren spells", "type": "spell_group", "book": "Ancient Magicks"},
+        {"name": "Seren prayers", "type": "prayer_group", "book": "Ancient Curses"}
+      ],
+      "source_urls": ["https://runescape.wiki/w/Ancient_Magicks", "https://runescape.wiki/w/Ancient_Curses"],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Base-game quest dependency only. Resolve against the official Equilibrium auto-quest overlay."
+    },
+    {
+      "id": "one-piercing-note:gwd1-abilities",
+      "quest": "One Piercing Note",
+      "category": "combat abilities",
+      "unlocks": [
+        {"name": "Sacrifice", "type": "ability"},
+        {"name": "Devotion", "type": "ability"},
+        {"name": "Transfigure", "type": "ability"}
+      ],
+      "historical_source": "These abilities were formerly God Wars Dungeon I drops. The 18 August 2025 update moved them to One Piercing Note.",
+      "source_url": "https://runescape.wiki/w/Abilities",
+      "confidence": "confirmed_wiki_current",
+      "league_treatment": "Do not value GWD1 as the source of these three abilities. Resolve One Piercing Note through the Equilibrium auto-quest overlay instead."
+    },
+    {
+      "id": "extinction:ring-of-vigour-passive",
+      "quest": "Extinction",
+      "category": "passive combat effect",
+      "unlocks": [{"name": "Passive ring of vigour effect", "type": "passive", "requires_item": "Ring of vigour", "quest_reward_item": "Warped gem"}],
+      "source_url": "https://runescape.wiki/w/Extinction/Quick_guide",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Base-game quest/item dependency only. Apply any Equilibrium passive that replaces this route after base progression."
+    }
+  ],
+  "account_unlocks": [
+    {
+      "id": "agility:dive",
+      "name": "Dive",
+      "category": "movement ability",
+      "access_requirements": ["30 Agility"],
+      "historical_requirement": "Previously unlocked through Succession before the 20 July 2026 Mid-Game Rebalance.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
+      "league_treatment": "Use the current 30 Agility base-game gate. Apply an explicit Equilibrium relic or passive override separately if one is revealed."
+    },
+    {
+      "id": "wars-retreat:permanent-hub-unlocks",
+      "name": "War's Retreat permanent hub unlocks",
+      "category": "account combat infrastructure",
+      "region_hint": "misthalin",
+      "access_requirements": ["60 Combat or 1,000 total level"],
+      "milestones": [
+        {"name": "War's Retreat Teleport", "boss_kills": 10},
+        {"name": "Second attunable boss portal", "boss_kills": 100},
+        {"name": "Altar of War", "boss_kills": 200},
+        {"name": "Altar ability-cooldown reset", "boss_kills": 500},
+        {"name": "War's Grimoire spellbook switching", "boss_kills": 750},
+        {"name": "Adrenaline crystal", "boss_kills": 1000},
+        {"name": "Adrenaline-potion cooldown refresh", "boss_kills": 2000}
+      ],
+      "source_urls": ["https://runescape.wiki/w/Guide_to_useful_items_and_unlocks", "https://runescape.wiki/w/Template:War%27s_Wares_stock", "https://runescape.wiki/w/Map:War%27s_Retreat"],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "War's Retreat is mapped to Misthalin for planning, but do not make that a hard Equilibrium gate until the League documents its hub access. Legacy aura-shop assumptions stay out because the 2026 Aura Overhaul removed the old combat-aura model."
+    }
+  ],
+  "activity_unlocks": [
+    {
+      "id": "livid-farm:lunar-spells",
+      "name": "Livid Farm Lunar spell unlocks",
+      "category": "Lunar spell additions",
+      "region_hint": "fremennik",
+      "requirements": ["Lunar Diplomacy", "Livid Farm progression"],
+      "unlocks": ["South Falador Teleport", "Repair Rune Pouch", "North Ardougne Teleport", "Remote Farm", "Spiritual Healing", "Make Leather", "Disruption Shield", "Vengeance Group", "Trollheim Farm Teleport", "Tele-group Trollheim Farm", "Borrowed Power"],
+      "source_url": "https://runescape.wiki/w/Rewards_(Livid_Farm)",
+      "confidence": "confirmed_wiki_unlocks_rate_not_used",
+      "league_treatment": "Track the unlock set, but do not import old Livid Farm XP-rate estimates into the League optimizer."
+    }
+  ],
+  "equipment_models": [
+    {
+      "id": "essence-of-finality:stored-special-attack",
+      "name": "Essence of Finality stored special attack",
+      "category": "equipment interaction",
+      "rules": ["A weapon is permanently sacrificed to store its special attack in the amulet.", "The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.", "The stored special attack must match the combat style currently being used."],
+      "source_url": "https://runescape.wiki/w/Essence_of_Finality_amulet_(purple)",
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Model the stored special separately from equipped weapon state; region and drop availability are separate dependencies."
+    }
+  ]
+}

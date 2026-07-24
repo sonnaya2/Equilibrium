@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-07-24",
+  "snapshot_date": "2026-07-25",
   "dataset": "RS3 Equilibrium research",
   "files": {
     "equilibrium.json": "Leagues II rules, region selection, relics and Blessing structure",
@@ -12,6 +12,7 @@
     "training-high-value.json": "High-value training routes with no-trading and cross-region dependencies",
     "training-current-audit.json": "Current-audit supplement that replaces stale rates with warnings rather than guesses",
     "planner-expansions.json": "Sourced combat spots, Runecrafting altars, Invention progression/components, Archaeology gates/relics and regional unique-drop chains",
+    "progression-unlocks.json": "Current quest, activity, account and equipment unlock dependencies that materially change a League build",
     "midgame-rebalance-2026-07-20.json": "Audited July 20 mid-game rebalance values from direct Jagex patch notes",
     "2026-changes.json": "Chronology of 2026 progression/combat changes relevant to League planning",
     "unknowns.json": "Unrevealed or unresolved facts that must not be guessed",
@@ -25,6 +26,7 @@
     "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",
     "regions": "high-value content, upgrade chains, altar access and regional unique drops mapped; boundary unknowns stay explicit",
     "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
+    "permanent_unlocks": "major spellbooks, prayer books, quest abilities, Lunar spell additions, current Dive access, War's Retreat milestones and Essence of Finality storage are separated from Equilibrium overrides",
     "training": "all 29 named RS3 skills surface in the browser; PvME-backed combat candidates and high-value region-sensitive routes are mapped without recycling stale combat XP tables",
     "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and Masterwork staff cross-region pressure; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention, Scavenging and major regional component sources mapped",
@@ -46,6 +48,7 @@
     "Post-launch Equilibrium XP benchmarks for combat and resource-limited production methods",
     "Archaeology collection rewards and remaining cross-region relic prerequisites",
     "Resolve The Arc/Wushanko and confirm Equilibrium-specific locality handling for City of Um, Fort Forinthry, Zanaris and Senntisten",
-    "Masterwork staff material-chain region normalization"
+    "Masterwork staff material-chain region normalization",
+    "Expand the permanent-unlock graph only when a current source adds a planner-relevant dependency"
   ]
 }

@@ -4,7 +4,7 @@ This folder is the app-facing data store.
 
 - `scraped-data/` contains research and ingest inputs.
 - `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
-- `scripts/sync-reference-data.mjs` copies the combat, historical League and 2026 reference datasets into their app-facing locations.
+- `scripts/sync-reference-data.mjs` copies the combat, historical League, permanent-unlock and 2026 reference datasets into their app-facing locations.
 - `scripts/sync-planner-expansions.mjs` validates the sourced planner rows and copies them into the app-facing research store.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
 - Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
@@ -16,6 +16,8 @@ RuneScape Wiki is the default source for settled game data. Rows explicitly sour
 PvME can supply current combat-practice routes and measured throughput. Old combat XP/hour figures are not treated as current after the 2026 combat changes unless they are rechecked.
 
 Historical Catalyst region labels can be useful evidence for ambiguous League localities, but they are marked as precedent rather than presented as an Equilibrium confirmation.
+
+Permanent unlocks record the normal-game dependency first. Equilibrium auto-completed quests, Relics, Blessings and League passives are separate overrides; they do not rewrite the base-game record. Boss/codex drops stay in the regional research instead of being copied into a second reward table.
 
 ## Current layout
 
@@ -30,6 +32,7 @@ Historical Catalyst region labels can be useful evidence for ambiguous League lo
 - `research/sources.json` — source manifest
 - `reference/changes-2026.json` — 2026 update chronology relevant to League planning
 - `reference/midgame-rebalance-2026-07-20.json` — July 20 rebalance values
+- `reference/progression-unlocks.json` — quest, activity, account and equipment unlock dependencies used by the planner
 - `reference/unknowns.json` — unrevealed or unresolved facts that must stay unresolved
 
 Do not add guessed League data to fill empty fields. Unknown or unrevealed values stay empty until there is a source.

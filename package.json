@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-planner-expansions.mjs",
+    "audit:progression": "node scripts/audit-progression-unlocks.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

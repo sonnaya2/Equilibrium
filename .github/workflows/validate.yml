@@ -46,6 +46,8 @@ jobs:
       - run: npm ci
       - name: Normalize research data in the validation workspace
         run: npm run normalize:data
+      - name: Audit permanent unlock assumptions
+        run: npm run audit:progression
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

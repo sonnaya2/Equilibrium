@@ -24,12 +24,14 @@ const combat = read("scraped-data/combat-2026.json");
 const catalyst = read("scraped-data/catalyst.json");
 const changes = read("scraped-data/2026-changes.json");
 const rebalance = read("scraped-data/midgame-rebalance-2026-07-20.json");
+const progressionUnlocks = read("scraped-data/progression-unlocks.json");
 const unknowns = read("scraped-data/unknowns.json");
 
 write("data/combat/modernisation-2026.json", combat);
 write("data/league/catalyst.json", catalyst);
 write("data/reference/changes-2026.json", changes);
 write("data/reference/midgame-rebalance-2026-07-20.json", rebalance);
+write("data/reference/progression-unlocks.json", progressionUnlocks);
 write("data/reference/unknowns.json", unknowns);
 
-console.log("REFERENCE DATA SYNC\nCombat, Catalyst, 2026 changes, mid-game rebalance and unknowns updated.");
+console.log("REFERENCE DATA SYNC\nCombat, Catalyst, 2026 changes, mid-game rebalance, permanent unlocks and unknowns updated.");

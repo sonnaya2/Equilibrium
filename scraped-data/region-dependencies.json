@@ -1,0 +1,21 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Canonical hard region requirements and aliases used by planners. These override looser geographic tagging elsewhere in the dataset.",
+  "dependencies": [
+    {
+      "content": "Daemonheim",
+      "system": "Dungeoneering",
+      "required_region": "forinthry",
+      "required_region_aliases": ["Wilderness", "Wildy"],
+      "hard_requirement": true,
+      "planner_rule": "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region.",
+      "confidence": "confirmed_official_region_mapping_plus_user_correction"
+    }
+  ],
+  "user_reference": {
+    "url": "https://miro.com/app/board/uXjVHUhqsR0=/",
+    "type": "region-planning board",
+    "fetch_status": "not accessible from current scraper environment",
+    "note": "Do not infer additional board contents until the board can be read or exported."
+  }
+}

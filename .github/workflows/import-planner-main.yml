@@ -1,5 +1,5 @@
-# Retry against the latest reconciled/enriched main head.
-name: Import audited planner data
+# One-shot repair/import of the corrected planner-expansions source. Self-removes after validation.
+name: Finish planner data import
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: import-planner-main
+  group: finish-planner-import
   cancel-in-progress: false
 
 jobs:
@@ -26,148 +26,21 @@ jobs:
         with:
           node-version: 22
           cache: npm
-
-      - name: Bring in only the useful planner research
+      - name: Restore corrected canonical planner source
         run: |
           git fetch origin agent/asset-harvest
-          git checkout origin/agent/asset-harvest -- \
-            scraped-data/planner-expansions.json \
-            scripts/sync-planner-expansions.mjs \
-            src/research/plannerExpansions.ts
-
-      - name: Reconcile region tags and wire it into canonical data
-        run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const load = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
-          const save = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
-          const catalystTasks = 'https://runescape.wiki/w/Catalyst_League/Tasks';
-
-          const planner = load('scraped-data/planner-expansions.json');
-          planner.source_policy.region_taxonomy = 'Use current Equilibrium locality rules where Jagex has published them. Fort Forinthry and City of Um use Catalyst as historical League precedent only; both stay under Misthalin until Equilibrium publishes a different locality.';
-
-          for (const spot of planner.combat_training_spots || []) {
-            if (spot.id === 'combat-bound-skeletons' || spot.id === 'combat-armoured-phantoms') {
-              spot.region = 'misthalin';
-              spot.region_source_url = catalystTasks;
-              const caveat = 'Working League locality: Catalyst grouped Fort Forinthry content under Misthalin. Keep this region tag provisional until Equilibrium publishes its own finer boundary.';
-              if (!String(spot.notes || '').includes(caveat)) spot.notes = `${spot.notes || ''} ${caveat}`.trim();
-              spot.confidence = spot.id === 'combat-armoured-phantoms'
-                ? 'cross_checked_method_working_league_region_taxonomy'
-                : 'pvme_current_method_working_league_region_taxonomy';
-            }
-          }
-
-          for (const drop of planner.regional_unique_drops || []) {
-            if (drop.source === 'Armoured phantoms / risen ghosts') {
-              drop.region = 'misthalin';
-              drop.region_source_url = catalystTasks;
-              drop.planner_value = 'Greater Sonic Wave unlock from Fort-crypt undead. The drop is Wiki-confirmed; the Misthalin tag follows Catalyst League locality precedent until Equilibrium publishes its own boundary.';
-              drop.confidence = 'confirmed_wiki_drop_working_league_region_taxonomy';
-            }
-          }
-          save('scraped-data/planner-expansions.json', planner);
-
-          const pkg = load('package.json');
-          if (!pkg.scripts['normalize:data'].includes('sync-planner-expansions.mjs')) {
-            pkg.scripts['normalize:data'] += ' && node scripts/sync-planner-expansions.mjs';
-          }
-          pkg.scripts['sync:planner'] = 'node scripts/sync-planner-expansions.mjs';
-          save('package.json', pkg);
-
-          const index = load('scraped-data/index.json');
-          index.files['planner-expansions.json'] = 'Sourced combat spots, Runecrafting altars, Invention progression/components, Archaeology gates/relics and regional unique-drop chains';
-          index.coverage.regions = 'high-value content, upgrade chains, altar access and regional unique drops mapped; boundary unknowns stay explicit';
-          index.coverage.training = 'all 29 named RS3 skills surface in the browser; PvME-backed combat progression candidates and region-sensitive routes are mapped without recycling stale combat XP tables';
-          index.coverage.runecrafting = 'altar locations and major access requirements mapped; Cosmic/Zanaris remains unresolved for League-region purposes';
-          index.coverage.invention = 'unlock ladder, item-level milestones, Ancient Invention, Scavenging and major regional component sources mapped';
-          index.coverage.archaeology = 'qualification gates, major dig-site unlocks, Ancient Invention linkage and PvM relic level milestones mapped; uncertain League boundaries stay explicit';
-          index.coverage.boss_specific_guides = 'intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies';
-          for (const item of [
-            'Current post-modernisation combat XP benchmarks by monster/style',
-            'Remaining regional unique-drop and Invention-component supply chains',
-            'Archaeology relic acquisition-region mapping and collection rewards',
-            'Resolve Cosmic/Zanaris and Senntisten boundary questions'
-          ]) {
-            if (!index.next_ingest_priority.includes(item)) index.next_ingest_priority.push(item);
-          }
-          save('scraped-data/index.json', index);
-
-          let dataReadme = fs.readFileSync('data/README.md', 'utf8');
-          if (!dataReadme.includes('sync-planner-expansions.mjs')) {
-            dataReadme = dataReadme.replace(
-              '- `scripts/sync-reference-data.mjs` copies the combat, historical League and 2026 reference datasets into their app-facing locations.\n',
-              '- `scripts/sync-reference-data.mjs` copies the combat, historical League and 2026 reference datasets into their app-facing locations.\n- `scripts/sync-planner-expansions.mjs` validates the sourced planner rows and copies them into the app-facing research store.\n'
-            );
-            dataReadme = dataReadme.replace(
-              'Jagex posts are used for new League or patch information until the Wiki has caught up.\n',
-              'Jagex posts are used for new League or patch information until the Wiki has caught up.\n\nPvME can supply current combat-practice routes and measured throughput. Old combat XP/hour figures are not treated as current after the 2026 combat changes unless they are rechecked.\n'
-            );
-            dataReadme = dataReadme.replace(
-              '- `research/catalog.json` — region/skill browser data\n',
-              '- `research/catalog.json` — region/skill browser data\n- `research/planner-expansions.json` — combat spots, Runecrafting altars, Invention/Archaeology progression and regional unique drops\n'
-            );
-            fs.writeFileSync('data/README.md', dataReadme);
-          }
-
-          let readme = fs.readFileSync('README.md', 'utf8');
-          if (!readme.includes('npm run sync:planner')) {
-            readme = readme.replace(
-              'npm run sync:quests:auto # apply official Jagex auto-completion lists when they exist\n',
-              'npm run sync:quests:auto # apply official Jagex auto-completion lists when they exist\nnpm run sync:planner     # rebuild sourced region-value / progression research\n'
-            );
-            readme = readme.replace(
-              'data/research/       app-facing research catalog\n',
-              'data/research/       app-facing research catalog + planner expansion data\n'
-            );
-            fs.writeFileSync('README.md', readme);
-          }
-
-          let kimi = fs.readFileSync('KIMI-START.md', 'utf8');
-          kimi = kimi.replace(
-            /- \[ \] \*\*Region-value additions:\*\*.*\n/,
-            '- [ ] **Region-value additions:** `data/research/planner-expansions.json` now has sourced combat/training spots, unique drops, Runecrafting altars/access, Invention unlocks/material loops and Archaeology progression. Wire those records into the existing region/skill views; do not research replacements in this queue.\n'
-          );
-          fs.writeFileSync('KIMI-START.md', kimi);
-
-          let workflow = fs.readFileSync('.github/workflows/normalize-data.yml', 'utf8');
-          if (!workflow.includes('scripts/sync-planner-expansions.mjs')) {
-            workflow = workflow.replace(
-              '      - "scripts/sync-reference-data.mjs"\n',
-              '      - "scripts/sync-reference-data.mjs"\n      - "scripts/sync-planner-expansions.mjs"\n'
-            );
-          }
-          if (!workflow.includes('git pull --rebase origin')) {
-            workflow = workflow.replace(
-              '          git commit -m "Sync normalized data"\n          git push origin HEAD:${{ github.ref_name }}\n',
-              '          git commit -m "Sync normalized data"\n          git pull --rebase origin "${{ github.ref_name }}"\n          git push origin HEAD:${{ github.ref_name }}\n'
-            );
-          }
-          fs.writeFileSync('.github/workflows/normalize-data.yml', workflow);
-          NODE
-
+          git checkout origin/agent/asset-harvest -- scraped-data/planner-expansions.json
       - run: npm ci
       - run: npm run normalize:data
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-
-      - name: Commit planner data
+      - name: Commit validated planner source and generated mirror
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            scraped-data/planner-expansions.json \
-            data/research/planner-expansions.json \
-            scripts/sync-planner-expansions.mjs \
-            src/research/plannerExpansions.ts \
-            package.json \
-            scraped-data/index.json \
-            data/research/catalog.json \
-            data/README.md \
-            README.md \
-            KIMI-START.md \
-            .github/workflows/normalize-data.yml
-          git commit -m "Add sourced planner progression data"
+          git rm .github/workflows/import-planner-main.yml
+          git add scraped-data/planner-expansions.json data/research/planner-expansions.json data/research/catalog.json
+          git commit -m "Complete sourced planner data import"
           git pull --rebase origin main
           git push origin HEAD:main

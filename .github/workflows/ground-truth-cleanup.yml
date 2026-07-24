@@ -1,0 +1,275 @@
+name: Ground truth cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ground-truth-cleanup.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ground-truth-cleanup-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Correct sourced research records
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const load = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const save = (path, value) => fs.writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
+
+          const officialEquilibrium = 'https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium';
+          const catalystTasks = 'https://runescape.wiki/w/Catalyst_League/Tasks';
+          const moonrise = 'https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise';
+
+          // Region facts and live Havenhythe content.
+          const regions = load('scraped-data/regions.json');
+          regions.scope_note = 'High-value region dependency map for Equilibrium. Official Equilibrium examples are used where published; older Catalyst locality labels are retained only as clearly marked League precedent for boundaries that Equilibrium has not published yet.';
+
+          const misthalin = regions.regions.find((r) => r.id === 'misthalin');
+          misthalin.open_questions = [
+            'Catalyst grouped City of Um and Fort Forinthry under Misthalin. Keep that as the working League taxonomy until Equilibrium publishes a different boundary.'
+          ];
+          misthalin.notable_content = misthalin.notable_content || [];
+          const upsertContent = (region, name, row) => {
+            const collections = ['notable_content', 'bosses_and_combat', 'skilling', 'power_upgrades'];
+            for (const key of collections) {
+              const list = region[key] || [];
+              const index = list.findIndex((x) => typeof x === 'object' && x.name === name);
+              if (index !== -1) {
+                list[index] = row;
+                region[key] = list;
+                return;
+              }
+            }
+            region.notable_content = region.notable_content || [];
+            region.notable_content.push(row);
+          };
+          upsertContent(misthalin, 'Fort Forinthry', {
+            name: 'Fort Forinthry',
+            type: 'Construction / Slayer hub',
+            note: 'Working League mapping: Catalyst consistently filed Fort Forinthry tasks under Misthalin. Equilibrium has not published a different locality boundary yet.',
+            source_url: catalystTasks,
+            confidence: 'historical_league_taxonomy_pending_equilibrium_confirmation'
+          });
+          upsertContent(misthalin, 'City of Um / Underworld', {
+            name: 'City of Um / Underworld',
+            type: 'Necromancy',
+            note: 'Working League mapping: Catalyst filed City of Um tasks under Misthalin. Equilibrium-specific locality handling is still unannounced.',
+            source_url: catalystTasks,
+            confidence: 'historical_league_taxonomy_pending_equilibrium_confirmation'
+          });
+
+          const haven = regions.regions.find((r) => r.id === 'havenhythe');
+          haven.major_areas = [...new Set([...(haven.major_areas || []), 'Amberfell', 'Moonrise Dig Site'])];
+          haven.skilling = haven.skilling || [];
+          const oldMoonrise = haven.skilling.findIndex((x) => x.name === 'First Age dig site' || x.name === 'Moonrise Dig Site');
+          const moonriseRow = {
+            name: 'Moonrise Dig Site',
+            skill: 'Archaeology',
+            level_range: '52-88',
+            base_game_requirements: ['52 Archaeology', 'Secrets of Amberfell'],
+            note: 'Live since 15 June 2026. Moonrise adds 15 artefacts across two collections, five mysteries, a relic power and a Necromancy ritual ring.',
+            source_url: moonrise,
+            confidence: 'confirmed_official'
+          };
+          if (oldMoonrise === -1) haven.skilling.push(moonriseRow);
+          else haven.skilling[oldMoonrise] = moonriseRow;
+
+          const asgarnia = regions.regions.find((r) => r.id === 'asgarnia');
+          asgarnia.boundary_confidence = 'official_equilibrium_plus_historical_league_taxonomy';
+          asgarnia.source_ids = ['equilibrium_official_2026_07_23', 'catalyst_tasks_wiki', 'smithing_training_wiki'];
+          asgarnia.boundary_rule = 'Use Asgarnia for Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. Equilibrium explicitly places God Wars Dungeon in Asgarnia; Catalyst also grouped Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia.';
+          save('scraped-data/regions.json', regions);
+
+          // Replace user-only boundary evidence with public League sources.
+          const deps = load('scraped-data/region-dependencies.json');
+          deps.purpose = 'Hard region requirements and working boundary rules used by the planner. Current Equilibrium sources take priority; Catalyst is used only as historical League evidence where the new League has not published a finer boundary.';
+          deps.boundary_overrides = [{
+            content: 'northern Asgarnia route',
+            required_region: 'asgarnia',
+            includes: ['Burthorpe', 'Death Plateau', 'Trollheim', 'Troll Stronghold', 'God Wars Dungeon approach'],
+            planner_rule: 'Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.',
+            confidence: 'official_equilibrium_plus_historical_league_taxonomy',
+            source_urls: [officialEquilibrium, catalystTasks],
+            evidence_note: 'Equilibrium explicitly lists God Wars Dungeon under Asgarnia. Catalyst locality labels also put Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia.'
+          }];
+          deps.dependencies = [
+            {
+              content: 'Daemonheim',
+              system: 'Dungeoneering',
+              required_region: 'forinthry',
+              required_region_aliases: ['Wilderness', 'Wildy'],
+              hard_requirement: true,
+              planner_rule: 'Dungeoneering through Daemonheim requires the Forinthry/Wilderness region.',
+              confidence: 'confirmed_official_equilibrium',
+              source_urls: [officialEquilibrium]
+            },
+            {
+              content: 'northern Asgarnia route',
+              system: 'regional boundary',
+              required_region: 'asgarnia',
+              required_region_aliases: ['Trollheim', 'Troll Stronghold'],
+              hard_requirement: true,
+              planner_rule: 'Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary.',
+              confidence: 'official_equilibrium_plus_historical_league_taxonomy',
+              source_urls: [officialEquilibrium, catalystTasks]
+            }
+          ];
+          delete deps.user_reference;
+          save('scraped-data/region-dependencies.json', deps);
+
+          // Live Moonrise unlocks.
+          const upgrades = load('scraped-data/major-upgrades-by-region.json');
+          upgrades.regions.havenhythe = upgrades.regions.havenhythe || [];
+          const moonriseUpgrade = {
+            name: 'Moonrise Dig Site',
+            category: 'Archaeology / Necromancy support',
+            location: 'Moonrise, Havenhythe',
+            requirements: ['52 Archaeology', 'Secrets of Amberfell'],
+            unlocks: ['15 artefacts across 2 collections', '5 mysteries', 'Hungry Like the Wolf relic power', 'Necromancy ritual ring'],
+            notes: 'Released 15 June 2026. This is live Havenhythe progression, not a future-roadmap item.',
+            source_url: moonrise,
+            confidence: 'confirmed_official'
+          };
+          const upgradeIndex = upgrades.regions.havenhythe.findIndex((x) => x.name === 'Moonrise Dig Site');
+          if (upgradeIndex === -1) upgrades.regions.havenhythe.push(moonriseUpgrade);
+          else upgrades.regions.havenhythe[upgradeIndex] = moonriseUpgrade;
+          save('scraped-data/major-upgrades-by-region.json', upgrades);
+
+          // Region-sensitive training rows.
+          const audit = load('scraped-data/training-current-audit.json');
+          for (const row of audit.methods || []) {
+            if (row.skill === 'Construction' && row.method === 'Fort Forinthry reinforcement') {
+              row.method_region = 'misthalin';
+              row.region_warning = 'Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping.';
+              row.confidence = 'confirmed_official_method_working_league_region_taxonomy';
+            }
+          }
+          save('scraped-data/training-current-audit.json', audit);
+
+          const high = load('scraped-data/training-high-value.json');
+          for (const row of high.methods || []) {
+            if (row.skill === 'Construction' && row.method === 'Fort Forinthry reinforcement') {
+              row.method_region = 'misthalin';
+              row.source = 'https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance';
+              row.region_warning = 'Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping.';
+              row.confidence = 'confirmed_official_method_working_league_region_taxonomy';
+            }
+            if (row.skill === 'Slayer' && row.method === 'High-value task routing') {
+              for (const master of row.regional_masters || []) {
+                if (master.name === 'The Raptor') master.region = 'misthalin';
+              }
+            }
+          }
+          save('scraped-data/training-high-value.json', high);
+
+          // Source manifest: make Moonrise a first-class source.
+          const sources = load('scraped-data/sources.json');
+          if (!sources.sources.some((s) => s.id === 'moonrise_official_2026_06_15')) {
+            sources.sources.push({
+              id: 'moonrise_official_2026_06_15',
+              title: 'Digging up the past at Moonrise',
+              publisher: 'Jagex / RuneScape',
+              published: '2026-06-15',
+              url: moonrise,
+              authority: 'official_game_update'
+            });
+          }
+          save('scraped-data/sources.json', sources);
+
+          // Unknowns: distinguish a working League mapping from an official Equilibrium confirmation.
+          const unknowns = load('scraped-data/unknowns.json');
+          const boundary = unknowns.items.find((x) => x.key === 'equilibrium_region_boundaries');
+          if (boundary) {
+            boundary.known = "Catalyst's task taxonomy grouped both City of Um and Fort Forinthry under Misthalin. Equilibrium explicitly places Daemonheim in Forinthry/Wilderness. We use those as the working planner mappings without presenting Catalyst locality labels as new-League confirmation.";
+            boundary.missing = [
+              'official Equilibrium confirmation of the City of Um / Underworld locality',
+              'official Equilibrium confirmation of the Fort Forinthry locality',
+              'The Arc / Wushanko mapping',
+              'cross-border teleports and global hubs',
+              'quest-instanced or entrance/arena boundary exceptions'
+            ];
+          }
+          save('scraped-data/unknowns.json', unknowns);
+
+          const index = load('scraped-data/index.json');
+          index.next_ingest_priority = (index.next_ingest_priority || []).filter((x) => !x.startsWith('Resolve The Arc/Wushanko boundary'));
+          index.next_ingest_priority.push('Resolve The Arc/Wushanko boundary and confirm Equilibrium-specific locality handling for City of Um and Fort Forinthry');
+          save('scraped-data/index.json', index);
+
+          // Keep the research notes sourced and readable.
+          const postits = load('scraped-data/postits.json');
+          postits.purpose = 'Source-linked notes for facts that are still moving or need another check before they become normal app data.';
+          postits.rules = [
+            'Every factual note needs a source URL.',
+            'Unknown Equilibrium values stay unknown; Catalyst is useful precedent, not a default for the new League.',
+            'Use the RuneScape Wiki for settled game data. Keep PvME or RS Analysis when a row came from them. Use Jagex directly for new reveals and patches until the Wiki catches up.',
+            'Asgarnia is the only public region name used for its planner area.'
+          ];
+          const asgNote = postits.notes.find((x) => x.id === 'asgarnia-boundary');
+          if (asgNote) {
+            asgNote.body = 'Keep Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach in one Asgarnia planner region. Equilibrium explicitly puts God Wars Dungeon in Asgarnia; Catalyst locality labels support the northern route.';
+            asgNote.source_urls = [officialEquilibrium, catalystTasks];
+          }
+          const daemonNote = postits.notes.find((x) => x.id === 'daemonheim-forinthry');
+          if (daemonNote) {
+            daemonNote.body = 'Daemonheim and normal Dungeoneering access require Forinthry/Wilderness. The Equilibrium reveal names Daemonheim directly under Forinthry.';
+            daemonNote.source_urls = [officialEquilibrium];
+          }
+          const fortNote = {
+            id: 'fort-forinthry-misthalin',
+            kind: 'planner_rule',
+            priority: 'high',
+            status: 'working_league_precedent',
+            title: 'Fort Forinthry uses Misthalin for now',
+            body: 'Catalyst consistently filed Fort Forinthry tasks under Misthalin. Use that locality for planning until Equilibrium publishes a different boundary; do not infer Forinthry solely from the fort being beside the Wilderness.',
+            source_urls: [catalystTasks, officialEquilibrium],
+            promote_to: ['data/league/quest-region-rules.json', 'scraped-data/regions.json']
+          };
+          const fortIndex = postits.notes.findIndex((x) => x.id === fortNote.id);
+          if (fortIndex === -1) postits.notes.splice(3, 0, fortNote);
+          else postits.notes[fortIndex] = fortNote;
+          const havenNote = postits.notes.find((x) => x.id === 'havenhythe-current');
+          if (havenNote) {
+            havenNote.body = 'Havenhythe is still receiving 2026 content. Moonrise is already live, so do not leave it tagged as an upcoming dig site.';
+            havenNote.source_urls = ['https://runescape.wiki/w/Havenhythe', moonrise];
+          }
+          save('scraped-data/postits.json', postits);
+          NODE
+
+      - run: npm ci
+      - run: npm run normalize:data
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      - name: Commit audited data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scraped-data/ data/
+          if git diff --cached --quiet; then
+            echo "Ground-truth data already current"
+            exit 0
+          fi
+          git commit -m "Correct League region taxonomy and Havenhythe data"
+          git pull --rebase origin main
+          git push origin HEAD:main

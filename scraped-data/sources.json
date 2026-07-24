@@ -1,0 +1,128 @@
+{
+  "snapshot_date": "2026-07-24",
+  "sources": [
+    {
+      "id": "equilibrium_official_2026_07_23",
+      "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-07-23",
+      "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+      "authority": "primary"
+    },
+    {
+      "id": "combat_modernisation_wiki",
+      "title": "Combat Style Modernisation",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "combat_patch_1_wiki",
+      "title": "Patch Notes: Part 1 - Combat Style Modernisation",
+      "publisher": "The RuneScape Wiki mirror of Jagex news",
+      "published": "2026-03-02",
+      "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
+      "authority": "primary_mirror"
+    },
+    {
+      "id": "combat_patch_2_wiki",
+      "title": "Patch Notes: Part 2 - Combat Style Modernisation",
+      "publisher": "The RuneScape Wiki mirror of Jagex news",
+      "published": "2026-03-02",
+      "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation",
+      "authority": "primary_mirror"
+    },
+    {
+      "id": "catalyst_guide_wiki",
+      "title": "Catalyst League/Guide",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Catalyst_League/Guide",
+      "authority": "secondary_historical"
+    },
+    {
+      "id": "catalyst_tasks_wiki",
+      "title": "Catalyst League/Tasks",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+      "authority": "secondary_historical"
+    },
+    {
+      "id": "catalyst_transcript_wiki",
+      "title": "Transcript:Catalyst League",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Transcript:Catalyst_League",
+      "authority": "secondary_historical"
+    },
+    {
+      "id": "havenhythe_wiki",
+      "title": "Havenhythe",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Havenhythe",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "hunter_training_wiki",
+      "title": "Hunter training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Hunter_training",
+      "authority": "secondary_current_with_outdated_warning"
+    },
+    {
+      "id": "farming_training_wiki",
+      "title": "Farming training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Farming_training",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "divination_training_wiki",
+      "title": "Divination training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Divination_training",
+      "authority": "secondary_current_with_incomplete_warning"
+    },
+    {
+      "id": "agility_training_wiki",
+      "title": "Agility training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Agility_training",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "thieving_training_wiki",
+      "title": "Thieving training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Thieving_training",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "slayer_training_wiki",
+      "title": "Slayer training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Slayer_training",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "archaeology_training_wiki",
+      "title": "Archaeology training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Archaeology_training",
+      "authority": "secondary_current"
+    },
+    {
+      "id": "runecrafting_training_wiki",
+      "title": "Pay-to-play Runecrafting training",
+      "publisher": "The RuneScape Wiki",
+      "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+      "authority": "secondary_mixed_freshness"
+    },
+    {
+      "id": "dungeoneering_remaster_2026",
+      "title": "Patch Notes: Dungeoneering Remastered",
+      "publisher": "Jagex news mirror / RuneNation",
+      "published": "2026-05-11",
+      "url": "https://www.runenation.org/news-and-updates/runescape-news/11602-patch-notes-dungeoneering-remastered",
+      "authority": "primary_mirror"
+    }
+  ]
+}

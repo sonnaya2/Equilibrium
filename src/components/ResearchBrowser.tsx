@@ -21,8 +21,8 @@ const SOURCE_LABEL: Record<SourceReference["source"], string> = {
 
 function cleanText(value: string): string {
   return value
-    .replaceAll("Asgarnia + Troll Country", "Asgarnia")
-    .replaceAll("Troll Country", "Asgarnia");
+    .replaceAll("Asgarnia", "Asgarnia")
+    .replaceAll("Asgarnia", "Asgarnia");
 }
 
 function availabilityLabel(value: string): string {

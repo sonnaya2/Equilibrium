@@ -42,7 +42,7 @@ export function Nav() {
                   aria-current={active ? "page" : undefined}
                   className={`transition-colors duration-150 ${
                     active
-                      ? "font-medium text-brass-300"
+                      ? "font-medium text-gem-400"
                       : "text-parch-300 hover:text-parch-50"
                   }`}
                 >

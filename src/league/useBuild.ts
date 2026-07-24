@@ -22,6 +22,10 @@ let state: BuildState = emptyBuild();
 let hydrated = false;
 const listeners = new Set<() => void>();
 
+// Must be a stable reference: a fresh object per call makes useSyncExternalStore
+// loop on the server snapshot.
+const SERVER_SNAPSHOT: BuildState = emptyBuild();
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => {
@@ -38,7 +42,7 @@ function setState(next: BuildState) {
 export function useBuild() {
   // Server snapshot stays the empty build so hydration matches; real state
   // loads from localStorage after mount.
-  const build = useSyncExternalStore(subscribe, () => state, emptyBuild);
+  const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
   const [loaded, setLoaded] = useState(hydrated);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import blessingsData from "#data/league/blessings.json";
+import questsData from "#data/league/quests.json";
 import relicsData from "#data/league/relics.json";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
@@ -9,6 +10,9 @@ export default function BuildPage() {
   const catalog = getResearchCatalog();
   const tierOne = relicsData.records.find((tier) => tier.tier === 1);
 
+  const primaryQuests = questsData.primary_region_counts as Record<string, number>;
+  const touchedQuests = questsData.region_group_counts as Record<string, number>;
+
   const regions = catalog.regions.map((region) => ({
     id: region.id,
     name: region.name,
@@ -17,6 +21,8 @@ export default function BuildPage() {
     trainingCount: region.training.length,
     upgradeCount: region.upgrades.length,
     hardRules: region.hardRules,
+    primaryQuests: primaryQuests[region.id] ?? 0,
+    touchedQuests: touchedQuests[region.id] ?? 0,
   }));
 
   const tierOneRelics = (tierOne?.choices ?? []).map((choice) => ({

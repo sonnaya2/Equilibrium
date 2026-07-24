@@ -20,7 +20,8 @@ export default function TasksPage() {
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-parch-50">Tasks</h1>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
-              Equilibrium task values are public. The individual task list is not in the dataset yet.
+              The point values are public. The full Equilibrium task list is not out yet, so there are no
+              placeholder tasks here.
             </p>
           </div>
           <a
@@ -49,14 +50,14 @@ export default function TasksPage() {
       <section className="py-5">
         <div className="flex items-baseline justify-between gap-4">
           <h2 className="text-sm font-medium text-parch-50">Task list</h2>
-          <span className="text-xs text-parch-300">{tasksData.records.length} published rows</span>
+          <span className="text-xs text-parch-300">{tasksData.records.length} tasks loaded</span>
         </div>
         <div className="mt-2 border-t border-stone-750">
           <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{tasksData.note}</p>
           {taskUnknown?.known ? <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{taskUnknown.known}</p> : null}
           {taskUnknown?.missing?.length ? (
             <div className="border-b border-stone-750/70 py-3">
-              <div className="text-xs text-parch-300">Still needed</div>
+              <div className="text-xs text-parch-300">Waiting on</div>
               <div className="mt-1 text-sm leading-6 text-parch-50">{taskUnknown.missing.join(" · ")}</div>
             </div>
           ) : null}

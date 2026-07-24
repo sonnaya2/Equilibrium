@@ -1,0 +1,32 @@
+{
+  "snapshot_date": "2026-07-24",
+  "dataset": "RS3 Equilibrium research",
+  "files": {
+    "equilibrium.json": "Leagues II rules, region selection, relics and Blessing structure",
+    "catalyst.json": "Catalyst League historical progression and relic baseline",
+    "combat-2026.json": "Post-March-2026 combat system modernisation and aura transition",
+    "regions.json": "Region-gated content and high-value unlock map",
+    "training-methods.json": "Training methods tagged by likely Equilibrium region and freshness",
+    "2026-changes.json": "Chronology of 2026 progression/combat changes relevant to League planning",
+    "unknowns.json": "Unrevealed or unresolved facts that must not be guessed",
+    "sources.json": "Provenance manifest"
+  },
+  "coverage": {
+    "combat_system": "partial-high",
+    "2026_changes": "high-level chronology complete; individual patch tables partial",
+    "catalyst": "high-level progression complete; not every relic/task serialized yet",
+    "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",
+    "regions": "high-value content mapped; exhaustive item/NPC/quest enumeration pending",
+    "training": "best/high-value methods seeded; exhaustive all-skill method table pending",
+    "boss_specific_guides": "intentionally excluded from first pass"
+  },
+  "next_ingest_priority": [
+    "Full Equilibrium task list when published",
+    "Daily relic reveals beginning 2026-07-28",
+    "Daily Blessing reveals beginning 2026-07-28",
+    "Exact region auto-completed quest lists",
+    "Full post-hotfix Magic and Ranged ability tables",
+    "2026 Mid-Game Rebalance numerical training tables",
+    "Region-to-item dependencies for major PvM gear and Invention components"
+  ]
+}

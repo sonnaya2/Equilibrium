@@ -1,0 +1,93 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Current Dungeoneering Remastered systems and reward unlocks not covered by the earlier post-remaster reward overlays. Removed content is stored explicitly so stale reward tables cannot resurrect it.",
+  "policy": {
+    "merge_only": true,
+    "effective_from": "2026-05-11",
+    "region_rule": "Daemonheim/Dungeoneering is a hard Forinthry dependency in this project.",
+    "removed_content_must_not_return": ["Scroll of Daemonheim"]
+  },
+  "prayer_additions": [
+    {
+      "id": "dungeoneering:rapid-renewal-current",
+      "name": "Rapid Renewal",
+      "category": "permanent Dungeoneering prayer unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 65,
+      "prayer_level": 65,
+      "token_cost": 38000,
+      "unlock_item": "Scroll of renewal",
+      "effect_summary": "While active, natural life-point regeneration occurs five times as quickly.",
+      "source_urls": [
+        "https://runescape.wiki/w/Unlockable_content",
+        "https://runescape.wiki/w/Template:Dungeoneering_rewards_stock"
+      ],
+      "confidence": "confirmed_current_wiki"
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "dungeoneering:remaster-floor-progression",
+      "name": "Dungeoneering Remastered floor progression",
+      "category": "current Daemonheim training and storage state",
+      "region_hint": "forinthry",
+      "removed_rewards": [
+        {
+          "name": "Scroll of Daemonheim",
+          "removed_on": "2026-05-11",
+          "refund_tokens": 30000,
+          "reason": "The remaster replaced the old Prestige approach and made the Daemonheim XP-trait scroll obsolete."
+        }
+      ],
+      "smugglers_storage": {
+        "starting_slots": 3,
+        "milestones": [
+          {"dungeoneering_level": 10, "slots": 6},
+          {"dungeoneering_level": 40, "slots": 9},
+          {"dungeoneering_level": 80, "slots": 12},
+          {"dungeoneering_level": 110, "slots": 15}
+        ],
+        "stack_limit": 100,
+        "cannot_store": ["bound items", "gatestones", "non-Dungeoneering items", "certain puzzle items"]
+      },
+      "bind_system": {
+        "loadouts": 4,
+        "maximum_possible_bound_items": 16
+      },
+      "floor_buff_cycle": [
+        {"name": "Death Penalty Reduction", "increment_percent": 1},
+        {"name": "Extra Resource Chance", "increment_percent": 2},
+        {"name": "Skilling XP Boost", "increment_percent": 1},
+        {"name": "Damage Reduction", "increment_percent": 1},
+        {"name": "Large Floor XP Boost", "increment_percent": 5}
+      ],
+      "buff_reset_rule": "Buffs cycle in order as unique floors are completed and reset after the player completes the number of floors available to their Dungeoneering level; at level 120 that example is 60 floors. Floor progress resets on the next login.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Update:Dungeoneering_Refresh_%26_Remaster"
+      ],
+      "confidence": "confirmed_2026_remaster",
+      "league_treatment": "These are Daemonheim training-state mechanics, not permanent surface-world combat buffs. Keep them out of the global combat ruleset."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "dungeoneering:necromancy-gravite-chaotic-current",
+      "name": "Gravite and Chaotic Necromancy weapons",
+      "category": "post-remaster Necromancy weapon progression",
+      "region_hint": "forinthry",
+      "weapons": [
+        {"name": "Gravite guard", "tier": 55, "slot": "main_hand", "token_cost": 22500, "dungeoneering_level": 55, "necromancy_level": 55},
+        {"name": "Gravite lantern", "tier": 55, "slot": "off_hand", "token_cost": 7500, "dungeoneering_level": 55, "necromancy_level": 55},
+        {"name": "Chaotic guard", "tier": 80, "slot": "main_hand", "token_cost": 150000, "dungeoneering_level": 70, "necromancy_level": 80},
+        {"name": "Chaotic lantern", "tier": 80, "slot": "off_hand", "token_cost": 50000, "dungeoneering_level": 70, "necromancy_level": 80}
+      ],
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Update:Dungeoneering_Refresh_%26_Remaster"
+      ],
+      "confidence": "confirmed_2026_remaster",
+      "league_treatment": "These form the Forinthry Necromancy weapon ladder below the T90 Ruinous guard/lantern. Keep them separate from the surface Necromancy weapon upgrade path."
+    }
+  ]
+}

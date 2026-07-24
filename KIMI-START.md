@@ -103,14 +103,23 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 - Never hardcode a game value into a component when a canonical JSON record can own it.
 - Preserve `SourceReference`, confidence/freshness, `verified`, and unresolved-state metadata all the way to the consumer. Do not make provisional data look confirmed.
 - Generated files stay generated. Integrate them; do not manually rewrite them to make the UI easier.
-- **Do not use old research branches as data sources.** The unique Slayer/Invention/Archaeology payload from `agent/invention-data-pass` was salvaged onto `main`; current `data/` + `scraped-data/` + the readers below are the handoff.
+- **Old research branches are not normal data sources.** The one temporary exception is the final cleanup below for closed PR #20 / `agent/invention-data-pass`; after that branch is reconciled, use only current `main`.
+
+### Priority: finish closed PR #20, then kill the branch
+
+- [ ] **Final `agent/invention-data-pass` salvage:** PR #20 is closed because the deployment path kept refusing to consume it. Work from the git branch directly (`origin/agent/invention-data-pass`), not from Vercel and not by reopening the PR. Compare the branch's current tree against the latest `main` and **copy/merge only records or files that are still absent or materially richer on the branch**. Do **not** merge the branch wholesale: its shared workflow/package/index/planner-sync edits are based on an old `main` and can overwrite newer audit logic.
+- [ ] Most Slayer/Invention/Archaeology payloads from #20 are already on `main`; verify them instead of redoing them. In particular, do not recreate the existing `planner-expansions-slayer*.json`, `planner-expansions-invention-*.json`, typed Slayer/Invention readers, or existing supplement audits when `main` is already equal/richer.
+- [ ] **Newest branch delta to reconcile:** `scraped-data/planner-expansions-archaeology-guild.json` is currently branch-only and contains current relic-loadout progression (2 tutorial presets → Professor third preset for 80,000 chronotes → Guildmaster fourth preset), Guild shop/storage/mattock/auto-screener progression, and a correction to the stale "Guildmaster grants second loadout" claim. Promote it only after checking for overlap with current Archaeology data; keep the correction explicit rather than silently leaving contradictory rows.
+- [ ] `planner-expansions-archaeology-special-relics.json` and `planner-expansions-archaeology-production.json` have already started landing on `main`. Finish their normalization registration, typed `src/research/archaeologyPlanner.ts` coverage, and collection/production audit wiring rather than copying duplicate files again.
+- [ ] Preserve the branch's structured Archaeology collection validation where it is stronger: `scripts/lib/archaeology-collection.mjs` + the current `scripts/audit-archaeology-collections.mjs` / production audit should validate collector/reward/level fields without discarding the newer current-main audit gates.
+- [ ] When the branch-vs-main diff contains no unique useful data left, run `npm run normalize:data`, `npm run audit:supplements`, the progression/reference/boundary audits already on `main`, `npm run typecheck`, `npm test`, and `npm run build`. Then make `agent/invention-data-pass` match `main`/mark it safe to delete and leave PR #20 closed.
 
 ### Research feeds already on `main` — use these first
 
 - **Base planner research:** `data/research/planner-expansions.json` — combat candidates, Runecrafting access, base Invention/Archaeology progression and regional drops.
 - **Slayer:** `src/research/slayerPlanner.ts` over `planner-expansions-slayer*.json` — 29 deduplicated high-value, collection-log and boundary-sensitive routes. Preserve the explicit stale/rebenchmark warnings on old PvME metrics.
 - **Invention:** `src/research/inventionPlanner.ts` over `planner-expansions-invention-*.json` — current rare-component taxonomy coverage, Ancient Invention/Archaeology links, perk-family material pressure, utility recipes and non-region bottlenecks.
-- **Archaeology:** `src/research/archaeologyPlanner.ts` over `planner-expansions-archaeology-*.json` — collection rewards and repeatable progression data in addition to the base relic/dig-site table.
+- **Archaeology:** `src/research/archaeologyPlanner.ts` over `planner-expansions-archaeology-*.json` — collection rewards and repeatable progression data in addition to the base relic/dig-site table. Finish the PR #20 cleanup above before treating this feed as closed.
 - **Combat seed:** `data/combat/ability-audit-2026-07-24.json` — current post-modernisation Magic/Ranged records. RS Analysis is a model/calculation cross-check, not a source of settings-dependent sample damage constants.
 - **Permanent unlocks:** `data/reference/progression-unlocks.json` — composed current quest/activity/account/equipment dependencies, including post-2026 removals and acquisition changes. Apply Equilibrium overlays separately.
 - **Region boundaries:** `data/league/regions.json` + `data/league/region-dependencies.json` — hard rules, historical working mappings and unresolved external/cross-boundary destinations are deliberately distinct.
@@ -128,7 +137,7 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 - [ ] **Unknown-state handling:** use `data/reference/unknowns.json` and region dependency status to keep unrevealed or unresolved League facts visibly unresolved. This includes region boundaries, XP/drop curves, unlock thresholds, task data and League-specific drop behavior.
 - [ ] **Slayer planner feed:** consume `getAllSlayerMethods()` / region filtering from `src/research/slayerPlanner.ts` in region/skill planning. Do not rank stale-warning PvME KPH as current combat performance.
 - [ ] **Invention planner feed:** consume `src/research/inventionPlanner.ts` for self-supply/component/perk pressure. Keep global/account bottlenecks global instead of inventing a region gate because one convenient source exists in a region.
-- [ ] **Archaeology planner feed:** consume `src/research/archaeologyPlanner.ts` for collection/repeatable value alongside the existing base Archaeology progression/relic records.
+- [ ] **Archaeology planner feed:** consume `src/research/archaeologyPlanner.ts` for collection/repeatable/production/Guild value alongside the existing base Archaeology progression/relic records after the PR #20 cleanup is complete.
 
 ### Consume these as the research pass adds them
 

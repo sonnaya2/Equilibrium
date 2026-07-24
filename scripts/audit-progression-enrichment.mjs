@@ -7,9 +7,7 @@ const byId = (rows, id) => (rows || []).find((row) => row?.id === id);
 
 const livid = byId(progression.activity_unlocks, "livid-farm:lunar-spells");
 const lividExpected = [10000, 20000, 35000, 45000, 60000, 75000, 90000, 100000, 110000, 120000, 130000];
-if (JSON.stringify((livid?.unlock_ladder || []).map((row) => row.produce_points)) !== JSON.stringify(lividExpected)) {
-  fail("Livid Farm is not using the post-16-March-2026 cumulative thresholds");
-}
+if (JSON.stringify((livid?.unlock_ladder || []).map((row) => row.produce_points)) !== JSON.stringify(lividExpected)) fail("Livid Farm is not using the post-16-March-2026 cumulative thresholds");
 
 const necro = byId(progression.activity_unlocks, "necromancy:well-of-souls-talents");
 if (necro?.talent_points?.maximum !== 21 || necro?.talent_points?.total_xp_for_all_21 !== 5740080) fail("Well of Souls talent-point state drifted");
@@ -18,6 +16,9 @@ if (JSON.stringify((necro?.tiers || []).map((row) => row.souls)) !== JSON.string
 for (const id of [
   "dungeoneering:spirit-cape-passive",
   "dungeoneering:ring-of-vigour-passive",
+  "dungeoneering:bonecrusher-current",
+  "dungeoneering:charming-imp-current",
+  "dungeoneering:herbicide-current",
   "anachronia:slayer-lodge",
   "anachronia:player-lodge",
   "farms:combat-perk-state",
@@ -34,6 +35,14 @@ const spirit = byId(progression.account_unlocks, "dungeoneering:spirit-cape-pass
 if (spirit.token_cost !== 45000 || spirit.special_move_cost_reduction_percent !== 20) fail("Spirit cape drifted");
 const vigour = byId(progression.account_unlocks, "dungeoneering:ring-of-vigour-passive");
 if (vigour?.base_ring?.dungeoneering_tokens !== 50000 || !vigour?.conversion?.quest?.includes("Extinction")) fail("Passive Ring of Vigour progression drifted");
+for (const [id, tokens, level] of [
+  ["dungeoneering:bonecrusher-current", 50000, 41],
+  ["dungeoneering:charming-imp-current", 50000, 41],
+  ["dungeoneering:herbicide-current", 50000, 41],
+]) {
+  const row = byId(progression.account_unlocks, id);
+  if (row?.token_cost !== tokens || row?.dungeoneering_level !== level) fail(`${id} is not using the 11-May-2026 reward table`);
+}
 const vitality = byId(progression.account_unlocks, "anachronia:totem-of-vitality");
 if (vitality.maximum_life_points_percent !== 25 || vitality.maximum_extra_life_points !== 1500) fail("Totem of Vitality drifted");
 const reaper = byId(progression.account_unlocks, "pvm:reaper-crew");
@@ -53,6 +62,9 @@ for (const id of [
   "blessed-flask:prayer-storage",
   "salve-amulet:enchanted",
   "broken-home:asylum-surgeons-ring",
+  "dungeoneering:split-dragontooth-necklace-current",
+  "dungeoneering:demon-horn-necklace-current",
+  "dungeoneering:amulet-of-zealots-current",
 ]) if (!byId(progression.equipment_models, id)) fail(`missing equipment progression ${id}`);
 const enchantments = byId(progression.equipment_models, "zamorakian-slivers:enchantments");
 if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !== "unresolved_cross_boundary") fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
@@ -63,6 +75,12 @@ const salve = byId(progression.equipment_models, "salve-amulet:enchanted");
 if (!salve?.effect?.includes("20%") || !salve?.quest_dependencies?.includes("Lair of Tarn Razorlor for Tarn's diary and the enchantment")) fail("Salve amulet (e) progression drifted");
 const asylum = byId(progression.equipment_models, "broken-home:asylum-surgeons-ring");
 if (!asylum?.requirements?.some((row) => row.includes("37 minutes")) || asylum?.region_status !== "unresolved_misthalin_morytania_boundary") fail("Asylum surgeon's ring acquisition drifted");
+const split = byId(progression.equipment_models, "dungeoneering:split-dragontooth-necklace-current");
+if (split?.token_cost !== 15500 || split?.dungeoneering_level !== 41 || split?.prayer_level !== 60) fail("Split dragontooth remaster values drifted");
+const demonHorn = byId(progression.equipment_models, "dungeoneering:demon-horn-necklace-current");
+if (demonHorn?.token_cost !== 35000 || demonHorn?.dungeoneering_level !== 75 || demonHorn?.prayer_level !== 90) fail("Demon horn remaster values drifted");
+const zealots = byId(progression.equipment_models, "dungeoneering:amulet-of-zealots-current");
+if (zealots?.token_cost !== 40000 || zealots?.dungeoneering_level !== 38 || zealots?.prayer_level !== 48) fail("Amulet of zealots remaster values drifted");
 
 for (const id of [
   "herblore:overload-chain",
@@ -75,6 +93,7 @@ for (const id of [
   "potion:holy-overload",
   "potion:spiritual-prayer",
   "potion:extreme-prayer",
+  "dungeoneering:meilyr-recipe-page-purchase",
 ]) if (!byId(progression.consumable_unlocks, id)) fail(`missing consumable progression ${id}`);
 
 const flask = byId(progression.consumable_unlocks, "crafting:combat-flask-infrastructure");
@@ -85,10 +104,10 @@ const spiritual = byId(progression.consumable_unlocks, "potion:spiritual-prayer"
 if (spiritual?.herblore_level !== 110 || spiritual?.recipe_shop_cost_coins !== 1000000) fail("Spiritual prayer recipe drifted");
 const extremePrayer = byId(progression.consumable_unlocks, "potion:extreme-prayer");
 if (extremePrayer?.herblore_level !== 117) fail("Extreme prayer requirement drifted");
+const recipePage = byId(progression.consumable_unlocks, "dungeoneering:meilyr-recipe-page-purchase");
+if (recipePage?.token_cost !== 100000 || recipePage?.dungeoneering_level !== 75) fail("Meilyr recipe-page remaster price drifted");
 
-for (const id of ["mage-arena:guthix-staff", "dominion-tower:dreadnips"]) {
-  if (!byId(progression.activity_unlocks, id)) fail(`missing general combat acquisition ${id}`);
-}
+for (const id of ["mage-arena:guthix-staff", "dominion-tower:dreadnips"]) if (!byId(progression.activity_unlocks, id)) fail(`missing general combat acquisition ${id}`);
 const mageArena = byId(progression.activity_unlocks, "mage-arena:guthix-staff");
 if (!mageArena?.requirements?.some((row) => row.includes("60 Magic")) || !mageArena?.requirements?.some((row) => row.includes("100 times")) || mageArena?.region_hint !== "forinthry") fail("Mage Arena acquisition drifted");
 const dreadnips = byId(progression.activity_unlocks, "dominion-tower:dreadnips");

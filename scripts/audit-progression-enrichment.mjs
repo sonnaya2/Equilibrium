@@ -12,40 +12,57 @@ if (JSON.stringify((livid?.unlock_ladder || []).map((row) => row.produce_points)
 }
 
 const necro = byId(progression.activity_unlocks, "necromancy:well-of-souls-talents");
-if (necro?.talent_points?.maximum !== 21 || necro?.talent_points?.total_xp_for_all_21 !== 5740080) {
-  fail("Well of Souls talent-point state drifted");
-}
-if (JSON.stringify((necro?.tiers || []).map((row) => row.souls)) !== JSON.stringify([1, 50, 400, 2000, 4500, 8500, 35000])) {
-  fail("Well of Souls soul thresholds drifted");
-}
+if (necro?.talent_points?.maximum !== 21 || necro?.talent_points?.total_xp_for_all_21 !== 5740080) fail("Well of Souls talent-point state drifted");
+if (JSON.stringify((necro?.tiers || []).map((row) => row.souls)) !== JSON.stringify([1, 50, 400, 2000, 4500, 8500, 35000])) fail("Well of Souls soul thresholds drifted");
 
 for (const id of [
   "dungeoneering:spirit-cape-passive",
+  "dungeoneering:ring-of-vigour-passive",
   "anachronia:slayer-lodge",
   "anachronia:player-lodge",
   "farms:combat-perk-state",
   "anachronia:totem-of-vitality",
   "legacy-of-zamorak:infernal-puzzle-box",
   "pvm:reaper-crew",
+  "achievements:seers-combat",
+  "achievements:fremennik-combat",
+  "achievements:tirannwn-combat",
+  "achievements:desert-keris",
 ]) if (!byId(progression.account_unlocks, id)) fail(`missing account row ${id}`);
 
 const spirit = byId(progression.account_unlocks, "dungeoneering:spirit-cape-passive");
 if (spirit.token_cost !== 45000 || spirit.special_move_cost_reduction_percent !== 20) fail("Spirit cape drifted");
+const vigour = byId(progression.account_unlocks, "dungeoneering:ring-of-vigour-passive");
+if (vigour?.base_ring?.dungeoneering_tokens !== 50000 || !vigour?.conversion?.quest?.includes("Extinction")) fail("Passive Ring of Vigour progression drifted");
 const vitality = byId(progression.account_unlocks, "anachronia:totem-of-vitality");
 if (vitality.maximum_life_points_percent !== 25 || vitality.maximum_extra_life_points !== 1500) fail("Totem of Vitality drifted");
 const reaper = byId(progression.account_unlocks, "pvm:reaper-crew");
 if (reaper.bonuses?.prayer !== 2 || reaper.bonuses?.armour !== 20 || reaper.bonuses?.life_points !== 200) fail("Reaper Crew defensive bonuses drifted");
-for (const style of ["melee", "ranged", "magic", "necromancy"]) {
-  if (reaper.bonuses?.damage?.[style] !== 12) fail(`Reaper Crew ${style} damage bonus drifted`);
-}
+for (const style of ["melee", "ranged", "magic", "necromancy"]) if (reaper.bonuses?.damage?.[style] !== 12) fail(`Reaper Crew ${style} damage bonus drifted`);
+const seers = byId(progression.account_unlocks, "achievements:seers-combat");
+if (!JSON.stringify(seers?.rewards ?? []).includes("+2 percentage points")) fail("Seers bolt-proc reward drifted");
+const frem = byId(progression.account_unlocks, "achievements:fremennik-combat");
+if (!JSON.stringify(frem?.rewards ?? []).includes("10%") || !JSON.stringify(frem?.rewards ?? []).includes("5%")) fail("Fremennik combat rewards drifted");
+const tir = byId(progression.account_unlocks, "achievements:tirannwn-combat");
+if ((tir?.rewards ?? []).filter((row) => String(row.effect).includes("5%")).length < 4) fail("Tirannwn combat reward set incomplete");
+const keris = byId(progression.account_unlocks, "achievements:desert-keris");
+if (!keris?.effect?.includes("25%") || !keris?.effect?.includes("5%")) fail("Hard Desert Keris reward drifted");
 
+for (const id of [
+  "zamorakian-slivers:enchantments",
+  "blessed-flask:prayer-storage",
+  "salve-amulet:enchanted",
+  "broken-home:asylum-surgeons-ring",
+]) if (!byId(progression.equipment_models, id)) fail(`missing equipment progression ${id}`);
 const enchantments = byId(progression.equipment_models, "zamorakian-slivers:enchantments");
-if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !== "unresolved_cross_boundary") {
-  fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
-}
+if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !== "unresolved_cross_boundary") fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
 const blessed = byId(progression.equipment_models, "blessed-flask:prayer-storage");
 if (blessed?.herblore_level !== 118 || blessed?.crafting_level !== 96 || blessed?.capacity_doses !== 80) fail("Blessed flask core requirements drifted");
 if (!blessed?.major_raw_dependencies?.some((row) => row.item === "Blessed sand" && row.quantity === 40000)) fail("Blessed flask blessed-sand dependency drifted");
+const salve = byId(progression.equipment_models, "salve-amulet:enchanted");
+if (!salve?.effect?.includes("20%") || !salve?.quest_dependencies?.includes("Lair of Tarn Razorlor for Tarn's diary and the enchantment")) fail("Salve amulet (e) progression drifted");
+const asylum = byId(progression.equipment_models, "broken-home:asylum-surgeons-ring");
+if (!asylum?.requirements?.some((row) => row.includes("37 minutes")) || asylum?.region_status !== "unresolved_misthalin_morytania_boundary") fail("Asylum surgeon's ring acquisition drifted");
 
 for (const id of [
   "herblore:overload-chain",
@@ -69,11 +86,17 @@ if (spiritual?.herblore_level !== 110 || spiritual?.recipe_shop_cost_coins !== 1
 const extremePrayer = byId(progression.consumable_unlocks, "potion:extreme-prayer");
 if (extremePrayer?.herblore_level !== 117) fail("Extreme prayer requirement drifted");
 
+for (const id of ["mage-arena:guthix-staff", "dominion-tower:dreadnips"]) {
+  if (!byId(progression.activity_unlocks, id)) fail(`missing general combat acquisition ${id}`);
+}
+const mageArena = byId(progression.activity_unlocks, "mage-arena:guthix-staff");
+if (!mageArena?.requirements?.some((row) => row.includes("60 Magic")) || !mageArena?.requirements?.some((row) => row.includes("100 times")) || mageArena?.region_hint !== "forinthry") fail("Mage Arena acquisition drifted");
+const dreadnips = byId(progression.activity_unlocks, "dominion-tower:dreadnips");
+if (!dreadnips?.requirements?.some((row) => row.includes("450")) || !dreadnips?.requirements?.some((row) => row.includes("Spectate")) || dreadnips?.region_hint !== "desert") fail("Dreadnip acquisition drifted");
+
 if (byId(progression.activity_unlocks, "mazcab:ability-codex-package")) fail("superseded Mazcab duplicate survived");
 if (byId(progression.activity_unlocks, "shattered-worlds:utility-abilities")) fail("superseded Shattered Worlds duplicate survived");
-for (const id of ["mazcab:teci-combat-ability-unlocks", "shattered-worlds:current-permanent-abilities", "tuskas-wrath:current-acquisition"]) {
-  if (!byId(progression.activity_unlocks, id)) fail(`current activity audit row missing: ${id}`);
-}
+for (const id of ["mazcab:teci-combat-ability-unlocks", "shattered-worlds:current-permanent-abilities", "tuskas-wrath:current-acquisition"]) if (!byId(progression.activity_unlocks, id)) fail(`current activity audit row missing: ${id}`);
 
 const relics = new Map((planner.archaeology_combat_relics || []).map((row) => [row.relic, row]));
 for (const [name, level, energy] of [
@@ -92,18 +115,7 @@ if (planner.archaeology_relic_system?.active_relic_limit !== 3) fail("Archaeolog
 if (JSON.stringify(planner.archaeology_relic_system?.monolith_energy_caps) !== JSON.stringify([150, 250, 400, 500, 650])) fail("Archaeology monolith energy-cap ladder drifted");
 if (!planner.combat_training_spots?.some((row) => row.id === "combat-armoured-zombies")) fail("current planner audit Armoured Zombies row missing");
 
-const banned = [
-  "unlock the power",
-  "game changer",
-  "seamlessly",
-  "robust solution",
-  "comprehensive solution",
-  "delve into",
-  "revolutionize",
-  "cutting edge",
-  "elevate your",
-  "supercharge your",
-];
+const banned = ["unlock the power", "game changer", "seamlessly", "robust solution", "comprehensive solution", "delve into", "revolutionize", "cutting edge", "elevate your", "supercharge your"];
 const prose = JSON.stringify({ progression, planner }).toLowerCase();
 for (const phrase of banned) if (prose.includes(phrase)) fail(`clanker phrase: ${phrase}`);
 

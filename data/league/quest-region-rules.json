@@ -1,25 +1,24 @@
 {
-  "version": 3,
+  "version": 4,
   "snapshot_date": "2026-07-24",
-  "method": "Primary region is inferred from the RuneScape Wiki Infobox Quest start-area field. Required regions are the union of that primary region and the recursively required quest regions from Module:Questreq/data. Stable global/special hubs are separated from unresolved Equilibrium boundaries. Explicit overrides win. City of Um/Underworld uses Misthalin as the working League taxonomy because Catalyst classified City of Um tasks under Misthalin; Fort Forinthry uses Forinthry because the fort is physically in the south-eastern Wilderness. This is planning data, not an official Equilibrium auto-completion list.",
+  "method": "Primary region is inferred from the RuneScape Wiki quest start-area field, then adjusted only where League region boundaries have stronger evidence. Required regions are the union of that primary region and recursively required quest regions from Module:Questreq/data. Catalyst is used as historical League precedent for ambiguous localities: it grouped both City of Um and Fort Forinthry under Misthalin, while Equilibrium's official reveal explicitly places Daemonheim in Forinthry (Wilderness). These are planner mappings, not an Equilibrium quest auto-completion list. Official auto-completions remain a separate Jagex-only overlay.",
   "sources": [
     "https://runescape.wiki/w/Template:Infobox_Quest/doc",
     "https://runescape.wiki/w/Module:Questreq/data",
     "https://runescape.wiki/w/List_of_quests",
     "https://runescape.wiki/w/Catalyst_League/Tasks",
-    "https://runescape.wiki/w/Fort_Forinthry",
-    "https://miro.com/app/board/uXjVHUhqsR0=/"
+    "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
   ],
   "regions": [
     {
       "id": "misthalin",
       "label": "Misthalin",
-      "terms": ["lumbridge", "draynor", "draynor outskirts", "wizard's tower", "wizards' tower", "varrock", "silvarea", "edgeville", "barbarian village", "dig site", "dorgeshuun", "dorgesh-kaan", "goblin village east", "paterdomus", "city of um", "underworld"]
+      "terms": ["lumbridge", "draynor", "draynor outskirts", "wizard's tower", "wizards' tower", "varrock", "silvarea", "edgeville", "barbarian village", "dig site", "dorgeshuun", "dorgesh-kaan", "goblin village east", "paterdomus", "city of um", "underworld", "fort forinthry"]
     },
     {
       "id": "havenhythe",
       "label": "Havenhythe",
-      "terms": ["havenhythe", "wendlewick", "hollow hill", "blighted cave", "eastfold"]
+      "terms": ["havenhythe", "wendlewick", "hollow hill", "blighted cave", "eastfold", "amberfell", "moonrise"]
     },
     {
       "id": "karamja",
@@ -44,7 +43,7 @@
     {
       "id": "forinthry",
       "label": "Forinthry / Wilderness",
-      "terms": ["wilderness", "forinthry", "fort forinthry", "daemonheim", "mage arena"]
+      "terms": ["wilderness", "forinthry", "daemonheim", "mage arena"]
     },
     {
       "id": "desert",
@@ -87,11 +86,11 @@
   "overrides": {
     "Impressing the Locals": {
       "primary_region": "unmapped",
-      "reason": "Starts in Port Sarim, but the quest's purpose is access to The Arc / Wushanko. Equilibrium has not yet assigned that external area to a planner region, so do not pretend Port Sarim alone resolves access."
+      "reason": "Starts in Port Sarim, but the quest exists to open The Arc / Wushanko. Equilibrium has not assigned that external area to a planner region yet, so Port Sarim alone is not enough to classify it."
     },
     "New Foundations": {
-      "primary_region": "forinthry",
-      "reason": "The quest begins at Varrock Palace but establishes Fort Forinthry in the south-eastern Wilderness; planning access belongs to Forinthry rather than its introductory conversation in Misthalin."
+      "primary_region": "misthalin",
+      "reason": "Catalyst's task list consistently grouped Fort Forinthry and New Foundations under Misthalin. Use that League precedent until Equilibrium publishes a different boundary; the fort's physical position beside the Wilderness is not enough to override the prior League taxonomy."
     }
   }
 }

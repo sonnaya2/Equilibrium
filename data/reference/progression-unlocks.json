@@ -370,6 +370,141 @@
       "source_url": "https://runescape.wiki/w/Rewards_(Livid_Farm)",
       "confidence": "confirmed_wiki_unlocks_rate_not_used",
       "league_treatment": "Track the unlock set, but do not import old Livid Farm XP-rate estimates into the League optimizer."
+    },
+    {
+      "id": "shattered-worlds:current-permanent-abilities",
+      "name": "Shattered Worlds permanent abilities",
+      "category": "activity ability unlocks",
+      "region_hint": "asgarnia",
+      "region_status": "working_access_hint_only",
+      "location": "Void Knights' Outpost",
+      "unlocks": [
+        {
+          "name": "Bladed Dive",
+          "type": "ability",
+          "style": "Melee",
+          "level_requirement": 65,
+          "currency": "shattered anima",
+          "cost": 63000000
+        },
+        {
+          "name": "Slayer's Insight",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 1,
+          "currency": "shattered anima",
+          "cost": 90000000
+        },
+        {
+          "name": "Kuradal's Favour",
+          "type": "ability",
+          "style": "Constitution",
+          "currency": "shattered anima",
+          "cost": 90000000
+        },
+        {
+          "name": "Aggression",
+          "type": "ability",
+          "style": "Defence",
+          "currency": "shattered anima",
+          "cost": 90000000
+        }
+      ],
+      "historical_removed_unlocks": [
+        {
+          "name": "Greater Dazing Shot",
+          "removed_at": "2026-03-02"
+        },
+        {
+          "name": "Salt the Wound",
+          "removed_at": "2026-03-02"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Shattered_Worlds",
+        "https://runescape.wiki/w/Abilities",
+        "https://runescape.wiki/w/Guide_to_useful_items_and_unlocks",
+        "https://runescape.wiki/w/Slayer_training"
+      ],
+      "confidence": "current_wiki_rewards_post_2026",
+      "league_treatment": "Shattered Worlds moved to the Void Knights' Outpost in November 2025. Asgarnia is a useful access hint because the canonical League map includes Port Sarim, but do not make the off-shore outpost/minigame a hard region gate until Equilibrium publishes locality treatment. Older reward pages that still list Salt the Wound or Greater Dazing Shot are stale after Combat Style Modernisation."
+    },
+    {
+      "id": "mazcab:teci-combat-ability-unlocks",
+      "name": "Mazcab / Teci combat ability unlocks",
+      "category": "activity ability unlocks",
+      "region_status": "off_world_region_unresolved",
+      "requirements": [
+        "Raid Rewards / Teci access",
+        "15,000 Teci for each direct untradeable ability codex"
+      ],
+      "unlocks": [
+        {
+          "name": "Corruption Shot",
+          "type": "ability",
+          "style": "Ranged",
+          "level_requirement": 70
+        },
+        {
+          "name": "Corruption Blast",
+          "type": "ability",
+          "style": "Magic",
+          "level_requirement": 70
+        },
+        {
+          "name": "Storm Shards",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 70,
+          "paired_unlock": "Shatter"
+        },
+        {
+          "name": "Shatter",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 70,
+          "paired_unlock": "Storm Shards"
+        },
+        {
+          "name": "Onslaught",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 90
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Abilities",
+        "https://runescape.wiki/w/Corruption_Blast_ability_codex",
+        "https://runescape.wiki/w/Storm_Shards_and_Shatter_Ability_Codex",
+        "https://runescape.wiki/w/Onslaught_Ability_Codex"
+      ],
+      "confidence": "confirmed_current_unlock_methods_combat_values_not_copied",
+      "league_treatment": "Keep Mazcab locality unresolved rather than assigning an overworld region by portal geography. In a self-sufficient League, preserve the direct Teci codex route separately from the tradeable base-game Mazcab ability codex."
+    },
+    {
+      "id": "tuskas-wrath:current-acquisition",
+      "name": "Tuska's Wrath current acquisition",
+      "category": "combat ability unlock",
+      "region_status": "multiple_sources_region_unresolved",
+      "unlocks": [
+        {
+          "name": "Tuska's Wrath",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 50
+        }
+      ],
+      "acquisition": [
+        "Rare drop from airuts",
+        "Rare drop from Beastmaster's hounds",
+        "Raid Rewards shop for 15,000 Teci"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Abilities",
+        "https://runescape.wiki/w/Tuska%27s_Wrath_ability_codex"
+      ],
+      "confidence": "confirmed_current_wiki_post_2025_tuska_cleanup",
+      "league_treatment": "Do not use the removed Anima Islands reward-currency route from old guides. Region availability depends on which current acquisition route Equilibrium makes accessible."
     }
   ],
   "equipment_models": [

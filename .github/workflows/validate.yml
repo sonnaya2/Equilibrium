@@ -3,11 +3,13 @@ name: Validate app
 on:
   push:
     branches:
-      - normalize-scraped-data
+      - main
     paths:
       - "app/**"
       - "src/**"
       - "data/**"
+      - "scraped-data/**"
+      - "scripts/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/validate.yml"
@@ -18,6 +20,8 @@ on:
       - "app/**"
       - "src/**"
       - "data/**"
+      - "scraped-data/**"
+      - "scripts/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/validate.yml"
@@ -40,6 +44,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Normalize research data in the validation workspace
+        run: npm run normalize:data
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

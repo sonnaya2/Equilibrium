@@ -18,6 +18,15 @@ export type RelicChoice = {
   name: string;
   effects: string[];
   sourceUrl?: string;
+  verified?: boolean;
+};
+
+export type RelicTier = {
+  tier: number;
+  revealed: boolean;
+  verified: boolean;
+  sourceUrl?: string;
+  choices: RelicChoice[];
 };
 
 export type BlessingTier = {
@@ -25,6 +34,9 @@ export type BlessingTier = {
   revealed: boolean;
   paths: string[];
   godTier: boolean;
+  verified: boolean;
+  sourceUrl?: string;
+  choices: unknown[];
 };
 
 function availabilityLabel(value: string): string {
@@ -34,12 +46,15 @@ function availabilityLabel(value: string): string {
 
 export function BuildPlanner({
   regions,
+  relicTiers,
   tierOneRelics,
   blessingTiers,
   resetCount,
 }: {
   regions: PlannerRegion[];
-  tierOneRelics: RelicChoice[];
+  relicTiers?: RelicTier[];
+  /** Temporary compatibility for callers that still provide only Tier 1. */
+  tierOneRelics?: RelicChoice[];
   blessingTiers: BlessingTier[];
   resetCount: number;
 }) {
@@ -49,6 +64,18 @@ export function BuildPlanner({
   const { build, toggleRegion } = useBuild();
   const selectedRegions: string[] = build.elective;
   const [selectedRelic, setSelectedRelic] = useState<string>("");
+
+  const effectiveRelicTiers = useMemo<RelicTier[]>(() => {
+    if (relicTiers?.length) return relicTiers;
+    return [
+      {
+        tier: 1,
+        revealed: Boolean(tierOneRelics?.length),
+        verified: false,
+        choices: tierOneRelics ?? [],
+      },
+    ];
+  }, [relicTiers, tierOneRelics]);
 
   const selectedRegionRows = useMemo(
     () => electiveRegions.filter((region) => selectedRegions.includes(region.id)),
@@ -119,26 +146,50 @@ export function BuildPlanner({
       <section className="border-b border-stone-750 py-5">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
           <div>
-            <h2 className="text-sm font-medium text-parch-50">Relic tier 1</h2>
-            <p className="mt-1 text-xs text-parch-300">Only Tier 1 is public in this snapshot. Later tiers stay hidden instead of being guessed.</p>
+            <h2 className="text-sm font-medium text-parch-50">Relics</h2>
+            <p className="mt-1 text-xs text-parch-300">Revealed tiers come from the League data store. Unrevealed tiers stay unknown.</p>
           </div>
           <div className="text-xs text-parch-300">{selectedRelic || "no relic selected"}</div>
         </div>
+
         <div className="border-t border-stone-750">
-          {tierOneRelics.map((relic) => {
-            const selected = selectedRelic === relic.name;
-            return (
-              <button
-                key={relic.name}
-                type="button"
-                onClick={() => setSelectedRelic((current) => current === relic.name ? "" : relic.name)}
-                className={`grid w-full gap-2 border-b border-stone-750/70 px-3 py-3 text-left md:grid-cols-[180px_minmax(0,1fr)] ${selected ? "bg-stone-850" : "hover:bg-white/[0.02]"}`}
-              >
-                <span className="text-sm font-medium text-parch-50">{relic.name}</span>
-                <span className="text-xs leading-5 text-parch-300">{relic.effects.join(" ")}</span>
-              </button>
-            );
-          })}
+          {effectiveRelicTiers.map((tier) => (
+            <div key={tier.tier} className="border-b border-stone-750/70">
+              <div className="flex flex-wrap items-baseline justify-between gap-3 px-3 py-2">
+                <div className="text-sm font-medium text-parch-50">Tier {tier.tier}</div>
+                <div className="flex items-center gap-3 text-[11px] text-parch-300">
+                  <span>{tier.revealed ? "revealed" : "not revealed"}</span>
+                  {tier.sourceUrl ? (
+                    <a href={tier.sourceUrl} target="_blank" rel="noreferrer" className="underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
+                      source
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+
+              {tier.revealed && tier.choices.length ? (
+                <div className="border-t border-stone-750/70">
+                  {tier.choices.map((relic) => {
+                    const selectionKey = `${tier.tier}:${relic.name}`;
+                    const selected = selectedRelic === selectionKey;
+                    return (
+                      <button
+                        key={selectionKey}
+                        type="button"
+                        onClick={() => setSelectedRelic((current) => current === selectionKey ? "" : selectionKey)}
+                        className={`grid w-full gap-2 border-b border-stone-750/70 px-3 py-3 text-left last:border-b-0 md:grid-cols-[180px_minmax(0,1fr)] ${selected ? "bg-stone-850" : "hover:bg-white/[0.02]"}`}
+                      >
+                        <span className="text-sm font-medium text-parch-50">{relic.name}</span>
+                        <span className="text-xs leading-5 text-parch-300">{relic.effects.join(" ")}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="border-t border-stone-750/70 px-3 py-3 text-xs text-parch-300">No public choices yet.</p>
+              )}
+            </div>
+          ))}
         </div>
       </section>
 
@@ -146,18 +197,19 @@ export function BuildPlanner({
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Blessings</h2>
-            <p className="mt-1 text-xs text-parch-300">Order, Balance and Chaos. Exact nodes are not public yet.</p>
+            <p className="mt-1 text-xs text-parch-300">Order, Balance and Chaos. Unrevealed node payloads stay unknown.</p>
           </div>
           <div className="text-xs text-parch-300">{resetCount} resets total · god tiers 4 and 8</div>
         </div>
         <div className="overflow-x-auto border-t border-stone-750">
-          <table className="w-full min-w-[620px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[700px] border-collapse text-left text-sm">
             <thead className="text-xs text-parch-300">
               <tr className="border-b border-stone-750">
                 <th className="py-2 pr-4 font-medium">Tier</th>
                 <th className="py-2 pr-4 font-medium">Paths</th>
                 <th className="py-2 pr-4 font-medium">God tier</th>
-                <th className="py-2 font-medium">Status</th>
+                <th className="py-2 pr-4 font-medium">Status</th>
+                <th className="py-2 font-medium">Source</th>
               </tr>
             </thead>
             <tbody>
@@ -166,7 +218,16 @@ export function BuildPlanner({
                   <td className="py-2.5 pr-4 text-parch-50">{tier.tier}</td>
                   <td className="py-2.5 pr-4 text-xs text-parch-300">{tier.paths.join(" · ")}</td>
                   <td className="py-2.5 pr-4 text-xs text-parch-300">{tier.godTier ? "yes" : "—"}</td>
-                  <td className="py-2.5 text-xs text-parch-300">{tier.revealed ? "revealed" : "not revealed"}</td>
+                  <td className="py-2.5 pr-4 text-xs text-parch-300">
+                    {tier.revealed ? `revealed${tier.choices.length ? ` · ${tier.choices.length} nodes` : ""}` : "not revealed"}
+                  </td>
+                  <td className="py-2.5 text-xs text-parch-300">
+                    {tier.sourceUrl ? (
+                      <a href={tier.sourceUrl} target="_blank" rel="noreferrer" className="underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
+                        source
+                      </a>
+                    ) : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>

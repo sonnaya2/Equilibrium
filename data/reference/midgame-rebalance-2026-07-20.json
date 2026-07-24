@@ -236,6 +236,32 @@
     "Agility region value must use the new July 20 rates.",
     "Negative Invention perks should not exist in any current optimizer data.",
     "Tirannwn crystal-tool progression benefits from the 40% Harmonic Dust harp buff and faster crystal sandstone.",
-    "No region should be penalized in planner economics for boss instance fees after this patch."
-  ]
+    "No region should be penalized in planner economics for boss instance fees after this patch.",
+    "Construction 99-120 training must use the July 20 Eternal-plank/Fort/contract rebalance rather than launch-week values."
+  ],
+  "sources": [
+    "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+    "https://secure.runescape.com/m=news/mid-game-rebalance-is-live"
+  ],
+  "construction": {
+    "context": "This follow-up rebalance landed one week after Player-Owned Housing and Construction 120.",
+    "eternal_magic_plank_base_xp": {
+      "old": 200,
+      "new": 520
+    },
+    "fort_forinthry_reinforcement": {
+      "unlock_level": 105,
+      "target": "any existing tier-3 Fort Forinthry structure",
+      "materials": [
+        "65 Eternal Magic Frames",
+        "6 Stone Wall Segments"
+      ],
+      "base_xp": 499200
+    },
+    "construction_contracts": {
+      "eternal_plank_bonus_xp_per_item": 5000
+    },
+    "planner_impact": "Post-99 Construction routes changed again on July 20. Do not rank 99-120 methods from the July 13 launch state or older Fort data without applying this follow-up rebalance.",
+    "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live"
+  }
 }

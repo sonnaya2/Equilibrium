@@ -13,25 +13,109 @@
   },
   "agility": {
     "courses": [
-      {"level": 48, "course": "Ape Atoll", "old_xp_per_hour": 46400.0, "new_xp_per_hour": 49200.0},
-      {"level": 50, "course": "Anachronia Novice", "old_xp_per_hour": 37440.0, "new_xp_per_hour": 46800.0},
-      {"level": 52, "course": "Wilderness", "old_xp_per_hour": 51390.0, "new_xp_per_hour": 51390.0},
-      {"level": 60, "course": "Werewolf", "old_xp_per_hour": 43200.0, "new_xp_per_hour": 60000.0},
-      {"level": 60, "course": "Bandos", "old_xp_per_hour": 39085.7, "new_xp_per_hour": 60171.4},
-      {"level": 65, "course": "Het's Oasis", "old_xp_per_hour": 70114.3, "new_xp_per_hour": 70114.3},
-      {"level": 70, "course": "Anachronia Advanced", "old_xp_per_hour": 51600.0, "new_xp_per_hour": 78000.0},
-      {"level": 77, "course": "Hefin 77", "old_xp_per_hour": 60342.9, "new_xp_per_hour": 102857.1},
-      {"level": 80, "course": "Dorgesh-Kaan", "old_xp_per_hour": 53437.5, "new_xp_per_hour": 123750.0},
-      {"level": 82, "course": "Hefin 82", "old_xp_per_hour": 75428.6, "new_xp_per_hour": 120000.0},
-      {"level": 85, "course": "Advanced Gnome Stronghold", "old_xp_per_hour": 65250.0, "new_xp_per_hour": 162000.0},
-      {"level": 85, "course": "Anachronia Full", "old_xp_per_hour": 150300.0, "new_xp_per_hour": 210000.0},
-      {"level": 87, "course": "Hefin 87", "old_xp_per_hour": 90514.3, "new_xp_per_hour": 137142.9},
-      {"level": 90, "course": "Advanced Barbarian Outpost", "old_xp_per_hour": 71336.8, "new_xp_per_hour": 189473.7},
-      {"level": 92, "course": "Hefin 92", "old_xp_per_hour": 101485.7, "new_xp_per_hour": 154285.7},
-      {"level": 97, "course": "Hefin 97", "old_xp_per_hour": 113828.6, "new_xp_per_hour": 171428.6}
+      {
+        "level": 48,
+        "course": "Ape Atoll",
+        "old_xp_per_hour": 46400,
+        "new_xp_per_hour": 49200
+      },
+      {
+        "level": 50,
+        "course": "Anachronia Novice",
+        "old_xp_per_hour": 37440,
+        "new_xp_per_hour": 46800
+      },
+      {
+        "level": 52,
+        "course": "Wilderness",
+        "old_xp_per_hour": 51390,
+        "new_xp_per_hour": 51390
+      },
+      {
+        "level": 60,
+        "course": "Werewolf",
+        "old_xp_per_hour": 43200,
+        "new_xp_per_hour": 60000
+      },
+      {
+        "level": 60,
+        "course": "Bandos",
+        "old_xp_per_hour": 39085.7,
+        "new_xp_per_hour": 60171.4
+      },
+      {
+        "level": 65,
+        "course": "Het's Oasis",
+        "old_xp_per_hour": 70114.3,
+        "new_xp_per_hour": 70114.3
+      },
+      {
+        "level": 70,
+        "course": "Anachronia Advanced",
+        "old_xp_per_hour": 51600,
+        "new_xp_per_hour": 78000
+      },
+      {
+        "level": 77,
+        "course": "Hefin 77",
+        "old_xp_per_hour": 60342.9,
+        "new_xp_per_hour": 102857.1
+      },
+      {
+        "level": 80,
+        "course": "Dorgesh-Kaan",
+        "old_xp_per_hour": 53437.5,
+        "new_xp_per_hour": 123750
+      },
+      {
+        "level": 82,
+        "course": "Hefin 82",
+        "old_xp_per_hour": 75428.6,
+        "new_xp_per_hour": 120000
+      },
+      {
+        "level": 85,
+        "course": "Advanced Gnome Stronghold",
+        "old_xp_per_hour": 65250,
+        "new_xp_per_hour": 162000
+      },
+      {
+        "level": 85,
+        "course": "Anachronia Full",
+        "old_xp_per_hour": 150300,
+        "new_xp_per_hour": 210000
+      },
+      {
+        "level": 87,
+        "course": "Hefin 87",
+        "old_xp_per_hour": 90514.3,
+        "new_xp_per_hour": 137142.9
+      },
+      {
+        "level": 90,
+        "course": "Advanced Barbarian Outpost",
+        "old_xp_per_hour": 71336.8,
+        "new_xp_per_hour": 189473.7
+      },
+      {
+        "level": 92,
+        "course": "Hefin 92",
+        "old_xp_per_hour": 101485.7,
+        "new_xp_per_hour": 154285.7
+      },
+      {
+        "level": 97,
+        "course": "Hefin 97",
+        "old_xp_per_hour": 113828.6,
+        "new_xp_per_hour": 171428.6
+      }
     ],
     "demonic_skull_removed": true,
-    "dive_unlock": {"new_requirement": "30 Agility", "old_requirement": "Succession quest", "notes": "No longer gated by the quest's 60 Mining and 60 Smithing requirements."}
+    "dive_unlock": {
+      "new_requirement": "30 Agility",
+      "old_requirement": "Succession quest",
+      "notes": "No longer gated by the quest's 60 Mining and 60 Smithing requirements."
+    }
   },
   "divination": {
     "energy_success_rate_average_increases": {
@@ -48,7 +132,13 @@
   "god_wars_dungeon_1": {
     "killcount_persists_after_leaving": true,
     "killcount_cap": 200,
-    "removed_items": ["Omni Soulstone", "Armadylean Soulstone", "Bandosian Soulstone", "Saradominist Soulstone", "Zamorakian Soulstone"],
+    "removed_items": [
+      "Omni Soulstone",
+      "Armadylean Soulstone",
+      "Bandosian Soulstone",
+      "Saradominist Soulstone",
+      "Zamorakian Soulstone"
+    ],
     "region_relevance": "Asgarnia",
     "planner_note": "The God Wars Dungeon approach is part of Asgarnia in the working region map."
   },
@@ -61,7 +151,21 @@
   },
   "invention": {
     "negative_perks_removed": [
-      "Antitheism", "Profane", "Inaccurate", "Junk Food", "Undead Bait", "Demon Bait", "Dragon Bait", "Cautious", "Mediocrity", "Fatiguing", "Committed", "Butterfingers", "Blunted", "Cheapskate", "Confused"
+      "Antitheism",
+      "Profane",
+      "Inaccurate",
+      "Junk Food",
+      "Undead Bait",
+      "Demon Bait",
+      "Dragon Bait",
+      "Cautious",
+      "Mediocrity",
+      "Fatiguing",
+      "Committed",
+      "Butterfingers",
+      "Blunted",
+      "Cheapskate",
+      "Confused"
     ],
     "planner_impact": "Do not include these perks in 2026 perk-generation tables."
   },
@@ -72,7 +176,10 @@
       "meilyr_crystal_sandstone": 50
     },
     "related_2026_dailyscape_change": "Daily mining caps had already been removed earlier in 2026.",
-    "region_relevance": {"red_sandstone": "Desert", "crystal_sandstone": "Tirannwn"}
+    "region_relevance": {
+      "red_sandstone": "Desert",
+      "crystal_sandstone": "Tirannwn"
+    }
   },
   "harmonic_dust": {
     "harp_gain_increase_percent": 40,
@@ -85,12 +192,42 @@
     "planner_impact": "Do not budget coins for boss instance fees; region- or item-specific entry requirements still apply."
   },
   "drop_rate_changes": [
-    {"item": "Dragon pickaxe", "source": "Chaos dwarves", "old_rate": "1/5,000", "new_rate": "1/3,000"},
-    {"item": "Dragon pickaxe", "source": "Chaos giants", "old_rate": "1/10,000", "new_rate": "1/1,000"},
-    {"item": "Vampyrism gloves", "source": "Sanguine Crawler on task", "old_rate": "1/500", "new_rate": "1/200"},
-    {"item": "Vampyrism gloves", "source": "Sanguine Crawler off task", "old_rate": "1/2,000", "new_rate": "1/1,000"},
-    {"item": "Corporeal Beast sigil", "source": "Corporeal Beast", "old_rate": "1/512", "new_rate": "1/256"},
-    {"item": "Linza equipment", "source": "Barrows", "old_rate": "1/192", "new_rate": "1/96"}
+    {
+      "item": "Dragon pickaxe",
+      "source": "Chaos dwarves",
+      "old_rate": "1/5,000",
+      "new_rate": "1/3,000"
+    },
+    {
+      "item": "Dragon pickaxe",
+      "source": "Chaos giants",
+      "old_rate": "1/10,000",
+      "new_rate": "1/1,000"
+    },
+    {
+      "item": "Vampyrism gloves",
+      "source": "Sanguine Crawler on task",
+      "old_rate": "1/500",
+      "new_rate": "1/200"
+    },
+    {
+      "item": "Vampyrism gloves",
+      "source": "Sanguine Crawler off task",
+      "old_rate": "1/2,000",
+      "new_rate": "1/1,000"
+    },
+    {
+      "item": "Corporeal Beast sigil",
+      "source": "Corporeal Beast",
+      "old_rate": "1/512",
+      "new_rate": "1/256"
+    },
+    {
+      "item": "Linza equipment",
+      "source": "Barrows",
+      "old_rate": "1/192",
+      "new_rate": "1/96"
+    }
   ],
   "league_relevance": [
     "Asgarnia GWD1 routing is less annoying because killcount persists.",
@@ -99,6 +236,32 @@
     "Agility region value must use the new July 20 rates.",
     "Negative Invention perks should not exist in any current optimizer data.",
     "Tirannwn crystal-tool progression benefits from the 40% Harmonic Dust harp buff and faster crystal sandstone.",
-    "No region should be penalized in planner economics for boss instance fees after this patch."
-  ]
+    "No region should be penalized in planner economics for boss instance fees after this patch.",
+    "Construction 99-120 training must use the July 20 Eternal-plank/Fort/contract rebalance rather than launch-week values."
+  ],
+  "sources": [
+    "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+    "https://secure.runescape.com/m=news/mid-game-rebalance-is-live"
+  ],
+  "construction": {
+    "context": "This follow-up rebalance landed one week after Player-Owned Housing and Construction 120.",
+    "eternal_magic_plank_base_xp": {
+      "old": 200,
+      "new": 520
+    },
+    "fort_forinthry_reinforcement": {
+      "unlock_level": 105,
+      "target": "any existing tier-3 Fort Forinthry structure",
+      "materials": [
+        "65 Eternal Magic Frames",
+        "6 Stone Wall Segments"
+      ],
+      "base_xp": 499200
+    },
+    "construction_contracts": {
+      "eternal_plank_bonus_xp_per_item": 5000
+    },
+    "planner_impact": "Post-99 Construction routes changed again on July 20. Do not rank 99-120 methods from the July 13 launch state or older Fort data without applying this follow-up rebalance.",
+    "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live"
+  }
 }

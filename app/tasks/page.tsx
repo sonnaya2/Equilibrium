@@ -20,8 +20,7 @@ export default function TasksPage() {
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-parch-50">Tasks</h1>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
-              The point values are public. The full Equilibrium task list is not out yet, so there are no
-              placeholder tasks here.
+              {tasksData.pointValueNote}
             </p>
           </div>
           <a
@@ -42,6 +41,7 @@ export default function TasksPage() {
             <div key={tier} className={`py-3 sm:px-3 ${index > 0 ? "border-t border-stone-750 sm:border-l sm:border-t-0" : ""}`}>
               <div className="text-xs capitalize text-parch-300">{tier}</div>
               <div className="mt-1 font-mono text-lg text-parch-50">{tasksData.tiers[tier]}</div>
+              {tasksData.tierConfidence[tier]?.startsWith("provisional") ? <div className="mt-1 text-[11px] text-parch-400">provisional</div> : null}
             </div>
           ))}
         </div>

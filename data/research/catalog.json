@@ -31,7 +31,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 61
+    "trainingMethods": 62
   },
   "regions": [
     {
@@ -337,6 +337,7 @@
         }
       ],
       "trainingMethodIds": [
+        "archaeology:moonrise-dig-site",
         "hunter:birdhouses",
         "hunter:clockwork-box-traps",
         "hunter:havenhythe-big-game-hunter",
@@ -990,11 +991,11 @@
           "category": "entire skill/infrastructure dependency",
           "detail": "",
           "requirements": [],
-          "confidence": "confirmed_official_region_mapping_plus_user_correction",
+          "confidence": "confirmed_official",
           "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Daemonheim",
-            "title": "Daemonheim",
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+            "title": "Daemonheim / Dungeoneering",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "forinthry"
@@ -1002,11 +1003,11 @@
         {
           "name": "Chaotic equipment",
           "category": "Dungeoneering reward gear",
-          "detail": "Catalyst tasks explicitly treated equipping chaotic equipment as Wilderness: Daemonheim content, reinforcing the dependency mapping. · Chaotic weapons, Chaotic kiteshield",
+          "detail": "Catalyst treated chaotic equipment as Wilderness: Daemonheim content; the Equilibrium reveal independently confirms Daemonheim belongs to Forinthry. · Chaotic weapons, Chaotic kiteshield",
           "requirements": [
             "80 Dungeoneering and relevant combat skill requirements"
           ],
-          "confidence": "confirmed_wiki_historical_and_region_mapping",
+          "confidence": "confirmed_wiki_historical_plus_official_region_mapping",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Chaotic_equipment",
@@ -1838,7 +1839,9 @@
     {
       "id": "archaeology",
       "name": "Archaeology",
-      "regions": [],
+      "regions": [
+        "Havenhythe"
+      ],
       "methods": [
         {
           "id": "archaeology:highest-level-available-excavation-hotspot-restoration",
@@ -1863,6 +1866,35 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Archaeology_training",
             "title": "Archaeology training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "archaeology:moonrise-dig-site",
+          "skill": "Archaeology",
+          "method": "Moonrise Dig Site",
+          "levelRange": "52-88",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "Moonrise, Havenhythe",
+          "requirements": [
+            "Secrets of Amberfell",
+            "52 Archaeology"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "Live First Age/Guthixian dig-site progression in a starting region. Keep the route, but do not invent an optimizer-grade XP/h rate without a current benchmark.",
+          "warning": "",
+          "freshness": "2026-06-15_live",
+          "confidence": "confirmed_live_official",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
+            "title": "Moonrise Dig Site",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1944,26 +1976,26 @@
         {
           "id": "construction:eternal-magic-furniture",
           "skill": "Construction",
-          "method": "Eternal magic furniture",
-          "levelRange": "94+",
-          "xpRate": "",
-          "intensity": "",
+          "method": "Eternal Magic furniture",
+          "levelRange": "94+ progression; post-99 focus",
+          "xpRate": "520 base Construction XP per Eternal Magic plank after the July 20 follow-up rebalance.",
+          "intensity": "active furniture construction",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "player_owned_house_global_with_resource_dependency"
+            "global_if_materials_available"
           ],
-          "note": "Eternal plank XP was raised from 200 to 520 per plank on 2026-07-20.",
+          "note": "The July 20 follow-up removed the Eternal-plank speed unlocks while raising XP per plank from 200 to 520. Resource supply, not a specific region tile, is the main League constraint.",
           "warning": "",
-          "freshness": "",
-          "confidence": "confirmed_official_archive",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
           "source": {
             "source": "jagex",
-            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-            "title": "Eternal magic furniture",
+            "url": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
+            "title": "Eternal Magic furniture",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1988,7 +2020,7 @@
           "confidence": "confirmed_official_method_working_league_region_taxonomy",
           "source": {
             "source": "jagex",
-            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+            "url": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
             "title": "Fort Forinthry reinforcement",
             "verifiedAt": "2026-07-24"
           }

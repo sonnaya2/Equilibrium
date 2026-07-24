@@ -9,7 +9,15 @@
     "elite": 200,
     "master": 400
   },
-  "note": "Individual Equilibrium tasks are not yet ingested. Tier point values are metadata, not fake task rows.",
+  "tierConfidence": {
+    "easy": "confirmed_official_lower_bound",
+    "medium": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+    "hard": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+    "elite": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+    "master": "confirmed_official_upper_bound"
+  },
+  "pointValueNote": "The July 23 Jagex reveal explicitly says tasks span Easy through Master and rewards run from 10 points for quick wins up to 400 for major achievements. The 30/80/200 intermediate values match Catalyst but remain provisional until an Equilibrium-specific source publishes them explicitly.",
+  "note": "The full Equilibrium task list has not been published yet.",
   "source": {
     "source": "jagex",
     "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",

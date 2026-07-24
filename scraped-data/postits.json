@@ -105,11 +105,14 @@
       "priority": "high",
       "status": "active",
       "title": "Use the post-March-2026 combat model",
-      "body": "Any combat table imported from older guides must be rechecked against Combat Style Modernisation and subsequent patches before it becomes optimizer-grade data.",
+      "body": "Any combat table imported from older guides must be rechecked against Combat Style Modernisation and the 9, 16 and 30 March follow-up patches before it becomes optimizer-grade data.",
       "source_urls": [
         "https://runescape.wiki/w/Combat_Style_Modernisation",
         "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
-        "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation"
+        "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation",
+        "https://runescape.wiki/w/Update:Combat_Style_Refinements_%26_March_Marketplace_Drop",
+        "https://runescape.wiki/w/Update:DailyScape_Overhaul_%26_Free_Runemetrics_for_Members",
+        "https://runescape.wiki/w/Update:Blooming_Burrow_Returns!"
       ],
       "promote_to": [
         "data/combat"
@@ -121,9 +124,10 @@
       "priority": "high",
       "status": "active",
       "title": "July 20 progression values supersede older guides",
-      "body": "Fletching, Agility, Divination, GWD progression, Invention perk availability and several resource loops changed in the July 20 Mid-Game Rebalance. Older method tables need explicit revalidation.",
+      "body": "Fletching, Agility, Divination, GWD progression, Invention perk availability, Construction 99-120 progression and several resource loops changed in the July 20 Mid-Game Rebalance. Older method tables need explicit revalidation.",
       "source_urls": [
-        "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance"
+        "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+        "https://secure.runescape.com/m=news/mid-game-rebalance-is-live"
       ],
       "promote_to": [
         "scraped-data/midgame-rebalance-2026-07-20.json",

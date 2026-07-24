@@ -52,12 +52,32 @@
       "confidence": "confirmed_official_archive"
     },
     {
-      "date": "2026-07",
-      "name": "Mid-game / training rebalance wave",
+      "date": "2026-06-15",
+      "name": "Moonrise Dig Site",
+      "category": "region_and_skilling",
+      "summary": "Moonrise launched as a live First Age/Guthixian Archaeology dig site on Havenhythe. Access requires Secrets of Amberfell and 52 Archaeology.",
+      "league_impact": "Moonrise is starting-region Archaeology progression in Equilibrium, not future Havenhythe content.",
+      "data_file": "regions.json",
+      "source_id": "moonrise_official_2026_06_15",
+      "confidence": "confirmed_live_official"
+    },
+    {
+      "date": "2026-07-13",
+      "name": "Player-Owned Housing Rework + Construction 120",
+      "category": "construction_and_progression",
+      "summary": "Player-Owned Housing was rebuilt and Construction's level cap increased to 120, adding new post-99 progression, recipes, utilities and housing systems.",
+      "league_impact": "Construction planning must use the post-July-13 progression; the July 20 rebalance then changed high-level XP and Eternal-plank value again.",
+      "source_id": "poh_rework_official_2026_07_13",
+      "confidence": "confirmed_live_official"
+    },
+    {
+      "date": "2026-07-20",
+      "name": "Mid-Game Rebalance",
       "category": "progression",
-      "summary": "Additional Road to Restoration balancing continued into the mid-game and changed the value of several older training assumptions.",
-      "league_impact": "Treat old Wilderness Agility, Abyss Runecrafting and other Demonic-Skull-dependent rates as stale until individually rechecked.",
-      "confidence": "current_change_family_exact_values_require_followup"
+      "summary": "Rebalanced Fletching, Agility, Divination, God Wars progression, Invention perks, Construction 99-120 progression, resource loops, boss instance costs and selected drop rates.",
+      "league_impact": "Treat older Wilderness Agility, pre-retier Fletching, launch-week Construction and other outdated progression rates as stale until individually rechecked.",
+      "data_file": "midgame-rebalance-2026-07-20.json",
+      "confidence": "confirmed_official"
     },
     {
       "date": "2026-07-23",
@@ -76,6 +96,9 @@
     "DailyScape Overhaul",
     "Aura Overhaul",
     "Dungeoneering Remaster",
+    "Moonrise / continued Havenhythe rollout",
+    "Player-Owned Housing Rework + Construction 120",
+    "Mid-Game Rebalance",
     "continued mid/end-game progression rebalance"
   ]
 }

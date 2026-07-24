@@ -10,7 +10,13 @@
     "confidence": "confirmed_official"
   },
   "progression": {
-    "systems": ["regions", "relics", "blessings", "tasks", "league_points"],
+    "systems": [
+      "regions",
+      "relics",
+      "blessings",
+      "tasks",
+      "league_points"
+    ],
     "task_point_values": {
       "easy": 10,
       "medium": 30,
@@ -23,26 +29,97 @@
       "League Points unlock Relic tiers and determine trophy progression.",
       "Blessings are unlocked through separate combat-focused Blessing Tasks in chosen regions."
     ],
-    "confidence": "confirmed_official"
+    "confidence": "mixed_confirmed_and_provisional",
+    "task_point_value_confidence": {
+      "easy": "confirmed_official_lower_bound",
+      "medium": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+      "hard": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+      "elite": "provisional_same_scheme_as_catalyst_not_explicit_in_july_23_text",
+      "master": "confirmed_official_upper_bound"
+    },
+    "task_point_value_note": "The July 23 Jagex reveal explicitly says tasks span Easy through Master and rewards run from 10 points for quick wins up to 400 for major achievements. The 30/80/200 intermediate values match Catalyst but remain provisional until an Equilibrium-specific source publishes them explicitly."
   },
   "regions": {
     "starting": [
-      {"id": "misthalin", "unlock": "start", "confidence": "confirmed_official"},
-      {"id": "havenhythe", "unlock": "start", "confidence": "confirmed_official"}
+      {
+        "id": "misthalin",
+        "unlock": "start",
+        "confidence": "confirmed_official"
+      },
+      {
+        "id": "havenhythe",
+        "unlock": "start",
+        "confidence": "confirmed_official"
+      }
     ],
     "automatic_early": [
-      {"id": "karamja", "unlock": "first task milestone", "confidence": "confirmed_official"}
+      {
+        "id": "karamja",
+        "unlock": "first task milestone",
+        "confidence": "confirmed_official"
+      }
     ],
     "elective_slots": 3,
     "elective_choices": [
-      {"id": "asgarnia", "official_examples": ["God Wars Dungeon", "Falador"]},
-      {"id": "kandarin", "official_examples": ["Player-Owned Farm", "Hall of Memories", "Deep Sea Fishing Hub"]},
-      {"id": "fremennik", "official_examples": ["Neitiznot", "Lunar Isle", "Jatizso"]},
-      {"id": "forinthry", "official_examples": ["Wilderness Slayer", "Daemonheim"]},
-      {"id": "desert", "official_examples": ["Menaphos", "Het's Oasis"]},
-      {"id": "morytania", "official_examples": ["Araxxor", "Everlight Dig Site"]},
-      {"id": "tirannwn", "official_examples": ["Prifddinas", "Lost Grove"]},
-      {"id": "anachronia", "official_examples": ["dinosaurs", "hunting", "farming"]}
+      {
+        "id": "asgarnia",
+        "official_examples": [
+          "God Wars Dungeon",
+          "Falador"
+        ]
+      },
+      {
+        "id": "kandarin",
+        "official_examples": [
+          "Player-Owned Farm",
+          "Hall of Memories",
+          "Deep Sea Fishing Hub"
+        ]
+      },
+      {
+        "id": "fremennik",
+        "official_examples": [
+          "Neitiznot",
+          "Lunar Isle",
+          "Jatizso"
+        ]
+      },
+      {
+        "id": "forinthry",
+        "official_examples": [
+          "Wilderness Slayer",
+          "Daemonheim"
+        ]
+      },
+      {
+        "id": "desert",
+        "official_examples": [
+          "Menaphos",
+          "Het's Oasis"
+        ]
+      },
+      {
+        "id": "morytania",
+        "official_examples": [
+          "Araxxor",
+          "Everlight Dig Site"
+        ]
+      },
+      {
+        "id": "tirannwn",
+        "official_examples": [
+          "Prifddinas",
+          "Lost Grove"
+        ]
+      },
+      {
+        "id": "anachronia",
+        "official_examples": [
+          "dinosaurs",
+          "hunting",
+          "farming"
+        ]
+      }
     ],
     "quest_behavior": {
       "summary": "Each unlocked region auto-completes a large number of quests so core regional content becomes immediately accessible.",
@@ -113,9 +190,16 @@
     "tiers": 8,
     "focus": "combat-only power progression",
     "unlock_method": "Blessing Tasks in chosen regions",
-    "paths": ["Order", "Balance", "Chaos"],
+    "paths": [
+      "Order",
+      "Balance",
+      "Chaos"
+    ],
     "style_lock": false,
-    "god_tiers": [4, 8],
+    "god_tiers": [
+      4,
+      8
+    ],
     "god_tier_resolution": {
       "chaos": "two or more Chaos choices in the preceding block",
       "order": "two or more Order choices in the preceding block",
@@ -148,5 +232,7 @@
     "membership_upgrade_keeps_progress": true,
     "confidence": "confirmed_official"
   },
-  "source_ids": ["equilibrium_official_2026_07_23"]
+  "source_ids": [
+    "equilibrium_official_2026_07_23"
+  ]
 }

@@ -179,7 +179,7 @@
   },
   "magic": {
     "identity": "Critical strikes and burn damage-over-time are the defining modernised themes.",
-    "data_status": "High-level identity captured. Ability-by-ability table still needs a dedicated pass before being treated as optimizer-grade data.",
+    "data_status": "High-level identity captured. Ability-by-ability data still needs a dedicated pass against the March 9, March 16 and March 30 follow-up patches before being treated as optimizer-grade.",
     "confidence": "confirmed_wiki_partial"
   },
   "combat_auras_disabled_on_2026_03_02": [
@@ -210,6 +210,29 @@
   "source_ids": [
     "combat_modernisation_wiki",
     "combat_patch_1_wiki",
-    "combat_patch_2_wiki"
+    "combat_patch_2_wiki",
+    "combat_refinements_wiki_2026_03_09",
+    "dailyscape_combat_patches_wiki_2026_03_16",
+    "blooming_burrow_combat_patches_wiki_2026_03_30"
+  ],
+  "post_launch_patch_sources": [
+    {
+      "date": "2026-03-09",
+      "name": "Combat Style Refinements",
+      "source_id": "combat_refinements_wiki_2026_03_09",
+      "note": "First major post-launch balance/refinement pass; current ability values must include this patch."
+    },
+    {
+      "date": "2026-03-16",
+      "name": "DailyScape combat follow-up patches",
+      "source_id": "dailyscape_combat_patches_wiki_2026_03_16",
+      "note": "Additional combat corrections landed two weeks after launch."
+    },
+    {
+      "date": "2026-03-30",
+      "name": "Blooming Burrow combat follow-up patches",
+      "source_id": "blooming_burrow_combat_patches_wiki_2026_03_30",
+      "note": "Further ability adjustments landed at the end of March."
+    }
   ]
 }

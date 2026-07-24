@@ -315,10 +315,38 @@
       "xp_event": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
       "intensity": "long AFK windows; active hotspots improve rate",
       "freshness": "2026-07-20_official",
-      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
       "confidence": "confirmed_official_method_working_league_region_taxonomy",
       "location": "Fort Forinthry, south-eastern Wilderness",
       "region_warning": "Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping."
+    },
+    {
+      "skill": "Construction",
+      "method": "Eternal Magic furniture",
+      "method_region": "global_if_materials_available",
+      "level_range": "94+ progression; post-99 focus",
+      "xp_event": "520 base Construction XP per Eternal Magic plank after the July 20 follow-up rebalance.",
+      "intensity": "active furniture construction",
+      "notes": "The July 20 follow-up removed the Eternal-plank speed unlocks while raising XP per plank from 200 to 520. Resource supply, not a specific region tile, is the main League constraint.",
+      "freshness": "2026-07-20_official",
+      "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
+      "confidence": "confirmed_official"
+    },
+    {
+      "skill": "Archaeology",
+      "method": "Moonrise Dig Site",
+      "method_region": "havenhythe",
+      "location": "Moonrise, Havenhythe",
+      "level_range": "52-88",
+      "xp_rate": "not normalized",
+      "requirements": [
+        "Secrets of Amberfell",
+        "52 Archaeology"
+      ],
+      "notes": "Live First Age/Guthixian dig-site progression in a starting region. Keep the route, but do not invent an optimizer-grade XP/h rate without a current benchmark.",
+      "freshness": "2026-06-15_live",
+      "source": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
+      "confidence": "confirmed_live_official"
     }
   ]
 }

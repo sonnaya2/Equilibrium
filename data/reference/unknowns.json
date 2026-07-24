@@ -72,9 +72,10 @@
     },
     {
       "key": "equilibrium_tasks",
-      "status": "not_yet_scraped",
-      "known": "Task values are Easy 10, Medium 30, Hard 80, Elite 200, Master 400.",
+      "status": "partially_revealed",
+      "known": "Jagex has confirmed task tiers from Easy through Master and a reward range from 10 points for quick wins up to 400 for major achievements. Medium 30 / Hard 80 / Elite 200 match Catalyst and remain provisional until explicitly published for Equilibrium.",
       "missing": [
+        "confirmed Equilibrium intermediate tier values",
         "full task list",
         "region tag",
         "skill tag",

@@ -150,7 +150,8 @@
           "Wilderness",
           "Wildy"
         ],
-        "confidence": "confirmed_official_region_mapping_plus_user_correction"
+        "confidence": "confirmed_official",
+        "source_url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
       },
       {
         "name": "Chaotic equipment",
@@ -160,8 +161,8 @@
           "Chaotic kiteshield"
         ],
         "base_game_requirement": "80 Dungeoneering and relevant combat skill requirements",
-        "league_relevance": "Catalyst tasks explicitly treated equipping chaotic equipment as Wilderness: Daemonheim content, reinforcing the dependency mapping.",
-        "confidence": "confirmed_wiki_historical_and_region_mapping"
+        "league_relevance": "Catalyst treated chaotic equipment as Wilderness: Daemonheim content; the Equilibrium reveal independently confirms Daemonheim belongs to Forinthry.",
+        "confidence": "confirmed_wiki_historical_plus_official_region_mapping"
       },
       {
         "name": "Primal ore / high-level Mining",

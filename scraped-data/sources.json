@@ -224,6 +224,46 @@
       "published": "2026-06-15",
       "url": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
       "authority": "official_game_update"
+    },
+    {
+      "id": "combat_refinements_wiki_2026_03_09",
+      "title": "Combat Style Refinements & March Marketplace Drop",
+      "publisher": "The RuneScape Wiki",
+      "published": "2026-03-09",
+      "url": "https://runescape.wiki/w/Update:Combat_Style_Refinements_%26_March_Marketplace_Drop",
+      "authority": "canonical_game_data"
+    },
+    {
+      "id": "dailyscape_combat_patches_wiki_2026_03_16",
+      "title": "DailyScape Overhaul & Free Runemetrics for Members",
+      "publisher": "The RuneScape Wiki",
+      "published": "2026-03-16",
+      "url": "https://runescape.wiki/w/Update:DailyScape_Overhaul_%26_Free_Runemetrics_for_Members",
+      "authority": "canonical_game_data"
+    },
+    {
+      "id": "blooming_burrow_combat_patches_wiki_2026_03_30",
+      "title": "Blooming Burrow Returns!",
+      "publisher": "The RuneScape Wiki",
+      "published": "2026-03-30",
+      "url": "https://runescape.wiki/w/Update:Blooming_Burrow_Returns!",
+      "authority": "canonical_game_data"
+    },
+    {
+      "id": "poh_rework_official_2026_07_13",
+      "title": "Player Owned Housing Rework Out Now!",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-07-13",
+      "url": "https://secure.runescape.com/m=news/player-owned-housing-rework-out-now",
+      "authority": "provisional_or_changelog"
+    },
+    {
+      "id": "midgame_rebalance_live_official_2026_07_20",
+      "title": "Mid-Game Rebalance is Live!",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-07-20",
+      "url": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
+      "authority": "provisional_or_changelog"
     }
   ]
 }

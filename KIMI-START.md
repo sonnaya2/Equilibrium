@@ -117,7 +117,7 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 
 ### Consume these as the research pass adds them
 
-- [ ] **Region-value additions:** integrate new sourced rows for best combat/training spots, unique drops, Runecrafting altars/access, Invention unlocks/material loops, Archaeology dig sites/relic unlocks and other region-sensitive progression. Kimi wires the normalized records into existing region/skill views; Kimi does not research them.
+- [ ] **Region-value additions:** `data/research/planner-expansions.json` now has sourced combat/training spots, unique drops, Runecrafting altars/access, Invention unlocks/material loops and Archaeology progression. Wire those records into the existing region/skill views; do not research replacements in this queue.
 - [ ] **Training updates:** when current post-2026 rates/methods are added to the canonical research data, expose them through the existing skill/region method tables and preserve stale/current warnings. Do not independently benchmark or search for replacements.
 - [ ] **League progression constants:** when exact XP multipliers, drop-rate multipliers, passive thresholds and elective-region unlock thresholds land in canonical League data, connect planner/progression calculations to those fields rather than duplicating constants.
 - [ ] **League drop metadata:** when sourced region availability, unique-drop modifiers, bad-luck rules or League-specific drop modifiers are added, connect them to region/build views. Do not build boss guides or research drop rates yourself.

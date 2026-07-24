@@ -103,6 +103,18 @@
           }
         },
         {
+          "name": "Sanctum of Rebirth",
+          "kind": "boss dungeon",
+          "detail": "Three-boss dungeon reached through the City of Um side of the Underworld.",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+            "title": "Sanctum of Rebirth",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
           "name": "Kerapac, the bound",
           "kind": "Elder God Wars Dungeon",
           "detail": "",
@@ -175,18 +187,6 @@
           }
         },
         {
-          "name": "Sanctum of Rebirth",
-          "kind": "City of Um access / boss dungeon",
-          "detail": "",
-          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
-            "title": "Sanctum of Rebirth",
-            "verifiedAt": "2026-07-24"
-          }
-        },
-        {
           "name": "The Gate of Elidinis",
           "kind": "City of Um access / skilling boss",
           "detail": "",
@@ -207,6 +207,42 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
             "title": "Zemouregal & Vorkath",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Vermyx, Brood Mother",
+          "kind": "Sanctum of Rebirth",
+          "detail": "",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vermyx,_Brood_Mother",
+            "title": "Vermyx, Brood Mother",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Kezalam, the Wanderer",
+          "kind": "Sanctum of Rebirth",
+          "detail": "",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kezalam,_the_Wanderer",
+            "title": "Kezalam, the Wanderer",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Nakatra, Devourer Eternal",
+          "kind": "Sanctum of Rebirth",
+          "detail": "",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nakatra,_Devourer_Eternal",
+            "title": "Nakatra, Devourer Eternal",
             "verifiedAt": "2026-07-24"
           }
         }

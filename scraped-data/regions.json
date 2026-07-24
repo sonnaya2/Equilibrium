@@ -36,6 +36,14 @@
           "note": "Working League mapping: Catalyst filed City of Um tasks under Misthalin. Equilibrium-specific locality handling is still unannounced.",
           "source_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
           "confidence": "historical_league_taxonomy_pending_equilibrium_confirmation"
+        },
+        {
+          "name": "Sanctum of Rebirth",
+          "type": "boss dungeon",
+          "note": "Three-boss dungeon reached through the City of Um side of the Underworld.",
+          "source_url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy"
         }
       ],
       "open_questions": [
@@ -86,13 +94,6 @@
           "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
         },
         {
-          "name": "Sanctum of Rebirth",
-          "group": "City of Um access / boss dungeon",
-          "source_url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
-          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
-          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
-        },
-        {
           "name": "The Gate of Elidinis",
           "group": "City of Um access / skilling boss",
           "source_url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
@@ -105,6 +106,27 @@
           "source_url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
           "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
           "confidence": "historical_catalyst_fort_misthalin_taxonomy_current_wiki_content"
+        },
+        {
+          "name": "Vermyx, Brood Mother",
+          "group": "Sanctum of Rebirth",
+          "source_url": "https://runescape.wiki/w/Vermyx,_Brood_Mother",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "Kezalam, the Wanderer",
+          "group": "Sanctum of Rebirth",
+          "source_url": "https://runescape.wiki/w/Kezalam,_the_Wanderer",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "Nakatra, Devourer Eternal",
+          "group": "Sanctum of Rebirth",
+          "source_url": "https://runescape.wiki/w/Nakatra,_Devourer_Eternal",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy"
         }
       ]
     },

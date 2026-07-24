@@ -342,6 +342,198 @@
       ],
       "confidence": "confirmed_wiki",
       "league_treatment": "War's Retreat is mapped to Misthalin for planning, but do not make that a hard Equilibrium gate until the League documents its hub access. Legacy aura-shop assumptions stay out because the 2026 Aura Overhaul removed the old combat-aura model."
+    },
+    {
+      "id": "dungeoneering:spirit-cape-passive",
+      "name": "Spirit cape passive",
+      "category": "permanent Summoning account buff",
+      "region_hint": "forinthry",
+      "token_cost": 45000,
+      "base_requirements": [
+        "50 Dungeoneering",
+        "50 Defence",
+        "50 Summoning"
+      ],
+      "special_move_cost_reduction_percent": 20,
+      "source_urls": [
+        "https://runescape.wiki/w/Comparison_of_combat_capes",
+        "https://runescape.wiki/w/PvM_unlock_guide"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Daemonheim is a hard Forinthry dependency in this project. League token multipliers change acquisition speed, not the passive."
+    },
+    {
+      "id": "anachronia:slayer-lodge",
+      "name": "Anachronia Slayer Lodge progression",
+      "category": "regional combat infrastructure",
+      "region_hint": "anachronia",
+      "tiers": [
+        {
+          "tier": 1,
+          "slayer_level": 40,
+          "benefit": "+1% damage on Anachronia"
+        },
+        {
+          "tier": 2,
+          "slayer_level": 70,
+          "benefit": "+3% damage on Anachronia"
+        },
+        {
+          "tier": 3,
+          "slayer_level": 90,
+          "benefit": "+6% damage on Anachronia plus the Slayer helmet stand"
+        }
+      ],
+      "tier_3_unique_material": "Dinosaur tooth",
+      "stand_rule": "A placed Slayer helmet grants its effects without being worn; the stand does not grant the helmet's stats or teleports.",
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Anachronia_base_camp/Slayer_Lodge_tiers",
+        "https://runescape.wiki/w/Unlockable_content"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "anachronia:player-lodge",
+      "name": "Anachronia Player Lodge progression",
+      "category": "account perk infrastructure",
+      "region_hint": "anachronia",
+      "tiers": [
+        {
+          "tier": 1,
+          "construction_level": 40,
+          "benefit": "+10% chance to find Anachronia building resources"
+        },
+        {
+          "tier": 2,
+          "construction_level": 70,
+          "benefit": "Player Lodge restoration and Anachronia teletab support"
+        },
+        {
+          "tier": 3,
+          "construction_level": 90,
+          "benefit": "Skillcape rack"
+        }
+      ],
+      "tier_3_unique_material": "Dinosaur rib bone",
+      "stand_rule": "The skillcape rack grants the passive perk of the placed skillcape; activation-only cape effects are not granted.",
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Anachronia_base_camp/Player_Lodge_tiers",
+        "https://runescape.wiki/w/Unlockable_content"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "farms:combat-perk-state",
+      "name": "Player-owned farm combat perk state",
+      "category": "account passive plus farm-totem state",
+      "tier_1_rule": "Completing an animal category breeding log passively grants that animal perk at Tier 1; this has been the rule since 22 January 2024.",
+      "tier_2_rule": "Tier 2 still requires two qualifying elder animals of the same species in two separate pens, both with farm totems.",
+      "records": [
+        {
+          "name": "NopeNopeNope",
+          "animal": "Spider",
+          "farming_level": 64,
+          "region_hint": "kandarin",
+          "tier_1": "2% increased damage against spiders including Araxxor/Araxxi",
+          "tier_2": "3% increased damage against spiders including Araxxor/Araxxi"
+        },
+        {
+          "name": "King of Beasts",
+          "animal": "Bagrada rex",
+          "farming_level": 106,
+          "region_hint": "anachronia",
+          "tier_1": "5% chance to conserve a thrown bomb",
+          "tier_2": "10% chance to conserve a thrown bomb"
+        },
+        {
+          "name": "No Fear",
+          "animal": "Corbicula rex",
+          "farming_level": 112,
+          "region_hint": "anachronia",
+          "tier_1": "20% increased critical-hit chance for Meteor Strike",
+          "tier_2": "40% increased critical-hit chance for Meteor Strike"
+        },
+        {
+          "name": "Armoured Hide",
+          "animal": "Malletops",
+          "farming_level": 117,
+          "region_hint": "anachronia",
+          "tier_1": "Barricade duration +3 ticks (1.8 seconds)",
+          "tier_2": "Barricade duration +6 ticks (3.6 seconds)"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Player-owned_farm",
+        "https://runescape.wiki/w/Animal_breeding_log",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Tier 1 is persistent account state after the breeding log. Tier 2 remains an active farm-totem configuration."
+    },
+    {
+      "id": "anachronia:totem-of-vitality",
+      "name": "Totem of Vitality",
+      "category": "persistent maximum-life-point buff",
+      "region_hint": "anachronia",
+      "maximum_life_points_percent": 25,
+      "maximum_extra_life_points": 1500,
+      "current_change": "The 13 April 2026 Aura Overhaul replaced the Totem of Auras with the Totem of Vitality, moved Might of Het here, and removed weekly totem charging or lockouts.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Anachronia"
+      ],
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "legacy-of-zamorak:infernal-puzzle-box",
+      "name": "Infernal Puzzle Box combat progression",
+      "category": "adrenaline/account infrastructure",
+      "region_status": "unresolved_cross_boundary",
+      "region_candidates": [
+        "misthalin",
+        "forinthry"
+      ],
+      "milestones": [
+        {
+          "tier": 3,
+          "requirement": "Civil War I",
+          "effect": "Adrenaline no longer drains outside combat while the box is carried."
+        },
+        {
+          "tier": 6,
+          "requirement": "Succession",
+          "effect": "The box can be added to the tool belt, keeping its carried effects without using an inventory slot."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Infernal_Puzzle_Box",
+        "https://runescape.wiki/w/Civil_War_I_(miniquest)",
+        "https://runescape.wiki/w/Succession"
+      ],
+      "confidence": "confirmed_current_wiki_region_unresolved"
+    },
+    {
+      "id": "pvm:reaper-crew",
+      "name": "Reaper Crew",
+      "category": "global boss-completion passive",
+      "region_status": "global_cross_region",
+      "bonuses": {
+        "prayer": 2,
+        "armour": 20,
+        "life_points": 200,
+        "damage": {
+          "melee": 12,
+          "ranged": 12,
+          "magic": 12,
+          "necromancy": 12
+        }
+      },
+      "requirement": "Defeat every boss required by the Reaper Crew achievement at least once.",
+      "source_urls": [
+        "https://runescape.wiki/w/Unlockable_content",
+        "https://runescape.wiki/w/Bosses"
+      ],
+      "confidence": "confirmed_current_wiki"
     }
   ],
   "activity_unlocks": [
@@ -367,9 +559,72 @@
         "Tele-group Trollheim Farm",
         "Borrowed Power"
       ],
-      "source_url": "https://runescape.wiki/w/Rewards_(Livid_Farm)",
-      "confidence": "confirmed_wiki_unlocks_rate_not_used",
-      "league_treatment": "Track the unlock set, but do not import old Livid Farm XP-rate estimates into the League optimizer."
+      "confidence": "confirmed_wiki_current_2026",
+      "league_treatment": "Track the unlock set, but do not import old Livid Farm XP-rate estimates into the League optimizer.",
+      "unlock_ladder": [
+        {
+          "name": "South Falador Teleport",
+          "produce_points": 10000,
+          "magic_level": 72
+        },
+        {
+          "name": "Repair Rune Pouch",
+          "produce_points": 20000,
+          "magic_level": 75
+        },
+        {
+          "name": "North Ardougne Teleport",
+          "produce_points": 35000,
+          "magic_level": 76
+        },
+        {
+          "name": "Remote Farm",
+          "produce_points": 45000,
+          "magic_level": 78
+        },
+        {
+          "name": "Spiritual Healing",
+          "produce_points": 60000,
+          "magic_level": 80
+        },
+        {
+          "name": "Make Leather",
+          "produce_points": 75000,
+          "magic_level": 83
+        },
+        {
+          "name": "Disruption Shield",
+          "produce_points": 90000,
+          "magic_level": 90
+        },
+        {
+          "name": "Vengeance Group",
+          "produce_points": 100000,
+          "magic_level": 95
+        },
+        {
+          "name": "Trollheim Farm Teleport",
+          "produce_points": 110000,
+          "magic_level": 92
+        },
+        {
+          "name": "Tele-group Trollheim Farm",
+          "produce_points": 120000,
+          "magic_level": 93
+        },
+        {
+          "name": "Borrowed Power",
+          "produce_points": 130000,
+          "magic_level": 99
+        }
+      ],
+      "point_semantics": "Unlock thresholds are cumulative. Borrowed Power is the spell that spends the 130,000 produce points when purchased.",
+      "current_change": "The 16 March 2026 DailyScape Overhaul reduced every Livid Farm spell threshold by 70%.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rewards_(Livid_Farm)",
+        "https://runescape.wiki/w/Update:DailyScape_Overhaul",
+        "https://runescape.wiki/w/Lunar_Diplomacy"
+      ]
     },
     {
       "id": "shattered-worlds:current-permanent-abilities",
@@ -505,6 +760,154 @@
       ],
       "confidence": "confirmed_current_wiki_post_2025_tuska_cleanup",
       "league_treatment": "Do not use the removed Anima Islands reward-currency route from old guides. Region availability depends on which current acquisition route Equilibrium makes accessible."
+    },
+    {
+      "id": "necromancy:well-of-souls-talents",
+      "name": "Well of Souls talent progression",
+      "category": "Necromancy combat progression tree",
+      "region_hint": "misthalin",
+      "region_status": "historical_catalyst_working_taxonomy",
+      "talent_points": {
+        "maximum": 21,
+        "earned_from": "Necromancy combat experience; ritual-only experience does not earn talent points.",
+        "next_point_xp_formula": "max(2000 * (N - 1)^2, 80)",
+        "total_xp_for_all_21": 5740080
+      },
+      "tiers": [
+        {
+          "tier": 1,
+          "necromancy_level": 1,
+          "souls": 1,
+          "unlocks": [
+            {
+              "name": "Conjure Skeleton Warrior",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "necromancy_level": 20,
+          "souls": 50,
+          "unlocks": [
+            {
+              "name": "Command Skeleton Warrior"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "necromancy_level": 40,
+          "souls": 400,
+          "unlocks": [
+            {
+              "name": "Conjure Vengeful Ghost"
+            },
+            {
+              "name": "Threads of Fate",
+              "level": 44,
+              "quest": "Rune Mythos"
+            },
+            {
+              "name": "Conjure Putrid Zombie"
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "necromancy_level": 60,
+          "souls": 2000,
+          "unlocks": [
+            {
+              "name": "Command Vengeful Ghost"
+            },
+            {
+              "name": "Spectral Scythe",
+              "level": 62
+            },
+            {
+              "name": "Spirit Pact I"
+            },
+            {
+              "name": "Command Putrid Zombie"
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "necromancy_level": 70,
+          "souls": 4500,
+          "unlocks": [
+            {
+              "name": "Greater Bone Shield",
+              "level": 73,
+              "quest": "Tomes of the Warlock"
+            },
+            {
+              "name": "Spectral Scythe Upgrade 1"
+            },
+            {
+              "name": "Conjure Phantom Guardian"
+            },
+            {
+              "name": "Spirit Pact II"
+            },
+            {
+              "name": "Life Transfer",
+              "level": 76,
+              "quest": "Tomes of the Warlock"
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "necromancy_level": 80,
+          "souls": 8500,
+          "unlocks": [
+            {
+              "name": "Darkness",
+              "level": 86,
+              "quest": "Tomes of the Warlock"
+            },
+            {
+              "name": "Spectral Scythe Upgrade 2"
+            },
+            {
+              "name": "Command Phantom Guardian"
+            },
+            {
+              "name": "Spirit Pact III"
+            },
+            {
+              "name": "Invoke Death",
+              "quest": "Tomes of the Warlock"
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "necromancy_level": 90,
+          "souls": 35000,
+          "unlocks": [
+            {
+              "name": "Split Soul",
+              "level": 92,
+              "quest": "The Temple at Senntisten"
+            },
+            {
+              "name": "Conjure Undead Army",
+              "level": 99
+            }
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Talents",
+        "https://runescape.wiki/w/Necromancy",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_current_wiki_working_league_region_taxonomy",
+      "league_treatment": "Equilibrium soul multipliers and auto-completed quests modify access speed or gates separately; they do not rewrite the base talent tree."
     }
   ],
   "equipment_models": [
@@ -520,6 +923,295 @@
       "source_url": "https://runescape.wiki/w/Essence_of_Finality_amulet_(purple)",
       "confidence": "confirmed_wiki",
       "league_treatment": "Model the stored special separately from equipped weapon state; region and drop availability are separate dependencies."
+    },
+    {
+      "id": "zamorakian-slivers:enchantments",
+      "name": "Zamorakian sliver enchantments",
+      "category": "permanent account equipment upgrades",
+      "region_status": "unresolved_cross_boundary",
+      "region_candidates": [
+        "misthalin",
+        "forinthry"
+      ],
+      "account_rule": "Consuming an enchantment permanently upgrades every current and future copy of the affected equipment on the account.",
+      "records": [
+        {
+          "id": "enchantment:agony",
+          "name": "Enchantment of agony",
+          "affected_item": "Enhanced gloves of passage",
+          "recipe": [
+            {
+              "item": "Sliver of strength",
+              "quantity": 8
+            },
+            {
+              "item": "Shadow components",
+              "quantity": 6
+            },
+            {
+              "item": "Abyssal vine whip",
+              "quantity": 1
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_agony"
+        },
+        {
+          "id": "enchantment:heroism",
+          "name": "Enchantment of heroism",
+          "affected_item": "Champion's ring",
+          "recipe": [
+            {
+              "item": "Sliver of strength",
+              "quantity": 10
+            },
+            {
+              "item": "Pneumatic gloves",
+              "quantity": 1
+            },
+            {
+              "item": "Scrimshaw of attack",
+              "quantity": 3
+            },
+            {
+              "item": "Brilliant energy",
+              "quantity": 3000
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_heroism"
+        },
+        {
+          "id": "enchantment:savagery",
+          "name": "Enchantment of savagery",
+          "affected_item": "Terrasaur maul",
+          "recipe": [
+            {
+              "item": "Sliver of strength",
+              "quantity": 15
+            },
+            {
+              "item": "Glorious bar",
+              "quantity": 2
+            },
+            {
+              "item": "Ork cleaver sword",
+              "quantity": 2
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_savagery"
+        },
+        {
+          "id": "enchantment:dispelling",
+          "name": "Enchantment of dispelling",
+          "affected_item": "Hexhunter bow",
+          "recipe": [
+            {
+              "item": "Sliver of power",
+              "quantity": 15
+            },
+            {
+              "item": "Sirenic scale",
+              "quantity": 10
+            },
+            {
+              "item": "Chaos star",
+              "quantity": 3
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_dispelling"
+        },
+        {
+          "id": "enchantment:dread",
+          "name": "Enchantment of dread",
+          "affected_item": "Enhanced nightmare gauntlets",
+          "recipe": [
+            {
+              "item": "Sliver of power",
+              "quantity": 8
+            },
+            {
+              "item": "Shifting components",
+              "quantity": 6
+            },
+            {
+              "item": "Dark bow",
+              "quantity": 2
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_dread"
+        },
+        {
+          "id": "enchantment:shadows",
+          "name": "Enchantment of shadows",
+          "affected_item": "Stalker's ring",
+          "recipe": [
+            {
+              "item": "Sliver of power",
+              "quantity": 10
+            },
+            {
+              "item": "Tracking gloves",
+              "quantity": 1
+            },
+            {
+              "item": "Scrimshaw of ranging",
+              "quantity": 3
+            },
+            {
+              "item": "Brilliant energy",
+              "quantity": 3000
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_shadows"
+        },
+        {
+          "id": "enchantment:affliction",
+          "name": "Enchantment of affliction",
+          "affected_item": "Inquisitor staff",
+          "recipe": [
+            {
+              "item": "Sliver of pain",
+              "quantity": 15
+            },
+            {
+              "item": "Onyx",
+              "quantity": 3
+            },
+            {
+              "item": "Necromantic focus",
+              "quantity": 1
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_affliction"
+        },
+        {
+          "id": "enchantment:flames",
+          "name": "Enchantment of flames",
+          "affected_item": "Enhanced Kerapac's wrist wraps",
+          "recipe": [
+            {
+              "item": "Sliver of pain",
+              "quantity": 8
+            },
+            {
+              "item": "Ilujankan components",
+              "quantity": 6
+            },
+            {
+              "item": "Staff of light",
+              "quantity": 2
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_flames"
+        },
+        {
+          "id": "enchantment:metaphysics",
+          "name": "Enchantment of metaphysics",
+          "affected_item": "Channeller's ring",
+          "recipe": [
+            {
+              "item": "Sliver of pain",
+              "quantity": 10
+            },
+            {
+              "item": "Static gloves",
+              "quantity": 1
+            },
+            {
+              "item": "Scrimshaw of magic",
+              "quantity": 3
+            },
+            {
+              "item": "Brilliant energy",
+              "quantity": 3000
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Enchantment_of_metaphysics"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Enchantment",
+        "https://runescape.wiki/w/Update:Introducing:_Zamorak,_Lord_of_Chaos"
+      ],
+      "confidence": "confirmed_current_wiki_region_unresolved"
+    },
+    {
+      "id": "blessed-flask:prayer-storage",
+      "name": "Blessed flask",
+      "category": "refillable prayer-storage account item",
+      "herblore_level": 118,
+      "crafting_level": 96,
+      "capacity_doses": 80,
+      "refill": "Extreme prayer potion variants",
+      "final_components": [
+        {
+          "item": "Blessed flask shell",
+          "quantity": 1
+        },
+        {
+          "item": "Glorious silvthril chain",
+          "quantity": 1
+        },
+        {
+          "item": "Holy elixir",
+          "quantity": 1
+        },
+        {
+          "item": "Holy water",
+          "quantity": 1
+        },
+        {
+          "item": "Light core",
+          "quantity": 5
+        },
+        {
+          "item": "Holy overload potion (6)",
+          "quantity": 5
+        },
+        {
+          "item": "Extreme prayer (4)",
+          "quantity": 5
+        },
+        {
+          "item": "Positive energy",
+          "quantity": 500
+        }
+      ],
+      "major_raw_dependencies": [
+        {
+          "item": "Blessed sand",
+          "quantity": 40000
+        },
+        {
+          "item": "Soda ash",
+          "quantity": 1200
+        },
+        {
+          "item": "Red sandstone",
+          "quantity": 1200
+        },
+        {
+          "item": "Crystal-flecked sandstone",
+          "quantity": 1200
+        },
+        {
+          "item": "Harmonic dust",
+          "quantity": 5000
+        },
+        {
+          "item": "Alaea sea salt",
+          "quantity": 250
+        }
+      ],
+      "quest_dependencies": [
+        "As a First Resort for sandstone glassmaking",
+        "Plague's End for crystal-flecked sandstone / Prifddinas",
+        "Legacy of Seergaze progression for the chain-link mould used in the silvthril-chain branch"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Blessed_flask",
+        "https://runescape.wiki/w/Holy_overload_potion"
+      ],
+      "confidence": "confirmed_current_wiki"
     }
   ],
   "ability_unlocks": [
@@ -794,6 +1486,318 @@
       ],
       "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
       "league_treatment": "Gate of Elidinis follows the City of Um working taxonomy already used by the planner; do not turn that precedent into an Equilibrium confirmation."
+    }
+  ],
+  "consumable_unlocks": [
+    {
+      "id": "herblore:overload-chain",
+      "name": "Overload progression chain",
+      "category": "permanent Herblore recipe progression",
+      "base_overload": {
+        "herblore_level": 96,
+        "tradeable": false
+      },
+      "recipe_shop_gate": {
+        "name": "Meilyr Recipe Shop",
+        "base_quest_gate": "Plague's End",
+        "region_hint": "tirannwn",
+        "note": "Relevant unreadable recipe pages must be discovered before the permanent recipe can be bought from Lady Meilyr."
+      },
+      "records": [
+        {
+          "name": "Overload salve",
+          "herblore_level": 97,
+          "recipe_shop_cost_coins": 800000
+        },
+        {
+          "name": "Supreme overload potion",
+          "herblore_level": 98,
+          "recipe_shop_cost_coins": 900000
+        },
+        {
+          "name": "Supreme overload salve",
+          "herblore_level": 99,
+          "recipe_shop_cost_coins": 1000000
+        },
+        {
+          "name": "Elder overload potion",
+          "herblore_level": 106,
+          "recipe_shop_cost_coins": 1200000,
+          "core_recipe": [
+            "Supreme overload potion (6)",
+            "Primal extract",
+            "Clean fellstalk"
+          ]
+        },
+        {
+          "name": "Elder overload salve",
+          "herblore_level": 107,
+          "recipe_shop_cost_coins": 1500000
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Recipe_Shop",
+        "https://runescape.wiki/w/Overload_salve",
+        "https://runescape.wiki/w/Potions"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "fort-forinthry:botanists-workbench",
+      "name": "Botanist's Workbench",
+      "category": "optional Herblore batch-production infrastructure",
+      "base_access_quest": "Ancient Awakening",
+      "region_status": "unresolved_fort_wilderness_boundary",
+      "tiers": [
+        {
+          "tier": 1,
+          "construction_level": 54
+        },
+        {
+          "tier": 2,
+          "construction_level": 78
+        },
+        {
+          "tier": 3,
+          "construction_level": 92,
+          "benefit": "Stackable unfinished overload and overload-salve batches"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Botanist%27s_Workbench",
+        "https://runescape.wiki/w/Fort_Forinthry"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "potion:adrenaline-renewal",
+      "name": "Adrenaline renewal potion",
+      "category": "combat adrenaline consumable",
+      "recipe_unlock": "automatic_by_level",
+      "effect": "Restores 40% adrenaline over six seconds and triggers the normal adrenaline-potion cooldown.",
+      "recipe_tiers": [
+        {
+          "herblore_level": 115,
+          "name": "regular",
+          "ingredients": [
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Super adrenaline potion (4)",
+              "quantity": 1
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 2
+            },
+            {
+              "item": "Clean arbuck",
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "herblore_level": 117,
+          "name": "improved +1"
+        },
+        {
+          "herblore_level": 119,
+          "name": "improved +2",
+          "ingredients": [
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Super adrenaline potion (3)",
+              "quantity": 1
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 1
+            },
+            {
+              "item": "Clean arbuck",
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Adrenaline_renewal_potion",
+        "https://runescape.wiki/w/Template:Adrenaline_renewal_potion/creation"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "bomb:vulnerability",
+      "name": "Vulnerability bomb",
+      "category": "thrown combat debuff",
+      "recipe_unlock": "automatic_by_level",
+      "recipe_tiers": [
+        {
+          "herblore_level": 103,
+          "name": "regular",
+          "ingredients": [
+            {
+              "item": "Soul rune",
+              "quantity": 5
+            },
+            {
+              "item": "Chaos rune",
+              "quantity": 5
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 2
+            }
+          ]
+        },
+        {
+          "herblore_level": 105,
+          "name": "improved +1"
+        },
+        {
+          "herblore_level": 107,
+          "name": "improved +2",
+          "ingredients": [
+            {
+              "item": "Soul rune",
+              "quantity": 3
+            },
+            {
+              "item": "Chaos rune",
+              "quantity": 3
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Vulnerability_bomb",
+        "https://runescape.wiki/w/Template:Vulnerability_bomb/creation"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "potion:weapon-poison-plus-plus-plus",
+      "name": "Weapon poison+++",
+      "category": "combat poison consumable",
+      "herblore_level": 100,
+      "duration_minutes": 12,
+      "ingredients": [
+        "Weapon poison++ (3)",
+        "Poison slime",
+        "Primal extract"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Weapon_poison%2B%2B%2B",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "incense:kwuarm",
+      "name": "Kwuarm incense sticks",
+      "category": "poison-damage incense",
+      "firemaking_level": 54,
+      "poison_damage_per_potency_percent": 2.5,
+      "maximum_poison_damage_percent": 10,
+      "maximum_potency": 4,
+      "source_urls": [
+        "https://runescape.wiki/w/Kwuarm_incense_sticks",
+        "https://runescape.wiki/w/Calculator:Firemaking/Incense_sticks"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "crafting:combat-flask-infrastructure",
+      "name": "Potion and crystal flask infrastructure",
+      "category": "six-dose combat container access",
+      "potion_flask": {
+        "crafting_level": 89,
+        "material": "Robust glass",
+        "material_access": [
+          "As a First Resort",
+          "81 Mining for red sandstone"
+        ],
+        "capacity_doses": 6
+      },
+      "crystal_flask": {
+        "crafting_level": 89,
+        "material": "Crystal glass",
+        "material_access": [
+          "As a First Resort",
+          "Plague's End",
+          "81 Mining for crystal-flecked sandstone"
+        ],
+        "capacity_doses": 6,
+        "primary_use": "Combination potions"
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/Crafting",
+        "https://runescape.wiki/w/Potion_flask",
+        "https://runescape.wiki/w/Crystal_flask"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "potion:holy-overload",
+      "name": "Holy overload potion",
+      "category": "permanent Meilyr combination-potion recipe",
+      "herblore_level": 97,
+      "recipe_shop_cost_coins": 700000,
+      "recipe_page_required": false,
+      "ingredients": [
+        "Overload (4)",
+        "Prayer renewal (4)",
+        "Crystal flask"
+      ],
+      "output_doses": 6,
+      "source_urls": [
+        "https://runescape.wiki/w/Holy_overload_potion"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "potion:spiritual-prayer",
+      "name": "Spiritual prayer potion",
+      "category": "permanent Meilyr combination-potion recipe",
+      "herblore_level": 110,
+      "recipe_shop_cost_coins": 1000000,
+      "ingredients": [
+        "Prayer potion (4)",
+        "Summoning potion (4)",
+        "Primal extract",
+        "Crystal flask"
+      ],
+      "output_doses": 6,
+      "source_urls": [
+        "https://runescape.wiki/w/Spiritual_prayer_potion"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "potion:extreme-prayer",
+      "name": "Extreme prayer potion",
+      "category": "high-level untradeable prayer consumable",
+      "herblore_level": 117,
+      "recipe_unlock": "automatic_by_level",
+      "ingredients": [
+        "Primal extract",
+        "Super prayer (3)",
+        "Spark chitin"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Extreme_prayer",
+        "https://runescape.wiki/w/Calculator:Herblore/Extreme_potions"
+      ],
+      "confidence": "confirmed_current_wiki"
     }
   ]
 }

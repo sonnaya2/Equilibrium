@@ -6,6 +6,9 @@ export interface AbilityHit {
   band: DamageBand;
   /** Per-hit crit eligibility inside a multi-hit ability; bleed tails set false. */
   critEligible?: boolean;
+  /** Ticks after the cast this hit lands on. Absent = cast tick; bleed/burn tails
+   *  carry their sourced interval here. */
+  tickOffset?: number;
 }
 
 export interface AbilitySpec {
@@ -18,6 +21,12 @@ export interface AbilitySpec {
   /** Per-ability data — adrenaline is never a magic global. */
   adrenaline?: { gain?: number; cost?: number };
   cooldownSeconds?: number;
+  /** Self-buff marker: the cast applies state through a style machine, no damage band. */
+  buff?: string;
+  /** Damaging cast that also applies a buff (Galeshot → Searing Winds). */
+  appliesBuff?: string;
+  /** Off-GCD cast (Runic Charge): does not consume or advance the global cooldown. */
+  offGcd?: boolean;
 }
 
 export interface AbilityResult {

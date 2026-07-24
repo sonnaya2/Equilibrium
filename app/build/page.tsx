@@ -7,7 +7,6 @@ import { getResearchCatalog } from "@/research/catalog";
 
 export default function BuildPage() {
   const catalog = getResearchCatalog();
-  const tierOne = relicsData.records.find((tier) => tier.tier === 1);
 
   const regions = catalog.regions.map((region) => ({
     id: region.id,
@@ -19,10 +18,17 @@ export default function BuildPage() {
     hardRules: region.hardRules,
   }));
 
-  const tierOneRelics = (tierOne?.choices ?? []).map((choice) => ({
-    name: choice.name,
-    effects: choice.effects,
-    sourceUrl: choice.source?.url,
+  // Full tier records pass through — later reveals populate choices and the
+  // planner renders them without code changes.
+  const relicTiers = relicsData.records.map((tier) => ({
+    tier: tier.tier,
+    revealed: tier.revealed,
+    choices: tier.choices.map((choice) => ({
+      name: choice.name,
+      effects: choice.effects,
+      sourceUrl: choice.source?.url,
+      verified: choice.verified,
+    })),
   }));
 
   const blessingTiers = blessingsData.records.map((tier) => ({
@@ -30,6 +36,9 @@ export default function BuildPage() {
     revealed: tier.revealed,
     paths: tier.paths,
     godTier: tier.godTier,
+    choices: tier.choices,
+    sourceUrl: tier.source?.url,
+    verified: tier.verified,
   }));
 
   return (
@@ -40,7 +49,7 @@ export default function BuildPage() {
       />
       <BuildPlanner
         regions={regions}
-        tierOneRelics={tierOneRelics}
+        relicTiers={relicTiers}
         blessingTiers={blessingTiers}
         resetCount={blessingsData.resetCount}
       />

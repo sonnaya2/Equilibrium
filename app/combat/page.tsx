@@ -3,6 +3,7 @@ import catalystData from "#data/league/catalyst.json";
 import changesData from "#data/reference/changes-2026.json";
 import sourcesData from "#data/research/sources.json";
 import { Page } from "@/components/Page";
+import { CombatTabs } from "@/components/combat/CombatTabs";
 
 type SourceRecord = {
   source: string;
@@ -92,6 +93,9 @@ export default function CombatPage() {
         </div>
       </header>
 
+      <CombatTabs
+        reference={
+          <>
       <section className="grid border-b border-stone-750 md:grid-cols-4">
         {Object.entries(combat.style_identity).map(([style, identity], index) => (
           <div
@@ -281,6 +285,9 @@ export default function CombatPage() {
           ))}
         </div>
       </section>
+          </>
+        }
+      />
     </Page>
   );
 }

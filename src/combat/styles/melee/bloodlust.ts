@@ -12,6 +12,9 @@ export interface BloodlustState {
   berserk: boolean;
 }
 
+export const BERSERK_DURATION_SECONDS = 19.8;
+export const BERSERK_DAMAGE_MULTIPLIER = 1.75;
+
 export const newBloodlust = (): BloodlustState => ({ stacks: 0, berserk: false });
 
 export function bloodlustCap(state: BloodlustState): number {
@@ -33,4 +36,10 @@ export function spendBloodlust(state: BloodlustState, cost: number): BloodlustSt
 export function activateBerserk(state: BloodlustState): BloodlustState {
   const next = { ...state, berserk: true };
   return { ...next, stacks: Math.min(bloodlustCap(next), state.stacks + BERSERK_ACTIVATION_STACKS) };
+}
+
+/** Window over: cap drops back and excess stacks fall off with it. */
+export function endBerserk(state: BloodlustState): BloodlustState {
+  const next = { ...state, berserk: false };
+  return { ...next, stacks: Math.min(bloodlustCap(next), next.stacks) };
 }

@@ -2,14 +2,19 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
+import { readBuildFromLocation } from "./share";
 import {
   emptyBuild,
   normalizeBuild,
+  pickBlessing,
+  resetBlessings,
   STORAGE_KEY,
   toggleElective,
+  toggleRelic,
   type BuildState,
   type RegionId,
 } from "./index";
+import type { BlessingPath } from "./blessings";
 
 /**
  * One shared build store for the whole app — map, planner, build, and combat
@@ -44,7 +49,8 @@ export function useBuild() {
   useEffect(() => {
     if (!hydrated) {
       hydrated = true;
-      setState(normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
+      const shared = readBuildFromLocation();
+      setState(shared ?? normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
     }
     setLoaded(true);
   }, []);
@@ -53,6 +59,10 @@ export function useBuild() {
     build,
     loaded,
     toggleRegion: (id: RegionId) => setState(toggleElective(build, id)),
+    toggleRelic: (tier: number, name: string) => setState(toggleRelic(build, tier, name)),
+    pickBlessing: (pathTier: number, path: BlessingPath) =>
+      setState(pickBlessing(build, pathTier, path)),
+    resetBlessings: () => setState(resetBlessings(build)),
     resetBuild: () => setState(emptyBuild()),
   };
 }

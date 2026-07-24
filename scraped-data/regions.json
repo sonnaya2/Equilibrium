@@ -620,6 +620,17 @@
           "source_url": "https://runescape.wiki/w/Telos,_the_Warden",
           "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Amascut, the Devourer",
+          "group": "Menaphos Imperial district",
+          "requirements": [
+            "Eclipse of the Heart"
+          ],
+          "source_url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_desert_menaphos_mapping_current_wiki_content",
+          "note": "Catalyst explicitly labelled Amascut as Desert: Menaphos. The current boss encounter/reward chest is in the Menaphos Imperial district."
         }
       ]
     },

@@ -19,6 +19,67 @@
         "https://runescape.wiki/w/Catalyst_League/Tasks"
       ],
       "evidence_note": "Equilibrium explicitly lists God Wars Dungeon under Asgarnia. Catalyst locality labels also put Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia."
+    },
+    {
+      "content": "Fort Forinthry",
+      "required_region": "misthalin",
+      "includes": [
+        "Fort Forinthry",
+        "Fort Forinthry crypt"
+      ],
+      "planner_rule": "Use Misthalin as the working League region for Fort Forinthry content. Catalyst explicitly labelled Fort Forinthry tasks as Misthalin; Equilibrium has not yet published a finer Fort locality rule.",
+      "confidence": "historical_catalyst_working_taxonomy",
+      "source_urls": [
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "evidence_note": "Historical League locality evidence only; do not present this as an Equilibrium-specific boundary reveal."
+    },
+    {
+      "content": "City of Um / Underworld",
+      "required_region": "misthalin",
+      "includes": [
+        "City of Um",
+        "Underworld",
+        "Rasial",
+        "Sanctum of Rebirth",
+        "Gate of Elidinis"
+      ],
+      "planner_rule": "Use Misthalin as the working League region for City of Um / Underworld content until Equilibrium publishes its own locality override.",
+      "confidence": "historical_catalyst_working_taxonomy",
+      "source_urls": [
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "evidence_note": "Catalyst explicitly labelled City of Um tasks as Misthalin."
+    },
+    {
+      "content": "Zanaris / Cosmic Altar",
+      "required_region": "misthalin",
+      "includes": [
+        "Zanaris",
+        "Cosmic Altar"
+      ],
+      "planner_rule": "Use Misthalin as the working League region for Zanaris/Cosmic-Altar access. Catalyst filed entering Zanaris via Lumbridge Swamp and crafting cosmic runes under Misthalin.",
+      "confidence": "historical_catalyst_working_taxonomy",
+      "source_urls": [
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "evidence_note": "Working historical League taxonomy; Equilibrium-specific exceptions remain unpublished."
+    },
+    {
+      "content": "Senntisten",
+      "required_region": "misthalin",
+      "includes": [
+        "Senntisten Dig Site",
+        "Elder God Wars Dungeon",
+        "Zamorakian Undercity entrance"
+      ],
+      "planner_rule": "Use Misthalin as the working League taxonomy for Senntisten-linked content unless a specific encounter has a separately established region mapping. This is historical/entrance evidence, not an Equilibrium-specific reveal.",
+      "confidence": "historical_catalyst_varrock_senntisten_precedent",
+      "source_urls": [
+        "https://runescape.wiki/w/Catalyst_League/Tasks",
+        "https://runescape.wiki/w/Senntisten_Dig_Site"
+      ],
+      "evidence_note": "Catalyst grouped Elder God Wars/Senntisten-adjacent content with Misthalin/Varrock; the Senntisten Dig Site is accessed from the Varrock Dig Site."
     }
   ],
   "dependencies": [

@@ -26,9 +26,9 @@
     "regions": "high-value content, upgrade chains, altar access and regional unique drops mapped; boundary unknowns stay explicit",
     "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
     "training": "all 29 named RS3 skills surface in the browser; PvME-backed combat candidates and high-value region-sensitive routes are mapped without recycling stale combat XP tables",
-    "runecrafting": "altar locations and major access requirements mapped; Cosmic/Zanaris remains unresolved for League-region purposes",
+    "runecrafting": "altar locations and major access requirements mapped; Zanaris/Cosmic uses a historical Catalyst Misthalin working taxonomy pending Equilibrium-specific confirmation",
     "invention": "unlock ladder, item-level milestones, Ancient Invention, Scavenging and major regional component sources mapped",
-    "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage and PvM relic level milestones mapped; uncertain League boundaries stay explicit",
+    "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic level milestones and relic acquisition-region dependencies mapped; uncertain League boundaries stay explicit",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
   },
   "hard_rules": [
@@ -43,8 +43,8 @@
     "Full post-hotfix Magic and Ranged ability tables",
     "Current post-modernisation combat XP benchmarks by monster/style",
     "Remaining regional unique-drop and Invention-component supply chains",
-    "Archaeology relic acquisition-region mapping and collection rewards",
     "Post-launch Equilibrium XP benchmarks for combat and resource-limited production methods",
-    "Resolve The Arc/Wushanko, Cosmic/Zanaris and Senntisten boundaries and confirm Equilibrium-specific locality handling for City of Um and Fort Forinthry"
+    "Archaeology collection rewards and remaining cross-region relic prerequisites",
+    "Resolve The Arc/Wushanko and confirm Equilibrium-specific locality handling for City of Um, Fort Forinthry, Zanaris and Senntisten"
   ]
 }

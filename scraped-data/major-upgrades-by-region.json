@@ -295,6 +295,22 @@
           "rock hitpoints reduced 50% in the July Mid-Game Rebalance"
         ],
         "confidence": "confirmed_wiki_and_official_archive"
+      },
+      {
+        "name": "Amascut, the Devourer progression",
+        "category": "high-end combat weapons / armour / endgame upgrade material",
+        "examples": [
+          "Devourer's Guard",
+          "Tumeken's Light",
+          "Tumeken's resplendence equipment",
+          "Shard of Genesis Essence"
+        ],
+        "requirements": [
+          "Eclipse of the Heart"
+        ],
+        "source_url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+        "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+        "confidence": "historical_catalyst_desert_menaphos_mapping_current_wiki_rewards"
       }
     ],
     "morytania": [

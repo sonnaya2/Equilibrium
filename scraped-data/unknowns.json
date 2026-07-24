@@ -35,7 +35,8 @@
     {
       "key": "equilibrium_region_boundaries",
       "status": "needs_launch_validation",
-      "missing": ["City of Um / Necromancy mapping", "cross-border teleports", "instances whose entrances and arenas lie in different conceptual regions", "global hubs", "quest-instanced exceptions"]
+      "known": "The working planner taxonomy maps City of Um / Underworld to Misthalin using Catalyst's region-task precedent, and Fort Forinthry to Forinthry/Wilderness from its physical location. These are planning mappings, not Equilibrium-specific official confirmations.",
+      "missing": ["official Equilibrium confirmation of City of Um / Necromancy mapping", "The Arc / Wushanko mapping", "cross-border teleports", "instances whose entrances and arenas lie in different conceptual regions", "global hubs", "quest-instanced exceptions"]
     },
     {
       "key": "equilibrium_drop_tables",

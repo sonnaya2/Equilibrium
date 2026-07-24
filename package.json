@@ -5,6 +5,7 @@
   "scripts": {
     "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-planner-expansions.mjs",
     "audit:progression": "node scripts/audit-progression-unlocks.mjs",
+    "audit:enrichment": "node scripts/audit-progression-enrichment.mjs",
     "audit:references": "node scripts/audit-reference-harvest.mjs",
     "audit:masterwork": "node scripts/audit-masterwork-staff-chain.mjs",
     "audit:boundaries": "node scripts/audit-region-boundaries.mjs",

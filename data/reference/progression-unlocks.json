@@ -536,6 +536,134 @@
       "confidence": "confirmed_current_wiki"
     },
     {
+      "id": "aura-overhaul:greenfingers-passive",
+      "name": "Greenfingers passive",
+      "category": "permanent Farming yield unlock",
+      "region_hint": "desert",
+      "currency": "Crux Eqal favour",
+      "cost": 30000,
+      "source_shop": "Sydekix's Shop of Balance",
+      "effect": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields.",
+      "migration": "Players who already owned Master Greenfingers (Tier 3) or higher received the passive automatically.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:focused-siphoning-passive",
+      "name": "Focused Siphoning passive",
+      "category": "permanent Runespan success unlock",
+      "region_status": "minigame_no_elective_region_assigned",
+      "currency": "Runespan points",
+      "cost": 20000,
+      "source_shop": "Wizard Rinsit's Runecrafting Shop",
+      "effect": "7.5% increased siphoning success chance across the Runespan.",
+      "migration": "Players who already owned Master Focused Siphoning (Tier 3) or higher received the passive automatically.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:five-finger-discount-passive",
+      "name": "Five-Finger Discount passive",
+      "category": "permanent Thieving success progression",
+      "region_hint": "misthalin",
+      "currency": "Pilfer points",
+      "ranks": 5,
+      "cost_per_rank": 1000,
+      "success_per_rank_percent": 2,
+      "maximum_success_bonus_percent": 10,
+      "source": "Thieves' Guild",
+      "migration": "Previous aura tiers converted to the equivalent number of passive ranks.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:divination-enrichment-progression",
+      "name": "Enriched memory chance progression",
+      "category": "Divination level passive",
+      "bonuses": [
+        {
+          "divination_level": 39,
+          "enriched_memory_chance_percent": 2
+        },
+        {
+          "divination_level": 59,
+          "enriched_memory_chance_percent": 4
+        },
+        {
+          "divination_level": 79,
+          "enriched_memory_chance_percent": 7
+        },
+        {
+          "divination_level": 99,
+          "enriched_memory_chance_percent": 10
+        }
+      ],
+      "stacking": "The bonuses are not additive; only the highest unlocked bonus applies.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:mining-critical-progression",
+      "name": "Mining critical-chance progression",
+      "category": "Mining level passive",
+      "bonuses": [
+        {
+          "mining_level": 59,
+          "critical_chance_percent": 5
+        },
+        {
+          "mining_level": 85,
+          "additional_critical_chance_percent": 5
+        }
+      ],
+      "maximum_added_critical_chance_percent": 10,
+      "historical_source": "Quarrymaster aura",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:resourceful-material-cache-rule",
+      "name": "Material cache consistency rule",
+      "category": "Archaeology gathering passive",
+      "effect": "An Archaeology material cache cannot expire on either of the first two gathers from that cache.",
+      "historical_source": "Resourceful aura",
+      "note": "The old extra-sandstone effect was no longer needed after the DailyScape overhaul removed sandstone daily caps.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:sunspear-prayer-sustain",
+      "name": "Sunspear Vyre prayer-sustain progression",
+      "category": "Morytania combat account passive",
+      "region_hint": "morytania",
+      "prerequisite": "Sunspear / Vyre cremation progression",
+      "thresholds": [
+        {
+          "vyres_cremated": 50,
+          "prayer_restore_percent_on_vyre_kill": 1
+        },
+        {
+          "vyres_cremated": 100,
+          "prayer_restore_percent_on_vyre_kill": 2
+        },
+        {
+          "vyres_cremated": 150,
+          "prayer_restore_percent_on_vyre_kill": 3
+        },
+        {
+          "vyres_cremated": 200,
+          "prayer_restore_percent_on_vyre_kill": 4
+        },
+        {
+          "vyres_cremated": 250,
+          "prayer_restore_percent_on_vyre_kill": 5
+        }
+      ],
+      "historical_source": "Harmony, Corruption and Salvation auras",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
       "id": "dungeoneering:bonecrusher-current",
       "name": "Bonecrusher",
       "category": "post-remaster Dungeoneering drop-cleaner unlock",
@@ -1091,6 +1219,43 @@
       "league_treatment": "Equilibrium soul multipliers and auto-completed quests modify access speed or gates separately; they do not rewrite the base talent tree."
     },
     {
+      "id": "aura-overhaul:system-removal-guard",
+      "name": "Aura system removal guard",
+      "category": "current account-system state",
+      "aura_slot_removed": true,
+      "aura_refreshes_removed": true,
+      "wars_wares_aura_refreshes_removed": true,
+      "removed_auras": [
+        "Aegis",
+        "Ancestor Spirits",
+        "Berserker",
+        "Brawler",
+        "Dark Magic",
+        "Inspiration",
+        "Invigorate",
+        "Knock-out",
+        "Maniacal",
+        "Reckless",
+        "Runic Accuracy",
+        "Sharpshooter",
+        "Equilibrium",
+        "Friend in Need",
+        "Illumination",
+        "Oddball",
+        "Reverence",
+        "Wisdom",
+        "Mahjarrat",
+        "Prime",
+        "Dedicated Slayer",
+        "Dwarven Instinct",
+        "Flameproof",
+        "Surefooted"
+      ],
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "league_treatment": "Do not expose legacy aura unlock costs, cooldowns, refreshes or aura-slot loadouts as current RS3 progression. Use the replacement passives/Aspects/items instead."
+    },
+    {
       "id": "dungeoneering:remaster-floor-progression",
       "name": "Dungeoneering Remastered floor progression",
       "category": "current Daemonheim training and storage state",
@@ -1524,6 +1689,91 @@
         "https://runescape.wiki/w/Holy_overload_potion"
       ],
       "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "aura-overhaul:fishing-catch-replacements",
+      "name": "Call of the Sea replacement bonuses",
+      "category": "Fishing familiar/tool catch-rate progression",
+      "familiar_bonuses": [
+        {
+          "name": "Granite crab",
+          "catch_rate_percent": 1
+        },
+        {
+          "name": "Ibis",
+          "catch_rate_percent": 2
+        },
+        {
+          "name": "Granite lobster",
+          "catch_rate_percent": 3
+        }
+      ],
+      "tool_bonuses": [
+        {
+          "name": "Rod-o-matic",
+          "catch_rate_percent": 3
+        },
+        {
+          "name": "Enhanced rod-o-matic",
+          "catch_rate_percent": 4
+        },
+        {
+          "name": "Dragon harpoon",
+          "catch_rate_percent": 9
+        },
+        {
+          "name": "Crystal fishing rod",
+          "catch_rate_percent": 8
+        },
+        {
+          "name": "Tavia's fishing rod",
+          "catch_rate_percent": 14
+        }
+      ],
+      "potion_bonuses": [
+        {
+          "name": "Perfect juju fishing potion",
+          "catch_rate_percent": 10
+        },
+        {
+          "name": "Perfect plus potion",
+          "catch_rate_percent": 10
+        }
+      ],
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:hatchet-chopping-bonuses",
+      "name": "Lumberjack replacement hatchet bonuses",
+      "category": "Woodcutting tool progression",
+      "tiers": [
+        {
+          "range": "Mithril through Rune",
+          "chopping_chance_percent": 5
+        },
+        {
+          "range": "Orikalkum through Bane",
+          "chopping_chance_percent": 10
+        },
+        {
+          "range": "Imcando and higher",
+          "chopping_chance_percent": 15
+        }
+      ],
+      "level_scaling": "Woodcutting levels above the tree requirement further improve success chance; this stacks conceptually with the tool-tier replacement bonus.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "aura-overhaul:antipoison-totem",
+      "name": "Antipoison totem",
+      "category": "Poison-immunity pocket item",
+      "slot": "pocket",
+      "poison_immunity_percent": 100,
+      "historical_source": "Poison Purge aura",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026"
     },
     {
       "id": "dungeoneering:split-dragontooth-necklace-current",
@@ -2017,6 +2267,74 @@
       ],
       "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
       "league_treatment": "Use the current Fort Forinthry working taxonomy only as planner precedent until Equilibrium confirms the locality."
+    },
+    {
+      "id": "aura-overhaul:vampyrism-aspect",
+      "name": "Vampyrism",
+      "category": "combat Aspect spell",
+      "spellbook": "Ancient Magicks",
+      "magic_level": 69,
+      "duration_minutes": 12,
+      "runes": [
+        {
+          "name": "Blood rune",
+          "quantity": 15
+        },
+        {
+          "name": "Death rune",
+          "quantity": 10
+        },
+        {
+          "name": "Soul rune",
+          "quantity": 6
+        },
+        {
+          "name": "Fire rune",
+          "quantity": 40
+        }
+      ],
+      "effect": "Heals 5% of damage dealt, capped at 50 life points per hit.",
+      "aspect_rule": "Only one Aspect can be active at a time.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Vampyrism"
+      ],
+      "confidence": "confirmed_official_2026",
+      "historical_correction": "This replaces the removed Vampyrism aura. Do not model an aura duration/cooldown or War's Wares aura purchase."
+    },
+    {
+      "id": "aura-overhaul:penance-aspect",
+      "name": "Penance",
+      "category": "combat Aspect spell",
+      "spellbook": "Standard spellbook",
+      "magic_level": 67,
+      "duration_minutes": 12,
+      "runes": [
+        {
+          "name": "Law rune",
+          "quantity": 3
+        },
+        {
+          "name": "Body rune",
+          "quantity": 30
+        },
+        {
+          "name": "Soul rune",
+          "quantity": 10
+        },
+        {
+          "name": "Chaos rune",
+          "quantity": 20
+        }
+      ],
+      "effect": "Restores Prayer points equal to 5% of damage received, capped at 100 Prayer points per hit.",
+      "aspect_rule": "Only one Aspect can be active at a time.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Penance"
+      ],
+      "confidence": "confirmed_official_2026",
+      "historical_correction": "This replaces the removed Penance aura. Do not model an aura duration/cooldown or War's Wares aura purchase."
     }
   ],
   "prayer_unlocks": [

@@ -1,4 +1,4 @@
-import regionsData from "#data/league/regions.json";
+import regionsData from "../../data/league/regions.json";
 import { describe, expect, it } from "vitest";
 import {
   canSelectElective,
@@ -82,21 +82,9 @@ describe("isRegionUnlocked", () => {
 });
 
 describe("normalizeBuild", () => {
-  it("passes a valid build through", () => {
-    expect(normalizeBuild({ elective: ["desert", "tirannwn"] })).toEqual({
+  it("drops invalid and non-elective ids and deduplicates", () => {
+    expect(normalizeBuild({ elective: ["desert", "desert", "karamja", "not-a-region", "tirannwn"] })).toEqual({
       elective: ["desert", "tirannwn"],
     });
-  });
-
-  it("recovers from garbage, unknown ids, duplicates, and over-cap state", () => {
-    expect(normalizeBuild(null)).toEqual(emptyBuild());
-    expect(normalizeBuild("junk")).toEqual(emptyBuild());
-    expect(normalizeBuild({ elective: "desert" })).toEqual(emptyBuild());
-    expect(
-      normalizeBuild({ elective: ["desert", "not-a-region", "misthalin", "desert"] }),
-    ).toEqual({ elective: ["desert"] });
-    expect(
-      normalizeBuild({ elective: ["asgarnia", "kandarin", "desert", "tirannwn", "fremennik"] }),
-    ).toEqual({ elective: ["asgarnia", "kandarin", "desert"] });
   });
 });

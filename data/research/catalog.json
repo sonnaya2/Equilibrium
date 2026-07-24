@@ -18,8 +18,9 @@
     "regions": "high-value content, upgrade chains, altar access and regional unique drops mapped; boundary unknowns stay explicit",
     "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
     "permanent_unlocks": "major spellbooks, prayer books, quest abilities, Lunar spell additions, current Dive access, War's Retreat milestones and Essence of Finality storage are separated from Equilibrium overrides",
+    "masterwork_staff": "tier-100 self-source chain mapped with explicit hard/conditional region pressure, current Abyssal synapse hotfix state, 2026 Havenhythe eternal-tree alternate location and weaker confidence retained where the complete flattened recipe is only cross-checked",
     "training": "all 29 named RS3 skills surface in the browser; combat-method candidates from PvME pages carrying the March 2026 site-wide stale warning are retained only as candidates and are no longer treated as current validation; no stale combat XP tables are promoted",
-    "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and Masterwork staff cross-region pressure; optimizer-grade post-2026 XP benchmarks remain pending",
+    "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and the detailed Masterwork staff cross-region chain; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention, Scavenging and major regional component sources mapped",
     "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic level milestones and relic acquisition-region dependencies mapped; uncertain League boundaries and source conflicts stay explicit",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"

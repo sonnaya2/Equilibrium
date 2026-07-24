@@ -1,0 +1,201 @@
+{
+  "snapshot_date": "2026-07-24",
+  "notes": [
+    "Rates are base-game reference rates unless explicitly marked otherwise. Equilibrium XP multipliers are not yet fully revealed and must be applied separately.",
+    "Several legacy RuneScape training guides still contain pre-2026 values. Each entry includes a freshness flag.",
+    "Region is the likely Equilibrium dependency, not necessarily a statement that every prerequisite quest/item is auto-unlocked."
+  ],
+  "methods": [
+    {
+      "skill": "Hunter",
+      "method": "Havenhythe Big Game Hunter",
+      "region": "havenhythe",
+      "level_range": "high-level, up to 110",
+      "xp_rate": "Jagex describes it as the best Hunter XP in the game; exact reliable post-launch rate table still needs capture.",
+      "intensity": "active",
+      "freshness": "2026_current",
+      "confidence": "confirmed_official"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Birdhouses",
+      "region": "havenhythe",
+      "level_range": "5-101",
+      "xp_rate": "not normalized yet",
+      "intensity": "periodic/passive route",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Clockwork box traps",
+      "region": "havenhythe",
+      "level_range": "55+",
+      "xp_rate": "not normalized yet",
+      "intensity": "lower-intensity trapping",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Divination",
+      "method": "Hall of Memories",
+      "region": "kandarin",
+      "level_range": "70+",
+      "xp_rate": {
+        "level_70_2tick": 140000,
+        "level_80_2tick": 170000,
+        "level_85_2tick": 205000,
+        "level_90_2tick": 245000,
+        "level_95_2tick": 310000,
+        "level_95_afk": 205000,
+        "level_99_with_outfit_scrimshaw_and_corehunting": "400000+"
+      },
+      "intensity": "AFK to very active depending on method",
+      "freshness": "current_page_but_page_marks_some_divination_data_incomplete",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Smithing",
+      "method": "Burial equipment at Artisans' Workshop",
+      "region": "asgarnia",
+      "level_range": "40+ workshop guild; best materials at high Smithing",
+      "xp_rate": "Can exceed 1,000,000 XP/h; ideal high-end setups can exceed 4,000,000 XP/h off Double XP according to current guide.",
+      "intensity": "production",
+      "cost": "very high; burial process destroys the finished armour",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Safecracking - Misthalin",
+      "region": "misthalin",
+      "level_range": "62-76",
+      "xp_rate": "up to ~300000 XP/h",
+      "intensity": "semi-AFK route",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Safecracking - Asgarnia",
+      "region": "asgarnia",
+      "level_range": "76-83",
+      "xp_rate": "up to ~400000 XP/h, ~500000 with flashing safes",
+      "intensity": "semi-AFK route",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Safecracking - Kandarin",
+      "region": "kandarin",
+      "level_range": "83-90",
+      "xp_rate": "up to ~575000 XP/h, ~600000 with flashing safes",
+      "intensity": "semi-AFK route",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Farming",
+      "method": "Player-Owned Farm / Manor Farm",
+      "region": "kandarin",
+      "level_range": "17+ core system",
+      "xp_rate": "time-gated animal growth; high time-efficiency rather than continuous XP/h",
+      "intensity": "periodic",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "skill": "Farming",
+      "method": "Ranch Out of Time",
+      "region": "anachronia",
+      "level_range": "high-level Farming",
+      "xp_rate": "time-gated; exact equilibrium value pending",
+      "intensity": "periodic",
+      "freshness": "current",
+      "confidence": "inferred_region"
+    },
+    {
+      "skill": "Archaeology",
+      "method": "Highest-level available excavation hotspot + restoration",
+      "region": "multi-region",
+      "level_range": "1-120",
+      "xp_rate": "varies heavily by level/site",
+      "intensity": "AFK to active depending on Time Sprite usage",
+      "freshness": "2026_current",
+      "strategy": [
+        "Complete mysteries when available.",
+        "Complete each collection at least once.",
+        "Prioritise the highest useful excavation hotspot rather than material caches for XP.",
+        "Keep research teams running once unlocked.",
+        "Complete qualification upgrades for precision, storage and other Archaeology progression."
+      ],
+      "region_examples": [
+        {"region": "morytania", "site": "Everlight Dig Site"},
+        {"region": "anachronia", "site": "Orthen Dig Site"},
+        {"region": "misthalin", "site": "Varrock Dig Site / guild progression"},
+        {"region": "havenhythe", "site": "First Age dig site, 2026 content"}
+      ],
+      "confidence": "confirmed_wiki_with_region_inference"
+    },
+    {
+      "skill": "Runecrafting",
+      "method": "Abyss runecrafting",
+      "region": "forinthry",
+      "level_range": "9+",
+      "xp_rate": "Legacy guide ranges are retained only as a baseline because the guide is missing 110 Runecrafting data and still references the old Demonic Skull boost.",
+      "intensity": "active movement",
+      "freshness": "stale_warning",
+      "confidence": "legacy_reference_only"
+    },
+    {
+      "skill": "Runecrafting",
+      "method": "Soul altar",
+      "region": "desert",
+      "level_range": "90+",
+      "xp_rate": "legacy guide lists ~226800 base XP/h before old Demonic Skull assumptions; re-benchmark for 2026 League use",
+      "intensity": "AFK charging + active craft trips",
+      "freshness": "stale_warning",
+      "confidence": "legacy_reference_only"
+    },
+    {
+      "skill": "Dungeoneering",
+      "method": "Daemonheim floors",
+      "region": "forinthry",
+      "level_range": "1-120",
+      "xp_rate": "2026 remaster rebalanced floor XP and made in-dungeon actions contribute; optimizer-grade rates still need post-remaster extraction.",
+      "intensity": "active",
+      "freshness": "2026_remastered",
+      "confidence": "confirmed_official"
+    },
+    {
+      "skill": "Agility",
+      "method": "Anachronia Agility Course",
+      "region": "anachronia",
+      "level_range": "high-level",
+      "xp_rate": "~184985 XP/h is an older wiki benchmark; verify against July 2026 rebalancing before using as final League value.",
+      "intensity": "active laps",
+      "freshness": "needs_2026_verification",
+      "confidence": "legacy_reference_only"
+    },
+    {
+      "skill": "Necromancy",
+      "method": "Combat + rituals progression",
+      "region": "unresolved",
+      "level_range": "1-120",
+      "xp_rate": "current training guide exists, but Equilibrium region access for City of Um and ritual infrastructure has not yet been publicly mapped.",
+      "intensity": "varies",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_method_region_unresolved"
+    }
+  ],
+  "source_ids": [
+    "hunter_training_wiki",
+    "divination_training_wiki",
+    "smithing_training_wiki",
+    "farming_training_wiki",
+    "archaeology_training_wiki",
+    "runecrafting_training_wiki",
+    "dungeoneering_remaster_2026"
+  ]
+}

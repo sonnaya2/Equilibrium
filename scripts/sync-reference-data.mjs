@@ -20,6 +20,13 @@ function write(path, value) {
   writeFileSync(target, `${JSON.stringify(canonicalize(value), null, 2)}\n`);
 }
 
+function mergeAddition(target, addition) {
+  if (typeof addition?.id !== "string" || !addition.id) throw new Error("Progression enrichment addition is missing id");
+  const index = target.findIndex((row) => row.id === addition.id);
+  if (index < 0) target.push(addition);
+  else target[index] = { ...addition, ...target[index] };
+}
+
 const combat = read("scraped-data/combat-2026.json");
 const combatAbilityAudit = read("scraped-data/combat-ability-audit-2026-07-24.json");
 const catalyst = read("scraped-data/catalyst.json");
@@ -38,9 +45,7 @@ if (existsSync(progressionAuditPath)) {
   const knownActivityIds = new Set(progressionUnlocks.activity_unlocks.map((row) => row.id));
 
   for (const addition of progressionAudit.quest_unlock_additions ?? []) {
-    if (typeof addition.id !== "string" || !addition.id) {
-      throw new Error("Progression quest unlock audit addition is missing id");
-    }
+    if (typeof addition.id !== "string" || !addition.id) throw new Error("Progression quest unlock audit addition is missing id");
     if (!knownQuestIds.has(addition.id)) {
       progressionUnlocks.quest_unlocks.push(addition);
       knownQuestIds.add(addition.id);
@@ -48,14 +53,38 @@ if (existsSync(progressionAuditPath)) {
   }
 
   for (const addition of progressionAudit.activity_unlock_additions ?? []) {
-    if (typeof addition.id !== "string" || !addition.id) {
-      throw new Error("Progression activity unlock audit addition is missing id");
-    }
+    if (typeof addition.id !== "string" || !addition.id) throw new Error("Progression activity unlock audit addition is missing id");
     if (!knownActivityIds.has(addition.id)) {
       progressionUnlocks.activity_unlocks.push(addition);
       knownActivityIds.add(addition.id);
     }
   }
+}
+
+const enrichmentPath = join(ROOT, "scraped-data/progression-enrichment-2026-07-24.json");
+if (existsSync(enrichmentPath)) {
+  const enrichment = JSON.parse(readFileSync(enrichmentPath, "utf8"));
+  progressionUnlocks.account_unlocks ||= [];
+  progressionUnlocks.activity_unlocks ||= [];
+  progressionUnlocks.equipment_models ||= [];
+  progressionUnlocks.consumable_unlocks ||= [];
+
+  const excluded = new Set(enrichment.policy?.activity_exclusions ?? []);
+  progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter((row) => !excluded.has(row.id));
+
+  for (const patch of enrichment.activity_patches ?? []) {
+    const row = progressionUnlocks.activity_unlocks.find((entry) => entry.id === patch.id);
+    if (!row) throw new Error(`Progression enrichment patch target not found: ${patch.id}`);
+    Object.assign(row, patch.set ?? {});
+    if (Array.isArray(row.source_urls) && row.source_url) delete row.source_url;
+  }
+
+  for (const addition of enrichment.activity_additions ?? []) mergeAddition(progressionUnlocks.activity_unlocks, addition);
+  for (const addition of enrichment.account_additions ?? []) mergeAddition(progressionUnlocks.account_unlocks, addition);
+  for (const addition of enrichment.equipment_additions ?? []) mergeAddition(progressionUnlocks.equipment_models, addition);
+  for (const addition of enrichment.consumable_additions ?? []) mergeAddition(progressionUnlocks.consumable_unlocks, addition);
+
+  progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date].filter(Boolean).sort().at(-1);
 }
 
 write("data/combat/modernisation-2026.json", combat);
@@ -69,4 +98,4 @@ write("data/research/reference-site-harvest.json", referenceHarvest);
 write("data/research/masterwork-staff-chain.json", masterworkStaffChain);
 write("data/reference/unknowns.json", unknowns);
 
-console.log("REFERENCE DATA SYNC\nCombat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, reference research, Masterwork staff chain and unknowns updated.");
+console.log("REFERENCE DATA SYNC\nCombat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, progression enrichment, reference research, Masterwork staff chain and unknowns updated.");

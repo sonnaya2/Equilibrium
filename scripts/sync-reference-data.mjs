@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
@@ -21,6 +21,7 @@ function write(path, value) {
 }
 
 const combat = read("scraped-data/combat-2026.json");
+const combatAbilityAudit = read("scraped-data/combat-ability-audit-2026-07-24.json");
 const catalyst = read("scraped-data/catalyst.json");
 const changes = read("scraped-data/2026-changes.json");
 const rebalance = read("scraped-data/midgame-rebalance-2026-07-20.json");
@@ -29,7 +30,24 @@ const referenceHarvest = read("scraped-data/reference-site-harvest.json");
 const masterworkStaffChain = read("scraped-data/masterwork-staff-chain.json");
 const unknowns = read("scraped-data/unknowns.json");
 
+const progressionAuditPath = join(ROOT, "scraped-data/progression-unlocks-audit-2026-07-24.json");
+if (existsSync(progressionAuditPath)) {
+  const progressionAudit = JSON.parse(readFileSync(progressionAuditPath, "utf8"));
+  const knownQuestIds = new Set(progressionUnlocks.quest_unlocks.map((row) => row.id));
+
+  for (const addition of progressionAudit.quest_unlock_additions ?? []) {
+    if (typeof addition.id !== "string" || !addition.id) {
+      throw new Error("Progression unlock audit addition is missing id");
+    }
+    if (!knownQuestIds.has(addition.id)) {
+      progressionUnlocks.quest_unlocks.push(addition);
+      knownQuestIds.add(addition.id);
+    }
+  }
+}
+
 write("data/combat/modernisation-2026.json", combat);
+write("data/combat/ability-audit-2026-07-24.json", combatAbilityAudit);
 write("data/league/catalyst.json", catalyst);
 write("data/reference/changes-2026.json", changes);
 write("data/reference/midgame-rebalance-2026-07-20.json", rebalance);
@@ -38,4 +56,4 @@ write("data/research/reference-site-harvest.json", referenceHarvest);
 write("data/research/masterwork-staff-chain.json", masterworkStaffChain);
 write("data/reference/unknowns.json", unknowns);
 
-console.log("REFERENCE DATA SYNC\nCombat, Catalyst, 2026 changes, mid-game rebalance, permanent unlocks, reference research, Masterwork staff chain and unknowns updated.");
+console.log("REFERENCE DATA SYNC\nCombat system data, audited ability records, Catalyst, 2026 changes, mid-game rebalance, permanent unlocks, reference research, Masterwork staff chain and unknowns updated.");

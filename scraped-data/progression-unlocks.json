@@ -13,11 +13,31 @@
       "quest": "The World Wakes",
       "category": "combat abilities",
       "unlocks": [
-        {"name": "Balanced Strike", "type": "ability", "style": "Melee"},
-        {"name": "Death's Swiftness", "type": "ability", "style": "Ranged"},
-        {"name": "Sunshine", "type": "ability", "style": "Magic"},
-        {"name": "Natural Instinct", "type": "ability", "style": "Defence"},
-        {"name": "Guthix's Blessing", "type": "ability", "style": "Constitution"}
+        {
+          "name": "Balanced Strike",
+          "type": "ability",
+          "style": "Melee"
+        },
+        {
+          "name": "Death's Swiftness",
+          "type": "ability",
+          "style": "Ranged"
+        },
+        {
+          "name": "Sunshine",
+          "type": "ability",
+          "style": "Magic"
+        },
+        {
+          "name": "Natural Instinct",
+          "type": "ability",
+          "style": "Defence"
+        },
+        {
+          "name": "Guthix's Blessing",
+          "type": "ability",
+          "style": "Constitution"
+        }
       ],
       "source_url": "https://runescape.wiki/w/The_World_Wakes",
       "confidence": "confirmed_wiki",
@@ -27,7 +47,12 @@
       "id": "temple-at-senntisten:ancient-curses",
       "quest": "The Temple at Senntisten",
       "category": "prayer book",
-      "unlocks": [{"name": "Ancient Curses", "type": "prayer_book"}],
+      "unlocks": [
+        {
+          "name": "Ancient Curses",
+          "type": "prayer_book"
+        }
+      ],
       "source_url": "https://runescape.wiki/w/Ancient_Curses",
       "confidence": "confirmed_wiki",
       "league_treatment": "Base-game quest dependency only. Equilibrium auto-completion may satisfy it."
@@ -36,7 +61,12 @@
       "id": "desert-treasure:ancient-magicks",
       "quest": "Desert Treasure",
       "category": "spellbook",
-      "unlocks": [{"name": "Ancient Magicks", "type": "spellbook"}],
+      "unlocks": [
+        {
+          "name": "Ancient Magicks",
+          "type": "spellbook"
+        }
+      ],
       "source_url": "https://runescape.wiki/w/Ancient_Magicks",
       "confidence": "confirmed_wiki",
       "league_treatment": "Base-game quest dependency only. Do not infer the final League region requirement from the quest name; use the official auto-quest overlay when published."
@@ -47,9 +77,18 @@
       "category": "spellbook and regional utility",
       "region_hint": "fremennik",
       "unlocks": [
-        {"name": "Lunar spellbook", "type": "spellbook"},
-        {"name": "Lunar Isle", "type": "area"},
-        {"name": "Astral altar", "type": "runecrafting_access"}
+        {
+          "name": "Lunar spellbook",
+          "type": "spellbook"
+        },
+        {
+          "name": "Lunar Isle",
+          "type": "area"
+        },
+        {
+          "name": "Astral altar",
+          "type": "runecrafting_access"
+        }
       ],
       "source_url": "https://runescape.wiki/w/Lunar_Diplomacy",
       "confidence": "confirmed_wiki",
@@ -61,15 +100,51 @@
       "category": "Lunar spell additions",
       "region_hint": "fremennik",
       "unlocks": [
-        {"name": "Monster Examine", "type": "spell", "book": "Lunar"},
-        {"name": "Humidify", "type": "spell", "book": "Lunar"},
-        {"name": "Hunter Kit", "type": "spell", "book": "Lunar"},
-        {"name": "Stat Spy", "type": "spell", "book": "Lunar"},
-        {"name": "Superglass Make", "type": "spell", "book": "Lunar"},
-        {"name": "Dream", "type": "spell", "book": "Lunar"},
-        {"name": "Plank Make", "type": "spell", "book": "Lunar"},
-        {"name": "Spin Flax", "type": "spell", "book": "Lunar"},
-        {"name": "Spellbook Swap", "type": "spell", "book": "Lunar"}
+        {
+          "name": "Monster Examine",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Humidify",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Hunter Kit",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Stat Spy",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Superglass Make",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Dream",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Plank Make",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Spin Flax",
+          "type": "spell",
+          "book": "Lunar"
+        },
+        {
+          "name": "Spellbook Swap",
+          "type": "spell",
+          "book": "Lunar"
+        }
       ],
       "source_url": "https://runescape.wiki/w/Dream_Mentor/Quick_guide",
       "confidence": "confirmed_wiki",
@@ -80,10 +155,26 @@
       "quest": "City of Senntisten",
       "category": "Ancient Magicks spell additions",
       "unlocks": [
-        {"name": "Smoke Cloud", "type": "spell", "style": "Magic"},
-        {"name": "Animate Dead", "type": "spell", "style": "Magic"},
-        {"name": "Exsanguinate", "type": "spell", "style": "Magic"},
-        {"name": "Incite Fear", "type": "spell", "style": "Magic"}
+        {
+          "name": "Smoke Cloud",
+          "type": "spell",
+          "style": "Magic"
+        },
+        {
+          "name": "Animate Dead",
+          "type": "spell",
+          "style": "Magic"
+        },
+        {
+          "name": "Exsanguinate",
+          "type": "spell",
+          "style": "Magic"
+        },
+        {
+          "name": "Incite Fear",
+          "type": "spell",
+          "style": "Magic"
+        }
       ],
       "source_url": "https://runescape.wiki/w/City_of_Senntisten",
       "confidence": "confirmed_wiki",
@@ -94,10 +185,21 @@
       "quest": "The Light Within",
       "category": "spell and prayer additions",
       "unlocks": [
-        {"name": "Seren spells", "type": "spell_group", "book": "Ancient Magicks"},
-        {"name": "Seren prayers", "type": "prayer_group", "book": "Ancient Curses"}
+        {
+          "name": "Seren spells",
+          "type": "spell_group",
+          "book": "Ancient Magicks"
+        },
+        {
+          "name": "Seren prayers",
+          "type": "prayer_group",
+          "book": "Ancient Curses"
+        }
       ],
-      "source_urls": ["https://runescape.wiki/w/Ancient_Magicks", "https://runescape.wiki/w/Ancient_Curses"],
+      "source_urls": [
+        "https://runescape.wiki/w/Ancient_Magicks",
+        "https://runescape.wiki/w/Ancient_Curses"
+      ],
       "confidence": "confirmed_wiki",
       "league_treatment": "Base-game quest dependency only. Resolve against the official Equilibrium auto-quest overlay."
     },
@@ -106,9 +208,18 @@
       "quest": "One Piercing Note",
       "category": "combat abilities",
       "unlocks": [
-        {"name": "Sacrifice", "type": "ability"},
-        {"name": "Devotion", "type": "ability"},
-        {"name": "Transfigure", "type": "ability"}
+        {
+          "name": "Sacrifice",
+          "type": "ability"
+        },
+        {
+          "name": "Devotion",
+          "type": "ability"
+        },
+        {
+          "name": "Transfigure",
+          "type": "ability"
+        }
       ],
       "historical_source": "These abilities were formerly God Wars Dungeon I drops. The 18 August 2025 update moved them to One Piercing Note.",
       "source_url": "https://runescape.wiki/w/Abilities",
@@ -119,7 +230,14 @@
       "id": "extinction:ring-of-vigour-passive",
       "quest": "Extinction",
       "category": "passive combat effect",
-      "unlocks": [{"name": "Passive ring of vigour effect", "type": "passive", "requires_item": "Ring of vigour", "quest_reward_item": "Warped gem"}],
+      "unlocks": [
+        {
+          "name": "Passive ring of vigour effect",
+          "type": "passive",
+          "requires_item": "Ring of vigour",
+          "quest_reward_item": "Warped gem"
+        }
+      ],
       "source_url": "https://runescape.wiki/w/Extinction/Quick_guide",
       "confidence": "confirmed_wiki",
       "league_treatment": "Base-game quest/item dependency only. Apply any Equilibrium passive that replaces this route after base progression."
@@ -130,7 +248,9 @@
       "id": "agility:dive",
       "name": "Dive",
       "category": "movement ability",
-      "access_requirements": ["30 Agility"],
+      "access_requirements": [
+        "30 Agility"
+      ],
       "historical_requirement": "Previously unlocked through Succession before the 20 July 2026 Mid-Game Rebalance.",
       "source_url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
       "confidence": "confirmed_official",
@@ -141,17 +261,44 @@
       "name": "War's Retreat permanent hub unlocks",
       "category": "account combat infrastructure",
       "region_hint": "misthalin",
-      "access_requirements": ["60 Combat or 1,000 total level"],
-      "milestones": [
-        {"name": "War's Retreat Teleport", "boss_kills": 10},
-        {"name": "Second attunable boss portal", "boss_kills": 100},
-        {"name": "Altar of War", "boss_kills": 200},
-        {"name": "Altar ability-cooldown reset", "boss_kills": 500},
-        {"name": "War's Grimoire spellbook switching", "boss_kills": 750},
-        {"name": "Adrenaline crystal", "boss_kills": 1000},
-        {"name": "Adrenaline-potion cooldown refresh", "boss_kills": 2000}
+      "access_requirements": [
+        "60 Combat or 1,000 total level"
       ],
-      "source_urls": ["https://runescape.wiki/w/Guide_to_useful_items_and_unlocks", "https://runescape.wiki/w/Template:War%27s_Wares_stock", "https://runescape.wiki/w/Map:War%27s_Retreat"],
+      "milestones": [
+        {
+          "name": "War's Retreat Teleport",
+          "boss_kills": 10
+        },
+        {
+          "name": "Second attunable boss portal",
+          "boss_kills": 100
+        },
+        {
+          "name": "Altar of War",
+          "boss_kills": 200
+        },
+        {
+          "name": "Altar ability-cooldown reset",
+          "boss_kills": 500
+        },
+        {
+          "name": "War's Grimoire spellbook switching",
+          "boss_kills": 750
+        },
+        {
+          "name": "Adrenaline crystal",
+          "boss_kills": 1000
+        },
+        {
+          "name": "Adrenaline-potion cooldown refresh",
+          "boss_kills": 2000
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Guide_to_useful_items_and_unlocks",
+        "https://runescape.wiki/w/Template:War%27s_Wares_stock",
+        "https://runescape.wiki/w/Map:War%27s_Retreat"
+      ],
       "confidence": "confirmed_wiki",
       "league_treatment": "War's Retreat is mapped to Misthalin for planning, but do not make that a hard Equilibrium gate until the League documents its hub access. Legacy aura-shop assumptions stay out because the 2026 Aura Overhaul removed the old combat-aura model."
     }
@@ -162,8 +309,23 @@
       "name": "Livid Farm Lunar spell unlocks",
       "category": "Lunar spell additions",
       "region_hint": "fremennik",
-      "requirements": ["Lunar Diplomacy", "Livid Farm progression"],
-      "unlocks": ["South Falador Teleport", "Repair Rune Pouch", "North Ardougne Teleport", "Remote Farm", "Spiritual Healing", "Make Leather", "Disruption Shield", "Vengeance Group", "Trollheim Farm Teleport", "Tele-group Trollheim Farm", "Borrowed Power"],
+      "requirements": [
+        "Lunar Diplomacy",
+        "Livid Farm progression"
+      ],
+      "unlocks": [
+        "South Falador Teleport",
+        "Repair Rune Pouch",
+        "North Ardougne Teleport",
+        "Remote Farm",
+        "Spiritual Healing",
+        "Make Leather",
+        "Disruption Shield",
+        "Vengeance Group",
+        "Trollheim Farm Teleport",
+        "Tele-group Trollheim Farm",
+        "Borrowed Power"
+      ],
       "source_url": "https://runescape.wiki/w/Rewards_(Livid_Farm)",
       "confidence": "confirmed_wiki_unlocks_rate_not_used",
       "league_treatment": "Track the unlock set, but do not import old Livid Farm XP-rate estimates into the League optimizer."
@@ -174,10 +336,288 @@
       "id": "essence-of-finality:stored-special-attack",
       "name": "Essence of Finality stored special attack",
       "category": "equipment interaction",
-      "rules": ["A weapon is permanently sacrificed to store its special attack in the amulet.", "The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.", "The stored special attack must match the combat style currently being used."],
+      "rules": [
+        "A weapon is permanently sacrificed to store its special attack in the amulet.",
+        "The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.",
+        "The stored special attack must match the combat style currently being used."
+      ],
       "source_url": "https://runescape.wiki/w/Essence_of_Finality_amulet_(purple)",
       "confidence": "confirmed_wiki",
       "league_treatment": "Model the stored special separately from equipped weapon state; region and drop availability are separate dependencies."
+    }
+  ],
+  "ability_unlocks": [
+    {
+      "id": "dragonkin-laboratory:greater-melee-codices",
+      "name": "Dragonkin Laboratory greater melee codices",
+      "category": "ability upgrades",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_base_game_geography",
+      "unlocks": [
+        {
+          "name": "Greater Flurry",
+          "source": "Astellarn"
+        },
+        {
+          "name": "Greater Fury",
+          "source": "Verak Lith"
+        },
+        {
+          "name": "Greater Barge",
+          "source": "Black Stone Dragon"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_Laboratory",
+        "https://runescape.wiki/w/Codex"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "The dungeon is in the Wilderness. Use Forinthry for base geography, then apply any explicit Equilibrium access exception separately."
+    },
+    {
+      "id": "sophanem:limitless",
+      "name": "Limitless",
+      "category": "ability unlock",
+      "region_hint": "desert",
+      "region_status": "confirmed_base_game_geography",
+      "unlocks": [
+        {
+          "name": "Limitless",
+          "source": "Limitless ability codex"
+        }
+      ],
+      "materials": [
+        {
+          "name": "Vital spark",
+          "quantity": 2000
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Limitless",
+        "https://runescape.wiki/w/Sophanem_Slayer_Dungeon"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Treat 2,000 vital sparks and the Sophanem source as the base-game acquisition path; League drop multipliers belong in the League ruleset."
+    },
+    {
+      "id": "senntisten:greater-concentrated-blast",
+      "name": "Greater Concentrated Blast",
+      "category": "ability upgrade",
+      "region_hint": "misthalin",
+      "region_status": "historical_catalyst_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Greater Concentrated Blast",
+          "source": "Kerapac, the bound"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Greater_Concentrated_Blast",
+        "https://runescape.wiki/w/Kerapac,_the_bound",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "current_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "Kerapac is in Senntisten. Misthalin is the current working League taxonomy, not an Equilibrium-specific locality reveal. Do not import old damage numbers from PvME."
+    },
+    {
+      "id": "senntisten:magma-tempest",
+      "name": "Magma Tempest",
+      "category": "ability unlock",
+      "region_hint": "misthalin",
+      "region_status": "historical_catalyst_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Magma Tempest",
+          "source": "TzKal-Zuk"
+        },
+        {
+          "name": "Magma Tempest (Targeted)",
+          "source": "TzKal-Zuk"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/TzekHaar_Front",
+        "https://runescape.wiki/w/TzKal-Zuk",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "current_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "The TzekHaar Front is in Senntisten. Keep Misthalin as a working League mapping only until Equilibrium publishes a finer locality rule."
+    },
+    {
+      "id": "zamorak-undercity:ability-codices",
+      "name": "Zamorakian Undercity ability codices",
+      "category": "ability upgrades",
+      "region_status": "unresolved_cross_boundary",
+      "region_candidates": [
+        "misthalin",
+        "forinthry"
+      ],
+      "unlocks": [
+        {
+          "name": "Chaos Roar",
+          "source": "Chaos Roar ability codex"
+        },
+        {
+          "name": "Greater Sunshine",
+          "source": "Greater Sunshine ability codex",
+          "invention_requirement": 85,
+          "components": [
+            "Codex of lost knowledge",
+            "Cywir components"
+          ]
+        },
+        {
+          "name": "Greater Death's Swiftness",
+          "source": "Greater Death's Swiftness ability codex",
+          "invention_requirement": 85,
+          "components": [
+            "Codex of lost knowledge",
+            "Cywir components"
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Codex",
+        "https://runescape.wiki/w/Greater_Sunshine",
+        "https://runescape.wiki/w/Greater_Death%27s_Swiftness_ability_codex_%28untradeable%29"
+      ],
+      "confidence": "confirmed_wiki_unlocks_region_unresolved",
+      "league_treatment": "Do not hard-gate these to a region yet. The Undercity entrance and Zamorak encounter produce an explicit cross-boundary ambiguity already tracked by the planner."
+    },
+    {
+      "id": "telos:reprisal",
+      "name": "Reprisal",
+      "category": "ability unlock",
+      "region_hint": "desert",
+      "region_status": "current_repo_region_mapping",
+      "unlocks": [
+        {
+          "name": "Reprisal",
+          "source": "Reprisal ability codex"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Telos,_the_Warden",
+        "https://runescape.wiki/w/Codex"
+      ],
+      "confidence": "confirmed_wiki_unlock_current_region_mapping",
+      "league_treatment": "Use the existing Desert/Heart of Gielinor region mapping; do not copy Telos strategy or enrage data into the planner."
+    },
+    {
+      "id": "fort-forinthry:greater-sonic-wave",
+      "name": "Greater Sonic Wave",
+      "category": "ability upgrade",
+      "region_hint": "misthalin",
+      "region_status": "historical_catalyst_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Greater Sonic Wave",
+          "source": "Risen ghosts and armoured phantoms"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Greater_Sonic_Wave_ability_codex",
+        "https://runescape.wiki/w/Fort_Forinthry_quest_series",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "The monsters are accessed through the Fort Forinthry crypt. Keep the historical Misthalin working taxonomy visibly provisional because the crypt is north of the Fort in Wilderness geography."
+    },
+    {
+      "id": "fort-forinthry:invoke-lord-of-bones",
+      "name": "Invoke Lord of Bones",
+      "category": "incantation unlock",
+      "region_hint": "misthalin",
+      "region_status": "historical_catalyst_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Invoke Lord of Bones",
+          "source": "Zemouregal & Vorkath"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+        "https://runescape.wiki/w/Zemouregal_%26_Vorkath_loot_%28normal%29",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "Use the current Fort Forinthry working taxonomy only as planner precedent until Equilibrium confirms the locality."
+    }
+  ],
+  "prayer_unlocks": [
+    {
+      "id": "nex-aod:praesul-curses",
+      "name": "Praesul codex curses",
+      "category": "prayer unlocks",
+      "region_hint": "asgarnia",
+      "region_status": "confirmed_current_repo_region_mapping",
+      "prerequisite": "Ancient Curses",
+      "unlocks": [
+        {
+          "name": "Malevolence",
+          "prayer_requirement": 99
+        },
+        {
+          "name": "Desolation",
+          "prayer_requirement": 99
+        },
+        {
+          "name": "Affliction",
+          "prayer_requirement": 99
+        },
+        {
+          "name": "Ruination",
+          "prayer_requirement": 99,
+          "necromancy_requirement": 95
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Nex,_Angel_of_Death",
+        "https://runescape.wiki/w/Unlockable_content",
+        "https://runescape.wiki/w/Necromancy"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "One Praesul codex unlocks one supported level-99 curse. Ancient Curses remain the base prayer-book prerequisite; apply League quest/passive overrides separately."
+    },
+    {
+      "id": "sanctum-of-rebirth:divine-rage",
+      "name": "Divine Rage",
+      "category": "prayer unlock",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Divine Rage",
+          "source": "Divine Rage prayer codex"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Sanctum_of_Rebirth",
+        "https://runescape.wiki/w/Divine_Rage_prayer_codex",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "Sanctum access follows the City of Um working taxonomy already used by the planner; keep that locality provisional."
+    },
+    {
+      "id": "gate-of-elidinis:eclipsed-soul",
+      "name": "Eclipsed Soul",
+      "category": "prayer unlock",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "unlocks": [
+        {
+          "name": "Eclipsed Soul",
+          "source": "Eclipsed Soul prayer codex"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/The_Gate_of_Elidinis",
+        "https://runescape.wiki/w/Eclipsed_Soul_prayer_codex",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_wiki_unlock_working_league_region_taxonomy",
+      "league_treatment": "Gate of Elidinis follows the City of Um working taxonomy already used by the planner; do not turn that precedent into an Equilibrium confirmation."
     }
   ]
 }

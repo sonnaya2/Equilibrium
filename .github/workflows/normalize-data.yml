@@ -1,0 +1,53 @@
+name: Normalize data
+
+on:
+  push:
+    branches:
+      - main
+      - "ui-data-pass-*"
+    paths:
+      - "scraped-data/**"
+      - "scripts/normalize-scraped-data.mjs"
+      - "scripts/sync-reference-data.mjs"
+      - "package.json"
+      - ".github/workflows/normalize-data.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: normalize-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  normalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run normalize:data
+
+      - name: Commit generated data
+        shell: bash
+        run: |
+          if git diff --quiet -- data/; then
+            echo "data/ is already current"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Sync normalized data"
+          git push origin HEAD:${{ github.ref_name }}

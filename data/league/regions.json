@@ -6,640 +6,257 @@
       "id": "misthalin",
       "name": "Misthalin",
       "availability": "starting",
-      "unlock": "Unlocked from the start",
-      "majorAreas": [
+      "aliases": [],
+      "areas": [
         "Lumbridge",
         "Varrock",
         "Draynor Village"
       ],
-      "officialExamples": [],
-      "content": [
-        {
-          "name": "Varrock Dig Site / early Archaeology",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "skilling"
-        },
-        {
-          "name": "Pale wisps near Draynor",
-          "kind": "notable",
-          "confidence": "confirmed_wiki",
-          "type": "Divination training"
-        }
-      ],
       "hardRules": [],
-      "openQuestions": [
+      "warnings": [
         "Exact handling of City of Um/Necromancy content has not yet been published."
       ],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "havenhythe",
       "name": "Havenhythe",
       "availability": "starting",
-      "unlock": "Unlocked from the start",
-      "majorAreas": [
+      "aliases": [],
+      "areas": [
         "Wendlewick",
         "Hollow Hill",
         "Blighted Cave",
-        "Eastfold Farm"
-      ],
-      "officialExamples": [],
-      "content": [
-        {
-          "name": "Ivar, King of Bones",
-          "kind": "combat",
-          "confidence": "confirmed_wiki",
-          "type": "boss"
-        },
-        {
-          "name": "Silverquill, the Dreadhog",
-          "kind": "combat",
-          "confidence": "confirmed_wiki",
-          "type": "boss"
-        },
-        {
-          "name": "Sanguine Crawler",
-          "kind": "combat",
-          "confidence": "confirmed_wiki",
-          "type": "Slayer monster",
-          "slayer_level": 35
-        },
-        {
-          "name": "Havenhythe Big Game Hunter",
-          "kind": "skilling",
-          "confidence": "confirmed_official",
-          "note": "Introduced with Hunter 110 and advertised as the best Hunter XP in the game.",
-          "skill": "Hunter"
-        },
-        {
-          "name": "Birdhouses",
-          "kind": "skilling",
-          "confidence": "confirmed_wiki",
-          "skill": "Hunter",
-          "level_range": "5-101"
-        },
-        {
-          "name": "Clockwork box traps",
-          "kind": "skilling",
-          "confidence": "confirmed_wiki",
-          "skill": "Hunter",
-          "unlock_level": 55
-        },
-        {
-          "name": "Black chinchompas",
-          "kind": "skilling",
-          "confidence": "confirmed_wiki",
-          "skill": "Hunter",
-          "unlock_level": 73
-        },
-        {
-          "name": "Fish farming / Giant Crayfish",
-          "kind": "skilling",
-          "confidence": "confirmed_official",
-          "skill": "Fishing",
-          "level_range": "45-84+"
-        },
-        {
-          "name": "First Age dig site",
-          "kind": "skilling",
-          "confidence": "current_2026_content",
-          "skill": "Archaeology",
-          "status": "summer 2026 rollout / verify exact launch state before League launch"
-        },
-        {
-          "name": "Apex Hide Armour",
-          "kind": "upgrade",
-          "confidence": "confirmed_official",
-          "tier": "85-90 progression",
-          "style": "Ranged"
-        },
-        {
-          "name": "Masterwork Ranged Armour materials",
-          "kind": "upgrade",
-          "confidence": "confirmed_official",
-          "style": "Ranged"
-        }
+        "Eastfold Farm",
+        "Highweald Forest",
+        "Shrine of Inanna"
       ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Havenhythe",
-          "title": "Havenhythe",
-          "verifiedAt": "2026-07-24"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Hunter_training",
-          "title": "Hunter training",
-          "verifiedAt": "2026-07-24"
-        },
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "karamja",
       "name": "Karamja",
       "availability": "automatic_early",
-      "unlock": "Unlocks at the first task milestone",
-      "majorAreas": [
+      "aliases": [],
+      "areas": [
         "Karamja",
         "Brimhaven",
         "Shilo Village",
         "TzHaar area"
       ],
-      "officialExamples": [],
-      "content": [
-        {
-          "name": "Duradel",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Slayer master",
-          "base_game_requirements": "100 combat, 50 Slayer"
-        },
-        {
-          "name": "TzHaar Fight Cave",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "combat",
-          "upgrade_examples": [
-            "Fire cape"
-          ]
-        },
-        {
-          "name": "Fight Kiln",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "combat",
-          "upgrade_examples": [
-            "TokHaar-Kal capes"
-          ]
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "asgarnia",
       "name": "Asgarnia",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
-        "God Wars Dungeon",
-        "Falador"
+      "aliases": [
+        "Asgarnia",
+        "Troll Country",
+        "Trollheim"
       ],
-      "content": [
-        {
-          "name": "General Graardor",
-          "kind": "combat",
-          "confidence": "inferred_region",
-          "group": "God Wars Dungeon 1"
-        },
-        {
-          "name": "Kree'arra",
-          "kind": "combat",
-          "confidence": "inferred_region",
-          "group": "God Wars Dungeon 1"
-        },
-        {
-          "name": "Commander Zilyana",
-          "kind": "combat",
-          "confidence": "inferred_region",
-          "group": "God Wars Dungeon 1"
-        },
-        {
-          "name": "K'ril Tsutsaroth",
-          "kind": "combat",
-          "confidence": "inferred_region",
-          "group": "God Wars Dungeon 1"
-        },
-        {
-          "name": "Nex",
-          "kind": "combat",
-          "confidence": "inferred_region",
-          "group": "God Wars Dungeon 1"
-        },
-        {
-          "name": "Artisans' Workshop burial smithing",
-          "kind": "skilling",
-          "confidence": "confirmed_wiki",
-          "note": "Among the fastest Smithing XP methods; expensive and consumes the armour.",
-          "skill": "Smithing"
-        },
-        {
-          "name": "Bandos equipment",
-          "kind": "upgrade",
-          "confidence": "inferred_region"
-        },
-        {
-          "name": "Armadyl equipment",
-          "kind": "upgrade",
-          "confidence": "inferred_region"
-        },
-        {
-          "name": "Subjugation equipment",
-          "kind": "upgrade",
-          "confidence": "inferred_region"
-        },
-        {
-          "name": "Nex tier-80 armour sets",
-          "kind": "upgrade",
-          "confidence": "inferred_region"
-        }
+      "areas": [
+        "Falador",
+        "Taverley",
+        "Burthorpe",
+        "Port Sarim",
+        "Dwarven Mine",
+        "Death Plateau",
+        "Trollheim",
+        "Troll Stronghold",
+        "God Wars Dungeon"
       ],
-      "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "hardRules": [
+        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
+        "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it."
+      ],
+      "warnings": [
+        "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
+        "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "kandarin",
       "name": "Kandarin",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "Player-Owned Farm",
         "Hall of Memories",
         "Deep Sea Fishing Hub"
       ],
-      "content": [
-        {
-          "name": "Player-Owned Farm / Manor Farm",
-          "kind": "skilling",
-          "confidence": "confirmed_official",
-          "skill": "Farming"
-        },
-        {
-          "name": "Hall of Memories",
-          "kind": "skilling",
-          "confidence": "confirmed_wiki",
-          "skill": "Divination",
-          "level": 70,
-          "xp_rates": {
-            "level_95_afk": 205000,
-            "level_95_2tick": 310000,
-            "high_end_with_boosts": "400k+"
-          }
-        },
-        {
-          "name": "Deep Sea Fishing Hub",
-          "kind": "skilling",
-          "confidence": "confirmed_official",
-          "skill": "Fishing"
-        },
-        {
-          "name": "Advanced Gnome Stronghold course",
-          "kind": "skilling",
-          "confidence": "inferred_region",
-          "skill": "Agility"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Divination_training",
-          "title": "Divination training",
-          "verifiedAt": "2026-07-24"
-        },
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "fremennik",
-      "name": "Fremennik Province",
+      "name": "Fremennik",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "Neitiznot",
         "Lunar Isle",
         "Jatizso"
       ],
-      "content": [
-        {
-          "name": "Lunar spellbook and Lunar utility",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "combat/skilling magic"
-        },
-        {
-          "name": "Dagannoth Kings",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "bossing"
-        },
-        {
-          "name": "Waterbirth Island",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "combat/slayer"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "forinthry",
-      "name": "Wilderness",
+      "name": "Forinthry",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [
+        "Wilderness",
+        "Wildy"
+      ],
+      "areas": [
         "Wilderness Slayer",
         "Daemonheim"
       ],
-      "content": [
-        {
-          "name": "Wilderness Slayer",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "type": "Slayer"
-        },
-        {
-          "name": "Daemonheim",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "note": "Dungeoneering was refreshed/remastered in 2026 with floor XP and progression changes.",
-          "type": "Dungeoneering"
-        },
-        {
-          "name": "Abyss entrance",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Runecrafting"
-        },
-        {
-          "name": "Wilderness Agility Course",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Agility"
-        }
-      ],
       "hardRules": [
-        {
-          "content": "Daemonheim",
-          "system": "Dungeoneering",
-          "rule": "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
-        }
+        "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
       ],
-      "legacyWarning": "Do not use old Demonic Skull boosted rates without verifying the July 2026 rebalance state.",
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [
+        "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "desert",
-      "name": "Kharidian Desert",
+      "name": "Desert",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "Menaphos",
         "Het's Oasis"
       ],
-      "content": [
-        {
-          "name": "Menaphos",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "type": "city/skilling hub"
-        },
-        {
-          "name": "Het's Oasis",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "type": "skilling"
-        },
-        {
-          "name": "Kalphite Queen",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "boss"
-        },
-        {
-          "name": "Kalphite King",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "boss",
-          "upgrade_examples": [
-            "Drygore weapons"
-          ]
-        },
-        {
-          "name": "Sophanem Slayer Dungeon / The Magister",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Slayer/bossing"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "morytania",
       "name": "Morytania",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "Araxxor",
         "Everlight Dig Site"
       ],
-      "content": [
-        {
-          "name": "Araxxor / Araxxi",
-          "kind": "notable",
-          "confidence": "confirmed_official_region_example",
-          "type": "boss",
-          "upgrade_examples": [
-            "Noxious weapon components"
-          ]
-        },
-        {
-          "name": "Everlight Dig Site",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "type": "Archaeology"
-        },
-        {
-          "name": "Slayer Tower",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Slayer"
-        },
-        {
-          "name": "Barrows",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "bossing"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "tirannwn",
       "name": "Tirannwn",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "Prifddinas",
         "Lost Grove"
       ],
-      "content": [
-        {
-          "name": "Prifddinas",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "note": "Jagex says region quest completion is designed to provide immediate access.",
-          "type": "high-level hub"
-        },
-        {
-          "name": "The Lost Grove",
-          "kind": "notable",
-          "confidence": "confirmed_official",
-          "type": "Slayer/combat"
-        },
-        {
-          "name": "Crystal equipment and Prifddinas skilling content",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "progression"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     },
     {
       "id": "anachronia",
       "name": "Anachronia",
       "availability": "elective",
-      "unlock": "Elective pick — 3 of 8",
-      "majorAreas": [],
-      "officialExamples": [
+      "aliases": [],
+      "areas": [
         "dinosaurs",
         "hunting",
         "farming"
       ],
-      "content": [
-        {
-          "name": "Anachronia Big Game Hunter",
-          "kind": "notable",
-          "confidence": "confirmed_official_region_theme",
-          "type": "Hunter"
-        },
-        {
-          "name": "Anachronia Agility Course",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "Agility"
-        },
-        {
-          "name": "Raksha",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "boss"
-        },
-        {
-          "name": "Rex Matriarchs",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "bossing"
-        },
-        {
-          "name": "Herby Werby / Ranch Out of Time",
-          "kind": "notable",
-          "confidence": "inferred_region",
-          "type": "skilling"
-        }
-      ],
       "hardRules": [],
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
-          "publishedAt": "2026-07-23",
-          "verifiedAt": "2026-07-24"
-        }
-      ]
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
     }
   ]
 }

@@ -12,23 +12,25 @@ import {
   type RegionId,
 } from "@/league";
 import { useBuild } from "@/league/useBuild";
-import regionsJson from "#data/league/regions.json";
 
-interface RegionRecord {
+/** Slim region row for the planner; the server page projects the research catalog into this. */
+export interface PlannerRegion {
   id: RegionId;
   name: string;
   availability: "starting" | "automatic_early" | "elective";
-  unlock: string;
-  majorAreas: string[];
-  content: Array<{ name: string; kind: string; confidence: string; note?: string }>;
-  hardRules: Array<{ content: string; system: string; rule: string }>;
-  openQuestions?: string[];
-  legacyWarning?: string;
-  sources: Array<{ title?: string; url: string; verifiedAt: string }>;
+  areas: string[];
+  content: Array<{ name: string; kind: string; confidence: string }>;
+  hardRules: string[];
+  warnings: string[];
+  sourceTitle: string | null;
+  verifiedAt: string | null;
 }
 
-const REGIONS = (regionsJson as { records: RegionRecord[] }).records;
-const REGION_BY_ID = new Map(REGIONS.map((r) => [r.id, r]));
+const UNLOCK_TEXT = {
+  starting: "Unlocked from the start",
+  automatic_early: "Unlocks at the first task milestone",
+  elective: "Elective pick — 3 of 8",
+} as const;
 
 function Hex({ on }: { on: boolean }) {
   return (
@@ -43,19 +45,20 @@ function Hex({ on }: { on: boolean }) {
   );
 }
 
-export function RegionPlanner() {
+export function RegionPlanner({ regions }: { regions: PlannerRegion[] }) {
   const { build, toggleRegion, resetBuild } = useBuild();
   const [focus, setFocus] = useState<RegionId>("misthalin");
+
+  const regionById = new Map(regions.map((r) => [r.id, r]));
+  const detail = regionById.get(focus);
 
   const pick = (id: RegionId) => {
     setFocus(id);
     toggleRegion(id);
   };
 
-  const detail = REGION_BY_ID.get(focus);
-
   const row = (id: RegionId) => {
-    const region = REGION_BY_ID.get(id);
+    const region = regionById.get(id);
     if (!region) return null;
     const unlocked = isRegionUnlocked(build, id);
     const selectable = canSelectElective(build, id);
@@ -126,16 +129,18 @@ export function RegionPlanner() {
         <section className="panel md:col-span-3" aria-live="polite">
           <div className="panel-head flex items-baseline justify-between">
             {detail.name}
-            <span className="text-xs normal-case tracking-normal text-parch-300">{detail.unlock}</span>
+            <span className="text-xs normal-case tracking-normal text-parch-300">
+              {UNLOCK_TEXT[detail.availability]}
+            </span>
           </div>
           <div className="panel-body">
-            {detail.majorAreas.length > 0 ? (
-              <p className="mb-3 text-sm text-parch-300">{detail.majorAreas.join(" · ")}</p>
+            {detail.areas.length > 0 ? (
+              <p className="mb-3 text-sm text-parch-300">{detail.areas.join(" · ")}</p>
             ) : null}
 
-            {detail.hardRules.map((r) => (
-              <p key={r.content} className="mb-3 border-l-2 border-gem-500 pl-3 text-sm text-parch-100">
-                {r.content} ({r.system}) is only available with this region.
+            {detail.hardRules.map((rule) => (
+              <p key={rule} className="mb-3 border-l-2 border-gem-500 pl-3 text-sm text-parch-100">
+                {rule}
               </p>
             ))}
 
@@ -168,16 +173,14 @@ export function RegionPlanner() {
               <p className="text-sm text-parch-300">No content mapped yet.</p>
             )}
 
-            {detail.openQuestions?.map((q) => (
-              <p key={q} className="mt-3 text-xs text-parch-500">Open: {q}</p>
+            {detail.warnings.map((w) => (
+              <p key={w} className="mt-3 text-xs text-parch-500">
+                Note: {w}
+              </p>
             ))}
-            {detail.legacyWarning ? (
-              <p className="mt-3 text-xs text-parch-500">Note: {detail.legacyWarning}</p>
-            ) : null}
 
             <p className="num mt-4 text-xs text-parch-500">
-              {detail.sources.length} source{detail.sources.length === 1 ? "" : "s"} · verified{" "}
-              {detail.sources[0]?.verifiedAt ?? "never"}
+              {detail.sourceTitle ?? "No source"} · verified {detail.verifiedAt ?? "never"}
             </p>
           </div>
         </section>

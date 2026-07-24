@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

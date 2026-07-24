@@ -1,37 +1,38 @@
 {
   "snapshot_date": "2026-07-24",
-  "scope_note": "High-value region dependency map. Exact Equilibrium boundary rules and quest auto-completions are not fully public; inferred mappings are labelled.",
+  "scope_note": "High-value region dependency map for Equilibrium. Exact quest auto-completions and several edge-case boundaries are still unpublished. Explicit user-provided map corrections are treated as planner boundary overrides and labelled separately from Wiki/Jagex confirmation.",
   "regions": [
     {
       "id": "misthalin",
       "availability": "starting",
       "major_areas": ["Lumbridge", "Varrock", "Draynor Village"],
       "notable_content": [
-        {"name": "Varrock Dig Site / early Archaeology", "type": "skilling", "confidence": "inferred_region"},
-        {"name": "Pale wisps near Draynor", "type": "Divination training", "confidence": "confirmed_wiki"}
+        {"name": "Varrock Dig Site / early Archaeology", "type": "skilling", "source_url": "https://runescape.wiki/w/Varrock_Dig_Site", "confidence": "inferred_region"},
+        {"name": "Pale wisps near Draynor", "type": "Divination", "source_url": "https://runescape.wiki/w/Pale_wisp", "confidence": "confirmed_wiki"}
       ],
       "open_questions": ["Exact handling of City of Um/Necromancy content has not yet been published."]
     },
     {
       "id": "havenhythe",
       "availability": "starting",
-      "major_areas": ["Wendlewick", "Hollow Hill", "Blighted Cave", "Eastfold Farm"],
+      "major_areas": ["Wendlewick", "Hollow Hill", "Blighted Cave", "Eastfold Farm", "Highweald Forest", "Shrine of Inanna"],
       "bosses_and_combat": [
-        {"name": "Ivar, King of Bones", "type": "boss", "confidence": "confirmed_wiki"},
-        {"name": "Silverquill, the Dreadhog", "type": "boss", "confidence": "confirmed_wiki"},
-        {"name": "Sanguine Crawler", "type": "Slayer monster", "slayer_level": 35, "confidence": "confirmed_wiki"}
+        {"name": "Ivar, King of Bones", "type": "boss", "source_url": "https://runescape.wiki/w/Ivar,_King_of_Bones", "confidence": "confirmed_wiki"},
+        {"name": "Silverquill, the Dreadhog", "type": "boss", "source_url": "https://runescape.wiki/w/Silverquill,_the_Dreadhog", "confidence": "confirmed_wiki"},
+        {"name": "Sanguine Crawler", "type": "Slayer", "slayer_level": 35, "source_url": "https://runescape.wiki/w/Sanguine_Crawler", "confidence": "confirmed_wiki"}
       ],
       "skilling": [
-        {"name": "Havenhythe Big Game Hunter", "skill": "Hunter", "note": "Introduced with Hunter 110 and advertised as the best Hunter XP in the game.", "confidence": "confirmed_official"},
-        {"name": "Birdhouses", "skill": "Hunter", "level_range": "5-101", "confidence": "confirmed_wiki"},
-        {"name": "Clockwork box traps", "skill": "Hunter", "unlock_level": 55, "confidence": "confirmed_wiki"},
-        {"name": "Black chinchompas", "skill": "Hunter", "unlock_level": 73, "confidence": "confirmed_wiki"},
-        {"name": "Fish farming / Giant Crayfish", "skill": "Fishing", "level_range": "45-84+", "confidence": "confirmed_official"},
-        {"name": "First Age dig site", "skill": "Archaeology", "status": "summer 2026 rollout / verify exact launch state before League launch", "confidence": "current_2026_content"}
+        {"name": "Havenhythe Big Game Hunter", "skill": "Hunter", "note": "The 2026 Hunter update describes the Havenhythe encounters as the highest Hunter experience rates.", "source_url": "https://runescape.wiki/w/Hunter_update", "confidence": "confirmed_wiki"},
+        {"name": "Birdhouses", "skill": "Hunter", "level_range": "5-101", "note": "Eight birdhouse plots are spread around Havenhythe; they use logs, clockwork and seeds and are harvested after a passive catch period.", "source_url": "https://runescape.wiki/w/Birdhouses", "confidence": "confirmed_wiki"},
+        {"name": "Clockwork box traps", "skill": "Hunter", "unlock_level": 55, "note": "Lower-intensity box trapping; traps can hold multiple creatures depending on Hunter level.", "source_url": "https://runescape.wiki/w/Hunter_update", "confidence": "confirmed_wiki"},
+        {"name": "Black chinchompas", "skill": "Hunter", "unlock_level": 73, "source_url": "https://runescape.wiki/w/Update:Welcome_to_Havenhythe", "confidence": "confirmed_wiki"},
+        {"name": "Fish farming", "skill": "Fishing", "level_range": "45-84", "note": "Havenhythe fish-farm progression spans levels 45-84, ending with giant crayfish at the farm.", "source_url": "https://runescape.wiki/w/Update:Welcome_to_Havenhythe", "confidence": "confirmed_wiki"},
+        {"name": "Giant crayfish fishing", "skill": "Fishing", "level_range": "82+", "note": "Wild giant crayfish spots require level 82 Fishing; the fish-farm giant-crayfish stage is level 84.", "source_url": "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)", "confidence": "confirmed_wiki"},
+        {"name": "First Age dig site", "skill": "Archaeology", "status": "announced for summer 2026; not treated as live until a release source is captured", "source_url": "https://runescape.wiki/w/Havenhythe", "confidence": "announced_not_yet_confirmed_live"}
       ],
       "power_upgrades": [
-        {"name": "Apex Hide Armour", "tier": "85-90 progression", "style": "Ranged", "confidence": "confirmed_official"},
-        {"name": "Masterwork Ranged Armour materials", "style": "Ranged", "confidence": "confirmed_official"}
+        {"name": "Apex Hide Armour", "tier": "85-90 progression", "style": "Ranged", "source_url": "https://runescape.wiki/w/Apex_hide_armour", "confidence": "confirmed_wiki"},
+        {"name": "Masterwork Ranged Armour materials", "tier": "100", "style": "Ranged", "note": "Hunter and Crafting progression from Havenhythe feeds tier-100 masterwork ranged equipment.", "source_url": "https://runescape.wiki/w/Masterwork_ranged_equipment", "confidence": "confirmed_wiki"}
       ],
       "source_ids": ["havenhythe_wiki", "hunter_training_wiki"]
     },
@@ -40,37 +41,44 @@
       "availability": "automatic_early",
       "major_areas": ["Karamja", "Brimhaven", "Shilo Village", "TzHaar area"],
       "notable_content": [
-        {"name": "Duradel", "type": "Slayer master", "base_game_requirements": "100 combat, 50 Slayer", "confidence": "inferred_region"},
-        {"name": "TzHaar Fight Cave", "type": "combat", "upgrade_examples": ["Fire cape"], "confidence": "inferred_region"},
-        {"name": "Fight Kiln", "type": "combat", "upgrade_examples": ["TokHaar-Kal capes"], "confidence": "inferred_region"}
+        {"name": "Duradel", "type": "Slayer", "base_game_requirements": "100 combat, 50 Slayer", "source_url": "https://runescape.wiki/w/Duradel", "confidence": "inferred_region"},
+        {"name": "TzHaar Fight Cave", "type": "combat", "upgrade_examples": ["Fire cape"], "source_url": "https://runescape.wiki/w/TzHaar_Fight_Cave", "confidence": "inferred_region"},
+        {"name": "Fight Kiln", "type": "combat", "upgrade_examples": ["TokHaar-Kal capes"], "source_url": "https://runescape.wiki/w/Fight_Kiln", "confidence": "inferred_region"}
       ]
     },
     {
       "id": "asgarnia",
+      "display_name": "Asgarnia",
       "availability": "elective",
+      "aliases": ["Asgarnia", "Troll Country", "Trollheim"],
+      "boundary_rule": "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks.",
+      "boundary_confidence": "user_confirmed_from_region_map",
+      "major_areas": ["Falador", "Taverley", "Burthorpe", "Port Sarim", "Dwarven Mine", "Death Plateau", "Trollheim", "Troll Stronghold", "God Wars Dungeon"],
       "official_examples": ["God Wars Dungeon", "Falador"],
       "bosses_and_combat": [
-        {"name": "General Graardor", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
-        {"name": "Kree'arra", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
-        {"name": "Commander Zilyana", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
-        {"name": "K'ril Tsutsaroth", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
-        {"name": "Nex", "group": "God Wars Dungeon 1", "confidence": "inferred_region"}
+        {"name": "General Graardor", "group": "God Wars Dungeon 1", "source_url": "https://runescape.wiki/w/General_Graardor", "confidence": "inferred_region"},
+        {"name": "Kree'arra", "group": "God Wars Dungeon 1", "source_url": "https://runescape.wiki/w/Kree%27arra", "confidence": "inferred_region"},
+        {"name": "Commander Zilyana", "group": "God Wars Dungeon 1", "source_url": "https://runescape.wiki/w/Commander_Zilyana", "confidence": "inferred_region"},
+        {"name": "K'ril Tsutsaroth", "group": "God Wars Dungeon 1", "source_url": "https://runescape.wiki/w/K%27ril_Tsutsaroth", "confidence": "inferred_region"},
+        {"name": "Nex", "group": "God Wars Dungeon 1", "source_url": "https://runescape.wiki/w/Nex", "confidence": "inferred_region"}
       ],
       "skilling": [
-        {"name": "Artisans' Workshop burial smithing", "skill": "Smithing", "note": "Among the fastest Smithing XP methods; expensive and consumes the armour.", "confidence": "confirmed_wiki"}
+        {"name": "Artisans' Workshop burial smithing", "skill": "Smithing", "note": "Burial equipment is available in the Falador workshop from 40 Smithing and is a high-throughput Smithing route when materials allow.", "source_url": "https://runescape.wiki/w/Artisans%27_Workshop", "confidence": "confirmed_wiki"},
+        {"name": "Safecracking route", "skill": "Thieving", "level_range": "76-83", "note": "Current training data lists roughly 400k XP/h and around 500k with flashing safes.", "source_url": "https://runescape.wiki/w/Safecracking", "confidence": "confirmed_wiki"}
       ],
       "power_upgrades": ["Bandos equipment", "Armadyl equipment", "Subjugation equipment", "Nex tier-80 armour sets"],
-      "source_ids": ["smithing_training_wiki"]
+      "open_questions": ["Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch."],
+      "source_ids": ["smithing_training_wiki", "user_region_map_2026_07_24"]
     },
     {
       "id": "kandarin",
       "availability": "elective",
       "official_examples": ["Player-Owned Farm", "Hall of Memories", "Deep Sea Fishing Hub"],
       "skilling": [
-        {"name": "Player-Owned Farm / Manor Farm", "skill": "Farming", "confidence": "confirmed_official"},
-        {"name": "Hall of Memories", "skill": "Divination", "level": 70, "xp_rates": {"level_95_afk": 205000, "level_95_2tick": 310000, "high_end_with_boosts": "400k+"}, "confidence": "confirmed_wiki"},
-        {"name": "Deep Sea Fishing Hub", "skill": "Fishing", "confidence": "confirmed_official"},
-        {"name": "Advanced Gnome Stronghold course", "skill": "Agility", "confidence": "inferred_region"}
+        {"name": "Player-Owned Farm / Manor Farm", "skill": "Farming", "source_url": "https://runescape.wiki/w/Player-owned_farm", "confidence": "confirmed_official"},
+        {"name": "Hall of Memories", "skill": "Divination", "level": 70, "xp_rates": {"level_95_afk": 205000, "level_95_2tick": 310000, "high_end_with_boosts": "400k+"}, "source_url": "https://runescape.wiki/w/Hall_of_Memories", "confidence": "confirmed_wiki"},
+        {"name": "Deep Sea Fishing Hub", "skill": "Fishing", "level_range": "68+ hub; Fishing Frenzy 94+; sailfish 97+", "source_url": "https://runescape.wiki/w/Deep_Sea_Fishing_hub", "confidence": "confirmed_wiki"},
+        {"name": "Advanced Gnome Stronghold course", "skill": "Agility", "source_url": "https://runescape.wiki/w/Advanced_Gnome_Stronghold_Agility_Course", "confidence": "inferred_region"}
       ],
       "source_ids": ["divination_training_wiki"]
     },
@@ -79,33 +87,34 @@
       "availability": "elective",
       "official_examples": ["Neitiznot", "Lunar Isle", "Jatizso"],
       "notable_content": [
-        {"name": "Lunar spellbook and Lunar utility", "type": "combat/skilling magic", "confidence": "inferred_region"},
-        {"name": "Dagannoth Kings", "type": "bossing", "confidence": "inferred_region"},
-        {"name": "Waterbirth Island", "type": "combat/slayer", "confidence": "inferred_region"}
+        {"name": "Lunar spellbook and Lunar utility", "type": "Magic", "note": "The spellbook is largely utility/skilling focused and includes spells used by several fast artisan routes.", "source_url": "https://runescape.wiki/w/Lunar_spellbook", "confidence": "inferred_region"},
+        {"name": "Dagannoth Kings", "type": "bossing", "source_url": "https://runescape.wiki/w/Dagannoth_Kings", "confidence": "inferred_region"},
+        {"name": "Waterbirth Island", "type": "combat/slayer", "source_url": "https://runescape.wiki/w/Waterbirth_Island", "confidence": "inferred_region"}
       ]
     },
     {
       "id": "forinthry",
       "availability": "elective",
+      "aliases": ["Wilderness", "Wildy"],
       "official_examples": ["Wilderness Slayer", "Daemonheim"],
       "notable_content": [
-        {"name": "Wilderness Slayer", "type": "Slayer", "confidence": "confirmed_official"},
-        {"name": "Daemonheim", "type": "Dungeoneering", "note": "Dungeoneering was refreshed/remastered in 2026 with floor XP and progression changes.", "confidence": "confirmed_official"},
-        {"name": "Abyss entrance", "type": "Runecrafting", "confidence": "inferred_region"},
-        {"name": "Wilderness Agility Course", "type": "Agility", "confidence": "inferred_region"}
+        {"name": "Wilderness Slayer", "type": "Slayer", "source_url": "https://runescape.wiki/w/Wilderness_Slayer", "confidence": "confirmed_official"},
+        {"name": "Daemonheim", "type": "Dungeoneering", "note": "Hard planner dependency: Dungeoneering/Daemonheim requires the Forinthry/Wilderness pick. Dungeoneering was refreshed in 2026 with floor XP and progression changes.", "source_url": "https://runescape.wiki/w/Daemonheim", "confidence": "confirmed_official"},
+        {"name": "Abyss entrance", "type": "Runecrafting", "source_url": "https://runescape.wiki/w/Abyss", "confidence": "inferred_region"},
+        {"name": "Wilderness Agility Course", "type": "Agility", "source_url": "https://runescape.wiki/w/Wilderness_Agility_Course", "confidence": "inferred_region"}
       ],
-      "legacy_warning": "Do not use old Demonic Skull boosted rates without verifying the July 2026 rebalance state."
+      "legacy_warning": "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
     },
     {
       "id": "desert",
       "availability": "elective",
       "official_examples": ["Menaphos", "Het's Oasis"],
       "notable_content": [
-        {"name": "Menaphos", "type": "city/skilling hub", "confidence": "confirmed_official"},
-        {"name": "Het's Oasis", "type": "skilling", "confidence": "confirmed_official"},
-        {"name": "Kalphite Queen", "type": "boss", "confidence": "inferred_region"},
-        {"name": "Kalphite King", "type": "boss", "upgrade_examples": ["Drygore weapons"], "confidence": "inferred_region"},
-        {"name": "Sophanem Slayer Dungeon / The Magister", "type": "Slayer/bossing", "confidence": "inferred_region"}
+        {"name": "Menaphos", "type": "city/skilling hub", "source_url": "https://runescape.wiki/w/Menaphos", "confidence": "confirmed_official"},
+        {"name": "Het's Oasis", "type": "skilling", "source_url": "https://runescape.wiki/w/Het%27s_Oasis", "confidence": "confirmed_official"},
+        {"name": "Kalphite Queen", "type": "boss", "source_url": "https://runescape.wiki/w/Kalphite_Queen", "confidence": "inferred_region"},
+        {"name": "Kalphite King", "type": "boss", "upgrade_examples": ["Drygore weapons"], "source_url": "https://runescape.wiki/w/Kalphite_King", "confidence": "inferred_region"},
+        {"name": "Sophanem Slayer Dungeon / The Magister", "type": "Slayer/bossing", "source_url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon", "confidence": "inferred_region"}
       ]
     },
     {
@@ -113,10 +122,10 @@
       "availability": "elective",
       "official_examples": ["Araxxor", "Everlight Dig Site"],
       "notable_content": [
-        {"name": "Araxxor / Araxxi", "type": "boss", "upgrade_examples": ["Noxious weapon components"], "confidence": "confirmed_official_region_example"},
-        {"name": "Everlight Dig Site", "type": "Archaeology", "confidence": "confirmed_official"},
-        {"name": "Slayer Tower", "type": "Slayer", "confidence": "inferred_region"},
-        {"name": "Barrows", "type": "bossing", "confidence": "inferred_region"}
+        {"name": "Araxxor / Araxxi", "type": "boss", "upgrade_examples": ["Noxious weapon components"], "source_url": "https://runescape.wiki/w/Araxxor", "confidence": "confirmed_official_region_example"},
+        {"name": "Everlight Dig Site", "type": "Archaeology", "source_url": "https://runescape.wiki/w/Everlight_Dig_Site", "confidence": "confirmed_official"},
+        {"name": "Slayer Tower", "type": "Slayer", "source_url": "https://runescape.wiki/w/Slayer_Tower", "confidence": "inferred_region"},
+        {"name": "Barrows", "type": "bossing", "source_url": "https://runescape.wiki/w/Barrows", "confidence": "inferred_region"}
       ]
     },
     {
@@ -124,9 +133,9 @@
       "availability": "elective",
       "official_examples": ["Prifddinas", "Lost Grove"],
       "notable_content": [
-        {"name": "Prifddinas", "type": "high-level hub", "note": "Jagex says region quest completion is designed to provide immediate access.", "confidence": "confirmed_official"},
-        {"name": "The Lost Grove", "type": "Slayer/combat", "confidence": "confirmed_official"},
-        {"name": "Crystal equipment and Prifddinas skilling content", "type": "progression", "confidence": "inferred_region"}
+        {"name": "Prifddinas", "type": "high-level hub", "note": "Jagex says region quest completion is designed to provide immediate access.", "source_url": "https://runescape.wiki/w/Prifddinas", "confidence": "confirmed_official"},
+        {"name": "The Lost Grove", "type": "Slayer/combat", "source_url": "https://runescape.wiki/w/The_Lost_Grove", "confidence": "confirmed_official"},
+        {"name": "Crystal equipment and Prifddinas skilling content", "type": "progression", "source_url": "https://runescape.wiki/w/Prifddinas", "confidence": "inferred_region"}
       ]
     },
     {
@@ -134,11 +143,11 @@
       "availability": "elective",
       "official_examples": ["dinosaurs", "hunting", "farming"],
       "notable_content": [
-        {"name": "Anachronia Big Game Hunter", "type": "Hunter", "confidence": "confirmed_official_region_theme"},
-        {"name": "Anachronia Agility Course", "type": "Agility", "confidence": "inferred_region"},
-        {"name": "Raksha", "type": "boss", "confidence": "inferred_region"},
-        {"name": "Rex Matriarchs", "type": "bossing", "confidence": "inferred_region"},
-        {"name": "Herby Werby / Ranch Out of Time", "type": "skilling", "confidence": "inferred_region"}
+        {"name": "Anachronia Big Game Hunter", "type": "Hunter", "source_url": "https://runescape.wiki/w/Big_Game_Hunter", "confidence": "confirmed_official_region_theme"},
+        {"name": "Anachronia Agility Course", "type": "Agility", "source_url": "https://runescape.wiki/w/Anachronia_Agility_Course", "confidence": "inferred_region"},
+        {"name": "Raksha", "type": "boss", "source_url": "https://runescape.wiki/w/Raksha", "confidence": "inferred_region"},
+        {"name": "Rex Matriarchs", "type": "bossing", "source_url": "https://runescape.wiki/w/Rex_Matriarchs", "confidence": "inferred_region"},
+        {"name": "Herby Werby / Ranch Out of Time", "type": "skilling", "source_url": "https://runescape.wiki/w/Ranch_Out_of_Time", "confidence": "inferred_region"}
       ]
     }
   ]

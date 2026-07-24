@@ -39,10 +39,45 @@
   --radius-md: 4px;
 }
 
-html,
+html {
+  color-scheme: dark;
+  background: var(--color-stone-950);
+}
+
 body {
   background: var(--color-stone-950);
   color: var(--color-parch-50);
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--color-parch-300);
+  color: var(--color-stone-950);
+}
+
+button,
+a,
+input {
+  transition-property: color, border-color, background-color;
+  transition-duration: 90ms;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 1px solid var(--color-parch-300);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 @layer components {

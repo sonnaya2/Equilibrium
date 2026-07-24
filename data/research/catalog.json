@@ -1,0 +1,3482 @@
+{
+  "snapshotDate": "2026-07-24",
+  "sourcePolicy": {
+    "defaultGroundTruth": "runescape-wiki",
+    "explicitSourceGroundTruth": [
+      "pvme",
+      "rs-analysis"
+    ],
+    "provisionalFallback": "jagex",
+    "note": "Use the RuneScape Wiki as canonical game-data ground truth unless a row was specifically sourced from PvME or RS Analysis; then keep and link that source for that row. Jagex reveal data remains provisional until the Wiki confirms it."
+  },
+  "coverage": {
+    "combat_system": "partial-high; current core rules and major 2026 transitions captured, exhaustive post-hotfix ability/item tables still pending",
+    "2026_changes": "high; July 20 rebalance audited against direct Jagex patch notes",
+    "catalyst": "high-level progression complete; not every relic/task serialized yet",
+    "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",
+    "regions": "high-value content and upgrade chains mapped; explicit working-map boundary overrides serialized; exhaustive item/NPC/quest enumeration pending",
+    "training": "all 29 named RS3 skills now surface in the browser; high-value region-sensitive routes are mapped, while stale combat XP tables and unresolved League supply loops are explicitly unranked",
+    "boss_specific_guides": "intentionally excluded"
+  },
+  "hardRules": [
+    "Daemonheim and Dungeoneering require the Forinthry/Wilderness (Wildy) region pick.",
+    "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach; these are not separate region picks."
+  ],
+  "datasets": {
+    "regions": 11,
+    "relicTiers": 7,
+    "revealedRelicTiers": 1,
+    "blessingTiers": 8,
+    "revealedBlessingTiers": 0,
+    "publishedTasks": 0,
+    "skills": 29,
+    "trainingMethods": 61
+  },
+  "regions": [
+    {
+      "id": "misthalin",
+      "name": "Misthalin",
+      "availability": "starting",
+      "aliases": [],
+      "areas": [
+        "Lumbridge",
+        "Varrock",
+        "Draynor Village"
+      ],
+      "skills": [
+        "Divination",
+        "Necromancy",
+        "Thieving"
+      ],
+      "content": [
+        {
+          "name": "Varrock Dig Site / early Archaeology",
+          "kind": "skilling",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Varrock_Dig_Site",
+            "title": "Varrock Dig Site / early Archaeology",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Pale wisps near Draynor",
+          "kind": "Divination",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Divination_training",
+            "title": "Divination training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [],
+      "trainingMethodIds": [
+        "necromancy:rituals",
+        "thieving:safecracking-misthalin"
+      ],
+      "hardRules": [],
+      "warnings": [
+        "Exact handling of City of Um/Necromancy content has not yet been published."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "havenhythe",
+      "name": "Havenhythe",
+      "availability": "starting",
+      "aliases": [],
+      "areas": [
+        "Wendlewick",
+        "Hollow Hill",
+        "Blighted Cave",
+        "Eastfold Farm",
+        "Highweald Forest",
+        "Shrine of Inanna"
+      ],
+      "skills": [
+        "Archaeology",
+        "Fishing",
+        "Hunter",
+        "Slayer",
+        "Summoning"
+      ],
+      "content": [
+        {
+          "name": "Ivar, King of Bones",
+          "kind": "boss",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ivar,_King_of_Bones",
+            "title": "Ivar, King of Bones",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Silverquill, the Dreadhog",
+          "kind": "boss",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Silverquill,_the_Dreadhog",
+            "title": "Silverquill, the Dreadhog",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Sanguine Crawler",
+          "kind": "Slayer",
+          "detail": "Slayer 35",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Havenhythe Big Game Hunter",
+          "kind": "Hunter",
+          "detail": "The 2026 Hunter update describes the Havenhythe encounters as the highest Hunter experience rates.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Birdhouses",
+          "kind": "Hunter",
+          "detail": "Eight birdhouse plots are spread around Havenhythe; they use logs, clockwork and seeds and are harvested after a passive catch period.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Clockwork box traps",
+          "kind": "Hunter",
+          "detail": "Lower-intensity box trapping; traps can hold multiple creatures depending on Hunter level. · Level 55",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Black chinchompas",
+          "kind": "Hunter",
+          "detail": "Level 73",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Fish farming",
+          "kind": "Fishing",
+          "detail": "Havenhythe fish-farm progression spans levels 45-84, ending with giant crayfish at the farm.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Giant crayfish fishing",
+          "kind": "Fishing",
+          "detail": "Wild giant crayfish spots require level 82 Fishing; the fish-farm giant-crayfish stage is level 84.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "First Age dig site",
+          "kind": "Archaeology",
+          "detail": "announced for summer 2026; not treated as live until a release source is captured",
+          "confidence": "announced_not_yet_confirmed_live",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Archaeology_training",
+            "title": "Archaeology training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Apex Hide Armour",
+          "kind": "upgrade",
+          "detail": "Tier 85-90 progression · Ranged",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Apex_hide_armour",
+            "title": "Apex Hide Armour",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Masterwork Ranged Armour materials",
+          "kind": "upgrade",
+          "detail": "Hunter and Crafting progression from Havenhythe feeds tier-100 masterwork ranged equipment. · Tier 100 · Ranged",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Masterwork_ranged_equipment",
+            "title": "Masterwork Ranged Armour materials",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Apex Hide Armour",
+          "category": "Ranged armour progression",
+          "detail": "2026 Havenhythe/Hunter progression feeds the new Ranged armour path, including Masterwork Ranged Armour materials.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Apex_hide_armour",
+            "title": "Apex hide armour",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "havenhythe"
+        },
+        {
+          "name": "Havenhythe Hunter 110 progression",
+          "category": "skilling power",
+          "detail": "Starting-region access to 2026 Big Game Hunter and other Hunter content makes high-level Hunter progression available without spending an elective region slot.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+            "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+            "publishedAt": "2026-07-23",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "havenhythe"
+        }
+      ],
+      "trainingMethodIds": [
+        "hunter:birdhouses",
+        "hunter:clockwork-box-traps",
+        "hunter:havenhythe-big-game-hunter",
+        "summoning:shrine-of-inanna-obelisks"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "karamja",
+      "name": "Karamja",
+      "availability": "automatic_early",
+      "aliases": [],
+      "areas": [
+        "Karamja",
+        "Brimhaven",
+        "Shilo Village",
+        "TzHaar area"
+      ],
+      "skills": [
+        "Slayer"
+      ],
+      "content": [
+        {
+          "name": "Duradel",
+          "kind": "Slayer",
+          "detail": "100 combat, 50 Slayer",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "TzHaar Fight Cave",
+          "kind": "combat",
+          "detail": "Fire cape",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/TzHaar_Fight_Cave",
+            "title": "TzHaar Fight Cave",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Fight Kiln",
+          "kind": "combat",
+          "detail": "TokHaar-Kal capes",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fight_Kiln",
+            "title": "Fight Kiln",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Fire cape",
+          "category": "combat cape",
+          "detail": "Source: TzHaar Fight Cave",
+          "requirements": [],
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fire_cape",
+            "title": "Fire cape",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "karamja"
+        },
+        {
+          "name": "TokHaar-Kal capes",
+          "category": "combat cape",
+          "detail": "Source: Fight Kiln",
+          "requirements": [],
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/TokHaar-Kal_capes",
+            "title": "TokHaar-Kal capes",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "karamja"
+        }
+      ],
+      "trainingMethodIds": [],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "asgarnia",
+      "name": "Asgarnia",
+      "availability": "elective",
+      "aliases": [
+        "Asgarnia",
+        "Troll Country",
+        "Trollheim"
+      ],
+      "areas": [
+        "Falador",
+        "Taverley",
+        "Burthorpe",
+        "Port Sarim",
+        "Dwarven Mine",
+        "Death Plateau",
+        "Trollheim",
+        "Troll Stronghold",
+        "God Wars Dungeon"
+      ],
+      "skills": [
+        "Invention",
+        "Smithing",
+        "Summoning",
+        "Thieving"
+      ],
+      "content": [
+        {
+          "name": "General Graardor",
+          "kind": "God Wars Dungeon 1",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/General_Graardor",
+            "title": "General Graardor",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Kree'arra",
+          "kind": "God Wars Dungeon 1",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kree%27arra",
+            "title": "Kree'arra",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Commander Zilyana",
+          "kind": "God Wars Dungeon 1",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Commander_Zilyana",
+            "title": "Commander Zilyana",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "K'ril Tsutsaroth",
+          "kind": "God Wars Dungeon 1",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/K%27ril_Tsutsaroth",
+            "title": "K'ril Tsutsaroth",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Nex",
+          "kind": "God Wars Dungeon 1",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nex",
+            "title": "Nex",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Artisans' Workshop burial smithing",
+          "kind": "Smithing",
+          "detail": "Burial equipment is available in the Falador workshop from 40 Smithing and is a high-throughput Smithing route when materials allow.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Smithing_training",
+            "title": "Pay-to-play Smithing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Safecracking route",
+          "kind": "Thieving",
+          "detail": "Current training data lists roughly 400k XP/h and around 500k with flashing safes.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Thieving training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Bandos equipment",
+          "kind": "upgrade",
+          "detail": "",
+          "confidence": "unclassified",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Bandos_equipment",
+            "title": "Bandos equipment",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Armadyl equipment",
+          "kind": "upgrade",
+          "detail": "",
+          "confidence": "unclassified",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Armadyl_equipment",
+            "title": "Armadyl equipment",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Subjugation equipment",
+          "kind": "upgrade",
+          "detail": "",
+          "confidence": "unclassified",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Subjugation_equipment",
+            "title": "Subjugation equipment",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Nex tier-80 armour sets",
+          "kind": "upgrade",
+          "detail": "",
+          "confidence": "unclassified",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nex_tier-80_armour_sets",
+            "title": "Nex tier-80 armour sets",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "God Wars Dungeon 1 equipment",
+          "category": "combat gear",
+          "detail": "GWD1 killcount now persists after leaving and is capped at 200. · Bandos equipment, Armadyl equipment, Subjugation equipment, Godsword components",
+          "requirements": [],
+          "confidence": "confirmed_region_example_with_base_game_drop_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/God_Wars_Dungeon",
+            "title": "God Wars Dungeon",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Nex equipment",
+          "category": "combat gear",
+          "detail": "Tier 80 · Torva, Pernix, Virtus",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nex",
+            "title": "Nex",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Invention Guild",
+          "category": "skill unlock infrastructure",
+          "detail": "Do not mark Asgarnia mandatory for Invention until Jagex reveals whether Equilibrium auto-completes/unlocks the tutorial globally. · Location: north-east of Falador",
+          "requirements": [
+            "80 Crafting",
+            "80 Divination",
+            "80 Smithing"
+          ],
+          "confidence": "confirmed_base_game_region_behavior_unresolved",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Invention_Guild",
+            "title": "Invention Guild",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
+        }
+      ],
+      "trainingMethodIds": [
+        "invention:augmented-equipment-levelling-siphon-disassemble",
+        "smithing:burial-equipment-at-artisans-workshop",
+        "summoning:geyser-titan-pouches-at-taverley",
+        "thieving:safecracking-asgarnia"
+      ],
+      "hardRules": [
+        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
+        "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it."
+      ],
+      "warnings": [
+        "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
+        "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "kandarin",
+      "name": "Kandarin",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Player-Owned Farm",
+        "Hall of Memories",
+        "Deep Sea Fishing Hub"
+      ],
+      "skills": [
+        "Agility",
+        "Divination",
+        "Farming",
+        "Fishing",
+        "Thieving",
+        "Woodcutting"
+      ],
+      "content": [
+        {
+          "name": "Player-Owned Farm / Manor Farm",
+          "kind": "Farming",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farming_training",
+            "title": "Farming training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Hall of Memories",
+          "kind": "Divination",
+          "detail": "level 95 afk: 205000 · level 95 2tick: 310000 · high end with boosts: 400k+",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Divination_training",
+            "title": "Divination training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Deep Sea Fishing Hub",
+          "kind": "Fishing",
+          "detail": "68+ hub; Fishing Frenzy 94+; sailfish 97+",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Advanced Gnome Stronghold course",
+          "kind": "Agility",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Ancient Invention",
+          "category": "Invention upgrade",
+          "detail": "Unlocks: Ancient weapon gizmo, Ancient armour gizmo, Ancient tool gizmo, Ancient tools blueprints, XP Capacitor blueprint · Source: Stormguard Citadel Dig Site / Howl's Floating Workshop",
+          "requirements": [
+            "95 Archaeology for workshop mystery"
+          ],
+          "confidence": "confirmed_wiki_content_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ancient_Invention",
+            "title": "Ancient Invention",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "kandarin"
+        },
+        {
+          "name": "Player-Owned Farm",
+          "category": "Farming progression",
+          "detail": "Officially advertised as Kandarin region content for Equilibrium.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Player-Owned_Farm",
+            "title": "Player-Owned Farm",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "kandarin"
+        },
+        {
+          "name": "Hall of Memories",
+          "category": "Divination progression",
+          "detail": "Officially advertised as Kandarin region content for Equilibrium.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hall_of_Memories",
+            "title": "Hall of Memories",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "kandarin"
+        }
+      ],
+      "trainingMethodIds": [
+        "agility:advanced-barbarian-outpost-course",
+        "agility:advanced-gnome-stronghold-course",
+        "divination:hall-of-memories",
+        "farming:player-owned-farm-manor-farm",
+        "fishing:fishing-frenzy",
+        "fishing:sailfish",
+        "thieving:safecracking-kandarin",
+        "woodcutting:eternal-magic-trees"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "fremennik",
+      "name": "Fremennik",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Neitiznot",
+        "Lunar Isle",
+        "Jatizso"
+      ],
+      "skills": [
+        "Cooking",
+        "Crafting",
+        "Herblore",
+        "Magic"
+      ],
+      "content": [
+        {
+          "name": "Lunar spellbook and Lunar utility",
+          "kind": "Magic",
+          "detail": "The spellbook is largely utility/skilling focused and includes spells used by several fast artisan routes.",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Magic_training",
+            "title": "Pay-to-play Magic training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Dagannoth Kings",
+          "kind": "bossing",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dagannoth_Kings",
+            "title": "Dagannoth Kings",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Waterbirth Island",
+          "kind": "combat/slayer",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Waterbirth_Island",
+            "title": "Waterbirth Island",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Lunar spellbook",
+          "category": "Magic/skilling utility",
+          "detail": "Several very fast artisan training methods depend on Lunar spells, making Fremennik more valuable than its boss list alone suggests. · Telekinetic Grind, Bake Pie, Plank Make and other Lunar utility depending quest unlock treatment",
+          "requirements": [],
+          "confidence": "base_game_confirmed_equilibrium_quest_autocomplete_pending",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Lunar_spellbook",
+            "title": "Lunar spellbook",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Dagannoth Kings uniques",
+          "category": "combat/skilling gear",
+          "detail": "Berserker ring, Warrior ring, Archers' ring, Seers' ring, Dragon hatchet · Source: Waterbirth Island",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dagannoth_Kings",
+            "title": "Dagannoth Kings",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "fremennik"
+        }
+      ],
+      "trainingMethodIds": [
+        "cooking:bake-pie",
+        "cooking:yak-meat-bank-range-loop",
+        "crafting:telekinetic-grind-sandstone",
+        "herblore:telekinetic-grind-herb-tar"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "forinthry",
+      "name": "Forinthry",
+      "availability": "elective",
+      "aliases": [
+        "Wilderness",
+        "Wildy"
+      ],
+      "areas": [
+        "Wilderness Slayer",
+        "Daemonheim"
+      ],
+      "skills": [
+        "Agility",
+        "Construction",
+        "Dungeoneering",
+        "Mining",
+        "Prayer",
+        "Runecrafting",
+        "Slayer"
+      ],
+      "content": [
+        {
+          "name": "Wilderness Slayer",
+          "kind": "Slayer",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Daemonheim",
+          "kind": "Dungeoneering",
+          "detail": "Hard planner dependency: Dungeoneering/Daemonheim requires the Forinthry/Wilderness pick. Dungeoneering was refreshed in 2026 with floor XP and progression changes.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Dungeoneering_training",
+            "title": "Pay-to-play Dungeoneering training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Abyss entrance",
+          "kind": "Runecrafting",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Wilderness Agility Course",
+          "kind": "Agility",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Daemonheim / Dungeoneering",
+          "category": "entire skill/infrastructure dependency",
+          "detail": "",
+          "requirements": [],
+          "confidence": "confirmed_official_region_mapping_plus_user_correction",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Daemonheim",
+            "title": "Daemonheim",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Chaotic equipment",
+          "category": "Dungeoneering reward gear",
+          "detail": "Catalyst tasks explicitly treated equipping chaotic equipment as Wilderness: Daemonheim content, reinforcing the dependency mapping. · Chaotic weapons, Chaotic kiteshield",
+          "requirements": [
+            "80 Dungeoneering and relevant combat skill requirements"
+          ],
+          "confidence": "confirmed_wiki_historical_and_region_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chaotic_equipment",
+            "title": "Chaotic equipment",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Primal ore / high-level Mining",
+          "category": "skilling progression",
+          "detail": "Level 100+ Mining · Source: Daemonheim Peninsula and Daemonheim",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Primal_ore",
+            "title": "Primal ore",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Abyss access",
+          "category": "Runecrafting/combat training access",
+          "detail": "The Abyss entrance is in the Wilderness; exact Equilibrium teleport exceptions still need launch validation.",
+          "requirements": [],
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Abyss",
+            "title": "Abyss",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        }
+      ],
+      "trainingMethodIds": [
+        "agility:wilderness-course",
+        "combat-styles:abyss-afk-combat-training",
+        "construction:fort-forinthry-reinforcement",
+        "dungeoneering:daemonheim-floors",
+        "mining:primal-ores",
+        "prayer:chaos-altar",
+        "runecrafting:abyss-runecrafting",
+        "runecrafting:time-runes-through-the-abyss"
+      ],
+      "hardRules": [
+        "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
+      ],
+      "warnings": [
+        "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "desert",
+      "name": "Desert",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Menaphos",
+        "Het's Oasis"
+      ],
+      "skills": [
+        "Agility",
+        "Crafting",
+        "Prayer",
+        "Runecrafting",
+        "Summoning"
+      ],
+      "content": [
+        {
+          "name": "Menaphos",
+          "kind": "city/skilling hub",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Menaphos",
+            "title": "Menaphos",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Het's Oasis",
+          "kind": "skilling",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Het%27s_Oasis",
+            "title": "Het's Oasis",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Kalphite Queen",
+          "kind": "boss",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kalphite_Queen",
+            "title": "Kalphite Queen",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Kalphite King",
+          "kind": "boss",
+          "detail": "Drygore weapons",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kalphite_King",
+            "title": "Kalphite King",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Sophanem Slayer Dungeon / The Magister",
+          "kind": "Slayer/bossing",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
+            "title": "Sophanem Slayer Dungeon / The Magister",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "God Wars Dungeon 2 weapon and anima-core progression",
+          "category": "combat gear",
+          "detail": "Best GWD2 boss drop rates are now available immediately; reputation no longer gates drop rates and the reputation cap is 2,000. · Dragon Rider lance, Wand of the Cywir elders, Orb of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora, Anima core equipment",
+          "requirements": [],
+          "confidence": "confirmed_wiki_and_official_archive",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Heart_of_Gielinor",
+            "title": "Heart of Gielinor",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "desert"
+        },
+        {
+          "name": "Telos weapon progression",
+          "category": "high-end combat weapons",
+          "detail": "Location: Heart of Gielinor · Seren godbow, Staff of Sliske, Zaros godsword",
+          "requirements": [],
+          "confidence": "confirmed_wiki_content_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Telos,_the_Warden",
+            "title": "Telos, the Warden",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "desert"
+        },
+        {
+          "name": "Drygore weapons",
+          "category": "tier-90 melee weapons",
+          "detail": "Source: Kalphite King",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Drygore_weapons",
+            "title": "Drygore weapons",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "desert"
+        },
+        {
+          "name": "Powder of burials",
+          "category": "Prayer training power",
+          "detail": "Enables the current fastest bank-standing Prayer training route when sufficient bones are available. · Source: Het's Oasis",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Powder_of_burials",
+            "title": "Powder of burials",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "desert"
+        },
+        {
+          "name": "Red sandstone",
+          "category": "flask/Herblore infrastructure",
+          "detail": "daily cap removed in the DailyScape Overhaul, rock hitpoints reduced 50% in the July Mid-Game Rebalance · Locations: Oo'glog, Sophanem",
+          "requirements": [],
+          "confidence": "confirmed_wiki_and_official_archive",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Red_sandstone",
+            "title": "Red sandstone",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "desert"
+        }
+      ],
+      "trainingMethodIds": [
+        "agility:het-s-oasis-course",
+        "crafting:telekinetic-grind-sandstone",
+        "prayer:powder-of-burials-banked-bones",
+        "runecrafting:soul-altar",
+        "summoning:menaphos-merchant-district-obelisk"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "morytania",
+      "name": "Morytania",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Araxxor",
+        "Everlight Dig Site"
+      ],
+      "skills": [
+        "Archaeology",
+        "Prayer",
+        "Slayer"
+      ],
+      "content": [
+        {
+          "name": "Araxxor / Araxxi",
+          "kind": "boss",
+          "detail": "Noxious weapon components",
+          "confidence": "confirmed_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Araxxor",
+            "title": "Araxxor / Araxxi",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Everlight Dig Site",
+          "kind": "Archaeology",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Archaeology_training",
+            "title": "Archaeology training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Slayer Tower",
+          "kind": "Slayer",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Barrows",
+          "kind": "bossing",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Barrows",
+            "title": "Barrows",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Noxious weapons",
+          "category": "tier-90 weapons",
+          "detail": "Noxious scythe, Noxious longbow, Noxious staff · Source: Araxxor/Araxxi",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Noxious_weapons",
+            "title": "Noxious weapons",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "morytania"
+        },
+        {
+          "name": "Everlight Dig Site",
+          "category": "Archaeology progression",
+          "detail": "Official Equilibrium region example.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Everlight_Dig_Site",
+            "title": "Everlight Dig Site",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "morytania"
+        },
+        {
+          "name": "Vyres / Sunspear multi-skill training",
+          "category": "Prayer/combat/Firemaking/Farming training",
+          "detail": "",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vyrewatch",
+            "title": "Vyrewatch",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "morytania"
+        }
+      ],
+      "trainingMethodIds": [
+        "prayer:vyrelords-vyreladies-with-sunspear"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "tirannwn",
+      "name": "Tirannwn",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Prifddinas",
+        "Lost Grove"
+      ],
+      "skills": [
+        "Agility",
+        "Crafting",
+        "Mining",
+        "Prayer",
+        "Summoning",
+        "Woodcutting"
+      ],
+      "content": [
+        {
+          "name": "Prifddinas",
+          "kind": "high-level hub",
+          "detail": "Jagex says region quest completion is designed to provide immediate access.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Prifddinas",
+            "title": "Prifddinas",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "The Lost Grove",
+          "kind": "Slayer/combat",
+          "detail": "",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Lost_Grove",
+            "title": "The Lost Grove",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Crystal equipment and Prifddinas skilling content",
+          "kind": "progression",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Prifddinas",
+            "title": "Crystal equipment and Prifddinas skilling content",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Prifddinas",
+          "category": "major high-level hub",
+          "detail": "Jagex says Equilibrium region auto-completion is designed to provide immediate access to Prifddinas.",
+          "requirements": [],
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Prifddinas",
+            "title": "Prifddinas",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Crystal mattock",
+          "category": "augmentable Archaeology tool",
+          "detail": "",
+          "requirements": [
+            "70 Archaeology",
+            "Dragon mattock",
+            "4,000 harmonic dust",
+            "Prifddinas/Plague's End in base game"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_mattock",
+            "title": "Crystal mattock",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Crystal sandstone",
+          "category": "combination-potion flask infrastructure",
+          "detail": "daily cap removed; sandstone mining was further accelerated in July · Location: Ithell district / Prifddinas",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_sandstone",
+            "title": "Crystal sandstone",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Solak / Lost Grove rewards",
+          "category": "high-end combat upgrades",
+          "detail": "The Lost Grove is an official Tirannwn Equilibrium example; Solak's current wiki drop table contains these rewards. · Blightbound crossbow, Off-hand Blightbound crossbow, Erethdor's grimoire, Torn grimoire pages",
+          "requirements": [],
+          "confidence": "confirmed_official_region_example_plus_confirmed_wiki_drops",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Solak",
+            "title": "Solak",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "tirannwn"
+        }
+      ],
+      "trainingMethodIds": [
+        "agility:hefin-course",
+        "crafting:telekinetic-grind-sandstone",
+        "mining:corrupted-ore",
+        "prayer:cleansing-crystals",
+        "summoning:amlodd-obelisk",
+        "woodcutting:crystal-trees",
+        "woodcutting:prifddinas-ivy"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "anachronia",
+      "name": "Anachronia",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "dinosaurs",
+        "hunting",
+        "farming"
+      ],
+      "skills": [
+        "Agility",
+        "Farming",
+        "Firemaking",
+        "Hunter",
+        "Runecrafting"
+      ],
+      "content": [
+        {
+          "name": "Anachronia Big Game Hunter",
+          "kind": "Hunter",
+          "detail": "",
+          "confidence": "confirmed_official_region_theme",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Anachronia Agility Course",
+          "kind": "Agility",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Raksha",
+          "kind": "boss",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Raksha",
+            "title": "Raksha",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Rex Matriarchs",
+          "kind": "bossing",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rex_Matriarchs",
+            "title": "Rex Matriarchs",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Herby Werby / Ranch Out of Time",
+          "kind": "skilling",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ranch_Out_of_Time",
+            "title": "Herby Werby / Ranch Out of Time",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ],
+      "upgrades": [
+        {
+          "name": "Dragon mattock",
+          "category": "Archaeology tool progression",
+          "detail": "Drop rate: 1/101 per dinosaur in the base game · Source: Anachronia Big Game Hunter",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dragon_mattock",
+            "title": "Dragon mattock",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Terrasaur maul components",
+          "category": "melee weapon progression",
+          "detail": "Base drop rate: 1/1000 for the relevant piece from its tier-3 dinosaur · Source: tier-3 Anachronia Big Game Hunter",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Terrasaur_maul",
+            "title": "Terrasaur maul",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Raksha ability upgrades",
+          "category": "ability codices",
+          "detail": "Greater Ricochet, Greater Chain, Divert",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Raksha",
+            "title": "Raksha",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Raksha boot upgrades",
+          "category": "combat boots",
+          "detail": "Fleeting boots, Laceration boots, Blast diffusion boots, Shadow spike upgrades to tier 90",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Raksha",
+            "title": "Raksha",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Anachronia Agility codex-page progression",
+          "category": "movement ability upgrades",
+          "detail": "Double Surge, Double Escape",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Anachronia_Agility_Course",
+            "title": "Anachronia Agility Course",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "anachronia"
+        }
+      ],
+      "trainingMethodIds": [
+        "agility:anachronia-full-course",
+        "farming:ranch-out-of-time",
+        "firemaking:sharp-shell-shards",
+        "runecrafting:time-runes-through-the-abyss"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "agility",
+      "name": "Agility",
+      "regions": [
+        "Kandarin",
+        "Forinthry",
+        "Desert",
+        "Tirannwn",
+        "Anachronia"
+      ],
+      "methods": [
+        {
+          "id": "agility:advanced-barbarian-outpost-course",
+          "skill": "Agility",
+          "method": "Advanced Barbarian Outpost course",
+          "levelRange": "90+",
+          "xpRate": "189473.7",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "agility:advanced-gnome-stronghold-course",
+          "skill": "Agility",
+          "method": "Advanced Gnome Stronghold course",
+          "levelRange": "85+",
+          "xpRate": "162000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "agility:anachronia-full-course",
+          "skill": "Agility",
+          "method": "Anachronia full course",
+          "levelRange": "85+",
+          "xpRate": "210000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "agility:hefin-course",
+          "skill": "Agility",
+          "method": "Hefin course",
+          "levelRange": "77-97+",
+          "xpRate": "77: 102857.1 · 82: 120000 · 87: 137142.9 · 92: 154285.7 · 97: 171428.6",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "agility:het-s-oasis-course",
+          "skill": "Agility",
+          "method": "Het's Oasis course",
+          "levelRange": "65+",
+          "xpRate": "70114.3",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "agility:wilderness-course",
+          "skill": "Agility",
+          "method": "Wilderness course",
+          "levelRange": "52+",
+          "xpRate": "51390",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "",
+          "warning": "Demonic Skull was removed in the same July 20 update. Do not use old boosted Wilderness-course rates.",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_training",
+            "title": "Agility training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "archaeology",
+      "name": "Archaeology",
+      "regions": [],
+      "methods": [
+        {
+          "id": "archaeology:highest-level-available-excavation-hotspot-restoration",
+          "skill": "Archaeology",
+          "method": "Highest-level available excavation hotspot + restoration",
+          "levelRange": "1-120",
+          "xpRate": "varies heavily by level/site",
+          "intensity": "AFK to active depending on Time Sprite usage",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi-region"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki_with_region_inference",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Archaeology_training",
+            "title": "Archaeology training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "attack",
+      "name": "Attack",
+      "regions": [],
+      "methods": [
+        {
+          "id": "attack:aoe-combat-slayer-routing",
+          "skill": "Attack",
+          "method": "AoE combat / Slayer routing",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Train through the highest practical region-available monsters or Slayer tasks while using current post-modernisation Melee abilities.",
+          "warning": "The current members melee training guide explicitly says its combat XP recommendations need major updating after the 2023 combat XP changes. Do not attach an optimizer-grade XP/h rate yet.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
+            "title": "Pay-to-play melee training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "constitution",
+      "name": "Constitution",
+      "regions": [],
+      "methods": [
+        {
+          "id": "constitution:passive-combat-xp-while-training-a-combat-style",
+          "skill": "Constitution",
+          "method": "Passive combat XP while training a combat style",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Constitution XP is earned alongside combat training. Planner value therefore follows the selected combat route and region rather than a unique Constitution method.",
+          "warning": "Do not import old ED3/Abyss-era XP claims as current rates without a 2026 benchmark.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
+            "title": "Pay-to-play melee training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "construction",
+      "name": "Construction",
+      "regions": [
+        "Forinthry"
+      ],
+      "methods": [
+        {
+          "id": "construction:eternal-magic-furniture",
+          "skill": "Construction",
+          "method": "Eternal magic furniture",
+          "levelRange": "94+",
+          "xpRate": "",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "player_owned_house_global_with_resource_dependency"
+          ],
+          "note": "Eternal plank XP was raised from 200 to 520 per plank on 2026-07-20.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_official_archive",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Construction_training",
+            "title": "Construction training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "construction:fort-forinthry-reinforcement",
+          "skill": "Construction",
+          "method": "Fort Forinthry reinforcement",
+          "levelRange": "Fort progression; Eternal reinforcement from 105",
+          "xpRate": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
+          "intensity": "long AFK windows; active hotspots improve rate",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry_inferred"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Construction_training",
+            "title": "Construction training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cooking",
+      "name": "Cooking",
+      "regions": [
+        "Fremennik"
+      ],
+      "methods": [
+        {
+          "id": "cooking:bake-pie",
+          "skill": "Cooking",
+          "method": "Bake Pie",
+          "levelRange": "85+ Cooking; 65 Magic for the spell",
+          "xpRate": "comparable to shark or better; exact no-trading League throughput depends on pie supply",
+          "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Bake Pie",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "fremennik"
+          ],
+          "note": "Bake Pie never burns pies and also gives Magic XP. Fremennik matters because the route depends on Lunar magic unless Equilibrium separately grants the spell globally.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki_with_equilibrium_unlock_dependency",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Cooking_training",
+            "title": "Pay-to-play Cooking training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "cooking:yak-meat-bank-range-loop",
+          "skill": "Cooking",
+          "method": "Yak meat bank/range loop",
+          "levelRange": "mid-level alternative",
+          "xpRate": "not normalized",
+          "intensity": "bank-standing / local supply loop",
+          "location": "Neitiznot yak pen",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "fremennik"
+          ],
+          "note": "The current guide calls out Neitiznot because the yak pen has nearby supply, a range and a bank. In a no-trading League that local loop is more useful than its main-game popularity suggests.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Cooking_training",
+            "title": "Pay-to-play Cooking training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "crafting",
+      "name": "Crafting",
+      "regions": [
+        "Fremennik",
+        "Desert",
+        "Tirannwn"
+      ],
+      "methods": [
+        {
+          "id": "crafting:cutting-gems",
+          "skill": "Crafting",
+          "method": "Cutting gems",
+          "levelRange": "20-99+",
+          "xpRate": "200000-550000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_if_materials_available"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
+            "title": "Pay-to-play Crafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "crafting:dragonhide-armour",
+          "skill": "Crafting",
+          "method": "Dragonhide armour",
+          "levelRange": "40-99+",
+          "xpRate": "300000-450000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_if_materials_available"
+          ],
+          "note": "In a no-trading League, practical value depends on which selected regions supply hides reliably.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
+            "title": "Pay-to-play Crafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "crafting:telekinetic-grind-sandstone",
+          "skill": "Crafting",
+          "method": "Telekinetic Grind sandstone",
+          "levelRange": "",
+          "xpRate": "400000+",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Telekinetic Grind",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region_dependency",
+            "fremennik",
+            "desert",
+            "tirannwn"
+          ],
+          "note": "No trading makes the spell unlock and bulk sandstone supply a meaningful region-combination problem.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_with_region_dependency_inference",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
+            "title": "Pay-to-play Crafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "defence",
+      "name": "Defence",
+      "regions": [],
+      "methods": [
+        {
+          "id": "defence:combat-training-with-defence-xp-enabled",
+          "skill": "Defence",
+          "method": "Combat training with Defence XP enabled",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Defence can be trained through the available combat styles by changing combat XP allocation. Region value follows the chosen combat route rather than one fixed training location.",
+          "warning": "Legacy combat training XP/h tables are not trusted for Equilibrium planning.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
+            "title": "Pay-to-play melee training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "divination",
+      "name": "Divination",
+      "regions": [
+        "Kandarin"
+      ],
+      "methods": [
+        {
+          "id": "divination:hall-of-memories",
+          "skill": "Divination",
+          "method": "Hall of Memories",
+          "levelRange": "70+",
+          "xpRate": "level 70 2tick: 140000 · level 80 2tick: 170000 · level 85 2tick: 205000 · level 90 2tick: 245000 · level 95 2tick: 310000 · level 95 afk: 205000 · level 99 with outfit scrimshaw and corehunting: 400000+",
+          "intensity": "AFK to very active depending on method",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "current_page_but_page_marks_some_divination_data_incomplete",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Divination_training",
+            "title": "Divination training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dungeoneering",
+      "name": "Dungeoneering",
+      "regions": [
+        "Forinthry"
+      ],
+      "methods": [
+        {
+          "id": "dungeoneering:daemonheim-floors",
+          "skill": "Dungeoneering",
+          "method": "Daemonheim floors",
+          "levelRange": "1-120",
+          "xpRate": "2026 remaster rebalanced floor XP and made in-dungeon actions contribute; optimizer-grade rates still need post-remaster extraction.",
+          "intensity": "active",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_remastered",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Dungeoneering_training",
+            "title": "Pay-to-play Dungeoneering training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "farming",
+      "name": "Farming",
+      "regions": [
+        "Kandarin",
+        "Anachronia"
+      ],
+      "methods": [
+        {
+          "id": "farming:player-owned-farm-manor-farm",
+          "skill": "Farming",
+          "method": "Player-Owned Farm / Manor Farm",
+          "levelRange": "17+ core system",
+          "xpRate": "time-gated animal growth; high time-efficiency rather than continuous XP/h",
+          "intensity": "periodic",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farming_training",
+            "title": "Farming training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "farming:ranch-out-of-time",
+          "skill": "Farming",
+          "method": "Ranch Out of Time",
+          "levelRange": "high-level Farming",
+          "xpRate": "time-gated; exact Equilibrium value pending",
+          "intensity": "periodic",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "current",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farming_training",
+            "title": "Farming training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "firemaking",
+      "name": "Firemaking",
+      "regions": [
+        "Anachronia"
+      ],
+      "methods": [
+        {
+          "id": "firemaking:eternal-magic-logs",
+          "skill": "Firemaking",
+          "method": "Eternal magic logs",
+          "levelRange": "100+",
+          "xpRate": "662400",
+          "intensity": "active line fires",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_if_materials_available"
+          ],
+          "note": "The current guide's line-fire table assumes roughly 1,200 logs/hour. Resource access is the League constraint, not the tile where they are burned.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki_resource_dependency_unmapped",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Firemaking_training",
+            "title": "Pay-to-play Firemaking training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "firemaking:sharp-shell-shards",
+          "skill": "Firemaking",
+          "method": "Sharp shell shards",
+          "levelRange": "87+",
+          "xpRate": "410000",
+          "intensity": "AFK up to roughly 3 minutes per batch",
+          "location": "Anachronia Dinosaur Farm / 'Accidental' Fletching and Firemaking",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "Igniting sharp shell shards gives 341.9 base XP every five ticks and the current guide reports about 410k base XP/h. The activity is on Anachronia.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Firemaking_training",
+            "title": "Pay-to-play Firemaking training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fishing",
+      "name": "Fishing",
+      "regions": [
+        "Kandarin"
+      ],
+      "methods": [
+        {
+          "id": "fishing:fishing-frenzy",
+          "skill": "Fishing",
+          "method": "Fishing frenzy",
+          "levelRange": "94+",
+          "xpRate": "285000",
+          "intensity": "very active",
+          "location": "Deep Sea Fishing Hub",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "The Wiki describes Fishing Frenzy as capable of the highest Fishing XP/hour in the game; the listed level-99 base rate is about 285k XP/h. Deep Sea Fishing Hub is an official Kandarin Equilibrium example.",
+          "warning": "",
+          "freshness": "current_content_region_confirmed",
+          "confidence": "confirmed_wiki_method_plus_official_region_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "fishing:sailfish",
+          "skill": "Fishing",
+          "method": "Sailfish",
+          "levelRange": "97+",
+          "xpRate": "90000",
+          "intensity": "low-to-medium",
+          "location": "Deep Sea Fishing Hub",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "Lower XP than Fishing Frenzy but produces sailfish, which matters more in a no-trading League than a pure XP ranking suggests.",
+          "warning": "",
+          "freshness": "current_content_region_confirmed",
+          "confidence": "confirmed_wiki_method_plus_official_region_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
+            "title": "Pay-to-play Fishing training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fletching",
+      "name": "Fletching",
+      "regions": [],
+      "methods": [
+        {
+          "id": "fletching:primal-arrows",
+          "skill": "Fletching",
+          "method": "Primal arrows",
+          "levelRange": "high-level / primal progression",
+          "xpRate": "900000",
+          "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_if_materials_available"
+          ],
+          "note": "The 20 July 2026 Mid-Game Rebalance retiered core Fletching and lists primal arrows at 900k XP/h in the high-end XP table.",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fletching_training",
+            "title": "Fletching training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "fletching:primal-bolts",
+          "skill": "Fletching",
+          "method": "Primal bolts",
+          "levelRange": "103+ for primal bolts",
+          "xpRate": "975000",
+          "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_if_materials_available"
+          ],
+          "note": "The 20 July 2026 Mid-Game Rebalance lists primal bolts at 975k XP/h. Primal bolts are tier-100 ammunition made from eternal magic headless shafts and primal bolt tips.",
+          "warning": "",
+          "freshness": "2026-07-20_official",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fletching_training",
+            "title": "Fletching training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "herblore",
+      "name": "Herblore",
+      "regions": [
+        "Fremennik"
+      ],
+      "methods": [
+        {
+          "id": "herblore:telekinetic-grind-herb-tar",
+          "skill": "Herblore",
+          "method": "Telekinetic Grind herb tar",
+          "levelRange": "",
+          "xpRate": "roughly 3900000 for harralander tar in the current guide's high-speed example",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "Lunar spellbook / Telekinetic Grind",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region_dependency",
+            "fremennik"
+          ],
+          "note": "Swamp tar has a major ground supply in Lumbridge Swamp (starting Misthalin); additional sources exist elsewhere.",
+          "warning": "Extremely resource-hungry; the guide's GE assumptions do not transfer to a no-trading League.",
+          "freshness": "",
+          "confidence": "confirmed_wiki_with_league_resource_warning",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Herblore_training",
+            "title": "Herblore training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter",
+      "regions": [
+        "Havenhythe"
+      ],
+      "methods": [
+        {
+          "id": "hunter:birdhouses",
+          "skill": "Hunter",
+          "method": "Birdhouses",
+          "levelRange": "5-101",
+          "xpRate": "not normalized yet",
+          "intensity": "periodic/passive route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "hunter:clockwork-box-traps",
+          "skill": "Hunter",
+          "method": "Clockwork box traps",
+          "levelRange": "55+",
+          "xpRate": "not normalized yet",
+          "intensity": "lower-intensity trapping",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "hunter:havenhythe-big-game-hunter",
+          "skill": "Hunter",
+          "method": "Havenhythe Big Game Hunter",
+          "levelRange": "high-level, up to 110",
+          "xpRate": "Jagex describes it as the best Hunter XP in the game; exact reliable post-launch rate table still needs capture.",
+          "intensity": "active",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Hunter training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "invention",
+      "name": "Invention",
+      "regions": [
+        "Asgarnia"
+      ],
+      "methods": [
+        {
+          "id": "invention:augmented-equipment-levelling-siphon-disassemble",
+          "skill": "Invention",
+          "method": "Augmented equipment levelling + siphon/disassemble",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "",
+          "requirements": [
+            "80 Crafting",
+            "80 Divination",
+            "80 Smithing"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "asgarnia_for_initial_guild_access_unless_league_autounlocks"
+          ],
+          "note": "The base-game Invention tutorial begins in the Invention Guild near Falador. Whether Equilibrium globally auto-unlocks the tutorial has not yet been published, so Asgarnia must not be marked mandatory until confirmed.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_base_game_region_rule_unresolved",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Invention_training",
+            "title": "Invention training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "magic",
+      "name": "Magic",
+      "regions": [],
+      "methods": [
+        {
+          "id": "magic:aoe-combat-slayer-routing",
+          "skill": "Magic",
+          "method": "AoE combat / Slayer routing",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Use current post-modernisation Magic abilities and region-available spellbook/resource access. The Abyss is a possible Forinthry AFK route, but old XP figures are not used as a current benchmark.",
+          "warning": "Combat training guide tables predate the current XP and 2026 combat model; benchmark after League launch before ranking routes numerically.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Magic_training",
+            "title": "Pay-to-play Magic training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mining",
+      "name": "Mining",
+      "regions": [
+        "Forinthry",
+        "Tirannwn"
+      ],
+      "methods": [
+        {
+          "id": "mining:alaea-crablets",
+          "skill": "Mining",
+          "method": "Alaea crablets",
+          "levelRange": "97+",
+          "xpRate": "190000",
+          "intensity": "",
+          "location": "Uncharted Isles / The Arc",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "arc_unresolved"
+          ],
+          "note": "The Arc is not one of the currently announced elective region names; do not assume access until Jagex documents how Eastern Lands work in Equilibrium.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_region_unresolved",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
+            "title": "Pay-to-play Mining training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "mining:corrupted-ore",
+          "skill": "Mining",
+          "method": "Corrupted ore",
+          "levelRange": "89-97+",
+          "xpRate": "180000",
+          "intensity": "AFK",
+          "location": "Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
+            "title": "Pay-to-play Mining training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "mining:primal-ores",
+          "skill": "Mining",
+          "method": "Primal ores",
+          "levelRange": "100+",
+          "xpRate": "250000+ from roughly level 105 with recommended setup",
+          "intensity": "",
+          "location": "Daemonheim / Daemonheim Peninsula",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": true,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "This is a direct consequence of Daemonheim being Wilderness/Forinthry-locked in Equilibrium.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_plus_hard_region_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
+            "title": "Pay-to-play Mining training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "necromancy",
+      "name": "Necromancy",
+      "regions": [
+        "Misthalin"
+      ],
+      "methods": [
+        {
+          "id": "necromancy:combat-rituals-progression",
+          "skill": "Necromancy",
+          "method": "Combat + rituals progression",
+          "levelRange": "1-120",
+          "xpRate": "current training guide exists, but Equilibrium region access for City of Um and ritual infrastructure has not yet been publicly mapped.",
+          "intensity": "varies",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "unresolved"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki_method_region_unresolved",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Necromancy_training",
+            "title": "Necromancy training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "necromancy:rituals",
+          "skill": "Necromancy",
+          "method": "Rituals",
+          "levelRange": "90-120 for fastest ritual-centric training",
+          "xpRate": "",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin_likely_city_of_um"
+          ],
+          "note": "Current guide identifies high-level rituals as the fastest training method and combat as the slower AFK alternative.",
+          "warning": "City of Um is expected to fall under Misthalin but Jagex has not yet published the exact Equilibrium boundary/quest treatment. Keep this inferred until revealed.",
+          "freshness": "",
+          "confidence": "confirmed_wiki_method_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Necromancy_training",
+            "title": "Necromancy training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prayer",
+      "name": "Prayer",
+      "regions": [
+        "Forinthry",
+        "Desert",
+        "Morytania",
+        "Tirannwn"
+      ],
+      "methods": [
+        {
+          "id": "prayer:chaos-altar",
+          "skill": "Prayer",
+          "method": "Chaos altar",
+          "levelRange": "",
+          "xpRate": "dragon bones: 403200 · dragonkin bones: 896000 · dinosaur bones: 952000 · frost dragon bones: 1008000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+            "title": "Pay-to-play Prayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "prayer:cleansing-crystals",
+          "skill": "Prayer",
+          "method": "Cleansing crystals",
+          "levelRange": "",
+          "xpRate": "294000",
+          "intensity": "",
+          "location": "Hefin Cathedral, Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "Low movement; can benefit from Hefin Voice of Seren in the base game.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+            "title": "Pay-to-play Prayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "prayer:powder-of-burials-banked-bones",
+          "skill": "Prayer",
+          "method": "Powder of burials + banked bones",
+          "levelRange": "",
+          "xpRate": "dragon bones: 1184400 · dragonkin bones: 2632000 · dinosaur bones: 2796500 · frost dragon bones: 2961000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "Het's Oasis",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "global_once_supplied",
+            "desert"
+          ],
+          "note": "With no trading, Desert access may matter primarily for obtaining powder rather than for where the bones are buried. · current wiki calls this the fastest Prayer training method",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+            "title": "Pay-to-play Prayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "prayer:vyrelords-vyreladies-with-sunspear",
+          "skill": "Prayer",
+          "method": "Vyrelords/Vyreladies with Sunspear",
+          "levelRange": "",
+          "xpRate": "prayer with morytania legs 4: 400000 · prayer without: 266000 · combat style: 600000 · constitution: 200000 · firemaking: 270000 · farming with seedicide: 140000",
+          "intensity": "",
+          "location": "Darkmeyer",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "morytania"
+          ],
+          "note": "",
+          "warning": "The guide still recommends old aura sustain; aura advice is obsolete after the 2026 Aura Overhaul, but the multi-skill training method remains relevant.",
+          "freshness": "",
+          "confidence": "confirmed_wiki_with_legacy_setup_warning",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+            "title": "Pay-to-play Prayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ranged",
+      "name": "Ranged",
+      "regions": [],
+      "methods": [
+        {
+          "id": "ranged:aoe-combat-slayer-routing",
+          "skill": "Ranged",
+          "method": "AoE combat / Slayer routing",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Use current post-modernisation Ranged abilities and region-available ammunition/gear. The Abyss remains a possible Forinthry AFK route, but its old published XP figures are not optimizer-grade.",
+          "warning": "The current Ranged training guide says it needs substantial updating after the 2023 combat XP changes.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Ranged_training",
+            "title": "Pay-to-play Ranged training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "runecrafting",
+      "name": "Runecrafting",
+      "regions": [
+        "Forinthry",
+        "Desert",
+        "Anachronia"
+      ],
+      "methods": [
+        {
+          "id": "runecrafting:abyss-runecrafting",
+          "skill": "Runecrafting",
+          "method": "Abyss runecrafting",
+          "levelRange": "9+",
+          "xpRate": "Legacy guide ranges are retained only as a baseline because the guide is missing 110 Runecrafting data and still references the old Demonic Skull boost.",
+          "intensity": "active movement",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "stale_warning",
+          "confidence": "legacy_reference_only",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "runecrafting:imbuing-eternal-magic-weapons",
+          "skill": "Runecrafting",
+          "method": "Imbuing eternal magic weapons",
+          "levelRange": "100+",
+          "xpRate": "staff at 106: 287600 · wands or orbs: 245600",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "materials_and_altar_dependent"
+          ],
+          "note": "More AFK than Abyss runs; current wiki marks the section incomplete and in need of further verification.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "wiki_incomplete",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "runecrafting:soul-altar",
+          "skill": "Runecrafting",
+          "method": "Soul altar",
+          "levelRange": "90+",
+          "xpRate": "legacy guide lists ~226800 base XP/h before old Demonic Skull assumptions; re-benchmark for 2026 League use",
+          "intensity": "AFK charging + active craft trips",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "stale_warning",
+          "confidence": "legacy_reference_only",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "runecrafting:time-runes-through-the-abyss",
+          "skill": "Runecrafting",
+          "method": "Time runes through the Abyss",
+          "levelRange": "105+",
+          "xpRate": "520000",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry_plus_anachronia_dependency"
+          ],
+          "note": "",
+          "warning": "The current guide explicitly needs a 110 Runecrafting update and still lists removed Demonic Skull rates. Time altar access is associated with Anachronia while the Abyss entrance is Wilderness/Forinthry.",
+          "freshness": "",
+          "confidence": "stale_guide_use_as_candidate_only",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+            "title": "Pay-to-play Runecrafting training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slayer",
+      "name": "Slayer",
+      "regions": [],
+      "methods": [
+        {
+          "id": "slayer:high-value-task-routing",
+          "skill": "Slayer",
+          "method": "High-value task routing",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "The current guide recommends using the highest practical Slayer master and optimizing block/prefer lists. Region locking will materially change available tasks and masters.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_with_region_inference",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_training",
+            "title": "Slayer training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "smithing",
+      "name": "Smithing",
+      "regions": [
+        "Asgarnia"
+      ],
+      "methods": [
+        {
+          "id": "smithing:burial-equipment-at-artisans-workshop",
+          "skill": "Smithing",
+          "method": "Burial equipment at Artisans' Workshop",
+          "levelRange": "40+ workshop guild; best materials at high Smithing",
+          "xpRate": "Can exceed 1,000,000 XP/h; ideal high-end setups can exceed 4,000,000 XP/h off Double XP according to current guide.",
+          "intensity": "production",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "asgarnia"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Smithing_training",
+            "title": "Pay-to-play Smithing training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "name": "Strength",
+      "regions": [],
+      "methods": [
+        {
+          "id": "strength:aoe-combat-slayer-routing",
+          "skill": "Strength",
+          "method": "AoE combat / Slayer routing",
+          "levelRange": "1-120",
+          "xpRate": "not normalized",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "multi_region"
+          ],
+          "note": "Shares Melee combat training access with Attack; region choice changes available Slayer masters, monster density and gear progression.",
+          "warning": "The current members melee training guide explicitly says its combat XP recommendations need major updating after the 2023 combat XP changes.",
+          "freshness": "current_page_stale_xp_tables",
+          "confidence": "current_wiki_method_stale_rate",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
+            "title": "Pay-to-play melee training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "summoning",
+      "name": "Summoning",
+      "regions": [
+        "Havenhythe",
+        "Asgarnia",
+        "Desert",
+        "Tirannwn"
+      ],
+      "methods": [
+        {
+          "id": "summoning:amlodd-obelisk",
+          "skill": "Summoning",
+          "method": "Amlodd obelisk",
+          "levelRange": "high-level",
+          "xpRate": "not normalized",
+          "intensity": "fast bank/obelisk loop",
+          "location": "Prifddinas, Amlodd district",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "Amlodd is one of the closest bank-to-obelisk routes and offers efficient shard returns. The main-game 20% Voice of Seren bonus should be treated as an environment-specific bonus rather than assumed League baseline.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Summoning_training",
+            "title": "Summoning training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "summoning:geyser-titan-pouches-at-taverley",
+          "skill": "Summoning",
+          "method": "Geyser titan pouches at Taverley",
+          "levelRange": "89+",
+          "xpRate": "11700000",
+          "intensity": "very active speed method",
+          "location": "Taverley summoning obelisk",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "asgarnia"
+          ],
+          "note": "The current Wiki gives about 11.7m base XP/h for the portable-deposit-box version, with slower fallback methods around 4.62m and 3.72m base XP/h.",
+          "warning": "Do not assume portable deposit boxes exist in Equilibrium. The 11.7m rate is a main-game ceiling, not a League guarantee. Taverley is inside the working Asgarnia + Troll Country region.",
+          "freshness": "current_wiki_main_game_ceiling",
+          "confidence": "confirmed_wiki_with_league_setup_warning",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Summoning_training",
+            "title": "Summoning training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "summoning:menaphos-merchant-district-obelisk",
+          "skill": "Summoning",
+          "method": "Menaphos Merchant district obelisk",
+          "levelRange": "general pouch training",
+          "xpRate": "not normalized",
+          "intensity": "bank/obelisk loop",
+          "location": "Menaphos Merchant district",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "The current guide lists Menaphos among the closest bank-to-obelisk routes, giving Desert a practical Summoning route without relying on Asgarnia or Tirannwn.",
+          "warning": "",
+          "freshness": "current_wiki",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Summoning_training",
+            "title": "Summoning training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "summoning:shrine-of-inanna-obelisks",
+          "skill": "Summoning",
+          "method": "Shrine of Inanna obelisks",
+          "levelRange": "all pouch tiers as materials allow",
+          "xpRate": "not normalized",
+          "intensity": "active",
+          "location": "Havenhythe near Wendlewick",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "Starting-region Summoning option. The obelisks build a material-saving / XP-rate buff and have a nearby bank, making this route worth tracking even if it is slower than the main-game Taverley speed method.",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Summoning_training",
+            "title": "Summoning training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "thieving",
+      "name": "Thieving",
+      "regions": [
+        "Misthalin",
+        "Asgarnia",
+        "Kandarin"
+      ],
+      "methods": [
+        {
+          "id": "thieving:safecracking-asgarnia",
+          "skill": "Thieving",
+          "method": "Safecracking - Asgarnia",
+          "levelRange": "76-83",
+          "xpRate": "up to ~400000 XP/h, ~500000 with flashing safes",
+          "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "asgarnia"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Thieving training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "thieving:safecracking-kandarin",
+          "skill": "Thieving",
+          "method": "Safecracking - Kandarin",
+          "levelRange": "83-90",
+          "xpRate": "up to ~575000 XP/h, ~600000 with flashing safes",
+          "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Thieving training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "thieving:safecracking-misthalin",
+          "skill": "Thieving",
+          "method": "Safecracking - Misthalin",
+          "levelRange": "62-76",
+          "xpRate": "up to ~300000 XP/h",
+          "intensity": "semi-AFK route",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Thieving training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    },
+    {
+      "id": "woodcutting",
+      "name": "Woodcutting",
+      "regions": [
+        "Kandarin",
+        "Tirannwn"
+      ],
+      "methods": [
+        {
+          "id": "woodcutting:crystal-trees",
+          "skill": "Woodcutting",
+          "method": "Crystal trees",
+          "levelRange": "94-100",
+          "xpRate": "130000-133000",
+          "intensity": "",
+          "location": "Prifddinas",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_with_setup_warning",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Pay-to-play Woodcutting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "woodcutting:eternal-magic-trees",
+          "skill": "Woodcutting",
+          "method": "Eternal magic trees",
+          "levelRange": "100+",
+          "xpRate": "300000+ with boosts according to the current training summary",
+          "intensity": "",
+          "location": "Piscatoris Hunter area; Havenhythe also contains a nursery interaction for eternal magic trees",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin_inferred"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_method_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Pay-to-play Woodcutting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "woodcutting:golden-bamboo",
+          "skill": "Woodcutting",
+          "method": "Golden bamboo",
+          "levelRange": "96+",
+          "xpRate": "about 300000 at 99 when continuously cutting; guide reports more than 776000 at 110 with a stacked boosted setup",
+          "intensity": "",
+          "location": "Uncharted Isles / The Arc",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "arc_unresolved"
+          ],
+          "note": "Region access to The Arc is unresolved as of this snapshot.",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki_region_unresolved",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Pay-to-play Woodcutting training",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "id": "woodcutting:prifddinas-ivy",
+          "skill": "Woodcutting",
+          "method": "Prifddinas ivy",
+          "levelRange": "68-99",
+          "xpRate": "86000-126000; up to about 151000 at 99 with Voice of Seren",
+          "intensity": "",
+          "location": "",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "",
+          "warning": "",
+          "freshness": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Pay-to-play Woodcutting training",
+            "verifiedAt": "2026-07-24"
+          }
+        }
+      ]
+    }
+  ]
+}

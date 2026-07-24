@@ -1,0 +1,142 @@
+# One-shot closure of the remaining source-audit gaps. Self-removes after validation.
+name: Close data audit gaps once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/close-data-audit-gaps-once.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: close-data-audit-gaps-once
+  cancel-in-progress: false
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Close stale mappings and add Amascut
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+          const upsert = (rows, key, row) => {
+            const i = rows.findIndex((x) => x?.[key] === row[key]);
+            if (i >= 0) rows[i] = { ...rows[i], ...row };
+            else rows.push(row);
+          };
+          const catalyst = 'https://runescape.wiki/w/Catalyst_League/Tasks';
+
+          const depPath = 'scraped-data/region-dependencies.json';
+          const deps = read(depPath);
+          const boundaryRows = [
+            {
+              content: 'Fort Forinthry',
+              required_region: 'misthalin',
+              includes: ['Fort Forinthry', 'Fort Forinthry crypt'],
+              planner_rule: 'Use Misthalin as the working League region for Fort Forinthry content. Catalyst explicitly labelled Fort Forinthry tasks as Misthalin; Equilibrium has not yet published a finer Fort locality rule.',
+              confidence: 'historical_catalyst_working_taxonomy',
+              source_urls: [catalyst],
+              evidence_note: 'Historical League locality evidence only; do not present this as an Equilibrium-specific boundary reveal.'
+            },
+            {
+              content: 'City of Um / Underworld',
+              required_region: 'misthalin',
+              includes: ['City of Um', 'Underworld', 'Rasial', 'Sanctum of Rebirth', 'Gate of Elidinis'],
+              planner_rule: 'Use Misthalin as the working League region for City of Um / Underworld content until Equilibrium publishes its own locality override.',
+              confidence: 'historical_catalyst_working_taxonomy',
+              source_urls: [catalyst],
+              evidence_note: 'Catalyst explicitly labelled City of Um tasks as Misthalin.'
+            },
+            {
+              content: 'Zanaris / Cosmic Altar',
+              required_region: 'misthalin',
+              includes: ['Zanaris', 'Cosmic Altar'],
+              planner_rule: 'Use Misthalin as the working League region for Zanaris/Cosmic-Altar access. Catalyst filed entering Zanaris via Lumbridge Swamp and crafting cosmic runes under Misthalin.',
+              confidence: 'historical_catalyst_working_taxonomy',
+              source_urls: [catalyst],
+              evidence_note: 'Working historical League taxonomy; Equilibrium-specific exceptions remain unpublished.'
+            },
+            {
+              content: 'Senntisten',
+              required_region: 'misthalin',
+              includes: ['Senntisten Dig Site', 'Elder God Wars Dungeon', 'Zamorakian Undercity entrance'],
+              planner_rule: 'Use Misthalin as the working League taxonomy for Senntisten-linked content unless a specific encounter has a separately established region mapping. This is historical/entrance evidence, not an Equilibrium-specific reveal.',
+              confidence: 'historical_catalyst_varrock_senntisten_precedent',
+              source_urls: [catalyst, 'https://runescape.wiki/w/Senntisten_Dig_Site'],
+              evidence_note: 'Catalyst grouped Elder God Wars/Senntisten-adjacent content with Misthalin/Varrock; the Senntisten Dig Site is accessed from the Varrock Dig Site.'
+            }
+          ];
+          for (const row of boundaryRows) upsert(deps.boundary_overrides, 'content', row);
+          write(depPath, deps);
+
+          const regionPath = 'scraped-data/regions.json';
+          const regions = read(regionPath);
+          const desert = regions.regions.find((r) => r.id === 'desert');
+          if (!desert) throw new Error('Desert region missing');
+          desert.bosses_and_combat ||= [];
+          upsert(desert.bosses_and_combat, 'name', {
+            name: 'Amascut, the Devourer',
+            group: 'Menaphos Imperial district',
+            requirements: ['Eclipse of the Heart'],
+            source_url: 'https://runescape.wiki/w/Amascut,_the_Devourer',
+            region_evidence_url: catalyst,
+            confidence: 'historical_catalyst_desert_menaphos_mapping_current_wiki_content',
+            note: 'Catalyst explicitly labelled Amascut as Desert: Menaphos. The current boss encounter/reward chest is in the Menaphos Imperial district.'
+          });
+          write(regionPath, regions);
+
+          const upgradePath = 'scraped-data/major-upgrades-by-region.json';
+          const upgrades = read(upgradePath);
+          upgrades.regions.desert ||= [];
+          upsert(upgrades.regions.desert, 'name', {
+            name: 'Amascut, the Devourer progression',
+            category: 'high-end combat weapons / armour / endgame upgrade material',
+            examples: ["Devourer's Guard", "Tumeken's Light", "Tumeken's resplendence equipment", 'Shard of Genesis Essence'],
+            requirements: ['Eclipse of the Heart'],
+            source_url: 'https://runescape.wiki/w/Amascut,_the_Devourer',
+            region_evidence_url: catalyst,
+            confidence: 'historical_catalyst_desert_menaphos_mapping_current_wiki_rewards'
+          });
+          write(upgradePath, upgrades);
+
+          const indexPath = 'scraped-data/index.json';
+          const index = read(indexPath);
+          index.coverage.runecrafting = 'altar locations and major access requirements mapped; Zanaris/Cosmic uses a historical Catalyst Misthalin working taxonomy pending Equilibrium-specific confirmation';
+          index.coverage.archaeology = 'qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic level milestones and relic acquisition-region dependencies mapped; uncertain League boundaries stay explicit';
+          index.next_ingest_priority = index.next_ingest_priority.filter((x) =>
+            x !== 'Archaeology relic acquisition-region mapping and collection rewards' &&
+            !x.includes('Resolve The Arc/Wushanko, Cosmic/Zanaris and Senntisten boundaries')
+          );
+          if (!index.next_ingest_priority.includes('Archaeology collection rewards and remaining cross-region relic prerequisites')) {
+            index.next_ingest_priority.push('Archaeology collection rewards and remaining cross-region relic prerequisites');
+          }
+          index.next_ingest_priority.push('Resolve The Arc/Wushanko and confirm Equilibrium-specific locality handling for City of Um, Fort Forinthry, Zanaris and Senntisten');
+          write(indexPath, index);
+          NODE
+      - run: npm run normalize:data
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Commit validated closure and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/close-data-audit-gaps-once.yml
+          git add scraped-data/ data/
+          git commit -m "Close remaining sourced planner audit gaps"
+          git pull --rebase origin main
+          git push origin HEAD:main

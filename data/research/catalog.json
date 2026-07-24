@@ -14,8 +14,9 @@
     "2026_changes": "high; July 20 rebalance audited against direct Jagex patch notes",
     "catalyst": "high-level progression complete; not every relic/task serialized yet",
     "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",
-    "regions": "high-value content and upgrade chains mapped; explicit working-map boundary overrides serialized; exhaustive item/NPC/quest enumeration pending",
-    "training": "all 29 named RS3 skills now surface in the browser; high-value region-sensitive routes are mapped, while stale combat XP tables and unresolved League supply loops are explicitly unranked",
+    "regions": "high-value content and upgrade chains mapped; explicit working-map boundary overrides serialized; quest catalog now generated separately under data/league with unresolved edge boundaries queued for review",
+    "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
+    "training": "all 29 named RS3 skills now surface in the browser; high-value region-sensitive routes are mapped, while stale combat XP tables and unresolved League supply loops remain explicitly unranked",
     "boss_specific_guides": "intentionally excluded"
   },
   "hardRules": [
@@ -68,14 +69,15 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Divination_training",
-            "title": "Divination training",
+            "url": "https://runescape.wiki/w/Pale_wisp",
+            "title": "Pale wisps near Draynor",
             "verifiedAt": "2026-07-24"
           }
         }
       ],
       "upgrades": [],
       "trainingMethodIds": [
+        "necromancy:combat-rituals-progression",
         "necromancy:rituals",
         "thieving:safecracking-misthalin"
       ],
@@ -144,8 +146,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_training",
-            "title": "Slayer training",
+            "url": "https://runescape.wiki/w/Sanguine_Crawler",
+            "title": "Sanguine Crawler",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -156,8 +158,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_training",
-            "title": "Hunter training",
+            "url": "https://runescape.wiki/w/Hunter_update",
+            "title": "Havenhythe Big Game Hunter",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -168,8 +170,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_training",
-            "title": "Hunter training",
+            "url": "https://runescape.wiki/w/Birdhouses",
+            "title": "Birdhouses",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -180,8 +182,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_training",
-            "title": "Hunter training",
+            "url": "https://runescape.wiki/w/Hunter_update",
+            "title": "Clockwork box traps",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -192,8 +194,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_training",
-            "title": "Hunter training",
+            "url": "https://runescape.wiki/w/Update:Welcome_to_Havenhythe",
+            "title": "Black chinchompas",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -204,8 +206,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
+            "url": "https://runescape.wiki/w/Update:Welcome_to_Havenhythe",
+            "title": "Fish farming",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -216,8 +218,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
+            "url": "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)",
+            "title": "Giant crayfish fishing",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -228,8 +230,8 @@
           "confidence": "announced_not_yet_confirmed_live",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Archaeology_training",
-            "title": "Archaeology training",
+            "url": "https://runescape.wiki/w/Havenhythe",
+            "title": "First Age dig site",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -328,8 +330,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_training",
-            "title": "Slayer training",
+            "url": "https://runescape.wiki/w/Duradel",
+            "title": "Duradel",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -406,8 +408,8 @@
       "availability": "elective",
       "aliases": [
         "Asgarnia",
-        "Troll Country",
-        "Trollheim"
+        "Trollheim",
+        "Troll Stronghold"
       ],
       "areas": [
         "Falador",
@@ -494,8 +496,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Smithing_training",
-            "title": "Pay-to-play Smithing training",
+            "url": "https://runescape.wiki/w/Artisans%27_Workshop",
+            "title": "Artisans' Workshop burial smithing",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -506,8 +508,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Thieving_training",
-            "title": "Thieving training",
+            "url": "https://runescape.wiki/w/Safecracking",
+            "title": "Safecracking route",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -657,8 +659,8 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Farming_training",
-            "title": "Farming training",
+            "url": "https://runescape.wiki/w/Player-owned_farm",
+            "title": "Player-Owned Farm / Manor Farm",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -669,8 +671,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Divination_training",
-            "title": "Divination training",
+            "url": "https://runescape.wiki/w/Hall_of_Memories",
+            "title": "Hall of Memories",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -681,8 +683,8 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
+            "url": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+            "title": "Deep Sea Fishing Hub",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -693,8 +695,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Agility_training",
-            "title": "Agility training",
+            "url": "https://runescape.wiki/w/Advanced_Gnome_Stronghold_Agility_Course",
+            "title": "Advanced Gnome Stronghold course",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -790,8 +792,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Magic_training",
-            "title": "Pay-to-play Magic training",
+            "url": "https://runescape.wiki/w/Lunar_spellbook",
+            "title": "Lunar spellbook and Lunar utility",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -896,8 +898,8 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_training",
-            "title": "Slayer training",
+            "url": "https://runescape.wiki/w/Wilderness_Slayer",
+            "title": "Wilderness Slayer",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -908,8 +910,8 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Dungeoneering_training",
-            "title": "Pay-to-play Dungeoneering training",
+            "url": "https://runescape.wiki/w/Daemonheim",
+            "title": "Daemonheim",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -920,8 +922,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
-            "title": "Pay-to-play Runecrafting training",
+            "url": "https://runescape.wiki/w/Abyss",
+            "title": "Abyss entrance",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -932,8 +934,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Agility_training",
-            "title": "Agility training",
+            "url": "https://runescape.wiki/w/Wilderness_Agility_Course",
+            "title": "Wilderness Agility Course",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1225,8 +1227,8 @@
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Archaeology_training",
-            "title": "Archaeology training",
+            "url": "https://runescape.wiki/w/Everlight_Dig_Site",
+            "title": "Everlight Dig Site",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1237,8 +1239,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_training",
-            "title": "Slayer training",
+            "url": "https://runescape.wiki/w/Slayer_Tower",
+            "title": "Slayer Tower",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1476,8 +1478,8 @@
           "confidence": "confirmed_official_region_theme",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_training",
-            "title": "Hunter training",
+            "url": "https://runescape.wiki/w/Big_Game_Hunter",
+            "title": "Anachronia Big Game Hunter",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1488,8 +1490,8 @@
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Agility_training",
-            "title": "Agility training",
+            "url": "https://runescape.wiki/w/Anachronia_Agility_Course",
+            "title": "Anachronia Agility Course",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -1639,7 +1641,7 @@
           "levelRange": "90+",
           "xpRate": "189473.7",
           "intensity": "",
-          "location": "",
+          "location": "Barbarian Outpost",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1665,7 +1667,7 @@
           "levelRange": "85+",
           "xpRate": "162000",
           "intensity": "",
-          "location": "",
+          "location": "Tree Gnome Stronghold",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1691,7 +1693,7 @@
           "levelRange": "85+",
           "xpRate": "210000",
           "intensity": "",
-          "location": "",
+          "location": "Anachronia Agility Course",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1717,7 +1719,7 @@
           "levelRange": "77-97+",
           "xpRate": "77: 102857.1 · 82: 120000 · 87: 137142.9 · 92: 154285.7 · 97: 171428.6",
           "intensity": "",
-          "location": "",
+          "location": "Prifddinas, Hefin district",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1743,7 +1745,7 @@
           "levelRange": "65+",
           "xpRate": "70114.3",
           "intensity": "",
-          "location": "",
+          "location": "Het's Oasis",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1769,7 +1771,7 @@
           "levelRange": "52+",
           "xpRate": "51390",
           "intensity": "",
-          "location": "",
+          "location": "Wilderness Agility Course",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -1850,7 +1852,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
-            "title": "Pay-to-play melee training",
+            "title": "AoE combat / Slayer routing",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1883,7 +1885,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
-            "title": "Pay-to-play melee training",
+            "title": "Passive combat XP while training a combat style",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1929,18 +1931,18 @@
           "levelRange": "Fort progression; Eternal reinforcement from 105",
           "xpRate": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
           "intensity": "long AFK windows; active hotspots improve rate",
-          "location": "",
+          "location": "Fort Forinthry, south-eastern Wilderness",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "forinthry_inferred"
+            "forinthry"
           ],
           "note": "",
           "warning": "",
           "freshness": "2026-07-20_official",
-          "confidence": "confirmed_official_region_inferred",
+          "confidence": "confirmed_official_with_wiki_region_mapping",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Construction_training",
@@ -1979,7 +1981,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Cooking_training",
-            "title": "Pay-to-play Cooking training",
+            "title": "Bake Pie",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2005,7 +2007,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Cooking_training",
-            "title": "Pay-to-play Cooking training",
+            "title": "Yak meat bank/range loop",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2042,7 +2044,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
-            "title": "Pay-to-play Crafting training",
+            "title": "Cutting gems",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2068,7 +2070,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
-            "title": "Pay-to-play Crafting training",
+            "title": "Dragonhide armour",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2097,7 +2099,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
-            "title": "Pay-to-play Crafting training",
+            "title": "Telekinetic Grind sandstone",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2130,7 +2132,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
-            "title": "Pay-to-play melee training",
+            "title": "Combat training with Defence XP enabled",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2150,7 +2152,7 @@
           "levelRange": "70+",
           "xpRate": "level 70 2tick: 140000 · level 80 2tick: 170000 · level 85 2tick: 205000 · level 90 2tick: 245000 · level 95 2tick: 310000 · level 95 afk: 205000 · level 99 with outfit scrimshaw and corehunting: 400000+",
           "intensity": "AFK to very active depending on method",
-          "location": "",
+          "location": "Hall of Memories, beneath the Memorial to Guthix in the Piscatoris Hunter area",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2185,7 +2187,7 @@
           "levelRange": "1-120",
           "xpRate": "2026 remaster rebalanced floor XP and made in-dungeon actions contribute; optimizer-grade rates still need post-remaster extraction.",
           "intensity": "active",
-          "location": "",
+          "location": "Daemonheim",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2221,7 +2223,7 @@
           "levelRange": "17+ core system",
           "xpRate": "time-gated animal growth; high time-efficiency rather than continuous XP/h",
           "intensity": "periodic",
-          "location": "",
+          "location": "Manor Farm, north of East Ardougne",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2247,7 +2249,7 @@
           "levelRange": "high-level Farming",
           "xpRate": "time-gated; exact Equilibrium value pending",
           "intensity": "periodic",
-          "location": "",
+          "location": "Anachronia Dinosaur Farm, on the island off Anachronia's west coast",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2258,7 +2260,7 @@
           "note": "",
           "warning": "",
           "freshness": "current",
-          "confidence": "inferred_region",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Farming_training",
@@ -2297,7 +2299,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Firemaking_training",
-            "title": "Pay-to-play Firemaking training",
+            "title": "Eternal magic logs",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2323,7 +2325,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Firemaking_training",
-            "title": "Pay-to-play Firemaking training",
+            "title": "Sharp shell shards",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2357,8 +2359,8 @@
           "confidence": "confirmed_wiki_method_plus_official_region_mapping",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
+            "url": "https://runescape.wiki/w/Deep_Sea_Fishing",
+            "title": "Fishing frenzy",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2383,8 +2385,8 @@
           "confidence": "confirmed_wiki_method_plus_official_region_mapping",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
+            "url": "https://runescape.wiki/w/Deep_Sea_Fishing",
+            "title": "Sailfish",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2479,7 +2481,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Herblore_training",
-            "title": "Herblore training",
+            "title": "Telekinetic Grind herb tar",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2499,7 +2501,7 @@
           "levelRange": "5-101",
           "xpRate": "not normalized yet",
           "intensity": "periodic/passive route",
-          "location": "",
+          "location": "Havenhythe birdhouse plots",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2525,7 +2527,7 @@
           "levelRange": "55+",
           "xpRate": "not normalized yet",
           "intensity": "lower-intensity trapping",
-          "location": "",
+          "location": "Havenhythe",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2551,7 +2553,7 @@
           "levelRange": "high-level, up to 110",
           "xpRate": "Jagex describes it as the best Hunter XP in the game; exact reliable post-launch rate table still needs capture.",
           "intensity": "active",
-          "location": "",
+          "location": "Havenhythe Big Game Hunter sites",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2586,7 +2588,7 @@
           "levelRange": "",
           "xpRate": "",
           "intensity": "",
-          "location": "",
+          "location": "Invention Guild, north-east of Falador (initial tutorial/guild access)",
           "requirements": [
             "80 Crafting",
             "80 Divination",
@@ -2604,8 +2606,8 @@
           "confidence": "confirmed_base_game_region_rule_unresolved",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Invention_training",
-            "title": "Invention training",
+            "url": "https://runescape.wiki/w/Invention",
+            "title": "Augmented equipment levelling + siphon/disassemble",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2638,7 +2640,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Magic_training",
-            "title": "Pay-to-play Magic training",
+            "title": "AoE combat / Slayer routing",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2674,7 +2676,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
-            "title": "Pay-to-play Mining training",
+            "title": "Alaea crablets",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2700,7 +2702,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
-            "title": "Pay-to-play Mining training",
+            "title": "Corrupted ore",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2726,7 +2728,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
-            "title": "Pay-to-play Mining training",
+            "title": "Primal ores",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2744,20 +2746,20 @@
           "skill": "Necromancy",
           "method": "Combat + rituals progression",
           "levelRange": "1-120",
-          "xpRate": "current training guide exists, but Equilibrium region access for City of Um and ritual infrastructure has not yet been publicly mapped.",
+          "xpRate": "Current training guide supports combat and ritual progression; exact Equilibrium rates should be benchmarked after launch.",
           "intensity": "varies",
-          "location": "",
+          "location": "City of Um / Underworld ritual site",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "unresolved"
+            "misthalin"
           ],
           "note": "",
           "warning": "",
           "freshness": "2026_current",
-          "confidence": "confirmed_wiki_method_region_unresolved",
+          "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Necromancy_training",
@@ -2772,22 +2774,22 @@
           "levelRange": "90-120 for fastest ritual-centric training",
           "xpRate": "",
           "intensity": "",
-          "location": "",
+          "location": "City of Um ritual site / Underworld",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "misthalin_likely_city_of_um"
+            "misthalin"
           ],
           "note": "Current guide identifies high-level rituals as the fastest training method and combat as the slower AFK alternative.",
-          "warning": "City of Um is expected to fall under Misthalin but Jagex has not yet published the exact Equilibrium boundary/quest treatment. Keep this inferred until revealed.",
+          "warning": "City of Um is treated as Misthalin for League planning, matching Catalyst's Misthalin: City of Um task taxonomy. Recheck if Equilibrium publishes a different boundary.",
           "freshness": "",
-          "confidence": "confirmed_wiki_method_region_inferred",
+          "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Necromancy_training",
-            "title": "Necromancy training",
+            "title": "Rituals",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2810,7 +2812,7 @@
           "levelRange": "",
           "xpRate": "dragon bones: 403200 · dragonkin bones: 896000 · dinosaur bones: 952000 · frost dragon bones: 1008000",
           "intensity": "",
-          "location": "",
+          "location": "Chaos Temple altar, Wilderness",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -2825,7 +2827,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
-            "title": "Pay-to-play Prayer training",
+            "title": "Chaos altar",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2851,7 +2853,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
-            "title": "Pay-to-play Prayer training",
+            "title": "Cleansing crystals",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2878,7 +2880,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
-            "title": "Pay-to-play Prayer training",
+            "title": "Powder of burials + banked bones",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -2904,7 +2906,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
-            "title": "Pay-to-play Prayer training",
+            "title": "Vyrelords/Vyreladies with Sunspear",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2937,7 +2939,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Ranged_training",
-            "title": "Pay-to-play Ranged training",
+            "title": "AoE combat / Slayer routing",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -2959,7 +2961,7 @@
           "levelRange": "9+",
           "xpRate": "Legacy guide ranges are retained only as a baseline because the guide is missing 110 Runecrafting data and still references the old Demonic Skull boost.",
           "intensity": "active movement",
-          "location": "",
+          "location": "Wilderness entrance via the Mage of Zamorak, then the Abyss",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3000,7 +3002,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
-            "title": "Pay-to-play Runecrafting training",
+            "title": "Imbuing eternal magic weapons",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3011,7 +3013,7 @@
           "levelRange": "90+",
           "xpRate": "legacy guide lists ~226800 base XP/h before old Demonic Skull assumptions; re-benchmark for 2026 League use",
           "intensity": "AFK charging + active craft trips",
-          "location": "",
+          "location": "Soul altar, accessed from Menaphos",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3037,7 +3039,7 @@
           "levelRange": "105+",
           "xpRate": "520000",
           "intensity": "",
-          "location": "",
+          "location": "Wilderness Abyss entrance + Time altar on Anachronia",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3052,7 +3054,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
-            "title": "Pay-to-play Runecrafting training",
+            "title": "Time runes through the Abyss",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -3085,7 +3087,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Slayer_training",
-            "title": "Slayer training",
+            "title": "High-value task routing",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -3105,7 +3107,7 @@
           "levelRange": "40+ workshop guild; best materials at high Smithing",
           "xpRate": "Can exceed 1,000,000 XP/h; ideal high-end setups can exceed 4,000,000 XP/h off Double XP according to current guide.",
           "intensity": "production",
-          "location": "",
+          "location": "Artisans' Workshop, Falador",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3153,7 +3155,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
-            "title": "Pay-to-play melee training",
+            "title": "AoE combat / Slayer routing",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -3191,7 +3193,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Summoning_training",
-            "title": "Summoning training",
+            "title": "Amlodd obelisk",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3211,13 +3213,13 @@
             "asgarnia"
           ],
           "note": "The current Wiki gives about 11.7m base XP/h for the portable-deposit-box version, with slower fallback methods around 4.62m and 3.72m base XP/h.",
-          "warning": "Do not assume portable deposit boxes exist in Equilibrium. The 11.7m rate is a main-game ceiling, not a League guarantee. Taverley is inside the working Asgarnia + Troll Country region.",
+          "warning": "Do not assume portable deposit boxes exist in Equilibrium. The 11.7m rate is a main-game ceiling, not a League guarantee. Taverley is in Asgarnia.",
           "freshness": "current_wiki_main_game_ceiling",
           "confidence": "confirmed_wiki_with_league_setup_warning",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Summoning_training",
-            "title": "Summoning training",
+            "title": "Geyser titan pouches at Taverley",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3243,7 +3245,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Summoning_training",
-            "title": "Summoning training",
+            "title": "Menaphos Merchant district obelisk",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3269,7 +3271,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Summoning_training",
-            "title": "Summoning training",
+            "title": "Shrine of Inanna obelisks",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -3291,7 +3293,7 @@
           "levelRange": "76-83",
           "xpRate": "up to ~400000 XP/h, ~500000 with flashing safes",
           "intensity": "semi-AFK route",
-          "location": "",
+          "location": "Asgarnia safecracking circuit",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3317,7 +3319,7 @@
           "levelRange": "83-90",
           "xpRate": "up to ~575000 XP/h, ~600000 with flashing safes",
           "intensity": "semi-AFK route",
-          "location": "",
+          "location": "Kandarin safecracking circuit (Camelot / Ardougne and nearby safes)",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3343,7 +3345,7 @@
           "levelRange": "62-76",
           "xpRate": "up to ~300000 XP/h",
           "intensity": "semi-AFK route",
-          "location": "",
+          "location": "Varrock Palace / Wizards' Tower / Lumbridge / Edgeville safecracking circuit",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3394,7 +3396,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-            "title": "Pay-to-play Woodcutting training",
+            "title": "Crystal trees",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3420,7 +3422,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-            "title": "Pay-to-play Woodcutting training",
+            "title": "Eternal magic trees",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3446,7 +3448,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-            "title": "Pay-to-play Woodcutting training",
+            "title": "Golden bamboo",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -3457,7 +3459,7 @@
           "levelRange": "68-99",
           "xpRate": "86000-126000; up to about 151000 at 99 with Voice of Seren",
           "intensity": "",
-          "location": "",
+          "location": "Prifddinas",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -3472,7 +3474,7 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-            "title": "Pay-to-play Woodcutting training",
+            "title": "Prifddinas ivy",
             "verifiedAt": "2026-07-24"
           }
         }

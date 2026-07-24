@@ -10,42 +10,58 @@ Read `AGENTS.md` before writing code - it is the spec, this file is just the map
 
 ## Status
 
-Scaffold. Routes are stubs, datasets are empty on purpose, and the only real engine code is
-`src/combat/core/damagePerLevel.ts`. Nothing here invents game numbers.
+Research/data ingestion is active. The Data route reads the audited region/skill snapshot, sourced media lives
+under `assets/`, and the quest catalog is generated from revision-pinned RuneScape Wiki data. Unrevealed League
+values and unresolved region boundaries stay explicit rather than being filled with guesses.
 
 ## Commands
 
-```
-npm run dev        # local dev server
-npm run build      # production build (what Vercel runs)
-npm run typecheck  # tsc --noEmit
-npm test           # vitest, combat core only
-npm run sync:combat / sync:league   # data scrapers (stubs, exit non-zero)
+```text
+npm run dev          # local dev server
+npm run build        # production build (what Vercel runs)
+npm run typecheck    # tsc --noEmit
+npm test             # vitest
+npm run sync:combat  # combat data sync scaffold
+npm run sync:league  # League data sync scaffold
+npm run sync:assets  # harvest sourced RS3 / League media + provenance manifest
+npm run sync:quests  # rebuild the full quest/region catalog from the RuneScape Wiki
+npm run sync:quests:auto  # apply official Jagex region auto-completion lists when published
 ```
 
-Node 26 runs the `scripts/*.ts` files directly via type stripping - no ts-node/tsx in the tree.
+Node runs the data scripts directly; no ts-node/tsx wrapper is required for the existing TypeScript sync scripts,
+and the asset/quest harvesters are plain `.mjs`.
 
 ## Layout
 
-```
+```text
 app/                 App Router routes: Overview / Map / Tasks / Build / Combat / Data (+ /sources)
 src/combat/          combat engine, zero React dependency
   core/ pipeline/ styles/{melee,ranged,magic,necromancy}/ shared/ rotation/ league/ target/ data/
 src/league/          Equilibrium domain model (regions, relics, blessings, tasks)
+src/research/        normalized audited research browser layer
 src/lib/             localStorage persistence
 src/components/      shared UI
-data/combat/         canonical JSON store written by scripts/sync-combat-data.ts
-data/league/         canonical JSON store written by scripts/sync-league-data.ts
-scripts/             sync-combat-data.ts, sync-league-data.ts
+data/combat/         canonical combat JSON store
+data/league/         League data + generated quest catalog / region rules / official auto-quest overlay
+scraped-data/        source-oriented research snapshots, provenance, post-its and unresolved facts
+assets/              local sourced game-media archive + generated provenance manifest
+scripts/             combat/League sync plus asset and quest harvesters
 ```
 
 `src/combat/data/` is the typed accessor layer over the root `data/` store, so there is one copy of the
 JSON rather than two.
 
+## Data provenance
+
+Game facts and media keep source links. `assets/manifest.generated.json` records the exact file/source page,
+direct retrieval URL and local hash for every harvested binary. `data/league/quests.json` stores the source URL
+and Wiki revision for every quest. Official Equilibrium quest auto-completions are a separate Jagex-only overlay;
+geographic inference never marks a quest auto-completed.
+
 ## Deployment
 
 Vercel, zero config. No env vars, no backend, no database - static JSON plus `localStorage`. Nothing in
-the build reads secrets or network.
+the production build reads secrets or performs live game-data fetches; sync workflows update the checked-in data.
 
 ## Agent skills
 

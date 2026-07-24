@@ -49,8 +49,8 @@
     "killcount_persists_after_leaving": true,
     "killcount_cap": 200,
     "removed_items": ["Omni Soulstone", "Armadylean Soulstone", "Bandosian Soulstone", "Saradominist Soulstone", "Zamorakian Soulstone"],
-    "region_relevance": "Asgarnia + Troll Country",
-    "planner_note": "The working region map folds Troll Country, including the God Wars Dungeon approach, into Asgarnia."
+    "region_relevance": "Asgarnia",
+    "planner_note": "The God Wars Dungeon approach is part of Asgarnia in the working region map."
   },
   "god_wars_dungeon_2": {
     "maximum_reputation_old": 5000,

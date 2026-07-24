@@ -50,7 +50,7 @@
       "id": "asgarnia",
       "display_name": "Asgarnia",
       "availability": "elective",
-      "aliases": ["Asgarnia", "Troll Country", "Trollheim"],
+      "aliases": ["Asgarnia", "Trollheim", "Troll Stronghold"],
       "boundary_rule": "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks.",
       "boundary_confidence": "user_confirmed_from_region_map",
       "major_areas": ["Falador", "Taverley", "Burthorpe", "Port Sarim", "Dwarven Mine", "Death Plateau", "Trollheim", "Troll Stronghold", "God Wars Dungeon"],

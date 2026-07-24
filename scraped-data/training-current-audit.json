@@ -190,7 +190,7 @@
       "base_xp_per_hour": 11700000,
       "intensity": "very active speed method",
       "notes": "The current Wiki gives about 11.7m base XP/h for the portable-deposit-box version, with slower fallback methods around 4.62m and 3.72m base XP/h.",
-      "warning": "Do not assume portable deposit boxes exist in Equilibrium. The 11.7m rate is a main-game ceiling, not a League guarantee. Taverley is inside the working Asgarnia + Troll Country region.",
+      "warning": "Do not assume portable deposit boxes exist in Equilibrium. The 11.7m rate is a main-game ceiling, not a League guarantee. Taverley is in Asgarnia.",
       "freshness": "current_wiki_main_game_ceiling",
       "source": "https://runescape.wiki/w/Summoning_training",
       "confidence": "confirmed_wiki_with_league_setup_warning"
@@ -242,7 +242,8 @@
       "base_xp_per_hour": 210000,
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Anachronia Agility Course"
     },
     {
       "skill": "Agility",
@@ -252,7 +253,8 @@
       "base_xp_per_hour": 189473.7,
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Barbarian Outpost"
     },
     {
       "skill": "Agility",
@@ -262,17 +264,25 @@
       "base_xp_per_hour": 162000,
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Tree Gnome Stronghold"
     },
     {
       "skill": "Agility",
       "method": "Hefin course",
       "method_region": "tirannwn",
       "level_range": "77-97+",
-      "base_xp_per_hour_by_unlock": {"77": 102857.1, "82": 120000, "87": 137142.9, "92": 154285.7, "97": 171428.6},
+      "base_xp_per_hour_by_unlock": {
+        "77": 102857.1,
+        "82": 120000,
+        "87": 137142.9,
+        "92": 154285.7,
+        "97": 171428.6
+      },
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Prifddinas, Hefin district"
     },
     {
       "skill": "Agility",
@@ -282,7 +292,8 @@
       "base_xp_per_hour": 70114.3,
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Het's Oasis"
     },
     {
       "skill": "Agility",
@@ -293,18 +304,20 @@
       "warning": "Demonic Skull was removed in the same July 20 update. Do not use old boosted Wilderness-course rates.",
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Wilderness Agility Course"
     },
     {
       "skill": "Construction",
       "method": "Fort Forinthry reinforcement",
-      "method_region": "forinthry_inferred",
+      "method_region": "forinthry",
       "level_range": "Fort progression; Eternal reinforcement from 105",
       "xp_event": "A tier-3 structure reinforced with 65 Eternal Magic Frames and 6 Stone Wall Segments awards 499,200 base XP after the July 20 rebalance.",
       "intensity": "long AFK windows; active hotspots improve rate",
       "freshness": "2026-07-20_official",
       "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_region_inferred"
+      "confidence": "confirmed_official_with_wiki_region_mapping",
+      "location": "Fort Forinthry, south-eastern Wilderness"
     }
   ]
 }

@@ -14,7 +14,8 @@
       "xp_rate": "Jagex describes it as the best Hunter XP in the game; exact reliable post-launch rate table still needs capture.",
       "intensity": "active",
       "freshness": "2026_current",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Havenhythe Big Game Hunter sites"
     },
     {
       "skill": "Hunter",
@@ -24,7 +25,8 @@
       "xp_rate": "not normalized yet",
       "intensity": "periodic/passive route",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Havenhythe birdhouse plots"
     },
     {
       "skill": "Hunter",
@@ -34,7 +36,8 @@
       "xp_rate": "not normalized yet",
       "intensity": "lower-intensity trapping",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Havenhythe"
     },
     {
       "skill": "Divination",
@@ -52,7 +55,8 @@
       },
       "intensity": "AFK to very active depending on method",
       "freshness": "current_page_but_page_marks_some_divination_data_incomplete",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Hall of Memories, beneath the Memorial to Guthix in the Piscatoris Hunter area"
     },
     {
       "skill": "Smithing",
@@ -63,7 +67,8 @@
       "intensity": "production",
       "cost": "very high; burial process destroys the finished armour",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Artisans' Workshop, Falador"
     },
     {
       "skill": "Thieving",
@@ -73,7 +78,8 @@
       "xp_rate": "up to ~300000 XP/h",
       "intensity": "semi-AFK route",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Varrock Palace / Wizards' Tower / Lumbridge / Edgeville safecracking circuit"
     },
     {
       "skill": "Thieving",
@@ -83,7 +89,8 @@
       "xp_rate": "up to ~400000 XP/h, ~500000 with flashing safes",
       "intensity": "semi-AFK route",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Asgarnia safecracking circuit"
     },
     {
       "skill": "Thieving",
@@ -93,7 +100,8 @@
       "xp_rate": "up to ~575000 XP/h, ~600000 with flashing safes",
       "intensity": "semi-AFK route",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Kandarin safecracking circuit (Camelot / Ardougne and nearby safes)"
     },
     {
       "skill": "Farming",
@@ -103,7 +111,8 @@
       "xp_rate": "time-gated animal growth; high time-efficiency rather than continuous XP/h",
       "intensity": "periodic",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Manor Farm, north of East Ardougne"
     },
     {
       "skill": "Farming",
@@ -113,7 +122,8 @@
       "xp_rate": "time-gated; exact Equilibrium value pending",
       "intensity": "periodic",
       "freshness": "current",
-      "confidence": "inferred_region"
+      "confidence": "confirmed_wiki",
+      "location": "Anachronia Dinosaur Farm, on the island off Anachronia's west coast"
     },
     {
       "skill": "Archaeology",
@@ -131,10 +141,22 @@
         "Complete qualification upgrades for precision, storage and other Archaeology progression."
       ],
       "region_examples": [
-        {"region": "morytania", "site": "Everlight Dig Site"},
-        {"region": "anachronia", "site": "Orthen Dig Site"},
-        {"region": "misthalin", "site": "Varrock Dig Site / guild progression"},
-        {"region": "havenhythe", "site": "First Age dig site, 2026 content"}
+        {
+          "region": "morytania",
+          "site": "Everlight Dig Site"
+        },
+        {
+          "region": "anachronia",
+          "site": "Orthen Dig Site"
+        },
+        {
+          "region": "misthalin",
+          "site": "Varrock Dig Site / guild progression"
+        },
+        {
+          "region": "havenhythe",
+          "site": "First Age dig site, 2026 content"
+        }
       ],
       "confidence": "confirmed_wiki_with_region_inference"
     },
@@ -146,7 +168,8 @@
       "xp_rate": "Legacy guide ranges are retained only as a baseline because the guide is missing 110 Runecrafting data and still references the old Demonic Skull boost.",
       "intensity": "active movement",
       "freshness": "stale_warning",
-      "confidence": "legacy_reference_only"
+      "confidence": "legacy_reference_only",
+      "location": "Wilderness entrance via the Mage of Zamorak, then the Abyss"
     },
     {
       "skill": "Runecrafting",
@@ -156,7 +179,8 @@
       "xp_rate": "legacy guide lists ~226800 base XP/h before old Demonic Skull assumptions; re-benchmark for 2026 League use",
       "intensity": "AFK charging + active craft trips",
       "freshness": "stale_warning",
-      "confidence": "legacy_reference_only"
+      "confidence": "legacy_reference_only",
+      "location": "Soul altar, accessed from Menaphos"
     },
     {
       "skill": "Dungeoneering",
@@ -166,7 +190,8 @@
       "xp_rate": "2026 remaster rebalanced floor XP and made in-dungeon actions contribute; optimizer-grade rates still need post-remaster extraction.",
       "intensity": "active",
       "freshness": "2026_remastered",
-      "confidence": "confirmed_official"
+      "confidence": "confirmed_official",
+      "location": "Daemonheim"
     },
     {
       "skill": "Agility",
@@ -177,7 +202,8 @@
       "xp_rate_unit": "approx XP/h",
       "intensity": "active laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Anachronia Agility Course"
     },
     {
       "skill": "Agility",
@@ -188,7 +214,8 @@
       "xp_rate_unit": "approx XP/h",
       "intensity": "active laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Barbarian Outpost"
     },
     {
       "skill": "Agility",
@@ -205,7 +232,8 @@
       "xp_rate_unit": "approx XP/h by level unlock",
       "intensity": "laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Prifddinas, Hefin district"
     },
     {
       "skill": "Agility",
@@ -216,7 +244,8 @@
       "xp_rate_unit": "approx XP/h",
       "intensity": "active laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Tree Gnome Stronghold"
     },
     {
       "skill": "Agility",
@@ -227,7 +256,8 @@
       "xp_rate_unit": "approx XP/h",
       "intensity": "laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Het's Oasis"
     },
     {
       "skill": "Agility",
@@ -238,17 +268,19 @@
       "xp_rate_unit": "approx XP/h",
       "intensity": "active laps",
       "freshness": "2026-07-20_rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Wilderness Agility Course"
     },
     {
       "skill": "Necromancy",
       "method": "Combat + rituals progression",
-      "region": "unresolved",
+      "region": "misthalin",
       "level_range": "1-120",
-      "xp_rate": "current training guide exists, but Equilibrium region access for City of Um and ritual infrastructure has not yet been publicly mapped.",
+      "xp_rate": "Current training guide supports combat and ritual progression; exact Equilibrium rates should be benchmarked after launch.",
       "intensity": "varies",
       "freshness": "2026_current",
-      "confidence": "confirmed_wiki_method_region_unresolved"
+      "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+      "location": "City of Um / Underworld ritual site"
     }
   ],
   "source_ids": [

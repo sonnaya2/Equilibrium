@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "snapshot_date": "2026-07-24",
+  "status": "awaiting_official_per_region_lists",
+  "rule": "Only exact quest names detected inside an official Jagex region section may be promoted automatically. Geographic inference never sets auto_completed=true.",
+  "official_source_urls": [
+    "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+    "https://secure.runescape.com/m=news/the-road-ahead"
+  ],
+  "last_checked_at": null,
+  "regions": {
+    "misthalin": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "havenhythe": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "karamja": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "asgarnia": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "kandarin": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "fremennik": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "forinthry": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "desert": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "morytania": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "tirannwn": {"auto_completed_quests": [], "source_urls": [], "detected_at": null},
+    "anachronia": {"auto_completed_quests": [], "source_urls": [], "detected_at": null}
+  }
+}

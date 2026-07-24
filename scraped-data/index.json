@@ -14,6 +14,7 @@
     "midgame-rebalance-2026-07-20.json": "Audited July 20 mid-game rebalance values from direct Jagex patch notes",
     "2026-changes.json": "Chronology of 2026 progression/combat changes relevant to League planning",
     "unknowns.json": "Unrevealed or unresolved facts that must not be guessed",
+    "postits.json": "Source-linked research guards, reveal watches and unresolved-data notes",
     "sources.json": "Provenance manifest"
   },
   "coverage": {
@@ -21,8 +22,9 @@
     "2026_changes": "high; July 20 rebalance audited against direct Jagex patch notes",
     "catalyst": "high-level progression complete; not every relic/task serialized yet",
     "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",
-    "regions": "high-value content and upgrade chains mapped; explicit working-map boundary overrides serialized; exhaustive item/NPC/quest enumeration pending",
-    "training": "all 29 named RS3 skills now surface in the browser; high-value region-sensitive routes are mapped, while stale combat XP tables and unresolved League supply loops are explicitly unranked",
+    "regions": "high-value content and upgrade chains mapped; explicit working-map boundary overrides serialized; quest catalog now generated separately under data/league with unresolved edge boundaries queued for review",
+    "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
+    "training": "all 29 named RS3 skills now surface in the browser; high-value region-sensitive routes are mapped, while stale combat XP tables and unresolved League supply loops remain explicitly unranked",
     "boss_specific_guides": "intentionally excluded"
   },
   "hard_rules": [
@@ -33,9 +35,9 @@
     "Full Equilibrium task list when published",
     "Daily relic reveals beginning 2026-07-28",
     "Daily Blessing reveals beginning 2026-07-28",
-    "Exact region auto-completed quest lists",
+    "Official per-region quest auto-completion lists",
     "Full post-hotfix Magic and Ranged ability tables",
     "Post-launch Equilibrium XP benchmarks for combat and resource-limited production methods",
-    "Exact region boundaries for City of Um, The Arc, Fort Forinthry and cross-region instances"
+    "Resolve remaining Equilibrium boundaries for City of Um, The Arc, Fort Forinthry and cross-region instances"
   ]
 }

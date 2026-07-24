@@ -1,0 +1,70 @@
+name: Sync sourced RuneScape assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - assets/source-manifest.json
+      - scripts/sync-assets.mjs
+      - scripts/normalize-region-names.mjs
+      - .github/workflows/sync-assets.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: equilibrium-generated-data-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Normalize region names
+        run: node scripts/normalize-region-names.mjs
+
+      - name: Harvest assets
+        id: harvest
+        continue-on-error: true
+        run: node scripts/sync-assets.mjs
+
+      - name: Show harvest result
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = 'assets/manifest.generated.json';
+          if (!fs.existsSync(p)) process.exit(0);
+          const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+          console.log(`Resolved ${m.count} assets (${m.totalBytes} bytes); unresolved ${m.unresolvedCount}`);
+          for (const x of m.unresolved || []) console.log(`UNRESOLVED ${x.id}: ${x.error}`);
+          NODE
+
+      - name: Commit normalized data and harvested assets
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets scraped-data data src app
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "Sync sourced RuneScape assets"
+          git pull --rebase origin "$TARGET_BRANCH"
+          git push origin HEAD:"$TARGET_BRANCH"
+
+      - name: Report partial sync
+        if: steps.harvest.outcome == 'failure'
+        run: echo "Asset sync completed partially; unresolved entries are recorded in assets/manifest.generated.json."

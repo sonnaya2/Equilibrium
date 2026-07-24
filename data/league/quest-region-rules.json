@@ -1,0 +1,97 @@
+{
+  "version": 3,
+  "snapshot_date": "2026-07-24",
+  "method": "Primary region is inferred from the RuneScape Wiki Infobox Quest start-area field. Required regions are the union of that primary region and the recursively required quest regions from Module:Questreq/data. Stable global/special hubs are separated from unresolved Equilibrium boundaries. Explicit overrides win. City of Um/Underworld uses Misthalin as the working League taxonomy because Catalyst classified City of Um tasks under Misthalin; Fort Forinthry uses Forinthry because the fort is physically in the south-eastern Wilderness. This is planning data, not an official Equilibrium auto-completion list.",
+  "sources": [
+    "https://runescape.wiki/w/Template:Infobox_Quest/doc",
+    "https://runescape.wiki/w/Module:Questreq/data",
+    "https://runescape.wiki/w/List_of_quests",
+    "https://runescape.wiki/w/Catalyst_League/Tasks",
+    "https://runescape.wiki/w/Fort_Forinthry",
+    "https://miro.com/app/board/uXjVHUhqsR0=/"
+  ],
+  "regions": [
+    {
+      "id": "misthalin",
+      "label": "Misthalin",
+      "terms": ["lumbridge", "draynor", "draynor outskirts", "wizard's tower", "wizards' tower", "varrock", "silvarea", "edgeville", "barbarian village", "dig site", "dorgeshuun", "dorgesh-kaan", "goblin village east", "paterdomus", "city of um", "underworld"]
+    },
+    {
+      "id": "havenhythe",
+      "label": "Havenhythe",
+      "terms": ["havenhythe", "wendlewick", "hollow hill", "blighted cave", "eastfold"]
+    },
+    {
+      "id": "karamja",
+      "label": "Karamja",
+      "terms": ["karamja", "brimhaven", "shilo", "musa point", "tai bwo wannai", "tzhaar", "kharazi", "ape atoll", "crandor"]
+    },
+    {
+      "id": "asgarnia",
+      "label": "Asgarnia",
+      "terms": ["falador", "taverley", "burthorpe", "port sarim", "rimmington", "crafting guild", "ice mountain", "death plateau", "trollheim", "troll stronghold", "god wars dungeon", "entrana", "white wolf mountain"]
+    },
+    {
+      "id": "kandarin",
+      "label": "Kandarin",
+      "terms": ["kandarin", "ardougne", "seers' village", "seers village", "catherby", "yanille", "tree gnome", "gnome village", "gnome stronghold", "feldip", "piscatoris", "witchaven", "observatory", "fight arena", "eagles' peak", "eagles peak", "oo'glog", "ooglog", "khazard"]
+    },
+    {
+      "id": "fremennik",
+      "label": "Fremennik Province",
+      "terms": ["fremennik", "rellekka", "neitiznot", "jatizso", "lunar isle", "waterbirth", "miscellania", "etceteria", "keldagrim", "mountain camp", "lighthouse"]
+    },
+    {
+      "id": "forinthry",
+      "label": "Forinthry / Wilderness",
+      "terms": ["wilderness", "forinthry", "fort forinthry", "daemonheim", "mage arena"]
+    },
+    {
+      "id": "desert",
+      "label": "Kharidian Desert",
+      "terms": ["al kharid", "kharidian", "desert", "uzer", "pollnivneach", "menaphos", "sophanem", "nardah", "bedabin", "bandit camp", "senliten", "het's oasis", "hets oasis", "dominion tower"]
+    },
+    {
+      "id": "morytania",
+      "label": "Morytania",
+      "terms": ["morytania", "canifis", "mort myre", "mort'ton", "mortton", "meiyerditch", "darkmeyer", "port phasmatys", "burgh de rott", "slayer tower", "everlight", "haunted mine", "ectofuntus"]
+    },
+    {
+      "id": "tirannwn",
+      "label": "Tirannwn",
+      "terms": ["tirannwn", "prifddinas", "lletya", "isafdar", "arandar", "tyras", "poison waste", "underground pass"]
+    },
+    {
+      "id": "anachronia",
+      "label": "Anachronia",
+      "terms": ["anachronia", "dinosaur farm", "orthen"]
+    }
+  ],
+  "global_terms": [
+    "player owned house",
+    "christmas village",
+    "blooming burrow",
+    "elsewhere"
+  ],
+  "unmapped_terms": [
+    "the arc",
+    "waiko",
+    "wushanko",
+    "world gate",
+    "tarddiad",
+    "mazcab",
+    "zanaris",
+    "tutorial island"
+  ],
+  "series_force_unmapped": [],
+  "overrides": {
+    "Impressing the Locals": {
+      "primary_region": "unmapped",
+      "reason": "Starts in Port Sarim, but the quest's purpose is access to The Arc / Wushanko. Equilibrium has not yet assigned that external area to a planner region, so do not pretend Port Sarim alone resolves access."
+    },
+    "New Foundations": {
+      "primary_region": "forinthry",
+      "reason": "The quest begins at Varrock Palace but establishes Fort Forinthry in the south-eastern Wilderness; planning access belongs to Forinthry rather than its introductory conversation in Misthalin."
+    }
+  }
+}

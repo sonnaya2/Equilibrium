@@ -10,7 +10,12 @@
       "resource_source": "Het's Oasis",
       "importance": "current wiki calls this the fastest Prayer training method",
       "throughput": "roughly 4,700 bones/hour in the guide table; 5,000-5,800 can be buried with action-bar execution",
-      "example_base_xp_per_hour": {"dragon_bones": 1184400, "dragonkin_bones": 2632000, "dinosaur_bones": 2796500, "frost_dragon_bones": 2961000},
+      "example_base_xp_per_hour": {
+        "dragon_bones": 1184400,
+        "dragonkin_bones": 2632000,
+        "dinosaur_bones": 2796500,
+        "frost_dragon_bones": 2961000
+      },
       "league_note": "With no trading, Desert access may matter primarily for obtaining powder rather than for where the bones are buried.",
       "source": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
       "confidence": "confirmed_wiki"
@@ -20,9 +25,15 @@
       "method": "Chaos altar",
       "method_region": "forinthry",
       "throughput": "about 1,600 bones/hour before achievement conveniences",
-      "example_base_xp_per_hour": {"dragon_bones": 403200, "dragonkin_bones": 896000, "dinosaur_bones": 952000, "frost_dragon_bones": 1008000},
+      "example_base_xp_per_hour": {
+        "dragon_bones": 403200,
+        "dragonkin_bones": 896000,
+        "dinosaur_bones": 952000,
+        "frost_dragon_bones": 1008000
+      },
       "source": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Chaos Temple altar, Wilderness"
     },
     {
       "skill": "Prayer",
@@ -39,7 +50,14 @@
       "method": "Vyrelords/Vyreladies with Sunspear",
       "method_region": "morytania",
       "location": "Darkmeyer",
-      "base_xp_per_hour": {"prayer_with_morytania_legs_4": 400000, "prayer_without": 266000, "combat_style": 600000, "constitution": 200000, "firemaking": 270000, "farming_with_seedicide": 140000},
+      "base_xp_per_hour": {
+        "prayer_with_morytania_legs_4": 400000,
+        "prayer_without": 266000,
+        "combat_style": 600000,
+        "constitution": 200000,
+        "firemaking": 270000,
+        "farming_with_seedicide": 140000
+      },
       "warning": "The guide still recommends old aura sustain; aura advice is obsolete after the 2026 Aura Overhaul, but the multi-skill training method remains relevant.",
       "source": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
       "confidence": "confirmed_wiki_with_legacy_setup_warning"
@@ -106,7 +124,8 @@
       "level_range": "68-99",
       "base_xp_per_hour": "86000-126000; up to about 151000 at 99 with Voice of Seren",
       "source": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-      "confidence": "confirmed_wiki"
+      "confidence": "confirmed_wiki",
+      "location": "Prifddinas"
     },
     {
       "skill": "Woodcutting",
@@ -127,7 +146,8 @@
       "base_xp_per_hour": 210000,
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Anachronia Agility Course"
     },
     {
       "skill": "Agility",
@@ -137,7 +157,8 @@
       "base_xp_per_hour": 189473.7,
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Barbarian Outpost"
     },
     {
       "skill": "Agility",
@@ -147,17 +168,25 @@
       "base_xp_per_hour": 162000,
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Tree Gnome Stronghold"
     },
     {
       "skill": "Agility",
       "method": "Hefin course",
       "method_region": "tirannwn",
       "level_range": "77-97+",
-      "base_xp_per_hour_by_unlock": {"77": 102857.1, "82": 120000, "87": 137142.9, "92": 154285.7, "97": 171428.6},
+      "base_xp_per_hour_by_unlock": {
+        "77": 102857.1,
+        "82": 120000,
+        "87": 137142.9,
+        "92": 154285.7,
+        "97": 171428.6
+      },
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Prifddinas, Hefin district"
     },
     {
       "skill": "Agility",
@@ -167,7 +196,8 @@
       "base_xp_per_hour": 70114.3,
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Het's Oasis"
     },
     {
       "skill": "Agility",
@@ -178,7 +208,8 @@
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "warning": "The Demonic Skull was removed in the same July 20 update; older 63000-78000 guides relying on it are stale.",
       "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "confidence": "confirmed_official_archive",
+      "location": "Wilderness Agility Course"
     },
     {
       "skill": "Crafting",
@@ -205,7 +236,10 @@
       "method_region": "multi_region_dependency",
       "required_unlock_region": "fremennik",
       "required_unlock": "Lunar spellbook / Telekinetic Grind",
-      "resource_region_options": ["desert", "tirannwn"],
+      "resource_region_options": [
+        "desert",
+        "tirannwn"
+      ],
       "base_xp_per_hour": "400000+",
       "league_note": "No trading makes the spell unlock and bulk sandstone supply a meaningful region-combination problem.",
       "source": "https://runescape.wiki/w/Pay-to-play_Crafting_training",
@@ -231,14 +265,18 @@
       "legacy_base_xp_per_hour": 520000,
       "warning": "The current guide explicitly needs a 110 Runecrafting update and still lists removed Demonic Skull rates. Time altar access is associated with Anachronia while the Abyss entrance is Wilderness/Forinthry.",
       "source": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
-      "confidence": "stale_guide_use_as_candidate_only"
+      "confidence": "stale_guide_use_as_candidate_only",
+      "location": "Wilderness Abyss entrance + Time altar on Anachronia"
     },
     {
       "skill": "Runecrafting",
       "method": "Imbuing eternal magic weapons",
       "method_region": "materials_and_altar_dependent",
       "level_range": "100+",
-      "base_xp_per_hour": {"staff_at_106": 287600, "wands_or_orbs": 245600},
+      "base_xp_per_hour": {
+        "staff_at_106": 287600,
+        "wands_or_orbs": 245600
+      },
       "notes": "More AFK than Abyss runs; current wiki marks the section incomplete and in need of further verification.",
       "source": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
       "confidence": "wiki_incomplete"
@@ -246,12 +284,13 @@
     {
       "skill": "Construction",
       "method": "Fort Forinthry reinforcement",
-      "method_region": "forinthry_inferred",
+      "method_region": "forinthry",
       "level_range": "Fort progression; Eternal reinforcement option from 105",
       "xp_event": "Reinforcing a tier-3 structure with 65 Eternal Magic Frames + 6 Stone Wall Segments awards 499200 base XP after the July 20 update.",
       "intensity": "long AFK windows, with higher XP/speed for following optimal hotspots",
       "source": "https://patchtracker.gg/runescape/mid-game-rebalance-is-live",
-      "confidence": "confirmed_official_archive_region_inferred"
+      "confidence": "confirmed_official_with_wiki_region_mapping",
+      "location": "Fort Forinthry, south-eastern Wilderness"
     },
     {
       "skill": "Construction",
@@ -266,10 +305,15 @@
       "skill": "Invention",
       "method": "Augmented equipment levelling + siphon/disassemble",
       "method_region": "asgarnia_for_initial_guild_access_unless_league_autounlocks",
-      "requirements": ["80 Crafting", "80 Divination", "80 Smithing"],
+      "requirements": [
+        "80 Crafting",
+        "80 Divination",
+        "80 Smithing"
+      ],
       "league_note": "The base-game Invention tutorial begins in the Invention Guild near Falador. Whether Equilibrium globally auto-unlocks the tutorial has not yet been published, so Asgarnia must not be marked mandatory until confirmed.",
       "source": "https://runescape.wiki/w/Invention",
-      "confidence": "confirmed_base_game_region_rule_unresolved"
+      "confidence": "confirmed_base_game_region_rule_unresolved",
+      "location": "Invention Guild, north-east of Falador (initial tutorial/guild access)"
     },
     {
       "skill": "Slayer",
@@ -277,11 +321,31 @@
       "method_region": "multi_region",
       "notes": "The current guide recommends using the highest practical Slayer master and optimizing block/prefer lists. Region locking will materially change available tasks and masters.",
       "regional_masters": [
-        {"name": "The Raptor", "region": "forinthry_inferred", "location": "Fort Forinthry"},
-        {"name": "Sumona", "region": "desert", "location": "Pollnivneach"},
-        {"name": "Duradel", "region": "karamja", "location": "Shilo Village"},
-        {"name": "Laniakea", "region": "anachronia", "location": "Anachronia"},
-        {"name": "Mandrith", "region": "forinthry", "location": "Wilderness"}
+        {
+          "name": "The Raptor",
+          "region": "forinthry",
+          "location": "Fort Forinthry"
+        },
+        {
+          "name": "Sumona",
+          "region": "desert",
+          "location": "Pollnivneach"
+        },
+        {
+          "name": "Duradel",
+          "region": "karamja",
+          "location": "Shilo Village"
+        },
+        {
+          "name": "Laniakea",
+          "region": "anachronia",
+          "location": "Anachronia"
+        },
+        {
+          "name": "Mandrith",
+          "region": "forinthry",
+          "location": "Wilderness"
+        }
       ],
       "source": "https://runescape.wiki/w/Slayer_training",
       "confidence": "confirmed_wiki_with_region_inference"
@@ -290,20 +354,29 @@
       "skill": "Combat styles",
       "method": "Abyss AFK combat training",
       "method_region": "forinthry",
-      "styles": ["Attack", "Strength", "Defence", "Constitution", "Ranged", "Magic"],
+      "styles": [
+        "Attack",
+        "Strength",
+        "Defence",
+        "Constitution",
+        "Ranged",
+        "Magic"
+      ],
       "warning": "Melee/Magic/Ranged training guides explicitly warn that their combat XP tables are substantially outdated after the 2023 combat XP changes. Keep this as a candidate method, not an optimizer-grade XP figure.",
       "source": "https://runescape.wiki/w/Pay-to-play_Ranged_training",
-      "confidence": "stale_guide_candidate"
+      "confidence": "stale_guide_candidate",
+      "location": "The Abyss, entered from the Wilderness"
     },
     {
       "skill": "Necromancy",
       "method": "Rituals",
-      "method_region": "misthalin_likely_city_of_um",
+      "method_region": "misthalin",
       "level_range": "90-120 for fastest ritual-centric training",
       "notes": "Current guide identifies high-level rituals as the fastest training method and combat as the slower AFK alternative.",
-      "region_warning": "City of Um is expected to fall under Misthalin but Jagex has not yet published the exact Equilibrium boundary/quest treatment. Keep this inferred until revealed.",
+      "region_warning": "City of Um is treated as Misthalin for League planning, matching Catalyst's Misthalin: City of Um task taxonomy. Recheck if Equilibrium publishes a different boundary.",
       "source": "https://runescape.wiki/w/Necromancy_training",
-      "confidence": "confirmed_wiki_method_region_inferred"
+      "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+      "location": "City of Um ritual site / Underworld"
     }
   ]
 }

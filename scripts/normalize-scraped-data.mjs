@@ -142,6 +142,7 @@ function wikiTrainingSource(skill) {
 function canonicalSource({ directUrl, directTitle, sourceIds = [], fallbackId, fallbackTitle }) {
   const direct = sourceFromUrl(directUrl, directTitle || fallbackTitle);
   if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;
+  if (direct?.source === "runescape-wiki") return direct;
 
   const candidates = sourceIds.map((id) => sourceFromId(id, fallbackTitle)).filter(Boolean);
   const wiki = candidates.find((source) => source.source === "runescape-wiki");
@@ -212,6 +213,7 @@ function wikiEntitySource(name) {
 function trainingSource(record) {
   const direct = sourceFromUrl(record.source, record.method);
   if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;
+  if (direct?.source === "runescape-wiki") return direct;
 
   const wiki = wikiTrainingSource(record.skill);
   if (wiki) return wiki;
@@ -302,11 +304,11 @@ function regionWikiFallback(region) {
 function contentSource(region, raw, name, kind) {
   const direct = sourceFromUrl(raw?.source_url || raw?.source, name);
   if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;
+  if (direct?.source === "runescape-wiki") return direct;
 
   const skillWiki = wikiTrainingSource(kind);
   if (skillWiki) return skillWiki;
 
-  if (direct?.source === "runescape-wiki") return direct;
   return wikiEntitySource(name) || regionWikiFallback(region) || direct || leagueRegionSource(region);
 }
 

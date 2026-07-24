@@ -12,7 +12,10 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "sync:combat": "node scripts/sync-combat-data.ts",
-    "sync:league": "node scripts/sync-league-data.ts"
+    "sync:league": "node scripts/sync-league-data.ts",
+    "sync:assets": "node scripts/sync-assets.mjs",
+    "sync:quests": "node scripts/sync-quest-regions.mjs",
+    "sync:quests:auto": "node scripts/sync-equilibrium-auto-quests.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

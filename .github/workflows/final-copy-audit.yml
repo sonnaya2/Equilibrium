@@ -1,0 +1,66 @@
+name: Final copy audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/final-copy-audit.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: final-copy-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Remove the last data-browser jargon
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'src/components/ResearchBrowser.tsx';
+          let s = fs.readFileSync(path, 'utf8');
+          const replace = (a, b, name) => {
+            if (!s.includes(a)) throw new Error(`Missing copy target: ${name}`);
+            s = s.replace(a, b);
+          };
+          replace('if (!normalized || normalized === "unclassified") return "Unclassified";', 'if (!normalized || normalized === "unclassified") return "Not checked";', 'unclassified');
+          replace('if (normalized.includes("current_2026_content")) return "Current 2026 content";', 'if (normalized.includes("current_2026_content")) return "Current";', 'current status');
+          replace('<h3 className="text-xs font-medium text-parch-300">Skills with mapped methods/content</h3>', '<h3 className="text-xs font-medium text-parch-300">Skills here</h3>', 'skills heading');
+          replace('No skill tags yet.', 'No skills listed yet.', 'empty skills');
+          replace('No fixed region dependency listed yet.', 'No single region requirement listed yet.', 'skill region empty state');
+          fs.writeFileSync(path, s);
+          NODE
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+      - name: Commit final copy pass
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/ResearchBrowser.tsx
+          if git diff --cached --quiet; then
+            echo "Copy already current"
+            exit 0
+          fi
+          git commit -m "Finish human copy pass"
+          git pull --rebase origin main
+          git push origin HEAD:main

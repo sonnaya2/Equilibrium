@@ -1,3 +1,4 @@
+import regionsData from "#data/league/regions.json";
 import { describe, expect, it } from "vitest";
 import {
   canSelectElective,
@@ -7,11 +8,30 @@ import {
   isRegionUnlocked,
   MILESTONE_REGION,
   normalizeBuild,
+  REGION_IDS,
   STARTING_REGIONS,
   toggleElective,
   UNLOCK_CAP,
   unlockedRegions,
 } from "./index";
+
+describe("canonical region contract", () => {
+  it("keeps domain ids and availability groups aligned with data/league/regions.json", () => {
+    const canonicalIds = regionsData.records.map((region) => region.id);
+    const canonicalStarting = regionsData.records
+      .filter((region) => region.availability === "starting")
+      .map((region) => region.id);
+    const canonicalMilestone = regionsData.records.find((region) => region.availability === "automatic_early")?.id;
+    const canonicalElective = regionsData.records
+      .filter((region) => region.availability === "elective")
+      .map((region) => region.id);
+
+    expect([...REGION_IDS]).toEqual(canonicalIds);
+    expect([...STARTING_REGIONS]).toEqual(canonicalStarting);
+    expect(MILESTONE_REGION).toBe(canonicalMilestone);
+    expect([...ELECTIVE_REGIONS]).toEqual(canonicalElective);
+  });
+});
 
 describe("unlockedRegions", () => {
   it("always includes the fixed starts and the Karamja milestone", () => {

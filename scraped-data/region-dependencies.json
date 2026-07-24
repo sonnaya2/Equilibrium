@@ -123,6 +123,53 @@
         "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
       ],
       "evidence_note": "Impressing the Locals begins in Port Sarim and unlocks The Arc, but the destination is in the Wushanko Isles and is not named in the current Equilibrium selectable-region list. The departure point is not enough evidence for a hard Asgarnia assignment."
+    },
+    {
+      "content": "Tarddiad",
+      "system": "World Gate external-world access",
+      "planner_status": "unresolved_external_region",
+      "entry_side": {
+        "working_region": "kandarin",
+        "location": "World Gate south of Eagles' Peak",
+        "confidence": "confirmed_wiki_entry_geography_only"
+      },
+      "destination_side": {
+        "geographic_region": "unmapped",
+        "location": "Tarddiad",
+        "confidence": "confirmed_wiki_external_world_equilibrium_region_unpublished"
+      },
+      "access_requirements": ["The Light Within"],
+      "planner_rule": "Do not classify Tarddiad as Kandarin because the World Gate is reached from the Eagles' Peak side of Gielinor. Tarddiad is another world and remains unmapped until Equilibrium publishes how World Gate destinations are treated.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fate_of_the_Gods/Quick_guide",
+        "https://runescape.wiki/w/Unlockable_content",
+        "https://runescape.wiki/w/Cosmology",
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+      ],
+      "evidence_note": "The World Gate is south of Eagles' Peak, while Tarddiad is explicitly another world unlocked through The Light Within. Entry geography is not destination-region evidence."
+    },
+    {
+      "content": "Mazcab",
+      "system": "world-window / teleport external-world access",
+      "planner_status": "unresolved_external_region",
+      "entry_side": {
+        "working_region": "unresolved",
+        "location": "World window / later teleport routes",
+        "confidence": "access_origin_in_transition_not_safe_for_region_assignment"
+      },
+      "destination_side": {
+        "geographic_region": "unmapped",
+        "location": "Mazcab",
+        "confidence": "confirmed_wiki_external_world_equilibrium_region_unpublished"
+      },
+      "planner_rule": "Do not assign Mazcab to a selectable Equilibrium region from whichever Gielinor-side transport currently reaches the world window. Mazcab is another world and keeps an unresolved external-region state until Equilibrium documents its treatment.",
+      "source_urls": [
+        "https://runescape.wiki/w/World_window",
+        "https://runescape.wiki/w/Mazcab_Teleport",
+        "https://runescape.wiki/w/Cosmology",
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+      ],
+      "evidence_note": "The world window transports players between Gielinor and Mazcab, and Mazcab also has its own teleport unlock. The Gielinor-side world-window placement has changed or been under rework, so it is deliberately not used as a League region assignment."
     }
   ]
 }

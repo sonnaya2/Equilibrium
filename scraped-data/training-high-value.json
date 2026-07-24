@@ -145,8 +145,8 @@
       "level_range": "85+",
       "base_xp_per_hour": 210000,
       "freshness": "2026-07-20 Mid-Game Rebalance",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Anachronia Agility Course"
     },
     {
@@ -156,8 +156,8 @@
       "level_range": "90+",
       "base_xp_per_hour": 189473.7,
       "freshness": "2026-07-20 Mid-Game Rebalance",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Barbarian Outpost"
     },
     {
@@ -167,8 +167,8 @@
       "level_range": "85+",
       "base_xp_per_hour": 162000,
       "freshness": "2026-07-20 Mid-Game Rebalance",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Tree Gnome Stronghold"
     },
     {
@@ -184,8 +184,8 @@
         "97": 171428.6
       },
       "freshness": "2026-07-20 Mid-Game Rebalance",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Prifddinas, Hefin district"
     },
     {
@@ -195,8 +195,8 @@
       "level_range": "65+",
       "base_xp_per_hour": 70114.3,
       "freshness": "2026-07-20 Mid-Game Rebalance",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Het's Oasis"
     },
     {
@@ -207,8 +207,8 @@
       "base_xp_per_hour": 51390,
       "freshness": "2026-07-20 Mid-Game Rebalance",
       "warning": "The Demonic Skull was removed in the same July 20 update; older 63000-78000 guides relying on it are stale.",
-      "source": "https://patchtracker.gg/runescape/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive",
+      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "confidence": "confirmed_official",
       "location": "Wilderness Agility Course"
     },
     {
@@ -288,7 +288,7 @@
       "level_range": "Fort progression; Eternal reinforcement option from 105",
       "xp_event": "Reinforcing a tier-3 structure with 65 Eternal Magic Frames + 6 Stone Wall Segments awards 499200 base XP after the July 20 update.",
       "intensity": "long AFK windows, with higher XP/speed for following optimal hotspots",
-      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
       "confidence": "confirmed_official_method_working_league_region_taxonomy",
       "location": "Fort Forinthry, south-eastern Wilderness",
       "region_warning": "Catalyst grouped Fort Forinthry under Misthalin. Use that as the working League region until Equilibrium publishes its own finer locality mapping."
@@ -299,8 +299,8 @@
       "method_region": "player_owned_house_global_with_resource_dependency",
       "level_range": "94+",
       "resource_note": "Eternal plank XP was raised from 200 to 520 per plank on 2026-07-20.",
-      "source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "confidence": "confirmed_official_archive"
+      "source": "https://secure.runescape.com/m=news/mid-game-rebalance-is-live",
+      "confidence": "confirmed_official"
     },
     {
       "skill": "Invention",

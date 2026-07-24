@@ -46,6 +46,13 @@
         "category": "combat cape",
         "source": "Fight Kiln",
         "confidence": "inferred_region"
+      },
+      {
+        "name": "Abomination progression",
+        "category": "combat uniques",
+        "source": "Abomination",
+        "source_url": "https://runescape.wiki/w/Abomination",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
       }
     ],
     "asgarnia": [
@@ -83,6 +90,36 @@
         ],
         "league_warning": "Do not mark Asgarnia mandatory for Invention until Jagex reveals whether Equilibrium auto-completes/unlocks the tutorial globally.",
         "confidence": "confirmed_base_game_region_behavior_unresolved"
+      },
+      {
+        "name": "Royal crossbow",
+        "category": "Ranged weapon progression",
+        "source": "Queen Black Dragon",
+        "notes": "The royal crossbow components come from QBD and the unfinished crossbow is forged using her extreme dragonfire.",
+        "source_url": "https://runescape.wiki/w/Royal_crossbow",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "Vorago progression",
+        "category": "Magic weapons / tectonic armour materials",
+        "examples": [
+          "Seismic wand",
+          "Seismic singularity",
+          "Tectonic energy"
+        ],
+        "source_url": "https://runescape.wiki/w/Vorago",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "Nex: Angel of Death progression",
+        "category": "Magic weapons / prayers",
+        "examples": [
+          "Wand of the praesul",
+          "Imperium core",
+          "Praesul codex"
+        ],
+        "source_url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
       }
     ],
     "kandarin": [
@@ -113,6 +150,13 @@
         "category": "Divination progression",
         "notes": "Officially advertised as Kandarin region content for Equilibrium.",
         "confidence": "confirmed_official"
+      },
+      {
+        "name": "Ascension crossbows",
+        "category": "tier-90 Ranged weapons",
+        "source": "Legiones",
+        "source_url": "https://runescape.wiki/w/Ascension_crossbow",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
       }
     ],
     "fremennik": [
@@ -176,6 +220,27 @@
         "category": "Runecrafting/combat training access",
         "notes": "The Abyss entrance is in the Wilderness; exact Equilibrium teleport exceptions still need launch validation.",
         "confidence": "inferred_region"
+      },
+      {
+        "name": "Dragonkin Laboratory upgrades",
+        "category": "Melee abilities / elite tectonic materials",
+        "examples": [
+          "Greater Fury",
+          "Greater Flurry",
+          "Greater Barge",
+          "Draconic energy"
+        ],
+        "source_url": "https://runescape.wiki/w/Dragonkin_Laboratory",
+        "confidence": "confirmed_wiki_wilderness_location"
+      },
+      {
+        "name": "Shadow Reef progression",
+        "category": "Ranged weapon / elite dungeon rewards",
+        "examples": [
+          "Eldritch crossbow components"
+        ],
+        "source_url": "https://runescape.wiki/w/The_Shadow_Reef",
+        "confidence": "confirmed_wiki_daemonheim_access"
       }
     ],
     "desert": [
@@ -254,6 +319,17 @@
         "name": "Vyres / Sunspear multi-skill training",
         "category": "Prayer/combat/Firemaking/Farming training",
         "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Rise of the Six progression",
+        "category": "Melee armour / shields",
+        "examples": [
+          "Malevolent energy",
+          "Malevolent armour",
+          "Barrows defenders/shields progression"
+        ],
+        "source_url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
       }
     ],
     "tirannwn": [
@@ -338,6 +414,104 @@
           "Double Escape"
         ],
         "confidence": "confirmed_wiki"
+      }
+    ],
+    "misthalin": [
+      {
+        "name": "Kerapac progression",
+        "category": "Magic weapons / ability / scripture",
+        "examples": [
+          "Fractured Staff of Armadyl components",
+          "Greater Concentrated Blast",
+          "Kerapac's wrist wraps",
+          "Scripture of Jas"
+        ],
+        "source_url": "https://runescape.wiki/w/Kerapac,_the_bound",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "Arch-Glacor progression",
+        "category": "Melee weapons / gloves / scripture",
+        "examples": [
+          "Frozen core of Leng",
+          "Dark nilas",
+          "Leng artefact",
+          "Scripture of Wen",
+          "enhanced glove upgrades"
+        ],
+        "source_url": "https://runescape.wiki/w/Arch-Glacor",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "Croesus progression",
+        "category": "Magic tank armour / skilling off-hands",
+        "examples": [
+          "Cryptbloom armour",
+          "Scripture of Bik",
+          "Croesus foultorch",
+          "Croesus sporehammer"
+        ],
+        "source_url": "https://runescape.wiki/w/Croesus",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "TzKal-Zuk progression",
+        "category": "combat capes / melee weapon / ability / scripture",
+        "examples": [
+          "Igneous capes",
+          "Ek-ZekKil",
+          "Magma Tempest",
+          "Scripture of Ful"
+        ],
+        "source_url": "https://runescape.wiki/w/TzKal-Zuk",
+        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+      },
+      {
+        "name": "First Necromancer's equipment",
+        "category": "tier-95 Necromancy weapons and power armour",
+        "examples": [
+          "Omni guard",
+          "Soulbound lantern",
+          "Robes of the First Necromancer"
+        ],
+        "source_url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+        "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+      },
+      {
+        "name": "Gate of Elidinis uniques",
+        "category": "prayer / skilling off-hands / scripture",
+        "examples": [
+          "Eclipsed Soul prayer codex",
+          "Memory dowser",
+          "Runic attuner",
+          "Scripture of Elidinis"
+        ],
+        "source_url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+        "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+      },
+      {
+        "name": "Sanctum of Rebirth uniques",
+        "category": "tier-95 Magic / prayer / scripture",
+        "examples": [
+          "Roar of Awakening",
+          "Ode to Deceit",
+          "Divine Rage prayer codex",
+          "Scripture of Amascut",
+          "Shard of Genesis Essence"
+        ],
+        "source_url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+        "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+      },
+      {
+        "name": "Zemouregal & Vorkath progression",
+        "category": "Ranged armour / Necromancy invocation",
+        "examples": [
+          "Dracolich armour",
+          "Elite Dracolich armour",
+          "Invoke Lord of Bones"
+        ],
+        "source_url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+        "confidence": "historical_catalyst_fort_misthalin_taxonomy_current_wiki_content"
       }
     ]
   },

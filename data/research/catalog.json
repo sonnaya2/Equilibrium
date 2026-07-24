@@ -98,9 +98,230 @@
             "title": "City of Um / Underworld",
             "verifiedAt": "2026-07-24"
           }
+        },
+        {
+          "name": "Kerapac, the bound",
+          "kind": "Elder God Wars Dungeon",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+            "title": "Kerapac, the bound",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Arch-Glacor",
+          "kind": "Elder God Wars Dungeon",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Arch-Glacor",
+            "title": "Arch-Glacor",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Croesus",
+          "kind": "Elder God Wars Dungeon / skilling boss",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Croesus",
+            "title": "Croesus",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "TzKal-Zuk",
+          "kind": "Elder God Wars Dungeon",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/TzKal-Zuk",
+            "title": "TzKal-Zuk",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Rasial, the First Necromancer",
+          "kind": "City of Um / Underworld",
+          "detail": "",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+            "title": "Rasial, the First Necromancer",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Hermod, the Spirit of War",
+          "kind": "City of Um / Underworld",
+          "detail": "Hermod is fought in Rasial's Citadel above the City of Um.",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hermod,_the_Spirit_of_War",
+            "title": "Hermod, the Spirit of War",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Sanctum of Rebirth",
+          "kind": "City of Um access / boss dungeon",
+          "detail": "",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+            "title": "Sanctum of Rebirth",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "The Gate of Elidinis",
+          "kind": "City of Um access / skilling boss",
+          "detail": "",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+            "title": "The Gate of Elidinis",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Zemouregal & Vorkath",
+          "kind": "Fort Forinthry",
+          "detail": "",
+          "confidence": "historical_catalyst_fort_misthalin_taxonomy_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+            "title": "Zemouregal & Vorkath",
+            "verifiedAt": "2026-07-24"
+          }
         }
       ],
-      "upgrades": [],
+      "upgrades": [
+        {
+          "name": "Kerapac progression",
+          "category": "Magic weapons / ability / scripture",
+          "detail": "Fractured Staff of Armadyl components, Greater Concentrated Blast, Kerapac's wrist wraps, Scripture of Jas",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+            "title": "Kerapac progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Arch-Glacor progression",
+          "category": "Melee weapons / gloves / scripture",
+          "detail": "Frozen core of Leng, Dark nilas, Leng artefact, Scripture of Wen, enhanced glove upgrades",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Arch-Glacor",
+            "title": "Arch-Glacor progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Croesus progression",
+          "category": "Magic tank armour / skilling off-hands",
+          "detail": "Cryptbloom armour, Scripture of Bik, Croesus foultorch, Croesus sporehammer",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Croesus",
+            "title": "Croesus progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "TzKal-Zuk progression",
+          "category": "combat capes / melee weapon / ability / scripture",
+          "detail": "Igneous capes, Ek-ZekKil, Magma Tempest, Scripture of Ful",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/TzKal-Zuk",
+            "title": "TzKal-Zuk progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "First Necromancer's equipment",
+          "category": "tier-95 Necromancy weapons and power armour",
+          "detail": "Omni guard, Soulbound lantern, Robes of the First Necromancer",
+          "requirements": [],
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+            "title": "First Necromancer's equipment",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Gate of Elidinis uniques",
+          "category": "prayer / skilling off-hands / scripture",
+          "detail": "Eclipsed Soul prayer codex, Memory dowser, Runic attuner, Scripture of Elidinis",
+          "requirements": [],
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+            "title": "Gate of Elidinis uniques",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Sanctum of Rebirth uniques",
+          "category": "tier-95 Magic / prayer / scripture",
+          "detail": "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
+          "requirements": [],
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+            "title": "Sanctum of Rebirth uniques",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Zemouregal & Vorkath progression",
+          "category": "Ranged armour / Necromancy invocation",
+          "detail": "Dracolich armour, Elite Dracolich armour, Invoke Lord of Bones",
+          "requirements": [],
+          "confidence": "historical_catalyst_fort_misthalin_taxonomy_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+            "title": "Zemouregal & Vorkath progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "misthalin"
+        }
+      ],
       "trainingMethodIds": [
         "construction:fort-forinthry-reinforcement",
         "necromancy:combat-rituals-progression",
@@ -404,6 +625,18 @@
             "title": "Fight Kiln",
             "verifiedAt": "2026-07-24"
           }
+        },
+        {
+          "name": "Abomination",
+          "kind": "Brimhaven area",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Abomination",
+            "title": "Abomination",
+            "verifiedAt": "2026-07-24"
+          }
         }
       ],
       "upgrades": [
@@ -431,6 +664,20 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/TokHaar-Kal_capes",
             "title": "TokHaar-Kal capes",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "karamja"
+        },
+        {
+          "name": "Abomination progression",
+          "category": "combat uniques",
+          "detail": "Source: Abomination",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Abomination",
+            "title": "Abomination progression",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "karamja"
@@ -532,6 +779,54 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Nex",
             "title": "Nex",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Giant Mole",
+          "kind": "Falador",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Giant_Mole",
+            "title": "Giant Mole",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Queen Black Dragon",
+          "kind": "Port Sarim / Grotworm Lair",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Queen_Black_Dragon",
+            "title": "Queen Black Dragon",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Vorago",
+          "kind": "Falador / Borehole",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vorago",
+            "title": "Vorago",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Nex: Angel of Death",
+          "kind": "God Wars Dungeon",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+            "title": "Nex: Angel of Death",
             "verifiedAt": "2026-07-24"
           }
         },
@@ -654,6 +949,48 @@
             "verifiedAt": "2026-07-24"
           },
           "regionId": "asgarnia"
+        },
+        {
+          "name": "Royal crossbow",
+          "category": "Ranged weapon progression",
+          "detail": "The royal crossbow components come from QBD and the unfinished crossbow is forged using her extreme dragonfire. · Source: Queen Black Dragon",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Royal_crossbow",
+            "title": "Royal crossbow",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Vorago progression",
+          "category": "Magic weapons / tectonic armour materials",
+          "detail": "Seismic wand, Seismic singularity, Tectonic energy",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vorago",
+            "title": "Vorago progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Nex: Angel of Death progression",
+          "category": "Magic weapons / prayers",
+          "detail": "Wand of the praesul, Imperium core, Praesul codex",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+            "title": "Nex: Angel of Death progression",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "asgarnia"
         }
       ],
       "trainingMethodIds": [
@@ -698,6 +1035,18 @@
         "Woodcutting"
       ],
       "content": [
+        {
+          "name": "Legiones",
+          "kind": "Monastery of Ascension",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Legiones",
+            "title": "Legiones",
+            "verifiedAt": "2026-07-24"
+          }
+        },
         {
           "name": "Player-Owned Farm / Manor Farm",
           "kind": "Farming",
@@ -788,6 +1137,20 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hall_of_Memories",
             "title": "Hall of Memories",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "kandarin"
+        },
+        {
+          "name": "Ascension crossbows",
+          "category": "tier-90 Ranged weapons",
+          "detail": "Source: Legiones",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ascension_crossbow",
+            "title": "Ascension crossbows",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "kandarin"
@@ -983,6 +1346,54 @@
             "title": "Wilderness Agility Course",
             "verifiedAt": "2026-07-24"
           }
+        },
+        {
+          "name": "Dragonkin Laboratory (ED2)",
+          "kind": "Elite Dungeon",
+          "detail": "Located in the Deep Wilderness Castle Ruins; contains Astellarn, Verak Lith and the Black Stone Dragon.",
+          "confidence": "confirmed_wiki_wilderness_location",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dragonkin_Laboratory",
+            "title": "Dragonkin Laboratory (ED2)",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "The Shadow Reef (ED3)",
+          "kind": "Elite Dungeon",
+          "detail": "Accessed from the eastern shore of Daemonheim; contains the Crassian Leviathan, Taraket and the Ambassador.",
+          "confidence": "confirmed_wiki_daemonheim_access",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Shadow_Reef",
+            "title": "The Shadow Reef (ED3)",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Corporeal Beast",
+          "kind": "Wilderness",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Corporeal_Beast",
+            "title": "Corporeal Beast",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Chaos Elemental",
+          "kind": "Wilderness",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chaos_Elemental",
+            "title": "Chaos Elemental",
+            "verifiedAt": "2026-07-24"
+          }
         }
       ],
       "upgrades": [
@@ -1040,6 +1451,34 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Abyss",
             "title": "Abyss",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Dragonkin Laboratory upgrades",
+          "category": "Melee abilities / elite tectonic materials",
+          "detail": "Greater Fury, Greater Flurry, Greater Barge, Draconic energy",
+          "requirements": [],
+          "confidence": "confirmed_wiki_wilderness_location",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dragonkin_Laboratory",
+            "title": "Dragonkin Laboratory upgrades",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Shadow Reef progression",
+          "category": "Ranged weapon / elite dungeon rewards",
+          "detail": "Eldritch crossbow components",
+          "requirements": [],
+          "confidence": "confirmed_wiki_daemonheim_access",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Shadow_Reef",
+            "title": "Shadow Reef progression",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "forinthry"
@@ -1143,6 +1582,30 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
             "title": "Sophanem Slayer Dungeon / The Magister",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Heart of Gielinor / God Wars Dungeon 2",
+          "kind": "bossing hub",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Heart_of_Gielinor",
+            "title": "Heart of Gielinor / God Wars Dungeon 2",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Telos, the Warden",
+          "kind": "Heart of Gielinor",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Telos,_the_Warden",
+            "title": "Telos, the Warden",
             "verifiedAt": "2026-07-24"
           }
         }
@@ -1299,6 +1762,18 @@
             "title": "Barrows",
             "verifiedAt": "2026-07-24"
           }
+        },
+        {
+          "name": "Barrows: Rise of the Six",
+          "kind": "Barrows",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+            "title": "Barrows: Rise of the Six",
+            "verifiedAt": "2026-07-24"
+          }
         }
       ],
       "upgrades": [
@@ -1340,6 +1815,20 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Vyrewatch",
             "title": "Vyrewatch",
+            "verifiedAt": "2026-07-24"
+          },
+          "regionId": "morytania"
+        },
+        {
+          "name": "Rise of the Six progression",
+          "category": "Melee armour / shields",
+          "detail": "Malevolent energy, Malevolent armour, Barrows defenders/shields progression",
+          "requirements": [],
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+            "title": "Rise of the Six progression",
             "verifiedAt": "2026-07-24"
           },
           "regionId": "morytania"
@@ -1410,6 +1899,18 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Prifddinas",
             "title": "Crystal equipment and Prifddinas skilling content",
+            "verifiedAt": "2026-07-24"
+          }
+        },
+        {
+          "name": "Solak",
+          "kind": "The Lost Grove",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Solak",
+            "title": "Solak",
             "verifiedAt": "2026-07-24"
           }
         }

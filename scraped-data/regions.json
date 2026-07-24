@@ -40,6 +40,72 @@
       ],
       "open_questions": [
         "Catalyst grouped City of Um and Fort Forinthry under Misthalin. Keep that as the working League taxonomy until Equilibrium publishes a different boundary."
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Kerapac, the bound",
+          "group": "Elder God Wars Dungeon",
+          "source_url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Arch-Glacor",
+          "group": "Elder God Wars Dungeon",
+          "source_url": "https://runescape.wiki/w/Arch-Glacor",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Croesus",
+          "group": "Elder God Wars Dungeon / skilling boss",
+          "source_url": "https://runescape.wiki/w/Croesus",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "TzKal-Zuk",
+          "group": "Elder God Wars Dungeon",
+          "source_url": "https://runescape.wiki/w/TzKal-Zuk",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Rasial, the First Necromancer",
+          "group": "City of Um / Underworld",
+          "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "Hermod, the Spirit of War",
+          "group": "City of Um / Underworld",
+          "note": "Hermod is fought in Rasial's Citadel above the City of Um.",
+          "source_url": "https://runescape.wiki/w/Hermod,_the_Spirit_of_War",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "Sanctum of Rebirth",
+          "group": "City of Um access / boss dungeon",
+          "source_url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "The Gate of Elidinis",
+          "group": "City of Um access / skilling boss",
+          "source_url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy"
+        },
+        {
+          "name": "Zemouregal & Vorkath",
+          "group": "Fort Forinthry",
+          "source_url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_fort_misthalin_taxonomy_current_wiki_content"
+        }
       ]
     },
     {
@@ -193,6 +259,15 @@
           "source_url": "https://runescape.wiki/w/Fight_Kiln",
           "confidence": "inferred_region"
         }
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Abomination",
+          "group": "Brimhaven area",
+          "source_url": "https://runescape.wiki/w/Abomination",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
       ]
     },
     {
@@ -251,6 +326,34 @@
           "group": "God Wars Dungeon 1",
           "source_url": "https://runescape.wiki/w/Nex",
           "confidence": "inferred_region"
+        },
+        {
+          "name": "Giant Mole",
+          "group": "Falador",
+          "source_url": "https://runescape.wiki/w/Giant_Mole",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Queen Black Dragon",
+          "group": "Port Sarim / Grotworm Lair",
+          "source_url": "https://runescape.wiki/w/Queen_Black_Dragon",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Vorago",
+          "group": "Falador / Borehole",
+          "source_url": "https://runescape.wiki/w/Vorago",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Nex: Angel of Death",
+          "group": "God Wars Dungeon",
+          "source_url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
         }
       ],
       "skilling": [
@@ -328,6 +431,15 @@
       ],
       "source_ids": [
         "divination_training_wiki"
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Legiones",
+          "group": "Monastery of Ascension",
+          "source_url": "https://runescape.wiki/w/Legiones",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
       ]
     },
     {
@@ -396,9 +508,39 @@
           "type": "Agility",
           "source_url": "https://runescape.wiki/w/Wilderness_Agility_Course",
           "confidence": "inferred_region"
+        },
+        {
+          "name": "Dragonkin Laboratory (ED2)",
+          "type": "Elite Dungeon",
+          "note": "Located in the Deep Wilderness Castle Ruins; contains Astellarn, Verak Lith and the Black Stone Dragon.",
+          "source_url": "https://runescape.wiki/w/Dragonkin_Laboratory",
+          "confidence": "confirmed_wiki_wilderness_location"
+        },
+        {
+          "name": "The Shadow Reef (ED3)",
+          "type": "Elite Dungeon",
+          "note": "Accessed from the eastern shore of Daemonheim; contains the Crassian Leviathan, Taraket and the Ambassador.",
+          "source_url": "https://runescape.wiki/w/The_Shadow_Reef",
+          "confidence": "confirmed_wiki_daemonheim_access"
         }
       ],
-      "legacy_warning": "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
+      "legacy_warning": "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance.",
+      "bosses_and_combat": [
+        {
+          "name": "Corporeal Beast",
+          "group": "Wilderness",
+          "source_url": "https://runescape.wiki/w/Corporeal_Beast",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        },
+        {
+          "name": "Chaos Elemental",
+          "group": "Wilderness",
+          "source_url": "https://runescape.wiki/w/Chaos_Elemental",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
+      ]
     },
     {
       "id": "desert",
@@ -440,6 +582,22 @@
           "type": "Slayer/bossing",
           "source_url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
           "confidence": "inferred_region"
+        },
+        {
+          "name": "Heart of Gielinor / God Wars Dungeon 2",
+          "type": "bossing hub",
+          "source_url": "https://runescape.wiki/w/Heart_of_Gielinor",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Telos, the Warden",
+          "group": "Heart of Gielinor",
+          "source_url": "https://runescape.wiki/w/Telos,_the_Warden",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
         }
       ]
     },
@@ -478,6 +636,15 @@
           "source_url": "https://runescape.wiki/w/Barrows",
           "confidence": "inferred_region"
         }
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Barrows: Rise of the Six",
+          "group": "Barrows",
+          "source_url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
       ]
     },
     {
@@ -506,6 +673,15 @@
           "type": "progression",
           "source_url": "https://runescape.wiki/w/Prifddinas",
           "confidence": "inferred_region"
+        }
+      ],
+      "bosses_and_combat": [
+        {
+          "name": "Solak",
+          "group": "The Lost Grove",
+          "source_url": "https://runescape.wiki/w/Solak",
+          "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
         }
       ]
     },

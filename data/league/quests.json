@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-07-24T18:22:16.937Z",
+  "generated_at": "2026-07-24T19:17:56.935Z",
   "snapshot_date": "2026-07-24",
   "quest_count": 281,
   "quest_list_entry_count": 281,
   "wiki_numbered_quest_count": 276,
   "special_or_unnumbered_entry_delta": 5,
-  "methodology": "Primary region is inferred from the RuneScape Wiki Infobox Quest start-area field. Required regions are the union of that primary region and the recursively required quest regions from Module:Questreq/data. Stable global/special hubs are separated from unresolved Equilibrium boundaries. Explicit overrides win. City of Um/Underworld uses Misthalin as the working League taxonomy because Catalyst classified City of Um tasks under Misthalin; Fort Forinthry uses Forinthry because the fort is physically in the south-eastern Wilderness. This is planning data, not an official Equilibrium auto-completion list.",
+  "methodology": "Primary region is inferred from the RuneScape Wiki quest start-area field, then adjusted only where League region boundaries have stronger evidence. Required regions are the union of that primary region and recursively required quest regions from Module:Questreq/data. Catalyst is used as historical League precedent for ambiguous localities: it grouped both City of Um and Fort Forinthry under Misthalin, while Equilibrium's official reveal explicitly places Daemonheim in Forinthry (Wilderness). These are planner mappings, not an Equilibrium quest auto-completion list. Official auto-completions remain a separate Jagex-only overlay.",
   "source_urls": [
     "https://runescape.wiki/w/List_of_quests",
     "https://runescape.wiki/w/Module:Questreq/data",
@@ -17,13 +17,13 @@
     "globals": 37095341
   },
   "region_group_counts": {
-    "misthalin": 139,
+    "misthalin": 145,
     "havenhythe": 4,
     "karamja": 19,
     "asgarnia": 90,
     "kandarin": 94,
     "fremennik": 32,
-    "forinthry": 16,
+    "forinthry": 4,
     "desert": 48,
     "morytania": 29,
     "tirannwn": 10,
@@ -32,13 +32,13 @@
     "unmapped": 2
   },
   "primary_region_counts": {
-    "misthalin": 77,
+    "misthalin": 86,
     "havenhythe": 4,
     "karamja": 8,
     "asgarnia": 43,
     "kandarin": 57,
     "fremennik": 20,
-    "forinthry": 13,
+    "forinthry": 4,
     "desert": 29,
     "morytania": 13,
     "tirannwn": 6,
@@ -59,9 +59,11 @@
       "Aftermath",
       "All Fired Up",
       "Alpha vs Omega",
+      "Ancient Awakening",
       "Animal Magnetism",
       "Another Slice of H.A.M.",
       "Back to the Freezer",
+      "Battle of Forinthry",
       "Battle of the Monolith",
       "Beneath Cursed Tides",
       "Beneath Scabaras' Sands",
@@ -76,6 +78,7 @@
       "Cook's Assistant",
       "Creature of Fenkenstrain",
       "Crocodile Tears",
+      "Dead and Buried",
       "Dealing with Scabaras",
       "Death to the Dorgeshuun",
       "Defender of Varrock",
@@ -128,9 +131,11 @@
       "Meeting History",
       "Missing My Mummy",
       "Missing, Presumed Death",
+      "Murder on the Border",
       "Myths of the White Lands",
       "Nature Spirit",
       "Necromancy!",
+      "New Foundations",
       "Nomad's Elegy",
       "Nomad's Requiem",
       "Ode of the Devourer",
@@ -183,6 +188,7 @@
       "The Void Stares Back",
       "Tomes of the Warlock",
       "Twilight of the Gods",
+      "Unwelcome Guests",
       "Vampyre Slayer",
       "Vessel of the Harbinger",
       "What Lies Below",
@@ -438,22 +444,10 @@
       "While Guthix Sleeps"
     ],
     "forinthry": [
-      "Ancient Awakening",
-      "Battle of Forinthry",
-      "Beneath Scabaras' Sands",
       "Curse of the Black Stone",
-      "Dead and Buried",
-      "Eclipse of the Heart",
-      "Murder on the Border",
-      "New Foundations",
-      "Ode of the Devourer",
-      "Pharaoh's Folly",
-      "Princess and the Pauper",
-      "Requiem for a Dragon",
       "Salt in the Wound",
       "Spirit of Summer",
-      "Summer's End",
-      "Unwelcome Guests"
+      "Summer's End"
     ],
     "desert": [
       "'Phite Club",
@@ -582,14 +576,17 @@
       "A Soul's Bane",
       "All Fired Up",
       "Alpha vs Omega",
+      "Ancient Awakening",
       "Animal Magnetism",
       "Another Slice of H.A.M.",
+      "Battle of Forinthry",
       "Battle of the Monolith",
       "Beneath Cursed Tides",
       "Broken Home",
       "Buyers and Cellars",
       "Chef's Assistant",
       "Cook's Assistant",
+      "Dead and Buried",
       "Death to the Dorgeshuun",
       "Defender of Varrock",
       "Demon Slayer",
@@ -619,18 +616,23 @@
       "Love Story",
       "Missing My Mummy",
       "Missing, Presumed Death",
+      "Murder on the Border",
       "Myths of the White Lands",
       "Nature Spirit",
       "Necromancy!",
+      "New Foundations",
       "Nomad's Elegy",
       "Nomad's Requiem",
+      "Ode of the Devourer",
       "Once Upon a Time in Gielinor",
       "One of a Kind",
       "Priest in Peril",
+      "Princess and the Pauper",
       "Rag and Bone Man",
       "Rat Catchers",
       "Recipe for Disaster",
       "Remains of the Necrolord",
+      "Requiem for a Dragon",
       "River of Blood",
       "Rune Memories",
       "Rune Mysteries",
@@ -651,6 +653,7 @@
       "The Spirit of War",
       "Tomes of the Warlock",
       "Twilight of the Gods",
+      "Unwelcome Guests",
       "Vampyre Slayer",
       "Vessel of the Harbinger",
       "What Lies Below"
@@ -798,19 +801,10 @@
       "Throne of Miscellania"
     ],
     "forinthry": [
-      "Ancient Awakening",
-      "Battle of Forinthry",
       "Curse of the Black Stone",
-      "Dead and Buried",
-      "Murder on the Border",
-      "New Foundations",
-      "Ode of the Devourer",
-      "Princess and the Pauper",
-      "Requiem for a Dragon",
       "Salt in the Wound",
       "Spirit of Summer",
-      "Summer's End",
-      "Unwelcome Guests"
+      "Summer's End"
     ],
     "desert": [
       "'Phite Club",
@@ -1240,7 +1234,7 @@
       "quest_type": "",
       "release": "9 October 2023",
       "members": "yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Ancient_Awakening",
       "source_revision": 37059988,
@@ -1249,7 +1243,7 @@
         "Dead and Buried"
       ],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
@@ -1434,7 +1428,7 @@
       "quest_type": "",
       "release": "20 November 2023",
       "members": "yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Battle_of_Forinthry",
       "source_revision": 37001171,
@@ -1443,7 +1437,7 @@
         "Ancient Awakening"
       ],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
@@ -1526,7 +1520,6 @@
       "required_regions": [
         "asgarnia",
         "desert",
-        "forinthry",
         "misthalin",
         "morytania"
       ],
@@ -2206,7 +2199,7 @@
       "quest_type": "",
       "release": "17 July 2023",
       "members": "Yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Dead_and_Buried",
       "source_revision": 37082680,
@@ -2215,7 +2208,7 @@
         "Unwelcome Guests"
       ],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
@@ -2825,7 +2818,6 @@
       "required_regions": [
         "asgarnia",
         "desert",
-        "forinthry",
         "misthalin",
         "morytania"
       ],
@@ -3936,7 +3928,7 @@
       "release": "11 July 2016",
       "members": "Yes",
       "primary_region": "unmapped",
-      "mapping_reason": "Starts in Port Sarim, but the quest's purpose is access to The Arc / Wushanko. Equilibrium has not yet assigned that external area to a planner region, so do not pretend Port Sarim alone resolves access.",
+      "mapping_reason": "Starts in Port Sarim, but the quest exists to open The Arc / Wushanko. Equilibrium has not assigned that external area to a planner region yet, so Port Sarim alone is not enough to classify it.",
       "source_url": "https://runescape.wiki/w/Impressing_the_Locals",
       "source_revision": 36964137,
       "source_revision_timestamp": "2026-03-11T04:02:00Z",
@@ -4675,7 +4667,7 @@
       "quest_type": "",
       "release": "20 March 2023",
       "members": "Yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Murder_on_the_Border",
       "source_revision": 37112318,
@@ -4684,7 +4676,7 @@
         "New Foundations"
       ],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
@@ -4804,14 +4796,14 @@
       "quest_type": "",
       "release": "13 February 2023",
       "members": "Yes",
-      "primary_region": "forinthry",
-      "mapping_reason": "The quest begins at Varrock Palace but establishes Fort Forinthry in the south-eastern Wilderness; planning access belongs to Forinthry rather than its introductory conversation in Misthalin.",
+      "primary_region": "misthalin",
+      "mapping_reason": "Catalyst's task list consistently grouped Fort Forinthry and New Foundations under Misthalin. Use that League precedent until Equilibrium publishes a different boundary; the fort's physical position beside the Wilderness is not enough to override the prior League taxonomy.",
       "source_url": "https://runescape.wiki/w/New_Foundations",
       "source_revision": 36971099,
       "source_revision_timestamp": "2026-03-17T19:02:33Z",
       "direct_prerequisites": [],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
@@ -4915,7 +4907,7 @@
       "quest_type": "",
       "release": "16 September 2024",
       "members": "Yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Ode_of_the_Devourer",
       "source_revision": 37112928,
@@ -4926,7 +4918,6 @@
       ],
       "required_regions": [
         "desert",
-        "forinthry",
         "misthalin",
         "morytania"
       ],
@@ -5190,7 +5181,6 @@
       "required_regions": [
         "asgarnia",
         "desert",
-        "forinthry",
         "misthalin",
         "morytania"
       ],
@@ -5341,7 +5331,7 @@
       "quest_type": "",
       "release": "2 February 2026",
       "members": "Yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Princess_and_the_Pauper",
       "source_revision": 37060988,
@@ -5351,10 +5341,9 @@
         "Murder on the Border"
       ],
       "required_regions": [
-        "forinthry",
         "misthalin"
       ],
-      "cross_region": true,
+      "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
       "equilibrium_auto_completion": {
         "status": "unknown_pending_official_jagex_list",
@@ -5589,7 +5578,7 @@
       "quest_type": "",
       "release": "22 April 2024",
       "members": "yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Requiem_for_a_Dragon",
       "source_revision": 37119465,
@@ -5601,7 +5590,6 @@
       ],
       "required_regions": [
         "desert",
-        "forinthry",
         "misthalin",
         "morytania"
       ],
@@ -7844,7 +7832,7 @@
       "quest_type": "",
       "release": "11 April 2023",
       "members": "Yes",
-      "primary_region": "forinthry",
+      "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Unwelcome_Guests",
       "source_revision": 36990230,
@@ -7853,7 +7841,7 @@
         "Murder on the Border"
       ],
       "required_regions": [
-        "forinthry"
+        "misthalin"
       ],
       "cross_region": false,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",

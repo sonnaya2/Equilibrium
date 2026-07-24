@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T18:22:16.937Z",
+  "generated_at": "2026-07-24T19:17:56.935Z",
   "source_revisions": {
     "quest_requirements": 37092213,
     "globals": 37095341
@@ -11,7 +11,7 @@
       "title": "Impressing the Locals",
       "start_area": "Port Sarim",
       "series": "Tales of the Arc",
-      "mapping_reason": "Starts in Port Sarim, but the quest's purpose is access to The Arc / Wushanko. Equilibrium has not yet assigned that external area to a planner region, so do not pretend Port Sarim alone resolves access.",
+      "mapping_reason": "Starts in Port Sarim, but the quest exists to open The Arc / Wushanko. Equilibrium has not assigned that external area to a planner region yet, so Port Sarim alone is not enough to classify it.",
       "source_url": "https://runescape.wiki/w/Impressing_the_Locals",
       "source_revision": 36964137,
       "source_revision_timestamp": "2026-03-11T04:02:00Z"

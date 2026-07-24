@@ -1,0 +1,152 @@
+{
+  "snapshot_date": "2026-07-24",
+  "league": {
+    "name": "Leagues II: EQUILIBRIUM",
+    "launch_date": "2026-08-10",
+    "theme": "Guthix / balance",
+    "mode": "limited-time fresh-save league worlds",
+    "trading": false,
+    "account_nomination": true,
+    "confidence": "confirmed_official"
+  },
+  "progression": {
+    "systems": ["regions", "relics", "blessings", "tasks", "league_points"],
+    "task_point_values": {
+      "easy": 10,
+      "medium": 30,
+      "hard": 80,
+      "elite": 200,
+      "master": 400
+    },
+    "notes": [
+      "Tasks earn League Points.",
+      "League Points unlock Relic tiers and determine trophy progression.",
+      "Blessings are unlocked through separate combat-focused Blessing Tasks in chosen regions."
+    ],
+    "confidence": "confirmed_official"
+  },
+  "regions": {
+    "starting": [
+      {"id": "misthalin", "unlock": "start", "confidence": "confirmed_official"},
+      {"id": "havenhythe", "unlock": "start", "confidence": "confirmed_official"}
+    ],
+    "automatic_early": [
+      {"id": "karamja", "unlock": "first task milestone", "confidence": "confirmed_official"}
+    ],
+    "elective_slots": 3,
+    "elective_choices": [
+      {"id": "asgarnia", "official_examples": ["God Wars Dungeon", "Falador"]},
+      {"id": "kandarin", "official_examples": ["Player-Owned Farm", "Hall of Memories", "Deep Sea Fishing Hub"]},
+      {"id": "fremennik", "official_examples": ["Neitiznot", "Lunar Isle", "Jatizso"]},
+      {"id": "forinthry", "official_examples": ["Wilderness Slayer", "Daemonheim"]},
+      {"id": "desert", "official_examples": ["Menaphos", "Het's Oasis"]},
+      {"id": "morytania", "official_examples": ["Araxxor", "Everlight Dig Site"]},
+      {"id": "tirannwn", "official_examples": ["Prifddinas", "Lost Grove"]},
+      {"id": "anachronia", "official_examples": ["dinosaurs", "hunting", "farming"]}
+    ],
+    "quest_behavior": {
+      "summary": "Each unlocked region auto-completes a large number of quests so core regional content becomes immediately accessible.",
+      "examples": [
+        "Tirannwn is intended to provide immediate access to Prifddinas.",
+        "Desert is intended to provide near-immediate access to Menaphos."
+      ],
+      "exact_quest_lists_revealed": false
+    },
+    "confidence": "confirmed_official"
+  },
+  "relics": {
+    "tiers": 7,
+    "unlock_currency": "League Points",
+    "selection_model": "choice per tier",
+    "design_goal": "fewer obvious best-in-slot picks and stronger playstyle differentiation",
+    "passive_bonus_examples": [
+      "large XP boosts",
+      "improved rare-drop rates",
+      "unlimited run energy",
+      "passive Skillcape perks",
+      "free Invention materials from combat"
+    ],
+    "tier_1": [
+      {
+        "name": "Survivalist",
+        "effects": [
+          "Doubles resources from Mining, Fishing, Woodcutting, and Archaeology excavation hotspots.",
+          "Provides powerful gathering tools for Mining, Woodcutting, and Fishing.",
+          "Provides Survivalist's Bag storing up to 150 of three different log, ore, or fish types."
+        ],
+        "confidence": "confirmed_official"
+      },
+      {
+        "name": "Endless Harvest",
+        "effects": [
+          "Archaeology, Farming, Fishing, Mining, and Woodcutting resources can be sent directly to bank or metal bank.",
+          "Fishing, Mining, and Woodcutting have a 10% chance to upgrade gathered resources to the next tier.",
+          "Trees are rarely felled and gathering automatically resumes when they regrow.",
+          "Fishing spots can be followed automatically when they move.",
+          "Mining stamina remains full.",
+          "Archaeology behaves as if a Time Sprite is always active."
+        ],
+        "confidence": "confirmed_official"
+      },
+      {
+        "name": "Golden Touch",
+        "effects": [
+          "Provides Goldenhawk Boots, tier-60 hybrid boots that periodically award Agility XP while moving, skilling, or using ultimate abilities.",
+          "Agility and Thieving can award Goldenhawk Feathers convertible to Prayer XP or coins.",
+          "Doubles Agility course XP and prevents course or shortcut failures.",
+          "Awards coins per completed Agility lap based on Agility level.",
+          "Thieving checks always succeed, loot is tripled and automatically noted.",
+          "Stalls never deplete, safes have no cooldown, and repeat Thieving actions continue automatically.",
+          "Coins from Thieving are multiplied by 100.",
+          "Chests and safes can additionally award herbs and potion ingredients sent to bank."
+        ],
+        "confidence": "confirmed_official"
+      }
+    ],
+    "tiers_2_to_7": {
+      "status": "unrevealed",
+      "reveal_schedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "confidence": "unrevealed"
+    }
+  },
+  "blessings": {
+    "tiers": 8,
+    "focus": "combat-only power progression",
+    "unlock_method": "Blessing Tasks in chosen regions",
+    "paths": ["Order", "Balance", "Chaos"],
+    "style_lock": false,
+    "god_tiers": [4, 8],
+    "god_tier_resolution": {
+      "chaos": "two or more Chaos choices in the preceding block",
+      "order": "two or more Order choices in the preceding block",
+      "balance": "two or more Balance choices, or one choice from each path, in the preceding block"
+    },
+    "resets": {
+      "total": 3,
+      "initial": 1,
+      "additional": 2,
+      "notes": "One reset is available from tier 1; two more unlock later."
+    },
+    "passive_bonus_examples": [
+      "mobility improvements",
+      "reduced ammunition and rune consumption",
+      "accuracy improvements",
+      "adrenaline improvements",
+      "removal of equipment degradation and other traditional PvM costs"
+    ],
+    "specific_choice_effects": {
+      "status": "unrevealed",
+      "confidence": "unrevealed"
+    },
+    "confidence": "confirmed_official"
+  },
+  "free_to_play": {
+    "enabled": true,
+    "dedicated_worlds": true,
+    "max_relic_tier": 3,
+    "region_scope": "all available free-to-play regions",
+    "membership_upgrade_keeps_progress": true,
+    "confidence": "confirmed_official"
+  },
+  "source_ids": ["equilibrium_official_2026_07_23"]
+}

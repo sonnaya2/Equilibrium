@@ -48,12 +48,16 @@ jobs:
         run: npm run normalize:data
       - name: Audit permanent unlock assumptions
         run: npm run audit:progression
+      - name: Audit progression enrichment
+        run: npm run audit:enrichment
       - name: Audit reference research corpus
         run: npm run audit:references
       - name: Audit Masterwork staff region chain
         run: npm run audit:masterwork
       - name: Audit League region boundaries
         run: npm run audit:boundaries
+      - name: Audit Slayer, Invention and Archaeology supplements
+        run: npm run audit:supplements
       - run: npm run typecheck
       - name: Run unit tests
         id: unit-tests

@@ -30,12 +30,19 @@ const REGION_LABELS: Record<string, string> = {
   unresolved: "Region unresolved",
 };
 
+function fieldLabel(value: string): string {
+  return value
+    .replaceAll("kph", "kills per hour")
+    .replaceAll("xp", "XP")
+    .replaceAll("_", " ");
+}
+
 function text(value: unknown): string {
   if (value == null || value === "") return "";
   if (Array.isArray(value)) return value.map(text).filter(Boolean).join(" · ");
   if (typeof value === "object") {
     return Object.entries(value as Row)
-      .map(([key, item]) => `${key.replaceAll("_", " ")}: ${text(item)}`)
+      .map(([key, item]) => `${fieldLabel(key)}: ${text(item)}`)
       .join(" · ");
   }
   return String(value);
@@ -98,7 +105,7 @@ export function ProgressionResearch() {
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    const source = plannerData[section] as Row[];
+    const source = plannerData[section] as unknown as Row[];
     if (!needle) return source;
     return source.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));
   }, [query, section]);

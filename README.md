@@ -10,7 +10,7 @@ This is a side project, not a Jagex product. RuneScape is a trademark of Jagex L
 
 The region map and build state are working, the data browser is backed by the checked-in research set, and the quest catalog is generated from revision-pinned RuneScape Wiki data. The combat engine is being rebuilt around the post-2026 game rather than carrying old formulas forward.
 
-The Equilibrium task page is deliberately sparse right now. Jagex has published the point values, but not the full task list, so the app does not make up placeholder tasks just to look finished.
+The Equilibrium task page is deliberately sparse right now. Jagex has confirmed tasks from Easy through Master and the 10-to-400 point range, but the full task list is not out yet. The 30 / 80 / 200 middle values match Catalyst and stay marked provisional until an Equilibrium source states them directly.
 
 The same rule applies everywhere else: unknown League numbers stay unknown.
 
@@ -47,6 +47,7 @@ npm run sync:league      # League data sync
 npm run sync:assets      # refresh sourced RS3 / League media
 npm run sync:quests      # rebuild quest/region data from the RuneScape Wiki
 npm run sync:quests:auto # apply official Jagex auto-completion lists when they exist
+npm run sync:planner     # rebuild sourced region-value / progression research
 ```
 
 ## Repo layout
@@ -61,7 +62,7 @@ src/components/      shared UI
 
 data/combat/         canonical combat JSON
 data/league/         canonical League data + generated quest data
-data/research/       app-facing research catalog
+data/research/       app-facing research catalog + planner progression data
 scraped-data/        source-oriented research and unresolved notes
 assets/              sourced game media + provenance manifest
 scripts/             data, quest and asset sync jobs

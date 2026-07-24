@@ -1,0 +1,183 @@
+{
+  "snapshot_date": "2026-07-24",
+  "release": {
+    "name": "Combat Style Modernisation",
+    "date": "2026-03-02",
+    "scope": ["Melee", "Ranged", "Magic", "Necromancy parity", "combat auras", "120 combat skill caps"],
+    "design_direction": "Bring the original combat styles closer to Necromancy's clarity and modern design while preserving distinct identities and reducing action-bar/keybind bloat.",
+    "confidence": "confirmed_wiki"
+  },
+  "global_changes": [
+    {
+      "change": "Attack, Strength, Ranged and Magic level caps increased to 120.",
+      "confidence": "confirmed_official"
+    },
+    {
+      "change": "A large set of combat auras was disabled as their power was moved into baseline combat progression.",
+      "confidence": "confirmed_official"
+    },
+    {
+      "change": "Ability tutorialisation was modernised so newly unlocked abilities are explained rather than silently auto-added to action bars.",
+      "confidence": "confirmed_official"
+    },
+    {
+      "change": "Magic and Ranged ammunition consumption was normalised as part of the wider Road to Restoration combat work.",
+      "confidence": "confirmed_official"
+    }
+  ],
+  "style_identity": {
+    "melee": "Burst damage, bleeds and meaningful weapon-style choice, driven by the new Bloodlust resource.",
+    "ranged": "High hit frequency, ammunition identity and sustained ranged pressure; ammunition families were redesigned to interact more directly with abilities.",
+    "magic": "Critical-strike and burn/DoT oriented identity, with the modernisation reducing legacy bloat.",
+    "necromancy": "Used as the modern baseline for clarity and 120 progression; received adjustments so aura removal did not leave it behind."
+  },
+  "melee": {
+    "bloodlust": {
+      "normal_max_stacks": 4,
+      "berserk_max_stacks": 8,
+      "summary": "Basic abilities build Bloodlust and several adrenaline abilities consume or scale from it. Berserk expands the stack ceiling and accelerates generation."
+    },
+    "book_structure": {
+      "strength_ability_book_removed": true,
+      "abilities_consolidated_under_attack": true
+    },
+    "important_abilities_after_initial_patches": [
+      {
+        "name": "Attack",
+        "type": "basic",
+        "damage_percent": "110-130%",
+        "adrenaline_gain_percent": 9,
+        "bloodlust_gain": 1
+      },
+      {
+        "name": "Adaptive Strike",
+        "unlock_level": 7,
+        "type": "basic",
+        "two_handed": "120-140% cone hit",
+        "dual_wield": "2 hits of 60-75%"
+      },
+      {
+        "name": "Rend",
+        "unlock_level": 18,
+        "type": "basic",
+        "damage_percent": "135-165%",
+        "bloodlust_gain": 2
+      },
+      {
+        "name": "Dismember",
+        "unlock_level": 50,
+        "damage": "8 bleed hits at 25-35% each",
+        "healing_percent": 4,
+        "chain": "enables Slaughter as the next bleed-chain cast"
+      },
+      {
+        "name": "Slaughter",
+        "unlock_level": 60,
+        "adrenaline_cost_percent": 25,
+        "damage": "6 bleed hits at 80-100% each",
+        "healing_percent": 6,
+        "chain": "enables Massacre"
+      },
+      {
+        "name": "Massacre",
+        "unlock_level": 75,
+        "adrenaline_cost_percent": 25,
+        "damage": "110-130% initial hit plus 6 bleed hits at 100% each",
+        "healing_percent": 12
+      },
+      {
+        "name": "Assault",
+        "unlock_level": 3,
+        "adrenaline_cost_percent": 25,
+        "damage": "4 channelled hits at 130-150% each; at 4 Bloodlust, 170-190% each",
+        "cooldown_seconds": 6,
+        "movement": "channel can be mobile"
+      },
+      {
+        "name": "Overpower",
+        "unlock_level": 15,
+        "adrenaline_cost_percent": 60,
+        "damage_percent": "520-570%",
+        "igneous_variant": "2 hits of 280-340%"
+      },
+      {
+        "name": "Punish",
+        "unlock_level": 60,
+        "special_rule": "Deals 2.5x damage to targets below 50% life points."
+      },
+      {
+        "name": "Berserk",
+        "unlock_level": 76,
+        "adrenaline_cost_percent": 100,
+        "duration_seconds": 19.8,
+        "damage_multiplier": 1.75,
+        "incoming_damage_multiplier": 1.25,
+        "bloodlust": "+4 maximum stacks and +4 stacks on activation; basics generate double Bloodlust",
+        "other": "Reduces Overpower cooldown."
+      },
+      {
+        "name": "Meteor Strike",
+        "unlock_level": 90,
+        "adrenaline_cost_percent": 60,
+        "summary": "Area attack that also grants an adrenaline-generation buff."
+      },
+      {
+        "name": "Chaos Roar",
+        "unlock_level": 92,
+        "summary": "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust."
+      }
+    ],
+    "removed_or_retired_legacy_examples": [
+      "Slice", "Havoc", "Smash", "Sever", "Destroy", "Quake", "Blood Tendrils", "Frenzy"
+    ],
+    "confidence": "confirmed_wiki"
+  },
+  "ranged": {
+    "ammo_system": [
+      {
+        "name": "Splintering arrows",
+        "effect": "Ranged abilities apply Puncture. Each stack contributes 1% ability damage, up to 250 stacks, with a 30-second duration model after the modernisation."
+      },
+      {
+        "name": "Deathspore arrows",
+        "effect": "Build stacks on hit rather than critical strikes; at 12 stacks they enable a free ability under the redesigned system."
+      }
+    ],
+    "important_ability_changes": [
+      {
+        "name": "Death's Swiftness",
+        "effect": "Changed from a ground-targeted area into a self buff.",
+        "damage_multiplier": 1.5,
+        "duration_seconds": 30,
+        "greater_duration_seconds": 37.8
+      },
+      {
+        "name": "Bombardment",
+        "adrenaline_cost_percent": 20,
+        "effect": "Reworked into a multi-target bleed-oriented ability."
+      },
+      {
+        "name": "Shadow Tendrils",
+        "effect": "No longer a threshold; deals 200-240% damage, is guaranteed to critically strike, and retains self-damage."
+      }
+    ],
+    "confidence": "confirmed_wiki"
+  },
+  "magic": {
+    "identity": "Critical strikes and burn damage-over-time are the defining modernised themes.",
+    "data_status": "High-level identity captured. Ability-by-ability table still needs a dedicated pass before being treated as optimizer-grade data.",
+    "confidence": "confirmed_wiki_partial"
+  },
+  "combat_auras_disabled_on_2026_03_02": [
+    "Knock Out", "Brawler", "Runic Accuracy", "Sharpshooter", "Ancestor Spirits", "Berserker", "Maniacal", "Reckless", "Dark Magic", "Regeneration", "Aegis", "Mahjarrat", "Inspiration", "Equilibrium", "Invigorate"
+  ],
+  "aura_overhaul_follow_up": {
+    "date": "2026-04-13",
+    "summary": "The Aura Overhaul removed the aura system rather than preserving one-hour peak-efficiency windows. Beneficial effects were either folded into the core game, retired, or transformed into other unlock types.",
+    "vampyrism_and_penance": "Converted into sustain Aspects rather than remaining auras. They therefore compete in the Aspect system instead of stacking as an aura with another Aspect.",
+    "later_aspect_qol": "Jagex subsequently announced multi-casting so 12-minute Aspect durations can be stacked up to one hour by paying the corresponding rune cost.",
+    "league_relevance": "Do not import Catalyst guides that assume Berserker/Maniacal/Reckless, Vampyrism aura, Penance aura, aura refreshes, or aura timing into Equilibrium planning.",
+    "confidence": "confirmed_official_and_patch_archive"
+  },
+  "source_ids": ["combat_modernisation_wiki", "combat_patch_1_wiki", "combat_patch_2_wiki"]
+}

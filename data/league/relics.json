@@ -1,5 +1,146 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
-  "records": []
+  "records": [
+    {
+      "tier": 1,
+      "status": "revealed",
+      "choices": [
+        {
+          "name": "Survivalist",
+          "effects": [
+            "Doubles resources from Mining, Fishing, Woodcutting, and Archaeology excavation hotspots.",
+            "Provides powerful gathering tools for Mining, Woodcutting, and Fishing.",
+            "Provides Survivalist's Bag storing up to 150 of three different log, ore, or fish types."
+          ],
+          "confidence": "confirmed_official"
+        },
+        {
+          "name": "Endless Harvest",
+          "effects": [
+            "Archaeology, Farming, Fishing, Mining, and Woodcutting resources can be sent directly to bank or metal bank.",
+            "Fishing, Mining, and Woodcutting have a 10% chance to upgrade gathered resources to the next tier.",
+            "Trees are rarely felled and gathering automatically resumes when they regrow.",
+            "Fishing spots can be followed automatically when they move.",
+            "Mining stamina remains full.",
+            "Archaeology behaves as if a Time Sprite is always active."
+          ],
+          "confidence": "confirmed_official"
+        },
+        {
+          "name": "Golden Touch",
+          "effects": [
+            "Provides Goldenhawk Boots, tier-60 hybrid boots that periodically award Agility XP while moving, skilling, or using ultimate abilities.",
+            "Agility and Thieving can award Goldenhawk Feathers convertible to Prayer XP or coins.",
+            "Doubles Agility course XP and prevents course or shortcut failures.",
+            "Awards coins per completed Agility lap based on Agility level.",
+            "Thieving checks always succeed, loot is tripled and automatically noted.",
+            "Stalls never deplete, safes have no cooldown, and repeat Thieving actions continue automatically.",
+            "Coins from Thieving are multiplied by 100.",
+            "Chests and safes can additionally award herbs and potion ingredients sent to bank."
+          ],
+          "confidence": "confirmed_official"
+        }
+      ],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 2,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 3,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 4,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 5,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 6,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 7,
+      "status": "unrevealed",
+      "revealSchedule": "Daily reveals begin 2026-07-28 and continue through launch.",
+      "choices": [],
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    }
+  ]
 }

@@ -11,5 +11,7 @@
  * Run: npm run sync:combat
  */
 // TODO: not implemented. Writing invented numbers here is worse than writing nothing.
+// scraped-data/combat-2026.json + midgame-rebalance-2026-07-20.json hold system-level changes,
+// not record-level ability/equipment tables — the record pass needs a Wiki scrape, not this dump.
 console.error("sync-combat-data: not implemented yet");
 process.exitCode = 1;

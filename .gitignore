@@ -100,3 +100,6 @@ design-previews/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.shots/
+dev-server.log
+.kimi-code/

@@ -1,5 +1,19 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
+  "structure": {
+    "pointValues": {
+      "easy": 10,
+      "medium": 30,
+      "hard": 80,
+      "elite": 200,
+      "master": 400
+    },
+    "notes": [
+      "Tasks earn League Points.",
+      "League Points unlock Relic tiers and determine trophy progression.",
+      "Blessings are unlocked through separate combat-focused Blessing Tasks in chosen regions."
+    ]
+  },
   "records": []
 }

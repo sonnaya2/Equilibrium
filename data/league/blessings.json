@@ -1,5 +1,154 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
-  "records": []
+  "structure": {
+    "focus": "combat-only power progression",
+    "unlockMethod": "Blessing Tasks in chosen regions",
+    "paths": [
+      "Order",
+      "Balance",
+      "Chaos"
+    ],
+    "styleLock": false,
+    "godTierResolution": {
+      "chaos": "two or more Chaos choices in the preceding block",
+      "order": "two or more Order choices in the preceding block",
+      "balance": "two or more Balance choices, or one choice from each path, in the preceding block"
+    },
+    "resets": {
+      "total": 3,
+      "initial": 1,
+      "additional": 2,
+      "notes": "One reset is available from tier 1; two more unlock later."
+    },
+    "passiveBonusExamples": [
+      "mobility improvements",
+      "reduced ammunition and rune consumption",
+      "accuracy improvements",
+      "adrenaline improvements",
+      "removal of equipment degradation and other traditional PvM costs"
+    ]
+  },
+  "records": [
+    {
+      "tier": 1,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 2,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 3,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 4,
+      "godTier": true,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 5,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 6,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 7,
+      "godTier": false,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "tier": 8,
+      "godTier": true,
+      "pathsPerTier": 3,
+      "status": "unrevealed",
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+          "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+          "publishedAt": "2026-07-23",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    }
+  ]
 }

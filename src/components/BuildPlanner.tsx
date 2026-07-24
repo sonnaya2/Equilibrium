@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { blessingResetsLeft, type RegionId } from "@/league";
 import {
   BLESSING_PATHS,
@@ -10,6 +10,7 @@ import {
 } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
+import { Hex, HexRow, hexClass } from "@/components/Hex";
 
 export type PlannerRegion = {
   id: string;
@@ -19,6 +20,8 @@ export type PlannerRegion = {
   trainingCount: number;
   upgradeCount: number;
   hardRules: string[];
+  primaryQuests: number;
+  touchedQuests: number;
 };
 
 export type RelicChoice = {
@@ -42,6 +45,12 @@ export type BlessingTier = {
   choices: unknown[];
   sourceUrl?: string;
   verified?: boolean;
+};
+
+const PATH_INK: Record<string, string> = {
+  Chaos: "text-chaos-300",
+  Balance: "text-balance-400",
+  Order: "text-order-400",
 };
 
 function availabilityLabel(value: string): string {
@@ -71,21 +80,26 @@ export function BuildPlanner({
   blessingTiers: BlessingTier[];
   resetCount: number;
 }) {
-  const electiveRegions = regions.filter((region) => region.availability === "elective");
-  const fixedRegions = regions.filter((region) => region.availability !== "elective");
   // All picks live in the shared unlock store — same state the map edits.
-  const { build, toggleRegion, toggleRelic, pickBlessing, resetBlessings } = useBuild();
-  const selectedRegions: string[] = build.elective;
+  const { build, loaded, toggleRegion, toggleRelic, pickBlessing, resetBlessings } = useBuild();
+  const picks = build.elective;
+  const [focusId, setFocusId] = useState<string>(regions[0]?.id ?? "");
+  const [copied, setCopied] = useState(false);
 
-  const selectedRegionRows = useMemo(
-    () => electiveRegions.filter((region) => selectedRegions.includes(region.id)),
-    [electiveRegions, selectedRegions],
+  const picked = (id: string) => (picks as string[]).includes(id);
+  const isOpen = (r: PlannerRegion) => r.availability !== "elective" || picked(r.id);
+  const focus = regions.find((r) => r.id === focusId) ?? regions[0];
+  const openCount = regions.filter(isOpen).length;
+  const paths = (blessingTiers[0]?.paths ?? [...BLESSING_PATHS]).filter(
+    (p): p is BlessingPath => (BLESSING_PATHS as readonly string[]).includes(p),
   );
-
   const alignments = godTierAlignments(build.blessingPicks);
   const resetsLeft = blessingResetsLeft(build);
+  const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0);
+  const blessingChoices = blessingTiers.flatMap((tier) =>
+    asBlessingChoices(tier.choices).map((choice) => ({ tier: tier.tier, ...choice })),
+  );
 
-  const [copied, setCopied] = useState(false);
   const copyShareLink = () => {
     void navigator.clipboard?.writeText(buildShareUrl(build));
     setCopied(true);
@@ -93,201 +107,297 @@ export function BuildPlanner({
   };
 
   return (
-    <div>
-      <section className="border-b border-stone-750 py-5">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-medium text-parch-50">Regions</h2>
-            <p className="mt-1 text-xs text-parch-300">Misthalin and Havenhythe start open. Karamja follows early. Pick up to three elective regions.</p>
-          </div>
-          <div className="flex items-center gap-3 text-xs text-parch-300">
-            <span>{selectedRegions.length}/3 elective picks</span>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="flex flex-col gap-6">
+        <section>
+          <div className="mb-3 flex items-baseline gap-3">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+              Regions
+            </h2>
+            <span className="num text-xs text-parch-400">
+              {openCount} of {regions.length} open · {picks.length}/3 picks
+            </span>
+            <span className="h-px flex-1 bg-stone-750" />
             <button
               type="button"
               onClick={copyShareLink}
-              className="border border-stone-750 px-3 py-1.5 text-parch-50 hover:bg-white/[0.02]"
+              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50"
             >
               {copied ? "Copied" : "Copy link"}
             </button>
-          </div>
-        </div>
-
-        <div className="grid border-t border-stone-750 lg:grid-cols-[260px_minmax(0,1fr)]">
-          <div className="border-b border-stone-750 lg:border-b-0 lg:border-r">
-            <div className="px-3 py-2 text-xs text-parch-300">Always available</div>
-            {fixedRegions.map((region) => (
-              <div key={region.id} className="border-t border-stone-750/70 px-3 py-3">
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-sm text-parch-50">{region.name}</span>
-                  <span className="text-[11px] text-parch-300">{availabilityLabel(region.availability)}</span>
-                </div>
-                <div className="mt-1 text-xs text-parch-300">{region.trainingCount} methods · {region.upgradeCount} upgrades</div>
-              </div>
-            ))}
+            <button
+              type="button"
+              onClick={() => picks.forEach((id) => toggleRegion(id as RegionId))}
+              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50"
+            >
+              Clear picks
+            </button>
           </div>
 
-          <div>
-            <div className="grid text-xs text-parch-300 sm:grid-cols-2 xl:grid-cols-4">
-              {electiveRegions.map((region) => {
-                const selected = selectedRegions.includes(region.id);
-                const disabled = !selected && selectedRegions.length >= 3;
-                return (
-                  <button
-                    key={region.id}
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => toggleRegion(region.id as RegionId)}
-                    className={`border-b border-stone-750/70 px-3 py-3 text-left sm:border-r ${
-                      selected ? "bg-stone-850 text-parch-50" : "text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-                    } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
-                  >
-                    <span className="block text-sm font-medium text-parch-50">{region.name}</span>
-                    <span className="mt-1 block">{region.trainingCount} methods · {region.upgradeCount} upgrades</span>
-                    <span className="mt-1 block truncate">{region.skills.slice(0, 5).join(" · ") || "No skill tags yet"}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {selectedRegionRows.length ? (
-          <div className="border-t border-stone-750 py-3">
-            <div className="text-xs font-medium text-parch-50">Selected</div>
-            <div className="mt-1 text-sm text-parch-300">{selectedRegionRows.map((region) => region.name).join(" · ")}</div>
-            {selectedRegionRows.flatMap((region) => region.hardRules).map((rule) => (
-              <p key={rule} className="mt-1 text-xs leading-5 text-parch-300">{rule}</p>
-            ))}
-          </div>
-        ) : null}
-      </section>
-
-      <section className="border-b border-stone-750 py-5">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-medium text-parch-50">Relics</h2>
-            <p className="mt-1 text-xs text-parch-300">Tier 1 is public. Later tiers stay hidden until the reveals land — nothing here is guessed.</p>
-          </div>
-          <div className="text-xs text-parch-300">{Object.keys(build.relics).length}/{relicTiers.length} picked</div>
-        </div>
-        <div className="border-t border-stone-750">
-          {relicTiers.map((tier) => {
-            if (!tier.revealed || tier.choices.length === 0) {
-              return (
-                <div key={tier.tier} className="flex items-baseline justify-between gap-3 border-b border-stone-750/70 px-3 py-2.5">
-                  <span className="text-sm text-parch-300">Tier {tier.tier}</span>
-                  <span className="text-xs text-parch-300">not revealed yet</span>
-                </div>
-              );
-            }
-            return (
-              <div key={tier.tier} className="border-b border-stone-750/70">
-                <div className="px-3 pt-3 text-xs text-parch-300">Tier {tier.tier}</div>
-                {tier.choices.map((relic) => {
-                  const selected = build.relics[String(tier.tier)] === relic.name;
+          <div className="flex flex-col">
+            {[regions.slice(0, 6), regions.slice(6)].map((row, rowIndex) => (
+              <HexRow key={rowIndex} offset={rowIndex === 1} className={rowIndex ? "-mt-[42px]" : ""}>
+                {row.map((region) => {
+                  const open = isOpen(region);
+                  const elective = region.availability === "elective";
+                  const barred = !open && picks.length >= 3;
+                  const selected = focusId === region.id;
                   return (
                     <button
-                      key={relic.name}
+                      key={region.id}
                       type="button"
-                      onClick={() => toggleRelic(tier.tier, relic.name)}
-                      className={`grid w-full gap-2 border-b border-stone-750/50 px-3 py-3 text-left last:border-b-0 md:grid-cols-[180px_minmax(0,1fr)] ${selected ? "bg-stone-850" : "hover:bg-white/[0.02]"}`}
+                      disabled={barred}
+                      aria-pressed={picked(region.id)}
+                      onClick={() => {
+                        if (elective) toggleRegion(region.id as RegionId);
+                        setFocusId(region.id);
+                      }}
+                      // Content sits above the bottom slope, which the next row overlaps.
+                      className={hexClass(
+                        "lg",
+                        barred ? "locked" : selected ? "selected" : "open",
+                        "gap-1 pb-2.5",
+                      )}
                     >
-                      <span className="text-sm font-medium text-parch-50">
-                        {relic.name}
-                        {relic.sourceUrl ? (
-                          <a
-                            href={relic.sourceUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(event) => event.stopPropagation()}
-                            className="ml-2 text-[11px] font-normal text-parch-300 underline underline-offset-2"
-                          >
-                            Source
-                          </a>
-                        ) : null}
+                      {barred ? (
+                        <span className="h-[17px] w-[15px] bg-gem-600 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
+                      ) : (
+                        <img
+                          src={`/game/regions/${region.id}.png`}
+                          alt=""
+                          width={42}
+                          height={48}
+                          className="h-12 w-auto object-contain"
+                        />
+                      )}
+                      <span className="flex min-h-[31px] items-end px-2 text-[12.5px] leading-tight text-parch-100">
+                        {region.name}
                       </span>
-                      <span className="text-xs leading-5 text-parch-300">{relic.effects.join(" ")}</span>
+                      <span
+                        className={`num text-[19px] ${barred ? "text-parch-500" : "text-gem-400"}`}
+                      >
+                        {region.primaryQuests}
+                      </span>
                     </button>
                   );
                 })}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="py-5">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-medium text-parch-50">Blessings</h2>
-            <p className="mt-1 text-xs text-parch-300">Order, Balance and Chaos across eight tiers. Effects aren&apos;t public — picks plan the path, and the god tiers follow from it.</p>
+              </HexRow>
+            ))}
           </div>
-          <div className="flex items-center gap-3 text-xs text-parch-300">
-            <span>{resetsLeft} of {resetCount} resets left</span>
+        </section>
+
+        <section className="border-t border-stone-750 pt-4">
+          <div className="mb-3 flex items-baseline gap-3">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+              Relics
+            </h2>
+            <span className="num text-xs text-parch-400">
+              {revealedRelicTiers.length} of {relicTiers.length} tiers revealed
+            </span>
+            <span className="h-px flex-1 bg-stone-750" />
+            <span className="text-xs text-parch-400">
+              {Object.keys(build.relics).length
+                ? `${Object.keys(build.relics).length} picked`
+                : "none picked"}
+            </span>
+          </div>
+
+          <div className="flex items-start gap-1 overflow-x-auto pb-1 pt-5">
+            {relicTiers.map((tier) => {
+              if (!tier.revealed || tier.choices.length === 0) {
+                return (
+                  <Hex key={tier.tier} size="md" state="unrevealed">
+                    <span className="num text-[11px] text-parch-500">T{tier.tier}</span>
+                  </Hex>
+                );
+              }
+              return (
+                <div
+                  key={tier.tier}
+                  className="relative mr-3.5 flex gap-1 border-r border-stone-750 pr-5"
+                >
+                  <span className="absolute -top-5 left-0 whitespace-nowrap text-[11px] uppercase tracking-[0.09em] text-gem-400">
+                    Tier {tier.tier} · pick one
+                  </span>
+                  {tier.choices.map((relic) => {
+                    const selected = build.relics[String(tier.tier)] === relic.name;
+                    return (
+                      <button
+                        key={relic.name}
+                        type="button"
+                        title={relic.effects.join(" ")}
+                        onClick={() => toggleRelic(tier.tier, relic.name)}
+                        className={hexClass("md", selected ? "selected" : "open")}
+                      >
+                        <span className="px-2 text-[12px] leading-tight text-parch-100">
+                          {relic.name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="border-t border-stone-750 pt-4">
+          <div className="mb-3 flex items-baseline gap-3">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+              Blessings
+            </h2>
+            <span className="text-xs text-parch-400">
+              god tier at 4 and 8 · {resetsLeft} of {resetCount} resets left
+            </span>
+            <span className="h-px flex-1 bg-stone-750" />
             <button
               type="button"
               onClick={resetBlessings}
               disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
-              className="border border-stone-750 px-3 py-1.5 text-parch-50 hover:bg-white/[0.02] disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Reset blessings
             </button>
           </div>
-        </div>
-        <div className="border-t border-stone-750">
-          {blessingTiers.map((tier) => {
-            if (tier.godTier) {
-              const god = alignments[tier.tier];
-              return (
-                <div key={tier.tier} className="flex items-baseline justify-between gap-3 border-b border-stone-750/70 px-3 py-2.5">
-                  <span className="text-sm text-parch-50">Tier {tier.tier}</span>
-                  <span className={`text-xs ${god ? "text-parch-50" : "text-parch-300"}`}>
-                    {god ? `${god} god` : "god undecided"}
+
+          <div className="overflow-x-auto pb-1">
+            <div className="flex gap-1 pl-[62px]">
+              {blessingTiers.map((tier) => (
+                <span
+                  key={tier.tier}
+                  className="num w-[52px] text-center text-[10.5px] text-parch-500"
+                >
+                  {tier.tier}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col">
+              {paths.map((path, pathIndex) => (
+                <div
+                  key={path}
+                  className={`flex items-center gap-1 ${pathIndex ? "-mt-[13px]" : ""}`}
+                >
+                  <span
+                    className={`w-[58px] shrink-0 text-[11px] uppercase tracking-[0.1em] ${
+                      PATH_INK[path] ?? "text-parch-300"
+                    }`}
+                  >
+                    {path}
                   </span>
-                </div>
-              );
-            }
-            const pickIndex = PATH_TIERS.indexOf(tier.tier);
-            const locked = pickIndex > build.blessingPicks.length;
-            const choices = asBlessingChoices(tier.choices);
-            return (
-              <div key={tier.tier} className="border-b border-stone-750/70 px-3 py-3">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <span className="text-sm text-parch-50">Tier {tier.tier}</span>
-                  <div className="flex gap-1">
-                    {tier.paths.map((path) => {
-                      if (!(BLESSING_PATHS as readonly string[]).includes(path)) return null;
-                      const selected = build.blessingPicks[pickIndex] === path;
+                  {blessingTiers.map((tier) => {
+                    if (tier.godTier) {
+                      const aligned = alignments[tier.tier] === path;
                       return (
-                        <button
-                          key={path}
-                          type="button"
-                          disabled={locked}
-                          onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
-                          className={`border border-stone-750 px-3 py-1.5 text-xs ${
-                            selected ? "bg-stone-850 text-parch-50" : "text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-                          } ${locked ? "cursor-not-allowed opacity-40" : ""}`}
-                        >
-                          {path}
-                        </button>
+                        <Hex key={tier.tier} size="sm" state={aligned ? "selected" : "unrevealed"}>
+                          <span
+                            className={`absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)] ${
+                              aligned ? "bg-brass-400" : "bg-stone-750"
+                            }`}
+                          />
+                        </Hex>
                       );
-                    })}
-                  </div>
+                    }
+                    const pickIndex = PATH_TIERS.indexOf(tier.tier);
+                    const locked = pickIndex > build.blessingPicks.length;
+                    const selected = build.blessingPicks[pickIndex] === path;
+                    return (
+                      <button
+                        key={tier.tier}
+                        type="button"
+                        disabled={locked}
+                        aria-pressed={selected}
+                        aria-label={`Tier ${tier.tier} ${path}`}
+                        onClick={() => pickBlessing(tier.tier, path)}
+                        className={hexClass(
+                          "sm",
+                          locked ? "locked" : selected ? "selected" : "open",
+                        )}
+                      />
+                    );
+                  })}
                 </div>
-                {tier.revealed && choices.length > 0 ? (
-                  <div className="mt-2 grid gap-2">
-                    {choices.map((choice) => (
-                      <div key={choice.name} className="text-xs leading-5 text-parch-300">
-                        <span className="text-parch-50">{choice.name}</span> — {choice.effects.join(" ")}
-                      </div>
-                    ))}
+              ))}
+            </div>
+            {blessingChoices.length > 0 ? (
+              <div className="mt-3 grid gap-2">
+                {blessingChoices.map((choice) => (
+                  <div key={`${choice.tier}-${choice.name}`} className="text-xs leading-5 text-parch-300">
+                    <span className="text-parch-50">
+                      T{choice.tier} · {choice.name}
+                    </span>{" "}
+                    — {choice.effects.join(" ")}
                   </div>
-                ) : null}
+                ))}
               </div>
-            );
-          })}
-        </div>
-      </section>
+            ) : (
+              <p className="mt-2 text-xs text-parch-400">
+                No blessing is revealed yet. The lattice is the shape of the choice, not a guess at
+                its contents.
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
+
+      <aside className="flex flex-col gap-4 border-t border-stone-750 pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+        {focus ? (
+          <>
+            <img
+              src={`/game/regions/${focus.id}.png`}
+              alt=""
+              width={52}
+              height={60}
+              className="h-[60px] w-auto object-contain"
+            />
+            <h3 className="font-display text-xl uppercase tracking-[0.1em] text-parch-50">
+              {focus.name}
+            </h3>
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.13em] text-parch-500">
+                Quests starting here
+              </div>
+              <div className="stat-key mt-1">{focus.primaryQuests}</div>
+            </div>
+            <dl className="flex flex-col border-t border-stone-750">
+              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
+                <dt className="text-[12.5px] text-parch-300">Quests touching</dt>
+                <dd className="num text-[15px] text-parch-50">{focus.touchedQuests}</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
+                <dt className="text-[12.5px] text-parch-300">Training methods</dt>
+                <dd className="num text-[15px] text-parch-50">{focus.trainingCount}</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
+                <dt className="text-[12.5px] text-parch-300">Upgrades</dt>
+                <dd className="num text-[15px] text-parch-50">{focus.upgradeCount}</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
+                <dt className="text-[12.5px] text-parch-300">Access</dt>
+                <dd className="text-[12.5px] text-parch-50">
+                  {availabilityLabel(focus.availability)}
+                </dd>
+              </div>
+            </dl>
+            {focus.skills.length ? (
+              <div className="flex flex-wrap gap-1.5">
+                {focus.skills.slice(0, 8).map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-sm border border-stone-750 bg-stone-850 px-1.5 py-0.5 text-[11.5px] text-parch-100"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            {focus.hardRules.map((rule) => (
+              <p key={rule} className="text-[13px] leading-relaxed text-parch-100">
+                {rule}
+              </p>
+            ))}
+          </>
+        ) : null}
+      </aside>
     </div>
   );
 }

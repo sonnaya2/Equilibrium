@@ -7,7 +7,7 @@
  */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three/webgpu";
 import { Html } from "@react-three/drei";
 import { useLoader, type ThreeEvent } from "@react-three/fiber";
@@ -33,11 +33,19 @@ const RING_COLOR = 0x2ecb8f;
 const SLAB_COLOR = 0x17140f;
 
 function MapPlane() {
-  const texture = useLoader(THREE.TextureLoader, MAP_IMAGE.src);
-  useMemo(() => {
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
-  }, [texture]);
+  const loaded = useLoader(THREE.TextureLoader, MAP_IMAGE.src);
+  // The loader cache hands the same Texture back on every mount, but its GPU
+  // state belongs to the renderer that uploaded it. StrictMode and Fast Refresh
+  // dispose that renderer and build a new one, which then finds the texture
+  // already initialized and throws. Own a clone per mount instead.
+  const texture = useMemo(() => {
+    const clone = loaded.clone();
+    clone.colorSpace = THREE.SRGBColorSpace;
+    clone.anisotropy = 8;
+    clone.needsUpdate = true;
+    return clone;
+  }, [loaded]);
+  useEffect(() => () => texture.dispose(), [texture]);
 
   return (
     <group>

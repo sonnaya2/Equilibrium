@@ -48,6 +48,8 @@ jobs:
         run: npm run normalize:data
       - name: Audit permanent unlock assumptions
         run: npm run audit:progression
+      - name: Audit reference research corpus
+        run: npm run audit:references
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

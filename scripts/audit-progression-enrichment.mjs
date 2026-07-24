@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-const progression = JSON.parse(readFileSync("scraped-data/progression-unlocks.json", "utf8"));
-const planner = JSON.parse(readFileSync("scraped-data/planner-expansions.json", "utf8"));
+const progression = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
+const planner = JSON.parse(readFileSync("data/research/planner-expansions.json", "utf8"));
 const fail = (message) => { throw new Error(`progression enrichment audit: ${message}`); };
 const byId = (rows, id) => (rows || []).find((row) => row?.id === id);
 
@@ -44,12 +44,8 @@ if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !=
   fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
 }
 const blessed = byId(progression.equipment_models, "blessed-flask:prayer-storage");
-if (blessed?.herblore_level !== 118 || blessed?.crafting_level !== 96 || blessed?.capacity_doses !== 80) {
-  fail("Blessed flask core requirements drifted");
-}
-if (!blessed?.major_raw_dependencies?.some((row) => row.item === "Blessed sand" && row.quantity === 40000)) {
-  fail("Blessed flask blessed-sand dependency drifted");
-}
+if (blessed?.herblore_level !== 118 || blessed?.crafting_level !== 96 || blessed?.capacity_doses !== 80) fail("Blessed flask core requirements drifted");
+if (!blessed?.major_raw_dependencies?.some((row) => row.item === "Blessed sand" && row.quantity === 40000)) fail("Blessed flask blessed-sand dependency drifted");
 
 for (const id of [
   "herblore:overload-chain",
@@ -75,6 +71,9 @@ if (extremePrayer?.herblore_level !== 117) fail("Extreme prayer requirement drif
 
 if (byId(progression.activity_unlocks, "mazcab:ability-codex-package")) fail("superseded Mazcab duplicate survived");
 if (byId(progression.activity_unlocks, "shattered-worlds:utility-abilities")) fail("superseded Shattered Worlds duplicate survived");
+for (const id of ["mazcab:teci-combat-ability-unlocks", "shattered-worlds:current-permanent-abilities", "tuskas-wrath:current-acquisition"]) {
+  if (!byId(progression.activity_unlocks, id)) fail(`current activity audit row missing: ${id}`);
+}
 
 const relics = new Map((planner.archaeology_combat_relics || []).map((row) => [row.relic, row]));
 for (const [name, level, energy] of [
@@ -90,9 +89,8 @@ for (const [name, level, energy] of [
   if (!row || row.archaeology_level !== level || row.monolith_energy !== energy) fail(`${name} relic metadata drifted`);
 }
 if (planner.archaeology_relic_system?.active_relic_limit !== 3) fail("Archaeology relic slot limit drifted");
-if (JSON.stringify(planner.archaeology_relic_system?.monolith_energy_caps) !== JSON.stringify([150, 250, 400, 500, 650])) {
-  fail("Archaeology monolith energy-cap ladder drifted");
-}
+if (JSON.stringify(planner.archaeology_relic_system?.monolith_energy_caps) !== JSON.stringify([150, 250, 400, 500, 650])) fail("Archaeology monolith energy-cap ladder drifted");
+if (!planner.combat_training_spots?.some((row) => row.id === "combat-armoured-zombies")) fail("current planner audit Armoured Zombies row missing");
 
 const banned = [
   "unlock the power",

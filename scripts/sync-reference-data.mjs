@@ -34,14 +34,25 @@ const progressionAuditPath = join(ROOT, "scraped-data/progression-unlocks-audit-
 if (existsSync(progressionAuditPath)) {
   const progressionAudit = JSON.parse(readFileSync(progressionAuditPath, "utf8"));
   const knownQuestIds = new Set(progressionUnlocks.quest_unlocks.map((row) => row.id));
+  const knownActivityIds = new Set(progressionUnlocks.activity_unlocks.map((row) => row.id));
 
   for (const addition of progressionAudit.quest_unlock_additions ?? []) {
     if (typeof addition.id !== "string" || !addition.id) {
-      throw new Error("Progression unlock audit addition is missing id");
+      throw new Error("Progression quest unlock audit addition is missing id");
     }
     if (!knownQuestIds.has(addition.id)) {
       progressionUnlocks.quest_unlocks.push(addition);
       knownQuestIds.add(addition.id);
+    }
+  }
+
+  for (const addition of progressionAudit.activity_unlock_additions ?? []) {
+    if (typeof addition.id !== "string" || !addition.id) {
+      throw new Error("Progression activity unlock audit addition is missing id");
+    }
+    if (!knownActivityIds.has(addition.id)) {
+      progressionUnlocks.activity_unlocks.push(addition);
+      knownActivityIds.add(addition.id);
     }
   }
 }

@@ -1,0 +1,62 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Merge-only permanent-unlock additions verified after the March 2026 combat modernisation. This file exists so audited dependency edges can land without hand-editing the larger harvested graph.",
+  "target": "scraped-data/progression-unlocks.json",
+  "policy": {
+    "merge_only": true,
+    "stable_key": "id",
+    "no_stale_combat_values": true,
+    "removed_content_rule": "Do not preserve a removed ability as a current unlock merely because an older quest guide still lists it."
+  },
+  "quest_unlock_additions": [
+    {
+      "id": "the-dig-site:codex-ultimatus-current-abilities",
+      "quest": "The Dig Site",
+      "category": "combat abilities",
+      "region_hint": "misthalin",
+      "unlocks": [
+        {
+          "name": "Shadow Tendrils",
+          "type": "ability",
+          "style": "Ranged",
+          "level_requirement": 75
+        },
+        {
+          "name": "Smoke Tendrils",
+          "type": "ability",
+          "style": "Magic",
+          "level_requirement": 75
+        },
+        {
+          "name": "Ice Asylum",
+          "type": "ability",
+          "style": "Constitution",
+          "level_requirement": 91
+        }
+      ],
+      "historical_removed_unlocks": [
+        {
+          "name": "Blood Tendrils",
+          "style": "Melee",
+          "removed_at": "2026-03-02",
+          "reason": "Removed during Combat Style Modernisation; older Dig Site/Codex pages may still list the historical four-ability reward."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Quests/Rewards",
+        "https://runescape.wiki/w/Abilities",
+        "https://runescape.wiki/w/Blood_Tendrils_(status)"
+      ],
+      "confidence": "confirmed_current_wiki_post_2026_with_stale_quest_page_guard",
+      "league_treatment": "Resolve The Dig Site through the official Equilibrium auto-quest overlay before manually gating these three current abilities. Do not restore Blood Tendrils as an Equilibrium unlock unless Jagex explicitly reintroduces it."
+    }
+  ],
+  "source_conflicts": [
+    {
+      "topic": "Codex Ultimatus ability count",
+      "current": "Three current unlocks: Shadow Tendrils, Smoke Tendrils, Ice Asylum.",
+      "stale": "Older The Dig Site quick-guide/transcript text still describes Blood Tendrils plus the other three.",
+      "resolution": "Use the current Abilities and Quests/Rewards tables plus Blood Tendrils update history. Blood Tendrils was removed on 2 March 2026."
+    }
+  ]
+}

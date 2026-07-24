@@ -1,3 +1,4 @@
+# Retry against the latest reconciled/enriched main head.
 name: Import audited planner data
 
 on:

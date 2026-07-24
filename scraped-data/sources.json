@@ -7,30 +7,30 @@
       "publisher": "Jagex / RuneScape",
       "published": "2026-07-23",
       "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
-      "authority": "primary"
+      "authority": "provisional_reveal"
     },
     {
       "id": "combat_modernisation_wiki",
       "title": "Combat Style Modernisation",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "combat_patch_1_wiki",
       "title": "Patch Notes: Part 1 - Combat Style Modernisation",
-      "publisher": "The RuneScape Wiki mirror of Jagex news",
+      "publisher": "The RuneScape Wiki",
       "published": "2026-03-02",
       "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
-      "authority": "primary_mirror"
+      "authority": "canonical_game_data"
     },
     {
       "id": "combat_patch_2_wiki",
       "title": "Patch Notes: Part 2 - Combat Style Modernisation",
-      "publisher": "The RuneScape Wiki mirror of Jagex news",
+      "publisher": "The RuneScape Wiki",
       "published": "2026-03-02",
       "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation",
-      "authority": "primary_mirror"
+      "authority": "canonical_game_data"
     },
     {
       "id": "aura_overhaul_official_2026_04_13",
@@ -38,7 +38,7 @@
       "publisher": "Jagex / RuneScape",
       "published": "2026-04-13",
       "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-      "authority": "primary"
+      "authority": "provisional_or_changelog"
     },
     {
       "id": "dungeoneering_remaster_official_2026_05_11",
@@ -46,7 +46,7 @@
       "publisher": "Jagex / RuneScape",
       "published": "2026-05-11",
       "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
-      "authority": "primary"
+      "authority": "provisional_or_changelog"
     },
     {
       "id": "midgame_rebalance_official_2026_07_20",
@@ -54,91 +54,168 @@
       "publisher": "Jagex / RuneScape",
       "published": "2026-07-20",
       "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
-      "authority": "primary"
+      "authority": "provisional_or_changelog"
+    },
+    {
+      "id": "rs_analysis_root",
+      "title": "RS Analysis",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "rs_analysis_magic",
+      "title": "RS Analysis - Magic",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/magic",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "rs_analysis_melee",
+      "title": "RS Analysis - Melee",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/melee",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "rs_analysis_ranged",
+      "title": "RS Analysis - Ranged",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/ranged",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "rs_analysis_necromancy",
+      "title": "RS Analysis - Necromancy",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/necromancy",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "rs_analysis_rotation_builder",
+      "title": "RS Analysis - Rotation Builder",
+      "publisher": "RS Analysis",
+      "url": "https://rs-analysis.xyz/rotation_builder",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "pvme_perk_information",
+      "title": "Perk Information",
+      "publisher": "PvME",
+      "url": "https://pvme.io/pvme-guides/invention-and-perks/perk-information/",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "pvme_perks",
+      "title": "Perks",
+      "publisher": "PvME",
+      "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "pvme_constitution_abilities",
+      "title": "Constitution Abilities",
+      "publisher": "PvME",
+      "url": "https://pvme.io/pvme-guides/miscellaneous-information/ability-information/constitution-abilities/",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "pvme_free_upgrades",
+      "title": "Free Upgrades",
+      "publisher": "PvME",
+      "url": "https://pvme.io/pvme-guides/upgrading-info/upgrade-order/free-upgrades/",
+      "authority": "canonical_when_explicitly_sourced"
+    },
+    {
+      "id": "pvme_dpm_faq",
+      "title": "DPM Advice FAQ",
+      "publisher": "PvME",
+      "url": "https://pvme.io/pvme-guides/dpm-advice/dpm-advice-faq/",
+      "authority": "canonical_when_explicitly_sourced"
     },
     {
       "id": "catalyst_guide_wiki",
       "title": "Catalyst League/Guide",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Catalyst_League/Guide",
-      "authority": "secondary_historical"
+      "authority": "canonical_historical"
     },
     {
       "id": "catalyst_tasks_wiki",
       "title": "Catalyst League/Tasks",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
-      "authority": "secondary_historical"
+      "authority": "canonical_historical"
     },
     {
       "id": "catalyst_transcript_wiki",
       "title": "Transcript:Catalyst League",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Transcript:Catalyst_League",
-      "authority": "secondary_historical"
+      "authority": "canonical_historical"
     },
     {
       "id": "havenhythe_wiki",
       "title": "Havenhythe",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Havenhythe",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "hunter_training_wiki",
       "title": "Hunter training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Hunter_training",
-      "authority": "secondary_current_with_outdated_warning"
+      "authority": "canonical_with_page_warning"
     },
     {
       "id": "farming_training_wiki",
       "title": "Farming training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Farming_training",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "divination_training_wiki",
       "title": "Divination training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Divination_training",
-      "authority": "secondary_current_with_incomplete_warning"
+      "authority": "canonical_with_page_warning"
     },
     {
       "id": "agility_training_wiki",
       "title": "Agility training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Agility_training",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "thieving_training_wiki",
       "title": "Thieving training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Thieving_training",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "slayer_training_wiki",
       "title": "Slayer training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Slayer_training",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "archaeology_training_wiki",
       "title": "Archaeology training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Archaeology_training",
-      "authority": "secondary_current"
+      "authority": "canonical_game_data"
     },
     {
       "id": "runecrafting_training_wiki",
       "title": "Pay-to-play Runecrafting training",
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
-      "authority": "secondary_mixed_freshness"
+      "authority": "canonical_with_page_warning"
     }
   ]
 }

@@ -27,7 +27,7 @@
   },
   "hard_rules": [
     "Daemonheim and Dungeoneering require the Forinthry/Wilderness (Wildy) region pick.",
-    "Troll Country is merged into Asgarnia for the working Equilibrium map and is not a separate region pick."
+    "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach; these are not separate region picks."
   ],
   "next_ingest_priority": [
     "Full Equilibrium task list when published",

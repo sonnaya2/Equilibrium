@@ -1,5 +1,168 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
-  "records": []
+  "records": [
+    {
+      "tier": 1,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 2,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 3,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 4,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": true,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 5,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 6,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 7,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": false,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "tier": 8,
+      "revealed": false,
+      "paths": [
+        "Order",
+        "Balance",
+        "Chaos"
+      ],
+      "godTier": true,
+      "choices": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    }
+  ],
+  "paths": [
+    "Order",
+    "Balance",
+    "Chaos"
+  ],
+  "godTiers": [
+    4,
+    8
+  ],
+  "resetCount": 3
 }

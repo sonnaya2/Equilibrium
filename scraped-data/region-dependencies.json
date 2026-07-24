@@ -3,12 +3,12 @@
   "purpose": "Canonical hard region requirements, boundary overrides, and aliases used by planners. These override looser geographic tagging elsewhere in the dataset.",
   "boundary_overrides": [
     {
-      "content": "Troll Country",
+      "content": "northern Asgarnia route",
       "required_region": "asgarnia",
       "includes": ["Burthorpe", "Death Plateau", "Trollheim", "Troll Stronghold", "God Wars Dungeon approach"],
-      "planner_rule": "Treat Troll Country as part of Asgarnia. Do not expose Troll Country as a separate selectable region.",
+      "planner_rule": "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
       "confidence": "user_confirmed_from_region_map",
-      "evidence_note": "User supplied the working Equilibrium region map and explicitly instructed that Troll Country is merged with Asgarnia. This also matches the long-running RuneScape Leagues convention where Troll Country is folded into Asgarnia, but the planner rule is based on the user's Equilibrium map instruction rather than assuming OSRS boundaries are automatically authoritative for RS3."
+      "evidence_note": "The user supplied the working Equilibrium region map and explicitly confirmed this boundary for planner use."
     }
   ],
   "dependencies": [
@@ -22,12 +22,12 @@
       "confidence": "confirmed_official_region_mapping_plus_user_correction"
     },
     {
-      "content": "Troll Country",
+      "content": "northern Asgarnia route",
       "system": "regional boundary",
       "required_region": "asgarnia",
-      "required_region_aliases": ["Asgarnia + Troll Country", "Trollheim", "Troll Stronghold"],
+      "required_region_aliases": ["Trollheim", "Troll Stronghold"],
       "hard_requirement": true,
-      "planner_rule": "Any content whose physical access is through Troll Country should resolve to Asgarnia unless a later official Equilibrium boundary explicitly overrides it.",
+      "planner_rule": "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it.",
       "confidence": "user_confirmed_from_region_map"
     }
   ],

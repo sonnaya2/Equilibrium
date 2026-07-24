@@ -1,5 +1,20 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
-  "records": []
+  "records": [],
+  "tiers": {
+    "easy": 10,
+    "medium": 30,
+    "hard": 80,
+    "elite": 200,
+    "master": 400
+  },
+  "note": "Individual Equilibrium tasks are not yet ingested. Tier point values are metadata, not fake task rows.",
+  "source": {
+    "source": "jagex",
+    "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+    "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+    "publishedAt": "2026-07-23",
+    "verifiedAt": "2026-07-24"
+  }
 }

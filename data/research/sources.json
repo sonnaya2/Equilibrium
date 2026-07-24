@@ -1,0 +1,199 @@
+{
+  "lastSynced": "2026-07-24",
+  "policy": {
+    "defaultGroundTruth": "runescape-wiki",
+    "explicitSourceGroundTruth": [
+      "pvme",
+      "rs-analysis"
+    ],
+    "provisionalFallback": "jagex"
+  },
+  "records": [
+    {
+      "source": "jagex",
+      "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+      "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+      "publishedAt": "2026-07-23",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+      "title": "Combat Style Modernisation",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
+      "title": "Patch Notes: Part 1 - Combat Style Modernisation",
+      "publishedAt": "2026-03-02",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_2_-_Combat_Style_Modernisation",
+      "title": "Patch Notes: Part 2 - Combat Style Modernisation",
+      "publishedAt": "2026-03-02",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "jagex",
+      "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "title": "Patch Notes: Aura Overhaul",
+      "publishedAt": "2026-04-13",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "jagex",
+      "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+      "title": "Patch Notes: Dungeoneering Remastered",
+      "publishedAt": "2026-05-11",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "jagex",
+      "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "title": "Patch Notes: Mid-Game Rebalance",
+      "publishedAt": "2026-07-20",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/",
+      "title": "RS Analysis",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/magic",
+      "title": "RS Analysis - Magic",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/melee",
+      "title": "RS Analysis - Melee",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/ranged",
+      "title": "RS Analysis - Ranged",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/necromancy",
+      "title": "RS Analysis - Necromancy",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "rs-analysis",
+      "url": "https://rs-analysis.xyz/rotation_builder",
+      "title": "RS Analysis - Rotation Builder",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "pvme",
+      "url": "https://pvme.io/pvme-guides/invention-and-perks/perk-information/",
+      "title": "Perk Information",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "pvme",
+      "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "title": "Perks",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "pvme",
+      "url": "https://pvme.io/pvme-guides/miscellaneous-information/ability-information/constitution-abilities/",
+      "title": "Constitution Abilities",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "pvme",
+      "url": "https://pvme.io/pvme-guides/upgrading-info/upgrade-order/free-upgrades/",
+      "title": "Free Upgrades",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "pvme",
+      "url": "https://pvme.io/pvme-guides/dpm-advice/dpm-advice-faq/",
+      "title": "DPM Advice FAQ",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Catalyst_League/Guide",
+      "title": "Catalyst League/Guide",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+      "title": "Catalyst League/Tasks",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Transcript:Catalyst_League",
+      "title": "Transcript:Catalyst League",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Havenhythe",
+      "title": "Havenhythe",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Hunter_training",
+      "title": "Hunter training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Farming_training",
+      "title": "Farming training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Divination_training",
+      "title": "Divination training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Agility_training",
+      "title": "Agility training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Thieving_training",
+      "title": "Thieving training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Slayer_training",
+      "title": "Slayer training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Archaeology_training",
+      "title": "Archaeology training",
+      "verifiedAt": "2026-07-24"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+      "title": "Pay-to-play Runecrafting training",
+      "verifiedAt": "2026-07-24"
+    }
+  ]
+}

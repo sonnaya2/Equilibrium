@@ -21,9 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen font-sans antialiased">
-        <header className="border-t-2 border-t-brass-400/70 border-b border-stone-750 bg-stone-950">
+        <header className="border-b border-stone-750 bg-stone-950">
           <nav className="mx-auto flex max-w-[1440px] items-baseline gap-5 overflow-x-auto px-4 py-2.5">
-            <Link href="/" className="shrink-0 font-mono text-xs tracking-[0.18em] text-brass-400">
+            <Link href="/" className="shrink-0 font-mono text-xs tracking-[0.18em] text-parch-50">
               EQUILIBRIUM
             </Link>
             <ul className="flex shrink-0 gap-4 text-sm text-parch-300">
@@ -35,8 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </li>
               ))}
             </ul>
-            <span className="ml-auto hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-parch-300/70 md:block">
-              RS3 Leagues II research build
+            <span className="ml-auto hidden shrink-0 text-xs text-parch-300/70 md:block">
+              RS3 Leagues II
             </span>
           </nav>
         </header>

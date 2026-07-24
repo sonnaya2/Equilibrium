@@ -1,5 +1,260 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-24",
   "verified": false,
-  "records": []
+  "records": [
+    {
+      "id": "misthalin",
+      "name": "Misthalin",
+      "availability": "starting",
+      "aliases": [],
+      "areas": [
+        "Lumbridge",
+        "Varrock",
+        "Draynor Village"
+      ],
+      "hardRules": [],
+      "warnings": [
+        "Exact handling of City of Um/Necromancy content has not yet been published."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "havenhythe",
+      "name": "Havenhythe",
+      "availability": "starting",
+      "aliases": [],
+      "areas": [
+        "Wendlewick",
+        "Hollow Hill",
+        "Blighted Cave",
+        "Eastfold Farm"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "karamja",
+      "name": "Karamja",
+      "availability": "automatic_early",
+      "aliases": [],
+      "areas": [
+        "Karamja",
+        "Brimhaven",
+        "Shilo Village",
+        "TzHaar area"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "asgarnia",
+      "name": "Asgarnia",
+      "availability": "elective",
+      "aliases": [
+        "Asgarnia",
+        "Troll Country",
+        "Trollheim"
+      ],
+      "areas": [
+        "Falador",
+        "Taverley",
+        "Burthorpe",
+        "Port Sarim",
+        "Dwarven Mine",
+        "Death Plateau",
+        "Trollheim",
+        "Troll Stronghold",
+        "God Wars Dungeon"
+      ],
+      "hardRules": [
+        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as part of Asgarnia. Do not expose them as a separate selectable region.",
+        "Any content reached through Burthorpe, Death Plateau, Trollheim or Troll Stronghold resolves to Asgarnia unless a later official Equilibrium boundary explicitly overrides it."
+      ],
+      "warnings": [
+        "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
+        "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. These are not separate region picks."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "kandarin",
+      "name": "Kandarin",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Player-Owned Farm",
+        "Hall of Memories",
+        "Deep Sea Fishing Hub"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "fremennik",
+      "name": "Fremennik",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Neitiznot",
+        "Lunar Isle",
+        "Jatizso"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "forinthry",
+      "name": "Forinthry",
+      "availability": "elective",
+      "aliases": [
+        "Wilderness",
+        "Wildy"
+      ],
+      "areas": [
+        "Wilderness Slayer",
+        "Daemonheim"
+      ],
+      "hardRules": [
+        "Treat Dungeoneering/Daemonheim as unavailable unless the player selects the Forinthry/Wilderness region."
+      ],
+      "warnings": [
+        "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
+      ],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "desert",
+      "name": "Desert",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Menaphos",
+        "Het's Oasis"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "morytania",
+      "name": "Morytania",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Araxxor",
+        "Everlight Dig Site"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "tirannwn",
+      "name": "Tirannwn",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Prifddinas",
+        "Lost Grove"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    },
+    {
+      "id": "anachronia",
+      "name": "Anachronia",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "dinosaurs",
+        "hunting",
+        "farming"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+        "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+        "publishedAt": "2026-07-23",
+        "verifiedAt": "2026-07-24"
+      },
+      "verified": false
+    }
+  ]
 }

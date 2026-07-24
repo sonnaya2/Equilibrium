@@ -1,0 +1,45 @@
+# One-shot full validation for the completed data/source audit. Self-removes after success.
+name: Final audit e2e once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/final-audit-e2e-once.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: final-audit-e2e-once
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run normalize:data
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Record successful full gate and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/final-audit-e2e-once.yml
+          printf 'normalize:data + typecheck + unit tests + production build + Playwright e2e passed\nvalidated_parent=%s\n' "$(git rev-parse HEAD)" > data/AUDIT_VALIDATION.txt
+          git add data/AUDIT_VALIDATION.txt data/
+          git commit -m "Validate final audited dataset"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,0 +1,123 @@
+name: Source and copy cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/source-copy-cleanup.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-copy-cleanup-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Fix source precedence and public copy
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const replaceOnce = (text, before, after, label) => {
+            if (!text.includes(before)) throw new Error(`Missing replacement target: ${label}`);
+            return text.replace(before, after);
+          };
+
+          let normalize = fs.readFileSync('scripts/normalize-scraped-data.mjs', 'utf8');
+
+          normalize = replaceOnce(
+            normalize,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n\n  const candidates = sourceIds.map((id) => sourceFromId(id, fallbackTitle)).filter(Boolean);`,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n  if (direct?.source === "jagex") return direct;\n\n  const candidates = sourceIds.map((id) => sourceFromId(id, fallbackTitle)).filter(Boolean);`,
+            'canonicalSource Jagex precedence'
+          );
+
+          normalize = replaceOnce(
+            normalize,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n\n  const wiki = wikiTrainingSource(record.skill);`,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n  if (direct?.source === "jagex") return direct;\n\n  const wiki = wikiTrainingSource(record.skill);`,
+            'trainingSource Jagex precedence'
+          );
+
+          normalize = replaceOnce(
+            normalize,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n\n  const skillWiki = wikiTrainingSource(kind);`,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n  if (direct?.source === "jagex") return direct;\n\n  const skillWiki = wikiTrainingSource(kind);`,
+            'contentSource Jagex precedence'
+          );
+
+          normalize = replaceOnce(
+            normalize,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n  return wikiEntitySource(name) || direct || leagueRegionSource({ id: regionId });`,
+            `  if (direct && (direct.source === "pvme" || direct.source === "rs-analysis")) return direct;\n  if (direct?.source === "runescape-wiki") return direct;\n  if (direct?.source === "jagex") return direct;\n  return wikiEntitySource(name) || direct || leagueRegionSource({ id: regionId });`,
+            'upgradeSource Jagex precedence'
+          );
+
+          fs.writeFileSync('scripts/normalize-scraped-data.mjs', normalize);
+
+          let browser = fs.readFileSync('src/components/ResearchBrowser.tsx', 'utf8');
+          browser = replaceOnce(
+            browser,
+            `function cleanText(value: string): string {\n  return value\n    .replaceAll("Asgarnia", "Asgarnia")\n    .replaceAll("Asgarnia", "Asgarnia");\n}`,
+            `function cleanText(value: string): string {\n  return value;\n}`,
+            'cleanText no-op'
+          );
+          browser = replaceOnce(browser, `if (!method.regionHints.length) return "not mapped";`, `if (!method.regionHints.length) return "no region set";`, 'method access copy');
+          browser = replaceOnce(browser, `.replaceAll("arc_unresolved", "The Arc; League access unresolved")`, `.replaceAll("arc_unresolved", "The Arc; region not confirmed")`, 'Arc copy');
+          browser = replaceOnce(browser, `{availabilityLabel(region.availability)} · {region.content.length} content rows · {region.training.length} training methods · {region.upgrades.length} upgrades`, `{availabilityLabel(region.availability)} · {region.content.length} entries · {region.training.length} training methods · {region.upgrades.length} upgrades`, 'region count copy');
+          browser = replaceOnce(browser, `{skill.methods.length} methods · {skill.regions.length} region dependencies`, `{skill.methods.length} methods · {skill.regions.length} regions`, 'skill count copy');
+          browser = replaceOnce(
+            browser,
+            `Regions, upgrades and training methods from the {catalog.snapshotDate} snapshot. Wiki links are used unless an entry comes from PvME or RS Analysis.`,
+            `Region unlocks, upgrades and training routes checked on {catalog.snapshotDate}. Most links go to the Wiki; PvME, RS Analysis and fresh Jagex updates stay attached when they are the actual source.`,
+            'data intro copy'
+          );
+          browser = replaceOnce(browser, `<span>tasks not published</span>`, `<span>task list pending</span>`, 'task status copy');
+
+          browser = replaceOnce(
+            browser,
+            `  if (normalized.includes("confirmed_wiki")) return "Wiki";\n  if (normalized.includes("confirmed_official")) return "Official";\n  if (normalized.includes("inferred_region") || normalized.includes("region_inferred")) return "Region inferred";`,
+            `  if (normalized.includes("historical_league_taxonomy") || normalized.includes("working_league_region_taxonomy")) return "League precedent";\n  if (normalized.includes("confirmed_wiki")) return "Wiki checked";\n  if (normalized.includes("confirmed_official")) return "Jagex";\n  if (normalized.includes("inferred_region") || normalized.includes("region_inferred")) return "Region inferred";`,
+            'confidence copy'
+          );
+
+          fs.writeFileSync('src/components/ResearchBrowser.tsx', browser);
+
+          const highPath = 'scraped-data/training-high-value.json';
+          let high = fs.readFileSync(highPath, 'utf8');
+          high = high.replaceAll('https://patchtracker.gg/runescape/mid-game-rebalance-is-live', 'https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance');
+          fs.writeFileSync(highPath, high);
+          NODE
+
+      - run: npm ci
+      - run: npm run normalize:data
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      - name: Commit source and copy fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/normalize-scraped-data.mjs src/components/ResearchBrowser.tsx scraped-data/training-high-value.json data/
+          if git diff --cached --quiet; then
+            echo "Source/copy pass already current"
+            exit 0
+          fi
+          git commit -m "Keep exact sources and humanize data copy"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three/webgpu";
 import { Canvas, extend } from "@react-three/fiber";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
 import { Effects } from "./Effects";
 import { useReducedMotion } from "./useReducedMotion";
-import { MAP_FRAME, MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
+import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
 
 extend(THREE as never);
 
@@ -17,6 +17,17 @@ export default function MapScene() {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [focus, setFocus] = useState<RegionAnchor | null>(null);
   const reducedMotion = useReducedMotion();
+  // R3F never calls dispose() on a custom gl (its forceContextLoss is a WebGL
+  // concept WebGPURenderer lacks), so every Canvas mount would leak a whole
+  // renderer. Dispose it ourselves on unmount.
+  const rendererRef = useRef<THREE.WebGPURenderer | null>(null);
+  useEffect(
+    () => () => {
+      rendererRef.current?.dispose();
+      rendererRef.current = null;
+    },
+    [],
+  );
 
   useEffect(() => {
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
@@ -49,15 +60,18 @@ export default function MapScene() {
         <Canvas
           dpr={[1, 2]}
           frameloop="demand"
-          camera={{ position: MAP_FRAME.position, fov: 42, near: 0.05, far: 20 }}
+          // Starts wide and high; the rig settles to MAP_FRAME as the intro
+          // descent (a hard cut under reduced motion).
+          camera={{ position: [0.9, 2.4, 2.1], fov: 42, near: 0.05, far: 20 }}
+          onPointerMissed={() => setFocus(null)}
           gl={async (props) => {
             const renderer = new THREE.WebGPURenderer({ ...(props as object), antialias: true });
             await renderer.init();
+            rendererRef.current = renderer;
             return renderer;
           }}
         >
           <color attach="background" args={["#0e0d0b"]} />
-          <fog attach="fog" args={["#0e0d0b", 1.6, 3.2]} />
 
           <ambientLight intensity={0.55} color="#cfd8c8" />
           <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.55} color="#e4efd6" />
@@ -65,7 +79,7 @@ export default function MapScene() {
 
           <MapTable onFocus={setFocus} />
           <CameraRig focus={focus} reducedMotion={reducedMotion} />
-          <Effects />
+          {/* <Effects /> */}
         </Canvas>
       </div>
       <p className="mt-1.5 text-xs text-parch-500">{MAP_IMAGE.credit}</p>

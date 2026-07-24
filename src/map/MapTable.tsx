@@ -122,7 +122,7 @@ function RegionMarker({
         <meshStandardMaterial
           color={unlocked ? GEM_LIT : GEM_DIM}
           emissive={unlocked ? GEM_LIT : GEM_DIM}
-          emissiveIntensity={unlocked ? (hovered ? 3.2 : 2.2) : 0.12}
+          emissiveIntensity={unlocked ? (hovered ? 2.1 : 1.4) : 0.12}
           roughness={0.3}
         />
       </mesh>

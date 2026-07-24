@@ -1,10 +1,6 @@
-import { Stub } from "@/components/Stub";
+import { ResearchBrowser } from "@/components/ResearchBrowser";
+import { getCurrentResearchCatalog } from "@/research/currentCatalog";
 
 export default function DataPage() {
-  return (
-    <Stub
-      title="Data"
-      note="Dataset freshness and provenance. Datasets under data/ are empty until the sync scripts run."
-    />
-  );
+  return <ResearchBrowser catalog={getCurrentResearchCatalog()} />;
 }

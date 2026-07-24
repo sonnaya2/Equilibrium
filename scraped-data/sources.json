@@ -33,6 +33,30 @@
       "authority": "primary_mirror"
     },
     {
+      "id": "aura_overhaul_official_2026_04_13",
+      "title": "Patch Notes: Aura Overhaul",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-04-13",
+      "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "authority": "primary"
+    },
+    {
+      "id": "dungeoneering_remaster_official_2026_05_11",
+      "title": "Patch Notes: Dungeoneering Remastered",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-05-11",
+      "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+      "authority": "primary"
+    },
+    {
+      "id": "midgame_rebalance_official_2026_07_20",
+      "title": "Patch Notes: Mid-Game Rebalance",
+      "publisher": "Jagex / RuneScape",
+      "published": "2026-07-20",
+      "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+      "authority": "primary"
+    },
+    {
       "id": "catalyst_guide_wiki",
       "title": "Catalyst League/Guide",
       "publisher": "The RuneScape Wiki",
@@ -115,14 +139,6 @@
       "publisher": "The RuneScape Wiki",
       "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
       "authority": "secondary_mixed_freshness"
-    },
-    {
-      "id": "dungeoneering_remaster_2026",
-      "title": "Patch Notes: Dungeoneering Remastered",
-      "publisher": "Jagex news mirror / RuneNation",
-      "published": "2026-05-11",
-      "url": "https://www.runenation.org/news-and-updates/runescape-news/11602-patch-notes-dungeoneering-remastered",
-      "authority": "primary_mirror"
     }
   ]
 }

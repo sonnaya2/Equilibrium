@@ -1,6 +1,6 @@
 {
   "snapshot_date": "2026-07-24",
-  "scope_note": "High-value region dependency map. Exact Equilibrium boundary rules and quest auto-completions are not fully public; inferred mappings are labelled.",
+  "scope_note": "High-value region dependency map for Equilibrium. Exact quest auto-completions and several edge-case boundaries are still unpublished. Explicit user-provided map corrections are treated as planner boundary overrides and labelled separately from Wiki/Jagex confirmation.",
   "regions": [
     {
       "id": "misthalin",
@@ -47,7 +47,12 @@
     },
     {
       "id": "asgarnia",
+      "display_name": "Asgarnia + Troll Country",
       "availability": "elective",
+      "aliases": ["Asgarnia", "Troll Country", "Trollheim"],
+      "boundary_rule": "Troll Country is merged into Asgarnia for the Equilibrium planner; it is not a separate region pick.",
+      "boundary_confidence": "user_confirmed_from_region_map",
+      "major_areas": ["Falador", "Taverley", "Burthorpe", "Port Sarim", "Dwarven Mine", "Troll Country", "Death Plateau", "Trollheim", "Troll Stronghold", "God Wars Dungeon"],
       "official_examples": ["God Wars Dungeon", "Falador"],
       "bosses_and_combat": [
         {"name": "General Graardor", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
@@ -57,10 +62,12 @@
         {"name": "Nex", "group": "God Wars Dungeon 1", "confidence": "inferred_region"}
       ],
       "skilling": [
-        {"name": "Artisans' Workshop burial smithing", "skill": "Smithing", "note": "Among the fastest Smithing XP methods; expensive and consumes the armour.", "confidence": "confirmed_wiki"}
+        {"name": "Artisans' Workshop burial smithing", "skill": "Smithing", "note": "Among the fastest Smithing XP methods; expensive and consumes the armour.", "confidence": "confirmed_wiki"},
+        {"name": "Safecracking route", "skill": "Thieving", "level_range": "76-83", "note": "Current training data lists roughly 400k XP/h and around 500k with flashing safes.", "confidence": "confirmed_wiki"}
       ],
       "power_upgrades": ["Bandos equipment", "Armadyl equipment", "Subjugation equipment", "Nex tier-80 armour sets"],
-      "source_ids": ["smithing_training_wiki"]
+      "open_questions": ["Confirm all Equilibrium-specific quest auto-completions for the Troll Country portion before launch."],
+      "source_ids": ["smithing_training_wiki", "user_region_map_2026_07_24"]
     },
     {
       "id": "kandarin",
@@ -87,14 +94,15 @@
     {
       "id": "forinthry",
       "availability": "elective",
+      "aliases": ["Wilderness", "Wildy"],
       "official_examples": ["Wilderness Slayer", "Daemonheim"],
       "notable_content": [
         {"name": "Wilderness Slayer", "type": "Slayer", "confidence": "confirmed_official"},
-        {"name": "Daemonheim", "type": "Dungeoneering", "note": "Dungeoneering was refreshed/remastered in 2026 with floor XP and progression changes.", "confidence": "confirmed_official"},
+        {"name": "Daemonheim", "type": "Dungeoneering", "note": "Hard planner dependency: Dungeoneering/Daemonheim requires the Forinthry/Wilderness pick. Dungeoneering was refreshed in 2026 with floor XP and progression changes.", "confidence": "confirmed_official"},
         {"name": "Abyss entrance", "type": "Runecrafting", "confidence": "inferred_region"},
         {"name": "Wilderness Agility Course", "type": "Agility", "confidence": "inferred_region"}
       ],
-      "legacy_warning": "Do not use old Demonic Skull boosted rates without verifying the July 2026 rebalance state."
+      "legacy_warning": "Do not use old Demonic Skull boosted rates; the Demonic Skull was removed in the July 2026 mid-game rebalance."
     },
     {
       "id": "desert",

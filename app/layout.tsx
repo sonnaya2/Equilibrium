@@ -21,12 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen font-sans antialiased">
-        <header className="border-b border-stone-750">
-          <nav className="mx-auto flex max-w-6xl items-baseline gap-6 px-4 py-3">
-            <Link href="/" className="font-mono text-sm tracking-[0.2em] text-brass-400">
+        <header className="border-t-2 border-t-brass-400/70 border-b border-stone-750 bg-stone-950">
+          <nav className="mx-auto flex max-w-[1440px] items-baseline gap-5 overflow-x-auto px-4 py-2.5">
+            <Link href="/" className="shrink-0 font-mono text-xs tracking-[0.18em] text-brass-400">
               EQUILIBRIUM
             </Link>
-            <ul className="flex gap-4 text-sm text-parch-300">
+            <ul className="flex shrink-0 gap-4 text-sm text-parch-300">
               {NAV.map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="hover:text-parch-50">
@@ -35,15 +35,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </li>
               ))}
             </ul>
+            <span className="ml-auto hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-parch-300/70 md:block">
+              RS3 Leagues II research build
+            </span>
           </nav>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="mx-auto max-w-6xl px-4 py-8 text-xs text-parch-300">
+        <main className="mx-auto max-w-[1440px] px-4 py-6">{children}</main>
+        <footer className="mx-auto flex max-w-[1440px] flex-wrap gap-x-2 border-t border-stone-750 px-4 py-4 text-xs text-parch-300">
           <Link href="/sources" className="hover:text-parch-50">
             Sources &amp; Credits
           </Link>
-          <span className="px-2">·</span>
-          Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
+          <span>·</span>
+          <span>Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.</span>
         </footer>
       </body>
     </html>

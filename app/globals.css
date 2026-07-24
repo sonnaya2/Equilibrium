@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* Placeholder base only. Real visual direction is a later pass: load no-slop-ui
-   before touching this file, then ui-humanizer for surgery. */
 @theme {
   --color-parch-50: #e8e3d6;
   --color-parch-300: #a99f88;
@@ -13,8 +11,43 @@
   --font-mono: ui-monospace, "Cascadia Mono", "Consolas", monospace;
 }
 
-html,
+html {
+  color-scheme: dark;
+  background: var(--color-stone-950);
+}
+
 body {
   background: var(--color-stone-950);
   color: var(--color-parch-50);
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--color-brass-400);
+  color: var(--color-stone-950);
+}
+
+button,
+a,
+input {
+  transition-property: color, border-color, background-color;
+  transition-duration: 90ms;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 1px solid var(--color-brass-400);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

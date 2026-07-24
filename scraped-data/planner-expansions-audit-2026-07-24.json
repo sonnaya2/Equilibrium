@@ -1,0 +1,113 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Patch-level audit for scraped-data/planner-expansions.json. This file records only corrections, confidence changes, and genuinely missing rows; it is not a second canonical planner dataset.",
+  "target": "scraped-data/planner-expansions.json",
+  "policy": {
+    "merge_only": true,
+    "delete_existing_rows": false,
+    "game_facts_ground_truth": "RuneScape Wiki",
+    "practice_source": "PvME",
+    "freshness_rule": "A PvME page carrying the site-wide March 2 2026 Combat Modernization warning must not be labelled pvme_current unless the specific claim has been independently revalidated after that warning."
+  },
+  "source_findings": [
+    {
+      "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
+      "finding": "The page currently states that, following the March 2 2026 Combat Modernization, the vast majority of PvME content is outdated while the site is rebuilt.",
+      "impact": "Rows sourced only from this page may remain as method-discovery candidates, but confidence values such as pvme_current overstate freshness. Do not use them for current XP rates, combat performance, or best-method ranking without a newer independent source.",
+      "recommended_confidence": "pvme_present_post_2026_global_stale_warning",
+      "verified": true
+    }
+  ],
+  "confidence_patches": [
+    {
+      "match": {
+        "section": "combat_training_spots",
+        "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/"
+      },
+      "set": {
+        "confidence": "pvme_present_post_2026_global_stale_warning"
+      },
+      "preserve": [
+        "region",
+        "location",
+        "requirements",
+        "notes",
+        "source_url",
+        "source_type"
+      ],
+      "reason": "Keep the useful method candidates, but stop presenting an explicitly stale PvME page as current validation."
+    }
+  ],
+  "additions": {
+    "combat_training_spots": [
+      {
+        "id": "combat-armoured-zombies",
+        "level_range": "50/60-80 candidate",
+        "region": "unresolved_cross_boundary",
+        "region_candidates": [
+          "misthalin",
+          "forinthry"
+        ],
+        "location": "Chaos Temple Dungeon / Zemouregal's Base, reached through Defender of Varrock progression",
+        "methods": [
+          "AoE combat training",
+          "undead training with Salve amulet synergy"
+        ],
+        "skills": [
+          "Attack",
+          "Strength",
+          "Defence",
+          "Constitution",
+          "Magic",
+          "Ranged",
+          "Necromancy"
+        ],
+        "requirements": [
+          "Defender of Varrock progression for access"
+        ],
+        "notes": "PvME lists Armoured Zombies alongside Abyss monsters for the 50/60-80 training band and explicitly notes Salve amulet synergy. The farmable dungeon is geographically associated with the Wilderness but is reached through a safe quest instance/access route from Varrock, so do not hard-assign an Equilibrium region until official locality or quest-auto-completion rules resolve it.",
+        "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
+        "secondary_source_urls": [
+          "https://runescape.wiki/w/Armoured_zombie",
+          "https://runescape.wiki/w/Chaos_Temple_Dungeon",
+          "https://runescape.wiki/w/Defender_of_Varrock"
+        ],
+        "source_type": "pvme_plus_wiki",
+        "confidence": "pvme_method_candidate_wiki_facts_cross_checked_region_unresolved"
+      }
+    ]
+  },
+  "archaeology_relic_audit": [
+    {
+      "relic": "Font of Life",
+      "target_field": "archaeology_level",
+      "current_value": "tutorial",
+      "recommended_value": 5,
+      "reason": "The relic is obtained during the tutorial, but current RuneScape Wiki data gives level 5 as the relic level. Keeping the acquisition note as tutorial while storing the numeric level makes the row consistent with the rest of the relic table.",
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeology",
+        "https://runescape.wiki/w/Font_of_Life"
+      ],
+      "verified": true
+    },
+    {
+      "relic": "Death Ward",
+      "target_field": "archaeology_level",
+      "current_value": 81,
+      "recommended_value": 81,
+      "reason": "Keep 81. Current Archaeology training and current PvM equipment guidance place the Aviansie dreamcoat / Ring of Solomon route at level 81. A Dungeoneering/Archaeology table currently shows 87, which conflicts with those more directly relevant pages and should not overwrite the planner row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeology_training",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM",
+        "https://runescape.wiki/w/Dungeoneering/Archaeology"
+      ],
+      "verified": true,
+      "source_conflict": true
+    }
+  ],
+  "do_not_promote": [
+    "Combat XP/hour numbers from the stale-warning PvME mid-game page",
+    "A hard Misthalin or Forinthry assignment for Armoured Zombies before Equilibrium locality/quest treatment is known",
+    "The conflicting level-87 Death Ward value from Dungeoneering/Archaeology"
+  ]
+}

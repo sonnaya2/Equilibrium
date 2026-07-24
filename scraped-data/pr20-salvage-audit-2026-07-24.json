@@ -1,0 +1,40 @@
+{
+  "snapshot_date": "2026-07-24",
+  "pr": 20,
+  "pr_head_sha": "98fd65e2d9c135ea993661ed4d9dbe5377febcfb",
+  "former_branch": "agent/invention-data-pass",
+  "status": "salvage_complete_no_unique_research_remaining",
+  "branch_state": "deleted",
+  "pr_state": "closed",
+  "findings": [
+    "The previously documented planner-expansions-archaeology-guild.json salvage target never existed in PR #20's authoritative changed-file list or at the PR head commit.",
+    "Every actual research overlay changed by PR #20 is already present on main with byte-identical blob content.",
+    "No PR #20 research payload needs another merge, cherry-pick, or branch recovery pass.",
+    "Current main specialist Slayer/Invention/Archaeology feeds are the canonical continuation point."
+  ],
+  "verified_identical_source_overlays": [
+    "scraped-data/planner-expansions-archaeology-collections.json",
+    "scraped-data/planner-expansions-archaeology-production.json",
+    "scraped-data/planner-expansions-archaeology-repeatables.json",
+    "scraped-data/planner-expansions-archaeology-special-relics.json",
+    "scraped-data/planner-expansions-invention-2026.json",
+    "scraped-data/planner-expansions-invention-archaeology.json",
+    "scraped-data/planner-expansions-invention-component-coverage.json",
+    "scraped-data/planner-expansions-invention-material-bottlenecks.json",
+    "scraped-data/planner-expansions-invention-perks.json",
+    "scraped-data/planner-expansions-invention-utility-perks.json",
+    "scraped-data/planner-expansions-slayer.json",
+    "scraped-data/planner-expansions-slayer-collection.json",
+    "scraped-data/planner-expansions-slayer-edge.json"
+  ],
+  "do_not_reopen": [
+    "agent/invention-data-pass",
+    "PR #20",
+    "scraped-data/planner-expansions-archaeology-guild.json"
+  ],
+  "evidence": {
+    "github_pr_changed_files": "PR #20 changed-file enumeration",
+    "comparison_method": "Git blob SHA comparison between current main and PR head for each research overlay",
+    "note": "Generated data, scripts and docs may have evolved on main after salvage; the audit concerns unique research payload recovery."
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Additional planner-relevant Archaeology collection relics and repeatable rewards. These rows focus on region pressure, one-time power unlocks and repeatable resource farms rather than serializing every chronote-only museum collection.",
+  "additional_collection_relic_routes": [
+    {
+      "collection": "Zamorakian IV",
+      "archaeology_level": 116,
+      "collector": "Isaura",
+      "first_reward": "Ariadne's Diadem",
+      "relic_power": "Inspire Love",
+      "artifact_regions": ["misthalin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["misthalin", "asgarnia"],
+      "path": "Excavate the Infernal Source collection, hand it to Isaura in Taverley Dungeon, then offer Ariadne's Diadem to the monolith.",
+      "source_url": "https://runescape.wiki/w/Isaura%3A_Zamorakian_IV",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Armadylean III",
+      "archaeology_level": 118,
+      "collector": "Lowse",
+      "first_reward": "Howl's Thinking Cap",
+      "relic_power": "Inspire Genius",
+      "artifact_regions": ["kandarin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["kandarin", "asgarnia"],
+      "path": "Complete the late Stormguard collection and hand it to Lowse at Armadyl's Tower; Howl's Thinking Cap unlocks Inspire Genius.",
+      "source_url": "https://runescape.wiki/w/Lowse%3A_Armadylean_III",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collections": ["Red Rum Relics III", "Green Gobbo Goodies III"],
+      "archaeology_level": 119,
+      "collectors": ["General Bentnoze", "General Wartface"],
+      "first_rewards": ["Helm of Terror (inside)", "Helm of Terror (outside)"],
+      "relic_power": "Inspire Awe",
+      "artifact_regions": ["kandarin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["kandarin", "asgarnia"],
+      "path": "Complete both Warforge III collections, combine the inside and outside Helm of Terror halves, then offer the completed Helm of Terror to the monolith.",
+      "source_url": "https://runescape.wiki/w/Helm_of_Terror_%28inside%29",
+      "secondary_source_url": "https://runescape.wiki/w/General_Wartface%3A_Green_Gobbo_Goodies_III",
+      "confidence": "confirmed_wiki_cross_region"
+    }
+  ],
+  "repeatable_collection_rewards": [
+    {
+      "collection": "Saradominist II",
+      "archaeology_level": 72,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["morytania"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["morytania", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_II",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Saradominist III",
+      "archaeology_level": 100,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["morytania"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["morytania", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_III",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Saradominist IV",
+      "archaeology_level": 117,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["morytania"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["morytania", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Sir_Atcha%3A_Saradominist_IV",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Zamorakian II",
+      "archaeology_level": 81,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["misthalin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["misthalin", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Isaura%3A_Zamorakian_II",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Zamorakian III",
+      "archaeology_level": 104,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["misthalin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["misthalin", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Isaura%3A_Zamorakian_III",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Zamorakian IV",
+      "archaeology_level": 116,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["misthalin"],
+      "collector_regions": ["asgarnia"],
+      "required_regions": ["misthalin", "asgarnia"],
+      "source_url": "https://runescape.wiki/w/Isaura%3A_Zamorakian_IV",
+      "confidence": "confirmed_wiki_cross_region"
+    },
+    {
+      "collection": "Zarosian II",
+      "archaeology_level": 81,
+      "repeat_reward": "50 Kharid-et pylon batteries",
+      "required_regions": ["misthalin"],
+      "source_url": "https://runescape.wiki/w/Soran%3A_Zarosian_II",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Zarosian III",
+      "archaeology_level": 107,
+      "repeat_reward": "100 Kharid-et pylon batteries",
+      "required_regions": ["misthalin"],
+      "source_url": "https://runescape.wiki/w/Soran%3A_Zarosian_III",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Zarosian IV",
+      "archaeology_level": 118,
+      "first_reward": "Random Inquisitor staff piece",
+      "repeat_reward": "100 Kharid-et pylon batteries",
+      "required_regions": ["misthalin"],
+      "planner_value": "One guaranteed Inquisitor staff piece on first completion plus the repeatable pylon route materially increases Kharid-et's self-sufficient Magic progression value.",
+      "source_url": "https://runescape.wiki/w/Inquisitor_staff",
+      "secondary_source_url": "https://runescape.wiki/w/Collections",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Dragonkin I",
+      "archaeology_level": 99,
+      "repeat_reward": "6 Anachronia resource packs",
+      "required_regions": ["anachronia"],
+      "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_I",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Dragonkin II",
+      "archaeology_level": 102,
+      "repeat_reward": "75 rex skeleton fragments",
+      "required_regions": ["anachronia"],
+      "source_url": "https://runescape.wiki/w/Dragonkin_II",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Dragonkin IV",
+      "archaeology_level": 120,
+      "repeat_reward": "150 rex skeleton fragments",
+      "required_regions": ["anachronia"],
+      "source_url": "https://runescape.wiki/w/Sharrigan%3A_Dragonkin_IV",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "collection": "Urns of the Empire",
+      "archaeology_level": 67,
+      "repeat_reward": "Tetracompass piece",
+      "artifact_regions": ["unresolved_senntisten"],
+      "collector_regions": ["desert"],
+      "required_regions": ["unresolved_senntisten", "desert"],
+      "planner_value": "Lowest-level tetracompass collection, but its artefacts come from Senntisten while Eblis is in the Desert. Keep Senntisten unresolved until Equilibrium publishes locality handling.",
+      "source_url": "https://runescape.wiki/w/Eblis%3A_Urns_of_the_Empire",
+      "confidence": "confirmed_wiki_cross_region_senntisten_pending"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "snapshot_date": "2026-07-24",
+  "scope_note": "High-value region dependency map. Exact Equilibrium boundary rules and quest auto-completions are not fully public; inferred mappings are labelled.",
+  "regions": [
+    {
+      "id": "misthalin",
+      "availability": "starting",
+      "major_areas": ["Lumbridge", "Varrock", "Draynor Village"],
+      "notable_content": [
+        {"name": "Varrock Dig Site / early Archaeology", "type": "skilling", "confidence": "inferred_region"},
+        {"name": "Pale wisps near Draynor", "type": "Divination training", "confidence": "confirmed_wiki"}
+      ],
+      "open_questions": ["Exact handling of City of Um/Necromancy content has not yet been published."]
+    },
+    {
+      "id": "havenhythe",
+      "availability": "starting",
+      "major_areas": ["Wendlewick", "Hollow Hill", "Blighted Cave", "Eastfold Farm"],
+      "bosses_and_combat": [
+        {"name": "Ivar, King of Bones", "type": "boss", "confidence": "confirmed_wiki"},
+        {"name": "Silverquill, the Dreadhog", "type": "boss", "confidence": "confirmed_wiki"},
+        {"name": "Sanguine Crawler", "type": "Slayer monster", "slayer_level": 35, "confidence": "confirmed_wiki"}
+      ],
+      "skilling": [
+        {"name": "Havenhythe Big Game Hunter", "skill": "Hunter", "note": "Introduced with Hunter 110 and advertised as the best Hunter XP in the game.", "confidence": "confirmed_official"},
+        {"name": "Birdhouses", "skill": "Hunter", "level_range": "5-101", "confidence": "confirmed_wiki"},
+        {"name": "Clockwork box traps", "skill": "Hunter", "unlock_level": 55, "confidence": "confirmed_wiki"},
+        {"name": "Black chinchompas", "skill": "Hunter", "unlock_level": 73, "confidence": "confirmed_wiki"},
+        {"name": "Fish farming / Giant Crayfish", "skill": "Fishing", "level_range": "45-84+", "confidence": "confirmed_official"},
+        {"name": "First Age dig site", "skill": "Archaeology", "status": "summer 2026 rollout / verify exact launch state before League launch", "confidence": "current_2026_content"}
+      ],
+      "power_upgrades": [
+        {"name": "Apex Hide Armour", "tier": "85-90 progression", "style": "Ranged", "confidence": "confirmed_official"},
+        {"name": "Masterwork Ranged Armour materials", "style": "Ranged", "confidence": "confirmed_official"}
+      ],
+      "source_ids": ["havenhythe_wiki", "hunter_training_wiki"]
+    },
+    {
+      "id": "karamja",
+      "availability": "automatic_early",
+      "major_areas": ["Karamja", "Brimhaven", "Shilo Village", "TzHaar area"],
+      "notable_content": [
+        {"name": "Duradel", "type": "Slayer master", "base_game_requirements": "100 combat, 50 Slayer", "confidence": "inferred_region"},
+        {"name": "TzHaar Fight Cave", "type": "combat", "upgrade_examples": ["Fire cape"], "confidence": "inferred_region"},
+        {"name": "Fight Kiln", "type": "combat", "upgrade_examples": ["TokHaar-Kal capes"], "confidence": "inferred_region"}
+      ]
+    },
+    {
+      "id": "asgarnia",
+      "availability": "elective",
+      "official_examples": ["God Wars Dungeon", "Falador"],
+      "bosses_and_combat": [
+        {"name": "General Graardor", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
+        {"name": "Kree'arra", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
+        {"name": "Commander Zilyana", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
+        {"name": "K'ril Tsutsaroth", "group": "God Wars Dungeon 1", "confidence": "inferred_region"},
+        {"name": "Nex", "group": "God Wars Dungeon 1", "confidence": "inferred_region"}
+      ],
+      "skilling": [
+        {"name": "Artisans' Workshop burial smithing", "skill": "Smithing", "note": "Among the fastest Smithing XP methods; expensive and consumes the armour.", "confidence": "confirmed_wiki"}
+      ],
+      "power_upgrades": ["Bandos equipment", "Armadyl equipment", "Subjugation equipment", "Nex tier-80 armour sets"],
+      "source_ids": ["smithing_training_wiki"]
+    },
+    {
+      "id": "kandarin",
+      "availability": "elective",
+      "official_examples": ["Player-Owned Farm", "Hall of Memories", "Deep Sea Fishing Hub"],
+      "skilling": [
+        {"name": "Player-Owned Farm / Manor Farm", "skill": "Farming", "confidence": "confirmed_official"},
+        {"name": "Hall of Memories", "skill": "Divination", "level": 70, "xp_rates": {"level_95_afk": 205000, "level_95_2tick": 310000, "high_end_with_boosts": "400k+"}, "confidence": "confirmed_wiki"},
+        {"name": "Deep Sea Fishing Hub", "skill": "Fishing", "confidence": "confirmed_official"},
+        {"name": "Advanced Gnome Stronghold course", "skill": "Agility", "confidence": "inferred_region"}
+      ],
+      "source_ids": ["divination_training_wiki"]
+    },
+    {
+      "id": "fremennik",
+      "availability": "elective",
+      "official_examples": ["Neitiznot", "Lunar Isle", "Jatizso"],
+      "notable_content": [
+        {"name": "Lunar spellbook and Lunar utility", "type": "combat/skilling magic", "confidence": "inferred_region"},
+        {"name": "Dagannoth Kings", "type": "bossing", "confidence": "inferred_region"},
+        {"name": "Waterbirth Island", "type": "combat/slayer", "confidence": "inferred_region"}
+      ]
+    },
+    {
+      "id": "forinthry",
+      "availability": "elective",
+      "official_examples": ["Wilderness Slayer", "Daemonheim"],
+      "notable_content": [
+        {"name": "Wilderness Slayer", "type": "Slayer", "confidence": "confirmed_official"},
+        {"name": "Daemonheim", "type": "Dungeoneering", "note": "Dungeoneering was refreshed/remastered in 2026 with floor XP and progression changes.", "confidence": "confirmed_official"},
+        {"name": "Abyss entrance", "type": "Runecrafting", "confidence": "inferred_region"},
+        {"name": "Wilderness Agility Course", "type": "Agility", "confidence": "inferred_region"}
+      ],
+      "legacy_warning": "Do not use old Demonic Skull boosted rates without verifying the July 2026 rebalance state."
+    },
+    {
+      "id": "desert",
+      "availability": "elective",
+      "official_examples": ["Menaphos", "Het's Oasis"],
+      "notable_content": [
+        {"name": "Menaphos", "type": "city/skilling hub", "confidence": "confirmed_official"},
+        {"name": "Het's Oasis", "type": "skilling", "confidence": "confirmed_official"},
+        {"name": "Kalphite Queen", "type": "boss", "confidence": "inferred_region"},
+        {"name": "Kalphite King", "type": "boss", "upgrade_examples": ["Drygore weapons"], "confidence": "inferred_region"},
+        {"name": "Sophanem Slayer Dungeon / The Magister", "type": "Slayer/bossing", "confidence": "inferred_region"}
+      ]
+    },
+    {
+      "id": "morytania",
+      "availability": "elective",
+      "official_examples": ["Araxxor", "Everlight Dig Site"],
+      "notable_content": [
+        {"name": "Araxxor / Araxxi", "type": "boss", "upgrade_examples": ["Noxious weapon components"], "confidence": "confirmed_official_region_example"},
+        {"name": "Everlight Dig Site", "type": "Archaeology", "confidence": "confirmed_official"},
+        {"name": "Slayer Tower", "type": "Slayer", "confidence": "inferred_region"},
+        {"name": "Barrows", "type": "bossing", "confidence": "inferred_region"}
+      ]
+    },
+    {
+      "id": "tirannwn",
+      "availability": "elective",
+      "official_examples": ["Prifddinas", "Lost Grove"],
+      "notable_content": [
+        {"name": "Prifddinas", "type": "high-level hub", "note": "Jagex says region quest completion is designed to provide immediate access.", "confidence": "confirmed_official"},
+        {"name": "The Lost Grove", "type": "Slayer/combat", "confidence": "confirmed_official"},
+        {"name": "Crystal equipment and Prifddinas skilling content", "type": "progression", "confidence": "inferred_region"}
+      ]
+    },
+    {
+      "id": "anachronia",
+      "availability": "elective",
+      "official_examples": ["dinosaurs", "hunting", "farming"],
+      "notable_content": [
+        {"name": "Anachronia Big Game Hunter", "type": "Hunter", "confidence": "confirmed_official_region_theme"},
+        {"name": "Anachronia Agility Course", "type": "Agility", "confidence": "inferred_region"},
+        {"name": "Raksha", "type": "boss", "confidence": "inferred_region"},
+        {"name": "Rex Matriarchs", "type": "bossing", "confidence": "inferred_region"},
+        {"name": "Herby Werby / Ranch Out of Time", "type": "skilling", "confidence": "inferred_region"}
+      ]
+    }
+  ]
+}

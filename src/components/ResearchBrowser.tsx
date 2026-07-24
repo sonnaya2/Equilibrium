@@ -20,9 +20,7 @@ const SOURCE_LABEL: Record<SourceReference["source"], string> = {
 };
 
 function cleanText(value: string): string {
-  return value
-    .replaceAll("Asgarnia", "Asgarnia")
-    .replaceAll("Asgarnia", "Asgarnia");
+  return value;
 }
 
 function availabilityLabel(value: string): string {
@@ -37,8 +35,9 @@ function confidenceLabel(value: string): string {
   if (normalized.includes("unresolved")) return "Unresolved";
   if (normalized.includes("incomplete")) return "Incomplete";
   if (normalized.includes("legacy")) return "Legacy reference";
-  if (normalized.includes("confirmed_wiki")) return "Wiki";
-  if (normalized.includes("confirmed_official")) return "Official";
+  if (normalized.includes("historical_league_taxonomy") || normalized.includes("working_league_region_taxonomy")) return "League precedent";
+  if (normalized.includes("confirmed_wiki")) return "Wiki checked";
+  if (normalized.includes("confirmed_official")) return "Jagex";
   if (normalized.includes("inferred_region") || normalized.includes("region_inferred")) return "Region inferred";
   if (normalized.includes("base_game")) return "Base game";
   if (normalized.includes("current_2026_content")) return "Current 2026 content";
@@ -59,7 +58,7 @@ function freshnessLabel(value: string): string {
 }
 
 function methodAccess(method: ResearchTrainingMethod): string {
-  if (!method.regionHints.length) return "not mapped";
+  if (!method.regionHints.length) return "no region set";
 
   return cleanText(method.regionHints.join(" · "))
     .replaceAll("_plus_", " + ")
@@ -69,7 +68,7 @@ function methodAccess(method: ResearchTrainingMethod): string {
     .replaceAll("global_once_supplied", "global once supplied")
     .replaceAll("player_owned_house_global_with_resource_dependency", "player-owned house; materials region-dependent")
     .replaceAll("materials_and_altar_dependent", "materials and altar dependent")
-    .replaceAll("arc_unresolved", "The Arc; League access unresolved")
+    .replaceAll("arc_unresolved", "The Arc; region not confirmed")
     .replaceAll("_inferred", " (inferred)")
     .replaceAll("_likely_", " likely ")
     .replaceAll("_", " ");
@@ -155,7 +154,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{cleanText(region.name)}</h2>
             <div className="mt-1 text-xs text-parch-300">
-              {availabilityLabel(region.availability)} · {region.content.length} content rows · {region.training.length} training methods · {region.upgrades.length} upgrades
+              {availabilityLabel(region.availability)} · {region.content.length} entries · {region.training.length} training methods · {region.upgrades.length} upgrades
             </div>
           </div>
           <div className="text-xs text-parch-300"><SourceLink source={region.source} /></div>
@@ -263,7 +262,7 @@ function SkillDetail({ skill }: { skill: ResearchSkill }) {
     <article>
       <header className="pb-5">
         <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{skill.name}</h2>
-        <div className="mt-1 text-xs text-parch-300">{skill.methods.length} methods · {skill.regions.length} region dependencies</div>
+        <div className="mt-1 text-xs text-parch-300">{skill.methods.length} methods · {skill.regions.length} regions</div>
         <p className="mt-3 text-sm leading-6 text-parch-300">
           {skill.regions.length ? `Relevant regions: ${cleanText(skill.regions.join(", "))}.` : "No fixed region dependency listed yet."} Rates are before Equilibrium XP multipliers.
         </p>
@@ -322,7 +321,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-parch-50">Data</h1>
-            <p className="mt-1 text-sm text-parch-300">Regions, upgrades and training methods from the {catalog.snapshotDate} snapshot. Wiki links are used unless an entry comes from PvME or RS Analysis.</p>
+            <p className="mt-1 text-sm text-parch-300">Region unlocks, upgrades and training routes checked on {catalog.snapshotDate}. Most links go to the Wiki; PvME, RS Analysis and fresh Jagex updates stay attached when they are the actual source.</p>
           </div>
           <div className="text-xs text-parch-300">{catalog.datasets.regions} regions · {catalog.datasets.skills} skills · {catalog.datasets.trainingMethods} methods</div>
         </div>
@@ -334,7 +333,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
         <div className="border-b border-stone-750 py-2 sm:px-3 lg:border-b-0 lg:border-r"><span className="text-parch-50">{catalog.datasets.blessingTiers}</span> blessing tiers</div>
         <div className="py-2 sm:border-r lg:px-3"><span className="text-parch-50">{catalog.datasets.skills}</span> skills</div>
         <div className="py-2 sm:px-3 sm:border-r"><span className="text-parch-50">{catalog.datasets.trainingMethods}</span> methods</div>
-        <div className="py-2 sm:pl-3">{catalog.datasets.publishedTasks ? <><span className="text-parch-50">{catalog.datasets.publishedTasks}</span> tasks</> : <span>tasks not published</span>}</div>
+        <div className="py-2 sm:pl-3">{catalog.datasets.publishedTasks ? <><span className="text-parch-50">{catalog.datasets.publishedTasks}</span> tasks</> : <span>task list pending</span>}</div>
       </div>
 
       {catalog.hardRules.length ? <div className="border-b border-stone-750 py-2 text-xs leading-5 text-parch-300">{cleanText(catalog.hardRules.join(" · "))}</div> : null}

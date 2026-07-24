@@ -91,6 +91,44 @@ RS Analysis as you go rather than at the end.
 
 ---
 
+## Kimi data-integration queue — integration only
+
+This section is deliberately narrow. **Do not spend tokens researching, scraping, browsing, guessing, or re-validating game facts here.** The data/research pass is handled separately. Kimi's job is to consume the canonical data already present in the repo and wire it into the app cleanly.
+
+### Non-negotiable data rules
+
+- **ADD / MERGE ONLY. DO NOT DELETE existing data, sourced rows, source references, generated catalogs, unresolved placeholders, or richer records.** If two inputs overlap, keep the richer sourced record and merge missing fields by stable ID/name instead of replacing the dataset.
+- `data/` is canonical. `src/**/data/` may expose typed accessors, but must not become a second hand-maintained copy.
+- If a canonical file is empty, unrevealed, unresolved, or marked provisional, **leave it that way and move on**. Do not go hunting for the missing facts.
+- Never hardcode a game value into a component when a canonical JSON record can own it.
+- Preserve `SourceReference`, confidence/freshness, `verified`, and unresolved-state metadata all the way to the consumer. Do not make provisional data look confirmed.
+- Generated files stay generated. Integrate them; do not manually rewrite them to make the UI easier.
+
+### Integrate now
+
+- [ ] **Quest catalog:** wire the current `data/league/quests.json` dataset into the places that need quest/region dependency data. It already contains **281 quest-list entries**, primary-region grouping and recursive required-region grouping. Keep this distinct from official League auto-completion.
+- [ ] **Official auto-quest overlay:** make consumers read `data/league/equilibrium-auto-quests.json` as a separate overlay. It is currently awaiting official per-region lists, so the correct current behavior is an honest empty overlay — not inferred auto-completions.
+- [ ] **Research/Data browser:** ensure `data/research/catalog.json` is the source for every region/skill row exposed on `/data`: currently **11 regions, 29 skills and 61 training methods**. New rows added by the data pass should appear without component edits.
+- [ ] **Region content payloads:** consume the canonical region fields for areas, important content, upgrades, requirements, training-method IDs, warnings and sources. Do not maintain a parallel region-content list in UI code.
+- [ ] **Relics:** consume `data/league/relics.json` generically. Tier 1 is populated; tiers 2–7 are intentionally unrevealed. The planner/UI should automatically pick up later records without hardcoded per-tier component edits.
+- [ ] **Blessings:** consume `data/league/blessings.json` generically across all eight tiers, preserving Order / Balance / Chaos, God Tiers at 4 and 8, and the three-reset rule. All reveal payloads are currently empty; do not research them.
+- [ ] **Tasks:** keep the Tasks UI/store bound to `data/league/tasks.json`. The file currently has the real tier point values but zero task records. Do not fabricate rows or scrape tasks; make the UI accept normalized task records as soon as the data pass adds them.
+- [ ] **Unknown-state handling:** use `data/reference/unknowns.json` to keep unrevealed or unresolved League facts visibly unresolved. This includes region boundaries, XP/drop curves, unlock thresholds, task data and League-specific drop behavior.
+
+### Consume these as the research pass adds them
+
+- [ ] **Region-value additions:** integrate new sourced rows for best combat/training spots, unique drops, Runecrafting altars/access, Invention unlocks/material loops, Archaeology dig sites/relic unlocks and other region-sensitive progression. Kimi wires the normalized records into existing region/skill views; Kimi does not research them.
+- [ ] **Training updates:** when current post-2026 rates/methods are added to the canonical research data, expose them through the existing skill/region method tables and preserve stale/current warnings. Do not independently benchmark or search for replacements.
+- [ ] **League progression constants:** when exact XP multipliers, drop-rate multipliers, passive thresholds and elective-region unlock thresholds land in canonical League data, connect planner/progression calculations to those fields rather than duplicating constants.
+- [ ] **League drop metadata:** when sourced region availability, unique-drop modifiers, bad-luck rules or League-specific drop modifiers are added, connect them to region/build views. Do not build boss guides or research drop rates yourself.
+- [ ] **Combat tables:** when the data pass adds/updates current ability, cooldown, adrenaline, hit-range, weapon override, special-attack, prayer/potion/perk or 2026-hotfix records under `data/combat/`, wire the typed combat accessors/engine to them. Do not re-scrape PvME, RS Analysis, the Wiki or Jagex from this queue.
+
+### Kimi stop condition
+
+If a checkbox requires a fact that is not already present in `data/`, **stop that checkbox and pick another integration task**. Record the missing field/path if useful, but do not spend the coding context window becoming the researcher. The point of this queue is to keep Kimi on integration while the separate data pass keeps feeding the canonical store.
+
+---
+
 ## Ways this goes wrong
 
 - **Boss-specific scope.** No boss guides, phase sims, kill-time or enrage calculators. Generic target

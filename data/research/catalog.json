@@ -11,6 +11,7 @@
   },
   "coverage": {
     "combat_system": "partial-high; current core rules and major 2026 transitions captured, exhaustive post-hotfix ability/item tables still pending",
+    "reference_research": "PvME navigation and the public RS Analysis calculator/research surface have been harvested as deduplicated mechanic/dependency notes; source code, UI, boss-guide prose, rotations and unverified numeric outputs are excluded",
     "2026_changes": "high; July 20 rebalance audited against direct Jagex patch notes",
     "catalyst": "high-level progression complete; not every relic/task serialized yet",
     "equilibrium": "all currently captured public rules represented; unrevealed data tracked separately",

@@ -52,6 +52,8 @@ jobs:
         run: npm run audit:references
       - name: Audit Masterwork staff region chain
         run: npm run audit:masterwork
+      - name: Audit League region boundaries
+        run: npm run audit:boundaries
       - run: npm run typecheck
       - name: Run unit tests
         id: unit-tests

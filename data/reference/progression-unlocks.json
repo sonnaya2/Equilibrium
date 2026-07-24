@@ -536,6 +536,57 @@
       "confidence": "confirmed_current_wiki"
     },
     {
+      "id": "dungeoneering:bonecrusher-current",
+      "name": "Bonecrusher",
+      "category": "post-remaster Dungeoneering drop-cleaner unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 41,
+      "prayer_level": 21,
+      "token_cost": 50000,
+      "effect": "Configured bone drops are automatically converted into the Prayer experience that burying those bones would give.",
+      "synergy": "Prayer-restoring Dungeoneering necklaces can restore Prayer points from bones processed by the Bonecrusher.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Dungeoneering/Rewards",
+        "https://runescape.wiki/w/Prayer_points"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "historical_correction": "Before the 11 May 2026 remaster the Bonecrusher cost 34,000 tokens and had a lower Dungeoneering requirement. Do not restore those values."
+    },
+    {
+      "id": "dungeoneering:charming-imp-current",
+      "name": "Charming imp",
+      "category": "post-remaster Summoning drop-cleaner unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 41,
+      "summoning_level": 21,
+      "token_cost": 50000,
+      "effect": "Automatically collects dropped charms and spirit gems; selected charm types can instead be converted into a small amount of Summoning experience.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Dungeoneering/Rewards",
+        "https://runescape.wiki/w/Charming_imp"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "historical_correction": "The 11 May 2026 remaster reduced the cost from 100,000 to 50,000 tokens and changed the Dungeoneering requirement to 41."
+    },
+    {
+      "id": "dungeoneering:herbicide-current",
+      "name": "Herbicide",
+      "category": "post-remaster Herblore drop-cleaner unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 41,
+      "herblore_level": 21,
+      "token_cost": 50000,
+      "effect": "Configured grimy herb drops are destroyed instead of received, granting twice the normal cleaning experience for those herbs.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Dungeoneering/Rewards"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "historical_correction": "The 11 May 2026 remaster increased the cost from 34,000 to 50,000 tokens and changed the Dungeoneering requirement to 41."
+    },
+    {
       "id": "dungeoneering:ring-of-vigour-passive",
       "name": "Passive Ring of Vigour",
       "category": "permanent adrenaline account passive",
@@ -1385,6 +1436,56 @@
       "confidence": "confirmed_current_wiki"
     },
     {
+      "id": "dungeoneering:split-dragontooth-necklace-current",
+      "name": "Split dragontooth necklace",
+      "category": "post-remaster prayer-sustain equipment unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 41,
+      "prayer_level": 60,
+      "token_cost": 15500,
+      "effect_summary": "Restores Prayer points when qualifying bones are buried; works with bones processed by the Bonecrusher.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Prayer_points",
+        "https://runescape.wiki/w/Split_dragontooth_necklace"
+      ],
+      "confidence": "confirmed_2026_remaster_cost_requirement_current_wiki_effect",
+      "historical_correction": "The remaster reduced the token cost from 17,000 to 15,500 and the Dungeoneering requirement from 60 to 41; the 60 Prayer requirement remains a separate equipment gate."
+    },
+    {
+      "id": "dungeoneering:demon-horn-necklace-current",
+      "name": "Demon horn necklace",
+      "category": "post-remaster prayer-sustain equipment unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 75,
+      "prayer_level": 90,
+      "token_cost": 35000,
+      "effect_summary": "Restores 50–150 Prayer points when qualifying bones are buried or supported ashes/ghosts are absorbed with the attuned ectoplasmator.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Transcript:Demon_horn_necklace",
+        "https://runescape.wiki/w/Prayer_points"
+      ],
+      "confidence": "confirmed_2026_remaster_requirement_current_wiki_effect",
+      "historical_correction": "The remaster kept the 35,000-token cost but reduced the Dungeoneering requirement from 90 to 75."
+    },
+    {
+      "id": "dungeoneering:amulet-of-zealots-current",
+      "name": "Amulet of zealots",
+      "category": "post-remaster prayer equipment unlock",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 38,
+      "prayer_level": 48,
+      "token_cost": 40000,
+      "effect_summary": "Increases the effect of supported single-stat boosting prayers by 10% while imposing a Prayer bonus penalty.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Jewellery"
+      ],
+      "confidence": "confirmed_2026_remaster_requirement_current_wiki_effect",
+      "historical_correction": "The remaster kept the 40,000-token cost and reduced the Dungeoneering requirement from 48 to 38."
+    },
+    {
       "id": "broken-home:asylum-surgeons-ring",
       "name": "Asylum surgeon's ring",
       "category": "quest-challenge equipment unlock",
@@ -2013,6 +2114,23 @@
         "https://runescape.wiki/w/Calculator:Herblore/Extreme_potions"
       ],
       "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "dungeoneering:meilyr-recipe-page-purchase",
+      "name": "Meilyr potion recipe page purchase",
+      "category": "post-remaster permanent combination-potion recipe-page route",
+      "region_hint": "forinthry",
+      "dungeoneering_level": 75,
+      "token_cost": 100000,
+      "effect": "Provides the Dungeoneering reward-shop route for a Meilyr combination-potion recipe page before the corresponding recipe is bought from Lady Meilyr.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+        "https://runescape.wiki/w/Update:Dungeoneering_Refresh_%26_Remaster",
+        "https://runescape.wiki/w/Template:Recipe_Shop"
+      ],
+      "confidence": "confirmed_2026_remaster",
+      "historical_correction": "The 11 May 2026 remaster reduced this reward-shop cost from 500,000 to 100,000 Dungeoneering tokens; the Dungeoneering requirement remained 75.",
+      "league_treatment": "This is one recipe-page acquisition route. Keep the permanent Lady Meilyr recipe purchase and Tirannwn access as separate dependencies."
     }
   ]
 }

@@ -32,6 +32,8 @@ function applyEnrichment(progressionUnlocks, enrichment, sourceName) {
   progressionUnlocks.activity_unlocks ||= [];
   progressionUnlocks.equipment_models ||= [];
   progressionUnlocks.consumable_unlocks ||= [];
+  progressionUnlocks.ability_unlocks ||= [];
+  progressionUnlocks.prayer_unlocks ||= [];
 
   const excluded = new Set(enrichment.policy?.activity_exclusions ?? []);
   progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter((row) => !excluded.has(row.id));
@@ -47,6 +49,8 @@ function applyEnrichment(progressionUnlocks, enrichment, sourceName) {
   for (const addition of enrichment.account_additions ?? []) mergeAddition(progressionUnlocks.account_unlocks, addition);
   for (const addition of enrichment.equipment_additions ?? []) mergeAddition(progressionUnlocks.equipment_models, addition);
   for (const addition of enrichment.consumable_additions ?? []) mergeAddition(progressionUnlocks.consumable_unlocks, addition);
+  for (const addition of enrichment.ability_additions ?? []) mergeAddition(progressionUnlocks.ability_unlocks, addition);
+  for (const addition of enrichment.prayer_additions ?? []) mergeAddition(progressionUnlocks.prayer_unlocks, addition);
 
   progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date].filter(Boolean).sort().at(-1);
 }

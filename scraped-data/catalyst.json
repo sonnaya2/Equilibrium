@@ -1,0 +1,181 @@
+{
+  "snapshot_date": "2026-07-24",
+  "status": "legacy_reference",
+  "league": {
+    "name": "Leagues: CATALYST",
+    "run": "2025-09-15 to 2025-11-10",
+    "region_locking": false,
+    "purpose_in_dataset": "Historical baseline for comparing League II progression, relic power, XP multipliers and task economy. Do not assume Catalyst mechanics carry into Equilibrium."
+  },
+  "task_points": {
+    "easy": {"count": 229, "points_each": 10, "total": 2290},
+    "medium": {"count": 279, "points_each": 30, "total": 8370},
+    "hard": {"count": 277, "points_each": 80, "total": 22160},
+    "elite": {"count": 297, "points_each": 200, "total": 59400},
+    "master": {"count": 35, "points_each": 400, "total": 14000},
+    "task_count": 1117,
+    "maximum_points": 106220,
+    "confidence": "confirmed_wiki"
+  },
+  "tiers": [
+    {
+      "tier": 1,
+      "points_required": 10,
+      "xp_multiplier": 4,
+      "passives": [
+        "Crops grow 5x faster.",
+        "Run energy does not drain.",
+        "+20% hit chance.",
+        "The Archaeology Guild Shop is fully available.",
+        "Necromancy rituals grant +400% souls."
+      ],
+      "relic_choices": ["Excavator", "Divine Woodcutter", "Animal Wrangler"]
+    },
+    {
+      "tier": 2,
+      "points_required": 750,
+      "xp_multiplier": 6,
+      "passives": [
+        "Thaler gain is multiplied by 4.",
+        "Rare items are twice as common.",
+        "Slayer task assignment offers a choice between two tasks.",
+        "Slayer task size can be chosen at the minimum or maximum amount.",
+        "Slayer and Reaper points are multiplied by 5."
+      ],
+      "relic_choices": ["Golden Footed", "Five Finger Discount", "Farming Frenzy"]
+    },
+    {
+      "tier": 3,
+      "points_required": 2000,
+      "xp_multiplier": 6,
+      "passives": [
+        "Movement ability cooldowns are reduced to 4.8 seconds.",
+        "Dive is automatically unlocked."
+      ],
+      "relic_choices": ["Fairy's Flight", "Assassin's Insight", "Voidwalker"]
+    },
+    {
+      "tier": 4,
+      "points_required": 3500,
+      "xp_multiplier": 8,
+      "passives": [
+        "Rare items are 4x as common as the base game.",
+        "All tool-belt items are unlocked.",
+        "Gate of Elidinis access is enabled, although Soul Searching is still needed for its surrounding area."
+      ],
+      "relic_choices": ["Production Master", "Rejuvenated", "Clue Connoisseur"]
+    },
+    {
+      "tier": 5,
+      "points_required": 6000,
+      "xp_multiplier": 8,
+      "passives": [
+        "Ancient Curses are unlocked.",
+        "Soul Reaper task can be chosen.",
+        "Zemouregal & Vorkath and Amascut become available without their normal quest requirements.",
+        "The Sage can swap spellbooks and prayer books."
+      ],
+      "relic_choices": ["Barbarism", "Crit Happens", "Bombardment", "Soulbourne"]
+    },
+    {
+      "tier": 6,
+      "points_required": 13000,
+      "xp_multiplier": 12,
+      "passives": [
+        "Ancient Magicks are unlocked.",
+        "Lunar Magic and most Lunar spells are unlocked.",
+        "All Seren spells and prayers are unlocked.",
+        "Ring of vigour becomes a passive effect."
+      ],
+      "relic_choices": ["Banker's Note", "Perkfection"]
+    },
+    {
+      "tier": 7,
+      "points_required": 22000,
+      "xp_multiplier": 16,
+      "passives": [
+        "Rare items are 6x as common as the base game.",
+        "Advance Time can be used without limit."
+      ],
+      "relic_choices": ["Ascension", "Specialist", "Everlasting Faith"]
+    }
+  ],
+  "selected_relic_effects": {
+    "Animal Wrangler": {
+      "effects": [
+        "Fishing can be performed without bait and receives a large catch-rate improvement.",
+        "Caught fish can be automatically cooked.",
+        "Hunter catches cannot fail and Hunter loot is doubled."
+      ],
+      "confidence": "confirmed_wiki_partial"
+    },
+    "Golden Footed": {
+      "effects": [
+        "Special boots periodically award Agility XP.",
+        "Agility course completion XP is heavily increased.",
+        "Agility obstacles cannot be failed.",
+        "Course laps award coins based on Agility level."
+      ],
+      "confidence": "confirmed_wiki_partial"
+    },
+    "Five Finger Discount": {
+      "effects": [
+        "Thieving checks do not fail.",
+        "Thieving loot is automatically noted.",
+        "Stalls do not deplete.",
+        "Safe cooldown is reduced to roughly one minute."
+      ],
+      "confidence": "confirmed_wiki_partial"
+    },
+    "Farming Frenzy": {
+      "effects": [
+        "Farming harvest actions are instantaneous.",
+        "Seeds grow immediately after planting.",
+        "Patches behave as if treated with ultracompost.",
+        "Seeds can be saved and crop yields are increased."
+      ],
+      "confidence": "confirmed_wiki_partial"
+    },
+    "Fairy's Flight": {
+      "effects": ["Provides a reusable teleport interface for fairy rings, spirit trees and farming patches."],
+      "confidence": "confirmed_wiki"
+    },
+    "Soulbourne": {
+      "effects": [
+        "Necromancy basic attacks generate double adrenaline.",
+        "Necromancy ability and special-attack cooldowns are reduced by 20%.",
+        "Necromancy has 100% hit chance.",
+        "Conjured spirits are larger and deal 25% more damage.",
+        "Ectoplasm and rune consumption has a 95% save chance.",
+        "All Well of Souls abilities are unlocked."
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    "Banker's Note": {
+      "effects": [
+        "Items can be noted or unnoted almost anywhere.",
+        "Provides near-universal bank access utility."
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    "Perkfection": {
+      "effects": [
+        "Provides effectively unlimited Invention materials.",
+        "Augmented equipment and machines consume no charge.",
+        "Beneficial perks trigger 10% more often where applicable.",
+        "Invention machines operate twice as fast.",
+        "Manual disassembly and alchemy can award both classes of resulting resources.",
+        "There is a 66% chance to save a resource used in relevant Invention operations.",
+        "All Dwarven and Goblin Technology blueprints are unlocked."
+      ],
+      "confidence": "confirmed_wiki"
+    }
+  },
+  "equilibrium_comparison_notes": [
+    "Catalyst did not use region locking; Equilibrium does.",
+    "Catalyst bundled combat power into relics and global tier passives; Equilibrium separates combat power into an 8-tier Blessing tree.",
+    "Equilibrium is advertised as faster to enter its high-power state, with more auto-completed quests and earlier combat power.",
+    "Catalyst aura-era assumptions are legacy because the 2026 Aura Overhaul removed the aura system."
+  ],
+  "source_ids": ["catalyst_guide_wiki", "catalyst_tasks_wiki", "catalyst_transcript_wiki"]
+}

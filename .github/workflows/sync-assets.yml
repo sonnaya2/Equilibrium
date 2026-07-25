@@ -11,6 +11,7 @@ on:
       - assets/source-manifest-expansion-2.json
       - assets/source-manifest-expansion-3.json
       - assets/source-manifest-expansion-4.json
+      - assets/source-manifest-expansion-5.json
       - scripts/sync-assets.mjs
       - scripts/sync-assets-expanded.mjs
       - scripts/normalize-region-names.mjs

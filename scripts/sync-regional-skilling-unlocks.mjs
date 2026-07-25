@@ -1,10 +1,10 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
-const ENRICHMENT_PATH = "scraped-data/progression-enrichment-regional-skilling-2026-07-25.json";
 const CATALOG_PATH = "data/research/catalog.json";
 const OUTPUT_PATH = "data/research/regional-skilling-unlocks.json";
+const ENRICHMENT_PATTERN = /^progression-enrichment-regional-skilling.*\.json$/;
 
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 const write = (path, value) => {
@@ -13,9 +13,19 @@ const write = (path, value) => {
   writeFileSync(target, `${JSON.stringify(value, null, 2)}\n`);
 };
 
-const enrichment = read(ENRICHMENT_PATH);
+const enrichmentFiles = readdirSync(join(ROOT, "scraped-data"))
+  .filter((name) => ENRICHMENT_PATTERN.test(name))
+  .sort();
+if (enrichmentFiles.length === 0) {
+  throw new Error("No regional skilling enrichment files found");
+}
+
+const enrichments = enrichmentFiles.map((name) => ({ name, data: read(`scraped-data/${name}`) }));
 const catalog = read(CATALOG_PATH);
-const verifiedAt = enrichment.snapshot_date || catalog.snapshotDate;
+const verifiedAt = [
+  catalog.snapshotDate,
+  ...enrichments.map(({ data }) => data.snapshot_date),
+].filter(Boolean).sort().at(-1);
 
 function list(value) {
   return Array.isArray(value) ? value : [];
@@ -71,13 +81,13 @@ function detail(row) {
   return pieces.join(" · ");
 }
 
-function normalizeRow(row, recordType) {
+function normalizeRow(row, recordType, sourceFile) {
   return {
     id: row.id,
     name: row.name,
     recordType,
-    category: row.category || "skilling unlock",
     regionHints: regionHints(row),
+    category: row.category || "skilling unlock",
     detail: detail(row),
     requirements: [...new Set([
       ...list(row.requirements).map(String),
@@ -85,16 +95,38 @@ function normalizeRow(row, recordType) {
     ])],
     confidence: row.confidence || "unclassified",
     source: sourceReference(row),
+    sourceFile,
   };
 }
 
-const activities = list(enrichment.activity_additions).map((row) => normalizeRow(row, "activity"));
-const equipment = list(enrichment.equipment_additions).map((row) => normalizeRow(row, "equipment"));
+const activityMap = new Map();
+const equipmentMap = new Map();
+for (const { name, data } of enrichments) {
+  for (const row of list(data.activity_additions)) {
+    activityMap.set(row.id, normalizeRow(row, "activity", name));
+  }
+  for (const row of list(data.equipment_additions)) {
+    equipmentMap.set(row.id, normalizeRow(row, "equipment", name));
+  }
+}
+const activities = [...activityMap.values()];
+const equipment = [...equipmentMap.values()];
 const records = [...activities, ...equipment];
 
 for (const region of catalog.regions || []) {
-  const additions = records.filter((row) => row.regionHints.includes(region.id));
   region.upgrades ||= [];
+
+  // Canonicalize two old Croesus placeholder labels while the source dataset is
+  // gradually migrated to first-class equipment records.
+  for (const upgrade of region.upgrades) {
+    if (upgrade.name === "Croesus progression" && typeof upgrade.detail === "string") {
+      upgrade.detail = upgrade.detail
+        .replaceAll("Croesus foultorch", "Sana's fyrtorch")
+        .replaceAll("Croesus sporehammer", "Tagga's corehammer");
+    }
+  }
+
+  const additions = records.filter((row) => row.regionHints.includes(region.id));
   const existing = new Set(region.upgrades.map((row) => row.name));
 
   for (const row of additions) {
@@ -120,11 +152,11 @@ catalog.datasets.regionalSkillingEquipment = equipment.length;
 write(CATALOG_PATH, catalog);
 write(OUTPUT_PATH, {
   snapshotDate: verifiedAt,
-  purpose: enrichment.purpose,
-  policy: enrichment.policy,
+  purpose: "Region-defining skilling activities, shops, outfits, off-hands, tool chains and production infrastructure for Equilibrium planning.",
+  sourceFiles: enrichmentFiles,
   records,
 });
 
 console.log(
-  `REGIONAL SKILLING SYNC\nActivities: ${activities.length}   Equipment: ${equipment.length}   Total: ${records.length}`,
+  `REGIONAL SKILLING SYNC\nFiles: ${enrichmentFiles.length}   Activities: ${activities.length}   Equipment: ${equipment.length}   Total: ${records.length}`,
 );

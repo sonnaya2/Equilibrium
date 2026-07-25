@@ -6,6 +6,7 @@ import { Canvas, extend } from "@react-three/fiber";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
 import { Effects } from "./Effects";
+import { FlatBoard } from "./FlatBoard";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
 
@@ -47,9 +48,12 @@ export default function MapScene() {
 
   if (!supported) {
     return (
-      <div className="panel panel-body text-sm text-parch-300">
-        This browser has no WebGPU, so the 3D map stays off. The planner below is the full
-        planner — every region choice works there.
+      <div className="panel panel-body">
+        <p className="mb-3 text-sm text-parch-300">
+          This browser has no WebGPU, so the 3D table stays off. The board below is the full
+          planner - every region choice works here.
+        </p>
+        <FlatBoard />
       </div>
     );
   }

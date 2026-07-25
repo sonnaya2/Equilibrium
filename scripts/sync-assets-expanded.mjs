@@ -1,21 +1,20 @@
-import { readFile, unlink, writeFile } from "node:fs/promises";
+import { readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const BASE_PATH = join(ROOT, "assets/source-manifest.json");
-const EXPANSION_FILES = [
-  "assets/source-manifest-expansion.json",
-  "assets/source-manifest-expansion-2.json",
-  "assets/source-manifest-expansion-3.json",
-  "assets/source-manifest-expansion-4.json",
-  "assets/source-manifest-expansion-5.json",
-];
-const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
+const ASSETS_DIR = join(ROOT, "assets");
+const BASE_PATH = join(ASSETS_DIR, "source-manifest.json");
+const GENERATED_PATH = join(ASSETS_DIR, "manifest.generated.json");
+
+const expansionNames = (await readdir(ASSETS_DIR))
+  .filter((name) => /^source-manifest-expansion(?:-\d+)?\.json$/.test(name))
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+const EXPANSION_FILES = expansionNames.map((name) => `assets/${name}`);
 
 const originalText = await readFile(BASE_PATH, "utf8");
 const base = JSON.parse(originalText);
 const expansions = await Promise.all(
-  EXPANSION_FILES.map(async (path) => JSON.parse(await readFile(join(ROOT, path), "utf8"))),
+  expansionNames.map(async (name) => JSON.parse(await readFile(join(ASSETS_DIR, name), "utf8"))),
 );
 
 const overrides = new Map([

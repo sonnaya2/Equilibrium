@@ -1,0 +1,658 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Second planner expansion pass: high-value Slayer/combat methods, Invention component supply chains, Archaeology relic acquisition paths, and stale-method corrections.",
+  "slayer_methods": [
+    {
+      "id": "slayer-abyssal-lords",
+      "monster": "Abyssal lords",
+      "slayer_level": 115,
+      "region_options": [
+        "forinthry",
+        "desert",
+        "unresolved_senntisten"
+      ],
+      "locations": [
+        "level 47 Wilderness",
+        "Sunken Pyramid in Menaphos",
+        "Senntisten Asylum"
+      ],
+      "planner_default_region": "forinthry",
+      "pvme_position": "best abyssal-creature task for both Slayer experience and gold",
+      "current_metrics": {
+        "slayer_xp_per_kill": 8235,
+        "optimal_kph_melee": 450,
+        "optimal_kph_magic": 398,
+        "optimal_kph_necromancy": 240,
+        "wilderness_lords_plus_beasts_magic_kph": 884,
+        "optimal_slayer_xp_per_hour_melee": "~3.71M",
+        "optimal_slayer_xp_per_hour_magic": "~3.28M",
+        "optimal_slayer_xp_per_hour_necromancy": "~1.98M",
+        "wilderness_lords_plus_beasts_magic_slayer_xp_per_hour": "~3.98M"
+      },
+      "desirable_drops": [
+        "Abyssal scourge",
+        "Abyssal flesh",
+        "Revenant drop enhancer in the Wilderness"
+      ],
+      "league_note": "Forinthry gives a direct Wilderness route. Sunken Pyramid is a Desert route. Senntisten remains an explicit boundary unknown rather than a free alternate region.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/abyssal-lords/",
+      "confidence": "pvme_current"
+    },
+    {
+      "id": "slayer-ripper-demons",
+      "monster": "Ripper demons",
+      "slayer_level": 96,
+      "region_options": [
+        "desert",
+        "forinthry"
+      ],
+      "locations": [
+        "Ripper Demon cave south-east of Al Kharid",
+        "Wilderness west of the Demonic Ruins"
+      ],
+      "current_metrics": {
+        "slayer_xp_per_kill": 2721.6,
+        "optimal_kph_magic_low_effort": 930,
+        "optimal_kph_necromancy_low_effort": 1700,
+        "optimal_slayer_xp_per_hour_magic": "~2.53M",
+        "optimal_slayer_xp_per_hour_necromancy": "~3.79M"
+      },
+      "desirable_drops": [
+        "Parasitic orb",
+        "Ripper demon binding-contract familiar materials",
+        "Raptor-mob collection-log drops"
+      ],
+      "league_note": "A useful region-flexible task: Desert provides the cave route while Forinthry provides the aggressive Wilderness stack/AoE route.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/ripper-demon/",
+      "confidence": "pvme_current"
+    },
+    {
+      "id": "slayer-lost-grove-moss-golems",
+      "monster": "Moss golems",
+      "slayer_level": "Lost Grove task requirements",
+      "region_options": [
+        "tirannwn"
+      ],
+      "location": "The Lost Grove",
+      "pvme_position": "fastest, best XP/hour and best GP/hour option among Lost Grove creatures",
+      "desirable_drops": [
+        "Cinderbane gloves",
+        "Ancient elven ritual shard",
+        "Torn grimoire pages"
+      ],
+      "drop_rates": {
+        "cinderbane_gloves_on_task": "1/1500",
+        "cinderbane_gloves_off_task": "1/5000",
+        "ancient_elven_ritual_shard_on_task": "1/1500",
+        "ancient_elven_ritual_shard_off_task": "1/5000",
+        "torn_grimoire_page_on_task": "1/512",
+        "torn_grimoire_page_off_task": "1/1536"
+      },
+      "source_url": "https://pvme.io/pvme-guides/slayer/lost-grove-creatures/",
+      "confidence": "pvme_current"
+    },
+    {
+      "id": "slayer-anachronia-dinosaurs",
+      "monster": "Anachronia dinosaurs",
+      "region_options": [
+        "anachronia"
+      ],
+      "location": "Anachronia",
+      "variants": [
+        {
+          "name": "Feral dinosaur",
+          "slayer_level": 90,
+          "legacy_guide_kph": "~300"
+        },
+        {
+          "name": "Brutish dinosaur",
+          "slayer_level": 99,
+          "legacy_guide_kph": "~200"
+        },
+        {
+          "name": "Venomous dinosaur",
+          "slayer_level": 105
+        },
+        {
+          "name": "Ripper dinosaur",
+          "slayer_level": 114,
+          "legacy_guide_kph": "~200"
+        }
+      ],
+      "warning": "PvME explicitly warns that some dinosaur methods may no longer work after the Q1 2026 combat changes. KPH values are retained only as legacy guide context, not current optimizer numbers.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/dinosaurs/",
+      "confidence": "pvme_current_page_with_2026_method_warning"
+    },
+    {
+      "id": "slayer-point-farm-lunar-catacombs",
+      "monster": "Low-level Slayer assignments via NPC Contact",
+      "region_options": [
+        "fremennik",
+        "misthalin"
+      ],
+      "location": "Lumbridge Catacombs with remote Slayer-master contact",
+      "requirements": [
+        "Lunar spellbook / NPC Contact",
+        "The Blood Pact for Lumbridge Catacombs"
+      ],
+      "planner_value": "Turns Fremennik Lunar access plus starting-region Catacombs into a fast Slayer-point engine for block/prefer lists and permanent Slayer unlocks.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/slayer-point-farming/",
+      "confidence": "pvme_current_cross_region_method"
+    },
+    {
+      "id": "slayer-edimmu",
+      "monster": "Edimmu",
+      "slayer_level": 90,
+      "region_options": [
+        "forinthry"
+      ],
+      "location": "Edimmu resource dungeon, Daemonheim",
+      "requirements": [
+        "115 Dungeoneering",
+        "Edimmu/Creatures of Daemonheim/Undead/Ghosts/Zombies task or Slayer wildcards"
+      ],
+      "guide_metrics": {
+        "optimal_kph": "~585",
+        "afk_kph": "~530",
+        "slayer_xp_per_kill": 880.2,
+        "optimal_slayer_xp_per_hour": "~515K",
+        "afk_slayer_xp_per_hour": "~466K"
+      },
+      "planner_value": "PvME gives Edimmu top priority when the Slayer cape assignment proc appears; it is also tied to the Daemonheim collection log.",
+      "warning": "PvME's site-wide March 2026 banner says most older combat content is being rebuilt. Keep these figures as guide metrics until independently post-modernisation benchmarked.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/edimmu/",
+      "confidence": "pvme_current_page_metrics_rebenchmark_recommended"
+    },
+    {
+      "id": "slayer-living-wyverns",
+      "monster": "Living wyverns",
+      "region_options": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "locations": [
+        "Asgarnian Ice Dungeon",
+        "north-west of Ghorrock in the Wilderness/Frozen Waste Plateau"
+      ],
+      "guide_metrics": {
+        "optimal_afk_kph": "~700",
+        "slayer_xp_per_kill": 1878.8,
+        "optimal_afk_slayer_xp_per_hour": "~1.3M"
+      },
+      "desirable_drops": [
+        "Wyvern bones",
+        "Wyvern crossbow"
+      ],
+      "drop_rates": {
+        "wyvern_crossbow_on_task": "1/2000",
+        "wyvern_crossbow_off_task": "1/10000"
+      },
+      "planner_value": "Provides an Asgarnia route and a Forinthry route to the same high-value Raptor mob; Wyvern bones feed super prayer potion supply.",
+      "warning": "Treat guide KPH as PvME method context until rebenchmarked under current combat tuning.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/living-wyverns/",
+      "confidence": "pvme_current_page_metrics_rebenchmark_recommended"
+    },
+    {
+      "id": "slayer-acheron-mammoths",
+      "monster": "Acheron mammoths",
+      "region_options": [
+        "fremennik",
+        "forinthry"
+      ],
+      "locations": [
+        "Mammoth Iceberg north of the Fremennik area",
+        "Frozen Waste Plateau in the Wilderness"
+      ],
+      "guide_metrics": {
+        "slayer_xp_per_kill": 4215.6,
+        "high_effort_kph": "~375",
+        "low_effort_kph": "~290",
+        "high_effort_slayer_xp_per_hour": "~1.58M",
+        "low_effort_slayer_xp_per_hour": "~1.22M"
+      },
+      "desirable_drops": [
+        "Mammoth tusk every kill",
+        "Crimson charms",
+        "Blue charms"
+      ],
+      "planner_value": "Fremennik supplies the dense active-AoE location; Forinthry supplies the lower-density Wilderness low-effort location. Tusks feed Pack Mammoth pouch production.",
+      "warning": "Treat KPH as PvME guide metrics until independently post-modernisation benchmarked.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/acheron-mammoths/",
+      "confidence": "pvme_current_page_metrics_rebenchmark_recommended"
+    },
+    {
+      "id": "slayer-gemstone-dragons",
+      "monster": "Gemstone dragons",
+      "region_options": [
+        "karamja",
+        "forinthry"
+      ],
+      "locations": [
+        "gemstone cavern below Shilo Village mines",
+        "Wilderness Dungeon south of Mandrith"
+      ],
+      "requirements": [
+        "95/98/101 Slayer by species",
+        "Karamja gloves 3+ for the Shilo cavern route"
+      ],
+      "desirable_drops": [
+        "Gemstone armour pieces",
+        "Draconic visage"
+      ],
+      "drop_rates": {
+        "gemstone_armour_on_task": "1/1000",
+        "gemstone_armour_off_task": "1/2500"
+      },
+      "planner_value": "High-Slayer-XP task with dual Karamja/Forinthry access; task status materially improves the armour rate.",
+      "warning": "PvME explicitly warns some methods may not work after Q1 2026 combat changes. Do not rank its KPH until rebenchmarked.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/gemstone-dragons/",
+      "confidence": "pvme_current_page_with_2026_method_warning"
+    },
+    {
+      "id": "slayer-profane-scabarites",
+      "monster": "Profane Scabarites",
+      "slayer_level": 87,
+      "region_options": [
+        "desert"
+      ],
+      "location": "Scabarite Cavern outside Pollnivneach",
+      "guide_metrics": {
+        "slayer_xp_per_kill": 900,
+        "optimal_magic_kph": "~850",
+        "optimal_magic_slayer_xp_per_hour": "~765K"
+      },
+      "desirable_drops": [
+        "Spectral Lens"
+      ],
+      "planner_value": "Desert-only Slayer route; Spectral Lens is the Necromancy Slayer-helmet component.",
+      "warning": "PvME explicitly warns this method may not work after Q1 2026 combat changes. Keep KPH as stale-context only.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/profane-scabarites/",
+      "confidence": "pvme_current_page_with_2026_method_warning"
+    },
+    {
+      "id": "slayer-soul-devourers",
+      "monster": "Soul devourers",
+      "slayer_level": "105-117 by variant",
+      "region_options": [
+        "desert"
+      ],
+      "locations": [
+        "Sophanem Slayer Dungeon",
+        "Sunken Pyramid"
+      ],
+      "requirements": [
+        "Feather of Ma'at inside Sophanem Slayer Dungeon"
+      ],
+      "desirable_drops": [
+        "Key to the Crossing",
+        "Vital sparks",
+        "resource/alchable drops"
+      ],
+      "drop_rates": {
+        "key_to_crossing_on_task": "1/75",
+        "key_to_crossing_with_dungeon_enhancer": "1/60"
+      },
+      "planner_value": "A dense Desert supply loop: Keys feed Magister access, Vital sparks feed ability unlocks, and the chest can automatically collect dungeon drops.",
+      "warning": "PvME marks several individual Soul Devourer melee methods as potentially stale after Q1 2026; retain access/drop facts and rebenchmark combat throughput per variant.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/soul-devourers/",
+      "confidence": "pvme_current_access_and_drop_data_mixed_method_freshness"
+    },
+    {
+      "id": "slayer-kalgerion-demons",
+      "monster": "Kal'gerion demons",
+      "region_options": [
+        "forinthry"
+      ],
+      "locations": [
+        "Demonic Ruins, level 47 Wilderness",
+        "Kal'gerion resource dungeon in Daemonheim"
+      ],
+      "requirements": [
+        "90 Dungeoneering for the resource dungeon"
+      ],
+      "guide_metrics": {
+        "low_effort_necromancy_kph": "~340 at 120",
+        "afk_necromancy_kph": "~325 at 120",
+        "slayer_xp_per_kill": 1858.8,
+        "low_effort_slayer_xp_per_hour": "~632K",
+        "afk_slayer_xp_per_hour": "~604K"
+      },
+      "desirable_drops": [
+        "Kal'gerion battle commendation",
+        "Demon Slayer equipment",
+        "Adrenaline urn"
+      ],
+      "planner_value": "Both natural locations resolve to the Forinthry/Daemonheim dependency, making this a clean region-specific collection-log and Slayer route.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/kalgerion-demons/",
+      "confidence": "pvme_current_necromancy_metrics"
+    },
+    {
+      "id": "slayer-lava-strykewyrms",
+      "monster": "Lava strykewyrms",
+      "region_options": [
+        "forinthry"
+      ],
+      "location": "south of the Lava Maze, level 34-41 Wilderness",
+      "guide_metrics": {
+        "slayer_xp_per_kill": 1872,
+        "optimal_ranged_kph": "~520",
+        "optimal_magic_kph": "~450",
+        "optimal_ranged_slayer_xp_per_hour": "~973K",
+        "optimal_magic_slayer_xp_per_hour": "~842K"
+      },
+      "desirable_drops": [
+        "Searing ashes",
+        "Wyrm spike",
+        "Wyrm heart",
+        "Wyrm scalp"
+      ],
+      "drop_rates": {
+        "wyrm_unique_piece_on_task": "1/6168",
+        "wyrm_unique_piece_off_task": "1/12288"
+      },
+      "planner_value": "Forinthry-only source of Searing ashes for aggression potions plus Wilderness Slayer-log weapon-upgrade pieces.",
+      "warning": "PvME explicitly warns some methods may not work after Q1 2026 combat changes; do not rank KPH until rebenchmarked.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/lava-strykewyrms/",
+      "confidence": "pvme_current_page_with_2026_method_warning"
+    },
+    {
+      "id": "slayer-nightmare-creatures",
+      "monster": "Nightmare creatures",
+      "slayer_level": 80,
+      "region_options": [
+        "unresolved_freneskae"
+      ],
+      "location": "Ritual site on Freneskae via the World Gate",
+      "requirements": [
+        "Children of Mah",
+        "50 Slayer points to enable the assignment"
+      ],
+      "guide_metrics": {
+        "magic_afk_kph": "~870",
+        "melee_afk_kph": "~803",
+        "necromancy_afk_kph": "~800",
+        "magic_slayer_xp_per_hour": "~1.34M",
+        "melee_slayer_xp_per_hour": "~1.24M",
+        "necromancy_slayer_xp_per_hour": "~1.23M"
+      },
+      "desirable_drops": [
+        "Nightmare gauntlets"
+      ],
+      "drop_rates": {
+        "nightmare_gauntlets_on_task": "1/2000",
+        "nightmare_gauntlets_off_task": "1/10000"
+      },
+      "league_note": "Do not map Freneskae to Kandarin merely because the World Gate is reached near Eagles' Peak; destination-instance treatment is unresolved for Equilibrium.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/nightmare-creatures/",
+      "confidence": "pvme_current_method_region_unresolved"
+    },
+    {
+      "id": "slayer-nihils",
+      "monster": "Nihils",
+      "region_options": [
+        "unresolved_freneskae"
+      ],
+      "location": "The Pit on Freneskae via the World Gate",
+      "requirements": [
+        "Fate of the Gods"
+      ],
+      "guide_metrics": {
+        "slayer_xp_per_kill": 705.4,
+        "optimal_afk_kph": "~790",
+        "optimal_afk_slayer_xp_per_hour": "~557K"
+      },
+      "desirable_drops": [
+        "Aviansie talons",
+        "Demon horn",
+        "Vampyre fangs",
+        "Icyene feather"
+      ],
+      "planner_value": "Important self-sufficient Summoning ingredient farm once Freneskae access is resolved.",
+      "warning": "PvME explicitly warns some Nihil methods may not work after Q1 2026 combat changes; keep access/drop facts, not ranked KPH.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/nihils/",
+      "confidence": "pvme_current_page_with_2026_method_warning_region_unresolved"
+    },
+    {
+      "id": "slayer-nodon-dragonkin",
+      "monster": "Nodon dragonkin",
+      "slayer_level": 92,
+      "region_options": [
+        "unresolved_senntisten"
+      ],
+      "location": "Nodon Front, Senntisten",
+      "guide_metrics": {
+        "guard_magic_kph": "~370",
+        "guard_necromancy_kph": "~430",
+        "guard_slayer_xp_per_kill": 1877,
+        "guard_magic_slayer_xp_per_hour": "~694K",
+        "guard_necromancy_slayer_xp_per_hour": "~807K"
+      },
+      "desirable_drops": [
+        "Dwarf multicannon upgrade kit",
+        "Oldak coil upgrade kit",
+        "Kinetic cyclone upgrade kit"
+      ],
+      "drop_rates": {
+        "each_kit_guard_artificer_hunter": "1/2000",
+        "each_kit_engineer": "3/2560",
+        "each_kit_elite_nodon_enforcer": "5/64"
+      },
+      "league_note": "Senntisten is still deliberately unresolved in the planner taxonomy; do not assign this to a surrounding region until Equilibrium says how the instance is handled.",
+      "warning": "PvME explicitly marks at least the AFK Magic method as potentially stale after Q1 2026 combat changes.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/nodon-dragonkin/",
+      "confidence": "pvme_current_drop_data_mixed_method_freshness_region_unresolved"
+    }
+  ],
+  "invention_component_chains": [
+    {
+      "component": "Avernic",
+      "region": "desert",
+      "primary_sources": [
+        "Twin Furies equipment / Zamorakian Heart of Gielinor drops"
+      ],
+      "perk_relevance": [
+        "Lunging combinations"
+      ],
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "pvme_current_region_from_GWD2"
+    },
+    {
+      "component": "Shadow",
+      "region": "desert",
+      "primary_sources": [
+        "Shadow glaives from Gregorovic in the Heart of Gielinor"
+      ],
+      "perk_relevance": [
+        "Caroming 4",
+        "Caroming combinations"
+      ],
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "secondary_source_url": "https://runescape.wiki/w/Shadow_glaive",
+      "confidence": "cross_checked"
+    },
+    {
+      "component": "Zamorak",
+      "region": "asgarnia",
+      "primary_sources": [
+        "Warpriest of Zamorak",
+        "Zamorakian spiritual warriors in God Wars Dungeon or Player-Owned Slayer Dungeon"
+      ],
+      "perk_relevance": [
+        "Impatient",
+        "Devoted combinations"
+      ],
+      "source_url": "https://runescape.wiki/w/Money_making_guide/Killing_spiritual_warriors",
+      "confidence": "confirmed_wiki_region_from_GWD1"
+    },
+    {
+      "component": "Saradomin",
+      "region": "asgarnia",
+      "primary_sources": [
+        "Warpriest of Saradomin",
+        "Saradominist spiritual warriors in God Wars Dungeon or Player-Owned Slayer Dungeon"
+      ],
+      "perk_relevance": [
+        "Devoted/Impatient combinations"
+      ],
+      "source_url": "https://runescape.wiki/w/Money_making_guide/Killing_spiritual_warriors",
+      "confidence": "confirmed_wiki_region_from_GWD1"
+    },
+    {
+      "component": "Fungal",
+      "region": "morytania",
+      "primary_sources": [
+        "Ganodermic armour",
+        "Polypore staff"
+      ],
+      "location": "Polypore Dungeon in Morytania",
+      "perk_relevance": [
+        "Absorbative combinations"
+      ],
+      "source_url": "https://runescape.wiki/w/Category:Items_that_disassemble_into_Fungal_components",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "component": "Resilient",
+      "region": "anachronia",
+      "primary_sources": [
+        "Dinosaurhide armour"
+      ],
+      "alternate_sources": [
+        "Tetsu equipment",
+        "Masuta's warspear",
+        "Mizuyari"
+      ],
+      "planner_value": "Anachronia gives a direct self-sourced path through dinosaur hides even when Player-Owned Ports gear is unavailable or slow.",
+      "source_url": "https://runescape.wiki/w/Template:Matcost/desc/doc",
+      "confidence": "confirmed_wiki_with_alternate_sources"
+    },
+    {
+      "component": "Armadyl / Zamorak / Saradomin warpriest farm",
+      "region": "asgarnia",
+      "primary_sources": [
+        "Spiritual warriors and mages"
+      ],
+      "planner_value": "High-KPH combat can double as god-component generation. PvME specifically recommends unowned Warpriest drops for troublesome rare components.",
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/invention-basics/",
+      "secondary_source_url": "https://runescape.wiki/w/Money_making_guide/Killing_spiritual_warriors",
+      "confidence": "cross_checked"
+    }
+  ],
+  "archaeology_relic_acquisition": [
+    {
+      "relic": "Font of Life",
+      "archaeology_level": 5,
+      "relic_item": "The Mortal Cup",
+      "acquisition_regions": [
+        "misthalin"
+      ],
+      "path": "Archaeology tutorial / Archaeology Campus progression",
+      "source_url": "https://runescape.wiki/w/Recommended_equipment_for_PvM",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "relic": "Berserker's Fury",
+      "archaeology_level": 56,
+      "relic_item": "Dharok's Memento",
+      "acquisition_regions": [
+        "morytania"
+      ],
+      "path": "Combine the Barrows-sourced Amulet of the forsaken with the Lock of hair from Saradominist I collection progression.",
+      "source_url": "https://runescape.wiki/w/Recommended_equipment_for_PvM",
+      "confidence": "wiki_relic_item_plus_region_supply_analysis"
+    },
+    {
+      "relic": "Shadow's Grace",
+      "archaeology_level": 67,
+      "relic_item": "Aurelius's Mask",
+      "acquisition_regions": [
+        "unresolved_senntisten"
+      ],
+      "path": "Senntisten Dig Site relic reward.",
+      "league_warning": "Do not assign Senntisten to a planner region until Equilibrium publishes that boundary.",
+      "source_url": "https://runescape.wiki/w/Senntisten_Dig_Site",
+      "confidence": "confirmed_wiki_region_pending"
+    },
+    {
+      "relic": "Death Ward",
+      "archaeology_level": 81,
+      "relic_item": "Ring of Solomon",
+      "acquisition_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
+      "path": "Obtain an aviansie dreamcoat through Armadylean/Stormguard archaeology, then give it to Armadyl; base-game Armadyl hand-in location is tied to his tower near Falador and can vary with quest state.",
+      "planner_value": "A real cross-region self-sufficiency chain rather than a level-only unlock.",
+      "source_url": "https://runescape.wiki/w/Archaeology_money_making",
+      "confidence": "wiki_item_path_plus_region_analysis_quest_state_sensitive"
+    },
+    {
+      "relic": "Fury of the Small",
+      "archaeology_level": 97,
+      "relic_item": "Goblin Warpaints",
+      "acquisition_regions": [
+        "kandarin"
+      ],
+      "path": "Warforge route: combine the Red hand cave painting and Green skull cave painting obtained by using the relevant Bandosian artefacts in Warforge tunnels.",
+      "source_url": "https://runescape.wiki/w/Pay-to-play_Ranged_training",
+      "confidence": "confirmed_wiki_relic_item_region_from_confirmed_Warforge"
+    },
+    {
+      "relic": "Persistent Rage",
+      "archaeology_level": 98,
+      "relic_item": "The Rings of Razulei",
+      "acquisition_regions": [
+        "misthalin"
+      ],
+      "path": "Complete Dagon Bye at the Infernal Source and give two restored hellfire katars to Dagon the Gatekeeper.",
+      "source_url": "https://runescape.wiki/w/Artefacts",
+      "confidence": "confirmed_wiki_Infernal_Source_path"
+    },
+    {
+      "relic": "Heightened Senses",
+      "archaeology_level": 105,
+      "relic_item": "Cup of Nectar",
+      "acquisition_regions": [
+        "morytania"
+      ],
+      "path": "Complete The Everlight mystery, then use the Kantharos cup with the Everlight beam.",
+      "source_url": "https://runescape.wiki/w/Mysteries",
+      "confidence": "confirmed_wiki_mystery_region"
+    },
+    {
+      "relic": "Conservation of Energy",
+      "archaeology_level": 118,
+      "relic_item": "Experimental Aether Reactor",
+      "acquisition_regions": [
+        "kandarin"
+      ],
+      "requirements": [
+        "108 Invention",
+        "Back to the Drawing Board research",
+        "Howl's workshop theoretical blueprint"
+      ],
+      "path": "Create the Experimental Aether Reactor at an Inventor's workbench after unlocking the Stormguard/Howl Ancient Invention blueprint path.",
+      "source_url": "https://runescape.wiki/w/Ancient_Invention",
+      "confidence": "confirmed_wiki"
+    }
+  ],
+  "stale_method_corrections": [
+    {
+      "topic": "Shattered Worlds location",
+      "old_state": "Older guides place the entrance in Lumbridge Swamp.",
+      "current_state": "RuneScape Wiki records Shattered Worlds at the Void Knights' Outpost after its 17 November 2025 relocation.",
+      "planner_region": "unresolved_void_knights_outpost",
+      "source_url": "https://runescape.wiki/w/Shattered_Worlds",
+      "confidence": "confirmed_wiki_2025_change"
+    },
+    {
+      "topic": "Dinosaur Slayer rotations",
+      "old_state": "PvME retains KPH/action-bar examples.",
+      "current_state": "The current PvME page explicitly warns that some methods may not work after Q1 2026 combat changes.",
+      "planner_rule": "Keep monster levels, locations and drops; do not rank dinosaur KPH until rebenchmarked.",
+      "source_url": "https://pvme.io/pvme-guides/slayer/dinosaurs/",
+      "confidence": "pvme_explicit_2026_warning"
+    }
+  ]
+}

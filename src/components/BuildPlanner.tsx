@@ -34,6 +34,9 @@ export type RelicChoice = {
 export type RelicTier = {
   tier: number;
   revealed: boolean;
+  /** Tier-level provenance from the data pass; rendered when consumers need it. */
+  verified?: boolean;
+  sourceUrl?: string;
   choices: RelicChoice[];
 };
 

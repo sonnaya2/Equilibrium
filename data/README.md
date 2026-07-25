@@ -4,7 +4,7 @@ This folder is the app-facing data store.
 
 - `scraped-data/` contains research and ingest inputs.
 - `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
-- `scripts/sync-reference-data.mjs` copies the combat, historical League, permanent-unlock, reference-research and 2026 datasets into their app-facing locations.
+- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, reference-research, focused progression-chain and 2026 datasets into their app-facing locations.
 - `scripts/sync-planner-expansions.mjs` validates the sourced planner rows and copies them into the app-facing research store.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
 - Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
@@ -17,14 +17,17 @@ PvME can supply current combat-practice routes and measured throughput. Old comb
 
 The PvME / RS Analysis crawl is a research index, not another game-constants table. It keeps mechanic and dependency discoveries, architecture notes and source warnings. It does not copy their UI, code, boss rotations, presets or guide prose, and PvME-only discoveries are not promoted to verified facts just because they were crawled.
 
-Historical Catalyst region labels can be useful evidence for ambiguous League localities, but they are marked as precedent rather than presented as an Equilibrium confirmation.
+Historical Catalyst region labels can be useful evidence for ambiguous League localities, but they are marked as precedent rather than presented as an Equilibrium confirmation. A transport/departure point is not enough to assign the destination to that region: external or split areas stay explicit unresolved boundary cases until Equilibrium publishes the rule.
 
 Permanent unlocks record the normal-game dependency first. Equilibrium auto-completed quests, Relics, Blessings and League passives are separate overrides; they do not rewrite the base-game record. Boss/codex drops stay in the regional research instead of being copied into a second reward table.
+
+Focused crafting chains use the same rule. A normal self-source route can create region pressure without making every ingredient a hard region lock. Alternate sources and weaker cross-checks stay visible rather than being flattened into certainty.
 
 ## Current layout
 
 - `combat/modernisation-2026.json` — current combat-system modernisation data
 - `league/regions.json` — region names, access and hard boundary rules
+- `league/region-dependencies.json` — hard, historical-working and unresolved cross-boundary/external-region rules
 - `league/relics.json` — Equilibrium relic tiers and revealed choices
 - `league/blessings.json` — Equilibrium blessing structure and revealed choices
 - `league/tasks.json` — published/provisional Equilibrium task metadata and task records when available
@@ -32,6 +35,7 @@ Permanent unlocks record the normal-game dependency first. Equilibrium auto-comp
 - `research/catalog.json` — region/skill browser data
 - `research/planner-expansions.json` — combat spots, Runecrafting altars, Invention/Archaeology progression and regional unique drops
 - `research/reference-site-harvest.json` — deduplicated PvME / RS Analysis mechanic and dependency research notes
+- `research/masterwork-staff-chain.json` — tier-100 staff self-source chain with hard vs conditional region pressure
 - `research/sources.json` — source manifest
 - `reference/changes-2026.json` — 2026 update chronology relevant to League planning
 - `reference/midgame-rebalance-2026-07-20.json` — July 20 rebalance values

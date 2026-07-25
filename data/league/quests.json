@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-24T19:17:56.935Z",
-  "snapshot_date": "2026-07-24",
+  "generated_at": "2026-07-25T11:06:39.291Z",
+  "snapshot_date": "2026-07-25",
   "quest_count": 281,
   "quest_list_entry_count": 281,
   "wiki_numbered_quest_count": 276,
@@ -5611,8 +5611,8 @@
       "primary_region": "asgarnia",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Falador Park",
       "source_url": "https://runescape.wiki/w/Ritual_of_the_Mahjarrat",
-      "source_revision": 37109745,
-      "source_revision_timestamp": "2026-07-20T19:46:19Z",
+      "source_revision": 37121056,
+      "source_revision_timestamp": "2026-07-25T03:50:20Z",
       "direct_prerequisites": [
         "The Temple at Senntisten",
         "While Guthix Sleeps",

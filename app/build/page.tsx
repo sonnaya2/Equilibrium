@@ -29,6 +29,8 @@ export default function BuildPage() {
   const relicTiers = relicsData.records.map((tier) => ({
     tier: tier.tier,
     revealed: tier.revealed,
+    verified: tier.verified,
+    sourceUrl: tier.source?.url,
     choices: tier.choices.map((choice) => ({
       name: choice.name,
       effects: choice.effects,

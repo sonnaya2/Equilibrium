@@ -1,0 +1,60 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Merge-only planner enrichment. Current planner rows keep their region/source/confidence fields; this overlay fills verified missing Archaeology loadout metadata and one missing relic.",
+  "policy": {
+    "merge_only": true,
+    "current_row_wins_on_conflict": true,
+    "league_relics_are_separate": true
+  },
+  "archaeology_relic_patches": [
+    {
+      "relic": "Font of Life",
+      "set_if_missing": {"monolith_energy": 50, "effect_summary": "Increases maximum life points by 500."},
+      "source_urls": ["https://runescape.wiki/w/Font_of_Life", "https://runescape.wiki/w/Relic_power"]
+    },
+    {
+      "relic": "Berserker's Fury",
+      "set_if_missing": {"monolith_energy": 250, "effect_summary": "Deals up to 5.5% more damage as current life points fall below maximum."},
+      "source_urls": ["https://runescape.wiki/w/Berserker%27s_Fury", "https://runescape.wiki/w/Relic_power"]
+    },
+    {
+      "relic": "Death Ward",
+      "set_if_missing": {"monolith_energy": 150, "effect_summary": "Reduces damage by 5% below 50% life points and 10% below 25% life points."},
+      "source_urls": ["https://runescape.wiki/w/Death_Ward", "https://runescape.wiki/w/Relic_power"]
+    },
+    {
+      "relic": "Fury of the Small",
+      "set_if_missing": {"monolith_energy": 150, "effect_summary": "Basic abilities generate 1% additional adrenaline."},
+      "source_urls": ["https://runescape.wiki/w/Fury_of_the_Small", "https://runescape.wiki/w/Relic_power"]
+    },
+    {
+      "relic": "Heightened Senses",
+      "set_if_missing": {"monolith_energy": 350, "effect_summary": "Increases maximum adrenaline by 10%."},
+      "source_urls": ["https://runescape.wiki/w/Heightened_Senses", "https://runescape.wiki/w/Relic_power"]
+    },
+    {
+      "relic": "Conservation of Energy",
+      "set_if_missing": {"monolith_energy": 350, "invention_level": 108, "effect_summary": "Regains 10% adrenaline after using an ultimate ability."},
+      "source_urls": ["https://runescape.wiki/w/Conservation_of_Energy", "https://runescape.wiki/w/Ancient_Invention"]
+    }
+  ],
+  "archaeology_relic_additions": [
+    {
+      "relic": "Blessing of Het",
+      "archaeology_level": 74,
+      "monolith_energy": 100,
+      "effect_summary": "Food and potions restore 10% more life points.",
+      "acquisition_region": "desert",
+      "acquisition_regions": ["desert"],
+      "acquisition": "Use the broken Eye of Het relic from the Het/Oasis progression chain.",
+      "source_url": "https://runescape.wiki/w/Eye_of_Het_(broken)",
+      "confidence": "confirmed_wiki_region_mapping"
+    }
+  ],
+  "archaeology_relic_system": {
+    "active_relic_limit": 3,
+    "monolith_energy_caps": [150, 250, 400, 500, 650],
+    "note": "Archaeology relic slots and monolith energy are a different system from Equilibrium League Relics and must not share slot state.",
+    "source_url": "https://runescape.wiki/w/Relic_power"
+  }
+}

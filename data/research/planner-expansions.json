@@ -61,7 +61,7 @@
       "notes": "PvME recommends Abyss monsters for the 50/60-80 band. No combat XP/h is stored because older tables are stale after combat-XP changes.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_current_method_no_xp_claim"
+      "confidence": "pvme_present_post_2026_global_stale_warning"
     },
     {
       "id": "combat-ravenous-ghouls",
@@ -83,7 +83,7 @@
       "notes": "Listed by PvME as an 80+ combat-training candidate.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_current"
+      "confidence": "pvme_present_post_2026_global_stale_warning"
     },
     {
       "id": "combat-vyrewatch",
@@ -114,7 +114,7 @@
       "notes": "High-value League method because one mob loop can train combat while producing Prayer and Firemaking XP; exact League throughput depends on auto-completed quest access.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_current_method_quest_access_pending"
+      "confidence": "pvme_present_post_2026_global_stale_warning"
     },
     {
       "id": "combat-bound-skeletons",
@@ -136,7 +136,7 @@
       "notes": "PvME lists bound skeletons among the 80+ progression options. Fort/crypt access should be checked against Equilibrium quest auto-completion once published.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_current_region_known_access_details_pending_working_fort_misthalin_taxonomy",
+      "confidence": "pvme_present_post_2026_global_stale_warning",
       "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
       "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary."
     },
@@ -162,7 +162,7 @@
       "notes": "PvME specifically highlights Ranged here for the 80+ progression band. Wilderness access is directly Forinthry; Senntisten is retained only as an alternate base-game location, not a claimed League region shortcut.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_current"
+      "confidence": "pvme_present_post_2026_global_stale_warning"
     },
     {
       "id": "combat-abyssal-beasts",
@@ -191,7 +191,7 @@
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/scavenging-farming/",
       "source_type": "pvme",
-      "confidence": "pvme_current"
+      "confidence": "pvme_present_post_2026_global_stale_warning"
     },
     {
       "id": "combat-armoured-phantoms",
@@ -224,7 +224,7 @@
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "secondary_source_url": "https://runescape.wiki/w/Greater_Sonic_Wave_ability_codex",
       "source_type": "pvme_plus_wiki",
-      "confidence": "cross_checked_working_fort_misthalin_taxonomy",
+      "confidence": "pvme_present_post_2026_global_stale_warning",
       "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
       "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary."
     },
@@ -252,6 +252,41 @@
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/scavenging-farming/",
       "source_type": "pvme",
       "confidence": "pvme_current"
+    },
+    {
+      "id": "combat-armoured-zombies",
+      "level_range": "50/60-80 candidate",
+      "region": "unresolved_cross_boundary",
+      "region_candidates": [
+        "misthalin",
+        "forinthry"
+      ],
+      "location": "Chaos Temple Dungeon / Zemouregal's Base, reached through Defender of Varrock progression",
+      "methods": [
+        "AoE combat training",
+        "undead training with Salve amulet synergy"
+      ],
+      "skills": [
+        "Attack",
+        "Strength",
+        "Defence",
+        "Constitution",
+        "Magic",
+        "Ranged",
+        "Necromancy"
+      ],
+      "requirements": [
+        "Defender of Varrock progression for access"
+      ],
+      "notes": "PvME lists Armoured Zombies alongside Abyss monsters for the 50/60-80 training band and explicitly notes Salve amulet synergy. The farmable dungeon is geographically associated with the Wilderness but is reached through a safe quest instance/access route from Varrock, so do not hard-assign an Equilibrium region until official locality or quest-auto-completion rules resolve it.",
+      "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
+      "secondary_source_urls": [
+        "https://runescape.wiki/w/Armoured_zombie",
+        "https://runescape.wiki/w/Chaos_Temple_Dungeon",
+        "https://runescape.wiki/w/Defender_of_Varrock"
+      ],
+      "source_type": "pvme_plus_wiki",
+      "confidence": "pvme_method_candidate_wiki_facts_cross_checked_region_unresolved"
     }
   ],
   "runecrafting_altars": [
@@ -719,15 +754,16 @@
   "archaeology_combat_relics": [
     {
       "relic": "Font of Life",
-      "archaeology_level": "tutorial",
-      "effect_summary": "PvM permanent unlock tracked by PvME",
+      "archaeology_level": 5,
+      "effect_summary": "Increases maximum life points by 500.",
       "acquisition_region": "misthalin",
       "source_url": "https://runescape.wiki/w/Font_of_Life",
       "confidence": "confirmed_wiki_region_mapping",
       "acquisition_regions": [
         "misthalin"
       ],
-      "acquisition": "The Mortal Cup from the Archaeology tutorial at the Archaeology Campus."
+      "acquisition": "The Mortal Cup from the Archaeology tutorial at the Archaeology Campus.",
+      "monolith_energy": 50
     },
     {
       "relic": "Berserker's Fury",
@@ -744,7 +780,8 @@
       "region_evidence_urls": [
         "https://runescape.wiki/w/Sir_Atcha:Saradominist_I",
         "https://runescape.wiki/w/Barrows"
-      ]
+      ],
+      "monolith_energy": 250
     },
     {
       "relic": "Shadow's Grace",
@@ -774,7 +811,8 @@
       "region_evidence_urls": [
         "https://runescape.wiki/w/Archaeology_training",
         "https://runescape.wiki/w/Armadyl%27s_Tower"
-      ]
+      ],
+      "monolith_energy": 150
     },
     {
       "relic": "Fury of the Small",
@@ -787,7 +825,8 @@
         "kandarin"
       ],
       "acquisition": "Goblin Warpaints assembled from cave paintings unlocked with Warforge artefacts.",
-      "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks"
+      "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+      "monolith_energy": 150
     },
     {
       "relic": "Persistent Rage",
@@ -813,7 +852,8 @@
         "morytania"
       ],
       "acquisition": "Cup of Nectar created with a Kantharos cup at the Everlight lighthouse after The Everlight mystery.",
-      "region_evidence_url": "https://runescape.wiki/w/Artefacts"
+      "region_evidence_url": "https://runescape.wiki/w/Artefacts",
+      "monolith_energy": 350
     },
     {
       "relic": "Conservation of Energy",
@@ -827,7 +867,22 @@
       ],
       "additional_dependency": "Requires Ancient Invention / an Invention workbench. Base-game Invention tutorial geography is Asgarnia, but Equilibrium tutorial treatment is not yet public.",
       "acquisition": "Experimental Aether Reactor created after deciphering theoretical blueprints in Howl's Workshop at Stormguard Citadel.",
-      "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks"
+      "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+      "monolith_energy": 350,
+      "invention_level": 108
+    },
+    {
+      "relic": "Blessing of Het",
+      "archaeology_level": 74,
+      "monolith_energy": 100,
+      "effect_summary": "Food and potions restore 10% more life points.",
+      "acquisition_region": "desert",
+      "acquisition_regions": [
+        "desert"
+      ],
+      "acquisition": "Use the broken Eye of Het relic from the Het/Oasis progression chain.",
+      "source_url": "https://runescape.wiki/w/Eye_of_Het_(broken)",
+      "confidence": "confirmed_wiki_region_mapping"
     }
   ],
   "regional_unique_drops": [
@@ -1024,5 +1079,17 @@
       }
     ],
     "training_warning": "The current Wiki Runecrafting training page still carries incomplete-rate warnings and legacy Demonic Skull figures in parts of its tables. Preserve the methods, but do not promote its XP/hour values to optimizer-grade Equilibrium rates without a current benchmark."
+  },
+  "archaeology_relic_system": {
+    "active_relic_limit": 3,
+    "monolith_energy_caps": [
+      150,
+      250,
+      400,
+      500,
+      650
+    ],
+    "note": "Archaeology relic slots and monolith energy are a different system from Equilibrium League Relics and must not share slot state.",
+    "source_url": "https://runescape.wiki/w/Relic_power"
   }
 }

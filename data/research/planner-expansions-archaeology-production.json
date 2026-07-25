@@ -1,0 +1,72 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Repeatable Archaeology collection rewards that provide useful production resources but are alternate supply loops rather than hard region gates.",
+  "production_collection_routes": [
+    {
+      "collection": "Blingy Fings",
+      "archaeology_level": 69,
+      "collector": "Chief Tess",
+      "collector_region": "kandarin",
+      "artifact_dig_sites": ["Kharid-et", "Everlight"],
+      "artifact_regions": ["desert", "morytania"],
+      "required_regions_for_collection_loop": ["desert", "morytania", "kandarin"],
+      "repeat_reward": "20 robust glass",
+      "planner_classification": "optional_archaeology_production_loop",
+      "planner_value": "Repeatable robust-glass source spanning Kharid-et and Everlight with turn-in at Chief Tess in Oo'glog. Robust glass also has non-collection production routes, so this must not become a hard Desert/Morytania/Kandarin gate.",
+      "source_url": "https://runescape.wiki/w/Blingy_Fings",
+      "secondary_source_url": "https://runescape.wiki/w/Chief_Tess%3A_Blingy_Fings",
+      "confidence": "confirmed_wiki_cross_region_optional_supply"
+    },
+    {
+      "collection": "Smoky Fings",
+      "archaeology_level": 81,
+      "collector": "Chief Tess",
+      "collector_region": "kandarin",
+      "artifact_dig_sites": ["Infernal Source", "Everlight", "Kharid-et"],
+      "artifact_regions": ["misthalin", "morytania", "desert"],
+      "required_regions_for_collection_loop": ["misthalin", "morytania", "desert", "kandarin"],
+      "first_reward": "Oo'glog Wellspring",
+      "repeat_reward": "40 robust glass",
+      "planner_classification": "optional_archaeology_production_loop",
+      "planner_value": "Four-region normal collection loop for robust glass. It is valuable as a no-trading alternate supply route, not a hard requirement for robust glass itself.",
+      "source_url": "https://runescape.wiki/w/Smoky_Fings",
+      "secondary_source_url": "https://runescape.wiki/w/Chief_Tess%3A_Smoky_Fings",
+      "confidence": "confirmed_wiki_cross_region_optional_supply"
+    },
+    {
+      "collection": "Hitty Fings",
+      "archaeology_level": 89,
+      "collector": "Chief Tess",
+      "collector_region": "kandarin",
+      "artifact_dig_sites": ["Kharid-et", "Everlight", "Warforge"],
+      "artifact_regions": ["desert", "morytania", "kandarin"],
+      "required_regions_for_collection_loop": ["desert", "morytania", "kandarin"],
+      "repeat_reward": "40 robust glass",
+      "planner_classification": "optional_archaeology_production_loop",
+      "planner_value": "Repeatable robust-glass loop using Kharid-et, Everlight and Warforge artefacts. Kandarin supplies both Warforge artefacts and the Oo'glog collector, but the collection still requires Desert and Morytania artefacts.",
+      "source_url": "https://runescape.wiki/w/Hitty_Fings",
+      "secondary_source_url": "https://runescape.wiki/w/Chief_Tess%3A_Hitty_Fings",
+      "confidence": "confirmed_wiki_cross_region_optional_supply"
+    },
+    {
+      "collection": "Showy Fings",
+      "archaeology_level": 92,
+      "collector": "Chief Tess",
+      "collector_region": "kandarin",
+      "artifact_dig_sites": ["Infernal Source", "Kharid-et", "Stormguard Citadel", "Everlight"],
+      "artifact_regions": ["misthalin", "desert", "kandarin", "morytania"],
+      "required_regions_for_collection_loop": ["misthalin", "desert", "kandarin", "morytania"],
+      "repeat_reward": "40 robust glass",
+      "planner_classification": "optional_archaeology_production_loop",
+      "planner_value": "Highest-level Chief Tess robust-glass loop, drawing from all four represented dig-site regions before turn-in at Oo'glog.",
+      "source_url": "https://runescape.wiki/w/Showy_Fings",
+      "secondary_source_url": "https://runescape.wiki/w/Chief_Tess%3A_Showy_Fings",
+      "confidence": "confirmed_wiki_cross_region_optional_supply"
+    }
+  ],
+  "alternate_supply_guard": {
+    "resource": "robust glass",
+    "rule": "Do not infer a hard region requirement from Chief Tess collections. Robust glass also has normal non-collection production routes such as red sandstone processing.",
+    "source_url": "https://runescape.wiki/w/Robust_glass"
+  }
+}

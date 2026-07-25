@@ -46,10 +46,29 @@ jobs:
       - run: npm ci
       - name: Normalize research data in the validation workspace
         run: npm run normalize:data
-      - name: Audit permanent unlock assumptions
-        run: npm run audit:progression
-      - name: Audit reference research corpus
-        run: npm run audit:references
+      - name: Audit all canonical and research data
+        run: npm run audit:all-data
+      - name: Ensure generated canonical data is committed
+        run: git diff --exit-code -- data/
       - run: npm run typecheck
-      - run: npm test
+      - name: Run unit tests
+        id: unit-tests
+        shell: bash
+        run: |
+          set +e
+          npm test > vitest.log 2>&1
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            tail -n 120 vitest.log
+            exit "$status"
+          fi
+          cat vitest.log
+      - name: Upload unit-test failure log
+        if: failure() && steps.unit-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-failure
+          path: vitest.log
+          if-no-files-found: error
+          retention-days: 3
       - run: npm run build

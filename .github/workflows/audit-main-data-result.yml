@@ -1,0 +1,83 @@
+name: Capture main data audit result
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/**"
+      - "scraped-data/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/audit-main-data-result.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture-main-data-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Normalize and audit
+        id: audit
+        shell: bash
+        run: |
+          set +e
+          source_head="$(git rev-parse HEAD)"
+          npm run normalize:data > main-data-audit.log 2>&1
+          normalize_status=$?
+          audit_status=125
+          if [ "$normalize_status" -eq 0 ]; then
+            npm run audit:all-data >> main-data-audit.log 2>&1
+            audit_status=$?
+          fi
+          export SOURCE_HEAD="$source_head" NORMALIZE_STATUS="$normalize_status" AUDIT_STATUS="$audit_status"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { spawnSync } = require('node:child_process');
+          const log = fs.readFileSync('main-data-audit.log', 'utf8');
+          const normalizeStatus = Number(process.env.NORMALIZE_STATUS);
+          const auditStatus = Number(process.env.AUDIT_STATUS);
+          const diffStatus = spawnSync('git', ['diff', '--quiet', '--', 'data/'], { stdio: 'ignore' }).status;
+          const result = {
+            source_head: process.env.SOURCE_HEAD,
+            captured_at: new Date().toISOString(),
+            status: normalizeStatus === 0 && auditStatus === 0 ? 'passed' : 'failed',
+            normalize_exit_code: normalizeStatus,
+            audit_exit_code: auditStatus,
+            generated_data_changed: diffStatus === 1,
+            generated_data_diff_probe_exit_code: diffStatus,
+            log_tail: log.split(/\r?\n/).slice(-300),
+          };
+          fs.writeFileSync('MAIN_DATA_AUDIT_RESULT.json', `${JSON.stringify(result, null, 2)}\n`);
+          NODE
+          exit 0
+
+      - name: Publish audit result branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C audit/main-data-result
+          git add MAIN_DATA_AUDIT_RESULT.json main-data-audit.log data/
+          git commit -m "Capture main data audit result" || true
+          git push --force origin HEAD:audit/main-data-result

@@ -1,0 +1,88 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Merge-only generic combat unlock acquisitions that affect League routing. Current acquisition gates are retained; stale or boss-specific performance claims are excluded.",
+  "policy": {
+    "merge_only": true,
+    "current_base_wins_on_id_collision": true,
+    "combat_effects_require_current_verification": true,
+    "league_overrides_separate": true
+  },
+  "activity_additions": [
+    {
+      "id": "mage-arena:guthix-staff",
+      "name": "Guthix staff and Claws of Guthix access",
+      "category": "Wilderness minigame combat unlock",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_base_game_geography",
+      "requirements": [
+        "60 Magic",
+        "Complete the Mage Arena encounter and choose Guthix for the initial staff/cape reward",
+        "Cast Divine Storm 100 times on Mage Arena mages to unlock the staff special attack / outside-arena Divine Storm access"
+      ],
+      "unlocks": [
+        {"name": "Guthix staff"},
+        {"name": "Claws of Guthix special attack"},
+        {"name": "Divine Storm outside the Mage Arena"}
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Guthix_staff",
+        "https://runescape.wiki/w/Mage_Arena",
+        "https://runescape.wiki/w/Divine_Storm"
+      ],
+      "discovery_sources": [
+        "https://runescape.fandom.com/wiki/Guthix_staff",
+        "https://www.runehq.com/item/guthix-staff"
+      ],
+      "confidence": "acquisition_confirmed_multiple_sources_wiki_linked",
+      "league_treatment": "Mage Arena is Wilderness geography, so use Forinthry for the base acquisition path unless Equilibrium publishes an explicit exception. Keep the special-attack combat numbers in the combat dataset, not this progression row."
+    },
+    {
+      "id": "dominion-tower:dreadnips",
+      "name": "Dreadnips",
+      "category": "Dominion Tower permanent reward access",
+      "region_hint": "desert",
+      "region_status": "confirmed_base_game_geography",
+      "requirements": [
+        "Defeat 450 bosses inside Dominion Tower",
+        "Spectate another player's Dominion Tower match"
+      ],
+      "reward": "Unlocks the ability to claim and deploy Dreadnips.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dreadnip",
+        "https://runescape.wiki/w/Dominion_Tower"
+      ],
+      "discovery_sources": [
+        "https://www.tip.it/runescape/pages/view/dominion_tower.htm",
+        "https://github.com/pvme/pvme-guides/blob/master/upgrading-info/permanent-unlocks.txt"
+      ],
+      "confidence": "acquisition_confirmed_multiple_sources_wiki_linked",
+      "league_treatment": "Store the permanent reward gate only. Do not import Dreadnip damage, stun or boss-usage guidance from old guides."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "broken-home:asylum-surgeons-ring",
+      "name": "Asylum surgeon's ring",
+      "category": "quest-challenge equipment unlock",
+      "region_status": "unresolved_misthalin_morytania_boundary",
+      "region_candidates": ["misthalin", "morytania"],
+      "quest": "Broken Home",
+      "requirements": [
+        "Complete Broken Home once",
+        "Complete the designated post-quest challenges",
+        "Complete a replay in under 37 minutes"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Asylum_surgeon%27s_ring",
+        "https://runescape.wiki/w/Broken_Home"
+      ],
+      "discovery_sources": [
+        "https://darkscape.fandom.com/wiki/Asylum_surgeon%27s_ring",
+        "https://www.tip.it/runescape/quests/view/259-broken-home",
+        "https://github.com/pvme/pvme-guides/blob/master/upgrading-info/permanent-unlocks.txt"
+      ],
+      "confidence": "acquisition_confirmed_multiple_sources_wiki_linked",
+      "league_treatment": "Do not hard-assign the mansion to an elective region from map intuition. Apply official Equilibrium quest auto-completion separately, and keep the ring's combat proc values out of progression until reverified from a current source."
+    }
+  ]
+}

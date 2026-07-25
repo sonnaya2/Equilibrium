@@ -1,0 +1,171 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "2026-specific Invention additions and account-level component bottlenecks that materially affect League combat builds.",
+  "new_2026_component_routes": [
+    {
+      "component": "Ecliptic components",
+      "invention_level_to_use": 92,
+      "release_date": "2026-03-09",
+      "primary_perk": "Equilibrium",
+      "region_options": [
+        "desert",
+        "unresolved_underworld_sanctum"
+      ],
+      "desert_sources": [
+        "Khopesh of Tumeken",
+        "Khopesh of Elidinis"
+      ],
+      "other_sources": [
+        "Roar of Awakening",
+        "Ode to Deceit",
+        "Devourer's Guard",
+        "Tumeken's resplendence equipment"
+      ],
+      "base_2026_source_rule": "Jagex introduced the component with one component from Roar of Awakening, Ode to Deceit, Khopesh of Tumeken or Khopesh of Elidinis; the current Wiki category also includes later Amascut/Tumeken equipment.",
+      "planner_value": "Desert has a self-contained Khopesh route to the component. Sanctum/Underworld locality is not forced into a region until Equilibrium publishes destination handling.",
+      "source_url": "https://runescape.wiki/w/Update:Combat_Style_Refinements_%26_March_Marketplace_Drop",
+      "secondary_source_url": "https://runescape.wiki/w/Category:Items_that_disassemble_into_Ecliptic_components",
+      "confidence": "confirmed_2026_wiki_desert_route_region_inferred_from_existing_khopesh_mapping"
+    }
+  ],
+  "current_2026_perk_dependencies": [
+    {
+      "perk": "Equilibrium 4",
+      "gizmo": "ancient armour gizmo",
+      "recommended_components": [
+        "6 Ecliptic",
+        "2 Manufactured"
+      ],
+      "pvme_result": "Guaranteed in the current PvME recipe",
+      "alternate_single_perk_recipe": [
+        "5 Ecliptic",
+        "4 Manufactured"
+      ],
+      "wiki_alternative": "7 Ecliptic is a guaranteed single-perk Equilibrium 4 route; 6 Ecliptic is approximately 98.97% before adding combo materials.",
+      "important_combinations": [
+        {
+          "perk": "Equilibrium 4 Crystal Shield 1",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "2 Faceted"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Demon Slayer",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "2 Third-age"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Dragon Slayer",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "2 Dragonfire"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Genocidal",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "2 Bandos"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Lucky 1",
+          "components": [
+            "6 Ecliptic",
+            "1 Silent",
+            "1 Fortunate"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Lucky 2",
+          "components": [
+            "6 Ecliptic",
+            "3 Silent"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Mobile",
+          "components": [
+            "6 Ecliptic",
+            "1 Flexible",
+            "1 Subtle",
+            "1 Dextrous"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Reflexes",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "1 Dextrous",
+            "1 Harnessed"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Undead Slayer",
+          "components": [
+            "6 Ecliptic",
+            "2 Living",
+            "1 Undead"
+          ]
+        },
+        {
+          "perk": "Equilibrium 4 Venomblood",
+          "components": [
+            "6 Ecliptic",
+            "1 Manufactured",
+            "2 Pestiferous"
+          ]
+        }
+      ],
+      "style_relevance": "PvME's current advanced Necromancy armour setup uses Equilibrium 4 in place of a crit-oriented Biting setup because Equilibrium prevents critical strikes.",
+      "region_pressure": [
+        "desert can self-source Ecliptic through Khopesh progression",
+        "other Ecliptic sources may reduce region pressure if their Equilibrium locality is available"
+      ],
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "secondary_source_url": "https://runescape.wiki/w/Equilibrium",
+      "confidence": "pvme_current_cross_checked_wiki"
+    },
+    {
+      "perk": "Equilibrium 2",
+      "gizmo": "armour gizmo",
+      "recommended_components": [
+        "9 Manufactured"
+      ],
+      "planner_value": "Lower-tier bridge that makes Manufactured supply relevant even before Ecliptic-heavy Equilibrium 4 setups.",
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "pvme_current_recipe"
+    },
+    {
+      "perk": "Equilibrium 1",
+      "gizmo": "common armour gizmo",
+      "recommended_components": [
+        "3 Manufactured"
+      ],
+      "pvme_result": "Guaranteed at 76+ Invention in the current PvME recipe.",
+      "planner_value": "Cheap bridge recipe and a direct proof that Manufactured is part of the live 2026 Equilibrium material ladder.",
+      "source_url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
+      "confidence": "pvme_current_recipe"
+    }
+  ],
+  "account_component_routes": [
+    {
+      "component": "Oceanic components",
+      "invention_level_to_use": 87,
+      "region": "player_owned_ports_account_progression",
+      "primary_source": "Seasinger equipment",
+      "example_return": "Seasinger items give 3 Oceanic components each; level-9 augmented Seasinger robe bottoms can give 12.",
+      "planner_value": "This is primarily a Player-Owned Ports time/account bottleneck rather than an elective-region bottleneck. Treating it as a region drop would make no-trading build estimates wrong.",
+      "source_url": "https://runescape.wiki/w/Oceanic_components",
+      "confidence": "confirmed_wiki_account_dependency"
+    }
+  ]
+}

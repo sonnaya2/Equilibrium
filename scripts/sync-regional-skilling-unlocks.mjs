@@ -65,6 +65,7 @@ function regionHints(row) {
   return [...new Set([
     row.region_hint,
     ...list(row.region_hints),
+    ...list(row.required_regions),
   ].filter(Boolean).map(String))];
 }
 
@@ -87,6 +88,8 @@ function normalizeRow(row, recordType, sourceFile) {
     name: row.name,
     recordType,
     regionHints: regionHints(row),
+    requiredRegions: list(row.required_regions).map(String),
+    regionRequirementType: row.region_requirement_type || "",
     category: row.category || "skilling unlock",
     detail: detail(row),
     requirements: [...new Set([
@@ -139,6 +142,9 @@ for (const region of catalog.regions || []) {
       confidence: row.confidence,
       source: row.source,
       regionId: region.id,
+      regionHints: row.regionHints,
+      requiredRegions: row.requiredRegions,
+      regionRequirementType: row.regionRequirementType,
     });
     existing.add(row.name);
   }

@@ -32,6 +32,21 @@ jobs:
       - run: npm ci
       - run: npm run normalize:data
       - name: Run complete data audit
-        run: npm run audit:all-data
+        id: data-audit
+        shell: bash
+        run: |
+          set +e
+          npm run audit:all-data > data-audit.log 2>&1
+          status=$?
+          tail -n 120 data-audit.log
+          exit "$status"
+      - name: Upload data-audit failure log
+        if: failure() && steps.data-audit.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-audit-failure
+          path: data-audit.log
+          if-no-files-found: error
+          retention-days: 3
       - name: Ensure generated data is committed
         run: git diff --exit-code -- data/

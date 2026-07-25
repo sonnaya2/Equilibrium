@@ -23,15 +23,23 @@ const overrides = new Map([
       search: "Zamorak Lord of Chaos model boss image",
     },
   ],
+  [
+    "activity-player-owned-farm",
+    {
+      fileTitle: "Player-owned farm.png",
+      search: "Player-owned farm Manor Farm activity image",
+    },
+  ],
 ]);
 
+const applyOverrides = (asset) => ({
+  ...asset,
+  ...(overrides.get(asset.id) ?? {}),
+});
 const expansionAssets = expansions
   .flatMap((expansion) => expansion.assets ?? [])
-  .map((asset) => ({
-    ...asset,
-    ...(overrides.get(asset.id) ?? {}),
-  }));
-const assets = [...(base.assets ?? []), ...expansionAssets];
+  .map(applyOverrides);
+const assets = [...(base.assets ?? []).map(applyOverrides), ...expansionAssets];
 const ids = new Set();
 const paths = new Set();
 

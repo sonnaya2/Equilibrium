@@ -9,6 +9,7 @@ const supplements = [
   "planner-expansions-archaeology-guild.json",
   "planner-expansions-archaeology-utilities.json",
   "planner-expansions-invention-2026.json",
+  "planner-expansions-invention-active-perks.json",
   "planner-expansions-invention-archaeology.json",
   "planner-expansions-invention-component-coverage.json",
   "planner-expansions-invention-material-bottlenecks.json",

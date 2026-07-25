@@ -1,0 +1,115 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Planner-facing Archaeology quality-of-life and collection-completion tools. This overlay corrects the current relic-preset progression and records utilities that materially reduce duplicate artefacts, collection travel and wasted hand-ins without pretending they are region unlocks.",
+  "source_policy": {
+    "game_facts": "RuneScape Wiki current pages and the archived official 10 February 2025 relic-presets update",
+    "league_rule": "Utilities may reduce time or travel, but they do not create or erase an elective League region requirement.",
+    "baseline_rule": "Limited-event or monetisation-only sources of Fixate charge tokens are not assumed in a normal self-sufficient League route."
+  },
+  "relic_system_progression": [
+    {
+      "id": "arch-relic-presets-tutorial",
+      "requirement": "Complete the Archaeology tutorial and relic-system onboarding",
+      "loadout_count_after_unlock": 2,
+      "effect": "Unlocks the first two relic presets, each supporting up to three active relic powers within the account's monolith-power limit.",
+      "source_url": "https://runescape.wiki/w/Update:Relic_Presets_%26_February_Mini_Strike_-_This_Week_In_RuneScape",
+      "confidence": "official_update_archive_current"
+    },
+    {
+      "id": "arch-relic-presets-professor",
+      "requirement": "Professor qualification and 80,000 chronotes at the Archaeology Guild Shop",
+      "loadout_count_after_unlock": 3,
+      "chronote_cost": 80000,
+      "effect": "Purchases the third relic preset.",
+      "source_url": "https://runescape.wiki/w/Update:Relic_Presets_%26_February_Mini_Strike_-_This_Week_In_RuneScape",
+      "confidence": "official_update_archive_current"
+    },
+    {
+      "id": "arch-relic-presets-guildmaster",
+      "requirement": "Guildmaster qualification",
+      "loadout_count_after_unlock": 4,
+      "effect": "Awards the fourth relic preset as part of the Guildmaster qualification.",
+      "source_url": "https://runescape.wiki/w/Qualification_-_Guildmaster",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-relic-preset-switch-cost",
+      "requirement": "Switch to a different configured relic preset",
+      "effect": "Switching costs 80% of the normal chronote harnessing cost for the relics in the selected preset; relics shared with the currently active preset are deducted from that activation cost.",
+      "cost_percent_of_normal_harnessing": 80,
+      "source_url": "https://runescape.wiki/w/Update:Relic_Presets_%26_February_Mini_Strike_-_This_Week_In_RuneScape",
+      "confidence": "official_update_archive_current"
+    }
+  ],
+  "collection_completion_tools": [
+    {
+      "id": "arch-fixate",
+      "tool": "Fixate",
+      "unlock_routes": [
+        "Wear the full master archaeologist's outfit",
+        "Consume a Fixate charge token for additional Fixate energy"
+      ],
+      "baseline_daily_uses_with_outfit": 3,
+      "effect": "Choose an artefact from the targeted excavation hotspot and guarantee that artefact on the next discovery.",
+      "planner_value": "Use on the missing artefact in a two- or three-artefact hotspot when finishing a collection or a secondary-use item chain. Do not assume event-token supply as a baseline League resource.",
+      "source_url": "https://runescape.wiki/w/Transcript:Fixate",
+      "secondary_source_url": "https://runescape.wiki/w/Archaeology_training",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-artefact-bad-luck-mitigation",
+      "tool": "Five-artefact duplicate mitigation",
+      "effect": "When the same artefact is received again, its chance is halved again; the system tracks the last five earned artefacts. Artefacts obtained through Fixate are also tracked.",
+      "planner_value": "Collection completion is not uniform random sampling. Route estimates should account for built-in duplicate suppression before assuming every hotspot needs equal expected attempts.",
+      "source_url": "https://runescape.wiki/w/Artefacts",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-journal-collector-information",
+      "tool": "Archaeology journal collector information",
+      "effect": "Shows collection progress and which artefacts have been submitted to collectors.",
+      "planner_value": "Use as the canonical in-game completion check before restoring duplicates or travelling to a collector.",
+      "source_url": "https://runescape.wiki/w/Collections",
+      "secondary_source_url": "https://runescape.wiki/w/Archaeology_training",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-master-outfit-routing",
+      "tool": "Master archaeologist's outfit teleports",
+      "requirement": "Full master archaeologist's outfit / Guildmaster shop progression",
+      "effect": "Provides unlimited teleports to archaeological dig sites and collectors through the outfit hat.",
+      "planner_value": "This sharply reduces collector hand-in travel after Guildmaster, but it does not grant access to a collector or dig site whose quest/region requirement is otherwise unavailable.",
+      "source_url": "https://runescape.wiki/w/Archaeology_training",
+      "secondary_source_url": "https://runescape.wiki/w/Teleportation",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-journal-campus-routing",
+      "tool": "Archaeology journal and dig-sites map",
+      "effect": "The journal teleports to the Archaeology Guild; the campus dig-sites map provides onward routing to unlocked dig sites.",
+      "planner_value": "Useful pre-Guildmaster routing fallback. It shortens travel but does not bypass region, quest or dig-site access requirements.",
+      "source_url": "https://runescape.wiki/w/Teleportation",
+      "secondary_source_url": "https://runescape.wiki/w/Archaeology",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-museum-donation-fallback",
+      "tool": "Museum donation bin",
+      "effect": "Extra restored artefacts can be donated for 40% of the chronotes that a collector would normally award.",
+      "collection_reward_eligible": false,
+      "planner_value": "Overflow disposal only. Collector first-time/repeat rewards and artefacts with secondary uses take precedence; do not value the museum bin as equivalent to completing a collection.",
+      "source_url": "https://runescape.wiki/w/Artefacts",
+      "confidence": "confirmed_wiki_current"
+    }
+  ],
+  "existing_data_corrections": [
+    {
+      "target_dataset": "planner-expansions-archaeology-collections",
+      "target_id": "arch-guildmaster-second-loadout",
+      "action": "replace_in_runtime_with_relic_system_progression_overlay",
+      "reason": "The 10 February 2025 update starts players with two presets, sells the third at Professor for 80,000 chronotes, and awards the fourth at Guildmaster. The older row incorrectly describes Guildmaster as granting the second loadout.",
+      "source_url": "https://runescape.wiki/w/Update:Relic_Presets_%26_February_Mini_Strike_-_This_Week_In_RuneScape",
+      "confidence": "official_update_archive_correction"
+    }
+  ]
+}

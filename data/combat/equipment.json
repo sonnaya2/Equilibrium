@@ -1,5 +1,971 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-25",
   "trackedSince": "2024-03-04",
-  "records": []
+  "records": [
+    {
+      "id": "item:seismic-wand",
+      "name": "Seismic wand",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vorago",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / tectonic armour materials"
+    },
+    {
+      "id": "item:seismic-singularity",
+      "name": "Seismic singularity",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vorago",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / tectonic armour materials"
+    },
+    {
+      "id": "item:tectonic-energy",
+      "name": "Tectonic energy",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vorago",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / tectonic armour materials"
+    },
+    {
+      "id": "item:wand-of-the-praesul",
+      "name": "Wand of the praesul",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Nex: Angel of Death progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / prayers"
+    },
+    {
+      "id": "item:imperium-core",
+      "name": "Imperium core",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Nex: Angel of Death progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / prayers"
+    },
+    {
+      "id": "item:praesul-codex",
+      "name": "Praesul codex",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Nex: Angel of Death progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / prayers"
+    },
+    {
+      "id": "item:eldritch-crossbow-components",
+      "name": "Eldritch crossbow components",
+      "style": "ranged",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Shadow Reef progression",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Shadow_Reef",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Ranged weapon / elite dungeon rewards"
+    },
+    {
+      "id": "item:devourers-guard",
+      "name": "Devourer's Guard",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+    },
+    {
+      "id": "item:tumekens-light",
+      "name": "Tumeken's Light",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+    },
+    {
+      "id": "item:tumekens-resplendence-equipment",
+      "name": "Tumeken's resplendence equipment",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+    },
+    {
+      "id": "item:shard-of-genesis-essence",
+      "name": "Shard of Genesis Essence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+    },
+    {
+      "id": "item:malevolent-energy",
+      "name": "Malevolent energy",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee armour / shields"
+    },
+    {
+      "id": "item:malevolent-armour",
+      "name": "Malevolent armour",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee armour / shields"
+    },
+    {
+      "id": "item:barrows-defenders-shields-progression",
+      "name": "Barrows defenders/shields progression",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee armour / shields"
+    },
+    {
+      "id": "item:fractured-staff-of-armadyl-components",
+      "name": "Fractured Staff of Armadyl components",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Kerapac progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / ability / scripture"
+    },
+    {
+      "id": "item:greater-concentrated-blast",
+      "name": "Greater Concentrated Blast",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Kerapac progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / ability / scripture"
+    },
+    {
+      "id": "item:kerapacs-wrist-wraps",
+      "name": "Kerapac's wrist wraps",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Kerapac progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / ability / scripture"
+    },
+    {
+      "id": "item:scripture-of-jas",
+      "name": "Scripture of Jas",
+      "slot": "pocket",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Kerapac progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic weapons / ability / scripture"
+    },
+    {
+      "id": "item:frozen-core-of-leng",
+      "name": "Frozen core of Leng",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Arch-Glacor progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Arch-Glacor",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee weapons / gloves / scripture"
+    },
+    {
+      "id": "item:dark-nilas",
+      "name": "Dark nilas",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Arch-Glacor progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Arch-Glacor",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee weapons / gloves / scripture"
+    },
+    {
+      "id": "item:leng-artefact",
+      "name": "Leng artefact",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Arch-Glacor progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Arch-Glacor",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee weapons / gloves / scripture"
+    },
+    {
+      "id": "item:scripture-of-wen",
+      "name": "Scripture of Wen",
+      "slot": "pocket",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Arch-Glacor progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Arch-Glacor",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee weapons / gloves / scripture"
+    },
+    {
+      "id": "item:enhanced-glove-upgrades",
+      "name": "enhanced glove upgrades",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Arch-Glacor progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Arch-Glacor",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Melee weapons / gloves / scripture"
+    },
+    {
+      "id": "item:cryptbloom-armour",
+      "name": "Cryptbloom armour",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Croesus",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic tank armour / skilling off-hands"
+    },
+    {
+      "id": "item:scripture-of-bik",
+      "name": "Scripture of Bik",
+      "slot": "pocket",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Croesus",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic tank armour / skilling off-hands"
+    },
+    {
+      "id": "item:croesus-foultorch",
+      "name": "Croesus foultorch",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Croesus",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic tank armour / skilling off-hands"
+    },
+    {
+      "id": "item:croesus-sporehammer",
+      "name": "Croesus sporehammer",
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Croesus",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Magic tank armour / skilling off-hands"
+    },
+    {
+      "id": "item:igneous-capes",
+      "name": "Igneous capes",
+      "slot": "cape",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "TzKal-Zuk progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzKal-Zuk",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "combat capes / melee weapon / ability / scripture"
+    },
+    {
+      "id": "item:ek-zekkil",
+      "name": "Ek-ZekKil",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "TzKal-Zuk progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzKal-Zuk",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "combat capes / melee weapon / ability / scripture"
+    },
+    {
+      "id": "item:magma-tempest",
+      "name": "Magma Tempest",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "TzKal-Zuk progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzKal-Zuk",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "combat capes / melee weapon / ability / scripture"
+    },
+    {
+      "id": "item:scripture-of-ful",
+      "name": "Scripture of Ful",
+      "slot": "pocket",
+      "style": "melee",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "TzKal-Zuk progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzKal-Zuk",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "combat capes / melee weapon / ability / scripture"
+    },
+    {
+      "id": "item:omni-guard",
+      "name": "Omni guard",
+      "tier": 95,
+      "style": "necromancy",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Necromancy weapons and power armour"
+    },
+    {
+      "id": "item:soulbound-lantern",
+      "name": "Soulbound lantern",
+      "tier": 95,
+      "style": "necromancy",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Necromancy weapons and power armour"
+    },
+    {
+      "id": "item:robes-of-the-first-necromancer",
+      "name": "Robes of the First Necromancer",
+      "tier": 95,
+      "style": "necromancy",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Necromancy weapons and power armour"
+    },
+    {
+      "id": "item:eclipsed-soul-prayer-codex",
+      "name": "Eclipsed Soul prayer codex",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Gate of Elidinis uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "prayer / skilling off-hands / scripture"
+    },
+    {
+      "id": "item:memory-dowser",
+      "name": "Memory dowser",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Gate of Elidinis uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "prayer / skilling off-hands / scripture"
+    },
+    {
+      "id": "item:runic-attuner",
+      "name": "Runic attuner",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Gate of Elidinis uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "prayer / skilling off-hands / scripture"
+    },
+    {
+      "id": "item:scripture-of-elidinis",
+      "name": "Scripture of Elidinis",
+      "slot": "pocket",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Gate of Elidinis uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "prayer / skilling off-hands / scripture"
+    },
+    {
+      "id": "item:roar-of-awakening",
+      "name": "Roar of Awakening",
+      "tier": 95,
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanctum of Rebirth uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Magic / prayer / scripture"
+    },
+    {
+      "id": "item:ode-to-deceit",
+      "name": "Ode to Deceit",
+      "tier": 95,
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanctum of Rebirth uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Magic / prayer / scripture"
+    },
+    {
+      "id": "item:divine-rage-prayer-codex",
+      "name": "Divine Rage prayer codex",
+      "tier": 95,
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanctum of Rebirth uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Magic / prayer / scripture"
+    },
+    {
+      "id": "item:scripture-of-amascut",
+      "name": "Scripture of Amascut",
+      "slot": "pocket",
+      "tier": 95,
+      "style": "magic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanctum of Rebirth uniques",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "tier-95 Magic / prayer / scripture"
+    },
+    {
+      "id": "item:dracolich-armour",
+      "name": "Dracolich armour",
+      "style": "ranged",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Ranged armour / Necromancy invocation"
+    },
+    {
+      "id": "item:elite-dracolich-armour",
+      "name": "Elite Dracolich armour",
+      "style": "ranged",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Ranged armour / Necromancy invocation"
+    },
+    {
+      "id": "item:invoke-lord-of-bones",
+      "name": "Invoke Lord of Bones",
+      "style": "ranged",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Ranged armour / Necromancy invocation"
+    },
+    {
+      "id": "item:essence-of-finality",
+      "name": "Essence of Finality",
+      "slot": "amulet",
+      "bonuses": {},
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Essence_of_Finality_amulet_(purple)",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "A weapon is permanently sacrificed to store its special attack in the amulet.; The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.; The stored special attack must match the combat style currently being used."
+    }
+  ]
 }

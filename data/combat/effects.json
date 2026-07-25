@@ -1,5 +1,72 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-25",
   "trackedSince": "2024-03-04",
-  "records": []
+  "records": [
+    {
+      "id": "magic:flow",
+      "name": "Flow",
+      "kind": "buff",
+      "facts": [
+        "Applies Flow",
+        "Flow reduces the adrenaline cost of the next Magic ability by 10%"
+      ],
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sonic_Wave",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "id": "magic:greater-flow",
+      "name": "Greater Flow",
+      "kind": "buff",
+      "facts": [
+        "Applies Greater Flow for 9 seconds",
+        "Greater Flow reduces the adrenaline cost of the next Magic ability by 20%"
+      ],
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Sonic_Wave",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "id": "ranged:searing-winds",
+      "name": "Searing Winds",
+      "kind": "buff",
+      "facts": [
+        "Applies Searing Winds for 6 seconds",
+        "Searing Winds adds 20% ability damage to each hit from Ranged abilities"
+      ],
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "id": "melee:bloodlust",
+      "name": "Bloodlust",
+      "kind": "buff",
+      "facts": [
+        "Normal cap 4 stacks",
+        "Berserk cap 8 stacks",
+        "Basic abilities build Bloodlust and several adrenaline abilities consume or scale from it. Berserk expands the stack ceiling and accelerates generation."
+      ],
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ]
+    }
+  ]
 }

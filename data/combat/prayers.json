@@ -1,5 +1,203 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-25",
   "trackedSince": "2024-03-04",
-  "records": []
+  "records": [
+    {
+      "id": "curse:malevolence",
+      "name": "Malevolence",
+      "book": "ancient",
+      "level": 99,
+      "facts": [
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Requires Ancient Curses"
+    },
+    {
+      "id": "curse:desolation",
+      "name": "Desolation",
+      "book": "ancient",
+      "level": 99,
+      "facts": [
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Requires Ancient Curses"
+    },
+    {
+      "id": "curse:affliction",
+      "name": "Affliction",
+      "book": "ancient",
+      "level": 99,
+      "facts": [
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Requires Ancient Curses"
+    },
+    {
+      "id": "curse:ruination",
+      "name": "Ruination",
+      "book": "ancient",
+      "level": 99,
+      "facts": [
+        "Requires Ancient Curses",
+        "Also requires 95 Necromancy"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Requires Ancient Curses; Also requires 95 Necromancy"
+    },
+    {
+      "id": "curse:divine-rage",
+      "name": "Divine Rage",
+      "book": "ancient",
+      "facts": [],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Divine Rage (sanctum-of-rebirth)",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Divine_Rage_prayer_codex",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:eclipsed-soul",
+      "name": "Eclipsed Soul",
+      "book": "ancient",
+      "facts": [],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Eclipsed Soul (gate-of-elidinis)",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Eclipsed_Soul_prayer_codex",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    }
+  ]
 }

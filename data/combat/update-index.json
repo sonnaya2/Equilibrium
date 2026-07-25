@@ -1,5 +1,629 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-25",
   "trackedSince": "2024-03-04",
-  "records": []
+  "records": [
+    {
+      "entityId": "curse:affliction",
+      "kind": "prayer",
+      "wikiPage": "Nex, Angel of Death",
+      "lastRevid": 37118149,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:desolation",
+      "kind": "prayer",
+      "wikiPage": "Nex, Angel of Death",
+      "lastRevid": 37118149,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:divine-rage",
+      "kind": "prayer",
+      "wikiPage": "Sanctum of Rebirth",
+      "lastRevid": 37112710,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:eclipsed-soul",
+      "kind": "prayer",
+      "wikiPage": "The Gate of Elidinis",
+      "lastRevid": 37104464,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:malevolence",
+      "kind": "prayer",
+      "wikiPage": "Nex, Angel of Death",
+      "lastRevid": 37118149,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:ruination",
+      "kind": "prayer",
+      "wikiPage": "Nex, Angel of Death",
+      "lastRevid": 37118149,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:barrows-defenders-shields-progression",
+      "kind": "equipment",
+      "wikiPage": "Barrows: Rise of the Six",
+      "lastRevid": 36033111,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:croesus-foultorch",
+      "kind": "equipment",
+      "wikiPage": "Croesus",
+      "lastRevid": 37113659,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:croesus-sporehammer",
+      "kind": "equipment",
+      "wikiPage": "Croesus",
+      "lastRevid": 37113659,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:cryptbloom-armour",
+      "kind": "equipment",
+      "wikiPage": "Croesus",
+      "lastRevid": 37113659,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:dark-nilas",
+      "kind": "equipment",
+      "wikiPage": "Arch-Glacor",
+      "lastRevid": 37107126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:devourers-guard",
+      "kind": "equipment",
+      "wikiPage": "Amascut, the Devourer",
+      "lastRevid": 37104045,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:divine-rage-prayer-codex",
+      "kind": "equipment",
+      "wikiPage": "Sanctum of Rebirth",
+      "lastRevid": 37112710,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:dracolich-armour",
+      "kind": "equipment",
+      "wikiPage": "Zemouregal & Vorkath",
+      "lastRevid": 37106547,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:eclipsed-soul-prayer-codex",
+      "kind": "equipment",
+      "wikiPage": "The Gate of Elidinis",
+      "lastRevid": 37104464,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:ek-zekkil",
+      "kind": "equipment",
+      "wikiPage": "TzKal-Zuk",
+      "lastRevid": 37113714,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:eldritch-crossbow-components",
+      "kind": "equipment",
+      "wikiPage": "The Shadow Reef",
+      "lastRevid": 37061126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:elite-dracolich-armour",
+      "kind": "equipment",
+      "wikiPage": "Zemouregal & Vorkath",
+      "lastRevid": 37106547,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:enhanced-glove-upgrades",
+      "kind": "equipment",
+      "wikiPage": "Arch-Glacor",
+      "lastRevid": 37107126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:essence-of-finality",
+      "kind": "equipment",
+      "wikiPage": "Essence of Finality amulet (purple)",
+      "lastRevid": 36963156,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:fractured-staff-of-armadyl-components",
+      "kind": "equipment",
+      "wikiPage": "Kerapac, the bound",
+      "lastRevid": 37106537,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:frozen-core-of-leng",
+      "kind": "equipment",
+      "wikiPage": "Arch-Glacor",
+      "lastRevid": 37107126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:greater-concentrated-blast",
+      "kind": "equipment",
+      "wikiPage": "Kerapac, the bound",
+      "lastRevid": 37106537,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:igneous-capes",
+      "kind": "equipment",
+      "wikiPage": "TzKal-Zuk",
+      "lastRevid": 37113714,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:imperium-core",
+      "kind": "equipment",
+      "wikiPage": "Nex: Angel of Death",
+      "lastRevid": 36658146,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:invoke-lord-of-bones",
+      "kind": "equipment",
+      "wikiPage": "Zemouregal & Vorkath",
+      "lastRevid": 37106547,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:kerapacs-wrist-wraps",
+      "kind": "equipment",
+      "wikiPage": "Kerapac, the bound",
+      "lastRevid": 37106537,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:leng-artefact",
+      "kind": "equipment",
+      "wikiPage": "Arch-Glacor",
+      "lastRevid": 37107126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:magma-tempest",
+      "kind": "equipment",
+      "wikiPage": "TzKal-Zuk",
+      "lastRevid": 37113714,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:malevolent-armour",
+      "kind": "equipment",
+      "wikiPage": "Barrows: Rise of the Six",
+      "lastRevid": 36033111,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:malevolent-energy",
+      "kind": "equipment",
+      "wikiPage": "Barrows: Rise of the Six",
+      "lastRevid": 36033111,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:memory-dowser",
+      "kind": "equipment",
+      "wikiPage": "The Gate of Elidinis",
+      "lastRevid": 37104464,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:ode-to-deceit",
+      "kind": "equipment",
+      "wikiPage": "Sanctum of Rebirth",
+      "lastRevid": 37112710,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:omni-guard",
+      "kind": "equipment",
+      "wikiPage": "First Necromancer's equipment",
+      "lastRevid": 37080505,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:praesul-codex",
+      "kind": "equipment",
+      "wikiPage": "Nex: Angel of Death",
+      "lastRevid": 36658146,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:roar-of-awakening",
+      "kind": "equipment",
+      "wikiPage": "Sanctum of Rebirth",
+      "lastRevid": 37112710,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:robes-of-the-first-necromancer",
+      "kind": "equipment",
+      "wikiPage": "First Necromancer's equipment",
+      "lastRevid": 37080505,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:runic-attuner",
+      "kind": "equipment",
+      "wikiPage": "The Gate of Elidinis",
+      "lastRevid": 37104464,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-amascut",
+      "kind": "equipment",
+      "wikiPage": "Sanctum of Rebirth",
+      "lastRevid": 37112710,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-bik",
+      "kind": "equipment",
+      "wikiPage": "Croesus",
+      "lastRevid": 37113659,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-elidinis",
+      "kind": "equipment",
+      "wikiPage": "The Gate of Elidinis",
+      "lastRevid": 37104464,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-ful",
+      "kind": "equipment",
+      "wikiPage": "TzKal-Zuk",
+      "lastRevid": 37113714,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-jas",
+      "kind": "equipment",
+      "wikiPage": "Kerapac, the bound",
+      "lastRevid": 37106537,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:scripture-of-wen",
+      "kind": "equipment",
+      "wikiPage": "Arch-Glacor",
+      "lastRevid": 37107126,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:seismic-singularity",
+      "kind": "equipment",
+      "wikiPage": "Vorago",
+      "lastRevid": 37120133,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:seismic-wand",
+      "kind": "equipment",
+      "wikiPage": "Vorago",
+      "lastRevid": 37120133,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:shard-of-genesis-essence",
+      "kind": "equipment",
+      "wikiPage": "Amascut, the Devourer",
+      "lastRevid": 37104045,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:soulbound-lantern",
+      "kind": "equipment",
+      "wikiPage": "First Necromancer's equipment",
+      "lastRevid": 37080505,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:tectonic-energy",
+      "kind": "equipment",
+      "wikiPage": "Vorago",
+      "lastRevid": 37120133,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:tumekens-light",
+      "kind": "equipment",
+      "wikiPage": "Amascut, the Devourer",
+      "lastRevid": 37104045,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:tumekens-resplendence-equipment",
+      "kind": "equipment",
+      "wikiPage": "Amascut, the Devourer",
+      "lastRevid": 37104045,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "item:wand-of-the-praesul",
+      "kind": "equipment",
+      "wikiPage": "Nex: Angel of Death",
+      "lastRevid": 36658146,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:asphyxiate",
+      "kind": "ability",
+      "wikiPage": "Asphyxiate",
+      "lastRevid": 37076065,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:concentrated-blast",
+      "kind": "ability",
+      "wikiPage": "Concentrated Blast",
+      "lastRevid": 37076084,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:flow",
+      "kind": "effect",
+      "wikiPage": "Sonic Wave",
+      "lastRevid": 37076174,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:greater-concentrated-blast",
+      "kind": "ability",
+      "wikiPage": "Greater Concentrated Blast",
+      "lastRevid": 37076113,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:greater-flow",
+      "kind": "effect",
+      "wikiPage": "Greater Sonic Wave",
+      "lastRevid": 37076118,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:greater-sonic-wave",
+      "kind": "ability",
+      "wikiPage": "Greater Sonic Wave",
+      "lastRevid": 37076118,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:runic-charge",
+      "kind": "ability",
+      "wikiPage": "Anima Charged",
+      "lastRevid": 36991749,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:sonic-wave",
+      "kind": "ability",
+      "wikiPage": "Sonic Wave",
+      "lastRevid": 37076174,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:wild-magic",
+      "kind": "ability",
+      "wikiPage": "Wild Magic",
+      "lastRevid": 36993889,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:adaptive-strike",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:assault",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:attack",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:berserk",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:bloodlust",
+      "kind": "effect",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:chaos-roar",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:dismember",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:massacre",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:meteor-strike",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:overpower",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:punish",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:rend",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "melee:slaughter",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:bombardment",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:corruption-shot",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:deadshot",
+      "kind": "ability",
+      "wikiPage": "Update:Patch Notes: Part 1 - Combat Style Modernisation",
+      "lastRevid": 36950630,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:deaths-swiftness",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:galeshot",
+      "kind": "ability",
+      "wikiPage": "Abilities",
+      "lastRevid": 37112605,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:greater-deaths-swiftness",
+      "kind": "ability",
+      "wikiPage": "Combat Style Modernisation",
+      "lastRevid": 37033522,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:greater-ricochet",
+      "kind": "ability",
+      "wikiPage": "Update:Patch Notes: Part 1 - Combat Style Modernisation",
+      "lastRevid": 36950630,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:imbue-shadows",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:piercing-shot",
+      "kind": "ability",
+      "wikiPage": "Abilities",
+      "lastRevid": 37112605,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:rapid-fire",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:ricochet",
+      "kind": "ability",
+      "wikiPage": "Update:Patch Notes: Part 1 - Combat Style Modernisation",
+      "lastRevid": 36950630,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:searing-winds",
+      "kind": "effect",
+      "wikiPage": "Abilities",
+      "lastRevid": 37112605,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:shadow-tendrils",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:snap-shot",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "ranged:snipe",
+      "kind": "ability",
+      "wikiPage": "Enhanced abilities",
+      "lastRevid": 36969850,
+      "lastVerifiedAt": "2026-07-24"
+    }
+  ]
 }

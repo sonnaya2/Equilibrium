@@ -1,5 +1,926 @@
 {
-  "lastSynced": null,
+  "lastSynced": "2026-07-25",
   "trackedSince": "2024-03-04",
-  "records": []
+  "records": [
+    {
+      "id": "magic:sonic-wave",
+      "name": "Sonic Wave",
+      "style": "magic",
+      "category": "basic",
+      "level": 6,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "6",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sonic_Wave",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 25,
+      "damagePercent": [
+        90,
+        110
+      ],
+      "displayDescription": "Applies Flow; Flow reduces the adrenaline cost of the next Magic ability by 10%"
+    },
+    {
+      "id": "magic:greater-sonic-wave",
+      "name": "Greater Sonic Wave",
+      "style": "magic",
+      "category": "basic",
+      "level": 6,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "codex",
+        "requirement": "Risen ghosts and armoured phantoms",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Sonic_Wave",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 25,
+      "damagePercent": [
+        115,
+        135
+      ],
+      "averageDamagePercent": 125,
+      "displayDescription": "Upgrade of Sonic Wave; Applies Greater Flow for 9 seconds; Greater Flow reduces the adrenaline cost of the next Magic ability by 20%"
+    },
+    {
+      "id": "magic:concentrated-blast",
+      "name": "Concentrated Blast",
+      "style": "magic",
+      "category": "basic",
+      "level": 66,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "66",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Concentrated_Blast",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "channelTicks": 3,
+      "hits": 3,
+      "damagePercent": [
+        30,
+        40
+      ],
+      "displayDescription": "Critical-strike chance applies to the next ability rather than only the next hit"
+    },
+    {
+      "id": "magic:greater-concentrated-blast",
+      "name": "Greater Concentrated Blast",
+      "style": "magic",
+      "category": "basic",
+      "level": 66,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "codex",
+        "requirement": "Kerapac, the bound / Kerapac progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Concentrated_Blast",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 9,
+      "channelTicks": 3,
+      "hits": 3,
+      "damagePercent": [
+        40,
+        50
+      ],
+      "displayDescription": "Upgrade of Concentrated Blast; Each hit adds 7% critical-strike chance to the next Magic ability; Stacks to 21% after all three hits"
+    },
+    {
+      "id": "magic:wild-magic",
+      "name": "Wild Magic",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 3,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "3",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Wild_Magic",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 9,
+      "hits": 2,
+      "damagePercent": [
+        125,
+        155
+      ],
+      "displayDescription": "Each hit has +10% critical-strike chance; Each hit has +20% critical-strike damage; Post-launch patch 2026-03-30"
+    },
+    {
+      "id": "magic:asphyxiate",
+      "name": "Asphyxiate",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 59,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "59",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Asphyxiate",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 34,
+      "hits": 4,
+      "damagePercent": [
+        120,
+        140
+      ],
+      "displayDescription": "Stuns and binds the target for 3.6 seconds; Completing the channel applies Channelled Might for 3.6 seconds; Channelled Might gives Magic attacks +15% critical-strike damage; Post-launch patch 2026-03-30"
+    },
+    {
+      "id": "magic:runic-charge",
+      "name": "Runic Charge",
+      "style": "magic",
+      "category": "utility",
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 0
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "undefined",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Anima_Charged",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Anima Charged makes Greater Sonic Wave reduce the next Magic ability's adrenaline cost by 45% rather than 20%; Anima Charged causes Concentrated Blast and Greater Concentrated Blast to grant an additional 10% critical-strike chance; Runic Charge is not triggered automatically by Revolution"
+    },
+    {
+      "id": "ranged:snap-shot",
+      "name": "Snap Shot",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 2,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "2",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 3,
+      "hits": 2,
+      "damagePercent": [
+        135,
+        155
+      ],
+      "averageDamagePercent": 290
+    },
+    {
+      "id": "ranged:snipe",
+      "name": "Snipe",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 7,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "7",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 100,
+      "channelTicks": 3,
+      "damagePercent": [
+        300,
+        360
+      ],
+      "averageDamagePercent": 330
+    },
+    {
+      "id": "ranged:piercing-shot",
+      "name": "Piercing Shot",
+      "style": "ranged",
+      "category": "basic",
+      "level": 13,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "13",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 5,
+      "hits": 2,
+      "damagePercent": [
+        45,
+        55
+      ],
+      "displayDescription": "Each hit reduces Snipe cooldown by 2.4 seconds"
+    },
+    {
+      "id": "ranged:deadshot",
+      "name": "Deadshot",
+      "style": "ranged",
+      "category": "ultimate",
+      "level": 21,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "21",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 50,
+      "displayDescription": "No longer a damage-over-time ultimate; it now deals multiple direct hits"
+    },
+    {
+      "id": "ranged:bombardment",
+      "name": "Bombardment",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 36,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "36",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 0,
+      "damagePercent": [
+        220,
+        260
+      ],
+      "averageDamagePercent": 240
+    },
+    {
+      "id": "ranged:galeshot",
+      "name": "Galeshot",
+      "style": "ranged",
+      "category": "basic",
+      "level": 58,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "58",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 34,
+      "averageDamagePercent": 100,
+      "displayDescription": "Applies Searing Winds for 6 seconds; Searing Winds adds 20% ability damage to each hit from Ranged abilities; Each Rapid Fire hit extends Searing Winds by 0.6 seconds"
+    },
+    {
+      "id": "ranged:rapid-fire",
+      "name": "Rapid Fire",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 62,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "62",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 34,
+      "hits": 8,
+      "damagePercent": [
+        75,
+        85
+      ],
+      "displayDescription": "Binds target for 6 seconds; Each hit extends Searing Winds by 0.6 seconds"
+    },
+    {
+      "id": "ranged:ricochet",
+      "name": "Ricochet",
+      "style": "ranged",
+      "category": "basic",
+      "level": 67,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 0
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "67",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Standard Ricochet now includes the old multi-hit Greater Ricochet behavior by default"
+    },
+    {
+      "id": "ranged:greater-ricochet",
+      "name": "Greater Ricochet",
+      "style": "ranged",
+      "category": "basic",
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 0
+      },
+      "unlock": {
+        "type": "codex",
+        "requirement": "Raksha ability upgrades",
+        "regions": [
+          "anachronia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Upgrade of Ricochet; Adds four hits beyond current Ricochet, each dealing 5% average damage"
+    },
+    {
+      "id": "ranged:corruption-shot",
+      "name": "Corruption Shot",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 70,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 20
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "70",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 25,
+      "hits": 5,
+      "displayDescription": "No longer spreads from target to target; subsequent DoT hits decay by 20% of initial damage per hit"
+    },
+    {
+      "id": "ranged:shadow-tendrils",
+      "name": "Shadow Tendrils",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 75,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "75",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 75,
+      "damagePercent": [
+        200,
+        240
+      ],
+      "displayDescription": "Extends Shadow Imbued by 3.6 seconds"
+    },
+    {
+      "id": "ranged:deaths-swiftness",
+      "name": "Death's Swiftness",
+      "style": "ranged",
+      "category": "ultimate",
+      "level": 76,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "unlock": {
+        "type": "quest",
+        "requirement": "The World Wakes",
+        "regions": [
+          "kandarin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 100,
+      "displayDescription": "No longer creates a stationary ground area or damage-over-time field; the modernized version follows the player"
+    },
+    {
+      "id": "ranged:greater-deaths-swiftness",
+      "name": "Greater Death's Swiftness",
+      "style": "ranged",
+      "category": "ultimate",
+      "level": 76,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "unlock": {
+        "type": "codex",
+        "requirement": "Greater Death's Swiftness ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 100,
+      "displayDescription": "Upgrade of Death's Swiftness"
+    },
+    {
+      "id": "ranged:imbue-shadows",
+      "name": "Imbue: Shadows",
+      "style": "ranged",
+      "category": "enhanced",
+      "level": 90,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 40
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "90",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Enhanced_abilities",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 100,
+      "displayDescription": "Applies Shadow Imbued; each hit from Ranged abilities against the target generates 5% adrenaline"
+    },
+    {
+      "id": "melee:attack",
+      "name": "Attack",
+      "style": "melee",
+      "category": "basic",
+      "level": 1,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "1",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "damagePercent": [
+        110,
+        130
+      ],
+      "displayDescription": "+1 Bloodlust"
+    },
+    {
+      "id": "melee:adaptive-strike",
+      "name": "Adaptive Strike",
+      "style": "melee",
+      "category": "basic",
+      "level": 7,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "7",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Two-handed: 120-140% cone hit; Dual wield: 2 hits of 60-75%"
+    },
+    {
+      "id": "melee:rend",
+      "name": "Rend",
+      "style": "melee",
+      "category": "basic",
+      "level": 18,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "18",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "damagePercent": [
+        135,
+        165
+      ],
+      "displayDescription": "+2 Bloodlust"
+    },
+    {
+      "id": "melee:dismember",
+      "name": "Dismember",
+      "style": "melee",
+      "category": "basic",
+      "level": 50,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "50",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "hits": 8,
+      "damagePercent": [
+        25,
+        35
+      ],
+      "displayDescription": "Heals 4%; enables Slaughter as the next bleed-chain cast; Damage: 8 bleed hits at 25-35% each"
+    },
+    {
+      "id": "melee:slaughter",
+      "name": "Slaughter",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 60,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "60",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "hits": 6,
+      "damagePercent": [
+        80,
+        100
+      ],
+      "displayDescription": "Heals 6%; enables Massacre; Damage: 6 bleed hits at 80-100% each"
+    },
+    {
+      "id": "melee:massacre",
+      "name": "Massacre",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 75,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "75",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "damagePercent": [
+        110,
+        130
+      ],
+      "displayDescription": "Heals 12%; Damage: 110-130% initial hit plus 6 bleed hits at 100% each"
+    },
+    {
+      "id": "melee:assault",
+      "name": "Assault",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 3,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "3",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "cooldownTicks": 10,
+      "hits": 4,
+      "damagePercent": [
+        130,
+        150
+      ],
+      "displayDescription": "channel can be mobile; Damage: 4 channelled hits at 130-150% each; at 4 Bloodlust, 170-190% each"
+    },
+    {
+      "id": "melee:overpower",
+      "name": "Overpower",
+      "style": "melee",
+      "category": "ultimate",
+      "level": 15,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "15",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "damagePercent": [
+        520,
+        570
+      ],
+      "displayDescription": "Igneous variant: 2 hits of 280-340%"
+    },
+    {
+      "id": "melee:punish",
+      "name": "Punish",
+      "style": "melee",
+      "category": "basic",
+      "level": 60,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "60",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Deals 2.5x damage to targets below 50% life points"
+    },
+    {
+      "id": "melee:berserk",
+      "name": "Berserk",
+      "style": "melee",
+      "category": "ultimate",
+      "level": 76,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "76",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Reduces Overpower cooldown; Lasts 19.8s; 1.75x damage; Takes 1.25x incoming damage; Bloodlust: +4 maximum stacks and +4 stacks on activation; basics generate double Bloodlust"
+    },
+    {
+      "id": "melee:meteor-strike",
+      "name": "Meteor Strike",
+      "style": "melee",
+      "category": "ultimate",
+      "level": 90,
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "unlock": {
+        "type": "level",
+        "requirement": "90",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Area attack that also grants an adrenaline-generation buff"
+    },
+    {
+      "id": "melee:chaos-roar",
+      "name": "Chaos Roar",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 92,
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "unlock": {
+        "type": "codex",
+        "requirement": "Chaos Roar ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
+          "title": "Combat Style Modernisation",
+          "verifiedAt": "2026-07-24"
+        }
+      ],
+      "displayDescription": "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust"
+    }
+  ]
 }

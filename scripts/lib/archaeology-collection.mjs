@@ -19,15 +19,30 @@ function stripWiki(text) {
     .trim();
 }
 
-export async function wikiArchaeologyCollection(title) {
-  const page = await wikiSource(title);
+function archaeologyLevel(page, title) {
   const archlevelRaw = field(page.content, "archlevel") ?? field(page.content, "level");
   const archlevel = archlevelRaw == null ? null : Number.parseInt(stripWiki(archlevelRaw), 10);
-
   if (!Number.isFinite(archlevel)) {
     throw new Error(`Could not parse Archaeology collection level from ${title} (revision ${page.revid})`);
   }
+  return archlevel;
+}
 
+export async function wikiArchaeologyCollectionLevel(title) {
+  const page = await wikiSource(title);
+  return {
+    title,
+    archlevel: archaeologyLevel(page, title),
+    revid: page.revid,
+    timestamp: page.timestamp,
+    url: page.url,
+    content: page.content,
+  };
+}
+
+export async function wikiArchaeologyCollection(title) {
+  const page = await wikiSource(title);
+  const archlevel = archaeologyLevel(page, title);
   const collector = stripWiki(field(page.content, "collector"));
   const first = stripWiki(field(page.content, "first"));
   const reward = stripWiki(field(page.content, "reward"));

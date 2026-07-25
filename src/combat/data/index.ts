@@ -14,6 +14,8 @@ import type {
   PrayerRecord,
 } from "./records";
 
+export type * from "./records";
+
 /**
  * Typed accessors over the canonical combat store at repo-root `data/combat/`.
  * The sync scripts own those files; nothing here hand-edits them. The integrity

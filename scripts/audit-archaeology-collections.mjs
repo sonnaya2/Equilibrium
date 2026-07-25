@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { wikiArchaeologyCollection } from "./lib/archaeology-collection.mjs";
 import { wikiSource } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
@@ -17,17 +18,6 @@ function normalize(text) {
 function assertContains(haystack, needle, context) {
   if (!normalize(haystack).includes(normalize(needle))) {
     throw new Error(`${context} no longer contains expected text: ${needle}`);
-  }
-}
-
-function assertLevel(wikitext, level, context) {
-  const patterns = [
-    new RegExp(`\\|\\s*level\\s*=\\s*${level}(?:\\D|$)`, "i"),
-    new RegExp(`archaeology\\s+level\\s+required\\s*[:=]\\s*${level}(?:\\D|$)`, "i"),
-    new RegExp(`requires?[^\\n]{0,80}\\b${level}\\s+archaeology\\b`, "i"),
-  ];
-  if (!patterns.some((pattern) => pattern.test(wikitext))) {
-    throw new Error(`${context} no longer exposes expected Archaeology level ${level}`);
   }
 }
 
@@ -64,8 +54,10 @@ const collectionExpectations = [
 ];
 
 for (const expectation of collectionExpectations) {
-  const page = await wikiSource(expectation.title);
-  if (expectation.level != null) assertLevel(page.content, expectation.level, expectation.title);
+  const page = await wikiArchaeologyCollection(expectation.title);
+  if (expectation.level != null && page.archlevel !== expectation.level) {
+    throw new Error(`${expectation.title} Archaeology level drift: expected ${expectation.level}, Wiki has ${page.archlevel}`);
+  }
   for (const text of expectation.required) assertContains(page.content, text, expectation.title);
 }
 

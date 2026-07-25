@@ -1,0 +1,38 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Small follow-up to keep multi-source support items from being falsely assigned to a single elective region.",
+  "combat_training_spot_patches": [
+    {
+      "id": "combat-abyssal-beasts",
+      "set": {
+        "target_tags": ["demon", "chthonian"],
+        "supporting_regions": ["forinthry", "desert"],
+        "recommended_unlocks": [
+          {
+            "name": "Demon horn necklace",
+            "region": "forinthry",
+            "effect": "Daemonheim reward; restores Prayer when qualifying remains are processed"
+          },
+          {
+            "name": "Attuned ectoplasmator",
+            "region": "multi-source, no single elective region",
+            "effect": "Processes supported ashes/ghost remains and can feed Dungeoneering prayer-necklace sustain"
+          },
+          {
+            "name": "Player-owned Slayer Dungeon route",
+            "region": "desert",
+            "effect": "Optional Sunken Pyramid route after capturing abyssal beast souls; Wilderness remains the direct Forinthry route"
+          }
+        ],
+        "alternate_region_routes": [
+          {
+            "region": "desert",
+            "location": "Sunken Pyramid / Player-owned Slayer Dungeon",
+            "requirements": "Captured abyssal beast souls and the Player-owned Slayer Dungeon setup"
+          }
+        ],
+        "dependency_note": "Forinthry is the direct Wilderness route. Desert is an optional Player-owned Slayer Dungeon route. The attuned ectoplasmator itself has multiple acquisition/recharge sources and is not hard-assigned to either region."
+      }
+    }
+  ]
+}

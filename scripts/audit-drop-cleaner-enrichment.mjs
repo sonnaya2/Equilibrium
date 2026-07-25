@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-const progression = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
-const equipment = progression.equipment_models || [];
+const support = JSON.parse(readFileSync("data/reference/progression-support-items-2026-07-25.json", "utf8"));
+const equipment = support.equipment_models || [];
 const byId = (id) => equipment.find((row) => row?.id === id);
 const fail = (message) => { throw new Error(`drop-cleaner enrichment audit: ${message}`); };
 

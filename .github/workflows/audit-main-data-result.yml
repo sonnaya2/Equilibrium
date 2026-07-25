@@ -53,23 +53,26 @@ jobs:
           export SOURCE_HEAD="$source_head" NORMALIZE_STATUS="$normalize_status" AUDIT_STATUS="$audit_status"
           node <<'NODE'
           const fs = require('node:fs');
+          const { spawnSync } = require('node:child_process');
           const log = fs.readFileSync('main-data-audit.log', 'utf8');
           const normalizeStatus = Number(process.env.NORMALIZE_STATUS);
           const auditStatus = Number(process.env.AUDIT_STATUS);
+          const diffStatus = spawnSync('git', ['diff', '--quiet', '--', 'data/'], { stdio: 'ignore' }).status;
           const result = {
             source_head: process.env.SOURCE_HEAD,
             captured_at: new Date().toISOString(),
             status: normalizeStatus === 0 && auditStatus === 0 ? 'passed' : 'failed',
             normalize_exit_code: normalizeStatus,
             audit_exit_code: auditStatus,
-            generated_data_changed: require('node:child_process').execFileSync('git', ['diff', '--quiet', '--', 'data/'], { stdio: 'ignore' }).status !== 0,
+            generated_data_changed: diffStatus === 1,
+            generated_data_diff_probe_exit_code: diffStatus,
             log_tail: log.split(/\r?\n/).slice(-300),
           };
           fs.writeFileSync('MAIN_DATA_AUDIT_RESULT.json', `${JSON.stringify(result, null, 2)}\n`);
           NODE
           exit 0
 
-      - name: Publish immutable audit result branch
+      - name: Publish audit result branch
         shell: bash
         run: |
           git config user.name "github-actions[bot]"

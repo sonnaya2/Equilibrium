@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-25",
+  "notes": [
+    "Tenth targeted audit pass from data/combat/equipment.json.",
+    "Adds the remaining concrete named equipment/material record not already represented by a final or representative asset; generic progression-family rows are intentionally not forced into arbitrary icons."
+  ],
+  "assets": [
+    {"id":"upgrade-malevolent-energy","label":"Malevolent energy","category":"rs3/upgrades/progression","path":"assets/rs3/upgrades/progression/malevolent-energy","fileTitle":"Malevolent energy.png","search":"Malevolent energy inventory icon","canonicalPage":"https://runescape.wiki/w/Malevolent_energy"}
+  ]
+}

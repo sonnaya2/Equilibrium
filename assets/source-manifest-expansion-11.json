@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-25",
+  "notes": [
+    "Eleventh targeted audit pass from data/combat/abilities.json after the live style-source comparison.",
+    "Adds the two remaining distinct named Ranged abilities missing from the asset manifests."
+  ],
+  "assets": [
+    {"id":"ability-piercing-shot","label":"Piercing Shot","category":"rs3/combat/abilities/ranged","path":"assets/rs3/combat/abilities/ranged/piercing-shot","search":"Piercing Shot ability icon","canonicalPage":"https://runescape.wiki/w/Piercing_Shot"},
+    {"id":"ability-ricochet","label":"Ricochet","category":"rs3/combat/abilities/ranged","path":"assets/rs3/combat/abilities/ranged/ricochet","search":"Ricochet ability icon","canonicalPage":"https://runescape.wiki/w/Ricochet"}
+  ]
+}

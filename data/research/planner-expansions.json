@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-07-24",
+  "snapshot_date": "2026-07-25",
   "purpose": "Planner-focused expansion for combat training, Runecrafting access, Invention, Archaeology, and region-sensitive unique drops. Base-game facts stay separate from unrevealed Equilibrium rules.",
   "source_policy": {
     "game_facts": "RuneScape Wiki",
@@ -1021,6 +1021,36 @@
       "planner_value": "High-end ranged and grimoire progression.",
       "source_url": "https://runescape.wiki/w/Solak",
       "confidence": "confirmed_wiki_plus_official_region_example"
+    },
+    {
+      "id": "kandarin-lost-grove-ancient-elven-ritual-shard",
+      "region": "kandarin",
+      "source": "The Lost Grove / Solak",
+      "uniques": [
+        "Ancient elven ritual shard"
+      ],
+      "support_item_effect": "Restores 37.5% of maximum Prayer points over 30 seconds and has a five-minute cooldown.",
+      "self_source_routes": [
+        {
+          "source": "Lost Grove creatures",
+          "drop_rate_on_slayer_task": "1/1,500",
+          "drop_rate_off_slayer_task": "1/5,000"
+        },
+        {
+          "source": "Solak, Guardian of the Grove",
+          "drop_rate_per_player": "1/1,000"
+        }
+      ],
+      "planner_value": "Reusable Prayer sustain for long combat or skilling sessions. The item is tradeable in the base game, but a no-trading League route depends on Kandarin access to the Lost Grove source chain.",
+      "region_evidence": "The Lost Grove sits by the Piscatoris Hunter area; the RuneScape fairy-ring directory classifies the nearby AKQ destination as Kandarin.",
+      "source_url": "https://runescape.wiki/w/Ancient_elven_ritual_shard",
+      "secondary_source_urls": [
+        "https://runescape.wiki/w/Solak,_Guardian_of_the_Grove",
+        "https://runescape.wiki/w/Vinecrawler",
+        "https://runescape.wiki/w/The_Lost_Grove",
+        "https://runescape.wiki/w/Fairy_ring"
+      ],
+      "confidence": "confirmed_current_wiki_region_mapping"
     }
   ],
   "runecrafting_110_progression": {

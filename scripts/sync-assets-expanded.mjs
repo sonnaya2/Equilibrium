@@ -7,6 +7,7 @@ const EXPANSION_PATHS = [
   join(ROOT, "assets/source-manifest-expansion.json"),
   join(ROOT, "assets/source-manifest-expansion-2.json"),
   join(ROOT, "assets/source-manifest-expansion-3.json"),
+  join(ROOT, "assets/source-manifest-expansion-4.json"),
 ];
 const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
 
@@ -17,125 +18,23 @@ const expansions = await Promise.all(
 );
 
 const overrides = new Map([
-  [
-    "boss-zamorak",
-    {
-      fileTitle: "Zamorak, Lord of Chaos model 1.jpg",
-      search: "Zamorak Lord of Chaos model boss image",
-    },
-  ],
-  [
-    "boss-ambassador",
-    {
-      fileTitle: "The Ambassador (boss portal) texture.png",
-      search: "The Ambassador boss portal texture",
-    },
-  ],
-  [
-    "activity-player-owned-farm",
-    {
-      fileTitle: "Player-owned farm.png",
-      search: "Player-owned farm Manor Farm activity image",
-    },
-  ],
-  [
-    "activity-heart-of-gielinor",
-    {
-      fileTitle: "Heart of Gielinor skybox.png",
-      search: "Heart of Gielinor location image",
-    },
-  ],
-  [
-    "activity-wars-retreat",
-    {
-      fileTitle: "War's Retreat.png",
-      search: "War's Retreat location image",
-    },
-  ],
-  [
-    "activity-archaeology-guild",
-    {
-      fileTitle: "Collectors at the Archaeology Guild.png",
-      search: "Archaeology Guild location image collectors",
-    },
-  ],
-  [
-    "activity-big-game-hunter",
-    {
-      fileTitle: "Big Game Hunter arena.png",
-      search: "Big Game Hunter arena activity image",
-    },
-  ],
-  [
-    "activity-wilderness-agility-course",
-    {
-      fileTitle: "Wilderness Agility Course.png",
-      search: "Wilderness Agility Course location image",
-    },
-  ],
-  [
-    "activity-max-guild",
-    {
-      fileTitle: "Max guild top view.png",
-      search: "Max Guild top view location image",
-    },
-  ],
-  [
-    "activity-monastery-of-ascension",
-    {
-      fileTitle: "Monastery of Ascension building.png",
-      search: "Monastery of Ascension building location image",
-    },
-  ],
-  [
-    "activity-sophanem-slayer-dungeon",
-    {
-      fileTitle: "Sophanem Slayer Dungeon.png",
-      search: "Sophanem Slayer Dungeon location image",
-    },
-  ],
-  [
-    "activity-god-wars-dungeon",
-    {
-      fileTitle: "God Wars Dungeon.png",
-      search: "God Wars Dungeon location image",
-    },
-  ],
-  [
-    "activity-artisans-workshop",
-    {
-      fileTitle: "Artisans Workshop.png",
-      search: "Artisans Workshop location image",
-    },
-  ],
-  [
-    "activity-everlight-dig-site",
-    {
-      fileTitle: "Everlight.png",
-      search: "Everlight Dig Site location image",
-    },
-  ],
-  [
-    "activity-barrows",
-    {
-      fileTitle: "Barrows Scenery.png",
-      search: "Barrows scenery minigame location image",
-    },
-  ],
-  [
-    "activity-livid-farm",
-    {
-      fileTitle: "Livid Farm.png",
-      search: "Livid Farm location image",
-    },
-  ],
-  [
-    "activity-lunar-isle",
-    {
-      fileTitle: "Lunar Isle.png",
-      search: "Lunar Isle location image",
-    },
-  ],
+  ["boss-zamorak", { fileTitle: "Zamorak, Lord of Chaos model 1.jpg", search: "Zamorak Lord of Chaos model boss image" }],
+  ["boss-ambassador", { fileTitle: "The Ambassador (boss portal) texture.png", search: "The Ambassador boss portal texture" }],
+  ["activity-player-owned-farm", { fileTitle: "Player-owned farm.png", search: "Player-owned farm Manor Farm activity image" }],
+  ["activity-heart-of-gielinor", { fileTitle: "Heart of Gielinor skybox.png", search: "Heart of Gielinor location image" }],
+  ["activity-wars-retreat", { fileTitle: "War's Retreat.png", search: "War's Retreat location image" }],
+  ["activity-archaeology-guild", { fileTitle: "Collectors at the Archaeology Guild.png", search: "Archaeology Guild location image collectors" }],
+  ["activity-big-game-hunter", { fileTitle: "Big Game Hunter arena.png", search: "Big Game Hunter arena activity image" }],
+  ["activity-wilderness-agility-course", { fileTitle: "Wilderness Agility course.png", search: "Wilderness Agility Course location image" }],
+  ["activity-max-guild", { fileTitle: "Max guild top view.png", search: "Max Guild top view location image" }],
+  ["activity-monastery-of-ascension", { fileTitle: "Monastery of Ascension building.png", search: "Monastery of Ascension building location image" }],
+  ["activity-sophanem-slayer-dungeon", { fileTitle: "Sophanem Slayer Dungeon.png", search: "Sophanem Slayer Dungeon location image" }],
+  ["activity-god-wars-dungeon", { fileTitle: "God Wars Dungeon.png", search: "God Wars Dungeon location image" }],
+  ["activity-artisans-workshop", { fileTitle: "Artisans Workshop.png", search: "Artisans Workshop location image" }],
+  ["activity-everlight-dig-site", { fileTitle: "Everlight.png", search: "Everlight Dig Site location image" }],
+  ["activity-barrows", { fileTitle: "Barrows Scenery.png", search: "Barrows scenery minigame location image" }],
+  ["activity-livid-farm", { fileTitle: "Livid Farm.png", search: "Livid Farm location image" }],
+  ["activity-lunar-isle", { fileTitle: "Lunar Isle.png", search: "Lunar Isle location image" }],
 ]);
 
 function applyOverrides(asset) {
@@ -143,16 +42,10 @@ function applyOverrides(asset) {
     asset.category?.startsWith("rs3/upgrades/") && !asset.fileTitle
       ? { fileTitle: `${asset.label}.png` }
       : {};
-  return {
-    ...asset,
-    ...preferExactUpgradeIcon,
-    ...(overrides.get(asset.id) ?? {}),
-  };
+  return { ...asset, ...preferExactUpgradeIcon, ...(overrides.get(asset.id) ?? {}) };
 }
 
-const expansionAssets = expansions
-  .flatMap((expansion) => expansion.assets ?? [])
-  .map(applyOverrides);
+const expansionAssets = expansions.flatMap((expansion) => expansion.assets ?? []).map(applyOverrides);
 const assets = [...(base.assets ?? []).map(applyOverrides), ...expansionAssets];
 const ids = new Set();
 const paths = new Set();
@@ -165,11 +58,7 @@ for (const asset of assets) {
   paths.add(asset.path);
 }
 
-// Remove stale variants when a pinned or exact source changes the output extension.
-for (const stalePath of [
-  "assets/rs3/bosses/zamorak.png",
-  "assets/rs3/bosses/ambassador.gif",
-]) {
+for (const stalePath of ["assets/rs3/bosses/zamorak.png", "assets/rs3/bosses/ambassador.gif"]) {
   await unlink(join(ROOT, stalePath)).catch((error) => {
     if (error?.code !== "ENOENT") throw error;
   });
@@ -178,10 +67,7 @@ for (const stalePath of [
 const merged = {
   ...base,
   snapshotDate: expansions.at(-1)?.snapshotDate ?? base.snapshotDate,
-  notes: [
-    ...(base.notes ?? []),
-    ...expansions.flatMap((expansion) => expansion.notes ?? []),
-  ],
+  notes: [...(base.notes ?? []), ...expansions.flatMap((expansion) => expansion.notes ?? [])],
   assets,
 };
 
@@ -189,7 +75,6 @@ await writeFile(BASE_PATH, `${JSON.stringify(merged, null, 2)}\n`);
 
 try {
   await import(`./sync-assets.mjs?expanded=${Date.now()}`);
-
   const generated = JSON.parse(await readFile(GENERATED_PATH, "utf8"));
   generated.sourceManifest = "assets/source-manifest.json";
   generated.sourceManifests = [
@@ -197,11 +82,13 @@ try {
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
     "assets/source-manifest-expansion-3.json",
+    "assets/source-manifest-expansion-4.json",
   ];
   generated.expansionManifests = [
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
     "assets/source-manifest-expansion-3.json",
+    "assets/source-manifest-expansion-4.json",
   ];
   await writeFile(GENERATED_PATH, `${JSON.stringify(generated, null, 2)}\n`);
 } finally {

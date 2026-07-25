@@ -189,11 +189,34 @@ const blessingStructure = {
 };
 
 // --- Tasks -------------------------------------------------------------------
-// No task list exists yet (reveals begin 2026-07-28). Only the confirmed point structure lands.
+// The Equilibrium list is still unpublished. Catalyst is an explicit UI test fixture only.
 
-const taskStructure = {
-  pointValues: equilibrium.progression.task_point_values,
-  notes: equilibrium.progression.notes,
+const taskSource = refs()[0] ?? {
+  source: "jagex" as const,
+  url: "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+  title: "Countdown to LEAGUES II: EQUILIBRIUM!",
+  publishedAt: "2026-07-23",
+  verifiedAt: SNAPSHOT,
+};
+
+const taskEnvelope = {
+  lastSynced: SNAPSHOT,
+  verified: false,
+  records: [],
+  tiers: equilibrium.progression.task_point_values,
+  tierConfidence: equilibrium.progression.task_point_value_confidence,
+  pointValueNote: equilibrium.progression.task_point_value_note,
+  note: "The full Equilibrium task list has not been published yet.",
+  testFallback: {
+    enabled: true,
+    league: "Catalyst League",
+    testingOnly: true,
+    url: "https://runescape.wiki/w/Catalyst_League/Tasks",
+    completionSource: "https://runescape.wiki/w/Module:Catalyst_League/Tasks/completion.json",
+    expectedRecords: 1117,
+    note: "Catalyst League tasks are temporarily shown on /tasks only to test the task browser. They are not Equilibrium tasks and must be replaced when the Equilibrium task list is published.",
+  },
+  source: taskSource,
 };
 
 // --- Write + report ----------------------------------------------------------
@@ -206,11 +229,7 @@ const envelopes: Array<[string, unknown, number]> = [
     { lastSynced: SNAPSHOT, verified: false, structure: blessingStructure, records: blessingTiers },
     blessingTiers.length,
   ],
-  [
-    "tasks.json",
-    { lastSynced: SNAPSHOT, verified: false, structure: taskStructure, records: [] },
-    0,
-  ],
+  ["tasks.json", taskEnvelope, 0],
 ];
 
 console.log("LEAGUE SYNC");

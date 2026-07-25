@@ -53,6 +53,14 @@ export const TERRAIN_WALL_DEEP = 0x332b21;
 /** The board the slabs sit in. Distinct from a locked cap so sockets read. */
 export const TERRAIN_TABLE = 0x241d14;
 
+/**
+ * Ocean. Deep teal, sampled from the water on the in-game Regions tab, kept
+ * dark enough that the slabs stay the brightest thing on the board.
+ */
+export const OCEAN_DEEP = 0x0b1f22;
+export const OCEAN_SHALLOW = 0x16403a;
+export const OCEAN_FOAM = 0x2c6a5c;
+
 /** The unifier: every slab cap grades 14% toward this mean (wartable plan §5). */
 export const BOARD_MEAN = 0x2a2318;
 

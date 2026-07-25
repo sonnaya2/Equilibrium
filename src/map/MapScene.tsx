@@ -8,6 +8,7 @@ import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
 import { Effects } from "./Effects";
 import { FlatBoard } from "./FlatBoard";
+import { Ocean } from "./Ocean";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
 import { LIGHT_FILL, LIGHT_KEY, LIGHT_RIM, SURFACE_VOID } from "./palette";
@@ -112,6 +113,7 @@ export default function MapScene() {
           <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.7} color={LIGHT_KEY} />
           <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.45} color={LIGHT_RIM} />
 
+          <Ocean reducedMotion={reducedMotion} />
           <MapTable onFocus={setFocus} reducedMotion={reducedMotion} />
           <CameraRig focus={focus} reducedMotion={reducedMotion} />
           <InvalidateOnBuild />

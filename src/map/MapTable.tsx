@@ -11,11 +11,9 @@ import * as THREE from "three/webgpu";
 import { useLoader } from "@react-three/fiber";
 import { REGION_SHAPES } from "./data/regionShapes";
 import { MAP_WORLD, type RegionAnchor } from "./data/regionAnchors";
-import { TERRAIN_TABLE } from "./palette";
+
 import { RegionSlab } from "./RegionSlab";
 
-/** Sunken slabs sit this far down; the table top hides everything below it. */
-const TABLE_TOP_Y = 0.035;
 
 export function MapTable({
   onFocus,
@@ -50,12 +48,9 @@ export function MapTable({
 
   return (
     <group>
-      {/* The table itself: locked slabs sink into their sockets until only
-          the rock bands show above this surface. */}
-      <mesh position={[0, TABLE_TOP_Y - 0.05, 0]}>
-        <boxGeometry args={[MAP_WORLD.width + 0.12, 0.1, MAP_WORLD.height + 0.12]} />
-        <meshStandardMaterial color={TERRAIN_TABLE} roughness={1} />
-      </mesh>
+      {/* No table plate: the sea is the ground, so it runs up to every
+          coastline and the shapes read as land rather than tiles on a board.
+          Locked regions sink toward it until the water is at their strata. */}
       {REGION_SHAPES.map((shape, i) => (
         <RegionSlab
           key={shape.id}

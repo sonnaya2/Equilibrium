@@ -17,7 +17,8 @@
     "planner-enrichment-2026-07-24.json": "Merge-only Archaeology loadout enrichment: monolith energy/effects, Blessing of Het and the separate three-slot/energy relic-system constraint",
     "planner-expansions-archaeology-collections.json": "Archaeology collection rewards and region-sensitive collection dependencies kept separate from the base progression table",
     "planner-expansions-archaeology-repeatables.json": "Repeatable Archaeology/research loops and self-sufficient progression pressure",
-    "planner-expansions-archaeology-utilities.json": "Corrected 2025 relic-preset progression plus Fixate, duplicate mitigation, journal tracking, collector/dig-site routing and museum overflow rules",
+    "planner-expansions-archaeology-guild.json": "Authoritative Guild progression for 2-to-4 relic presets, shop upgrades, the master outfit and Fixate infrastructure",
+    "planner-expansions-archaeology-utilities.json": "Non-Guild collection utilities: duplicate mitigation, journal tracking/routing and museum overflow rules",
     "planner-expansions-invention-2026.json": "Current 2026 Invention material/perk additions including the Ecliptic and Manufactured component layer",
     "planner-expansions-invention-archaeology.json": "Ancient Invention discovery, artefact disassembly and Archaeology-to-Invention supply links",
     "planner-expansions-invention-component-coverage.json": "Current rare-component family coverage and self-supply mapping",
@@ -59,7 +60,7 @@
     "slayer": "29 deduplicated high-value, collection-log and boundary-sensitive Slayer routes are preserved with alternate regions and source freshness visible; legacy PvME KPH/XP values remain guide context rather than optimizer-grade post-2026 rankings",
     "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and the detailed Masterwork staff cross-region chain; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention and Scavenging are joined by current rare-material taxonomy coverage, 20 current weapon/armour perk families, utility bridge recipes and explicit account/non-region material bottlenecks for self-sufficient planning",
-    "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic milestones, monolith energy constraints, collection rewards, repeatable loops, corrected four-preset progression, Fixate/duplicate mitigation, collection tracking and collector/dig-site routing are mapped; uncertain League boundaries and source conflicts stay explicit",
+    "archaeology": "qualification gates, dig-site unlocks, Ancient Invention, relic milestones, collection/repeatable routes and the authoritative Guild progression are composed with non-Guild duplicate mitigation, journal tracking/routing and museum overflow rules; uncertain League boundaries stay explicit",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
   },
   "hard_rules": [

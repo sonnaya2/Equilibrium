@@ -23,15 +23,30 @@ const overrides = new Map([
       search: "Zamorak Lord of Chaos model boss image",
     },
   ],
+  [
+    "boss-ambassador",
+    {
+      fileTitle: "The Ambassador (boss portal) texture.png",
+      search: "The Ambassador boss portal texture",
+    },
+  ],
+  [
+    "activity-player-owned-farm",
+    {
+      fileTitle: "Player-owned farm.png",
+      search: "Player-owned farm Manor Farm activity image",
+    },
+  ],
 ]);
 
+const applyOverrides = (asset) => ({
+  ...asset,
+  ...(overrides.get(asset.id) ?? {}),
+});
 const expansionAssets = expansions
   .flatMap((expansion) => expansion.assets ?? [])
-  .map((asset) => ({
-    ...asset,
-    ...(overrides.get(asset.id) ?? {}),
-  }));
-const assets = [...(base.assets ?? []), ...expansionAssets];
+  .map(applyOverrides);
+const assets = [...(base.assets ?? []).map(applyOverrides), ...expansionAssets];
 const ids = new Set();
 const paths = new Set();
 
@@ -43,11 +58,15 @@ for (const asset of assets) {
   paths.add(asset.path);
 }
 
-// The first broad search resolved a seasonal Zamorak variant. Remove it before
-// writing the pinned model render so stale art cannot survive an extension change.
-await unlink(join(ROOT, "assets/rs3/bosses/zamorak.png")).catch((error) => {
-  if (error?.code !== "ENOENT") throw error;
-});
+// Remove stale variants when a pinned source changes the output extension.
+for (const stalePath of [
+  "assets/rs3/bosses/zamorak.png",
+  "assets/rs3/bosses/ambassador.gif",
+]) {
+  await unlink(join(ROOT, stalePath)).catch((error) => {
+    if (error?.code !== "ENOENT") throw error;
+  });
+}
 
 const merged = {
   ...base,

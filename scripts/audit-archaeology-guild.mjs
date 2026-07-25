@@ -39,8 +39,8 @@ for (const expected of expectedLoadouts) {
   }
 }
 
-const [training, guildmaster, presetUpdate, fixate, masterOutfit] = await Promise.all([
-  wikiRenderedText("Archaeology training"),
+const [shopGuide, guildmaster, presetUpdate, fixate, masterOutfit] = await Promise.all([
+  wikiRenderedText("Archaeology money making"),
   wikiRenderedText("Qualification - Guildmaster"),
   wikiRenderedText("Update:Relic Presets & February Mini Strike - This Week In RuneScape"),
   wikiRenderedText("Fixate"),
@@ -51,6 +51,7 @@ assertContains(presetUpdate.text, "first two presets", "Relic preset update");
 assertContains(presetUpdate.text, "80,000 Chronotes", "Relic preset update");
 assertContains(presetUpdate.text, "Professor qualification", "Relic preset update");
 assertContains(guildmaster.text, "additional relic loadout tab", "Guildmaster qualification");
+assertContains(shopGuide.text, "permanent upgrades", "Archaeology permanent-upgrades source");
 
 const expectedShopRows = [
   { qualification: "Assistant", name: "Soil box upgrade", cost: 3500 },
@@ -78,7 +79,7 @@ for (const expected of expectedShopRows) {
   if (row.chronote_cost !== expected.cost) {
     throw new Error(`${expected.qualification} ${expected.name} cost drifted`);
   }
-  assertContains(training.text, String(expected.cost), `Archaeology training:${expected.name} cost`);
+  assertContains(shopGuide.text, String(expected.cost), `Archaeology permanent upgrades:${expected.name} cost`);
 }
 
 const fixateRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-master-outfit");

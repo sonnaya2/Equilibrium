@@ -1,10 +1,9 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
 const inputPath = join(ROOT, "scraped-data/planner-expansions.json");
 const auditPath = join(ROOT, "scraped-data/planner-expansions-audit-2026-07-24.json");
-const enrichmentPath = join(ROOT, "scraped-data/planner-enrichment-2026-07-24.json");
 const outputPath = join(ROOT, "data/research/planner-expansions.json");
 const data = JSON.parse(readFileSync(inputPath, "utf8"));
 
@@ -51,12 +50,25 @@ if (existsSync(auditPath)) {
   if (typeof audit.snapshot_date === "string" && audit.snapshot_date > data.snapshot_date) data.snapshot_date = audit.snapshot_date;
 }
 
-if (existsSync(enrichmentPath)) {
-  const enrichment = JSON.parse(readFileSync(enrichmentPath, "utf8"));
+function mergeById(target, addition, sourceName) {
+  if (typeof addition?.id !== "string" || !addition.id) {
+    throw new Error(`Planner enrichment addition is missing id in ${sourceName}`);
+  }
+  const index = target.findIndex((row) => row.id === addition.id);
+  if (index < 0) target.push(addition);
+  else target[index] = { ...addition, ...target[index] };
+}
+
+const enrichmentFiles = readdirSync(join(ROOT, "scraped-data"))
+  .filter((name) => /^planner-enrichment-.*\.json$/.test(name))
+  .sort();
+
+for (const file of enrichmentFiles) {
+  const enrichment = JSON.parse(readFileSync(join(ROOT, "scraped-data", file), "utf8"));
 
   for (const patch of enrichment.archaeology_relic_patches ?? []) {
     const row = data.archaeology_combat_relics.find((entry) => entry.relic === patch.relic);
-    if (!row) throw new Error(`Planner enrichment relic not found: ${patch.relic}`);
+    if (!row) throw new Error(`Planner enrichment relic not found in ${file}: ${patch.relic}`);
     for (const [key, value] of Object.entries(patch.set_if_missing ?? {})) {
       if (row[key] == null || row[key] === "PvM permanent unlock tracked by PvME") row[key] = value;
     }
@@ -66,11 +78,17 @@ if (existsSync(enrichmentPath)) {
     if (!data.archaeology_combat_relics.some((row) => row.relic === addition.relic)) data.archaeology_combat_relics.push(addition);
   }
 
+  for (const addition of enrichment.regional_unique_drop_additions ?? []) {
+    mergeById(data.regional_unique_drops, addition, file);
+  }
+
   if (!data.archaeology_relic_system && enrichment.archaeology_relic_system) {
     data.archaeology_relic_system = enrichment.archaeology_relic_system;
   }
 
-  if (typeof enrichment.snapshot_date === "string" && enrichment.snapshot_date > data.snapshot_date) data.snapshot_date = enrichment.snapshot_date;
+  if (typeof enrichment.snapshot_date === "string" && enrichment.snapshot_date > data.snapshot_date) {
+    data.snapshot_date = enrichment.snapshot_date;
+  }
 }
 
 function validateSources(rows, section) {
@@ -87,4 +105,4 @@ mkdirSync(dirname(outputPath), { recursive: true });
 writeFileSync(outputPath, `${JSON.stringify(data, null, 2)}\n`);
 
 const counts = Object.fromEntries(requiredArrays.map((key) => [key, data[key].length]));
-console.log("Synced planner expansions:", counts);
+console.log("Synced planner expansions:", counts, `with ${enrichmentFiles.length} enrichment overlay(s)`);

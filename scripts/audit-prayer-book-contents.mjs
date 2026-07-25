@@ -5,8 +5,7 @@ const ROOT = process.cwd();
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 
 const prayerBooks = read("scraped-data/prayer-books.json");
-const prayerCatalogue = read("scraped-data/prayers.json");
-const prayerCatalogueCanonical = read("data/reference/prayers.json");
+const prayerCatalogue = read("data/reference/prayers.json");
 
 const expectedStandardPrayers = [
   "Accelerated Decay",
@@ -115,6 +114,52 @@ const expectedSerenPrayers = [
   "Teamwork Protection",
 ];
 
+const templeRegions = ["asgarnia", "desert", "fremennik", "kandarin", "misthalin"];
+const lightWithinRegions = ["asgarnia", "desert", "fremennik", "kandarin", "misthalin", "tirannwn"];
+const allowedRegions = new Set([
+  "asgarnia",
+  "desert",
+  "forinthry",
+  "fremennik",
+  "havenhythe",
+  "kandarin",
+  "karamja",
+  "misthalin",
+  "morytania",
+  "tirannwn",
+  "anachronia",
+  "global",
+  "unmapped",
+]);
+
+const standardRegionOverrides = new Map([
+  ["Hand of Judgement", ["misthalin"]],
+  ["Hand of Fate", ["misthalin"]],
+  ["Hand of Doom", ["misthalin"]],
+  ["Decay", ["misthalin"]],
+  ["Hastened Decay", ["misthalin"]],
+  ["Accelerated Decay", ["misthalin"]],
+  ["Protect from Necromancy", ["misthalin"]],
+  ["Chivalry", ["kandarin", "karamja"]],
+  ["Piety", ["kandarin", "karamja"]],
+  ["Rigour", ["kandarin", "karamja"]],
+  ["Augury", ["kandarin", "karamja"]],
+  ["Sanctity", ["kandarin", "karamja", "misthalin"]],
+  ["Rapid Renewal", ["forinthry"]],
+  ["Eclipsed Soul", ["desert", "misthalin", "morytania"]],
+  ["Divine Rage", ["misthalin"]],
+]);
+
+function sorted(values) {
+  return [...values].sort();
+}
+
+function assertSameArray(actual, expected, label) {
+  if (JSON.stringify(sorted(actual)) !== JSON.stringify(sorted(expected))) {
+    throw new Error(`${label} mismatch. Expected ${sorted(expected).join(", ") || "none"}; found ${sorted(actual).join(", ") || "none"}`);
+  }
+}
+
 function assertNames(bookId, expected) {
   const book = prayerCatalogue.books.find((row) => row.id === bookId);
   if (!book) throw new Error(`Prayer catalogue is missing ${bookId}`);
@@ -131,6 +176,37 @@ function assertNames(bookId, expected) {
   return book;
 }
 
+function assertDetails(book) {
+  for (const prayer of book.prayers) {
+    if (typeof prayer.effect !== "string" || !prayer.effect.trim()) {
+      throw new Error(`${book.id}:${prayer.name} is missing effect text`);
+    }
+    if (!Array.isArray(prayer.required_regions)) {
+      throw new Error(`${book.id}:${prayer.name} is missing required_regions`);
+    }
+    for (const region of prayer.required_regions) {
+      if (!allowedRegions.has(region)) throw new Error(`${book.id}:${prayer.name} uses unknown region ${region}`);
+    }
+    if (typeof prayer.unlock_profile_id !== "string" || !prayer.unlock_profile_id) {
+      throw new Error(`${book.id}:${prayer.name} is missing unlock_profile_id`);
+    }
+    const profile = prayerCatalogue.unlock_profiles?.[prayer.unlock_profile_id];
+    if (!profile) throw new Error(`${book.id}:${prayer.name} references missing unlock profile ${prayer.unlock_profile_id}`);
+    assertSameArray(prayer.required_regions, profile.required_regions, `${book.id}:${prayer.name} profile regions`);
+    if (!Array.isArray(prayer.unlock_requirements) || prayer.unlock_requirements.length === 0) {
+      throw new Error(`${book.id}:${prayer.name} is missing unlock requirements`);
+    }
+    if (!Array.isArray(prayer.source_refs) || prayer.source_refs.length === 0) {
+      throw new Error(`${book.id}:${prayer.name} is missing source refs`);
+    }
+    for (const sourceRef of prayer.source_refs) {
+      if (typeof prayerCatalogue.sources?.[sourceRef] !== "string") {
+        throw new Error(`${book.id}:${prayer.name} references missing source ${sourceRef}`);
+      }
+    }
+  }
+}
+
 const switchableIds = prayerBooks.prayer_books
   .filter((book) => book.book_type === "switchable_book")
   .map((book) => book.id)
@@ -139,9 +215,32 @@ if (JSON.stringify(switchableIds) !== JSON.stringify(["ancient-curses", "standar
   throw new Error(`Prayer switch state is wrong: ${switchableIds.join(", ")}`);
 }
 
-assertNames("standard-prayers", expectedStandardPrayers);
+const standard = assertNames("standard-prayers", expectedStandardPrayers);
 const ancient = assertNames("ancient-curses", expectedAncientCurses);
 const serenCatalogue = assertNames("seren-prayers", expectedSerenPrayers);
+assertDetails(standard);
+assertDetails(ancient);
+assertDetails(serenCatalogue);
+
+for (const prayer of standard.prayers) {
+  assertSameArray(
+    prayer.required_regions,
+    standardRegionOverrides.get(prayer.name) ?? [],
+    `standard-prayers:${prayer.name} required regions`,
+  );
+}
+
+const serenNames = new Set(expectedSerenPrayers);
+for (const prayer of ancient.prayers) {
+  assertSameArray(
+    prayer.required_regions,
+    serenNames.has(prayer.name) ? lightWithinRegions : templeRegions,
+    `ancient-curses:${prayer.name} required regions`,
+  );
+}
+for (const prayer of serenCatalogue.prayers) {
+  assertSameArray(prayer.required_regions, lightWithinRegions, `seren-prayers:${prayer.name} required regions`);
+}
 
 const serenBook = prayerBooks.prayer_books.find((book) => book.id === "seren-prayers");
 const serenUnlockNames = [...(serenBook?.prayers ?? [])].sort();
@@ -161,8 +260,8 @@ if (missingFromAncient.length > 0) {
   throw new Error(`Seren prayers missing from Ancient Curses: ${missingFromAncient.join(", ")}`);
 }
 
-if (JSON.stringify(prayerCatalogue) !== JSON.stringify(prayerCatalogueCanonical)) {
-  throw new Error("Complete prayer catalogue canonical mirror is stale; run npm run normalize:data");
+if (JSON.stringify(prayerCatalogue).includes("—")) {
+  throw new Error("Prayer catalogue contains an em dash");
 }
 
-console.log("Prayer catalogue: Standard 46/46; Ancient Curses 45/45; Seren extension 7/7; switchable books: 2");
+console.log("Prayer catalogue: Standard 46/46; Ancient Curses 45/45; Seren extension 7/7; effects 98/98; region requirements audited");

@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-25T15:42:41.587Z",
+  "generatedAt": "2026-07-25T15:45:38.483Z",
   "sourceManifest": "assets/source-manifest.json",
   "count": 382,
   "unresolvedCount": 0,
-  "totalBytes": 71088967,
+  "totalBytes": 92843266,
   "assets": [
     {
       "id": "skill-attack",
@@ -22,7 +22,7 @@
       "sourceSha1": "01914b3eb5c6452ae62bd141a70a394137fe9d01",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:32.147Z"
+      "verifiedAt": "2026-07-25T15:42:56.763Z"
     },
     {
       "id": "skill-defence",
@@ -41,7 +41,7 @@
       "sourceSha1": "3b7bf2ebc004a9706899366c53aa4e8903243c2b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:32.448Z"
+      "verifiedAt": "2026-07-25T15:42:57.040Z"
     },
     {
       "id": "skill-strength",
@@ -60,7 +60,7 @@
       "sourceSha1": "95cf6f319e013bb9431c2fc420660e5951d1fe15",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:32.741Z"
+      "verifiedAt": "2026-07-25T15:42:57.320Z"
     },
     {
       "id": "skill-constitution",
@@ -79,7 +79,7 @@
       "sourceSha1": "5da1c2786783a8e8d778370926de39c940f804b8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:33.037Z"
+      "verifiedAt": "2026-07-25T15:42:57.595Z"
     },
     {
       "id": "skill-ranged",
@@ -98,7 +98,7 @@
       "sourceSha1": "4181812c654eeb9a1255761d7539711fd1b007b5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:33.328Z"
+      "verifiedAt": "2026-07-25T15:42:57.867Z"
     },
     {
       "id": "skill-prayer",
@@ -117,7 +117,7 @@
       "sourceSha1": "2ebe9ab3a242177f1766bf2dadc37ac54c0fc589",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:33.623Z"
+      "verifiedAt": "2026-07-25T15:42:58.156Z"
     },
     {
       "id": "skill-magic",
@@ -136,7 +136,7 @@
       "sourceSha1": "083ac3342f358a622fe1205a3b1f58881855f249",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:33.911Z"
+      "verifiedAt": "2026-07-25T15:42:58.430Z"
     },
     {
       "id": "skill-cooking",
@@ -155,7 +155,7 @@
       "sourceSha1": "03e595a5b50429cc7c95dabab67cd836a511eab4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:34.243Z"
+      "verifiedAt": "2026-07-25T15:42:58.703Z"
     },
     {
       "id": "skill-woodcutting",
@@ -174,7 +174,7 @@
       "sourceSha1": "2bab45a4a34c0bb7f88a8c07d089243a05614927",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:34.619Z"
+      "verifiedAt": "2026-07-25T15:42:58.977Z"
     },
     {
       "id": "skill-fletching",
@@ -193,7 +193,7 @@
       "sourceSha1": "e3e622dab2ec1169b0bee4819129ce0145f853c2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:34.981Z"
+      "verifiedAt": "2026-07-25T15:42:59.246Z"
     },
     {
       "id": "skill-fishing",
@@ -212,7 +212,7 @@
       "sourceSha1": "db6b37815f204ef365fff110a41ef716e74d25e7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:35.339Z"
+      "verifiedAt": "2026-07-25T15:42:59.522Z"
     },
     {
       "id": "skill-firemaking",
@@ -231,7 +231,7 @@
       "sourceSha1": "e3c824b3fe046ef4b2580d256a2d41130384288e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:35.637Z"
+      "verifiedAt": "2026-07-25T15:42:59.801Z"
     },
     {
       "id": "skill-crafting",
@@ -250,7 +250,7 @@
       "sourceSha1": "950c6a64d86a9da2cd5b4cbf354919ed7269acce",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:35.927Z"
+      "verifiedAt": "2026-07-25T15:43:00.084Z"
     },
     {
       "id": "skill-smithing",
@@ -269,7 +269,7 @@
       "sourceSha1": "e11b7d02cf92c12d70bd27bfacf9faf844b85703",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:36.236Z"
+      "verifiedAt": "2026-07-25T15:43:00.364Z"
     },
     {
       "id": "skill-mining",
@@ -288,7 +288,7 @@
       "sourceSha1": "68972b36785a16c7409dc1a4e4112c935c0386b2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:36.595Z"
+      "verifiedAt": "2026-07-25T15:43:00.651Z"
     },
     {
       "id": "skill-herblore",
@@ -307,7 +307,7 @@
       "sourceSha1": "6288617f94ed318a1bdc77b8f39a4561228c1cd2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:36.895Z"
+      "verifiedAt": "2026-07-25T15:43:00.928Z"
     },
     {
       "id": "skill-agility",
@@ -326,7 +326,7 @@
       "sourceSha1": "3ed0119b49814940e60503629916027800b763f6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:37.200Z"
+      "verifiedAt": "2026-07-25T15:43:01.207Z"
     },
     {
       "id": "skill-thieving",
@@ -345,7 +345,7 @@
       "sourceSha1": "177d0591528d1947fd7eef2a5d80f2c3cb4750d4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:37.503Z"
+      "verifiedAt": "2026-07-25T15:43:01.486Z"
     },
     {
       "id": "skill-slayer",
@@ -364,7 +364,7 @@
       "sourceSha1": "f02e62091573da83747736f18cd20f4391710897",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:37.817Z"
+      "verifiedAt": "2026-07-25T15:43:01.767Z"
     },
     {
       "id": "skill-farming",
@@ -383,7 +383,7 @@
       "sourceSha1": "c4eec73cdb528c2b5b33d660b8ae57fd34adcbd1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:38.147Z"
+      "verifiedAt": "2026-07-25T15:43:02.045Z"
     },
     {
       "id": "skill-runecrafting",
@@ -402,7 +402,7 @@
       "sourceSha1": "c7ad907daff9263e40eaaec413bc5c1626fc9588",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:38.505Z"
+      "verifiedAt": "2026-07-25T15:43:02.326Z"
     },
     {
       "id": "skill-hunter",
@@ -421,7 +421,7 @@
       "sourceSha1": "be473ac4d42d2c77f24406a353156a04d4aab047",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:38.855Z"
+      "verifiedAt": "2026-07-25T15:43:02.604Z"
     },
     {
       "id": "skill-construction",
@@ -440,7 +440,7 @@
       "sourceSha1": "9495f8573b12a598a3965bec2e05a6a91e867297",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:39.244Z"
+      "verifiedAt": "2026-07-25T15:43:02.886Z"
     },
     {
       "id": "skill-summoning",
@@ -459,7 +459,7 @@
       "sourceSha1": "4bf0ce624844ec6aa38f0d1a9c3c34c0ecfc5fd0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:39.538Z"
+      "verifiedAt": "2026-07-25T15:43:03.179Z"
     },
     {
       "id": "skill-dungeoneering",
@@ -478,7 +478,7 @@
       "sourceSha1": "57a744bb5e7cb0ef2d09edd322c751697f8e26f0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:39.822Z"
+      "verifiedAt": "2026-07-25T15:43:03.460Z"
     },
     {
       "id": "skill-divination",
@@ -497,7 +497,7 @@
       "sourceSha1": "e021220de1f5c1cb5a1481bb546b4def12e4ca98",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:40.115Z"
+      "verifiedAt": "2026-07-25T15:43:03.741Z"
     },
     {
       "id": "skill-invention",
@@ -516,7 +516,7 @@
       "sourceSha1": "cba7053405fac0a54bb636782fb82bf3161ce941",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:40.404Z"
+      "verifiedAt": "2026-07-25T15:43:04.028Z"
     },
     {
       "id": "skill-archaeology",
@@ -535,7 +535,7 @@
       "sourceSha1": "cd281c957ccbe30083c6d7b0b59117db625c3cf5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:40.694Z"
+      "verifiedAt": "2026-07-25T15:43:04.305Z"
     },
     {
       "id": "skill-necromancy",
@@ -554,7 +554,7 @@
       "sourceSha1": "0ae42a41d80dc68527ea66c5e549161707e9bf92",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:40.982Z"
+      "verifiedAt": "2026-07-25T15:43:04.582Z"
     },
     {
       "id": "combat-melee-abilities",
@@ -573,7 +573,7 @@
       "sourceSha1": "935442c477c072ab61efae88489cb9e080ab25c4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:41.271Z"
+      "verifiedAt": "2026-07-25T15:43:04.859Z"
     },
     {
       "id": "combat-ranged-abilities",
@@ -592,7 +592,7 @@
       "sourceSha1": "7e174800d371e64fe2efcf955ec90278fa97b4c0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:41.573Z"
+      "verifiedAt": "2026-07-25T15:43:05.136Z"
     },
     {
       "id": "combat-magic-abilities",
@@ -611,7 +611,7 @@
       "sourceSha1": "b49ff749fbcb375d74621bd1dc352cd3752b4450",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:41.861Z"
+      "verifiedAt": "2026-07-25T15:43:05.407Z"
     },
     {
       "id": "combat-necromancy-abilities",
@@ -630,7 +630,7 @@
       "sourceSha1": "b2cfe99a6c4c832a5f4ad7d123ed040146c49b0b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:42.150Z"
+      "verifiedAt": "2026-07-25T15:43:05.692Z"
     },
     {
       "id": "combat-defence-abilities",
@@ -649,7 +649,7 @@
       "sourceSha1": "ca93dbec8ecfe61bb6feaa64540b1f6057ae1050",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:42.806Z"
+      "verifiedAt": "2026-07-25T15:43:06.287Z"
     },
     {
       "id": "combat-constitution-abilities",
@@ -668,7 +668,7 @@
       "sourceSha1": "6cd71476b0d75bec2d9186cf5fd07c645c8fee33",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:43.454Z"
+      "verifiedAt": "2026-07-25T15:43:06.876Z"
     },
     {
       "id": "combat-adrenaline",
@@ -687,7 +687,7 @@
       "sourceSha1": "adfb44f630647766cb3ddeef41dbf461f60f83a6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:44.107Z"
+      "verifiedAt": "2026-07-25T15:43:07.463Z"
     },
     {
       "id": "combat-critical-strike",
@@ -706,7 +706,7 @@
       "sourceSha1": "0887a65f08bb31f339bef76aa2cad2a145d84d2e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:44.824Z"
+      "verifiedAt": "2026-07-25T15:43:08.049Z"
     },
     {
       "id": "combat-equilibrium-perk",
@@ -725,7 +725,7 @@
       "sourceSha1": "6347f44d9ca7bb32168d47c841bcfd6add579688",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:45.303Z"
+      "verifiedAt": "2026-07-25T15:43:08.483Z"
     },
     {
       "id": "combat-invention-perk",
@@ -744,7 +744,7 @@
       "sourceSha1": "77b6bdaf3a77a7b1ae5a8a6c7af84a353acab0ae",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:45.967Z"
+      "verifiedAt": "2026-07-25T15:43:09.132Z"
     },
     {
       "id": "region-misthalin",
@@ -763,7 +763,7 @@
       "sourceSha1": "09cce992701a29437223af6ff9d0c039c7bea558",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:46.445Z"
+      "verifiedAt": "2026-07-25T15:43:09.589Z"
     },
     {
       "id": "region-havenhythe",
@@ -782,7 +782,7 @@
       "sourceSha1": "b6d4632db52223a603ecd0d59ef63f0f4f4b0c6b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:47.097Z"
+      "verifiedAt": "2026-07-25T15:43:10.170Z"
     },
     {
       "id": "region-karamja",
@@ -801,7 +801,7 @@
       "sourceSha1": "aa832574d0d10f8811c442aa6c57861fbe8e2689",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:47.575Z"
+      "verifiedAt": "2026-07-25T15:43:10.604Z"
     },
     {
       "id": "region-asgarnia",
@@ -820,7 +820,7 @@
       "sourceSha1": "f51d38f2a5a0cd7de67b73501fc8e1947b2e7a95",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:48.052Z"
+      "verifiedAt": "2026-07-25T15:43:11.039Z"
     },
     {
       "id": "region-kandarin",
@@ -839,7 +839,7 @@
       "sourceSha1": "52584211d8097f1c222989c268c4345aa04e3f27",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:48.526Z"
+      "verifiedAt": "2026-07-25T15:43:11.476Z"
     },
     {
       "id": "region-fremennik",
@@ -858,7 +858,7 @@
       "sourceSha1": "1c347040dd2655265e49ffb01f15fd9e8162960e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:49.177Z"
+      "verifiedAt": "2026-07-25T15:43:12.069Z"
     },
     {
       "id": "region-forinthry",
@@ -877,7 +877,7 @@
       "sourceSha1": "b34485550a7307336dd08055cc3ad1ee7e2e9393",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:49.832Z"
+      "verifiedAt": "2026-07-25T15:43:12.677Z"
     },
     {
       "id": "region-desert",
@@ -896,7 +896,7 @@
       "sourceSha1": "a64438558455d6f52d2344573d9522890c76de29",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:50.313Z"
+      "verifiedAt": "2026-07-25T15:43:13.123Z"
     },
     {
       "id": "region-morytania",
@@ -915,7 +915,7 @@
       "sourceSha1": "ec3417965f04a169dcfc9a9084bdc2ca56a32dd0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:50.785Z"
+      "verifiedAt": "2026-07-25T15:43:13.564Z"
     },
     {
       "id": "region-tirannwn",
@@ -934,7 +934,7 @@
       "sourceSha1": "210d96804cd83175392f80a3903a1cd94455bb4c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:51.254Z"
+      "verifiedAt": "2026-07-25T15:43:14.005Z"
     },
     {
       "id": "region-anachronia",
@@ -953,7 +953,7 @@
       "sourceSha1": "f64d2a57f63432682ca92df6e9ef30cf18f425fd",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:51.736Z"
+      "verifiedAt": "2026-07-25T15:43:14.444Z"
     },
     {
       "id": "catalyst-relic-excavator",
@@ -972,7 +972,7 @@
       "sourceSha1": "2cc2be22ac2ec1b8c6e7b0d87dce5aa735d29714",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:52.227Z"
+      "verifiedAt": "2026-07-25T15:43:14.879Z"
     },
     {
       "id": "catalyst-relic-divine-woodcutter",
@@ -991,7 +991,7 @@
       "sourceSha1": "ed77a6188249dd4bd8bc6a85df26e7d038ca7085",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:52.732Z"
+      "verifiedAt": "2026-07-25T15:43:15.328Z"
     },
     {
       "id": "catalyst-relic-animal-wrangler",
@@ -1010,7 +1010,7 @@
       "sourceSha1": "977837c0fbce104c10822e3d598f71666d218755",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:53.219Z"
+      "verifiedAt": "2026-07-25T15:43:15.773Z"
     },
     {
       "id": "catalyst-relic-golden-footed",
@@ -1029,7 +1029,7 @@
       "sourceSha1": "63d8eb551b875976304d666af80d6a87a39a63d3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:53.847Z"
+      "verifiedAt": "2026-07-25T15:43:16.212Z"
     },
     {
       "id": "catalyst-relic-five-finger-discount",
@@ -1048,7 +1048,7 @@
       "sourceSha1": "047bd5f87f960a003497fd2fda9b6af38691d1b4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:54.332Z"
+      "verifiedAt": "2026-07-25T15:43:16.652Z"
     },
     {
       "id": "catalyst-relic-farming-frenzy",
@@ -1067,7 +1067,7 @@
       "sourceSha1": "438874b5d20509e06d039f5d9628557e59344863",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:54.982Z"
+      "verifiedAt": "2026-07-25T15:43:17.235Z"
     },
     {
       "id": "catalyst-relic-fairys-flight",
@@ -1086,7 +1086,7 @@
       "sourceSha1": "ecb4ce9f8b7d606122a86baef71b374861f17318",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:55.462Z"
+      "verifiedAt": "2026-07-25T15:43:17.682Z"
     },
     {
       "id": "catalyst-relic-assassins-insight",
@@ -1105,7 +1105,7 @@
       "sourceSha1": "fcd5282a7db6793faca9f69dc1a8925e7aedce61",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:55.961Z"
+      "verifiedAt": "2026-07-25T15:43:18.128Z"
     },
     {
       "id": "catalyst-relic-voidwalker",
@@ -1124,7 +1124,7 @@
       "sourceSha1": "4f5d3ca920d43bb2c6765e2f40576d7a55ed766b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:56.446Z"
+      "verifiedAt": "2026-07-25T15:43:18.569Z"
     },
     {
       "id": "catalyst-relic-production-master",
@@ -1143,7 +1143,7 @@
       "sourceSha1": "09f38508d140ab623b0ed70ff305d73fff124644",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:57.070Z"
+      "verifiedAt": "2026-07-25T15:43:19.008Z"
     },
     {
       "id": "catalyst-relic-rejuvenated",
@@ -1162,7 +1162,7 @@
       "sourceSha1": "dc9a26ce696de42fe93c239716747a76be927e21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:57.705Z"
+      "verifiedAt": "2026-07-25T15:43:19.451Z"
     },
     {
       "id": "catalyst-relic-clue-connoisseur",
@@ -1181,7 +1181,7 @@
       "sourceSha1": "cf189b27aa0b237ba8964da810455c6528ebe947",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:58.340Z"
+      "verifiedAt": "2026-07-25T15:43:19.899Z"
     },
     {
       "id": "catalyst-relic-barbarism",
@@ -1200,7 +1200,7 @@
       "sourceSha1": "e947b65346f4a62ef35d862e0d010adbc9a27613",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:58.826Z"
+      "verifiedAt": "2026-07-25T15:43:20.347Z"
     },
     {
       "id": "catalyst-relic-crit-happens",
@@ -1219,7 +1219,7 @@
       "sourceSha1": "fe676dd5bcb5fd1b742705f51ee23c203c42e26c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:59.301Z"
+      "verifiedAt": "2026-07-25T15:43:20.786Z"
     },
     {
       "id": "catalyst-relic-bombardment",
@@ -1238,7 +1238,7 @@
       "sourceSha1": "c1d92e9d00d90cbb9f601f528a0619a584e23622",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:39:59.773Z"
+      "verifiedAt": "2026-07-25T15:43:21.227Z"
     },
     {
       "id": "catalyst-relic-soulbourne",
@@ -1257,7 +1257,7 @@
       "sourceSha1": "71d3a88fcf0246e37959b1acf857eba3d2eda7e8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:00.254Z"
+      "verifiedAt": "2026-07-25T15:43:21.666Z"
     },
     {
       "id": "catalyst-relic-bankers-note",
@@ -1276,7 +1276,7 @@
       "sourceSha1": "4f2cc25c318444dd7e047c5b0e456433f47a8b57",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:00.903Z"
+      "verifiedAt": "2026-07-25T15:43:22.252Z"
     },
     {
       "id": "catalyst-relic-perkfection",
@@ -1295,7 +1295,7 @@
       "sourceSha1": "510b802d77ae83fc8fbbb8e1fdab45f55ec11cc1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:01.384Z"
+      "verifiedAt": "2026-07-25T15:43:22.699Z"
     },
     {
       "id": "catalyst-relic-ascension",
@@ -1314,7 +1314,7 @@
       "sourceSha1": "e4f8a01136b327c419ca5a2e3b58cb83ff2b181f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:02.014Z"
+      "verifiedAt": "2026-07-25T15:43:23.148Z"
     },
     {
       "id": "catalyst-relic-specialist",
@@ -1333,7 +1333,7 @@
       "sourceSha1": "0b7a962290de6b5eea464f32527674d3d73d5cd9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:02.487Z"
+      "verifiedAt": "2026-07-25T15:43:23.585Z"
     },
     {
       "id": "catalyst-relic-everlasting-faith",
@@ -1352,7 +1352,7 @@
       "sourceSha1": "78c5882059c753f84de17b62c6798620c9d9d5fe",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:02.964Z"
+      "verifiedAt": "2026-07-25T15:43:24.033Z"
     },
     {
       "id": "catalyst-item-abyssal-conduit",
@@ -1371,7 +1371,7 @@
       "sourceSha1": "d920cf53f81bdd21a3faa543d25ecb0b0c0ab9e4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:03.620Z"
+      "verifiedAt": "2026-07-25T15:43:24.616Z"
     },
     {
       "id": "catalyst-item-bankers-note",
@@ -1390,7 +1390,7 @@
       "sourceSha1": "c77a26d144a516285264e0b5ae30932c271b77d7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:04.267Z"
+      "verifiedAt": "2026-07-25T15:43:25.208Z"
     },
     {
       "id": "catalyst-item-brooch-elder-gods",
@@ -1409,7 +1409,7 @@
       "sourceSha1": "2c6111c286f6a6aa1c20cafc1e69d74db7c17d1d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:04.554Z"
+      "verifiedAt": "2026-07-25T15:43:25.548Z"
     },
     {
       "id": "catalyst-item-clue-gear-crate",
@@ -1428,7 +1428,7 @@
       "sourceSha1": "0cbd9677d39fa6bfdc144d44f26aaac1f39271dc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:05.198Z"
+      "verifiedAt": "2026-07-25T15:43:26.127Z"
     },
     {
       "id": "catalyst-item-elder-eof",
@@ -1447,7 +1447,7 @@
       "sourceSha1": "7d2518308a991148310bd1d4b81ada2e526a280a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:05.851Z"
+      "verifiedAt": "2026-07-25T15:43:26.725Z"
     },
     {
       "id": "catalyst-item-elder-god-book",
@@ -1466,7 +1466,7 @@
       "sourceSha1": "a67e3fe969d7ea229d47503a185b53fbb5b31e5b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:06.514Z"
+      "verifiedAt": "2026-07-25T15:43:27.318Z"
     },
     {
       "id": "catalyst-item-fairy-mushroom",
@@ -1485,7 +1485,7 @@
       "sourceSha1": "086cb1a893f62a81cd72146fbebcfd11f6e5305d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:07.226Z"
+      "verifiedAt": "2026-07-25T15:43:27.913Z"
     },
     {
       "id": "catalyst-item-goldenhawk-boots",
@@ -1504,7 +1504,7 @@
       "sourceSha1": "d2269d2b48fd0c032bada7842c389b51b8bd7bb2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:07.889Z"
+      "verifiedAt": "2026-07-25T15:43:28.495Z"
     },
     {
       "id": "catalyst-item-hatchet-divinity",
@@ -1523,7 +1523,7 @@
       "sourceSha1": "a7456fdffd809af32b6e66f1f764004749996882",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:08.373Z"
+      "verifiedAt": "2026-07-25T15:43:28.928Z"
     },
     {
       "id": "catalyst-item-pickaxe-ages",
@@ -1542,7 +1542,7 @@
       "sourceSha1": "c532b24bd5a7c49153522ad77731650afd3f8bb9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:08.850Z"
+      "verifiedAt": "2026-07-25T15:43:29.581Z"
     },
     {
       "id": "catalyst-item-skull-slaying",
@@ -1561,7 +1561,7 @@
       "sourceSha1": "456318b1b5b921ceea5c20dd3b77362744a9873b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:09.324Z"
+      "verifiedAt": "2026-07-25T15:43:30.016Z"
     },
     {
       "id": "catalyst-item-trappers-harpoon",
@@ -1580,7 +1580,7 @@
       "sourceSha1": "a174f383abc1518a90ff4dc8e2c1964beb2432cb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:10.092Z"
+      "verifiedAt": "2026-07-25T15:43:30.599Z"
     },
     {
       "id": "catalyst-trophy-bronze",
@@ -1599,7 +1599,7 @@
       "sourceSha1": "1ac77e633c344691251c9e294e0e1a9a00ab6abe",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:10.693Z"
+      "verifiedAt": "2026-07-25T15:43:31.034Z"
     },
     {
       "id": "catalyst-trophy-iron",
@@ -1618,7 +1618,7 @@
       "sourceSha1": "137e9466cd267413b635c578a0df4f42b525995d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:11.170Z"
+      "verifiedAt": "2026-07-25T15:43:31.470Z"
     },
     {
       "id": "catalyst-trophy-steel",
@@ -1637,7 +1637,7 @@
       "sourceSha1": "39113d9fc44170211d794b492e1138bc8d05e426",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:11.674Z"
+      "verifiedAt": "2026-07-25T15:43:31.909Z"
     },
     {
       "id": "catalyst-trophy-mithril",
@@ -1656,7 +1656,7 @@
       "sourceSha1": "d16cbae8721344a07893c5af18ac78ac7dfca60d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:12.160Z"
+      "verifiedAt": "2026-07-25T15:43:32.351Z"
     },
     {
       "id": "catalyst-trophy-adamant",
@@ -1675,7 +1675,7 @@
       "sourceSha1": "a4be1aa0cd502a2c86178562ae204c21b176a0b6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:12.635Z"
+      "verifiedAt": "2026-07-25T15:43:32.787Z"
     },
     {
       "id": "catalyst-trophy-rune",
@@ -1694,7 +1694,7 @@
       "sourceSha1": "80b65e5f6ecf7ed4bf6a332c4759a8460132d3a3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:13.115Z"
+      "verifiedAt": "2026-07-25T15:43:33.230Z"
     },
     {
       "id": "catalyst-trophy-dragon",
@@ -1713,7 +1713,7 @@
       "sourceSha1": "144dd5494fce2647fed7894aa653b8c6cac24c21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:13.897Z"
+      "verifiedAt": "2026-07-25T15:43:33.672Z"
     },
     {
       "id": "catalyst-token-aura",
@@ -1732,7 +1732,7 @@
       "sourceSha1": "2c4f4bb93d6acbb17230d22710ea1574f0849be8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:14.387Z"
+      "verifiedAt": "2026-07-25T15:43:34.112Z"
     },
     {
       "id": "catalyst-token-harpoon",
@@ -1751,7 +1751,7 @@
       "sourceSha1": "f800732f3892803509e8e6f01d0110646ecf1c21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:15.027Z"
+      "verifiedAt": "2026-07-25T15:43:34.563Z"
     },
     {
       "id": "catalyst-token-hatchet",
@@ -1770,7 +1770,7 @@
       "sourceSha1": "fcc3ca371ae9567d4537fb8744bd8a8df32269d1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:15.509Z"
+      "verifiedAt": "2026-07-25T15:43:35.005Z"
     },
     {
       "id": "catalyst-token-pickaxe",
@@ -1789,7 +1789,7 @@
       "sourceSha1": "9f6238800f0ba1f1e20d59225a1a806ca302c7c9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:15.994Z"
+      "verifiedAt": "2026-07-25T15:43:35.449Z"
     },
     {
       "id": "catalyst-token-teleport",
@@ -1808,7 +1808,7 @@
       "sourceSha1": "99f93a65d55718e7e139ddefe46707d316ae4f7e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:16.476Z"
+      "verifiedAt": "2026-07-25T15:43:35.893Z"
     },
     {
       "id": "catalyst-token-meditate-rest",
@@ -1827,7 +1827,7 @@
       "sourceSha1": "f04e3c69c340c728886c78ed560a548c70f310e1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:17.099Z"
+      "verifiedAt": "2026-07-25T15:43:36.338Z"
     },
     {
       "id": "catalyst-scroll-bloat",
@@ -1846,7 +1846,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:17.729Z"
+      "verifiedAt": "2026-07-25T15:43:36.792Z"
     },
     {
       "id": "catalyst-scroll-detonate",
@@ -1865,7 +1865,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:18.381Z"
+      "verifiedAt": "2026-07-25T15:43:37.251Z"
     },
     {
       "id": "catalyst-scroll-flurry",
@@ -1884,7 +1884,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:19.020Z"
+      "verifiedAt": "2026-07-25T15:43:37.687Z"
     },
     {
       "id": "catalyst-scroll-reflect",
@@ -1903,7 +1903,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:19.501Z"
+      "verifiedAt": "2026-07-25T15:43:38.137Z"
     },
     {
       "id": "catalyst-scroll-snapshot",
@@ -1922,7 +1922,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:20.131Z"
+      "verifiedAt": "2026-07-25T15:43:38.574Z"
     },
     {
       "id": "task-tier-easy",
@@ -1941,7 +1941,7 @@
       "sourceSha1": "a3d5863d31abc1f96c64833ce16203a580fc9487",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:20.790Z"
+      "verifiedAt": "2026-07-25T15:43:39.174Z"
     },
     {
       "id": "task-tier-medium",
@@ -1960,7 +1960,7 @@
       "sourceSha1": "5ecb3cf4a46281c285445729ccd89f0f4175fd1d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:21.450Z"
+      "verifiedAt": "2026-07-25T15:43:39.765Z"
     },
     {
       "id": "task-tier-hard",
@@ -1979,7 +1979,7 @@
       "sourceSha1": "4c884090df9f3c4141a93499aa7b58c5d69a4ce1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:22.098Z"
+      "verifiedAt": "2026-07-25T15:43:40.347Z"
     },
     {
       "id": "task-tier-elite",
@@ -1998,7 +1998,7 @@
       "sourceSha1": "545e909a7c403f026791b69bdaf2fcb01aa4be0d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:22.750Z"
+      "verifiedAt": "2026-07-25T15:43:40.921Z"
     },
     {
       "id": "task-tier-master",
@@ -2017,7 +2017,7 @@
       "sourceSha1": "48406c51705dbcf079ea7fc1d7899912ce712127",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:23.421Z"
+      "verifiedAt": "2026-07-25T15:43:41.501Z"
     },
     {
       "id": "upgrade-bandos",
@@ -2036,7 +2036,7 @@
       "sourceSha1": "f727b27de8144bf790a9257082090bf70c81d75b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:23.712Z"
+      "verifiedAt": "2026-07-25T15:43:41.774Z"
     },
     {
       "id": "upgrade-armadyl",
@@ -2055,7 +2055,7 @@
       "sourceSha1": "892ffb5f2875259a23601a68b4daa5ed51027e6b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:24.017Z"
+      "verifiedAt": "2026-07-25T15:43:42.047Z"
     },
     {
       "id": "upgrade-subjugation",
@@ -2074,7 +2074,7 @@
       "sourceSha1": "7f03bcace8dfde5110bd0e7df83206863ab3c84d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:24.856Z"
+      "verifiedAt": "2026-07-25T15:43:42.793Z"
     },
     {
       "id": "upgrade-nex-t80",
@@ -2093,7 +2093,7 @@
       "sourceSha1": "841b838c51dd7baa51103aaf29d5aab2923d540d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:25.146Z"
+      "verifiedAt": "2026-07-25T15:43:43.077Z"
     },
     {
       "id": "upgrade-drygore",
@@ -2112,7 +2112,7 @@
       "sourceSha1": "08f0c66ca6a220fee043444927d0d46bc568868a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:25.437Z"
+      "verifiedAt": "2026-07-25T15:43:43.352Z"
     },
     {
       "id": "upgrade-harmonic-dust",
@@ -2131,7 +2131,7 @@
       "sourceSha1": "82fc8a83173f4c5ce0043585cf7afbcfb5c30efc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:25.729Z"
+      "verifiedAt": "2026-07-25T15:43:43.633Z"
     },
     {
       "id": "upgrade-crystal-hatchet",
@@ -2150,7 +2150,7 @@
       "sourceSha1": "9b0dc87a62e5fd6607c35c40f52d05d0de1acc49",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:26.019Z"
+      "verifiedAt": "2026-07-25T15:43:43.906Z"
     },
     {
       "id": "upgrade-dragon-pickaxe",
@@ -2169,7 +2169,7 @@
       "sourceSha1": "e181aca7be9d2080c75923016b523d50630b655b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:26.307Z"
+      "verifiedAt": "2026-07-25T15:43:44.191Z"
     },
     {
       "id": "upgrade-linza",
@@ -2188,7 +2188,7 @@
       "sourceSha1": "acd5643eb3be242728fe9f2460886cf1e9d880ed",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:26.599Z"
+      "verifiedAt": "2026-07-25T15:43:44.474Z"
     },
     {
       "id": "equilibrium-countdown-official",
@@ -2204,7 +2204,7 @@
       "resolvedTitle": "Leagues II: Equilibrium countdown art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-25T15:40:28.764Z"
+      "verifiedAt": "2026-07-25T15:43:47.046Z"
     },
     {
       "id": "equilibrium-road-ahead-official",
@@ -2220,7 +2220,7 @@
       "resolvedTitle": "Leagues II: Equilibrium Road Ahead art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-25T15:40:30.302Z"
+      "verifiedAt": "2026-07-25T15:43:48.766Z"
     },
     {
       "id": "catalyst-official-page-art",
@@ -2236,7 +2236,7 @@
       "resolvedTitle": "Catalyst official page art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-25T15:40:30.623Z"
+      "verifiedAt": "2026-07-25T15:43:49.570Z"
     },
     {
       "id": "ability-attack",
@@ -2255,7 +2255,7 @@
       "sourceSha1": "999f5f9a183cd2506a650877ea2a8cc2f65b3078",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:31.107Z"
+      "verifiedAt": "2026-07-25T15:43:50.042Z"
     },
     {
       "id": "ability-adaptive-strike",
@@ -2274,7 +2274,7 @@
       "sourceSha1": "66b6c26b01462783030ded2b2f14487b3c65c27a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:31.594Z"
+      "verifiedAt": "2026-07-25T15:43:50.461Z"
     },
     {
       "id": "ability-rend",
@@ -2293,7 +2293,7 @@
       "sourceSha1": "92013b9cd0098f58751cc0ddc684a8e0344ed269",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:32.081Z"
+      "verifiedAt": "2026-07-25T15:43:50.885Z"
     },
     {
       "id": "ability-dismember",
@@ -2312,7 +2312,7 @@
       "sourceSha1": "37296a77483d652f18c1159134b7c7c842f7cd9c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:32.555Z"
+      "verifiedAt": "2026-07-25T15:43:51.322Z"
     },
     {
       "id": "ability-slaughter",
@@ -2331,7 +2331,7 @@
       "sourceSha1": "23b40316ea3a220dd7a71f013bf8016adc384972",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:33.035Z"
+      "verifiedAt": "2026-07-25T15:43:51.744Z"
     },
     {
       "id": "ability-massacre",
@@ -2350,7 +2350,7 @@
       "sourceSha1": "4fd4ef092b35c410d3bc533e238afdce52ea994a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:33.526Z"
+      "verifiedAt": "2026-07-25T15:43:52.168Z"
     },
     {
       "id": "ability-assault",
@@ -2369,7 +2369,7 @@
       "sourceSha1": "cf553c6722c9883b70d09e5591e97bff0668a498",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:34.021Z"
+      "verifiedAt": "2026-07-25T15:43:52.597Z"
     },
     {
       "id": "ability-overpower",
@@ -2388,7 +2388,7 @@
       "sourceSha1": "e3ae73886e2ed9229a25337755fb7a508e1712b4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:34.509Z"
+      "verifiedAt": "2026-07-25T15:43:53.024Z"
     },
     {
       "id": "ability-punish",
@@ -2407,7 +2407,7 @@
       "sourceSha1": "0a23f476b98723b16b51be85c405e93ccadde2b8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:34.980Z"
+      "verifiedAt": "2026-07-25T15:43:53.448Z"
     },
     {
       "id": "ability-berserk",
@@ -2426,7 +2426,7 @@
       "sourceSha1": "1fa4f1d3c69a95b9f36e1ea534b2cf6309eec462",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:35.452Z"
+      "verifiedAt": "2026-07-25T15:43:53.871Z"
     },
     {
       "id": "ability-meteor-strike",
@@ -2445,7 +2445,7 @@
       "sourceSha1": "67cb106ac5cc0af9fe2c207b45c6b39eec111efe",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:35.939Z"
+      "verifiedAt": "2026-07-25T15:43:54.303Z"
     },
     {
       "id": "ability-chaos-roar",
@@ -2464,7 +2464,7 @@
       "sourceSha1": "49257ec78b90cb2c19af3826f70ea02242e548bb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:36.423Z"
+      "verifiedAt": "2026-07-25T15:43:54.730Z"
     },
     {
       "id": "ability-greater-fury",
@@ -2483,7 +2483,7 @@
       "sourceSha1": "69e1879b6819febe1b72731207feca16636d0f62",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:36.922Z"
+      "verifiedAt": "2026-07-25T15:43:55.155Z"
     },
     {
       "id": "ability-greater-flurry",
@@ -2502,7 +2502,7 @@
       "sourceSha1": "653c4f0c1fbfb9daf1cb6b1c7d422a9482e82912",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:37.404Z"
+      "verifiedAt": "2026-07-25T15:43:55.584Z"
     },
     {
       "id": "ability-greater-barge",
@@ -2521,7 +2521,7 @@
       "sourceSha1": "348d99f76916ef5e545ddcfc26ce530c53aca760",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:37.890Z"
+      "verifiedAt": "2026-07-25T15:43:56.020Z"
     },
     {
       "id": "ability-deaths-swiftness",
@@ -2540,7 +2540,7 @@
       "sourceSha1": "14e738874c0b6fac257c3c6165221396e43e820a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:38.370Z"
+      "verifiedAt": "2026-07-25T15:43:56.463Z"
     },
     {
       "id": "ability-bombardment",
@@ -2559,7 +2559,7 @@
       "sourceSha1": "fba13639fce4fd5ec95915c71c3ac4d31e9585db",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:38.850Z"
+      "verifiedAt": "2026-07-25T15:43:56.891Z"
     },
     {
       "id": "ability-shadow-tendrils",
@@ -2578,7 +2578,7 @@
       "sourceSha1": "408703f59914eb2f09eea04af9f60850d66c5fc0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:39.332Z"
+      "verifiedAt": "2026-07-25T15:43:57.321Z"
     },
     {
       "id": "ability-greater-ricochet",
@@ -2597,7 +2597,7 @@
       "sourceSha1": "2bb6116ff0b5da2e1e82f1f63a166750fc9b71c1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:39.813Z"
+      "verifiedAt": "2026-07-25T15:43:57.763Z"
     },
     {
       "id": "ability-sunshine",
@@ -2616,7 +2616,7 @@
       "sourceSha1": "b526e0982781830b808c8179e928aa5a14b806e0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:40.289Z"
+      "verifiedAt": "2026-07-25T15:43:58.193Z"
     },
     {
       "id": "ability-greater-concentrated-blast",
@@ -2635,7 +2635,7 @@
       "sourceSha1": "d1ba5453f9fc726bad2206caa34207e8ede85981",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:40.785Z"
+      "verifiedAt": "2026-07-25T15:43:58.624Z"
     },
     {
       "id": "ability-magma-tempest",
@@ -2654,7 +2654,7 @@
       "sourceSha1": "2dbd0473ee8b825f08019b958fb41a479ec6f07b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:41.262Z"
+      "verifiedAt": "2026-07-25T15:43:59.059Z"
     },
     {
       "id": "ability-greater-chain",
@@ -2673,7 +2673,7 @@
       "sourceSha1": "a9e53553c6d94089581f357eedd2d3e1f0b1c681",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:41.748Z"
+      "verifiedAt": "2026-07-25T15:43:59.492Z"
     },
     {
       "id": "ability-living-death",
@@ -2692,7 +2692,7 @@
       "sourceSha1": "868e5e61ee4977ed962a62484999d173c39bab0a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:42.228Z"
+      "verifiedAt": "2026-07-25T15:43:59.933Z"
     },
     {
       "id": "ability-split-soul",
@@ -2711,7 +2711,7 @@
       "sourceSha1": "63dc9ccec4ae9ecdb4801adc13fd63613f38e5a5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:42.894Z"
+      "verifiedAt": "2026-07-25T15:44:00.495Z"
     },
     {
       "id": "ability-invoke-lord-of-bones",
@@ -2730,7 +2730,7 @@
       "sourceSha1": "9e436d0afc03ac96e573858609f17b6a7393f0b6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:43.548Z"
+      "verifiedAt": "2026-07-25T15:44:01.067Z"
     },
     {
       "id": "ability-divert",
@@ -2749,7 +2749,7 @@
       "sourceSha1": "e919e5f6a83a8079a4e0330b5c26e7f24e584bae",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:44.018Z"
+      "verifiedAt": "2026-07-25T15:44:01.500Z"
     },
     {
       "id": "ability-devotion",
@@ -2768,7 +2768,7 @@
       "sourceSha1": "33573edac9c32528c0a40ab28614afa589cc0403",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:44.498Z"
+      "verifiedAt": "2026-07-25T15:44:01.921Z"
     },
     {
       "id": "ability-debilitate",
@@ -2787,7 +2787,7 @@
       "sourceSha1": "f53de7126395699e51ea7bfef4c26bab4ec2b4a4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:44.978Z"
+      "verifiedAt": "2026-07-25T15:44:02.347Z"
     },
     {
       "id": "ability-resonance",
@@ -2806,7 +2806,7 @@
       "sourceSha1": "0d21b6d2700d4e0525932d9f6e0f59ac8c5430fc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:45.458Z"
+      "verifiedAt": "2026-07-25T15:44:02.768Z"
     },
     {
       "id": "ability-barricade",
@@ -2825,7 +2825,7 @@
       "sourceSha1": "22c01bdeb702ff84d3fdc73f8d2b6a62a3072484",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:45.942Z"
+      "verifiedAt": "2026-07-25T15:44:03.195Z"
     },
     {
       "id": "ability-immortality",
@@ -2844,7 +2844,7 @@
       "sourceSha1": "86f9a9204da20270d241194defe0df2ac939bd59",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:46.421Z"
+      "verifiedAt": "2026-07-25T15:44:03.635Z"
     },
     {
       "id": "ability-anticipation",
@@ -2863,7 +2863,7 @@
       "sourceSha1": "d50a00ec28f33589c4667b8ab701d456d8011d34",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:46.904Z"
+      "verifiedAt": "2026-07-25T15:44:04.062Z"
     },
     {
       "id": "ability-freedom",
@@ -2882,7 +2882,7 @@
       "sourceSha1": "be2b4d8718853af75d3beaee2a44daf047cd6197",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:47.384Z"
+      "verifiedAt": "2026-07-25T15:44:04.488Z"
     },
     {
       "id": "ability-surge",
@@ -2901,7 +2901,7 @@
       "sourceSha1": "5966b2f11a4f56e8fb458e754582670c6586b432",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:47.864Z"
+      "verifiedAt": "2026-07-25T15:44:04.914Z"
     },
     {
       "id": "ability-escape",
@@ -2920,7 +2920,7 @@
       "sourceSha1": "d273c0ceaca9edaefb60343f82f8e4c5cf44dbc2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:48.345Z"
+      "verifiedAt": "2026-07-25T15:44:05.349Z"
     },
     {
       "id": "ability-dive",
@@ -2939,7 +2939,7 @@
       "sourceSha1": "c8afc03924ea4b8ebc03f742307e0428f28d9808",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:48.825Z"
+      "verifiedAt": "2026-07-25T15:44:05.770Z"
     },
     {
       "id": "ability-bladed-dive",
@@ -2958,7 +2958,7 @@
       "sourceSha1": "3251bdd568fc4bec2812201cf374da4dc302eb18",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:49.302Z"
+      "verifiedAt": "2026-07-25T15:44:06.208Z"
     },
     {
       "id": "ability-eclipsed-soul",
@@ -2977,7 +2977,7 @@
       "sourceSha1": "d86504a08ee7582130a5385f59ce2391fd7f54c9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:49.785Z"
+      "verifiedAt": "2026-07-25T15:44:06.637Z"
     },
     {
       "id": "ability-divine-rage",
@@ -2996,7 +2996,7 @@
       "sourceSha1": "37c3db44629b9ac4f4e5c33910daada8ead1b9a2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:50.266Z"
+      "verifiedAt": "2026-07-25T15:44:07.064Z"
     },
     {
       "id": "upgrade-codex-greater-concentrated-blast",
@@ -3015,7 +3015,7 @@
       "sourceSha1": "95b7ad775be2c8a0d1c155f06e6ed9bbec6bedde",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:50.938Z"
+      "verifiedAt": "2026-07-25T15:44:07.639Z"
     },
     {
       "id": "upgrade-codex-magma-tempest",
@@ -3034,7 +3034,7 @@
       "sourceSha1": "d6035b6f2ac6b942b5a9b191c61d65c29bc21c3d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:51.231Z"
+      "verifiedAt": "2026-07-25T15:44:07.907Z"
     },
     {
       "id": "upgrade-codex-greater-ricochet",
@@ -3053,7 +3053,7 @@
       "sourceSha1": "638f6261235732e75caf39391d2117524a416d51",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:51.523Z"
+      "verifiedAt": "2026-07-25T15:44:08.172Z"
     },
     {
       "id": "upgrade-codex-greater-chain",
@@ -3072,7 +3072,7 @@
       "sourceSha1": "f977d0b3a95c04f31d58bd76dcf5fb3661236f97",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:51.815Z"
+      "verifiedAt": "2026-07-25T15:44:08.442Z"
     },
     {
       "id": "upgrade-codex-divert",
@@ -3091,7 +3091,7 @@
       "sourceSha1": "1cabee4bd010483d534d1b0ac551b894e39ee39c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:52.103Z"
+      "verifiedAt": "2026-07-25T15:44:08.715Z"
     },
     {
       "id": "upgrade-codex-greater-fury",
@@ -3110,7 +3110,7 @@
       "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:52.389Z"
+      "verifiedAt": "2026-07-25T15:44:08.984Z"
     },
     {
       "id": "upgrade-codex-greater-flurry",
@@ -3129,7 +3129,7 @@
       "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:52.686Z"
+      "verifiedAt": "2026-07-25T15:44:09.255Z"
     },
     {
       "id": "upgrade-codex-greater-barge",
@@ -3148,7 +3148,7 @@
       "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:52.974Z"
+      "verifiedAt": "2026-07-25T15:44:09.528Z"
     },
     {
       "id": "upgrade-codex-double-surge",
@@ -3167,7 +3167,7 @@
       "sourceSha1": "455d1e0a76efbc2a3fd5b3b8f6395005a7e52283",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:53.272Z"
+      "verifiedAt": "2026-07-25T15:44:09.796Z"
     },
     {
       "id": "upgrade-codex-double-escape",
@@ -3186,7 +3186,7 @@
       "sourceSha1": "819cdaa4d09a4b3ead5acbd856718d1e5f3eb180",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:53.562Z"
+      "verifiedAt": "2026-07-25T15:44:10.063Z"
     },
     {
       "id": "upgrade-codex-eclipsed-soul",
@@ -3205,7 +3205,7 @@
       "sourceSha1": "f1a9cf81b212efa48a9d7200f7a31988f3940b0f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:53.847Z"
+      "verifiedAt": "2026-07-25T15:44:10.333Z"
     },
     {
       "id": "upgrade-codex-divine-rage",
@@ -3224,7 +3224,7 @@
       "sourceSha1": "84649b6e887b5d7843d79eec05b1e0d8141efa34",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:54.146Z"
+      "verifiedAt": "2026-07-25T15:44:10.611Z"
     },
     {
       "id": "upgrade-codex-invoke-lord-of-bones",
@@ -3243,7 +3243,7 @@
       "sourceSha1": "4b8bde5633dbe32735875abf20fec80c6af93e3b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:54.437Z"
+      "verifiedAt": "2026-07-25T15:44:10.880Z"
     },
     {
       "id": "boss-kerapac",
@@ -3262,7 +3262,7 @@
       "sourceSha1": "51b257307814c75ce6a848cb3d16563fe6517ba9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:54.929Z"
+      "verifiedAt": "2026-07-25T15:44:11.341Z"
     },
     {
       "id": "boss-arch-glacor",
@@ -3281,7 +3281,7 @@
       "sourceSha1": "9ddec14b50968d69755bd70ce59527a3af0ea7ff",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:55.418Z"
+      "verifiedAt": "2026-07-25T15:44:11.782Z"
     },
     {
       "id": "boss-croesus",
@@ -3300,7 +3300,7 @@
       "sourceSha1": "88858ce995b6d16791c00edd9e94b2765651a587",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:55.902Z"
+      "verifiedAt": "2026-07-25T15:44:12.214Z"
     },
     {
       "id": "boss-tzkal-zuk",
@@ -3319,7 +3319,7 @@
       "sourceSha1": "4f254e197c54b65f25c71f27da372dcc9abf2af8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:56.397Z"
+      "verifiedAt": "2026-07-25T15:44:12.663Z"
     },
     {
       "id": "boss-rasial",
@@ -3338,7 +3338,7 @@
       "sourceSha1": "44f04b5e02b8d77245e19a981df93515d4e363fa",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:56.889Z"
+      "verifiedAt": "2026-07-25T15:44:13.106Z"
     },
     {
       "id": "boss-hermod",
@@ -3357,7 +3357,7 @@
       "sourceSha1": "50e05d3e569ba920d4f800b439826bdaa7f57c5b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:57.369Z"
+      "verifiedAt": "2026-07-25T15:44:13.552Z"
     },
     {
       "id": "boss-gate-of-elidinis",
@@ -3376,7 +3376,7 @@
       "sourceSha1": "7576b43d45c641c8b9c9f3dab6a9284dfcd9bb1f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:57.874Z"
+      "verifiedAt": "2026-07-25T15:44:14.018Z"
     },
     {
       "id": "boss-zemouregal-vorkath",
@@ -3395,7 +3395,7 @@
       "sourceSha1": "2384274cfddda740c89674931d91bfccfdc12c77",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:58.371Z"
+      "verifiedAt": "2026-07-25T15:44:14.458Z"
     },
     {
       "id": "boss-vermyx",
@@ -3414,7 +3414,7 @@
       "sourceSha1": "b9a834bb4dda9faa8b2e61c1d02b20b5cce1c5b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:58.871Z"
+      "verifiedAt": "2026-07-25T15:44:14.912Z"
     },
     {
       "id": "boss-kezalam",
@@ -3433,7 +3433,7 @@
       "sourceSha1": "6dd48201cdc6b940b2032c57e216ee32a1c0407a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:59.359Z"
+      "verifiedAt": "2026-07-25T15:44:15.372Z"
     },
     {
       "id": "boss-nakatra",
@@ -3452,7 +3452,7 @@
       "sourceSha1": "2bc59d4b052a2c07595755b5a9017633c425d7d8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:40:59.872Z"
+      "verifiedAt": "2026-07-25T15:44:15.823Z"
     },
     {
       "id": "boss-ivar",
@@ -3471,7 +3471,7 @@
       "sourceSha1": "889161b402ec7b812841d9eae5a9801d460f9d50",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:00.349Z"
+      "verifiedAt": "2026-07-25T15:44:16.258Z"
     },
     {
       "id": "boss-silverquill",
@@ -3490,7 +3490,7 @@
       "sourceSha1": "e342a6cfca20cf1736f046e96d17d0b1c06e7fc3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:00.839Z"
+      "verifiedAt": "2026-07-25T15:44:16.712Z"
     },
     {
       "id": "boss-nex",
@@ -3509,7 +3509,7 @@
       "sourceSha1": "c7186c03e6bacaac3634fa8c8a4172179c36a064",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:01.329Z"
+      "verifiedAt": "2026-07-25T15:44:17.149Z"
     },
     {
       "id": "boss-queen-black-dragon",
@@ -3528,7 +3528,7 @@
       "sourceSha1": "efd484af888cd14b3abce2623d6bbb8165672004",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:01.822Z"
+      "verifiedAt": "2026-07-25T15:44:17.598Z"
     },
     {
       "id": "boss-vorago",
@@ -3547,7 +3547,7 @@
       "sourceSha1": "b62658bc68530d6522df790a3ddfa50175750b7f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:02.316Z"
+      "verifiedAt": "2026-07-25T15:44:18.028Z"
     },
     {
       "id": "boss-nex-aod",
@@ -3566,7 +3566,7 @@
       "sourceSha1": "f3abc702cbc604f75f15ad96cb98a7b27de5c729",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:02.806Z"
+      "verifiedAt": "2026-07-25T15:44:18.478Z"
     },
     {
       "id": "boss-legiones",
@@ -3585,7 +3585,7 @@
       "sourceSha1": "538c354c6c019ef9063634f7c8579ff453f2daa9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:03.298Z"
+      "verifiedAt": "2026-07-25T15:44:18.915Z"
     },
     {
       "id": "boss-kalphite-queen",
@@ -3604,7 +3604,7 @@
       "sourceSha1": "1de24fd105b402ba00cf0d69fa7b1f8646dab969",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:03.793Z"
+      "verifiedAt": "2026-07-25T15:44:19.353Z"
     },
     {
       "id": "boss-kalphite-king",
@@ -3623,7 +3623,7 @@
       "sourceSha1": "d47ab1226c494051cb310056c6afa6936d13dee2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:04.283Z"
+      "verifiedAt": "2026-07-25T15:44:19.797Z"
     },
     {
       "id": "boss-magister",
@@ -3642,7 +3642,7 @@
       "sourceSha1": "72c8f0de617ae60c34a1fa660063ec9f683cb595",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:04.793Z"
+      "verifiedAt": "2026-07-25T15:44:20.237Z"
     },
     {
       "id": "boss-telos",
@@ -3661,7 +3661,7 @@
       "sourceSha1": "adcab7ef97315c41afa6245af35a3697bccdbc31",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:05.276Z"
+      "verifiedAt": "2026-07-25T15:44:20.667Z"
     },
     {
       "id": "boss-amascut",
@@ -3680,7 +3680,7 @@
       "sourceSha1": "6fd3726f094215e4c48d7e5afa1fb350572cb1aa",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:05.800Z"
+      "verifiedAt": "2026-07-25T15:44:21.101Z"
     },
     {
       "id": "boss-raksha",
@@ -3699,7 +3699,7 @@
       "sourceSha1": "74953e1812f653220fa58d112bf2ba80bb8d5abb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:06.300Z"
+      "verifiedAt": "2026-07-25T15:44:21.535Z"
     },
     {
       "id": "boss-rex-matriarchs",
@@ -3718,7 +3718,7 @@
       "sourceSha1": "46643c0d5b1f42444ae2ec1ca24d6e18669b8436",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:06.791Z"
+      "verifiedAt": "2026-07-25T15:44:21.977Z"
     },
     {
       "id": "boss-solak",
@@ -3737,7 +3737,7 @@
       "sourceSha1": "d3ae0e45df33b8637b4a11e099b6055baad6d1b7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:07.280Z"
+      "verifiedAt": "2026-07-25T15:44:22.404Z"
     },
     {
       "id": "boss-araxxor",
@@ -3756,7 +3756,7 @@
       "sourceSha1": "a0bfbc9526107b5e7abab813d21abb5875b4c2b9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:07.763Z"
+      "verifiedAt": "2026-07-25T15:44:22.842Z"
     },
     {
       "id": "boss-araxxi",
@@ -3775,7 +3775,7 @@
       "sourceSha1": "3ac5975c230cfe31e17e2d7c1d3d039cf56ef26c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:08.247Z"
+      "verifiedAt": "2026-07-25T15:44:23.298Z"
     },
     {
       "id": "boss-ambassador",
@@ -3794,7 +3794,7 @@
       "sourceSha1": "d3a4f87279dda5c294c3812b2c842da4e4be09f4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:08.691Z"
+      "verifiedAt": "2026-07-25T15:44:23.700Z"
     },
     {
       "id": "boss-seiryu",
@@ -3813,7 +3813,7 @@
       "sourceSha1": "90a2bbc85ec792e009ca004f3ef20da528be5d8d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:09.172Z"
+      "verifiedAt": "2026-07-25T15:44:24.138Z"
     },
     {
       "id": "boss-black-stone-dragon",
@@ -3832,7 +3832,7 @@
       "sourceSha1": "02b608b943dd6d700dcf1f1fb970f5ed3578a14b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:09.651Z"
+      "verifiedAt": "2026-07-25T15:44:24.575Z"
     },
     {
       "id": "boss-zamorak",
@@ -3851,7 +3851,7 @@
       "sourceSha1": "66e880ffad4eaf25731b170bf6fdf8d019df0b0c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:09.946Z"
+      "verifiedAt": "2026-07-25T15:44:24.962Z"
     },
     {
       "id": "boss-beastmaster-durzag",
@@ -3870,7 +3870,7 @@
       "sourceSha1": "92d2236a7f2d2512eaea6a0321c3fbd165c6bf9c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:10.439Z"
+      "verifiedAt": "2026-07-25T15:44:25.394Z"
     },
     {
       "id": "boss-yakamaru",
@@ -3889,7 +3889,7 @@
       "sourceSha1": "6693cec1df591f6842fb90f226b1e77133c4b8bc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:11.084Z"
+      "verifiedAt": "2026-07-25T15:44:25.822Z"
     },
     {
       "id": "activity-sanctum-of-rebirth",
@@ -3908,7 +3908,7 @@
       "sourceSha1": "dda65a5055a6ec2bca280bf0d0d7ed0b89985075",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:11.588Z"
+      "verifiedAt": "2026-07-25T15:44:26.286Z"
     },
     {
       "id": "activity-moonrise-dig-site",
@@ -3927,7 +3927,7 @@
       "sourceSha1": "828e78510328afdc5cf9bedafc7836d738610a34",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:12.084Z"
+      "verifiedAt": "2026-07-25T15:44:26.728Z"
     },
     {
       "id": "activity-fort-forinthry",
@@ -3946,7 +3946,7 @@
       "sourceSha1": "ad763a293cbb931473676bed3422be40a4577efc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:12.579Z"
+      "verifiedAt": "2026-07-25T15:44:27.259Z"
     },
     {
       "id": "activity-city-of-um",
@@ -3965,7 +3965,7 @@
       "sourceSha1": "090c7182485b05c640e1da88858257a5ad575eae",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:13.082Z"
+      "verifiedAt": "2026-07-25T15:44:27.715Z"
     },
     {
       "id": "activity-player-owned-farm",
@@ -3984,7 +3984,7 @@
       "sourceSha1": "87f1ee4d4c3d575df57600aee61e5fc3f4fb0098",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:13.535Z"
+      "verifiedAt": "2026-07-25T15:44:28.110Z"
     },
     {
       "id": "activity-hall-of-memories",
@@ -4003,7 +4003,7 @@
       "sourceSha1": "87b7090f3ebb79a3962618a759adc6592f30d03d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:14.045Z"
+      "verifiedAt": "2026-07-25T15:44:28.564Z"
     },
     {
       "id": "activity-deep-sea-fishing",
@@ -4022,15 +4022,15 @@
       "sourceSha1": "334b677eab6d67b25908e9d5f168b08f43b9143a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:14.561Z"
+      "verifiedAt": "2026-07-25T15:44:29.029Z"
     },
     {
       "id": "activity-big-game-hunter",
       "label": "Big Game Hunter",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/big-game-hunter.png",
-      "bytes": 3402123,
-      "sha256": "5ede808a087114bbb44d0ffac2ca01c0cd53004394c05b34bcc152d6abdcbd84",
+      "bytes": 2250503,
+      "sha256": "5a19b50565bad845204763ce990f2dca64fa451b059cbc1b3dea5fa165eda02a",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Big_Game_Hunter",
       "sourcePage": "https://runescape.wiki/w/File%3ABig_Game_Hunter_arena.png",
@@ -4041,7 +4041,7 @@
       "sourceSha1": "3198ef1a9a8b903c6e1fd676ba82575e19112e48",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:15.717Z"
+      "verifiedAt": "2026-07-25T15:44:29.438Z"
     },
     {
       "id": "activity-ranch-out-of-time",
@@ -4060,7 +4060,7 @@
       "sourceSha1": "81734d3ba5f89bcb847edbf4cc2ac175a53f2420",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:16.220Z"
+      "verifiedAt": "2026-07-25T15:44:29.873Z"
     },
     {
       "id": "activity-daemonheim",
@@ -4079,7 +4079,7 @@
       "sourceSha1": "259f62e7dec0f923c89b0c0b8ceb7180499b60eb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:16.735Z"
+      "verifiedAt": "2026-07-25T15:44:30.325Z"
     },
     {
       "id": "activity-dragonkin-laboratory",
@@ -4098,7 +4098,7 @@
       "sourceSha1": "bbee39170ebf6e7e7c9dcb3654ced39c71011f7f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:17.228Z"
+      "verifiedAt": "2026-07-25T15:44:30.762Z"
     },
     {
       "id": "activity-shadow-reef",
@@ -4117,7 +4117,7 @@
       "sourceSha1": "e0e0fe2e2bb1206e3204b90a283ef0916a3aeb8f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:17.715Z"
+      "verifiedAt": "2026-07-25T15:44:31.215Z"
     },
     {
       "id": "activity-heart-of-gielinor",
@@ -4136,7 +4136,7 @@
       "sourceSha1": "26cff9e8efc6f48e9d62523c3783e20b0ac399ce",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:18.175Z"
+      "verifiedAt": "2026-07-25T15:44:31.599Z"
     },
     {
       "id": "activity-menaphos",
@@ -4155,7 +4155,7 @@
       "sourceSha1": "904290d11bfd38b5a422cb07ad5b35e0a6edc077",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:18.681Z"
+      "verifiedAt": "2026-07-25T15:44:32.040Z"
     },
     {
       "id": "activity-hets-oasis",
@@ -4174,7 +4174,7 @@
       "sourceSha1": "52e902e2a0b5b6683ec9ba1446e8c10559196051",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:19.173Z"
+      "verifiedAt": "2026-07-25T15:44:32.499Z"
     },
     {
       "id": "activity-wars-retreat",
@@ -4193,7 +4193,7 @@
       "sourceSha1": "18711334b5eacf296eb0428f3026d73563431a80",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:19.827Z"
+      "verifiedAt": "2026-07-25T15:44:32.929Z"
     },
     {
       "id": "activity-invention-guild",
@@ -4212,7 +4212,7 @@
       "sourceSha1": "2c3c4637dac54a4b94cfe6348471d515739b1261",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:20.324Z"
+      "verifiedAt": "2026-07-25T15:44:33.365Z"
     },
     {
       "id": "activity-archaeology-guild",
@@ -4231,7 +4231,7 @@
       "sourceSha1": "94fb901d82b879c79b043d83df92d6d3cab398a0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:20.792Z"
+      "verifiedAt": "2026-07-25T15:44:33.756Z"
     },
     {
       "id": "activity-anachronia-agility-course",
@@ -4250,26 +4250,26 @@
       "sourceSha1": "d6e7c4bda4469c34eef87cef32f023ca47a4d341",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:21.291Z"
+      "verifiedAt": "2026-07-25T15:44:34.215Z"
     },
     {
       "id": "activity-wilderness-agility-course",
       "label": "Wilderness Agility Course",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/wilderness-agility-course.png",
-      "bytes": 741,
-      "sha256": "d5c32d5a377ed1e0683b71a06465ee89e57898942b82ff752999c6a06d288d3b",
+      "bytes": 1975113,
+      "sha256": "3c308c4b11059bde337c592d0b26bf5fed3665923e892789f1df128b9b618305",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Wilderness_Agility_Course",
-      "sourcePage": "https://runescape.wiki/w/File%3AWilderness_Agility_Course_icon.png",
-      "downloadUrl": "https://runescape.wiki/images/Wilderness_Agility_Course_icon.png?488cd",
-      "resolvedTitle": "File:Wilderness Agility Course icon.png",
-      "sourceWidth": 22,
-      "sourceHeight": 30,
-      "sourceSha1": "c630d44382b8747f3636e47147145bc991b2fc0c",
+      "sourcePage": "https://runescape.wiki/w/File%3AWilderness_Agility_course.png",
+      "downloadUrl": "https://runescape.wiki/images/Wilderness_Agility_course.png?36159",
+      "resolvedTitle": "File:Wilderness Agility course.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1017,
+      "sourceSha1": "8744dfce3c574a81b8e946bb8150e7a6c0625f75",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:21.800Z"
+      "verifiedAt": "2026-07-25T15:44:34.987Z"
     },
     {
       "id": "activity-prifddinas",
@@ -4288,83 +4288,83 @@
       "sourceSha1": "04238b52e979e16884f5c1c018763c268444a3d9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:22.290Z"
+      "verifiedAt": "2026-07-25T15:44:35.422Z"
     },
     {
       "id": "activity-max-guild",
       "label": "Max Guild",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/max-guild.png",
-      "bytes": 1755,
-      "sha256": "887ecf2bc369c5e08e5b76244485f67d1b0462cccad4942b7dfef149220b85d4",
+      "bytes": 2456054,
+      "sha256": "eb082bdc4170b309245e019897f00774936fe8fd1fcd2aa94a6f96a045341cbf",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Max_Guild",
-      "sourcePage": "https://runescape.wiki/w/File%3AMax_guild_Teleport_icon_(2019).png",
-      "downloadUrl": "https://runescape.wiki/images/Max_guild_Teleport_icon_%282019%29.png?70497",
-      "resolvedTitle": "File:Max guild Teleport icon (2019).png",
-      "sourceWidth": 30,
-      "sourceHeight": 30,
-      "sourceSha1": "8173da27a7c815718d36c6a46efe76e2f43e2ddc",
+      "sourcePage": "https://runescape.wiki/w/File%3AGrand_Exchange_(Max_Guild).png",
+      "downloadUrl": "https://runescape.wiki/images/Grand_Exchange_%28Max_Guild%29.png?e91f4",
+      "resolvedTitle": "File:Grand Exchange (Max Guild).png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "9dc42561bfbd7dcba6b29b8b66928db2775a75bb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:22.778Z"
+      "verifiedAt": "2026-07-25T15:44:36.364Z"
     },
     {
       "id": "activity-monastery-of-ascension",
       "label": "Monastery of Ascension",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/monastery-of-ascension.png",
-      "bytes": 828209,
-      "sha256": "86ea523666fab7dbddd8c44e4ba384c6f2971d735a709104e12c73d6c4c91fb6",
+      "bytes": 2570719,
+      "sha256": "732fc03869f798f38a3c3321681f1d2d3fb6c708f06b19c4dba9f87e6030b807",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Monastery_of_Ascension",
-      "sourcePage": "https://runescape.wiki/w/File%3ALectern_(Monastery_of_Ascension).png",
-      "downloadUrl": "https://runescape.wiki/images/Lectern_%28Monastery_of_Ascension%29.png?c861c",
-      "resolvedTitle": "File:Lectern (Monastery of Ascension).png",
-      "sourceWidth": 951,
-      "sourceHeight": 2089,
-      "sourceSha1": "2bd5eeff779b9b3dd7a63a88f368044c350faf16",
+      "sourcePage": "https://runescape.wiki/w/File%3AMonastery_of_Ascension_building.png",
+      "downloadUrl": "https://runescape.wiki/images/Monastery_of_Ascension_building.png?298f4",
+      "resolvedTitle": "File:Monastery of Ascension building.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "0a6d18466f18f32d01f20c72757e1982fa4e4911",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:23.278Z"
+      "verifiedAt": "2026-07-25T15:44:36.760Z"
     },
     {
       "id": "activity-sophanem-slayer-dungeon",
       "label": "Sophanem Slayer Dungeon",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/sophanem-slayer-dungeon.png",
-      "bytes": 153571,
-      "sha256": "e272a9690d1035a863dad6586c9c7f8e97a4fc661163d5d5b066a404db375dcd",
+      "bytes": 1071259,
+      "sha256": "47438c331e832cf3853f583eb50b75ff2fae325de231a631112f1c88e0041a64",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
-      "sourcePage": "https://runescape.wiki/w/File%3ARope_(Sophanem_Slayer_Dungeon).png",
-      "downloadUrl": "https://runescape.wiki/images/Rope_%28Sophanem_Slayer_Dungeon%29.png?81648",
-      "resolvedTitle": "File:Rope (Sophanem Slayer Dungeon).png",
-      "sourceWidth": 1427,
-      "sourceHeight": 2043,
-      "sourceSha1": "f714ddc65e239eff2dd5121ba610fcd868434ffb",
+      "sourcePage": "https://runescape.wiki/w/File%3ASophanem_Slayer_Dungeon.png",
+      "downloadUrl": "https://runescape.wiki/images/Sophanem_Slayer_Dungeon.png?51916",
+      "resolvedTitle": "File:Sophanem Slayer Dungeon.png",
+      "sourceWidth": 1366,
+      "sourceHeight": 768,
+      "sourceSha1": "077b7a6527340ed7ba6451cb039b0813481121cb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:23.778Z"
+      "verifiedAt": "2026-07-25T15:44:37.160Z"
     },
     {
       "id": "activity-god-wars-dungeon",
       "label": "God Wars Dungeon",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/god-wars-dungeon.png",
-      "bytes": 220203,
-      "sha256": "ce5375166e883c6812fccc09250df3bf4ae02cc04e75bb43907cf7fde5fd3d54",
+      "bytes": 3107079,
+      "sha256": "644fc09e36a093ddd8112d62760934114e27066913656c43068fa619c49470bd",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/God_Wars_Dungeon",
-      "sourcePage": "https://runescape.wiki/w/File%3AElder_God_Wars_Dungeon_-_The_Nodon_Front_(11)_update_image.png",
-      "downloadUrl": "https://runescape.wiki/images/Elder_God_Wars_Dungeon_-_The_Nodon_Front_%2811%29_update_image.png?d25c7",
-      "resolvedTitle": "File:Elder God Wars Dungeon - The Nodon Front (11) update image.png",
+      "sourcePage": "https://runescape.wiki/w/File%3AGod_Wars_Dungeon.png",
+      "downloadUrl": "https://runescape.wiki/images/God_Wars_Dungeon.png?3fc6b",
+      "resolvedTitle": "File:God Wars Dungeon.png",
       "sourceWidth": 1920,
       "sourceHeight": 1080,
-      "sourceSha1": "be94c5d409a3936a1bc9527d7cbfdb04b533290e",
+      "sourceSha1": "85644433a8389ec30864524691971680dc98d8ad",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:24.276Z"
+      "verifiedAt": "2026-07-25T15:44:37.648Z"
     },
     {
       "id": "activity-abyss",
@@ -4383,7 +4383,7 @@
       "sourceSha1": "3d7a9b6b2d1705ec2e0233b712c91d990419a311",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:24.765Z"
+      "verifiedAt": "2026-07-25T15:44:38.089Z"
     },
     {
       "id": "upgrade-fractured-staff-of-armadyl",
@@ -4402,7 +4402,7 @@
       "sourceSha1": "4325d3d380df855c73ba92def761c44f57490b7f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:25.060Z"
+      "verifiedAt": "2026-07-25T15:44:38.353Z"
     },
     {
       "id": "upgrade-scripture-of-jas",
@@ -4421,7 +4421,7 @@
       "sourceSha1": "1f7ae199fb34083118e6fb8e2e77e6226336f3af",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:25.510Z"
+      "verifiedAt": "2026-07-25T15:44:38.620Z"
     },
     {
       "id": "upgrade-scripture-of-wen",
@@ -4440,7 +4440,7 @@
       "sourceSha1": "7b5ce239aa29d7d3bd72e877f4a246c72cfd3575",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:25.803Z"
+      "verifiedAt": "2026-07-25T15:44:38.894Z"
     },
     {
       "id": "upgrade-scripture-of-bik",
@@ -4459,7 +4459,7 @@
       "sourceSha1": "b1b7803790e455065c1d6ca8c6af719d28af948a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:26.091Z"
+      "verifiedAt": "2026-07-25T15:44:39.168Z"
     },
     {
       "id": "upgrade-scripture-of-ful",
@@ -4478,7 +4478,7 @@
       "sourceSha1": "ff42959da9cee7cbd3c73e58ad3e61928bbea662",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:26.377Z"
+      "verifiedAt": "2026-07-25T15:44:39.442Z"
     },
     {
       "id": "upgrade-omni-guard",
@@ -4497,7 +4497,7 @@
       "sourceSha1": "b2784c01c6aa4dc87119954dab5cb0edfd607837",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:26.672Z"
+      "verifiedAt": "2026-07-25T15:44:39.712Z"
     },
     {
       "id": "upgrade-soulbound-lantern",
@@ -4516,7 +4516,7 @@
       "sourceSha1": "6fcb3f164a3b2d642c807f2d28fbf986cc30b486",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:26.961Z"
+      "verifiedAt": "2026-07-25T15:44:39.986Z"
     },
     {
       "id": "upgrade-roar-of-awakening",
@@ -4535,7 +4535,7 @@
       "sourceSha1": "31e5ff9f173c23f8e6f3aac5f4824af49edaceac",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:27.399Z"
+      "verifiedAt": "2026-07-25T15:44:40.262Z"
     },
     {
       "id": "upgrade-ode-to-deceit",
@@ -4554,7 +4554,7 @@
       "sourceSha1": "7ef4189dff4a05cc55e2425aea8a98431e5d779d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:27.690Z"
+      "verifiedAt": "2026-07-25T15:44:40.524Z"
     },
     {
       "id": "upgrade-shard-of-genesis-essence",
@@ -4573,7 +4573,7 @@
       "sourceSha1": "c33e39b3a13555cada25be9e3de33b9b81b5a1ca",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:27.974Z"
+      "verifiedAt": "2026-07-25T15:44:40.810Z"
     },
     {
       "id": "upgrade-elite-dracolich-hauberk",
@@ -4592,7 +4592,7 @@
       "sourceSha1": "9a9d9189ad9638b3e9ad822a4d8b3b8a7b8465c7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:28.647Z"
+      "verifiedAt": "2026-07-25T15:44:41.404Z"
     },
     {
       "id": "upgrade-wand-of-praesul",
@@ -4611,7 +4611,7 @@
       "sourceSha1": "0eeb841a083f556c6a47cc55579680b051e18e06",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:28.941Z"
+      "verifiedAt": "2026-07-25T15:44:41.674Z"
     },
     {
       "id": "upgrade-imperium-core",
@@ -4630,7 +4630,7 @@
       "sourceSha1": "de45040d8eaaf0ce0965f538e6f343f60e4db378",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:29.228Z"
+      "verifiedAt": "2026-07-25T15:44:41.941Z"
     },
     {
       "id": "upgrade-ascension-crossbow",
@@ -4649,7 +4649,7 @@
       "sourceSha1": "8bbb2dbed632a8c336ad4635475a1a858d4adcad",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:29.516Z"
+      "verifiedAt": "2026-07-25T15:44:42.214Z"
     },
     {
       "id": "upgrade-eldritch-crossbow",
@@ -4668,7 +4668,7 @@
       "sourceSha1": "f5b392203f859ea44ba95432764465de641f6596",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:29.952Z"
+      "verifiedAt": "2026-07-25T15:44:42.491Z"
     },
     {
       "id": "upgrade-seren-godbow",
@@ -4687,7 +4687,7 @@
       "sourceSha1": "a08ed6e0a6803e1b920af3eb222d7dddc8c4eea3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:30.400Z"
+      "verifiedAt": "2026-07-25T15:44:42.767Z"
     },
     {
       "id": "upgrade-staff-of-sliske",
@@ -4706,7 +4706,7 @@
       "sourceSha1": "6d8e2ddb2eda8f290e07b3c405d1b121aea02156",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:30.843Z"
+      "verifiedAt": "2026-07-25T15:44:43.043Z"
     },
     {
       "id": "upgrade-zaros-godsword",
@@ -4725,7 +4725,7 @@
       "sourceSha1": "f2d91915701b8b284b5745500dc42a5bbfade2a4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:31.287Z"
+      "verifiedAt": "2026-07-25T15:44:43.309Z"
     },
     {
       "id": "upgrade-devourers-guard",
@@ -4744,7 +4744,7 @@
       "sourceSha1": "25ce7a20ee499081ea110ec68393fcbe11ff94a4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:31.579Z"
+      "verifiedAt": "2026-07-25T15:44:43.582Z"
     },
     {
       "id": "upgrade-tumekens-light",
@@ -4763,7 +4763,7 @@
       "sourceSha1": "b18ce6a18f9b20cc2d2952c86a6156e7ca693570",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:31.870Z"
+      "verifiedAt": "2026-07-25T15:44:43.853Z"
     },
     {
       "id": "upgrade-dragon-mattock",
@@ -4782,7 +4782,7 @@
       "sourceSha1": "b95bcf00aa68bba56b91489c6f139381c7a95866",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:32.165Z"
+      "verifiedAt": "2026-07-25T15:44:44.123Z"
     },
     {
       "id": "upgrade-terrasaur-maul",
@@ -4801,7 +4801,7 @@
       "sourceSha1": "0e96030fedeb3408969ca2ae4761d9744ecf6e4e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:32.452Z"
+      "verifiedAt": "2026-07-25T15:44:44.392Z"
     },
     {
       "id": "upgrade-fleeting-boots",
@@ -4820,7 +4820,7 @@
       "sourceSha1": "73c16584f05750faaafece68d34e5d18963ffb0b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:32.748Z"
+      "verifiedAt": "2026-07-25T15:44:44.667Z"
     },
     {
       "id": "upgrade-laceration-boots",
@@ -4839,7 +4839,7 @@
       "sourceSha1": "35d08fff339c0b41646a9b49870b9c8355d0c405",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:33.039Z"
+      "verifiedAt": "2026-07-25T15:44:44.938Z"
     },
     {
       "id": "upgrade-blast-diffusion-boots",
@@ -4858,7 +4858,7 @@
       "sourceSha1": "55c314a99da42fc45aade0a0f48a6851c101cb4e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:33.329Z"
+      "verifiedAt": "2026-07-25T15:44:45.211Z"
     },
     {
       "id": "upgrade-royal-crossbow",
@@ -4877,7 +4877,7 @@
       "sourceSha1": "274a325b15e95747a84aa570ed01e83aa0e174ac",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:33.769Z"
+      "verifiedAt": "2026-07-25T15:44:45.584Z"
     },
     {
       "id": "upgrade-seismic-wand",
@@ -4896,7 +4896,7 @@
       "sourceSha1": "ebd9fb5cab63ade72664c91b5945c37f508bc738",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:34.207Z"
+      "verifiedAt": "2026-07-25T15:44:45.855Z"
     },
     {
       "id": "upgrade-seismic-singularity",
@@ -4915,7 +4915,7 @@
       "sourceSha1": "8a6d6bfad5009f5e6ea22d383231777a640ea8d0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:34.502Z"
+      "verifiedAt": "2026-07-25T15:44:46.120Z"
     },
     {
       "id": "upgrade-dark-shard-of-leng",
@@ -4934,7 +4934,7 @@
       "sourceSha1": "be87d44b86173d0c7d17733df8390e4475423a2f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:34.941Z"
+      "verifiedAt": "2026-07-25T15:44:46.391Z"
     },
     {
       "id": "upgrade-dark-sliver-of-leng",
@@ -4953,7 +4953,7 @@
       "sourceSha1": "aa7763cb57ce8bd4e8443566acd051d3297ee2ad",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:35.375Z"
+      "verifiedAt": "2026-07-25T15:44:46.667Z"
     },
     {
       "id": "upgrade-ek-zekkil",
@@ -4972,7 +4972,7 @@
       "sourceSha1": "012ae60a886b83600f8838d37bc2b4bdac403d70",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:35.663Z"
+      "verifiedAt": "2026-07-25T15:44:46.933Z"
     },
     {
       "id": "upgrade-cryptbloom-top",
@@ -4991,7 +4991,7 @@
       "sourceSha1": "5fee4676bc797fd19146eb6334ea0a2e603e42e7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:36.112Z"
+      "verifiedAt": "2026-07-25T15:44:47.211Z"
     },
     {
       "id": "upgrade-memory-dowser",
@@ -5010,7 +5010,7 @@
       "sourceSha1": "944d2f08e27e23cf2e1080c818a688dee6a0dd8f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:36.400Z"
+      "verifiedAt": "2026-07-25T15:44:47.480Z"
     },
     {
       "id": "upgrade-runic-attuner",
@@ -5029,7 +5029,7 @@
       "sourceSha1": "935c82daf08e499a200e4ba53552e6da22f4d88a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:36.702Z"
+      "verifiedAt": "2026-07-25T15:44:47.749Z"
     },
     {
       "id": "ability-balanced-strike",
@@ -5048,7 +5048,7 @@
       "sourceSha1": "f9651041dc5726898b97ac20308c63642318af37",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:37.321Z"
+      "verifiedAt": "2026-07-25T15:44:48.173Z"
     },
     {
       "id": "ability-natural-instinct",
@@ -5067,7 +5067,7 @@
       "sourceSha1": "0efa68b01e1353ca4aaea89b3e596a2f43200d5f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:37.944Z"
+      "verifiedAt": "2026-07-25T15:44:48.601Z"
     },
     {
       "id": "ability-guthixs-blessing",
@@ -5086,7 +5086,7 @@
       "sourceSha1": "909a4601dc538252d7a1133723750bf34839c67b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:38.575Z"
+      "verifiedAt": "2026-07-25T15:44:49.027Z"
     },
     {
       "id": "ability-sacrifice",
@@ -5105,7 +5105,7 @@
       "sourceSha1": "684741ac73bc256c7698a8de6eef84a9345a88b8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:39.205Z"
+      "verifiedAt": "2026-07-25T15:44:49.460Z"
     },
     {
       "id": "ability-transfigure",
@@ -5124,7 +5124,7 @@
       "sourceSha1": "10095c413fda8a769b02832e7ad63619678197aa",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:39.832Z"
+      "verifiedAt": "2026-07-25T15:44:49.893Z"
     },
     {
       "id": "ability-smoke-tendrils",
@@ -5143,7 +5143,7 @@
       "sourceSha1": "082f1a94fd0905f18b1f50f654c81ee3eacf0189",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:40.312Z"
+      "verifiedAt": "2026-07-25T15:44:50.322Z"
     },
     {
       "id": "ability-ice-asylum",
@@ -5162,7 +5162,7 @@
       "sourceSha1": "34126b80e190571da9b76c0a4bbcd5d3bfd8f8e0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:40.936Z"
+      "verifiedAt": "2026-07-25T15:44:50.740Z"
     },
     {
       "id": "ability-slayers-insight",
@@ -5181,7 +5181,7 @@
       "sourceSha1": "5cacdeee366204dc528e030cef0e0929a585270f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:41.423Z"
+      "verifiedAt": "2026-07-25T15:44:51.166Z"
     },
     {
       "id": "ability-kuradals-favour",
@@ -5200,7 +5200,7 @@
       "sourceSha1": "cfa38c3d6ead4ded89dc389b39ea392eea70865e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:42.056Z"
+      "verifiedAt": "2026-07-25T15:44:51.595Z"
     },
     {
       "id": "ability-aggression",
@@ -5219,7 +5219,7 @@
       "sourceSha1": "c08274e2bd7053040bc39672a4201df583f0f0d9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:42.541Z"
+      "verifiedAt": "2026-07-25T15:44:52.021Z"
     },
     {
       "id": "ability-corruption-shot",
@@ -5238,7 +5238,7 @@
       "sourceSha1": "9c3725cc5877944644e13a6e9fb68dcad83f7cbf",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:43.182Z"
+      "verifiedAt": "2026-07-25T15:44:52.444Z"
     },
     {
       "id": "ability-corruption-blast",
@@ -5257,7 +5257,7 @@
       "sourceSha1": "17adb48384a62ef826e166f6b900797313739e22",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:43.819Z"
+      "verifiedAt": "2026-07-25T15:44:52.871Z"
     },
     {
       "id": "ability-storm-shards",
@@ -5276,7 +5276,7 @@
       "sourceSha1": "5048bce0e47c15e62597acf11ec8feb2feb4d377",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:44.441Z"
+      "verifiedAt": "2026-07-25T15:44:53.306Z"
     },
     {
       "id": "ability-shatter",
@@ -5295,7 +5295,7 @@
       "sourceSha1": "0deb0a89fc86938bcf76d290d2ec12d8bea5cb86",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:45.065Z"
+      "verifiedAt": "2026-07-25T15:44:53.736Z"
     },
     {
       "id": "ability-onslaught",
@@ -5314,7 +5314,7 @@
       "sourceSha1": "cd2c69664fe69dc2138d7cc15079acf760af0708",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:45.686Z"
+      "verifiedAt": "2026-07-25T15:44:54.159Z"
     },
     {
       "id": "ability-tuskas-wrath",
@@ -5333,7 +5333,7 @@
       "sourceSha1": "342328c7995c9cf60810c5162946d1f81f255cb6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:46.313Z"
+      "verifiedAt": "2026-07-25T15:44:54.586Z"
     },
     {
       "id": "ability-conjure-skeleton-warrior",
@@ -5352,7 +5352,7 @@
       "sourceSha1": "d598daa52cab8ae4c13732fa15c3c0fdc5eb22ed",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:46.939Z"
+      "verifiedAt": "2026-07-25T15:44:55.018Z"
     },
     {
       "id": "ability-command-skeleton-warrior",
@@ -5371,7 +5371,7 @@
       "sourceSha1": "e5435aad1c91eee33c6941ccf3cab9913b57cc36",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:47.566Z"
+      "verifiedAt": "2026-07-25T15:44:55.452Z"
     },
     {
       "id": "ability-conjure-vengeful-ghost",
@@ -5390,7 +5390,7 @@
       "sourceSha1": "7defcdd5119f607f1522717e1b65e2c315b4f1a3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:48.199Z"
+      "verifiedAt": "2026-07-25T15:44:55.898Z"
     },
     {
       "id": "ability-threads-of-fate",
@@ -5409,7 +5409,7 @@
       "sourceSha1": "106adad2e62816c226e6639d4c920846ff4299bb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:48.986Z"
+      "verifiedAt": "2026-07-25T15:44:56.475Z"
     },
     {
       "id": "ability-conjure-putrid-zombie",
@@ -5428,7 +5428,7 @@
       "sourceSha1": "97e8c5e2b3481f20443ba763d9d39a941097e8e1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:49.618Z"
+      "verifiedAt": "2026-07-25T15:44:56.898Z"
     },
     {
       "id": "ability-command-vengeful-ghost",
@@ -5447,7 +5447,7 @@
       "sourceSha1": "2e2fb8c2753d436d85b72d6c70c5ecae2a1ec03f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:50.240Z"
+      "verifiedAt": "2026-07-25T15:44:57.326Z"
     },
     {
       "id": "ability-spectral-scythe",
@@ -5466,7 +5466,7 @@
       "sourceSha1": "867b0df75f79f65e59501866eaa6b003332d4d57",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:50.874Z"
+      "verifiedAt": "2026-07-25T15:44:57.762Z"
     },
     {
       "id": "ability-command-putrid-zombie",
@@ -5485,7 +5485,7 @@
       "sourceSha1": "06867f3675d214016a5857ddde311dc3d0bfb4e4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:51.512Z"
+      "verifiedAt": "2026-07-25T15:44:58.193Z"
     },
     {
       "id": "ability-greater-bone-shield",
@@ -5504,7 +5504,7 @@
       "sourceSha1": "1fb616502f505199d1c19a0ef811614b3e460de4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:52.315Z"
+      "verifiedAt": "2026-07-25T15:44:58.866Z"
     },
     {
       "id": "ability-conjure-phantom-guardian",
@@ -5523,7 +5523,7 @@
       "sourceSha1": "2ad8ab0e7a0673649c8a7c2ab46f2b5487b953e9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:52.950Z"
+      "verifiedAt": "2026-07-25T15:44:59.308Z"
     },
     {
       "id": "ability-life-transfer",
@@ -5542,7 +5542,7 @@
       "sourceSha1": "d832c79427374bdbc5d84eb7fdfe88618c5da6da",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:53.756Z"
+      "verifiedAt": "2026-07-25T15:44:59.883Z"
     },
     {
       "id": "ability-darkness",
@@ -5561,7 +5561,7 @@
       "sourceSha1": "a43a1b6da073f5100f932e1dd248adaec727f13b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:54.552Z"
+      "verifiedAt": "2026-07-25T15:45:00.476Z"
     },
     {
       "id": "ability-command-phantom-guardian",
@@ -5580,7 +5580,7 @@
       "sourceSha1": "a940a5fc287cf39a514bd752918d81e6191be56a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:55.185Z"
+      "verifiedAt": "2026-07-25T15:45:00.919Z"
     },
     {
       "id": "ability-invoke-death",
@@ -5599,7 +5599,7 @@
       "sourceSha1": "5c5c0952ccd7e4519350be65e1e4a791e22949b0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:55.988Z"
+      "verifiedAt": "2026-07-25T15:45:01.504Z"
     },
     {
       "id": "ability-conjure-undead-army",
@@ -5618,7 +5618,7 @@
       "sourceSha1": "a91ca22d4af49b2d0952cc68b3c7a1e0f97bafd2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:56.610Z"
+      "verifiedAt": "2026-07-25T15:45:01.948Z"
     },
     {
       "id": "upgrade-codex-corruption-shot",
@@ -5637,7 +5637,7 @@
       "sourceSha1": "a29c352248198d1ca26b45f63345aca13d7be0a9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:57.041Z"
+      "verifiedAt": "2026-07-25T15:45:02.221Z"
     },
     {
       "id": "upgrade-codex-corruption-blast",
@@ -5656,7 +5656,7 @@
       "sourceSha1": "a29c352248198d1ca26b45f63345aca13d7be0a9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:57.480Z"
+      "verifiedAt": "2026-07-25T15:45:02.493Z"
     },
     {
       "id": "upgrade-codex-storm-shards-shatter",
@@ -5675,7 +5675,7 @@
       "sourceSha1": "e729a92a74a3d225babfd0a1294d49f9b907f5cb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:58.135Z"
+      "verifiedAt": "2026-07-25T15:45:03.068Z"
     },
     {
       "id": "upgrade-codex-onslaught",
@@ -5694,7 +5694,7 @@
       "sourceSha1": "a29c352248198d1ca26b45f63345aca13d7be0a9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:58.954Z"
+      "verifiedAt": "2026-07-25T15:45:03.657Z"
     },
     {
       "id": "upgrade-codex-tuskas-wrath",
@@ -5713,7 +5713,7 @@
       "sourceSha1": "ec995d52ec7a7fce6ea3afa57f06240de367b807",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:59.246Z"
+      "verifiedAt": "2026-07-25T15:45:03.923Z"
     },
     {
       "id": "upgrade-codex-ultimatus",
@@ -5732,7 +5732,7 @@
       "sourceSha1": "fdad110cca027d305fdac3fa4ae7dd6bfb22efbd",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:41:59.679Z"
+      "verifiedAt": "2026-07-25T15:45:04.191Z"
     },
     {
       "id": "boss-general-graardor",
@@ -5751,7 +5751,7 @@
       "sourceSha1": "602f9ad6284d01b010b272eeb77fc67df326146b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:00.118Z"
+      "verifiedAt": "2026-07-25T15:45:04.574Z"
     },
     {
       "id": "boss-kreearra",
@@ -5770,7 +5770,7 @@
       "sourceSha1": "6f1cc9e801a16100ad15c944522428e4a87e2139",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:00.563Z"
+      "verifiedAt": "2026-07-25T15:45:04.970Z"
     },
     {
       "id": "boss-commander-zilyana",
@@ -5789,7 +5789,7 @@
       "sourceSha1": "51c604f4ff23c28d08a74f93b1afd43e99f2efb9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:00.997Z"
+      "verifiedAt": "2026-07-25T15:45:05.359Z"
     },
     {
       "id": "boss-kril-tsutsaroth",
@@ -5808,7 +5808,7 @@
       "sourceSha1": "631ee0fabdbc1baf449b4b80cde0d8fabb86e873",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:01.439Z"
+      "verifiedAt": "2026-07-25T15:45:05.745Z"
     },
     {
       "id": "boss-giant-mole",
@@ -5827,7 +5827,7 @@
       "sourceSha1": "ef8c8a6fcee0f5a2f409dc4c4b912c4337073245",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:02.074Z"
+      "verifiedAt": "2026-07-25T15:45:06.284Z"
     },
     {
       "id": "boss-dagannoth-kings",
@@ -5846,7 +5846,7 @@
       "sourceSha1": "1823bdd2c9cf25769362943db7855d31908bf48e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:02.710Z"
+      "verifiedAt": "2026-07-25T15:45:06.860Z"
     },
     {
       "id": "boss-corporeal-beast",
@@ -5865,7 +5865,7 @@
       "sourceSha1": "7db6d2fe6591175111bbc9d10dcdb47e4d58322d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:03.363Z"
+      "verifiedAt": "2026-07-25T15:45:07.389Z"
     },
     {
       "id": "boss-chaos-elemental",
@@ -5884,7 +5884,7 @@
       "sourceSha1": "76947fd143dabd3f59b9d7959c5cc5def197fd53",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:04.024Z"
+      "verifiedAt": "2026-07-25T15:45:07.981Z"
     },
     {
       "id": "boss-astellarn",
@@ -5903,7 +5903,7 @@
       "sourceSha1": "e525924f667be6bdb20a62822304821ab9260f39",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:04.855Z"
+      "verifiedAt": "2026-07-25T15:45:08.562Z"
     },
     {
       "id": "boss-verak-lith",
@@ -5922,7 +5922,7 @@
       "sourceSha1": "29f2ae5a39ede23843d3a79cd4badc2065af7665",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:05.682Z"
+      "verifiedAt": "2026-07-25T15:45:09.133Z"
     },
     {
       "id": "boss-crassian-leviathan",
@@ -5941,7 +5941,7 @@
       "sourceSha1": "a8dc5179e0d933c62ac65085de2d4e105c90a1f4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:06.515Z"
+      "verifiedAt": "2026-07-25T15:45:09.728Z"
     },
     {
       "id": "boss-taraket",
@@ -5960,7 +5960,7 @@
       "sourceSha1": "734f9d71b8e484cdfabd663e2bd2700af2a41256",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:07.323Z"
+      "verifiedAt": "2026-07-25T15:45:10.317Z"
     },
     {
       "id": "boss-abomination",
@@ -5979,7 +5979,7 @@
       "sourceSha1": "274f274665ac59e6e3d2a193cb1ee43ab6b73d7d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:08.003Z"
+      "verifiedAt": "2026-07-25T15:45:10.895Z"
     },
     {
       "id": "boss-helwyr",
@@ -5998,7 +5998,7 @@
       "sourceSha1": "0490b1cfb0bf9e1b13f39ee2f443d26aceef7245",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:08.626Z"
+      "verifiedAt": "2026-07-25T15:45:11.425Z"
     },
     {
       "id": "boss-vindicta-gorvek",
@@ -6017,7 +6017,7 @@
       "sourceSha1": "4102d0381b0c205792854e5a21a2bd7e6f64c1d8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:09.252Z"
+      "verifiedAt": "2026-07-25T15:45:11.964Z"
     },
     {
       "id": "boss-twin-furies",
@@ -6036,7 +6036,7 @@
       "sourceSha1": "d6b8b61acc46439641be7841ee477c661dd62806",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:09.898Z"
+      "verifiedAt": "2026-07-25T15:45:12.508Z"
     },
     {
       "id": "boss-gregorovic",
@@ -6055,7 +6055,7 @@
       "sourceSha1": "65461c314216cc1acd23a756d04fbe01c3a23117",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:10.531Z"
+      "verifiedAt": "2026-07-25T15:45:13.061Z"
     },
     {
       "id": "boss-tztok-jad",
@@ -6074,7 +6074,7 @@
       "sourceSha1": "b437b46879441a34115f6ca7286468b49696cba0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:11.166Z"
+      "verifiedAt": "2026-07-25T15:45:13.606Z"
     },
     {
       "id": "boss-har-aken",
@@ -6093,7 +6093,7 @@
       "sourceSha1": "1e5b7913926cb35ec53e5073141ef46dda300417",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:11.798Z"
+      "verifiedAt": "2026-07-25T15:45:14.352Z"
     },
     {
       "id": "activity-tzhaar-fight-cave",
@@ -6112,7 +6112,7 @@
       "sourceSha1": "e787227519f76af6e98b3025895e7295a7a572b9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:12.447Z"
+      "verifiedAt": "2026-07-25T15:45:14.787Z"
     },
     {
       "id": "activity-fight-kiln",
@@ -6131,26 +6131,26 @@
       "sourceSha1": "1686117d159d28f8f9e890bd6f8566e56ff44123",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:13.093Z"
+      "verifiedAt": "2026-07-25T15:45:15.329Z"
     },
     {
       "id": "activity-artisans-workshop",
       "label": "Artisans' Workshop",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/artisans-workshop.png",
-      "bytes": 47403,
-      "sha256": "ab17a21693dbbd4effe9a5ec900d7c3aa944b73abad59462c47c312982d0f246",
+      "bytes": 1073701,
+      "sha256": "f93095f5a9763adf50a3028a97273f199f704128e275e6f2f0ef779fa25aa933",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Artisans%27_Workshop",
-      "sourcePage": "https://runescape.wiki/w/File%3AArtisans'_Workshop_furnace_interface.png",
-      "downloadUrl": "https://runescape.wiki/images/Artisans%27_Workshop_furnace_interface.png?711ee",
-      "resolvedTitle": "File:Artisans' Workshop furnace interface.png",
-      "sourceWidth": 504,
-      "sourceHeight": 323,
-      "sourceSha1": "27026130671cb281ec2015b829e3f8ab31749cf0",
+      "sourcePage": "https://runescape.wiki/w/File%3AArtisans'_Workshop_(historical).png",
+      "downloadUrl": "https://runescape.wiki/images/Artisans%27_Workshop_%28historical%29.png?5d101",
+      "resolvedTitle": "File:Artisans' Workshop (historical).png",
+      "sourceWidth": 831,
+      "sourceHeight": 736,
+      "sourceSha1": "5e54a5183424d919fbea3fb51a0e4def92981796",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:13.738Z"
+      "verifiedAt": "2026-07-25T15:45:16.450Z"
     },
     {
       "id": "activity-waterbirth-island",
@@ -6169,7 +6169,7 @@
       "sourceSha1": "91544af1a987f41f582b28dc1c1c48b401ee9da4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:14.474Z"
+      "verifiedAt": "2026-07-25T15:45:17.023Z"
     },
     {
       "id": "activity-wilderness-slayer",
@@ -6188,26 +6188,26 @@
       "sourceSha1": "352b11e9bae11b0bb8b1edb852ce9b0e848b883f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:15.119Z"
+      "verifiedAt": "2026-07-25T15:45:17.643Z"
     },
     {
       "id": "activity-everlight-dig-site",
       "label": "Everlight Dig Site",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/everlight-dig-site.png",
-      "bytes": 375856,
-      "sha256": "092dda0a7a80f35d0de65bb6aaea742c68facaa28938781fb11fac27b6c5668c",
+      "bytes": 1435851,
+      "sha256": "4acca6702d0781a0f8712cfb71564f0e2003871f1ff39e65731d81cd4e1f6752",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Everlight_Dig_Site",
-      "sourcePage": "https://runescape.wiki/w/File%3ARing_(Everlight_Dig_Site).png",
-      "downloadUrl": "https://runescape.wiki/images/Ring_%28Everlight_Dig_Site%29.png?c8459",
-      "resolvedTitle": "File:Ring (Everlight Dig Site).png",
-      "sourceWidth": 2328,
-      "sourceHeight": 1155,
-      "sourceSha1": "59753a8cd58f54b11828ef29f1c7dab0bd32a797",
+      "sourcePage": "https://runescape.wiki/w/File%3AEverlight.png",
+      "downloadUrl": "https://runescape.wiki/images/Everlight.png?1e083",
+      "resolvedTitle": "File:Everlight.png",
+      "sourceWidth": 1872,
+      "sourceHeight": 984,
+      "sourceSha1": "ba5fbd7c19e19ac1c75bc720a4defed41aeea0ed",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:15.753Z"
+      "verifiedAt": "2026-07-25T15:45:18.061Z"
     },
     {
       "id": "activity-slayer-tower",
@@ -6226,26 +6226,26 @@
       "sourceSha1": "735b2879d6878428bc72a91ccabd6665cb33bd83",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:16.409Z"
+      "verifiedAt": "2026-07-25T15:45:18.598Z"
     },
     {
       "id": "activity-barrows",
       "label": "Barrows",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/barrows.png",
-      "bytes": 227321,
-      "sha256": "b3e8ed8ca3efe26749f4d6540b6a0bdd8af0fb284525ecae5c9d2ee91b56f99d",
+      "bytes": 2589069,
+      "sha256": "da857be622a338862242c876e068fb458daeed4d4b3b793aee56ff53f265d0bd",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Barrows",
-      "sourcePage": "https://runescape.wiki/w/File%3ATectonic_robe_armour_(Barrows)_equipped_(female).png",
-      "downloadUrl": "https://runescape.wiki/images/Tectonic_robe_armour_%28Barrows%29_equipped_%28female%29.png?e9e38",
-      "resolvedTitle": "File:Tectonic robe armour (Barrows) equipped (female).png",
-      "sourceWidth": 377,
-      "sourceHeight": 969,
-      "sourceSha1": "f3821d4395ba9d7a078d5c377d3f36f9286bef95",
+      "sourcePage": "https://runescape.wiki/w/File%3ABarrows_Scenery.png",
+      "downloadUrl": "https://runescape.wiki/images/Barrows_Scenery.png?52326",
+      "resolvedTitle": "File:Barrows Scenery.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "d37187bde2c5e01ad547b473d1eb416eab8e4d24",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:17.037Z"
+      "verifiedAt": "2026-07-25T15:45:19.026Z"
     },
     {
       "id": "activity-rise-of-the-six",
@@ -6264,7 +6264,7 @@
       "sourceSha1": "135a4b796eff5d8d2c57f031019a5397e4089dff",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:17.691Z"
+      "verifiedAt": "2026-07-25T15:45:19.622Z"
     },
     {
       "id": "activity-lost-grove",
@@ -6283,7 +6283,7 @@
       "sourceSha1": "80d4d8f36a5026cc5e83fbebb26637284475532a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:18.341Z"
+      "verifiedAt": "2026-07-25T15:45:20.192Z"
     },
     {
       "id": "activity-time-altar",
@@ -6302,7 +6302,7 @@
       "sourceSha1": "610281ad6f49d9647f2ed7d2ef23dfa2bcba8468",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:18.988Z"
+      "verifiedAt": "2026-07-25T15:45:20.746Z"
     },
     {
       "id": "activity-shattered-worlds",
@@ -6321,7 +6321,7 @@
       "sourceSha1": "c051b2eba32087d2866a9b913a6b1aafe5a860c5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:19.627Z"
+      "verifiedAt": "2026-07-25T15:45:21.308Z"
     },
     {
       "id": "activity-well-of-souls",
@@ -6340,45 +6340,45 @@
       "sourceSha1": "4ee28d4ef0e9f392b59d51308d74d4760e222da6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:20.317Z"
+      "verifiedAt": "2026-07-25T15:45:21.866Z"
     },
     {
       "id": "activity-livid-farm",
       "label": "Livid Farm",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/livid-farm.png",
-      "bytes": 33189,
-      "sha256": "6eb8afe4cc5899a18ee97ed4ec5d07c84c6051f88e40cb58e9a280e093fffaa8",
+      "bytes": 2424685,
+      "sha256": "5a46e1eed30439a91045230de9bbdcc773e37bc9eebff664348643ced14550e4",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Livid_Farm",
-      "sourcePage": "https://runescape.wiki/w/File%3ALivid_Farm_reward.png",
-      "downloadUrl": "https://runescape.wiki/images/Livid_Farm_reward.png?942f1",
-      "resolvedTitle": "File:Livid Farm reward.png",
-      "sourceWidth": 506,
-      "sourceHeight": 330,
-      "sourceSha1": "df1930163808d7cd406c9a4cbb03936e43bf23a6",
+      "sourcePage": "https://runescape.wiki/w/File%3ALivid_Farm.png",
+      "downloadUrl": "https://runescape.wiki/images/Livid_Farm.png?4ea4e",
+      "resolvedTitle": "File:Livid Farm.png",
+      "sourceWidth": 2560,
+      "sourceHeight": 1440,
+      "sourceSha1": "cc4900156b7b07472c8ecf23502d94c5f12863da",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:20.940Z"
+      "verifiedAt": "2026-07-25T15:45:22.342Z"
     },
     {
       "id": "activity-lunar-isle",
       "label": "Lunar Isle",
       "category": "rs3/activities",
       "path": "assets/rs3/activities/lunar-isle.png",
-      "bytes": 111682,
-      "sha256": "988c4b5ae90d2d389dced052b327e5163a2626edf820809cd6e09e6da41f55a4",
+      "bytes": 6207867,
+      "sha256": "699fc819a01a4cfc7c387e86b326875f11ce66e0cb47c7cbbbfeecd851b37281",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Lunar_Isle",
-      "sourcePage": "https://runescape.wiki/w/File%3ABookcase_(Lunar_Isle).png",
-      "downloadUrl": "https://runescape.wiki/images/Bookcase_%28Lunar_Isle%29.png?2e398",
-      "resolvedTitle": "File:Bookcase (Lunar Isle).png",
-      "sourceWidth": 279,
-      "sourceHeight": 415,
-      "sourceSha1": "b4c918495bcc6c05ff2cfed14a5f444908e4de13",
+      "sourcePage": "https://runescape.wiki/w/File%3ALunar_Isle.png",
+      "downloadUrl": "https://runescape.wiki/images/Lunar_Isle.png?8c40d",
+      "resolvedTitle": "File:Lunar Isle.png",
+      "sourceWidth": 2560,
+      "sourceHeight": 1440,
+      "sourceSha1": "1d4941db0b8f1e6313094096eb89239fd1308712",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:21.576Z"
+      "verifiedAt": "2026-07-25T15:45:23.081Z"
     },
     {
       "id": "upgrade-kerapacs-wrist-wraps",
@@ -6397,7 +6397,7 @@
       "sourceSha1": "8d96ef43585af9010e212c2acbd53e95bb68a88e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:22.024Z"
+      "verifiedAt": "2026-07-25T15:45:23.351Z"
     },
     {
       "id": "upgrade-frozen-core-of-leng",
@@ -6416,7 +6416,7 @@
       "sourceSha1": "acc041fa1e8fd00fd26312ee0877da5715b0754f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:22.461Z"
+      "verifiedAt": "2026-07-25T15:45:23.724Z"
     },
     {
       "id": "upgrade-dark-nilas",
@@ -6435,7 +6435,7 @@
       "sourceSha1": "8bab9ee421f003ce96716b6247fabad6f45b89e4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:22.898Z"
+      "verifiedAt": "2026-07-25T15:45:24.101Z"
     },
     {
       "id": "upgrade-leng-artefact",
@@ -6454,7 +6454,7 @@
       "sourceSha1": "59351a537ebe7a6a324f3a31089d7aa249fe2648",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:23.340Z"
+      "verifiedAt": "2026-07-25T15:45:24.474Z"
     },
     {
       "id": "upgrade-croesus-foultorch",
@@ -6473,7 +6473,7 @@
       "sourceSha1": "af9801b49b6b8e8f5b24bd7b7c67c792c0bba16d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:23.774Z"
+      "verifiedAt": "2026-07-25T15:45:24.747Z"
     },
     {
       "id": "upgrade-croesus-sporehammer",
@@ -6492,7 +6492,7 @@
       "sourceSha1": "a734ae406bb9e6d866def810e37b42ef6f1af2d1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:24.222Z"
+      "verifiedAt": "2026-07-25T15:45:25.120Z"
     },
     {
       "id": "upgrade-igneous-kal-zuk",
@@ -6511,7 +6511,7 @@
       "sourceSha1": "d0f0de0341b4a5bf67df4b41b5a1a65ca06c2610",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:24.663Z"
+      "verifiedAt": "2026-07-25T15:45:25.395Z"
     },
     {
       "id": "upgrade-first-necromancer-robe-top",
@@ -6530,7 +6530,7 @@
       "sourceSha1": "188c0556014be3fcd5d10185e38aca5c76b17af3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:25.102Z"
+      "verifiedAt": "2026-07-25T15:45:25.774Z"
     },
     {
       "id": "upgrade-scripture-of-elidinis",
@@ -6549,7 +6549,7 @@
       "sourceSha1": "2e9c37ecb6b01b9ca8a05bdb212e546666bab50b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:25.399Z"
+      "verifiedAt": "2026-07-25T15:45:26.043Z"
     },
     {
       "id": "upgrade-scripture-of-amascut",
@@ -6568,7 +6568,7 @@
       "sourceSha1": "b8210cf447efcf62cc7275a858f7a1afaca572c9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:25.832Z"
+      "verifiedAt": "2026-07-25T15:45:26.423Z"
     },
     {
       "id": "upgrade-dracolich-hauberk",
@@ -6587,7 +6587,7 @@
       "sourceSha1": "f35714bd35399de2e6e9d15f580cdb464be8300b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:26.275Z"
+      "verifiedAt": "2026-07-25T15:45:26.693Z"
     },
     {
       "id": "upgrade-apex-hide-body",
@@ -6606,7 +6606,7 @@
       "sourceSha1": "559107d0264a7004e2c30a91ff02d5db4a126754",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:26.725Z"
+      "verifiedAt": "2026-07-25T15:45:27.068Z"
     },
     {
       "id": "upgrade-masterwork-ranged-body",
@@ -6625,7 +6625,7 @@
       "sourceSha1": "5ff839d5728505a6eb6e47717a0a775b0095d53b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:27.175Z"
+      "verifiedAt": "2026-07-25T15:45:27.438Z"
     },
     {
       "id": "upgrade-fire-cape",
@@ -6644,7 +6644,7 @@
       "sourceSha1": "a1f876fc540c9d814c4f15e460c852ddcaa40962",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:27.619Z"
+      "verifiedAt": "2026-07-25T15:45:27.712Z"
     },
     {
       "id": "upgrade-tokhaar-kal-ket",
@@ -6663,7 +6663,7 @@
       "sourceSha1": "bb43ebf128470c871ca09cfc6c20f006816458eb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:28.057Z"
+      "verifiedAt": "2026-07-25T15:45:28.083Z"
     },
     {
       "id": "upgrade-tectonic-energy",
@@ -6682,7 +6682,7 @@
       "sourceSha1": "ac4d14325520ecdf753510a911bee2dd09984657",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:28.490Z"
+      "verifiedAt": "2026-07-25T15:45:28.452Z"
     },
     {
       "id": "upgrade-praesul-codex",
@@ -6701,7 +6701,7 @@
       "sourceSha1": "3ce65101be8a0826913c1c099578ab9ccdad24f3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:28.917Z"
+      "verifiedAt": "2026-07-25T15:45:28.724Z"
     },
     {
       "id": "upgrade-berserker-ring",
@@ -6720,7 +6720,7 @@
       "sourceSha1": "a81c7faf7eece80bbddf538d78a024c6698b1512",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:29.205Z"
+      "verifiedAt": "2026-07-25T15:45:28.995Z"
     },
     {
       "id": "upgrade-dragon-hatchet",
@@ -6739,7 +6739,7 @@
       "sourceSha1": "c6b7b246fc5420212f8de22850d69c0b43536915",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:29.653Z"
+      "verifiedAt": "2026-07-25T15:45:29.265Z"
     },
     {
       "id": "upgrade-chaotic-rapier",
@@ -6758,7 +6758,7 @@
       "sourceSha1": "948326ba1fc746efc88008f4b78a55ff09b60af0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:29.946Z"
+      "verifiedAt": "2026-07-25T15:45:29.538Z"
     },
     {
       "id": "upgrade-chaotic-kiteshield",
@@ -6777,7 +6777,7 @@
       "sourceSha1": "d918836715a3865b531daff0f4e1c16aa3315bfd",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:30.380Z"
+      "verifiedAt": "2026-07-25T15:45:29.912Z"
     },
     {
       "id": "upgrade-draconic-energy",
@@ -6796,7 +6796,7 @@
       "sourceSha1": "ac114af41432d970bf1670e996b9350bd73b581d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:30.671Z"
+      "verifiedAt": "2026-07-25T15:45:30.178Z"
     },
     {
       "id": "upgrade-dragon-rider-lance",
@@ -6815,7 +6815,7 @@
       "sourceSha1": "198d7dac91691c5a3d23e4fb07d2731ff0b46e4f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:31.105Z"
+      "verifiedAt": "2026-07-25T15:45:30.562Z"
     },
     {
       "id": "upgrade-wand-of-the-cywir-elders",
@@ -6834,7 +6834,7 @@
       "sourceSha1": "7018672c3ec411545690a002aa737730f9c3c670",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:31.537Z"
+      "verifiedAt": "2026-07-25T15:45:30.831Z"
     },
     {
       "id": "upgrade-shadow-glaive",
@@ -6853,7 +6853,7 @@
       "sourceSha1": "9e90052294b7d08ae080806663da57f05a2ab82f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:31.821Z"
+      "verifiedAt": "2026-07-25T15:45:31.097Z"
     },
     {
       "id": "upgrade-powder-of-burials",
@@ -6872,7 +6872,7 @@
       "sourceSha1": "5c3bd1b3ea86c2eeae610937cbee939b8daed568",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:32.110Z"
+      "verifiedAt": "2026-07-25T15:45:31.463Z"
     },
     {
       "id": "upgrade-tumekens-resplendence-robe-top",
@@ -6891,7 +6891,7 @@
       "sourceSha1": "9aa87d2f70e9f10e88448aa438e8dc6053cf211e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:32.558Z"
+      "verifiedAt": "2026-07-25T15:45:31.738Z"
     },
     {
       "id": "upgrade-noxious-scythe",
@@ -6910,7 +6910,7 @@
       "sourceSha1": "c3586f384f498a98d2eedea9931198c47ec78191",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:32.848Z"
+      "verifiedAt": "2026-07-25T15:45:32.013Z"
     },
     {
       "id": "upgrade-malevolent-cuirass",
@@ -6929,7 +6929,7 @@
       "sourceSha1": "28e3438ad2e7c24fd5222936002c6f286e5e433b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:33.280Z"
+      "verifiedAt": "2026-07-25T15:45:32.386Z"
     },
     {
       "id": "upgrade-sunspear-melee",
@@ -6948,7 +6948,7 @@
       "sourceSha1": "78a661c09e36e4fa27248138b1ae148bd81ff10c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:33.724Z"
+      "verifiedAt": "2026-07-25T15:45:32.659Z"
     },
     {
       "id": "upgrade-crystal-mattock",
@@ -6967,7 +6967,7 @@
       "sourceSha1": "8885b3ba975b17493ca262cf1ad56b52b3deeb86",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:34.179Z"
+      "verifiedAt": "2026-07-25T15:45:32.929Z"
     },
     {
       "id": "upgrade-blightbound-crossbow",
@@ -6986,7 +6986,7 @@
       "sourceSha1": "d473cc1b2188856f624cd5364436ad0b88cd4c76",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:34.621Z"
+      "verifiedAt": "2026-07-25T15:45:33.200Z"
     },
     {
       "id": "upgrade-offhand-blightbound-crossbow",
@@ -7005,7 +7005,7 @@
       "sourceSha1": "8bd2767c7008c4d1c438c0979f4bc27531069528",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:35.070Z"
+      "verifiedAt": "2026-07-25T15:45:33.480Z"
     },
     {
       "id": "upgrade-erethdors-grimoire",
@@ -7024,7 +7024,7 @@
       "sourceSha1": "a62965d244eb4a3fc72ad7b895c0e3534d64f1ce",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:35.507Z"
+      "verifiedAt": "2026-07-25T15:45:33.749Z"
     },
     {
       "id": "upgrade-shadow-spike",
@@ -7043,7 +7043,7 @@
       "sourceSha1": "5e36ecd4d2a8e6c7d9eb31ec878424e9fe1681d2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:35.796Z"
+      "verifiedAt": "2026-07-25T15:45:34.130Z"
     },
     {
       "id": "upgrade-ancient-elven-ritual-shard",
@@ -7062,7 +7062,7 @@
       "sourceSha1": "a67b8eae879e1ee7815dede069137dc589b1df8a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:36.241Z"
+      "verifiedAt": "2026-07-25T15:45:34.400Z"
     },
     {
       "id": "upgrade-ring-of-vigour",
@@ -7081,7 +7081,7 @@
       "sourceSha1": "1ea2128406151d7d97dc99515af3d446f643d900",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:36.682Z"
+      "verifiedAt": "2026-07-25T15:45:34.673Z"
     },
     {
       "id": "upgrade-warped-gem",
@@ -7100,7 +7100,7 @@
       "sourceSha1": "495e1f5342f29f5a9e63ba1b6d195587d15cbbfc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:37.118Z"
+      "verifiedAt": "2026-07-25T15:45:35.052Z"
     },
     {
       "id": "upgrade-spirit-cape",
@@ -7119,7 +7119,7 @@
       "sourceSha1": "090f95f38840bff65d51109915ef026370ec60d1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:37.557Z"
+      "verifiedAt": "2026-07-25T15:45:35.423Z"
     },
     {
       "id": "upgrade-totem-of-vitality",
@@ -7138,7 +7138,7 @@
       "sourceSha1": "a079c1ad0331e9976b5f57a504d6a8ba1a296cd8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:37.995Z"
+      "verifiedAt": "2026-07-25T15:45:35.799Z"
     },
     {
       "id": "upgrade-infernal-puzzle-box",
@@ -7157,7 +7157,7 @@
       "sourceSha1": "5ae9cd09272fade69402e830a3926eebcba09d0c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:38.445Z"
+      "verifiedAt": "2026-07-25T15:45:36.062Z"
     },
     {
       "id": "upgrade-guthix-staff",
@@ -7176,15 +7176,15 @@
       "sourceSha1": "d9d5594cdee8a699d75962a5d99b9ce64074a7da",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:38.883Z"
+      "verifiedAt": "2026-07-25T15:45:36.332Z"
     },
     {
       "id": "spell-divine-storm",
       "label": "Divine Storm",
       "category": "rs3/combat/spells",
       "path": "assets/rs3/combat/spells/divine-storm.png",
-      "bytes": 15878,
-      "sha256": "27d76064fae00cf09498583f5d4996cb42ec202f2b8e3f8cf34d7443df2c66fd",
+      "bytes": 10330,
+      "sha256": "abd8408888963c34ea5155d3c35f69fd2265246c598e8ed648cebffa06440e25",
       "mime": "image/png",
       "canonicalPage": "https://runescape.wiki/w/Divine_Storm",
       "sourcePage": "https://runescape.wiki/w/File%3ADivine_Storm_icon.png",
@@ -7195,7 +7195,7 @@
       "sourceSha1": "5736b83f29fe1bd1ca92348d63232c5e62864f73",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:39.643Z"
+      "verifiedAt": "2026-07-25T15:45:36.866Z"
     },
     {
       "id": "upgrade-dreadnip",
@@ -7214,7 +7214,7 @@
       "sourceSha1": "26fc37e5e3cbde82b405b32990257ef9b6acdb0f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:40.083Z"
+      "verifiedAt": "2026-07-25T15:45:37.134Z"
     },
     {
       "id": "activity-mage-arena",
@@ -7233,7 +7233,7 @@
       "sourceSha1": "f3b25dad3b44da322712cbe4aec8239f221e4475",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:40.803Z"
+      "verifiedAt": "2026-07-25T15:45:37.769Z"
     },
     {
       "id": "activity-dominion-tower",
@@ -7252,7 +7252,7 @@
       "sourceSha1": "b16643f89d3c4ebe2fb76373249f4edb12c86361",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-25T15:42:41.486Z"
+      "verifiedAt": "2026-07-25T15:45:38.384Z"
     }
   ],
   "unresolved": [],

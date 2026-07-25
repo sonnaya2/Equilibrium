@@ -6,6 +6,7 @@ import type {
   ResearchRegion,
   ResearchSkill,
   ResearchTrainingMethod,
+  ResearchUpgrade,
   SourceReference,
 } from "@/research/catalog";
 
@@ -46,7 +47,7 @@ function confidenceLabel(value: string): string {
 
 function freshnessLabel(value: string): string {
   const normalized = value.toLowerCase();
-  if (!normalized) return "—";
+  if (!normalized) return "-";
   if (normalized === "2026_current" || normalized === "current" || normalized === "current_wiki") return "Current";
   if (normalized.includes("2026-07-20")) return "Jul 20, 2026";
   if (normalized.includes("2026_remastered")) return "2026 remaster";
@@ -55,6 +56,25 @@ function freshnessLabel(value: string): string {
   if (normalized.includes("current_content_region_confirmed")) return "Current";
   if (normalized.includes("current_wiki_main_game_ceiling")) return "Current main-game ceiling";
   return value.replaceAll("_", " ");
+}
+
+function regionName(value: string): string {
+  return value
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function upgradeRegionAccess(upgrade: ResearchUpgrade): string {
+  const required = upgrade.requiredRegions ?? [];
+  if (required.length > 1) return `Requires regions: ${required.map(regionName).join(" + ")}`;
+
+  const hints = upgrade.regionHints ?? [];
+  if (hints.length > 1) {
+    const label = upgrade.regionRequirementType === "all_required" ? "Requires regions" : "Region chain";
+    return `${label}: ${hints.map(regionName).join(upgrade.regionRequirementType === "all_required" ? " + " : " / ")}`;
+  }
+
+  return "";
 }
 
 function methodAccess(method: ResearchTrainingMethod): string {
@@ -75,7 +95,7 @@ function methodAccess(method: ResearchTrainingMethod): string {
 }
 
 function SourceLink({ source }: { source: SourceReference | null }) {
-  if (!source?.url) return <span className="text-parch-300">—</span>;
+  if (!source?.url) return <span className="text-parch-300">-</span>;
 
   return (
     <a
@@ -120,7 +140,7 @@ function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
                 {method.note ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300">{cleanText(method.note)}</div> : null}
                 {method.warning ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300/80">{cleanText(method.warning)}</div> : null}
               </td>
-              <td className="py-3 pr-4 text-parch-300">{method.levelRange || "—"}</td>
+              <td className="py-3 pr-4 text-parch-300">{method.levelRange || "-"}</td>
               <td className="max-w-[250px] py-3 pr-4 font-mono text-xs leading-5 text-parch-50">{method.xpRate || "not listed"}</td>
               <td className="max-w-[230px] py-3 pr-4 text-xs leading-5 text-parch-300">
                 {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
@@ -131,7 +151,7 @@ function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
                 {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
                 {method.requirements.length ? <div className="mt-1">{method.requirements.join(" · ")}</div> : null}
                 {method.resourceSource ? <div className="mt-1">Supply: {cleanText(method.resourceSource)}</div> : null}
-                {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "—" : null}
+                {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
               </td>
               <td className="py-3 pr-4 text-xs leading-5 text-parch-300">
                 <div>{freshnessLabel(method.freshness)}</div>
@@ -213,7 +233,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                 <tr key={`${row.name}-${index}`} className="border-b border-stone-750/70 align-top">
                   <td className="py-2.5 pr-4 text-parch-50">{cleanText(row.name)}</td>
                   <td className="py-2.5 pr-4 text-xs text-parch-300">{row.kind}</td>
-                  <td className="max-w-xl py-2.5 pr-4 text-xs leading-5 text-parch-300">{row.detail ? cleanText(row.detail) : "—"}</td>
+                  <td className="max-w-xl py-2.5 pr-4 text-xs leading-5 text-parch-300">{row.detail ? cleanText(row.detail) : "-"}</td>
                   <td className="py-2.5 pr-4 text-[11px] text-parch-300">{confidenceLabel(row.confidence)}</td>
                   <td className="py-2.5 text-xs"><SourceLink source={row.source} /></td>
                 </tr>
@@ -229,27 +249,31 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           <span className="text-xs text-parch-300">{region.upgrades.length}</span>
         </div>
         <div className="border-t border-stone-750">
-          {region.upgrades.length ? region.upgrades.map((upgrade) => (
-            <div key={upgrade.name} className="grid gap-1 border-b border-stone-750/70 py-3 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5">
-              <div>
-                <div className="text-sm font-medium text-parch-50">{cleanText(upgrade.name)}</div>
-                <div className="mt-0.5 text-xs text-parch-300">{upgrade.category}</div>
+          {region.upgrades.length ? region.upgrades.map((upgrade) => {
+            const regionAccess = upgradeRegionAccess(upgrade);
+            return (
+              <div key={upgrade.name} className="grid gap-1 border-b border-stone-750/70 py-3 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5">
+                <div>
+                  <div className="text-sm font-medium text-parch-50">{cleanText(upgrade.name)}</div>
+                  <div className="mt-0.5 text-xs text-parch-300">{upgrade.category}</div>
+                  {regionAccess ? <div className="mt-1 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
+                </div>
+                <div className="text-xs leading-5 text-parch-300">
+                  {upgrade.detail ? cleanText(upgrade.detail) : "No details yet."}
+                  {upgrade.requirements.length ? <div className="mt-1 text-parch-50">Requires: {upgrade.requirements.join(" · ")}</div> : null}
+                </div>
+                <div className="text-[11px] text-parch-300">{confidenceLabel(upgrade.confidence)}</div>
+                <div className="text-xs md:text-right"><SourceLink source={upgrade.source} /></div>
               </div>
-              <div className="text-xs leading-5 text-parch-300">
-                {upgrade.detail ? cleanText(upgrade.detail) : "No details yet."}
-                {upgrade.requirements.length ? <div className="mt-1 text-parch-50">Requires: {upgrade.requirements.join(" · ")}</div> : null}
-              </div>
-              <div className="text-[11px] text-parch-300">{confidenceLabel(upgrade.confidence)}</div>
-              <div className="text-xs md:text-right"><SourceLink source={upgrade.source} /></div>
-            </div>
-          )) : <p className="py-3 text-sm text-parch-300">No major upgrades listed yet.</p>}
+            );
+          }) : <p className="py-3 text-sm text-parch-300">No major upgrades listed yet.</p>}
         </div>
       </section>
 
       <section>
         <div className="mb-2 flex items-baseline justify-between gap-4">
           <h3 className="text-xs font-medium text-parch-300">Training</h3>
-          <span className="text-xs text-parch-300">base-game rates unless noted</span>
+          <span className="text-xs text-parch-300">{region.training.length}</span>
         </div>
         <MethodTable methods={region.training} />
       </section>
@@ -305,7 +329,14 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
             ...region.skills,
             ...region.areas,
             ...region.content.flatMap((row) => [row.name, row.kind, row.detail]),
-            ...region.upgrades.flatMap((row) => [row.name, row.category, row.detail, ...row.requirements]),
+            ...region.upgrades.flatMap((row) => [
+              row.name,
+              row.category,
+              row.detail,
+              ...row.requirements,
+              ...(row.regionHints ?? []),
+              ...(row.requiredRegions ?? []),
+            ]),
             ...region.training.map(methodSearchText),
           ]
             .join(" ")

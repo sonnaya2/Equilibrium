@@ -1,0 +1,37 @@
+name: Validate canonical data
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "data/**"
+      - "scraped-data/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/validate-data-only.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run normalize:data
+      - name: Run complete data audit
+        run: npm run audit:all-data
+      - name: Ensure generated data is committed
+        run: git diff --exit-code -- data/

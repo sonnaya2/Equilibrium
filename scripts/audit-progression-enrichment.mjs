@@ -1,7 +1,24 @@
 import { readFileSync } from "node:fs";
 
-const progression = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
-const planner = JSON.parse(readFileSync("data/research/planner-expansions.json", "utf8"));
+function mergeRows(supplement, base) {
+  const rows = new Map();
+  for (const row of supplement || []) rows.set(String(row.id), row);
+  for (const row of base || []) rows.set(String(row.id), row);
+  return [...rows.values()];
+}
+
+const progressionBase = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
+const progressionSupport = JSON.parse(readFileSync("data/reference/progression-support-items-2026-07-25.json", "utf8"));
+const plannerBase = JSON.parse(readFileSync("data/research/planner-expansions.json", "utf8"));
+const plannerSupport = JSON.parse(readFileSync("data/research/planner-support-items-2026-07-25.json", "utf8"));
+const progression = {
+  ...progressionBase,
+  equipment_models: mergeRows(progressionSupport.equipment_models, progressionBase.equipment_models),
+};
+const planner = {
+  ...plannerBase,
+  regional_unique_drops: mergeRows(plannerSupport.regional_unique_drops, plannerBase.regional_unique_drops),
+};
 const fail = (message) => { throw new Error(`progression enrichment audit: ${message}`); };
 const byId = (rows, id) => (rows || []).find((row) => row?.id === id);
 

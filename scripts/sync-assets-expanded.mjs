@@ -43,6 +43,8 @@ const overrides = new Map([
   ["skilling-pickaxe-earth-song", { fileTitle: "Pickaxe of earth and song.png", canonicalPage: "https://runescape.wiki/w/Pickaxe_of_earth_and_song", search: "Pickaxe of earth and song inventory icon" }],
   ["skilling-hatchet-ember-glade", { fileTitle: "Hatchet of ember and glade.png", canonicalPage: "https://runescape.wiki/w/Hatchet_of_ember_and_glade", search: "Hatchet of ember and glade inventory icon" }],
   ["skilling-hatchet-bloom-blight", { fileTitle: "Hatchet of bloom and blight.png", canonicalPage: "https://runescape.wiki/w/Hatchet_of_bloom_and_blight", search: "Hatchet of bloom and blight inventory icon" }],
+  ["skilling-gem-bag-upgraded", { fileTitle: "Gem bag (upgraded).png", canonicalPage: "https://runescape.wiki/w/Gem_bag_(upgraded)", search: "Gem bag upgraded inventory icon" }],
+  ["skilling-autoheater", { fileTitle: "Advanced smithing autoheater.png", canonicalPage: "https://runescape.wiki/w/Advanced_smithing_autoheater", search: "Advanced smithing autoheater inventory icon" }],
 ]);
 
 function applyOverrides(asset) {

@@ -5,7 +5,7 @@ import { wikiSource } from "./lib/runescape-wiki.mjs";
 const ROOT = process.cwd();
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 const utilities = read("scraped-data/planner-expansions-archaeology-utilities.json");
-const collections = read("scraped-data/planner-expansions-archaeology-collections.json");
+const guild = read("scraped-data/planner-expansions-archaeology-guild.json");
 
 function normalize(value) {
   return String(value ?? "")
@@ -29,36 +29,15 @@ function assertUniqueIds(rows, section) {
   }
 }
 
-assertUniqueIds(utilities.relic_system_progression, "relic_system_progression");
+if ("relic_system_progression" in utilities || "existing_data_corrections" in utilities) {
+  throw new Error("Archaeology utilities must not duplicate Guild relic-preset progression or stale-data corrections");
+}
+
 assertUniqueIds(utilities.collection_completion_tools, "collection_completion_tools");
 
-const presetCounts = utilities.relic_system_progression
-  .filter((row) => Number.isInteger(row.loadout_count_after_unlock))
-  .map((row) => row.loadout_count_after_unlock);
-if (JSON.stringify(presetCounts) !== JSON.stringify([2, 3, 4])) {
-  throw new Error(`Relic preset progression must be 2 -> 3 -> 4; found ${presetCounts.join(" -> ")}`);
-}
-
-const professor = utilities.relic_system_progression.find((row) => row.id === "arch-relic-presets-professor");
-if (!professor || professor.chronote_cost !== 80000 || professor.loadout_count_after_unlock !== 3) {
-  throw new Error("Professor relic-preset purchase must unlock preset 3 for 80,000 chronotes");
-}
-
-const guildmaster = utilities.relic_system_progression.find((row) => row.id === "arch-relic-presets-guildmaster");
-if (!guildmaster || guildmaster.loadout_count_after_unlock !== 4) {
-  throw new Error("Guildmaster qualification must unlock preset 4");
-}
-
-const switchCost = utilities.relic_system_progression.find((row) => row.id === "arch-relic-preset-switch-cost");
-if (!switchCost || switchCost.cost_percent_of_normal_harnessing !== 80) {
-  throw new Error("Relic preset switch cost must remain 80% of normal harnessing cost");
-}
-
 const expectedTools = new Set([
-  "arch-fixate",
   "arch-artefact-bad-luck-mitigation",
   "arch-journal-collector-information",
-  "arch-master-outfit-routing",
   "arch-journal-campus-routing",
   "arch-museum-donation-fallback",
 ]);
@@ -67,9 +46,18 @@ if (expectedTools.size > 0) {
   throw new Error(`Missing Archaeology collection utilities: ${[...expectedTools].join(", ")}`);
 }
 
-const fixate = utilities.collection_completion_tools.find((row) => row.id === "arch-fixate");
-if (!fixate || fixate.baseline_daily_uses_with_outfit !== 3) {
-  throw new Error("Fixate baseline must remain three daily uses with the full master outfit");
+for (const forbiddenId of ["arch-fixate", "arch-master-outfit-routing"]) {
+  if (utilities.collection_completion_tools.some((row) => row.id === forbiddenId)) {
+    throw new Error(`${forbiddenId} belongs to the Archaeology Guild feed and must not be duplicated`);
+  }
+}
+
+const guildLoadouts = guild.relic_loadout_progression.map((row) => row.loadout_count_after_unlock);
+if (JSON.stringify(guildLoadouts) !== JSON.stringify([2, 3, 4])) {
+  throw new Error(`Guild feed must remain authoritative for relic presets 2 -> 3 -> 4; found ${guildLoadouts.join(" -> ")}`);
+}
+if (!guild.collection_completion_infrastructure.some((row) => row.id === "fixate-master-outfit")) {
+  throw new Error("Guild feed must remain authoritative for master-outfit Fixate");
 }
 
 const museum = utilities.collection_completion_tools.find((row) => row.id === "arch-museum-donation-fallback");
@@ -77,39 +65,32 @@ if (!museum || museum.collection_reward_eligible !== false || !museum.effect.inc
   throw new Error("Museum donation must remain a 40% chronote overflow route with no collection reward");
 }
 
-const correction = utilities.existing_data_corrections.find(
-  (row) => row.target_id === "arch-guildmaster-second-loadout",
-);
-if (!correction) throw new Error("Missing stale Guildmaster loadout correction");
-if (!collections.relic_system_progression.some((row) => row.id === correction.target_id)) {
-  throw new Error("Guildmaster loadout correction no longer matches the source collection dataset");
-}
-
-const presetUpdate = await wikiSource("Update:Relic Presets & February Mini Strike - This Week In RuneScape");
-for (const text of ["first two presets", "80,000 Chronotes", "Guildmaster qualification", "80%"] ) {
-  assertContains(presetUpdate.content, text, "Relic Presets official update");
+for (const row of utilities.collection_completion_tools) {
+  if ("region" in row || "required_regions" in row || "hard_region_requirement" in row) {
+    throw new Error(`${row.id} must remain a utility rather than a region gate`);
+  }
 }
 
 const archaeology = await wikiSource("Archaeology");
-for (const text of ["last five earned artefacts", "half as likely", "40%", "Fixate can be activated 3 times per day"]) {
-  assertContains(archaeology.content, text, "Archaeology utility rules");
+for (const text of ["last five earned artefacts", "half as likely", "40%"] ) {
+  assertContains(archaeology.content, text, "Archaeology collection utility rules");
 }
 
-const fixateTranscript = await wikiSource("Transcript:Fixate");
-for (const text of ["guarantee it on your next discovery", "master archaeologist's outfit", "Fixate charge token"]) {
-  assertContains(fixateTranscript.content, text, "Fixate transcript");
+const artefacts = await wikiSource("Artefacts");
+for (const text of ["Fixate are also tracked", "secondary uses", "40%"] ) {
+  assertContains(artefacts.content, text, "Artefact completion rules");
 }
 
-const collectionPage = await wikiSource("Collections");
+const collections = await wikiSource("Collections");
 for (const text of ["Collector information", "Archaeology journal"]) {
-  assertContains(collectionPage.content, text, "Collections tracking");
+  assertContains(collections.content, text, "Collections tracking");
 }
 
-const training = await wikiSource("Archaeology training");
-for (const text of ["3 uses per day of the Fixate spell", "Unlimited teleports", "dig sites and collectors"]) {
-  assertContains(training.content, text, "Archaeology training utilities");
+const journal = await wikiSource("Archaeology journal");
+for (const text of ["Archaeology Guild", "collector"] ) {
+  assertContains(journal.content, text, "Archaeology journal routing");
 }
 
 console.log(
-  `Archaeology utility audit passed: ${utilities.relic_system_progression.length} relic-system rows, ${utilities.collection_completion_tools.length} collection tools`,
+  `Archaeology utility audit passed: ${utilities.collection_completion_tools.length} non-Guild collection tools`,
 );

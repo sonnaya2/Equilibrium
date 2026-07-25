@@ -121,11 +121,16 @@ export function QuickCalculator() {
         <div>
           <h2 className="text-sm font-medium text-parch-50">{ability.name}</h2>
           <p className="mt-1 text-xs text-parch-300">
-            {ability.category} · {ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : ""}
-            {ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : ""}
-            {ability.cooldownSeconds ? ` · ${ability.cooldownSeconds}s cooldown` : ""}
-            {(ability as RangedAbilitySpec).guaranteedCrit ? " · guaranteed crit" : ""}
-            {(ability as MagicAbilitySpec).requiresAnima ? " · needs an active Runic Charge" : ""}
+            {[
+              ability.category,
+              ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
+              ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
+              ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
+              (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
+              (ability as MagicAbilitySpec).requiresAnima ? "needs an active Runic Charge" : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
           <dl className="mt-3 border-t border-stone-750 text-sm">
             <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">

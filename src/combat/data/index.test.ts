@@ -53,6 +53,18 @@ describe("canonical combat datasets", () => {
       }
     }
   });
+
+  it("pins the documented adrenaline exceptions (§5.4 basics rule, §5.7, §4.4)", () => {
+    // All basics generate 9% unless a source names a different value.
+    expect(abilityById("melee:dismember")?.adrenaline).toEqual({ kind: "gain", percent: 0 });
+    expect(abilityById("melee:adaptive-strike")?.adrenaline).toEqual({ kind: "gain", percent: 12 });
+    expect(abilityById("melee:chaos-roar")?.adrenaline).toEqual({ kind: "gain", percent: 9 });
+    expect(abilityById("melee:chaos-roar")?.category).toBe("basic");
+    expect(abilityById("melee:punish")?.category).toBe("basic");
+    expect(abilityById("ranged:ricochet")?.adrenaline).toEqual({ kind: "gain", percent: 9 });
+    // Unsourced adrenaline stays absent rather than manufactured.
+    expect(abilityById("magic:runic-charge")?.adrenaline).toBeUndefined();
+  });
 });
 
 describe("combat data accessors", () => {

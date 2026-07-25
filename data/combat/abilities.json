@@ -8,10 +8,6 @@
       "style": "magic",
       "category": "basic",
       "level": 6,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "6",
@@ -24,6 +20,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "cooldownTicks": 25,
       "damagePercent": [
         90,
@@ -37,10 +37,6 @@
       "style": "magic",
       "category": "basic",
       "level": 6,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "codex",
         "requirement": "Risen ghosts and armoured phantoms",
@@ -55,6 +51,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "cooldownTicks": 25,
       "damagePercent": [
         115,
@@ -69,10 +69,6 @@
       "style": "magic",
       "category": "basic",
       "level": 66,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "66",
@@ -85,6 +81,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "channelTicks": 3,
       "hits": 3,
       "damagePercent": [
@@ -99,10 +99,6 @@
       "style": "magic",
       "category": "basic",
       "level": 66,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "codex",
         "requirement": "Kerapac, the bound / Kerapac progression",
@@ -117,6 +113,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "cooldownTicks": 9,
       "channelTicks": 3,
       "hits": 3,
@@ -132,10 +132,6 @@
       "style": "magic",
       "category": "enhanced",
       "level": 3,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "3",
@@ -148,6 +144,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 9,
       "hits": 2,
       "damagePercent": [
@@ -162,10 +162,6 @@
       "style": "magic",
       "category": "enhanced",
       "level": 59,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "59",
@@ -178,6 +174,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 34,
       "hits": 4,
       "damagePercent": [
@@ -191,10 +191,6 @@
       "name": "Runic Charge",
       "style": "magic",
       "category": "utility",
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 0
-      },
       "unlock": {
         "type": "level",
         "requirement": "undefined",
@@ -215,10 +211,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 2,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "2",
@@ -231,6 +223,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 3,
       "hits": 2,
       "damagePercent": [
@@ -245,10 +241,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 7,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 0
-      },
       "unlock": {
         "type": "level",
         "requirement": "7",
@@ -261,6 +253,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
       "cooldownTicks": 100,
       "channelTicks": 3,
       "damagePercent": [
@@ -275,10 +271,6 @@
       "style": "ranged",
       "category": "basic",
       "level": 13,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "13",
@@ -291,6 +283,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "cooldownTicks": 5,
       "hits": 2,
       "damagePercent": [
@@ -305,10 +301,6 @@
       "style": "ranged",
       "category": "ultimate",
       "level": 21,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 60
-      },
       "unlock": {
         "type": "level",
         "requirement": "21",
@@ -321,6 +313,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
       "cooldownTicks": 50,
       "displayDescription": "No longer a damage-over-time ultimate; it now deals multiple direct hits"
     },
@@ -330,10 +326,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 36,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "36",
@@ -346,6 +338,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 0,
       "damagePercent": [
         220,
@@ -359,10 +355,6 @@
       "style": "ranged",
       "category": "basic",
       "level": 58,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "58",
@@ -375,6 +367,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "cooldownTicks": 34,
       "averageDamagePercent": 100,
       "displayDescription": "Applies Searing Winds for 6 seconds; Searing Winds adds 20% ability damage to each hit from Ranged abilities; Each Rapid Fire hit extends Searing Winds by 0.6 seconds"
@@ -385,10 +381,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 62,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "62",
@@ -401,6 +393,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 34,
       "hits": 8,
       "damagePercent": [
@@ -415,10 +411,6 @@
       "style": "ranged",
       "category": "basic",
       "level": 67,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 0
-      },
       "unlock": {
         "type": "level",
         "requirement": "67",
@@ -431,6 +423,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "displayDescription": "Standard Ricochet now includes the old multi-hit Greater Ricochet behavior by default"
     },
     {
@@ -438,10 +434,6 @@
       "name": "Greater Ricochet",
       "style": "ranged",
       "category": "basic",
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 0
-      },
       "unlock": {
         "type": "codex",
         "requirement": "Raksha ability upgrades",
@@ -456,6 +448,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "displayDescription": "Upgrade of Ricochet; Adds four hits beyond current Ricochet, each dealing 5% average damage"
     },
     {
@@ -464,10 +460,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 70,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 20
-      },
       "unlock": {
         "type": "level",
         "requirement": "70",
@@ -480,6 +472,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 20
+      },
       "cooldownTicks": 25,
       "hits": 5,
       "displayDescription": "No longer spreads from target to target; subsequent DoT hits decay by 20% of initial damage per hit"
@@ -490,10 +486,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 75,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 0
-      },
       "unlock": {
         "type": "level",
         "requirement": "75",
@@ -506,6 +498,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
       "cooldownTicks": 75,
       "damagePercent": [
         200,
@@ -519,10 +515,6 @@
       "style": "ranged",
       "category": "ultimate",
       "level": 76,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 100
-      },
       "unlock": {
         "type": "quest",
         "requirement": "The World Wakes",
@@ -537,6 +529,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
       "cooldownTicks": 100,
       "displayDescription": "No longer creates a stationary ground area or damage-over-time field; the modernized version follows the player"
     },
@@ -546,10 +542,6 @@
       "style": "ranged",
       "category": "ultimate",
       "level": 76,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 100
-      },
       "unlock": {
         "type": "codex",
         "requirement": "Greater Death's Swiftness ability codex",
@@ -562,6 +554,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
       "cooldownTicks": 100,
       "displayDescription": "Upgrade of Death's Swiftness"
     },
@@ -571,10 +567,6 @@
       "style": "ranged",
       "category": "enhanced",
       "level": 90,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 40
-      },
       "unlock": {
         "type": "level",
         "requirement": "90",
@@ -587,6 +579,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 40
+      },
       "cooldownTicks": 100,
       "displayDescription": "Applies Shadow Imbued; each hit from Ranged abilities against the target generates 5% adrenaline"
     },
@@ -596,10 +592,6 @@
       "style": "melee",
       "category": "basic",
       "level": 1,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "1",
@@ -613,6 +605,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "damagePercent": [
         110,
         130
@@ -625,10 +621,6 @@
       "style": "melee",
       "category": "basic",
       "level": 7,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "7",
@@ -642,6 +634,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 12
+      },
       "displayDescription": "Two-handed: 120-140% cone hit; Dual wield: 2 hits of 60-75%"
     },
     {
@@ -650,10 +646,6 @@
       "style": "melee",
       "category": "basic",
       "level": 18,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "18",
@@ -667,6 +659,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "damagePercent": [
         135,
         165
@@ -679,10 +675,6 @@
       "style": "melee",
       "category": "basic",
       "level": 50,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "50",
@@ -696,6 +688,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 0
+      },
       "hits": 8,
       "damagePercent": [
         25,
@@ -709,10 +705,6 @@
       "style": "melee",
       "category": "enhanced",
       "level": 60,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "60",
@@ -726,6 +718,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "hits": 6,
       "damagePercent": [
         80,
@@ -739,10 +735,6 @@
       "style": "melee",
       "category": "enhanced",
       "level": 75,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "75",
@@ -756,6 +748,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "damagePercent": [
         110,
         130
@@ -768,10 +764,6 @@
       "style": "melee",
       "category": "enhanced",
       "level": 3,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 25
-      },
       "unlock": {
         "type": "level",
         "requirement": "3",
@@ -785,6 +777,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
       "cooldownTicks": 10,
       "hits": 4,
       "damagePercent": [
@@ -799,10 +795,6 @@
       "style": "melee",
       "category": "ultimate",
       "level": 15,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 60
-      },
       "unlock": {
         "type": "level",
         "requirement": "15",
@@ -816,6 +808,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
       "damagePercent": [
         520,
         570
@@ -828,10 +824,6 @@
       "style": "melee",
       "category": "basic",
       "level": 60,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "level",
         "requirement": "60",
@@ -845,6 +837,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "displayDescription": "Deals 2.5x damage to targets below 50% life points"
     },
     {
@@ -853,10 +849,6 @@
       "style": "melee",
       "category": "ultimate",
       "level": 76,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 100
-      },
       "unlock": {
         "type": "level",
         "requirement": "76",
@@ -870,6 +862,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
       "displayDescription": "Reduces Overpower cooldown; Lasts 19.8s; 1.75x damage; Takes 1.25x incoming damage; Bloodlust: +4 maximum stacks and +4 stacks on activation; basics generate double Bloodlust"
     },
     {
@@ -878,10 +874,6 @@
       "style": "melee",
       "category": "ultimate",
       "level": 90,
-      "adrenaline": {
-        "kind": "cost",
-        "percent": 60
-      },
       "unlock": {
         "type": "level",
         "requirement": "90",
@@ -895,18 +887,18 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
       "displayDescription": "Area attack that also grants an adrenaline-generation buff"
     },
     {
       "id": "melee:chaos-roar",
       "name": "Chaos Roar",
       "style": "melee",
-      "category": "enhanced",
+      "category": "basic",
       "level": 92,
-      "adrenaline": {
-        "kind": "gain",
-        "percent": 9
-      },
       "unlock": {
         "type": "codex",
         "requirement": "Chaos Roar ability codex",
@@ -920,6 +912,10 @@
           "verifiedAt": "2026-07-24"
         }
       ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
       "displayDescription": "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust"
     }
   ]

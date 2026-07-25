@@ -64,7 +64,11 @@ function auditRecord(style, entry) {
   if (!category) throw new Error(`Unknown audit type "${entry.type}" on ${entry.name}`);
   const adrenaline = entry.adrenaline_cost_percent != null
     ? { kind: "cost", percent: entry.adrenaline_cost_percent }
-    : { kind: "gain", percent: entry.adrenaline_delta_percent ?? 0 };
+    : entry.adrenaline_delta_percent != null
+      ? { kind: "gain", percent: entry.adrenaline_delta_percent }
+      : category === "basic"
+        ? { kind: "gain", percent: 9 } // §5.4: all basics generate 9%
+        : undefined;
   const rangeSource = entry.damage_range_percent ?? entry.damage_per_hit_percent;
   const range = rangeSource ? parseRange(rangeSource) : null;
   const notes = [];
@@ -79,12 +83,12 @@ function auditRecord(style, entry) {
     style,
     category,
     level: entry.level,
-    adrenaline,
     unlock: { type: "level", requirement: String(entry.level), regions: [] },
     sources: [
       { source: "runescape-wiki", url: entry.source_url, verifiedAt: "2026-07-24" },
     ],
   };
+  if (adrenaline) record.adrenaline = adrenaline;
   if (entry.cooldown_seconds != null) record.cooldownTicks = ticks(entry.cooldown_seconds);
   if (entry.channel_seconds != null) record.channelTicks = ticks(entry.channel_seconds);
   if (entry.hits != null) record.hits = entry.hits;
@@ -95,20 +99,36 @@ function auditRecord(style, entry) {
 }
 
 /** Engine-verified melee categories, mirrored from src/combat/styles/melee/abilities.ts —
- *  the engine holds the verified rules; the corpus only types the basics. */
+ *  the engine holds the verified rules; the corpus only types the basics.
+ *  Punish and Chaos Roar are basics per Beta Update 3 (changelog §4.4). */
 const MELEE_CATEGORY = {
   Attack: "basic",
   "Adaptive Strike": "basic",
   Rend: "basic",
   Dismember: "basic",
+  Punish: "basic",
+  "Chaos Roar": "basic",
   Slaughter: "enhanced",
   Massacre: "enhanced",
   Assault: "enhanced",
-  "Chaos Roar": "enhanced",
   Overpower: "ultimate",
   Berserk: "ultimate",
   "Meteor Strike": "ultimate",
 };
+
+/** Adrenaline per ability is data, never a global default. §5.4 documents the rule:
+ *  all basics generate 9%, with named exceptions — Adaptive Strike +12% (§5.4),
+ *  Dismember 0% (§5.7). Non-basics without a corpus cost are omitted, not guessed. */
+const MELEE_BASIC_GAIN_OVERRIDE = { "Adaptive Strike": 12, Dismember: 0 };
+
+function meleeAdrenaline(entry, category) {
+  if (entry.adrenaline_cost_percent != null) return { kind: "cost", percent: entry.adrenaline_cost_percent };
+  if (entry.adrenaline_gain_percent != null) return { kind: "gain", percent: entry.adrenaline_gain_percent };
+  if (category === "basic") {
+    return { kind: "gain", percent: MELEE_BASIC_GAIN_OVERRIDE[entry.name] ?? 9 };
+  }
+  return undefined;
+}
 
 function meleeRecord(entry) {
   const name = entry.name;
@@ -119,14 +139,13 @@ function meleeRecord(entry) {
     style: "melee",
     category: MELEE_CATEGORY[name] ?? entry.type ?? "basic",
     level: entry.unlock_level ?? 1,
-    adrenaline: entry.adrenaline_cost_percent != null
-      ? { kind: "cost", percent: entry.adrenaline_cost_percent }
-      : { kind: "gain", percent: entry.adrenaline_gain_percent ?? 9 },
     unlock: entry.unlock_level != null
       ? { type: "level", requirement: String(entry.unlock_level), regions: [] }
       : { type: "level", requirement: "1", regions: [] },
     sources: [MODERNISATION_SOURCE],
   };
+  const adrenaline = meleeAdrenaline(entry, record.category);
+  if (adrenaline) record.adrenaline = adrenaline;
   if (entry.cooldown_seconds != null) record.cooldownTicks = ticks(entry.cooldown_seconds);
   if (entry.bloodlust_gain != null) notes.push(`+${entry.bloodlust_gain} Bloodlust`);
   if (entry.healing_percent != null) notes.push(`Heals ${entry.healing_percent}%`);

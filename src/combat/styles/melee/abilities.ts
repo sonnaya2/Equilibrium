@@ -155,7 +155,8 @@ export const MELEE_EFFECTS = [
   {
     id: "chaos_roar",
     name: "Chaos Roar",
-    category: "enhanced" as const,
+    // Beta Update 3 (§4.4): "Punish and Chaos Roar become basics."
+    category: "basic" as const,
     notes: "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust.",
     source: MODERNISATION_WIKI,
   },

@@ -72,7 +72,7 @@ for (const [kind, dataset] of Object.entries(datasets)) {
 for (const record of datasets.abilities.records) {
   check(ABILITY_CATEGORIES.has(record.category), `abilities:${record.id} bad category "${record.category}"`);
   check(COMBAT_STYLES.has(record.style), `abilities:${record.id} bad style "${record.style}"`);
-  check(record.adrenaline?.percent >= 0, `abilities:${record.id} negative adrenaline`);
+  if (record.adrenaline != null) check(record.adrenaline.percent >= 0, `abilities:${record.id} negative adrenaline`);
   if (record.damagePercent) {
     check(record.damagePercent[0] <= record.damagePercent[1], `abilities:${record.id} inverted damage range`);
   }

@@ -103,7 +103,8 @@ export function RotationPlanner() {
       <div>
         <h2 className="text-sm font-medium text-parch-50">Rotation</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Queue casts, run the tick sim. Necromancy joins once its bands are sourced.
+          Queue casts, run the tick sim. Volley of Souls runs in Quick and Analysis; the sim has
+          no soul tracking yet.
         </p>
         <label className="mt-3 flex items-center gap-2 text-xs text-parch-300">
           <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />

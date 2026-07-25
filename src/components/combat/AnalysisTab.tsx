@@ -132,7 +132,16 @@ export function AnalysisTab() {
             </dl>
           </div>
           <div>
-            <h3 className="text-xs font-medium text-parch-50">B · Comparison</h3>
+            <div className="flex items-baseline justify-between gap-2">
+              <h3 className="text-xs font-medium text-parch-50">B · Comparison</h3>
+              <button
+                type="button"
+                onClick={() => setLineB({ ...loadout })}
+                className="border border-stone-750 px-2 py-0.5 text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+              >
+                Reset to A
+              </button>
+            </div>
             <div className="mt-2 border-t border-stone-750">
               <NumberField label="Level" value={lineB.level} onChange={(level) => setLineB({ ...lineB, level })} />
               <NumberField label="Base" value={lineB.base} onChange={(base) => setLineB({ ...lineB, base })} />

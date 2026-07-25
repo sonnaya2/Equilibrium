@@ -1,8 +1,9 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const TODAY = "2026-07-25";
+const REPORT_PATH = "data/reference/data-audit-report.json";
 const failures = [];
 const stats = {
   files: 0,
@@ -89,7 +90,9 @@ function inspect(file, value, path = "$", key = "") {
   }
 }
 
-const jsonFiles = [...walk(join(ROOT, "data")), ...walk(join(ROOT, "scraped-data"))].sort();
+const jsonFiles = [...walk(join(ROOT, "data")), ...walk(join(ROOT, "scraped-data"))]
+  .filter((absolute) => relative(ROOT, absolute).replaceAll("\\", "/") !== REPORT_PATH)
+  .sort();
 for (const absolute of jsonFiles) {
   const file = relative(ROOT, absolute).replaceAll("\\", "/");
   try {
@@ -169,6 +172,29 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
+const report = {
+  snapshot_date: TODAY,
+  status: "passed",
+  scope: ["data/**/*.json", "scraped-data/**/*.json"],
+  checks: [
+    "JSON parse integrity",
+    "duplicate stable IDs within arrays",
+    "HTTPS and non-placeholder source URLs",
+    "canonical Asgarnia naming in generated data",
+    "unresolved and unrevealed state truthfulness",
+    "Relic and Blessing tier shapes",
+    "Blessing paths, God Tiers and reset count",
+    "task-record array shape",
+    "permanent-unlock section shape, IDs and provenance",
+    "removed combat unlocks excluded from active progression"
+  ],
+  stats,
+  note: "Domain-specific progression, 2026 remaster, Aura overhaul, reference, boundary, Masterwork and supplement audits run through npm run audit:all-data."
+};
+const target = join(ROOT, REPORT_PATH);
+mkdirSync(dirname(target), { recursive: true });
+writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`);
+
 console.log([
   "MAIN DATA AUDIT PASSED",
   `JSON files: ${stats.files}`,
@@ -178,4 +204,5 @@ console.log([
   `Source URLs inspected: ${stats.sourceUrls}`,
   `Unresolved/provisional rows preserved: ${stats.unresolvedRows}`,
   `Explicitly unverified rows preserved: ${stats.unverifiedRows}`,
+  `Report: ${REPORT_PATH}`,
 ].join("\n"));

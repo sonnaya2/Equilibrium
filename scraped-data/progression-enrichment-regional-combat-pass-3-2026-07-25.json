@@ -1,0 +1,117 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Third regional combat audit covering Karamja TzekHaar support equipment, Corporeal Beast supply, and the Blessed flask multi-region production chain.",
+  "policy": {
+    "hard_gate_rule": "Only use required_regions when every listed elective region is truly mandatory. Long production chains with alternate supply sources use region_hints and explicit region pressure instead.",
+    "external_area_rule": "The Arc/Wushanko remains an unresolved external destination in the current Equilibrium region model and must not be silently assigned to an elective region.",
+    "boss_strategy_rule": "Record persistent support items and acquisition dependencies without turning this dataset into a boss strategy guide."
+  },
+  "activity_additions": [
+    {
+      "id": "karamja:fight-cauldron-obsidian-support",
+      "name": "Fight Cauldron obsidian armour progression",
+      "category": "TzekHaar combat support and cape progression",
+      "region_hint": "karamja",
+      "required_regions": ["karamja"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "The Brink of Extinction in the normal game",
+        "Fight Cauldron access for obsidian shards"
+      ],
+      "unlocks": [
+        "Obsidian armour crafted from Fight Cauldron obsidian shards",
+        "Up to 55% damage reduction from obsidian monsters in Fight Kiln and TzKal-Zuk encounters",
+        "Obsidian helms with increased accuracy against TzekHaar wave monsters",
+        "Fight Cauldron TokKul donation for an additional 10 percentage points of obsidian-armour damage reduction while active"
+      ],
+      "notes": "The protection applies through the TzKal-Zuk encounter, including Zuk. The obsidian helm accuracy effect applies to the surrounding TzekHaar but not Zuk himself. This gives Karamja continuing value after the TokHaar-Kal prerequisite is obtained.",
+      "source_urls": [
+        "https://runescape.wiki/w/Obsidian_equipment",
+        "https://runescape.wiki/w/TzekHaar_Front",
+        "https://runescape.wiki/w/Fight_Cauldron"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Quest auto-completion can satisfy the normal quest gate, but Karamja remains the Fight Cauldron and obsidian-shard source unless Equilibrium explicitly supplies the equipment."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "karamja:tokkul-zo",
+      "name": "TokKul-Zo",
+      "category": "TzHaar and TzekHaar combat support ring",
+      "region_hint": "karamja",
+      "required_regions": ["karamja"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": ["The Elder Kiln in the normal game"],
+      "effects": [
+        "10% increased damage against TzHaar, TokHaar, TzekHaar and Igneous TzekHaar",
+        "The damage effect works on TzekHaar waves but not TzKal-Zuk himself",
+        "Teleports around TzHaar City including Fight Cave, Fight Kiln and Fight Cauldron"
+      ],
+      "notes": "This is a Karamja support unlock for the wave portions of the Zuk encounter and for the earlier TzHaar progression. Do not describe it as a 10% damage bonus against Zuk himself.",
+      "source_urls": [
+        "https://runescape.wiki/w/TokKul-Zo",
+        "https://runescape.wiki/w/TzekHaar_Front"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "forinthry:corporeal-beast-holy-elixir",
+      "name": "Corporeal Beast holy-elixir supply",
+      "category": "combat-support and Blessed flask ingredient supply",
+      "region_hint": "forinthry",
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "normal_self_supply_region",
+      "requirements": ["Summer's End for the normal-game Corporeal Beast progression"],
+      "unlocks": [
+        "Holy elixir drop source",
+        "Spirit shield and sigil progression",
+        "Necrite and phasmatite stone-spirit supply relevant to Blessed flask crafting"
+      ],
+      "notes": "The Corporeal Beast cavern entrance is in the Wilderness. The lair itself is not dangerous Wilderness territory, but Forinthry is the useful region dependency for entering the normal self-supply chain. Holy elixir can also come from the tormented wraith, so this row describes the primary practical regional source rather than claiming Corp is the only source.",
+      "source_urls": [
+        "https://runescape.wiki/w/Corporeal_Beast",
+        "https://runescape.wiki/w/Blessed_flask"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "cross-region:blessed-flask",
+      "name": "Blessed flask production chain",
+      "category": "high-end Prayer sustain cross-region production",
+      "region_hints": ["desert", "tirannwn", "karamja", "forinthry"],
+      "region_requirement_type": "self_supply_pressure_with_alternates",
+      "requirements": [
+        "118 Herblore, boostable",
+        "96 Crafting",
+        "Blessed flask shell and glorious silvthril chain",
+        "Holy elixir",
+        "Holy water",
+        "Five light cores",
+        "Five holy overload potions (6)",
+        "Five extreme prayer potions (4)",
+        "500 positive energy"
+      ],
+      "region_pressure": [
+        "Desert: the normal direct source for the 1,200 red sandstone used in the shell chain; alternate account sources can weaken this as a hard region gate.",
+        "Tirannwn: crystal-flecked sandstone and 5,000 harmonic dust are naturally supplied through Prifddinas; some alternate sources mean this is recorded as pressure rather than an unconditional hard gate.",
+        "Karamja: Holy water production is learned through Legends' Quest and uses the Kharazi Jungle water pool.",
+        "Forinthry: Corporeal Beast is the practical normal self-supply source for the holy elixir and several required stone spirits; the tormented wraith is an alternate holy-elixir source.",
+        "External unresolved: 250 alaea sea salt comes from the Arc/Wushanko chain, which is not currently assigned to an Equilibrium elective region."
+      ],
+      "effects": [
+        "Holds up to 80 doses of extreme prayer in one inventory slot",
+        "At level 99 Prayer, 80 doses can represent up to 45,200 Prayer points before other modifiers",
+        "Holy wrench increases the Prayer restored per extreme-prayer dose and works with the Blessed flask"
+      ],
+      "notes": "This is a real region-planning chain because no trading makes the ingredient sources matter, but it would be wrong to display Desert + Tirannwn + Karamja + Forinthry as four unconditional required picks while alternate supply routes and the unresolved Arc exist. Keep the full pressure visible instead.",
+      "source_urls": [
+        "https://runescape.wiki/w/Blessed_flask",
+        "https://runescape.wiki/w/Holy_water",
+        "https://runescape.wiki/w/Corporeal_Beast"
+      ],
+      "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+      "league_treatment": "Re-evaluate individual ingredient gates when Equilibrium publishes external-area handling, quest auto-completion details, or League-specific supply passives."
+    }
+  ]
+}

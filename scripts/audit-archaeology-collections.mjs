@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { wikiArchaeologyCollectionLevel } from "./lib/archaeology-collection.mjs";
-import { wikiSource } from "./lib/runescape-wiki.mjs";
+import { wikiRenderedText, wikiSource } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
@@ -54,11 +54,14 @@ const collectionExpectations = [
 ];
 
 for (const expectation of collectionExpectations) {
-  const page = await wikiArchaeologyCollectionLevel(expectation.title);
+  const [page, rendered] = await Promise.all([
+    wikiArchaeologyCollectionLevel(expectation.title),
+    wikiRenderedText(expectation.title),
+  ]);
   if (expectation.level != null && page.archlevel !== expectation.level) {
     throw new Error(`${expectation.title} Archaeology level drift: expected ${expectation.level}, Wiki has ${page.archlevel}`);
   }
-  for (const text of expectation.required) assertContains(page.content, text, expectation.title);
+  for (const text of expectation.required) assertContains(rendered.text, text, expectation.title);
 }
 
 const qualificationExpectations = [

@@ -10,11 +10,11 @@ import {
   type TaskTier,
 } from "@/tasks";
 
-/**
- * The task-record consumer. Zero records today — it renders nothing and the
- * page keeps its honest empty state; when the data pass adds rows they appear
- * here with filtering and search, no component rewrite.
- */
+function formatCompletionRate(rate: number, qualifier?: "<"): string {
+  const value = Number.isInteger(rate) ? rate.toFixed(0) : rate.toFixed(1);
+  return `${qualifier ?? ""}${value}%`;
+}
+
 export function TaskRecords({
   records: raw,
   tiers,
@@ -70,10 +70,12 @@ export function TaskRecords({
         visible.map((record, index) => {
           const points = taskPoints(record, tiers);
           const provisional = tierConfidence[record.tier]?.startsWith("provisional");
+          const hasCatalystCompletionRate = typeof record.catalystCompletionRate === "number";
+
           return (
             <div
               key={`${record.name}-${index}`}
-              className="grid gap-1 border-b border-stone-750/70 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-4"
+              className="grid gap-2 border-b border-stone-750/70 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-6"
             >
               <div>
                 <div className="text-sm text-parch-50">
@@ -85,6 +87,9 @@ export function TaskRecords({
                 {record.description ? (
                   <p className="mt-1 text-xs leading-5 text-parch-300">{record.description}</p>
                 ) : null}
+                {record.requirements ? (
+                  <p className="mt-1 text-[11px] leading-5 text-parch-400">Requires: {record.requirements}</p>
+                ) : null}
                 {record.region || record.skills?.length || record.areas?.length ? (
                   <div className="mt-1 text-[11px] text-parch-400">
                     {[record.region, ...(record.skills ?? []), ...(record.areas ?? [])]
@@ -93,12 +98,23 @@ export function TaskRecords({
                   </div>
                 ) : null}
               </div>
-              {points !== null ? (
-                <div className="text-right">
-                  <span className="font-mono text-sm text-parch-50">{points}</span>
-                  <span className="ml-1 text-xs text-parch-300">pts{provisional ? "*" : ""}</span>
-                </div>
-              ) : null}
+
+              <div className="flex items-start gap-5 sm:justify-end">
+                {hasCatalystCompletionRate ? (
+                  <div className="min-w-28 sm:text-right">
+                    <div className="font-mono text-sm text-parch-50">
+                      {formatCompletionRate(record.catalystCompletionRate!, record.catalystCompletionRateQualifier)}
+                    </div>
+                    <div className="mt-0.5 text-[10px] leading-4 text-parch-400">Catalyst completion rate</div>
+                  </div>
+                ) : null}
+                {points !== null ? (
+                  <div className="min-w-14 sm:text-right">
+                    <span className="font-mono text-sm text-parch-50">{points}</span>
+                    <span className="ml-1 text-xs text-parch-300">pts{provisional ? "*" : ""}</span>
+                  </div>
+                ) : null}
+              </div>
             </div>
           );
         })

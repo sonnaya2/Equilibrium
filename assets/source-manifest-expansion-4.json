@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-25",
+  "notes": [
+    "Fourth targeted audit pass for current build-changing combat spells already tracked by the permanent unlock graph.",
+    "Utility Lunar spells and broad prayer/spell groups are intentionally excluded unless the planner models them individually."
+  ],
+  "assets": [
+    {"id":"spell-smoke-cloud","label":"Smoke Cloud","category":"rs3/combat/spells/magic","path":"assets/rs3/combat/spells/magic/smoke-cloud","canonicalPage":"https://runescape.wiki/w/Smoke_Cloud","search":"Smoke Cloud spell icon"},
+    {"id":"spell-animate-dead","label":"Animate Dead","category":"rs3/combat/spells/magic","path":"assets/rs3/combat/spells/magic/animate-dead","canonicalPage":"https://runescape.wiki/w/Animate_Dead","search":"Animate Dead spell icon"},
+    {"id":"spell-exsanguinate","label":"Exsanguinate","category":"rs3/combat/spells/magic","path":"assets/rs3/combat/spells/magic/exsanguinate","canonicalPage":"https://runescape.wiki/w/Exsanguinate","search":"Exsanguinate spell icon"},
+    {"id":"spell-incite-fear","label":"Incite Fear","category":"rs3/combat/spells/magic","path":"assets/rs3/combat/spells/magic/incite-fear","canonicalPage":"https://runescape.wiki/w/Incite_Fear","search":"Incite Fear spell icon"}
+  ]
+}

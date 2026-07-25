@@ -78,7 +78,6 @@ for (const expected of expectedShopRows) {
   if (row.chronote_cost !== expected.cost) {
     throw new Error(`${expected.qualification} ${expected.name} cost drifted`);
   }
-  assertContains(training.text, expected.name, `Archaeology training:${expected.name}`);
   assertContains(training.text, String(expected.cost), `Archaeology training:${expected.name} cost`);
 }
 

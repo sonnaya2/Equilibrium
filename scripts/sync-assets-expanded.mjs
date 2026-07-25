@@ -3,12 +3,17 @@ import { join } from "node:path";
 
 const ROOT = process.cwd();
 const BASE_PATH = join(ROOT, "assets/source-manifest.json");
-const EXPANSION_PATH = join(ROOT, "assets/source-manifest-expansion.json");
+const EXPANSION_PATHS = [
+  join(ROOT, "assets/source-manifest-expansion.json"),
+  join(ROOT, "assets/source-manifest-expansion-2.json"),
+];
 const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
 
 const originalText = await readFile(BASE_PATH, "utf8");
 const base = JSON.parse(originalText);
-const expansion = JSON.parse(await readFile(EXPANSION_PATH, "utf8"));
+const expansions = await Promise.all(
+  EXPANSION_PATHS.map(async (path) => JSON.parse(await readFile(path, "utf8"))),
+);
 
 const overrides = new Map([
   [
@@ -20,10 +25,12 @@ const overrides = new Map([
   ],
 ]);
 
-const expansionAssets = (expansion.assets ?? []).map((asset) => ({
-  ...asset,
-  ...(overrides.get(asset.id) ?? {}),
-}));
+const expansionAssets = expansions
+  .flatMap((expansion) => expansion.assets ?? [])
+  .map((asset) => ({
+    ...asset,
+    ...(overrides.get(asset.id) ?? {}),
+  }));
 const assets = [...(base.assets ?? []), ...expansionAssets];
 const ids = new Set();
 const paths = new Set();
@@ -44,8 +51,11 @@ await unlink(join(ROOT, "assets/rs3/bosses/zamorak.png")).catch((error) => {
 
 const merged = {
   ...base,
-  snapshotDate: expansion.snapshotDate ?? base.snapshotDate,
-  notes: [...(base.notes ?? []), ...(expansion.notes ?? [])],
+  snapshotDate: expansions.at(-1)?.snapshotDate ?? base.snapshotDate,
+  notes: [
+    ...(base.notes ?? []),
+    ...expansions.flatMap((expansion) => expansion.notes ?? []),
+  ],
   assets,
 };
 
@@ -59,8 +69,12 @@ try {
   generated.sourceManifests = [
     "assets/source-manifest.json",
     "assets/source-manifest-expansion.json",
+    "assets/source-manifest-expansion-2.json",
   ];
-  generated.expansionManifest = "assets/source-manifest-expansion.json";
+  generated.expansionManifests = [
+    "assets/source-manifest-expansion.json",
+    "assets/source-manifest-expansion-2.json",
+  ];
   await writeFile(GENERATED_PATH, `${JSON.stringify(generated, null, 2)}\n`);
 } finally {
   await writeFile(BASE_PATH, originalText);

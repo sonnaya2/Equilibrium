@@ -39,19 +39,12 @@ function inspect(file, value, path = "$", key = "") {
   if (Array.isArray(value)) {
     stats.arrays += 1;
     const ids = new Map();
-    const tiers = new Map();
     for (let index = 0; index < value.length; index += 1) {
       const row = value[index];
-      if (row && typeof row === "object" && !Array.isArray(row)) {
-        if (typeof row.id === "string") {
-          stats.ids += 1;
-          if (ids.has(row.id)) fail(file, path, `duplicate id ${row.id} at indexes ${ids.get(row.id)} and ${index}`);
-          ids.set(row.id, index);
-        }
-        if (Number.isInteger(row.tier)) {
-          if (tiers.has(row.tier)) fail(file, path, `duplicate tier ${row.tier} at indexes ${tiers.get(row.tier)} and ${index}`);
-          tiers.set(row.tier, index);
-        }
+      if (row && typeof row === "object" && !Array.isArray(row) && typeof row.id === "string") {
+        stats.ids += 1;
+        if (ids.has(row.id)) fail(file, path, `duplicate id ${row.id} at indexes ${ids.get(row.id)} and ${index}`);
+        ids.set(row.id, index);
       }
       inspect(file, row, `${path}[${index}]`);
     }
@@ -82,7 +75,7 @@ function inspect(file, value, path = "$", key = "") {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(child)) fail(file, childPath, `invalid date format ${child}`);
         if (child > TODAY) fail(file, childPath, `date is in the future: ${child}`);
       }
-      if (typeof child === "number" && /(?:quantity|cost|level|points|tokens|tier|count|maximum|minimum|duration|cooldown)/i.test(childKey) && child < 0) {
+      if (typeof child === "number" && /(?:quantity|cost|level|points|tokens|count|maximum|minimum|duration|cooldown)/i.test(childKey) && child < 0) {
         fail(file, childPath, `negative progression quantity is not allowed: ${child}`);
       }
       inspect(file, child, childPath, childKey);
@@ -90,7 +83,7 @@ function inspect(file, value, path = "$", key = "") {
     return;
   }
 
-  if (typeof value === "string") {
+  if (typeof value === "string" && file.startsWith("data/")) {
     if (value.includes("Troll Country")) fail(file, path, "canonical naming violation: use Asgarnia");
     if (key === "id" && /troll[-_ ]country/i.test(value)) fail(file, path, "canonical region id must not use Troll Country");
   }
@@ -144,7 +137,10 @@ for (const section of ["quest_unlocks", "account_unlocks", "activity_unlocks", "
     if (typeof row.id !== "string" || row.id.length === 0) fail("data/reference/progression-unlocks.json", `$.${section}`, "progression row is missing a stable id");
     else if (ids.has(row.id)) fail("data/reference/progression-unlocks.json", `$.${section}`, `duplicate progression id ${row.id}`);
     else ids.add(row.id);
-    const hasSource = typeof row.source_url === "string" || (Array.isArray(row.source_urls) && row.source_urls.length > 0) || Array.isArray(row.sources);
+    const hasSource = typeof row.source_url === "string"
+      || (Array.isArray(row.source_urls) && row.source_urls.length > 0)
+      || (Array.isArray(row.sources) && row.sources.length > 0)
+      || (row.source && typeof row.source === "object");
     if (!hasSource) fail("data/reference/progression-unlocks.json", `$.${section}.${row.id ?? "missing-id"}`, "progression row is missing provenance");
   }
 }

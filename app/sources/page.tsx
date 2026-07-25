@@ -42,7 +42,7 @@ export default function SourcesPage() {
             <dt className="text-sm">
               <a
                 href={c.url}
-                className="font-medium text-parch-50 transition-colors duration-150 hover:text-brass-300"
+                className="font-medium text-parch-50 transition-colors duration-150 hover:text-gold-300"
                 rel="noreferrer noopener"
               >
                 {c.name}

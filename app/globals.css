@@ -3,7 +3,7 @@
 /*
   Sampled from the in-game league panel and RuneScape: DragonWilds key art.
   Ground is warm umber and the chrome accent is gem green: 130 degrees of hue
-  separation, so the accent has somewhere to punch. Brass is engraved display
+  separation, so the accent has somewhere to punch. Gold is engraved display
   ink only and never marks an interactive state. The god-path triad is data.
   Full rationale and the sanctioned exceptions live in the equilibrium-ui skill.
 */
@@ -21,9 +21,9 @@
   --color-stone-950: #0d0a07;
   --color-stone-carve: #463a29;
 
-  --color-brass-300: #f3c97b;
-  --color-brass-400: #e0b264;
-  --color-brass-500: #a87c3c;
+  --color-gold-300: #f3c97b;
+  --color-gold-400: #e0b264;
+  --color-gold-500: #a87c3c;
 
   --color-gem-200: #8ff0cd;
   --color-gem-300: #57e0ae;
@@ -238,5 +238,57 @@ input:focus-visible {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-parch-300);
+  }
+
+  /*
+    Vine frame: viewport-edge growth bound to the pick count. An instrument,
+    not decoration — it is a second read of picks spent. Motion is one
+    transition on state change; nothing idles. The reduced-motion rule above
+    already kills it, no second path here.
+  */
+  .vine-frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .vine-frame path {
+    stroke-dashoffset: var(--vine-grow, 1);
+    transition: stroke-dashoffset 180ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .vine-frame .leaf {
+    transform: scale(var(--leaf-on, 0));
+    transform-origin: center;
+    transition: transform 160ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  /* Quest count sitting directly on a map slab — no chip background. */
+  .slab-chip {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    line-height: 1;
+    color: var(--color-parch-50);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Inspector stat strip: the countable facts about one region. */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .stat-strip .stat-label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--color-parch-500);
+  }
+  .stat-strip .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--color-parch-50);
+    font-variant-numeric: tabular-nums;
   }
 }

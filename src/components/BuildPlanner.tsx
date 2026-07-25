@@ -81,25 +81,24 @@ export function BuildPlanner({
   resetCount: number;
 }) {
   // All picks live in the shared unlock store — same state the map edits.
-  const { build, loaded, toggleRegion, toggleRelic, pickBlessing, resetBlessings } = useBuild();
+  const { build, toggleRegion, toggleRelic, pickBlessing, resetBlessings } = useBuild();
   const picks = build.elective;
   const [focusId, setFocusId] = useState<string>(regions[0]?.id ?? "");
-  const [copied, setCopied] = useState(false);
 
   const picked = (id: string) => (picks as string[]).includes(id);
   const isOpen = (r: PlannerRegion) => r.availability !== "elective" || picked(r.id);
   const focus = regions.find((r) => r.id === focusId) ?? regions[0];
   const openCount = regions.filter(isOpen).length;
-  const paths = (blessingTiers[0]?.paths ?? [...BLESSING_PATHS]).filter(
-    (p): p is BlessingPath => (BLESSING_PATHS as readonly string[]).includes(p),
+  const paths = blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"];
+
+  const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0).length;
+  const anyBlessingRevealed = blessingTiers.some(
+    (t) => t.revealed && asBlessingChoices(t.choices).length > 0,
   );
   const alignments = godTierAlignments(build.blessingPicks);
   const resetsLeft = blessingResetsLeft(build);
-  const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0);
-  const blessingChoices = blessingTiers.flatMap((tier) =>
-    asBlessingChoices(tier.choices).map((choice) => ({ tier: tier.tier, ...choice })),
-  );
 
+  const [copied, setCopied] = useState(false);
   const copyShareLink = () => {
     void navigator.clipboard?.writeText(buildShareUrl(build));
     setCopied(true);
@@ -111,7 +110,7 @@ export function BuildPlanner({
       <div className="flex flex-col gap-6">
         <section>
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
               Regions
             </h2>
             <span className="num text-xs text-parch-400">
@@ -188,17 +187,15 @@ export function BuildPlanner({
 
         <section className="border-t border-stone-750 pt-4">
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
               Relics
             </h2>
             <span className="num text-xs text-parch-400">
-              {revealedRelicTiers.length} of {relicTiers.length} tiers revealed
+              {revealedRelicTiers} of {relicTiers.length} tiers revealed
             </span>
             <span className="h-px flex-1 bg-stone-750" />
             <span className="text-xs text-parch-400">
-              {Object.keys(build.relics).length
-                ? `${Object.keys(build.relics).length} picked`
-                : "none picked"}
+              {Object.values(build.relics).join(" · ") || "none picked"}
             </span>
           </div>
 
@@ -225,7 +222,8 @@ export function BuildPlanner({
                       <button
                         key={relic.name}
                         type="button"
-                        title={relic.effects.join(" ")}
+                        title={relic.effects[0]}
+                        aria-pressed={selected}
                         onClick={() => toggleRelic(tier.tier, relic.name)}
                         className={hexClass("md", selected ? "selected" : "open")}
                       >
@@ -239,11 +237,33 @@ export function BuildPlanner({
               );
             })}
           </div>
+          {relicTiers.map((tier) => {
+            const choice = tier.choices.find((c) => c.name === build.relics[String(tier.tier)]);
+            if (!choice) return null;
+            return (
+              <p key={tier.tier} className="mt-2 text-xs leading-5 text-parch-400">
+                <span className="text-parch-100">{choice.name}</span> — {choice.effects.join(" ")}
+                {choice.sourceUrl ? (
+                  <>
+                    {" "}
+                    <a
+                      href={choice.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-2"
+                    >
+                      Source
+                    </a>
+                  </>
+                ) : null}
+              </p>
+            );
+          })}
         </section>
 
         <section className="border-t border-stone-750 pt-4">
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-brass-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
               Blessings
             </h2>
             <span className="text-xs text-parch-400">
@@ -256,7 +276,7 @@ export function BuildPlanner({
               disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
               className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Reset blessings
+              Reset
             </button>
           </div>
 
@@ -286,18 +306,17 @@ export function BuildPlanner({
                   </span>
                   {blessingTiers.map((tier) => {
                     if (tier.godTier) {
-                      const aligned = alignments[tier.tier] === path;
                       return (
-                        <Hex key={tier.tier} size="sm" state={aligned ? "selected" : "unrevealed"}>
-                          <span
-                            className={`absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)] ${
-                              aligned ? "bg-brass-400" : "bg-stone-750"
-                            }`}
-                          />
+                        <Hex key={tier.tier} size="sm" state="unrevealed">
+                          <span className="absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 bg-gold-400 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
                         </Hex>
                       );
                     }
                     const pickIndex = PATH_TIERS.indexOf(tier.tier);
+                    const validPath = (BLESSING_PATHS as readonly string[]).includes(path);
+                    if (pickIndex < 0 || !validPath) {
+                      return <Hex key={tier.tier} size="sm" state="unrevealed" />;
+                    }
                     const locked = pickIndex > build.blessingPicks.length;
                     const selected = build.blessingPicks[pickIndex] === path;
                     return (
@@ -307,10 +326,10 @@ export function BuildPlanner({
                         disabled={locked}
                         aria-pressed={selected}
                         aria-label={`Tier ${tier.tier} ${path}`}
-                        onClick={() => pickBlessing(tier.tier, path)}
+                        onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
                         className={hexClass(
                           "sm",
-                          locked ? "locked" : selected ? "selected" : "open",
+                          selected ? "selected" : locked ? "unrevealed" : "open",
                         )}
                       />
                     );
@@ -318,22 +337,37 @@ export function BuildPlanner({
                 </div>
               ))}
             </div>
-            {blessingChoices.length > 0 ? (
-              <div className="mt-3 grid gap-2">
-                {blessingChoices.map((choice) => (
-                  <div key={`${choice.tier}-${choice.name}`} className="text-xs leading-5 text-parch-300">
-                    <span className="text-parch-50">
-                      T{choice.tier} · {choice.name}
-                    </span>{" "}
-                    — {choice.effects.join(" ")}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-2 text-xs text-parch-400">
+            <p className="mt-2 text-xs text-parch-400">
+              {blessingTiers
+                .filter((t) => t.godTier)
+                .map((t) =>
+                  alignments[t.tier] ? `Tier ${t.tier}: ${alignments[t.tier]} god` : `Tier ${t.tier}: god undecided`,
+                )
+                .join(" · ")}
+            </p>
+            {!anyBlessingRevealed ? (
+              <p className="mt-1 text-xs text-parch-400">
                 No blessing is revealed yet. The lattice is the shape of the choice, not a guess at
                 its contents.
               </p>
+            ) : (
+              <div className="mt-3 grid gap-2">
+                {blessingTiers
+                  .filter((t) => t.revealed)
+                  .flatMap((tier) =>
+                    asBlessingChoices(tier.choices).map((choice) => (
+                      <div
+                        key={`${tier.tier}-${choice.name}`}
+                        className="text-xs leading-5 text-parch-300"
+                      >
+                        <span className="text-parch-50">
+                          T{tier.tier} {choice.name}
+                        </span>{" "}
+                        — {choice.effects.join(" ")}
+                      </div>
+                    )),
+                  )}
+              </div>
             )}
           </div>
         </section>

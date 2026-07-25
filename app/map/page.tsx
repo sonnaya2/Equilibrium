@@ -3,6 +3,7 @@ import { PageHeading } from "@/components/Heading";
 import { MapLoader } from "@/map/MapLoader";
 import { RegionPlanner, type PlannerRegion } from "@/map/RegionPlanner";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
+import { REGION_METRICS_BY_ID } from "@/map/data/regionMetrics";
 import { getResearchCatalog } from "@/research/catalog";
 import type { RegionId } from "@/league";
 
@@ -16,10 +17,11 @@ export default function MapPage() {
   const catalog = getResearchCatalog();
   const plannerRegions: PlannerRegion[] = catalog.regions.map((r) => ({
     id: r.id as RegionId,
-    // In-game display names (Wilderness, Kharidian Desert, …) are our overlay
+    // In-game display names (Wilderness, Kharidian Desert, .) are our overlay
     // data in regionAnchors; the catalog keeps the short data names.
     name: REGION_ANCHOR_BY_ID.get(r.id as RegionId)?.name ?? r.name,
     availability: r.availability as PlannerRegion["availability"],
+    quests: REGION_METRICS_BY_ID.get(r.id as RegionId)?.quests ?? 0,
     areas: r.areas,
     content: r.content.map((c) => ({ name: c.name, kind: c.kind, confidence: c.confidence })),
     hardRules: r.hardRules,

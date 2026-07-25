@@ -18,6 +18,8 @@ export interface PlannerRegion {
   id: RegionId;
   name: string;
   availability: "starting" | "automatic_early" | "elective";
+  /** Quests touching the region — the count a pick unlocks. */
+  quests: number;
   areas: string[];
   content: Array<{ name: string; kind: string; confidence: string }>;
   hardRules: string[];
@@ -80,7 +82,8 @@ export function RegionPlanner({ regions }: { regions: PlannerRegion[] }) {
         >
           <Hex on={unlocked} />
           <span className="text-sm font-medium">{region.name}</span>
-          <span className="ml-auto text-xs text-parch-500">
+          <span className="num ml-auto text-xs text-parch-300">{region.quests}</span>
+          <span className="w-20 text-right text-xs text-parch-500">
             {region.availability === "starting"
               ? "start"
               : region.availability === "automatic_early"

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import regionsData from "#data/league/regions.json";
 import { BLESSING_RESET_COUNT, PATH_TIERS } from "./blessings";
 import {
   blessingResetsLeft,
@@ -10,6 +11,7 @@ import {
   MILESTONE_REGION,
   normalizeBuild,
   pickBlessing,
+  REGION_IDS,
   resetBlessings,
   STARTING_REGIONS,
   toggleElective,
@@ -17,6 +19,21 @@ import {
   UNLOCK_CAP,
   unlockedRegions,
 } from "./index";
+
+describe("region domain drift guard", () => {
+  const idsWithAvailability = (availability: string) =>
+    regionsData.records.filter((r) => r.availability === availability).map((r) => r.id);
+
+  it("runtime grouping comes from data/league/regions.json", () => {
+    expect([...STARTING_REGIONS]).toEqual(idsWithAvailability("starting"));
+    expect([MILESTONE_REGION]).toEqual(idsWithAvailability("automatic_early"));
+    expect([...ELECTIVE_REGIONS]).toEqual(idsWithAvailability("elective"));
+  });
+
+  it("the compile-time union covers every canonical id and nothing else", () => {
+    expect([...REGION_IDS].sort()).toEqual(regionsData.records.map((r) => r.id).sort());
+  });
+});
 
 describe("unlockedRegions", () => {
   it("always includes the fixed starts and the Karamja milestone", () => {

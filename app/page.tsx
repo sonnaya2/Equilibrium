@@ -22,7 +22,7 @@ export default function OverviewPage() {
   return (
     <Page>
       <header className="mb-6">
-        <h1 className="font-display text-lg uppercase tracking-[0.16em] text-brass-400">
+        <h1 className="font-display text-lg uppercase tracking-[0.16em] text-gold-400">
           Leagues II: Equilibrium
         </h1>
         <p className="mt-1 max-w-prose text-sm text-parch-300">
@@ -57,7 +57,7 @@ export default function OverviewPage() {
               >
                 <Link
                   href={href}
-                  className="w-20 shrink-0 font-medium text-parch-50 transition-colors duration-150 hover:text-brass-300"
+                  className="w-20 shrink-0 font-medium text-parch-50 transition-colors duration-150 hover:text-gold-300"
                 >
                   {name}
                 </Link>

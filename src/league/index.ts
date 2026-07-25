@@ -6,6 +6,7 @@
  * Blessing paths, god tiers and the reset count derive from data/league/blessings.json.
  */
 
+import regionsData from "#data/league/regions.json";
 import {
   BLESSING_PATHS,
   BLESSING_RESET_COUNT,
@@ -29,18 +30,22 @@ export const REGION_IDS = [
 
 export type RegionId = (typeof REGION_IDS)[number];
 
-export const STARTING_REGIONS: readonly RegionId[] = ["misthalin", "havenhythe"];
-export const MILESTONE_REGION: RegionId = "karamja";
-export const ELECTIVE_REGIONS: readonly RegionId[] = [
-  "asgarnia",
-  "kandarin",
-  "fremennik",
-  "forinthry",
-  "desert",
-  "morytania",
-  "tirannwn",
-  "anachronia",
-];
+export function isRegionId(value: unknown): value is RegionId {
+  return typeof value === "string" && (REGION_IDS as readonly string[]).includes(value);
+}
+
+/** Runtime grouping comes from the canonical records; REGION_IDS only names the
+ *  compile-time union. The drift-guard test fails loudly when the two disagree. */
+function idsWithAvailability(availability: string): RegionId[] {
+  return regionsData.records
+    .filter((r) => r.availability === availability)
+    .map((r) => r.id)
+    .filter(isRegionId);
+}
+
+export const STARTING_REGIONS: readonly RegionId[] = idsWithAvailability("starting");
+export const MILESTONE_REGION: RegionId = idsWithAvailability("automatic_early")[0] ?? "karamja";
+export const ELECTIVE_REGIONS: readonly RegionId[] = idsWithAvailability("elective");
 export const ELECTIVE_CAP = 3;
 export const UNLOCK_CAP = STARTING_REGIONS.length + 1 + ELECTIVE_CAP; // 6
 
@@ -57,10 +62,6 @@ export const STORAGE_KEY = "eq:build:v1";
 
 export function emptyBuild(): BuildState {
   return { elective: [], relics: {}, blessingPicks: [], blessingResetsUsed: 0 };
-}
-
-export function isRegionId(value: unknown): value is RegionId {
-  return typeof value === "string" && (REGION_IDS as readonly string[]).includes(value);
 }
 
 /** Tolerates corrupt or stale persisted shapes — anything unrecognised drops out. */

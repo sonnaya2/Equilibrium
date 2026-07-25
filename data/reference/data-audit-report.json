@@ -18,11 +18,11 @@
     "removed combat unlocks excluded from active progression"
   ],
   "stats": {
-    "files": 108,
-    "jsonObjects": 4174,
-    "arrays": 3808,
-    "ids": 744,
-    "sourceUrls": 2170,
+    "files": 109,
+    "jsonObjects": 4245,
+    "arrays": 3810,
+    "ids": 813,
+    "sourceUrls": 2172,
     "unresolvedRows": 330,
     "unverifiedRows": 44
   },

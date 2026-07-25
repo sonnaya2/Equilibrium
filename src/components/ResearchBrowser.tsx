@@ -293,24 +293,50 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
   const [skillId, setSkillId] = useState(catalog.skills[0]?.id ?? "");
   const normalizedQuery = query.trim().toLowerCase();
 
+  const regionSearchText = useMemo(
+    () =>
+      new Map(
+        catalog.regions.map((region) => [
+          region.id,
+          [
+            region.name,
+            region.id,
+            ...region.aliases,
+            ...region.skills,
+            ...region.areas,
+            ...region.content.flatMap((row) => [row.name, row.kind, row.detail]),
+            ...region.upgrades.flatMap((row) => [row.name, row.category, row.detail, ...row.requirements]),
+            ...region.training.map(methodSearchText),
+          ]
+            .join(" ")
+            .toLowerCase(),
+        ]),
+      ),
+    [catalog.regions],
+  );
+
+  const skillSearchText = useMemo(
+    () =>
+      new Map(
+        catalog.skills.map((skill) => [
+          skill.id,
+          [skill.name, ...skill.regions, ...skill.methods.map(methodSearchText)]
+            .join(" ")
+            .toLowerCase(),
+        ]),
+      ),
+    [catalog.skills],
+  );
+
   const filteredRegions = useMemo(() => {
     if (!normalizedQuery) return catalog.regions;
-    return catalog.regions.filter((region) => [
-      region.name,
-      region.id,
-      ...region.aliases,
-      ...region.skills,
-      ...region.areas,
-      ...region.content.flatMap((row) => [row.name, row.kind, row.detail]),
-      ...region.upgrades.flatMap((row) => [row.name, row.category, row.detail, ...row.requirements]),
-      ...region.training.map(methodSearchText),
-    ].join(" ").toLowerCase().includes(normalizedQuery));
-  }, [catalog.regions, normalizedQuery]);
+    return catalog.regions.filter((region) => regionSearchText.get(region.id)?.includes(normalizedQuery));
+  }, [catalog.regions, regionSearchText, normalizedQuery]);
 
   const filteredSkills = useMemo(() => {
     if (!normalizedQuery) return catalog.skills;
-    return catalog.skills.filter((skill) => [skill.name, ...skill.regions, ...skill.methods.map(methodSearchText)].join(" ").toLowerCase().includes(normalizedQuery));
-  }, [catalog.skills, normalizedQuery]);
+    return catalog.skills.filter((skill) => skillSearchText.get(skill.id)?.includes(normalizedQuery));
+  }, [catalog.skills, skillSearchText, normalizedQuery]);
 
   const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? filteredRegions[0] ?? catalog.regions[0];
   const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? filteredSkills[0] ?? catalog.skills[0];

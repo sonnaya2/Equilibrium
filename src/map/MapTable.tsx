@@ -28,16 +28,19 @@ export function MapTable({
     THREE.TextureLoader,
     REGION_SHAPES.map((s) => `/game/regions/${s.id}.png`),
   );
-  // The loader cache hands the same Texture back on every mount, but its GPU
-  // state belongs to the renderer that uploaded it. Own a clone per mount.
+  // The loader cache hands the same Texture back on every mount and its upload
+  // state belongs to the renderer that uploaded it. clone() is not enough here:
+  // it shares the Source, and the Source keeps that state across a renderer
+  // swap, so a remount re-uploads an already-initialized source and three
+  // throws. Wrap the decoded image in a fresh Texture so each mount owns one.
   const crests = useMemo(
     () =>
       loaded.map((t) => {
-        const clone = t.clone();
-        clone.colorSpace = THREE.SRGBColorSpace;
-        clone.anisotropy = 8;
-        clone.needsUpdate = true;
-        return clone;
+        const tex = new THREE.Texture(t.image);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 8;
+        tex.needsUpdate = true;
+        return tex;
       }),
     [loaded],
   );

@@ -42,8 +42,9 @@ export function RotationPlanner() {
   const [result, setResult] = useState<RotationSummary | null>(null);
 
   useEffect(() => {
-    const stored = loadState<string[]>(STORAGE_KEY, []);
-    setQueue(stored.filter((id) => ALL_ABILITIES.some((a) => a.id === id)));
+    const stored = loadState<unknown>(STORAGE_KEY, []);
+    const list = Array.isArray(stored) ? stored : [];
+    setQueue(list.filter((id): id is string => typeof id === "string" && ALL_ABILITIES.some((a) => a.id === id)));
   }, []);
 
   const updateQueue = (next: string[]) => {
@@ -52,12 +53,13 @@ export function RotationPlanner() {
   };
 
   const run = () => {
+    const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
     setResult(
       simulate({
-        base: Math.max(0, base),
-        level: Math.min(Math.max(1, level), 145),
-        accuracy: Math.min(Math.max(0, accuracy), 100) / 100,
-        crit: { chance: Math.min(Math.max(0, critChance), 100) / 100 },
+        base: Math.max(0, finite(base, 0)),
+        level: Math.min(Math.max(1, finite(level, 99)), 145),
+        accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100) / 100,
+        crit: { chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100 },
         abilities: ALL_ABILITIES,
         rotation: rotationOf(...queue),
         ammo: ammo === "none" ? undefined : ammo,

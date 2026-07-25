@@ -148,6 +148,14 @@ describe("simulate — ranged", () => {
     expect(s.casts.at(-1)!.adrenalineAfter).toBe(5 + 9 + 5);
   });
 
+  it("shadow tendrils without an active imbue grants no phantom adrenaline", () => {
+    const s = simulate({
+      ...rangedInput,
+      rotation: rotationOf("shadow_tendrils", "ranged_attack"),
+    });
+    expect(s.casts.map((c) => c.adrenalineAfter)).toEqual([0, 9]);
+  });
+
   it("shadow tendrils crits guaranteed even at 0% crit chance", () => {
     const s = simulate({ ...rangedInput, crit: { chance: 0 }, rotation: rotationOf("shadow_tendrils") });
     expect(s.casts[0].result.expected).toBeCloseTo(2200 * 1.5);

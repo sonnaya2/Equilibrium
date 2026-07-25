@@ -117,7 +117,9 @@ export function activateShadowImbued(tick: number): ShadowImbuedState {
   return { expiresAtTick: tick + SHADOW_IMBUED_DURATION_TICKS };
 }
 
-export function extendShadowImbued(state: ShadowImbuedState): ShadowImbuedState {
+/** Tendrils extends an active window only — never creates one. */
+export function extendShadowImbued(state: ShadowImbuedState, tick: number): ShadowImbuedState {
+  if (tick >= state.expiresAtTick) return state;
   return { expiresAtTick: state.expiresAtTick + SHADOW_TENDRILS_IMBUED_EXTENSION_TICKS };
 }
 

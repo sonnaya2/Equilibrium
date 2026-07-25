@@ -10,6 +10,7 @@ import {
   extendShadowImbued,
   newDeathspore,
   newPuncture,
+  newShadowImbued,
   onRangedHit,
   PUNCTURE_CAP,
   punctureBonusPct,
@@ -83,8 +84,13 @@ describe("shadow imbued", () => {
     expect(shadowImbuedAdrenalinePerHit(state, 50)).toBe(0);
   });
 
-  it("shadow tendrils extends the window by 6 ticks", () => {
-    const state = extendShadowImbued(activateShadowImbued(0));
+  it("shadow tendrils extends an active window by 6 ticks", () => {
+    const state = extendShadowImbued(activateShadowImbued(0), 0);
     expect(state.expiresAtTick).toBe(56);
+  });
+
+  it("shadow tendrils never creates a window from nothing", () => {
+    expect(extendShadowImbued(newShadowImbued(), 0)).toEqual(newShadowImbued());
+    expect(extendShadowImbued(activateShadowImbued(0), 60).expiresAtTick).toBe(50);
   });
 });

@@ -327,9 +327,12 @@ frosted-cell exception met. Not before.
 
 ### One graph, eleven parameter sets
 
-Generated art stays banned, and there is no artist to hand-author eleven tiling surfaces. So:
-**one shared TSL node graph, per-region uniforms, one grade pass applied identically to all eleven.**
-That last part is the mechanism that makes them read as one artifact.
+Gen-AI imagery stays banned, and there is no artist to hand-author eleven tiling surfaces. Wiki and
+game art are available under CC BY-NC-SA, but photoreal scans fight the flat vector crests, so the
+board wants a stylised surface. So: **one shared TSL node graph, per-region uniforms, one grade pass
+applied identically to all eleven.** That last part is the mechanism that makes them read as one
+artifact. Reference tiles built from this exact parameter table already exist (seeded procedural
+noise, seam-verified) and can either ship as textures or be ported straight into TSL.
 
 `ExtrudeGeometry` emits exactly two material groups — group `0` for the caps, group `1` for the side
 walls (verified in `three.core.js`: `addGroup(start, …, 0)` on the lid block, `…, 1)` on the
@@ -759,12 +762,14 @@ Total ~5 days.
 
 1. **`docs/3d-map-handoff.md` is stale as a spec and wrong as a description.** It says
    `app/map/page.tsx` is a `<Stub />`, `data/league/regions.json` is empty, `src/league/index.ts` is
-   `export {}`, `public/` is empty, and no 3D libraries are installed. All five are false now. It
-   also carries settled decision #2 — *"Terrain is original stylized geometry. No traced heightmaps,
-   no extracted game assets, no copied wiki map art"* — which the shipped `MapTable.tsx` violates by
-   rendering `league-map.jpg` as the board. `AGENTS.md` sanctions the flat plate, so the two
-   documents disagree. This plan resolves it toward the handoff (authored geometry), which satisfies
-   both and matches the `equilibrium-ui` ledger. Put a superseded banner on the handoff.
+   `export {}`, `public/` is empty, and no 3D libraries are installed. All five are false now. Put a
+   superseded banner on it.
+
+   Decision #2 has since been corrected: wiki and game art *are* usable under CC BY-NC-SA with
+   attribution, and the real ban is copying another tool's interface. Authored geometry is still the
+   right call for the board — the plate carries Jagex's own baked-in markers, so overlaying ours
+   doubles every one — but that is now a design reason, not a licensing one, and tracing the world
+   map for coastline fidelity is allowed.
 
 2. **`app/globals.css` is on the old palette.** The gem ramp and the Order/Chaos/Balance triad match
    the ruling exactly. Nothing else does: surface is `#0e0d0b / #171613 / #1c1a17 / #23211d` where

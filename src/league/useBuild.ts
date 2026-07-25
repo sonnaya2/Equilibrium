@@ -62,11 +62,11 @@ export function useBuild() {
   return {
     build,
     loaded,
-    toggleRegion: (id: RegionId) => setState(toggleElective(build, id)),
-    toggleRelic: (tier: number, name: string) => setState(toggleRelic(build, tier, name)),
+    toggleRegion: (id: RegionId) => setState(toggleElective(state, id)),
+    toggleRelic: (tier: number, name: string) => setState(toggleRelic(state, tier, name)),
     pickBlessing: (pathTier: number, path: BlessingPath) =>
-      setState(pickBlessing(build, pathTier, path)),
-    resetBlessings: () => setState(resetBlessings(build)),
+      setState(pickBlessing(state, pathTier, path)),
+    resetBlessings: () => setState(resetBlessings(state)),
     resetBuild: () => setState(emptyBuild()),
   };
 }

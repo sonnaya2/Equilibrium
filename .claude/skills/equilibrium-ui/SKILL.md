@@ -8,8 +8,30 @@ description: The RS3 Equilibrium visual system - the palette sampled from the in
 This is the RS3 counterpart to `no-slop-ui` §5. That section's rulings were measured against
 EverSense/NTE, a different product: its `#FD61A8` pink accent, its "all dark grounds are now
 rejected" verdict and its "this codebase is not Tailwind" note describe that product, not this one.
-Everything else in `no-slop-ui` still applies as law, and its bans still win over generic pretty
-defaults.
+Everything else in `no-slop-ui` still applies, and its bans still win over generic pretty defaults.
+
+## Precedence — read this before quoting a ban at someone
+
+1. **What the user asked for wins.** These skills exist to stop the model's
+   defaults from being generic, not to overrule a person who told you what they
+   want. If a request collides with a ban, build the request, say once which ban
+   it touches and why the ban exists, and move on. Do not talk them out of it,
+   and do not water it down and call that a compromise.
+2. **The game's own language wins over the ban list.** If RuneScape does it —
+   blur on unrevealed content, a lit bevel on a hexagon, a loud desert — it is
+   in-world, not slop. The bans target the *model's* reflexes (rainbow chrome,
+   hero pitches, glassmorphism), not the world's material.
+3. **Only then, the ban list.**
+
+`no-slop-ui` is written as enumerated prohibitions with prose encouragement
+(§4.5, §9) as the counterweight. Enumerated rules fire harder than prose, so the
+practical failure mode here is over-guarding: refusing a good idea because a rule
+*could* be read to cover it. §4.5 exists precisely because bleached, over-corrected
+output fails just as hard as slop. When in doubt, build the bolder version — a
+timid screen is a failure state, not a safe one.
+
+Its "Tournament results" ledger is NTE verdicts. Useful as evidence, not binding
+here; "don't re-litigate" applies to that product's rounds, not to ours.
 
 **Product class:** game-world surface plus tool workbench. A free fan tool for players. Nothing is
 sold, nothing converts.
@@ -115,8 +137,21 @@ cannot carry a screen alone. `data/league/quests.json` has 281 records plus prec
 
 Real game art is the identity; a game tool with no game art scores BUSTED on `bot-audit` sweep 5.
 `assets/rs3/` holds 121 real PNGs and is not web-served, so art reaches the app through
-`public/game/`. Generated art stays banned. When a crest sits inside a region button, it needs
-`alt=""` or it changes the accessible name the e2e suite pins.
+`public/game/`. When a crest sits inside a region button it needs `alt=""`, or it changes the
+accessible name the e2e suite pins.
+
+**What you may use.** Extracted game art, RuneScape Wiki imagery, world-map art and map tiles, and
+official icons. The wiki is CC BY-NC-SA 3.0 and this is a free non-commercial fan tool: attribute it
+where the art shows and keep derived art under the same terms. Reach for more real art rather than
+inventing substitutes.
+
+**What you may make.** Procedural and script-generated assets — seeded noise, shader/TSL materials,
+SVG built from our own data. Deterministic output from code is authored work, not generated imagery.
+The terrain tiles are built this way, one graph with per-region parameters plus a shared grade pass.
+
+**What stays banned.** Gen-AI imagery, and copying another tool's *design* — pvme.io,
+rs-analysis.xyz and leagues.build give facts and lessons, never layout, components or wording. The
+distinction is art versus interface: their art is not theirs to guard, their interface is.
 
 ## Tournament ledger
 
@@ -125,10 +160,16 @@ Verdicts, so losses are not rebuilt.
 - **Hex Lattice — shipped.** The hexagon as literal layout grid at three densities, real crests inside
   cells, locked cells behind timber-and-crystal barrier. Survives because cells read as carved stone
   rather than neon.
-- **War Table — runner-up, in development as the 3D map.** A stage carrying real data. Its flat form
-  failed on one hard fact: `public/map/league-map.jpg` is a screenshot of the game's own Regions tab,
-  so it already carries Jagex's markers and every overlaid crest reads doubled. Raised per-region
-  geometry replacing the flat plate is the way out.
+- **War Table — shipping, and now the primary map.** Its flat form failed on one hard fact: the
+  Jagex plate is a screenshot of the game's own Regions tab, so it carries Jagex's markers and every
+  overlaid crest read doubled. Raised per-region geometry replaced the plate. Landed: authored region
+  rings on a shared border-node graph (~100 nodes, seams as shared polylines, invariants tested), an
+  SVG flat board that doubles as the no-WebGPU fallback, extruded slabs with crests and quest counts,
+  and authored per-region camera framings. Outstanding: TSL materials, vines, ledger/inspector split.
+- **Region identity is structural, not hue.** Four green regions rendered as interchangeable mush at
+  slab scale. Furrows, hedgerow plots, open heath and canopy clumps separate them; tint alone does
+  not. Any future terrain work keeps structure as the differentiator and the shared grade pass as
+  the unifier.
 - **Stone Ledger — scrapped.** Rail plus dense grid plus inspector. Passed every ban and had no
   identity; the Fribbels topology alone is not a visual direction.
 - **Honeycomb offset harms tabular meaning.** The region hive interlocks, but the blessing lattice

@@ -80,4 +80,4 @@ Read `AGENTS.md` before changing the app. The repo also has project-specific gui
 
 ## Credits
 
-RuneScape Wiki, RS Analysis, PvME, Jagex, and leagues.build for UX inspiration only.
+RuneScape Wiki, RS Analysis, PvME, and Jagex.

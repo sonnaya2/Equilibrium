@@ -245,7 +245,7 @@ export function simulate(input: SimulateInput): RotationSummary {
         state = patchRanged(state, { deathspore: onRangedHit(state.ranged.deathspore, working.hits.length) });
       }
       if (ability.id === "shadow_tendrils") {
-        state = patchRanged(state, { shadowImbued: extendShadowImbued(state.ranged.shadowImbued) });
+        state = patchRanged(state, { shadowImbued: extendShadowImbued(state.ranged.shadowImbued, readyTick) });
       }
       const perHit = shadowImbuedAdrenalinePerHit(state.ranged.shadowImbued, readyTick);
       if (perHit > 0 && working.hits.length > 0) {

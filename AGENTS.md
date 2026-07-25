@@ -97,11 +97,22 @@ accent in Equilibrium gem green, gold reserved for engraved display type, and th
 triad reserved as data semantics. `equilibrium-ui` carries the token contract and the sanctioned
 exceptions.
 
-Four references, zero clones — steal the lesson, never the markup: **RuneScape Wiki** (density,
+Three references, zero clones — steal the lesson, never the markup: **RuneScape Wiki** (density,
 dark-mode familiarity, tables), **rs-analysis.xyz** (serious calculator feel with many parameters
-exposed without becoming unusable), **leagues.build** (planner flow, map-to-build relationship),
-**RuneScape itself** (colour, iconography, League identity). Normalise facts into our own compact copy
-rather than reproducing theirs. Real game art is welcome; generated art is not.
+exposed without becoming unusable), **RuneScape itself** (colour, iconography, League identity). Normalise facts into our own compact copy
+rather than reproducing theirs.
+
+**Art and design are separate rules, and only one of them is a ban.**
+
+*Art is fair game.* Game assets, wiki imagery, world-map art, icons and map tiles can all be used.
+The RuneScape Wiki is CC BY-NC-SA 3.0 and this is a free non-commercial fan tool, so credit it where
+it shows and keep derived art under the same terms. Extracted game art (the region crests in
+`public/game/`) is the identity — use more of it, not less. Procedural and script-generated
+textures are fine too; only gen-AI imagery is banned.
+
+*Copying another tool's design is the ban.* pvme.io, rs-analysis.xyz and leagues.build are for facts
+and lessons. Never their layout, component structure, class names, or wording — if a screen would be
+recognisable as theirs, it is wrong.
 
 Top-level IA:
 

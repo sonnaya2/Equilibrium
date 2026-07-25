@@ -5,7 +5,7 @@ const CREDITS = [
   {
     name: "RuneScape Wiki",
     url: "https://runescape.wiki",
-    note: "Primary source for current-game mechanics, ability and equipment values, and update histories. Wiki-derived material is used under the Wiki's attribution and licensing terms.",
+    note: "Primary source for current-game mechanics, ability and equipment values, and update histories. Wiki text and imagery, including region crests and map art, are used under CC BY-NC-SA 3.0. Facts are rewritten in our own words rather than copied.",
   },
   {
     name: "RS Analysis",
@@ -16,11 +16,6 @@ const CREDITS = [
     name: "PvM Encyclopedia (PvME)",
     url: "https://pvme.io",
     note: "Used to discover mechanics and interactions worth investigating. Values are re-verified against current sources before use.",
-  },
-  {
-    name: "leagues.build",
-    url: "https://leagues.build",
-    note: "UX inspiration for League planner flow only. Not a data or visual source.",
   },
   {
     name: "Jagex",

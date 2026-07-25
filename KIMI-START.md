@@ -128,7 +128,7 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 
 - [x] **Relic reveal pass-through:** `app/build/page.tsx` currently finds only Tier 1 and passes `tierOneRelics` into `BuildPlanner`. Replace that one-off shape with the full tier records from `data/league/relics.json`, including `revealed`, `verified` and source metadata. `BuildPlanner` must render whatever tiers are populated later without code changes or hardcoded "Tier 1 only" copy.
 - [x] **Blessing reveal pass-through:** `app/build/page.tsx` currently drops each Blessing tier's future choice/effect/source payload and passes only tier/path/god-tier/revealed metadata. Pass the normalized record through so a later data sync can populate nodes/effects and have them appear automatically. Preserve unrevealed rows as unknown.
-- [ ] **Task-record consumer:** `app/tasks/page.tsx` currently shows point metadata, the record count and the waiting-on message but never renders `tasksData.records`. Add a normalized records consumer with filtering/search built from fields actually present in the canonical task schema. With zero records it must preserve the current honest empty state; once rows land they should appear without a component rewrite.
+- [x] **Task-record consumer:** `app/tasks/page.tsx` currently shows point metadata, the record count and the waiting-on message but never renders `tasksData.records`. Add a normalized records consumer with filtering/search built from fields actually present in the canonical task schema. With zero records it must preserve the current honest empty state; once rows land they should appear without a component rewrite.
 - [ ] **Planner-expansion adapter:** add one typed accessor/join for `data/research/planner-expansions.json` keyed by stable record ID plus region/skill. Feed the sourced combat-training spots, Runecrafting access, Invention/Archaeology progression and unique-drop rows into the existing region/skill/build views. Do not copy those rows into component-local arrays.
 - [ ] **Provenance pass-through:** stop dropping source/confidence state between JSON and planner consumers. Relic `sourceUrl` is already mapped but not rendered; Blessing source/verification is not passed at all. Planner-expansion rows also need their source/confidence state kept available to the UI rather than flattened into unsourced prose.
 - [ ] **Region-domain drift guard:** `src/league/index.ts` currently repeats the region IDs and starting/automatic/elective grouping that already exists in `data/league/regions.json`. Keep any compile-time union needed by TypeScript, but make runtime grouping come from canonical region records and add a contract test that fails when the domain IDs/availability drift from `data/league/regions.json`. Do not create another hand-maintained region list.
@@ -143,8 +143,10 @@ If a checkbox requires a fact that is not already present in `data/`, **stop tha
 
 - **Boss-specific scope.** No boss guides, phase sims, kill-time or enrage calculators. Generic target
   only. This is the single most likely place to drift.
-- **Cloning.** rs-analysis.xyz, pvme.io and leagues.build are for lessons, not markup. Take the facts and
-  the math; write our own components and our own words.
+- **Cloning another tool's interface.** rs-analysis.xyz, pvme.io and leagues.build are for lessons,
+  not markup. Take the facts and the math; write our own components and our own words. This is about
+  their *interface* — game art and wiki imagery are fine to use (CC BY-NC-SA, attribute it), and
+  reaching for real art over invented substitutes is encouraged.
 - **Stale combat data.** Pre-March-2026 values are wrong by default. PvME is for discovering that a
   mechanic exists, not for its current number.
 - **Merging the League ruleset into base combat.** It stays a separate layer that can be switched off.

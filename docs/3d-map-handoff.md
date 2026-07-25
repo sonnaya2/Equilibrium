@@ -1,5 +1,12 @@
 # Handoff: 3D Gielinor Map
 
+> **Superseded — read `docs/wartable-plan.md` instead.** Kept for its settled
+> decisions and its WebGPU/TSL constraints, which still hold. Everything this
+> file says about the *current state* is stale: the pages are no longer stubs,
+> `data/league/` is populated, the 3D libraries are installed, and the map has
+> shipped through P3 (rings, flat SVG board, extruded slabs, camera framings).
+> Decision #2 has also been corrected — wiki and game art are usable.
+
 **For:** Kimi V3
 **Repo:** https://github.com/sonnaya2/Equilibrium — public, default branch `main`
 **Live:** https://equilibrium-ruddy.vercel.app
@@ -15,7 +22,7 @@ The repo is a working Next.js scaffold with a real combat engine underway, but *
 **Settled decisions — do not reopen:**
 
 1. **WebGPU + TSL nodes, no WebGL fallback.** Maximum ceiling. Consequences spelled out below.
-2. **Terrain is original stylized geometry.** No traced heightmaps, no extracted game assets, no copied wiki map art.
+2. **Terrain is original stylized geometry, and wiki/game art is fair game to build it from.** Trace heightmaps, sample the world map, and use extracted game assets — the RuneScape Wiki is CC BY-NC-SA 3.0 and this is a free fan tool, so attribute it and keep it non-commercial. What stays banned is copying another *tool's* design: pvme.io, rs-analysis.xyz and leagues.build are for facts and lessons, never their layout, components or markup.
 3. **Planner first, cinematic second.** The map *is* the region-unlock planner; spectacle serves navigation.
 4. **You have full authority.** Deploy, install, use Context7, Playwright, the Vercel MCP, whatever you need. Use the latest version of everything.
 
@@ -358,7 +365,7 @@ Return **BLOCKED** rather than claiming visual verification you did not perform.
 
 ## Do not
 
-- Copy geometry, textures, markup, or copy from Jagex, the wiki, rs-analysis, pvme, or leagues.build.
+- Copy geometry, textures, markup, or copy from Jagex, the wiki, rs-analysis, or pvme.
 - Install `postprocessing` or `@react-three/postprocessing` — WebGL-only.
 - Use `THREE.PostProcessing` — renamed to `RenderPipeline` in r183.
 - Put map geometry into `data/league/regions.json`, or unverified gameplay numbers anywhere.

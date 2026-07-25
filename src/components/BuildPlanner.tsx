@@ -100,9 +100,14 @@ export function BuildPlanner({
 
   const [copied, setCopied] = useState(false);
   const copyShareLink = () => {
-    void navigator.clipboard?.writeText(buildShareUrl(build));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    if (!navigator.clipboard) return;
+    void navigator.clipboard
+      .writeText(buildShareUrl(build))
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {});
   };
 
   return (

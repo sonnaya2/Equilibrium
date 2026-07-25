@@ -28,6 +28,11 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+/** Number inputs yield NaN/Infinity on partial input or 1e999 — keep them out of the engine. */
+function finite(value: number, fallback: number): number {
+  return Number.isFinite(value) ? value : fallback;
+}
+
 function NumberField({
   label,
   value,
@@ -69,11 +74,11 @@ export function QuickCalculator() {
 
   const result = ability
     ? calculateAbility(ability, {
-        base: Math.max(0, base),
-        level: Math.min(Math.max(1, level), 145),
-        accuracy: Math.min(Math.max(0, accuracy), 100) / 100,
+        base: Math.max(0, finite(base, 0)),
+        level: Math.min(Math.max(1, finite(level, 99)), 145),
+        accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100) / 100,
         crit: {
-          chance: Math.min(Math.max(0, critChance), 100) / 100,
+          chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100,
           guaranteed: (ability as RangedAbilitySpec).guaranteedCrit,
         },
         context: { style },

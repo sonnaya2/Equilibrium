@@ -176,6 +176,35 @@
     },
     {
       "skill": "Thieving",
+      "method": "Fremennik citizen pickpocketing",
+      "region": "fremennik",
+      "level_range": "50-62+",
+      "xp_rate": "About 130,000 base XP/h once the target can be pickpocketed without stuns.",
+      "intensity": "low-input target swapping",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_method_region_inferred",
+      "location": "Fremennik Province settlements",
+      "notes": "One of the current guide's strong pre-safecracking targets. It has no inventory loot to interrupt the loop and is substantially faster than continuing Thieves' Guild doors through the 50s.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Menaphite marketeer pickpocketing",
+      "region": "desert",
+      "level_range": "51-62+",
+      "xp_rate": "About 133,000 base XP/h once the target can be pickpocketed without stuns.",
+      "intensity": "low-input target swapping",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Menaphos Merchant district",
+      "requirements": [
+        "Partial completion of The Jack of Spades in the base game"
+      ],
+      "notes": "A particularly strong Desert early/mid Thieving route because the target produces no inventory loot and sits immediately before safecracking progression.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
+      "skill": "Thieving",
       "method": "Keldagrim dwarf traders",
       "region": "fremennik",
       "level_range": "90+; quoted ceiling assumes 100% success",
@@ -275,6 +304,55 @@
       "location": "Anachronia Dinosaur Farm, on the island off Anachronia's west coast"
     },
     {
+      "skill": "Fishing",
+      "method": "Menafish",
+      "region": "desert",
+      "level_range": "52+ for food; 72-93 as the optimal no-Crystallise Ironman XP route",
+      "xp_rate": "not normalized; current Ironman guidance identifies Menaphos fishing as optimal experience from 72-93 when Crystallise is unavailable",
+      "intensity": "low-to-medium",
+      "freshness": "current_method_ironman_route",
+      "confidence": "confirmed_wiki_ironman_strategy",
+      "location": "Menaphos Port district and VIP skilling area",
+      "requirements": [
+        "52 Fishing for desert sole",
+        "60 Fishing for catfish",
+        "72 Fishing for beltfish",
+        "Menaphos access"
+      ],
+      "notes": "This route is unusually League-relevant because it trains Fishing while banking useful food. The Ironman guide recommends it from 72-93 for XP when Crystallise is not being used, and it can be started at 52 when food supply matters.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Strategies/Fishing"
+    },
+    {
+      "skill": "Crafting",
+      "method": "Al Kharid uncommon gem rocks into cut gems",
+      "region": "desert",
+      "level_range": "20-75",
+      "xp_rate": "not normalized; Catalyst League's no-trading Crafting guide uses this as its main level 20-75 route",
+      "intensity": "gather then process",
+      "freshness": "2025_league_route_current_base_mechanics",
+      "confidence": "confirmed_historical_league_guide",
+      "location": "Al Kharid mine",
+      "notes": "Strong Equilibrium candidate because it is self-supplied and was explicitly selected by the Wiki's prior no-trading League guide. Keep the cut gems for later porter production. Do not carry over Catalyst relic-specific auto-cut or auto-bank effects unless Equilibrium reveals an equivalent.",
+      "source": "https://runescape.wiki/w/Catalyst_League/Crafting"
+    },
+    {
+      "skill": "Mining",
+      "method": "Menaphos concentrated sandstone",
+      "region": "desert",
+      "level_range": "50+",
+      "xp_rate": "Up to about 75,000 base XP/h according to the current Mining guide.",
+      "intensity": "gathering",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Menaphos Worker district mining site",
+      "requirements": [
+        "50 Mining",
+        "Menaphos access"
+      ],
+      "notes": "A meaningful Desert midgame spike: the standard ore progression is around 60,000 XP/h at level 50-60, while the Menaphos sandstone site can reach roughly 75,000 XP/h and offers a local city training loop.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Mining_training"
+    },
+    {
       "skill": "Woodcutting",
       "method": "Creeping ivy",
       "region": "havenhythe",
@@ -285,6 +363,26 @@
       "confidence": "confirmed_wiki",
       "location": "Havenhythe walls; convenient patch directly north of the Wendlewick lodestone",
       "notes": "A strong starting-region early/mid route. It gives no logs, but requires less attention than most trees and still rolls bird nests.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
+    },
+    {
+      "skill": "Woodcutting",
+      "method": "Acadia trees",
+      "region": "desert",
+      "level_range": "50-99",
+      "xp_rate": {
+        "50": 55000,
+        "60": 68000,
+        "70": 75000,
+        "80": 102000,
+        "90": 110000,
+        "99": 117000
+      },
+      "intensity": "gathering",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "West of Het's Oasis, Menaphos Imperial district/VIP area, and north of Uzer",
+      "notes": "A strong Desert midgame Woodcutting route with Menaphos reputation synergy. The current guide also lists 191,000-219,000 XP/h from levels 80-99 with Crystallise and Light Form, but that boosted version depends on external spell/prayer unlocks and is not treated as Desert-only baseline.",
       "source": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
     },
     {

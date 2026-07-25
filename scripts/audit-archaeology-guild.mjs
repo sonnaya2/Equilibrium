@@ -9,7 +9,7 @@ const data = JSON.parse(
 
 function normalize(value) {
   return String(value ?? "")
-    .replace(/,/g, "")
+    .replace(/(\d)[,\s\u00a0]+(?=\d)/g, "$1")
     .replace(/[_\s]+/g, " ")
     .trim()
     .toLowerCase();

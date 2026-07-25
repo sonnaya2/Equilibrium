@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-24T18:23:18.635Z",
+  "generatedAt": "2026-07-25T12:28:05.788Z",
   "sourceManifest": "assets/source-manifest.json",
-  "count": 118,
+  "count": 265,
   "unresolvedCount": 0,
-  "totalBytes": 5411391,
+  "totalBytes": 43864931,
   "assets": [
     {
       "id": "skill-attack",
@@ -22,7 +22,7 @@
       "sourceSha1": "01914b3eb5c6452ae62bd141a70a394137fe9d01",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:31.556Z"
+      "verifiedAt": "2026-07-25T12:25:31.942Z"
     },
     {
       "id": "skill-defence",
@@ -41,7 +41,7 @@
       "sourceSha1": "3b7bf2ebc004a9706899366c53aa4e8903243c2b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:31.812Z"
+      "verifiedAt": "2026-07-25T12:25:32.244Z"
     },
     {
       "id": "skill-strength",
@@ -60,7 +60,7 @@
       "sourceSha1": "95cf6f319e013bb9431c2fc420660e5951d1fe15",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:32.065Z"
+      "verifiedAt": "2026-07-25T12:25:32.545Z"
     },
     {
       "id": "skill-constitution",
@@ -79,7 +79,7 @@
       "sourceSha1": "5da1c2786783a8e8d778370926de39c940f804b8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:32.324Z"
+      "verifiedAt": "2026-07-25T12:25:32.982Z"
     },
     {
       "id": "skill-ranged",
@@ -98,7 +98,7 @@
       "sourceSha1": "4181812c654eeb9a1255761d7539711fd1b007b5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:32.765Z"
+      "verifiedAt": "2026-07-25T12:25:33.285Z"
     },
     {
       "id": "skill-prayer",
@@ -117,7 +117,7 @@
       "sourceSha1": "2ebe9ab3a242177f1766bf2dadc37ac54c0fc589",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:33.063Z"
+      "verifiedAt": "2026-07-25T12:25:33.578Z"
     },
     {
       "id": "skill-magic",
@@ -136,7 +136,7 @@
       "sourceSha1": "083ac3342f358a622fe1205a3b1f58881855f249",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:33.315Z"
+      "verifiedAt": "2026-07-25T12:25:33.874Z"
     },
     {
       "id": "skill-cooking",
@@ -155,7 +155,7 @@
       "sourceSha1": "03e595a5b50429cc7c95dabab67cd836a511eab4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:33.567Z"
+      "verifiedAt": "2026-07-25T12:25:34.165Z"
     },
     {
       "id": "skill-woodcutting",
@@ -174,7 +174,7 @@
       "sourceSha1": "2bab45a4a34c0bb7f88a8c07d089243a05614927",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:33.853Z"
+      "verifiedAt": "2026-07-25T12:25:34.457Z"
     },
     {
       "id": "skill-fletching",
@@ -193,7 +193,7 @@
       "sourceSha1": "e3e622dab2ec1169b0bee4819129ce0145f853c2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:34.107Z"
+      "verifiedAt": "2026-07-25T12:25:34.752Z"
     },
     {
       "id": "skill-fishing",
@@ -212,7 +212,7 @@
       "sourceSha1": "db6b37815f204ef365fff110a41ef716e74d25e7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:34.364Z"
+      "verifiedAt": "2026-07-25T12:25:35.049Z"
     },
     {
       "id": "skill-firemaking",
@@ -231,7 +231,7 @@
       "sourceSha1": "e3c824b3fe046ef4b2580d256a2d41130384288e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:34.613Z"
+      "verifiedAt": "2026-07-25T12:25:35.344Z"
     },
     {
       "id": "skill-crafting",
@@ -250,7 +250,7 @@
       "sourceSha1": "950c6a64d86a9da2cd5b4cbf354919ed7269acce",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:34.860Z"
+      "verifiedAt": "2026-07-25T12:25:35.629Z"
     },
     {
       "id": "skill-smithing",
@@ -269,7 +269,7 @@
       "sourceSha1": "e11b7d02cf92c12d70bd27bfacf9faf844b85703",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:35.109Z"
+      "verifiedAt": "2026-07-25T12:25:35.919Z"
     },
     {
       "id": "skill-mining",
@@ -288,7 +288,7 @@
       "sourceSha1": "68972b36785a16c7409dc1a4e4112c935c0386b2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:35.360Z"
+      "verifiedAt": "2026-07-25T12:25:36.204Z"
     },
     {
       "id": "skill-herblore",
@@ -307,7 +307,7 @@
       "sourceSha1": "6288617f94ed318a1bdc77b8f39a4561228c1cd2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:35.628Z"
+      "verifiedAt": "2026-07-25T12:25:36.496Z"
     },
     {
       "id": "skill-agility",
@@ -326,7 +326,7 @@
       "sourceSha1": "3ed0119b49814940e60503629916027800b763f6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:35.883Z"
+      "verifiedAt": "2026-07-25T12:25:36.786Z"
     },
     {
       "id": "skill-thieving",
@@ -345,7 +345,7 @@
       "sourceSha1": "177d0591528d1947fd7eef2a5d80f2c3cb4750d4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:36.134Z"
+      "verifiedAt": "2026-07-25T12:25:37.075Z"
     },
     {
       "id": "skill-slayer",
@@ -364,7 +364,7 @@
       "sourceSha1": "f02e62091573da83747736f18cd20f4391710897",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:36.386Z"
+      "verifiedAt": "2026-07-25T12:25:37.363Z"
     },
     {
       "id": "skill-farming",
@@ -383,7 +383,7 @@
       "sourceSha1": "c4eec73cdb528c2b5b33d660b8ae57fd34adcbd1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:36.637Z"
+      "verifiedAt": "2026-07-25T12:25:37.652Z"
     },
     {
       "id": "skill-runecrafting",
@@ -402,7 +402,7 @@
       "sourceSha1": "c7ad907daff9263e40eaaec413bc5c1626fc9588",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:36.896Z"
+      "verifiedAt": "2026-07-25T12:25:38.085Z"
     },
     {
       "id": "skill-hunter",
@@ -421,7 +421,7 @@
       "sourceSha1": "be473ac4d42d2c77f24406a353156a04d4aab047",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:37.141Z"
+      "verifiedAt": "2026-07-25T12:25:38.381Z"
     },
     {
       "id": "skill-construction",
@@ -440,7 +440,7 @@
       "sourceSha1": "9495f8573b12a598a3965bec2e05a6a91e867297",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:37.395Z"
+      "verifiedAt": "2026-07-25T12:25:38.676Z"
     },
     {
       "id": "skill-summoning",
@@ -459,7 +459,7 @@
       "sourceSha1": "4bf0ce624844ec6aa38f0d1a9c3c34c0ecfc5fd0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:37.644Z"
+      "verifiedAt": "2026-07-25T12:25:38.966Z"
     },
     {
       "id": "skill-dungeoneering",
@@ -478,7 +478,7 @@
       "sourceSha1": "57a744bb5e7cb0ef2d09edd322c751697f8e26f0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:37.893Z"
+      "verifiedAt": "2026-07-25T12:25:39.255Z"
     },
     {
       "id": "skill-divination",
@@ -497,7 +497,7 @@
       "sourceSha1": "e021220de1f5c1cb5a1481bb546b4def12e4ca98",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:38.148Z"
+      "verifiedAt": "2026-07-25T12:25:39.544Z"
     },
     {
       "id": "skill-invention",
@@ -516,7 +516,7 @@
       "sourceSha1": "cba7053405fac0a54bb636782fb82bf3161ce941",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:38.404Z"
+      "verifiedAt": "2026-07-25T12:25:39.836Z"
     },
     {
       "id": "skill-archaeology",
@@ -535,7 +535,7 @@
       "sourceSha1": "cd281c957ccbe30083c6d7b0b59117db625c3cf5",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:38.653Z"
+      "verifiedAt": "2026-07-25T12:25:40.136Z"
     },
     {
       "id": "skill-necromancy",
@@ -554,7 +554,7 @@
       "sourceSha1": "0ae42a41d80dc68527ea66c5e549161707e9bf92",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:38.901Z"
+      "verifiedAt": "2026-07-25T12:25:40.428Z"
     },
     {
       "id": "combat-melee-abilities",
@@ -573,7 +573,7 @@
       "sourceSha1": "935442c477c072ab61efae88489cb9e080ab25c4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:39.153Z"
+      "verifiedAt": "2026-07-25T12:25:40.717Z"
     },
     {
       "id": "combat-ranged-abilities",
@@ -592,7 +592,7 @@
       "sourceSha1": "7e174800d371e64fe2efcf955ec90278fa97b4c0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:39.402Z"
+      "verifiedAt": "2026-07-25T12:25:41.171Z"
     },
     {
       "id": "combat-magic-abilities",
@@ -611,7 +611,7 @@
       "sourceSha1": "b49ff749fbcb375d74621bd1dc352cd3752b4450",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:39.659Z"
+      "verifiedAt": "2026-07-25T12:25:41.463Z"
     },
     {
       "id": "combat-necromancy-abilities",
@@ -630,7 +630,7 @@
       "sourceSha1": "b2cfe99a6c4c832a5f4ad7d123ed040146c49b0b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:39.910Z"
+      "verifiedAt": "2026-07-25T12:25:41.903Z"
     },
     {
       "id": "combat-defence-abilities",
@@ -649,7 +649,7 @@
       "sourceSha1": "ca93dbec8ecfe61bb6feaa64540b1f6057ae1050",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:40.474Z"
+      "verifiedAt": "2026-07-25T12:25:42.571Z"
     },
     {
       "id": "combat-constitution-abilities",
@@ -668,7 +668,7 @@
       "sourceSha1": "6cd71476b0d75bec2d9186cf5fd07c645c8fee33",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:41.022Z"
+      "verifiedAt": "2026-07-25T12:25:43.239Z"
     },
     {
       "id": "combat-adrenaline",
@@ -687,7 +687,7 @@
       "sourceSha1": "adfb44f630647766cb3ddeef41dbf461f60f83a6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:41.556Z"
+      "verifiedAt": "2026-07-25T12:25:43.893Z"
     },
     {
       "id": "combat-critical-strike",
@@ -706,7 +706,7 @@
       "sourceSha1": "0887a65f08bb31f339bef76aa2cad2a145d84d2e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:42.112Z"
+      "verifiedAt": "2026-07-25T12:25:44.694Z"
     },
     {
       "id": "combat-equilibrium-perk",
@@ -725,7 +725,7 @@
       "sourceSha1": "6347f44d9ca7bb32168d47c841bcfd6add579688",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:42.530Z"
+      "verifiedAt": "2026-07-25T12:25:45.184Z"
     },
     {
       "id": "combat-invention-perk",
@@ -744,7 +744,7 @@
       "sourceSha1": "77b6bdaf3a77a7b1ae5a8a6c7af84a353acab0ae",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:43.087Z"
+      "verifiedAt": "2026-07-25T12:25:45.851Z"
     },
     {
       "id": "region-misthalin",
@@ -763,7 +763,7 @@
       "sourceSha1": "09cce992701a29437223af6ff9d0c039c7bea558",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:43.502Z"
+      "verifiedAt": "2026-07-25T12:25:46.330Z"
     },
     {
       "id": "region-havenhythe",
@@ -782,7 +782,7 @@
       "sourceSha1": "b6d4632db52223a603ecd0d59ef63f0f4f4b0c6b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:44.039Z"
+      "verifiedAt": "2026-07-25T12:25:46.983Z"
     },
     {
       "id": "region-karamja",
@@ -801,7 +801,7 @@
       "sourceSha1": "aa832574d0d10f8811c442aa6c57861fbe8e2689",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:44.442Z"
+      "verifiedAt": "2026-07-25T12:25:47.459Z"
     },
     {
       "id": "region-asgarnia",
@@ -820,7 +820,7 @@
       "sourceSha1": "f51d38f2a5a0cd7de67b73501fc8e1947b2e7a95",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:44.854Z"
+      "verifiedAt": "2026-07-25T12:25:47.939Z"
     },
     {
       "id": "region-kandarin",
@@ -839,7 +839,7 @@
       "sourceSha1": "52584211d8097f1c222989c268c4345aa04e3f27",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:45.268Z"
+      "verifiedAt": "2026-07-25T12:25:48.430Z"
     },
     {
       "id": "region-fremennik",
@@ -858,7 +858,7 @@
       "sourceSha1": "1c347040dd2655265e49ffb01f15fd9e8162960e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:45.791Z"
+      "verifiedAt": "2026-07-25T12:25:49.085Z"
     },
     {
       "id": "region-forinthry",
@@ -877,7 +877,7 @@
       "sourceSha1": "b34485550a7307336dd08055cc3ad1ee7e2e9393",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:46.332Z"
+      "verifiedAt": "2026-07-25T12:25:49.750Z"
     },
     {
       "id": "region-desert",
@@ -896,7 +896,7 @@
       "sourceSha1": "a64438558455d6f52d2344573d9522890c76de29",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:46.727Z"
+      "verifiedAt": "2026-07-25T12:25:50.244Z"
     },
     {
       "id": "region-morytania",
@@ -915,7 +915,7 @@
       "sourceSha1": "ec3417965f04a169dcfc9a9084bdc2ca56a32dd0",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:47.137Z"
+      "verifiedAt": "2026-07-25T12:25:50.727Z"
     },
     {
       "id": "region-tirannwn",
@@ -934,7 +934,7 @@
       "sourceSha1": "210d96804cd83175392f80a3903a1cd94455bb4c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:47.537Z"
+      "verifiedAt": "2026-07-25T12:25:51.203Z"
     },
     {
       "id": "region-anachronia",
@@ -953,7 +953,7 @@
       "sourceSha1": "f64d2a57f63432682ca92df6e9ef30cf18f425fd",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:47.947Z"
+      "verifiedAt": "2026-07-25T12:25:51.694Z"
     },
     {
       "id": "catalyst-relic-excavator",
@@ -972,7 +972,7 @@
       "sourceSha1": "2cc2be22ac2ec1b8c6e7b0d87dce5aa735d29714",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:48.352Z"
+      "verifiedAt": "2026-07-25T12:25:52.319Z"
     },
     {
       "id": "catalyst-relic-divine-woodcutter",
@@ -991,7 +991,7 @@
       "sourceSha1": "ed77a6188249dd4bd8bc6a85df26e7d038ca7085",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:48.772Z"
+      "verifiedAt": "2026-07-25T12:25:52.952Z"
     },
     {
       "id": "catalyst-relic-animal-wrangler",
@@ -1010,7 +1010,7 @@
       "sourceSha1": "977837c0fbce104c10822e3d598f71666d218755",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:49.186Z"
+      "verifiedAt": "2026-07-25T12:25:53.581Z"
     },
     {
       "id": "catalyst-relic-golden-footed",
@@ -1029,7 +1029,7 @@
       "sourceSha1": "63d8eb551b875976304d666af80d6a87a39a63d3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:49.597Z"
+      "verifiedAt": "2026-07-25T12:25:54.211Z"
     },
     {
       "id": "catalyst-relic-five-finger-discount",
@@ -1048,7 +1048,7 @@
       "sourceSha1": "047bd5f87f960a003497fd2fda9b6af38691d1b4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:50.025Z"
+      "verifiedAt": "2026-07-25T12:25:54.858Z"
     },
     {
       "id": "catalyst-relic-farming-frenzy",
@@ -1067,7 +1067,7 @@
       "sourceSha1": "438874b5d20509e06d039f5d9628557e59344863",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:50.545Z"
+      "verifiedAt": "2026-07-25T12:25:55.646Z"
     },
     {
       "id": "catalyst-relic-fairys-flight",
@@ -1086,7 +1086,7 @@
       "sourceSha1": "ecb4ce9f8b7d606122a86baef71b374861f17318",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:50.947Z"
+      "verifiedAt": "2026-07-25T12:25:56.276Z"
     },
     {
       "id": "catalyst-relic-assassins-insight",
@@ -1105,7 +1105,7 @@
       "sourceSha1": "fcd5282a7db6793faca9f69dc1a8925e7aedce61",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:51.356Z"
+      "verifiedAt": "2026-07-25T12:25:56.937Z"
     },
     {
       "id": "catalyst-relic-voidwalker",
@@ -1124,7 +1124,7 @@
       "sourceSha1": "4f5d3ca920d43bb2c6765e2f40576d7a55ed766b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:51.768Z"
+      "verifiedAt": "2026-07-25T12:25:57.572Z"
     },
     {
       "id": "catalyst-relic-production-master",
@@ -1143,7 +1143,7 @@
       "sourceSha1": "09f38508d140ab623b0ed70ff305d73fff124644",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:52.178Z"
+      "verifiedAt": "2026-07-25T12:25:58.047Z"
     },
     {
       "id": "catalyst-relic-rejuvenated",
@@ -1162,7 +1162,7 @@
       "sourceSha1": "dc9a26ce696de42fe93c239716747a76be927e21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:52.573Z"
+      "verifiedAt": "2026-07-25T12:25:58.539Z"
     },
     {
       "id": "catalyst-relic-clue-connoisseur",
@@ -1181,7 +1181,7 @@
       "sourceSha1": "cf189b27aa0b237ba8964da810455c6528ebe947",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:52.964Z"
+      "verifiedAt": "2026-07-25T12:25:59.024Z"
     },
     {
       "id": "catalyst-relic-barbarism",
@@ -1200,7 +1200,7 @@
       "sourceSha1": "e947b65346f4a62ef35d862e0d010adbc9a27613",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:53.362Z"
+      "verifiedAt": "2026-07-25T12:25:59.661Z"
     },
     {
       "id": "catalyst-relic-crit-happens",
@@ -1219,7 +1219,7 @@
       "sourceSha1": "fe676dd5bcb5fd1b742705f51ee23c203c42e26c",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:53.774Z"
+      "verifiedAt": "2026-07-25T12:26:00.289Z"
     },
     {
       "id": "catalyst-relic-bombardment",
@@ -1238,7 +1238,7 @@
       "sourceSha1": "c1d92e9d00d90cbb9f601f528a0619a584e23622",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:54.179Z"
+      "verifiedAt": "2026-07-25T12:26:00.919Z"
     },
     {
       "id": "catalyst-relic-soulbourne",
@@ -1257,7 +1257,7 @@
       "sourceSha1": "71d3a88fcf0246e37959b1acf857eba3d2eda7e8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:54.579Z"
+      "verifiedAt": "2026-07-25T12:26:01.560Z"
     },
     {
       "id": "catalyst-relic-bankers-note",
@@ -1276,7 +1276,7 @@
       "sourceSha1": "4f2cc25c318444dd7e047c5b0e456433f47a8b57",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:55.133Z"
+      "verifiedAt": "2026-07-25T12:26:02.371Z"
     },
     {
       "id": "catalyst-relic-perkfection",
@@ -1295,7 +1295,7 @@
       "sourceSha1": "510b802d77ae83fc8fbbb8e1fdab45f55ec11cc1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:55.548Z"
+      "verifiedAt": "2026-07-25T12:26:03.002Z"
     },
     {
       "id": "catalyst-relic-ascension",
@@ -1314,7 +1314,7 @@
       "sourceSha1": "e4f8a01136b327c419ca5a2e3b58cb83ff2b181f",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:55.946Z"
+      "verifiedAt": "2026-07-25T12:26:03.480Z"
     },
     {
       "id": "catalyst-relic-specialist",
@@ -1333,7 +1333,7 @@
       "sourceSha1": "0b7a962290de6b5eea464f32527674d3d73d5cd9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:56.350Z"
+      "verifiedAt": "2026-07-25T12:26:04.120Z"
     },
     {
       "id": "catalyst-relic-everlasting-faith",
@@ -1352,7 +1352,7 @@
       "sourceSha1": "78c5882059c753f84de17b62c6798620c9d9d5fe",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:56.753Z"
+      "verifiedAt": "2026-07-25T12:26:04.741Z"
     },
     {
       "id": "catalyst-item-abyssal-conduit",
@@ -1371,7 +1371,7 @@
       "sourceSha1": "d920cf53f81bdd21a3faa543d25ecb0b0c0ab9e4",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:57.294Z"
+      "verifiedAt": "2026-07-25T12:26:05.405Z"
     },
     {
       "id": "catalyst-item-bankers-note",
@@ -1390,7 +1390,7 @@
       "sourceSha1": "c77a26d144a516285264e0b5ae30932c271b77d7",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:57.823Z"
+      "verifiedAt": "2026-07-25T12:26:06.055Z"
     },
     {
       "id": "catalyst-item-brooch-elder-gods",
@@ -1409,7 +1409,7 @@
       "sourceSha1": "2c6111c286f6a6aa1c20cafc1e69d74db7c17d1d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:58.291Z"
+      "verifiedAt": "2026-07-25T12:26:06.348Z"
     },
     {
       "id": "catalyst-item-clue-gear-crate",
@@ -1428,7 +1428,7 @@
       "sourceSha1": "0cbd9677d39fa6bfdc144d44f26aaac1f39271dc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:58.822Z"
+      "verifiedAt": "2026-07-25T12:26:07.145Z"
     },
     {
       "id": "catalyst-item-elder-eof",
@@ -1447,7 +1447,7 @@
       "sourceSha1": "7d2518308a991148310bd1d4b81ada2e526a280a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:59.361Z"
+      "verifiedAt": "2026-07-25T12:26:07.947Z"
     },
     {
       "id": "catalyst-item-elder-god-book",
@@ -1466,7 +1466,7 @@
       "sourceSha1": "a67e3fe969d7ea229d47503a185b53fbb5b31e5b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:22:59.889Z"
+      "verifiedAt": "2026-07-25T12:26:08.748Z"
     },
     {
       "id": "catalyst-item-fairy-mushroom",
@@ -1485,7 +1485,7 @@
       "sourceSha1": "086cb1a893f62a81cd72146fbebcfd11f6e5305d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:00.423Z"
+      "verifiedAt": "2026-07-25T12:26:09.545Z"
     },
     {
       "id": "catalyst-item-goldenhawk-boots",
@@ -1504,7 +1504,7 @@
       "sourceSha1": "d2269d2b48fd0c032bada7842c389b51b8bd7bb2",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:00.965Z"
+      "verifiedAt": "2026-07-25T12:26:10.191Z"
     },
     {
       "id": "catalyst-item-hatchet-divinity",
@@ -1523,7 +1523,7 @@
       "sourceSha1": "a7456fdffd809af32b6e66f1f764004749996882",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:01.359Z"
+      "verifiedAt": "2026-07-25T12:26:10.816Z"
     },
     {
       "id": "catalyst-item-pickaxe-ages",
@@ -1542,7 +1542,7 @@
       "sourceSha1": "c532b24bd5a7c49153522ad77731650afd3f8bb9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:01.762Z"
+      "verifiedAt": "2026-07-25T12:26:11.452Z"
     },
     {
       "id": "catalyst-item-skull-slaying",
@@ -1561,7 +1561,7 @@
       "sourceSha1": "456318b1b5b921ceea5c20dd3b77362744a9873b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:02.176Z"
+      "verifiedAt": "2026-07-25T12:26:11.941Z"
     },
     {
       "id": "catalyst-item-trappers-harpoon",
@@ -1580,7 +1580,7 @@
       "sourceSha1": "a174f383abc1518a90ff4dc8e2c1964beb2432cb",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:02.714Z"
+      "verifiedAt": "2026-07-25T12:26:12.764Z"
     },
     {
       "id": "catalyst-trophy-bronze",
@@ -1599,7 +1599,7 @@
       "sourceSha1": "1ac77e633c344691251c9e294e0e1a9a00ab6abe",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:03.108Z"
+      "verifiedAt": "2026-07-25T12:26:13.236Z"
     },
     {
       "id": "catalyst-trophy-iron",
@@ -1618,7 +1618,7 @@
       "sourceSha1": "137e9466cd267413b635c578a0df4f42b525995d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:03.504Z"
+      "verifiedAt": "2026-07-25T12:26:13.719Z"
     },
     {
       "id": "catalyst-trophy-steel",
@@ -1637,7 +1637,7 @@
       "sourceSha1": "39113d9fc44170211d794b492e1138bc8d05e426",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:03.907Z"
+      "verifiedAt": "2026-07-25T12:26:14.193Z"
     },
     {
       "id": "catalyst-trophy-mithril",
@@ -1656,7 +1656,7 @@
       "sourceSha1": "d16cbae8721344a07893c5af18ac78ac7dfca60d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:04.303Z"
+      "verifiedAt": "2026-07-25T12:26:14.682Z"
     },
     {
       "id": "catalyst-trophy-adamant",
@@ -1675,7 +1675,7 @@
       "sourceSha1": "a4be1aa0cd502a2c86178562ae204c21b176a0b6",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:04.713Z"
+      "verifiedAt": "2026-07-25T12:26:15.162Z"
     },
     {
       "id": "catalyst-trophy-rune",
@@ -1694,7 +1694,7 @@
       "sourceSha1": "80b65e5f6ecf7ed4bf6a332c4759a8460132d3a3",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:05.121Z"
+      "verifiedAt": "2026-07-25T12:26:15.635Z"
     },
     {
       "id": "catalyst-trophy-dragon",
@@ -1713,7 +1713,7 @@
       "sourceSha1": "144dd5494fce2647fed7894aa653b8c6cac24c21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:05.522Z"
+      "verifiedAt": "2026-07-25T12:26:16.127Z"
     },
     {
       "id": "catalyst-token-aura",
@@ -1732,7 +1732,7 @@
       "sourceSha1": "2c4f4bb93d6acbb17230d22710ea1574f0849be8",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:05.924Z"
+      "verifiedAt": "2026-07-25T12:26:16.602Z"
     },
     {
       "id": "catalyst-token-harpoon",
@@ -1751,7 +1751,7 @@
       "sourceSha1": "f800732f3892803509e8e6f01d0110646ecf1c21",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:06.319Z"
+      "verifiedAt": "2026-07-25T12:26:17.074Z"
     },
     {
       "id": "catalyst-token-hatchet",
@@ -1770,7 +1770,7 @@
       "sourceSha1": "fcc3ca371ae9567d4537fb8744bd8a8df32269d1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:06.727Z"
+      "verifiedAt": "2026-07-25T12:26:17.706Z"
     },
     {
       "id": "catalyst-token-pickaxe",
@@ -1789,7 +1789,7 @@
       "sourceSha1": "9f6238800f0ba1f1e20d59225a1a806ca302c7c9",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:07.120Z"
+      "verifiedAt": "2026-07-25T12:26:18.336Z"
     },
     {
       "id": "catalyst-token-teleport",
@@ -1808,7 +1808,7 @@
       "sourceSha1": "99f93a65d55718e7e139ddefe46707d316ae4f7e",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:07.518Z"
+      "verifiedAt": "2026-07-25T12:26:18.990Z"
     },
     {
       "id": "catalyst-token-meditate-rest",
@@ -1827,7 +1827,7 @@
       "sourceSha1": "f04e3c69c340c728886c78ed560a548c70f310e1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:07.918Z"
+      "verifiedAt": "2026-07-25T12:26:19.468Z"
     },
     {
       "id": "catalyst-scroll-bloat",
@@ -1846,7 +1846,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:08.321Z"
+      "verifiedAt": "2026-07-25T12:26:19.956Z"
     },
     {
       "id": "catalyst-scroll-detonate",
@@ -1865,7 +1865,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:08.719Z"
+      "verifiedAt": "2026-07-25T12:26:20.434Z"
     },
     {
       "id": "catalyst-scroll-flurry",
@@ -1884,7 +1884,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:09.117Z"
+      "verifiedAt": "2026-07-25T12:26:20.922Z"
     },
     {
       "id": "catalyst-scroll-reflect",
@@ -1903,7 +1903,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:09.513Z"
+      "verifiedAt": "2026-07-25T12:26:21.561Z"
     },
     {
       "id": "catalyst-scroll-snapshot",
@@ -1922,7 +1922,7 @@
       "sourceSha1": "2d58d5e34b906cbe6f23dd4fee7bf908293c66b1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:09.915Z"
+      "verifiedAt": "2026-07-25T12:26:22.038Z"
     },
     {
       "id": "task-tier-easy",
@@ -1941,7 +1941,7 @@
       "sourceSha1": "a3d5863d31abc1f96c64833ce16203a580fc9487",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:10.487Z"
+      "verifiedAt": "2026-07-25T12:26:22.709Z"
     },
     {
       "id": "task-tier-medium",
@@ -1960,7 +1960,7 @@
       "sourceSha1": "5ecb3cf4a46281c285445729ccd89f0f4175fd1d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:11.024Z"
+      "verifiedAt": "2026-07-25T12:26:23.358Z"
     },
     {
       "id": "task-tier-hard",
@@ -1979,7 +1979,7 @@
       "sourceSha1": "4c884090df9f3c4141a93499aa7b58c5d69a4ce1",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:11.545Z"
+      "verifiedAt": "2026-07-25T12:26:24.013Z"
     },
     {
       "id": "task-tier-elite",
@@ -1998,7 +1998,7 @@
       "sourceSha1": "545e909a7c403f026791b69bdaf2fcb01aa4be0d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:12.073Z"
+      "verifiedAt": "2026-07-25T12:26:24.680Z"
     },
     {
       "id": "task-tier-master",
@@ -2017,7 +2017,7 @@
       "sourceSha1": "48406c51705dbcf079ea7fc1d7899912ce712127",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:12.614Z"
+      "verifiedAt": "2026-07-25T12:26:25.341Z"
     },
     {
       "id": "upgrade-bandos",
@@ -2036,7 +2036,7 @@
       "sourceSha1": "f727b27de8144bf790a9257082090bf70c81d75b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:12.867Z"
+      "verifiedAt": "2026-07-25T12:26:25.627Z"
     },
     {
       "id": "upgrade-armadyl",
@@ -2055,7 +2055,7 @@
       "sourceSha1": "892ffb5f2875259a23601a68b4daa5ed51027e6b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:13.117Z"
+      "verifiedAt": "2026-07-25T12:26:25.913Z"
     },
     {
       "id": "upgrade-subjugation",
@@ -2074,7 +2074,7 @@
       "sourceSha1": "7f03bcace8dfde5110bd0e7df83206863ab3c84d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:13.795Z"
+      "verifiedAt": "2026-07-25T12:26:26.740Z"
     },
     {
       "id": "upgrade-nex-t80",
@@ -2093,7 +2093,7 @@
       "sourceSha1": "841b838c51dd7baa51103aaf29d5aab2923d540d",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:14.050Z"
+      "verifiedAt": "2026-07-25T12:26:27.040Z"
     },
     {
       "id": "upgrade-drygore",
@@ -2112,7 +2112,7 @@
       "sourceSha1": "08f0c66ca6a220fee043444927d0d46bc568868a",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:14.295Z"
+      "verifiedAt": "2026-07-25T12:26:27.334Z"
     },
     {
       "id": "upgrade-harmonic-dust",
@@ -2131,7 +2131,7 @@
       "sourceSha1": "82fc8a83173f4c5ce0043585cf7afbcfb5c30efc",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:14.556Z"
+      "verifiedAt": "2026-07-25T12:26:27.633Z"
     },
     {
       "id": "upgrade-crystal-hatchet",
@@ -2150,7 +2150,7 @@
       "sourceSha1": "9b0dc87a62e5fd6607c35c40f52d05d0de1acc49",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:14.799Z"
+      "verifiedAt": "2026-07-25T12:26:27.921Z"
     },
     {
       "id": "upgrade-dragon-pickaxe",
@@ -2169,7 +2169,7 @@
       "sourceSha1": "e181aca7be9d2080c75923016b523d50630b655b",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:15.051Z"
+      "verifiedAt": "2026-07-25T12:26:28.208Z"
     },
     {
       "id": "upgrade-linza",
@@ -2188,7 +2188,7 @@
       "sourceSha1": "acd5643eb3be242728fe9f2460886cf1e9d880ed",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "RuneScape Wiki / Jagex",
-      "verifiedAt": "2026-07-24T18:23:15.301Z"
+      "verifiedAt": "2026-07-25T12:26:28.499Z"
     },
     {
       "id": "equilibrium-countdown-official",
@@ -2204,7 +2204,7 @@
       "resolvedTitle": "Leagues II: Equilibrium countdown art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-24T18:23:16.676Z"
+      "verifiedAt": "2026-07-25T12:26:30.354Z"
     },
     {
       "id": "equilibrium-road-ahead-official",
@@ -2220,7 +2220,7 @@
       "resolvedTitle": "Leagues II: Equilibrium Road Ahead art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-24T18:23:17.885Z"
+      "verifiedAt": "2026-07-25T12:26:32.199Z"
     },
     {
       "id": "catalyst-official-page-art",
@@ -2236,8 +2236,2806 @@
       "resolvedTitle": "Catalyst official page art",
       "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
       "attribution": "Jagex / RuneScape",
-      "verifiedAt": "2026-07-24T18:23:18.535Z"
+      "verifiedAt": "2026-07-25T12:26:32.666Z"
+    },
+    {
+      "id": "ability-attack",
+      "label": "Attack",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/attack.png",
+      "bytes": 1256,
+      "sha256": "ac9520e1eddeae8e09774bac7d44c273e5ecabfd9422a8fe6cb68a228d741c76",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Attack_(ability)",
+      "sourcePage": "https://runescape.wiki/w/File%3AAttack_icon_(abilities).png",
+      "downloadUrl": "https://runescape.wiki/images/Attack_icon_%28abilities%29.png?69be0",
+      "resolvedTitle": "File:Attack icon (abilities).png",
+      "sourceWidth": 34,
+      "sourceHeight": 34,
+      "sourceSha1": "999f5f9a183cd2506a650877ea2a8cc2f65b3078",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:33.316Z"
+    },
+    {
+      "id": "ability-adaptive-strike",
+      "label": "Adaptive Strike",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/adaptive-strike.png",
+      "bytes": 25627,
+      "sha256": "bdb53510b92841d7c720028f8588476ae014dffc6790c0317a3fe654a84aefb3",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Adaptive_Strike",
+      "sourcePage": "https://runescape.wiki/w/File%3AAdaptive_Strike.png",
+      "downloadUrl": "https://runescape.wiki/images/Adaptive_Strike.png?59e57",
+      "resolvedTitle": "File:Adaptive Strike.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "66b6c26b01462783030ded2b2f14487b3c65c27a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:34.074Z"
+    },
+    {
+      "id": "ability-rend",
+      "label": "Rend",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/rend.png",
+      "bytes": 3400,
+      "sha256": "28f3e23d362f4bf908acb8f2315fe020cd76bfee722d16409de7fa85fded5605",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Rend",
+      "sourcePage": "https://runescape.wiki/w/File%3ARend.png",
+      "downloadUrl": "https://runescape.wiki/images/Rend.png?bedd0",
+      "resolvedTitle": "File:Rend.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "92013b9cd0098f58751cc0ddc684a8e0344ed269",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:34.704Z"
+    },
+    {
+      "id": "ability-dismember",
+      "label": "Dismember",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/dismember.png",
+      "bytes": 22848,
+      "sha256": "34e1b447626c6a06dc322231e7f5cfbc56104de5ac87cfb9bcfc3787acdd544e",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Dismember",
+      "sourcePage": "https://runescape.wiki/w/File%3ADismember.png",
+      "downloadUrl": "https://runescape.wiki/images/Dismember.png?c79ba",
+      "resolvedTitle": "File:Dismember.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "37296a77483d652f18c1159134b7c7c842f7cd9c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:35.338Z"
+    },
+    {
+      "id": "ability-slaughter",
+      "label": "Slaughter",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/slaughter.png",
+      "bytes": 25754,
+      "sha256": "7e6b9c31dfeda809ffe73a30c97f3362ebb6a2bf276e702353650fb96bf12cd9",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Slaughter",
+      "sourcePage": "https://runescape.wiki/w/File%3ASlaughter.png",
+      "downloadUrl": "https://runescape.wiki/images/Slaughter.png?01407",
+      "resolvedTitle": "File:Slaughter.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "23b40316ea3a220dd7a71f013bf8016adc384972",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:36.030Z"
+    },
+    {
+      "id": "ability-massacre",
+      "label": "Massacre",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/massacre.png",
+      "bytes": 22808,
+      "sha256": "6b67b3f403679ae29374bb93a15c9b86495587c8a7297c032a2ed742aaef7da6",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Massacre",
+      "sourcePage": "https://runescape.wiki/w/File%3AMassacre.png",
+      "downloadUrl": "https://runescape.wiki/images/Massacre.png?e1d07",
+      "resolvedTitle": "File:Massacre.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "4fd4ef092b35c410d3bc533e238afdce52ea994a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:36.648Z"
+    },
+    {
+      "id": "ability-assault",
+      "label": "Assault",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/assault.png",
+      "bytes": 3427,
+      "sha256": "bf5abf20f0875f5c2565b5348795000c97b7dff002cf872176de79ad2b9a997a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Assault",
+      "sourcePage": "https://runescape.wiki/w/File%3AAssault.png",
+      "downloadUrl": "https://runescape.wiki/images/Assault.png?47cfd",
+      "resolvedTitle": "File:Assault.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "cf553c6722c9883b70d09e5591e97bff0668a498",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:37.269Z"
+    },
+    {
+      "id": "ability-overpower",
+      "label": "Overpower",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/overpower.png",
+      "bytes": 3121,
+      "sha256": "f4897c978e5ccdefa630283a23e5664b19230c454a37d591e69d13462694cfe6",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Overpower",
+      "sourcePage": "https://runescape.wiki/w/File%3AOverpower.png",
+      "downloadUrl": "https://runescape.wiki/images/Overpower.png?bba74",
+      "resolvedTitle": "File:Overpower.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "e3ae73886e2ed9229a25337755fb7a508e1712b4",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:37.907Z"
+    },
+    {
+      "id": "ability-punish",
+      "label": "Punish",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/punish.png",
+      "bytes": 2676,
+      "sha256": "c27ad4f9427993c03bc8ca7eb652c6edafef5f567b5f0a9c1e64363346a36604",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Punish",
+      "sourcePage": "https://runescape.wiki/w/File%3APunish.png",
+      "downloadUrl": "https://runescape.wiki/images/Punish.png?4dcdf",
+      "resolvedTitle": "File:Punish.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "0a23f476b98723b16b51be85c405e93ccadde2b8",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:38.549Z"
+    },
+    {
+      "id": "ability-berserk",
+      "label": "Berserk",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/berserk.png",
+      "bytes": 2368,
+      "sha256": "6b5e1146f1b24775aaf6aacf65ca8823be96c8cca7b61fb349fab4f534ca9b6f",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Berserk",
+      "sourcePage": "https://runescape.wiki/w/File%3ABerserk.png",
+      "downloadUrl": "https://runescape.wiki/images/Berserk.png?27b7b",
+      "resolvedTitle": "File:Berserk.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "1fa4f1d3c69a95b9f36e1ea534b2cf6309eec462",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:39.181Z"
+    },
+    {
+      "id": "ability-meteor-strike",
+      "label": "Meteor Strike",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/meteor-strike.png",
+      "bytes": 22539,
+      "sha256": "d7845e7af7e2757ce27b1513fdfedc0542e77e85d9eaedfcf91f3197f96ab9c5",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Meteor_Strike",
+      "sourcePage": "https://runescape.wiki/w/File%3AMeteor_Strike.png",
+      "downloadUrl": "https://runescape.wiki/images/Meteor_Strike.png?3123c",
+      "resolvedTitle": "File:Meteor Strike.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "67cb106ac5cc0af9fe2c207b45c6b39eec111efe",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:39.806Z"
+    },
+    {
+      "id": "ability-chaos-roar",
+      "label": "Chaos Roar",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/chaos-roar.png",
+      "bytes": 19625,
+      "sha256": "2a70af30fe4049bd127d9e85dd79af5fcbdd230a13ad1b6bce4a8bd459870ba1",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Chaos_Roar",
+      "sourcePage": "https://runescape.wiki/w/File%3AChaos_Roar.png",
+      "downloadUrl": "https://runescape.wiki/images/Chaos_Roar.png?1dbb6",
+      "resolvedTitle": "File:Chaos Roar.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "49257ec78b90cb2c19af3826f70ea02242e548bb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:40.462Z"
+    },
+    {
+      "id": "ability-greater-fury",
+      "label": "Greater Fury",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/greater-fury.png",
+      "bytes": 3808,
+      "sha256": "d30ea7c30d834d1b747398605f10561a8d030002b787dc6a31904e35b589b52a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Fury",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Fury.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Fury.png?9d608",
+      "resolvedTitle": "File:Greater Fury.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "69e1879b6819febe1b72731207feca16636d0f62",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:41.086Z"
+    },
+    {
+      "id": "ability-greater-flurry",
+      "label": "Greater Flurry",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/greater-flurry.png",
+      "bytes": 3590,
+      "sha256": "ac32a76bda473d4779a642b5ec7bf1f93d512b778546828790590b6be14dcc06",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Flurry",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Flurry.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Flurry.png?e76c4",
+      "resolvedTitle": "File:Greater Flurry.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "653c4f0c1fbfb9daf1cb6b1c7d422a9482e82912",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:41.709Z"
+    },
+    {
+      "id": "ability-greater-barge",
+      "label": "Greater Barge",
+      "category": "rs3/combat/abilities/melee",
+      "path": "assets/rs3/combat/abilities/melee/greater-barge.png",
+      "bytes": 3195,
+      "sha256": "4c97a4c476d04ac8e1191b51fdc3a8d4c37c17637cce9e22892da89a95027434",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Barge",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Barge.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Barge.png?2fe13",
+      "resolvedTitle": "File:Greater Barge.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "348d99f76916ef5e545ddcfc26ce530c53aca760",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:42.338Z"
+    },
+    {
+      "id": "ability-deaths-swiftness",
+      "label": "Death's Swiftness",
+      "category": "rs3/combat/abilities/ranged",
+      "path": "assets/rs3/combat/abilities/ranged/deaths-swiftness.png",
+      "bytes": 18476,
+      "sha256": "752177eeffcaa7b859faeb5203d8735b859024e55e29d954d0ed51e5697d37b3",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Death%27s_Swiftness",
+      "sourcePage": "https://runescape.wiki/w/File%3ADeath's_Swiftness.png",
+      "downloadUrl": "https://runescape.wiki/images/Death%27s_Swiftness.png?1b938",
+      "resolvedTitle": "File:Death's Swiftness.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "14e738874c0b6fac257c3c6165221396e43e820a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:42.977Z"
+    },
+    {
+      "id": "ability-bombardment",
+      "label": "Bombardment",
+      "category": "rs3/combat/abilities/ranged",
+      "path": "assets/rs3/combat/abilities/ranged/bombardment.png",
+      "bytes": 2342,
+      "sha256": "93ff99a4560614818b0b9d620a770f3f7b4aa23b1e77debcb1a7f471e1fe3b32",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Bombardment",
+      "sourcePage": "https://runescape.wiki/w/File%3ABombardment.png",
+      "downloadUrl": "https://runescape.wiki/images/Bombardment.png?24372",
+      "resolvedTitle": "File:Bombardment.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "fba13639fce4fd5ec95915c71c3ac4d31e9585db",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:43.612Z"
+    },
+    {
+      "id": "ability-shadow-tendrils",
+      "label": "Shadow Tendrils",
+      "category": "rs3/combat/abilities/ranged",
+      "path": "assets/rs3/combat/abilities/ranged/shadow-tendrils.png",
+      "bytes": 3404,
+      "sha256": "6784bea1422e54aeace6fbb4c0e93cd32eec9572692714446635e0714e6aed37",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Shadow_Tendrils",
+      "sourcePage": "https://runescape.wiki/w/File%3AShadow_Tendrils.png",
+      "downloadUrl": "https://runescape.wiki/images/Shadow_Tendrils.png?1b3ac",
+      "resolvedTitle": "File:Shadow Tendrils.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "408703f59914eb2f09eea04af9f60850d66c5fc0",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:44.246Z"
+    },
+    {
+      "id": "ability-greater-ricochet",
+      "label": "Greater Ricochet",
+      "category": "rs3/combat/abilities/ranged",
+      "path": "assets/rs3/combat/abilities/ranged/greater-ricochet.png",
+      "bytes": 1962,
+      "sha256": "46260487fb0f400489745668a289afb2485c9b1b20be41ed94f4d1450315e358",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Ricochet",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Ricochet.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Ricochet.png?93e69",
+      "resolvedTitle": "File:Greater Ricochet.png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "2bb6116ff0b5da2e1e82f1f63a166750fc9b71c1",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:44.886Z"
+    },
+    {
+      "id": "ability-sunshine",
+      "label": "Sunshine",
+      "category": "rs3/combat/abilities/magic",
+      "path": "assets/rs3/combat/abilities/magic/sunshine.png",
+      "bytes": 6207,
+      "sha256": "05c444c852a54d43c9a8dbf01a216a1901a5975f423ea5f3abc9ee358bc44c7c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Sunshine",
+      "sourcePage": "https://runescape.wiki/w/File%3ASunshine.png",
+      "downloadUrl": "https://runescape.wiki/images/Sunshine.png?f2e63",
+      "resolvedTitle": "File:Sunshine.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "b526e0982781830b808c8179e928aa5a14b806e0",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:45.515Z"
+    },
+    {
+      "id": "ability-greater-concentrated-blast",
+      "label": "Greater Concentrated Blast",
+      "category": "rs3/combat/abilities/magic",
+      "path": "assets/rs3/combat/abilities/magic/greater-concentrated-blast.png",
+      "bytes": 8038,
+      "sha256": "611b314ee023b9e2b9c97e9d114286bef7468062fbe6fea204412ddb7fd1cbd4",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Concentrated_Blast",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Concentrated_Blast.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Concentrated_Blast.png?445f0",
+      "resolvedTitle": "File:Greater Concentrated Blast.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "d1ba5453f9fc726bad2206caa34207e8ede85981",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:45.989Z"
+    },
+    {
+      "id": "ability-magma-tempest",
+      "label": "Magma Tempest",
+      "category": "rs3/combat/abilities/magic",
+      "path": "assets/rs3/combat/abilities/magic/magma-tempest.png",
+      "bytes": 6310,
+      "sha256": "6149f844cf3d029c8fb2b7ee6c362da544314ff30ff7df865c4504fc6ed39238",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Magma_Tempest",
+      "sourcePage": "https://runescape.wiki/w/File%3AMagma_Tempest.png",
+      "downloadUrl": "https://runescape.wiki/images/Magma_Tempest.png?79578",
+      "resolvedTitle": "File:Magma Tempest.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "2dbd0473ee8b825f08019b958fb41a479ec6f07b",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:46.624Z"
+    },
+    {
+      "id": "ability-greater-chain",
+      "label": "Greater Chain",
+      "category": "rs3/combat/abilities/magic",
+      "path": "assets/rs3/combat/abilities/magic/greater-chain.png",
+      "bytes": 8889,
+      "sha256": "afac9b5443df77911c9fa54bdeead97ea2f27860849c08f512b73550c6704c63",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Chain",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Chain.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Chain.png?c6bba",
+      "resolvedTitle": "File:Greater Chain.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "a9e53553c6d94089581f357eedd2d3e1f0b1c681",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:47.096Z"
+    },
+    {
+      "id": "ability-living-death",
+      "label": "Living Death",
+      "category": "rs3/combat/abilities/necromancy",
+      "path": "assets/rs3/combat/abilities/necromancy/living-death.png",
+      "bytes": 20085,
+      "sha256": "01162cc909d4ac095d127450d425d4f1120b6820b24e1882fbb461284bec9623",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Living_Death",
+      "sourcePage": "https://runescape.wiki/w/File%3ALiving_Death.png",
+      "downloadUrl": "https://runescape.wiki/images/Living_Death.png?7c2b7",
+      "resolvedTitle": "File:Living Death.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "868e5e61ee4977ed962a62484999d173c39bab0a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:47.713Z"
+    },
+    {
+      "id": "ability-split-soul",
+      "label": "Split Soul",
+      "category": "rs3/combat/abilities/necromancy",
+      "path": "assets/rs3/combat/abilities/necromancy/split-soul.png",
+      "bytes": 14255,
+      "sha256": "cc42d910c2274883a4396ad924ff02169fedd54ce2436ac2212d1a6e7d300ff2",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Split_Soul",
+      "sourcePage": "https://runescape.wiki/w/File%3ASplit_Soul_icon.png",
+      "downloadUrl": "https://runescape.wiki/images/Split_Soul_icon.png?648e6",
+      "resolvedTitle": "File:Split Soul icon.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "63dc9ccec4ae9ecdb4801adc13fd63613f38e5a5",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:48.560Z"
+    },
+    {
+      "id": "ability-invoke-lord-of-bones",
+      "label": "Invoke Lord of Bones",
+      "category": "rs3/combat/abilities/necromancy",
+      "path": "assets/rs3/combat/abilities/necromancy/invoke-lord-of-bones.png",
+      "bytes": 22816,
+      "sha256": "376cdb0201e2222ae872c23e416a0430721b6319d6f75dc558b3d36a1b8e9ef7",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Invoke_Lord_of_Bones",
+      "sourcePage": "https://runescape.wiki/w/File%3AInvoke_Lord_of_Bones_icon.png",
+      "downloadUrl": "https://runescape.wiki/images/Invoke_Lord_of_Bones_icon.png?c5e87",
+      "resolvedTitle": "File:Invoke Lord of Bones icon.png",
+      "sourceWidth": 116,
+      "sourceHeight": 116,
+      "sourceSha1": "9e436d0afc03ac96e573858609f17b6a7393f0b6",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:49.685Z"
+    },
+    {
+      "id": "ability-divert",
+      "label": "Divert",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/divert.png",
+      "bytes": 1887,
+      "sha256": "2cb78c797a063da801d96cf6e7211a49e140c74f65106cf076127dea1da9d15e",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Divert",
+      "sourcePage": "https://runescape.wiki/w/File%3ADivert.png",
+      "downloadUrl": "https://runescape.wiki/images/Divert.png?c1cc8",
+      "resolvedTitle": "File:Divert.png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "e919e5f6a83a8079a4e0330b5c26e7f24e584bae",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:50.313Z"
+    },
+    {
+      "id": "ability-devotion",
+      "label": "Devotion",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/devotion.png",
+      "bytes": 2932,
+      "sha256": "342b25098507519963fcb7bc18a69f5d808fe8edaa942e24ce3b365e8810e794",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Devotion",
+      "sourcePage": "https://runescape.wiki/w/File%3ADevotion.png",
+      "downloadUrl": "https://runescape.wiki/images/Devotion.png?e7ad5",
+      "resolvedTitle": "File:Devotion.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "33573edac9c32528c0a40ab28614afa589cc0403",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:50.951Z"
+    },
+    {
+      "id": "ability-debilitate",
+      "label": "Debilitate",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/debilitate.png",
+      "bytes": 3019,
+      "sha256": "fb0117e94fbb1d7cee1f1566e311d794c00bca0be0ae0f4743049457f73cc9bd",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Debilitate",
+      "sourcePage": "https://runescape.wiki/w/File%3ADebilitate.png",
+      "downloadUrl": "https://runescape.wiki/images/Debilitate.png?c1896",
+      "resolvedTitle": "File:Debilitate.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "f53de7126395699e51ea7bfef4c26bab4ec2b4a4",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:51.571Z"
+    },
+    {
+      "id": "ability-resonance",
+      "label": "Resonance",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/resonance.png",
+      "bytes": 3031,
+      "sha256": "f9783174d443a2e438bac11a539403ced5d481cdb274bd01d983528cebca3517",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Resonance",
+      "sourcePage": "https://runescape.wiki/w/File%3AResonance.png",
+      "downloadUrl": "https://runescape.wiki/images/Resonance.png?f47f2",
+      "resolvedTitle": "File:Resonance.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "0d21b6d2700d4e0525932d9f6e0f59ac8c5430fc",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:52.207Z"
+    },
+    {
+      "id": "ability-barricade",
+      "label": "Barricade",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/barricade.png",
+      "bytes": 2861,
+      "sha256": "0a5b970af662ffd623374f1dbb052967038e97f8c618300afc12f5b9e2500eb2",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Barricade",
+      "sourcePage": "https://runescape.wiki/w/File%3ABarricade.png",
+      "downloadUrl": "https://runescape.wiki/images/Barricade.png?c7a4c",
+      "resolvedTitle": "File:Barricade.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "22c01bdeb702ff84d3fdc73f8d2b6a62a3072484",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:52.823Z"
+    },
+    {
+      "id": "ability-immortality",
+      "label": "Immortality",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/immortality.png",
+      "bytes": 3243,
+      "sha256": "1824b3930a91d18cda030f007a9588b0f7deaf9efbbc79b47844f658a1cd44f7",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Immortality",
+      "sourcePage": "https://runescape.wiki/w/File%3AImmortality.png",
+      "downloadUrl": "https://runescape.wiki/images/Immortality.png?16919",
+      "resolvedTitle": "File:Immortality.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "86f9a9204da20270d241194defe0df2ac939bd59",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:53.457Z"
+    },
+    {
+      "id": "ability-anticipation",
+      "label": "Anticipation",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/anticipation.png",
+      "bytes": 3294,
+      "sha256": "7745b5e403bdae6609117075877ccd1eb393f4df9246a49bc655e851137352bf",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Anticipation",
+      "sourcePage": "https://runescape.wiki/w/File%3AAnticipation.png",
+      "downloadUrl": "https://runescape.wiki/images/Anticipation.png?611d9",
+      "resolvedTitle": "File:Anticipation.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "d50a00ec28f33589c4667b8ab701d456d8011d34",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:54.085Z"
+    },
+    {
+      "id": "ability-freedom",
+      "label": "Freedom",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/freedom.png",
+      "bytes": 2596,
+      "sha256": "45b3804ef605646fce6c03f46ad3d6910e0f98e60f50ae313d5402f80dc80c6e",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Freedom",
+      "sourcePage": "https://runescape.wiki/w/File%3AFreedom.png",
+      "downloadUrl": "https://runescape.wiki/images/Freedom.png?afb14",
+      "resolvedTitle": "File:Freedom.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "be2b4d8718853af75d3beaee2a44daf047cd6197",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:54.718Z"
+    },
+    {
+      "id": "ability-surge",
+      "label": "Surge",
+      "category": "rs3/combat/abilities/movement",
+      "path": "assets/rs3/combat/abilities/movement/surge.png",
+      "bytes": 3145,
+      "sha256": "e3d8b41f1fe1a150f7e4a3aded718b4ea8b8b93af2bdb5b2275ddc1acf3f2840",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Surge",
+      "sourcePage": "https://runescape.wiki/w/File%3ASurge.png",
+      "downloadUrl": "https://runescape.wiki/images/Surge.png?60657",
+      "resolvedTitle": "File:Surge.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "5966b2f11a4f56e8fb458e754582670c6586b432",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:55.353Z"
+    },
+    {
+      "id": "ability-escape",
+      "label": "Escape",
+      "category": "rs3/combat/abilities/movement",
+      "path": "assets/rs3/combat/abilities/movement/escape.png",
+      "bytes": 2581,
+      "sha256": "499761ea7e8fd3b6a2ce61fe87aaf273e23f743a9cacf6af567dc4db2e60a94a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Escape",
+      "sourcePage": "https://runescape.wiki/w/File%3AEscape.png",
+      "downloadUrl": "https://runescape.wiki/images/Escape.png?31e65",
+      "resolvedTitle": "File:Escape.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "d273c0ceaca9edaefb60343f82f8e4c5cf44dbc2",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:55.983Z"
+    },
+    {
+      "id": "ability-dive",
+      "label": "Dive",
+      "category": "rs3/combat/abilities/movement",
+      "path": "assets/rs3/combat/abilities/movement/dive.png",
+      "bytes": 6756,
+      "sha256": "f60d1a76d3eb705fa5cbf58d193f08f71b076dcee346be4b5d217f314f2efab2",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Dive",
+      "sourcePage": "https://runescape.wiki/w/File%3ADive.png",
+      "downloadUrl": "https://runescape.wiki/images/Dive.png?9df37",
+      "resolvedTitle": "File:Dive.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "c8afc03924ea4b8ebc03f742307e0428f28d9808",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:56.478Z"
+    },
+    {
+      "id": "ability-bladed-dive",
+      "label": "Bladed Dive",
+      "category": "rs3/combat/abilities/movement",
+      "path": "assets/rs3/combat/abilities/movement/bladed-dive.png",
+      "bytes": 7900,
+      "sha256": "4145f6af74c134dbb842dcc674d1cac99e2ca30bd0d40eefc682a5d05b6c3dc0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Bladed_Dive",
+      "sourcePage": "https://runescape.wiki/w/File%3ABladed_Dive.png",
+      "downloadUrl": "https://runescape.wiki/images/Bladed_Dive.png?29fef",
+      "resolvedTitle": "File:Bladed Dive.png",
+      "sourceWidth": 60,
+      "sourceHeight": 60,
+      "sourceSha1": "3251bdd568fc4bec2812201cf374da4dc302eb18",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:57.108Z"
+    },
+    {
+      "id": "ability-eclipsed-soul",
+      "label": "Eclipsed Soul",
+      "category": "rs3/combat/abilities/prayer",
+      "path": "assets/rs3/combat/abilities/prayer/eclipsed-soul.png",
+      "bytes": 27874,
+      "sha256": "1b068271bee9ffaabc65e2cf018be7bc954b925804a03a053cde35599f01cdd3",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Eclipsed_Soul",
+      "sourcePage": "https://runescape.wiki/w/File%3AEclipsed_Soul.png",
+      "downloadUrl": "https://runescape.wiki/images/Eclipsed_Soul.png?a8742",
+      "resolvedTitle": "File:Eclipsed Soul.png",
+      "sourceWidth": 128,
+      "sourceHeight": 128,
+      "sourceSha1": "d86504a08ee7582130a5385f59ce2391fd7f54c9",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:57.728Z"
+    },
+    {
+      "id": "ability-divine-rage",
+      "label": "Divine Rage",
+      "category": "rs3/combat/abilities/prayer",
+      "path": "assets/rs3/combat/abilities/prayer/divine-rage.png",
+      "bytes": 22060,
+      "sha256": "03728a33f328154beece929e9988da4a6e8a972e1abdc815d92218abc8f072ad",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Divine_Rage",
+      "sourcePage": "https://runescape.wiki/w/File%3ADivine_Rage.png",
+      "downloadUrl": "https://runescape.wiki/images/Divine_Rage.png?fe3bb",
+      "resolvedTitle": "File:Divine Rage.png",
+      "sourceWidth": 120,
+      "sourceHeight": 120,
+      "sourceSha1": "37c3db44629b9ac4f4e5c33910daada8ead1b9a2",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:58.361Z"
+    },
+    {
+      "id": "upgrade-codex-greater-concentrated-blast",
+      "label": "Greater Concentrated Blast ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-concentrated-blast.png",
+      "bytes": 825,
+      "sha256": "6da0637888925224bd5b9e7726aefdcb76c43db27a16295f58f1254670d4f4a8",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Concentrated_Blast_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Concentrated_blast_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Concentrated_blast_ability_codex.png?2c257",
+      "resolvedTitle": "File:Greater Concentrated blast ability codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "95b7ad775be2c8a0d1c155f06e6ed9bbec6bedde",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:58.994Z"
+    },
+    {
+      "id": "upgrade-codex-magma-tempest",
+      "label": "Magma Tempest ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/magma-tempest.png",
+      "bytes": 771,
+      "sha256": "a85cdccc342d2d1a0d642644f77efe101df52b92d3a1f179b8659e55b55cb897",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Magma_Tempest_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AMagma_Tempest_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Magma_Tempest_ability_codex.png?68582",
+      "resolvedTitle": "File:Magma Tempest ability codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "d6035b6f2ac6b942b5a9b191c61d65c29bc21c3d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:26:59.629Z"
+    },
+    {
+      "id": "upgrade-codex-greater-ricochet",
+      "label": "Greater Ricochet ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-ricochet.png",
+      "bytes": 706,
+      "sha256": "a521c42a35d0d3c666fe593e40314d4b6d3671d5d6a41ffa67b40cf7bd429df4",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Ricochet_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Ricochet_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Ricochet_ability_codex.png?2c250",
+      "resolvedTitle": "File:Greater Ricochet ability codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "638f6261235732e75caf39391d2117524a416d51",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:00.102Z"
+    },
+    {
+      "id": "upgrade-codex-greater-chain",
+      "label": "Greater Chain ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-chain.png",
+      "bytes": 738,
+      "sha256": "c337348bd329b5e737431927c36e7a21d068b68c63f6f66f6afcd9b5fc9f2251",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Chain_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Chain_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Chain_ability_codex.png?23833",
+      "resolvedTitle": "File:Greater Chain ability codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "f977d0b3a95c04f31d58bd76dcf5fb3661236f97",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:00.581Z"
+    },
+    {
+      "id": "upgrade-codex-divert",
+      "label": "Divert ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/divert.png",
+      "bytes": 717,
+      "sha256": "24a04a0df856059d89a987b5591f165fd8969bc4c5a6a3f3b85b3b479833113b",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Divert_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3ADivert_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Divert_ability_codex.png?4dc48",
+      "resolvedTitle": "File:Divert ability codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "1cabee4bd010483d534d1b0ac551b894e39ee39c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:01.213Z"
+    },
+    {
+      "id": "upgrade-codex-greater-fury",
+      "label": "Greater Fury ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-fury.png",
+      "bytes": 1046,
+      "sha256": "6b02bc287af1e227f98f72e6337d15d957e08043ff2f7062fa41e0ad28876e67",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Fury_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Fury_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Fury_ability_codex.png?3f538",
+      "resolvedTitle": "File:Greater Fury ability codex.png",
+      "sourceWidth": 28,
+      "sourceHeight": 27,
+      "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:01.832Z"
+    },
+    {
+      "id": "upgrade-codex-greater-flurry",
+      "label": "Greater Flurry ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-flurry.png",
+      "bytes": 1046,
+      "sha256": "6b02bc287af1e227f98f72e6337d15d957e08043ff2f7062fa41e0ad28876e67",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Flurry_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Flurry_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Flurry_ability_codex.png?d3257",
+      "resolvedTitle": "File:Greater Flurry ability codex.png",
+      "sourceWidth": 28,
+      "sourceHeight": 27,
+      "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:02.461Z"
+    },
+    {
+      "id": "upgrade-codex-greater-barge",
+      "label": "Greater Barge ability codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/greater-barge.png",
+      "bytes": 1046,
+      "sha256": "6b02bc287af1e227f98f72e6337d15d957e08043ff2f7062fa41e0ad28876e67",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Greater_Barge_ability_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AGreater_Barge_ability_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Greater_Barge_ability_codex.png?2264e",
+      "resolvedTitle": "File:Greater Barge ability codex.png",
+      "sourceWidth": 28,
+      "sourceHeight": 27,
+      "sourceSha1": "cd32f909622bb54724bb3f28880d71c8cfcd898d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:03.105Z"
+    },
+    {
+      "id": "upgrade-codex-double-surge",
+      "label": "Double Surge codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/double-surge.png",
+      "bytes": 809,
+      "sha256": "45ee4da18c562b8d5ef0cc9c6d520ce2bd37a5a8cac41cc15cb24493996aa17b",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Double_Surge_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3ADouble_Surge_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Double_Surge_codex.png?3f063",
+      "resolvedTitle": "File:Double Surge codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "455d1e0a76efbc2a3fd5b3b8f6395005a7e52283",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:03.592Z"
+    },
+    {
+      "id": "upgrade-codex-double-escape",
+      "label": "Double Escape codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/double-escape.png",
+      "bytes": 734,
+      "sha256": "f7e108634dbff80d0f8fccbe5e901588095932e6ed1f7b5c57866f971d5a6c3a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Double_Escape_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3ADouble_Escape_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Double_Escape_codex.png?a3566",
+      "resolvedTitle": "File:Double Escape codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "819cdaa4d09a4b3ead5acbd856718d1e5f3eb180",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:04.078Z"
+    },
+    {
+      "id": "upgrade-codex-eclipsed-soul",
+      "label": "Eclipsed Soul prayer codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/eclipsed-soul.png",
+      "bytes": 860,
+      "sha256": "61cf589a801293261458a8a9be819836d46c9abb287994479a97eed71e0dfd20",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Eclipsed_Soul_prayer_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AEclipsed_Soul_prayer_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Eclipsed_Soul_prayer_codex.png?18f64",
+      "resolvedTitle": "File:Eclipsed Soul prayer codex.png",
+      "sourceWidth": 28,
+      "sourceHeight": 27,
+      "sourceSha1": "f1a9cf81b212efa48a9d7200f7a31988f3940b0f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:04.722Z"
+    },
+    {
+      "id": "upgrade-codex-divine-rage",
+      "label": "Divine Rage prayer codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/divine-rage.png",
+      "bytes": 701,
+      "sha256": "9758738c9053e504ce2b7dd866cdce5f37cae044c40ad0eb019c9e11b87808b0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Divine_Rage_prayer_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3ADivine_Rage_prayer_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Divine_Rage_prayer_codex.png?a5f88",
+      "resolvedTitle": "File:Divine Rage prayer codex.png",
+      "sourceWidth": 28,
+      "sourceHeight": 27,
+      "sourceSha1": "84649b6e887b5d7843d79eec05b1e0d8141efa34",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:05.358Z"
+    },
+    {
+      "id": "upgrade-codex-invoke-lord-of-bones",
+      "label": "Invoke Lord of Bones incantation codex",
+      "category": "rs3/upgrades/ability-codices",
+      "path": "assets/rs3/upgrades/ability-codices/invoke-lord-of-bones.png",
+      "bytes": 801,
+      "sha256": "6943614471ebb03bb933c9cf93d56234465de4929e04557d11f8e0497e7bdf40",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Invoke_Lord_of_Bones_incantation_codex",
+      "sourcePage": "https://runescape.wiki/w/File%3AInvoke_Lord_of_Bones_incantation_codex.png",
+      "downloadUrl": "https://runescape.wiki/images/Invoke_Lord_of_Bones_incantation_codex.png?04303",
+      "resolvedTitle": "File:Invoke Lord of Bones incantation codex.png",
+      "sourceWidth": 25,
+      "sourceHeight": 29,
+      "sourceSha1": "4b8bde5633dbe32735875abf20fec80c6af93e3b",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:05.992Z"
+    },
+    {
+      "id": "boss-kerapac",
+      "label": "Kerapac, the bound",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/kerapac.png",
+      "bytes": 370724,
+      "sha256": "11e8774d160a1af3b13e284ab5a108fc751c244d7897de75bf40af5fdbd16967",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Kerapac,_the_bound",
+      "sourcePage": "https://runescape.wiki/w/File%3AKerapac%2C_the_bound_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Kerapac%2C_the_bound_%28boss_portal%29_texture.png?adc62",
+      "resolvedTitle": "File:Kerapac, the bound (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "51b257307814c75ce6a848cb3d16563fe6517ba9",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:06.636Z"
+    },
+    {
+      "id": "boss-arch-glacor",
+      "label": "Arch-Glacor",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/arch-glacor.png",
+      "bytes": 257241,
+      "sha256": "284d0f22e25a986e4a97c7af414b1461cfb3fe1b64dc9ecd9a0d4c9d97992117",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Arch-Glacor",
+      "sourcePage": "https://runescape.wiki/w/File%3AArch-Glacor_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Arch-Glacor_%28boss_portal%29_texture.png?6ef29",
+      "resolvedTitle": "File:Arch-Glacor (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "9ddec14b50968d69755bd70ce59527a3af0ea7ff",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:07.276Z"
+    },
+    {
+      "id": "boss-croesus",
+      "label": "Croesus",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/croesus.png",
+      "bytes": 243442,
+      "sha256": "6d69266fef57aa30110c5fbe9bc5622ede14b22fb01a2609e23658e28f5794e4",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Croesus",
+      "sourcePage": "https://runescape.wiki/w/File%3ACroesus_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Croesus_%28boss_portal%29_texture.png?2c995",
+      "resolvedTitle": "File:Croesus (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "88858ce995b6d16791c00edd9e94b2765651a587",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:07.909Z"
+    },
+    {
+      "id": "boss-tzkal-zuk",
+      "label": "TzKal-Zuk",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/tzkal-zuk.png",
+      "bytes": 346348,
+      "sha256": "8f3087ce3965f91073296bcd7b9b30ab269afc9f776b9201e59b08cbb1ecbd31",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/TzKal-Zuk",
+      "sourcePage": "https://runescape.wiki/w/File%3ATzKal-Zuk_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/TzKal-Zuk_%28boss_portal%29_texture.png?3813d",
+      "resolvedTitle": "File:TzKal-Zuk (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "4f254e197c54b65f25c71f27da372dcc9abf2af8",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:08.542Z"
+    },
+    {
+      "id": "boss-rasial",
+      "label": "Rasial, the First Necromancer",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/rasial.png",
+      "bytes": 243882,
+      "sha256": "1e1501122dc44015c30c9b0ec33a970810373e00e8c8e7325ca9068c19233558",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+      "sourcePage": "https://runescape.wiki/w/File%3ARasial%2C_the_First_Necromancer_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Rasial%2C_the_First_Necromancer_%28boss_portal%29_texture.png?6649a",
+      "resolvedTitle": "File:Rasial, the First Necromancer (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "44f04b5e02b8d77245e19a981df93515d4e363fa",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:09.036Z"
+    },
+    {
+      "id": "boss-hermod",
+      "label": "Hermod, the Spirit of War",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/hermod.png",
+      "bytes": 406138,
+      "sha256": "41ac44f5d78c6940219614d9ab76e58d5f16c72644a1ac878f8098031fd06117",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Hermod,_the_Spirit_of_War",
+      "sourcePage": "https://runescape.wiki/w/File%3AHermod%2C_the_Spirit_of_War_(Christmas).png",
+      "downloadUrl": "https://runescape.wiki/images/Hermod%2C_the_Spirit_of_War_%28Christmas%29.png?76b90",
+      "resolvedTitle": "File:Hermod, the Spirit of War (Christmas).png",
+      "sourceWidth": 867,
+      "sourceHeight": 957,
+      "sourceSha1": "50e05d3e569ba920d4f800b439826bdaa7f57c5b",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:09.684Z"
+    },
+    {
+      "id": "boss-gate-of-elidinis",
+      "label": "The Gate of Elidinis",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/gate-of-elidinis.png",
+      "bytes": 593649,
+      "sha256": "b0397b000bc7e9fb52e60a7b86e570929a0d4aad477ac7ba1f374c8cafa020c0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+      "sourcePage": "https://runescape.wiki/w/File%3AUpcoming_New_Skilling_Boss-_Gate_of_Elidinis_(6)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Upcoming_New_Skilling_Boss-_Gate_of_Elidinis_%286%29_update_image.png?2a886",
+      "resolvedTitle": "File:Upcoming New Skilling Boss- Gate of Elidinis (6) update image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1079,
+      "sourceSha1": "7576b43d45c641c8b9c9f3dab6a9284dfcd9bb1f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:10.350Z"
+    },
+    {
+      "id": "boss-zemouregal-vorkath",
+      "label": "Zemouregal & Vorkath",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/zemouregal-vorkath.png",
+      "bytes": 304251,
+      "sha256": "2a909cce17f7ca1f35b3a4d245c2ec5443d5a14afd3b41650e8aad5479b43260",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
+      "sourcePage": "https://runescape.wiki/w/File%3AZemouregal_%26_Vorkath_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Zemouregal_%26_Vorkath_%28boss_portal%29_texture.png?c3f4a",
+      "resolvedTitle": "File:Zemouregal & Vorkath (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "2384274cfddda740c89674931d91bfccfdc12c77",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:10.993Z"
+    },
+    {
+      "id": "boss-vermyx",
+      "label": "Vermyx, Brood Mother",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/vermyx.png",
+      "bytes": 1002919,
+      "sha256": "b8685fb64180de1e823765421ff5f8be2e0cb07aa2e5aed2dcac544226a5a059",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Vermyx,_Brood_Mother",
+      "sourcePage": "https://runescape.wiki/w/File%3AVermyx%2C_Brood_Mother_(Christmas).png",
+      "downloadUrl": "https://runescape.wiki/images/Vermyx%2C_Brood_Mother_%28Christmas%29.png?c61fc",
+      "resolvedTitle": "File:Vermyx, Brood Mother (Christmas).png",
+      "sourceWidth": 1700,
+      "sourceHeight": 959,
+      "sourceSha1": "b9a834bb4dda9faa8b2e61c1d02b20b5cce1c5b1",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:11.653Z"
+    },
+    {
+      "id": "boss-kezalam",
+      "label": "Kezalam, the Wanderer",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/kezalam.png",
+      "bytes": 1531919,
+      "sha256": "31aab3746a322aaf502f0b7990054d654ccbad4cbfdeac3977b7c338a188335c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Kezalam,_the_Wanderer",
+      "sourcePage": "https://runescape.wiki/w/File%3AKezalam%2C_the_Wanderer_(Christmas).png",
+      "downloadUrl": "https://runescape.wiki/images/Kezalam%2C_the_Wanderer_%28Christmas%29.png?4283d",
+      "resolvedTitle": "File:Kezalam, the Wanderer (Christmas).png",
+      "sourceWidth": 1610,
+      "sourceHeight": 1031,
+      "sourceSha1": "6dd48201cdc6b940b2032c57e216ee32a1c0407a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:12.309Z"
+    },
+    {
+      "id": "boss-nakatra",
+      "label": "Nakatra, Devourer Eternal",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/nakatra.png",
+      "bytes": 1209377,
+      "sha256": "0c2d7b33ba8e7f435c31deff051bc60dba7698be34a113399cceacda9c28d6cf",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Nakatra,_Devourer_Eternal",
+      "sourcePage": "https://runescape.wiki/w/File%3ANakatra%2C_Devourer_Eternal_(2024).png",
+      "downloadUrl": "https://runescape.wiki/images/Nakatra%2C_Devourer_Eternal_%282024%29.png?1876a",
+      "resolvedTitle": "File:Nakatra, Devourer Eternal (2024).png",
+      "sourceWidth": 903,
+      "sourceHeight": 873,
+      "sourceSha1": "2bc59d4b052a2c07595755b5a9017633c425d7d8",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:12.962Z"
+    },
+    {
+      "id": "boss-ivar",
+      "label": "Ivar, King of Bones",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/ivar.png",
+      "bytes": 345844,
+      "sha256": "08a587bad47889654b8c9752de87a0d8285d2a20ec657b8057ad1a9891d9d283",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Ivar,_King_of_Bones",
+      "sourcePage": "https://runescape.wiki/w/File%3AIvar%2C_King_of_Bones_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Ivar%2C_King_of_Bones_%28boss_portal%29_texture.png?11e70",
+      "resolvedTitle": "File:Ivar, King of Bones (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "889161b402ec7b812841d9eae5a9801d460f9d50",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:13.599Z"
+    },
+    {
+      "id": "boss-silverquill",
+      "label": "Silverquill, the Dreadhog",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/silverquill.png",
+      "bytes": 262742,
+      "sha256": "57544ed332172f9e471f513e2a65707f37801bf3e0e88f854e6e2bb15568653d",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Silverquill,_the_Dreadhog",
+      "sourcePage": "https://runescape.wiki/w/File%3ASilverquill%2C_the_Dreadhog_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Silverquill%2C_the_Dreadhog_%28boss_portal%29_texture.png?61217",
+      "resolvedTitle": "File:Silverquill, the Dreadhog (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "e342a6cfca20cf1736f046e96d17d0b1c06e7fc3",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:14.221Z"
+    },
+    {
+      "id": "boss-nex",
+      "label": "Nex",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/nex.png",
+      "bytes": 385099,
+      "sha256": "823deb5697b6599751e66c85095339d0b6a004f360887bb08193ece356dcd1b0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Nex",
+      "sourcePage": "https://runescape.wiki/w/File%3AClan_Boss_Cup_-_Nex.png",
+      "downloadUrl": "https://runescape.wiki/images/Clan_Boss_Cup_-_Nex.png?1226c",
+      "resolvedTitle": "File:Clan Boss Cup - Nex.png",
+      "sourceWidth": 588,
+      "sourceHeight": 1004,
+      "sourceSha1": "c7186c03e6bacaac3634fa8c8a4172179c36a064",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:14.855Z"
+    },
+    {
+      "id": "boss-queen-black-dragon",
+      "label": "Queen Black Dragon",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/queen-black-dragon.png",
+      "bytes": 256391,
+      "sha256": "2184f8461b57d9830c63574669df3a6e96412437e63871d3b8d0ffc9c034bb61",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Queen_Black_Dragon",
+      "sourcePage": "https://runescape.wiki/w/File%3AQueen_Black_Dragon_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Queen_Black_Dragon_%28boss_portal%29_texture.png?adc62",
+      "resolvedTitle": "File:Queen Black Dragon (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "efd484af888cd14b3abce2623d6bbb8165672004",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:15.502Z"
+    },
+    {
+      "id": "boss-vorago",
+      "label": "Vorago",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/vorago.png",
+      "bytes": 334063,
+      "sha256": "2abb7a14715ff9dc7b3f67f7a7e2f1ac3a307cce60a536ec11d6f85e632bf8b2",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Vorago",
+      "sourcePage": "https://runescape.wiki/w/File%3AVorago_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Vorago_%28boss_portal%29_texture.png?76014",
+      "resolvedTitle": "File:Vorago (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "b62658bc68530d6522df790a3ddfa50175750b7f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:16.150Z"
+    },
+    {
+      "id": "boss-nex-aod",
+      "label": "Nex: Angel of Death",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/nex-aod.png",
+      "bytes": 301082,
+      "sha256": "25c3b6b962e24908c28e6b3fc033e3432485250f2af3cd5587ccee6a5a05349d",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Nex:_Angel_of_Death",
+      "sourcePage": "https://runescape.wiki/w/File%3ANex-_Angel_of_Death_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Nex-_Angel_of_Death_%28boss_portal%29_texture.png?adc62",
+      "resolvedTitle": "File:Nex- Angel of Death (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "f3abc702cbc604f75f15ad96cb98a7b27de5c729",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:16.794Z"
+    },
+    {
+      "id": "boss-legiones",
+      "label": "Legiones",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/legiones.png",
+      "bytes": 395839,
+      "sha256": "c838c210998929de8ff4361a16d94a45363e0b2dcbb6d6dcd57c0f66094cfa69",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Legiones",
+      "sourcePage": "https://runescape.wiki/w/File%3APortal_(Legiones).png",
+      "downloadUrl": "https://runescape.wiki/images/Portal_%28Legiones%29.png?98136",
+      "resolvedTitle": "File:Portal (Legiones).png",
+      "sourceWidth": 574,
+      "sourceHeight": 807,
+      "sourceSha1": "538c354c6c019ef9063634f7c8579ff453f2daa9",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:17.476Z"
+    },
+    {
+      "id": "boss-kalphite-queen",
+      "label": "Kalphite Queen",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/kalphite-queen.png",
+      "bytes": 362814,
+      "sha256": "e56efe9776d584222cca24926d0b789b194209b8cebc040b6bc79fc97ceafc6d",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Kalphite_Queen",
+      "sourcePage": "https://runescape.wiki/w/File%3ABoss_Slayer_Kalphite_Queen.png",
+      "downloadUrl": "https://runescape.wiki/images/Boss_Slayer_Kalphite_Queen.png?9f864",
+      "resolvedTitle": "File:Boss Slayer Kalphite Queen.png",
+      "sourceWidth": 934,
+      "sourceHeight": 696,
+      "sourceSha1": "1de24fd105b402ba00cf0d69fa7b1f8646dab969",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:18.118Z"
+    },
+    {
+      "id": "boss-kalphite-king",
+      "label": "Kalphite King",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/kalphite-king.png",
+      "bytes": 187457,
+      "sha256": "04d1ad95ff94220c6294be4d91779b42e3fd9e60a788d5f9e4864c47319a0bb8",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Kalphite_King",
+      "sourcePage": "https://runescape.wiki/w/File%3ABoss_Slayer_Kalphite_King.png",
+      "downloadUrl": "https://runescape.wiki/images/Boss_Slayer_Kalphite_King.png?becf4",
+      "resolvedTitle": "File:Boss Slayer Kalphite King.png",
+      "sourceWidth": 917,
+      "sourceHeight": 805,
+      "sourceSha1": "d47ab1226c494051cb310056c6afa6936d13dee2",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:18.750Z"
+    },
+    {
+      "id": "boss-magister",
+      "label": "The Magister",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/magister.png",
+      "bytes": 255033,
+      "sha256": "053464c47d3b516aecd38aabc4180a71f45745d4dc6c632019d9227aa321d157",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/The_Magister",
+      "sourcePage": "https://runescape.wiki/w/File%3AThe_Magister_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/The_Magister_%28boss_portal%29_texture.png?b8eb2",
+      "resolvedTitle": "File:The Magister (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "72c8f0de617ae60c34a1fa660063ec9f683cb595",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:19.383Z"
+    },
+    {
+      "id": "boss-telos",
+      "label": "Telos, the Warden",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/telos.png",
+      "bytes": 299490,
+      "sha256": "efd3facb88b201474ff4306ca31494e3d57191ce5437d510ebcac7c2858dc724",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Telos,_the_Warden",
+      "sourcePage": "https://runescape.wiki/w/File%3ATelos%2C_the_Warden_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Telos%2C_the_Warden_%28boss_portal%29_texture.png?b8eb2",
+      "resolvedTitle": "File:Telos, the Warden (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "adcab7ef97315c41afa6245af35a3697bccdbc31",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:20.013Z"
+    },
+    {
+      "id": "boss-amascut",
+      "label": "Amascut, the Devourer",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/amascut.png",
+      "bytes": 294033,
+      "sha256": "bfe62e293e0e26084b8681f8d2247b46d6d59f3eec82d71c70432c568f092ece",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Amascut,_the_Devourer",
+      "sourcePage": "https://runescape.wiki/w/File%3AAmascut%2C_the_Devourer.png",
+      "downloadUrl": "https://runescape.wiki/images/Amascut%2C_the_Devourer.png?7d30e",
+      "resolvedTitle": "File:Amascut, the Devourer.png",
+      "sourceWidth": 471,
+      "sourceHeight": 1011,
+      "sourceSha1": "6fd3726f094215e4c48d7e5afa1fb350572cb1aa",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:20.498Z"
+    },
+    {
+      "id": "boss-raksha",
+      "label": "Raksha",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/raksha.png",
+      "bytes": 268063,
+      "sha256": "ea9ee5ba9f60778afa08c0579f2f0d3c07edfd687282ec100da3251bd351bf16",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Raksha",
+      "sourcePage": "https://runescape.wiki/w/File%3ARaksha%2C_the_Shadow_Colossus_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Raksha%2C_the_Shadow_Colossus_%28boss_portal%29_texture.png?b8eb2",
+      "resolvedTitle": "File:Raksha, the Shadow Colossus (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "74953e1812f653220fa58d112bf2ba80bb8d5abb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:21.138Z"
+    },
+    {
+      "id": "boss-rex-matriarchs",
+      "label": "Rex Matriarchs",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/rex-matriarchs.png",
+      "bytes": 185246,
+      "sha256": "5ff85befa243abf930752c57df3bb611f77454155d1583b514d64c5279567dca",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Rex_Matriarchs",
+      "sourcePage": "https://runescape.wiki/w/File%3ARex_Matriarchs_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Rex_Matriarchs_%28boss_portal%29_texture.png?abdf7",
+      "resolvedTitle": "File:Rex Matriarchs (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "46643c0d5b1f42444ae2ec1ca24d6e18669b8436",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:21.770Z"
+    },
+    {
+      "id": "boss-solak",
+      "label": "Solak",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/solak.png",
+      "bytes": 284519,
+      "sha256": "eb8011ffef84c21fff24a1a6c669c456ceb92072d254ef94bd7d1ba17dec75ee",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Solak",
+      "sourcePage": "https://runescape.wiki/w/File%3ASolak_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Solak_%28boss_portal%29_texture.png?b8eb2",
+      "resolvedTitle": "File:Solak (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "d3ae0e45df33b8637b4a11e099b6055baad6d1b7",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:22.409Z"
+    },
+    {
+      "id": "boss-araxxor",
+      "label": "Araxxor",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/araxxor.png",
+      "bytes": 261069,
+      "sha256": "415222aebaf618bcab79b8d7a8809e88712e54f4197381263bd7e1b763fd59d0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Araxxor",
+      "sourcePage": "https://runescape.wiki/w/File%3AAraxxor_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Araxxor_%28boss_portal%29_texture.png?27cc2",
+      "resolvedTitle": "File:Araxxor (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "a0bfbc9526107b5e7abab813d21abb5875b4c2b9",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:23.056Z"
+    },
+    {
+      "id": "boss-araxxi",
+      "label": "Araxxi",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/araxxi.png",
+      "bytes": 310992,
+      "sha256": "7d830f87668081822c2ccc7bb9ee71856c6205628b8387e138b13e8f1e9a8850",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Araxxi",
+      "sourcePage": "https://runescape.wiki/w/File%3AAraxxi_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Araxxi_%28boss_portal%29_texture.png?6b901",
+      "resolvedTitle": "File:Araxxi (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "3ac5975c230cfe31e17e2d7c1d3d039cf56ef26c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:23.708Z"
+    },
+    {
+      "id": "boss-ambassador",
+      "label": "The Ambassador",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/ambassador.gif",
+      "bytes": 2226417,
+      "sha256": "d881d9539bb6a4ad8e86051d126306d4bbb2f824e485dea16ecb6762e6948db4",
+      "mime": "image/gif",
+      "canonicalPage": "https://runescape.wiki/w/The_Ambassador",
+      "sourcePage": "https://runescape.wiki/w/File%3AShadowReefGuide_AmbassadorFragments.gif",
+      "downloadUrl": "https://runescape.wiki/images/ShadowReefGuide_AmbassadorFragments.gif?682f8",
+      "resolvedTitle": "File:ShadowReefGuide AmbassadorFragments.gif",
+      "sourceWidth": 359,
+      "sourceHeight": 204,
+      "sourceSha1": "aa2ee36e2012f6d3bb632c6a999afac3721c98bb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:24.377Z"
+    },
+    {
+      "id": "boss-seiryu",
+      "label": "Seiryu the Azure Serpent",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/seiryu.png",
+      "bytes": 284142,
+      "sha256": "7e605e7081911191b59a1324cca45ae6c5fda99031eed05fb21dc5a8b5c880d3",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Seiryu_the_Azure_Serpent",
+      "sourcePage": "https://runescape.wiki/w/File%3ASeiryu_the_Azure_Serpent_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Seiryu_the_Azure_Serpent_%28boss_portal%29_texture.png?b8eb2",
+      "resolvedTitle": "File:Seiryu the Azure Serpent (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "90a2bbc85ec792e009ca004f3ef20da528be5d8d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:25.014Z"
+    },
+    {
+      "id": "boss-black-stone-dragon",
+      "label": "Black Stone Dragon",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/black-stone-dragon.png",
+      "bytes": 226374,
+      "sha256": "f4ca412784fc4fd23821a7a4315f70d6c94bbf97164a7406255044e91f477d38",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Black_Stone_Dragon",
+      "sourcePage": "https://runescape.wiki/w/File%3ABlack_stone_dragon_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Black_stone_dragon_%28boss_portal%29_texture.png?27cc2",
+      "resolvedTitle": "File:Black stone dragon (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "02b608b943dd6d700dcf1f1fb970f5ed3578a14b",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:25.656Z"
+    },
+    {
+      "id": "boss-zamorak",
+      "label": "Zamorak, Lord of Chaos",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/zamorak.jpg",
+      "bytes": 1130151,
+      "sha256": "75fc46ab5c5907f4f937bb28d219aee3b8bebd72e64a8136fcbbff9e564d4653",
+      "mime": "image/jpeg",
+      "canonicalPage": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+      "sourcePage": "https://runescape.wiki/w/File%3AZamorak%2C_Lord_of_Chaos_model_1.jpg",
+      "downloadUrl": "https://runescape.wiki/images/Zamorak%2C_Lord_of_Chaos_model_1.jpg?1256e",
+      "resolvedTitle": "File:Zamorak, Lord of Chaos model 1.jpg",
+      "sourceWidth": 3840,
+      "sourceHeight": 2160,
+      "sourceSha1": "66e880ffad4eaf25731b170bf6fdf8d019df0b0c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:26.510Z"
+    },
+    {
+      "id": "boss-beastmaster-durzag",
+      "label": "Beastmaster Durzag",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/beastmaster-durzag.png",
+      "bytes": 1231409,
+      "sha256": "a28ad3401e61f730aabd17b2d14ebc39fe8cfa4ea591a1f7f8c190983295d2f0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Beastmaster_Durzag",
+      "sourcePage": "https://runescape.wiki/w/File%3ABeastmaster_Durzag_boss_fight.png",
+      "downloadUrl": "https://runescape.wiki/images/Beastmaster_Durzag_boss_fight.png?74497",
+      "resolvedTitle": "File:Beastmaster Durzag boss fight.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "92d2236a7f2d2512eaea6a0321c3fbd165c6bf9c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:27.231Z"
+    },
+    {
+      "id": "boss-yakamaru",
+      "label": "Yakamaru",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/yakamaru.png",
+      "bytes": 281945,
+      "sha256": "352a91a65b9cef9e58f26c3bcb6308109b4dc710151c13b0e092a184b37f53ee",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Yakamaru",
+      "sourcePage": "https://runescape.wiki/w/File%3AYakamaru_(boss_portal)_texture.png",
+      "downloadUrl": "https://runescape.wiki/images/Yakamaru_%28boss_portal%29_texture.png?76014",
+      "resolvedTitle": "File:Yakamaru (boss portal) texture.png",
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "sourceSha1": "6693cec1df591f6842fb90f226b1e77133c4b8bc",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:27.877Z"
+    },
+    {
+      "id": "activity-sanctum-of-rebirth",
+      "label": "Sanctum of Rebirth",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/sanctum-of-rebirth.png",
+      "bytes": 1532463,
+      "sha256": "83a1fa6f06f9f14bc7e927cb477c780b4b54462afaf66a9012ea996c27995305",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+      "sourcePage": "https://runescape.wiki/w/File%3ASanctum_of_Rebirth.png",
+      "downloadUrl": "https://runescape.wiki/images/Sanctum_of_Rebirth.png?1bb57",
+      "resolvedTitle": "File:Sanctum of Rebirth.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1056,
+      "sourceSha1": "dda65a5055a6ec2bca280bf0d0d7ed0b89985075",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:28.536Z"
+    },
+    {
+      "id": "activity-moonrise-dig-site",
+      "label": "Moonrise Dig Site",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/moonrise-dig-site.png",
+      "bytes": 674628,
+      "sha256": "5eaf2a95ccb940536a1de33e4c5bdf50de524ce806295a6673f3ade7b83a0d4c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Moonrise_Dig_Site",
+      "sourcePage": "https://runescape.wiki/w/File%3AUncovering_the_Moonrise_Dig_Site_(3)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Uncovering_the_Moonrise_Dig_Site_%283%29_update_image.png?bd7fb",
+      "resolvedTitle": "File:Uncovering the Moonrise Dig Site (3) update image.png",
+      "sourceWidth": 1200,
+      "sourceHeight": 627,
+      "sourceSha1": "828e78510328afdc5cf9bedafc7836d738610a34",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:29.179Z"
+    },
+    {
+      "id": "activity-fort-forinthry",
+      "label": "Fort Forinthry",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/fort-forinthry.png",
+      "bytes": 1604377,
+      "sha256": "261eef911d23fea5228bcbfb593b27f67f19ec27ba242e46b828a4ad61b44d67",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry",
+      "sourcePage": "https://runescape.wiki/w/File%3AFort_Forinthry_lodestone.png",
+      "downloadUrl": "https://runescape.wiki/images/Fort_Forinthry_lodestone.png?39c91",
+      "resolvedTitle": "File:Fort Forinthry lodestone.png",
+      "sourceWidth": 2718,
+      "sourceHeight": 1315,
+      "sourceSha1": "ad763a293cbb931473676bed3422be40a4577efc",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:29.839Z"
+    },
+    {
+      "id": "activity-city-of-um",
+      "label": "City of Um",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/city-of-um.png",
+      "bytes": 523376,
+      "sha256": "c3de9b200cc13726a73e6daa6bcff1a4083134565c44dc2d440bd4c4a612d1e0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/City_of_Um",
+      "sourcePage": "https://runescape.wiki/w/File%3ACity_of_Um-_Necromancy_Insights_(26)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/City_of_Um-_Necromancy_Insights_%2826%29_update_image.png?88ee6",
+      "resolvedTitle": "File:City of Um- Necromancy Insights (26) update image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "090c7182485b05c640e1da88858257a5ad575eae",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:30.488Z"
+    },
+    {
+      "id": "activity-player-owned-farm",
+      "label": "Player-owned farm",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/player-owned-farm.png",
+      "bytes": 244,
+      "sha256": "24ef9530415afadf58e841443649d337c68992e356392a80d31914c0d76f2e18",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Player-owned_farm",
+      "sourcePage": "https://runescape.wiki/w/File%3APOF_produce_icon.png",
+      "downloadUrl": "https://runescape.wiki/images/POF_produce_icon.png?246ab",
+      "resolvedTitle": "File:POF produce icon.png",
+      "sourceWidth": 26,
+      "sourceHeight": 31,
+      "sourceSha1": "50e909d9c670c32a99f0a9c68a5859312141fb27",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:31.126Z"
+    },
+    {
+      "id": "activity-hall-of-memories",
+      "label": "Hall of Memories",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/hall-of-memories.png",
+      "bytes": 2124215,
+      "sha256": "88c9f190079b89bc33fc873e8fc1cde3c4cee208c1acfc44697f5109faf2b68f",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Hall_of_Memories",
+      "sourcePage": "https://runescape.wiki/w/File%3AHall_of_Memories_news_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Hall_of_Memories_news_image.png?db93d",
+      "resolvedTitle": "File:Hall of Memories news image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "87b7090f3ebb79a3962618a759adc6592f30d03d",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:31.831Z"
+    },
+    {
+      "id": "activity-deep-sea-fishing",
+      "label": "Deep Sea Fishing hub",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/deep-sea-fishing.png",
+      "bytes": 4543649,
+      "sha256": "482c0ff59b959c3fed14f43c1cf01bfcdbd204ecf68dc915135c17fb751b1d15",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+      "sourcePage": "https://runescape.wiki/w/File%3ADeep_Sea_Fishing_hub.png",
+      "downloadUrl": "https://runescape.wiki/images/Deep_Sea_Fishing_hub.png?0500f",
+      "resolvedTitle": "File:Deep Sea Fishing hub.png",
+      "sourceWidth": 2560,
+      "sourceHeight": 1440,
+      "sourceSha1": "334b677eab6d67b25908e9d5f168b08f43b9143a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:32.517Z"
+    },
+    {
+      "id": "activity-big-game-hunter",
+      "label": "Big Game Hunter",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/big-game-hunter.png",
+      "bytes": 1176,
+      "sha256": "b4e3260ca238a97b0d11a3c732c13e7b17ac6ef4acffb9995e80ab1c1223be18",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Big_Game_Hunter",
+      "sourcePage": "https://runescape.wiki/w/File%3AGiant_chinchompa_(Big_Game_Hunter)_icon.png",
+      "downloadUrl": "https://runescape.wiki/images/Giant_chinchompa_%28Big_Game_Hunter%29_icon.png?458dc",
+      "resolvedTitle": "File:Giant chinchompa (Big Game Hunter) icon.png",
+      "sourceWidth": 26,
+      "sourceHeight": 30,
+      "sourceSha1": "28b0a8173a5a313c1a6a0e9a77158605ee0d6276",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:33.146Z"
+    },
+    {
+      "id": "activity-ranch-out-of-time",
+      "label": "Ranch Out of Time",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ranch-out-of-time.png",
+      "bytes": 351224,
+      "sha256": "850480870d472b93324c5835f43fc1ae9aad2aec1b56208b4fb12257c69f9644",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Ranch_Out_of_Time",
+      "sourcePage": "https://runescape.wiki/w/File%3ARanch_Out_of_Time_Prerelease_news_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Ranch_Out_of_Time_Prerelease_news_image.png?6fba7",
+      "resolvedTitle": "File:Ranch Out of Time Prerelease news image.png",
+      "sourceWidth": 1552,
+      "sourceHeight": 535,
+      "sourceSha1": "81734d3ba5f89bcb847edbf4cc2ac175a53f2420",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:33.794Z"
+    },
+    {
+      "id": "activity-daemonheim",
+      "label": "Daemonheim",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/daemonheim.png",
+      "bytes": 547637,
+      "sha256": "eaf52e1330a01971a4f24725955628869ced423277fae83b20e9a93045675f9d",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Daemonheim",
+      "sourcePage": "https://runescape.wiki/w/File%3ANew_Archaeology_Dig_Site_-_Daemonheim_(9)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/New_Archaeology_Dig_Site_-_Daemonheim_%289%29_update_image.png?b2ac7",
+      "resolvedTitle": "File:New Archaeology Dig Site - Daemonheim (9) update image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "259f62e7dec0f923c89b0c0b8ceb7180499b60eb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:34.440Z"
+    },
+    {
+      "id": "activity-dragonkin-laboratory",
+      "label": "Dragonkin Laboratory",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/dragonkin-laboratory.jpg",
+      "bytes": 216978,
+      "sha256": "fc92c81cddd0831f40bef978791b2bde5fde2426795a9a563c65c14563be1975",
+      "mime": "image/jpeg",
+      "canonicalPage": "https://runescape.wiki/w/Dragonkin_Laboratory",
+      "sourcePage": "https://runescape.wiki/w/File%3ADragonkin_Laboratory_news_image.jpg",
+      "downloadUrl": "https://runescape.wiki/images/Dragonkin_Laboratory_news_image.jpg?6d4e3",
+      "resolvedTitle": "File:Dragonkin Laboratory news image.jpg",
+      "sourceWidth": 1852,
+      "sourceHeight": 1056,
+      "sourceSha1": "bbee39170ebf6e7e7c9dcb3654ced39c71011f7f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:35.071Z"
+    },
+    {
+      "id": "activity-shadow-reef",
+      "label": "The Shadow Reef",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/shadow-reef.png",
+      "bytes": 19376,
+      "sha256": "34867c18dce528e6911c7b3956982c0d09036e12e421fe265be71facec4741b0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/The_Shadow_Reef",
+      "sourcePage": "https://runescape.wiki/w/File%3AElite_Dungeons_-_Shadow_Reef_news_image_3.png",
+      "downloadUrl": "https://runescape.wiki/images/Elite_Dungeons_-_Shadow_Reef_news_image_3.png?651a8",
+      "resolvedTitle": "File:Elite Dungeons - Shadow Reef news image 3.png",
+      "sourceWidth": 305,
+      "sourceHeight": 147,
+      "sourceSha1": "e0e0fe2e2bb1206e3204b90a283ef0916a3aeb8f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:35.714Z"
+    },
+    {
+      "id": "activity-heart-of-gielinor",
+      "label": "Heart of Gielinor",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/heart-of-gielinor.png",
+      "bytes": 19064,
+      "sha256": "218bb7e08712aebd986d87fcd99ac33edba4ec58fb311b85c4e0869fe873443b",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Heart_of_Gielinor",
+      "sourcePage": "https://runescape.wiki/w/File%3AKillcount_(Heart_of_Gielinor).png",
+      "downloadUrl": "https://runescape.wiki/images/Killcount_%28Heart_of_Gielinor%29.png?75e75",
+      "resolvedTitle": "File:Killcount (Heart of Gielinor).png",
+      "sourceWidth": 318,
+      "sourceHeight": 113,
+      "sourceSha1": "714e6773772a3c339cfad2ee0eb2b306ab1644b7",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:36.368Z"
+    },
+    {
+      "id": "activity-menaphos",
+      "label": "Menaphos",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/menaphos.png",
+      "bytes": 2147361,
+      "sha256": "c9b94292d791e53036c516815aeb119c9ad04f82c2eb73409706f8ce86f9192a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Menaphos",
+      "sourcePage": "https://runescape.wiki/w/File%3AMenaphos_Obelisks_news_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Menaphos_Obelisks_news_image.png?ce54b",
+      "resolvedTitle": "File:Menaphos Obelisks news image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "904290d11bfd38b5a422cb07ad5b35e0a6edc077",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:37.018Z"
+    },
+    {
+      "id": "activity-hets-oasis",
+      "label": "Het's Oasis",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/hets-oasis.png",
+      "bytes": 871855,
+      "sha256": "c344c2d2657bacebe56f8301d5c9f8d3a8352a1d9ceb296ee29a2ae03ad20eae",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Het%27s_Oasis",
+      "sourcePage": "https://runescape.wiki/w/File%3AIntroducing_Het's_Oasis_(6)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Introducing_Het%27s_Oasis_%286%29_update_image.png?21da7",
+      "resolvedTitle": "File:Introducing Het's Oasis (6) update image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "52e902e2a0b5b6683ec9ba1446e8c10559196051",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:37.658Z"
+    },
+    {
+      "id": "activity-wars-retreat",
+      "label": "War's Retreat",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/wars-retreat.png",
+      "bytes": 2319,
+      "sha256": "a1b2ffdc141092fd94c1e37e64f92b01a142fd541378cf8661185216fd51b81a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/War%27s_Retreat",
+      "sourcePage": "https://runescape.wiki/w/File%3AWar's_Retreat_Teleport_icon_(2021).png",
+      "downloadUrl": "https://runescape.wiki/images/War%27s_Retreat_Teleport_icon_%282021%29.png?ef92b",
+      "resolvedTitle": "File:War's Retreat Teleport icon (2021).png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "563f308d7e1b564ed4f718ad2ab4cfc7ee935ada",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:38.299Z"
+    },
+    {
+      "id": "activity-invention-guild",
+      "label": "Invention Guild",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/invention-guild.jpg",
+      "bytes": 145234,
+      "sha256": "bad9e7723231c179ba995b757433394fdbc627e421988e6a5f64b6bc4eafaf5d",
+      "mime": "image/jpeg",
+      "canonicalPage": "https://runescape.wiki/w/Invention_Guild",
+      "sourcePage": "https://runescape.wiki/w/File%3AInvention_Guild_entrance_news_image.jpg",
+      "downloadUrl": "https://runescape.wiki/images/Invention_Guild_entrance_news_image.jpg?e74f5",
+      "resolvedTitle": "File:Invention Guild entrance news image.jpg",
+      "sourceWidth": 580,
+      "sourceHeight": 320,
+      "sourceSha1": "2c3c4637dac54a4b94cfe6348471d515739b1261",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:38.939Z"
+    },
+    {
+      "id": "activity-archaeology-guild",
+      "label": "Archaeology Guild",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/archaeology-guild.png",
+      "bytes": 44406,
+      "sha256": "d98432ecfd83b01fcdfa386c68508b187641bad5af6e4ba6e9326e837d76ef22",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Archaeology_Guild",
+      "sourcePage": "https://runescape.wiki/w/File%3AJournal_(Archaeology_Guild).png",
+      "downloadUrl": "https://runescape.wiki/images/Journal_%28Archaeology_Guild%29.png?e3e93",
+      "resolvedTitle": "File:Journal (Archaeology Guild).png",
+      "sourceWidth": 443,
+      "sourceHeight": 435,
+      "sourceSha1": "1508d732644125c2834f673ad399e2d381aa4704",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:39.582Z"
+    },
+    {
+      "id": "activity-anachronia-agility-course",
+      "label": "Anachronia Agility Course",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/anachronia-agility-course.png",
+      "bytes": 3056916,
+      "sha256": "ae7e6c381376c57a008a283b064f29e5fca8a1b29b8f4470d827b7ac3e4ed462",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "sourcePage": "https://runescape.wiki/w/File%3AAnachronia_Agility_Course.png",
+      "downloadUrl": "https://runescape.wiki/images/Anachronia_Agility_Course.png?11dd2",
+      "resolvedTitle": "File:Anachronia Agility Course.png",
+      "sourceWidth": 2560,
+      "sourceHeight": 1440,
+      "sourceSha1": "d6e7c4bda4469c34eef87cef32f023ca47a4d341",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:40.297Z"
+    },
+    {
+      "id": "activity-wilderness-agility-course",
+      "label": "Wilderness Agility Course",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/wilderness-agility-course.png",
+      "bytes": 741,
+      "sha256": "d5c32d5a377ed1e0683b71a06465ee89e57898942b82ff752999c6a06d288d3b",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Wilderness_Agility_Course",
+      "sourcePage": "https://runescape.wiki/w/File%3AWilderness_Agility_Course_icon.png",
+      "downloadUrl": "https://runescape.wiki/images/Wilderness_Agility_Course_icon.png?488cd",
+      "resolvedTitle": "File:Wilderness Agility Course icon.png",
+      "sourceWidth": 22,
+      "sourceHeight": 30,
+      "sourceSha1": "c630d44382b8747f3636e47147145bc991b2fc0c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:40.926Z"
+    },
+    {
+      "id": "activity-prifddinas",
+      "label": "Prifddinas",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/prifddinas.jpg",
+      "bytes": 226983,
+      "sha256": "3b11f09044833c40b0393c0f5a022652f8f337a5111b10bad9b4c95ec8ed1a8e",
+      "mime": "image/jpeg",
+      "canonicalPage": "https://runescape.wiki/w/Prifddinas",
+      "sourcePage": "https://runescape.wiki/w/File%3APrifddinas_news_image_full.jpg",
+      "downloadUrl": "https://runescape.wiki/images/Prifddinas_news_image_full.jpg?ab41f",
+      "resolvedTitle": "File:Prifddinas news image full.jpg",
+      "sourceWidth": 1200,
+      "sourceHeight": 395,
+      "sourceSha1": "04238b52e979e16884f5c1c018763c268444a3d9",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:41.575Z"
+    },
+    {
+      "id": "activity-max-guild",
+      "label": "Max Guild",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/max-guild.png",
+      "bytes": 1755,
+      "sha256": "887ecf2bc369c5e08e5b76244485f67d1b0462cccad4942b7dfef149220b85d4",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Max_Guild",
+      "sourcePage": "https://runescape.wiki/w/File%3AMax_guild_Teleport_icon_(2019).png",
+      "downloadUrl": "https://runescape.wiki/images/Max_guild_Teleport_icon_%282019%29.png?70497",
+      "resolvedTitle": "File:Max guild Teleport icon (2019).png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "8173da27a7c815718d36c6a46efe76e2f43e2ddc",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:42.218Z"
+    },
+    {
+      "id": "activity-monastery-of-ascension",
+      "label": "Monastery of Ascension",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/monastery-of-ascension.png",
+      "bytes": 828209,
+      "sha256": "86ea523666fab7dbddd8c44e4ba384c6f2971d735a709104e12c73d6c4c91fb6",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Monastery_of_Ascension",
+      "sourcePage": "https://runescape.wiki/w/File%3ALectern_(Monastery_of_Ascension).png",
+      "downloadUrl": "https://runescape.wiki/images/Lectern_%28Monastery_of_Ascension%29.png?c861c",
+      "resolvedTitle": "File:Lectern (Monastery of Ascension).png",
+      "sourceWidth": 951,
+      "sourceHeight": 2089,
+      "sourceSha1": "2bd5eeff779b9b3dd7a63a88f368044c350faf16",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:42.877Z"
+    },
+    {
+      "id": "activity-sophanem-slayer-dungeon",
+      "label": "Sophanem Slayer Dungeon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/sophanem-slayer-dungeon.png",
+      "bytes": 153571,
+      "sha256": "e272a9690d1035a863dad6586c9c7f8e97a4fc661163d5d5b066a404db375dcd",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
+      "sourcePage": "https://runescape.wiki/w/File%3ARope_(Sophanem_Slayer_Dungeon).png",
+      "downloadUrl": "https://runescape.wiki/images/Rope_%28Sophanem_Slayer_Dungeon%29.png?81648",
+      "resolvedTitle": "File:Rope (Sophanem Slayer Dungeon).png",
+      "sourceWidth": 1427,
+      "sourceHeight": 2043,
+      "sourceSha1": "f714ddc65e239eff2dd5121ba610fcd868434ffb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:43.527Z"
+    },
+    {
+      "id": "activity-god-wars-dungeon",
+      "label": "God Wars Dungeon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/god-wars-dungeon.png",
+      "bytes": 220203,
+      "sha256": "ce5375166e883c6812fccc09250df3bf4ae02cc04e75bb43907cf7fde5fd3d54",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/God_Wars_Dungeon",
+      "sourcePage": "https://runescape.wiki/w/File%3AElder_God_Wars_Dungeon_-_The_Nodon_Front_(11)_update_image.png",
+      "downloadUrl": "https://runescape.wiki/images/Elder_God_Wars_Dungeon_-_The_Nodon_Front_%2811%29_update_image.png?d25c7",
+      "resolvedTitle": "File:Elder God Wars Dungeon - The Nodon Front (11) update image.png",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceSha1": "be94c5d409a3936a1bc9527d7cbfdb04b533290e",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:44.170Z"
+    },
+    {
+      "id": "activity-abyss",
+      "label": "The Abyss",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/abyss.gif",
+      "bytes": 1309566,
+      "sha256": "83af7678544c002c06c79080a031fe0fd8df81f2fe042f21f7bb27849381c6f8",
+      "mime": "image/gif",
+      "canonicalPage": "https://runescape.wiki/w/Abyss",
+      "sourcePage": "https://runescape.wiki/w/File%3AAbyssal_rift.gif",
+      "downloadUrl": "https://runescape.wiki/images/Abyssal_rift.gif?62b00",
+      "resolvedTitle": "File:Abyssal rift.gif",
+      "sourceWidth": 528,
+      "sourceHeight": 505,
+      "sourceSha1": "3d7a9b6b2d1705ec2e0233b712c91d990419a311",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:44.820Z"
+    },
+    {
+      "id": "upgrade-fractured-staff-of-armadyl",
+      "label": "Fractured Staff of Armadyl",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/fractured-staff-of-armadyl.png",
+      "bytes": 692,
+      "sha256": "3a5d2658767ee6c7328e1ed7c19d35afb9c5dc23fb8353a2907a09f229611756",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Fractured_Staff_of_Armadyl",
+      "sourcePage": "https://runescape.wiki/w/File%3AFractured_Staff_of_Armadyl.png",
+      "downloadUrl": "https://runescape.wiki/images/Fractured_Staff_of_Armadyl.png?50e28",
+      "resolvedTitle": "File:Fractured Staff of Armadyl.png",
+      "sourceWidth": 32,
+      "sourceHeight": 32,
+      "sourceSha1": "4325d3d380df855c73ba92def761c44f57490b7f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:45.472Z"
+    },
+    {
+      "id": "upgrade-scripture-of-jas",
+      "label": "Scripture of Jas",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/scripture-of-jas.png",
+      "bytes": 896,
+      "sha256": "f9bfbc01f0360d0f797f0ff2495f978f56bee8b97c29921ccbac57a6a4af0264",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Scripture_of_Jas",
+      "sourcePage": "https://runescape.wiki/w/File%3AScripture_of_Jas_(used).png",
+      "downloadUrl": "https://runescape.wiki/images/Scripture_of_Jas_%28used%29.png?9a302",
+      "resolvedTitle": "File:Scripture of Jas (used).png",
+      "sourceWidth": 28,
+      "sourceHeight": 32,
+      "sourceSha1": "0f1a2da1f587969ad194190344d700deca7290e5",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:46.086Z"
+    },
+    {
+      "id": "upgrade-scripture-of-wen",
+      "label": "Scripture of Wen",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/scripture-of-wen.png",
+      "bytes": 985,
+      "sha256": "51f2238b43110514a4988bef82f9efced75bb3b89541d36146c05c8a2a59aa5c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Scripture_of_Wen",
+      "sourcePage": "https://runescape.wiki/w/File%3AScripture_of_Wen.png",
+      "downloadUrl": "https://runescape.wiki/images/Scripture_of_Wen.png?1b2b5",
+      "resolvedTitle": "File:Scripture of Wen.png",
+      "sourceWidth": 28,
+      "sourceHeight": 30,
+      "sourceSha1": "7b5ce239aa29d7d3bd72e877f4a246c72cfd3575",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:46.716Z"
+    },
+    {
+      "id": "upgrade-scripture-of-bik",
+      "label": "Scripture of Bik",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/scripture-of-bik.png",
+      "bytes": 584,
+      "sha256": "9fa9fafbd53d14b7d7f3c74c07e677be0e5d0a2188ace179f3abccdb402c78fb",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Scripture_of_Bik",
+      "sourcePage": "https://runescape.wiki/w/File%3AScripture_of_Bik.png",
+      "downloadUrl": "https://runescape.wiki/images/Scripture_of_Bik.png?3dad6",
+      "resolvedTitle": "File:Scripture of Bik.png",
+      "sourceWidth": 29,
+      "sourceHeight": 32,
+      "sourceSha1": "b1b7803790e455065c1d6ca8c6af719d28af948a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:47.205Z"
+    },
+    {
+      "id": "upgrade-scripture-of-ful",
+      "label": "Scripture of Ful",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/scripture-of-ful.png",
+      "bytes": 569,
+      "sha256": "25b7e766f9d904fb15828679b0298b3f8e847b6279f80ab9dcb522fb9c8063f5",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Scripture_of_Ful",
+      "sourcePage": "https://runescape.wiki/w/File%3AScripture_of_Ful.png",
+      "downloadUrl": "https://runescape.wiki/images/Scripture_of_Ful.png?ebb92",
+      "resolvedTitle": "File:Scripture of Ful.png",
+      "sourceWidth": 29,
+      "sourceHeight": 32,
+      "sourceSha1": "ff42959da9cee7cbd3c73e58ad3e61928bbea662",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:47.829Z"
+    },
+    {
+      "id": "upgrade-omni-guard",
+      "label": "Omni guard",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/omni-guard.png",
+      "bytes": 786,
+      "sha256": "04adcf2f7ff530d742752c5ec492f8b5ab5d3c1c2b43e8c628d2502ca26478ad",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Omni_guard",
+      "sourcePage": "https://runescape.wiki/w/File%3AOmni_guard.png",
+      "downloadUrl": "https://runescape.wiki/images/Omni_guard.png?c184b",
+      "resolvedTitle": "File:Omni guard.png",
+      "sourceWidth": 27,
+      "sourceHeight": 29,
+      "sourceSha1": "b2784c01c6aa4dc87119954dab5cb0edfd607837",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:48.453Z"
+    },
+    {
+      "id": "upgrade-soulbound-lantern",
+      "label": "Soulbound lantern",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/soulbound-lantern.png",
+      "bytes": 672,
+      "sha256": "7b318376a158eb6e31ae3370997eb9de16aec99b6515c4e55a770935293c97b7",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Soulbound_lantern",
+      "sourcePage": "https://runescape.wiki/w/File%3ASoulbound_lantern.png",
+      "downloadUrl": "https://runescape.wiki/images/Soulbound_lantern.png?fbe1b",
+      "resolvedTitle": "File:Soulbound lantern.png",
+      "sourceWidth": 14,
+      "sourceHeight": 30,
+      "sourceSha1": "6fcb3f164a3b2d642c807f2d28fbf986cc30b486",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:49.081Z"
+    },
+    {
+      "id": "upgrade-roar-of-awakening",
+      "label": "Roar of Awakening",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/roar-of-awakening.png",
+      "bytes": 588,
+      "sha256": "0785ed0211d8f520450d3b4b4970e453e95cd12e59fd4638e884f02ac7550e07",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Roar_of_Awakening",
+      "sourcePage": "https://runescape.wiki/w/File%3ARoar_of_Awakening_(Ice).png",
+      "downloadUrl": "https://runescape.wiki/images/Roar_of_Awakening_%28Ice%29.png?af609",
+      "resolvedTitle": "File:Roar of Awakening (Ice).png",
+      "sourceWidth": 26,
+      "sourceHeight": 29,
+      "sourceSha1": "575be61945cceab24194e290c83ca718b68f602c",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:49.723Z"
+    },
+    {
+      "id": "upgrade-ode-to-deceit",
+      "label": "Ode to Deceit",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/ode-to-deceit.png",
+      "bytes": 1071,
+      "sha256": "0e9442d5c414a0853e993d7c30559c790e760dd7c5ffc1f7785512074c5e538c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Ode_to_Deceit",
+      "sourcePage": "https://runescape.wiki/w/File%3AOde_to_Deceit_(Blood).png",
+      "downloadUrl": "https://runescape.wiki/images/Ode_to_Deceit_%28Blood%29.png?7a1c5",
+      "resolvedTitle": "File:Ode to Deceit (Blood).png",
+      "sourceWidth": 21,
+      "sourceHeight": 30,
+      "sourceSha1": "37a48812a7e25431a920d8db57119027fd014bfb",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:50.351Z"
+    },
+    {
+      "id": "upgrade-shard-of-genesis-essence",
+      "label": "Shard of Genesis Essence",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/shard-of-genesis-essence.png",
+      "bytes": 682,
+      "sha256": "2a54c3cc6fd9cdc56f035cae07c114495c297a57bedc1274e62c62f610a091c0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Shard_of_Genesis_Essence",
+      "sourcePage": "https://runescape.wiki/w/File%3AShard_of_Genesis_Essence.png",
+      "downloadUrl": "https://runescape.wiki/images/Shard_of_Genesis_Essence.png?d63ca",
+      "resolvedTitle": "File:Shard of Genesis Essence.png",
+      "sourceWidth": 26,
+      "sourceHeight": 27,
+      "sourceSha1": "c33e39b3a13555cada25be9e3de33b9b81b5a1ca",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:50.821Z"
+    },
+    {
+      "id": "upgrade-elite-dracolich-hauberk",
+      "label": "Elite dracolich hauberk",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/elite-dracolich-hauberk.png",
+      "bytes": 1042,
+      "sha256": "1dca25b896beed743e60efe1b80825aee61581842003de6d569b2e6f35cb0b0c",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Elite_dracolich_hauberk",
+      "sourcePage": "https://runescape.wiki/w/File%3AElite_Dracolich_hauberk.png",
+      "downloadUrl": "https://runescape.wiki/images/Elite_Dracolich_hauberk.png?5e7d5",
+      "resolvedTitle": "File:Elite Dracolich hauberk.png",
+      "sourceWidth": 27,
+      "sourceHeight": 30,
+      "sourceSha1": "9a9d9189ad9638b3e9ad822a4d8b3b8a7b8465c7",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:51.471Z"
+    },
+    {
+      "id": "upgrade-wand-of-praesul",
+      "label": "Wand of the praesul",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/wand-of-praesul.png",
+      "bytes": 440,
+      "sha256": "79395c41fed228753af2b394d28e5bb73ab41ec024d630e03a272a8775a34a74",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Wand_of_the_praesul",
+      "sourcePage": "https://runescape.wiki/w/File%3AWand_of_the_praesul_shard.png",
+      "downloadUrl": "https://runescape.wiki/images/Wand_of_the_praesul_shard.png?658b3",
+      "resolvedTitle": "File:Wand of the praesul shard.png",
+      "sourceWidth": 30,
+      "sourceHeight": 29,
+      "sourceSha1": "76f8c8d50eb4b6513ff0c25c2365060662b53e48",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:52.106Z"
+    },
+    {
+      "id": "upgrade-imperium-core",
+      "label": "Imperium core",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/imperium-core.png",
+      "bytes": 578,
+      "sha256": "da23122b4167c8f8142c671ba93d8a37850526ef635c1dec09fb846d84fc4b5d",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Imperium_core",
+      "sourcePage": "https://runescape.wiki/w/File%3AImperium_core_shard.png",
+      "downloadUrl": "https://runescape.wiki/images/Imperium_core_shard.png?a1393",
+      "resolvedTitle": "File:Imperium core shard.png",
+      "sourceWidth": 30,
+      "sourceHeight": 29,
+      "sourceSha1": "7c9f969b3d5d5a45fbec6f04ccd0db7c086a4abf",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:52.741Z"
+    },
+    {
+      "id": "upgrade-ascension-crossbow",
+      "label": "Ascension crossbow",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/ascension-crossbow.png",
+      "bytes": 811,
+      "sha256": "dfbbcf5ac294612532408af3b86ab430d16ea4b9d2d495dafd3b6eb9ed6739f0",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Ascension_crossbow",
+      "sourcePage": "https://runescape.wiki/w/File%3AAscension_crossbow.png",
+      "downloadUrl": "https://runescape.wiki/images/Ascension_crossbow.png?5054e",
+      "resolvedTitle": "File:Ascension crossbow.png",
+      "sourceWidth": 36,
+      "sourceHeight": 27,
+      "sourceSha1": "8bbb2dbed632a8c336ad4635475a1a858d4adcad",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:53.243Z"
+    },
+    {
+      "id": "upgrade-eldritch-crossbow",
+      "label": "Eldritch crossbow",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/eldritch-crossbow.png",
+      "bytes": 1003,
+      "sha256": "4652efd9c49b71177d09fec891dfc22d82d8eeaf833cb468c7237776100778bd",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Eldritch_crossbow",
+      "sourcePage": "https://runescape.wiki/w/File%3AEldritch_crossbow_limb.png",
+      "downloadUrl": "https://runescape.wiki/images/Eldritch_crossbow_limb.png?305bf",
+      "resolvedTitle": "File:Eldritch crossbow limb.png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "d2d9707b40f08fcf62be334bccc2912be475d55a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:53.868Z"
+    },
+    {
+      "id": "upgrade-seren-godbow",
+      "label": "Seren godbow",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/seren-godbow.png",
+      "bytes": 679,
+      "sha256": "d6a6a295689ce8ec4942bb40635455409d87c80bd2fbc3fa5fe80dfd96d76415",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Seren_godbow",
+      "sourcePage": "https://runescape.wiki/w/File%3ADormant_Seren_godbow.png",
+      "downloadUrl": "https://runescape.wiki/images/Dormant_Seren_godbow.png?20c9a",
+      "resolvedTitle": "File:Dormant Seren godbow.png",
+      "sourceWidth": 31,
+      "sourceHeight": 26,
+      "sourceSha1": "5eb6420fee12e762340aaaf80750e270395e7ac4",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:54.504Z"
+    },
+    {
+      "id": "upgrade-staff-of-sliske",
+      "label": "Staff of Sliske",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/staff-of-sliske.png",
+      "bytes": 334,
+      "sha256": "0f53595d998a19a2777b3b7d179f8796a9acf166c71c7c656fce651613e6c731",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Staff_of_Sliske",
+      "sourcePage": "https://runescape.wiki/w/File%3ADormant_staff_of_Sliske.png",
+      "downloadUrl": "https://runescape.wiki/images/Dormant_staff_of_Sliske.png?c4c12",
+      "resolvedTitle": "File:Dormant staff of Sliske.png",
+      "sourceWidth": 29,
+      "sourceHeight": 27,
+      "sourceSha1": "6b920b118985bcc4ccb04ceddb7bc80c48e80eb5",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:55.154Z"
+    },
+    {
+      "id": "upgrade-zaros-godsword",
+      "label": "Zaros godsword",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/zaros-godsword.png",
+      "bytes": 493,
+      "sha256": "c13cc0de0adf0225dfb574bcf6700aed312a0cae324648bbf7f7bfa4f27e52d4",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Zaros_godsword",
+      "sourcePage": "https://runescape.wiki/w/File%3AZaros_Godsword_(Third_Age)(used).png",
+      "downloadUrl": "https://runescape.wiki/images/Zaros_Godsword_%28Third_Age%29%28used%29.png?55a02",
+      "resolvedTitle": "File:Zaros Godsword (Third Age)(used).png",
+      "sourceWidth": 31,
+      "sourceHeight": 31,
+      "sourceSha1": "eedf791b18939022f1f561a347490c624d4ec496",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:55.782Z"
+    },
+    {
+      "id": "upgrade-devourers-guard",
+      "label": "Devourer's Guard",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/devourers-guard.png",
+      "bytes": 797,
+      "sha256": "7c47f0438f5da44d2f41000521dc47cb01abf10c5fb8976468861032d547245e",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Devourer%27s_Guard",
+      "sourcePage": "https://runescape.wiki/w/File%3ADevourer's_Guard.png",
+      "downloadUrl": "https://runescape.wiki/images/Devourer%27s_Guard.png?08d50",
+      "resolvedTitle": "File:Devourer's Guard.png",
+      "sourceWidth": 28,
+      "sourceHeight": 29,
+      "sourceSha1": "25ce7a20ee499081ea110ec68393fcbe11ff94a4",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:56.410Z"
+    },
+    {
+      "id": "upgrade-tumekens-light",
+      "label": "Tumeken's Light",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/tumekens-light.png",
+      "bytes": 387,
+      "sha256": "8dc7b5c94ce69e4c6f439f2df451b32de1f2fa22f2f1f6c4047e8d4c6d2a1b2a",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Tumeken%27s_Light",
+      "sourcePage": "https://runescape.wiki/w/File%3ATumeken's_Light.png",
+      "downloadUrl": "https://runescape.wiki/images/Tumeken%27s_Light.png?7b1f1",
+      "resolvedTitle": "File:Tumeken's Light.png",
+      "sourceWidth": 30,
+      "sourceHeight": 30,
+      "sourceSha1": "b18ce6a18f9b20cc2d2952c86a6156e7ca693570",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:56.903Z"
+    },
+    {
+      "id": "upgrade-dragon-mattock",
+      "label": "Dragon mattock",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/dragon-mattock.png",
+      "bytes": 587,
+      "sha256": "a7b43a4d5187660c05b7ab58ebf94ab2a02e8b0b95bddced0e04e4e4e929b007",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Dragon_mattock",
+      "sourcePage": "https://runescape.wiki/w/File%3ADragon_mattock.png",
+      "downloadUrl": "https://runescape.wiki/images/Dragon_mattock.png?bec9a",
+      "resolvedTitle": "File:Dragon mattock.png",
+      "sourceWidth": 26,
+      "sourceHeight": 25,
+      "sourceSha1": "b95bcf00aa68bba56b91489c6f139381c7a95866",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:57.524Z"
+    },
+    {
+      "id": "upgrade-terrasaur-maul",
+      "label": "Terrasaur maul",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/terrasaur-maul.png",
+      "bytes": 582,
+      "sha256": "e040697fc4368aeaa1b4f8dbddfb76814e60a4200eed8304fc4d3ef057fbc796",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Terrasaur_maul",
+      "sourcePage": "https://runescape.wiki/w/File%3ATerrasaur_maul.png",
+      "downloadUrl": "https://runescape.wiki/images/Terrasaur_maul.png?154a5",
+      "resolvedTitle": "File:Terrasaur maul.png",
+      "sourceWidth": 26,
+      "sourceHeight": 31,
+      "sourceSha1": "0e96030fedeb3408969ca2ae4761d9744ecf6e4e",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:58.153Z"
+    },
+    {
+      "id": "upgrade-fleeting-boots",
+      "label": "Fleeting boots",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/fleeting-boots.png",
+      "bytes": 688,
+      "sha256": "f00d0d967260503fe1b7c2555e00fe6f9d7c0aaee22dbea2d332dadb1d140892",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Fleeting_boots",
+      "sourcePage": "https://runescape.wiki/w/File%3AFleeting_boots.png",
+      "downloadUrl": "https://runescape.wiki/images/Fleeting_boots.png?7249d",
+      "resolvedTitle": "File:Fleeting boots.png",
+      "sourceWidth": 28,
+      "sourceHeight": 17,
+      "sourceSha1": "73c16584f05750faaafece68d34e5d18963ffb0b",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:58.638Z"
+    },
+    {
+      "id": "upgrade-laceration-boots",
+      "label": "Laceration boots",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/laceration-boots.png",
+      "bytes": 642,
+      "sha256": "05de9af2b149467f5b12528a6ac6f1941f058659b7da4ecf88176ccbb68f4f0e",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Laceration_boots",
+      "sourcePage": "https://runescape.wiki/w/File%3ALaceration_boots.png",
+      "downloadUrl": "https://runescape.wiki/images/Laceration_boots.png?53f67",
+      "resolvedTitle": "File:Laceration boots.png",
+      "sourceWidth": 28,
+      "sourceHeight": 17,
+      "sourceSha1": "35d08fff339c0b41646a9b49870b9c8355d0c405",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:59.271Z"
+    },
+    {
+      "id": "upgrade-blast-diffusion-boots",
+      "label": "Blast diffusion boots",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/blast-diffusion-boots.png",
+      "bytes": 1112,
+      "sha256": "a44ba9595ebbabf34bae1432544c0a3530f7dbaba8b3bf29d26354f89e6182ad",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Blast_diffusion_boots",
+      "sourcePage": "https://runescape.wiki/w/File%3ABlast_diffusion_boots.png",
+      "downloadUrl": "https://runescape.wiki/images/Blast_diffusion_boots.png?1ffdd",
+      "resolvedTitle": "File:Blast diffusion boots.png",
+      "sourceWidth": 28,
+      "sourceHeight": 17,
+      "sourceSha1": "55c314a99da42fc45aade0a0f48a6851c101cb4e",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:27:59.929Z"
+    },
+    {
+      "id": "upgrade-royal-crossbow",
+      "label": "Royal crossbow",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/royal-crossbow.png",
+      "bytes": 779,
+      "sha256": "a7ca82496f88dba699c357bde4cf6f881e49d40230ee2cc5ba75de9c08ad5e06",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Royal_crossbow",
+      "sourcePage": "https://runescape.wiki/w/File%3ARoyal_crossbow_(unforged).png",
+      "downloadUrl": "https://runescape.wiki/images/Royal_crossbow_%28unforged%29.png?96117",
+      "resolvedTitle": "File:Royal crossbow (unforged).png",
+      "sourceWidth": 23,
+      "sourceHeight": 26,
+      "sourceSha1": "274a325b15e95747a84aa570ed01e83aa0e174ac",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:00.556Z"
+    },
+    {
+      "id": "upgrade-seismic-wand",
+      "label": "Seismic wand",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/seismic-wand.png",
+      "bytes": 495,
+      "sha256": "0b28a0454c9fb337982db9e8f51092826f9006524ea215d555dbe7d6a56ae86b",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Seismic_wand",
+      "sourcePage": "https://runescape.wiki/w/File%3ASeismic_wand_shard.png",
+      "downloadUrl": "https://runescape.wiki/images/Seismic_wand_shard.png?9aeb0",
+      "resolvedTitle": "File:Seismic wand shard.png",
+      "sourceWidth": 30,
+      "sourceHeight": 29,
+      "sourceSha1": "82a970bd5f388447a0d7ba40d7c90722bfd6bf2a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:01.203Z"
+    },
+    {
+      "id": "upgrade-seismic-singularity",
+      "label": "Seismic singularity",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/seismic-singularity.png",
+      "bytes": 698,
+      "sha256": "7a414fb8405976347d9970ff6daf30e8984fddce6a257d12a85d1bdde8dba831",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Seismic_singularity",
+      "sourcePage": "https://runescape.wiki/w/File%3ASeismic_singularity.png",
+      "downloadUrl": "https://runescape.wiki/images/Seismic_singularity.png?ce492",
+      "resolvedTitle": "File:Seismic singularity.png",
+      "sourceWidth": 25,
+      "sourceHeight": 26,
+      "sourceSha1": "8a6d6bfad5009f5e6ea22d383231777a640ea8d0",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:01.843Z"
+    },
+    {
+      "id": "upgrade-dark-shard-of-leng",
+      "label": "Dark Shard of Leng",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/dark-shard-of-leng.png",
+      "bytes": 463,
+      "sha256": "701c5b2f776e467459f5e022dbdf248ec4b9757ada9022f7124bbd078f060b0f",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Dark_Shard_of_Leng",
+      "sourcePage": "https://runescape.wiki/w/File%3ADark_shard_of_Leng_(shadow).png",
+      "downloadUrl": "https://runescape.wiki/images/Dark_shard_of_Leng_%28shadow%29.png?bde9a",
+      "resolvedTitle": "File:Dark shard of Leng (shadow).png",
+      "sourceWidth": 29,
+      "sourceHeight": 29,
+      "sourceSha1": "4cdee05cc4143285e02b5f197c8dd4cbe385d600",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:02.483Z"
+    },
+    {
+      "id": "upgrade-dark-sliver-of-leng",
+      "label": "Dark Sliver of Leng",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/dark-sliver-of-leng.png",
+      "bytes": 613,
+      "sha256": "533850cb77a5c43dcc4e9f25e40f70c48f3061365b983686781ebf68b57c1704",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Dark_Sliver_of_Leng",
+      "sourcePage": "https://runescape.wiki/w/File%3ADark_Sliver_of_Leng_(broken).png",
+      "downloadUrl": "https://runescape.wiki/images/Dark_Sliver_of_Leng_%28broken%29.png?26b91",
+      "resolvedTitle": "File:Dark Sliver of Leng (broken).png",
+      "sourceWidth": 25,
+      "sourceHeight": 28,
+      "sourceSha1": "aa7763cb57ce8bd4e8443566acd051d3297ee2ad",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:03.135Z"
+    },
+    {
+      "id": "upgrade-ek-zekkil",
+      "label": "Ek-ZekKil",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/ek-zekkil.png",
+      "bytes": 261,
+      "sha256": "f52acad9f881e69cb74b33ed07b06b74a06b4817553490358ac90eb965abf0d6",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Ek-ZekKil",
+      "sourcePage": "https://runescape.wiki/w/File%3AEk-ZekKil.png",
+      "downloadUrl": "https://runescape.wiki/images/Ek-ZekKil.png?7f634",
+      "resolvedTitle": "File:Ek-ZekKil.png",
+      "sourceWidth": 27,
+      "sourceHeight": 31,
+      "sourceSha1": "012ae60a886b83600f8838d37bc2b4bdac403d70",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:03.784Z"
+    },
+    {
+      "id": "upgrade-cryptbloom-top",
+      "label": "Cryptbloom top",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/cryptbloom-top.png",
+      "bytes": 816,
+      "sha256": "a76bbcd62cd2127e82bb42b3f64e8def7a8f151f9f2c96c3952b21743c2704d6",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Cryptbloom_top",
+      "sourcePage": "https://runescape.wiki/w/File%3ACryptbloom_top_(incomplete).png",
+      "downloadUrl": "https://runescape.wiki/images/Cryptbloom_top_%28incomplete%29.png?b8475",
+      "resolvedTitle": "File:Cryptbloom top (incomplete).png",
+      "sourceWidth": 28,
+      "sourceHeight": 26,
+      "sourceSha1": "99a08055130f5c528c86776c2a3ba2e2244118b7",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:04.417Z"
+    },
+    {
+      "id": "upgrade-memory-dowser",
+      "label": "Memory dowser",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/memory-dowser.png",
+      "bytes": 612,
+      "sha256": "ca19fdec64fc1a29dcfb3f96dd993f09d2f39c4a226a5c91fe67c35067d17687",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Memory_dowser",
+      "sourcePage": "https://runescape.wiki/w/File%3AMemory_dowser.png",
+      "downloadUrl": "https://runescape.wiki/images/Memory_dowser.png?43f9b",
+      "resolvedTitle": "File:Memory dowser.png",
+      "sourceWidth": 29,
+      "sourceHeight": 27,
+      "sourceSha1": "944d2f08e27e23cf2e1080c818a688dee6a0dd8f",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:05.043Z"
+    },
+    {
+      "id": "upgrade-runic-attuner",
+      "label": "Runic attuner",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/runic-attuner.png",
+      "bytes": 668,
+      "sha256": "27b4af3c67e048328d71ac79abde08dea313d2c2424d19e156cd236942bed42f",
+      "mime": "image/png",
+      "canonicalPage": "https://runescape.wiki/w/Runic_attuner",
+      "sourcePage": "https://runescape.wiki/w/File%3ARunic_attuner.png",
+      "downloadUrl": "https://runescape.wiki/images/Runic_attuner.png?dd33a",
+      "resolvedTitle": "File:Runic attuner.png",
+      "sourceWidth": 29,
+      "sourceHeight": 27,
+      "sourceSha1": "935c82daf08e499a200e4ba53552e6da22f4d88a",
+      "copyright": "Jagex Ltd.; game media used via the RuneScape Wiki or official RuneScape site",
+      "attribution": "RuneScape Wiki / Jagex",
+      "verifiedAt": "2026-07-25T12:28:05.688Z"
     }
   ],
-  "unresolved": []
+  "unresolved": [],
+  "sourceManifests": [
+    "assets/source-manifest.json",
+    "assets/source-manifest-expansion.json"
+  ],
+  "expansionManifest": "assets/source-manifest-expansion.json"
 }

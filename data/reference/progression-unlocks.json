@@ -730,6 +730,61 @@
       "confidence": "confirmed_2026_remaster"
     },
     {
+      "id": "achievements:morytania-barrows",
+      "name": "Hard Morytania Barrows rewards",
+      "category": "regional achievement combat and reward passive",
+      "region_hint": "morytania",
+      "requirements": [
+        "Complete the hard Morytania achievements and claim Morytania legs 3"
+      ],
+      "rewards": [
+        {
+          "effect": "Prayer drain is halved while completing Barrows runs."
+        },
+        {
+          "effect": "Rune rewards from Barrows chests are doubled."
+        },
+        {
+          "effect": "Barrows chest loot can be sent directly to the bank from the reward interface."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Morytania_achievements",
+        "https://runescape.wiki/w/Template:Morytania_legs"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Store the achievement reward state only. Do not add Barrows strategy, kill-order or preset data to the permanent-unlock graph."
+    },
+    {
+      "id": "anachronia:totem-of-summoning",
+      "name": "Totem of Summoning",
+      "category": "persistent familiar-duration support",
+      "region_hint": "anachronia",
+      "duration_bonus_minutes": 16,
+      "piece_sources": [
+        "Agility Course",
+        "Anachronia Slayer monsters",
+        "Big Game Hunter"
+      ],
+      "related_unlocks": [
+        {
+          "id": "livid-farm:lunar-spells",
+          "interaction": "Spiritual Healing extends a familiar by 20% of its starting duration once per familiar."
+        },
+        {
+          "id": "dungeoneering:spirit-cape-passive",
+          "interaction": "Spirit Cape permanently reduces familiar special-move point costs by 20%."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia",
+        "https://runescape.wiki/w/Totem",
+        "https://runescape.wiki/w/Summoning_familiars"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Duration and scroll-efficiency effects are independent account modifiers. Keep them composable instead of baking them into each familiar record."
+    },
+    {
       "id": "dungeoneering:ring-of-vigour-passive",
       "name": "Passive Ring of Vigour",
       "category": "permanent adrenaline account passive",
@@ -1385,6 +1440,458 @@
       ],
       "confidence": "acquisition_confirmed_multiple_sources_wiki_linked",
       "league_treatment": "Store the permanent reward gate only. Do not import Dreadnip damage, stun or boss-usage guidance from old guides."
+    },
+    {
+      "id": "archaeology:ancient-summoning-binding-contracts",
+      "name": "Ancient Summoning binding contracts",
+      "category": "Archaeology and Slayer familiar-production system",
+      "region_hint": "misthalin",
+      "region_status": "base_unlock_location_only",
+      "base_unlock": {
+        "requirement": "Complete the Dagon Bye mystery at the Infernal Source.",
+        "blank_contract_recipe": [
+          {
+            "item": "Blue charm",
+            "quantity": 1
+          },
+          {
+            "item": "Pouch",
+            "quantity": 1
+          },
+          {
+            "item": "Blood of Orcus",
+            "quantity": 2
+          },
+          {
+            "item": "Hellfire metal",
+            "quantity": 2
+          },
+          {
+            "item": "Spirit shards",
+            "quantity": 200
+          }
+        ],
+        "binding_rule": "Carry a blank binding contract while killing the target creature. Summoning and Slayer must both meet that familiar's level."
+      },
+      "key_combat_contracts": [
+        {
+          "name": "Hellhound",
+          "summoning_level": 45,
+          "slayer_level": 45,
+          "role": "tank",
+          "passive": "Redirects 20% of damage dealt to the player to the familiar.",
+          "source_region_status": "multi_region"
+        },
+        {
+          "name": "Blood reaver",
+          "summoning_level": 73,
+          "slayer_level": 73,
+          "role": "healing-trigger damage",
+          "passive": "Deals damage to the primary target based on player healing.",
+          "source_region_hint": "asgarnia",
+          "source_dependency": "Ancient Prison access in God Wars Dungeon"
+        },
+        {
+          "name": "Kal'gerion demon",
+          "summoning_level": 90,
+          "slayer_level": 90,
+          "role": "critical-strike support",
+          "passive": "+1% critical-strike chance.",
+          "special_move": "+5% critical-strike chance for the player, familiar and nearby players for 60 seconds.",
+          "source_region_hint": "forinthry",
+          "source_dependency": "Kal'gerion resource dungeon / Daemonheim access"
+        },
+        {
+          "name": "Ripper demon",
+          "summoning_level": 96,
+          "slayer_level": 96,
+          "role": "damage",
+          "passive": "Deals more damage as the target loses life points.",
+          "special_move": "Death From Above deals 200-320% of the familiar's maximum hit.",
+          "source_regions": [
+            "desert",
+            "forinthry"
+          ],
+          "source_region_status": "multiple_confirmed_base_game_locations"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Binding_contract",
+        "https://runescape.wiki/w/Template:Ancient_Summoning_pouches",
+        "https://runescape.wiki/w/Binding_contract_(kal%27gerion_demon)",
+        "https://runescape.wiki/w/Ripper_Demon"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "The Infernal Source unlock is a Misthalin planning hint, but each bound creature keeps its own source-region dependency. Do not treat Dagon Bye alone as access to every contract."
+    },
+    {
+      "id": "fate-of-the-gods:nihil-familiars",
+      "name": "Nihil familiar progression",
+      "category": "quest-gated accuracy familiars",
+      "region_status": "unresolved_external_region",
+      "base_requirements": [
+        "Fate of the Gods",
+        "87 Summoning"
+      ],
+      "shared_recipe": [
+        {
+          "item": "Elder charm",
+          "quantity": 1
+        },
+        {
+          "item": "Elder energy",
+          "quantity": 150
+        },
+        {
+          "item": "Pouch",
+          "quantity": 1
+        }
+      ],
+      "variants": [
+        {
+          "name": "Blood nihil",
+          "accuracy_style": "melee",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Vampyre fangs"
+        },
+        {
+          "name": "Shadow nihil",
+          "accuracy_style": "ranged",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Demon horn"
+        },
+        {
+          "name": "Smoke nihil",
+          "accuracy_style": "magic",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Aviansie talons"
+        },
+        {
+          "name": "Ice nihil",
+          "accuracy_style": "necromancy",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Icyene feather",
+          "additional_effect": "Chance to reduce target accuracy and defence by 5%."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Fate_of_the_Gods/Quick_guide",
+        "https://runescape.wiki/w/Summoning_familiars",
+        "https://runescape.wiki/w/Calculator:Summoning/Pouches",
+        "https://runescape.wiki/w/Hit_chance"
+      ],
+      "confidence": "confirmed_current_wiki_external_region_unresolved",
+      "league_treatment": "Freneskae is another world. Keep the quest and ingredient chain explicit, but do not assign the destination to an elective Gielinor region until Equilibrium publishes its external-world rule."
+    },
+    {
+      "id": "summoning:combat-and-burden-milestones",
+      "name": "Combat familiar and Beast of Burden milestones",
+      "category": "standard Summoning pouch progression",
+      "combat_milestones": [
+        {
+          "name": "Steel titan",
+          "summoning_level": 99,
+          "role": "standard combat familiar",
+          "recipe": [
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 178
+            },
+            {
+              "item": "Steel ingot",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
+          ],
+          "source_region_status": "global_smithing_supply"
+        }
+      ],
+      "burden_milestones": [
+        {
+          "name": "Spirit kalphite",
+          "summoning_level": 25,
+          "inventory_slots": 6
+        },
+        {
+          "name": "Bull ant",
+          "summoning_level": 40,
+          "inventory_slots": 9
+        },
+        {
+          "name": "Spirit terrorbird",
+          "summoning_level": 52,
+          "inventory_slots": 12
+        },
+        {
+          "name": "War tortoise",
+          "summoning_level": 67,
+          "inventory_slots": 18
+        },
+        {
+          "name": "Pack yak",
+          "summoning_level": 96,
+          "inventory_slots": 30,
+          "recipe": [
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 211
+            },
+            {
+              "item": "Yak-hide",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
+          ],
+          "source_region_hint": "fremennik",
+          "source_dependency": "Yak-hide from yaks on Neitiznot"
+        },
+        {
+          "name": "Pack mammoth",
+          "summoning_level": 99,
+          "inventory_slots": 32,
+          "recipe": [
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 222
+            },
+            {
+              "item": "Mammoth tusk",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
+          ],
+          "source_region_hint": "forinthry",
+          "source_dependency": "Mammoth tusk from Wilderness mammoths"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM",
+        "https://runescape.wiki/w/Summoning_familiars",
+        "https://runescape.wiki/w/Calculator:Summoning/Pouches",
+        "https://runescape.wiki/w/Yak-hide"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Summoning level, charm supply, shards, tertiary ingredients and source geography are separate planner edges. Do not reduce familiar access to a level-only checkbox."
+    },
+    {
+      "id": "havenhythe:empowered-summoning-obelisks",
+      "name": "Havenhythe empowered Summoning obelisks",
+      "category": "regional pouch-production infrastructure",
+      "region_hint": "havenhythe",
+      "location": "Shrine of Inanna",
+      "base_access": [
+        "Start and progress Visions of Havenhythe",
+        "Reach Havenhythe from Port Sarim",
+        "Fairy ring BKS provides later Shrine access"
+      ],
+      "spirit_plane_connection": {
+        "gain": "Gain 1% connection when infusing a pouch at an empowered obelisk.",
+        "loss": [
+          "Lose 1% when infusing at a non-empowered obelisk.",
+          "Lose 1% every 20 seconds while no pouches are being infused."
+        ],
+        "maximum_percent": 100,
+        "maximum_summoning_xp_bonus_percent": 50,
+        "xp_scaling": "+1% Summoning XP per 2% connection",
+        "maximum_material_save_chance_percent": 10,
+        "material_save_scaling": "+1 percentage point per 10% connection"
+      },
+      "spirit_communion": {
+        "trigger": "Offer 100 spirit shards to a visiting Spirit Wolf at the empowered obelisks.",
+        "protected_pouch_infusions": 100,
+        "effect": "Connection percentage does not decay from pouch creation for the protected infusions and pouch creation is reduced from 4 ticks to 3 ticks."
+      },
+      "achievements": [
+        {
+          "name": "Dialed In",
+          "requirement": "Reach 100% Spirit Plane Connection by infusing pouches at empowered obelisks."
+        },
+        {
+          "name": "Getting Familiar",
+          "requirement": "Offer 100 spirit shards to the visiting Spirit Wolf."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_Plane_Connection",
+        "https://runescape.wiki/w/Dialed_In",
+        "https://runescape.wiki/w/Getting_Familiar",
+        "https://runescape.wiki/w/Summoning_training",
+        "https://runescape.wiki/w/Visions_of_Havenhythe/Quick_guide"
+      ],
+      "confidence": "confirmed_current_wiki_2026",
+      "league_treatment": "This is a Havenhythe production advantage, not global access to Havenhythe familiars or ingredients. Keep connection state separate from Amlodd's Voice of Seren modifier."
+    },
+    {
+      "id": "havenhythe:jackalope-familiar",
+      "name": "Jackalope familiar",
+      "category": "Archaeology soil-support familiar",
+      "region_hint": "havenhythe",
+      "summoning_level": 30,
+      "duration_minutes": 16,
+      "inventory_slots": 30,
+      "inventory_restriction": "Archaeology soil only",
+      "passive": "Screens stored soil over time, with a 33% chance to receive materials per soil.",
+      "pouch_recipe": [
+        {
+          "item": "Gold charm",
+          "quantity": 1
+        },
+        {
+          "item": "Spirit shards",
+          "quantity": 10
+        },
+        {
+          "item": "Pouch",
+          "quantity": 1
+        },
+        {
+          "item": "Jackalope antlers",
+          "quantity": 1
+        }
+      ],
+      "tertiary_source": "Jackalope hunting in Havenhythe",
+      "special_move": {
+        "name": "Dig for Soil",
+        "special_move_points": 12,
+        "special_move_points_with_spirit_cape": 9,
+        "effect": "Increases the chance of finding soil while excavating by 10% for 1 minute.",
+        "maximum_stacked_duration_minutes": 5
+      },
+      "scroll_conversion": {
+        "normal_output": 10,
+        "amlodd_voice_of_seren_output": 12
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_familiars",
+        "https://runescape.wiki/w/Jackalope_scroll_(Dig_for_Soil)",
+        "https://runescape.wiki/w/Spirit_shards",
+        "https://runescape.wiki/w/Gold_(achievement)",
+        "https://runescape.wiki/w/2026_Hunter_update"
+      ],
+      "confidence": "confirmed_current_wiki_2026",
+      "league_treatment": "Havenhythe supplies the antlers. The familiar's Archaeology utility is global after the pouch is created; do not turn it into a combat familiar or unrestricted Beast of Burden."
+    },
+    {
+      "id": "hets-oasis:holy-scarab-familiar",
+      "name": "Holy scarab familiar",
+      "category": "Prayer-drain support familiar",
+      "region_hint": "desert",
+      "location": "Het's Oasis",
+      "summoning_level": 80,
+      "duration_minutes": 64,
+      "prayer_drain_reduction_percent": 50,
+      "pouch_recipe": [
+        {
+          "item": "Green charm",
+          "quantity": 1
+        },
+        {
+          "item": "Spirit shards",
+          "quantity": 154
+        },
+        {
+          "item": "Pouch",
+          "quantity": 1
+        },
+        {
+          "item": "Plain whirligig shell",
+          "quantity": 1
+        },
+        {
+          "item": "Gliding whirligig shell",
+          "quantity": 1
+        },
+        {
+          "item": "Swift whirligig shell",
+          "quantity": 1
+        },
+        {
+          "item": "Hasty whirligig shell",
+          "quantity": 1
+        },
+        {
+          "item": "Speedy whirligig shell",
+          "quantity": 1
+        }
+      ],
+      "special_move": {
+        "name": "Bone Conjure",
+        "effect": "Adds a random bone to the player's inventory."
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/Het%27s_Oasis",
+        "https://runescape.wiki/w/Summoning_familiars",
+        "https://runescape.wiki/w/Calculator:Summoning/Pouches",
+        "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Holy scarab is a Desert/Het's Oasis familiar. Do not associate it with Havenhythe merely because both systems use Summoning obelisks."
+    },
+    {
+      "id": "familiarisation:triple-charm-throughput",
+      "name": "Familiarisation triple-charm reward",
+      "category": "weekly charm-acquisition modifier",
+      "region_status": "global_activity",
+      "reward_duration_minutes": 40,
+      "effect": "Triples eligible charm drops from monsters while the reward is active.",
+      "exceptions": [
+        "Elder charms",
+        "Talon beast charms",
+        "Bork's guaranteed charm drops",
+        "Ork legion charm drops"
+      ],
+      "interaction_order": "Applies before the charming potion's flat charm increase.",
+      "source_urls": [
+        "https://runescape.wiki/w/Familiarisation",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Treat this as a temporary account buff. Do not multiply elder-charm Nihil production or excluded guaranteed charm sources."
+    },
+    {
+      "id": "amlodd:summoning-conversion-efficiency",
+      "name": "Amlodd Voice of Seren Summoning efficiency",
+      "category": "regional pouch and scroll conversion modifier",
+      "region_hint": "tirannwn",
+      "base_access": [
+        "Plague's End",
+        "Prifddinas",
+        "Amlodd district obelisk"
+      ],
+      "pouch_and_scroll_xp_multiplier": 1.2,
+      "scroll_output_multiplier": 1.2,
+      "examples": [
+        "A pouch that normally converts to 10 scrolls produces 12.",
+        "An Ancient Summoning contract that normally converts to 20 scrolls produces 24."
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training",
+        "https://runescape.wiki/w/Abyssal_Demon_scroll_(Abyssal_Block)",
+        "https://runescape.wiki/w/Kal%27gerion_Demon_scroll_(Crit-i-Kal)"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "This is a Tirannwn production advantage, not a prerequisite for using the familiar elsewhere."
     }
   ],
   "equipment_models": [
@@ -1776,6 +2283,225 @@
       "confidence": "confirmed_official_2026"
     },
     {
+      "id": "anachronia:herb-bag-current",
+      "name": "Herb bag progression",
+      "category": "grimy-herb inventory container",
+      "region_hint": "anachronia",
+      "hard_region_requirement": true,
+      "activity": "Herby Werby",
+      "currency": "Spirit points",
+      "weekly_point_cap": 100,
+      "base": {
+        "cost": 200,
+        "capacity_per_grimy_herb": 50
+      },
+      "upgrade": {
+        "cost": 200,
+        "requires_base_bag": true,
+        "capacity_per_grimy_herb": 100
+      },
+      "stores_noted_items": true,
+      "source_urls": [
+        "https://runescape.wiki/w/Herby_Werby",
+        "https://runescape.wiki/w/Guide_to_useful_items_and_unlocks",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "This is a hard Anachronia weekly-currency route. Track the base and upgrade as two 200-point milestones rather than collapsing them into a generic 400-point item."
+    },
+    {
+      "id": "dungeoneering:gem-bag-current",
+      "name": "Gem bag progression",
+      "category": "uncut-gem inventory container",
+      "region_hint": "forinthry",
+      "hard_region_requirement": true,
+      "base": {
+        "dungeoneering_level": 25,
+        "crafting_level": 25,
+        "token_cost": 2000,
+        "capacity_total": 100,
+        "gem_types": [
+          "Sapphire",
+          "Emerald",
+          "Ruby",
+          "Diamond"
+        ]
+      },
+      "upgrade": {
+        "dungeoneering_level": 40,
+        "crafting_level": 45,
+        "additional_token_cost": 20000,
+        "requires_empty_base_bag": true,
+        "capacity_per_type": 60,
+        "capacity_total": 300,
+        "gem_types": [
+          "Sapphire",
+          "Emerald",
+          "Ruby",
+          "Diamond",
+          "Dragonstone"
+        ]
+      },
+      "stores_noted_items": true,
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Dungeoneering_rewards_stock",
+        "https://runescape.wiki/w/Gem_bag_(upgraded)",
+        "https://runescape.wiki/w/Slayer_training"
+      ],
+      "confidence": "confirmed_current_wiki_2026_reward_table",
+      "league_treatment": "Daemonheim is a hard Forinthry dependency. Keep the 2,000-token base bag and 20,000-token upgrade as separate milestones."
+    },
+    {
+      "id": "crafting:artificers-measure",
+      "name": "Artificer's measure",
+      "category": "high-level gem container and skilling off-hand",
+      "region_status": "cross_region_dependency_chain",
+      "region_pressure": [
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "requirements": [
+        "99 Crafting",
+        "102 Archaeology",
+        "40 Dungeoneering through the upgraded gem bag",
+        "99 Smithing for self-sufficient glorious-bar production"
+      ],
+      "gem_storage": {
+        "capacity_per_type": 100,
+        "gem_types": [
+          "Sapphire",
+          "Emerald",
+          "Ruby",
+          "Diamond",
+          "Dragonstone"
+        ],
+        "shared_with_other_artificers_measures": true
+      },
+      "materials": [
+        {
+          "item": "Pasaha",
+          "quantity": 1
+        },
+        {
+          "item": "Dragon scalpel",
+          "quantity": 1
+        },
+        {
+          "item": "Orthenglass flask",
+          "quantity": 1
+        },
+        {
+          "item": "Protective goggles",
+          "quantity": 1
+        },
+        {
+          "item": "Magic stone",
+          "quantity": 1
+        },
+        {
+          "item": "Gem bag (upgraded)",
+          "quantity": 1
+        },
+        {
+          "item": "Mystic cloth",
+          "quantity": 10
+        },
+        {
+          "item": "Blessed molten glass",
+          "quantity": 10
+        },
+        {
+          "item": "Glorious silvthril chain",
+          "quantity": 1
+        },
+        {
+          "item": "Onyx",
+          "quantity": 1
+        }
+      ],
+      "dependency_notes": [
+        "Forinthry: upgraded gem bag through Daemonheim rewards.",
+        "Tirannwn: crystal-flecked sandstone / Prifddinas route used by blessed molten glass.",
+        "Morytania: partial Legacy of Seergaze progression for the chain-link mould used in the silvthril chain.",
+        "Player-owned Ports can supply crystal-flecked sandstone as a slower alternative and remains an account-time bottleneck rather than an elective region."
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Artificer%27s_measure",
+        "https://runescape.wiki/w/Gem_bag_(upgraded)"
+      ],
+      "confidence": "confirmed_current_wiki_cross_region_chain",
+      "league_treatment": "Do not present 99 Crafting and 102 Archaeology as the whole requirement. The consumed upgraded gem bag and glass/chain branches create real cross-region pressure."
+    },
+    {
+      "id": "dungeoneering:advanced-gold-accumulator-current",
+      "name": "Advanced gold accumulator",
+      "category": "permanent coin drop cleaner",
+      "region_hint": "forinthry",
+      "hard_region_requirement": true,
+      "dungeoneering_level": 60,
+      "token_cost": 1500000,
+      "effect": "Automatically adds 90% of monster coin drops to the money pouch and destroys the remaining 10%.",
+      "degrades": false,
+      "toolbelt_unlock": {
+        "currency": "Slayer points",
+        "cost": 500
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/Advanced_gold_accumulator",
+        "https://runescape.wiki/w/Template:Dungeoneering_rewards_stock",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_current_wiki_2026_reward_table",
+      "league_treatment": "Daemonheim is a hard Forinthry dependency in this project. Keep the 1,500,000-token purchase and optional 500-Slayer-point tool-belt unlock as separate milestones."
+    },
+    {
+      "id": "drop-cleaner:seedicide",
+      "name": "Seedicide",
+      "category": "Farming experience drop cleaner",
+      "region_status": "multiple_acquisition_routes",
+      "acquisition_routes": [
+        {
+          "route": "Cabbage Facepunch Bonanza Quartermaster",
+          "region_hint": "asgarnia",
+          "currency": "renown",
+          "cost": 2200
+        },
+        {
+          "route": "Farmers' Market",
+          "region_hint": "kandarin",
+          "currency": "beans",
+          "cost": 10000
+        },
+        {
+          "route": "Stanley Limelight",
+          "region_status": "minigame_spotlight_currency",
+          "currency": "Thaler",
+          "cost": 360
+        }
+      ],
+      "effect": "Destroys selected seed drops and awards twice the Farming experience that planting the seed would give, provided the player has the Farming level to plant it.",
+      "uses": "unlimited",
+      "pickup_upgrade": {
+        "source": "Farmers' Market",
+        "currency": "beans",
+        "cost": 25000,
+        "effect": "Collects selected seeds instead of destroying them."
+      },
+      "toolbelt_unlock": {
+        "currency": "Slayer points",
+        "cost": 500
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/Seedicide",
+        "https://runescape.wiki/w/Rewards_(Cabbage_Facepunch_Bonanza)",
+        "https://runescape.wiki/w/Farming_training",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Do not hard-assign Seedicide to one region: Asgarnia, Kandarin and Thaler routes are distinct alternatives."
+    },
+    {
       "id": "dungeoneering:split-dragontooth-necklace-current",
       "name": "Split dragontooth necklace",
       "category": "post-remaster prayer-sustain equipment unlock",
@@ -2054,6 +2780,114 @@
       "league_treatment": "Do not hard-assign the mansion to an elective region from map intuition. Apply official Equilibrium quest auto-completion separately, and keep the ring's combat proc values out of progression until reverified from a current source."
     },
     {
+      "id": "invention:spring-cleaner-current",
+      "name": "Spring cleaner progression",
+      "category": "upgradeable salvage and drop cleaner",
+      "region_status": "global_if_invention_materials_available",
+      "invention_level": 43,
+      "base_device_recipe": [
+        {
+          "material": "Simple parts",
+          "quantity": 300
+        },
+        {
+          "material": "Tensile parts",
+          "quantity": 500
+        },
+        {
+          "material": "Flexible parts",
+          "quantity": 300
+        },
+        {
+          "material": "Precise components",
+          "quantity": 50
+        }
+      ],
+      "tight_spring_recipe": {
+        "output_quantity": 20,
+        "materials": [
+          {
+            "material": "Tensile parts",
+            "quantity": 120
+          },
+          {
+            "material": "Subtle components",
+            "quantity": 1
+          }
+        ]
+      },
+      "upgrade_ladder": [
+        {
+          "version": "Spring cleaner 2000",
+          "cumulative_springs": 200,
+          "unlock": "Automatically high-alchemises configured salvage drops at the cost of one spring per salvage."
+        },
+        {
+          "version": "Spring cleaner 3000",
+          "cumulative_springs": 600,
+          "unlock": "Automatically disassembles configured salvage drops without consuming a spring; free disassembly does not advance upgrades."
+        },
+        {
+          "version": "Spring cleaner 5000",
+          "cumulative_springs": 1800,
+          "unlock": "Further improves the cleaner's older dismantle/research functionality."
+        },
+        {
+          "version": "Spring cleaner 9000",
+          "cumulative_springs": 4000,
+          "unlock": "Higher-tier cleaner with the full pre-9001 salvage configuration set."
+        },
+        {
+          "version": "Spring cleaner 9001",
+          "cumulative_springs": 10000,
+          "unlock": "Extends supported automatic cleaning to noted salvage drops."
+        }
+      ],
+      "maximum_stored_springs": 250000,
+      "supply_bottleneck": "A self-sufficient account can craft tight springs, but the tensile-part and subtle-component cost is the meaningful long-run constraint. Store the component recipe and upgrade ladder rather than a volatile spring coin price.",
+      "source_urls": [
+        "https://runescape.wiki/w/Invention_exp_table",
+        "https://runescape.wiki/w/Simple_parts",
+        "https://runescape.wiki/w/Subtle_components",
+        "https://runescape.wiki/w/Spring_cleaner_5000",
+        "https://runescape.wiki/w/Medium_bladed_orikalkum_salvage",
+        "https://runescape.wiki/w/Spring_cleaner_9001"
+      ],
+      "confidence": "confirmed_current_wiki_core_fandom_crosscheck_for_upgrade_thresholds",
+      "league_treatment": "The 43 Invention unlock is only the first gate. Track the 600-spring free-disassembly milestone and 10,000-spring noted-salvage milestone separately, and let regional component-supply rows determine how practical those milestones are."
+    },
+    {
+      "id": "summoning:charm-conservation-tools",
+      "name": "Summoning charm-conservation tools",
+      "category": "pouch-production supply modifiers",
+      "records": [
+        {
+          "name": "Spirit gems",
+          "save_chance_percent_range": [
+            10,
+            60
+          ],
+          "charge_rule": "One charge is consumed whenever a charm is saved.",
+          "note": "Higher-tier gems increase the chance; gems are most valuable on scarce crimson or blue charms."
+        },
+        {
+          "name": "Modified shaman's headdress",
+          "save_chance_percent": 5
+        },
+        {
+          "name": "Summoning cape",
+          "summoning_level": 99,
+          "save_chance_percent": 2
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training",
+        "https://runescape.wiki/w/Spirit_sapphire"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Charm-saving effects reduce supply consumption; they do not change familiar unlock requirements or tertiary-item geography."
+    },
+    {
       "id": "salve-amulet:enchanted",
       "name": "Salve amulet (e)",
       "category": "quest/minique​st combat equipment unlock",
@@ -2069,6 +2903,59 @@
         "https://runescape.wiki/w/Lair_of_Tarn_Razorlor"
       ],
       "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "rum-deal:holy-wrench",
+      "name": "Holy wrench",
+      "category": "quest prayer-restoration support item",
+      "region_hint": "morytania",
+      "region_status": "base_game_island_access_working_taxonomy",
+      "quest_dependencies": [
+        "Rum Deal for the Holy wrench",
+        "Pieces of Hate for the Dungeoneering prayer-necklace interaction"
+      ],
+      "usable_slots": [
+        "backpack",
+        "pocket"
+      ],
+      "effects": [
+        "Increases Prayer restored by supported prayer-restoring potions while carried or worn.",
+        "After Pieces of Hate, increases Prayer restored by Dungeoneering prayer necklaces by 10%."
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Holy_wrench",
+        "https://runescape.wiki/w/Rum_Deal",
+        "https://runescape.wiki/w/Pieces_of_Hate",
+        "https://runescape.wiki/w/Prayer_points"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Keep the Rum Deal item gate and Pieces of Hate enhancement separate so official Equilibrium quest auto-completion can satisfy either dependency without inventing a region exception."
+    },
+    {
+      "id": "drop-cleaner:attuned-ectoplasmator",
+      "name": "Attuned ectoplasmator",
+      "category": "upgradeable Prayer drop cleaner",
+      "region_status": "multi_source_no_single_region",
+      "base_item": "Ectoplasmator",
+      "upgrade": {
+        "item": "Ghostly essence",
+        "quantity": 100
+      },
+      "charges": {
+        "initial": 1000,
+        "maximum": 5009,
+        "consumed_per_absorption": 1,
+        "recharge_item": "Ghostly essence"
+      },
+      "effect": "Absorbs eligible ghost remains and destroys demonic ashes for the normal Prayer experience that scattering or burying them would grant.",
+      "source_urls": [
+        "https://runescape.wiki/w/Attuned_ectoplasmator",
+        "https://runescape.wiki/w/Ectoplasmator",
+        "https://runescape.wiki/w/Ghostly_essence",
+        "https://runescape.wiki/w/Slayer_training"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Do not assign this to one elective region. The base cleaner and recharge material have multiple ghost-source routes; region value belongs to the source rows that supply them."
     }
   ],
   "ability_unlocks": [
@@ -2335,6 +3222,113 @@
       ],
       "confidence": "confirmed_official_2026",
       "historical_correction": "This replaces the removed Penance aura. Do not model an aura duration/cooldown or War's Wares aura purchase."
+    },
+    {
+      "id": "sophanem:golden-touch-unsullied",
+      "name": "Golden Touch and Unsullied",
+      "category": "vital-spark ability codices",
+      "region_hint": "desert",
+      "region_status": "confirmed_base_game_geography",
+      "source_system": "Sophanem Slayer Dungeon vital sparks",
+      "unlocks": [
+        {
+          "name": "Golden Touch",
+          "vital_sparks": 2000
+        },
+        {
+          "name": "Unsullied",
+          "vital_sparks": 2000
+        }
+      ],
+      "dedupe_note": "Limitless uses the same 2,000-vital-spark acquisition system and is already represented separately on main.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
+        "https://runescape.wiki/w/Unlock_tokens",
+        "https://runescape.wiki/w/PvM_unlock_guide"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Treat the 2,000-spark requirements as base acquisition costs. League drop multipliers and access overrides remain separate modifiers."
+    },
+    {
+      "id": "invention:ingenuity-of-the-humans",
+      "name": "Ingenuity of the Humans",
+      "category": "crafted ability codex",
+      "region_status": "cross_region_material_dependency",
+      "requirements": [
+        "114 Invention",
+        "80 Crafting",
+        "Discover the Ingenuity of the Humans ability codex research"
+      ],
+      "materials": [
+        {
+          "name": "Alchemical onyx",
+          "quantity": 2
+        },
+        {
+          "name": "Stunning components",
+          "quantity": 20
+        },
+        {
+          "name": "Direct components",
+          "quantity": 100
+        },
+        {
+          "name": "Smooth parts",
+          "quantity": 1500
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Alchemical_onyx",
+        "https://runescape.wiki/w/Invention/Level_up_table",
+        "https://runescape.wiki/w/PvM_unlock_guide"
+      ],
+      "confidence": "confirmed_current_wiki_generated_recipe",
+      "league_treatment": "Do not assign a single region from the inventor's workbench. Region pressure comes from alchemical-onyx and component supply chains."
+    },
+    {
+      "id": "elite-dungeons:slayer-ability-codices",
+      "name": "Demon, Dragon and Undead Slayer ability codices",
+      "category": "crafted Slayer ability codices",
+      "region_status": "cross_region_material_dependency",
+      "requirements": [
+        "88 Invention",
+        "80 Crafting",
+        "Relevant codex blueprints from the Elite Dungeon Reward Shop"
+      ],
+      "shared_materials": [
+        {
+          "name": "Black stone heart",
+          "quantity": 100
+        },
+        {
+          "name": "Onyx",
+          "quantity": 2
+        }
+      ],
+      "variants": [
+        {
+          "name": "Demon Slayer",
+          "component": "Silent components",
+          "component_quantity": 60
+        },
+        {
+          "name": "Dragon Slayer",
+          "component": "Resilient components",
+          "component_quantity": 60
+        },
+        {
+          "name": "Undead Slayer",
+          "component": "Oceanic components",
+          "component_quantity": 60
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Calculator:Invention/Trading_materials_through_product_manufacturing",
+        "https://runescape.wiki/w/Unlock_tokens",
+        "https://runescape.wiki/w/Codex"
+      ],
+      "confidence": "confirmed_current_wiki_generated_recipe",
+      "league_treatment": "Model blueprint access, Black stone hearts, onyxes and component supply as separate dependencies. Do not collapse all three codices to one Elite Dungeon or one elective region."
     }
   ],
   "prayer_unlocks": [
@@ -2756,6 +3750,47 @@
       "confidence": "confirmed_2026_remaster",
       "historical_correction": "The 11 May 2026 remaster reduced this reward-shop cost from 500,000 to 100,000 Dungeoneering tokens; the Dungeoneering requirement remained 75.",
       "league_treatment": "This is one recipe-page acquisition route. Keep the permanent Lady Meilyr recipe purchase and Tirannwn access as separate dependencies."
+    },
+    {
+      "id": "potion:charming",
+      "name": "Charming potion",
+      "category": "temporary charm-drop modifier",
+      "herblore_level": 102,
+      "duration_minutes": 6,
+      "effect": "Increases the base number of charms dropped by a monster by 1.",
+      "ingredients": [
+        {
+          "item": "Primal extract",
+          "quantity": 1
+        },
+        {
+          "item": "Gold charm",
+          "quantity": 4
+        },
+        {
+          "item": "Green charm",
+          "quantity": 4
+        },
+        {
+          "item": "Crimson charm",
+          "quantity": 4
+        },
+        {
+          "item": "Blue charm",
+          "quantity": 4
+        },
+        {
+          "item": "Spark chitin",
+          "quantity": 1
+        }
+      ],
+      "special_charm_rule": "Special charms such as abyssal and talon beast charms are affected unless their source has a separate exclusion.",
+      "source_urls": [
+        "https://runescape.wiki/w/Potions",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Apply the flat +1 before temporary League drop multipliers only when the official League rules confirm the stacking order."
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { wikiSource } from "./lib/runescape-wiki.mjs";
+import { wikiApi } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
@@ -21,42 +21,28 @@ function addComponentField(set, value) {
   }
 }
 
-function extractSection(wikitext, heading) {
-  const lines = wikitext.split(/\r?\n/);
-  const wanted = heading.trim().toLowerCase();
-  let start = -1;
-  let level = 0;
-
-  for (let index = 0; index < lines.length; index += 1) {
-    const match = lines[index].match(/^(={2,6})\s*(.*?)\s*\1\s*$/);
-    if (!match) continue;
-    if (match[2].trim().toLowerCase() !== wanted) continue;
-    start = index + 1;
-    level = match[1].length;
-    break;
-  }
-
-  if (start < 0) throw new Error(`Could not locate Wiki section: ${heading}`);
-
-  const section = [];
-  for (let index = start; index < lines.length; index += 1) {
-    const match = lines[index].match(/^(={2,6})\s*(.*?)\s*\1\s*$/);
-    if (match && match[1].length <= level) break;
-    section.push(lines[index]);
-  }
-  return section.join("\n");
-}
-
-function extractRareMaterialLinks(wikitext) {
-  const section = extractSection(wikitext, "Rare materials");
+async function liveRareMaterialFamilies() {
+  // The Materials page builds its Rare materials table via <dpl>, so the
+  // families no longer appear as wikilinks in the page source; read the
+  // underlying category instead.
   const result = new Set();
-  const linkPattern = /\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|[^\]]*)?\]\]/g;
-
-  for (const match of section.matchAll(linkPattern)) {
-    const title = match[1].trim();
-    if (!/(?: components| parts)(?: \(blueprint\))?$/i.test(title)) continue;
-    result.add(normalizeMaterial(title));
-  }
+  let cmcontinue;
+  do {
+    const data = await wikiApi({
+      action: "query",
+      list: "categorymembers",
+      cmtitle: "Category:Rare materials",
+      cmlimit: 500,
+      cmnamespace: 0,
+      ...(cmcontinue ? { cmcontinue } : {}),
+    });
+    for (const member of data?.query?.categorymembers ?? []) {
+      const title = String(member?.title ?? "");
+      if (!/(?: components| parts)(?: \(blueprint\))?$/i.test(title)) continue;
+      result.add(normalizeMaterial(title));
+    }
+    cmcontinue = data?.continue?.cmcontinue;
+  } while (cmcontinue);
   return result;
 }
 
@@ -75,8 +61,7 @@ for (const row of perks.component_supply_routes) addComponentField(mapped, row.c
 for (const row of perks.global_or_account_component_routes) addComponentField(mapped, row.component);
 for (const row of coverage.remaining_component_routes) addComponentField(mapped, row.component);
 
-const materialsPage = await wikiSource("Materials");
-const liveRare = extractRareMaterialLinks(materialsPage.content);
+const liveRare = await liveRareMaterialFamilies();
 
 if (liveRare.size < 25) {
   throw new Error(
@@ -102,5 +87,5 @@ if (coverage.coverage_after_this_file !== liveRare.size) {
 }
 
 console.log(
-  `Live RuneScape Wiki rare-material coverage: ${liveRare.size}/${liveRare.size} (Materials revision ${materialsPage.revid}, ${materialsPage.timestamp})`,
+  `Live RuneScape Wiki rare-material coverage: ${liveRare.size}/${liveRare.size} (Category:Rare materials)`,
 );

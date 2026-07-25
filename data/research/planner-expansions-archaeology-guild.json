@@ -41,9 +41,21 @@
     {
       "qualification": "Assistant",
       "upgrades": [
-        {"name": "Soil box upgrade", "chronote_cost": 3500, "effect": "Soil box capacity 100"},
-        {"name": "Material storage upgrade", "chronote_cost": 7000, "effect": "Material storage capacity 30 types"},
-        {"name": "Mattock precision upgrade", "chronote_cost": 8000, "effect": "+2 base mattock precision"}
+        {
+          "name": "Soil box upgrade",
+          "chronote_cost": 3500,
+          "effect": "Soil box capacity 100"
+        },
+        {
+          "name": "Material storage upgrade",
+          "chronote_cost": 7000,
+          "effect": "Material storage capacity 30 types"
+        },
+        {
+          "name": "Mattock precision upgrade",
+          "chronote_cost": 8000,
+          "effect": "+2 base mattock precision"
+        }
       ],
       "planner_value": "First permanent throughput/storage tier; cheap enough to matter early in an accelerated League.",
       "source_url": "https://runescape.wiki/w/Archaeology_training",
@@ -52,11 +64,31 @@
     {
       "qualification": "Associate",
       "upgrades": [
-        {"name": "Archaeologist's outfit", "chronote_cost": 50000, "effect": "Regular skilling outfit; 6% Archaeology XP with full set"},
-        {"name": "Soil box upgrade", "chronote_cost": 18000, "effect": "Soil box capacity 250"},
-        {"name": "Material storage upgrade", "chronote_cost": 25000, "effect": "Material storage capacity 35 types"},
-        {"name": "Mattock precision upgrade", "chronote_cost": 30000, "effect": "+2 additional base mattock precision"},
-        {"name": "Auto-screener v1.080 blueprint", "chronote_cost": 50000, "effect": "Unlocks the blueprint; 67 Invention is required to discover/manufacture the device"}
+        {
+          "name": "Archaeologist's outfit",
+          "chronote_cost": 50000,
+          "effect": "Regular skilling outfit; 6% Archaeology XP with full set"
+        },
+        {
+          "name": "Soil box upgrade",
+          "chronote_cost": 18000,
+          "effect": "Soil box capacity 250"
+        },
+        {
+          "name": "Material storage upgrade",
+          "chronote_cost": 25000,
+          "effect": "Material storage capacity 35 types"
+        },
+        {
+          "name": "Mattock precision upgrade",
+          "chronote_cost": 30000,
+          "effect": "+2 additional base mattock precision"
+        },
+        {
+          "name": "Auto-screener v1.080 blueprint",
+          "chronote_cost": 50000,
+          "effect": "Unlocks the blueprint; 67 Invention is required to discover/manufacture the device"
+        }
       ],
       "planner_value": "Auto-screener is the major Associate breakpoint; it can make later soil-box upgrades optional depending on relic/loadout choice.",
       "source_url": "https://runescape.wiki/w/Archaeology_training",
@@ -66,10 +98,26 @@
     {
       "qualification": "Professor",
       "upgrades": [
-        {"name": "Soil box upgrade", "chronote_cost": 48000, "effect": "Soil box capacity 500"},
-        {"name": "Material storage upgrade", "chronote_cost": 60000, "effect": "Material storage capacity 40 types"},
-        {"name": "Mattock precision upgrade", "chronote_cost": 75000, "effect": "+2 additional base mattock precision"},
-        {"name": "Additional relic loadout", "chronote_cost": 80000, "effect": "Unlocks the third relic loadout tab"}
+        {
+          "name": "Soil box upgrade",
+          "chronote_cost": 48000,
+          "effect": "Soil box capacity 500"
+        },
+        {
+          "name": "Material storage upgrade",
+          "chronote_cost": 60000,
+          "effect": "Material storage capacity 40 types"
+        },
+        {
+          "name": "Mattock precision upgrade",
+          "chronote_cost": 75000,
+          "effect": "+2 additional base mattock precision"
+        },
+        {
+          "name": "Additional relic loadout",
+          "chronote_cost": 80000,
+          "effect": "Unlocks the third relic loadout tab"
+        }
       ],
       "planner_value": "Professor is the full-storage breakpoint and the purchasable third-loadout breakpoint.",
       "source_url": "https://runescape.wiki/w/Archaeology_training",
@@ -79,11 +127,27 @@
     {
       "qualification": "Guildmaster",
       "upgrades": [
-        {"name": "Master archaeologist's outfit", "chronote_cost": 250000, "effect": "7% excavation success, 7% screening success, 7% mattock base precision, faster restore/screening, longer consumables, collector/dig-site teleports, and unlocks the daily Fixate allowance"},
-        {"name": "Energised meteorite shard", "chronote_cost": 250000, "effect": "Required for the Mattock of Time and Space"},
-        {"name": "Mattock precision upgrade", "chronote_cost": 150000, "effect": "+2 final base mattock precision upgrade"}
+        {
+          "name": "Master archaeologist's outfit",
+          "chronote_cost": 250000,
+          "effect": "7% excavation success, 7% screening success, 7% mattock base precision, faster restore/screening, longer consumables, collector/dig-site teleports, and unlocks the daily Fixate allowance"
+        },
+        {
+          "name": "Energised meteorite shard",
+          "chronote_cost": 250000,
+          "effect": "Required for the Mattock of Time and Space"
+        },
+        {
+          "name": "Mattock precision upgrade",
+          "chronote_cost": 150000,
+          "effect": "+2 final base mattock precision upgrade"
+        }
       ],
-      "qualification_rewards": ["Research team size 5", "Access to research professors", "Fourth relic loadout tab"],
+      "qualification_rewards": [
+        "Research team size 5",
+        "Access to research professors",
+        "Fourth relic loadout tab"
+      ],
       "planner_value": "Late Archaeology throughput/infrastructure breakpoint. Mattock of Time and Space access depends on the Guildmaster shop shard rather than level alone.",
       "source_url": "https://runescape.wiki/w/Qualification_-_Guildmaster",
       "secondary_source_url": "https://runescape.wiki/w/Archaeology_training",

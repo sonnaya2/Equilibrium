@@ -7,7 +7,9 @@ on:
       - main
     paths:
       - assets/source-manifest.json
+      - assets/source-manifest-expansion.json
       - scripts/sync-assets.mjs
+      - scripts/sync-assets-expanded.mjs
       - scripts/normalize-region-names.mjs
       - .github/workflows/sync-assets.yml
 
@@ -37,7 +39,7 @@ jobs:
       - name: Harvest assets
         id: harvest
         continue-on-error: true
-        run: node scripts/sync-assets.mjs
+        run: node scripts/sync-assets-expanded.mjs
 
       - name: Show harvest result
         run: |

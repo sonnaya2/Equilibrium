@@ -1,0 +1,30 @@
+{
+  "snapshot_date": "2026-07-25",
+  "status": "passed",
+  "scope": [
+    "data/**/*.json",
+    "scraped-data/**/*.json"
+  ],
+  "checks": [
+    "JSON parse integrity",
+    "duplicate stable IDs within arrays",
+    "HTTPS and non-placeholder source URLs",
+    "canonical Asgarnia naming in generated data",
+    "unresolved and unrevealed state truthfulness",
+    "Relic and Blessing tier shapes",
+    "Blessing paths, God Tiers and reset count",
+    "task-record array shape",
+    "permanent-unlock section shape, IDs and provenance",
+    "removed combat unlocks excluded from active progression"
+  ],
+  "stats": {
+    "files": 106,
+    "jsonObjects": 4084,
+    "arrays": 3784,
+    "ids": 661,
+    "sourceUrls": 2154,
+    "unresolvedRows": 330,
+    "unverifiedRows": 44
+  },
+  "note": "Domain-specific progression, 2026 remaster, Aura overhaul, reference, boundary, Masterwork and supplement audits run through npm run audit:all-data."
+}

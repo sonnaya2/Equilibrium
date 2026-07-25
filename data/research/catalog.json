@@ -42,7 +42,10 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 83
+    "trainingMethods": 83,
+    "regionalSkillingUnlocks": 31,
+    "regionalSkillingActivities": 17,
+    "regionalSkillingEquipment": 14
   },
   "regions": [
     {
@@ -365,6 +368,113 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
             "title": "Zemouregal & Vorkath progression",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
+          "category": "Woodcutting tool progression",
+          "detail": "After tier 3 Grove is built, Imcando-hatchet fragments can appear in bird nests from Woodcutting. This makes Fort progression a permanent Woodcutting tool gate. · The repo currently maps Fort Forinthry to Misthalin using Catalyst precedent. Keep that mapping provisional until Equilibrium confirms it. · Unlocks: Imcando hatchet fragment nests from Woodcutting, One guaranteed first fragment from Oak, Bad-luck mitigation on fragment nests · Region status: historical_fort_working_taxonomy",
+          "requirements": [
+            "Tier 3 Woodcutter's Grove in the normal game"
+          ],
+          "confidence": "confirmed_wiki_method_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Woodcutter%27s_Grove",
+            "title": "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Ghostly sole fishing",
+          "category": "low-input Fishing unlock",
+          "detail": "The spot does not move, making ghostly soles a useful low-input City of Um route and a practical place to level augmented fishing gear. · City of Um is currently a historical Misthalin working mapping, not an Equilibrium-specific locality confirmation. · Unlocks: Stationary ghostly sole fishing spot, 130 base Fishing XP per catch · Region status: historical_city_of_um_working_taxonomy",
+          "requirements": [
+            "66 Fishing"
+          ],
+          "confidence": "confirmed_wiki_method_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Raw_ghostly_sole",
+            "title": "Ghostly sole fishing",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Sana's fyrtorch",
+          "category": "Woodcutting and Firemaking skilling off-hand",
+          "detail": "Use the canonical item name. The existing loose major-upgrade row used a non-item placeholder name for this reward. · Region status: historical_senntisten_working_taxonomy",
+          "requirements": [],
+          "confidence": "confirmed_wiki_unlock_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sana%27s_fyrtorch",
+            "title": "Sana's fyrtorch",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Tagga's corehammer",
+          "category": "Mining skilling off-hand",
+          "detail": "Use the canonical item name. The critical-strike bonuses remain useful outside core ores; only the arrow-tip effect is core-ore specific. · Effects: +10% Mining critical strike chance, +35% Mining critical strike damage, Chance for deathspore arrow tips from core ores · Region status: historical_senntisten_working_taxonomy",
+          "requirements": [],
+          "confidence": "confirmed_wiki_unlock_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Tagga%27s_corehammer",
+            "title": "Tagga's corehammer",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Memory dowser",
+          "category": "Divination skilling off-hand",
+          "detail": "City of Um/Gate is currently mapped to Misthalin by historical League precedent pending Equilibrium confirmation. · Effects: Gather memories from wisps up to 7 tiles away, Supports ranged, low-movement Divination gathering · Region status: historical_city_of_um_working_taxonomy",
+          "requirements": [],
+          "confidence": "confirmed_wiki_unlock_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Memory_dowser",
+            "title": "Memory dowser",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Runic attuner",
+          "category": "Runecrafting skilling off-hand",
+          "detail": "Use the post-29-September-2025 effect, not the original release tooltip. Do not assume it is always the best XP/hour route; altar sequence and Soul altar use matter. · Effects: Attunes to eligible Runecrafting altars, At 1-49 energy, attuned-altar crafting gains 200% additional Runecrafting XP, Every 5 energy gives a 50% rune multiplier at the attuned altar, Every 7 energy allows choosing an altar, Every 10 energy grants an attuned-altar teleport, Every 25 energy guarantees 1-4 magical thread, At 50 energy, attuned-altar crafting gains 2,400% additional Runecrafting XP and resets energy · Region status: historical_city_of_um_working_taxonomy",
+          "requirements": [
+            "80 Runecrafting"
+          ],
+          "confidence": "confirmed_wiki_post_2025_effect",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Runic_attuner",
+            "title": "Runic attuner",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Imcando hatchet",
+          "category": "augmentable Woodcutting tool progression",
+          "detail": "Use the Fort's current working Misthalin taxonomy until Equilibrium publishes a different boundary. · Region status: historical_fort_working_taxonomy",
+          "requirements": [
+            "Tier 3 Woodcutter's Grove",
+            "Imcando hatchet fragments from bird nests"
+          ],
+          "confidence": "confirmed_wiki_method_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Imcando_hatchet",
+            "title": "Imcando hatchet",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "misthalin"
@@ -1053,6 +1163,20 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "asgarnia"
+        },
+        {
+          "name": "Artisans' Workshop Reward Shop",
+          "category": "Smithing outfit and workshop upgrades",
+          "detail": "Blacksmith outfit pieces cost respect at the Reward Shop. Luminite injectors overload the workshop and add progress per smithing swing for players in the workshop. · This is a real Asgarnia skilling unlock bundle, not just the burial-smithing training method. · Unlocks: Blacksmith's outfit, up to 6% Smithing XP, Luminite injector, Ceremonial sword reward upgrades, Cannon upgrade progression",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Artisans%27_Workshop",
+            "title": "Artisans' Workshop Reward Shop",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "asgarnia"
         }
       ],
       "trainingMethodIds": [
@@ -1216,6 +1340,56 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "kandarin"
+        },
+        {
+          "name": "Deep Sea Fishing hub",
+          "category": "Fishing activity and shop hub",
+          "detail": "Fishing Frenzy is already tracked as the high-XP route. The hub also adds lower-input food gathering, swarm fishing, a rotating merchant, and the rare Tavia's fishing rod acquisition path. · Merchant stock and currency practicality should be launch-checked, but hub access itself is a major Kandarin unlock. · Unlocks: Fishing Frenzy at 94+, Sailfish at 97+, Swarm fishing, Travelling Merchant access, Deep Sea Fishing boosts and events",
+          "requirements": [
+            "68 Fishing for hub access"
+          ],
+          "confidence": "confirmed_wiki_plus_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Deep_Sea_Fishing",
+            "title": "Deep Sea Fishing hub",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "kandarin"
+        },
+        {
+          "name": "Farmers' Market and master farmer outfit",
+          "category": "Farming reward shop and elite outfit",
+          "detail": "The master farmer outfit is an important permanent Farming progression target. Its animal-farming benefits include increased beans when selling animals. · No-trading increases the value of bean-shop and self-sufficient farm unlocks. · Unlocks: Master farmer outfit blueprint, Animal, crop and tree farmer outfit progression, Player-Owned Farm reward-shop upgrades",
+          "requirements": [
+            "Player-Owned Farm access",
+            "1,000 beans for the master farmer outfit blueprint",
+            "80 Farming and 20 Invention to manufacture outfit pieces"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farmers%27_Market",
+            "title": "Farmers' Market and master farmer outfit",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "kandarin"
+        },
+        {
+          "name": "Tavia's fishing rod",
+          "category": "rare hero Fishing tool",
+          "detail": "Record as a rare ceiling item, not baseline Kandarin power. A player cannot plan around obtaining it quickly. · Rarity: hero_item_very_rare · Effects: 10% increased fishing success rate when compatible, Can trigger all three Deep Sea Fishing boosts, Can be augmented",
+          "requirements": [
+            "Rare red uncharted island map from Deep Sea Fishing or Travelling Merchant route"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Tavia%27s_fishing_rod",
+            "title": "Tavia's fishing rod",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "kandarin"
         }
       ],
       "trainingMethodIds": [
@@ -1319,6 +1493,57 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Dagannoth_Kings",
             "title": "Dagannoth Kings",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Lava Flow Mine skilling unlocks",
+          "category": "Mining outfit and pickaxe progression",
+          "detail": "Keldagrim's Lava Flow Mine is the normal-game source for the golden mining suit and the Imcando-pickaxe branch of late-game Mining tool progression. · Keldagrim is treated as Fremennik-region geography. Resolve quest auto-completion separately. · Unlocks: Golden mining suit, 6% Mining XP with the full set, Gilded dragon pickaxe step, Imcando pickaxe fragments from lava geysers",
+          "requirements": [],
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Lava_Flow_Mine",
+            "title": "Lava Flow Mine skilling unlocks",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Imcando pickaxe",
+          "category": "augmentable Mining tool progression",
+          "detail": "Do not use historical enchanted-Imcando bonus-XP data. The enchanted variant was removed in 2019.",
+          "requirements": [
+            "Lava Flow Mine access",
+            "Golden mining suit before gilding a dragon pickaxe",
+            "Four Imcando pickaxe fragments"
+          ],
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Imcando_pickaxe",
+            "title": "Imcando pickaxe",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Pickaxe of Earth and Song",
+          "category": "cross-region augmentable Mining tool",
+          "detail": "Treat Fremennik plus Tirannwn as the normal self-sufficient chain unless Equilibrium adds alternate tool sources. · Region pressure: Imcando pickaxe progression comes from the Keldagrim/Lava Flow Mine chain., Crystal pickaxe progression comes from Prifddinas crystal-tool infrastructure.",
+          "requirements": [
+            "Imcando pickaxe",
+            "Crystal pickaxe",
+            "Blast fusion hammer",
+            "90 Smithing"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+            "title": "Pickaxe of Earth and Song",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "fremennik"
@@ -1546,6 +1771,73 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/The_Shadow_Reef",
             "title": "Shadow Reef progression",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Daemonheim skilling reward infrastructure",
+          "category": "Dungeoneering reward shop and utility unlocks",
+          "detail": "Equilibrium explicitly places Daemonheim in Forinthry, so Dungeoneering reward-store items are a real regional dependency in a no-trading planner. · Do not assume reward-token costs are altered unless Equilibrium publishes a multiplier or passive. · Unlocks: Bonecrusher, Charming imp, Herbicide, Gem bag and upgraded gem bag, Smithing autoheater upgrades, Scroll and utility rewards used by skilling chains · Region status: confirmed_official",
+          "requirements": [],
+          "confidence": "confirmed_wiki_plus_official_region_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dungeoneering_Rewards",
+            "title": "Daemonheim skilling reward infrastructure",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Skeka's hypnowand",
+          "category": "Hunter skilling off-hand cross-region chain",
+          "detail": "Do not label this Anachronia-only. The Daemonheim journal gate is a real Forinthry dependency in the normal acquisition path. · Region pressure: Forinthry owns Daemonheim and the Warped Depths journal gate., Pieces then come from Anachronia activities including Big Game Hunter, Rex Matriarchs, vile blooms and the Agility Course.",
+          "requirements": [
+            "103 Archaeology",
+            "95 Dungeoneering",
+            "Read the aged journal in the Warped Depths of the Daemonheim Dig Site before pieces can drop"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Skeka%27s_hypnowand",
+            "title": "Skeka's hypnowand",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Balarak's sash brush",
+          "category": "Archaeology skilling off-hand cross-region chain",
+          "detail": "Surface both Forinthry and Anachronia in planner dependencies. · Effects: +5% excavation success rate, +5% mattock base precision, 10% chance for an additional material while excavating, 5% chance for Chronal Focus at 100% sprite focus · Region pressure: Brush pieces come from the Warped Depths of the Daemonheim Dig Site., The damaged brush is shown to Sharrigan outside Anachronia Base Camp to learn restoration.",
+          "requirements": [],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Balarak%27s_sash_brush",
+            "title": "Balarak's sash brush",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "forinthry"
+        },
+        {
+          "name": "Artificer's measure",
+          "category": "Crafting and Construction skilling off-hand cross-region chain",
+          "detail": "Do not hard-require every listed region. Crystal sandstone has an alternate Ports source and quest auto-completion can change the mould route, but region choices strongly affect self-sufficient acquisition. · Effects: Stores gems like the upgraded gem bag, Always applies the Ithell Voice of Seren harp benefit while playing harps, 5% chance to duplicate glassblown items and urns, including potion and crystal flasks, Scroll of proficiency chance multiplied by 1.25, Crafting/Construction buff can stack to 5% after proficiency procs",
+          "requirements": [
+            "99 Crafting",
+            "102 Archaeology",
+            "Upgraded gem bag",
+            "Orthen artefact components",
+            "Chain link mould from the Legacy of Seergaze route",
+            "Crystal-flecked sandstone or an alternate player-owned ports source"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Artificer%27s_measure",
+            "title": "Artificer's measure",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "forinthry"
@@ -1782,6 +2074,34 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "desert"
+        },
+        {
+          "name": "Pyramid Plunder and black ibis outfit",
+          "category": "Thieving activity and XP outfit",
+          "detail": "Do not import old black-ibis drop-rate tables into League planning. The permanent outfit unlock is what matters here. · Treat this as Desert skilling progression even if a faster raw-XP Thieving method is available elsewhere. · Unlocks: Black ibis outfit, Up to 5% Thieving XP with the full set",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pyramid_Plunder",
+            "title": "Pyramid Plunder and black ibis outfit",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "desert"
+        },
+        {
+          "name": "Red sandstone and potion flasks",
+          "category": "Herblore flask infrastructure",
+          "detail": "Red sandstone at Oo'glog and Sophanem feeds potion-flask production. The 2026 DailyScape overhaul removed the old daily cap, and July 2026 reduced rock hitpoints. · This is the Desert half of high-end six-dose flask infrastructure; crystal flasks for combination potions are a separate Tirannwn unlock. · Unlocks: Robust glass, Potion flasks",
+          "requirements": [],
+          "confidence": "confirmed_wiki_and_2026_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Red_sandstone",
+            "title": "Red sandstone and potion flasks",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "desert"
         }
       ],
       "trainingMethodIds": [
@@ -1940,6 +2260,41 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "morytania"
+        },
+        {
+          "name": "Temple Trekking skilling outfits",
+          "category": "Construction and Woodcutting outfit progression",
+          "detail": "Temple Trekking is worth surfacing as permanent skilling progression, not just a minigame, because it owns two useful XP outfits. · Resolve normal quest access through the Equilibrium auto-quest overlay before treating the trek itself as manually gated. · Unlocks: Constructor's outfit, up to 6% Construction XP, Lumberjack outfit, 5% Woodcutting XP",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Temple_Trekking",
+            "title": "Temple Trekking skilling outfits",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "morytania"
+        },
+        {
+          "name": "Artificer's measure",
+          "category": "Crafting and Construction skilling off-hand cross-region chain",
+          "detail": "Do not hard-require every listed region. Crystal sandstone has an alternate Ports source and quest auto-completion can change the mould route, but region choices strongly affect self-sufficient acquisition. · Effects: Stores gems like the upgraded gem bag, Always applies the Ithell Voice of Seren harp benefit while playing harps, 5% chance to duplicate glassblown items and urns, including potion and crystal flasks, Scroll of proficiency chance multiplied by 1.25, Crafting/Construction buff can stack to 5% after proficiency procs",
+          "requirements": [
+            "99 Crafting",
+            "102 Archaeology",
+            "Upgraded gem bag",
+            "Orthen artefact components",
+            "Chain link mould from the Legacy of Seergaze route",
+            "Crystal-flecked sandstone or an alternate player-owned ports source"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Artificer%27s_measure",
+            "title": "Artificer's measure",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "morytania"
         }
       ],
       "trainingMethodIds": [
@@ -2082,6 +2437,191 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Solak",
             "title": "Solak",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Prifddinas skilling hub",
+          "category": "regional skilling infrastructure",
+          "detail": "Prifddinas is far more than one training method. Treat it as a bundle of tool, shop, production, and high-level skilling unlocks when valuing Tirannwn. · Equilibrium explicitly advertises Prifddinas as Tirannwn content and says region quest completion is intended to provide immediate access. Keep any individual item skill requirements. · Unlocks: Ithell harmonium harps and harmonic dust, Trahaearn Seren stones and corrupted ore, Meilyr combination-potion infrastructure, Waterfall Fishing and crystal fishing rod shop, district skilling services and Voice of Seren rotations · Region status: confirmed_official_region_example",
+          "requirements": [],
+          "confidence": "confirmed_wiki_plus_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Prifddinas",
+            "title": "Prifddinas skilling hub",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Crystal tool and harmonic dust infrastructure",
+          "category": "skilling tool progression",
+          "detail": "Lady Ithell upgrades several dragon-tier tools with harmonic dust. Crystal pickaxes, hatchets, mattocks, fishing rods, tinderboxes and hammers also feed augmentable skilling progression. · Tirannwn supplies the crystal side of several late-game tool chains. Do not imply the other components of those chains are Tirannwn-only. · Unlocks: Crystal pickaxe, Crystal hatchet, Crystal mattock, Crystal tool-seed utility, Attuned crystal teleport seed, Harmonium harps as a low-attention harmonic-dust source",
+          "requirements": [
+            "Prifddinas access",
+            "Harmonic dust for crystal-tool upgrades"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_tool",
+            "title": "Crystal tool and harmonic dust infrastructure",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Waterfall Fishing and Fishing Shop",
+          "category": "Fishing activity and permanent tool unlock",
+          "detail": "The crystal fishing rod is 5% more likely to catch fish and can be augmented. This makes Waterfall Fishing a permanent tool unlock as well as a training activity. · Keep the rod unlock even if Equilibrium XP multipliers make another fishing method faster. · Unlocks: Crystal urchin points, Ability to make the crystal fishing rod for 3,000 crystal urchin points",
+          "requirements": [
+            "93 Fishing for the high-level Waterfall Fishing route",
+            "90 Agility, Ranged and Strength for the waterfall route in the normal game"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Waterfall_Fishing",
+            "title": "Waterfall Fishing and Fishing Shop",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Meilyr Recipe Shop and combination potions",
+          "category": "Herblore recipe and shop infrastructure",
+          "detail": "Some combination-potion recipes are purchased directly once requirements are met; others first need recipe discovery from Daemonheim or another source. Do not hard-code Forinthry as a requirement for every Meilyr recipe. · Tirannwn is the shop and production hub. Recipe-specific discovery dependencies remain separate. · Unlocks: Combination-potion recipes, Recipe Shop purchase step, Access to Meilyr Herblore services · Region status: confirmed_base_game_geography",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Recipe_Shop",
+            "title": "Meilyr Recipe Shop and combination potions",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Crystal sandstone and crystal flasks",
+          "category": "combination-potion flask infrastructure",
+          "detail": "Crystal sandstone is the local Prifddinas supply for crystal flasks. The 2026 DailyScape overhaul removed the old daily mining cap, so old daily-cap advice must not be used. · This is a major no-trading production unlock because it controls self-supplied combination-potion containers. · Unlocks: Crystal glass, Crystal flasks, Six-dose combination-potion containers",
+          "requirements": [
+            "81 Mining for crystal-flecked sandstone in the normal game",
+            "89 Crafting for crystal flasks in the normal game"
+          ],
+          "confidence": "confirmed_wiki_with_2026_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal-flecked_sandstone",
+            "title": "Crystal sandstone and crystal flasks",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Motherlode Maw and Meilyr resource dungeons",
+          "category": "high-level skilling reward infrastructure",
+          "detail": "The Maw is a high-level Prifddinas reward source and can also help with otherwise awkward unlocks such as Meilyr potion recipes. · The activity lives in Tirannwn, but its 115 Dungeoneering requirement means Forinthry can still be a practical cross-region dependency in Equilibrium. · Unlocks: Motherlode Maw daily reward, Edimmu resource dungeon, Meilyr crystal sandstone access, Useful enhancers and high-level skilling rewards",
+          "requirements": [
+            "115 Dungeoneering for the Motherlode Maw resource dungeon",
+            "95 in normal skills for Maw rewards, including Necromancy"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Motherlode_Maw",
+            "title": "Motherlode Maw and Meilyr resource dungeons",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Seren stones and corrupted ore",
+          "category": "AFK Mining and Smithing supply loop",
+          "detail": "Seren stones are a durable Prifddinas skilling unlock even when they are not the absolute fastest Mining route. They matter for low-input training and self-supplied Smithing experience. · Keep this as a utility and AFK route, separate from pure XP/hour rankings. · Unlocks: Corrupted ore, High-attention-free Mining route, Corrupted-ore Smithing experience",
+          "requirements": [
+            "89 Mining for Seren stones"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Seren_stone",
+            "title": "Seren stones and corrupted ore",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Crystal fishing rod",
+          "category": "augmentable Fishing tool",
+          "detail": "A major permanent Fishing tool unlock even when Fishing Frenzy or another activity is better raw XP. · Effects: 5% more likely to catch fish at compatible fishing spots, Can be augmented for Invention perks",
+          "requirements": [
+            "Waterfall Fishing unlock",
+            "3,000 crystal urchin points"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_fishing_rod",
+            "title": "Crystal fishing rod",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Trahaearn exoskeleton",
+          "category": "Thieving skilling outfit",
+          "detail": "Prifddinas/Tirannwn is the useful regional value. Resolve the quest through Equilibrium auto-completion before treating it as a manual requirement. · Effects: 25% chance to avoid being stunned and damaged while pickpocketing, 25% chance to avoid snake bites in Pyramid Plunder, Can inherit black ibis experience benefits once those are owned",
+          "requirements": [
+            "Plague's End reward in the normal game"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Trahaearn_exoskeleton_set",
+            "title": "Trahaearn exoskeleton",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Pickaxe of Earth and Song",
+          "category": "cross-region augmentable Mining tool",
+          "detail": "Treat Fremennik plus Tirannwn as the normal self-sufficient chain unless Equilibrium adds alternate tool sources. · Region pressure: Imcando pickaxe progression comes from the Keldagrim/Lava Flow Mine chain., Crystal pickaxe progression comes from Prifddinas crystal-tool infrastructure.",
+          "requirements": [
+            "Imcando pickaxe",
+            "Crystal pickaxe",
+            "Blast fusion hammer",
+            "90 Smithing"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+            "title": "Pickaxe of Earth and Song",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Artificer's measure",
+          "category": "Crafting and Construction skilling off-hand cross-region chain",
+          "detail": "Do not hard-require every listed region. Crystal sandstone has an alternate Ports source and quest auto-completion can change the mould route, but region choices strongly affect self-sufficient acquisition. · Effects: Stores gems like the upgraded gem bag, Always applies the Ithell Voice of Seren harp benefit while playing harps, 5% chance to duplicate glassblown items and urns, including potion and crystal flasks, Scroll of proficiency chance multiplied by 1.25, Crafting/Construction buff can stack to 5% after proficiency procs",
+          "requirements": [
+            "99 Crafting",
+            "102 Archaeology",
+            "Upgraded gem bag",
+            "Orthen artefact components",
+            "Chain link mould from the Legacy of Seergaze route",
+            "Crystal-flecked sandstone or an alternate player-owned ports source"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Artificer%27s_measure",
+            "title": "Artificer's measure",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "tirannwn"
@@ -2271,6 +2811,76 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Runecrafting_altars",
             "title": "Time altar / 110 Runecrafting",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Orthen furnace core",
+          "category": "Smithing and Firemaking skilling off-hand",
+          "detail": "Track the unlock, but do not label it BIS for pure XP. Its situational effects can lose to augmented off-hands and other setups.",
+          "requirements": [
+            "99 Smithing",
+            "102 Archaeology"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Orthen_furnace_core",
+            "title": "Orthen furnace core",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Skeka's hypnowand",
+          "category": "Hunter skilling off-hand cross-region chain",
+          "detail": "Do not label this Anachronia-only. The Daemonheim journal gate is a real Forinthry dependency in the normal acquisition path. · Region pressure: Forinthry owns Daemonheim and the Warped Depths journal gate., Pieces then come from Anachronia activities including Big Game Hunter, Rex Matriarchs, vile blooms and the Agility Course.",
+          "requirements": [
+            "103 Archaeology",
+            "95 Dungeoneering",
+            "Read the aged journal in the Warped Depths of the Daemonheim Dig Site before pieces can drop"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Skeka%27s_hypnowand",
+            "title": "Skeka's hypnowand",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Balarak's sash brush",
+          "category": "Archaeology skilling off-hand cross-region chain",
+          "detail": "Surface both Forinthry and Anachronia in planner dependencies. · Effects: +5% excavation success rate, +5% mattock base precision, 10% chance for an additional material while excavating, 5% chance for Chronal Focus at 100% sprite focus · Region pressure: Brush pieces come from the Warped Depths of the Daemonheim Dig Site., The damaged brush is shown to Sharrigan outside Anachronia Base Camp to learn restoration.",
+          "requirements": [],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Balarak%27s_sash_brush",
+            "title": "Balarak's sash brush",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "anachronia"
+        },
+        {
+          "name": "Artificer's measure",
+          "category": "Crafting and Construction skilling off-hand cross-region chain",
+          "detail": "Do not hard-require every listed region. Crystal sandstone has an alternate Ports source and quest auto-completion can change the mould route, but region choices strongly affect self-sufficient acquisition. · Effects: Stores gems like the upgraded gem bag, Always applies the Ithell Voice of Seren harp benefit while playing harps, 5% chance to duplicate glassblown items and urns, including potion and crystal flasks, Scroll of proficiency chance multiplied by 1.25, Crafting/Construction buff can stack to 5% after proficiency procs",
+          "requirements": [
+            "99 Crafting",
+            "102 Archaeology",
+            "Upgraded gem bag",
+            "Orthen artefact components",
+            "Chain link mould from the Legacy of Seergaze route",
+            "Crystal-flecked sandstone or an alternate player-owned ports source"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Artificer%27s_measure",
+            "title": "Artificer's measure",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "anachronia"

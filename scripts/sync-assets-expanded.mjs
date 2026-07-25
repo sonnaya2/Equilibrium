@@ -30,7 +30,7 @@ const overrides = new Map([
   ["activity-monastery-of-ascension", { fileTitle: "Monastery of Ascension building.png", search: "Monastery of Ascension building location image" }],
   ["activity-sophanem-slayer-dungeon", { fileTitle: "Sophanem Slayer Dungeon.png", search: "Sophanem Slayer Dungeon location image" }],
   ["activity-god-wars-dungeon", { fileTitle: "God Wars Dungeon.png", search: "God Wars Dungeon location image" }],
-  ["activity-artisans-workshop", { fileTitle: "Artisans Workshop.png", search: "Artisans Workshop location image" }],
+  ["activity-artisans-workshop", { fileTitle: "Artisans' Workshop.png", search: "Artisans Workshop location image" }],
   ["activity-everlight-dig-site", { fileTitle: "Everlight.png", search: "Everlight Dig Site location image" }],
   ["activity-barrows", { fileTitle: "Barrows Scenery.png", search: "Barrows scenery minigame location image" }],
   ["activity-livid-farm", { fileTitle: "Livid Farm.png", search: "Livid Farm location image" }],

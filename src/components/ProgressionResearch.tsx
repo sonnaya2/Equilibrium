@@ -15,12 +15,12 @@ type SectionKey =
   | "regional_unique_drops";
 
 const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> = [
-  { key: "combat_training_spots", label: "Combat spots", description: "Current method candidates without recycling stale combat XP tables." },
+  { key: "combat_training_spots", label: "Combat spots", description: "Current method candidates with important support unlocks kept separate from hard access requirements." },
   { key: "runecrafting_altars", label: "Runecrafting", description: "Altar locations, levels and the access that can make a region matter." },
   { key: "invention_progression", label: "Invention", description: "Unlock milestones and the routes needed to reach them." },
   { key: "invention_component_sources", label: "Components", description: "Region-sensitive component supply for a self-sufficient account." },
   { key: "archaeology_progression", label: "Archaeology", description: "Dig sites, qualifications and progression gates." },
-  { key: "archaeology_combat_relics", label: "Arch relics", description: "Combat relic milestones. Unmapped acquisition regions stay unmapped." },
+  { key: "archaeology_combat_relics", label: "Arch relics", description: "Combat relic milestones. Cross-region acquisition chains stay visible instead of collapsing to one region." },
   { key: "regional_unique_drops", label: "Unique drops", description: "Notable reward and support-item chains that can change the value of a region pick." },
 ];
 
@@ -39,6 +39,7 @@ const REGION_LABELS: Record<string, string> = {
   global_once_unlocked: "Global once unlocked",
   not_mapped_yet: "Region not mapped",
   unresolved: "Region unresolved",
+  unresolved_cross_boundary: "Cross-boundary region unresolved",
 };
 
 function fieldLabel(value: string): string {
@@ -59,10 +60,27 @@ function text(value: unknown): string {
   return String(value);
 }
 
-function regionLabel(value: unknown): string {
-  const raw = text(value).toLowerCase();
-  if (!raw) return "No region set";
+function regionName(value: unknown): string {
+  const raw = String(value ?? "").toLowerCase();
   return REGION_LABELS[raw] ?? raw.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function rowRegionLabel(row: Row): string {
+  if (Array.isArray(row.required_regions) && row.required_regions.length) {
+    return `Requires regions: ${row.required_regions.map(regionName).join(" + ")}`;
+  }
+
+  if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
+    return `Region unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+  }
+
+  if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
+    return `Region chain: ${row.region_hints.map(regionName).join(" / ")}`;
+  }
+
+  const direct = row.region || row.acquisition_region || row.region_hint;
+  if (!direct) return "No region set";
+  return regionName(direct);
 }
 
 function statusLabel(value: unknown): string {
@@ -90,6 +108,7 @@ function sourceLinks(row: Row): string[] {
     row.source_url,
     row.secondary_source_url,
     row.region_evidence_url,
+    ...(Array.isArray(row.source_urls) ? row.source_urls : []),
     ...(Array.isArray(row.secondary_source_urls) ? row.secondary_source_urls : []),
   ];
   return [...new Set(values.filter((value): value is string => typeof value === "string" && value.startsWith("https://")))];
@@ -106,9 +125,14 @@ function rowSubtitle(row: Row): string {
 function rowDetails(row: Row): string[] {
   const details = [
     row.methods,
+    row.target_tags ? { target_tags: row.target_tags } : null,
     row.planner_value,
     row.effect,
     row.support_item_effect,
+    row.recommended_unlocks ? { recommended_unlocks: row.recommended_unlocks } : null,
+    row.supporting_regions ? { supporting_regions: row.supporting_regions } : null,
+    row.alternate_region_routes ? { alternate_region_routes: row.alternate_region_routes } : null,
+    row.dependency_note,
     row.self_source_routes,
     row.region_evidence,
     row.training_rule,
@@ -181,14 +205,14 @@ export function ProgressionResearch() {
 
         <div className="mt-3 border-t border-stone-750">
           {rows.length ? rows.map((row, index) => {
-            const links = sourceLinks(row);
+            const rowLinks = sourceLinks(row);
             const details = rowDetails(row);
             return (
               <article key={String(row.id || `${rowTitle(row)}-${index}`)} className="grid gap-2 border-b border-stone-750/70 py-4 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6">
                 <div>
                   <h3 className="text-sm font-medium text-parch-50">{rowTitle(row)}</h3>
                   {rowSubtitle(row) ? <p className="mt-1 text-xs leading-5 text-parch-300">{rowSubtitle(row)}</p> : null}
-                  <p className="mt-1 text-[11px] text-parch-300/80">{regionLabel(row.region || row.acquisition_region)}</p>
+                  <p className="mt-1 text-[11px] text-parch-300/80">{rowRegionLabel(row)}</p>
                 </div>
                 <div className="space-y-1 text-xs leading-5 text-parch-300">
                   {details.length ? details.map((detail, detailIndex) => <p key={detailIndex}>{detail}</p>) : <p>No extra detail listed.</p>}
@@ -196,7 +220,7 @@ export function ProgressionResearch() {
                 <div className="text-xs lg:text-right">
                   <div className="text-parch-300">{statusLabel(row.confidence)}</div>
                   <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
-                    {links.map((url, linkIndex) => (
+                    {rowLinks.map((url, linkIndex) => (
                       <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
                         {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
                       </a>

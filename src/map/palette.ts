@@ -33,6 +33,26 @@ export const ORDER_400 = 0x4a7ec2;
 export const BALANCE_400 = 0x6fae45;
 export const EMBER_400 = 0xe2622a;
 
+/**
+ * Lit-surface albedo. Kept separate from the SURFACE_* chrome tokens above for
+ * a reason worth spelling out, because it has already been got wrong once:
+ * chrome tokens are the value a flat DOM panel should *end up* being on screen.
+ * Feed one to a lit PBR material and the light multiplies it down — SURFACE_RAISED
+ * (0x231d15) decodes to ~0.017 linear and renders far darker than the token it
+ * names, which is what made the whole board read as near-black. Albedo has to
+ * start brighter than the value you want back.
+ *
+ * Terrain caps sample a texture; these are the fallbacks and the tints under it.
+ */
+export const TERRAIN_CAP = 0x7d7059;
+export const TERRAIN_CAP_LOCKED = 0x3a3226;
+export const TERRAIN_WALL_TOPSOIL = 0x8a6f4a;
+export const TERRAIN_WALL_SUBSOIL = 0x6b5437;
+export const TERRAIN_WALL_ROCK = 0x4a3f30;
+export const TERRAIN_WALL_DEEP = 0x332b21;
+/** The board the slabs sit in. Distinct from a locked cap so sockets read. */
+export const TERRAIN_TABLE = 0x241d14;
+
 /** The unifier: every slab cap grades 14% toward this mean (wartable plan §5). */
 export const BOARD_MEAN = 0x2a2318;
 

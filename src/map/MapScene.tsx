@@ -10,6 +10,7 @@ import { Effects } from "./Effects";
 import { FlatBoard } from "./FlatBoard";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
+import { LIGHT_FILL, LIGHT_KEY, LIGHT_RIM, SURFACE_VOID } from "./palette";
 
 extend(THREE as never);
 
@@ -102,11 +103,14 @@ export default function MapScene() {
             return renderer;
           }}
         >
-          <color attach="background" args={["#0e0d0b"]} />
+          <color attach="background" args={[SURFACE_VOID]} />
 
-          <ambientLight intensity={0.55} color="#cfd8c8" />
-          <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.55} color="#e4efd6" />
-          <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.55} color="#7fd0a8" />
+          {/* Warm key over a warm board, with a gem rim so raised slab edges
+              separate from the void. The cool sage/mint this replaced fought
+              the umber palette and flattened every extrusion. */}
+          <ambientLight intensity={0.42} color={LIGHT_FILL} />
+          <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.7} color={LIGHT_KEY} />
+          <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.45} color={LIGHT_RIM} />
 
           <MapTable onFocus={setFocus} reducedMotion={reducedMotion} />
           <CameraRig focus={focus} reducedMotion={reducedMotion} />

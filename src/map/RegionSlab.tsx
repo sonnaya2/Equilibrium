@@ -3,8 +3,12 @@
 /**
  * One region slab: an extruded low-poly landmass piece that lifts when
  * unlocked and sinks into the table when locked. Lock state is a property of
- * the geometry — height and colour, never a badge. Flat palette materials for
- * now; the TSL cap/wall graphs land in the materials phase (wartable plan P4).
+ * the geometry — height and colour, never a badge.
+ *
+ * The cap samples its region's terrain tile; the wall is banded into strata so
+ * the cut earth shows, which is the whole reason these are extruded rather than
+ * drawn flat. Both use TERRAIN_* albedo, never the SURFACE_* chrome tokens —
+ * see the note in palette.ts for why that distinction is load-bearing.
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +26,7 @@ import { useBuild } from "@/league/useBuild";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { ringPoints, type RegionShape } from "./data/regionShapes";
 import { MAP_WORLD, REGION_ANCHOR_BY_ID, type RegionAnchor } from "./data/regionAnchors";
-import { EDGE_LINE, SURFACE_DEEP, SURFACE_PANEL, SURFACE_RAISED } from "./palette";
+import { createSlabMaterials } from "./materials/slabMaterials";
 
 /** Per-slab inset so shared seams never z-fight (bevelSize stays under half of it). */
 const INSET = 0.004;
@@ -70,11 +74,13 @@ function statusLabel(id: RegionId, elective: boolean, unlocked: boolean, selecta
 export function RegionSlab({
   shape,
   crest,
+  terrain,
   onFocus,
   reducedMotion,
 }: {
   shape: RegionShape;
   crest: THREE.Texture;
+  terrain: THREE.Texture;
   onFocus: (anchor: RegionAnchor) => void;
   reducedMotion: boolean;
 }) {
@@ -92,9 +98,31 @@ export function RegionSlab({
   const geometry = useMemo(() => buildSlabGeometry(shape), [shape]);
   useEffect(() => () => geometry.dispose(), [geometry]);
 
+  // One graph per slab; lock state rides a uniform so nothing rebuilds on toggle.
+  const mats = useMemo(
+    () => createSlabMaterials(terrain, shape.depth),
+    [terrain, shape.depth],
+  );
+  useEffect(() => () => mats.dispose(), [mats]);
+  useEffect(() => {
+    mats.lock.value = unlocked ? 0 : 1;
+    invalidate();
+  }, [mats, unlocked, invalidate]);
+
   // Raise/sink spring: one damped number, keyed off lock state, asleep at rest.
+  // The group's y is owned by this frame loop alone — passing `position` as a JSX
+  // prop would let R3F reapply the target in the same commit that flips it, so
+  // `cur === targetY` before the lerp ever runs and the slab teleports instead.
   const groupRef = useRef<THREE.Group>(null);
   const targetY = unlocked ? RAISED_Y : SUNKEN_Y;
+  const settled = useRef(false);
+  useEffect(() => {
+    // Seed the first mount at its resting height so the board does not animate in.
+    if (!settled.current && groupRef.current) {
+      groupRef.current.position.y = targetY;
+      settled.current = true;
+    }
+  }, [targetY]);
   useFrame((_, delta) => {
     const g = groupRef.current;
     if (!g) return;
@@ -124,25 +152,28 @@ export function RegionSlab({
     (shape.markerUv[0] - 0.5) * MAP_WORLD.width,
     (shape.markerUv[1] - 0.5) * MAP_WORLD.height,
   ];
+  // Crest sits north of the marker, count south of it. Stacked on one point they
+  // overlap on screen, because the crest lies flat and foreshortens while the
+  // count is a screen-space chip centred on the same projected pixel.
+  const CREST_OFFSET = 0.055;
+  const COUNT_OFFSET = 0.052;
 
   return (
-    <group ref={groupRef} position={[0, targetY, 0]}>
-      <mesh geometry={geometry} onClick={click} onPointerOver={over} onPointerOut={out}>
-        <meshStandardMaterial
-          attach="material-0"
-          color={unlocked ? SURFACE_RAISED : SURFACE_DEEP}
-          roughness={0.9}
-        />
-        <meshStandardMaterial
-          attach="material-1"
-          color={unlocked ? EDGE_LINE : SURFACE_PANEL}
-          roughness={0.95}
-        />
-      </mesh>
+    <group ref={groupRef}>
+      <mesh
+        geometry={geometry}
+        material={[mats.cap, mats.wall]}
+        onClick={click}
+        onPointerOver={over}
+        onPointerOut={out}
+      />
 
       {/* Crest decal on the cap — real game art, unlit, alpha-tested. */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[mx, shape.depth + 0.004, mz]}>
-        <planeGeometry args={[0.079, 0.09]} />
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[mx, shape.depth + 0.004, mz - CREST_OFFSET]}
+      >
+        <planeGeometry args={[0.116, 0.132]} />
         <meshBasicMaterial
           map={crest}
           transparent
@@ -155,7 +186,7 @@ export function RegionSlab({
 
       {/* Quest count on the cap. aria-hidden always: the DOM ledger owns names. */}
       <Html
-        position={[mx, shape.depth + 0.03, mz]}
+        position={[mx, shape.depth + 0.012, mz + COUNT_OFFSET]}
         center
         distanceFactor={1}
         zIndexRange={[10, 0]}

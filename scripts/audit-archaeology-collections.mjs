@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { wikiArchaeologyCollection } from "./lib/archaeology-collection.mjs";
+import { wikiArchaeologyCollectionLevel } from "./lib/archaeology-collection.mjs";
 import { wikiSource } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
@@ -54,7 +54,7 @@ const collectionExpectations = [
 ];
 
 for (const expectation of collectionExpectations) {
-  const page = await wikiArchaeologyCollection(expectation.title);
+  const page = await wikiArchaeologyCollectionLevel(expectation.title);
   if (expectation.level != null && page.archlevel !== expectation.level) {
     throw new Error(`${expectation.title} Archaeology level drift: expected ${expectation.level}, Wiki has ${page.archlevel}`);
   }

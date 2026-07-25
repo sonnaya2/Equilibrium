@@ -71,6 +71,8 @@ for (const id of [
   "dungeoneering:chaotic-grimoire",
   "dungeoneering:ruinous-weapons",
   "dungeoneering:occultist-necromancy-necklaces",
+  "rum-deal:holy-wrench",
+  "drop-cleaner:attuned-ectoplasmator",
 ]) if (!byId(progression.equipment_models, id)) fail(`missing equipment progression ${id}`);
 const enchantments = byId(progression.equipment_models, "zamorakian-slivers:enchantments");
 if ((enchantments?.records || []).length !== 9 || enchantments?.region_status !== "unresolved_cross_boundary") fail("Zamorakian sliver enchantment model is incomplete or over-resolved");
@@ -100,6 +102,10 @@ const occultistBase = Object.fromEntries((occultist?.base_rewards || []).map((ro
 if (occultistBase["Occultist's undead necklace"]?.token_cost !== 6500 || occultistBase["Occultist's revival necklace"]?.token_cost !== 15500) fail("Occultist base necklace costs drifted");
 const hex = (occultist?.upgrade_chain || []).find((row) => row.name === "Occultist's hex necklace");
 if (hex?.chaotic_remnant?.token_cost !== 100000 || hex?.chaotic_remnant?.dungeoneering_level !== 60 || !JSON.stringify(hex?.region_pressure ?? []).includes("asgarnia")) fail("Occultist hex cross-region chain drifted");
+const holyWrench = byId(progression.equipment_models, "rum-deal:holy-wrench");
+if (!holyWrench?.quest_dependencies?.includes("Rum Deal for the Holy wrench") || !holyWrench?.usable_slots?.includes("pocket") || !JSON.stringify(holyWrench?.effects ?? []).includes("10%")) fail("Holy wrench progression drifted");
+const ectoplasmator = byId(progression.equipment_models, "drop-cleaner:attuned-ectoplasmator");
+if (ectoplasmator?.upgrade?.quantity !== 100 || ectoplasmator?.charges?.initial !== 1000 || ectoplasmator?.charges?.maximum !== 5009 || ectoplasmator?.charges?.consumed_per_absorption !== 1) fail("Attuned ectoplasmator upgrade or charge state drifted");
 
 for (const id of [
   "herblore:overload-chain",
@@ -152,6 +158,11 @@ for (const [name, level, energy] of [
 if (planner.archaeology_relic_system?.active_relic_limit !== 3) fail("Archaeology relic slot limit drifted");
 if (JSON.stringify(planner.archaeology_relic_system?.monolith_energy_caps) !== JSON.stringify([150, 250, 400, 500, 650])) fail("Archaeology monolith energy-cap ladder drifted");
 if (!planner.combat_training_spots?.some((row) => row.id === "combat-armoured-zombies")) fail("current planner audit Armoured Zombies row missing");
+const ritualShard = byId(planner.regional_unique_drops, "kandarin-lost-grove-ancient-elven-ritual-shard");
+if (ritualShard?.region !== "kandarin" || !ritualShard?.support_item_effect?.includes("37.5%") || !ritualShard?.support_item_effect?.includes("five-minute")) fail("Ancient elven ritual shard region or effect drifted");
+const groveRoute = (ritualShard?.self_source_routes || []).find((row) => row.source === "Lost Grove creatures");
+const solakRoute = (ritualShard?.self_source_routes || []).find((row) => row.source === "Solak, Guardian of the Grove");
+if (groveRoute?.drop_rate_on_slayer_task !== "1/1,500" || groveRoute?.drop_rate_off_slayer_task !== "1/5,000" || solakRoute?.drop_rate_per_player !== "1/1,000") fail("Ancient elven ritual shard self-source rates drifted");
 
 const banned = ["unlock the power", "game changer", "seamlessly", "robust solution", "comprehensive solution", "delve into", "revolutionize", "cutting edge", "elevate your", "supercharge your"];
 const prose = JSON.stringify({ progression, planner }).toLowerCase();

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
@@ -10,7 +10,21 @@ const originalText = await readFile(BASE_PATH, "utf8");
 const base = JSON.parse(originalText);
 const expansion = JSON.parse(await readFile(EXPANSION_PATH, "utf8"));
 
-const assets = [...(base.assets ?? []), ...(expansion.assets ?? [])];
+const overrides = new Map([
+  [
+    "boss-zamorak",
+    {
+      fileTitle: "Zamorak, Lord of Chaos model 1.jpg",
+      search: "Zamorak Lord of Chaos model boss image",
+    },
+  ],
+]);
+
+const expansionAssets = (expansion.assets ?? []).map((asset) => ({
+  ...asset,
+  ...(overrides.get(asset.id) ?? {}),
+}));
+const assets = [...(base.assets ?? []), ...expansionAssets];
 const ids = new Set();
 const paths = new Set();
 
@@ -21,6 +35,12 @@ for (const asset of assets) {
   ids.add(asset.id);
   paths.add(asset.path);
 }
+
+// The first broad search resolved a seasonal Zamorak variant. Remove it before
+// writing the pinned model render so stale art cannot survive an extension change.
+await unlink(join(ROOT, "assets/rs3/bosses/zamorak.png")).catch((error) => {
+  if (error?.code !== "ENOENT") throw error;
+});
 
 const merged = {
   ...base,

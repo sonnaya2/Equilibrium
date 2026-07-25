@@ -4,7 +4,7 @@ This folder is the app-facing data store.
 
 - `scraped-data/` contains research and ingest inputs.
 - `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
-- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, prayer-book, spellbook, reference-research, focused progression-chain and 2026 datasets into their app-facing locations.
+- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, prayer-book, complete-prayer, spellbook, reference-research, focused progression-chain and 2026 datasets into their app-facing locations.
 - `scripts/sync-planner-expansions.mjs` validates the sourced base planner rows and applies merge-only audits/enrichments.
 - `scripts/sync-planner-supplements.mjs` validates and copies the specialist Slayer, Invention and Archaeology supplements, including the active Invention perk catalogue, Guild progression and non-Guild collection utilities.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
@@ -22,7 +22,7 @@ Historical Catalyst region labels can be useful evidence for ambiguous League lo
 
 Permanent unlocks record the normal-game dependency first. Equilibrium auto-completed quests, Relics, Blessings and League passives are separate overrides; they do not rewrite the base-game record. Boss/codex drops stay in the regional research instead of being copied into a second reward table.
 
-Prayer and spellbook catalogues keep book state separate from quest dependency records. Seren Prayers are an Ancient Curses extension, not a fabricated third switch state. Necromancy incantations and the Daemonheim spellbook stay separate from the three main-world Magic spellbooks.
+Prayer and spellbook catalogues keep book state separate from quest dependency records. The complete prayer catalogue contains 46 Standard prayers and 45 Ancient Curses. Seren Prayers are a seven-prayer Ancient Curses extension, not a fabricated third switch state. Necromancy incantations and the Daemonheim spellbook stay separate from the three main-world Magic spellbooks.
 
 The active Invention perk catalogue excludes perks removed in the 20 July 2026 Mid-Game Rebalance. Optimised PvM recipes remain in their specialist recipe files instead of turning the catalogue into a second recipe table.
 
@@ -52,7 +52,8 @@ Archaeology utility rows describe time, travel and duplicate-mitigation advantag
 - `reference/changes-2026.json` — 2026 update chronology relevant to League planning
 - `reference/midgame-rebalance-2026-07-20.json` — July 20 rebalance values
 - `reference/progression-unlocks.json` — quest, activity, account and equipment unlock dependencies used by the planner
-- `reference/prayer-books.json` — Standard Prayers, Ancient Curses and the Seren Prayer extension
+- `reference/prayer-books.json` — prayer-book state and unlock dependencies
+- `reference/prayers.json` — complete Standard, Ancient Curses and Seren prayer-name catalogue
 - `reference/spellbooks.json` — Standard, Ancient and Lunar spellbook state plus scoped special systems
 - `reference/unknowns.json` — unrevealed or unresolved facts that must stay unresolved
 

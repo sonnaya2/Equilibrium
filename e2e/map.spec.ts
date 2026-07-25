@@ -45,10 +45,11 @@ test("region detail joins against verified data", async ({ page }) => {
   await page.getByRole("button", { name: /^Asgarnia/ }).click();
   const panel = page.locator("section[aria-live]");
   await expect(panel.getByText("General Graardor")).toBeVisible();
-  await expect(panel.getByText(/sources? · verified 2026-07-24/)).toBeVisible();
+  // Date stays a pattern: pinning it makes every data sync fail this test.
+  await expect(panel.getByText(/sources? · verified \d{4}-\d{2}-\d{2}/)).toBeVisible();
 });
 
 test("wilderness shows the Daemonheim hard rule", async ({ page }) => {
   await page.getByRole("button", { name: /^Wilderness/ }).click();
-  await expect(page.getByText(/Dungeoneering\/Daemonheim as unavailable/)).toBeVisible();
+  await expect(page.getByText(/Daemonheim requires the Forinthry\/Wilderness region/)).toBeVisible();
 });

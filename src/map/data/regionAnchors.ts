@@ -1,21 +1,23 @@
 /**
- * Region anchors on the official Leagues II: Equilibrium region map
- * (public/map/league-map.jpg — cropped from the in-game Regions tab shown in
- * Jagex's "Countdown to Leagues II: Equilibrium" news post).
+ * Region anchors for the war-table board. The official Regions-tab screenshot
+ * that used to back these lives out of the served bundle at
+ * assets/leagues/equilibrium/official/regions-tab.jpg; the board itself is now
+ * original geometry (src/map/data/regionShapes.ts) in the same coordinate
+ * frame.
  *
- * The anchors are our own measured overlay data: normalized texture
- * coordinates (0..1, x east, y south) placed on each region's map icon.
- * Gameplay facts (unlock costs, content lists) stay in data/league/regions.json
- * and join by id.
+ * The anchors are our own measured overlay data: normalized coordinates
+ * (0..1, x east, y south) for each region's marker. Gameplay facts (unlock
+ * costs, content lists) stay in data/league/regions.json and join by id.
  */
 
 import type { RegionId } from "@/league";
 
 export const MAP_IMAGE = {
-  src: "/map/league-map.jpg",
   width: 865,
   height: 404,
-  credit: "Map image: Jagex, from the Leagues II: Equilibrium reveal post.",
+  // The plate is gone: the board is original geometry whose layout follows
+  // Jagex's map, and the credit says exactly that.
+  credit: "Region layout follows Jagex's Leagues II: Equilibrium map.",
 } as const;
 
 /** World plane the map texture lies on: x east, z south, origin at centre. */

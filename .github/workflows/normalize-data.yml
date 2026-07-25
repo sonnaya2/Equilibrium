@@ -11,9 +11,7 @@ on:
       - "scripts/sync-reference-data.mjs"
       - "scripts/sync-planner-expansions.mjs"
       - "scripts/sync-planner-supplements.mjs"
-      - "scripts/audit-progression-enrichment.mjs"
-      - "scripts/audit-dungeoneering-remaster.mjs"
-      - "scripts/audit-aura-overhaul.mjs"
+      - "scripts/audit-*.mjs"
       - "package.json"
       - ".github/workflows/normalize-data.yml"
   workflow_dispatch:
@@ -42,13 +40,8 @@ jobs:
 
       - run: npm ci
       - run: npm run normalize:data
-      - run: npm run audit:progression
-      - run: npm run audit:enrichment
-      - run: npm run audit:dungeoneering2026
-      - run: npm run audit:aura2026
-      - run: npm run audit:references
-      - run: npm run audit:boundaries
-      - run: npm run audit:supplements
+      - name: Audit all canonical and research data
+        run: npm run audit:all-data
 
       - name: Commit generated data
         shell: bash

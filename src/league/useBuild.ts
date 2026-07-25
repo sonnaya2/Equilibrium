@@ -2,14 +2,19 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
+import { readBuildFromLocation } from "./share";
 import {
   emptyBuild,
   normalizeBuild,
+  pickBlessing,
+  resetBlessings,
   STORAGE_KEY,
   toggleElective,
+  toggleRelic,
   type BuildState,
   type RegionId,
 } from "./index";
+import type { BlessingPath } from "./blessings";
 
 /**
  * One shared build store for the whole app — map, planner, build, and combat
@@ -21,6 +26,10 @@ import {
 let state: BuildState = emptyBuild();
 let hydrated = false;
 const listeners = new Set<() => void>();
+
+// Must be a stable reference: a fresh object per call makes useSyncExternalStore
+// loop on the server snapshot.
+const SERVER_SNAPSHOT: BuildState = emptyBuild();
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
@@ -38,13 +47,14 @@ function setState(next: BuildState) {
 export function useBuild() {
   // Server snapshot stays the empty build so hydration matches; real state
   // loads from localStorage after mount.
-  const build = useSyncExternalStore(subscribe, () => state, emptyBuild);
+  const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
   const [loaded, setLoaded] = useState(hydrated);
 
   useEffect(() => {
     if (!hydrated) {
       hydrated = true;
-      setState(normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
+      const shared = readBuildFromLocation();
+      setState(shared ?? normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
     }
     setLoaded(true);
   }, []);
@@ -52,7 +62,11 @@ export function useBuild() {
   return {
     build,
     loaded,
-    toggleRegion: (id: RegionId) => setState(toggleElective(build, id)),
+    toggleRegion: (id: RegionId) => setState(toggleElective(state, id)),
+    toggleRelic: (tier: number, name: string) => setState(toggleRelic(state, tier, name)),
+    pickBlessing: (pathTier: number, path: BlessingPath) =>
+      setState(pickBlessing(state, pathTier, path)),
+    resetBlessings: () => setState(resetBlessings(state)),
     resetBuild: () => setState(emptyBuild()),
   };
 }

@@ -19,7 +19,7 @@ export function Nav() {
       <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
         <Link
           href="/"
-          className="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-brass-400"
+          className="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-gold-400"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
             <path
@@ -42,7 +42,7 @@ export function Nav() {
                   aria-current={active ? "page" : undefined}
                   className={`transition-colors duration-150 ${
                     active
-                      ? "font-medium text-brass-300"
+                      ? "font-medium text-gem-400"
                       : "text-parch-300 hover:text-parch-50"
                   }`}
                 >

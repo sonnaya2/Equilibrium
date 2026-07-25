@@ -58,7 +58,7 @@ The Combat > Data tab renders the same facts plus a stale-data warning.
 ## Hard rules
 
 - **Ingestion supplies candidate data; the engine holds verified mechanical rules.** Keep them separate. Never implement the engine by regexing ability tooltips.
-- **No plagiarism.** Never copy full Wiki, PvME, or RS Analysis descriptions into the app. Normalize facts in our own words.
+- **No copied prose.** Never lift full Wiki, PvME, or RS Analysis descriptions into the app. Normalize facts in our own words. This is about *text* — wiki and game imagery is usable under CC BY-NC-SA with attribution, and is the preferred source for icons and art.
 - **Never invent a number to fill a stub.** An empty `records: []` is correct until real data exists.
 - League records sourced only from countdown/reveal posts stay `verified: false`; Wiki confirmation flips that.
 - The Data page must expose the canonical source link for each normalized row instead of hiding provenance in an internal manifest.

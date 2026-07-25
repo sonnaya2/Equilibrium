@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import plannerData from "../../data/research/planner-expansions.json";
+import supportItems from "../../data/research/planner-support-items-2026-07-25.json";
 
 type Row = Record<string, unknown>;
 type SectionKey =
@@ -20,8 +21,18 @@ const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> =
   { key: "invention_component_sources", label: "Components", description: "Region-sensitive component supply for a self-sufficient account." },
   { key: "archaeology_progression", label: "Archaeology", description: "Dig sites, qualifications and progression gates." },
   { key: "archaeology_combat_relics", label: "Arch relics", description: "Combat relic milestones. Unmapped acquisition regions stay unmapped." },
-  { key: "regional_unique_drops", label: "Unique drops", description: "Notable reward chains that can change the value of a region pick." },
+  { key: "regional_unique_drops", label: "Unique drops", description: "Notable reward and support-item chains that can change the value of a region pick." },
 ];
+
+const SUPPLEMENTS: Record<SectionKey, Row[]> = {
+  combat_training_spots: [],
+  runecrafting_altars: [],
+  invention_progression: [],
+  invention_component_sources: [],
+  archaeology_progression: [],
+  archaeology_combat_relics: [],
+  regional_unique_drops: supportItems.regional_unique_drops as unknown as Row[],
+};
 
 const REGION_LABELS: Record<string, string> = {
   global_if_materials_available: "Global if supplied",
@@ -74,12 +85,22 @@ function sourceName(url: string): string {
   return "Source";
 }
 
+function sourceLinks(row: Row): string[] {
+  const values = [
+    row.source_url,
+    row.secondary_source_url,
+    row.region_evidence_url,
+    ...(Array.isArray(row.secondary_source_urls) ? row.secondary_source_urls : []),
+  ];
+  return [...new Set(values.filter((value): value is string => typeof value === "string" && value.startsWith("https://")))];
+}
+
 function rowTitle(row: Row): string {
   return text(row.name || row.method || row.unlock || row.relic || row.rune || row.component || row.source || "Entry");
 }
 
 function rowSubtitle(row: Row): string {
-  return text(row.location || row.category || row.level_range || row.effect_summary || row.region_reason || row.source);
+  return text(row.location || row.category || row.level_range || row.effect_summary || row.support_item_effect || row.region_reason || row.source);
 }
 
 function rowDetails(row: Row): string[] {
@@ -87,6 +108,9 @@ function rowDetails(row: Row): string[] {
     row.methods,
     row.planner_value,
     row.effect,
+    row.support_item_effect,
+    row.self_source_routes,
+    row.region_evidence,
     row.training_rule,
     row.notes,
     row.requirements,
@@ -98,6 +122,14 @@ function rowDetails(row: Row): string[] {
   return details.map(text).filter(Boolean);
 }
 
+function rowsFor(section: SectionKey): Row[] {
+  const base = plannerData[section] as unknown as Row[];
+  const rows = new Map<string, Row>();
+  for (const row of SUPPLEMENTS[section]) rows.set(String(row.id || rowTitle(row)), row);
+  for (const row of base) rows.set(String(row.id || rowTitle(row)), row);
+  return [...rows.values()];
+}
+
 export function ProgressionResearch() {
   const [section, setSection] = useState<SectionKey>("combat_training_spots");
   const [query, setQuery] = useState("");
@@ -105,7 +137,7 @@ export function ProgressionResearch() {
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    const source = plannerData[section] as unknown as Row[];
+    const source = rowsFor(section);
     if (!needle) return source;
     return source.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));
   }, [query, section]);
@@ -149,11 +181,10 @@ export function ProgressionResearch() {
 
         <div className="mt-3 border-t border-stone-750">
           {rows.length ? rows.map((row, index) => {
-            const sourceUrl = text(row.source_url);
-            const secondaryUrl = text(row.secondary_source_url || row.region_evidence_url);
+            const links = sourceLinks(row);
             const details = rowDetails(row);
             return (
-              <article key={`${rowTitle(row)}-${index}`} className="grid gap-2 border-b border-stone-750/70 py-4 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6">
+              <article key={String(row.id || `${rowTitle(row)}-${index}`)} className="grid gap-2 border-b border-stone-750/70 py-4 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6">
                 <div>
                   <h3 className="text-sm font-medium text-parch-50">{rowTitle(row)}</h3>
                   {rowSubtitle(row) ? <p className="mt-1 text-xs leading-5 text-parch-300">{rowSubtitle(row)}</p> : null}
@@ -164,9 +195,12 @@ export function ProgressionResearch() {
                 </div>
                 <div className="text-xs lg:text-right">
                   <div className="text-parch-300">{statusLabel(row.confidence)}</div>
-                  <div className="mt-1 flex gap-3 lg:justify-end">
-                    {sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">{sourceName(sourceUrl)}</a> : null}
-                    {secondaryUrl && secondaryUrl !== sourceUrl ? <a href={secondaryUrl} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">Context</a> : null}
+                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
+                    {links.map((url, linkIndex) => (
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
+                        {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </article>

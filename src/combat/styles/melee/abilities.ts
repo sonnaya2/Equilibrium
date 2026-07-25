@@ -61,7 +61,11 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Dismember",
     style: "melee",
     category: "basic",
-    hits: Array.from({ length: 8 }, () => ({ band: { minPct: 25, maxPct: 35 }, critEligible: false })),
+    hits: Array.from({ length: 8 }, (_, i) => ({
+      band: { minPct: 25, maxPct: 35 },
+      critEligible: false,
+      tickOffset: (i + 1) * 2,
+    })),
     enables: "slaughter",
     source: MODERNISATION_WIKI,
   },
@@ -70,7 +74,11 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Slaughter",
     style: "melee",
     category: "enhanced",
-    hits: Array.from({ length: 6 }, () => ({ band: { minPct: 80, maxPct: 100 }, critEligible: false })),
+    hits: Array.from({ length: 6 }, (_, i) => ({
+      band: { minPct: 80, maxPct: 100 },
+      critEligible: false,
+      tickOffset: (i + 1) * 3,
+    })),
     adrenaline: { cost: 25 },
     enables: "massacre",
     source: MODERNISATION_WIKI,
@@ -82,7 +90,11 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     category: "enhanced",
     hits: [
       { band: { minPct: 110, maxPct: 130 } },
-      ...Array.from({ length: 6 }, () => ({ band: { minPct: 100, maxPct: 100 }, critEligible: false })),
+      ...Array.from({ length: 6 }, (_, i) => ({
+        band: { minPct: 100, maxPct: 100 },
+        critEligible: false,
+        tickOffset: (i + 1) * 4,
+      })),
     ],
     adrenaline: { cost: 25 },
     source: MODERNISATION_WIKI,
@@ -115,6 +127,16 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 280, maxPct: 340 } }, { band: { minPct: 280, maxPct: 340 } }],
     adrenaline: { cost: 60 },
     source: MODERNISATION_WIKI,
+  },
+  {
+    id: "berserk",
+    name: "Berserk",
+    style: "melee",
+    category: "ultimate",
+    hits: [],
+    adrenaline: { cost: 100 },
+    buff: "berserk",
+    source: MODERNISATION_PATCH_2,
   },
 ];
 

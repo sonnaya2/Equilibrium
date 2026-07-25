@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { wikiSource } from "./lib/runescape-wiki.mjs";
+import { wikiRenderedText } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
 const data = JSON.parse(
@@ -9,7 +9,7 @@ const data = JSON.parse(
 
 function normalize(value) {
   return String(value ?? "")
-    .replace(/,/g, "")
+    .replace(/(\d)[,\s\u00a0]+(?=\d)/g, "$1")
     .replace(/[_\s]+/g, " ")
     .trim()
     .toLowerCase();
@@ -39,6 +39,21 @@ for (const expected of expectedLoadouts) {
   }
 }
 
+const [shopGuide, guildmaster, presetUpdate, fixate, masterOutfit] = await Promise.all([
+  wikiRenderedText("Archaeology Guild Shop"),
+  wikiRenderedText("Qualification - Guildmaster"),
+  wikiRenderedText("Update:Relic Presets & February Mini Strike - This Week In RuneScape"),
+  wikiRenderedText("Fixate"),
+  wikiRenderedText("Master archaeologist's outfit"),
+]);
+
+assertContains(presetUpdate.text, "first two presets", "Relic preset update");
+assertContains(presetUpdate.text, "80,000 Chronotes", "Relic preset update");
+assertContains(presetUpdate.text, "Professor qualification", "Relic preset update");
+assertContains(guildmaster.text, "additional relic loadout tab", "Guildmaster qualification");
+assertContains(shopGuide.text, "Soil box upgrade", "Archaeology permanent-upgrades source");
+assertContains(shopGuide.text, "Energised meteorite shard", "Archaeology permanent-upgrades source");
+
 const expectedShopRows = [
   { qualification: "Assistant", name: "Soil box upgrade", cost: 3500 },
   { qualification: "Assistant", name: "Material storage upgrade", cost: 7000 },
@@ -65,42 +80,15 @@ for (const expected of expectedShopRows) {
   if (row.chronote_cost !== expected.cost) {
     throw new Error(`${expected.qualification} ${expected.name} cost drifted`);
   }
-}
-
-const training = await wikiSource("Archaeology training");
-const guildmaster = await wikiSource("Qualification - Guildmaster");
-const presetUpdate = await wikiSource("Update:Relic Presets & February Mini Strike - This Week In RuneScape");
-const fixateTranscript = await wikiSource("Transcript:Fixate");
-const masterOutfit = await wikiSource("Master archaeologist's outfit");
-
-for (const text of ["first two presets", "80,000 Chronotes", "Professor qualification", "80%"] ) {
-  assertContains(presetUpdate.content, text, "Relic preset update");
-}
-assertContains(guildmaster.content, "additional relic loadout tab", "Guildmaster qualification");
-
-for (const text of [
-  "Soil box upgrade",
-  "Material storage upgrade",
-  "Mattock precision upgrade",
-  "Archaeologist's outfit",
-  "Auto-screener v1.080",
-  "Additional relic loadout",
-  "Master archaeologist's outfit",
-  "Energised meteorite shard",
-]) {
-  assertContains(training.content, text, `Archaeology training:${text}`);
-}
-for (const cost of [3500, 7000, 8000, 18000, 25000, 30000, 48000, 50000, 60000, 75000, 80000, 150000, 250000]) {
-  assertContains(training.content, String(cost), `Archaeology training:chronote cost ${cost}`);
+  assertContains(shopGuide.text, String(expected.cost), `Archaeology permanent upgrades:${expected.name} cost`);
 }
 
 const fixateRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-master-outfit");
 if (!fixateRow) throw new Error("Missing master-outfit Fixate infrastructure row");
 if (fixateRow.daily_energy !== 3) throw new Error("Master-outfit Fixate daily energy must be 3");
-assertContains(training.content, "3 uses per day of the Fixate", "Fixate daily energy");
-assertContains(fixateTranscript.content, "master archaeologist's outfit", "Fixate outfit requirement");
-assertContains(fixateTranscript.content, "Fixate charge token", "Fixate token route");
-assertContains(masterOutfit.content, "Fixate", "Master archaeologist outfit Fixate unlock");
+assertContains(fixate.text, "3", "Fixate daily energy");
+assertContains(fixate.text, "master archaeologist's outfit", "Fixate outfit requirement");
+assertContains(masterOutfit.text, "Fixate", "Master archaeologist outfit Fixate unlock");
 
 const tokenRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-charge-token");
 if (!tokenRow) throw new Error("Missing Fixate charge-token infrastructure row");

@@ -9,6 +9,7 @@ const guild = read("scraped-data/planner-expansions-archaeology-guild.json");
 
 function normalize(value) {
   return String(value ?? "")
+    .replace(/\[\[([^\]|]*\|)?([^\]]+)\]\]/g, "$2")
     .replace(/[_\s]+/g, " ")
     .toLowerCase();
 }
@@ -77,7 +78,7 @@ for (const text of ["last five earned artefacts", "half as likely", "40%"] ) {
 }
 
 const artefacts = await wikiSource("Artefacts");
-for (const text of ["Fixate are also tracked", "secondary uses", "40%"] ) {
+for (const text of ["Fixate are also tracked", "Museum donation bin", "40%"] ) {
   assertContains(artefacts.content, text, "Artefact completion rules");
 }
 

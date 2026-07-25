@@ -1,0 +1,109 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Merge-only Summoning supply modifiers for charm collection, pouch creation and scroll conversion. Exact monster charm rates and live prices are excluded.",
+  "policy": {
+    "merge_only": true,
+    "current_base_wins_on_id_collision": true,
+    "no_monster_drop_rates": true,
+    "no_live_prices": true,
+    "league_overrides_separate": true
+  },
+  "activity_additions": [
+    {
+      "id": "familiarisation:triple-charm-throughput",
+      "name": "Familiarisation triple-charm reward",
+      "category": "weekly charm-acquisition modifier",
+      "region_status": "global_activity",
+      "reward_duration_minutes": 40,
+      "effect": "Triples eligible charm drops from monsters while the reward is active.",
+      "exceptions": [
+        "Elder charms",
+        "Talon beast charms",
+        "Bork's guaranteed charm drops",
+        "Ork legion charm drops"
+      ],
+      "interaction_order": "Applies before the charming potion's flat charm increase.",
+      "source_urls": [
+        "https://runescape.wiki/w/Familiarisation",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Treat this as a temporary account buff. Do not multiply elder-charm Nihil production or excluded guaranteed charm sources."
+    },
+    {
+      "id": "amlodd:summoning-conversion-efficiency",
+      "name": "Amlodd Voice of Seren Summoning efficiency",
+      "category": "regional pouch and scroll conversion modifier",
+      "region_hint": "tirannwn",
+      "base_access": ["Plague's End", "Prifddinas", "Amlodd district obelisk"],
+      "pouch_and_scroll_xp_multiplier": 1.2,
+      "scroll_output_multiplier": 1.2,
+      "examples": [
+        "A pouch that normally converts to 10 scrolls produces 12.",
+        "An Ancient Summoning contract that normally converts to 20 scrolls produces 24."
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training",
+        "https://runescape.wiki/w/Abyssal_Demon_scroll_(Abyssal_Block)",
+        "https://runescape.wiki/w/Kal%27gerion_Demon_scroll_(Crit-i-Kal)"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "This is a Tirannwn production advantage, not a prerequisite for using the familiar elsewhere."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "summoning:charm-conservation-tools",
+      "name": "Summoning charm-conservation tools",
+      "category": "pouch-production supply modifiers",
+      "records": [
+        {
+          "name": "Spirit gems",
+          "save_chance_percent_range": [10, 60],
+          "charge_rule": "One charge is consumed whenever a charm is saved.",
+          "note": "Higher-tier gems increase the chance; gems are most valuable on scarce crimson or blue charms."
+        },
+        {
+          "name": "Modified shaman's headdress",
+          "save_chance_percent": 5
+        },
+        {
+          "name": "Summoning cape",
+          "summoning_level": 99,
+          "save_chance_percent": 2
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training",
+        "https://runescape.wiki/w/Spirit_sapphire"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Charm-saving effects reduce supply consumption; they do not change familiar unlock requirements or tertiary-item geography."
+    }
+  ],
+  "consumable_additions": [
+    {
+      "id": "potion:charming",
+      "name": "Charming potion",
+      "category": "temporary charm-drop modifier",
+      "herblore_level": 102,
+      "duration_minutes": 6,
+      "effect": "Increases the base number of charms dropped by a monster by 1.",
+      "ingredients": [
+        {"item": "Primal extract", "quantity": 1},
+        {"item": "Gold charm", "quantity": 4},
+        {"item": "Green charm", "quantity": 4},
+        {"item": "Crimson charm", "quantity": 4},
+        {"item": "Blue charm", "quantity": 4},
+        {"item": "Spark chitin", "quantity": 1}
+      ],
+      "special_charm_rule": "Special charms such as abyssal and talon beast charms are affected unless their source has a separate exclusion.",
+      "source_urls": [
+        "https://runescape.wiki/w/Potions",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Apply the flat +1 before temporary League drop multipliers only when the official League rules confirm the stacking order."
+    }
+  ]
+}

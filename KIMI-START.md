@@ -152,10 +152,10 @@ This section is deliberately narrow. **Do not spend tokens researching, scraping
 
 - [x] **Relic reveal pass-through:** `app/build/page.tsx` now passes every relic tier, reveal state, verification and source metadata into `BuildPlanner` instead of extracting Tier 1 only.
 - [x] **Blessing reveal pass-through:** `app/build/page.tsx` now preserves each Blessing tier's choice payload, source URL and verification state. Unrevealed tiers remain unknown.
-- [ ] **Task-record consumer:** intentionally not fabricated while `data/league/tasks.json.records` is empty. When normalized rows arrive, render/filter/search those actual fields and preserve the current honest empty state when the array is empty.
+- [x] **Task-record consumer:** `app/tasks/page.tsx` renders normalized records via `TaskRecords`, keeping the honest empty state while `data/league/tasks.json.records` is empty; rows will render/filter/search their actual fields once they land.
 - [ ] **Base planner-expansion adapter:** add the typed join/accessor for `data/research/planner-expansions.json` keyed by stable record ID plus region/skill. **Do not rebuild the specialist adapters** — Slayer, Invention and Archaeology already have dedicated typed readers under `src/research/`.
 - [ ] **Provenance pass-through — remaining:** relic/blessing tier source URLs and verification reach the planner. Preserve source/confidence/warning state from the base and specialist planner records through any view model; do not flatten sourced records into unsourced prose.
-- [ ] **Region-domain runtime derivation:** a contract test fails if `src/league` IDs or availability groups drift from `data/league/regions.json`. Kimi still owns the runtime cleanup: keep the compile-time `RegionId` union if useful, but derive starting/automatic/elective grouping from canonical region records instead of maintaining the grouping twice.
+- [x] **Region-domain runtime derivation:** `src/league` derives starting/automatic/elective grouping from canonical region records and a contract test fails on drift from `data/league/regions.json`; `REGION_IDS` remains only as the compile-time `RegionId` union.
 
 ### Kimi stop condition
 
@@ -167,8 +167,10 @@ If a checkbox requires a fact that is not already present in `data/`, **stop tha
 
 - **Boss-specific scope.** No boss guides, phase sims, kill-time or enrage calculators. Generic target
   only. This is the single most likely place to drift.
-- **Cloning.** rs-analysis.xyz, pvme.io and leagues.build are for lessons, not markup. Take the facts and
-  the math; write our own components and our own words.
+- **Cloning another tool's interface.** rs-analysis.xyz, pvme.io and leagues.build are for lessons,
+  not markup. Take the facts and the math; write our own components and our own words. This is about
+  their *interface* — game art and wiki imagery are fine to use (CC BY-NC-SA, attribute it), and
+  reaching for real art over invented substitutes is encouraged.
 - **Stale combat data.** Pre-March-2026 values are wrong by default. PvME is for discovering that a
   mechanic exists, not for its current number unless the specific current page/value has been independently validated.
 - **Merging the League ruleset into base combat.** It stays a separate layer that can be switched off.

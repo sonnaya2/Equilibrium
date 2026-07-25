@@ -1,6 +1,7 @@
 import tasksData from "#data/league/tasks.json";
 import unknownsData from "#data/reference/unknowns.json";
 import { Page } from "@/components/Page";
+import { TaskRecords } from "@/components/TaskRecords";
 
 const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
 
@@ -53,14 +54,26 @@ export default function TasksPage() {
           <span className="text-xs text-parch-300">{tasksData.records.length} tasks loaded</span>
         </div>
         <div className="mt-2 border-t border-stone-750">
-          <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{tasksData.note}</p>
-          {taskUnknown?.known ? <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{taskUnknown.known}</p> : null}
-          {taskUnknown?.missing?.length ? (
-            <div className="border-b border-stone-750/70 py-3">
-              <div className="text-xs text-parch-300">Waiting on</div>
-              <div className="mt-1 text-sm leading-6 text-parch-50">{taskUnknown.missing.join(" · ")}</div>
+          {tasksData.records.length === 0 ? (
+            <>
+              <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{tasksData.note}</p>
+              {taskUnknown?.known ? <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{taskUnknown.known}</p> : null}
+              {taskUnknown?.missing?.length ? (
+                <div className="border-b border-stone-750/70 py-3">
+                  <div className="text-xs text-parch-300">Waiting on</div>
+                  <div className="mt-1 text-sm leading-6 text-parch-50">{taskUnknown.missing.join(" · ")}</div>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="py-3">
+              <TaskRecords
+                records={tasksData.records}
+                tiers={tasksData.tiers}
+                tierConfidence={tasksData.tierConfidence}
+              />
             </div>
-          ) : null}
+          )}
         </div>
       </section>
     </Page>

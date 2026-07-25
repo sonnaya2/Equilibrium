@@ -1,0 +1,50 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Merge-only Spring cleaner progression with the current Invention recipe, upgrade thresholds and self-sufficient tight-spring component bottleneck. Live spring prices and profitability are excluded.",
+  "policy": {
+    "merge_only": true,
+    "current_base_wins_on_id_collision": true,
+    "no_live_prices": true
+  },
+  "equipment_additions": [
+    {
+      "id": "invention:spring-cleaner-current",
+      "name": "Spring cleaner progression",
+      "category": "upgradeable salvage and drop cleaner",
+      "region_status": "global_if_invention_materials_available",
+      "invention_level": 43,
+      "base_device_recipe": [
+        {"material": "Simple parts", "quantity": 300},
+        {"material": "Tensile parts", "quantity": 500},
+        {"material": "Flexible parts", "quantity": 300},
+        {"material": "Precise components", "quantity": 50}
+      ],
+      "tight_spring_recipe": {
+        "output_quantity": 20,
+        "materials": [
+          {"material": "Tensile parts", "quantity": 120},
+          {"material": "Subtle components", "quantity": 1}
+        ]
+      },
+      "upgrade_ladder": [
+        {"version": "Spring cleaner 2000", "cumulative_springs": 200, "unlock": "Automatically high-alchemises configured salvage drops at the cost of one spring per salvage."},
+        {"version": "Spring cleaner 3000", "cumulative_springs": 600, "unlock": "Automatically disassembles configured salvage drops without consuming a spring; free disassembly does not advance upgrades."},
+        {"version": "Spring cleaner 5000", "cumulative_springs": 1800, "unlock": "Further improves the cleaner's older dismantle/research functionality."},
+        {"version": "Spring cleaner 9000", "cumulative_springs": 4000, "unlock": "Higher-tier cleaner with the full pre-9001 salvage configuration set."},
+        {"version": "Spring cleaner 9001", "cumulative_springs": 10000, "unlock": "Extends supported automatic cleaning to noted salvage drops."}
+      ],
+      "maximum_stored_springs": 250000,
+      "supply_bottleneck": "A self-sufficient account can craft tight springs, but the tensile-part and subtle-component cost is the meaningful long-run constraint. Store the component recipe and upgrade ladder rather than a volatile spring coin price.",
+      "source_urls": [
+        "https://runescape.wiki/w/Invention_exp_table",
+        "https://runescape.wiki/w/Simple_parts",
+        "https://runescape.wiki/w/Subtle_components",
+        "https://runescape.wiki/w/Spring_cleaner_5000",
+        "https://runescape.wiki/w/Medium_bladed_orikalkum_salvage",
+        "https://runescape.wiki/w/Spring_cleaner_9001"
+      ],
+      "confidence": "confirmed_current_wiki_core_fandom_crosscheck_for_upgrade_thresholds",
+      "league_treatment": "The 43 Invention unlock is only the first gate. Track the 600-spring free-disassembly milestone and 10,000-spring noted-salvage milestone separately, and let regional component-supply rows determine how practical those milestones are."
+    }
+  ]
+}

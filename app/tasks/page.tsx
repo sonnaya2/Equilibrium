@@ -6,7 +6,10 @@ import { loadCatalystTestTasks } from "@/tasks/catalyst";
 
 const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
 
-export const revalidate = 60 * 60 * 24;
+// Literal, not an expression: Next statically analyses segment config exports
+// and rejects anything it cannot read off the AST, which fails the build at
+// page-data collection rather than at compile.
+export const revalidate = 86400; // 24h
 
 type UnknownItem = {
   key: string;

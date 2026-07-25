@@ -16,6 +16,35 @@ import { LIGHT_FILL, LIGHT_KEY, LIGHT_RIM, SURFACE_VOID } from "./palette";
 extend(THREE as never);
 
 /**
+ * One renderer per canvas element, cached outside React.
+ *
+ * A ref cannot do this job: StrictMode's dev replay unmounts and remounts on a
+ * fresh fiber, so every ref is new and a second WebGPURenderer gets built over
+ * the same canvas. The second `getContext('webgpu')` + configure() displaces the
+ * first, which leaves frames drawing while R3F's event system is still bound to
+ * the torn-down root — a board that renders and cannot be hovered or clicked.
+ * Production never replays, which is why only dev was ever broken.
+ *
+ * Keyed weakly so a discarded canvas takes its renderer with it.
+ */
+const RENDERERS = new WeakMap<HTMLCanvasElement, Promise<THREE.WebGPURenderer>>();
+
+type RendererParams = ConstructorParameters<typeof THREE.WebGPURenderer>[0];
+
+function rendererFor(props: Record<string, unknown>): Promise<THREE.WebGPURenderer> {
+  const canvas = props.canvas as HTMLCanvasElement | undefined;
+  const existing = canvas ? RENDERERS.get(canvas) : undefined;
+  if (existing) return existing;
+  const made = (async () => {
+    const r = new THREE.WebGPURenderer({ ...props, antialias: true } as RendererParams);
+    await r.init();
+    return r;
+  })();
+  if (canvas) RENDERERS.set(canvas, made);
+  return made;
+}
+
+/**
  * frameloop="demand" sleeps unless something invalidates. Any store change
  * that forgets leaves a stale frame on screen (wartable plan, risk 3), so one
  * subscription re-renders on every build mutation.
@@ -35,29 +64,23 @@ export default function MapScene() {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [focus, setFocus] = useState<RegionAnchor | null>(null);
   const reducedMotion = useReducedMotion();
-  // R3F never calls dispose() on a custom gl (its forceContextLoss is a WebGL
-  // concept WebGPURenderer lacks), so every Canvas mount would leak a whole
-  // renderer. Dispose it ourselves on unmount — but deferred: StrictMode
-  // replays mount/unmount synchronously in dev, and disposing there wipes the
-  // renderer's texture registry while R3F keeps driving the same instance
-  // (every later frame then throws "Texture already initialized" on the
-  // shared DFG LUT). The replayed mount cancels the timer; only a real
-  // unmount (route change) lets it fire.
-  const rendererRef = useRef<THREE.WebGPURenderer | null>(null);
-  const disposeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    if (disposeTimer.current) {
-      clearTimeout(disposeTimer.current);
-      disposeTimer.current = null;
-    }
-    return () => {
-      disposeTimer.current = setTimeout(() => {
-        rendererRef.current?.dispose();
-        rendererRef.current = null;
-        disposeTimer.current = null;
-      }, 0);
-    };
-  }, []);
+  // Exactly one renderer, and it must be built from R3F's own canvas — the
+  // factory's `props` carry it, so constructing without them makes three spin up
+  // a second, detached canvas and the board renders where nobody can see it.
+  //
+  // The promise is cached rather than the renderer. StrictMode replays
+  // mount/unmount in dev, and an un-cached async factory races two
+  // `renderer.init()` calls against the same canvas: the later one reconfigures
+  // the GPUCanvasContext so frames keep drawing, while R3F's events stay bound
+  // to the root that was torn down. That is a board which renders perfectly and
+  // cannot be hovered or clicked, and it only ever reproduced in dev — which is
+  // why the production build was fine the whole time.
+  //
+  // R3F never disposes a custom gl (its forceContextLoss is a WebGL concept
+  // WebGPURenderer lacks), so disposal is ours, deferred past the replay.
+  // The WeakMap owns the renderer's lifetime now: when React drops the canvas,
+  // the entry goes with it. No manual dispose, so nothing can tear down a
+  // renderer that the replayed mount is still driving.
 
   useEffect(() => {
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
@@ -97,12 +120,7 @@ export default function MapScene() {
           // descent (a hard cut under reduced motion).
           camera={{ position: [0.9, 2.4, 2.1], fov: 42, near: 0.05, far: 20 }}
           onPointerMissed={() => setFocus(null)}
-          gl={async (props) => {
-            const renderer = new THREE.WebGPURenderer({ ...(props as object), antialias: true });
-            await renderer.init();
-            rendererRef.current = renderer;
-            return renderer;
-          }}
+          gl={(props) => rendererFor(props as unknown as Record<string, unknown>)}
         >
           <color attach="background" args={[SURFACE_VOID]} />
 

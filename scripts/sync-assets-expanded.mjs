@@ -3,18 +3,19 @@ import { join } from "node:path";
 
 const ROOT = process.cwd();
 const BASE_PATH = join(ROOT, "assets/source-manifest.json");
-const EXPANSION_PATHS = [
-  join(ROOT, "assets/source-manifest-expansion.json"),
-  join(ROOT, "assets/source-manifest-expansion-2.json"),
-  join(ROOT, "assets/source-manifest-expansion-3.json"),
-  join(ROOT, "assets/source-manifest-expansion-4.json"),
+const EXPANSION_FILES = [
+  "assets/source-manifest-expansion.json",
+  "assets/source-manifest-expansion-2.json",
+  "assets/source-manifest-expansion-3.json",
+  "assets/source-manifest-expansion-4.json",
+  "assets/source-manifest-expansion-5.json",
 ];
 const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
 
 const originalText = await readFile(BASE_PATH, "utf8");
 const base = JSON.parse(originalText);
 const expansions = await Promise.all(
-  EXPANSION_PATHS.map(async (path) => JSON.parse(await readFile(path, "utf8"))),
+  EXPANSION_FILES.map(async (path) => JSON.parse(await readFile(join(ROOT, path), "utf8"))),
 );
 
 const overrides = new Map([
@@ -38,18 +39,18 @@ const overrides = new Map([
 ]);
 
 function applyOverrides(asset) {
-  const preferExactUpgradeIcon =
-    asset.category?.startsWith("rs3/upgrades/") && !asset.fileTitle
-      ? { fileTitle: `${asset.label}.png` }
-      : {};
-  return { ...asset, ...preferExactUpgradeIcon, ...(overrides.get(asset.id) ?? {}) };
+  const exactUpgrade = asset.category?.startsWith("rs3/upgrades/") && !asset.fileTitle
+    ? { fileTitle: `${asset.label}.png` }
+    : {};
+  return { ...asset, ...exactUpgrade, ...(overrides.get(asset.id) ?? {}) };
 }
 
-const expansionAssets = expansions.flatMap((expansion) => expansion.assets ?? []).map(applyOverrides);
-const assets = [...(base.assets ?? []).map(applyOverrides), ...expansionAssets];
+const assets = [
+  ...(base.assets ?? []).map(applyOverrides),
+  ...expansions.flatMap((expansion) => expansion.assets ?? []).map(applyOverrides),
+];
 const ids = new Set();
 const paths = new Set();
-
 for (const asset of assets) {
   if (!asset?.id || !asset?.path) throw new Error("Every asset needs an id and path");
   if (ids.has(asset.id)) throw new Error(`Duplicate asset id: ${asset.id}`);
@@ -70,26 +71,14 @@ const merged = {
   notes: [...(base.notes ?? []), ...expansions.flatMap((expansion) => expansion.notes ?? [])],
   assets,
 };
-
 await writeFile(BASE_PATH, `${JSON.stringify(merged, null, 2)}\n`);
 
 try {
   await import(`./sync-assets.mjs?expanded=${Date.now()}`);
   const generated = JSON.parse(await readFile(GENERATED_PATH, "utf8"));
   generated.sourceManifest = "assets/source-manifest.json";
-  generated.sourceManifests = [
-    "assets/source-manifest.json",
-    "assets/source-manifest-expansion.json",
-    "assets/source-manifest-expansion-2.json",
-    "assets/source-manifest-expansion-3.json",
-    "assets/source-manifest-expansion-4.json",
-  ];
-  generated.expansionManifests = [
-    "assets/source-manifest-expansion.json",
-    "assets/source-manifest-expansion-2.json",
-    "assets/source-manifest-expansion-3.json",
-    "assets/source-manifest-expansion-4.json",
-  ];
+  generated.sourceManifests = ["assets/source-manifest.json", ...EXPANSION_FILES];
+  generated.expansionManifests = EXPANSION_FILES;
   await writeFile(GENERATED_PATH, `${JSON.stringify(generated, null, 2)}\n`);
 } finally {
   await writeFile(BASE_PATH, originalText);

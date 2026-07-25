@@ -39,6 +39,10 @@ const overrides = new Map([
   ["activity-lunar-isle", { fileTitle: "Lunar Isle.png", search: "Lunar Isle location image" }],
   ["activity-mage-arena", { fileTitle: "Succession - Bilrach's ritual.png", search: "Mage Arena Wilderness location image" }],
   ["upgrade-subjugation", { fileTitle: "Garb of subjugation.png", search: "Garb of subjugation inventory icon" }],
+  ["activity-waterfall-fishing", { fileTitle: "Prifddinas waterfall fishing.png", canonicalPage: "https://runescape.wiki/w/Prifddinas_Waterfall_Fishing", search: "Prifddinas Waterfall Fishing activity image" }],
+  ["skilling-pickaxe-earth-song", { fileTitle: "Pickaxe of earth and song.png", canonicalPage: "https://runescape.wiki/w/Pickaxe_of_earth_and_song", search: "Pickaxe of earth and song inventory icon" }],
+  ["skilling-hatchet-ember-glade", { fileTitle: "Hatchet of ember and glade.png", canonicalPage: "https://runescape.wiki/w/Hatchet_of_ember_and_glade", search: "Hatchet of ember and glade inventory icon" }],
+  ["skilling-hatchet-bloom-blight", { fileTitle: "Hatchet of bloom and blight.png", canonicalPage: "https://runescape.wiki/w/Hatchet_of_bloom_and_blight", search: "Hatchet of bloom and blight inventory icon" }],
 ]);
 
 function applyOverrides(asset) {

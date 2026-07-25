@@ -1,0 +1,195 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Standalone spellbook dependency data for Equilibrium planning. This separates spellbook state from the general permanent-unlock graph.",
+  "spellbooks": [
+    {
+      "id": "standard-spellbook",
+      "name": "Standard spellbook",
+      "book_type": "main_world_spellbook",
+      "default_book": true,
+      "base_unlock": {
+        "type": "default",
+        "requirements": []
+      },
+      "planner_groups": [
+        {
+          "id": "standard-base",
+          "name": "Base Standard spells",
+          "unlock_type": "magic_level_and_quest_where_applicable",
+          "notes": "Combat, teleport, enchantment, alchemy and utility spells that remain on the default book."
+        },
+        {
+          "id": "standard-god-spells",
+          "name": "Mage Arena god spells",
+          "unlock_type": "activity",
+          "requirements": [
+            "Mage Arena progression"
+          ]
+        },
+        {
+          "id": "standard-bane-ammunition",
+          "name": "Tune Bane Ore",
+          "unlock_type": "quest",
+          "notes": "Current standard-book route used to enchant bane ammunition after the July 2026 Fletching re-tier."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Standard_spellbook",
+        "https://runescape.wiki/w/Mage_Arena",
+        "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance"
+      ],
+      "confidence": "confirmed_current_sources"
+    },
+    {
+      "id": "ancient-magicks",
+      "name": "Ancient Magicks",
+      "book_type": "main_world_spellbook",
+      "default_book": false,
+      "base_unlock": {
+        "type": "quest",
+        "requirements": [
+          "Desert Treasure"
+        ]
+      },
+      "planner_groups": [
+        {
+          "id": "ancient-base",
+          "name": "Base Ancient Magicks",
+          "unlock_type": "quest_and_magic_level",
+          "notes": "The Ancient combat and teleport spell set."
+        },
+        {
+          "id": "ancient-city-of-senntisten",
+          "name": "City of Senntisten spells",
+          "unlock_type": "quest",
+          "requirements": [
+            "City of Senntisten"
+          ],
+          "spells": [
+            "Smoke Cloud",
+            "Animate Dead",
+            "Exsanguinate",
+            "Incite Fear"
+          ]
+        },
+        {
+          "id": "ancient-seren",
+          "name": "Seren spells",
+          "unlock_type": "quest",
+          "requirements": [
+            "The Light Within"
+          ],
+          "notes": "The Seren spell extension remains on Ancient Magicks."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ancient_Magicks",
+        "https://runescape.wiki/w/City_of_Senntisten",
+        "https://runescape.wiki/w/The_Light_Within"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "lunar-spellbook",
+      "name": "Lunar spellbook",
+      "book_type": "main_world_spellbook",
+      "default_book": false,
+      "base_unlock": {
+        "type": "quest",
+        "requirements": [
+          "Lunar Diplomacy"
+        ]
+      },
+      "region_hint": "fremennik",
+      "planner_groups": [
+        {
+          "id": "lunar-base",
+          "name": "Base Lunar spells",
+          "unlock_type": "quest_and_magic_level",
+          "requirements": [
+            "Lunar Diplomacy"
+          ]
+        },
+        {
+          "id": "lunar-dream-mentor",
+          "name": "Dream Mentor spells",
+          "unlock_type": "quest",
+          "requirements": [
+            "Dream Mentor"
+          ],
+          "spells": [
+            "Monster Examine",
+            "Humidify",
+            "Hunter Kit",
+            "Stat Spy",
+            "Superglass Make",
+            "Dream",
+            "Plank Make",
+            "Spin Flax",
+            "Spellbook Swap"
+          ]
+        },
+        {
+          "id": "lunar-livid-farm",
+          "name": "Livid Farm spells",
+          "unlock_type": "activity_points",
+          "requirements": [
+            "Lunar Diplomacy",
+            "Livid Farm progression"
+          ],
+          "spells": [
+            "South Falador Teleport",
+            "Repair Rune Pouch",
+            "North Ardougne Teleport",
+            "Remote Farm",
+            "Spiritual Healing",
+            "Make Leather",
+            "Disruption Shield",
+            "Vengeance Group",
+            "Trollheim Farm Teleport",
+            "Tele-group Trollheim Farm",
+            "Borrowed Power"
+          ],
+          "current_change": "The 16 March 2026 DailyScape Overhaul reduced every Livid Farm spell threshold by 70%."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Lunar_spellbook",
+        "https://runescape.wiki/w/Lunar_Diplomacy",
+        "https://runescape.wiki/w/Dream_Mentor",
+        "https://runescape.wiki/w/Rewards_(Livid_Farm)",
+        "https://runescape.wiki/w/Update:DailyScape_Overhaul"
+      ],
+      "confidence": "confirmed_current_wiki"
+    }
+  ],
+  "special_magic_systems": [
+    {
+      "id": "necromancy-incantations",
+      "name": "Necromancy incantations",
+      "system_type": "separate_incantation_system",
+      "main_world_spellbook": false,
+      "planner_note": "Incantations use necrotic runes and the Well of Souls talent path. They are spells for planner purposes but do not replace one of the three Magic spellbooks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Incantations",
+        "https://runescape.wiki/w/Necromancy"
+      ]
+    },
+    {
+      "id": "daemonheim-spellbook",
+      "name": "Daemonheim spellbook",
+      "system_type": "dungeoneering_only_spellbook",
+      "main_world_spellbook": false,
+      "region_hint": "forinthry",
+      "planner_note": "Keep this scoped to Daemonheim. It is not a fourth selectable main-world spellbook.",
+      "source_urls": [
+        "https://runescape.wiki/w/Magic_(Daemonheim)"
+      ]
+    }
+  ],
+  "switching": {
+    "spellbook_swap_spell": "Lunar spellbook temporary switch",
+    "wars_grimoire": "Permanent hub switching after the relevant War's Retreat unlock",
+    "book_switcher": "Invention device that switches prayer books and spellbooks in safe areas"
+  }
+}

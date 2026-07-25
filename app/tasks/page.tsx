@@ -17,7 +17,9 @@ type UnknownItem = {
 export default async function TasksPage() {
   const taskUnknown = (unknownsData.items as UnknownItem[]).find((item) => item.key === "equilibrium_tasks");
   const useCatalystTestData = tasksData.records.length === 0 && tasksData.testFallback.enabled;
-  const catalystResult = useCatalystTestData ? await loadCatalystTestTasks() : { records: [] };
+  const catalystResult = useCatalystTestData
+    ? await loadCatalystTestTasks()
+    : { records: [], error: undefined };
   const records = useCatalystTestData ? catalystResult.records : tasksData.records;
   const sourceUrl = useCatalystTestData ? tasksData.testFallback.url : tasksData.source.url;
   const sourceLabel = useCatalystTestData ? "Catalyst task source" : "Jagex reveal";

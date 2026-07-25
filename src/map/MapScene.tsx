@@ -35,15 +35,27 @@ export default function MapScene() {
   const reducedMotion = useReducedMotion();
   // R3F never calls dispose() on a custom gl (its forceContextLoss is a WebGL
   // concept WebGPURenderer lacks), so every Canvas mount would leak a whole
-  // renderer. Dispose it ourselves on unmount.
+  // renderer. Dispose it ourselves on unmount — but deferred: StrictMode
+  // replays mount/unmount synchronously in dev, and disposing there wipes the
+  // renderer's texture registry while R3F keeps driving the same instance
+  // (every later frame then throws "Texture already initialized" on the
+  // shared DFG LUT). The replayed mount cancels the timer; only a real
+  // unmount (route change) lets it fire.
   const rendererRef = useRef<THREE.WebGPURenderer | null>(null);
-  useEffect(
-    () => () => {
-      rendererRef.current?.dispose();
-      rendererRef.current = null;
-    },
-    [],
-  );
+  const disposeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (disposeTimer.current) {
+      clearTimeout(disposeTimer.current);
+      disposeTimer.current = null;
+    }
+    return () => {
+      disposeTimer.current = setTimeout(() => {
+        rendererRef.current?.dispose();
+        rendererRef.current = null;
+        disposeTimer.current = null;
+      }, 0);
+    };
+  }, []);
 
   useEffect(() => {
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;

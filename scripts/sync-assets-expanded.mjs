@@ -66,6 +66,41 @@ const overrides = new Map([
       search: "Big Game Hunter arena activity image",
     },
   ],
+  [
+    "activity-wilderness-agility-course",
+    {
+      fileTitle: "Wilderness Agility Course.png",
+      search: "Wilderness Agility Course location image",
+    },
+  ],
+  [
+    "activity-max-guild",
+    {
+      fileTitle: "Max guild top view.png",
+      search: "Max Guild top view location image",
+    },
+  ],
+  [
+    "activity-monastery-of-ascension",
+    {
+      fileTitle: "Monastery of Ascension building.png",
+      search: "Monastery of Ascension building location image",
+    },
+  ],
+  [
+    "activity-sophanem-slayer-dungeon",
+    {
+      fileTitle: "Sophanem Slayer Dungeon.png",
+      search: "Sophanem Slayer Dungeon location image",
+    },
+  ],
+  [
+    "activity-god-wars-dungeon",
+    {
+      fileTitle: "God Wars Dungeon.png",
+      search: "God Wars Dungeon location image",
+    },
+  ],
 ]);
 
 function applyOverrides(asset) {

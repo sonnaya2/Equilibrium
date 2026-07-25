@@ -35,6 +35,7 @@ const overrides = new Map([
   ["activity-barrows", { fileTitle: "Barrows Scenery.png", search: "Barrows scenery minigame location image" }],
   ["activity-livid-farm", { fileTitle: "Livid Farm.png", search: "Livid Farm location image" }],
   ["activity-lunar-isle", { fileTitle: "Lunar Isle.png", search: "Lunar Isle location image" }],
+  ["activity-mage-arena", { fileTitle: "Succession - Bilrach's ritual.png", search: "Mage Arena Wilderness location image" }],
 ]);
 
 function applyOverrides(asset) {

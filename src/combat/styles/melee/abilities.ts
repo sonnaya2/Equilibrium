@@ -24,6 +24,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Attack",
     style: "melee",
     category: "basic",
+    autoAttack: true,
     hits: [{ band: { minPct: 110, maxPct: 130 } }],
     adrenaline: { gain: 9 },
     bloodlustGain: 1,

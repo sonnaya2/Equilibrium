@@ -27,6 +27,10 @@ export interface AbilitySpec {
   appliesBuff?: string;
   /** Off-GCD cast (Runic Charge): does not consume or advance the global cooldown. */
   offGcd?: boolean;
+  /** The style's basic attack ability — the cast the sim auto-weaves into GCD gaps
+   *  and adrenaline shortfalls when autoWeave is on (§5.6: basics auto-used when
+   *  nothing else is queued). Exactly one spec per style should carry this. */
+  autoAttack?: boolean;
 }
 
 export interface AbilityResult {

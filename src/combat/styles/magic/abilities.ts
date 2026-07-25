@@ -26,6 +26,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Magic basic attack",
     style: "magic",
     category: "basic",
+    autoAttack: true,
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
     source: MODERNISATION_WIKI,

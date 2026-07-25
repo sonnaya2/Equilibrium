@@ -60,6 +60,10 @@ export interface SimulateInput {
   /** Ammo family; "splintering" is accepted but unwired — the Puncture
    *  application rule is unverified (see styles/ranged/onHit.ts). */
   ammo?: "deathspore" | "splintering";
+  /** When true, the style's autoAttack basic is woven into GCD gaps and
+   *  adrenaline shortfalls before each queued cast (§5.6: basics auto-used
+   *  when nothing else is queued). When false, a shortfall fails the run. */
+  autoWeave?: boolean;
 }
 
 export interface CastRecord {
@@ -67,6 +71,8 @@ export interface CastRecord {
   abilityId: string;
   result: AbilityResult;
   adrenalineAfter: number;
+  /** Woven basic-attack cast, not part of the queued rotation. */
+  auto?: boolean;
 }
 
 export interface RotationSummary {
@@ -110,6 +116,7 @@ function buffMultiplier(id: string, multiplier: number, source: SourceReference)
  */
 export function simulate(input: SimulateInput): RotationSummary {
   const byId = new Map(input.abilities.map((a) => [a.id, a]));
+  const basicByStyle = new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]));
   const casts: CastRecord[] = [];
   const perAbility: Record<string, number> = {};
   const damageByTick: Record<number, number> = {};
@@ -135,41 +142,20 @@ export function simulate(input: SimulateInput): RotationSummary {
     };
   }
 
-  for (const action of input.rotation) {
-    const ability = byId.get(action.abilityId);
-    if (!ability) return finish(`unknown ability: ${action.abilityId}`);
+  /** Adrenaline cost evaluated against current state (Deathspore free casts). */
+  function costOf(ability: AbilitySpec): number {
+    const listed = ability.adrenaline?.cost ?? 0;
+    return listed > 0 && ability.style === "ranged" && input.ammo === "deathspore" && deathsporeReady(state.ranged.deathspore)
+      ? 0
+      : listed;
+  }
 
-    if (ability.buff === "runic_charge") {
-      if (!runicChargeReady(state.magic, state.tick)) {
-        return finish(`runic_charge is on cooldown at tick ${state.tick}`);
-      }
-      state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
-      casts.push({ tick: state.tick, abilityId: ability.id, result: EMPTY_RESULT, adrenalineAfter: state.adrenaline });
-      endTick = Math.max(endTick, state.tick + 1);
-      continue;
-    }
-
-    const readyTick = firstLegalTick(state, ability.id);
+  /** Everything a real cast does at a fixed tick: damage, resources, buffs, style
+   *  on-hit effects, and the GCD advance. Queued and woven casts share this path. */
+  function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void {
     state = { ...state, tick: readyTick };
     if (state.melee.berserk && readyTick >= state.berserkUntilTick) {
       state = { ...state, melee: endBerserk(state.melee), berserkUntilTick: 0 };
-    }
-
-    if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, readyTick)) {
-      return finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
-    }
-
-    const listedCost = ability.adrenaline?.cost ?? 0;
-    const freeCast =
-      listedCost > 0 &&
-      ability.style === "ranged" &&
-      input.ammo === "deathspore" &&
-      deathsporeReady(state.ranged.deathspore);
-    const cost = freeCast ? 0 : listedCost;
-    if (cost > state.adrenaline) {
-      return finish(
-        `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${readyTick}`,
-      );
     }
 
     const melee = ability.style === "melee" ? (ability as MeleeAbilitySpec) : null;
@@ -217,9 +203,12 @@ export function simulate(input: SimulateInput): RotationSummary {
       endTick = Math.max(endTick, landTick + 1);
     });
 
+    const cost = costOf(ability);
     if (ability.adrenaline?.gain) state = gainAdrenaline(state, ability.adrenaline.gain);
     if (cost) state = spendAdrenaline(state, cost);
-    if (freeCast) state = patchRanged(state, { deathspore: spendDeathspore(state.ranged.deathspore) });
+    if (cost === 0 && (ability.adrenaline?.cost ?? 0) > 0) {
+      state = patchRanged(state, { deathspore: spendDeathspore(state.ranged.deathspore) });
+    }
     if (melee?.bloodlustGain) state = gainMeleeBloodlust(state, melee.bloodlustGain);
     if (ability.cooldownSeconds) {
       state = startCooldown(state, ability.id, secondsToTicks(ability.cooldownSeconds));
@@ -256,10 +245,48 @@ export function simulate(input: SimulateInput): RotationSummary {
       state = { ...state, magic: consumeAnima(state.magic) };
     }
 
-    casts.push({ tick: readyTick, abilityId: ability.id, result, adrenalineAfter: state.adrenaline });
+    casts.push({ tick: readyTick, abilityId: ability.id, result, adrenalineAfter: state.adrenaline, ...(auto ? { auto: true as const } : {}) });
     perAbility[ability.id] = (perAbility[ability.id] ?? 0) + result.expected;
     state = { ...state, tick: readyTick + GLOBAL_COOLDOWN_TICKS };
     endTick = Math.max(endTick, state.tick);
+  }
+
+  for (const action of input.rotation) {
+    const ability = byId.get(action.abilityId);
+    if (!ability) return finish(`unknown ability: ${action.abilityId}`);
+
+    if (ability.buff === "runic_charge") {
+      if (!runicChargeReady(state.magic, state.tick)) {
+        return finish(`runic_charge is on cooldown at tick ${state.tick}`);
+      }
+      state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
+      casts.push({ tick: state.tick, abilityId: ability.id, result: EMPTY_RESULT, adrenalineAfter: state.adrenaline });
+      endTick = Math.max(endTick, state.tick + 1);
+      continue;
+    }
+
+    if (input.autoWeave) {
+      const basic = basicByStyle.get(ability.style);
+      let guard = 0;
+      while (basic && (firstLegalTick(state, ability.id) > state.tick || costOf(ability) > state.adrenaline)) {
+        if (++guard > 200) return finish(`${ability.id} is unaffordable at tick ${state.tick}, even weaving basics`);
+        performCast(basic, state.tick, true);
+      }
+    }
+
+    const readyTick = firstLegalTick(state, ability.id);
+    if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, readyTick)) {
+      return finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
+    }
+
+    const cost = costOf(ability);
+    if (cost > state.adrenaline) {
+      return finish(
+        `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${readyTick}`,
+      );
+    }
+
+    performCast(ability, readyTick, false);
   }
 
   return finish();

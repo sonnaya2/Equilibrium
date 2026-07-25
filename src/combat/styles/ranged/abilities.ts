@@ -21,6 +21,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Ranged basic attack",
     style: "ranged",
     category: "basic",
+    autoAttack: true,
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
     source: MODERNISATION_WIKI,

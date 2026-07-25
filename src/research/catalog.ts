@@ -52,6 +52,9 @@ export interface ResearchUpgrade {
   confidence: string;
   source: SourceReference | null;
   regionId?: string;
+  regionHints?: string[];
+  requiredRegions?: string[];
+  regionRequirementType?: string;
 }
 
 export interface ResearchRegion {
@@ -86,6 +89,13 @@ export interface ResearchDatasetStats {
   publishedTasks: number;
   skills: number;
   trainingMethods: number;
+  regionalSkillingUnlocks?: number;
+  regionalSkillingActivities?: number;
+  regionalSkillingEquipment?: number;
+  regionalCombatUnlocks?: number;
+  regionalCombatAccounts?: number;
+  regionalCombatActivities?: number;
+  regionalCombatEquipment?: number;
 }
 
 export interface ResearchSourcePolicy {

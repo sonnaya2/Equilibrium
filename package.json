@@ -11,7 +11,7 @@
     "audit:references": "node scripts/audit-reference-harvest.mjs",
     "audit:masterwork": "node scripts/audit-masterwork-staff-chain.mjs",
     "audit:boundaries": "node scripts/audit-region-boundaries.mjs",
-    "audit:supplements": "node scripts/audit-archaeology-collections.mjs && node scripts/audit-archaeology-utilities.mjs && node scripts/audit-invention-components.mjs && node scripts/audit-invention-perk-families.mjs && node scripts/audit-invention-perk-materials.mjs && node scripts/audit-invention-wiki-taxonomy.mjs",
+    "audit:supplements": "node scripts/audit-archaeology-collections.mjs && node scripts/audit-archaeology-guild.mjs && node scripts/audit-archaeology-utilities.mjs && node scripts/audit-invention-components.mjs && node scripts/audit-invention-perk-families.mjs && node scripts/audit-invention-perk-materials.mjs && node scripts/audit-invention-wiki-taxonomy.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

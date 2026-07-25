@@ -1,41 +1,53 @@
 # Equilibrium
 
-**Equilibrium** is a fan-made planner for **RuneScape 3: Leagues II — Equilibrium**, launching 10 August 2026.
+A fan-made planner for RuneScape 3's second league, **Equilibrium**, which starts 10 August 2026.
 
-I built it because planning a League across reveal posts, Wiki pages, spreadsheets and separate combat tools gets messy fast. The app keeps region picks, Relics, Blessings, tasks, quest access and current RS3 combat math in one place.
+Planning a league means juggling reveal posts, a dozen Wiki tabs, a spreadsheet and somebody else's
+DPS calculator. This puts region picks, Relics, Blessings, tasks, quest access and current RS3 combat
+math on one site.
 
-[Open the live planner](https://equilibrium-ruddy.vercel.app)
+→ [equilibrium-ruddy.vercel.app](https://equilibrium-ruddy.vercel.app)
 
-## What is in the app
+## What's in it
 
-- **Map** — plan the three elective region picks and inspect what each region opens up.
-- **Tasks** — track League tasks and points as Jagex publishes them.
-- **Build** — keep regions, Relics, Blessings and gear together instead of maintaining a separate plan for each system.
-- **Combat** — calculate against current RS3 rules, with League modifiers applied through a separate ruleset layer.
-- **Data** — browse the records behind the planner and follow them back to their sources.
+**Map** plans the three elective regions and shows what each one actually opens up. **Tasks** tracks
+tasks and points. **Build** keeps regions, Relics, Blessings and gear in one place, so you aren't
+maintaining four plans that quietly disagree with each other. **Combat** calculates against current
+RS3 rules, with league modifiers layered on through a separate ruleset rather than baked into the
+formulas. **Data** shows the records behind all of it, and every number links back to where it
+came from.
 
-The map, build state and data browser are usable now. The quest catalog is generated from revision-pinned RuneScape Wiki data. The combat engine is still being rebuilt around the post-2026 game rather than carrying old formulas forward.
+## What's actually finished
 
-The task page is intentionally incomplete. Jagex has confirmed task tiers from Easy through Master and the 10-to-400 point range, but has not published the full Equilibrium task list yet. The 30 / 80 / 200 middle values currently mirror Catalyst and remain marked provisional until an Equilibrium source confirms them.
+Map, build state and the data browser work today. Quests are generated from revision-pinned Wiki
+data. The combat engine is a rebuild against the post-2026 game instead of old formulas dragged
+forward, and it's the part still under construction.
 
-Unknown League values stay blank. The app does not fill gaps with plausible-looking numbers.
+Tasks is deliberately half-empty. Jagex confirmed the tiers (Easy through Master) and the 10–400
+point range, then stopped. The 30 / 80 / 200 middle values in there right now are Catalyst's, marked
+provisional, and they stay marked until an Equilibrium source says otherwise. Everything else
+unrevealed is simply blank — a guess that looks plausible is worse than an empty field.
 
-## Data and sources
+## Sources
 
-The RuneScape Wiki is the default source for normal RS3 game data. Records taken specifically from PvME or RS Analysis keep those sources. New League reveals and patch values can point directly to Jagex until the Wiki catches up.
+RuneScape Wiki by default. Records lifted specifically from PvME or RS Analysis keep those instead.
+Fresh reveals and patch values can cite Jagex directly until the Wiki catches up.
 
-Generated quest records retain the Wiki page and revision used to build them. Harvested media retains its source page, retrieval URL and local hash. Geographic quest inference is kept separate from official League auto-completion; only a Jagex source can move a quest into the official overlay.
+Generated quest records keep the Wiki page and the exact revision they were built from. Harvested
+media keeps its source page, retrieval URL and a local hash. Guessing a quest's region from its
+geography is kept well clear of Jagex's official auto-completion list; only a Jagex source moves a
+quest into that overlay.
 
-The full source list is available at `/sources` in the app.
+Full list is at `/sources`.
 
-## Local development
+## Running it locally
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Before pushing:
+Before you push:
 
 ```bash
 npm run typecheck
@@ -44,9 +56,10 @@ npm run test:e2e
 npm run build
 ```
 
-Playwright boots its own server on port 3100. Stop any existing dev server from this checkout before running `npm run test:e2e`.
+Playwright boots its own server on 3100, because 3000 was already taken on my machine. It won't boot
+that server if you've got a dev server running from the same checkout, so stop yours first.
 
-## Data work
+## Data jobs
 
 ```bash
 npm run normalize:data   # rebuild app-facing data from scraped-data/
@@ -59,9 +72,10 @@ npm run sync:planner     # rebuild region-value and progression research
 npm run audit:all-data   # run the full data audit set
 ```
 
-`data/` is the app-facing source of truth. `scraped-data/` holds source-oriented research before normalization. `src/combat/data/` reads and types the canonical combat JSON; it is not a second hand-maintained copy.
+`data/` is what the app reads. `scraped-data/` is the source-shaped research before normalization.
+`src/combat/data/` reads and types the canonical combat JSON — it is not a second copy to hand-edit.
 
-## Repository layout
+## Layout
 
 ```text
 app/                 Next.js routes
@@ -79,35 +93,44 @@ assets/              sourced game media and provenance manifest
 scripts/             sync, normalization and audit jobs
 ```
 
-## Project rules
+## House rules
 
-- Do not invent unrevealed League data.
-- Keep a source on every externally derived record.
-- Keep the base RS3 combat engine independent from React and from League modifiers.
-- Do not add boss simulators, phase models, kill-time or enrage calculators to the generic combat target.
-- Do not copy the layout, component structure, classes or wording of PvME, RS Analysis or leagues.build.
-- Game art and sourced Wiki media are allowed with the proper credit. Generated-AI imagery is not.
-- Do not turn the tool into a SaaS landing page. It should open on useful information, not a marketing hero.
+- Never invent unrevealed league data.
+- Every externally derived record carries its source.
+- The base combat engine stays clear of React and of league modifiers, so base RS3 math can be
+  validated on its own.
+- The generic combat target stays generic. No boss sims, no phase models, no kill-times, no enrage
+  curves.
+- Steal lessons from PvME, RS Analysis and leagues.build. Never their layout, components, class
+  names or wording.
+- Game art and credited Wiki media are fine. Gen-AI imagery is not.
+- This is a tool, not a product. It opens on information, not a marketing hero.
 
 ## Working on the repo
 
-Read [`AGENTS.md`](./AGENTS.md) before changing the app. Detailed rules live in the project skills rather than being repeated in every file:
+Read [`AGENTS.md`](./AGENTS.md) first. The detail lives in skills rather than being repeated in every
+file:
 
-- `combat-math` for the damage pipeline and rounding rules
-- `league-data` for regions, Relics, Blessings, tasks and provisional data
-- `data-sync` for provenance, staleness and sync reports
-- `equilibrium-ui` for the RuneScape-derived visual system
-- `no-slop-ui` and `ui-humanizer` for interface cleanup
-- `text-humanizer` for copy that sounds like it belongs in this project
-- `bot-audit` for the final AI-pattern pass
-- `rs3-ponytail` for deciding how much implementation effort a change deserves
+- `combat-math` — damage pipeline and rounding
+- `league-data` — regions, Relics, Blessings, tasks, provisional data
+- `data-sync` — provenance, staleness, sync reports
+- `equilibrium-ui` — the RuneScape-derived visual system
+- `no-slop-ui`, `ui-humanizer`, `bot-audit` — interface cleanup and the final AI-pattern pass
+- `text-humanizer` — copy that sounds like it belongs here
+- `rs3-ponytail` — how much implementation a given change actually deserves
 
-For copy, keep the exact game term, number, path, state or limitation. Cut filler before cutting precision. Avoid generic product claims, slogan-shaped headings, fake enthusiasm and copy that could describe any planner.
+When you write copy, keep the exact game term, number, path, state or limitation. Cut filler before
+you cut precision. No slogans, no manufactured enthusiasm, nothing that could describe any other
+planner.
 
-The app deploys to Vercel from `main`. There is no backend or account system: game data ships as checked-in JSON and user progress stays in browser `localStorage`.
+Pushes to `main` deploy straight to Vercel production, so there is no staging net. No backend and no
+accounts either: game data ships as checked-in JSON and your progress lives in `localStorage`.
 
 ## Credits
 
-Data and research come from the [RuneScape Wiki](https://runescape.wiki/), [RS Analysis](https://rs-analysis.xyz/), [PvME](https://pvme.io/) and official [Jagex](https://www.jagex.com/) material. Individual records keep their own source where possible.
+Data and research come from the [RuneScape Wiki](https://runescape.wiki/),
+[RS Analysis](https://rs-analysis.xyz/), [PvME](https://pvme.io/) and official
+[Jagex](https://www.jagex.com/) material. Individual records keep their own source where possible.
 
-This is an unofficial, non-commercial fan project. It is not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
+Unofficial, non-commercial fan project. Not affiliated with or endorsed by Jagex. RuneScape is a
+trademark of Jagex Ltd.

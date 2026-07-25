@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { wikiSource } from "./lib/runescape-wiki.mjs";
+import { wikiRenderedText } from "./lib/runescape-wiki.mjs";
 
 const ROOT = process.cwd();
 const data = JSON.parse(
@@ -39,16 +39,18 @@ for (const expected of expectedLoadouts) {
   }
 }
 
-const training = await wikiSource("Archaeology training");
-const guildmaster = await wikiSource("Qualification - Guildmaster");
-const presetUpdate = await wikiSource("Update:Relic Presets & February Mini Strike - This Week In RuneScape");
-const fixate = await wikiSource("Fixate");
-const masterOutfit = await wikiSource("Master archaeologist's outfit");
+const [training, guildmaster, presetUpdate, fixate, masterOutfit] = await Promise.all([
+  wikiRenderedText("Archaeology training"),
+  wikiRenderedText("Qualification - Guildmaster"),
+  wikiRenderedText("Update:Relic Presets & February Mini Strike - This Week In RuneScape"),
+  wikiRenderedText("Fixate"),
+  wikiRenderedText("Master archaeologist's outfit"),
+]);
 
-assertContains(presetUpdate.content, "first two presets", "Relic preset update");
-assertContains(presetUpdate.content, "80,000 Chronotes", "Relic preset update");
-assertContains(presetUpdate.content, "Professor qualification", "Relic preset update");
-assertContains(guildmaster.content, "additional relic loadout tab", "Guildmaster qualification");
+assertContains(presetUpdate.text, "first two presets", "Relic preset update");
+assertContains(presetUpdate.text, "80,000 Chronotes", "Relic preset update");
+assertContains(presetUpdate.text, "Professor qualification", "Relic preset update");
+assertContains(guildmaster.text, "additional relic loadout tab", "Guildmaster qualification");
 
 const expectedShopRows = [
   { qualification: "Assistant", name: "Soil box upgrade", cost: 3500 },
@@ -76,16 +78,16 @@ for (const expected of expectedShopRows) {
   if (row.chronote_cost !== expected.cost) {
     throw new Error(`${expected.qualification} ${expected.name} cost drifted`);
   }
-  assertContains(training.content, expected.name, `Archaeology training:${expected.name}`);
-  assertContains(training.content, String(expected.cost), `Archaeology training:${expected.name} cost`);
+  assertContains(training.text, expected.name, `Archaeology training:${expected.name}`);
+  assertContains(training.text, String(expected.cost), `Archaeology training:${expected.name} cost`);
 }
 
 const fixateRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-master-outfit");
 if (!fixateRow) throw new Error("Missing master-outfit Fixate infrastructure row");
 if (fixateRow.daily_energy !== 3) throw new Error("Master-outfit Fixate daily energy must be 3");
-assertContains(fixate.content, "3", "Fixate daily energy");
-assertContains(fixate.content, "master archaeologist's outfit", "Fixate outfit requirement");
-assertContains(masterOutfit.content, "Fixate", "Master archaeologist outfit Fixate unlock");
+assertContains(fixate.text, "3", "Fixate daily energy");
+assertContains(fixate.text, "master archaeologist's outfit", "Fixate outfit requirement");
+assertContains(masterOutfit.text, "Fixate", "Master archaeologist outfit Fixate unlock");
 
 const tokenRow = data.collection_completion_infrastructure.find((entry) => entry.id === "fixate-charge-token");
 if (!tokenRow) throw new Error("Missing Fixate charge-token infrastructure row");

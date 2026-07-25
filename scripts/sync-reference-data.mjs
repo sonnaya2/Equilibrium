@@ -61,6 +61,9 @@ const catalyst = read("scraped-data/catalyst.json");
 const changes = read("scraped-data/2026-changes.json");
 const rebalance = read("scraped-data/midgame-rebalance-2026-07-20.json");
 const progressionUnlocks = read("scraped-data/progression-unlocks.json");
+const prayerBooks = read("scraped-data/prayer-books.json");
+const prayers = read("scraped-data/prayers.json");
+const spellbooks = read("scraped-data/spellbooks.json");
 const regionDependencies = read("scraped-data/region-dependencies.json");
 const referenceHarvest = read("scraped-data/reference-site-harvest.json");
 const masterworkStaffChain = read("scraped-data/masterwork-staff-chain.json");
@@ -103,8 +106,12 @@ write("data/league/region-dependencies.json", regionDependencies);
 write("data/reference/changes-2026.json", changes);
 write("data/reference/midgame-rebalance-2026-07-20.json", rebalance);
 write("data/reference/progression-unlocks.json", progressionUnlocks);
+write("data/reference/prayer-books.json", prayerBooks);
+write("data/reference/prayers.json", prayers);
+write("data/reference/spellbooks.json", spellbooks);
 write("data/research/reference-site-harvest.json", referenceHarvest);
 write("data/research/masterwork-staff-chain.json", masterworkStaffChain);
 write("data/reference/unknowns.json", unknowns);
 
-console.log(`REFERENCE DATA SYNC\nCombat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, ${enrichmentFiles.length} progression enrichment overlay(s), reference research, Masterwork staff chain and unknowns updated.`);
+console.log(`REFERENCE DATA SYNC
+Combat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, prayer books, complete prayers, spellbooks, ${enrichmentFiles.length} progression enrichment overlay(s), reference research, Masterwork staff chain and unknowns updated.`);

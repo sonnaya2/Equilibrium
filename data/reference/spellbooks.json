@@ -28,14 +28,18 @@
         },
         {
           "id": "standard-bane-ammunition",
-          "name": "Tune Bane Ore",
+          "name": "Tune Banite Ore",
           "unlock_type": "quest",
-          "notes": "Current standard-book route used to enchant bane ammunition after the July 2026 Fletching re-tier."
+          "requirements": [
+            "Ritual of the Mahjarrat"
+          ],
+          "notes": "Current standard-book route used to tune banite ore for bane ammunition after the July 2026 Fletching re-tier."
         }
       ],
       "source_urls": [
         "https://runescape.wiki/w/Standard_spellbook",
         "https://runescape.wiki/w/Mage_Arena",
+        "https://runescape.wiki/w/Ritual_of_the_Mahjarrat",
         "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance"
       ],
       "confidence": "confirmed_current_sources"

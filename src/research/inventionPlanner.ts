@@ -2,6 +2,7 @@ import archaeologySource from "../../data/research/planner-expansions-invention-
 import invention2026Source from "../../data/research/planner-expansions-invention-2026.json";
 import perkSource from "../../data/research/planner-expansions-invention-perks.json";
 import utilityPerkSource from "../../data/research/planner-expansions-invention-utility-perks.json";
+import activePerkSource from "../../data/research/planner-expansions-invention-active-perks.json";
 import coverageSource from "../../data/research/planner-expansions-invention-component-coverage.json";
 import bottleneckSource from "../../data/research/planner-expansions-invention-material-bottlenecks.json";
 
@@ -14,6 +15,7 @@ export type Current2026PerkDependency = (typeof invention2026Source)["current_20
 export type AccountComponentRoute = (typeof invention2026Source)["account_component_routes"][number];
 export type ArmourPerkRecipe = (typeof perkSource)["current_armour_perk_recipes"][number];
 export type UtilityPerkRecipe = (typeof utilityPerkSource)["utility_perk_recipes"][number];
+export type ActiveInventionPerk = (typeof activePerkSource)["active_perks"][number];
 export type PerkComponentSupplyRoute = (typeof perkSource)["component_supply_routes"][number];
 export type GlobalOrAccountComponentRoute = (typeof perkSource)["global_or_account_component_routes"][number];
 export type RemainingRareComponentRoute = (typeof coverageSource)["remaining_component_routes"][number];
@@ -53,6 +55,10 @@ export function getCurrentArmourPerkRecipes(): ArmourPerkRecipe[] {
 
 export function getUtilityPerkRecipes(): UtilityPerkRecipe[] {
   return utilityPerkSource.utility_perk_recipes;
+}
+
+export function getActiveInventionPerks(): ActiveInventionPerk[] {
+  return activePerkSource.active_perks;
 }
 
 export function getPerkComponentSupplyRoutes(): PerkComponentSupplyRoute[] {

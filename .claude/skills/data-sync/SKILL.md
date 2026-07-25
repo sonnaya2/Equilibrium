@@ -5,13 +5,33 @@ description: Game-data ingestion for this repo - the scripts/sync-combat-data.ts
 
 # Data sync and provenance
 
-Two source sync paths feed the normalized `data/` store:
+The combat pipeline is live; the league side stays normalize-driven:
 
-- `scripts/sync-combat-data.ts` -> `data/combat/{abilities,equipment,prayers,perks,effects,update-index}.json`
-- `scripts/sync-league-data.ts` -> `data/league/{regions,relics,blessings,tasks}.json`
-- `scripts/normalize-scraped-data.mjs` -> converts audited `scraped-data/` research into the canonical app-facing `data/` shapes while the direct sync scripts are still being completed.
+- `scripts/sync-combat-records.mjs` (last stage of `npm run normalize:data`) builds
+  `data/combat/{abilities,equipment,prayers,perks,effects}.json` from the curated scraped-data
+  corpus — one writer per dataset, never hand-edited. Record types live in
+  `src/combat/data/records.ts`; region unlock labels come from the corpus joins in that script.
+- `scripts/sync-combat-data.ts` (`npm run sync:combat`) maintains the tracked-entity ledger
+  `data/combat/update-index.json` and polls each entity's Wiki page for revisions newer than
+  the record's `verifiedAt`. It never scrapes values into records.
+- `scripts/audit-combat-data.mjs` (`npm run audit:combat`, inside `audit:all-data`) enforces
+  provenance, unique ids, valid region tags and enum sanity. `src/combat/data/index.test.ts`
+  is the matching contract test.
+- `scripts/sync-league-data.ts` writes `data/league/` from scraped-data, but the canonical
+  producer of the on-disk league files is `scripts/normalize-scraped-data.mjs` — do not run
+  sync:league expecting the same shape.
+- `scripts/publish-assets.mjs` (inside `npm run sync:assets`) publishes attributed art from
+  `assets/` to `public/game/<category>/`.
 
 The RuneScape Wiki is the default ground truth for current game data. `src/combat/data/` and the app-facing research accessors read the normalized root `data/` store; components do not ingest `scraped-data/` directly.
+
+## Patch-day loop
+
+Game update lands → `npm run sync:combat` flags revised pages (exit 1, STALE lines) → re-verify
+those records against the update post, bump `verifiedAt` in the corpus snapshot →
+`npm run normalize:data` → `npm run audit:combat` → tests → update `docs/combat-changelog.md`
+status date. League reveals (28 Jul → 10 Aug 2026) flip `verified: false` records only on Wiki
+confirmation.
 
 ## Provenance contract
 
@@ -53,7 +73,8 @@ COMBAT SYNC
 Abilities checked: 74   Items checked: 183   Changed since dataset: 4   New entities: 2   Warnings: 1
 ```
 
-The Combat > Data tab renders the same facts plus a stale-data warning.
+The Combat > Reference tab renders the dataset counts and the ledger's poll status (stale
+warning included). `.agents/skills/data-sync/SKILL.md` mirrors this file; edit both together.
 
 ## Hard rules
 

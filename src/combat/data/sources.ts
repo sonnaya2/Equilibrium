@@ -60,3 +60,35 @@ export const RESIDUAL_SOUL_WIKI: SourceReference = {
   title: "Residual Soul",
   verifiedAt: "2026-07-24",
 };
+
+export const BETA_UPDATE_3_WIKI_2026_02_13: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Update:Combat_Styles_Improvements_-_Beta_Update_3",
+  title: "Combat Styles Improvements - Beta Update 3",
+  publishedAt: "2026-02-13",
+  verifiedAt: "2026-07-24",
+};
+
+export const BETA_UPDATE_4_WIKI_2026_02_18: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Update:Combat_Styles_Improvements_-_Beta_Update_4",
+  title: "Combat Styles Improvements - Beta Update 4",
+  publishedAt: "2026-02-18",
+  verifiedAt: "2026-07-24",
+};
+
+export const MASTERWORK_WEAPONS_WIKI_2025_05_27: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Update:Masterwork_%26_Legendary_Weapon_Improvements",
+  title: "Masterwork & Legendary Weapon Improvements",
+  publishedAt: "2025-05-27",
+  verifiedAt: "2026-07-24",
+};
+
+export const AMASCUT_MASTERIES_WIKI_2025_09_29: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Update:Amascut_Combat_Masteries_%26_QoL_Runecrafting_-_This_Week_In_RuneScape",
+  title: "Amascut Combat Masteries & QoL Runecrafting",
+  publishedAt: "2025-09-29",
+  verifiedAt: "2026-07-24",
+};

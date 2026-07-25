@@ -1,163 +1,64 @@
-/**
- * The flat league map on a table: the official region map texture as an
- * unlit plane, with a floating hex gem per region carrying unlock state.
- * Gems are the state language — emerald and lit when unlocked, dim when
- * locked; the emissive channel feeds the selective bloom pass.
- * Names are baked into the map art, so DOM overlays appear only on hover.
- */
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+/**
+ * The war table: eleven carved slabs on a dark umber board, one per region.
+ * The flat league-map.jpg plate is gone — the board is original geometry now,
+ * cut along shared seams so it visibly comes apart (wartable plan §1-2).
+ */
+
+import { useEffect, useMemo } from "react";
 import * as THREE from "three/webgpu";
-import { Html } from "@react-three/drei";
-import { useLoader, type ThreeEvent } from "@react-three/fiber";
-import {
-  canSelectElective,
-  ELECTIVE_REGIONS,
-  isRegionUnlocked,
-  MILESTONE_REGION,
-  type RegionId,
-} from "@/league";
-import { useBuild } from "@/league/useBuild";
-import {
-  anchorWorld,
-  MAP_IMAGE,
-  MAP_WORLD,
-  REGION_ANCHORS,
-  type RegionAnchor,
-} from "./data/regionAnchors";
+import { useLoader } from "@react-three/fiber";
+import { REGION_SHAPES } from "./data/regionShapes";
+import { MAP_WORLD, type RegionAnchor } from "./data/regionAnchors";
+import { SURFACE_DEEP } from "./palette";
+import { RegionSlab } from "./RegionSlab";
 
-const GEM_LIT = new THREE.Color(0x2ecb8f);
-const GEM_DIM = new THREE.Color(0x33453b);
-const RING_COLOR = 0x2ecb8f;
-const SLAB_COLOR = 0x17140f;
+/** Sunken slabs sit this far down; the table top hides everything below it. */
+const TABLE_TOP_Y = 0.035;
 
-function MapPlane() {
-  const loaded = useLoader(THREE.TextureLoader, MAP_IMAGE.src);
-  // The loader cache hands the same Texture back on every mount, but its GPU
-  // state belongs to the renderer that uploaded it. StrictMode and Fast Refresh
-  // dispose that renderer and build a new one, which then finds the texture
-  // already initialized and throws. Own a clone per mount instead.
-  const texture = useMemo(() => {
-    const clone = loaded.clone();
-    clone.colorSpace = THREE.SRGBColorSpace;
-    clone.anisotropy = 8;
-    clone.needsUpdate = true;
-    return clone;
-  }, [loaded]);
-  useEffect(() => () => texture.dispose(), [texture]);
-
-  return (
-    <group>
-      {/* Backing slab — the table edge around the map. */}
-      <mesh position={[0, -0.011, 0]}>
-        <boxGeometry args={[MAP_WORLD.width + 0.09, 0.02, MAP_WORLD.height + 0.09]} />
-        <meshStandardMaterial color={SLAB_COLOR} roughness={0.9} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[MAP_WORLD.width, MAP_WORLD.height]} />
-        <meshBasicMaterial map={texture} toneMapped={false} />
-      </mesh>
-    </group>
-  );
-}
-
-function statusLabel(
-  anchor: RegionAnchor,
-  elective: boolean,
-  unlocked: boolean,
-  selectable: boolean,
-): string {
-  if (!elective) return anchor.id === MILESTONE_REGION ? "First milestone" : "Fixed start";
-  if (unlocked) return "Selected · click to remove";
-  return selectable ? "Click to unlock" : "Locked";
-}
-
-function RegionMarker({
-  anchor,
+export function MapTable({
   onFocus,
+  reducedMotion,
 }: {
-  anchor: RegionAnchor;
   onFocus: (anchor: RegionAnchor) => void;
+  reducedMotion: boolean;
 }) {
-  const { build, toggleRegion } = useBuild();
-  const [hovered, setHovered] = useState(false);
-
-  const unlocked = isRegionUnlocked(build, anchor.id);
-  const elective = (ELECTIVE_REGIONS as readonly RegionId[]).includes(anchor.id);
-  const selectable = elective && canSelectElective(build, anchor.id);
-
-  const [x, z] = anchorWorld(anchor.uv);
-  const r = 0.028 * anchor.size;
-  const gemY = hovered ? 0.062 : 0.048;
-
-  const click = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation();
-    onFocus(anchor);
-    if (elective) toggleRegion(anchor.id);
-  };
-  const over = (e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation();
-    setHovered(true);
-    document.body.style.cursor = selectable || !elective ? "pointer" : "not-allowed";
-  };
-  const out = () => {
-    setHovered(false);
-    document.body.style.cursor = "auto";
-  };
-
-  return (
-    <group position={[x, 0, z]}>
-      {/* Invisible hit disc on the map surface, wider than the gem. */}
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.003, 0]}
-        onClick={click}
-        onPointerOver={over}
-        onPointerOut={out}
-      >
-        <circleGeometry args={[r * 2.2, 24]} />
-        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
-      </mesh>
-      {hovered && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-          <ringGeometry args={[r * 1.6, r * 1.9, 32]} />
-          <meshBasicMaterial color={RING_COLOR} transparent opacity={0.85} side={THREE.DoubleSide} />
-        </mesh>
-      )}
-      <mesh position={[0, gemY, 0]} onClick={click} onPointerOver={over} onPointerOut={out}>
-        <cylinderGeometry args={[r, r, 0.018, 6]} />
-        <meshStandardMaterial
-          color={unlocked ? GEM_LIT : GEM_DIM}
-          emissive={unlocked ? GEM_LIT : GEM_DIM}
-          emissiveIntensity={unlocked ? (hovered ? 2.1 : 1.4) : 0.12}
-          roughness={0.3}
-        />
-      </mesh>
-      {hovered && (
-        <Html
-          position={[0, gemY + 0.055, 0]}
-          center
-          distanceFactor={1}
-          zIndexRange={[20, 0]}
-          style={{ pointerEvents: "none" }}
-        >
-          <div className="map-chip">
-            <span className="map-chip-name">{anchor.name}</span>
-            <span className="map-chip-state">{statusLabel(anchor, elective, unlocked, selectable)}</span>
-          </div>
-        </Html>
-      )}
-    </group>
+  const loaded = useLoader(
+    THREE.TextureLoader,
+    REGION_SHAPES.map((s) => `/game/regions/${s.id}.png`),
   );
-}
+  // The loader cache hands the same Texture back on every mount, but its GPU
+  // state belongs to the renderer that uploaded it. Own a clone per mount.
+  const crests = useMemo(
+    () =>
+      loaded.map((t) => {
+        const clone = t.clone();
+        clone.colorSpace = THREE.SRGBColorSpace;
+        clone.anisotropy = 8;
+        clone.needsUpdate = true;
+        return clone;
+      }),
+    [loaded],
+  );
+  useEffect(() => () => crests.forEach((c) => c.dispose()), [crests]);
 
-export function MapTable({ onFocus }: { onFocus: (anchor: RegionAnchor) => void }) {
   return (
     <group>
-      <MapPlane />
-      {REGION_ANCHORS.map((anchor) => (
-        <RegionMarker key={anchor.id} anchor={anchor} onFocus={onFocus} />
+      {/* The table itself: locked slabs sink into their sockets until only
+          the rock bands show above this surface. */}
+      <mesh position={[0, TABLE_TOP_Y - 0.05, 0]}>
+        <boxGeometry args={[MAP_WORLD.width + 0.12, 0.1, MAP_WORLD.height + 0.12]} />
+        <meshStandardMaterial color={SURFACE_DEEP} roughness={1} />
+      </mesh>
+      {REGION_SHAPES.map((shape, i) => (
+        <RegionSlab
+          key={shape.id}
+          shape={shape}
+          crest={crests[i]}
+          onFocus={onFocus}
+          reducedMotion={reducedMotion}
+        />
       ))}
     </group>
   );

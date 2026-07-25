@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three/webgpu";
-import { Canvas, extend } from "@react-three/fiber";
+import { Canvas, extend, useThree } from "@react-three/fiber";
+import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
 import { Effects } from "./Effects";
@@ -11,6 +12,20 @@ import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
 
 extend(THREE as never);
+
+/**
+ * frameloop="demand" sleeps unless something invalidates. Any store change
+ * that forgets leaves a stale frame on screen (wartable plan, risk 3), so one
+ * subscription re-renders on every build mutation.
+ */
+function InvalidateOnBuild() {
+  const invalidate = useThree((s) => s.invalidate);
+  const { build } = useBuild();
+  useEffect(() => {
+    invalidate();
+  }, [build, invalidate]);
+  return null;
+}
 
 export default function MapScene() {
   // Gate on a real adapter, not just the API — three would otherwise fall back
@@ -81,8 +96,9 @@ export default function MapScene() {
           <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.55} color="#e4efd6" />
           <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.55} color="#7fd0a8" />
 
-          <MapTable onFocus={setFocus} />
+          <MapTable onFocus={setFocus} reducedMotion={reducedMotion} />
           <CameraRig focus={focus} reducedMotion={reducedMotion} />
+          <InvalidateOnBuild />
           {/* <Effects /> */}
         </Canvas>
       </div>

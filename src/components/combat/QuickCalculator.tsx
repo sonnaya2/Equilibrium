@@ -7,6 +7,9 @@ import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES, type MeleeAbilitySpec } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES, type MagicAbilitySpec } from "@/combat/styles/magic/abilities";
+import { styleIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
+import { NumberField } from "./NumberField";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -31,33 +34,6 @@ function formatNumber(value: number): string {
 /** Number inputs yield NaN/Infinity on partial input or 1e999 — keep them out of the engine. */
 function finite(value: number, fallback: number): number {
   return Number.isFinite(value) ? value : fallback;
-}
-
-function NumberField({
-  label,
-  value,
-  onChange,
-  suffix,
-}: {
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-  suffix?: string;
-}) {
-  return (
-    <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
-      <span>{label}</span>
-      <span className="flex items-center gap-1">
-        <input
-          type="number"
-          value={value}
-          onChange={(event) => onChange(Number(event.target.value))}
-          className="w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50"
-        />
-        {suffix ? <span className="text-parch-300">{suffix}</span> : null}
-      </span>
-    </label>
-  );
 }
 
 export function QuickCalculator() {
@@ -90,7 +66,8 @@ export function QuickCalculator() {
       <div>
         <h2 className="text-sm font-medium text-parch-50">Quick</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Necromancy waits on sourced bands; the other styles run their modernised kits.
+          Necromancy waits on sourced bands beyond Volley of Souls; the other styles run their
+          modernised kits.
         </p>
         <div className="mt-3 flex gap-1">
           {AVAILABLE_STYLES.map((s) => (
@@ -98,15 +75,25 @@ export function QuickCalculator() {
               key={s}
               type="button"
               onClick={() => setStyle(s)}
-              className={`border px-3 py-1.5 text-xs ${
+              className={`flex items-center gap-1.5 border px-3 py-1.5 text-xs ${
                 style === s
                   ? "border-stone-700 bg-stone-850 text-parch-50"
                   : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
               }`}
             >
+              <GameIcon src={styleIconPath(s)} size={16} />
               {STYLE_LABELS[s]}
             </button>
           ))}
+          <button
+            type="button"
+            disabled
+            title="Necromancy waits on sourced ability bands"
+            className="flex cursor-not-allowed items-center gap-1.5 border border-stone-750 px-3 py-1.5 text-xs text-parch-300/50"
+          >
+            <GameIcon src={styleIconPath("necromancy")} size={16} />
+            {STYLE_LABELS.necromancy}
+          </button>
         </div>
         <div className="mt-3 border-t border-stone-750">
           <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />

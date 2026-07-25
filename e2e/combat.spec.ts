@@ -39,3 +39,20 @@ test("rotation reports adrenaline starvation honestly", async ({ page }) => {
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText(/Rotation fails: overpower needs 60% adrenaline/)).toBeVisible();
 });
+
+test("build tab filters equipment by region", async ({ page }) => {
+  await page.getByRole("button", { name: "Build", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Loadout" })).toBeVisible();
+
+  await page.getByRole("combobox", { name: "Region" }).selectOption("misthalin");
+  await expect(page.getByRole("button", { name: /Omni guard/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Seismic wand/ })).toBeHidden();
+});
+
+test("analysis tab compares two stat lines", async ({ page }) => {
+  await page.getByRole("button", { name: "Analysis", exact: true }).click();
+  await expect(page.getByText("A · Build loadout")).toBeVisible();
+  await expect(page.getByText("B · Comparison")).toBeVisible();
+  await expect(page.getByText("B − A")).toBeVisible();
+  await expect(page.getByText("Damage Potential")).toBeVisible();
+});

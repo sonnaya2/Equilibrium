@@ -131,6 +131,8 @@ export interface UpdateIndexEntry {
   wikiPage?: string;
   lastRevid: number | null;
   lastVerifiedAt: string | null;
+  /** Set by sync-combat-data when the Wiki page was revised after lastVerifiedAt. */
+  stale?: boolean;
 }
 
 export type UpdateIndex = CombatDataset<UpdateIndexEntry>;

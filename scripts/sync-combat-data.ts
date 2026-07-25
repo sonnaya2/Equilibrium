@@ -106,7 +106,8 @@ const ledger: LedgerEntry[] = entities.map((entity) => {
     warnings.push(`${entity.entityId}: Wiki page missing — ${entity.wikiPage}`);
     return { entityId: entity.entityId, kind: entity.kind, wikiPage: entity.wikiPage, lastRevid: null, lastVerifiedAt: entity.recordVerifiedAt || null };
   }
-  if (seen.timestamp.slice(0, 10) > entity.recordVerifiedAt) {
+  const isStale = seen.timestamp.slice(0, 10) > entity.recordVerifiedAt;
+  if (isStale) {
     stale.push(`${entity.entityId}: ${entity.wikiPage} revised ${seen.timestamp.slice(0, 10)}, record verified ${entity.recordVerifiedAt}`);
   }
   return {
@@ -115,6 +116,7 @@ const ledger: LedgerEntry[] = entities.map((entity) => {
     wikiPage: entity.wikiPage,
     lastRevid: seen.revid,
     lastVerifiedAt: entity.recordVerifiedAt || null,
+    ...(isStale ? { stale: true as const } : {}),
   };
 });
 ledger.sort((a, b) => a.entityId.localeCompare(b.entityId));

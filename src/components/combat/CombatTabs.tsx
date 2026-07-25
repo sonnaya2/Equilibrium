@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { AnalysisTab } from "./AnalysisTab";
+import { BuildTab } from "./BuildTab";
 import { QuickCalculator } from "./QuickCalculator";
 import { RotationPlanner } from "./RotationPlanner";
 
-const TABS = ["Quick", "Rotation", "Reference"] as const;
+const TABS = ["Quick", "Build", "Rotation", "Analysis", "Reference"] as const;
 type Tab = (typeof TABS)[number];
 
 export function CombatTabs({ reference }: { reference: ReactNode }) {
@@ -29,7 +31,9 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
         ))}
       </div>
       {tab === "Quick" ? <QuickCalculator /> : null}
+      {tab === "Build" ? <BuildTab /> : null}
       {tab === "Rotation" ? <RotationPlanner /> : null}
+      {tab === "Analysis" ? <AnalysisTab /> : null}
       {tab === "Reference" ? reference : null}
     </div>
   );

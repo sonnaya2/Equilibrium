@@ -1,7 +1,9 @@
 import combatData from "#data/combat/modernisation-2026.json";
+import updateIndexData from "#data/combat/update-index.json";
 import catalystData from "#data/league/catalyst.json";
 import changesData from "#data/reference/changes-2026.json";
 import sourcesData from "#data/research/sources.json";
+import { combatSyncFacts } from "@/combat/data";
 import { Page } from "@/components/Page";
 import { CombatTabs } from "@/components/combat/CombatTabs";
 
@@ -96,6 +98,30 @@ export default function CombatPage() {
       <CombatTabs
         reference={
           <>
+      <section className="border-b border-stone-750 py-5">
+        <div className="mb-2 flex items-baseline justify-between gap-4">
+          <h2 className="text-sm font-medium text-parch-50">Data sync</h2>
+          <span className="text-xs text-parch-300">
+            {updateIndexData.records.length} tracked entities · polled {updateIndexData.lastSynced}
+          </span>
+        </div>
+        <dl className="grid text-xs md:grid-cols-5">
+          {combatSyncFacts().map((fact) => (
+            <div key={fact.kind} className="border-t border-stone-750 py-2 md:pr-4">
+              <dt className="capitalize text-parch-300">{fact.kind}</dt>
+              <dd className="mt-0.5 font-mono text-parch-50">{fact.records} records</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-2 text-xs text-parch-300">
+          Wiki revision poll: {(updateIndexData.records as Array<{ stale?: boolean }>).some((entry) => entry.stale)
+            ? "stale entities — run npm run sync:combat for the list"
+            : "no tracked entity revised since its record was verified"}
+          {" · tracking since "}
+          {updateIndexData.trackedSince}
+        </p>
+      </section>
+
       <section className="grid border-b border-stone-750 md:grid-cols-4">
         {Object.entries(combat.style_identity).map(([style, identity], index) => (
           <div

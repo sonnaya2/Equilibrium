@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
+import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 
 type Row = Record<string, unknown>;
 type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models";
@@ -14,6 +15,15 @@ const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> =
   { key: "activity_unlocks", label: "Activities", description: "Permanent rewards earned through repeatable activities." },
   { key: "equipment_models", label: "Equipment rules", description: "Persistent equipment interactions the planner and combat model need to understand." },
 ];
+
+const SUPPLEMENTS: Record<SectionKey, Row[]> = {
+  quest_unlocks: [],
+  ability_unlocks: [],
+  prayer_unlocks: [],
+  account_unlocks: [],
+  activity_unlocks: [],
+  equipment_models: supportItems.equipment_models as unknown as Row[],
+};
 
 function labelKey(value: string): string {
   return value
@@ -80,7 +90,15 @@ function details(row: Row): string[] {
     row.unlocks,
     row.access_requirements,
     row.requirements,
+    row.quest_dependencies,
+    row.acquisition_routes,
     row.materials,
+    row.upgrade,
+    row.charges,
+    row.toolbelt_unlock,
+    row.pickup_upgrade,
+    row.effects,
+    row.effect,
     row.milestones,
     row.rules,
     row.prerequisite,
@@ -90,13 +108,21 @@ function details(row: Row): string[] {
   ].map(format).filter(Boolean);
 }
 
+function rowsFor(section: SectionKey): Row[] {
+  const base = unlockData[section] as unknown as Row[];
+  const rows = new Map<string, Row>();
+  for (const row of SUPPLEMENTS[section]) rows.set(String(row.id), row);
+  for (const row of base) rows.set(String(row.id), row);
+  return [...rows.values()];
+}
+
 export function PermanentUnlockResearch() {
   const [section, setSection] = useState<SectionKey>("quest_unlocks");
   const [query, setQuery] = useState("");
   const selected = SECTIONS.find((item) => item.key === section) ?? SECTIONS[0];
 
   const rows = useMemo(() => {
-    const source = unlockData[section] as unknown as Row[];
+    const source = rowsFor(section);
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
     return source.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));

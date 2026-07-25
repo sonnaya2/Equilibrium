@@ -38,6 +38,7 @@ const overrides = new Map([
   ["activity-livid-farm", { fileTitle: "Livid Farm.png", search: "Livid Farm location image" }],
   ["activity-lunar-isle", { fileTitle: "Lunar Isle.png", search: "Lunar Isle location image" }],
   ["activity-mage-arena", { fileTitle: "Succession - Bilrach's ritual.png", search: "Mage Arena Wilderness location image" }],
+  ["upgrade-subjugation", { fileTitle: "Garb of subjugation.png", search: "Garb of subjugation inventory icon" }],
 ]);
 
 function applyOverrides(asset) {

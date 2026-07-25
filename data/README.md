@@ -22,7 +22,7 @@ Historical Catalyst region labels can be useful evidence for ambiguous League lo
 
 Permanent unlocks record the normal-game dependency first. Equilibrium auto-completed quests, Relics, Blessings and League passives are separate overrides; they do not rewrite the base-game record. Boss/codex drops stay in the regional research instead of being copied into a second reward table.
 
-Prayer and spellbook catalogues keep book state separate from quest dependency records. The complete prayer catalogue contains 46 Standard prayers and 45 Ancient Curses. Seren Prayers are a seven-prayer Ancient Curses extension, not a fabricated third switch state. Necromancy incantations and the Daemonheim spellbook stay separate from the three main-world Magic spellbooks.
+Prayer and spellbook catalogues keep book state separate from quest dependency records. The complete prayer catalogue contains 46 Standard prayers and 45 Ancient Curses. Seren Prayers are a seven-prayer Ancient Curses extension, not a fabricated third switch state. Every app-facing prayer row includes its current effect, normal-game required regions, unlock profile and source references. Official Equilibrium quest auto-completion remains a separate override. Necromancy incantations and the Daemonheim spellbook stay separate from the three main-world Magic spellbooks.
 
 The active Invention perk catalogue excludes perks removed in the 20 July 2026 Mid-Game Rebalance. Optimised PvM recipes remain in their specialist recipe files instead of turning the catalogue into a second recipe table.
 
@@ -32,29 +32,29 @@ Archaeology utility rows describe time, travel and duplicate-mitigation advantag
 
 ## Current layout
 
-- `combat/modernisation-2026.json` — current combat-system modernisation data
-- `league/regions.json` — region names, access and hard boundary rules
-- `league/region-dependencies.json` — hard, historical-working and unresolved cross-boundary/external-region rules
-- `league/relics.json` — Equilibrium relic tiers and revealed choices
-- `league/blessings.json` — Equilibrium blessing structure and revealed choices
-- `league/tasks.json` — published/provisional Equilibrium task metadata and task records when available
-- `league/catalyst.json` — 2025 Catalyst League historical baseline
-- `research/catalog.json` — region/skill browser data
-- `research/planner-expansions.json` — combat spots, Runecrafting altars, Invention/Archaeology progression and regional unique drops
-- `research/planner-expansions-invention-active-perks.json` — active current Invention perks; July 2026 removals excluded
-- `research/planner-expansions-archaeology-collections.json` — region-sensitive collection rewards and relic hand-in chains
-- `research/planner-expansions-archaeology-repeatables.json` — repeatable collection farms and collection relic routes
-- `research/planner-expansions-archaeology-guild.json` — corrected 2→3→4 relic presets, Guild shop progression, master outfit and Fixate infrastructure
-- `research/planner-expansions-archaeology-utilities.json` — duplicate mitigation, journal collection tracking/routing and museum overflow rules
-- `research/reference-site-harvest.json` — deduplicated PvME / RS Analysis mechanic and dependency research notes
-- `research/masterwork-staff-chain.json` — tier-100 staff self-source chain with hard vs conditional region pressure
-- `research/sources.json` — source manifest
-- `reference/changes-2026.json` — 2026 update chronology relevant to League planning
-- `reference/midgame-rebalance-2026-07-20.json` — July 20 rebalance values
-- `reference/progression-unlocks.json` — quest, activity, account and equipment unlock dependencies used by the planner
-- `reference/prayer-books.json` — prayer-book state and unlock dependencies
-- `reference/prayers.json` — complete Standard, Ancient Curses and Seren prayer-name catalogue
-- `reference/spellbooks.json` — Standard, Ancient and Lunar spellbook state plus scoped special systems
-- `reference/unknowns.json` — unrevealed or unresolved facts that must stay unresolved
+- `combat/modernisation-2026.json`: current combat-system modernisation data
+- `league/regions.json`: region names, access and hard boundary rules
+- `league/region-dependencies.json`: hard, historical-working and unresolved cross-boundary/external-region rules
+- `league/relics.json`: Equilibrium relic tiers and revealed choices
+- `league/blessings.json`: Equilibrium blessing structure and revealed choices
+- `league/tasks.json`: published/provisional Equilibrium task metadata and task records when available
+- `league/catalyst.json`: 2025 Catalyst League historical baseline
+- `research/catalog.json`: region/skill browser data
+- `research/planner-expansions.json`: combat spots, Runecrafting altars, Invention/Archaeology progression and regional unique drops
+- `research/planner-expansions-invention-active-perks.json`: active current Invention perks; July 2026 removals excluded
+- `research/planner-expansions-archaeology-collections.json`: region-sensitive collection rewards and relic hand-in chains
+- `research/planner-expansions-archaeology-repeatables.json`: repeatable collection farms and collection relic routes
+- `research/planner-expansions-archaeology-guild.json`: corrected 2-to-3-to-4 relic presets, Guild shop progression, master outfit and Fixate infrastructure
+- `research/planner-expansions-archaeology-utilities.json`: duplicate mitigation, journal collection tracking/routing and museum overflow rules
+- `research/reference-site-harvest.json`: deduplicated PvME / RS Analysis mechanic and dependency research notes
+- `research/masterwork-staff-chain.json`: tier-100 staff self-source chain with hard vs conditional region pressure
+- `research/sources.json`: source manifest
+- `reference/changes-2026.json`: 2026 update chronology relevant to League planning
+- `reference/midgame-rebalance-2026-07-20.json`: July 20 rebalance values
+- `reference/progression-unlocks.json`: quest, activity, account and equipment unlock dependencies used by the planner
+- `reference/prayer-books.json`: prayer-book state and unlock dependencies
+- `reference/prayers.json`: complete Standard, Ancient Curses and Seren prayer catalogue with effects and required regions
+- `reference/spellbooks.json`: Standard, Ancient and Lunar spellbook state plus scoped special systems
+- `reference/unknowns.json`: unrevealed or unresolved facts that must stay unresolved
 
 Do not add guessed League data to fill empty fields. Unknown or unrevealed values stay empty until there is a source.

@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-07-24",
+  "snapshot_date": "2026-07-25",
   "notes": [
     "Rates are base-game reference rates unless explicitly marked otherwise. Equilibrium XP multipliers are not yet fully revealed and must be applied separately.",
     "Several legacy RuneScape training guides still contain pre-2026 values. Each entry includes a freshness flag.",
@@ -30,6 +30,19 @@
     },
     {
       "skill": "Hunter",
+      "method": "Jackalope hunting",
+      "region": "havenhythe",
+      "level_range": "32+",
+      "xp_rate": "202 base Hunter XP per successful catch; a reliable post-2026 XP/hour benchmark has not yet been captured.",
+      "intensity": "active rabbit snaring",
+      "freshness": "2026_post_hunter_update_current_per_catch",
+      "confidence": "confirmed_wiki_per_catch_rate_hourly_unbenchmarked",
+      "location": "Havenhythe jackalope burrows",
+      "notes": "The 2026 Hunter update explicitly positions jackalopes as the level-32 step up from white rabbits. Current creature data lists 202 XP per catch versus 144 for white rabbits, about 40% more per successful catch. Keep it as an important early-game Havenhythe route, but do not claim it beats Desert whirligigs on XP/hour until post-rebalance catch-rate data exists.",
+      "source": "https://runescape.wiki/w/Hunter_creatures"
+    },
+    {
+      "skill": "Hunter",
       "method": "Clockwork box traps",
       "region": "havenhythe",
       "level_range": "55+",
@@ -38,6 +51,64 @@
       "freshness": "2026_current",
       "confidence": "confirmed_wiki",
       "location": "Havenhythe"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Whirligig progression",
+      "region": "desert",
+      "level_range": "30-110+",
+      "xp_rate": {
+        "30_49_gliding": "70,000+ XP/h on the current training page",
+        "50_69_swift": "125,000-200,000 XP/h on the current training page",
+        "70_89_hasty": "the page contains conflicting legacy estimates and needs a post-rebalance benchmark",
+        "90_plus_speedy": "the page lists very high rates but its Hunter summary is explicitly marked stale after the 2026 early-game rebalance"
+      },
+      "intensity": "active crocodile routing",
+      "freshness": "current_page_explicitly_stale_after_2026_early_game_rebalance",
+      "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+      "location": "Het's Oasis",
+      "warning": "The Wiki still identifies whirligigs as the main fast Hunter progression through these levels, but its summary rates are explicitly marked out of date after the 2026 rebalance. Keep the route visible and re-benchmark before optimizer ranking.",
+      "source": "https://runescape.wiki/w/Hunter_training"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Black salamanders",
+      "region": "forinthry",
+      "level_range": "67+",
+      "xp_rate": "Current Hunter training page lists roughly 110,000-186,000 base XP/h as an alternative in this level range.",
+      "intensity": "low-to-medium trapping",
+      "freshness": "current_page_with_2026_hunter_rate_warning",
+      "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+      "location": "Wilderness",
+      "warning": "Hunter's early-game rate table is marked stale after the 2026 rebalance, so retain this as a strong Forinthry candidate rather than an optimizer-grade number.",
+      "source": "https://runescape.wiki/w/Hunter_training"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Charming moths",
+      "region": "forinthry",
+      "level_range": "88+ Hunter; 83+ Agility",
+      "xp_rate": "About 180,000-240,000 Hunter XP/h plus 34,000-45,000 Agility XP/h with no items on the current guide.",
+      "intensity": "low-input barehanded catching",
+      "freshness": "current_method_with_removed_demonic_skull_warning",
+      "confidence": "confirmed_wiki_base_route_old_boost_removed",
+      "location": "Wilderness charming moth area",
+      "notes": "The route also produces roughly 360 Summoning charms per hour around level 99, which makes it unusually valuable in a no-trading League.",
+      "warning": "Ignore the old Demonic Skull bonus still mentioned on the Hunter guide. The skull was removed in the July 2026 mid-game rebalance.",
+      "source": "https://runescape.wiki/w/Hunter_training"
+    },
+    {
+      "skill": "Hunter",
+      "method": "Anachronia Big Game Hunter",
+      "region": "anachronia",
+      "level_range": "75+",
+      "xp_rate": "The current Hunter summary lists roughly 90,000-400,000 base XP/h depending on dinosaur tier and performance.",
+      "intensity": "active",
+      "freshness": "current_page_with_2026_hunter_rate_warning",
+      "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+      "location": "Anachronia Big Game Hunter sites",
+      "notes": "Still an important Anachronia Hunter route and profitable alternative. Havenhythe Big Game Hunter is the newer top-end XP route once its encounters are available.",
+      "source": "https://runescape.wiki/w/Hunter_training"
     },
     {
       "skill": "Divination",
@@ -104,6 +175,84 @@
       "location": "Kandarin safecracking circuit (Camelot / Ardougne and nearby safes)"
     },
     {
+      "skill": "Thieving",
+      "method": "Keldagrim dwarf traders",
+      "region": "fremennik",
+      "level_range": "90+; quoted ceiling assumes 100% success",
+      "xp_rate": "About 1,163,000 base XP/h at 100% pickpocket success.",
+      "intensity": "very low input once success rate is high enough",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_method_region_inferred",
+      "location": "Keldagrim",
+      "requirements": [
+        "90 Thieving",
+        "100% success for the quoted 1.163m XP/h ceiling; level 115 reaches 100% without boosts"
+      ],
+      "notes": "At level 90 with no boosts the guide gives a 75% success rate. With enough success chance, traders can be pickpocketed for up to roughly five minutes before being caught, making this one of Fremennik's strongest high-level skilling unlocks.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Keldagrim multi-step chests",
+      "region": "fremennik",
+      "level_range": "94+",
+      "xp_rate": 575000,
+      "xp_rate_unit": "approx base XP/h",
+      "intensity": "moderate; interaction every 10-30 seconds",
+      "freshness": "2026_current_2025_chest_rework",
+      "confidence": "confirmed_wiki_method_region_inferred",
+      "location": "Keldagrim Palace",
+      "requirements": [
+        "94 Thieving",
+        "Master thief's lockpick",
+        "Partial completion of The Giant Dwarf"
+      ],
+      "notes": "Especially valuable for a no-trading League: the Ironman guide highlights the route because it also supplies orikalkum/necronium bars and large quantities of stone spirits while training.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Strategies/Thieving"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Cadarn district multi-step chest",
+      "region": "tirannwn",
+      "level_range": "103+",
+      "xp_rate": 850000,
+      "xp_rate_unit": "approx base XP/h",
+      "intensity": "moderate",
+      "freshness": "2026_current_2025_chest_rework",
+      "confidence": "confirmed_wiki",
+      "location": "Prifddinas, Cadarn district",
+      "notes": "The reworked multi-step chest gives Tirannwn a high-level Thieving route that is substantially faster than elven clan workers on pure XP/hour.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
+      "skill": "Thieving",
+      "method": "City of Um multi-step chest",
+      "region": "misthalin",
+      "level_range": "112+",
+      "xp_rate": 1160000,
+      "xp_rate_unit": "approx base XP/h",
+      "intensity": "moderate",
+      "freshness": "2026_current_2025_chest_rework",
+      "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+      "location": "City of Um",
+      "notes": "High-level starting-region Thieving route under the working League mapping that groups City of Um with Misthalin.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
+      "skill": "Thieving",
+      "method": "Rasial's Citadel multi-step chest",
+      "region": "misthalin",
+      "level_range": "119+",
+      "xp_rate": 1300000,
+      "xp_rate_unit": "approx base XP/h",
+      "intensity": "moderate",
+      "freshness": "2026_current_2025_chest_rework",
+      "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+      "location": "Outside Rasial's Citadel",
+      "notes": "Current Thieving data lists roughly 1.3m base XP/h, making this an important late-game route in the starting Misthalin/City of Um bucket.",
+      "source": "https://runescape.wiki/w/Thieving_training"
+    },
+    {
       "skill": "Farming",
       "method": "Player-Owned Farm / Manor Farm",
       "region": "kandarin",
@@ -124,6 +273,36 @@
       "freshness": "current",
       "confidence": "confirmed_wiki",
       "location": "Anachronia Dinosaur Farm, on the island off Anachronia's west coast"
+    },
+    {
+      "skill": "Woodcutting",
+      "method": "Creeping ivy",
+      "region": "havenhythe",
+      "level_range": "35-68",
+      "xp_rate": "30,000-75,000 base XP/h",
+      "intensity": "low attention",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Havenhythe walls; convenient patch directly north of the Wendlewick lodestone",
+      "notes": "A strong starting-region early/mid route. It gives no logs, but requires less attention than most trees and still rolls bird nests.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
+    },
+    {
+      "skill": "Firemaking",
+      "method": "Curly roots in the Jadinko Lair",
+      "region": "karamja",
+      "level_range": "83+ Firemaking and 83+ Woodcutting",
+      "xp_rate": "About 250,000 Firemaking XP/h at minimum requirements and about 305,000 Firemaking XP/h at high levels with the normal firepit route; over 670,000 XP/h is possible with Superheat Form.",
+      "intensity": "semi-AFK normally; more active with Superheat Form",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_with_setup_dependency",
+      "location": "Jadinko Lair, south-eastern Karamja",
+      "requirements": [
+        "83 Firemaking",
+        "83 Woodcutting"
+      ],
+      "notes": "The normal route is free, produces some Woodcutting XP and can earn Jadinko Favour. The current guide calls the Superheat Form variant the best Firemaking XP method in-game, but that ceiling depends on prayer and sustain unlocks and should not be assumed as the League baseline.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Firemaking_training"
     },
     {
       "skill": "Archaeology",
@@ -159,6 +338,20 @@
         }
       ],
       "confidence": "confirmed_wiki_with_region_inference"
+    },
+    {
+      "skill": "Runecrafting",
+      "method": "Runespan via Wizards' Tower",
+      "region": "misthalin",
+      "level_range": "1-99+",
+      "xp_rate": "Current legacy guide ranges from roughly 16,500 XP/h at level 1 to 93,000 XP/h around level 90-99, with lower/middle-floor progression around 26,000-59,000 XP/h.",
+      "intensity": "low-to-medium",
+      "freshness": "stale_warning_110_runecrafting_update",
+      "confidence": "legacy_reference_only_current_method",
+      "location": "Runespan portals in the Wizards' Tower",
+      "notes": "Not the fastest Runecrafting route, but a resource-free starting-region option that matters more in a no-trading League than in the main game.",
+      "warning": "The members Runecrafting guide is missing parts of the 110 Runecrafting update and still contains removed Demonic Skull assumptions elsewhere. Treat the Runespan route as current content but re-benchmark rates before optimizer ranking.",
+      "source": "https://runescape.wiki/w/Pay_to_Play_Runecrafting_training"
     },
     {
       "skill": "Runecrafting",

@@ -6,6 +6,7 @@ const BASE_PATH = join(ROOT, "assets/source-manifest.json");
 const EXPANSION_PATHS = [
   join(ROOT, "assets/source-manifest-expansion.json"),
   join(ROOT, "assets/source-manifest-expansion-2.json"),
+  join(ROOT, "assets/source-manifest-expansion-3.json"),
 ];
 const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
 
@@ -37,12 +38,48 @@ const overrides = new Map([
       search: "Player-owned farm Manor Farm activity image",
     },
   ],
+  [
+    "activity-heart-of-gielinor",
+    {
+      fileTitle: "Heart of Gielinor skybox.png",
+      search: "Heart of Gielinor location image",
+    },
+  ],
+  [
+    "activity-wars-retreat",
+    {
+      fileTitle: "War's Retreat.png",
+      search: "War's Retreat location image",
+    },
+  ],
+  [
+    "activity-archaeology-guild",
+    {
+      fileTitle: "Collectors at the Archaeology Guild.png",
+      search: "Archaeology Guild location image collectors",
+    },
+  ],
+  [
+    "activity-big-game-hunter",
+    {
+      fileTitle: "Big Game Hunter arena.png",
+      search: "Big Game Hunter arena activity image",
+    },
+  ],
 ]);
 
-const applyOverrides = (asset) => ({
-  ...asset,
-  ...(overrides.get(asset.id) ?? {}),
-});
+function applyOverrides(asset) {
+  const preferExactUpgradeIcon =
+    asset.category?.startsWith("rs3/upgrades/") && !asset.fileTitle
+      ? { fileTitle: `${asset.label}.png` }
+      : {};
+  return {
+    ...asset,
+    ...preferExactUpgradeIcon,
+    ...(overrides.get(asset.id) ?? {}),
+  };
+}
+
 const expansionAssets = expansions
   .flatMap((expansion) => expansion.assets ?? [])
   .map(applyOverrides);
@@ -58,7 +95,7 @@ for (const asset of assets) {
   paths.add(asset.path);
 }
 
-// Remove stale variants when a pinned source changes the output extension.
+// Remove stale variants when a pinned or exact source changes the output extension.
 for (const stalePath of [
   "assets/rs3/bosses/zamorak.png",
   "assets/rs3/bosses/ambassador.gif",
@@ -89,10 +126,12 @@ try {
     "assets/source-manifest.json",
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
+    "assets/source-manifest-expansion-3.json",
   ];
   generated.expansionManifests = [
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
+    "assets/source-manifest-expansion-3.json",
   ];
   await writeFile(GENERATED_PATH, `${JSON.stringify(generated, null, 2)}\n`);
 } finally {

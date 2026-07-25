@@ -55,6 +55,39 @@ function applyEnrichment(progressionUnlocks, enrichment, sourceName) {
   progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date].filter(Boolean).sort().at(-1);
 }
 
+function enrichPrayerCatalogue(prayerSource, details) {
+  const enriched = structuredClone(prayerSource);
+  enriched.purpose = "Complete current prayer catalogue with effects and normal-game region dependencies for Equilibrium planning.";
+  enriched.region_methodology = details.region_methodology;
+  enriched.sources = details.sources;
+  enriched.unlock_profiles = details.unlock_profiles;
+
+  for (const book of enriched.books) {
+    const defaultProfileId = details.default_profile_by_book?.[book.id];
+    if (!defaultProfileId) throw new Error(`Prayer details are missing a default unlock profile for ${book.id}`);
+
+    for (const prayer of book.prayers) {
+      const overrideKey = `${book.id}:${prayer.name}`;
+      const profileId = details.profile_overrides?.[overrideKey] ?? defaultProfileId;
+      const profile = details.unlock_profiles?.[profileId];
+      const effect = details.effects?.[prayer.name];
+      if (!profile) throw new Error(`Prayer details are missing unlock profile ${profileId} for ${overrideKey}`);
+      if (typeof effect !== "string" || !effect.trim()) throw new Error(`Prayer details are missing an effect for ${overrideKey}`);
+
+      const baseSourceRef = book.id === "standard-prayers" ? "prayer" : "curses";
+      prayer.effect = effect;
+      prayer.required_regions = [...profile.required_regions];
+      prayer.region_requirement_type = profile.region_requirement_type;
+      prayer.unlock_profile_id = profileId;
+      prayer.unlock_requirements = [...profile.requirements];
+      prayer.source_refs = [...new Set([baseSourceRef, ...(profile.source_refs ?? [])])];
+      if (profile.acquisition_location_region) prayer.acquisition_location_region = profile.acquisition_location_region;
+    }
+  }
+
+  return enriched;
+}
+
 const combat = read("scraped-data/combat-2026.json");
 const combatAbilityAudit = read("scraped-data/combat-ability-audit-2026-07-24.json");
 const catalyst = read("scraped-data/catalyst.json");
@@ -62,7 +95,9 @@ const changes = read("scraped-data/2026-changes.json");
 const rebalance = read("scraped-data/midgame-rebalance-2026-07-20.json");
 const progressionUnlocks = read("scraped-data/progression-unlocks.json");
 const prayerBooks = read("scraped-data/prayer-books.json");
-const prayers = read("scraped-data/prayers.json");
+const prayerSource = read("scraped-data/prayers.json");
+const prayerDetails = read("scraped-data/prayer-effects-regions.json");
+const prayers = enrichPrayerCatalogue(prayerSource, prayerDetails);
 const spellbooks = read("scraped-data/spellbooks.json");
 const regionDependencies = read("scraped-data/region-dependencies.json");
 const referenceHarvest = read("scraped-data/reference-site-harvest.json");
@@ -114,4 +149,4 @@ write("data/research/masterwork-staff-chain.json", masterworkStaffChain);
 write("data/reference/unknowns.json", unknowns);
 
 console.log(`REFERENCE DATA SYNC
-Combat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, prayer books, complete prayers, spellbooks, ${enrichmentFiles.length} progression enrichment overlay(s), reference research, Masterwork staff chain and unknowns updated.`);
+Combat system data, audited ability records, Catalyst, region dependencies, 2026 changes, mid-game rebalance, permanent unlocks, prayer books, prayer effects and region dependencies, spellbooks, ${enrichmentFiles.length} progression enrichment overlay(s), reference research, Masterwork staff chain and unknowns updated.`);

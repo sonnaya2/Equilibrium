@@ -6,6 +6,7 @@ const BASE_PATH = join(ROOT, "assets/source-manifest.json");
 const EXPANSION_PATHS = [
   join(ROOT, "assets/source-manifest-expansion.json"),
   join(ROOT, "assets/source-manifest-expansion-2.json"),
+  join(ROOT, "assets/source-manifest-expansion-3.json"),
 ];
 const GENERATED_PATH = join(ROOT, "assets/manifest.generated.json");
 
@@ -118,10 +119,12 @@ try {
     "assets/source-manifest.json",
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
+    "assets/source-manifest-expansion-3.json",
   ];
   generated.expansionManifests = [
     "assets/source-manifest-expansion.json",
     "assets/source-manifest-expansion-2.json",
+    "assets/source-manifest-expansion-3.json",
   ];
   await writeFile(GENERATED_PATH, `${JSON.stringify(generated, null, 2)}\n`);
 } finally {

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
+import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
 
 type Row = Record<string, unknown>;
 type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models";
@@ -22,7 +23,10 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   prayer_unlocks: [],
   account_unlocks: [],
   activity_unlocks: [],
-  equipment_models: supportItems.equipment_models as unknown as Row[],
+  equipment_models: [
+    ...(supportItems.equipment_models as unknown as Row[]),
+    ...(containerBags.equipment_models as unknown as Row[]),
+  ],
 };
 
 function labelKey(value: string): string {
@@ -58,7 +62,7 @@ function title(row: Row): string {
 }
 
 function region(row: Row): string {
-  const value = format(row.region_hint || row.region_candidates);
+  const value = format(row.region_hint || row.region_pressure || row.region_candidates);
   if (!value) return "No hard region set";
   return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
@@ -91,8 +95,11 @@ function details(row: Row): string[] {
     row.access_requirements,
     row.requirements,
     row.quest_dependencies,
+    row.dependency_notes,
     row.acquisition_routes,
     row.materials,
+    row.base,
+    row.gem_storage,
     row.base_device_recipe,
     row.tight_spring_recipe,
     row.upgrade_ladder,

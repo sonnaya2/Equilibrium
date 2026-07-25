@@ -1,22 +1,24 @@
 import collectionSource from "../../data/research/planner-expansions-archaeology-collections.json";
 import repeatableSource from "../../data/research/planner-expansions-archaeology-repeatables.json";
+import guildSource from "../../data/research/planner-expansions-archaeology-guild.json";
 import utilitySource from "../../data/research/planner-expansions-archaeology-utilities.json";
 
 export type ArchaeologyQualificationMilestone = (typeof collectionSource)["qualification_milestones"][number];
-export type RelicSystemProgression =
-  | (typeof collectionSource)["relic_system_progression"][number]
-  | (typeof utilitySource)["relic_system_progression"][number];
-export type RelicPresetProgression = (typeof utilitySource)["relic_system_progression"][number];
+export type RelicSystemProgression = (typeof collectionSource)["relic_system_progression"][number];
+export type RelicLoadoutProgression = (typeof guildSource)["relic_loadout_progression"][number];
+export type ArchaeologyGuildShopProgression = (typeof guildSource)["shop_progression"][number];
 export type CollectionRelicRoute =
   | (typeof collectionSource)["collection_relic_routes"][number]
   | (typeof repeatableSource)["additional_collection_relic_routes"][number];
 export type RepeatableCollectionReward =
   | (typeof collectionSource)["repeatable_collection_rewards"][number]
   | (typeof repeatableSource)["repeatable_collection_rewards"][number];
-export type ArchaeologyCollectionCompletionTool = (typeof utilitySource)["collection_completion_tools"][number];
+export type ArchaeologyCollectionCompletionTool =
+  | (typeof guildSource)["collection_completion_infrastructure"][number]
+  | (typeof utilitySource)["collection_completion_tools"][number];
 export type ArchaeologyDataCorrection =
   | (typeof collectionSource)["existing_data_corrections"][number]
-  | (typeof utilitySource)["existing_data_corrections"][number];
+  | (typeof guildSource)["stale_data_correction"];
 export type CurrentArchaeologyRelicAddition = (typeof collectionSource)["current_2026_relic_additions"][number];
 
 export function getArchaeologyQualificationMilestones(): ArchaeologyQualificationMilestone[] {
@@ -24,20 +26,17 @@ export function getArchaeologyQualificationMilestones(): ArchaeologyQualificatio
 }
 
 export function getRelicSystemProgression(): RelicSystemProgression[] {
-  const supersededIds = new Set(
-    utilitySource.existing_data_corrections
-      .filter((correction) => correction.action === "replace_in_runtime_with_relic_system_progression_overlay")
-      .map((correction) => correction.target_id),
+  return collectionSource.relic_system_progression.filter(
+    (row) => row.id !== guildSource.stale_data_correction.target_id,
   );
-
-  return [
-    ...collectionSource.relic_system_progression.filter((row) => !supersededIds.has(row.id)),
-    ...utilitySource.relic_system_progression,
-  ];
 }
 
-export function getRelicPresetProgression(): RelicPresetProgression[] {
-  return utilitySource.relic_system_progression;
+export function getRelicLoadoutProgression(): RelicLoadoutProgression[] {
+  return guildSource.relic_loadout_progression;
+}
+
+export function getArchaeologyGuildShopProgression(): ArchaeologyGuildShopProgression[] {
+  return guildSource.shop_progression;
 }
 
 export function getCollectionRelicRoutes(): CollectionRelicRoute[] {
@@ -69,13 +68,16 @@ export function getRepeatableCollectionRewardsByRegion(region: string): Repeatab
 }
 
 export function getArchaeologyCollectionCompletionTools(): ArchaeologyCollectionCompletionTool[] {
-  return utilitySource.collection_completion_tools;
+  return [
+    ...guildSource.collection_completion_infrastructure,
+    ...utilitySource.collection_completion_tools,
+  ];
 }
 
 export function getArchaeologyDataCorrections(): ArchaeologyDataCorrection[] {
   return [
     ...collectionSource.existing_data_corrections,
-    ...utilitySource.existing_data_corrections,
+    guildSource.stale_data_correction,
   ];
 }
 

@@ -17,7 +17,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three/webgpu";
 import { useFrame, useThree } from "@react-three/fiber";
-import { float, mix, mx_fractal_noise_float, positionWorld, smoothstep, time, uniform, vec3 } from "three/tsl";
+import { float, mix, positionWorld, smoothstep, uniform, vec3 } from "three/tsl";
 import { MAP_WORLD } from "./data/regionAnchors";
 import { OCEAN_DEEP, OCEAN_FOAM, OCEAN_SHALLOW } from "./palette";
 
@@ -36,14 +36,21 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
     const m = new THREE.MeshBasicNodeMaterial();
     // Frozen under reduced motion: the clock stops, the surface stays.
     const clock = uniform(0);
-    const p = positionWorld.xz.mul(1.6);
-    const drift = vec3(p.x.add(clock.mul(0.03)), p.y.sub(clock.mul(0.018)), float(0));
-    const swell = mx_fractal_noise_float(drift, 3);
+
+    // Deliberately sines, not noise. This plane covers most of the viewport once
+    // the camera descends, so its fragment cost is paid on nearly every pixel at
+    // whatever dpr the display has. A 3-octave fractal noise here locked up real
+    // hardware at dpr 2 while headless dpr 1 looked fine. Two crossed waves cost
+    // a handful of ALU ops and read the same at this scale.
+    const p = positionWorld.xz;
+    const a = p.x.mul(2.7).add(p.y.mul(1.1)).add(clock.mul(0.35)).sin();
+    const b = p.y.mul(3.4).sub(p.x.mul(0.8)).sub(clock.mul(0.22)).sin();
+    const swell = a.mul(0.6).add(b.mul(0.4));
 
     const base = mix(linear(OCEAN_DEEP), linear(OCEAN_SHALLOW), swell.mul(0.5).add(0.5));
-    // Thin crests where the ridge crosses a band, rather than a full foam layer.
-    const ridge = smoothstep(float(0.62), float(0.7), swell.abs());
-    m.colorNode = mix(base, linear(OCEAN_FOAM), ridge.mul(0.35));
+    // Thin crests where the two waves agree, rather than a full foam layer.
+    const ridge = smoothstep(float(0.72), float(0.95), swell.abs());
+    m.colorNode = mix(base, linear(OCEAN_FOAM), ridge.mul(0.3));
     m.fog = false;
     return { m, clock };
   }, []);
@@ -65,15 +72,21 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
     return () => io.disconnect();
   }, [gl, invalidate, reducedMotion]);
 
+  // Throttled to ~30Hz. The sea does not need 165 frames a second, and every
+  // frame it asks for is a full-viewport repaint of the whole scene.
+  const accum = useRef(0);
   useFrame((_, delta) => {
     if (!running.current) return;
     material.clock.value += delta;
+    accum.current += delta;
+    if (accum.current < 1 / 30) return;
+    accum.current = 0;
     invalidate();
   });
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.028, 0]} material={material.m}>
-      <planeGeometry args={[MAP_WORLD.width * 3.2, MAP_WORLD.height * 3.6]} />
+      <planeGeometry args={[MAP_WORLD.width * 2.2, MAP_WORLD.height * 2.4]} />
     </mesh>
   );
 }

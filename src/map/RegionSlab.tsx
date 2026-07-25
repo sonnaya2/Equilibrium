@@ -155,8 +155,33 @@ export function RegionSlab({
   // Crest sits north of the marker, count south of it. Stacked on one point they
   // overlap on screen, because the crest lies flat and foreshortens while the
   // count is a screen-space chip centred on the same projected pixel.
-  const CREST_OFFSET = 0.055;
-  const COUNT_OFFSET = 0.052;
+  //
+  // Scaled to the slab, not fixed: regions differ by 3x in area, and a constant
+  // offset walks the crest off the cap of a small one, where the overhang gets
+  // occluded by whatever is behind it and reads as a clipped shield.
+  const inradius = useMemo(() => {
+    const pts = ringPoints(shape).map(
+      ([u, v]) =>
+        [(u - 0.5) * MAP_WORLD.width, (v - 0.5) * MAP_WORLD.height] as [number, number],
+    );
+    const m: [number, number] = [
+      (shape.markerUv[0] - 0.5) * MAP_WORLD.width,
+      (shape.markerUv[1] - 0.5) * MAP_WORLD.height,
+    ];
+    let best = Infinity;
+    for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+      const [ax, az] = pts[j];
+      const [bx, bz] = pts[i];
+      const dx = bx - ax;
+      const dz = bz - az;
+      const t = Math.max(0, Math.min(1, ((m[0] - ax) * dx + (m[1] - az) * dz) / (dx * dx + dz * dz || 1)));
+      best = Math.min(best, Math.hypot(m[0] - (ax + t * dx), m[1] - (az + t * dz)));
+    }
+    return best;
+  }, [shape]);
+  const CREST_OFFSET = Math.min(0.055, inradius * 0.5);
+  const COUNT_OFFSET = Math.min(0.052, inradius * 0.48);
+  const crestSize = Math.min(0.116, inradius * 1.05);
 
   return (
     <group ref={groupRef}>
@@ -173,7 +198,7 @@ export function RegionSlab({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[mx, shape.depth + 0.004, mz - CREST_OFFSET]}
       >
-        <planeGeometry args={[0.116, 0.132]} />
+        <planeGeometry args={[crestSize, crestSize * 1.14]} />
         <meshBasicMaterial
           map={crest}
           transparent

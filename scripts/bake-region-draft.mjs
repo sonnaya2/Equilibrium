@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SRC = path.join(ROOT, "public/map/league-map.jpg");
+const SRC = path.join(ROOT, "assets/leagues/equilibrium/official/regions-tab.jpg");
 const OUT = path.join(ROOT, "scripts/.region-draft.json");
 
 // Same anchors the scene uses, so drafts land where the markers already are.

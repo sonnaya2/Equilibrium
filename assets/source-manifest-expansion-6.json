@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-25",
+  "notes": [
+    "Sixth targeted audit pass for permanent equipment upgrades represented directly in progression-unlocks.json.",
+    "Adds the Essence of Finality equipment anchor and the nine Zamorakian sliver enchantment consumables; recipe ingredients are intentionally excluded."
+  ],
+  "assets": [
+    {"id":"upgrade-essence-of-finality","label":"Essence of Finality amulet","category":"rs3/upgrades/permanent-equipment","path":"assets/rs3/upgrades/permanent-equipment/essence-of-finality","fileTitle":"Essence of Finality amulet.png","search":"Essence of Finality amulet inventory icon","canonicalPage":"https://runescape.wiki/w/Essence_of_Finality_amulet"},
+    {"id":"upgrade-enchantment-agony","label":"Enchantment of agony","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/agony","fileTitle":"Enchantment of agony.png","search":"Enchantment of agony inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_agony"},
+    {"id":"upgrade-enchantment-heroism","label":"Enchantment of heroism","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/heroism","fileTitle":"Enchantment of heroism.png","search":"Enchantment of heroism inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_heroism"},
+    {"id":"upgrade-enchantment-savagery","label":"Enchantment of savagery","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/savagery","fileTitle":"Enchantment of savagery.png","search":"Enchantment of savagery inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_savagery"},
+    {"id":"upgrade-enchantment-dispelling","label":"Enchantment of dispelling","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/dispelling","fileTitle":"Enchantment of dispelling.png","search":"Enchantment of dispelling inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_dispelling"},
+    {"id":"upgrade-enchantment-dread","label":"Enchantment of dread","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/dread","fileTitle":"Enchantment of dread.png","search":"Enchantment of dread inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_dread"},
+    {"id":"upgrade-enchantment-shadows","label":"Enchantment of shadows","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/shadows","fileTitle":"Enchantment of shadows.png","search":"Enchantment of shadows inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_shadows"},
+    {"id":"upgrade-enchantment-affliction","label":"Enchantment of affliction","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/affliction","fileTitle":"Enchantment of affliction.png","search":"Enchantment of affliction inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_affliction"},
+    {"id":"upgrade-enchantment-flames","label":"Enchantment of flames","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/flames","fileTitle":"Enchantment of flames.png","search":"Enchantment of flames inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_flames"},
+    {"id":"upgrade-enchantment-metaphysics","label":"Enchantment of metaphysics","category":"rs3/upgrades/enchantments","path":"assets/rs3/upgrades/enchantments/metaphysics","fileTitle":"Enchantment of metaphysics.png","search":"Enchantment of metaphysics inventory icon","canonicalPage":"https://runescape.wiki/w/Enchantment_of_metaphysics"}
+  ]
+}

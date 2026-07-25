@@ -1,8 +1,7 @@
 /**
- * Task records: data/league/tasks.json ships zero records until the reveal, so the
- * canonical shape is the tier table plus what the reveal promises (name, tier,
- * points, region/skill context). The guard below is the contract — rows that match
- * render, anything else drops out, and zero records keeps the honest empty state.
+ * Shared task-record contract. Equilibrium records stay canonical. A Catalyst
+ * League fixture may temporarily use the same renderer while the Equilibrium
+ * task list is unpublished.
  */
 
 export const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
@@ -16,6 +15,11 @@ export interface TaskRecord {
   region?: string;
   skills?: string[];
   areas?: string[];
+  requirements?: string;
+  sourceLeague?: string;
+  testingOnly?: boolean;
+  catalystCompletionRate?: number;
+  catalystCompletionRateQualifier?: "<";
 }
 
 export function asTaskRecords(value: unknown): TaskRecord[] {
@@ -52,6 +56,7 @@ export function filterTasks(
       record.name,
       record.description ?? "",
       record.region ?? "",
+      record.requirements ?? "",
       ...(record.skills ?? []),
       ...(record.areas ?? []),
     ]

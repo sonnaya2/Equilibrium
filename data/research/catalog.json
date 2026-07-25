@@ -42,7 +42,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 64
+    "trainingMethods": 77
   },
   "regions": [
     {
@@ -59,6 +59,7 @@
         "Construction",
         "Divination",
         "Necromancy",
+        "Runecrafting",
         "Thieving"
       ],
       "content": [
@@ -373,6 +374,9 @@
         "construction:fort-forinthry-reinforcement",
         "necromancy:combat-rituals-progression",
         "necromancy:rituals",
+        "runecrafting:runespan-via-wizards-tower",
+        "thieving:city-of-um-multi-step-chest",
+        "thieving:rasial-s-citadel-multi-step-chest",
         "thieving:safecracking-misthalin"
       ],
       "hardRules": [
@@ -413,7 +417,8 @@
         "Fishing",
         "Hunter",
         "Slayer",
-        "Summoning"
+        "Summoning",
+        "Woodcutting"
       ],
       "content": [
         {
@@ -614,7 +619,9 @@
         "hunter:birdhouses",
         "hunter:clockwork-box-traps",
         "hunter:havenhythe-big-game-hunter",
-        "summoning:shrine-of-inanna-obelisks"
+        "hunter:jackalope-hunting",
+        "summoning:shrine-of-inanna-obelisks",
+        "woodcutting:creeping-ivy"
       ],
       "hardRules": [],
       "warnings": [],
@@ -639,6 +646,7 @@
         "TzHaar area"
       ],
       "skills": [
+        "Firemaking",
         "Slayer"
       ],
       "content": [
@@ -735,7 +743,9 @@
           "regionId": "karamja"
         }
       ],
-      "trainingMethodIds": [],
+      "trainingMethodIds": [
+        "firemaking:curly-roots-in-the-jadinko-lair"
+      ],
       "hardRules": [],
       "warnings": [],
       "source": {
@@ -1243,7 +1253,8 @@
         "Cooking",
         "Crafting",
         "Herblore",
-        "Magic"
+        "Magic",
+        "Thieving"
       ],
       "content": [
         {
@@ -1317,7 +1328,9 @@
         "cooking:bake-pie",
         "cooking:yak-meat-bank-range-loop",
         "crafting:telekinetic-grind-sandstone",
-        "herblore:telekinetic-grind-herb-tar"
+        "herblore:telekinetic-grind-herb-tar",
+        "thieving:keldagrim-dwarf-traders",
+        "thieving:keldagrim-multi-step-chests"
       ],
       "hardRules": [],
       "warnings": [],
@@ -1345,6 +1358,7 @@
       "skills": [
         "Agility",
         "Dungeoneering",
+        "Hunter",
         "Mining",
         "Prayer",
         "Runecrafting",
@@ -1540,6 +1554,8 @@
         "agility:wilderness-course",
         "combat-styles:abyss-afk-combat-training",
         "dungeoneering:daemonheim-floors",
+        "hunter:black-salamanders",
+        "hunter:charming-moths",
         "mining:primal-ores",
         "prayer:chaos-altar",
         "runecrafting:abyss-runecrafting",
@@ -1572,6 +1588,7 @@
       "skills": [
         "Agility",
         "Crafting",
+        "Hunter",
         "Prayer",
         "Runecrafting",
         "Summoning"
@@ -1765,6 +1782,7 @@
       "trainingMethodIds": [
         "agility:het-s-oasis-course",
         "crafting:telekinetic-grind-sandstone",
+        "hunter:whirligig-progression",
         "prayer:powder-of-burials-banked-bones",
         "runecrafting:soul-altar",
         "summoning:menaphos-merchant-district-obelisk"
@@ -1943,6 +1961,7 @@
         "Mining",
         "Prayer",
         "Summoning",
+        "Thieving",
         "Woodcutting"
       ],
       "content": [
@@ -2064,6 +2083,7 @@
         "mining:corrupted-ore",
         "prayer:cleansing-crystals",
         "summoning:amlodd-obelisk",
+        "thieving:cadarn-district-multi-step-chest",
         "woodcutting:crystal-trees",
         "woodcutting:prifddinas-ivy"
       ],
@@ -2250,6 +2270,7 @@
         "agility:anachronia-full-course",
         "farming:ranch-out-of-time",
         "firemaking:sharp-shell-shards",
+        "hunter:anachronia-big-game-hunter",
         "runecrafting:time-runes",
         "runecrafting:time-runes-through-the-abyss"
       ],
@@ -2948,9 +2969,39 @@
       "id": "firemaking",
       "name": "Firemaking",
       "regions": [
+        "Karamja",
         "Anachronia"
       ],
       "methods": [
+        {
+          "id": "firemaking:curly-roots-in-the-jadinko-lair",
+          "skill": "Firemaking",
+          "method": "Curly roots in the Jadinko Lair",
+          "levelRange": "83+ Firemaking and 83+ Woodcutting",
+          "xpRate": "About 250,000 Firemaking XP/h at minimum requirements and about 305,000 Firemaking XP/h at high levels with the normal firepit route; over 670,000 XP/h is possible with Superheat Form.",
+          "intensity": "semi-AFK normally; more active with Superheat Form",
+          "location": "Jadinko Lair, south-eastern Karamja",
+          "requirements": [
+            "83 Firemaking",
+            "83 Woodcutting"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "karamja"
+          ],
+          "note": "The normal route is free, produces some Woodcutting XP and can earn Jadinko Favour. The current guide calls the Superheat Form variant the best Firemaking XP method in-game, but that ceiling depends on prayer and sustain unlocks and should not be assumed as the League baseline.",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki_with_setup_dependency",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Firemaking_training",
+            "title": "Curly roots in the Jadinko Lair",
+            "verifiedAt": "2026-07-25"
+          }
+        },
         {
           "id": "firemaking:eternal-magic-logs",
           "skill": "Firemaking",
@@ -3165,9 +3216,38 @@
       "id": "hunter",
       "name": "Hunter",
       "regions": [
-        "Havenhythe"
+        "Havenhythe",
+        "Forinthry",
+        "Desert",
+        "Anachronia"
       ],
       "methods": [
+        {
+          "id": "hunter:anachronia-big-game-hunter",
+          "skill": "Hunter",
+          "method": "Anachronia Big Game Hunter",
+          "levelRange": "75+",
+          "xpRate": "The current Hunter summary lists roughly 90,000-400,000 base XP/h depending on dinosaur tier and performance.",
+          "intensity": "active",
+          "location": "Anachronia Big Game Hunter sites",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "Still an important Anachronia Hunter route and profitable alternative. Havenhythe Big Game Hunter is the newer top-end XP route once its encounters are available.",
+          "warning": "",
+          "freshness": "current_page_with_2026_hunter_rate_warning",
+          "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Anachronia Big Game Hunter",
+            "verifiedAt": "2026-07-25"
+          }
+        },
         {
           "id": "hunter:birdhouses",
           "skill": "Hunter",
@@ -3191,6 +3271,58 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hunter_training",
             "title": "Hunter training",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "hunter:black-salamanders",
+          "skill": "Hunter",
+          "method": "Black salamanders",
+          "levelRange": "67+",
+          "xpRate": "Current Hunter training page lists roughly 110,000-186,000 base XP/h as an alternative in this level range.",
+          "intensity": "low-to-medium trapping",
+          "location": "Wilderness",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "",
+          "warning": "Hunter's early-game rate table is marked stale after the 2026 rebalance, so retain this as a strong Forinthry candidate rather than an optimizer-grade number.",
+          "freshness": "current_page_with_2026_hunter_rate_warning",
+          "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Black salamanders",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "hunter:charming-moths",
+          "skill": "Hunter",
+          "method": "Charming moths",
+          "levelRange": "88+ Hunter; 83+ Agility",
+          "xpRate": "About 180,000-240,000 Hunter XP/h plus 34,000-45,000 Agility XP/h with no items on the current guide.",
+          "intensity": "low-input barehanded catching",
+          "location": "Wilderness charming moth area",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "The route also produces roughly 360 Summoning charms per hour around level 99, which makes it unusually valuable in a no-trading League.",
+          "warning": "Ignore the old Demonic Skull bonus still mentioned on the Hunter guide. The skull was removed in the July 2026 mid-game rebalance.",
+          "freshness": "current_method_with_removed_demonic_skull_warning",
+          "confidence": "confirmed_wiki_base_route_old_boost_removed",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Charming moths",
             "verifiedAt": "2026-07-25"
           }
         },
@@ -3243,6 +3375,58 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hunter_training",
             "title": "Hunter training",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "hunter:jackalope-hunting",
+          "skill": "Hunter",
+          "method": "Jackalope hunting",
+          "levelRange": "32+",
+          "xpRate": "202 base Hunter XP per successful catch; a reliable post-2026 XP/hour benchmark has not yet been captured.",
+          "intensity": "active rabbit snaring",
+          "location": "Havenhythe jackalope burrows",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "The 2026 Hunter update explicitly positions jackalopes as the level-32 step up from white rabbits. Current creature data lists 202 XP per catch versus 144 for white rabbits, about 40% more per successful catch. Keep it as an important early-game Havenhythe route, but do not claim it beats Desert whirligigs on XP/hour until post-rebalance catch-rate data exists.",
+          "warning": "",
+          "freshness": "2026_post_hunter_update_current_per_catch",
+          "confidence": "confirmed_wiki_per_catch_rate_hourly_unbenchmarked",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_creatures",
+            "title": "Jackalope hunting",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "hunter:whirligig-progression",
+          "skill": "Hunter",
+          "method": "Whirligig progression",
+          "levelRange": "30-110+",
+          "xpRate": "30 49 gliding: 70,000+ XP/h on the current training page · 50 69 swift: 125,000-200,000 XP/h on the current training page · 70 89 hasty: the page contains conflicting legacy estimates and needs a post-rebalance benchmark · 90 plus speedy: the page lists very high rates but its Hunter summary is explicitly marked stale after the 2026 early-game rebalance",
+          "intensity": "active crocodile routing",
+          "location": "Het's Oasis",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "",
+          "warning": "The Wiki still identifies whirligigs as the main fast Hunter progression through these levels, but its summary rates are explicitly marked out of date after the 2026 rebalance. Keep the route visible and re-benchmark before optimizer ranking.",
+          "freshness": "current_page_explicitly_stale_after_2026_early_game_rebalance",
+          "confidence": "wiki_candidate_rate_needs_post_rebalance_benchmark",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_training",
+            "title": "Whirligig progression",
             "verifiedAt": "2026-07-25"
           }
         }
@@ -3623,6 +3807,7 @@
       "id": "runecrafting",
       "name": "Runecrafting",
       "regions": [
+        "Misthalin",
         "Forinthry",
         "Desert",
         "Anachronia"
@@ -3703,6 +3888,32 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
             "title": "Imbuing eternal magic weapons",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "runecrafting:runespan-via-wizards-tower",
+          "skill": "Runecrafting",
+          "method": "Runespan via Wizards' Tower",
+          "levelRange": "1-99+",
+          "xpRate": "Current legacy guide ranges from roughly 16,500 XP/h at level 1 to 93,000 XP/h around level 90-99, with lower/middle-floor progression around 26,000-59,000 XP/h.",
+          "intensity": "low-to-medium",
+          "location": "Runespan portals in the Wizards' Tower",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin"
+          ],
+          "note": "Not the fastest Runecrafting route, but a resource-free starting-region option that matters more in a no-trading League than in the main game.",
+          "warning": "The members Runecrafting guide is missing parts of the 110 Runecrafting update and still contains removed Demonic Skull assumptions elsewhere. Treat the Runespan route as current content but re-benchmark rates before optimizer ranking.",
+          "freshness": "stale_warning_110_runecrafting_update",
+          "confidence": "legacy_reference_only_current_method",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay_to_Play_Runecrafting_training",
+            "title": "Runespan via Wizards' Tower",
             "verifiedAt": "2026-07-25"
           }
         },
@@ -4012,9 +4223,148 @@
       "regions": [
         "Misthalin",
         "Asgarnia",
-        "Kandarin"
+        "Kandarin",
+        "Fremennik",
+        "Tirannwn"
       ],
       "methods": [
+        {
+          "id": "thieving:cadarn-district-multi-step-chest",
+          "skill": "Thieving",
+          "method": "Cadarn district multi-step chest",
+          "levelRange": "103+",
+          "xpRate": "850000",
+          "intensity": "moderate",
+          "location": "Prifddinas, Cadarn district",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "The reworked multi-step chest gives Tirannwn a high-level Thieving route that is substantially faster than elven clan workers on pure XP/hour.",
+          "warning": "",
+          "freshness": "2026_current_2025_chest_rework",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Cadarn district multi-step chest",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "thieving:city-of-um-multi-step-chest",
+          "skill": "Thieving",
+          "method": "City of Um multi-step chest",
+          "levelRange": "112+",
+          "xpRate": "1160000",
+          "intensity": "moderate",
+          "location": "City of Um",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin"
+          ],
+          "note": "High-level starting-region Thieving route under the working League mapping that groups City of Um with Misthalin.",
+          "warning": "",
+          "freshness": "2026_current_2025_chest_rework",
+          "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "City of Um multi-step chest",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "thieving:keldagrim-dwarf-traders",
+          "skill": "Thieving",
+          "method": "Keldagrim dwarf traders",
+          "levelRange": "90+; quoted ceiling assumes 100% success",
+          "xpRate": "About 1,163,000 base XP/h at 100% pickpocket success.",
+          "intensity": "very low input once success rate is high enough",
+          "location": "Keldagrim",
+          "requirements": [
+            "90 Thieving",
+            "100% success for the quoted 1.163m XP/h ceiling; level 115 reaches 100% without boosts"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "fremennik"
+          ],
+          "note": "At level 90 with no boosts the guide gives a 75% success rate. With enough success chance, traders can be pickpocketed for up to roughly five minutes before being caught, making this one of Fremennik's strongest high-level skilling unlocks.",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki_method_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Keldagrim dwarf traders",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "thieving:keldagrim-multi-step-chests",
+          "skill": "Thieving",
+          "method": "Keldagrim multi-step chests",
+          "levelRange": "94+",
+          "xpRate": "575000",
+          "intensity": "moderate; interaction every 10-30 seconds",
+          "location": "Keldagrim Palace",
+          "requirements": [
+            "94 Thieving",
+            "Master thief's lockpick",
+            "Partial completion of The Giant Dwarf"
+          ],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "fremennik"
+          ],
+          "note": "Especially valuable for a no-trading League: the Ironman guide highlights the route because it also supplies orikalkum/necronium bars and large quantities of stone spirits while training.",
+          "warning": "",
+          "freshness": "2026_current_2025_chest_rework",
+          "confidence": "confirmed_wiki_method_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ironman_Mode/Strategies/Thieving",
+            "title": "Keldagrim multi-step chests",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "thieving:rasial-s-citadel-multi-step-chest",
+          "skill": "Thieving",
+          "method": "Rasial's Citadel multi-step chest",
+          "levelRange": "119+",
+          "xpRate": "1300000",
+          "intensity": "moderate",
+          "location": "Outside Rasial's Citadel",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin"
+          ],
+          "note": "Current Thieving data lists roughly 1.3m base XP/h, making this an important late-game route in the starting Misthalin/City of Um bucket.",
+          "warning": "",
+          "freshness": "2026_current_2025_chest_rework",
+          "confidence": "confirmed_wiki_method_working_league_region_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Thieving_training",
+            "title": "Rasial's Citadel multi-step chest",
+            "verifiedAt": "2026-07-25"
+          }
+        },
         {
           "id": "thieving:safecracking-asgarnia",
           "skill": "Thieving",
@@ -4099,10 +4449,37 @@
       "id": "woodcutting",
       "name": "Woodcutting",
       "regions": [
+        "Havenhythe",
         "Kandarin",
         "Tirannwn"
       ],
       "methods": [
+        {
+          "id": "woodcutting:creeping-ivy",
+          "skill": "Woodcutting",
+          "method": "Creeping ivy",
+          "levelRange": "35-68",
+          "xpRate": "30,000-75,000 base XP/h",
+          "intensity": "low attention",
+          "location": "Havenhythe walls; convenient patch directly north of the Wendlewick lodestone",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "A strong starting-region early/mid route. It gives no logs, but requires less attention than most trees and still rolls bird nests.",
+          "warning": "",
+          "freshness": "2026_current",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Creeping ivy",
+            "verifiedAt": "2026-07-25"
+          }
+        },
         {
           "id": "woodcutting:crystal-trees",
           "skill": "Woodcutting",

@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import regionsData from "#data/league/regions.json";
+import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { combatEquipment, type EquipmentRecord } from "@/combat/data";
+import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { RegionId } from "@/league";
 import { GameIcon } from "../GameIcon";
 import { regionCrestPath } from "@/lib/gameArt";
@@ -66,10 +68,129 @@ export function BuildTab() {
         </p>
         <div className="mt-3 border-t border-stone-750">
           <NumberField label="Style level" value={loadout.level} onChange={(level) => setLoadout({ ...loadout, level })} />
+          <NumberField label="Weapon tier" value={loadout.weaponTier} onChange={(weaponTier) => setLoadout({ ...loadout, weaponTier })} />
           <NumberField label="Base ability damage" value={loadout.base} onChange={(base) => setLoadout({ ...loadout, base })} />
+          <div className="flex justify-end border-b border-stone-750/70 py-1.5">
+            <button
+              type="button"
+              onClick={() =>
+                setLoadout({
+                  ...loadout,
+                  base: baseAbilityDamage(loadout.level, {
+                    kind: "twohand",
+                    weapon: { tier: loadout.weaponTier },
+                    style: loadout.style,
+                  }),
+                })
+              }
+              className="border border-stone-750 px-2 py-1 text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+            >
+              Compute from level + tier
+            </button>
+          </div>
           <NumberField label="Accuracy" value={loadout.accuracy} onChange={(accuracy) => setLoadout({ ...loadout, accuracy })} suffix="%" />
           <NumberField label="Crit chance" value={loadout.critChance} onChange={(critChance) => setLoadout({ ...loadout, critChance })} suffix="%" />
         </div>
+
+        <h3 className="mt-4 text-xs font-medium text-parch-50">Target</h3>
+        <p className="mt-1 text-xs text-parch-300">
+          Model an NPC instead of entering accuracy directly — Damage Potential follows the
+          verified hit-chance chain.
+        </p>
+        <div className="mt-2 border-t border-stone-750">
+          <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+            <input
+              type="checkbox"
+              checked={loadout.target !== null}
+              onChange={(event) =>
+                setLoadout({
+                  ...loadout,
+                  target: event.target.checked ? { defenceLevel: 80, affinity: "same" } : null,
+                })
+              }
+            />
+            Use NPC target model
+          </label>
+          {loadout.target ? (
+            <>
+              <NumberField
+                label="Defence level"
+                value={loadout.target.defenceLevel}
+                onChange={(defenceLevel) =>
+                  setLoadout({ ...loadout, target: { ...loadout.target!, defenceLevel } })
+                }
+              />
+              <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+                <span>Affinity</span>
+                <select
+                  value={loadout.target.affinity}
+                  onChange={(event) =>
+                    setLoadout({
+                      ...loadout,
+                      target: { ...loadout.target!, affinity: event.target.value as AffinityKind },
+                    })
+                  }
+                  className="w-full border border-stone-750 bg-transparent px-2 py-1 text-xs text-parch-50"
+                >
+                  <option value="weak">Weak (70)</option>
+                  <option value="same">Same (60)</option>
+                  <option value="strong">Strong (50)</option>
+                  <option value="weakness">Specific weakness (90)</option>
+                </select>
+              </label>
+            </>
+          ) : null}
+        </div>
+
+        <h3 className="mt-4 text-xs font-medium text-parch-50">Perks &amp; sets</h3>
+        <p className="mt-1 text-xs text-parch-300">
+          Only sourced current values — unsourced perks stay out rather than guessed.
+        </p>
+        <div className="mt-2 border-t border-stone-750">
+          {(
+            [
+              ["equilibrium", "Equilibrium rank (+10% +1%/rank AD)", 5],
+              ["ultimatums", "Ultimatums rank (+3% +1%/rank ult)", 4],
+              ["lunging", "Lunging rank (+10% +3%/rank bleeds)", 4],
+              ["energising", "Energising rank (+50 +25/rank acc)", 4],
+              ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 5],
+              ["tumekensPieces", "Tumeken's pieces (+1.5%/piece crit)", 5],
+            ] as const
+          ).map(([key, label, max]) => (
+            <NumberField
+              key={key}
+              label={label}
+              value={loadout.perks[key]}
+              onChange={(value) =>
+                setLoadout({
+                  ...loadout,
+                  perks: { ...loadout.perks, [key]: Math.min(Math.max(0, Math.floor(value)), max) },
+                })
+              }
+            />
+          ))}
+          <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+            <input
+              type="checkbox"
+              checked={loadout.perks.eliteTectonic}
+              onChange={(event) =>
+                setLoadout({ ...loadout, perks: { ...loadout.perks, eliteTectonic: event.target.checked } })
+              }
+            />
+            Elite tectonic (+2%/piece instead)
+          </label>
+          <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+            <input
+              type="checkbox"
+              checked={loadout.perks.insideSunshine}
+              onChange={(event) =>
+                setLoadout({ ...loadout, perks: { ...loadout.perks, insideSunshine: event.target.checked } })
+              }
+            />
+            Inside Sunshine (Tumeken set(3) active)
+          </label>
+        </div>
+
         <p className="mt-3 text-xs text-parch-300">
           {selected.size} item{selected.size === 1 ? "" : "s"} pinned to the loadout.
         </p>

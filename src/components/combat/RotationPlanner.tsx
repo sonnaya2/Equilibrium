@@ -10,6 +10,8 @@ import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { loadState, saveState } from "@/lib/storage";
+import { loadoutStats } from "./loadoutStats";
+import { useLoadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
@@ -32,6 +34,8 @@ function abilityName(id: string): string {
 }
 
 export function RotationPlanner() {
+  const [loadout] = useLoadout();
+  const [useBuild, setUseBuild] = useState(true);
   const [base, setBase] = useState(1000);
   const [level, setLevel] = useState(99);
   const [accuracy, setAccuracy] = useState(100);
@@ -54,6 +58,22 @@ export function RotationPlanner() {
 
   const run = () => {
     const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
+    if (useBuild) {
+      const stats = loadoutStats(loadout);
+      setResult(
+        simulate({
+          base: stats.base,
+          level: stats.level,
+          accuracy: stats.dp,
+          crit: { chance: stats.critChance },
+          abilities: ALL_ABILITIES,
+          rotation: rotationOf(...queue),
+          modifiers: stats.globalModifiers,
+          ammo: ammo === "none" ? undefined : ammo,
+        }),
+      );
+      return;
+    }
     setResult(
       simulate({
         base: Math.max(0, finite(base, 0)),
@@ -68,6 +88,7 @@ export function RotationPlanner() {
   };
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
+  const buildStats = loadoutStats(loadout);
 
   const contributions = result
     ? Object.entries(result.perAbility)
@@ -84,23 +105,47 @@ export function RotationPlanner() {
         <p className="mt-1 text-xs text-parch-300">
           Queue casts, run the tick sim. Necromancy joins once its bands are sourced.
         </p>
+        <label className="mt-3 flex items-center gap-2 text-xs text-parch-300">
+          <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
+          Use Build loadout
+        </label>
+        {useBuild ? (
+          <dl className="mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
+            {(
+              [
+                ["Level", buildStats.level],
+                ["Base", buildStats.base],
+                ["DP", `${Math.round(buildStats.dp * 1000) / 10}%`],
+                ["Crit", `${Math.round(buildStats.critChance * 1000) / 10}%`],
+              ] as const
+            ).map(([label, value]) => (
+              <div key={label} className="border-b border-stone-750/70 py-1.5">
+                <dt className="text-parch-300">{label}</dt>
+                <dd className="font-mono text-parch-50">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-parch-300">
+            <label className="grid gap-1">
+              <span>Base damage</span>
+              <input type="number" value={base} onChange={(e) => setBase(Number(e.target.value))} className={inputCls} />
+            </label>
+            <label className="grid gap-1">
+              <span>Level</span>
+              <input type="number" value={level} onChange={(e) => setLevel(Number(e.target.value))} className={inputCls} />
+            </label>
+            <label className="grid gap-1">
+              <span>Accuracy %</span>
+              <input type="number" value={accuracy} onChange={(e) => setAccuracy(Number(e.target.value))} className={inputCls} />
+            </label>
+            <label className="grid gap-1">
+              <span>Crit %</span>
+              <input type="number" value={critChance} onChange={(e) => setCritChance(Number(e.target.value))} className={inputCls} />
+            </label>
+          </div>
+        )}
         <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-parch-300">
-          <label className="grid gap-1">
-            <span>Base damage</span>
-            <input type="number" value={base} onChange={(e) => setBase(Number(e.target.value))} className={inputCls} />
-          </label>
-          <label className="grid gap-1">
-            <span>Level</span>
-            <input type="number" value={level} onChange={(e) => setLevel(Number(e.target.value))} className={inputCls} />
-          </label>
-          <label className="grid gap-1">
-            <span>Accuracy %</span>
-            <input type="number" value={accuracy} onChange={(e) => setAccuracy(Number(e.target.value))} className={inputCls} />
-          </label>
-          <label className="grid gap-1">
-            <span>Crit %</span>
-            <input type="number" value={critChance} onChange={(e) => setCritChance(Number(e.target.value))} className={inputCls} />
-          </label>
           <label className="grid gap-1">
             <span>Ammo</span>
             <select

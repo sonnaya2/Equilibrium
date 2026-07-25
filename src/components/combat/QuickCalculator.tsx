@@ -10,6 +10,7 @@ import { MAGIC_ABILITIES, type MagicAbilitySpec } from "@/combat/styles/magic/ab
 import { styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
+import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -43,9 +44,11 @@ export function QuickCalculator() {
   const [accuracy, setAccuracy] = useState(100);
   const [critChance, setCritChance] = useState(10);
   const [abilityId, setAbilityId] = useState("attack");
+  const [souls, setSouls] = useState(3);
 
   // Quick is for damaging casts; buff-only records live on the Rotation tab.
-  const damaging = STYLE_ABILITIES[style].filter((a) => a.hits.length > 0);
+  // Necromancy's palette is Volley of Souls — the one band the corpus pins.
+  const damaging = style === "necromancy" ? [volleyOfSouls(souls)] : STYLE_ABILITIES[style].filter((a) => a.hits.length > 0);
   const ability = damaging.find((a) => a.id === abilityId) ?? damaging[0];
 
   const result = ability
@@ -66,11 +69,10 @@ export function QuickCalculator() {
       <div>
         <h2 className="text-sm font-medium text-parch-50">Quick</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Necromancy waits on sourced bands beyond Volley of Souls; the other styles run their
-          modernised kits.
+          Necromancy offers Volley of Souls — the one band the corpus pins so far.
         </p>
         <div className="mt-3 flex gap-1">
-          {AVAILABLE_STYLES.map((s) => (
+          {[...AVAILABLE_STYLES, "necromancy" as const].map((s) => (
             <button
               key={s}
               type="button"
@@ -85,21 +87,15 @@ export function QuickCalculator() {
               {STYLE_LABELS[s]}
             </button>
           ))}
-          <button
-            type="button"
-            disabled
-            title="Necromancy waits on sourced ability bands"
-            className="flex cursor-not-allowed items-center gap-1.5 border border-stone-750 px-3 py-1.5 text-xs text-parch-300/50"
-          >
-            <GameIcon src={styleIconPath("necromancy")} size={16} />
-            {STYLE_LABELS.necromancy}
-          </button>
         </div>
         <div className="mt-3 border-t border-stone-750">
           <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
           <NumberField label="Base ability damage" value={base} onChange={setBase} />
           <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
           <NumberField label="Crit chance" value={critChance} onChange={setCritChance} suffix="%" />
+          {style === "necromancy" ? (
+            <NumberField label="Residual Souls" value={souls} onChange={(value) => setSouls(Math.min(Math.max(1, Math.floor(value)), MAX_SOULS))} />
+          ) : null}
         </div>
         <div className="mt-3 border-t border-stone-750">
           {damaging.map((a) => (

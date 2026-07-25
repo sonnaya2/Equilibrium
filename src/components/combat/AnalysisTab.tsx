@@ -6,7 +6,9 @@ import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
+import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { NumberField } from "./NumberField";
+import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { useLoadout, type Loadout } from "./useLoadout";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -22,6 +24,9 @@ const DAMAGING: Array<{ style: CombatStyle; ability: AbilitySpec }> = (
   STYLE_ABILITIES[style].filter((ability) => ability.hits.length > 0).map((ability) => ({ style, ability })),
 );
 
+const VOLLEY_ENTRY = { style: "necromancy" as CombatStyle, ability: volleyOfSouls(3) };
+const ALL_ENTRIES = [...DAMAGING, VOLLEY_ENTRY];
+
 function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
@@ -30,29 +35,46 @@ function finite(value: number, fallback: number): number {
   return Number.isFinite(value) ? value : fallback;
 }
 
-function runCast(ability: AbilitySpec, style: CombatStyle, stats: Pick<Loadout, "level" | "base" | "accuracy" | "critChance">) {
+function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
   return calculateAbility(ability, {
     base: Math.max(0, finite(stats.base, 0)),
-    level: Math.min(Math.max(1, finite(stats.level, 99)), 145),
-    accuracy: Math.min(Math.max(0, finite(stats.accuracy, 100)), 100) / 100,
+    level: stats.level,
+    accuracy: stats.dp,
     crit: {
-      chance: Math.min(Math.max(0, finite(stats.critChance, 10)), 100) / 100,
+      chance: stats.critChance,
       guaranteed: (ability as RangedAbilitySpec).guaranteedCrit,
     },
+    modifiers: stats.castModifiersFor(ability),
     context: { style },
   });
 }
 
-/** Analysis: one cast through two stat lines — the shared loadout (A) against an
- *  editable comparison line (B) — with the split that matters for judging a change. */
+/** Analysis: one cast through two stat lines — the shared loadout (A, perks and
+ *  target model included) against an editable comparison line (B). */
 export function AnalysisTab() {
   const [loadout] = useLoadout();
-  const [abilityId, setAbilityId] = useState(DAMAGING[0].ability.id);
+  const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
+  const [souls, setSouls] = useState(3);
   const [lineB, setLineB] = useState(() => ({ ...loadout }));
 
-  const entry = DAMAGING.find((candidate) => candidate.ability.id === abilityId) ?? DAMAGING[0];
-  const resultA = useMemo(() => runCast(entry.ability, entry.style, loadout), [entry, loadout]);
-  const resultB = useMemo(() => runCast(entry.ability, entry.style, lineB), [entry, lineB]);
+  const entry = ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
+  const ability = entry.ability.id === "volley_of_souls" ? volleyOfSouls(souls) : entry.ability;
+
+  const statsA = loadoutStats(loadout);
+  const statsB: CalcStats = {
+    ...statsA,
+    base: lineB.base,
+    level: Math.min(Math.max(1, finite(lineB.level, 99)), 145),
+    dp: Math.min(Math.max(0, finite(lineB.accuracy, 100)), 100) / 100,
+    critChance: Math.min(
+      1,
+      Math.max(0, finite(lineB.critChance, 10)) / 100 +
+        (statsA.critChance - loadout.critChance / 100),
+    ),
+  };
+
+  const resultA = useMemo(() => runCast(ability, entry.style, statsA), [ability, entry.style, statsA]);
+  const resultB = useMemo(() => runCast(ability, entry.style, statsB), [ability, entry.style, statsB]);
 
   const delta =
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
@@ -66,22 +88,27 @@ export function AnalysisTab() {
           change before committing to it.
         </p>
         <div className="mt-3 border-t border-stone-750">
-          {DAMAGING.map(({ style, ability }) => (
+          {ALL_ENTRIES.map(({ style, ability: candidate }) => (
             <button
-              key={ability.id}
+              key={candidate.id}
               type="button"
-              onClick={() => setAbilityId(ability.id)}
+              onClick={() => setAbilityId(candidate.id)}
               className={`grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs ${
-                ability.id === entry.ability.id
+                candidate.id === entry.ability.id
                   ? "bg-stone-850 text-parch-50"
                   : "text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
               }`}
             >
-              <span>{ability.name}</span>
+              <span>{candidate.name}</span>
               <span className="font-mono capitalize">{style}</span>
             </button>
           ))}
         </div>
+        {entry.ability.id === "volley_of_souls" ? (
+          <div className="mt-3 border-t border-stone-750">
+            <NumberField label="Residual Souls spent" value={souls} onChange={(value) => setSouls(Math.min(Math.max(1, Math.floor(value)), MAX_SOULS))} />
+          </div>
+        ) : null}
       </div>
 
       <div>
@@ -91,10 +118,10 @@ export function AnalysisTab() {
             <dl className="mt-2 border-t border-stone-750 text-xs">
               {(
                 [
-                  ["Level", loadout.level],
-                  ["Base", loadout.base],
-                  ["Accuracy", `${loadout.accuracy}%`],
-                  ["Crit", `${loadout.critChance}%`],
+                  ["Level", statsA.level],
+                  ["Base", statsA.base],
+                  ["Damage Potential", `${Math.round(statsA.dp * 1000) / 10}%`],
+                  ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
                 ] as const
               ).map(([label, value]) => (
                 <div key={label} className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">

@@ -59,6 +59,13 @@ const overrides = new Map([
       search: "Archaeology Guild location image collectors",
     },
   ],
+  [
+    "activity-big-game-hunter",
+    {
+      fileTitle: "Big Game Hunter arena.png",
+      search: "Big Game Hunter arena activity image",
+    },
+  ],
 ]);
 
 function applyOverrides(asset) {

@@ -101,6 +101,41 @@ const overrides = new Map([
       search: "God Wars Dungeon location image",
     },
   ],
+  [
+    "activity-artisans-workshop",
+    {
+      fileTitle: "Artisans Workshop.png",
+      search: "Artisans Workshop location image",
+    },
+  ],
+  [
+    "activity-everlight-dig-site",
+    {
+      fileTitle: "Everlight.png",
+      search: "Everlight Dig Site location image",
+    },
+  ],
+  [
+    "activity-barrows",
+    {
+      fileTitle: "Barrows Scenery.png",
+      search: "Barrows scenery minigame location image",
+    },
+  ],
+  [
+    "activity-livid-farm",
+    {
+      fileTitle: "Livid Farm.png",
+      search: "Livid Farm location image",
+    },
+  ],
+  [
+    "activity-lunar-isle",
+    {
+      fileTitle: "Lunar Isle.png",
+      search: "Lunar Isle location image",
+    },
+  ],
 ]);
 
 function applyOverrides(asset) {

@@ -18,6 +18,7 @@
     "regions": "high-value content and upgrade chains mapped; hard, historical-working and unresolved external/cross-boundary cases are kept separate instead of forcing every location into a selectable region",
     "region_boundaries": "Daemonheim is a hard Forinthry rule; northern Asgarnia is consolidated; Fort/City of Um/Zanaris/Senntisten remain labelled historical working mappings; ED4/Zamorak is cross-boundary; The Arc/Wushanko, Tarddiad and Mazcab are explicit unresolved external destinations",
     "regional_support_items": "The ancient elven ritual shard's no-trading source route is mapped to Kandarin through the Lost Grove/Solak supply chain, with current effect and drop-rate metadata but no live GE price",
+    "regional_skilling": "region-defining training activities, production infrastructure, reward shops, gameplay-obtainable XP outfits, skilling off-hands and late-game tool chains are now indexed separately from raw XP methods; Prifddinas, flask infrastructure, Deep Sea Fishing, Archaeology Guild upgrades, Garden of Kharid, Lava Flow Mine, Woodcutter's Grove, Croesus/Gate off-hands and cross-region tool chains are included",
     "quests": "current RuneScape Wiki quest-list entries are revision-pinned, grouped by primary and recursively required regions, with official Equilibrium auto-completion kept as a separate Jagex-only overlay",
     "permanent_unlocks": "base spell/prayer books, quest abilities, modern Shattered Worlds/Mazcab/Tuska acquisition, Livid Farm's 2026 point ladder, Well of Souls, War's Retreat, Anachronia/account passives, regional achievement passives, Ring of Vigour, Salve (e), Holy wrench, attuned ectoplasmator, advanced gold accumulator, Seedicide, Spring cleaner, Mage Arena, Dreadnips, Asylum surgeon's ring, enchantments, flasks, high-value combat consumables, post-remaster Dungeoneering rewards/systems and post-aura replacement passives/Aspects are composed from base + current-audit + enrichment overlays; Equilibrium overrides remain separate",
     "prayers": "46 Standard prayers, 45 Ancient Curses and the seven-prayer Seren subset now carry current effects, unlock profiles, source references and normal-game required regions; only Standard and Ancient Curses are switchable books",
@@ -43,9 +44,9 @@
     "publishedTasks": 0,
     "skills": 29,
     "trainingMethods": 83,
-    "regionalSkillingUnlocks": 31,
-    "regionalSkillingActivities": 17,
-    "regionalSkillingEquipment": 14
+    "regionalSkillingUnlocks": 40,
+    "regionalSkillingActivities": 24,
+    "regionalSkillingEquipment": 16
   },
   "regions": [
     {
@@ -291,7 +292,7 @@
         {
           "name": "Croesus progression",
           "category": "Magic tank armour / skilling off-hands",
-          "detail": "Cryptbloom armour, Scripture of Bik, Croesus foultorch, Croesus sporehammer",
+          "detail": "Cryptbloom armour, Scripture of Bik, Sana's fyrtorch, Tagga's corehammer",
           "requirements": [],
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
@@ -405,6 +406,51 @@
           "regionId": "misthalin"
         },
         {
+          "name": "Archaeology Guild Shop and qualification upgrades",
+          "category": "Archaeology shop, outfits, storage, precision and tool progression",
+          "detail": "This is one of the strongest starting-region skilling infrastructure unlocks. Archaeology qualifications convert chronotes into permanent tool, storage, outfit and quality-of-life upgrades rather than only consumables. · The Archaeology Guild is in the starting Misthalin/Varrock bucket. Qualification and level requirements still apply unless a League rule overrides them. · Unlocks: Archaeologist's outfit, up to 6% Archaeology XP, Master archaeologist's outfit at Guildmaster qualification, Master outfit: +7% excavation success, +7% screening success and +7% mattock base precision, Faster artefact restoration and soil screening, Longer Archaeology consumable durations, Unlimited dig-site and collector teleports from the master outfit, Material storage upgrades, Mattock precision upgrades, Auto-screener blueprint, Energised meteorite shard for the Mattock of Time and Space",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Archaeology_Guild",
+            "title": "Archaeology Guild Shop and qualification upgrades",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Austin's Place and ritualist's outfit",
+          "category": "Necromancy skilling outfit and ritual support",
+          "detail": "The outfit gained a permanent non-MTX acquisition route in July 2025. League data should use Austin's gameplay shop, not the old Grim Harvest source. · City of Um remains a historical Misthalin working mapping until Equilibrium publishes its own locality rule. · Unlocks: Ritualist's outfit purchased for ectoplasm, Up to 6% Necromancy XP with the full outfit, Modified ritualist's mask with a chance to save ritual focus objects · Region status: historical_city_of_um_working_taxonomy",
+          "requirements": [
+            "68 Necromancy",
+            "Bring Austin a ghost impling jar to unlock the permanent shop"
+          ],
+          "confidence": "confirmed_2025_gameplay_source_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ritualist%27s_outfit",
+            "title": "Austin's Place and ritualist's outfit",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Runespan reward shop and master runecrafter robes",
+          "category": "Runecrafting outfit and reward shop",
+          "detail": "Misthalin provides a direct self-sufficient route to the master runecrafter set through Runespan. The outfit is not a hard Misthalin exclusive because Great Orb Project tokens and thaler are alternate acquisition currencies. · Surface Misthalin as an acquisition route without turning it into a mandatory region dependency. · Unlocks: Master runecrafter robes for Runespan points, 5% Runecrafting XP with the full set, Runespan utility rewards and unstable essence · Region status: misthalin_accessible_not_region_exclusive",
+          "requirements": [],
+          "confidence": "confirmed_wiki_access_route_not_exclusive",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Master_runecrafter_robes",
+            "title": "Runespan reward shop and master runecrafter robes",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
           "name": "Sana's fyrtorch",
           "category": "Woodcutting and Firemaking skilling off-hand",
           "detail": "Use the canonical item name. The existing loose major-upgrade row used a non-item placeholder name for this reward. · Region status: historical_senntisten_working_taxonomy",
@@ -475,6 +521,47 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Imcando_hatchet",
             "title": "Imcando hatchet",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Hatchet of Ember and Glade",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain",
+          "detail": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks. · Region pressure: Crystal-hatchet progression is tied to Prifddinas crystal tools and a dragon hatchet base., Dragon hatchets have a direct Dagannoth Kings source in the Fremennik region., Imcando-hatchet fragments come from the tier-3 Woodcutter's Grove, currently mapped to Misthalin by historical League precedent., The Shard of the Lumberjack is purchased from Wilfred north of Falador in Asgarnia., Normal-game quest and dragon-forge requirements can add further access pressure and must be resolved through the Equilibrium quest overlay.",
+          "requirements": [
+            "Crystal hatchet",
+            "Imcando hatchet",
+            "Shard of the Lumberjack",
+            "90 Smithing",
+            "90 Woodcutting"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+            "title": "Hatchet of Ember and Glade",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "misthalin"
+        },
+        {
+          "name": "Hatchet of Bloom and Blight",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain",
+          "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known. · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement. · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier",
+          "requirements": [
+            "Hatchet of Ember and Glade",
+            "100 Woodcutting",
+            "100 Fletching",
+            "100 Smithing",
+            "90 Necromancy",
+            "Normal-game Kili Row and Pieces of Hate progression"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+            "title": "Hatchet of Bloom and Blight",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "misthalin"
@@ -1177,6 +1264,61 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "asgarnia"
+        },
+        {
+          "name": "Flash Powder Factory Herblore outfits",
+          "category": "Herblore reward shop and outfit progression",
+          "detail": "For self-sufficient Herblore, the factory set is more important than a plain XP outfit because three pieces change potion output. A common optimized setup mixes factory pieces with botanist pieces rather than wearing one full set for every potion. · Taverley is Asgarnia in the current region model. Do not assume Treasure Hunter acquisition for the botanist set. · Unlocks: Botanist's outfit, up to 6% Herblore XP, Modified botanist's mask, Factory outfit, Three-piece factory effect: 10% chance to create a 4-dose potion instead of a 3-dose potion, Five-piece factory effect for unfinished-potion Herblore XP",
+          "requirements": [],
+          "confidence": "confirmed_wiki_base_mechanics_region_confirmed",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Flash_Powder_Factory",
+            "title": "Flash Powder Factory Herblore outfits",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Hatchet of Ember and Glade",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain",
+          "detail": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks. · Region pressure: Crystal-hatchet progression is tied to Prifddinas crystal tools and a dragon hatchet base., Dragon hatchets have a direct Dagannoth Kings source in the Fremennik region., Imcando-hatchet fragments come from the tier-3 Woodcutter's Grove, currently mapped to Misthalin by historical League precedent., The Shard of the Lumberjack is purchased from Wilfred north of Falador in Asgarnia., Normal-game quest and dragon-forge requirements can add further access pressure and must be resolved through the Equilibrium quest overlay.",
+          "requirements": [
+            "Crystal hatchet",
+            "Imcando hatchet",
+            "Shard of the Lumberjack",
+            "90 Smithing",
+            "90 Woodcutting"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+            "title": "Hatchet of Ember and Glade",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "asgarnia"
+        },
+        {
+          "name": "Hatchet of Bloom and Blight",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain",
+          "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known. · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement. · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier",
+          "requirements": [
+            "Hatchet of Ember and Glade",
+            "100 Woodcutting",
+            "100 Fletching",
+            "100 Smithing",
+            "90 Necromancy",
+            "Normal-game Kili Row and Pieces of Hate progression"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+            "title": "Hatchet of Bloom and Blight",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "asgarnia"
         }
       ],
       "trainingMethodIds": [
@@ -1376,6 +1518,20 @@
           "regionId": "kandarin"
         },
         {
+          "name": "Gnome Restaurant and sous chef's outfit",
+          "category": "Cooking activity and XP outfit",
+          "detail": "The gameplay acquisition route is hard Gnome Restaurant deliveries. This is a persistent Kandarin Cooking unlock even when a different region provides the fastest raw Cooking method. · Do not use Treasure Hunter as the acquisition path. · Unlocks: Sous chef's outfit from hard deliveries, Up to 6% Cooking XP with the full outfit",
+          "requirements": [],
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Gnome_Restaurant",
+            "title": "Gnome Restaurant and sous chef's outfit",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "kandarin"
+        },
+        {
           "name": "Tavia's fishing rod",
           "category": "rare hero Fishing tool",
           "detail": "Record as a rare ceiling item, not baseline Kandarin power. A player cannot plan around obtaining it quickly. · Rarity: hero_item_very_rare · Effects: 10% increased fishing success rate when compatible, Can trigger all three Deep Sea Fishing boosts, Can be augmented",
@@ -1544,6 +1700,47 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
             "title": "Pickaxe of Earth and Song",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Hatchet of Ember and Glade",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain",
+          "detail": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks. · Region pressure: Crystal-hatchet progression is tied to Prifddinas crystal tools and a dragon hatchet base., Dragon hatchets have a direct Dagannoth Kings source in the Fremennik region., Imcando-hatchet fragments come from the tier-3 Woodcutter's Grove, currently mapped to Misthalin by historical League precedent., The Shard of the Lumberjack is purchased from Wilfred north of Falador in Asgarnia., Normal-game quest and dragon-forge requirements can add further access pressure and must be resolved through the Equilibrium quest overlay.",
+          "requirements": [
+            "Crystal hatchet",
+            "Imcando hatchet",
+            "Shard of the Lumberjack",
+            "90 Smithing",
+            "90 Woodcutting"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+            "title": "Hatchet of Ember and Glade",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "fremennik"
+        },
+        {
+          "name": "Hatchet of Bloom and Blight",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain",
+          "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known. · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement. · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier",
+          "requirements": [
+            "Hatchet of Ember and Glade",
+            "100 Woodcutting",
+            "100 Fletching",
+            "100 Smithing",
+            "90 Necromancy",
+            "Normal-game Kili Row and Pieces of Hate progression"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+            "title": "Hatchet of Bloom and Blight",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "fremennik"
@@ -2102,6 +2299,20 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "desert"
+        },
+        {
+          "name": "Garden of Kharid and Sydekix's Shop of Balance",
+          "category": "Farming permanent unlock shop and XP outfit",
+          "detail": "Garden of Kharid is a major Desert skilling shop because its favour purchases permanent Farming and incense upgrades rather than only consumables. The regular farmer outfit also supplies the XP bonus inherited by higher-tier Farming outfit setups once owned. · Keep these unlocks separate from Kandarin Player-Owned Farm and master-farmer blueprint progression. The two regions provide different parts of Farming progression. · Unlocks: Farmer's outfit pieces, up to 6% Farming XP, Bountiful Harvest, Speedy Growth, Quick-cense, Everlasting Incense, Buckets All the Way Down, Supreme growth potions and patch bombs",
+          "requirements": [],
+          "confidence": "confirmed_wiki_region_confirmed",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Garden_of_Kharid",
+            "title": "Garden of Kharid and Sydekix's Shop of Balance",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "desert"
         }
       ],
       "trainingMethodIds": [
@@ -2271,6 +2482,20 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Temple_Trekking",
             "title": "Temple Trekking skilling outfits",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "morytania"
+        },
+        {
+          "name": "Ectofuntus and first age Prayer outfit",
+          "category": "Prayer activity and XP outfit",
+          "detail": "The first age outfit is a permanent gameplay reward from the Ectofuntus route. Its XP boost does not apply while worshipping at the Ectofuntus itself, so the value is for Prayer training elsewhere. · Resolve normal Ghosts Ahoy access through the Equilibrium quest auto-completion overlay. · Unlocks: First age outfit purchased for ecto-tokens, Up to 6% Prayer XP with the full outfit, Modified first age tiara after the base set",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/First_age_outfit",
+            "title": "Ectofuntus and first age Prayer outfit",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "morytania"
@@ -2622,6 +2847,47 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Artificer%27s_measure",
             "title": "Artificer's measure",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Hatchet of Ember and Glade",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain",
+          "detail": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks. · Region pressure: Crystal-hatchet progression is tied to Prifddinas crystal tools and a dragon hatchet base., Dragon hatchets have a direct Dagannoth Kings source in the Fremennik region., Imcando-hatchet fragments come from the tier-3 Woodcutter's Grove, currently mapped to Misthalin by historical League precedent., The Shard of the Lumberjack is purchased from Wilfred north of Falador in Asgarnia., Normal-game quest and dragon-forge requirements can add further access pressure and must be resolved through the Equilibrium quest overlay.",
+          "requirements": [
+            "Crystal hatchet",
+            "Imcando hatchet",
+            "Shard of the Lumberjack",
+            "90 Smithing",
+            "90 Woodcutting"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+            "title": "Hatchet of Ember and Glade",
+            "verifiedAt": "2026-07-25"
+          },
+          "regionId": "tirannwn"
+        },
+        {
+          "name": "Hatchet of Bloom and Blight",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain",
+          "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known. · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement. · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier",
+          "requirements": [
+            "Hatchet of Ember and Glade",
+            "100 Woodcutting",
+            "100 Fletching",
+            "100 Smithing",
+            "90 Necromancy",
+            "Normal-game Kili Row and Pieces of Hate progression"
+          ],
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+            "title": "Hatchet of Bloom and Blight",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "tirannwn"

@@ -45,10 +45,9 @@ export async function wikiArchaeologyCollection(title) {
   const archlevel = archaeologyLevel(page, title);
   const collector = stripWiki(field(page.content, "collector"));
   const first = stripWiki(field(page.content, "first"));
-  const reward = stripWiki(field(page.content, "reward"));
+  const reward = stripWiki(field(page.content, "reward") ?? field(page.content, "recurring"));
 
   if (!collector) throw new Error(`Could not parse Archaeology collection collector from ${title}`);
-  if (first == null) throw new Error(`Could not parse Archaeology collection first reward from ${title}`);
   if (reward == null) throw new Error(`Could not parse Archaeology collection recurring reward from ${title}`);
 
   return {

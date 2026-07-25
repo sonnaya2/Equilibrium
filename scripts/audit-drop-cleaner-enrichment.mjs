@@ -23,4 +23,21 @@ if (seedicide.pickup_upgrade?.cost !== 25000 || seedicide.pickup_upgrade?.curren
 if (seedicide.toolbelt_unlock?.cost !== 500 || seedicide.toolbelt_unlock?.currency !== "Slayer points") fail("Seedicide tool-belt unlock drifted");
 if (seedicide.region_status !== "multiple_acquisition_routes") fail("Seedicide must retain alternative regional acquisition routes");
 
+const springCleaner = byId("invention:spring-cleaner-current");
+if (!springCleaner) fail("Spring cleaner progression row missing");
+if (springCleaner.invention_level !== 43) fail("Spring cleaner Invention requirement drifted");
+const baseRecipe = Object.fromEntries((springCleaner.base_device_recipe || []).map((row) => [row.material, row.quantity]));
+for (const [material, quantity] of [["Simple parts", 300], ["Tensile parts", 500], ["Flexible parts", 300], ["Precise components", 50]]) {
+  if (baseRecipe[material] !== quantity) fail(`Spring cleaner base recipe drifted: ${material}`);
+}
+const tightRecipe = Object.fromEntries((springCleaner.tight_spring_recipe?.materials || []).map((row) => [row.material, row.quantity]));
+if (springCleaner.tight_spring_recipe?.output_quantity !== 20 || tightRecipe["Tensile parts"] !== 120 || tightRecipe["Subtle components"] !== 1) fail("Tight spring recipe drifted");
+const upgrades = Object.fromEntries((springCleaner.upgrade_ladder || []).map((row) => [row.version, row]));
+if (upgrades["Spring cleaner 2000"]?.cumulative_springs !== 200 || !upgrades["Spring cleaner 2000"]?.unlock?.includes("one spring")) fail("Spring cleaner 2000 milestone drifted");
+if (upgrades["Spring cleaner 3000"]?.cumulative_springs !== 600 || !upgrades["Spring cleaner 3000"]?.unlock?.includes("without consuming")) fail("Spring cleaner 3000 milestone drifted");
+if (upgrades["Spring cleaner 5000"]?.cumulative_springs !== 1800) fail("Spring cleaner 5000 milestone drifted");
+if (upgrades["Spring cleaner 9000"]?.cumulative_springs !== 4000) fail("Spring cleaner 9000 milestone drifted");
+if (upgrades["Spring cleaner 9001"]?.cumulative_springs !== 10000 || !upgrades["Spring cleaner 9001"]?.unlock?.includes("noted salvage")) fail("Spring cleaner 9001 milestone drifted");
+if (springCleaner.maximum_stored_springs !== 250000 || !springCleaner.supply_bottleneck?.includes("subtle-component")) fail("Spring cleaner storage or supply bottleneck drifted");
+
 console.log("Drop-cleaner enrichment audit passed");

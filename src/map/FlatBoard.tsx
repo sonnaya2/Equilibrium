@@ -15,7 +15,8 @@
 import { useState } from "react";
 import { canSelectElective, isRegionUnlocked, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
-import { REGION_SHAPES, ringPoints } from "./data/regionShapes";
+import { REGION_SHAPES } from "./data/regionShapes";
+import { smoothRing } from "./data/regionCurve";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { MAP_WORLD, REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
 
@@ -40,11 +41,9 @@ export function FlatBoard() {
         const unlocked = isRegionUnlocked(build, id);
         const selectable = canSelectElective(build, id);
         const isHover = hovered === id;
-        const points = ringPoints(shape)
+        const points = smoothRing(shape)
           .map(([u, v]) => `${X(u).toFixed(1)},${Y(v).toFixed(1)}`)
           .join(" ");
-        const [mu, mv] = shape.markerUv;
-        const quests = REGION_METRICS_BY_ID.get(id)?.quests ?? 0;
         const name = REGION_ANCHOR_BY_ID.get(id)?.name ?? id;
         return (
           <g
@@ -70,8 +69,20 @@ export function FlatBoard() {
               strokeWidth={isHover ? 3 : 2}
               strokeLinejoin="round"
             />
+          </g>
+        );
+      })}
+
+      {/* Crests and counts in a second pass, over every polygon. SVG has no
+          depth: drawn inside their own group, a later region's fill covers an
+          earlier one's label wherever two rings sit close. */}
+      {REGION_SHAPES.map((shape) => {
+        const unlocked = isRegionUnlocked(build, shape.id);
+        const [mu, mv] = shape.markerUv;
+        return (
+          <g key={`${shape.id}-mark`} pointerEvents="none">
             <image
-              href={`/game/regions/${id}.png`}
+              href={`/game/regions/${shape.id}.png`}
               x={X(mu) - 26}
               y={Y(mv) - 42}
               width={52}
@@ -88,7 +99,7 @@ export function FlatBoard() {
               fontFamily="var(--font-mono)"
               opacity={unlocked ? 1 : 0.45}
             >
-              {quests}
+              {REGION_METRICS_BY_ID.get(shape.id)?.quests ?? 0}
             </text>
           </g>
         );

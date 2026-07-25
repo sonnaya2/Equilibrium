@@ -1,5 +1,20 @@
 # Map completion plan
 
+> **Status: phases 1–6 are landed.** Everything below is kept as the record of what
+> the work was for and why each call was made. Two things were not in the plan and
+> turned out to matter more than several things that were:
+>
+> - **Coastlines.** The rings are subdivided into curves in `src/map/data/regionCurve.ts`,
+>   per edge in canonical node order so shared seams stay byte-identical. Interpolation
+>   alone turned the islands into pebbles, so each span also gets a seeded perpendicular
+>   displacement. `regionCurve.test.ts` holds the seam parity, the winding, and a new
+>   invariant: a ring may not cross a region it shares no border with — which caught
+>   Karamja sitting under Kandarin's south coast, invisible on the 3D board and plain
+>   on the flat one.
+> - **Geometry offsets.** `ExtrudeGeometry` puts its bevel *outside* the requested
+>   depth, so anything laid on a cap has to clear `depth + bevelThickness`. That is
+>   what hid the barrier lattice completely and left the crests z-fighting.
+
 Supersedes phases P3–P6 of `docs/wartable-plan.md`. That document still holds the
 design rationale and the region-geometry decision; this one is the work queue from
 here, written against what is actually on screen rather than what was projected.

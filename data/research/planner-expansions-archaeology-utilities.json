@@ -1,0 +1,46 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Planner-facing Archaeology collection-completion utilities not already owned by the Guild progression feed. These mechanics reduce duplicate artefacts, clarify collection state and shorten routing without creating or bypassing League region requirements.",
+  "source_policy": {
+    "game_facts": "RuneScape Wiki current Archaeology, Artefacts, Collections, training and teleportation pages",
+    "league_rule": "Utilities may reduce time or travel, but they do not create or erase an elective League region requirement.",
+    "ownership_rule": "Relic presets, Guild shop upgrades, the master outfit and Fixate remain authoritative in planner-expansions-archaeology-guild.json and are intentionally not duplicated here."
+  },
+  "collection_completion_tools": [
+    {
+      "id": "arch-artefact-bad-luck-mitigation",
+      "tool": "Five-artefact duplicate mitigation",
+      "effect": "When the same artefact is received again, its chance is halved again; the system tracks the last five earned artefacts. Artefacts obtained through Fixate are also tracked.",
+      "planner_value": "Collection completion is not uniform random sampling. Route estimates should account for built-in duplicate suppression before assuming every hotspot needs equal expected attempts.",
+      "source_url": "https://runescape.wiki/w/Artefacts",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-journal-collector-information",
+      "tool": "Archaeology journal collector information",
+      "effect": "Shows collection progress and which artefacts have been submitted to collectors.",
+      "planner_value": "Use as the canonical in-game completion check before restoring duplicates or travelling to a collector.",
+      "source_url": "https://runescape.wiki/w/Collections",
+      "secondary_source_url": "https://runescape.wiki/w/Archaeology_training",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-journal-campus-routing",
+      "tool": "Archaeology journal and dig-sites map",
+      "effect": "The journal teleports to the Archaeology Guild; the campus dig-sites map provides onward routing to unlocked dig sites.",
+      "planner_value": "Useful pre-Guildmaster routing fallback. It shortens travel but does not bypass region, quest or dig-site access requirements.",
+      "source_url": "https://runescape.wiki/w/Teleportation",
+      "secondary_source_url": "https://runescape.wiki/w/Archaeology",
+      "confidence": "confirmed_wiki_current"
+    },
+    {
+      "id": "arch-museum-donation-fallback",
+      "tool": "Museum donation bin",
+      "effect": "Extra restored artefacts can be donated for 40% of the chronotes that a collector would normally award.",
+      "collection_reward_eligible": false,
+      "planner_value": "Overflow disposal only. Collector first-time/repeat rewards and artefacts with secondary uses take precedence; do not value the museum bin as equivalent to completing a collection.",
+      "source_url": "https://runescape.wiki/w/Artefacts",
+      "confidence": "confirmed_wiki_current"
+    }
+  ]
+}

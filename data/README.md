@@ -5,7 +5,8 @@ This folder is the app-facing data store.
 - `scraped-data/` contains research and ingest inputs.
 - `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
 - `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, reference-research, focused progression-chain and 2026 datasets into their app-facing locations.
-- `scripts/sync-planner-expansions.mjs` validates the sourced planner rows and copies them into the app-facing research store.
+- `scripts/sync-planner-expansions.mjs` validates the sourced base planner rows and applies merge-only audits/enrichments.
+- `scripts/sync-planner-supplements.mjs` validates and copies the specialist Slayer, Invention and Archaeology supplements, including Guild progression and non-Guild collection utilities.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
 - Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
 
@@ -23,6 +24,8 @@ Permanent unlocks record the normal-game dependency first. Equilibrium auto-comp
 
 Focused crafting chains use the same rule. A normal self-source route can create region pressure without making every ingredient a hard region lock. Alternate sources and weaker cross-checks stay visible rather than being flattened into certainty.
 
+Archaeology utility rows describe time, travel and duplicate-mitigation advantages. They never bypass a region, quest, dig-site or collector requirement. The Guild feed remains authoritative for relic presets, shop upgrades, the master outfit and Fixate.
+
 ## Current layout
 
 - `combat/modernisation-2026.json` — current combat-system modernisation data
@@ -34,6 +37,10 @@ Focused crafting chains use the same rule. A normal self-source route can create
 - `league/catalyst.json` — 2025 Catalyst League historical baseline
 - `research/catalog.json` — region/skill browser data
 - `research/planner-expansions.json` — combat spots, Runecrafting altars, Invention/Archaeology progression and regional unique drops
+- `research/planner-expansions-archaeology-collections.json` — region-sensitive collection rewards and relic hand-in chains
+- `research/planner-expansions-archaeology-repeatables.json` — repeatable collection farms and collection relic routes
+- `research/planner-expansions-archaeology-guild.json` — corrected 2→3→4 relic presets, Guild shop progression, master outfit and Fixate infrastructure
+- `research/planner-expansions-archaeology-utilities.json` — duplicate mitigation, journal collection tracking/routing and museum overflow rules
 - `research/reference-site-harvest.json` — deduplicated PvME / RS Analysis mechanic and dependency research notes
 - `research/masterwork-staff-chain.json` — tier-100 staff self-source chain with hard vs conditional region pressure
 - `research/sources.json` — source manifest

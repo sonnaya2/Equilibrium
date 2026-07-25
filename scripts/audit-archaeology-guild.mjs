@@ -40,7 +40,7 @@ for (const expected of expectedLoadouts) {
 }
 
 const [shopGuide, guildmaster, presetUpdate, fixate, masterOutfit] = await Promise.all([
-  wikiRenderedText("Archaeology money making"),
+  wikiRenderedText("Archaeology Guild Shop"),
   wikiRenderedText("Qualification - Guildmaster"),
   wikiRenderedText("Update:Relic Presets & February Mini Strike - This Week In RuneScape"),
   wikiRenderedText("Fixate"),
@@ -51,7 +51,8 @@ assertContains(presetUpdate.text, "first two presets", "Relic preset update");
 assertContains(presetUpdate.text, "80,000 Chronotes", "Relic preset update");
 assertContains(presetUpdate.text, "Professor qualification", "Relic preset update");
 assertContains(guildmaster.text, "additional relic loadout tab", "Guildmaster qualification");
-assertContains(shopGuide.text, "permanent upgrades", "Archaeology permanent-upgrades source");
+assertContains(shopGuide.text, "Soil box upgrade", "Archaeology permanent-upgrades source");
+assertContains(shopGuide.text, "Energised meteorite shard", "Archaeology permanent-upgrades source");
 
 const expectedShopRows = [
   { qualification: "Assistant", name: "Soil box upgrade", cost: 3500 },

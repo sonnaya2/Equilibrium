@@ -6,6 +6,8 @@ const ROOT = process.cwd();
 const supplements = [
   "planner-expansions-archaeology-collections.json",
   "planner-expansions-archaeology-repeatables.json",
+  "planner-expansions-archaeology-guild.json",
+  "planner-expansions-archaeology-utilities.json",
   "planner-expansions-invention-2026.json",
   "planner-expansions-invention-archaeology.json",
   "planner-expansions-invention-component-coverage.json",

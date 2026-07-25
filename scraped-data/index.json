@@ -18,6 +18,8 @@
     "planner-enrichment-support-items-2026-07-25.json": "Merge-only Kandarin Lost Grove/Solak self-source route for the ancient elven ritual shard; no live price data",
     "planner-expansions-archaeology-collections.json": "Archaeology collection rewards and region-sensitive collection dependencies kept separate from the base progression table",
     "planner-expansions-archaeology-repeatables.json": "Repeatable Archaeology/research loops and self-sufficient progression pressure",
+    "planner-expansions-archaeology-guild.json": "Authoritative Guild progression for 2-to-4 relic presets, shop upgrades, the master outfit and Fixate infrastructure",
+    "planner-expansions-archaeology-utilities.json": "Non-Guild collection utilities: duplicate mitigation, journal tracking/routing and museum overflow rules",
     "planner-expansions-invention-2026.json": "Current 2026 Invention material/perk additions including the Ecliptic and Manufactured component layer",
     "planner-expansions-invention-archaeology.json": "Ancient Invention discovery, artefact disassembly and Archaeology-to-Invention supply links",
     "planner-expansions-invention-component-coverage.json": "Current rare-component family coverage and self-supply mapping",
@@ -63,7 +65,7 @@
     "slayer": "29 deduplicated high-value, collection-log and boundary-sensitive Slayer routes are preserved with alternate regions and source freshness visible; legacy PvME KPH/XP values remain guide context rather than optimizer-grade post-2026 rankings",
     "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and the detailed Masterwork staff cross-region chain; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention and Scavenging are joined by current rare-material taxonomy coverage, 20 current weapon/armour perk families, utility bridge recipes, the Spring cleaner tight-spring bottleneck and explicit account/non-region material bottlenecks for self-sufficient planning",
-    "archaeology": "qualification gates, major dig-site unlocks, Ancient Invention linkage, PvM relic milestones, monolith energy constraints, collection rewards, repeatable loops and relic acquisition-region dependencies are mapped; uncertain League boundaries and source conflicts stay explicit",
+    "archaeology": "qualification gates, dig-site unlocks, Ancient Invention, relic milestones, collection/repeatable routes and the authoritative Guild progression are composed with non-Guild duplicate mitigation, journal tracking/routing, museum overflow rules, monolith energy constraints and relic acquisition-region dependencies; uncertain League boundaries stay explicit",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
   },
   "hard_rules": [

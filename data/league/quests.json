@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T11:06:39.291Z",
+  "generated_at": "2026-07-25T18:13:08.262Z",
   "snapshot_date": "2026-07-25",
   "quest_count": 281,
   "quest_list_entry_count": 281,
@@ -1620,8 +1620,8 @@
       "primary_region": "fremennik",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Keldagrim",
       "source_url": "https://runescape.wiki/w/Birthright_of_the_Dwarves",
-      "source_revision": 37056886,
-      "source_revision_timestamp": "2026-05-30T10:48:05Z",
+      "source_revision": 37121510,
+      "source_revision_timestamp": "2026-07-25T14:16:43Z",
       "direct_prerequisites": [
         "King of the Dwarves"
       ],
@@ -1883,8 +1883,8 @@
       "primary_region": "fremennik",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fremennik Province",
       "source_url": "https://runescape.wiki/w/Children_of_Mah",
-      "source_revision": 36959855,
-      "source_revision_timestamp": "2026-03-08T19:33:28Z",
+      "source_revision": 37121480,
+      "source_revision_timestamp": "2026-07-25T12:51:50Z",
       "direct_prerequisites": [
         "The Light Within",
         "Dishonour among Thieves"
@@ -8248,8 +8248,8 @@
       "primary_region": "kandarin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Seers' Village",
       "source_url": "https://runescape.wiki/w/You_Are_It",
-      "source_revision": 36985448,
-      "source_revision_timestamp": "2026-03-25T18:10:16Z",
+      "source_revision": 37121701,
+      "source_revision_timestamp": "2026-07-25T15:19:35Z",
       "direct_prerequisites": [],
       "required_regions": [
         "kandarin"

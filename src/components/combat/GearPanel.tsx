@@ -8,6 +8,7 @@ import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
 import { regionCrestPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { setEffectsSummary } from "@/combat/shared/equipment";
 import {
   clearEquipment,
   equipInSlot,
@@ -269,7 +270,8 @@ export function GearPanel({
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
           Wearables require a slot. Style filter defaults to setup (and hybrid). Browse chips let
-          you page another style without changing Setup. Bonuses where sourced; tier feeds AD.
+          you page another style without changing Setup. Item combat stats and set piece counts
+          come from the wiki where sourced; weapon tier still drives base AD.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
@@ -312,6 +314,27 @@ export function GearPanel({
             }),
           )}
         </div>
+
+        {(() => {
+          const sets = setEffectsSummary(loadout);
+          if (sets.length === 0) return null;
+          return (
+            <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">
+              <div className="text-[11px] uppercase tracking-wide text-parch-300">Set pieces equipped</div>
+              <ul className="mt-1 space-y-0.5 text-parch-100">
+                {sets.map((s) => (
+                  <li key={s.setId}>
+                    <span className="text-parch-50">{s.label}</span>
+                    <span className="ml-1.5 font-mono text-parch-300">×{s.pieces}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-1 text-[11px] text-parch-300">
+                Combat-relevant set crits (Tectonic / Tumeken) apply automatically from gear.
+              </p>
+            </div>
+          );
+        })()}
 
         {activeItem ? (
           <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">

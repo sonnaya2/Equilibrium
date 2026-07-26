@@ -8,6 +8,7 @@ import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers
 import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/target/genericTarget";
 import {
   equippedBonuses,
+  equippedSetCounts,
   equippedWeaponTier,
   loadoutAttackLevel,
   loadoutBase,
@@ -15,6 +16,7 @@ import {
   loadoutStats,
   loadoutWeaponTier,
   nonWeaponAccuracyBonus,
+  setEffectsSummary,
 } from "./loadoutStats";
 import { DEFAULT_LOADOUT, type Loadout } from "./useLoadout";
 
@@ -143,6 +145,78 @@ describe("loadoutStats", () => {
     expect(stats.critChance).toBe(1);
     const plain = loadoutStats(base);
     expect(plain.critChance).toBeCloseTo(0.1, 10);
+  });
+
+  it("3 tectonic pieces from equipped gear → +3% crit (perk 0)", () => {
+    const stats = loadoutStats({
+      ...base,
+      critChance: 10,
+      equipmentSlots: {
+        helmet: "item:tectonic-helm",
+        body: "item:tectonic-body",
+        legs: "item:tectonic-legs",
+      },
+    });
+    expect(equippedSetCounts({
+      equipmentSlots: {
+        helmet: "item:tectonic-helm",
+        body: "item:tectonic-body",
+        legs: "item:tectonic-legs",
+      },
+    }).get("tectonic")).toBe(3);
+    expect(stats.critChance).toBeCloseTo(0.13, 10);
+  });
+
+  it("tumeken 3 gear in sunshine → +4.5% crit", () => {
+    const stats = loadoutStats({
+      ...base,
+      critChance: 10,
+      equipmentSlots: {
+        helmet: "item:tumekens-resplendence-helm",
+        body: "item:tumekens-resplendence-body",
+        legs: "item:tumekens-resplendence-legs",
+      },
+      perks: { ...base.perks, insideSunshine: true },
+    });
+    expect(stats.critChance).toBeCloseTo(0.145, 10);
+  });
+
+  it("empty gear + zero perk set pieces → no set crit", () => {
+    expect(
+      loadoutStats({
+        ...base,
+        critChance: 10,
+        equipmentSlots: {},
+        perks: { ...base.perks, tectonicPieces: 0, tumekensPieces: 0 },
+      }).critChance,
+    ).toBeCloseTo(0.1, 10);
+  });
+
+  it("setEffectsSummary exposes equipped sets for GearPanel", () => {
+    expect(
+      setEffectsSummary({
+        equipmentSlots: {
+          helmet: "item:tectonic-helm",
+          body: "item:tectonic-body",
+          legs: "item:tectonic-legs",
+        },
+      }),
+    ).toEqual([{ setId: "tectonic", pieces: 3, label: "Tectonic (Fracture Point)" }]);
+  });
+
+  it("Math.max(gear, perk) does not double-count tectonic", () => {
+    // 3 gear + perk 3 → still 3% not 6%
+    const stats = loadoutStats({
+      ...base,
+      critChance: 10,
+      equipmentSlots: {
+        helmet: "item:tectonic-helm",
+        body: "item:tectonic-body",
+        legs: "item:tectonic-legs",
+      },
+      perks: { ...base.perks, tectonicPieces: 3 },
+    });
+    expect(stats.critChance).toBeCloseTo(0.13, 10);
   });
 
   it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {

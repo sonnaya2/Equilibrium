@@ -299,7 +299,8 @@
         }
       ],
       "displayDescription": "Tier 95 two-handed melee (halberd) weapon",
-      "slot": "twohand"
+      "slot": "twohand",
+      "setId": "tumeken"
     },
     {
       "id": "item:tumekens-resplendence-equipment",
@@ -675,7 +676,10 @@
       "id": "item:kerapacs-wrist-wraps",
       "name": "Kerapac's wrist wraps",
       "style": "magic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2,
+        "damage": 13.2
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Kerapac progression",
@@ -797,9 +801,15 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Arch-Glacor",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scripture_of_Wen",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Melee weapons / gloves / scripture"
+      "displayDescription": "Melee weapons / gloves / scripture",
+      "setId": "scripture"
     },
     {
       "id": "item:enhanced-glove-upgrades",
@@ -1055,9 +1065,15 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/TzKal-Zuk",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Igneous_Kal-Ket",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "combat capes / melee weapon / ability / scripture"
+      "displayDescription": "combat capes / melee weapon / ability / scripture",
+      "setId": "igneous"
     },
     {
       "id": "item:ek-zekkil",
@@ -1083,7 +1099,8 @@
         }
       ],
       "displayDescription": "combat capes / melee weapon / ability / scripture",
-      "slot": "twohand"
+      "slot": "twohand",
+      "setId": "leng"
     },
     {
       "id": "item:magma-tempest",
@@ -1124,9 +1141,15 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/TzKal-Zuk",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scripture_of_Ful",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "combat capes / melee weapon / ability / scripture"
+      "displayDescription": "combat capes / melee weapon / ability / scripture",
+      "setId": "scripture"
     },
     {
       "id": "item:omni-guard",
@@ -1200,7 +1223,8 @@
           "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "set aggregate — equip pieces"
+      "displayDescription": "set aggregate — equip pieces",
+      "setId": "first-necromancer"
     },
     {
       "id": "item:first-necromancer-helm",
@@ -1403,7 +1427,9 @@
       "id": "item:scripture-of-elidinis",
       "name": "Scripture of Elidinis",
       "slot": "pocket",
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 6
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Gate of Elidinis uniques",
@@ -1416,6 +1442,11 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scripture_of_Elidinis",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "displayDescription": "prayer / skilling off-hands / scripture"
@@ -1862,12 +1893,20 @@
       "id": "item:essence-of-finality",
       "name": "Essence of Finality",
       "slot": "amulet",
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 7,
+        "damage": 55.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Essence_of_Finality_amulet_(purple)",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Essence_of_Finality_amulet",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "displayDescription": "A weapon is permanently sacrificed to store its special attack in the amulet.; The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.; The stored special attack must match the combat style currently being used."
@@ -1876,7 +1915,10 @@
       "id": "item:salve-amulet-e",
       "name": "Salve amulet (e)",
       "slot": "amulet",
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 3,
+        "damage": 5.7
+      },
       "unlock": {
         "type": "quest",
         "requirement": "Haunted Mine for the base salve amulet; Lair of Tarn Razorlor for Tarn's diary and the enchantment",
@@ -2007,7 +2049,9 @@
     {
       "id": "item:asylum-surgeons-ring",
       "name": "Asylum surgeon's ring",
-      "bonuses": {},
+      "bonuses": {
+        "damage": 26.2
+      },
       "unlock": {
         "type": "quest",
         "requirement": "Complete Broken Home once; Complete the post-quest challenges; Complete a replay in under 37 minutes",
@@ -2075,14 +2119,19 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 864,
+        "accuracy": 2458,
+        "prayer": 9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Drygore_mace",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:drygore-rapier",
@@ -2090,14 +2139,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1102.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Drygore_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:drygore-longsword",
@@ -2105,14 +2158,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1102.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Drygore_longsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:off-hand-drygore-mace",
@@ -2120,14 +2177,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 432,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_drygore_mace",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:off-hand-drygore-rapier",
@@ -2135,14 +2196,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 551.2,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_drygore_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:off-hand-drygore-longsword",
@@ -2150,14 +2215,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 551.2,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_drygore_longsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "drygore"
     },
     {
       "id": "item:noxious-scythe",
@@ -2165,14 +2234,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2011.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Noxious_scythe",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "noxious"
     },
     {
       "id": "item:zaros-godsword",
@@ -2180,14 +2253,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2056.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Zaros_godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "zaros-godsword"
     },
     {
       "id": "item:masterwork-spear-of-annihilation",
@@ -2195,14 +2272,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2056.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_Spear_of_Annihilation",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "masterwork"
     },
     {
       "id": "item:trimmed-masterwork-spear-of-annihilation",
@@ -2217,7 +2298,8 @@
           "url": "https://runescape.wiki/w/Trimmed_Masterwork_Spear_of_Annihilation",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "trimmed-masterwork"
     },
     {
       "id": "item:spear-of-annihilation",
@@ -2225,14 +2307,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 87,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2011.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Spear_of_Annihilation",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "annihilation"
     },
     {
       "id": "item:laniakeas-spear",
@@ -2240,14 +2326,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 82,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2011.5,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Laniakea%27s_spear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "laniakea"
     },
     {
       "id": "item:dark-ice-sliver",
@@ -2255,14 +2345,19 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 422,
+        "accuracy": 2178,
+        "prayer": 9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dark_ice_sliver",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "leng"
     },
     {
       "id": "item:dark-ice-shard",
@@ -2270,14 +2365,19 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 844,
+        "accuracy": 2178,
+        "prayer": 9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dark_ice_shard",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "leng"
     },
     {
       "id": "item:dark-sliver-of-leng",
@@ -2285,14 +2385,24 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 95,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 456,
+        "accuracy": 2765,
+        "prayer": 9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dark_sliver_of_Leng",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dark_Sliver_of_Leng",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "leng"
     },
     {
       "id": "item:dark-shard-of-leng",
@@ -2300,14 +2410,24 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 95,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 912,
+        "accuracy": 2765,
+        "prayer": 9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dark_shard_of_Leng",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dark_Shard_of_Leng",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "leng"
     },
     {
       "id": "item:abyssal-scourge",
@@ -2315,14 +2435,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 883.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Abyssal_scourge",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "abyssal"
     },
     {
       "id": "item:khopesh-of-tumeken",
@@ -2330,14 +2454,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 82,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 883.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Khopesh_of_Tumeken",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "khopesh"
     },
     {
       "id": "item:khopesh-of-elidinis",
@@ -2345,14 +2473,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 82,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 441.6,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Khopesh_of_Elidinis",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "khopesh"
     },
     {
       "id": "item:khopesh-of-the-kharidian",
@@ -2360,14 +2492,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 787.2,
+        "accuracy": 2023
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Khopesh_of_the_Kharidian",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "khopesh"
     },
     {
       "id": "item:blade-of-nymora",
@@ -2375,14 +2511,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 768,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Blade_of_Nymora",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "twin-furies"
     },
     {
       "id": "item:blade-of-avaryss",
@@ -2390,14 +2530,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 384,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Blade_of_Avaryss",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "twin-furies"
     },
     {
       "id": "item:chaotic-rapier",
@@ -2405,14 +2549,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 980,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Chaotic_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:chaotic-longsword",
@@ -2420,14 +2568,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 980,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Chaotic_longsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:chaotic-claw",
@@ -2435,14 +2587,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 768,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Chaotic_claw",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:off-hand-chaotic-rapier",
@@ -2450,14 +2606,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 490,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_chaotic_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:off-hand-chaotic-longsword",
@@ -2465,14 +2625,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 490,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_chaotic_longsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:off-hand-chaotic-claw",
@@ -2480,14 +2644,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 384,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_chaotic_claw",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:chaotic-maul",
@@ -2495,14 +2663,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Chaotic_maul",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:attuned-crystal-dagger",
@@ -2510,14 +2682,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 768,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Attuned_crystal_dagger",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "attuned-crystal"
     },
     {
       "id": "item:off-hand-attuned-crystal-dagger",
@@ -2525,14 +2701,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 384,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_attuned_crystal_dagger",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "attuned-crystal"
     },
     {
       "id": "item:attuned-crystal-halberd",
@@ -2540,14 +2720,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Attuned_crystal_halberd",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "attuned-crystal"
     },
     {
       "id": "item:dragon-rider-lance",
@@ -2555,14 +2739,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dragon_Rider_lance",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "dragon-rider"
     },
     {
       "id": "item:mizuyari",
@@ -2570,14 +2758,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1899.8,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Mizuyari",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "mizuyari"
     },
     {
       "id": "item:terrasaur-maul",
@@ -2585,14 +2777,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Terrasaur_maul",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "terrasaur"
     },
     {
       "id": "item:lava-whip",
@@ -2600,14 +2796,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 816,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Lava_whip",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "lava"
     },
     {
       "id": "item:abyssal-whip",
@@ -2615,14 +2815,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 672,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Abyssal_whip",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "abyssal"
     },
     {
       "id": "item:abyssal-vine-whip",
@@ -2630,14 +2834,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 720,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Abyssal_vine_whip",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "abyssal"
     },
     {
       "id": "item:superior-statiuss-warhammer",
@@ -2645,14 +2853,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1311,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Superior_Statius%27s_warhammer",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "statius"
     },
     {
       "id": "item:superior-vestas-longsword",
@@ -2660,14 +2872,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1078,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Superior_Vesta%27s_longsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "vesta"
     },
     {
       "id": "item:superior-vestas-spear",
@@ -2675,14 +2891,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1967,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Superior_Vesta%27s_spear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "vesta"
     },
     {
       "id": "item:tetsu-katana",
@@ -2690,14 +2910,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1041.3,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Tetsu_katana",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "tetsu"
     },
     {
       "id": "item:tetsu-wakizashi",
@@ -2705,14 +2929,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 520.6,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Tetsu_wakizashi",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "tetsu"
     },
     {
       "id": "item:elite-tetsu-katana",
@@ -2720,14 +2948,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1078,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_tetsu_katana",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "elite-tetsu"
     },
     {
       "id": "item:elite-tetsu-wakizashi",
@@ -2735,14 +2967,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 539,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_tetsu_wakizashi",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "elite-tetsu"
     },
     {
       "id": "item:masutas-warspear",
@@ -2750,14 +2986,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1832.7,
+        "accuracy": 2023
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masuta%27s_warspear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "masuta"
     },
     {
       "id": "item:sunspear-melee",
@@ -2765,14 +3005,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 78,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1743.3,
+        "accuracy": 1829
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Sunspear_(melee)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "sunspear"
     },
     {
       "id": "item:torva-full-helm",
@@ -2781,7 +3025,11 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "torva",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "prayer": 2,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -2797,7 +3045,11 @@
       "slot": "body",
       "tier": 80,
       "setId": "torva",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "prayer": 3,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -2813,7 +3065,11 @@
       "slot": "legs",
       "tier": 80,
       "setId": "torva",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "prayer": 2,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -2829,7 +3085,11 @@
       "slot": "gloves",
       "tier": 80,
       "setId": "torva",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -2845,7 +3105,11 @@
       "slot": "boots",
       "tier": 80,
       "setId": "torva",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -2861,11 +3125,20 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 435.6,
+        "prayer": 2,
+        "damage": 22.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_helm",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_melee_helm",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2877,11 +3150,20 @@
       "slot": "body",
       "tier": 90,
       "setId": "masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3,
+        "damage": 33.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_platebody",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_melee_platebody",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2893,11 +3175,20 @@
       "slot": "legs",
       "tier": 90,
       "setId": "masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2,
+        "damage": 28.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_platelegs",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_melee_platelegs",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2909,11 +3200,20 @@
       "slot": "gloves",
       "tier": 90,
       "setId": "masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_melee_gloves",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2925,11 +3225,20 @@
       "slot": "boots",
       "tier": 90,
       "setId": "masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_boots",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_melee_boots",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2941,11 +3250,20 @@
       "slot": "helmet",
       "tier": 92,
       "setId": "trimmed-masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 457.4,
+        "prayer": 2,
+        "damage": 23
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_masterwork_helm",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_helm",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2957,11 +3275,20 @@
       "slot": "body",
       "tier": 92,
       "setId": "trimmed-masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 526,
+        "prayer": 3,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_masterwork_platebody",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_platebody",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2973,11 +3300,20 @@
       "slot": "legs",
       "tier": 92,
       "setId": "trimmed-masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 503.1,
+        "prayer": 2,
+        "damage": 28.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_masterwork_platelegs",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_platelegs",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -2989,11 +3325,20 @@
       "slot": "gloves",
       "tier": 92,
       "setId": "trimmed-masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 114.3,
+        "prayer": 2,
+        "damage": 14.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_masterwork_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_gloves",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3005,11 +3350,20 @@
       "slot": "boots",
       "tier": 92,
       "setId": "trimmed-masterwork",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 114.3,
+        "prayer": 2,
+        "damage": 14.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_masterwork_boots",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_boots",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3021,11 +3375,19 @@
       "slot": "helmet",
       "tier": 95,
       "setId": "vestments-of-havoc",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2,
+        "damage": 27.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Hood_of_the_Vestments_of_Havoc",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vestments_of_havoc_hood",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3037,11 +3399,19 @@
       "slot": "body",
       "tier": 95,
       "setId": "vestments-of-havoc",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 341.7,
+        "damage": 41.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Robe_top_of_the_Vestments_of_Havoc",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vestments_of_havoc_robe_top",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3053,11 +3423,19 @@
       "slot": "legs",
       "tier": 95,
       "setId": "vestments-of-havoc",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 326.9,
+        "damage": 34.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Robe_bottom_of_the_Vestments_of_Havoc",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vestments_of_havoc_robe_bottom",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3075,6 +3453,11 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Gloves_of_the_Vestments_of_Havoc",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vestments_of_havoc_armour",
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -3085,11 +3468,19 @@
       "slot": "boots",
       "tier": 95,
       "setId": "vestments-of-havoc",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 74.3,
+        "damage": 17.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Boots_of_the_Vestments_of_Havoc",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vestments_of_havoc_boots",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3101,7 +3492,11 @@
       "slot": "helmet",
       "tier": 70,
       "setId": "bandos",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 259.8,
+        "prayer": 1,
+        "damage": 17.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3117,7 +3512,11 @@
       "slot": "body",
       "tier": 70,
       "setId": "bandos",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 298.7,
+        "prayer": 2,
+        "damage": 26.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3133,7 +3532,11 @@
       "slot": "legs",
       "tier": 70,
       "setId": "bandos",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 285.7,
+        "prayer": 1,
+        "damage": 21.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3149,7 +3552,11 @@
       "slot": "gloves",
       "tier": 70,
       "setId": "bandos",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3165,7 +3572,11 @@
       "slot": "boots",
       "tier": 70,
       "setId": "bandos",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3181,7 +3592,10 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3197,7 +3611,10 @@
       "slot": "body",
       "tier": 80,
       "setId": "anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3213,7 +3630,10 @@
       "slot": "legs",
       "tier": 80,
       "setId": "anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3229,7 +3649,10 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "refined-anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8,
+        "damage": 21.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3245,7 +3668,10 @@
       "slot": "body",
       "tier": 85,
       "setId": "refined-anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 442.5,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3261,7 +3687,10 @@
       "slot": "legs",
       "tier": 85,
       "setId": "refined-anima-core-zaros",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 423.2,
+        "damage": 26.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3277,7 +3706,9 @@
       "slot": "helmet",
       "tier": 88,
       "setId": "teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3293,7 +3724,9 @@
       "slot": "body",
       "tier": 88,
       "setId": "teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3309,7 +3742,9 @@
       "slot": "legs",
       "tier": 88,
       "setId": "teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3325,7 +3760,9 @@
       "slot": "gloves",
       "tier": 88,
       "setId": "teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3341,7 +3778,9 @@
       "slot": "boots",
       "tier": 88,
       "setId": "teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3357,7 +3796,9 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "achto-teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3373,7 +3814,9 @@
       "slot": "body",
       "tier": 90,
       "setId": "achto-teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3389,7 +3832,9 @@
       "slot": "legs",
       "tier": 90,
       "setId": "achto-teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3405,7 +3850,9 @@
       "slot": "gloves",
       "tier": 90,
       "setId": "achto-teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3421,7 +3868,9 @@
       "slot": "boots",
       "tier": 90,
       "setId": "achto-teralith",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3437,7 +3886,9 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 414.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3453,7 +3904,9 @@
       "slot": "body",
       "tier": 85,
       "setId": "tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 477
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3469,7 +3922,9 @@
       "slot": "legs",
       "tier": 85,
       "setId": "tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 456.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3485,11 +3940,19 @@
       "slot": "helmet",
       "tier": 88,
       "setId": "elite-tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 435.6,
+        "prayer": 2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_tetsu_helm",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_tetsu_helm",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3501,11 +3964,19 @@
       "slot": "body",
       "tier": 88,
       "setId": "elite-tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_tetsu_body",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_tetsu_body",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3517,11 +3988,19 @@
       "slot": "legs",
       "tier": 88,
       "setId": "elite-tetsu",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_tetsu_platelegs",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_tetsu_platelegs",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3532,14 +4011,18 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2,
+        "damage": 13.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Gloves_of_passage",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "gloves-of-passage"
     },
     {
       "id": "item:razorback-gauntlets",
@@ -3547,14 +4030,19 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Razorback_gauntlets",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "razorback"
     },
     {
       "id": "item:cinderbane-gloves",
@@ -3562,14 +4050,18 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 74.3,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Cinderbane_gloves",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "cinderbane"
     },
     {
       "id": "item:emberkeen-boots",
@@ -3577,14 +4069,19 @@
       "style": "melee",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Emberkeen_boots",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "emberkeen"
     },
     {
       "id": "item:steadfast-boots",
@@ -3592,14 +4089,17 @@
       "style": "melee",
       "slot": "boots",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Steadfast_boots",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "steadfast"
     },
     {
       "id": "item:goliath-gloves",
@@ -3607,14 +4107,17 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Goliath_gloves",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "goliath"
     },
     {
       "id": "item:malevolent-kiteshield",
@@ -3622,14 +4125,17 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Malevolent_kiteshield",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "malevolent"
     },
     {
       "id": "item:kalphite-defender",
@@ -3637,14 +4143,19 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 216,
+        "accuracy": 2458,
+        "armour": 245.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Kalphite_defender",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "kalphite"
     },
     {
       "id": "item:ancient-defender",
@@ -3652,14 +4163,19 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 192,
+        "accuracy": 1924,
+        "armour": 192.4
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Ancient_defender",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ancient-defender"
     },
     {
       "id": "item:divine-spirit-shield",
@@ -3667,14 +4183,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "prayer": 3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Divine_spirit_shield",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "spirit-shield"
     },
     {
       "id": "item:noxious-longbow",
@@ -3682,7 +4202,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1147.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3697,7 +4220,9 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3712,11 +4237,19 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_Ascension_crossbow",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Off-hand_ascension_crossbow",
+          "title": "Off-hand ascension crossbow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -3727,7 +4260,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2056.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3742,7 +4278,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1173,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3757,7 +4296,9 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3772,7 +4313,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3787,7 +4330,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 87,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1598.6,
+        "accuracy": 2287
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3802,7 +4348,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 384,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3817,7 +4366,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1083.8,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3832,7 +4384,9 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3847,7 +4401,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3862,7 +4418,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1470,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3877,7 +4436,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 980,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3892,7 +4454,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 490,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3907,7 +4472,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 980,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3922,7 +4490,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 490,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3937,7 +4508,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 816,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3952,7 +4526,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 408,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3967,7 +4544,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1311.2,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3982,7 +4562,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1078,
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -3997,7 +4580,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 87,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1224,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4012,7 +4598,11 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 450.5,
+        "accuracy": 2178,
+        "armour": 435.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4027,7 +4617,11 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1470,
+        "accuracy": 1924,
+        "prayer": 2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4042,7 +4636,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1020,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4057,7 +4654,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 95,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1211.3,
+        "accuracy": 2765
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4072,7 +4672,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 78,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1743.3,
+        "accuracy": 1829
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4088,7 +4691,11 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 435.6,
+        "prayer": 2,
+        "damage": 22.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4104,7 +4711,11 @@
       "slot": "body",
       "tier": 90,
       "setId": "sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3,
+        "damage": 33.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4120,7 +4731,11 @@
       "slot": "legs",
       "tier": 90,
       "setId": "sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2,
+        "damage": 28.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4136,7 +4751,11 @@
       "slot": "helmet",
       "tier": 92,
       "setId": "elite-sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 457.4,
+        "prayer": 2,
+        "damage": 23
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4152,7 +4771,11 @@
       "slot": "body",
       "tier": 92,
       "setId": "elite-sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 526,
+        "prayer": 3,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4168,7 +4791,11 @@
       "slot": "legs",
       "tier": 92,
       "setId": "elite-sirenic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 503.1,
+        "prayer": 2,
+        "damage": 28.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4184,7 +4811,11 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "pernix",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "prayer": 2,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4200,7 +4831,11 @@
       "slot": "body",
       "tier": 80,
       "setId": "pernix",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "prayer": 3,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4216,7 +4851,11 @@
       "slot": "legs",
       "tier": 80,
       "setId": "pernix",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "prayer": 2,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4232,7 +4871,11 @@
       "slot": "gloves",
       "tier": 80,
       "setId": "pernix",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4248,7 +4891,11 @@
       "slot": "boots",
       "tier": 80,
       "setId": "pernix",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4264,7 +4911,10 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4280,7 +4930,10 @@
       "slot": "body",
       "tier": 80,
       "setId": "anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4296,7 +4949,10 @@
       "slot": "legs",
       "tier": 80,
       "setId": "anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4312,7 +4968,10 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "refined-anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8,
+        "damage": 21.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4328,7 +4987,10 @@
       "slot": "body",
       "tier": 85,
       "setId": "refined-anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 442.5,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4344,7 +5006,10 @@
       "slot": "legs",
       "tier": 85,
       "setId": "refined-anima-core-zamorak",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 423.2,
+        "damage": 26.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4359,7 +5024,10 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2,
+        "damage": 13.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4374,7 +5042,11 @@
       "style": "ranged",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4404,7 +5076,9 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4420,7 +5094,9 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 414.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4436,7 +5112,9 @@
       "slot": "body",
       "tier": 85,
       "setId": "death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 477
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4452,7 +5130,9 @@
       "slot": "legs",
       "tier": 85,
       "setId": "death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 456.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4468,11 +5148,20 @@
       "slot": "helmet",
       "tier": 88,
       "setId": "elite-death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 435.6,
+        "prayer": 2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_Death_Lotus_hood",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_Death_Lotus_hood",
+          "title": "Superior Death Lotus hood",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -4484,11 +5173,20 @@
       "slot": "body",
       "tier": 88,
       "setId": "elite-death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_Death_Lotus_chestplate",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_Death_Lotus_chestplate",
+          "title": "Superior Death Lotus chestplate",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -4500,11 +5198,20 @@
       "slot": "legs",
       "tier": 88,
       "setId": "elite-death-lotus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_Death_Lotus_chaps",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_Death_Lotus_chaps",
+          "title": "Superior Death Lotus chaps",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -4516,7 +5223,9 @@
       "slot": "helmet",
       "tier": 88,
       "setId": "tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4532,7 +5241,9 @@
       "slot": "body",
       "tier": 88,
       "setId": "tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4548,7 +5259,9 @@
       "slot": "legs",
       "tier": 88,
       "setId": "tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4564,7 +5277,9 @@
       "slot": "gloves",
       "tier": 88,
       "setId": "tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4580,7 +5295,9 @@
       "slot": "boots",
       "tier": 88,
       "setId": "tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4596,7 +5313,9 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "achto-tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4612,7 +5331,9 @@
       "slot": "body",
       "tier": 90,
       "setId": "achto-tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4628,7 +5349,9 @@
       "slot": "legs",
       "tier": 90,
       "setId": "achto-tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4644,7 +5367,9 @@
       "slot": "gloves",
       "tier": 90,
       "setId": "achto-tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4660,7 +5385,9 @@
       "slot": "boots",
       "tier": 90,
       "setId": "achto-tempest",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4676,7 +5403,11 @@
       "slot": "helmet",
       "tier": 70,
       "setId": "armadyl",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 259.8,
+        "prayer": 1,
+        "damage": 17.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4692,7 +5423,11 @@
       "slot": "body",
       "tier": 70,
       "setId": "armadyl",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 298.7,
+        "prayer": 2,
+        "damage": 26.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4708,7 +5443,11 @@
       "slot": "legs",
       "tier": 70,
       "setId": "armadyl",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 285.7,
+        "prayer": 1,
+        "damage": 21.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4724,7 +5463,11 @@
       "slot": "gloves",
       "tier": 70,
       "setId": "armadyl",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4740,7 +5483,11 @@
       "slot": "boots",
       "tier": 70,
       "setId": "armadyl",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4755,7 +5502,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4770,7 +5519,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 95,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2765
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4800,7 +5551,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4815,7 +5568,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4830,7 +5585,9 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4845,7 +5602,9 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4860,14 +5619,17 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Seasinger_kiba",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "seasinger"
     },
     {
       "id": "item:seasinger-makigai",
@@ -4875,14 +5637,17 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Seasinger_makigai",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "seasinger"
     },
     {
       "id": "item:elite-seasinger-kiba",
@@ -4890,14 +5655,17 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_seasinger_kiba",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "elite-seasinger"
     },
     {
       "id": "item:elite-seasinger-makigai",
@@ -4905,14 +5673,17 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Elite_seasinger_makigai",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "elite-seasinger"
     },
     {
       "id": "item:attuned-crystal-wand",
@@ -4920,7 +5691,9 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4935,7 +5708,9 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4950,7 +5725,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -4965,14 +5742,17 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Virtus_wand",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "virtus"
     },
     {
       "id": "item:virtus-book",
@@ -4980,14 +5760,17 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Virtus_book",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "virtus"
     },
     {
       "id": "item:obliteration",
@@ -4995,7 +5778,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 87,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2287
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5010,7 +5795,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 88,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2343
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5025,7 +5812,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5040,7 +5829,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5055,7 +5846,9 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5070,7 +5863,9 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5085,7 +5880,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 78,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1829
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5101,7 +5898,11 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "virtus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "prayer": 2,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5117,7 +5918,11 @@
       "slot": "body",
       "tier": 80,
       "setId": "virtus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "prayer": 3,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5133,7 +5938,11 @@
       "slot": "legs",
       "tier": 80,
       "setId": "virtus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "prayer": 2,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5149,7 +5958,11 @@
       "slot": "gloves",
       "tier": 80,
       "setId": "virtus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5165,7 +5978,11 @@
       "slot": "boots",
       "tier": 80,
       "setId": "virtus",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "prayer": 2,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5181,7 +5998,10 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5197,7 +6017,10 @@
       "slot": "body",
       "tier": 80,
       "setId": "anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5213,7 +6036,10 @@
       "slot": "legs",
       "tier": 80,
       "setId": "anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5229,7 +6055,10 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "refined-anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8,
+        "damage": 21.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5245,7 +6074,10 @@
       "slot": "body",
       "tier": 85,
       "setId": "refined-anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 442.5,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5261,7 +6093,10 @@
       "slot": "legs",
       "tier": 85,
       "setId": "refined-anima-core-seren",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 423.2,
+        "damage": 26.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5277,7 +6112,9 @@
       "slot": "helmet",
       "tier": 75,
       "setId": "ganodermic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5293,7 +6130,9 @@
       "slot": "body",
       "tier": 75,
       "setId": "ganodermic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5309,7 +6148,9 @@
       "slot": "legs",
       "tier": 75,
       "setId": "ganodermic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5325,7 +6166,11 @@
       "slot": "helmet",
       "tier": 70,
       "setId": "subjugation",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 259.8,
+        "prayer": 1,
+        "damage": 17.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5341,7 +6186,11 @@
       "slot": "body",
       "tier": 70,
       "setId": "subjugation",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 298.7,
+        "prayer": 2,
+        "damage": 26.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5357,7 +6206,11 @@
       "slot": "legs",
       "tier": 70,
       "setId": "subjugation",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 285.7,
+        "prayer": 1,
+        "damage": 21.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5373,7 +6226,11 @@
       "slot": "gloves",
       "tier": 70,
       "setId": "subjugation",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5389,7 +6246,11 @@
       "slot": "boots",
       "tier": 70,
       "setId": "subjugation",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "prayer": 1,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5405,7 +6266,9 @@
       "slot": "helmet",
       "tier": 88,
       "setId": "primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5421,7 +6284,9 @@
       "slot": "body",
       "tier": 88,
       "setId": "primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5437,7 +6302,9 @@
       "slot": "legs",
       "tier": 88,
       "setId": "primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5453,7 +6320,9 @@
       "slot": "gloves",
       "tier": 88,
       "setId": "primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5469,7 +6338,9 @@
       "slot": "boots",
       "tier": 88,
       "setId": "primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5485,7 +6356,9 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "achto-primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5501,7 +6374,9 @@
       "slot": "body",
       "tier": 90,
       "setId": "achto-primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5517,7 +6392,9 @@
       "slot": "legs",
       "tier": 90,
       "setId": "achto-primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5533,7 +6410,9 @@
       "slot": "gloves",
       "tier": 90,
       "setId": "achto-primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5549,7 +6428,9 @@
       "slot": "boots",
       "tier": 90,
       "setId": "achto-primeval",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5565,7 +6446,9 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "seasinger",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 414.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5581,7 +6464,9 @@
       "slot": "body",
       "tier": 85,
       "setId": "seasinger",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 477
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5597,7 +6482,9 @@
       "slot": "legs",
       "tier": 85,
       "setId": "seasinger",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 456.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5661,7 +6548,11 @@
       "slot": "helmet",
       "tier": 92,
       "setId": "elite-tectonic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 457.4,
+        "prayer": 2,
+        "damage": 23
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5677,7 +6568,11 @@
       "slot": "body",
       "tier": 92,
       "setId": "elite-tectonic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 526,
+        "prayer": 3,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5693,7 +6588,11 @@
       "slot": "legs",
       "tier": 92,
       "setId": "elite-tectonic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 503.1,
+        "prayer": 2,
+        "damage": 28.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5708,7 +6607,11 @@
       "style": "magic",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5723,7 +6626,10 @@
       "style": "magic",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5738,7 +6644,9 @@
       "style": "magic",
       "slot": "boots",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5753,7 +6661,11 @@
       "style": "magic",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5768,7 +6680,9 @@
       "style": "magic",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5783,7 +6697,10 @@
       "style": "magic",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5798,7 +6715,9 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 491.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5813,7 +6732,10 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "prayer": 3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5858,14 +6780,24 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1043,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathguard",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Death_guard_(tier_70)",
+          "revision": "37010310",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:skull-lantern",
@@ -5873,14 +6805,24 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 521.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Skull_lantern_(tier_70)",
+          "revision": "37010272",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:deathguard-t80",
@@ -5888,14 +6830,24 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1192,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathguard",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Death_guard_(tier_80)",
+          "revision": "37010288",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:skull-lantern-t80",
@@ -5903,14 +6855,24 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 596,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Skull_lantern_(tier_80)",
+          "revision": "37010274",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:deathguard-t90",
@@ -5918,14 +6880,24 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1341,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathguard",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Death_guard_(tier_90)",
+          "revision": "37055809",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:skull-lantern-t90",
@@ -5933,14 +6905,24 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 670.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Skull_lantern_(tier_90)",
+          "revision": "37055811",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:deathdealer-hood",
@@ -5949,11 +6931,20 @@
       "slot": "helmet",
       "tier": 70,
       "setId": "deathdealer-70",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 259.8,
+        "damage": 17.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_hood",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_hood_(tier_70)",
+          "revision": "36962434",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -5965,11 +6956,20 @@
       "slot": "body",
       "tier": 70,
       "setId": "deathdealer-70",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 298.7,
+        "damage": 26.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_top",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_top_(tier_70)",
+          "revision": "36962435",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -5981,11 +6981,20 @@
       "slot": "legs",
       "tier": 70,
       "setId": "deathdealer-70",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 285.7,
+        "damage": 21.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_bottom",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_bottom_(tier_70)",
+          "revision": "36962436",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -5997,11 +7006,20 @@
       "slot": "gloves",
       "tier": 70,
       "setId": "deathdealer-70",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_gloves_(tier_70)",
+          "revision": "36962437",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6013,11 +7031,20 @@
       "slot": "boots",
       "tier": 70,
       "setId": "deathdealer-70",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 64.9,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_boots",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_boots_(tier_70)",
+          "revision": "36962438",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6029,11 +7056,20 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "deathdealer-80",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 338.8,
+        "damage": 20
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_hood",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_hood_(tier_80)",
+          "revision": "36962441",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6045,11 +7081,20 @@
       "slot": "body",
       "tier": 80,
       "setId": "deathdealer-80",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 389.6,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_top",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_top_(tier_80)",
+          "revision": "36962442",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6061,11 +7106,20 @@
       "slot": "legs",
       "tier": 80,
       "setId": "deathdealer-80",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 372.6,
+        "damage": 25
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_bottom",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_bottom_(tier_80)",
+          "revision": "36962443",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6077,11 +7131,20 @@
       "slot": "gloves",
       "tier": 80,
       "setId": "deathdealer-80",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_gloves_(tier_80)",
+          "revision": "36962444",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6093,11 +7156,20 @@
       "slot": "boots",
       "tier": 80,
       "setId": "deathdealer-80",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_boots",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_boots_(tier_80)",
+          "revision": "36962445",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6109,11 +7181,20 @@
       "slot": "helmet",
       "tier": 90,
       "setId": "deathdealer-90",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 435.6,
+        "damage": 22.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_hood",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_hood_(tier_90)",
+          "revision": "37068316",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6125,11 +7206,20 @@
       "slot": "body",
       "tier": 90,
       "setId": "deathdealer-90",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "damage": 33.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_top",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_top_(tier_90)",
+          "revision": "37068318",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6141,11 +7231,20 @@
       "slot": "legs",
       "tier": 90,
       "setId": "deathdealer-90",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "damage": 28.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_robe_bottom",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_robe_bottom_(tier_90)",
+          "revision": "37068320",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6157,11 +7256,20 @@
       "slot": "gloves",
       "tier": 90,
       "setId": "deathdealer-90",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_gloves_(tier_90)",
+          "revision": "37068324",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6173,11 +7281,20 @@
       "slot": "boots",
       "tier": 90,
       "setId": "deathdealer-90",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Deathdealer_boots",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathdealer_boots_(tier_90)",
+          "revision": "37068317",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6188,7 +7305,10 @@
       "style": "hybrid",
       "slot": "amulet",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 5,
+        "damage": 48.3
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6203,7 +7323,10 @@
       "style": "hybrid",
       "slot": "amulet",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 3,
+        "damage": 40.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6218,7 +7341,10 @@
       "style": "hybrid",
       "slot": "amulet",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 3,
+        "damage": 40.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6233,14 +7359,18 @@
       "style": "melee",
       "slot": "amulet",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 46,
+        "accuracy": 84
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Brawler%27s_knockout_necklace",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "brawler"
     },
     {
       "id": "item:farsight-sniper-necklace",
@@ -6248,7 +7378,9 @@
       "style": "ranged",
       "slot": "amulet",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 46
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6263,7 +7395,10 @@
       "style": "magic",
       "slot": "amulet",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 46,
+        "accuracy": 84
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6278,7 +7413,10 @@
       "style": "hybrid",
       "slot": "amulet",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 10,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6293,7 +7431,10 @@
       "style": "hybrid",
       "slot": "ring",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 3,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6308,7 +7449,11 @@
       "style": "hybrid",
       "slot": "ring",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 17,
+        "prayer": 5,
+        "damage": 33
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6323,7 +7468,10 @@
       "style": "magic",
       "slot": "ring",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 5,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6338,7 +7486,10 @@
       "style": "ranged",
       "slot": "ring",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 5,
+        "damage": 34.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6353,14 +7504,18 @@
       "style": "melee",
       "slot": "ring",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 34.5,
+        "prayer": 5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Champion%27s_ring",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "champions-ring"
     },
     {
       "id": "item:luck-of-the-dwarves",
@@ -6368,7 +7523,9 @@
       "style": "hybrid",
       "slot": "ring",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 22.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6383,7 +7540,10 @@
       "style": "hybrid",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 3,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6398,14 +7558,19 @@
       "style": "melee",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 57.7,
+        "prayer": 2,
+        "damage": 37.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Igneous_Kal-Ket",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "igneous"
     },
     {
       "id": "item:igneous-kal-xil",
@@ -6413,7 +7578,11 @@
       "style": "ranged",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 57.7,
+        "prayer": 2,
+        "damage": 37.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6428,7 +7597,11 @@
       "style": "magic",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 57.7,
+        "prayer": 2,
+        "damage": 37.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6443,7 +7616,11 @@
       "style": "necromancy",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 57.7,
+        "prayer": 2,
+        "damage": 37.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6458,7 +7635,11 @@
       "style": "hybrid",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 57.7,
+        "prayer": 2,
+        "damage": 37.1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6473,14 +7654,19 @@
       "style": "melee",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 2,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/TokHaar-Kal-Ket",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "tokhaar"
     },
     {
       "id": "item:tokhaar-kal-xil",
@@ -6488,7 +7674,11 @@
       "style": "ranged",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 2,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6503,7 +7693,11 @@
       "style": "magic",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 2,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6518,7 +7712,11 @@
       "style": "necromancy",
       "slot": "cape",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 2,
+        "damage": 31.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6540,7 +7738,8 @@
           "url": "https://runescape.wiki/w/Scrimshaw_of_vampyrism",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "scrimshaw"
     },
     {
       "id": "item:scrimshaw-of-the-elements",
@@ -6585,7 +7784,8 @@
           "url": "https://runescape.wiki/w/Superior_scrimshaw_of_vampyrism",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "scrimshaw"
     },
     {
       "id": "item:superior-scrimshaw-of-the-elements",
@@ -6623,7 +7823,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6638,7 +7841,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6653,7 +7859,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6668,7 +7877,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6683,7 +7895,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6698,7 +7913,10 @@
       "style": "hybrid",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 4,
+        "damage": 10.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6713,7 +7931,10 @@
       "style": "necromancy",
       "slot": "pocket",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "prayer": 2,
+        "damage": 14.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6848,7 +8069,9 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 912
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6863,11 +8086,19 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 960
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Wen_arrows",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Wen_arrow",
+          "title": "Wen arrow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6878,11 +8109,19 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 960
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Ful_arrows",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ful_arrow",
+          "title": "Ful arrow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6893,11 +8132,19 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 960
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Bik_arrows",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Bik_arrow",
+          "title": "Bik arrow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6908,11 +8155,19 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 960
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Jas_dragonbane_arrows",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Jas_dragonbane_arrow",
+          "title": "Jas dragonbane arrow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -6923,7 +8178,9 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 902.4
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6938,7 +8195,9 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 912
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6953,7 +8212,9 @@
       "style": "ranged",
       "slot": "ammo",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 912
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6983,7 +8244,9 @@
       "style": "hybrid",
       "slot": "helmet",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -6999,7 +8262,9 @@
       "slot": "helmet",
       "tier": 80,
       "setId": "anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 259.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7015,7 +8280,9 @@
       "slot": "body",
       "tier": 80,
       "setId": "anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 298.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7031,7 +8298,9 @@
       "slot": "legs",
       "tier": 80,
       "setId": "anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 285.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7047,7 +8316,9 @@
       "slot": "helmet",
       "tier": 85,
       "setId": "refined-anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7063,7 +8334,9 @@
       "slot": "body",
       "tier": 85,
       "setId": "refined-anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 341.7
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7079,7 +8352,9 @@
       "slot": "legs",
       "tier": 85,
       "setId": "refined-anima-core-sliske",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 326.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7094,7 +8369,11 @@
       "style": "hybrid",
       "slot": "cape",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 5,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7109,7 +8388,11 @@
       "style": "hybrid",
       "slot": "cape",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 44.5,
+        "prayer": 5,
+        "damage": 30
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7139,7 +8422,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 100,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7169,7 +8454,9 @@
       "style": "magic",
       "slot": "offhand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7199,7 +8486,9 @@
       "style": "magic",
       "slot": "mainhand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7214,7 +8503,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7244,7 +8535,10 @@
       "style": "magic",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7259,7 +8553,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7289,7 +8585,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7334,7 +8632,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 82,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2023
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7364,7 +8664,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7379,7 +8681,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7394,7 +8698,9 @@
       "style": "magic",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7409,7 +8715,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 78,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1829
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7424,7 +8732,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 77,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1783
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7439,7 +8749,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7454,7 +8766,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7469,7 +8783,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7484,7 +8800,9 @@
       "style": "magic",
       "slot": "twohand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -7506,7 +8824,8 @@
           "url": "https://runescape.wiki/w/Ahrim's_staff",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ahrims"
     },
     {
       "id": "item:ahrims-wand",
@@ -7521,7 +8840,8 @@
           "url": "https://runescape.wiki/w/Ahrim's_wand",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ahrims"
     },
     {
       "id": "item:blisterwood-orb",
@@ -7581,7 +8901,8 @@
           "url": "https://runescape.wiki/w/Ahrim's_book_of_magic",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ahrims"
     },
     {
       "id": "item:crystal-orb",
@@ -7664,14 +8985,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2235,
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Masterwork_2h_sword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "masterwork"
     },
     {
       "id": "item:dominion-sword",
@@ -7679,14 +9004,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2011.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dominion_sword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "dominion"
     },
     {
       "id": "item:enhanced-gloves-of-passage",
@@ -7694,14 +9023,18 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Enhanced_gloves_of_passage",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "gloves-of-passage"
     },
     {
       "id": "item:enhanced-laceration-boots",
@@ -7709,14 +9042,18 @@
       "style": "melee",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Enhanced_laceration_boots",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "laceration"
     },
     {
       "id": "item:off-hand-ruinous-rapier",
@@ -7731,7 +9068,8 @@
           "url": "https://runescape.wiki/w/Off-hand_ruinous_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ruinous"
     },
     {
       "id": "item:ruinous-maul",
@@ -7746,7 +9084,8 @@
           "url": "https://runescape.wiki/w/Ruinous_maul",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ruinous"
     },
     {
       "id": "item:ruinous-rapier",
@@ -7761,7 +9100,8 @@
           "url": "https://runescape.wiki/w/Ruinous_rapier",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ruinous"
     },
     {
       "id": "item:annihilation",
@@ -7769,14 +9109,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 87,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1944,
+        "accuracy": 2287
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Annihilation",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "annihilation"
     },
     {
       "id": "item:jaws-of-the-abyss",
@@ -7784,14 +9128,18 @@
       "style": "melee",
       "slot": "helmet",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8,
+        "damage": 21.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Jaws_of_the_Abyss",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "jaws-of-the-abyss"
     },
     {
       "id": "item:off-hand-ripper-claw",
@@ -7799,14 +9147,18 @@
       "style": "melee",
       "slot": "offhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 408,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Off-hand_ripper_claw",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ripper"
     },
     {
       "id": "item:pneumatic-gloves",
@@ -7814,14 +9166,17 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Pneumatic_gloves",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "pneumatic"
     },
     {
       "id": "item:ripper-claw",
@@ -7829,14 +9184,18 @@
       "style": "melee",
       "slot": "mainhand",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 816,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Ripper_claw",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "ripper"
     },
     {
       "id": "item:off-hand-khopesh-of-the-kharidian",
@@ -7851,7 +9210,8 @@
           "url": "https://runescape.wiki/w/Off-hand_khopesh_of_the_Kharidian",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "khopesh"
     },
     {
       "id": "item:chaotic-spear",
@@ -7859,14 +9219,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Chaotic_spear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "chaotic"
     },
     {
       "id": "item:goliath-gloves-black",
@@ -7874,14 +9238,17 @@
       "style": "melee",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Goliath_gloves_(black)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "goliath"
     },
     {
       "id": "item:laceration-boots",
@@ -7889,14 +9256,18 @@
       "style": "melee",
       "slot": "boots",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Laceration_boots",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "laceration"
     },
     {
       "id": "item:linzas-hammer",
@@ -7910,8 +9281,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Linza's_hammer",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Linza%27s_hammer",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "linza"
     },
     {
       "id": "item:second-age-sword",
@@ -7926,7 +9303,8 @@
           "url": "https://runescape.wiki/w/Second-Age_sword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "second-age"
     },
     {
       "id": "item:swordy-mcswordface",
@@ -7934,14 +9312,18 @@
       "style": "melee",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1788,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Swordy_McSwordFace",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "swordy-mcswordface"
     },
     {
       "id": "item:jessikas-sword",
@@ -7954,6 +9336,11 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Jessika's_sword",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Jessika%27s_sword",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -7970,6 +9357,11 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Korasi's_sword",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Korasi%27s_sword",
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -7985,8 +9377,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Statius's_warhammer",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Statius%27s_warhammer",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "statius"
     },
     {
       "id": "item:vestas-longsword",
@@ -8000,8 +9398,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Vesta's_longsword",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vesta%27s_longsword",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "vesta"
     },
     {
       "id": "item:vestas-spear",
@@ -8015,8 +9419,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Vesta's_spear",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vesta%27s_spear",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "vesta"
     },
     {
       "id": "item:armadyl-godsword",
@@ -8031,7 +9441,8 @@
           "url": "https://runescape.wiki/w/Armadyl_godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "godsword"
     },
     {
       "id": "item:bandos-godsword",
@@ -8046,7 +9457,8 @@
           "url": "https://runescape.wiki/w/Bandos_godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "godsword"
     },
     {
       "id": "item:enhanced-excalibur",
@@ -8061,7 +9473,8 @@
           "url": "https://runescape.wiki/w/Enhanced_Excalibur",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "excalibur"
     },
     {
       "id": "item:godsword",
@@ -8076,7 +9489,8 @@
           "url": "https://runescape.wiki/w/Godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "godsword"
     },
     {
       "id": "item:saradomin-godsword",
@@ -8091,7 +9505,8 @@
           "url": "https://runescape.wiki/w/Saradomin_godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "godsword"
     },
     {
       "id": "item:saradomin-sword",
@@ -8121,7 +9536,8 @@
           "url": "https://runescape.wiki/w/Sunspear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "sunspear"
     },
     {
       "id": "item:vanquish-melee",
@@ -8136,7 +9552,8 @@
           "url": "https://runescape.wiki/w/Vanquish_(melee)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "vanquish"
     },
     {
       "id": "item:zamorak-godsword",
@@ -8151,7 +9568,8 @@
           "url": "https://runescape.wiki/w/Zamorak_godsword",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "godsword"
     },
     {
       "id": "item:zamorakian-spear",
@@ -8166,7 +9584,8 @@
           "url": "https://runescape.wiki/w/Zamorakian_spear",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "zamorakian"
     },
     {
       "id": "item:akrisaes-war-mace",
@@ -8180,8 +9599,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Akrisae's_war_mace",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Akrisae%27s_war_mace",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "barrows"
     },
     {
       "id": "item:corrupted-defender",
@@ -8196,7 +9621,8 @@
           "url": "https://runescape.wiki/w/Corrupted_defender",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "corrupted-defender"
     },
     {
       "id": "item:crystal-dagger",
@@ -8211,7 +9637,8 @@
           "url": "https://runescape.wiki/w/Crystal_dagger",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "crystal"
     },
     {
       "id": "item:crystal-halberd",
@@ -8226,7 +9653,8 @@
           "url": "https://runescape.wiki/w/Crystal_halberd",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "crystal"
     },
     {
       "id": "item:dharoks-greataxe",
@@ -8240,8 +9668,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dharok's_greataxe",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dharok%27s_greataxe",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "barrows"
     },
     {
       "id": "item:guthans-warspear",
@@ -8255,8 +9689,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Guthan's_warspear",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Guthan%27s_warspear",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "barrows"
     },
     {
       "id": "item:off-hand-crystal-dagger",
@@ -8271,7 +9711,8 @@
           "url": "https://runescape.wiki/w/Off-hand_crystal_dagger",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "crystal"
     },
     {
       "id": "item:torags-hammer",
@@ -8285,8 +9726,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Torag's_hammer",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Torag%27s_hammer",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "barrows"
     },
     {
       "id": "item:veracs-flail",
@@ -8300,8 +9747,14 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Verac's_flail",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Verac%27s_flail",
+          "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "barrows"
     },
     {
       "id": "item:death-guard-tier-90",
@@ -8309,14 +9762,18 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1341,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Death_guard_(tier_90)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:ruinous-guard",
@@ -8324,7 +9781,10 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1341,
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8339,7 +9799,10 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 670.5,
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8354,14 +9817,18 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 670.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern_(tier_90)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:death-guard-tier-80",
@@ -8369,14 +9836,18 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1192,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Death_guard_(tier_80)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:skull-lantern-tier-80",
@@ -8384,14 +9855,18 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 596,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern_(tier_80)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:death-guard-tier-70",
@@ -8399,14 +9874,18 @@
       "style": "necromancy",
       "slot": "mainhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1043,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Death_guard_(tier_70)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "death-guard"
     },
     {
       "id": "item:skull-lantern-tier-70",
@@ -8414,14 +9893,18 @@
       "style": "necromancy",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 521.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Skull_lantern_(tier_70)",
           "verifiedAt": "2026-07-26"
         }
-      ]
+      ],
+      "setId": "skull-lantern"
     },
     {
       "id": "item:eternal-magic-longbow",
@@ -8429,11 +9912,20 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1083.8,
+        "accuracy": 2178
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Eternal_Magic_longbow",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Eternal_magic_longbow",
+          "title": "Eternal magic longbow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -8444,7 +9936,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 789.8,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8459,7 +9954,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1275,
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8474,7 +9972,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8489,7 +9989,9 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 99,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8504,7 +10006,11 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 2,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8519,7 +10025,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1147.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8534,7 +10043,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1020,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8549,7 +10061,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 702,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8564,7 +10079,10 @@
       "style": "ranged",
       "slot": "boots",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8579,7 +10097,10 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "damage": 14
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8594,7 +10115,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1147.5,
+        "accuracy": 2458
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8609,7 +10133,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1819.1,
+        "accuracy": 3031
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8624,7 +10151,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 2458,
+        "armour": 245.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8639,7 +10169,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8654,7 +10186,9 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 90,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 3100
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8669,7 +10203,9 @@
       "style": "ranged",
       "slot": "boots",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8684,7 +10220,9 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 85,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8699,7 +10237,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1924,
+        "armour": 192.4
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8714,7 +10255,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8729,7 +10272,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 384.8
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8744,7 +10289,10 @@
       "style": "ranged",
       "slot": "boots",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 84.7,
+        "damage": 12.5
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8759,7 +10307,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 956.3,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8774,7 +10325,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 956,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8789,7 +10343,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 658,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8804,7 +10361,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1020,
+        "accuracy": 1924
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8819,7 +10379,9 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 80,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 96.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8834,7 +10396,10 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694,
+        "prayer": 1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8849,7 +10414,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 956.3,
+        "accuracy": 1694
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8864,7 +10432,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 75,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1694,
+        "prayer": 1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8879,11 +10450,19 @@
       "style": "ranged",
       "slot": "gloves",
       "tier": 73,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 80.4
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Mercenary's_gloves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Mercenary%27s_gloves",
+          "title": "Mercenary's gloves",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -8894,7 +10473,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2,
+        "prayer": 1
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8909,7 +10491,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8924,7 +10509,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8939,7 +10527,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 1286.3,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8954,7 +10545,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8969,7 +10562,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8984,7 +10580,9 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "armour": 297.2
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8999,11 +10597,20 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Karil's_crossbow",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Karil%27s_crossbow",
+          "title": "Karil's crossbow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -9014,11 +10621,19 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Karil's_off-hand_pistol_crossbow",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Karil%27s_off-hand_pistol_crossbow",
+          "title": "Karil's off-hand pistol crossbow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -9029,11 +10644,19 @@
       "style": "ranged",
       "slot": "mainhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Karil's_pistol_crossbow",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Karil%27s_pistol_crossbow",
+          "title": "Karil's pistol crossbow",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -9044,7 +10667,10 @@
       "style": "ranged",
       "slot": "offhand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "accuracy": 1486,
+        "armour": 148.6
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -9059,7 +10685,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -9074,7 +10703,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892.5,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -9089,7 +10721,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 892,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",
@@ -9104,7 +10739,10 @@
       "style": "ranged",
       "slot": "twohand",
       "tier": 70,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 614.3,
+        "accuracy": 1486
+      },
       "sources": [
         {
           "source": "runescape-wiki",

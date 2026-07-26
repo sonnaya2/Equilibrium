@@ -1,0 +1,1138 @@
+{
+  "fetchedAt": "2026-07-26",
+  "style": "melee",
+  "source": "runescape-wiki Infobox Bonuses / comparison tables",
+  "notes": [
+    "bonuses.damage maps weapon damage OR armour strength (melee style damage).",
+    "Prefer default / level-99 combat stats; Dark Shard/Sliver of Leng use non-enchanted (pre-Genesis) values.",
+    "Vestments of havoc has no gloves piece on wiki — vestments-of-havoc-gloves left empty.",
+    "equipment.json dark-ice / leng sliver-shard slot labels disagree with wiki hand assignment; stats follow wiki page titles from sources URLs.",
+    "Masterwork armour pages redirect to Masterwork melee * names."
+  ],
+  "count": 161,
+  "filled": 124,
+  "empty": 37,
+  "records": [
+    {
+      "id": "item:tumekens-light",
+      "bonuses": { "damage": 2123.3, "accuracy": 2765 },
+      "tier": 95,
+      "setId": "tumeken",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tumeken%27s_Light", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:malevolent-helm",
+      "bonuses": { "armour": 435.6, "prayer": 2, "damage": 22.5 },
+      "tier": 90,
+      "setId": "malevolent",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Malevolent_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:malevolent-body",
+      "bonuses": { "armour": 500.9, "prayer": 3, "damage": 33.7 },
+      "tier": 90,
+      "setId": "malevolent",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Malevolent_cuirass", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:malevolent-legs",
+      "bonuses": { "armour": 479.1, "prayer": 2, "damage": 28.1 },
+      "tier": 90,
+      "setId": "malevolent",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Malevolent_greaves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:scripture-of-wen",
+      "bonuses": {},
+      "setId": "scripture",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Wen", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:igneous-capes",
+      "bonuses": {},
+      "setId": "igneous",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Igneous_Kal-Ket", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:ek-zekkil",
+      "bonuses": { "damage": 2123.3, "accuracy": 2765 },
+      "tier": 95,
+      "setId": "leng",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ek-ZekKil", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:scripture-of-ful",
+      "bonuses": {},
+      "setId": "scripture",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Ful", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:drygore-mace",
+      "bonuses": { "damage": 864.0, "accuracy": 2458, "prayer": 9 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Drygore_mace", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:drygore-rapier",
+      "bonuses": { "damage": 1102.5, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Drygore_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:drygore-longsword",
+      "bonuses": { "damage": 1102.5, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Drygore_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-drygore-mace",
+      "bonuses": { "damage": 432.0, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_drygore_mace", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-drygore-rapier",
+      "bonuses": { "damage": 551.2, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_drygore_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-drygore-longsword",
+      "bonuses": { "damage": 551.2, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "drygore",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_drygore_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:noxious-scythe",
+      "bonuses": { "damage": 2011.5, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "noxious",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Noxious_scythe", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:zaros-godsword",
+      "bonuses": { "damage": 2056.2, "accuracy": 2577 },
+      "tier": 92,
+      "setId": "zaros-godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Zaros_godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-spear-of-annihilation",
+      "bonuses": { "damage": 2056.2, "accuracy": 2577 },
+      "tier": 92,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_Spear_of_Annihilation", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-spear-of-annihilation",
+      "bonuses": {},
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_Masterwork_Spear_of_Annihilation", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:spear-of-annihilation",
+      "bonuses": { "damage": 2011.5, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "annihilation",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Spear_of_Annihilation", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:laniakeas-spear",
+      "bonuses": { "damage": 2011.5, "accuracy": 1694 },
+      "tier": 82,
+      "setId": "laniakea",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Laniakea%27s_spear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dark-ice-sliver",
+      "bonuses": { "damage": 422.0, "accuracy": 2178, "prayer": 9 },
+      "tier": 85,
+      "setId": "leng",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dark_ice_sliver", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dark-ice-shard",
+      "bonuses": { "damage": 844.0, "accuracy": 2178, "prayer": 9 },
+      "tier": 85,
+      "setId": "leng",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dark_ice_shard", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dark-sliver-of-leng",
+      "bonuses": { "damage": 456.0, "accuracy": 2765, "prayer": 9 },
+      "tier": 95,
+      "setId": "leng",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dark_Sliver_of_Leng", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dark-shard-of-leng",
+      "bonuses": { "damage": 912.0, "accuracy": 2765, "prayer": 9 },
+      "tier": 95,
+      "setId": "leng",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dark_Shard_of_Leng", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:abyssal-scourge",
+      "bonuses": { "damage": 883.2, "accuracy": 2577 },
+      "tier": 92,
+      "setId": "abyssal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Abyssal_scourge", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:khopesh-of-tumeken",
+      "bonuses": { "damage": 883.2, "accuracy": 2577 },
+      "tier": 92,
+      "setId": "khopesh",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Khopesh_of_Tumeken", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:khopesh-of-elidinis",
+      "bonuses": { "damage": 441.6, "accuracy": 2577 },
+      "tier": 92,
+      "setId": "khopesh",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Khopesh_of_Elidinis", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:khopesh-of-the-kharidian",
+      "bonuses": { "damage": 787.2, "accuracy": 2023 },
+      "tier": 82,
+      "setId": "khopesh",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Khopesh_of_the_Kharidian", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:blade-of-nymora",
+      "bonuses": { "damage": 768.0, "accuracy": 2458 },
+      "tier": 85,
+      "setId": "twin-furies",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Blade_of_Nymora", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:blade-of-avaryss",
+      "bonuses": { "damage": 384.0, "accuracy": 2458 },
+      "tier": 85,
+      "setId": "twin-furies",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Blade_of_Avaryss", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:chaotic-rapier",
+      "bonuses": { "damage": 980.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Chaotic_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:chaotic-longsword",
+      "bonuses": { "damage": 980.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Chaotic_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:chaotic-claw",
+      "bonuses": { "damage": 768.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Chaotic_claw", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-chaotic-rapier",
+      "bonuses": { "damage": 490.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_chaotic_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-chaotic-longsword",
+      "bonuses": { "damage": 490.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_chaotic_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-chaotic-claw",
+      "bonuses": { "damage": 384.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_chaotic_claw", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:chaotic-maul",
+      "bonuses": { "damage": 1788.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Chaotic_maul", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:attuned-crystal-dagger",
+      "bonuses": { "damage": 768.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "attuned-crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Attuned_crystal_dagger", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-attuned-crystal-dagger",
+      "bonuses": { "damage": 384.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "attuned-crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_attuned_crystal_dagger", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:attuned-crystal-halberd",
+      "bonuses": { "damage": 1788.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "attuned-crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Attuned_crystal_halberd", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dragon-rider-lance",
+      "bonuses": { "damage": 1788.0, "accuracy": 2458 },
+      "tier": 85,
+      "setId": "dragon-rider",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dragon_Rider_lance", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:mizuyari",
+      "bonuses": { "damage": 1899.8, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "mizuyari",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Mizuyari", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:terrasaur-maul",
+      "bonuses": { "damage": 1788.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "terrasaur",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Terrasaur_maul", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:lava-whip",
+      "bonuses": { "damage": 816.0, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "lava",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Lava_whip", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:abyssal-whip",
+      "bonuses": { "damage": 672.0, "accuracy": 1486 },
+      "tier": 70,
+      "setId": "abyssal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Abyssal_whip", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:abyssal-vine-whip",
+      "bonuses": { "damage": 720.0, "accuracy": 1694 },
+      "tier": 75,
+      "setId": "abyssal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Abyssal_vine_whip", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:superior-statiuss-warhammer",
+      "bonuses": { "damage": 1311.0, "accuracy": 2343 },
+      "tier": 88,
+      "setId": "statius",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_Statius%27s_warhammer", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:superior-vestas-longsword",
+      "bonuses": { "damage": 1078.0, "accuracy": 2343 },
+      "tier": 88,
+      "setId": "vesta",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_Vesta%27s_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:superior-vestas-spear",
+      "bonuses": { "damage": 1967.0, "accuracy": 2343 },
+      "tier": 88,
+      "setId": "vesta",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_Vesta%27s_spear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tetsu-katana",
+      "bonuses": { "damage": 1041.3, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tetsu_katana", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tetsu-wakizashi",
+      "bonuses": { "damage": 520.6, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tetsu_wakizashi", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:elite-tetsu-katana",
+      "bonuses": { "damage": 1078.0, "accuracy": 2343 },
+      "tier": 88,
+      "setId": "elite-tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Elite_tetsu_katana", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:elite-tetsu-wakizashi",
+      "bonuses": { "damage": 539.0, "accuracy": 2343 },
+      "tier": 88,
+      "setId": "elite-tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Elite_tetsu_wakizashi", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masutas-warspear",
+      "bonuses": { "damage": 1832.7, "accuracy": 2023 },
+      "tier": 82,
+      "setId": "masuta",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masuta%27s_warspear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:sunspear-melee",
+      "bonuses": { "damage": 1743.3, "accuracy": 1829 },
+      "tier": 78,
+      "setId": "sunspear",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Sunspear_(melee)", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torva-full-helm",
+      "bonuses": { "armour": 338.8, "prayer": 2, "damage": 20.0 },
+      "tier": 80,
+      "setId": "torva",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torva_full_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torva-platebody",
+      "bonuses": { "armour": 389.6, "prayer": 3, "damage": 30.0 },
+      "tier": 80,
+      "setId": "torva",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torva_platebody", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torva-platelegs",
+      "bonuses": { "armour": 372.6, "prayer": 2, "damage": 25.0 },
+      "tier": 80,
+      "setId": "torva",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torva_platelegs", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torva-gloves",
+      "bonuses": { "armour": 84.7, "prayer": 2, "damage": 12.5 },
+      "tier": 80,
+      "setId": "torva",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torva_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torva-boots",
+      "bonuses": { "armour": 84.7, "prayer": 2, "damage": 12.5 },
+      "tier": 80,
+      "setId": "torva",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torva_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-helm",
+      "bonuses": { "armour": 435.6, "prayer": 2, "damage": 22.5 },
+      "tier": 90,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_melee_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-platebody",
+      "bonuses": { "armour": 500.9, "prayer": 3, "damage": 33.7 },
+      "tier": 90,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_melee_platebody", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-platelegs",
+      "bonuses": { "armour": 479.1, "prayer": 2, "damage": 28.1 },
+      "tier": 90,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_melee_platelegs", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-gloves",
+      "bonuses": { "armour": 108.9, "prayer": 2, "damage": 14.0 },
+      "tier": 90,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_melee_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-boots",
+      "bonuses": { "armour": 108.9, "prayer": 2, "damage": 14.0 },
+      "tier": 90,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_melee_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-helm",
+      "bonuses": { "armour": 457.4, "prayer": 2, "damage": 23.0 },
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-platebody",
+      "bonuses": { "armour": 526.0, "prayer": 3, "damage": 34.5 },
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_platebody", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-platelegs",
+      "bonuses": { "armour": 503.1, "prayer": 2, "damage": 28.7 },
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_platelegs", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-gloves",
+      "bonuses": { "armour": 114.3, "prayer": 2, "damage": 14.3 },
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:trimmed-masterwork-boots",
+      "bonuses": { "armour": 114.3, "prayer": 2, "damage": 14.3 },
+      "tier": 92,
+      "setId": "trimmed-masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestments-of-havoc-hood",
+      "bonuses": { "armour": 297.2, "damage": 27.5 },
+      "tier": 95,
+      "setId": "vestments-of-havoc",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_hood", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestments-of-havoc-robe-top",
+      "bonuses": { "armour": 341.7, "damage": 41.2 },
+      "tier": 95,
+      "setId": "vestments-of-havoc",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_robe_top", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestments-of-havoc-robe-bottom",
+      "bonuses": { "armour": 326.9, "damage": 34.3 },
+      "tier": 95,
+      "setId": "vestments-of-havoc",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_robe_bottom", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestments-of-havoc-gloves",
+      "bonuses": {},
+      "tier": 95,
+      "setId": "vestments-of-havoc",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_armour", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestments-of-havoc-boots",
+      "bonuses": { "armour": 74.3, "damage": 17.1 },
+      "tier": 95,
+      "setId": "vestments-of-havoc",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-helmet",
+      "bonuses": { "armour": 259.8, "prayer": 1, "damage": 17.5 },
+      "tier": 70,
+      "setId": "bandos",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_helmet", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-chestplate",
+      "bonuses": { "armour": 298.7, "prayer": 2, "damage": 26.2 },
+      "tier": 70,
+      "setId": "bandos",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_chestplate", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-tassets",
+      "bonuses": { "armour": 285.7, "prayer": 1, "damage": 21.8 },
+      "tier": 70,
+      "setId": "bandos",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_tassets", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-gloves",
+      "bonuses": { "armour": 64.9, "prayer": 1, "damage": 10.9 },
+      "tier": 70,
+      "setId": "bandos",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-boots",
+      "bonuses": { "armour": 64.9, "prayer": 1, "damage": 10.9 },
+      "tier": 70,
+      "setId": "bandos",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:anima-core-helm-of-zaros",
+      "bonuses": { "armour": 338.8, "damage": 20.0 },
+      "tier": 80,
+      "setId": "anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Anima_core_helm_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:anima-core-body-of-zaros",
+      "bonuses": { "armour": 389.6, "damage": 30.0 },
+      "tier": 80,
+      "setId": "anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Anima_core_body_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:anima-core-legs-of-zaros",
+      "bonuses": { "armour": 372.6, "damage": 25.0 },
+      "tier": 80,
+      "setId": "anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Anima_core_legs_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:refined-anima-core-helm-of-zaros",
+      "bonuses": { "armour": 384.8, "damage": 21.2 },
+      "tier": 85,
+      "setId": "refined-anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Refined_anima_core_helm_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:refined-anima-core-body-of-zaros",
+      "bonuses": { "armour": 442.5, "damage": 31.8 },
+      "tier": 85,
+      "setId": "refined-anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Refined_anima_core_body_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:refined-anima-core-legs-of-zaros",
+      "bonuses": { "armour": 423.2, "damage": 26.5 },
+      "tier": 85,
+      "setId": "refined-anima-core-zaros",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Refined_anima_core_legs_of_Zaros", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:teralith-helmet",
+      "bonuses": { "armour": 491.6 },
+      "tier": 90,
+      "setId": "teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Teralith_helmet", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:teralith-cuirass",
+      "bonuses": { "armour": 565.3 },
+      "tier": 90,
+      "setId": "teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Teralith_cuirass", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:teralith-leggings",
+      "bonuses": { "armour": 540.7 },
+      "tier": 90,
+      "setId": "teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Teralith_leggings", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:teralith-gauntlets",
+      "bonuses": { "armour": 122.9 },
+      "tier": 90,
+      "setId": "teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Teralith_gauntlets", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:teralith-boots",
+      "bonuses": { "armour": 122.9 },
+      "tier": 90,
+      "setId": "teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Teralith_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:achto-teralith-helmet",
+      "bonuses": { "armour": 491.6 },
+      "tier": 90,
+      "setId": "achto-teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Achto_Teralith_helmet", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:achto-teralith-cuirass",
+      "bonuses": { "armour": 565.3 },
+      "tier": 90,
+      "setId": "achto-teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Achto_Teralith_cuirass", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:achto-teralith-leggings",
+      "bonuses": { "armour": 540.7 },
+      "tier": 90,
+      "setId": "achto-teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Achto_Teralith_leggings", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:achto-teralith-gauntlets",
+      "bonuses": { "armour": 122.9 },
+      "tier": 90,
+      "setId": "achto-teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Achto_Teralith_gauntlets", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:achto-teralith-boots",
+      "bonuses": { "armour": 122.9 },
+      "tier": 90,
+      "setId": "achto-teralith",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Achto_Teralith_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tetsu-helm",
+      "bonuses": { "armour": 414.8 },
+      "tier": 83,
+      "setId": "tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tetsu_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tetsu-body",
+      "bonuses": { "armour": 477.0 },
+      "tier": 83,
+      "setId": "tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tetsu_body", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tetsu-platelegs",
+      "bonuses": { "armour": 456.2 },
+      "tier": 83,
+      "setId": "tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Tetsu_platelegs", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:elite-tetsu-helm",
+      "bonuses": { "armour": 435.6, "prayer": 2 },
+      "tier": 85,
+      "setId": "elite-tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_tetsu_helm", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:elite-tetsu-body",
+      "bonuses": { "armour": 500.9, "prayer": 3 },
+      "tier": 85,
+      "setId": "elite-tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_tetsu_body", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:elite-tetsu-platelegs",
+      "bonuses": { "armour": 479.1, "prayer": 2 },
+      "tier": 85,
+      "setId": "elite-tetsu",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_tetsu_platelegs", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:gloves-of-passage",
+      "bonuses": { "armour": 96.2, "damage": 13.2 },
+      "tier": 85,
+      "setId": "gloves-of-passage",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Gloves_of_passage", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:razorback-gauntlets",
+      "bonuses": { "armour": 108.9, "prayer": 2, "damage": 14.0 },
+      "tier": 90,
+      "setId": "razorback",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Razorback_gauntlets", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:cinderbane-gloves",
+      "bonuses": { "armour": 74.3, "damage": 10.9 },
+      "tier": 85,
+      "setId": "cinderbane",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Cinderbane_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:emberkeen-boots",
+      "bonuses": { "armour": 108.9, "prayer": 2, "damage": 14.0 },
+      "tier": 90,
+      "setId": "emberkeen",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Emberkeen_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:steadfast-boots",
+      "bonuses": { "armour": 108.9 },
+      "tier": 85,
+      "setId": "steadfast",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Steadfast_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:goliath-gloves",
+      "bonuses": { "armour": 96.2 },
+      "tier": 80,
+      "setId": "goliath",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Goliath_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:malevolent-kiteshield",
+      "bonuses": { "armour": 491.6 },
+      "tier": 90,
+      "setId": "malevolent",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Malevolent_kiteshield", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:kalphite-defender",
+      "bonuses": { "damage": 216.0, "accuracy": 2458, "armour": 245.8 },
+      "tier": 90,
+      "setId": "kalphite",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Kalphite_defender", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:ancient-defender",
+      "bonuses": { "damage": 192.0, "accuracy": 1924, "armour": 192.4 },
+      "tier": 80,
+      "setId": "ancient-defender",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ancient_defender", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:divine-spirit-shield",
+      "bonuses": { "armour": 338.8, "prayer": 3 },
+      "tier": 75,
+      "setId": "spirit-shield",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Divine_spirit_shield", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:brawlers-knockout-necklace",
+      "bonuses": { "damage": 46.0, "accuracy": 84 },
+      "tier": 80,
+      "setId": "brawler",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Brawler%27s_knockout_necklace", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:champions-ring",
+      "bonuses": { "damage": 34.5, "prayer": 5 },
+      "tier": 85,
+      "setId": "champions-ring",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Champion%27s_ring", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:igneous-kal-ket",
+      "bonuses": { "armour": 57.7, "prayer": 2, "damage": 37.1 },
+      "tier": 85,
+      "setId": "igneous",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Igneous_Kal-Ket", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:tokhaar-kal-ket",
+      "bonuses": { "armour": 44.5, "prayer": 2, "damage": 31.8 },
+      "tier": 75,
+      "setId": "tokhaar",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/TokHaar-Kal-Ket", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:scrimshaw-of-vampyrism",
+      "bonuses": {},
+      "tier": 85,
+      "setId": "scrimshaw",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scrimshaw_of_vampyrism", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:superior-scrimshaw-of-vampyrism",
+      "bonuses": {},
+      "tier": 90,
+      "setId": "scrimshaw",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_scrimshaw_of_vampyrism", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:masterwork-2h-sword",
+      "bonuses": { "damage": 2235.0, "accuracy": 3100 },
+      "tier": 99,
+      "setId": "masterwork",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Masterwork_2h_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dominion-sword",
+      "bonuses": { "damage": 2011.5, "accuracy": 2458 },
+      "tier": 90,
+      "setId": "dominion",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dominion_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:enhanced-gloves-of-passage",
+      "bonuses": { "armour": 108.9, "damage": 14.0 },
+      "tier": 90,
+      "setId": "gloves-of-passage",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Enhanced_gloves_of_passage", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:enhanced-laceration-boots",
+      "bonuses": { "armour": 108.9, "damage": 14.0 },
+      "tier": 90,
+      "setId": "laceration",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Enhanced_laceration_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-ruinous-rapier",
+      "bonuses": {},
+      "tier": 90,
+      "setId": "ruinous",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_ruinous_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:ruinous-maul",
+      "bonuses": {},
+      "tier": 90,
+      "setId": "ruinous",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ruinous_maul", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:ruinous-rapier",
+      "bonuses": {},
+      "tier": 90,
+      "setId": "ruinous",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ruinous_rapier", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:annihilation",
+      "bonuses": { "damage": 1944.0, "accuracy": 2287 },
+      "tier": 87,
+      "setId": "annihilation",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Annihilation", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:jaws-of-the-abyss",
+      "bonuses": { "armour": 384.8, "damage": 21.2 },
+      "tier": 85,
+      "setId": "jaws-of-the-abyss",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Jaws_of_the_Abyss", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-ripper-claw",
+      "bonuses": { "damage": 408.0, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "ripper",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_ripper_claw", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:pneumatic-gloves",
+      "bonuses": { "armour": 108.9 },
+      "tier": 85,
+      "setId": "pneumatic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Pneumatic_gloves", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:ripper-claw",
+      "bonuses": { "damage": 816.0, "accuracy": 2178 },
+      "tier": 85,
+      "setId": "ripper",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ripper_claw", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-khopesh-of-the-kharidian",
+      "bonuses": {},
+      "tier": 82,
+      "setId": "khopesh",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_khopesh_of_the_Kharidian", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:chaotic-spear",
+      "bonuses": { "damage": 1788.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "chaotic",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Chaotic_spear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:goliath-gloves-black",
+      "bonuses": { "armour": 96.2 },
+      "tier": 80,
+      "setId": "goliath",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Goliath_gloves_(black)", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:laceration-boots",
+      "bonuses": { "armour": 84.7, "damage": 12.5 },
+      "tier": 80,
+      "setId": "laceration",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Laceration_boots", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:linzas-hammer",
+      "bonuses": {},
+      "tier": 80,
+      "setId": "linza",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Linza%27s_hammer", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:second-age-sword",
+      "bonuses": {},
+      "tier": 80,
+      "setId": "second-age",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Second-Age_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:swordy-mcswordface",
+      "bonuses": { "damage": 1788.0, "accuracy": 1924 },
+      "tier": 80,
+      "setId": "swordy-mcswordface",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Swordy_McSwordFace", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:jessikas-sword",
+      "bonuses": {},
+      "tier": 78,
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Jessika%27s_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:korasis-sword",
+      "bonuses": {},
+      "tier": 78,
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Korasi%27s_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:statiuss-warhammer",
+      "bonuses": {},
+      "tier": 78,
+      "setId": "statius",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Statius%27s_warhammer", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestas-longsword",
+      "bonuses": {},
+      "tier": 78,
+      "setId": "vesta",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vesta%27s_longsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vestas-spear",
+      "bonuses": {},
+      "tier": 78,
+      "setId": "vesta",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vesta%27s_spear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:armadyl-godsword",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Armadyl_godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:bandos-godsword",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:enhanced-excalibur",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "excalibur",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Enhanced_Excalibur", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:godsword",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:saradomin-godsword",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Saradomin_godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:saradomin-sword",
+      "bonuses": {},
+      "tier": 75,
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Saradomin_sword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:sunspear",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "sunspear",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Sunspear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:vanquish-melee",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "vanquish",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vanquish_(melee)", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:zamorak-godsword",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "godsword",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Zamorak_godsword", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:zamorakian-spear",
+      "bonuses": {},
+      "tier": 75,
+      "setId": "zamorakian",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Zamorakian_spear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:akrisaes-war-mace",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "barrows",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Akrisae%27s_war_mace", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:corrupted-defender",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "corrupted-defender",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Corrupted_defender", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:crystal-dagger",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_dagger", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:crystal-halberd",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_halberd", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:dharoks-greataxe",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "barrows",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dharok%27s_greataxe", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:guthans-warspear",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "barrows",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Guthan%27s_warspear", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:off-hand-crystal-dagger",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "crystal",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_crystal_dagger", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:torags-hammer",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "barrows",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torag%27s_hammer", "verifiedAt": "2026-07-26" }]
+    },
+    {
+      "id": "item:veracs-flail",
+      "bonuses": {},
+      "tier": 70,
+      "setId": "barrows",
+      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Verac%27s_flail", "verifiedAt": "2026-07-26" }]
+    }
+  ]
+}

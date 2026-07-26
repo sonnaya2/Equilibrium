@@ -13,11 +13,13 @@ import {
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import {
+  equippedSetCounts,
   isWeaponAccuracySlot,
+  loadoutSetCritChance,
+  setDamageModifiers,
+  setEffectsSummary,
   sumEquipmentBonuses,
   sumNonWeaponAccuracy,
-  tectonicSet,
-  tumekensSunshineSet,
 } from "@/combat/shared/equipment";
 import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
@@ -27,6 +29,9 @@ import type { AdrenalineRules, ProcRules } from "@/combat/rotation/simulate";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { Loadout } from "./useLoadout";
+
+/** Re-export for GearPanel / setup consumers. */
+export { equippedSetCounts, setEffectsSummary };
 
 /** Pure derivation of engine inputs from a Setup loadout — single place tabs
  *  resolve "what does this loadout mean numerically". */
@@ -183,20 +188,26 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     : clamp01(loadout.accuracy / 100);
 
   // Equilibrium prevents critical strikes (wiki). Biting/set bonuses ignored while active.
+  // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
+  const setCounts = equippedSetCounts(loadout);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
+  const setCrit = loadoutSetCritChance({
+    equipmentSlots: loadout.equipmentSlots,
+    equipmentIds: loadout.equipmentIds,
+    perks: {
+      tectonicPieces: loadout.perks.tectonicPieces,
+      eliteTectonic: loadout.perks.eliteTectonic,
+      tumekensPieces: loadout.perks.tumekensPieces,
+      insideSunshine: loadout.perks.insideSunshine,
+    },
+  });
   const critChance =
     loadout.perks.equilibrium > 0
       ? 0
-      : clamp01(
-          loadout.critChance / 100 +
-            biting +
-            tectonicSet(loadout.perks.tectonicPieces, loadout.perks.eliteTectonic).critChanceBonus +
-            tumekensSunshineSet(loadout.perks.tumekensPieces, loadout.perks.insideSunshine)
-              .critChanceBonus,
-        );
+      : clamp01(loadout.critChance / 100 + biting + setCrit);
 
   const globalModifiers: CombatModifier[] = [];
   if (loadout.perks.equilibrium > 0) {
@@ -205,6 +216,12 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   if (loadout.perks.eruptive > 0) {
     globalModifiers.push(eruptivePerkModifier(loadout.perks.eruptive));
   }
+  // Catalogue damageMult sets (none sourced yet — structure ready).
+  globalModifiers.push(
+    ...setDamageModifiers(setCounts, {
+      insideSunshine: loadout.perks.insideSunshine,
+    }),
+  );
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (curse) globalModifiers.push(prayerDamageModifier(curse));
 

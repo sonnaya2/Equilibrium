@@ -1,4 +1,5 @@
 import { gainBloodlust, newBloodlust, type BloodlustState } from "../styles/melee/bloodlust";
+import { newSunshine, type SunshineState } from "../styles/magic/effects";
 import {
   newDeathspore,
   newSearingWinds,
@@ -28,6 +29,8 @@ export interface RotationState {
   melee: BloodlustState;
   /** Tick Berserk's damage window closes; 0 = inactive. */
   berserkUntilTick: number;
+  /** Greater Sunshine's damage buff window (starts 1 tick after cast). */
+  sunshine: SunshineState;
   ranged: RangedRotationState;
   magic: RunicChargeState;
 }
@@ -39,6 +42,7 @@ export function newRotationState(): RotationState {
     cooldowns: {},
     melee: newBloodlust(),
     berserkUntilTick: 0,
+    sunshine: newSunshine(),
     ranged: {
       swiftness: newDeathsSwiftness(),
       searingWinds: newSearingWinds(),

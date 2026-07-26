@@ -15,6 +15,12 @@ import {
   deathsSwiftnessMultiplier,
 } from "../styles/ranged/effects";
 import {
+  activateGreaterSunshine,
+  sunshineActive,
+  SUNSHINE_DAMAGE_MULTIPLIER,
+  SUNSHINE_SOURCE,
+} from "../styles/magic/effects";
+import {
   activateSearingWinds,
   activateShadowImbued,
   deathsporeReady,
@@ -194,6 +200,9 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
         };
       }
     }
+    if (ability.style === "magic" && sunshineActive(state.sunshine, readyTick)) {
+      modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
+    }
 
     const result =
       working.hits.length === 0
@@ -233,11 +242,16 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       };
     } else if (ability.buff === "deaths_swiftness") {
       state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick) });
+    } else if (ability.buff === "greater_deaths_swiftness") {
+      state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick, true) });
     } else if (ability.buff === "shadow_imbued") {
       state = patchRanged(state, { shadowImbued: activateShadowImbued(readyTick) });
     }
     if (ability.appliesBuff === "searing_winds") {
       state = patchRanged(state, { searingWinds: activateSearingWinds(readyTick) });
+    }
+    if (ability.appliesBuff === "greater_sunshine") {
+      state = { ...state, sunshine: activateGreaterSunshine(readyTick) };
     }
 
     if (ability.style === "ranged") {

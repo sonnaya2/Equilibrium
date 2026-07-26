@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  activateGreaterSunshine,
   channelledMightCritBonus,
   CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS,
   grantChannelledMight,
   newChannelledMight,
+  SUNSHINE_DAMAGE_MULTIPLIER,
+  sunshineActive,
   TUMEKENS_CHANNELLED_MIGHT,
 } from "./effects";
 
@@ -23,5 +26,18 @@ describe("channelled might", () => {
 
   it("is inactive by default", () => {
     expect(channelledMightCritBonus(newChannelledMight(), 0)).toBe(0);
+  });
+});
+
+describe("greater sunshine damage buff", () => {
+  it("grants +50% magic damage for 64 ticks starting 1 tick after cast", () => {
+    const state = activateGreaterSunshine(10);
+    expect(state.startsAtTick).toBe(11);
+    expect(state.expiresAtTick).toBe(75);
+    expect(sunshineActive(state, 10)).toBe(false);
+    expect(sunshineActive(state, 11)).toBe(true);
+    expect(sunshineActive(state, 74)).toBe(true);
+    expect(sunshineActive(state, 75)).toBe(false);
+    expect(SUNSHINE_DAMAGE_MULTIPLIER).toBe(1.5);
   });
 });

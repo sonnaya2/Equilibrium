@@ -59,6 +59,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Greater Sunshine",
     style: "magic",
     category: "ultimate",
+    appliesBuff: "greater_sunshine",
     hits: [
       { band: { minPct: 315, maxPct: 315 } },
       ...Array.from({ length: 21 }, (_, i) => ({

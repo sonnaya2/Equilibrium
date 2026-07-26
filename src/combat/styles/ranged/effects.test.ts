@@ -8,16 +8,21 @@ import {
 } from "./effects";
 
 describe("death's swiftness", () => {
-  it("grants 1.5x for 30 seconds (50 ticks)", () => {
+  it("grants 1.5x for 50 ticks, with the buff beginning 1 tick after cast", () => {
     const state = activateDeathsSwiftness(10);
+    expect(state.startsAtTick).toBe(11);
     expect(state.expiresAtTick).toBe(60);
+    expect(deathsSwiftnessMultiplier(state, 10)).toBe(1);
+    expect(deathsSwiftnessMultiplier(state, 11)).toBe(DEATHS_SWIFTNESS_MULTIPLIER);
     expect(deathsSwiftnessMultiplier(state, 59)).toBe(DEATHS_SWIFTNESS_MULTIPLIER);
     expect(deathsSwiftnessMultiplier(state, 60)).toBe(1);
   });
 
-  it("greater lasts 37.8 seconds (63 ticks)", () => {
+  it("greater lasts 63 ticks from cast (62 of actual buff)", () => {
     const state = activateDeathsSwiftness(0, true);
+    expect(state.startsAtTick).toBe(1);
     expect(state.expiresAtTick).toBe(63);
+    expect(deathsSwiftnessActive(state, 0)).toBe(false);
     expect(deathsSwiftnessActive(state, 62)).toBe(true);
     expect(deathsSwiftnessActive(state, 63)).toBe(false);
   });

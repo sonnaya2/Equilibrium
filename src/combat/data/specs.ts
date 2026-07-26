@@ -23,6 +23,7 @@ const ENGINE_ID_BY_RECORD_ID: Record<string, string> = {
   "ranged:shadow-tendrils": "shadow_tendrils",
   "ranged:deaths-swiftness": "deaths_swiftness",
   "ranged:imbue-shadows": "imbue_shadows",
+  "ranged:greater-deaths-swiftness": "greater_deaths_swiftness",
   "magic:magic-attack": "magic_attack",
   "magic:greater-sunshine": "greater_sunshine",
   "magic:combust": "combust",

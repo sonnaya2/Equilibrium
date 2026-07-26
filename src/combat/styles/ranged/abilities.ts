@@ -52,6 +52,21 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     category: "ultimate",
     hits: [],
     buff: "deaths_swiftness",
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
+    source: MODERNISATION_WIKI,
+  },
+  {
+    // Greater Death's Swiftness (16 Mar 2026, §7): same 1.5x mobile self-buff,
+    // 63-tick window — buff begins 1 tick after cast (62 ticks of actual buff).
+    id: "greater_deaths_swiftness",
+    name: "Greater Death's Swiftness",
+    style: "ranged",
+    category: "ultimate",
+    hits: [],
+    buff: "greater_deaths_swiftness",
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
     source: MODERNISATION_WIKI,
   },
   {

@@ -42,4 +42,32 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
   return tick < state.expiresAtTick ? state.critDamageBonus : 0;
 }
 
+/** Greater Sunshine (wiki, June 2026): +50% magic damage, buff begins 1 tick after
+ *  cast and lasts 64 ticks (38.4s) inside the 65-tick ability duration. Base
+ *  Sunshine (50 ticks) is not yet modelled — only the greater bar variant. */
+export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
+export const GREATER_SUNSHINE_BUFF_TICKS = 64;
+
+export interface SunshineState {
+  startsAtTick: number;
+  expiresAtTick: number;
+}
+
+export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTick: 0 });
+
+export function activateGreaterSunshine(tick: number): SunshineState {
+  return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
+}
+
+export function sunshineActive(state: SunshineState, tick: number): boolean {
+  return tick >= state.startsAtTick && tick < state.expiresAtTick;
+}
+
+export const SUNSHINE_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Greater_Sunshine",
+  title: "Greater Sunshine",
+  verifiedAt: "2026-07-25",
+};
+
 export const CHANNELLED_MIGHT_SOURCE: SourceReference = BLOOMING_BURROW_WIKI_2026_03_30;

@@ -3,29 +3,30 @@ import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
 /**
- * Death's Swiftness: modernised from a ground-targeted area into a self buff —
- * 1.5x damage for 30s, 37.8s for Greater.
+ * Death's Swiftness: reworked 16 Mar 2026 (changelog §7) from a ground-targeted
+ * area into a mobile self-buff — 1.5x ranged damage, 50 ticks base, 63 Greater.
+ * The wiki ability pages pin one more fact: the damage buff begins 1 tick after
+ * cast, so the window opens on cast+1, not on the cast tick.
  */
 export const DEATHS_SWIFTNESS_MULTIPLIER = 1.5;
-export const DEATHS_SWIFTNESS_DURATION_SECONDS = 30;
-export const GREATER_DEATHS_SWIFTNESS_DURATION_SECONDS = 37.8;
+export const DEATHS_SWIFTNESS_DURATION_TICKS = 50;
+export const GREATER_DEATHS_SWIFTNESS_DURATION_TICKS = 63;
 
 export interface DeathsSwiftnessState {
-  /** Tick the buff expires on; 0 = inactive. */
+  /** Buff applies to casts on ticks [startsAtTick, expiresAtTick); both 0 = inactive. */
+  startsAtTick: number;
   expiresAtTick: number;
 }
 
-export const newDeathsSwiftness = (): DeathsSwiftnessState => ({ expiresAtTick: 0 });
+export const newDeathsSwiftness = (): DeathsSwiftnessState => ({ startsAtTick: 0, expiresAtTick: 0 });
 
 export function activateDeathsSwiftness(tick: number, greater = false): DeathsSwiftnessState {
-  const seconds = greater
-    ? GREATER_DEATHS_SWIFTNESS_DURATION_SECONDS
-    : DEATHS_SWIFTNESS_DURATION_SECONDS;
-  return { expiresAtTick: tick + secondsToTicks(seconds) };
+  const duration = greater ? GREATER_DEATHS_SWIFTNESS_DURATION_TICKS : DEATHS_SWIFTNESS_DURATION_TICKS;
+  return { startsAtTick: tick + 1, expiresAtTick: tick + duration };
 }
 
 export function deathsSwiftnessActive(state: DeathsSwiftnessState, tick: number): boolean {
-  return tick < state.expiresAtTick;
+  return tick >= state.startsAtTick && tick < state.expiresAtTick;
 }
 
 export function deathsSwiftnessMultiplier(state: DeathsSwiftnessState, tick: number): number {

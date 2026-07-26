@@ -132,3 +132,48 @@ describe("simulateRevolution", () => {
     expect(Math.max(...burnTicks)).toBeGreaterThan(6);
   });
 });
+
+describe("revolution buff uptimes", () => {
+  it("applies Greater Sunshine's +50% only inside its 64-tick window", () => {
+    const sunshine = ENGINE_SPECS.get("greater_sunshine")!;
+    const s = simulateRevolution({
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [sunshine],
+      style: "magic",
+      durationTicks: 120,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[12].abilityId).toBe("greater_sunshine"); // funded at tick 36
+    const buffed = s.casts.find((cast) => cast.abilityId === "magic_attack" && cast.tick === 39)!;
+    expect(buffed.result.expected).toBeCloseTo(1500);
+    const expired = s.casts.filter((cast) => cast.abilityId === "magic_attack" && cast.tick >= 101);
+    expect(expired.length).toBeGreaterThan(0);
+    expect(expired.every((cast) => Math.abs(cast.result.expected - 1000) < 1e-9)).toBe(true);
+  });
+
+  it("applies Greater Death's Swiftness for exactly its 63-tick window", () => {
+    const gds = ENGINE_SPECS.get("greater_deaths_swiftness")!;
+    const s = simulateRevolution({
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [gds],
+      style: "ranged",
+      durationTicks: 120,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[12].abilityId).toBe("greater_deaths_swiftness"); // tick 36
+    const buffed = s.casts.find((cast) => cast.abilityId === "ranged_attack" && cast.tick === 39)!;
+    expect(buffed.result.expected).toBeCloseTo(1500);
+    // Buff runs 37..99 (cast+1 through cast+62); basics at 102+ are unbuffed.
+    const expired = s.casts.filter((cast) => cast.abilityId === "ranged_attack" && cast.tick >= 102);
+    expect(expired.length).toBeGreaterThan(0);
+    expect(expired.every((cast) => Math.abs(cast.result.expected - 1000) < 1e-9)).toBe(true);
+  });
+});

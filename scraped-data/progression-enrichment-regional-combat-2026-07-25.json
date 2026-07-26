@@ -1,0 +1,324 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Region-defining combat support items, achievement passives, Archaeology combat relic chains, and cross-region equipment dependencies for Equilibrium planning.",
+  "policy": {
+    "region_rule": "required_regions means every listed region contributes a mandatory base-game acquisition step. region_hints means the chain touches those regions but may have alternatives or unresolved League overrides.",
+    "league_rule": "Quest auto-completion and League passives are overlays. Do not erase the underlying item, activity, or geography dependency until Jagex explicitly replaces it.",
+    "combat_method_rule": "Support items are surfaced when they materially change a listed combat method. They are not treated as mandatory unless the method actually requires them."
+  },
+  "equipment_additions": [
+    {
+      "id": "salve-amulet:enchanted",
+      "name": "Salve amulet (e)",
+      "category": "undead combat support",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "quest_dependencies": [
+        "Haunted Mine for the base salve amulet",
+        "Lair of Tarn Razorlor for Tarn's diary and the enchantment"
+      ],
+      "effects": [
+        "+20% damage against undead enemies",
+        "+20% hit chance against undead enemies",
+        "Stacks with the full Slayer helmet, Void Knight equipment, the Undead Slayer perk, and the Undead Slayer ability",
+        "The bonus is on-hit and does not increase damage-over-time abilities or conjures"
+      ],
+      "notes": "This is one of Morytania's strongest cross-region combat support unlocks because it materially improves undead methods outside Morytania, including Lumbridge Catacombs skeletons, bound skeletons, armoured phantoms, and armoured zombies.",
+      "source_urls": [
+        "https://runescape.wiki/w/Salve_amulet_(e)",
+        "https://runescape.wiki/w/Lair_of_Tarn_Razorlor",
+        "https://runescape.wiki/w/Haunted_Mine"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Keep Morytania as the normal self-sufficient acquisition region unless Equilibrium explicitly grants the amulet or quest rewards globally."
+    },
+    {
+      "id": "morytania:amulet-of-forsaken-berserkers-fury",
+      "name": "Amulet of the forsaken to Berserker's Fury",
+      "category": "combat necklace and Archaeology relic ingredient",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "56 Archaeology to activate Berserker's Fury",
+        "Saradominist I collection progression for the Lock of hair",
+        "Amulet of the forsaken from Barrows"
+      ],
+      "unlocks": [
+        "Amulet of the forsaken as a Barrows reward",
+        "Dharok's Memento by combining the amulet with the Lock of hair",
+        "Berserker's Fury relic power"
+      ],
+      "effects": [
+        "Berserker's Fury deals up to 5.5% more damage as current life points fall below maximum",
+        "Consumes 250 monolith energy when active",
+        "Does not stack with Dharok's set effect"
+      ],
+      "notes": "Both the Barrows amulet and the Saradominist I/Everlight side of the relic chain are Morytania content, making this a real single-region combat relic unlock rather than a generic Archaeology passive.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amulet_of_the_forsaken",
+        "https://runescape.wiki/w/Dharok%27s_Memento",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM"
+      ],
+      "confidence": "confirmed_current_wiki_region_chain",
+      "league_treatment": "Quest auto-completion can satisfy quest gates, but it should not silently remove the Barrows item dependency unless Equilibrium says the relic itself is granted."
+    },
+    {
+      "id": "cross-region:igneous-zuk-capes",
+      "name": "Igneous cape progression",
+      "category": "best-in-slot combat cape cross-region chain",
+      "region_hints": ["karamja", "misthalin"],
+      "required_regions": ["karamja", "misthalin"],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Karamja: Fire cape for the one-time Fight Kiln entry payment",
+        "Karamja: Fight Kiln completion for a TokHaar-Kal cape",
+        "Misthalin working Senntisten mapping: defeat TzKal-Zuk without checkpoints for an igneous stone"
+      ],
+      "unlocks": [
+        "Igneous Kal-Ket",
+        "Igneous Kal-Xil",
+        "Igneous Kal-Mej",
+        "Igneous Kal-Mor",
+        "Igneous Kal-Zuk after the hard-mode flawless requirement and all four style capes"
+      ],
+      "notes": "The Zuk encounter supplies the igneous stone, but the stone upgrades a TokHaar-Kal cape from Karamja's Fight Kiln. A planner that shows only Misthalin materially understates the cape chain.",
+      "source_urls": [
+        "https://runescape.wiki/w/TzKal-Zuk",
+        "https://runescape.wiki/w/Fight_Kiln",
+        "https://runescape.wiki/w/Comparison_of_combat_capes"
+      ],
+      "confidence": "confirmed_wiki_cross_region_chain_working_senntisten_taxonomy",
+      "league_treatment": "Display this as Karamja + Misthalin under the current Senntisten working map. If Equilibrium later assigns Senntisten differently, update only that side of the chain."
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "morytania:berserkers-fury-relic",
+      "name": "Berserker's Fury relic chain",
+      "category": "combat Archaeology relic",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "56 Archaeology",
+        "Dharok's Memento",
+        "250 monolith energy"
+      ],
+      "unlocks": ["Berserker's Fury"],
+      "effects": ["Up to 5.5% increased damage at lower current life points"],
+      "notes": "Dharok's Memento requires the Barrows Amulet of the forsaken plus the Saradominist I Lock of hair, so the important necklace dependency is visible instead of being hidden behind the relic name.",
+      "source_urls": [
+        "https://runescape.wiki/w/Pay-to-play_melee_training",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "morytania:heightened-senses-relic",
+      "name": "Heightened Senses relic chain",
+      "category": "combat Archaeology relic",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "105 Archaeology",
+        "Everlight mystery progression",
+        "Kantharos cup used with the Everlight beam"
+      ],
+      "unlocks": ["Cup of Nectar", "Heightened Senses"],
+      "effects": ["Increases maximum adrenaline by 10%"],
+      "source_urls": [
+        "https://runescape.wiki/w/Heightened_Senses",
+        "https://runescape.wiki/w/Everlight_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki_historical_league_locality"
+    },
+    {
+      "id": "cross-region:death-ward-relic",
+      "name": "Death Ward relic chain",
+      "category": "combat Archaeology relic cross-region chain",
+      "region_hints": ["kandarin", "asgarnia"],
+      "required_regions": ["kandarin", "asgarnia"],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "81 Archaeology",
+        "Kandarin: restore the Aviansie dreamcoat from Stormguard Citadel",
+        "Asgarnia: give the restored artefact to Armadyl at Armadyl's Tower"
+      ],
+      "unlocks": ["Ring of Solomon", "Death Ward"],
+      "effects": [
+        "5% damage reduction below 50% life points",
+        "10% damage reduction below 25% life points"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeology_training",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM"
+      ],
+      "confidence": "confirmed_wiki_cross_region_base_game_chain",
+      "league_treatment": "Keep both regions visible unless Equilibrium auto-completion explicitly bypasses the Armadyl turn-in or supplies the relic directly."
+    },
+    {
+      "id": "morytania:vyre-combat-infrastructure",
+      "name": "Vyre combat and Sunspear progression",
+      "category": "combat and multi-skill support infrastructure",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "unlocks": [
+        "Blisterwood/Sunspear damage access against vyres",
+        "Up to +100 Sunspear/blisterwood damage from the 500-corpse cremation progression",
+        "Automatic Prayer and Firemaking XP from Sunspear cremations",
+        "Morytania elite achievement bonus to vyre cremation Prayer and Firemaking XP"
+      ],
+      "notes": "Vyrewatch are not a Salve-amulet method. Their important progression is the Ivandis/blisterwood/Sunspear system plus corpse-cremation bonuses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sunspear_(melee)",
+        "https://runescape.wiki/w/Morytania_achievements"
+      ],
+      "confidence": "confirmed_current_wiki"
+    }
+  ],
+  "account_additions": [
+    {
+      "id": "achievements:morytania-barrows",
+      "name": "Hard Morytania Barrows rewards",
+      "category": "regional achievement combat passives",
+      "region_hint": "morytania",
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "rewards": [
+        "Prayer drain is halved in Barrows",
+        "Barrows rune rewards are doubled",
+        "Barrows chest loot can be banked directly from the reward chest"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Morytania_achievements",
+        "https://runescape.wiki/w/PvM_unlock_guide"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "achievements:seers-combat",
+      "name": "Seers' Village combat achievement rewards",
+      "category": "regional achievement combat passives",
+      "region_hint": "kandarin",
+      "required_regions": ["kandarin"],
+      "region_requirement_type": "acquisition_region",
+      "rewards": [
+        "Enhanced Excalibur healing progression",
+        "Elite tier doubles Enhanced Excalibur's healing duration",
+        "+2 percentage points to enchanted-bolt special-effect activation chance"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Enhanced_Excalibur",
+        "https://runescape.wiki/w/Seers%27_Village_achievements"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "achievements:fremennik-combat",
+      "name": "Elite Fremennik combat rewards",
+      "category": "regional achievement combat passives",
+      "region_hint": "fremennik",
+      "required_regions": ["fremennik"],
+      "region_requirement_type": "acquisition_region",
+      "rewards": [
+        "Dagannoth Kings drop noted bones",
+        "10% more auto-attack damage and 5% more ability damage against the Dagannoth Kings"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Fremennik_achievements",
+        "https://runescape.wiki/w/Template:Fremennik_sea_boots"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "achievements:tirannwn-combat",
+      "name": "Tirannwn combat achievement rewards",
+      "category": "regional achievement combat passives",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "region_requirement_type": "acquisition_region",
+      "rewards": [
+        "5% increased damage against shadow creatures in Prifddinas",
+        "5% increased damage against elves in Prifddinas",
+        "5% increased damage against dark beasts",
+        "5% chance not to consume an attuned crystal bow or ward charge"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Tirannwn_achievements",
+        "https://runescape.wiki/w/Template:Tirannwn_quiver"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "achievements:desert-keris",
+      "name": "Hard Desert Keris upgrade",
+      "category": "regional achievement weapon passive",
+      "region_hint": "desert",
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": ["Contact! for the base Keris in the normal game"],
+      "effects": [
+        "Against Kalphites and Scabarites, the Keris hit-chance bonus rises from 15% to 25%",
+        "Triple-damage chance rises from about 2.5% to 5%"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Keris",
+        "https://runescape.wiki/w/Desert_achievements"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "anachronia:slayer-lodge",
+      "name": "Slayer Lodge progression",
+      "category": "regional and global combat infrastructure",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "unlocks": [
+        "Tier 1: +1% damage on Anachronia",
+        "Tier 2: +3% damage on Anachronia",
+        "Tier 3: +6% damage on Anachronia plus the Slayer helmet stand"
+      ],
+      "notes": "The tier-3 stand grants the effects of the placed Slayer helmet without wearing it, but not the helmet's stats or teleports.",
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Anachronia_base_camp/Slayer_Lodge_tiers",
+        "https://runescape.wiki/w/Unlockable_content"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "anachronia:totem-of-vitality",
+      "name": "Totem of Vitality",
+      "category": "persistent maximum-life-point combat buff",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "effects": ["Increases maximum life points by 25%, capped at 1,500 additional life points"],
+      "notes": "The April 2026 Aura Overhaul moved the former Might of Het effect here and removed the old weekly totem charging upkeep.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Anachronia"
+      ],
+      "confidence": "confirmed_official_2026"
+    },
+    {
+      "id": "dungeoneering:spirit-cape-passive",
+      "name": "Spirit cape passive",
+      "category": "permanent Summoning combat support",
+      "region_hint": "forinthry",
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": ["50 Dungeoneering", "50 Defence", "50 Summoning", "45,000 Dungeoneering tokens"],
+      "effects": ["Permanently reduces familiar special-move point costs by 20% after purchase"],
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_cape",
+        "https://runescape.wiki/w/Dungeoneering"
+      ],
+      "confidence": "confirmed_current_wiki"
+    }
+  ]
+}

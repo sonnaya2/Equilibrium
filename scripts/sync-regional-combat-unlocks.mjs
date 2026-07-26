@@ -3,8 +3,8 @@ import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
 const CATALOG_PATH = "data/research/catalog.json";
-const OUTPUT_PATH = "data/research/regional-skilling-unlocks.json";
-const ENRICHMENT_PATTERN = /^progression-enrichment-regional-skilling.*\.json$/;
+const OUTPUT_PATH = "data/research/regional-combat-unlocks.json";
+const ENRICHMENT_PATTERN = /^progression-enrichment-regional-combat.*\.json$/;
 
 const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 const write = (path, value) => {
@@ -16,16 +16,14 @@ const write = (path, value) => {
 const enrichmentFiles = readdirSync(join(ROOT, "scraped-data"))
   .filter((name) => ENRICHMENT_PATTERN.test(name))
   .sort();
-if (enrichmentFiles.length === 0) {
-  throw new Error("No regional skilling enrichment files found");
-}
+if (!enrichmentFiles.length) throw new Error("No regional combat enrichment files found");
 
 const enrichments = enrichmentFiles.map((name) => ({ name, data: read(`scraped-data/${name}`) }));
 const catalog = read(CATALOG_PATH);
-const verifiedAt = [
-  catalog.snapshotDate,
-  ...enrichments.map(({ data }) => data.snapshot_date),
-].filter(Boolean).sort().at(-1);
+const verifiedAt = [catalog.snapshotDate, ...enrichments.map(({ data }) => data.snapshot_date)]
+  .filter(Boolean)
+  .sort()
+  .at(-1);
 
 function list(value) {
   return Array.isArray(value) ? value : [];
@@ -70,31 +68,32 @@ function regionHints(row) {
 }
 
 function detail(row) {
-  const pieces = [
+  return [
     row.notes,
     row.league_treatment,
-    row.rarity ? `Rarity: ${compact(row.rarity)}` : "",
     list(row.effects).length ? `Effects: ${compact(row.effects)}` : "",
     list(row.unlocks).length ? `Unlocks: ${compact(row.unlocks)}` : "",
+    list(row.rewards).length ? `Rewards: ${compact(row.rewards)}` : "",
     list(row.region_pressure).length ? `Region pressure: ${compact(row.region_pressure)}` : "",
     row.region_status ? `Region status: ${compact(row.region_status)}` : "",
-  ].filter(Boolean);
-  return pieces.join(" · ");
+  ].filter(Boolean).join(" · ");
 }
 
 function normalizeRow(row, recordType, sourceFile) {
+  const hints = regionHints(row);
   return {
     id: row.id,
     name: row.name,
     recordType,
-    regionHints: regionHints(row),
+    category: row.category || "combat unlock",
+    regionHints: hints,
     requiredRegions: list(row.required_regions).map(String),
     regionRequirementType: row.region_requirement_type || "",
-    category: row.category || "skilling unlock",
     detail: detail(row),
     requirements: [...new Set([
       ...list(row.requirements).map(String),
       ...list(row.access_requirements).map(String),
+      ...list(row.quest_dependencies).map(String),
     ])],
     confidence: row.confidence || "unclassified",
     source: sourceReference(row),
@@ -102,36 +101,35 @@ function normalizeRow(row, recordType, sourceFile) {
   };
 }
 
-const activityMap = new Map();
-const equipmentMap = new Map();
+const recordMap = new Map();
 for (const { name, data } of enrichments) {
-  for (const row of list(data.activity_additions)) {
-    activityMap.set(row.id, normalizeRow(row, "activity", name));
-  }
-  for (const row of list(data.equipment_additions)) {
-    equipmentMap.set(row.id, normalizeRow(row, "equipment", name));
+  for (const [recordType, rows] of [
+    ["account", data.account_additions],
+    ["activity", data.activity_additions],
+    ["equipment", data.equipment_additions],
+  ]) {
+    for (const row of list(rows)) recordMap.set(row.id, normalizeRow(row, recordType, name));
   }
 }
-const activities = [...activityMap.values()];
-const equipment = [...equipmentMap.values()];
-const records = [...activities, ...equipment];
+const records = [...recordMap.values()];
 
 for (const region of catalog.regions || []) {
   region.upgrades ||= [];
 
-  // Canonicalize two old Croesus placeholder labels while the source dataset is
-  // gradually migrated to first-class equipment records.
   for (const upgrade of region.upgrades) {
-    if (upgrade.name === "Croesus progression" && typeof upgrade.detail === "string") {
+    if (upgrade.name === "TzKal-Zuk progression" && typeof upgrade.detail === "string") {
       upgrade.detail = upgrade.detail
-        .replaceAll("Croesus foultorch", "Sana's fyrtorch")
-        .replaceAll("Croesus sporehammer", "Tagga's corehammer");
+        .replace(/^Igneous capes,\s*/, "")
+        .replace(/,\s*Igneous capes\b/, "")
+        .replace(/\bIgneous capes,\s*/, "")
+        .trim();
+      const suffix = "Igneous cape acquisition is indexed separately as a Karamja + Misthalin chain.";
+      if (!upgrade.detail.includes(suffix)) upgrade.detail = [upgrade.detail, suffix].filter(Boolean).join(" · ");
     }
   }
 
   const additions = records.filter((row) => row.regionHints.includes(region.id));
   const existing = new Set(region.upgrades.map((row) => row.name));
-
   for (const row of additions) {
     if (existing.has(row.name)) continue;
     region.upgrades.push({
@@ -151,18 +149,19 @@ for (const region of catalog.regions || []) {
 }
 
 catalog.datasets ||= {};
-catalog.datasets.regionalSkillingUnlocks = records.length;
-catalog.datasets.regionalSkillingActivities = activities.length;
-catalog.datasets.regionalSkillingEquipment = equipment.length;
+catalog.datasets.regionalCombatUnlocks = records.length;
+catalog.datasets.regionalCombatAccounts = records.filter((row) => row.recordType === "account").length;
+catalog.datasets.regionalCombatActivities = records.filter((row) => row.recordType === "activity").length;
+catalog.datasets.regionalCombatEquipment = records.filter((row) => row.recordType === "equipment").length;
 
 write(CATALOG_PATH, catalog);
 write(OUTPUT_PATH, {
   snapshotDate: verifiedAt,
-  purpose: "Region-defining skilling activities, shops, outfits, off-hands, tool chains and production infrastructure for Equilibrium planning.",
+  purpose: "Region-defining combat support items, achievement passives, Archaeology relic chains, and cross-region equipment dependencies.",
   sourceFiles: enrichmentFiles,
   records,
 });
 
 console.log(
-  `REGIONAL SKILLING SYNC\nFiles: ${enrichmentFiles.length}   Activities: ${activities.length}   Equipment: ${equipment.length}   Total: ${records.length}`,
+  `REGIONAL COMBAT SYNC\nFiles: ${enrichmentFiles.length}   Records: ${records.length}`,
 );

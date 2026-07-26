@@ -51,7 +51,7 @@ function format(value: unknown): string {
         .map(([key, item]) => `${labelKey(key)} ${format(item)}`)
         .filter(Boolean)
         .join(", ");
-      const source = typeof row.source === "string" ? ` — ${row.source}` : "";
+      const source = typeof row.source === "string" ? ` - ${row.source}` : "";
       return `${row.name}${source}${rest ? ` (${rest})` : ""}`;
     }
     return Object.entries(row).map(([key, item]) => `${labelKey(key)}: ${format(item)}`).join(" · ");
@@ -63,10 +63,32 @@ function title(row: Row): string {
   return format(row.name || row.quest || row.id || "Unlock");
 }
 
+function regionName(value: unknown): string {
+  return String(value ?? "")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 function region(row: Row): string {
-  const value = format(row.region_hint || row.region_pressure || row.region_candidates);
+  if (Array.isArray(row.required_regions) && row.required_regions.length) {
+    return `Requires regions: ${row.required_regions.map(regionName).join(" + ")}`;
+  }
+
+  if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
+    return `Region unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+  }
+
+  if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
+    return `Region chain: ${row.region_hints.map(regionName).join(" / ")}`;
+  }
+
+  if (Array.isArray(row.region_pressure) && row.region_pressure.length) {
+    return `Region pressure: ${row.region_pressure.map(format).join(" · ")}`;
+  }
+
+  const value = row.region_hint;
   if (!value) return "No hard region set";
-  return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return regionName(value);
 }
 
 function status(value: unknown): string {
@@ -94,6 +116,7 @@ function sourceLabel(url: string): string {
 function details(row: Row): string[] {
   return [
     row.unlocks,
+    row.rewards,
     row.access_requirements,
     row.requirements,
     row.quest_dependencies,

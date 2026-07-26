@@ -10,9 +10,12 @@ export default defineConfig({
   timeout: 30_000,
   use: { baseURL: URL },
   webServer: {
+    // Same-directory second `next dev` is rejected (lockfile). Stop any local
+    // `npm run dev` for this repo before CI-like runs; 3000 is EverSense.
     command: `npm run dev -- --port ${PORT}`,
     url: URL,
     reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
   },
   projects: [{ name: "chromium", use: { browserName: "chromium" } }],
 });

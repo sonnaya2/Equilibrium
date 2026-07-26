@@ -31,10 +31,13 @@ test("elective picks cap at three and persist", async ({ page }) => {
   }
   await expect(page.getByText("3/3")).toBeVisible();
 
-  // Cap blocks pick, not focus — aria-disabled keeps inspector/camera usable.
+  // Cap blocks pick, not focus — we use aria-disabled, not the native disabled
+  // attribute (Playwright treats aria-disabled as not "enabled").
   const fourth = page.getByRole("button", { name: /^Asgarnia/ });
   await expect(fourth).toHaveAttribute("aria-disabled", "true");
-  await expect(fourth).toBeEnabled();
+  await expect(fourth).not.toHaveAttribute("disabled");
+  await fourth.focus();
+  await expect(fourth).toBeFocused();
 
   await page.reload();
   await expect(page.getByText("3/3")).toBeVisible();

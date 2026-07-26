@@ -6,7 +6,7 @@ import supportItems from "../../data/reference/progression-support-items-2026-07
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
 
 type Row = Record<string, unknown>;
-type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models";
+type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models" | "consumable_unlocks";
 
 const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> = [
   { key: "quest_unlocks", label: "Quest unlocks", description: "Normal-game quest dependencies before the official Equilibrium auto-quest overlay is applied." },
@@ -15,6 +15,7 @@ const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> =
   { key: "account_unlocks", label: "Account", description: "Skill, boss-kill and account-wide progression milestones." },
   { key: "activity_unlocks", label: "Activities", description: "Permanent rewards earned through repeatable activities." },
   { key: "equipment_models", label: "Equipment rules", description: "Persistent equipment interactions the planner and combat model need to understand." },
+  { key: "consumable_unlocks", label: "Consumables", description: "Permanent consumable progression such as the overload recipe chain, with per-step levels, costs and unlock sources." },
 ];
 
 const SUPPLEMENTS: Record<SectionKey, Row[]> = {
@@ -27,6 +28,7 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
     ...(supportItems.equipment_models as unknown as Row[]),
     ...(containerBags.equipment_models as unknown as Row[]),
   ],
+  consumable_unlocks: [],
 };
 
 function labelKey(value: string): string {
@@ -99,6 +101,10 @@ function details(row: Row): string[] {
     row.acquisition_routes,
     row.materials,
     row.base,
+    row.base_overload,
+    row.recipe_shop_gate,
+    row.records,
+    row.boost,
     row.gem_storage,
     row.base_device_recipe,
     row.tight_spring_recipe,

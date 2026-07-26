@@ -1,0 +1,356 @@
+{
+  "snapshot_date": "2026-07-24",
+  "purpose": "Current combat-consumable unlock and production dependencies that can alter a League route. Live Grand Exchange prices, boss presets and PvME shopping-list recommendations are excluded.",
+  "policy": {
+    "ground_truth": "Current RuneScape Wiki or direct Jagex material for recipes, levels and permanent unlocks.",
+    "pricing": "No live prices are stored. Ingredient availability and permanent recipe access are the planner inputs.",
+    "league_overlay": "Equilibrium XP/drop multipliers and auto-completed quests apply separately from these base-game recipes.",
+    "region_rule": "Recipe unlock geography, ingredient geography and optional production infrastructure are separate dependencies."
+  },
+  "overload_chain": {
+    "id": "herblore:overload-chain",
+    "name": "Overload progression chain",
+    "category": "combat stat potion progression",
+    "base_overload": {
+      "herblore_level": 96,
+      "effect_summary": "Boosts all six combat stats simultaneously and reapplies the boost periodically.",
+      "tradeable": false
+    },
+    "recipe_shop_gate": {
+      "name": "Meilyr Recipe Shop",
+      "base_quest_gate": "Plague's End",
+      "region_hint": "tirannwn",
+      "region_status": "confirmed_base_game_geography",
+      "unlock_method": "Find the relevant unreadable recipe page through Daemonheim/Motherlode Maw/Meilyr sources where applicable, then buy the recipe in the Meilyr Recipe Shop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Template:Recipe_Shop",
+        "https://runescape.wiki/w/Motherlode_Maw",
+        "https://runescape.wiki/w/PvM_unlock_guide"
+      ]
+    },
+    "records": [
+      {
+        "id": "potion:overload-salve",
+        "name": "Overload salve",
+        "herblore_level": 97,
+        "recipe_shop_cost_coins": 800000,
+        "recipe_unlock_required": true,
+        "source_urls": [
+          "https://runescape.wiki/w/Overload_salve",
+          "https://runescape.wiki/w/Template:Recipe_Shop"
+        ],
+        "confidence": "confirmed_current_wiki"
+      },
+      {
+        "id": "potion:supreme-overload",
+        "name": "Supreme overload potion",
+        "herblore_level": 98,
+        "recipe_shop_cost_coins": 900000,
+        "recipe_unlock_required": true,
+        "boost": "16% of the relevant stat level + 4",
+        "source_urls": [
+          "https://runescape.wiki/w/Template:Recipe_Shop",
+          "https://runescape.wiki/w/Potions"
+        ],
+        "confidence": "confirmed_current_wiki"
+      },
+      {
+        "id": "potion:supreme-overload-salve",
+        "name": "Supreme overload salve",
+        "herblore_level": 99,
+        "recipe_shop_cost_coins": 1000000,
+        "recipe_unlock_required": true,
+        "boost": "16% of the relevant stat level + 4",
+        "source_urls": [
+          "https://runescape.wiki/w/Template:Recipe_Shop",
+          "https://runescape.wiki/w/Holy_overload_potion"
+        ],
+        "confidence": "confirmed_current_wiki"
+      },
+      {
+        "id": "potion:elder-overload",
+        "name": "Elder overload potion",
+        "herblore_level": 106,
+        "recipe_shop_cost_coins": 1200000,
+        "recipe_unlock_required": true,
+        "boost": "17% of the relevant stat level + 5",
+        "core_recipe": [
+          {
+            "item": "Supreme overload potion (6)",
+            "quantity": 1
+          },
+          {
+            "item": "Primal extract",
+            "quantity": 1
+          },
+          {
+            "item": "Clean fellstalk",
+            "quantity": 1
+          }
+        ],
+        "source_urls": [
+          "https://runescape.wiki/w/Template:Recipe_Shop",
+          "https://runescape.wiki/w/Potions"
+        ],
+        "confidence": "confirmed_current_wiki"
+      },
+      {
+        "id": "potion:elder-overload-salve",
+        "name": "Elder overload salve",
+        "herblore_level": 107,
+        "recipe_shop_cost_coins": 1500000,
+        "recipe_unlock_required": true,
+        "boost": "17% of the relevant stat level + 5",
+        "source_urls": [
+          "https://runescape.wiki/w/Template:Recipe_Shop",
+          "https://runescape.wiki/w/Holy_overload_potion"
+        ],
+        "confidence": "confirmed_current_wiki"
+      }
+    ],
+    "league_treatment": "Treat the Meilyr recipe unlock as permanent account state. Tirannwn access, Daemonheim recipe-page routes and Herblore level are separate planner edges rather than one overloaded boolean."
+  },
+  "production_infrastructure": [
+    {
+      "id": "fort-forinthry:botanists-workbench",
+      "name": "Botanist's Workbench",
+      "category": "optional Herblore batch-production infrastructure",
+      "base_access_quest": "Ancient Awakening",
+      "region_status": "unresolved_fort_wilderness_boundary",
+      "tiers": [
+        {
+          "tier": 1,
+          "construction_level": 54,
+          "benefit": "Granny Rowan decanting services"
+        },
+        {
+          "tier": 2,
+          "construction_level": 78,
+          "benefit": "Additional Herblore supplies and unnoted vials of water"
+        },
+        {
+          "tier": 3,
+          "construction_level": 92,
+          "benefit": "Granny Rowan can prepare overload and overload-salve ingredients into stackable unfinished batches"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Fort_Forinthry",
+        "https://runescape.wiki/w/Overload_salve"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "This improves production throughput; it does not unlock the underlying potion recipes. Keep it separate from recipe ownership and ingredient access."
+    }
+  ],
+  "adrenaline": [
+    {
+      "id": "potion:adrenaline-renewal",
+      "name": "Adrenaline renewal potion",
+      "category": "combat adrenaline consumable",
+      "recipe_unlock": "automatic_by_level",
+      "effect_summary": "Restores 40% adrenaline over six seconds and triggers the normal adrenaline-potion cooldown.",
+      "recipe_tiers": [
+        {
+          "herblore_level": 115,
+          "name": "regular",
+          "ingredients": [
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Super adrenaline potion (4)",
+              "quantity": 1
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 2
+            },
+            {
+              "item": "Clean arbuck",
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "herblore_level": 117,
+          "name": "improved +1",
+          "change": "Faster production; same material quantities as the regular recipe"
+        },
+        {
+          "herblore_level": 119,
+          "name": "improved +2",
+          "ingredients": [
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Super adrenaline potion (3)",
+              "quantity": 1
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 1
+            },
+            {
+              "item": "Clean arbuck",
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "ingredient_region_pressure": [
+        "anachronia: bottled dinosaur roar and arbuck are Anachronia-linked supplies",
+        "herblore-chain: super adrenaline potion remains a lower-tier Herblore dependency"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Adrenaline_renewal_potion",
+        "https://runescape.wiki/w/Template:Adrenaline_renewal_potion/creation"
+      ],
+      "confidence": "confirmed_current_wiki"
+    }
+  ],
+  "bombs": [
+    {
+      "id": "bomb:vulnerability",
+      "name": "Vulnerability bomb",
+      "category": "thrown combat debuff",
+      "recipe_unlock": "automatic_by_level",
+      "effect_summary": "Creates a short-lived 3x3 area that applies Vulnerability to targets standing in it.",
+      "recipe_tiers": [
+        {
+          "herblore_level": 103,
+          "name": "regular",
+          "ingredients": [
+            {
+              "item": "Bomb vial",
+              "quantity": 1
+            },
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Soul rune",
+              "quantity": 5
+            },
+            {
+              "item": "Chaos rune",
+              "quantity": 5
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 2
+            },
+            {
+              "item": "Clean dwarf weed",
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "herblore_level": 105,
+          "name": "improved +1",
+          "change": "Faster production"
+        },
+        {
+          "herblore_level": 107,
+          "name": "improved +2",
+          "ingredients": [
+            {
+              "item": "Bomb vial",
+              "quantity": 1
+            },
+            {
+              "item": "Primal extract",
+              "quantity": 1
+            },
+            {
+              "item": "Soul rune",
+              "quantity": 3
+            },
+            {
+              "item": "Chaos rune",
+              "quantity": 3
+            },
+            {
+              "item": "Bottled dinosaur roar",
+              "quantity": 1
+            },
+            {
+              "item": "Clean dwarf weed",
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Bomb_(Herblore)",
+        "https://runescape.wiki/w/Template:Vulnerability_bomb/creation",
+        "https://runescape.wiki/w/Template:Bomb_Potions_table"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Treat Anachronia dinosaur-roar supply and rune access as ingredient pressure; no regional hard gate is inferred from the Herblore level itself."
+    }
+  ],
+  "poison_stack": [
+    {
+      "id": "potion:weapon-poison-plus-plus-plus",
+      "name": "Weapon poison+++",
+      "category": "combat poison consumable",
+      "herblore_level": 100,
+      "duration_minutes": 12,
+      "effect_summary": "Highest standard weapon-poison tier; current PvM guidance pairs it with other poison modifiers on poisonable targets.",
+      "ingredients": [
+        {
+          "item": "Weapon poison++ (3)",
+          "quantity": 1
+        },
+        {
+          "item": "Poison slime",
+          "quantity": 1
+        },
+        {
+          "item": "Primal extract",
+          "quantity": 1
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM",
+        "https://runescape.wiki/w/Potions"
+      ],
+      "confidence": "confirmed_current_wiki"
+    },
+    {
+      "id": "incense:kwuarm",
+      "name": "Kwuarm incense sticks",
+      "category": "poison-damage incense",
+      "firemaking_level": 54,
+      "effect_summary": "Each potency level adds 2.5% weapon-poison damage, up to 10% at potency 4.",
+      "incense_mechanic": {
+        "base_duration_minutes": 10,
+        "maximum_duration_minutes": 60,
+        "maximum_potency": 4,
+        "overload_sticks_consumed": 6
+      },
+      "ingredients": [
+        {
+          "item": "Accursed acadia incense sticks",
+          "quantity": 1
+        },
+        {
+          "item": "Clean kwuarm",
+          "quantity": 1
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Calculator:Firemaking/Incense_sticks",
+        "https://runescape.wiki/w/Firemaking",
+        "https://runescape.wiki/w/Recommended_equipment_for_PvM"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Store this as an optional consumable modifier. Do not bake its poison bonus into Weapon poison+++ itself."
+    }
+  ]
+}

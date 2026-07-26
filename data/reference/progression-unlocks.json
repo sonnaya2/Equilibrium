@@ -4315,17 +4315,40 @@
         {
           "name": "Overload salve",
           "herblore_level": 97,
-          "recipe_shop_cost_coins": 800000
+          "recipe_shop_cost_coins": 800000,
+          "id": "potion:overload-salve",
+          "recipe_unlock_required": true,
+          "source_urls": [
+            "https://runescape.wiki/w/Overload_salve",
+            "https://runescape.wiki/w/Template:Recipe_Shop"
+          ],
+          "confidence": "confirmed_current_wiki"
         },
         {
           "name": "Supreme overload potion",
           "herblore_level": 98,
-          "recipe_shop_cost_coins": 900000
+          "recipe_shop_cost_coins": 900000,
+          "id": "potion:supreme-overload",
+          "recipe_unlock_required": true,
+          "boost": "16% of the relevant stat level + 4",
+          "source_urls": [
+            "https://runescape.wiki/w/Template:Recipe_Shop",
+            "https://runescape.wiki/w/Potions"
+          ],
+          "confidence": "confirmed_current_wiki"
         },
         {
           "name": "Supreme overload salve",
           "herblore_level": 99,
-          "recipe_shop_cost_coins": 1000000
+          "recipe_shop_cost_coins": 1000000,
+          "id": "potion:supreme-overload-salve",
+          "recipe_unlock_required": true,
+          "boost": "16% of the relevant stat level + 4",
+          "source_urls": [
+            "https://runescape.wiki/w/Template:Recipe_Shop",
+            "https://runescape.wiki/w/Holy_overload_potion"
+          ],
+          "confidence": "confirmed_current_wiki"
         },
         {
           "name": "Elder overload potion",
@@ -4335,12 +4358,28 @@
             "Supreme overload potion (6)",
             "Primal extract",
             "Clean fellstalk"
-          ]
+          ],
+          "id": "potion:elder-overload",
+          "recipe_unlock_required": true,
+          "boost": "17% of the relevant stat level + 5",
+          "source_urls": [
+            "https://runescape.wiki/w/Template:Recipe_Shop",
+            "https://runescape.wiki/w/Potions"
+          ],
+          "confidence": "confirmed_current_wiki"
         },
         {
           "name": "Elder overload salve",
           "herblore_level": 107,
-          "recipe_shop_cost_coins": 1500000
+          "recipe_shop_cost_coins": 1500000,
+          "id": "potion:elder-overload-salve",
+          "recipe_unlock_required": true,
+          "boost": "17% of the relevant stat level + 5",
+          "source_urls": [
+            "https://runescape.wiki/w/Template:Recipe_Shop",
+            "https://runescape.wiki/w/Holy_overload_potion"
+          ],
+          "confidence": "confirmed_current_wiki"
         }
       ],
       "source_urls": [

@@ -10,10 +10,26 @@
       "relic_power": "Slayer Introspection",
       "relic_effect_summary": "When requesting a Slayer assignment, choose between the task's minimum and maximum assignment amounts.",
       "monolith_energy": 200,
-      "artifact_regions": ["misthalin", "morytania", "kandarin"],
-      "collector_regions": ["misthalin"],
-      "required_regions": ["misthalin", "morytania", "kandarin"],
-      "dig_sites": ["Infernal Source", "Kharid-et", "Everlight", "Stormguard Citadel", "Warforge"],
+      "artifact_regions": [
+        "misthalin",
+        "morytania",
+        "kandarin"
+      ],
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania",
+        "kandarin"
+      ],
+      "dig_sites": [
+        "Infernal Source",
+        "Kharid-et",
+        "Everlight",
+        "Stormguard Citadel",
+        "Warforge"
+      ],
       "planner_value": "High-level Slayer-control relic whose collection is intrinsically cross-region even though the collector is in Misthalin.",
       "source_url": "https://runescape.wiki/w/Wise_Old_Man%3A_Knowledge_is_Power",
       "secondary_source_url": "https://runescape.wiki/w/Amascut%27s_Enchanted_Gem",
@@ -26,7 +42,10 @@
       "release_date": "2026-06-15",
       "dig_site": "Moonrise",
       "region": "havenhythe",
-      "dig_site_requirements": ["52 Archaeology", "Secrets of Amberfell"],
+      "dig_site_requirements": [
+        "52 Archaeology",
+        "Secrets of Amberfell"
+      ],
       "officially_confirmed_path": "Complete one of Moonrise's two collections, combine its reward with Expensive spices, then use the resulting relic item at the monolith.",
       "effect_summary": "Food heals 100 additional life points and eating food no longer drains adrenaline.",
       "secondary_candidate_path": {

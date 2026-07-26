@@ -12,7 +12,10 @@
         "Rum Deal for the Holy wrench",
         "Pieces of Hate for the Dungeoneering prayer-necklace interaction"
       ],
-      "usable_slots": ["backpack", "pocket"],
+      "usable_slots": [
+        "backpack",
+        "pocket"
+      ],
       "effects": [
         "Increases Prayer restored by supported prayer-restoring potions while carried or worn.",
         "After Pieces of Hate, increases Prayer restored by Dungeoneering prayer necklaces by 10%."
@@ -32,8 +35,16 @@
       "category": "upgradeable Prayer drop cleaner",
       "region_status": "multi_source_no_single_region",
       "base_item": "Ectoplasmator",
-      "upgrade": {"item": "Ghostly essence", "quantity": 100},
-      "charges": {"initial": 1000, "maximum": 5009, "consumed_per_absorption": 1, "recharge_item": "Ghostly essence"},
+      "upgrade": {
+        "item": "Ghostly essence",
+        "quantity": 100
+      },
+      "charges": {
+        "initial": 1000,
+        "maximum": 5009,
+        "consumed_per_absorption": 1,
+        "recharge_item": "Ghostly essence"
+      },
       "effect": "Absorbs eligible ghost remains and destroys demonic ashes for the normal Prayer experience that scattering or burying them would grant.",
       "source_urls": [
         "https://runescape.wiki/w/Attuned_ectoplasmator",
@@ -54,7 +65,10 @@
       "token_cost": 1500000,
       "effect": "Automatically adds 90% of monster coin drops to the money pouch and destroys the remaining 10%.",
       "degrades": false,
-      "toolbelt_unlock": {"currency": "Slayer points", "cost": 500},
+      "toolbelt_unlock": {
+        "currency": "Slayer points",
+        "cost": 500
+      },
       "source_urls": [
         "https://runescape.wiki/w/Advanced_gold_accumulator",
         "https://runescape.wiki/w/Template:Dungeoneering_rewards_stock",
@@ -69,14 +83,37 @@
       "category": "Farming experience drop cleaner",
       "region_status": "multiple_acquisition_routes",
       "acquisition_routes": [
-        {"route": "Cabbage Facepunch Bonanza Quartermaster", "region_hint": "asgarnia", "currency": "renown", "cost": 2200},
-        {"route": "Farmers' Market", "region_hint": "kandarin", "currency": "beans", "cost": 10000},
-        {"route": "Stanley Limelight", "region_status": "minigame_spotlight_currency", "currency": "Thaler", "cost": 360}
+        {
+          "route": "Cabbage Facepunch Bonanza Quartermaster",
+          "region_hint": "asgarnia",
+          "currency": "renown",
+          "cost": 2200
+        },
+        {
+          "route": "Farmers' Market",
+          "region_hint": "kandarin",
+          "currency": "beans",
+          "cost": 10000
+        },
+        {
+          "route": "Stanley Limelight",
+          "region_status": "minigame_spotlight_currency",
+          "currency": "Thaler",
+          "cost": 360
+        }
       ],
       "effect": "Destroys selected seed drops and awards twice the Farming experience that planting the seed would give, provided the player has the Farming level to plant it.",
       "uses": "unlimited",
-      "pickup_upgrade": {"source": "Farmers' Market", "currency": "beans", "cost": 25000, "effect": "Collects selected seeds instead of destroying them."},
-      "toolbelt_unlock": {"currency": "Slayer points", "cost": 500},
+      "pickup_upgrade": {
+        "source": "Farmers' Market",
+        "currency": "beans",
+        "cost": 25000,
+        "effect": "Collects selected seeds instead of destroying them."
+      },
+      "toolbelt_unlock": {
+        "currency": "Slayer points",
+        "cost": 500
+      },
       "source_urls": [
         "https://runescape.wiki/w/Seedicide",
         "https://runescape.wiki/w/Rewards_(Cabbage_Facepunch_Bonanza)",
@@ -93,24 +130,62 @@
       "region_status": "global_if_invention_materials_available",
       "invention_level": 43,
       "base_device_recipe": [
-        {"material": "Simple parts", "quantity": 300},
-        {"material": "Tensile parts", "quantity": 500},
-        {"material": "Flexible parts", "quantity": 300},
-        {"material": "Precise components", "quantity": 50}
+        {
+          "material": "Simple parts",
+          "quantity": 300
+        },
+        {
+          "material": "Tensile parts",
+          "quantity": 500
+        },
+        {
+          "material": "Flexible parts",
+          "quantity": 300
+        },
+        {
+          "material": "Precise components",
+          "quantity": 50
+        }
       ],
       "tight_spring_recipe": {
         "output_quantity": 20,
         "materials": [
-          {"material": "Tensile parts", "quantity": 120},
-          {"material": "Subtle components", "quantity": 1}
+          {
+            "material": "Tensile parts",
+            "quantity": 120
+          },
+          {
+            "material": "Subtle components",
+            "quantity": 1
+          }
         ]
       },
       "upgrade_ladder": [
-        {"version": "Spring cleaner 2000", "cumulative_springs": 200, "unlock": "Automatically high-alchemises configured salvage drops at the cost of one spring per salvage."},
-        {"version": "Spring cleaner 3000", "cumulative_springs": 600, "unlock": "Automatically disassembles configured salvage drops without consuming a spring; free disassembly does not advance upgrades."},
-        {"version": "Spring cleaner 5000", "cumulative_springs": 1800, "unlock": "Further improves the cleaner's older dismantle/research functionality."},
-        {"version": "Spring cleaner 9000", "cumulative_springs": 4000, "unlock": "Higher-tier cleaner with the full pre-9001 salvage configuration set."},
-        {"version": "Spring cleaner 9001", "cumulative_springs": 10000, "unlock": "Extends supported automatic cleaning to noted salvage drops."}
+        {
+          "version": "Spring cleaner 2000",
+          "cumulative_springs": 200,
+          "unlock": "Automatically high-alchemises configured salvage drops at the cost of one spring per salvage."
+        },
+        {
+          "version": "Spring cleaner 3000",
+          "cumulative_springs": 600,
+          "unlock": "Automatically disassembles configured salvage drops without consuming a spring; free disassembly does not advance upgrades."
+        },
+        {
+          "version": "Spring cleaner 5000",
+          "cumulative_springs": 1800,
+          "unlock": "Further improves the cleaner's older dismantle/research functionality."
+        },
+        {
+          "version": "Spring cleaner 9000",
+          "cumulative_springs": 4000,
+          "unlock": "Higher-tier cleaner with the full pre-9001 salvage configuration set."
+        },
+        {
+          "version": "Spring cleaner 9001",
+          "cumulative_springs": 10000,
+          "unlock": "Extends supported automatic cleaning to noted salvage drops."
+        }
       ],
       "maximum_stored_springs": 250000,
       "supply_bottleneck": "A self-sufficient account can craft tight springs, but the tensile-part and subtle-component cost is the meaningful long-run constraint. Store the component recipe and upgrade ladder rather than a volatile spring coin price.",

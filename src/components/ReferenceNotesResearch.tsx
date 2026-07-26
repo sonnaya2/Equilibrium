@@ -2,11 +2,6 @@ import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchS
 import harvest from "../../data/research/reference-site-harvest.json";
 import midgame from "../../data/reference/midgame-rebalance-2026-07-20.json";
 
-/**
- * Notes-only surfaces: never treat as combat/math constants.
- * Harvest = mechanic/dependency notes; midgame = official Jul 2026 rebalance tables.
- */
-
 function asRows(value: unknown): ResearchRow[] {
   if (!Array.isArray(value)) return [];
   return value as ResearchRow[];
@@ -50,13 +45,13 @@ const midgameRows = midgameSectionRows();
 const TABS: ResearchTab[] = [
   {
     key: "harvest",
-    label: "Site harvest notes",
+    label: "Harvest",
     description: "",
     rows: harvestRows,
   },
   {
     key: "midgame",
-    label: "July 2026 rebalance",
+    label: "Rebalance",
     description: "",
     rows: midgameRows,
   },
@@ -65,11 +60,11 @@ const TABS: ResearchTab[] = [
 export function ReferenceNotesResearch() {
   return (
     <ResearchSection
-      title="Reference notes"
+      title="Notes"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search reference notes"
-      searchLabel="Search reference notes"
+      searchPlaceholder="Search notes"
+      searchLabel="Search notes"
     />
   );
 }

@@ -49,7 +49,7 @@ const museumRows = museumMatrix.map((row) => {
   const collectors = (loose.collector_regions ?? []) as string[];
   const combo =
     loose.comboLabel ||
-    (required.length > 1 ? `Region combo (all required): ${required.join(" + ")}` : "");
+    (required.length > 1 ? required.join(" + ") : "");
   const status = String(loose.status || "obtainable");
   const reason = loose.unobtainable_reason ? ` · ${loose.unobtainable_reason}` : "";
   const chronotesFirst = loose.chronotes_first;
@@ -57,7 +57,7 @@ const museumRows = museumMatrix.map((row) => {
     id: loose.id,
     name: loose.name,
     recordType: "activity",
-    category: status === "unobtainable" ? "museum collection (unobtainable)" : "museum collection",
+    category: status === "unobtainable" ? "museum · unobtainable" : "museum",
     regionHints: [...new Set([...required, ...artifacts, ...collectors])],
     requiredRegions: required,
     regionRequirementType: required.length > 1 ? "all_required" : "single",
@@ -71,19 +71,19 @@ const museumRows = museumMatrix.map((row) => {
     archaeology_level: loose.archaeology_level,
     detail: [
       combo,
-      status === "unobtainable" ? `UNOBTAINABLE${reason}` : "Obtainable in Equilibrium elective regions",
-      loose.collector ? `Collector: ${loose.collector}` : "",
+      status === "unobtainable" ? `Unobtainable${reason}` : "Obtainable",
+      loose.collector ? `Collector ${loose.collector}` : "",
       Array.isArray(loose.dig_sites) && loose.dig_sites.length
-        ? `Dig sites: ${loose.dig_sites.join(", ")}`
+        ? `Sites ${loose.dig_sites.join(", ")}`
         : "",
-      loose.first_reward ? `First reward: ${loose.first_reward}` : "",
-      chronotesFirst != null ? `Chronotes (collection reward): ${chronotesFirst}` : "",
+      loose.first_reward ? `Reward ${loose.first_reward}` : "",
+      chronotesFirst != null ? `Chronotes ${chronotesFirst}` : "",
     ]
       .filter(Boolean)
       .join(" · "),
     requirements: [
       row.archaeology_level != null ? `Archaeology ${row.archaeology_level}` : "",
-      ...required.map((region) => `Region: ${region}`),
+      ...required,
     ].filter(Boolean),
     confidence: row.confidence || "confirmed_wiki",
     source: row.source_urls?.[0]
@@ -161,8 +161,8 @@ export function ArchaeologyProductionResearch() {
       title="Archaeology"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search Archaeology"
-      searchLabel="Search Archaeology data"
+      searchPlaceholder="Search"
+      searchLabel="Search Archaeology"
     />
   );
 }

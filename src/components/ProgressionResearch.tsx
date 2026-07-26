@@ -58,9 +58,9 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
 const REGION_LABELS: Record<string, string> = {
   global_if_materials_available: "Global if supplied",
   global_once_unlocked: "Global once unlocked",
-  not_mapped_yet: "Region not mapped",
-  unresolved: "Region unresolved",
-  unresolved_cross_boundary: "Cross-boundary region unresolved",
+  not_mapped_yet: "Unmapped",
+  unresolved: "Unresolved",
+  unresolved_cross_boundary: "Cross-boundary unresolved",
 };
 
 function fieldLabel(value: string): string {
@@ -88,19 +88,20 @@ function regionName(value: unknown): string {
 
 function rowRegionLabel(row: Row): string {
   if (Array.isArray(row.required_regions) && row.required_regions.length) {
-    return `Requires regions: ${row.required_regions.map(regionName).join(" + ")}`;
+    const list = row.required_regions.map(regionName).join(" + ");
+    return row.required_regions.length > 1 ? `Combo: ${list}` : list;
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Region unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+    return `Unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
-    return `Region chain: ${row.region_hints.map(regionName).join(" / ")}`;
+    return `Chain: ${row.region_hints.map(regionName).join(" / ")}`;
   }
 
   const direct = row.region || row.acquisition_region || row.region_hint;
-  if (!direct) return "No region set";
+  if (!direct) return "—";
   return regionName(direct);
 }
 
@@ -180,23 +181,17 @@ export function ProgressionResearch() {
 
   return (
     <section className="border-t border-stone-750 pt-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="min-w-0">
-          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">Progression</h2>
-          <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
-            Methods and unlock chains outside the skill catalog.
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search progression"
-          aria-label="Search progression research"
+          placeholder="Search"
+          aria-label="Search progression"
           className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
         />
       </div>
 
-      <div role="tablist" aria-label="Progression research sections" className="comp-seg mt-2 overflow-x-auto">
+      <div role="tablist" aria-label="Progression sections" className="comp-seg mt-2 overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (

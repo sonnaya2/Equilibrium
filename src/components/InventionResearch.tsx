@@ -78,8 +78,8 @@ export function InventionResearch() {
       title="Invention"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search Invention"
-      searchLabel="Search Invention data"
+      searchPlaceholder="Search invention"
+      searchLabel="Search invention"
     />
   );
 }

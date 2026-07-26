@@ -7,14 +7,12 @@ import type { ResearchCatalog } from "@/research/catalog";
 import type { ReactNode } from "react";
 
 const panelFallback = () => (
-  <p className="py-6 text-sm text-parch-300" aria-busy="true">
-    Loading…
+  <p className="py-6 text-xs text-parch-300" aria-busy="true">
+    Loading
   </p>
 );
 
-// Heavy research trees stay out of the initial /data chunk. WorkbenchPanel only
-// mounts the active tab; dynamic() keeps inactive JSON/modules off the wire.
-// ssr:false requires a client module — cannot live on the server page.tsx.
+// Inactive tabs stay off the wire (dynamic + mount-active). ssr:false needs client host.
 const ProgressionResearch = dynamic(
   () =>
     import("@/components/ProgressionResearch").then((m) => ({

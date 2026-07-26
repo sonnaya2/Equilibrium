@@ -72,23 +72,24 @@ function regionName(value: unknown): string {
 
 function region(row: Row): string {
   if (Array.isArray(row.required_regions) && row.required_regions.length) {
-    return `Requires regions: ${row.required_regions.map(regionName).join(" + ")}`;
+    const list = row.required_regions.map(regionName).join(" + ");
+    return row.required_regions.length > 1 ? `Combo: ${list}` : list;
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Region unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+    return `Unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
-    return `Region chain: ${row.region_hints.map(regionName).join(" / ")}`;
+    return `Chain: ${row.region_hints.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_pressure) && row.region_pressure.length) {
-    return `Region pressure: ${row.region_pressure.map(format).join(" · ")}`;
+    return `Soft: ${row.region_pressure.map(format).join(" · ")}`;
   }
 
   const value = row.region_hint;
-  if (!value) return "No hard region set";
+  if (!value) return "—";
   return regionName(value);
 }
 
@@ -175,23 +176,17 @@ export function PermanentUnlockResearch() {
 
   return (
     <section className="border-t border-stone-750 pt-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="min-w-0">
-          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">Permanent unlocks</h2>
-          <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
-            Base-game deps first; League overrides second.
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search unlocks"
-          aria-label="Search permanent unlocks"
+          placeholder="Search"
+          aria-label="Search unlocks"
           className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
         />
       </div>
 
-      <div role="tablist" aria-label="Permanent unlock sections" className="comp-seg mt-2 overflow-x-auto">
+      <div role="tablist" aria-label="Unlock sections" className="comp-seg mt-2 overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (

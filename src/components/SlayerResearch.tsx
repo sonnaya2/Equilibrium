@@ -20,7 +20,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "stale",
-    label: "Stale corrections",
+    label: "Stale fixes",
     description: "",
     rows: stale as unknown as ResearchRow[],
   },
@@ -41,11 +41,11 @@ const TABS: ResearchTab[] = [
 export function SlayerResearch() {
   return (
     <ResearchSection
-      title="Slayer routes"
+      title="Slayer"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search Slayer routes"
-      searchLabel="Search Slayer routes"
+      searchPlaceholder="Search Slayer"
+      searchLabel="Search Slayer"
     />
   );
 }

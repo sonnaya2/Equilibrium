@@ -39,11 +39,11 @@ const TABS: ResearchTab[] = [
 export function ConsumablesResearch() {
   return (
     <ResearchSection
-      title="Combat consumables"
+      title="Consumables"
       intro=""
       tabs={TABS}
       searchPlaceholder="Search consumables"
-      searchLabel="Search combat consumables"
+      searchLabel="Search consumables"
     />
   );
 }

@@ -46,11 +46,11 @@ const TABS: ResearchTab[] = [
 export function PrayerSpellbookResearch() {
   return (
     <ResearchSection
-      title="Prayers and spellbooks"
+      title="Prayers"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search prayers or spellbooks"
-      searchLabel="Search prayers and spellbooks"
+      searchPlaceholder="Search prayers"
+      searchLabel="Search prayers"
     />
   );
 }

@@ -42,11 +42,11 @@ const TABS: ResearchTab[] = [
 export function CombatBisResearch() {
   return (
     <ResearchSection
-      title="Combat BiS"
-      intro={`${combatRows.length} unlocks · ${combos.length} multi-region · ${combat.snapshotDate}`}
+      title="BiS"
+      intro=""
       tabs={TABS}
-      searchPlaceholder="Search combat BiS unlocks"
-      searchLabel="Search combat BiS unlocks"
+      searchPlaceholder="Search BiS"
+      searchLabel="Search BiS"
     />
   );
 }

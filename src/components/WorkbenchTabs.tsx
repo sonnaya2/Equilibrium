@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-/** Composite segment strip — gem underline + shell rail (champion DNA). */
+/** Gem-active tab strip. */
 export function WorkbenchTabs<T extends string>({
   tabs,
   active,

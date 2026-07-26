@@ -73,13 +73,13 @@ function methodAccess(method: ResearchTrainingMethod): string {
 
   return cleanText(method.regionHints.join(" · "))
     .replaceAll("_plus_", " + ")
-    .replaceAll("multi_region_dependency", "multiple regions")
-    .replaceAll("multi_region", "multiple regions")
-    .replaceAll("global_if_materials_available", "global if materials are available")
+    .replaceAll("multi_region_dependency", "multi-region")
+    .replaceAll("multi_region", "multi-region")
+    .replaceAll("global_if_materials_available", "global if mats available")
     .replaceAll("global_once_supplied", "global once supplied")
-    .replaceAll("player_owned_house_global_with_resource_dependency", "player-owned house; materials region-dependent")
-    .replaceAll("materials_and_altar_dependent", "materials and altar dependent")
-    .replaceAll("arc_unresolved", "The Arc; region not confirmed")
+    .replaceAll("player_owned_house_global_with_resource_dependency", "PoH · mats by region")
+    .replaceAll("materials_and_altar_dependent", "mats + altar")
+    .replaceAll("arc_unresolved", "The Arc (unconfirmed)")
     .replaceAll("_inferred", " (inferred)")
     .replaceAll("_likely_", " likely ")
     .replaceAll("_", " ");
@@ -129,7 +129,7 @@ function MethodTable({
   onFocus?: (id: string) => void;
 }) {
   if (!methods.length) {
-    return <p className="px-3 py-2 text-[13px] text-parch-100">None yet.</p>;
+    return <p className="px-3 py-2 text-[13px] text-parch-100">No methods.</p>;
   }
 
   return (
@@ -141,7 +141,7 @@ function MethodTable({
             <th>Level</th>
             <th>Rate</th>
             <th>Where</th>
-            <th>Needs</th>
+            <th>Req</th>
             <th>Status</th>
             <th>Source</th>
           </tr>
@@ -169,12 +169,12 @@ function MethodTable({
                 <td className="max-w-[230px] secondary leading-5">
                   {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
                   <div className={method.location ? "mt-0.5" : ""}>{methodAccess(method)}</div>
-                  {method.hardRegionRequirement ? <div className="mt-0.5 text-parch-50">region required</div> : null}
+                  {method.hardRegionRequirement ? <div className="mt-0.5 text-parch-50">region lock</div> : null}
                 </td>
                 <td className="max-w-[240px] secondary leading-5">
                   {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
                   {method.requirements.length ? <div className="mt-0.5">{method.requirements.join(" · ")}</div> : null}
-                  {method.resourceSource ? <div className="mt-0.5">Supply: {cleanText(method.resourceSource)}</div> : null}
+                  {method.resourceSource ? <div className="mt-0.5">Mats: {cleanText(method.resourceSource)}</div> : null}
                   {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
                 </td>
                 <td className="secondary leading-5">
@@ -211,7 +211,7 @@ function RegionDetail({
           <div>
             <h2 className="text-xl font-semibold text-parch-50">{cleanText(region.name)}</h2>
             <div className="mt-0.5 text-[11px] text-parch-100">
-              {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} methods · {region.upgrades.length} upgrades
+              {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} train · {region.upgrades.length} upgrades
             </div>
           </div>
           <div className="text-[12px]"><SourceLink source={region.source} /></div>
@@ -220,7 +220,7 @@ function RegionDetail({
 
       {region.hardRules.length ? (
         <section className="panel">
-          <div className="panel-head">Requirements</div>
+          <div className="panel-head">Hard rules</div>
           <div className="panel-body space-y-1">
             {region.hardRules.map((rule) => <p key={rule} className="text-[14px] leading-5 text-parch-50">{cleanText(rule)}</p>)}
           </div>
@@ -231,20 +231,20 @@ function RegionDetail({
         <div className="panel">
           <div className="panel-head">Areas</div>
           <div className="px-3">
-            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2 text-[13px] text-parch-100">None.</div>}
+            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2 text-[13px] text-parch-100">No areas.</div>}
           </div>
         </div>
         <div className="panel">
           <div className="panel-head">Skills</div>
           <div className="px-3">
-            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2 text-[13px] text-parch-100">None.</div>}
+            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2 text-[13px] text-parch-100">No skills.</div>}
           </div>
         </div>
       </section>
 
       {region.warnings.length ? (
         <section className="panel">
-          <div className="panel-head">Notes</div>
+          <div className="panel-head">Caveats</div>
           <div className="px-3">
             {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-1.5 text-[14px] leading-5 text-parch-100 last:border-b-0">{cleanText(warning)}</p>)}
           </div>
@@ -260,10 +260,10 @@ function RegionDetail({
           <table className="data-table min-w-[820px]">
             <thead>
               <tr>
-                <th>Content</th>
-                <th>Type</th>
-                <th>Details</th>
-                <th>Status</th>
+                <th>Name</th>
+                <th>Kind</th>
+                <th>Detail</th>
+                <th>Conf</th>
                 <th>Source</th>
               </tr>
             </thead>
@@ -316,7 +316,7 @@ function RegionDetail({
                 </div>
                 <div className="text-[14px] leading-5 text-parch-100">
                   {upgrade.detail ? cleanText(upgrade.detail) : "—"}
-                  {upgrade.requirements.length ? <div className="mt-0.5 text-parch-50">Needs: {upgrade.requirements.join(" · ")}</div> : null}
+                  {upgrade.requirements.length ? <div className="mt-0.5 text-parch-50">{upgrade.requirements.join(" · ")}</div> : null}
                 </div>
                 <div className="text-[11px] text-parch-100">{confidenceLabel(upgrade.confidence)}</div>
                 <div className="text-[12px] md:text-right" onClick={(e) => e.stopPropagation()}>
@@ -324,7 +324,7 @@ function RegionDetail({
                 </div>
               </button>
             );
-          }) : <p className="px-3 py-2 text-[13px] text-parch-100">None yet.</p>}
+          }) : <p className="px-3 py-2 text-[13px] text-parch-100">No upgrades.</p>}
         </div>
       </section>
 
@@ -361,7 +361,7 @@ function SkillDetail({
         <div className="mt-0.5 text-[11px] text-parch-100">
           {skill.methods.length} methods · {skill.regions.length} regions
           {skill.regions.length ? ` · ${cleanText(skill.regions.join(", "))}` : ""}
-          {" · rates ignore League mult"}
+          {" · base rates (no League mult)"}
         </div>
       </header>
       <section className="panel">
@@ -432,9 +432,9 @@ function factsOf(...rows: Array<[string, string] | null>): [string, string][] {
 function contentFacts(row: ResearchContentRow): [string, string][] {
   return factsOf(
     fact("Name", row.name),
-    fact("Type", row.kind),
+    fact("Kind", row.kind),
     fact("Detail", row.detail || null),
-    fact("Confidence", confidenceLabel(row.confidence)),
+    fact("Conf", confidenceLabel(row.confidence)),
   );
 }
 
@@ -444,61 +444,61 @@ function upgradeFacts(row: ResearchUpgrade): [string, string][] {
     fact("Name", row.name),
     fact("Category", row.category),
     fact("Detail", row.detail || null),
-    fact("Confidence", confidenceLabel(row.confidence)),
+    fact("Conf", confidenceLabel(row.confidence)),
     fact("Access", access || null),
-    fact("Region id", row.regionId),
-    fact("Requirement type", row.regionRequirementType),
-    fact("Combo", row.comboLabel),
-    fact("Region combo", row.isRegionCombo),
-    fact("Required regions", row.requiredRegions?.length ? row.requiredRegions.map(regionName).join(", ") : null),
-    fact("Region hints", row.regionHints?.length ? row.regionHints.map(regionName).join(", ") : null),
-    fact("Requirements", row.requirements.length ? row.requirements.join(" · ") : null),
+    fact("Region", row.regionId),
+    fact("Access type", row.regionRequirementType),
+    fact("Combo label", row.comboLabel),
+    fact("Multi-region", row.isRegionCombo),
+    fact("Needs regions", row.requiredRegions?.length ? row.requiredRegions.map(regionName).join(", ") : null),
+    fact("Hints", row.regionHints?.length ? row.regionHints.map(regionName).join(", ") : null),
+    fact("Req", row.requirements.length ? row.requirements.join(" · ") : null),
   );
 }
 
 function methodFacts(row: ResearchTrainingMethod): [string, string][] {
   return factsOf(
-    fact("Id", row.id),
+    fact("ID", row.id),
     fact("Method", row.method),
     fact("Skill", row.skill),
     fact("Level", row.levelRange || null),
-    fact("XP rate", row.xpRate || null),
+    fact("Rate", row.xpRate || null),
     fact("Intensity", row.intensity || null),
     fact("Location", row.location || null),
     fact("Access", methodAccess(row)),
-    fact("Hard region", row.hardRegionRequirement),
+    fact("Region lock", row.hardRegionRequirement),
     fact("Unlock", row.requiredUnlock || null),
-    fact("Requirements", row.requirements.length ? row.requirements.join(" · ") : null),
-    fact("Supply", row.resourceSource || null),
-    fact("Freshness", freshnessLabel(row.freshness)),
-    fact("Confidence", confidenceLabel(row.confidence)),
+    fact("Req", row.requirements.length ? row.requirements.join(" · ") : null),
+    fact("Mats", row.resourceSource || null),
+    fact("Fresh", freshnessLabel(row.freshness)),
+    fact("Conf", confidenceLabel(row.confidence)),
     fact("Note", row.note || null),
-    fact("Warning", row.warning || null),
+    fact("Warn", row.warning || null),
   );
 }
 
 function regionRecordFacts(region: ResearchRegion): [string, string][] {
   return factsOf(
-    fact("Id", region.id),
-    fact("Availability", availabilityLabel(region.availability)),
+    fact("ID", region.id),
+    fact("Unlock", availabilityLabel(region.availability)),
     fact("Verified", region.verified),
-    fact("Aliases", region.aliases.length ? region.aliases.join(", ") : null),
+    fact("Aka", region.aliases.length ? region.aliases.join(", ") : null),
     fact("Content", region.content.length),
-    fact("Training", region.training.length),
+    fact("Train", region.training.length),
     fact("Upgrades", region.upgrades.length),
     fact("Skills", region.skills.length),
     fact("Areas", region.areas.length),
-    fact("Skills list", region.skills.length ? region.skills.join(", ") : null),
-    fact("Areas list", region.areas.length ? region.areas.join(", ") : null),
+    fact("Skill set", region.skills.length ? region.skills.join(", ") : null),
+    fact("Area set", region.areas.length ? region.areas.join(", ") : null),
   );
 }
 
 function skillRecordFacts(skill: ResearchSkill): [string, string][] {
   return factsOf(
-    fact("Id", skill.id),
+    fact("ID", skill.id),
     fact("Methods", skill.methods.length),
     fact("Regions", skill.regions.length),
-    fact("Region list", skill.regions.length ? skill.regions.map(regionName).join(", ") : null),
+    fact("In", skill.regions.length ? skill.regions.map(regionName).join(", ") : null),
   );
 }
 
@@ -511,7 +511,6 @@ function buildInspectorModel(
   title: string;
   subtitle: string;
   crestId: string | null;
-  scope: string;
   facts: [string, string][];
   rules: string[];
   notes: string[];
@@ -525,7 +524,6 @@ function buildInspectorModel(
           title: row.name,
           subtitle: `Content · ${region.name}`,
           crestId: region.id,
-          scope: "content",
           facts: contentFacts(row),
           rules: [],
           notes: [],
@@ -545,7 +543,6 @@ function buildInspectorModel(
           title: row.name,
           subtitle: `Upgrade · ${region.name}`,
           crestId: region.id,
-          scope: "upgrade",
           facts: upgradeFacts(row),
           rules: [],
           notes: [],
@@ -563,9 +560,8 @@ function buildInspectorModel(
       if (row) {
         return {
           title: row.method,
-          subtitle: `Training · ${region.name}`,
+          subtitle: `Train · ${region.name}`,
           crestId: region.id,
-          scope: "method",
           facts: methodFacts(row),
           rules: [],
           notes: row.warning ? [row.warning] : [],
@@ -582,7 +578,6 @@ function buildInspectorModel(
       title: region.name,
       subtitle: availabilityLabel(region.availability),
       crestId: region.id,
-      scope: "region",
       facts: regionRecordFacts(region),
       rules: region.hardRules,
       notes: region.warnings,
@@ -596,9 +591,8 @@ function buildInspectorModel(
       if (row) {
         return {
           title: row.method,
-          subtitle: `Training · ${skill.name}`,
+          subtitle: `Train · ${skill.name}`,
           crestId: null,
-          scope: "method",
           facts: methodFacts(row),
           rules: [],
           notes: row.warning ? [row.warning] : [],
@@ -615,7 +609,6 @@ function buildInspectorModel(
       title: skill.name,
       subtitle: `${skill.regions.length} regions · ${skill.methods.length} methods`,
       crestId: null,
-      scope: "skill",
       facts: skillRecordFacts(skill),
       rules: [],
       notes: [],
@@ -743,7 +736,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
           onClick={() => setMineOnly((on) => !on)}
           aria-pressed={mineOnly}
           disabled={!loaded}
-          title={loaded ? "Unlocked by your Map/Build picks" : "Loading picks…"}
+          title={loaded ? "Filter to your Map/Build unlocks" : "Loading picks…"}
           className={`comp-facet disabled:cursor-not-allowed disabled:opacity-40${
             mineOnly ? " is-on" : ""
           }`}
@@ -754,7 +747,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={mode === "region" ? "region, boss, item, skill" : "skill, method, location"}
-          aria-label="Search catalog"
+          aria-label="Search"
           className="field-inset ml-auto min-w-[12rem] flex-1 px-2 py-1 text-sm text-parch-50 placeholder:text-parch-400 md:max-w-sm"
         />
       </div>
@@ -813,7 +806,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
                   );
                 })}
             {(mode === "region" ? filteredRegions.length : filteredSkills.length) === 0 ? (
-              <p className="px-2.5 py-2 text-[12px] text-parch-100">No matches.</p>
+              <p className="px-2.5 py-2 text-[12px] text-parch-100">Nothing matches.</p>
             ) : null}
           </div>
         </aside>
@@ -831,12 +824,10 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
               title={inspector.title}
               subtitle={inspector.subtitle}
               crestId={inspector.crestId}
-              scope={inspector.scope}
               sources={inspector.sources}
               facts={inspector.facts}
               rules={inspector.rules}
               notes={inspector.notes}
-              focused={focus !== null}
               onClearFocus={focus !== null ? () => setFocus(null) : undefined}
             />
           ) : null}
@@ -850,36 +841,32 @@ function BrowseSourcesInspector({
   title,
   subtitle,
   crestId,
-  scope,
   sources,
   facts,
   rules,
   notes,
-  focused,
   onClearFocus,
 }: {
   title: string;
   subtitle: string;
   crestId: string | null;
-  scope: string;
   sources: SourceReference[];
   facts: [string, string][];
   rules: string[];
   notes: string[];
-  focused: boolean;
   onClearFocus?: () => void;
 }) {
   return (
     <div className="text-[14px]">
       <div className="flex items-baseline justify-between gap-2">
-        <p className="font-display text-[11px] uppercase tracking-[0.12em] text-gold-400">Sources</p>
+        <p className="font-display text-[11px] uppercase tracking-[0.12em] text-gold-400">Inspector</p>
         {onClearFocus ? (
           <button
             type="button"
             onClick={onClearFocus}
             className="text-[11px] text-gem-300 underline-offset-2 hover:underline"
           >
-            Full record
+            Clear focus
           </button>
         ) : null}
       </div>
@@ -887,10 +874,7 @@ function BrowseSourcesInspector({
         {crestId ? <GameIcon src={regionCrestPath(crestId)} size={22} className="shrink-0" /> : null}
         <div className="min-w-0">
           <p className="text-[14px] font-medium leading-4 text-parch-50">{cleanText(title)}</p>
-          <p className="mt-0.5 text-[11px] text-parch-100">
-            {subtitle}
-            {focused ? ` · ${scope}` : ""}
-          </p>
+          <p className="mt-0.5 text-[11px] text-parch-100">{subtitle}</p>
         </div>
       </div>
 
@@ -905,7 +889,7 @@ function BrowseSourcesInspector({
 
       {rules.length ? (
         <div className="mt-2.5 border-t border-stone-750 pt-2">
-          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Rules</p>
+          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Hard rules</p>
           <ul className="mt-1 space-y-1 text-[13px] leading-4 text-parch-50">
             {rules.map((r) => (
               <li key={r}>{cleanText(r)}</li>
@@ -916,7 +900,7 @@ function BrowseSourcesInspector({
 
       {notes.length ? (
         <div className="mt-2.5 border-t border-stone-750 pt-2">
-          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Notes</p>
+          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Caveats</p>
           <ul className="mt-1 space-y-1 text-[13px] leading-4 text-parch-100">
             {notes.map((n) => (
               <li key={n}>{cleanText(n)}</li>
@@ -927,10 +911,10 @@ function BrowseSourcesInspector({
 
       <div className="mt-2.5 border-t border-stone-750 pt-2">
         <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">
-          Links · {sources.length}
+          Sources · {sources.length}
         </p>
         {sources.length === 0 ? (
-          <p className="mt-1 text-[12px] text-parch-100">None.</p>
+          <p className="mt-1 text-[12px] text-parch-100">No sources.</p>
         ) : (
           <ul className="mt-1.5 space-y-1.5">
             {sources.map((s) => (

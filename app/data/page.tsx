@@ -27,11 +27,7 @@ export default function DataPage() {
 
         <DataWorkbenchHost
           catalog={catalog}
-          notes={
-            <p className="text-sm text-parch-100">
-              Ironman only. Each row has a source.
-            </p>
-          }
+          notes={<p className="text-parch-300">Ironman only.</p>}
         />
       </div>
     </Page>

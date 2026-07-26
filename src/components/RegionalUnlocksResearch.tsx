@@ -44,20 +44,14 @@ const TABS: ResearchTab[] = [
   },
 ];
 
-const combatCombos = combatRows.filter(
-  (row) =>
-    Boolean(row.comboLabel) ||
-    (Array.isArray(row.requiredRegions) && (row.requiredRegions as string[]).length > 1),
-);
-
 export function RegionalUnlocksResearch() {
   return (
     <ResearchSection
-      title="Regional unlocks"
-      intro={`${combatRows.length} combat unlocks · ${combatCombos.length} multi-region`}
+      title="Regional"
+      intro=""
       tabs={TABS}
-      searchPlaceholder="Search regional unlocks"
-      searchLabel="Search regional unlocks"
+      searchPlaceholder="Search unlocks"
+      searchLabel="Search unlocks"
     />
   );
 }

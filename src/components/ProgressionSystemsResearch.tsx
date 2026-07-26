@@ -50,7 +50,7 @@ const TABS: ResearchTab[] = [
   {
     key: "farm",
     label: "Farm perks",
-    description: pass5.farm_combat_perks.tier_1_account_rule,
+    description: "",
     rows: farmPerks as unknown as ResearchRow[],
   },
   {
@@ -61,7 +61,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "account",
-    label: "Account infrastructure",
+    label: "Account",
     description: "",
     rows: pass5.account_combat_infrastructure as unknown as ResearchRow[],
   },
@@ -70,11 +70,11 @@ const TABS: ResearchTab[] = [
 export function ProgressionSystemsResearch() {
   return (
     <ResearchSection
-      title="Progression systems"
+      title="Progression"
       intro=""
       tabs={TABS}
       searchPlaceholder="Search systems"
-      searchLabel="Search progression systems"
+      searchLabel="Search systems"
     />
   );
 }

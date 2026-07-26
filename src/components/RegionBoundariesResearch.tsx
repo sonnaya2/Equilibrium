@@ -4,19 +4,19 @@ import dependencies from "../../data/league/region-dependencies.json";
 const TABS: ResearchTab[] = [
   {
     key: "overrides",
-    label: "Boundary overrides",
+    label: "Overrides",
     description: "",
     rows: dependencies.boundary_overrides as unknown as ResearchRow[],
   },
   {
     key: "dependencies",
-    label: "Hard dependencies",
+    label: "Hard reqs",
     description: "",
     rows: dependencies.dependencies as unknown as ResearchRow[],
   },
   {
     key: "crossings",
-    label: "Unresolved crossings",
+    label: "Unclear edges",
     description: "",
     rows: dependencies.cross_boundary_cases.map((row) => ({
       ...row,
@@ -28,11 +28,11 @@ const TABS: ResearchTab[] = [
 export function RegionBoundariesResearch() {
   return (
     <ResearchSection
-      title="Region boundary rules"
+      title="Boundaries"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search boundary rules"
-      searchLabel="Search region boundary rules"
+      searchPlaceholder="Search boundaries"
+      searchLabel="Search boundaries"
     />
   );
 }

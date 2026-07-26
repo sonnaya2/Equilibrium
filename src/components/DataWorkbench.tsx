@@ -23,10 +23,7 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-/**
- * Control Surface Data: primary tabs, only the active category mounts heavy trees.
- * Crafting holds Archaeology + Masterwork as stacked sections.
- */
+/** Active tab only. Crafting stacks Archaeology + Masterwork. */
 export function DataWorkbench({
   browse,
   quests,
@@ -68,7 +65,7 @@ export function DataWorkbench({
 
   return (
     <div className="data-screen flex min-h-0 flex-1 flex-col">
-      <WorkbenchTabs aria-label="Data categories" tabs={TABS} active={tab} onChange={setTab} />
+      <WorkbenchTabs aria-label="Data" tabs={TABS} active={tab} onChange={setTab} />
 
       <div className="min-h-0 flex-1 overflow-hidden">
       <WorkbenchPanel id="browse" active={tab}>

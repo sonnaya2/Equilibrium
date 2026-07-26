@@ -3,7 +3,6 @@ import combosData from "../../data/research/region-combos.json";
 import combat from "../../data/research/regional-combat-unlocks.json";
 import {
   getMuseumCollectionMatrix,
-  getUnobtainableMuseumCollections,
   type MuseumCollectionMatrixRow,
 } from "@/research/archaeologyPlanner";
 
@@ -22,7 +21,6 @@ const partial = combos.filter((row) => row.modeled === "partial");
 const gaps = combos.filter((row) => row.modeled === false);
 
 const museumMatrix = getMuseumCollectionMatrix();
-const unobtainableMuseum = getUnobtainableMuseumCollections();
 const museumMulti = museumMatrix.filter((row) => (row.required_regions ?? []).length > 1);
 
 function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
@@ -32,13 +30,13 @@ function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
   const status = String(row.status || "obtainable");
   const combo =
     row.comboLabel ||
-    (required.length > 1 ? `Region combo (all required): ${required.join(" + ")}` : "");
+    (required.length > 1 ? `Needs ${required.join(" + ")}` : "");
   const reason = row.unobtainable_reason ? ` · ${row.unobtainable_reason}` : "";
   return {
     id: row.id,
     name: row.name,
     recordType: "activity",
-    category: status === "unobtainable" ? "museum collection (unobtainable)" : "museum collection",
+    category: status === "unobtainable" ? "museum · can't get" : "museum",
     regionHints: [...new Set([...required, ...artifacts, ...collectors])],
     requiredRegions: required,
     regionRequirementType: required.length > 1 ? "all_required" : "single",
@@ -52,7 +50,7 @@ function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
     archaeology_level: row.archaeology_level,
     detail: [
       combo,
-      status === "unobtainable" ? `UNOBTAINABLE${reason}` : "Obtainable in Equilibrium elective regions",
+      status === "unobtainable" ? `Can't get${reason}` : "Needs electives",
       row.collector ? `Collector: ${row.collector}` : "",
       Array.isArray(row.dig_sites) && row.dig_sites.length
         ? `Dig sites: ${row.dig_sites.join(", ")}`
@@ -91,37 +89,37 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "hard-required",
-    label: "Hard multi-region",
+    label: "Hard combos",
     description: "",
     rows: hard as ResearchRow[],
   },
   {
     key: "pressure-only",
-    label: "Pressure only",
+    label: "Soft only",
     description: "",
     rows: pressure as ResearchRow[],
   },
   {
     key: "museum-multi",
-    label: "Museum multi-region",
+    label: "Museum combos",
     description: "",
     rows: museumRows,
   },
   {
     key: "combat-multi",
-    label: "Combat multi-region",
+    label: "Combat combos",
     description: "",
     rows: combatCombos,
   },
   {
     key: "modeled",
-    label: "Already modeled",
+    label: "In catalog",
     description: "",
     rows: [...modeled, ...partial] as ResearchRow[],
   },
   {
     key: "gaps",
-    label: "Planner gaps",
+    label: "Gaps",
     description: "",
     rows: gaps as ResearchRow[],
   },
@@ -134,14 +132,13 @@ const TABS: ResearchTab[] = [
 ];
 
 export function RegionCombosResearch() {
-  const counts = combosData.counts as { combos?: number; globalIssues?: number } | undefined;
   return (
     <ResearchSection
-      title="Region combos"
-      intro={`${counts?.combos ?? combos.length} skilling · ${museumMulti.length} museum · ${combatCombos.length} combat · ${counts?.globalIssues ?? issues.length} issues`}
+      title="Combos"
+      intro=""
       tabs={TABS}
-      searchPlaceholder="Search region combos"
-      searchLabel="Search region combos"
+      searchPlaceholder="Search combos"
+      searchLabel="Search combos"
     />
   );
 }

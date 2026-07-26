@@ -462,9 +462,11 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: auto repeat(8, minmax(2.4rem, 1fr));
+  /* Fixed chip columns — never fluid 1fr (was growing into huge squares). */
+  grid-template-columns: auto repeat(8, 1.75rem);
   gap: 0.22rem;
   align-content: start;
+  justify-content: start;
   overflow: auto;
   padding: 0.35rem;
   border: 1px solid rgb(138 115 72 / 22%);
@@ -483,18 +485,22 @@
   padding: 0.12rem;
 }
 
+/* Path labels match relic tier chip scale — compact, not column titles */
 .build-game__bless-path {
   font-size: 0.625rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  line-height: 1.1;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   padding-right: 0.28rem;
 }
 
 .build-game__bless-cell {
-  aspect-ratio: 1;
-  min-height: 2.35rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  box-sizing: border-box;
   border: 1px solid rgb(50 42 30 / 75%);
   border-radius: 2px;
   background:
@@ -530,8 +536,8 @@
 }
 
 .build-game__bless-dot {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.72rem;
+  height: 0.72rem;
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   background: rgb(36 44 48 / 70%);
   border: 1px solid rgb(90 100 110 / 28%);
@@ -715,6 +721,11 @@
     flex: 1 1 4.75rem;
   }
   .build-game__bless-grid {
-    grid-template-columns: auto repeat(4, minmax(2.15rem, 1fr));
+    grid-template-columns: auto repeat(8, 1.65rem);
+  }
+
+  .build-game__bless-cell {
+    width: 1.6rem;
+    height: 1.6rem;
   }
 }

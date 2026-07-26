@@ -62,11 +62,129 @@ const STRUCTURAL_KEYS = new Set([
   "policy",
 ]);
 
+/** Short player-facing labels for research detail keys. Unknown keys title-case. */
+const FIELD_LABELS: Record<string, string> = {
+  archaeology_level: "Arch level",
+  collector: "Collector",
+  first_reward: "First reward",
+  relic_effect_summary: "Effect",
+  effect_summary: "Effect",
+  support_item_effect: "Support effect",
+  monolith_energy: "Energy",
+  dig_sites: "Dig sites",
+  dig_site: "Dig site",
+  dig_site_requirements: "Dig reqs",
+  planner_value: "Value",
+  release_date: "Released",
+  officially_confirmed_path: "Path",
+  secondary_candidate_path: "Also try",
+  promotion_rule: "Note",
+  region_reason: "Why",
+  pvme_position: "PvME",
+  kills_per_hour: "KPH",
+  kph: "KPH",
+  xp_per_hour: "XP/hr",
+  notes: "Notes",
+  note: "Note",
+  requirements: "Reqs",
+  access_requirements: "Access",
+  quest_dependencies: "Quests",
+  dependency_notes: "Depends on",
+  method: "Method",
+  unlock: "Unlock",
+  unlocks: "Unlocks",
+  rewards: "Rewards",
+  cost: "Cost",
+  materials: "Mats",
+  material: "Mat",
+  components: "Components",
+  component_sources: "Sources",
+  gizmo: "Gizmo",
+  recipe: "Recipe",
+  recipes: "Recipes",
+  perk: "Perk",
+  perks: "Perks",
+  rank: "Rank",
+  ranks: "Ranks",
+  level: "Level",
+  slayer_level: "Slayer",
+  combat_level: "Combat",
+  style: "Style",
+  styles: "Styles",
+  gear: "Gear",
+  setup: "Setup",
+  rotation: "Rotation",
+  frequency: "How often",
+  duration: "Duration",
+  effect: "Effect",
+  effects: "Effects",
+  summary: "Summary",
+  description: "Detail",
+  acquisition: "How to get",
+  acquisition_routes: "Routes",
+  production: "Make",
+  stack: "Stack",
+  dose: "Dose",
+  doses: "Doses",
+  heal: "Heal",
+  adrenaline: "Adren",
+  poison: "Poison",
+  bomb: "Bomb",
+  overload: "Overload",
+  tier: "Tier",
+  type: "Type",
+  category: "Category",
+  status: "Status",
+  freshness: "Freshness",
+  confidence: "Confidence",
+  reason: "Why",
+  why: "Why",
+  value: "Value",
+  priority: "Priority",
+  bottleneck: "Bottleneck",
+  supply: "Supply",
+  source: "Source",
+  sources: "Sources",
+  wiki_note: "Wiki",
+  correction: "Fix",
+  stale_reason: "Why stale",
+  replacement: "Use instead",
+  recommended: "Rec",
+  alternative: "Alt",
+  alternatives: "Alts",
+  monster: "Monster",
+  monsters: "Monsters",
+  task: "Task",
+  tasks: "Tasks",
+  assignment: "Assignment",
+  location_detail: "Where",
+  where: "Where",
+  how: "How",
+  chain: "Chain",
+  step_order: "Step",
+  order: "Order",
+  quantity: "Qty",
+  amount: "Amount",
+  rate: "Rate",
+  gp_per_hour: "GP/hr",
+  xp: "XP",
+  experience: "XP",
+};
+
 function fieldLabel(value: string): string {
-  return value
-    .replaceAll("kph", "kills per hour")
-    .replaceAll("xp", "XP")
-    .replaceAll("_", " ");
+  if (FIELD_LABELS[value]) return FIELD_LABELS[value];
+  const cleaned = value
+    .replaceAll("_", " ")
+    .replace(/\bkph\b/gi, "KPH")
+    .replace(/\bxp\b/gi, "XP")
+    .replace(/\s+/g, " ")
+    .trim();
+  // Title-case; trim long underscore dumps to first three words.
+  if (cleaned.length > 28) {
+    const short = cleaned.split(" ").slice(0, 3).join(" ");
+    return short.replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return cleaned.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function text(value: unknown): string {
@@ -104,7 +222,7 @@ function title(row: ResearchRow): string {
       row.method ||
       row.unlock ||
       row.id ||
-      "Entry",
+      "—",
   );
 }
 
@@ -150,40 +268,40 @@ function region(row: ResearchRow): string {
   if (required?.length) {
     const type = String(row.regionRequirementType || "").toLowerCase();
     if (required.length > 1) {
-      if (type === "support") return `Region chain (support pressure): ${regionList(required, " / ")}`;
-      return `Region combo (all required): ${regionList(required, " + ")}`;
+      if (type === "support") return `Chain: ${regionList(required, " / ")}`;
+      return `Combo: ${regionList(required, " + ")}`;
     }
-    return `Requires region: ${regionName(required[0])}`;
+    return `Needs ${regionName(required[0])}`;
   }
 
   if (Array.isArray(row.required_regions_for_collection_loop) && row.required_regions_for_collection_loop.length) {
-    return `Collection loop: ${regionList(row.required_regions_for_collection_loop, " + ")}`;
+    return `Loop: ${regionList(row.required_regions_for_collection_loop, " + ")}`;
   }
 
   if (Array.isArray(row.artifact_regions) && row.artifact_regions.length) {
     const artifacts = regionList(row.artifact_regions, " / ");
     if (Array.isArray(row.collector_regions) && row.collector_regions.length) {
-      return `Artifacts: ${artifacts} · Collector: ${regionList(row.collector_regions, " / ")}`;
+      return `Artifacts ${artifacts} · Collector ${regionList(row.collector_regions, " / ")}`;
     }
-    return `Artifact regions: ${artifacts}`;
+    return `Artifacts ${artifacts}`;
   }
 
   if (Array.isArray(row.collector_regions) && row.collector_regions.length) {
-    return `Collector regions: ${regionList(row.collector_regions, " / ")}`;
+    return `Collector ${regionList(row.collector_regions, " / ")}`;
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Region unresolved: ${regionList(row.region_candidates, " / ")}`;
+    return `Could be ${regionList(row.region_candidates, " / ")}`;
   }
 
   if (Array.isArray(row.region_options) && row.region_options.length) {
     const options = regionList(row.region_options, " / ");
-    const preferred = row.planner_default_region ? ` · Default: ${regionName(row.planner_default_region)}` : "";
-    return `Region options: ${options}${preferred}`;
+    const preferred = row.planner_default_region ? ` · Prefer ${regionName(row.planner_default_region)}` : "";
+    return `Pick: ${options}${preferred}`;
   }
 
   if (Array.isArray(row.acquisition_regions) && row.acquisition_regions.length) {
-    return `Acquisition: ${regionList(row.acquisition_regions, " / ")}`;
+    return `From ${regionList(row.acquisition_regions, " / ")}`;
   }
 
   const hints = Array.isArray(row.regionHints)
@@ -193,16 +311,16 @@ function region(row: ResearchRow): string {
       : null;
   if (hints && hints.length > 1) {
     const type = String(row.regionRequirementType || "").toLowerCase();
-    if (type === "all_required") return `Region combo (all required): ${regionList(hints, " + ")}`;
-    return `Region chain (support pressure): ${regionList(hints, " / ")}`;
+    if (type === "all_required") return `Combo: ${regionList(hints, " + ")}`;
+    return `Chain: ${regionList(hints, " / ")}`;
   }
 
   const entry = nestedRegion(row.entry_side);
   const destination = nestedRegion(row.destination_side || row.final_arena_side);
   if (entry || destination) {
-    if (entry && destination) return `Entry: ${regionName(entry)} · Destination: ${regionName(destination)}`;
-    if (entry) return `Entry: ${regionName(entry)}`;
-    return `Destination: ${regionName(destination)}`;
+    if (entry && destination) return `${regionName(entry)} → ${regionName(destination)}`;
+    if (entry) return `Start ${regionName(entry)}`;
+    return `End ${regionName(destination)}`;
   }
 
   const direct =
@@ -214,7 +332,7 @@ function region(row: ResearchRow): string {
     (hints && hints.length === 1 ? hints[0] : null) ||
     row.region ||
     row.region_status;
-  if (!direct) return "No hard region set";
+  if (!direct) return "—";
   return regionName(direct);
 }
 
@@ -314,7 +432,7 @@ export function ResearchSection({
       <div className="py-2">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           {blurb ? <p className="m-0 text-[12px] leading-5 text-parch-300">{blurb}</p> : <span />}
-          <span className="font-mono text-[11px] text-parch-400">{rows.length} shown</span>
+          <span className="font-mono text-[11px] text-parch-400">{rows.length}</span>
         </div>
 
         <div className="mt-1.5 border-t border-stone-750">

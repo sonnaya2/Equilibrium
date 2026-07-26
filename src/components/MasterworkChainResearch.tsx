@@ -4,7 +4,7 @@ import chain from "../../data/research/masterwork-staff-chain.json";
 const TABS: ResearchTab[] = [
   {
     key: "region-pressure",
-    label: "Region pressure",
+    label: "Region needs",
     description: "",
     rows: chain.region_pressure as unknown as ResearchRow[],
   },
@@ -25,11 +25,11 @@ const TABS: ResearchTab[] = [
 export function MasterworkChainResearch() {
   return (
     <ResearchSection
-      title="Masterwork staff chain"
-      intro={`${chain.name} · tier ${chain.tier} ${chain.style}`}
+      title="Masterwork staff"
+      intro=""
       tabs={TABS}
-      searchPlaceholder="Search the chain"
-      searchLabel="Search the Masterwork staff chain"
+      searchPlaceholder="Search"
+      searchLabel="Search masterwork staff"
     />
   );
 }

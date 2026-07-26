@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { runPipeline } from "@/combat/pipeline/modifierPipeline";
+import { sumNonWeaponAccuracy } from "@/combat/shared/equipment";
 import { equilibriumDamageBonus } from "@/combat/shared/perks";
 import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers";
@@ -13,8 +14,47 @@ import {
   loadoutDamageLevel,
   loadoutStats,
   loadoutWeaponTier,
+  nonWeaponAccuracyBonus,
 } from "./loadoutStats";
 import { DEFAULT_LOADOUT, type Loadout } from "./useLoadout";
+
+vi.mock("@/combat/data", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/combat/data")>();
+  return {
+    ...actual,
+    equipmentById: (id: string) => {
+      if (id === "mock:acc-ring") {
+        return {
+          id,
+          name: "Mock accuracy ring",
+          slot: "ring" as const,
+          bonuses: { accuracy: 100 },
+          sources: [],
+        };
+      }
+      if (id === "mock:acc-amulet") {
+        return {
+          id,
+          name: "Mock accuracy amulet",
+          slot: "amulet" as const,
+          bonuses: { accuracy: 50 },
+          sources: [],
+        };
+      }
+      if (id === "mock:weapon-main") {
+        return {
+          id,
+          name: "Mock mainhand",
+          slot: "mainhand" as const,
+          tier: 90,
+          bonuses: { accuracy: 9999 },
+          sources: [],
+        };
+      }
+      return actual.equipmentById(id);
+    },
+  };
+});
 
 const base: Loadout = { ...DEFAULT_LOADOUT };
 
@@ -227,6 +267,96 @@ describe("loadoutStats", () => {
     expect(equippedBonuses(seismic)).toEqual({ damage: 0, accuracy: 2458 });
 
     expect(equippedBonuses({ ...base, equipmentSlots: {} })).toEqual({ damage: 0, accuracy: 0 });
+  });
+
+  it("sumNonWeaponAccuracy keeps only accessory/armour accuracy (not weapons)", () => {
+    expect(
+      sumNonWeaponAccuracy([
+        { slot: "mainhand", bonuses: { accuracy: 2765 } },
+        { slot: "offhand", bonuses: { accuracy: 2765 } },
+        { slot: "twohand", bonuses: { accuracy: 2458 } },
+        { slot: "ring", bonuses: { accuracy: 100 } },
+        { slot: "amulet", bonuses: { accuracy: 50 } },
+        { slot: "gloves", bonuses: { accuracy: 25 } },
+        { slot: null, bonuses: { accuracy: 999 } },
+        { bonuses: { accuracy: 999 } },
+      ]),
+    ).toBe(175);
+  });
+
+  it("nonWeaponAccuracyBonus ignores weapon slots and sums accessories", () => {
+    expect(
+      nonWeaponAccuracyBonus({
+        ...base,
+        equipmentSlots: {
+          mainhand: "mock:weapon-main",
+          ring: "mock:acc-ring",
+          amulet: "mock:acc-amulet",
+        },
+      }),
+    ).toBe(150);
+
+    // Weapon-only loadout contributes 0 flat accessory accuracy (tier covers weapon).
+    expect(
+      nonWeaponAccuracyBonus({
+        ...base,
+        equipmentSlots: { mainhand: "mock:weapon-main" },
+      }),
+    ).toBe(0);
+
+    expect(
+      nonWeaponAccuracyBonus({
+        ...base,
+        equipmentSlots: { mainhand: "item:omni-guard" },
+      }),
+    ).toBe(0);
+  });
+
+  it("accessory accuracy 100 raises DP vs target vs same loadout without it", () => {
+    // High defence so base hit chance is not already 100%.
+    // mock:weapon-main has tier 90 (and 9999 wiki accuracy that must not enter DP).
+    const target = { defenceLevel: 120, affinity: "strong" as const };
+    const without = loadoutStats({
+      ...base,
+      attackLevel: 70,
+      strengthLevel: 70,
+      level: 70,
+      weaponTier: 70,
+      target,
+      equipmentSlots: { mainhand: "mock:weapon-main" },
+    });
+    const withRing = loadoutStats({
+      ...base,
+      attackLevel: 70,
+      strengthLevel: 70,
+      level: 70,
+      weaponTier: 70,
+      target,
+      equipmentSlots: { mainhand: "mock:weapon-main", ring: "mock:acc-ring" },
+    });
+    expect(without.dp).toBeLessThan(1);
+    expect(withRing.dp).toBeGreaterThan(without.dp);
+    // Tier from mock weapon (90); wiki accuracy 9999 excluded from flat accessory sum.
+    expect(without.dp).toBeCloseTo(
+      targetDamagePotential(playerAccuracy(70, 90), target),
+      10,
+    );
+    expect(withRing.dp).toBeCloseTo(
+      targetDamagePotential(playerAccuracy(70, 90) + 100, target),
+      10,
+    );
+    // Energising still stacks on top of accessory flat accuracy.
+    const withBoth = loadoutStats({
+      ...base,
+      weaponTier: 90,
+      target,
+      perks: { ...base.perks, energising: 4 },
+      equipmentSlots: { ring: "mock:acc-ring" },
+    });
+    expect(withBoth.dp).toBeCloseTo(
+      hitChance(playerAccuracy(99, 90) + 150 + 100, target),
+      10,
+    );
   });
 
   it("Eruptive adds a global base-stage damage modifier", () => {

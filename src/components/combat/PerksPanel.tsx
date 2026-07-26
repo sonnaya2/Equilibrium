@@ -14,6 +14,7 @@ const PERK_FIELDS = [
   ["energising", "Energising rank (R1 +75 accuracy, +25/rank)", 4],
   ["crackling", "Crackling rank (PvM zap 50% AD × rank, 60s CD)", 4],
   ["aftershock", "Aftershock rank (AoE after 50k dmg, 40% AD × rank, 6s min)", 4],
+  ["relentless", "Relentless rank (R1 1% EV adren refund on costs; 1.1% if lvl20)", 5],
   ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 5],
   ["tumekensPieces", "Tumeken's pieces (+1.5%/piece crit)", 5],
 ] as const;
@@ -74,6 +75,19 @@ export function PerksPanel({
             }
           />
           Impatient on level-20 item (9.9%/rank)
+        </label>
+        <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+          <input
+            type="checkbox"
+            checked={loadout.perks.relentlessLevel20}
+            onChange={(event) =>
+              setLoadout({
+                ...loadout,
+                perks: { ...loadout.perks, relentlessLevel20: event.target.checked },
+              })
+            }
+          />
+          Relentless on level-20 item (1.1%/rank)
         </label>
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
           <input

@@ -332,6 +332,22 @@ export function relentlessProcChance(rank: number, level20Gear = false): number 
 
 export const RELENTLESS_INTERNAL_CD_SECONDS = 30;
 
+/**
+ * EV adrenaline refund on a single cast with positive cost.
+ * No 30s internal CD model (same honesty as Impatient EV on every basic) —
+ * overstates real EV slightly when costs fire more often than once per CD.
+ * Rank 0 / non-positive cost => 0.
+ */
+export function expectedRelentlessRefund(
+  cost: number,
+  rank: number,
+  level20Gear = false,
+): number {
+  if (!Number.isFinite(cost) || cost <= 0) return 0;
+  if (!Number.isInteger(rank) || rank < 1 || rank > 5) return 0;
+  return cost * relentlessProcChance(rank, level20Gear);
+}
+
 /** Planted Feet: Sunshine / Death's Swiftness duration x 1.25; loses periodic damage. Rankless. */
 export const PLANTED_FEET_DURATION_MULT = 1.25;
 

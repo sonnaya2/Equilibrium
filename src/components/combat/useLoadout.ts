@@ -51,6 +51,9 @@ export interface LoadoutPerks {
   crackling: number;
   /** Aftershock: AoE after 50k damage, 40% AD × rank, 6s min. Rank 0 = off, max 4. */
   aftershock: number;
+  /** Relentless: EV refund of adren cost (1%/rank, no ICD model). Rank 0 = off, max 5. */
+  relentless: number;
+  relentlessLevel20: boolean;
   tectonicPieces: number;
   eliteTectonic: boolean;
   tumekensPieces: number;
@@ -124,6 +127,8 @@ export const DEFAULT_LOADOUT: Loadout = {
     energising: 0,
     crackling: 0,
     aftershock: 0,
+    relentless: 0,
+    relentlessLevel20: false,
     tectonicPieces: 0,
     eliteTectonic: false,
     tumekensPieces: 0,
@@ -320,6 +325,8 @@ export function normalizeLoadout(value: unknown): Loadout {
       energising: clampRank(rawPerks.energising, 4),
       crackling: clampRank(rawPerks.crackling, 4),
       aftershock: clampRank(rawPerks.aftershock, 4),
+      relentless: clampRank(rawPerks.relentless, 5),
+      relentlessLevel20: rawPerks.relentlessLevel20 === true,
       tectonicPieces: clampRank(rawPerks.tectonicPieces, 5),
       eliteTectonic: rawPerks.eliteTectonic === true,
       tumekensPieces: clampRank(rawPerks.tumekensPieces, 5),

@@ -397,7 +397,7 @@ export const MELEE_EFFECTS = [
     category: "basic" as const,
     durationSeconds: 6,
     notes:
-      "UNVERIFIED in sim: idle damage scale and Endless Assault need an off-target idle clock. Wiki tooltip: +5-7% ability damage per idle tick (cap 10 ticks / 6s); analysis table matches +5 min/+7 max per tick (helpers in styles/melee/effects.ts). Wiki analysis claims idle is time off-target (move/Surge/Escape/Bladed Dive), not pure last-attack — conflict, do not invent. After 4.8s idle, next channelled melee within 6s is Endless Assault (DoT, normal hit timings). Base hit 75-95 only is modelled.",
+      "SIM: last-attack idle (readyTick - lastMeleeCastTick) scales this cast's band +5 min / +7 max AD% per idle tick, cap 10. After >= 8 idle ticks grants Endless Assault for 6s — next channelled melee (Assault / Flurry / Greater Flurry) consumes the window; multi-hit offsets already model channel timings as DoT-style. Off-target movement idle (Surge / Escape / Bladed Dive) is unmodelled on generic target.",
     source: wikiAbility("Greater Barge", "Greater_Barge"),
   },
   {

@@ -136,7 +136,11 @@
       "tier": 90,
       "style": "magic",
       "setId": "tectonic",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2,
+        "damage": 28.1
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Vorago progression",
@@ -353,7 +357,11 @@
       "tier": 95,
       "style": "magic",
       "setId": "tumekens-resplendence",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3,
+        "prayer": 4,
+        "damage": 35.6
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Amascut, the Devourer progression",
@@ -377,7 +385,11 @@
       "tier": 95,
       "style": "magic",
       "setId": "tumekens-resplendence",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7,
+        "prayer": 3,
+        "damage": 29.6
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Amascut, the Devourer progression",
@@ -401,7 +413,11 @@
       "tier": 95,
       "style": "magic",
       "setId": "tumekens-resplendence",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9,
+        "prayer": 2,
+        "damage": 14.8
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Amascut, the Devourer progression",
@@ -425,7 +441,11 @@
       "tier": 95,
       "style": "magic",
       "setId": "tumekens-resplendence",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9,
+        "prayer": 2,
+        "damage": 14.8
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Amascut, the Devourer progression",
@@ -539,7 +559,11 @@
       "tier": 90,
       "style": "melee",
       "setId": "malevolent",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3,
+        "damage": 33.7
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Rise of the Six progression",
@@ -563,7 +587,11 @@
       "tier": 90,
       "style": "melee",
       "setId": "malevolent",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2,
+        "damage": 28.1
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Rise of the Six progression",
@@ -847,7 +875,9 @@
       "tier": 90,
       "style": "magic",
       "setId": "cryptbloom",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Croesus progression",
@@ -871,7 +901,9 @@
       "tier": 90,
       "style": "magic",
       "setId": "cryptbloom",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Croesus progression",
@@ -895,7 +927,9 @@
       "tier": 90,
       "style": "magic",
       "setId": "cryptbloom",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Croesus progression",
@@ -919,7 +953,9 @@
       "tier": 90,
       "style": "magic",
       "setId": "cryptbloom",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Croesus progression",
@@ -1199,7 +1235,10 @@
       "tier": 95,
       "style": "necromancy",
       "setId": "first-necromancer",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 565.3,
+        "damage": 35.6
+      },
       "unlock": {
         "type": "drop",
         "requirement": "First Necromancer's equipment",
@@ -1223,7 +1262,10 @@
       "tier": 95,
       "style": "necromancy",
       "setId": "first-necromancer",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 540.7,
+        "damage": 29.6
+      },
       "unlock": {
         "type": "drop",
         "requirement": "First Necromancer's equipment",
@@ -1247,7 +1289,10 @@
       "tier": 95,
       "style": "necromancy",
       "setId": "first-necromancer",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9,
+        "damage": 14.8
+      },
       "unlock": {
         "type": "drop",
         "requirement": "First Necromancer's equipment",
@@ -1271,7 +1316,10 @@
       "tier": 95,
       "style": "necromancy",
       "setId": "first-necromancer",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 122.9,
+        "damage": 14.8
+      },
       "unlock": {
         "type": "drop",
         "requirement": "First Necromancer's equipment",
@@ -1522,7 +1570,11 @@
       "tier": 90,
       "style": "ranged",
       "setId": "dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 500.9,
+        "prayer": 3,
+        "damage": 33.7
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1546,7 +1598,11 @@
       "tier": 90,
       "style": "ranged",
       "setId": "dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 479.1,
+        "prayer": 2,
+        "damage": 28.1
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1570,7 +1626,11 @@
       "tier": 90,
       "style": "ranged",
       "setId": "dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 1,
+        "damage": 14
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1594,7 +1654,11 @@
       "tier": 90,
       "style": "ranged",
       "setId": "dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 108.9,
+        "prayer": 1,
+        "damage": 14
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1667,7 +1731,11 @@
       "tier": 92,
       "style": "ranged",
       "setId": "elite-dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 526,
+        "prayer": 3,
+        "damage": 34.5
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1691,7 +1759,11 @@
       "tier": 92,
       "style": "ranged",
       "setId": "elite-dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 503.1,
+        "prayer": 2,
+        "damage": 28.7
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1715,7 +1787,11 @@
       "tier": 92,
       "style": "ranged",
       "setId": "elite-dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 114.3,
+        "prayer": 1,
+        "damage": 14.3
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",
@@ -1739,7 +1815,11 @@
       "tier": 92,
       "style": "ranged",
       "setId": "elite-dracolich",
-      "bonuses": {},
+      "bonuses": {
+        "armour": 114.3,
+        "prayer": 1,
+        "damage": 14.3
+      },
       "unlock": {
         "type": "drop",
         "requirement": "Zemouregal & Vorkath progression",

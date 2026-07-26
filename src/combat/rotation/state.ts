@@ -57,6 +57,18 @@ export interface RotationState {
    * until this tick (0 = inactive). Wiki duration 30s (50 ticks).
    */
   meteorStrikeUntilTick: number;
+  /**
+   * Last-attack idle clock for Greater Barge (generic target / pure revo).
+   * Tick of the previous melee damaging cast; -1 = none yet.
+   * Idle = readyTick - lastMeleeCastTick when last >= 0. Off-target movement
+   * (Surge / Escape / Bladed Dive) is unmodelled.
+   */
+  lastMeleeCastTick: number;
+  /**
+   * Endless Assault window end tick (0 = inactive). Set when Greater Barge is
+   * cast after >= 8 idle ticks; next channelled melee inside the window consumes it.
+   */
+  endlessAssaultUntilTick: number;
   /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
   sunshine: SunshineState;
   /** Instability (FSOA): Lightning Surge on Magic crit while active. */
@@ -86,6 +98,8 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     greaterFuryCrit: false,
     furyCritBonus: false,
     meteorStrikeUntilTick: 0,
+    lastMeleeCastTick: -1,
+    endlessAssaultUntilTick: 0,
     sunshine: newSunshine(),
     instability: newInstability(),
     ranged: {

@@ -30,13 +30,16 @@ export const METEOR_STRIKE_PASSIVE_ADREN_PER_TICK = 4.5;
 export const METEOR_STRIKE_DURATION_SECONDS = 30;
 export const METEOR_STRIKE_SOURCE = wiki("Meteor Strike", "Meteor_Strike");
 
-// --- Greater Barge (partial — idle clock UNVERIFIED for pure rotation sim) ---
+// --- Greater Barge ------------------------------------------------------------
 /**
  * Wiki tooltip: +5-7% ability damage per idle tick, cap 6s (10 ticks).
- * Wiki analysis table matches +5 min / +7 max per tick.
- * What advances the idle clock (last attack vs off-target/movement) conflicts
- * between tooltip and analysis — see MELEE_EFFECTS. Constants only until the
- * rotation layer models off-target idle.
+ * Analysis table matches +5 min / +7 max per tick.
+ *
+ * Sim idle clock (last-attack model): ticks since last melee damaging cast
+ * (`readyTick - lastMeleeCastTick`). Pure revo / generic target has no position
+ * — off-target movement (Surge / Escape / Bladed Dive) is unmodelled.
+ * After >= 8 idle ticks, Greater Barge also grants Endless Assault for 6s
+ * (next channelled melee consumes the window; hits already multi-tick).
  */
 export const GREATER_BARGE_IDLE_MIN_PCT_PER_TICK = 5;
 export const GREATER_BARGE_IDLE_MAX_PCT_PER_TICK = 7;
@@ -52,7 +55,7 @@ export const PULVERISE_DEBUFF_DURATION_SECONDS = 30;
 export const PULVERISE_KILL_ADRENALINE = 50;
 export const PULVERISE_SOURCE = wiki("Pulverise", "Pulverise");
 
-/** Band after Greater Barge idle ticks (tooltip table; not auto-wired). */
+/** Band after Greater Barge idle ticks (tooltip table; wired in simulate). */
 export function greaterBargeIdleBand(
   baseMinPct: number,
   baseMaxPct: number,

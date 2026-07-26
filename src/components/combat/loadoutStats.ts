@@ -9,9 +9,16 @@ import {
   impatientProcChance,
   invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
+  relentlessProcChance,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
-import { sumEquipmentBonuses, tectonicSet, tumekensSunshineSet } from "@/combat/shared/equipment";
+import {
+  isWeaponAccuracySlot,
+  sumEquipmentBonuses,
+  sumNonWeaponAccuracy,
+  tectonicSet,
+  tumekensSunshineSet,
+} from "@/combat/shared/equipment";
 import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
@@ -67,13 +74,40 @@ function equippedRecordIds(loadout: Loadout): string[] {
 }
 
 /**
- * Sum wiki combat Damage / Accuracy from equipped pieces.
- * Weapon Accuracy ratings are catalog/display — hit chance still uses tier via
- * playerAccuracy(level, weaponTier). Flat weapon Damage is not folded into base AD
- * (ability damage is tier-driven).
+ * Sum wiki combat Damage / Accuracy from equipped pieces (display totals).
+ * Hit chance does NOT add full weapon Accuracy ratings — those mirror tier and
+ * would double-count playerAccuracy(level, weaponTier). See nonWeaponAccuracyBonus.
+ * Style damage on armour is not folded into base AD either (tier-driven AD).
  */
 export function equippedBonuses(loadout: Loadout): { damage: number; accuracy: number } {
   return sumEquipmentBonuses(equippedRecordIds(loadout).map((id) => equipmentById(id)?.bonuses));
+}
+
+/**
+ * Flat accuracy from non-weapon slots only (gloves, rings, amulets, cape, armour, …).
+ * Mainhand / offhand / twohand Accuracy is excluded — encoded by weapon tier.
+ */
+export function nonWeaponAccuracyBonus(loadout: Loadout): number {
+  const pieces: { slot?: string | null; bonuses?: { accuracy?: number } | null }[] = [];
+  const seen = new Set<string>();
+  for (const [slot, id] of Object.entries(loadout.equipmentSlots ?? {})) {
+    if (typeof id !== "string") continue;
+    if (isWeaponAccuracySlot(slot)) {
+      seen.add(id);
+      continue;
+    }
+    if (seen.has(id)) continue;
+    seen.add(id);
+    pieces.push({ slot, bonuses: equipmentById(id)?.bonuses });
+  }
+  for (const id of loadout.equipmentIds ?? []) {
+    if (typeof id !== "string" || seen.has(id)) continue;
+    seen.add(id);
+    const record = equipmentById(id);
+    if (!record) continue;
+    pieces.push({ slot: record.slot, bonuses: record.bonuses });
+  }
+  return sumNonWeaponAccuracy(pieces);
 }
 
 /** Equipped twohand or mainhand tier when tagged on the record. */
@@ -133,13 +167,19 @@ export function loadoutStats(loadout: Loadout): CalcStats {
 
   const level = loadoutDamageLevel(loadout);
   const energising = loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
+  const accessoryAccuracy = nonWeaponAccuracyBonus(loadout);
   const weaponTier = loadoutWeaponTier(loadout);
 
+  // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
+  // Without a target, the manual accuracy% slider remains authoritative.
   const dp = loadout.target
-    ? targetDamagePotential(playerAccuracy(attackLevel, weaponTier) + energising, {
-        defenceLevel: loadout.target.defenceLevel,
-        affinity: loadout.target.affinity,
-      })
+    ? targetDamagePotential(
+        playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
+        {
+          defenceLevel: loadout.target.defenceLevel,
+          affinity: loadout.target.affinity,
+        },
+      )
     : clamp01(loadout.accuracy / 100);
 
   // Equilibrium prevents critical strikes (wiki). Biting/set bonuses ignored while active.
@@ -177,6 +217,10 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       loadout.perks.impatient > 0
         ? impatientProcChance(loadout.perks.impatient, loadout.perks.impatientLevel20) *
           IMPATIENT_EXTRA_ADRENALINE
+        : 0,
+    relentlessRefundChance:
+      loadout.perks.relentless > 0
+        ? relentlessProcChance(loadout.perks.relentless, loadout.perks.relentlessLevel20)
         : 0,
   };
 

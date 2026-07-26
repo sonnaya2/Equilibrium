@@ -12,9 +12,11 @@ import {
   eruptivePerkModifier,
   expectedAftershockDamage,
   expectedCracklingDamage,
+  expectedRelentlessRefund,
   genocidalDamageBonus,
   lungingPerkModifier,
   preciseMinHitAddition,
+  relentlessProcChance,
   ruthlessDamageBonus,
   SLAYER_PERK_DAMAGE_BONUS,
   ultimatumsPerkModifier,
@@ -103,5 +105,16 @@ describe("shared/perks", () => {
 
   it("skillcape constants match Beta Update 4", () => {
     expect(ATTACK_CAPE_MELEE_HIT_CHANCE).toBe(0.02);
+  });
+
+  it("Relentless is 1%/rank (1.1% lvl20) and EV refund is cost × chance", () => {
+    expect(relentlessProcChance(1)).toBeCloseTo(0.01, 10);
+    expect(relentlessProcChance(5)).toBeCloseTo(0.05, 10);
+    expect(relentlessProcChance(5, true)).toBeCloseTo(0.055, 10);
+    // R5 non-l20 on a 60-cost ultimate: 60 * 0.05 = 3
+    expect(expectedRelentlessRefund(60, 5)).toBeCloseTo(3, 10);
+    expect(expectedRelentlessRefund(60, 5, true)).toBeCloseTo(3.3, 10);
+    expect(expectedRelentlessRefund(0, 5)).toBe(0);
+    expect(expectedRelentlessRefund(60, 0)).toBe(0);
   });
 });

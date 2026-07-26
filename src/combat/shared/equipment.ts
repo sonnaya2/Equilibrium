@@ -2,7 +2,7 @@ import {
   AMASCUT_MASTERIES_WIKI_2025_09_29,
   MASTERWORK_WEAPONS_WIKI_2025_05_27,
 } from "../data/sources";
-import type { EquipmentBonuses } from "../data/records";
+import type { EquipmentBonuses, EquipmentSlot } from "../data/records";
 import type { SourceReference } from "../types";
 
 /**
@@ -11,8 +11,22 @@ import type { SourceReference } from "../types";
  * AD and playerAccuracy; do not add weapon Accuracy ratings into playerAccuracy or
  * you double-count the tier curve.
  *
+ * Style damage on armour / accessories is not folded into base AD either — ability
+ * damage stays level+tier driven (wiki weapon Damage is the face of that tier).
+ *
  * Set crit bonuses feed CritLayers.chance, not the modifier pipeline.
  */
+
+/** Slots whose Accuracy rating is already encoded by playerAccuracy(level, weaponTier). */
+export const WEAPON_ACCURACY_SLOTS: ReadonlySet<EquipmentSlot> = new Set([
+  "mainhand",
+  "offhand",
+  "twohand",
+]);
+
+export function isWeaponAccuracySlot(slot: string | null | undefined): boolean {
+  return slot != null && WEAPON_ACCURACY_SLOTS.has(slot as EquipmentSlot);
+}
 
 export interface SetEffect {
   id: string;
@@ -39,7 +53,7 @@ export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): Se
   return insideSunshine ? effect : { ...effect, critChanceBonus: 0 };
 }
 
-/** Sum numeric damage/accuracy from equipped piece bonus bags (display / future wiring). */
+/** Sum numeric damage/accuracy from equipped piece bonus bags (display totals). */
 export function sumEquipmentBonuses(pieces: Iterable<EquipmentBonuses | undefined>): {
   damage: number;
   accuracy: number;
@@ -52,4 +66,21 @@ export function sumEquipmentBonuses(pieces: Iterable<EquipmentBonuses | undefine
     if (b.accuracy != null && Number.isFinite(b.accuracy)) accuracy += b.accuracy;
   }
   return { damage, accuracy };
+}
+
+/**
+ * Flat accuracy from non-weapon pieces only (rings, amulets, cape, gloves, armour, …).
+ * Pieces without a known slot are skipped so unscoped legacy weapon pins cannot
+ * leak a full wiki Accuracy rating into hit chance.
+ */
+export function sumNonWeaponAccuracy(
+  pieces: Iterable<{ slot?: string | null; bonuses?: EquipmentBonuses | null } | null | undefined>,
+): number {
+  let accuracy = 0;
+  for (const p of pieces) {
+    if (!p || p.slot == null || isWeaponAccuracySlot(p.slot)) continue;
+    const a = p.bonuses?.accuracy;
+    if (a != null && Number.isFinite(a)) accuracy += a;
+  }
+  return accuracy;
 }

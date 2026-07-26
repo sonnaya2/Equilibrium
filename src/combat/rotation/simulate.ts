@@ -13,7 +13,10 @@ import {
 import type { MeleeAbilitySpec } from "../styles/melee/abilities";
 import {
   FURY_CRIT_CHANCE_BONUS,
+  GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
+  GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS,
+  greaterBargeIdleBand,
   METEOR_STRIKE_BASIC_ADREN_MULTIPLIER,
   METEOR_STRIKE_DURATION_SECONDS,
   METEOR_STRIKE_PASSIVE_ADREN_PER_TICK,
@@ -81,12 +84,17 @@ import {
 } from "./state";
 import { GLOBAL_COOLDOWN_TICKS, secondsToTicks, TICK_SECONDS } from "./timeline";
 
-/** Invigorating / Impatient (and similar) — applied only to basic adren gains. */
+/** Invigorating / Impatient / Relentless — adren gain and EV refund rules. */
 export interface AdrenalineRules {
   /** Multiplier on basic-category adrenaline gains (Invigorating). Default 1. */
   basicGainMultiplier?: number;
   /** EV extra adrenaline on each basic gain cast (Impatient chance × 3). Default 0. */
   impatientExpectedExtra?: number;
+  /**
+   * Relentless EV: fraction of spent cost refunded after spend (proc chance).
+   * Applied once per cast with cost > 0; no 30s internal CD model. Default 0.
+   */
+  relentlessRefundChance?: number;
 }
 
 /** Crackling / Aftershock EV procs — ranks 0 = off, 1-4 wiki max. */
@@ -336,6 +344,40 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       working = resolveNecromancyAbility(working, state.necro, readyTick);
     }
 
+    // Greater Barge last-attack idle (generic target): ticks since last melee damaging cast.
+    // Off-target movement is unmodelled. First damaging melee (last < 0) has 0 idle.
+    const meleeIdleTicks =
+      ability.style === "melee" && working.hits.length > 0 && state.lastMeleeCastTick >= 0
+        ? readyTick - state.lastMeleeCastTick
+        : 0;
+    // Greater Barge: rewrite this cast's hit bands from idle ticks; grant Endless Assault at >= 8.
+    if (ability.id === "greater_barge" && working.hits.length > 0) {
+      working = {
+        ...working,
+        hits: working.hits.map((h) => ({
+          ...h,
+          band: greaterBargeIdleBand(h.band.minPct, h.band.maxPct, meleeIdleTicks),
+        })),
+      };
+      if (meleeIdleTicks >= GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS) {
+        state = {
+          ...state,
+          endlessAssaultUntilTick:
+            readyTick + secondsToTicks(GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS),
+        };
+      }
+    }
+    // Endless Assault: next channelled melee inside the window (Assault / Flurry / GFlurry).
+    // Hits already multi-tick; clear the window without inventing a damage mult.
+    if (
+      melee?.channelled &&
+      working.hits.length > 0 &&
+      state.endlessAssaultUntilTick > 0 &&
+      readyTick < state.endlessAssaultUntilTick
+    ) {
+      state = { ...state, endlessAssaultUntilTick: 0 };
+    }
+
     const baseMods =
       typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
     const modifiers = [...baseMods];
@@ -468,7 +510,14 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       }
       state = gainAdrenaline(state, gain);
     }
-    if (cost) state = spendAdrenaline(state, cost);
+    if (cost) {
+      state = spendAdrenaline(state, cost);
+      // Relentless EV: refund cost × proc chance once per cast (no internal CD model).
+      const relentlessChance = input.adrenaline?.relentlessRefundChance ?? 0;
+      if (relentlessChance > 0) {
+        state = gainAdrenaline(state, cost * relentlessChance);
+      }
+    }
     // Deathspore free-cast only — FoD Necrosis free casts must not consume stacks.
     if (
       cost === 0 &&
@@ -550,8 +599,12 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       const extendTicks = working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
       state = { ...state, berserkUntilTick: state.berserkUntilTick + extendTicks };
     }
-    // greater_barge: idle scale + Endless Assault need off-target idle (UNVERIFIED in sim).
     // pulverise: target -25% outgoing + on-kill adren — not modelled (defensive / kill-gated).
+
+    // Last-attack idle clock: any melee damaging cast advances the GBarge reference.
+    if (ability.style === "melee" && working.hits.length > 0) {
+      state = { ...state, lastMeleeCastTick: readyTick };
+    }
 
     if (ability.style === "ranged") {
       if (input.ammo === "deathspore") {

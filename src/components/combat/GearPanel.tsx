@@ -173,8 +173,8 @@ export function GearPanel({
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Wearables require a slot. Set pieces expanded from aggregates. Bonuses still unsourced —
-          tier only. Click a slot, then pick an item. Only weapon tier (when tagged) feeds base AD.
+          Wearables require a slot. Set pieces expanded from aggregates. Bonuses where sourced;
+          tier feeds AD. Click a slot, then pick an item. Empty bonus bags show as no numbers.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">

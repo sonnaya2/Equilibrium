@@ -191,6 +191,41 @@ describe("simulate — Invigorating / Impatient adrenaline", () => {
   });
 });
 
+describe("simulate — Relentless EV cost refund", () => {
+  it("refunds cost × chance after spend (R5: 25 cost → +1.25 EV)", () => {
+    // 4× attack → 36 adren; Assault costs 25 → 11 without Relentless, 12.25 with R5.
+    const plain = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
+    });
+    const withR = simulate({
+      ...baseInput,
+      adrenaline: { relentlessRefundChance: 0.05 },
+      rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
+    });
+    expect(plain.ok).toBe(true);
+    expect(withR.ok).toBe(true);
+    const plainAssault = plain.casts.at(-1)!;
+    const rAssault = withR.casts.at(-1)!;
+    expect(plainAssault.abilityId).toBe("assault");
+    expect(plainAssault.adrenalineAfter).toBeCloseTo(36 - 25, 10);
+    expect(rAssault.adrenalineAfter).toBeCloseTo(36 - 25 + 25 * 0.05, 10);
+  });
+
+  it("does not refund when cost is 0 (basics / free casts)", () => {
+    const plain = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack"),
+    });
+    const withR = simulate({
+      ...baseInput,
+      adrenaline: { relentlessRefundChance: 0.05 },
+      rotation: rotationOf("attack"),
+    });
+    expect(withR.casts[0].adrenalineAfter).toBeCloseTo(plain.casts[0].adrenalineAfter, 10);
+  });
+});
+
 describe("simulate — damage-over-time scheduling", () => {
   it("bleed tails land on their sourced ticks and extend the timeline", () => {
     const s = simulate({ ...baseInput, rotation: rotationOf("dismember") });
@@ -323,6 +358,63 @@ describe("simulate — greater_fury / chaos_roar (already wired)", () => {
     expect(s.ok).toBe(true);
     // Guaranteed crit at level 99: mid of floor(1100*1.5)..floor(1300*1.5) = 1800.
     expect(s.casts[1].result.expected).toBeCloseTo(1800);
+  });
+});
+
+describe("simulate — greater_barge idle + Endless Assault", () => {
+  const byId = (id: string) => MELEE_ABILITIES.find((a) => a.id === id)!;
+
+  it("after 10 idle ticks, min/max gain +5*10 / +7*10 AD%", () => {
+    // last-attack idle: attack at 0, GBarge at 10 → idleTicks = 10 (cap).
+    const ctx = createCastContext(baseInput);
+    ctx.performCast(byId("attack"), 0, false);
+    ctx.performCast(byId("greater_barge"), 10, false);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+    const g = s.casts[1];
+    // Base 75-95 + 50/70 → 125-165 @ base 1000 → min 1250 max 1650 mid 1450.
+    expect(g.result.min).toBe(1250);
+    expect(g.result.max).toBe(1650);
+    expect(g.result.expected).toBeCloseTo(1450);
+  });
+
+  it("caps idle scale at 10 ticks", () => {
+    const ctx = createCastContext(baseInput);
+    ctx.performCast(byId("attack"), 0, false);
+    // 20 idle ticks still cap at 10 → same band as the 10-tick case.
+    ctx.performCast(byId("greater_barge"), 20, false);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+    const g = s.casts[1];
+    expect(g.result.min).toBe(1250);
+    expect(g.result.max).toBe(1650);
+  });
+
+  it("first melee cast has 0 idle (lastMeleeCastTick starts at -1)", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf("greater_barge"),
+    });
+    expect(s.ok).toBe(true);
+    // Unscaled 75-95 @ base 1000.
+    expect(s.casts[0].result.min).toBe(750);
+    expect(s.casts[0].result.max).toBe(950);
+  });
+
+  it("grants Endless Assault after 8 idle ticks and consumes on next channelled melee", () => {
+    const ctx = createCastContext(baseInput);
+    ctx.performCast(byId("attack"), 0, false);
+    // 8 idle → Endless Assault until tick 8 + 10 = 18.
+    ctx.performCast(byId("greater_barge"), 8, false);
+    expect(ctx.getState().endlessAssaultUntilTick).toBe(18);
+    // Assault inside the window clears Endless Assault (multi-hit already DoT-style).
+    ctx.performCast(byId("assault"), 11, false);
+    expect(ctx.getState().endlessAssaultUntilTick).toBe(0);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+    // GBarge at 8 idle: 75+40 / 95+56 = 115-151.
+    expect(s.casts[1].result.min).toBe(1150);
+    expect(s.casts[1].result.max).toBe(1510);
   });
 });
 

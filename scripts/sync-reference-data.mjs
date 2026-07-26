@@ -134,26 +134,6 @@ for (const file of enrichmentFiles) {
   applyEnrichment(progressionUnlocks, read(`scraped-data/${file}`), file);
 }
 
-// Enrich the overload progression chain with the per-record research from the
-// consumables pass (ids, recipe unlock flag, boost effect, provenance).
-// Existing canonical values win; a numeric disagreement is drift and throws.
-const consumablesPass = read("scraped-data/combat-consumables-pass-1.json");
-const overloadChain = progressionUnlocks.consumable_unlocks?.find((row) => row.id === "herblore:overload-chain");
-if (overloadChain && Array.isArray(consumablesPass.overload_chain?.records)) {
-  for (const researched of consumablesPass.overload_chain.records) {
-    if (typeof researched?.id !== "string" || !researched.id) throw new Error("Consumables pass overload record is missing id");
-    const record = overloadChain.records.find((entry) => entry.name === researched.name);
-    if (!record) throw new Error(`Consumables pass overload record not found in progression unlocks: ${researched.name}`);
-    for (const [key, value] of Object.entries(researched)) {
-      if (key === "name") continue;
-      if (record[key] == null) record[key] = value;
-      else if (Object(record[key]) !== record[key] && Object(value) !== value && record[key] !== value) {
-        throw new Error(`Overload chain drift on ${researched.id}.${key}: ${JSON.stringify(record[key])} vs ${JSON.stringify(value)}`);
-      }
-    }
-  }
-}
-
 write("data/combat/modernisation-2026.json", combat);
 write("data/combat/ability-audit-2026-07-24.json", combatAbilityAudit);
 write("data/league/catalyst.json", catalyst);

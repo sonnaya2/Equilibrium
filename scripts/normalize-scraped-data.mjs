@@ -523,15 +523,6 @@ write("data/league/tasks.json", {
   tierConfidence: equilibrium.progression.task_point_value_confidence || {},
   pointValueNote: equilibrium.progression.task_point_value_note || "Jagex has confirmed the Easy-to-Master range and 10-to-400 point bounds; any unconfirmed intermediate values stay provisional.",
   note: "The full Equilibrium task list has not been published yet.",
-  testFallback: {
-    enabled: true,
-    league: "Catalyst League",
-    testingOnly: true,
-    url: "https://runescape.wiki/w/Catalyst_League/Tasks",
-    completionSource: "https://runescape.wiki/w/Module:Catalyst_League/Tasks/completion.json",
-    expectedRecords: 1117,
-    note: "Catalyst League tasks are temporarily shown on /tasks only to test the task browser. They are not Equilibrium tasks and must be replaced when the Equilibrium task list is published.",
-  },
   source: leagueSource,
 });
 

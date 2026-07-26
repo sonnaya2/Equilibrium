@@ -6,20 +6,11 @@
       "id": "kandarin-lost-grove-ancient-elven-ritual-shard",
       "region": "kandarin",
       "source": "The Lost Grove / Solak",
-      "uniques": [
-        "Ancient elven ritual shard"
-      ],
+      "uniques": ["Ancient elven ritual shard"],
       "support_item_effect": "Restores 37.5% of maximum Prayer points over 30 seconds and has a five-minute cooldown.",
       "self_source_routes": [
-        {
-          "source": "Lost Grove creatures",
-          "drop_rate_on_slayer_task": "1/1,500",
-          "drop_rate_off_slayer_task": "1/5,000"
-        },
-        {
-          "source": "Solak, Guardian of the Grove",
-          "drop_rate_per_player": "1/1,000"
-        }
+        {"source": "Lost Grove creatures", "drop_rate_on_slayer_task": "1/1,500", "drop_rate_off_slayer_task": "1/5,000"},
+        {"source": "Solak, Guardian of the Grove", "drop_rate_per_player": "1/1,000"}
       ],
       "planner_value": "Reusable Prayer sustain for long combat or skilling sessions. The item is tradeable in the base game, but a no-trading League route depends on Kandarin access to the Lost Grove source chain.",
       "region_evidence": "The Lost Grove sits by the Piscatoris Hunter area; the RuneScape fairy-ring directory classifies the nearby AKQ destination as Kandarin.",

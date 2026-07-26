@@ -11,15 +11,8 @@
       "activity": "Herby Werby",
       "currency": "Spirit points",
       "weekly_point_cap": 100,
-      "base": {
-        "cost": 200,
-        "capacity_per_grimy_herb": 50
-      },
-      "upgrade": {
-        "cost": 200,
-        "requires_base_bag": true,
-        "capacity_per_grimy_herb": 100
-      },
+      "base": {"cost": 200, "capacity_per_grimy_herb": 50},
+      "upgrade": {"cost": 200, "requires_base_bag": true, "capacity_per_grimy_herb": 100},
       "stores_noted_items": true,
       "source_urls": [
         "https://runescape.wiki/w/Herby_Werby",
@@ -40,12 +33,7 @@
         "crafting_level": 25,
         "token_cost": 2000,
         "capacity_total": 100,
-        "gem_types": [
-          "Sapphire",
-          "Emerald",
-          "Ruby",
-          "Diamond"
-        ]
+        "gem_types": ["Sapphire", "Emerald", "Ruby", "Diamond"]
       },
       "upgrade": {
         "dungeoneering_level": 40,
@@ -54,13 +42,7 @@
         "requires_empty_base_bag": true,
         "capacity_per_type": 60,
         "capacity_total": 300,
-        "gem_types": [
-          "Sapphire",
-          "Emerald",
-          "Ruby",
-          "Diamond",
-          "Dragonstone"
-        ]
+        "gem_types": ["Sapphire", "Emerald", "Ruby", "Diamond", "Dragonstone"]
       },
       "stores_noted_items": true,
       "source_urls": [
@@ -76,11 +58,7 @@
       "name": "Artificer's measure",
       "category": "high-level gem container and skilling off-hand",
       "region_status": "cross_region_dependency_chain",
-      "region_pressure": [
-        "forinthry",
-        "tirannwn",
-        "morytania"
-      ],
+      "region_pressure": ["forinthry", "tirannwn", "morytania"],
       "requirements": [
         "99 Crafting",
         "102 Archaeology",
@@ -89,56 +67,20 @@
       ],
       "gem_storage": {
         "capacity_per_type": 100,
-        "gem_types": [
-          "Sapphire",
-          "Emerald",
-          "Ruby",
-          "Diamond",
-          "Dragonstone"
-        ],
+        "gem_types": ["Sapphire", "Emerald", "Ruby", "Diamond", "Dragonstone"],
         "shared_with_other_artificers_measures": true
       },
       "materials": [
-        {
-          "item": "Pasaha",
-          "quantity": 1
-        },
-        {
-          "item": "Dragon scalpel",
-          "quantity": 1
-        },
-        {
-          "item": "Orthenglass flask",
-          "quantity": 1
-        },
-        {
-          "item": "Protective goggles",
-          "quantity": 1
-        },
-        {
-          "item": "Magic stone",
-          "quantity": 1
-        },
-        {
-          "item": "Gem bag (upgraded)",
-          "quantity": 1
-        },
-        {
-          "item": "Mystic cloth",
-          "quantity": 10
-        },
-        {
-          "item": "Blessed molten glass",
-          "quantity": 10
-        },
-        {
-          "item": "Glorious silvthril chain",
-          "quantity": 1
-        },
-        {
-          "item": "Onyx",
-          "quantity": 1
-        }
+        {"item": "Pasaha", "quantity": 1},
+        {"item": "Dragon scalpel", "quantity": 1},
+        {"item": "Orthenglass flask", "quantity": 1},
+        {"item": "Protective goggles", "quantity": 1},
+        {"item": "Magic stone", "quantity": 1},
+        {"item": "Gem bag (upgraded)", "quantity": 1},
+        {"item": "Mystic cloth", "quantity": 10},
+        {"item": "Blessed molten glass", "quantity": 10},
+        {"item": "Glorious silvthril chain", "quantity": 1},
+        {"item": "Onyx", "quantity": 1}
       ],
       "dependency_notes": [
         "Forinthry: upgraded gem bag through Daemonheim rewards.",

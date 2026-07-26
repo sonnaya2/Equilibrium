@@ -4,10 +4,9 @@ This folder is the app-facing data store.
 
 - `scraped-data/` contains research and ingest inputs.
 - `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
-- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, prayer-book, complete-prayer, spellbook, reference-research, focused progression-chain and 2026 datasets into their app-facing locations, and enriches the overload progression chain from the combat-consumables pass.
+- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, prayer-book, complete-prayer, spellbook, reference-research, focused progression-chain and 2026 datasets into their app-facing locations.
 - `scripts/sync-planner-expansions.mjs` validates the sourced base planner rows and applies merge-only audits/enrichments.
-- `scripts/sync-planner-supplements.mjs` validates and copies the specialist Slayer, Invention and Archaeology supplements, including the active Invention perk catalogue, Guild progression, production collection routes, special relic chains and non-Guild collection utilities.
-- `scripts/sync-permanent-unlock-passes.mjs` copies the combat-consumables and permanent-unlock research passes into `reference/`, and builds the canonical support-item and container-bag supplements from the enrichment overlays.
+- `scripts/sync-planner-supplements.mjs` validates and copies the specialist Slayer, Invention and Archaeology supplements, including the active Invention perk catalogue, Guild progression and non-Guild collection utilities.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
 - Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
 
@@ -47,20 +46,12 @@ Archaeology utility rows describe time, travel and duplicate-mitigation advantag
 - `research/planner-expansions-archaeology-repeatables.json`: repeatable collection farms and collection relic routes
 - `research/planner-expansions-archaeology-guild.json`: corrected 2-to-3-to-4 relic presets, Guild shop progression, master outfit and Fixate infrastructure
 - `research/planner-expansions-archaeology-utilities.json`: duplicate mitigation, journal collection tracking/routing and museum overflow rules
-- `research/planner-expansions-archaeology-production.json`: repeatable collection rewards that act as alternate production supply loops
-- `research/planner-expansions-archaeology-special-relics.json`: planner-relevant relic chains outside the culture-specific collections
-- `research/planner-support-items-2026-07-25.json`: canonical regional support-item drops in the planner supply graph
 - `research/reference-site-harvest.json`: deduplicated PvME / RS Analysis mechanic and dependency research notes
 - `research/masterwork-staff-chain.json`: tier-100 staff self-source chain with hard vs conditional region pressure
 - `research/sources.json`: source manifest
 - `reference/changes-2026.json`: 2026 update chronology relevant to League planning
 - `reference/midgame-rebalance-2026-07-20.json`: July 20 rebalance values
 - `reference/progression-unlocks.json`: quest, activity, account and equipment unlock dependencies used by the planner
-- `reference/progression-support-items-2026-07-25.json`: canonical combat support equipment supplement (holy wrench, ectoplasmator, drop cleaners, spring cleaner)
-- `reference/progression-container-bags-2026-07-25.json`: canonical container-bag supplement (herb bag, gem bag, artificer's measure)
-- `reference/combat-consumables-pass-1.json`: combat-consumable unlock and production dependencies: overload chain, adrenaline, bombs, poison
-- `reference/permanent-unlocks-pass-3.json`: Necromancy talent progression and combat-relevant Archaeology relic acquisition systems
-- `reference/permanent-unlocks-pass-5.json`: account passives, region achievement rewards and farm/base-camp perks that alter combat or region value
 - `reference/prayer-books.json`: prayer-book state and unlock dependencies
 - `reference/prayers.json`: complete Standard, Ancient Curses and Seren prayer catalogue with effects and required regions
 - `reference/spellbooks.json`: Standard, Ancient and Lunar spellbook state plus scoped special systems

@@ -115,12 +115,11 @@ function sourceLinks(row: Row): string[] {
 }
 
 function rowTitle(row: Row): string {
-  return text(row.name || row.method || row.unlock || row.relic || row.rune || row.component || row.source || row.location || "Entry");
+  return text(row.name || row.method || row.unlock || row.relic || row.rune || row.component || row.source || "Entry");
 }
 
 function rowSubtitle(row: Row): string {
-  const value = text(row.location || row.category || row.level_range || row.effect_summary || row.support_item_effect || row.region_reason || row.source);
-  return value === rowTitle(row) ? "" : value;
+  return text(row.location || row.category || row.level_range || row.effect_summary || row.support_item_effect || row.region_reason || row.source);
 }
 
 function rowDetails(row: Row): string[] {

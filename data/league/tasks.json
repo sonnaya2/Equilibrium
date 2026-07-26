@@ -18,15 +18,6 @@
   },
   "pointValueNote": "The July 23 Jagex reveal explicitly says tasks span Easy through Master and rewards run from 10 points for quick wins up to 400 for major achievements. The 30/80/200 intermediate values match Catalyst but remain provisional until an Equilibrium-specific source publishes them explicitly.",
   "note": "The full Equilibrium task list has not been published yet.",
-  "testFallback": {
-    "enabled": true,
-    "league": "Catalyst League",
-    "testingOnly": true,
-    "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
-    "completionSource": "https://runescape.wiki/w/Module:Catalyst_League/Tasks/completion.json",
-    "expectedRecords": 1117,
-    "note": "Catalyst League tasks are temporarily shown on /tasks only to test the task browser. They are not Equilibrium tasks and must be replaced when the Equilibrium task list is published."
-  },
   "source": {
     "source": "jagex",
     "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",

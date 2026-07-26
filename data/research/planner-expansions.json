@@ -37,7 +37,22 @@
       "notes": "PvME calls this the most effective dedicated Scavenging-proc location. Keep the KPH figures as method throughput, not combat-XP claims.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/scavenging-farming/",
       "source_type": "pvme",
-      "confidence": "pvme_current"
+      "confidence": "pvme_current",
+      "target_tags": [
+        "undead",
+        "skeleton"
+      ],
+      "supporting_regions": [
+        "morytania"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Salve amulet (e)",
+          "region": "morytania",
+          "effect": "+20% damage and +20% hit chance against the Lumbridge Catacombs skeletons"
+        }
+      ],
+      "dependency_note": "The training spot itself is Misthalin. Morytania materially improves the skeleton method through the enchanted Salve amulet, so this is a useful cross-region synergy rather than a hard two-region gate."
     },
     {
       "id": "combat-abyss-monsters",
@@ -61,7 +76,12 @@
       "notes": "PvME recommends Abyss monsters for the 50/60-80 band. No combat XP/h is stored because older tables are stale after combat-XP changes.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_present_post_2026_global_stale_warning"
+      "confidence": "pvme_present_post_2026_global_stale_warning",
+      "target_tags": [
+        "abyss"
+      ],
+      "supporting_regions": [],
+      "dependency_note": "The method's meaningful regional dependency is the Forinthry/Wilderness Abyss entrance. No Salve synergy is assigned."
     },
     {
       "id": "combat-ravenous-ghouls",
@@ -83,7 +103,20 @@
       "notes": "Listed by PvME as an 80+ combat-training candidate.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_present_post_2026_global_stale_warning"
+      "confidence": "pvme_present_post_2026_global_stale_warning",
+      "target_tags": [
+        "ghoul",
+        "living_not_undead"
+      ],
+      "supporting_regions": [],
+      "recommended_unlocks": [
+        {
+          "name": "Blood essence",
+          "region": "morytania",
+          "effect": "Equipping a blood essence makes all ravenous ghouls in the crypt aggressive"
+        }
+      ],
+      "dependency_note": "Ravenous ghouls are not undead. Do not recommend Salve amulet or Salve amulet (e) here."
     },
     {
       "id": "combat-vyrewatch",
@@ -114,7 +147,31 @@
       "notes": "High-value League method because one mob loop can train combat while producing Prayer and Firemaking XP; exact League throughput depends on auto-completed quest access.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_present_post_2026_global_stale_warning"
+      "confidence": "pvme_present_post_2026_global_stale_warning",
+      "target_tags": [
+        "vampyre",
+        "vyre",
+        "not_salve_target"
+      ],
+      "supporting_regions": [],
+      "recommended_unlocks": [
+        {
+          "name": "Sunspear",
+          "region": "morytania",
+          "effect": "+75% hit chance against vyres, a chance to deal up to double normal attack damage, and automatic Prayer/Firemaking XP from cremations"
+        },
+        {
+          "name": "500-vyre corpse cremation progression",
+          "region": "morytania",
+          "effect": "Every 50 manually cremated vyre corpses adds +10 damage to blisterwood/Sunspear against vyres, up to +100"
+        },
+        {
+          "name": "Morytania elite achievements",
+          "region": "morytania",
+          "effect": "+50% Prayer and Firemaking XP from cremating vyre corpses, including Sunspear cremations"
+        }
+      ],
+      "dependency_note": "Vyres use the Ivandis/blisterwood/Sunspear progression, not the Salve amulet system."
     },
     {
       "id": "combat-bound-skeletons",
@@ -138,7 +195,22 @@
       "source_type": "pvme",
       "confidence": "pvme_present_post_2026_global_stale_warning",
       "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
-      "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary."
+      "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary.",
+      "target_tags": [
+        "undead",
+        "skeleton"
+      ],
+      "supporting_regions": [
+        "morytania"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Salve amulet (e)",
+          "region": "morytania",
+          "effect": "+20% damage and +20% hit chance against bound skeletons"
+        }
+      ],
+      "dependency_note": "Under the current Fort working map this is a Misthalin method with a strong optional Morytania support unlock."
     },
     {
       "id": "combat-abyssal-savages",
@@ -162,7 +234,22 @@
       "notes": "PvME specifically highlights Ranged here for the 80+ progression band. Wilderness access is directly Forinthry; Senntisten is retained only as an alternate base-game location, not a claimed League region shortcut.",
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "source_type": "pvme",
-      "confidence": "pvme_present_post_2026_global_stale_warning"
+      "confidence": "pvme_present_post_2026_global_stale_warning",
+      "target_tags": [
+        "demon",
+        "chthonian"
+      ],
+      "supporting_regions": [
+        "forinthry"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Demon horn necklace prayer-sustain chain",
+          "region": "forinthry",
+          "effect": "Daemonheim supplies the Demon horn necklace; pair with an Attuned ectoplasmator when using infernal-ash kills for prayer sustain"
+        }
+      ],
+      "dependency_note": "Abyssal savages are demons, not undead. Do not attach Salve bonuses to this row."
     },
     {
       "id": "combat-abyssal-beasts",
@@ -191,7 +278,40 @@
       "source_url": "https://pvme.io/pvme-guides/new-to-bossing/mid-game-combat/",
       "secondary_source_url": "https://pvme.io/pvme-guides/invention-and-perks/scavenging-farming/",
       "source_type": "pvme",
-      "confidence": "pvme_present_post_2026_global_stale_warning"
+      "confidence": "pvme_present_post_2026_global_stale_warning",
+      "target_tags": [
+        "demon",
+        "chthonian"
+      ],
+      "supporting_regions": [
+        "forinthry",
+        "desert"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Demon horn necklace",
+          "region": "forinthry",
+          "effect": "Daemonheim reward; restores Prayer when qualifying remains are processed"
+        },
+        {
+          "name": "Attuned ectoplasmator",
+          "region": "multi-source, no single elective region",
+          "effect": "Processes supported ashes/ghost remains and can feed Dungeoneering prayer-necklace sustain"
+        },
+        {
+          "name": "Player-owned Slayer Dungeon route",
+          "region": "desert",
+          "effect": "Optional Sunken Pyramid route after capturing abyssal beast souls; Wilderness remains the direct Forinthry route"
+        }
+      ],
+      "alternate_region_routes": [
+        {
+          "region": "desert",
+          "location": "Sunken Pyramid / Player-owned Slayer Dungeon",
+          "requirements": "Captured abyssal beast souls and the Player-owned Slayer Dungeon setup"
+        }
+      ],
+      "dependency_note": "Forinthry is the direct Wilderness route. Desert is an optional Player-owned Slayer Dungeon route. The attuned ectoplasmator itself has multiple acquisition/recharge sources and is not hard-assigned to either region."
     },
     {
       "id": "combat-armoured-phantoms",
@@ -226,7 +346,22 @@
       "source_type": "pvme_plus_wiki",
       "confidence": "pvme_present_post_2026_global_stale_warning",
       "region_evidence_url": "https://runescape.wiki/w/Catalyst_League/Tasks",
-      "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary."
+      "region_note": "Fort Forinthry is kept under the working Misthalin League taxonomy because Catalyst filed Fort tasks under Misthalin; Equilibrium has not yet published a finer Fort boundary.",
+      "target_tags": [
+        "undead",
+        "phantom"
+      ],
+      "supporting_regions": [
+        "morytania"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Salve amulet (e)",
+          "region": "morytania",
+          "effect": "+20% damage and +20% hit chance against armoured phantoms"
+        }
+      ],
+      "dependency_note": "The Fort crypt method is a current Misthalin working-map entry with a strong optional Morytania support dependency."
     },
     {
       "id": "combat-waterbirth-dagannoths-scavenging",
@@ -251,7 +386,22 @@
       "notes": "Not the universal best combat-XP spot; included because PvME measures it as a high-KPH component/charm farm and region access can matter heavily in a no-trading League.",
       "source_url": "https://pvme.io/pvme-guides/invention-and-perks/scavenging-farming/",
       "source_type": "pvme",
-      "confidence": "pvme_current"
+      "confidence": "pvme_current",
+      "target_tags": [
+        "dagannoth",
+        "charm_farm"
+      ],
+      "supporting_regions": [
+        "forinthry"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Charming imp",
+          "region": "forinthry",
+          "effect": "Automatically collects charms and materially improves the usability of Waterbirth as a high-volume charm farm"
+        }
+      ],
+      "dependency_note": "Waterbirth itself is Fremennik. Forinthry adds the Daemonheim Charming imp, which is especially relevant because the method is explicitly indexed for charm farming."
     },
     {
       "id": "combat-armoured-zombies",
@@ -286,7 +436,22 @@
         "https://runescape.wiki/w/Defender_of_Varrock"
       ],
       "source_type": "pvme_plus_wiki",
-      "confidence": "pvme_method_candidate_wiki_facts_cross_checked_region_unresolved"
+      "confidence": "pvme_method_candidate_wiki_facts_cross_checked_region_unresolved",
+      "target_tags": [
+        "undead",
+        "zombie"
+      ],
+      "supporting_regions": [
+        "morytania"
+      ],
+      "recommended_unlocks": [
+        {
+          "name": "Salve amulet (e)",
+          "region": "morytania",
+          "effect": "+20% damage and +20% hit chance against armoured zombies"
+        }
+      ],
+      "dependency_note": "The training location remains an unresolved Misthalin/Forinthry boundary case. Morytania is a separate optional support region through Salve amulet (e)."
     }
   ],
   "runecrafting_altars": [

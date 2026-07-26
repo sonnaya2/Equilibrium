@@ -73,7 +73,11 @@ if (!JSON.stringify(seers?.rewards ?? []).includes("+2 percentage points")) fail
 const frem = byId(progression.account_unlocks, "achievements:fremennik-combat");
 if (!JSON.stringify(frem?.rewards ?? []).includes("10%") || !JSON.stringify(frem?.rewards ?? []).includes("5%")) fail("Fremennik combat rewards drifted");
 const tir = byId(progression.account_unlocks, "achievements:tirannwn-combat");
-if ((tir?.rewards ?? []).filter((row) => String(row.effect).includes("5%")).length < 4) fail("Tirannwn combat reward set incomplete");
+// Rewards are a string in most rows and an object in a few, so match on the
+// serialised row the way the Seers and Fremennik checks above do. Reading
+// row.effect only worked on the object shape: against a string it produced
+// "undefined", matched nothing, and failed an entry that was actually correct.
+if ((tir?.rewards ?? []).filter((row) => JSON.stringify(row).includes("5%")).length < 4) fail("Tirannwn combat reward set incomplete");
 const keris = byId(progression.account_unlocks, "achievements:desert-keris");
 if (!keris?.effect?.includes("25%") || !keris?.effect?.includes("5%")) fail("Hard Desert Keris reward drifted");
 

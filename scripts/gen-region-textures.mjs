@@ -137,7 +137,8 @@ function render({ size, regions, boardMean }) {
         // Feature layer: the thing that makes a region recognisable at a glance.
         if (feature === "dunes") {
           // Wind ridges: sinusoid warped by low-frequency noise, wraps on x.
-          n = 0.5 + 0.5 * Math.sin((x * 6 + broad(x, y) * 1.4) * Math.PI * 2) * 0.55 + n * 0.28;
+          // Warped hard enough that the crests wander instead of ruling lines.
+          n = 0.5 + 0.5 * Math.sin((x * 4 + broad(x, y) * 2.6) * Math.PI * 2) * 0.42 + n * 0.34;
         } else if (feature === "canopy") {
           // Clumped crowns: sharpen the noise so foliage reads as blobs.
           n = smooth(smooth(n));
@@ -153,9 +154,11 @@ function render({ size, regions, boardMean }) {
         } else if (feature === "stone") {
           n = n * 0.7 + detail(x, y) * 0.3;
         } else if (feature === "furrow") {
-          // Tilled strips: regular ridges, wrapped, softened by the base noise.
-          const rows = 0.5 + 0.5 * Math.sin((y * 18 + base(x, y) * 0.8) * Math.PI * 2);
-          n = n * 0.66 + rows * 0.34;
+          // Tilled strips. Kept low and heavily warped: the tile repeats 3x per
+          // slab, so ridges that read as fields at 1:1 read as corduroy on the
+          // board. Structure you notice, not stripes you count.
+          const rows = 0.5 + 0.5 * Math.sin((y * 7 + broad(x, y) * 2.2) * Math.PI * 2);
+          n = n * 0.84 + rows * 0.16;
         } else if (feature === "hedgerow") {
           // Enclosed pasture: plot interiors lit, hedge borders dark.
           const edge = Math.min(1, plots(x, y) * 2.4);

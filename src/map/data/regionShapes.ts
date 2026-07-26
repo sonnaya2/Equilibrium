@@ -46,8 +46,11 @@ export const BORDER_NODES = {
   c_w_des: [0.412, 0.771],
   c_s_asg_e: [0.41, 0.68],
   c_s_asg: [0.416, 0.671],
-  c_s_kand_e: [0.364, 0.755],
-  c_s_kand: [0.262, 0.836],
+  // Kandarin's south coast stays shallow: it used to dip to v 0.836, which put
+  // it straight over Karamja's northern lobe. The two rings overlapped, which
+  // the 3D board hid behind slab heights and the flat board did not.
+  c_s_kand_e: [0.352, 0.686],
+  c_s_kand: [0.256, 0.7],
   c_s_tir_e: [0.219, 0.764],
   c_s_tir: [0.168, 0.762],
   c_w_tir_s: [0.112, 0.692],
@@ -86,18 +89,19 @@ export const BORDER_NODES = {
   s_md_1: [0.53, 0.658], // Misthalin | Desert
   s_kt_1: [0.214, 0.546], // Kandarin | Tirannwn, the elf wall
 
-  // Karamja — island, no shared nodes.
-  k_n: [0.308, 0.622],
-  k_ne: [0.35, 0.632],
-  k_e_n: [0.385, 0.658],
-  k_e: [0.402, 0.724],
-  k_se: [0.38, 0.791],
-  k_s_e: [0.344, 0.82],
-  k_s: [0.308, 0.828],
-  k_sw: [0.258, 0.802],
-  k_w_s: [0.229, 0.748],
-  k_w: [0.223, 0.693],
-  k_nw: [0.255, 0.644],
+  // Karamja — island, no shared nodes. Sits clear of Kandarin's south coast
+  // and west of the Desert's, which regionCurve.test.ts holds.
+  k_n: [0.308, 0.712],
+  k_ne: [0.35, 0.722],
+  k_e_n: [0.385, 0.748],
+  k_e: [0.402, 0.814],
+  k_se: [0.38, 0.881],
+  k_s_e: [0.344, 0.91],
+  k_s: [0.308, 0.918],
+  k_sw: [0.258, 0.892],
+  k_w_s: [0.229, 0.838],
+  k_w: [0.223, 0.783],
+  k_nw: [0.255, 0.734],
 
   // Anachronia — island.
   a_nw: [0.676, 0.073],
@@ -153,9 +157,9 @@ export interface Framing {
 /** The default 3/4 war-table shot. */
 export const TABLE_FRAMING: Framing = {
   azimuth: 0,
-  elevation: 0.82,
-  radius: 1.62,
-  target: [0, 0, 0.06],
+  elevation: 0.8,
+  radius: 1.42,
+  target: [0, 0, 0.03],
   fov: 38,
 };
 
@@ -176,7 +180,9 @@ function frame(
     radius,
     target: [
       (markerUv[0] - 0.5) * MAP_WORLD.width * keep,
-      0,
+      // Aimed at the slab surface, not the ground plane: at y=0 the board rides
+      // the top of the frame and the lower half is all water.
+      0.055,
       (markerUv[1] - 0.5) * MAP_WORLD.height * keep,
     ],
     fov,
@@ -213,9 +219,9 @@ export const REGION_SHAPES: readonly RegionShape[] = [
   {
     id: "karamja",
     ring: ["k_n", "k_ne", "k_e_n", "k_e", "k_se", "k_s_e", "k_s", "k_sw", "k_w_s", "k_w", "k_nw"],
-    markerUv: [0.313, 0.732],
+    markerUv: [0.313, 0.822],
     depth: 0.07,
-    framing: frame([0.313, 0.732], -0.3, 0.82, 1.1, 38, 0.14),
+    framing: frame([0.313, 0.822], -0.3, 0.82, 1.1, 38, 0.14),
   },
   {
     id: "asgarnia",
@@ -252,9 +258,12 @@ export const REGION_SHAPES: readonly RegionShape[] = [
       "t_tir_k_n",
       "c_nw_tir",
     ],
-    markerUv: [0.311, 0.647],
+    // Pulled north off Karamja: at the old [0.311, 0.647] the two markers sat
+    // 0.08 world units apart and their crest-and-count stacks overlapped on
+    // screen, which made both counts unreadable.
+    markerUv: [0.285, 0.48],
     depth: 0.08,
-    framing: frame([0.311, 0.647], -0.34, 0.78, 1.15, 38, 0.1),
+    framing: frame([0.285, 0.48], -0.34, 0.78, 1.15, 38, 0.1),
   },
   {
     id: "fremennik",
@@ -317,7 +326,9 @@ export const REGION_SHAPES: readonly RegionShape[] = [
     ],
     markerUv: [0.545, 0.796],
     depth: 0.07,
-    framing: frame([0.545, 0.796], 0, 0.84, 1.12, 38, 0.12),
+    // Barely pulled toward centre: at 0.12 the Menaphos end of the region sat
+    // below the frame, so half its markers were off screen when focused.
+    framing: frame([0.545, 0.796], 0, 0.84, 1.12, 38, 0.03),
   },
   {
     id: "morytania",

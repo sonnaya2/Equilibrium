@@ -20,7 +20,9 @@ import {
   float,
   mix,
   mx_noise_float,
+  normalView,
   positionLocal,
+  positionViewDirection,
   positionWorld,
   step,
   texture,
@@ -28,6 +30,8 @@ import {
   vec3,
 } from "three/tsl";
 import {
+  EMBER_400,
+  GEM_400,
   TERRAIN_WALL_DEEP,
   TERRAIN_WALL_ROCK,
   TERRAIN_WALL_SUBSOIL,
@@ -52,19 +56,48 @@ export interface SlabMaterials {
   wall: THREE.MeshStandardNodeMaterial;
   /** 0 = open, 1 = locked. Drives desaturation on both surfaces. */
   lock: ReturnType<typeof uniform>;
+  /** 0 = this slab is the subject, 1 = something else is. Drops it back. */
+  dim: ReturnType<typeof uniform>;
+  /** 0..1 focus rim. The sanctioned selection glow; 0 on every other slab. */
+  focus: ReturnType<typeof uniform>;
+  /** 1 -> 0 over ~600ms on unlock: ember resolving to gem. Never rests non-zero. */
+  sweep: ReturnType<typeof uniform>;
   dispose(): void;
 }
 
 export function createSlabMaterials(terrain: THREE.Texture, depth: number): SlabMaterials {
   const lock = uniform(0);
-  // Locked ground drains of colour toward its own luminance without going black.
-  const drain = lock.mul(0.72);
+  const dim = uniform(0);
+  const focus = uniform(0);
+  const sweep = uniform(0);
+  // Locked ground drains of colour toward its own luminance without going black;
+  // an unfocused slab drains a little too, so the subject separates from the board.
+  const drain = lock.mul(0.72).add(dim.mul(0.3)).min(float(0.85));
+  const shade = float(1).sub(dim.mul(0.3));
+
+  // Nothing is emissive at rest: both terms are driven by uniforms that sit at 0
+  // until a selection or an unlock, which is what keeps bloom off the terrain.
+  //
+  // The focus term is a *rim*, weighted by facing ratio. Applied flat it washed
+  // the whole cap mint green, which read as a broken material rather than a
+  // selection: a cap faces the camera and would take the glow at full strength,
+  // while the extruded wall — the edge you actually want lit — took the same.
+  const gem = linear(GEM_400);
+  // Both vectors must be in the same space. normalWorld against a view-space
+  // view direction dots to noise, which came back as rim=1 everywhere and
+  // painted the focused cap flat mint.
+  const rim = normalView.dot(positionViewDirection).clamp(0, 1).oneMinus().pow(2.5);
+  const glow = gem
+    .mul(rim.mul(focus).mul(1.9))
+    // Ember is transition-only by ruling — it resolves into gem and leaves.
+    .add(mix(gem, linear(EMBER_400), sweep).mul(sweep.mul(0.45)));
 
   // ---- cap ----------------------------------------------------------------
   const cap = new THREE.MeshStandardNodeMaterial({ roughness: 0.92 });
   const tile = texture(terrain).rgb.mul(ALBEDO_GAIN);
   const tileLum = tile.x.mul(0.2126).add(tile.y.mul(0.7152)).add(tile.z.mul(0.0722));
-  cap.colorNode = mix(tile, vec3(tileLum, tileLum, tileLum), drain);
+  cap.colorNode = mix(tile, vec3(tileLum, tileLum, tileLum), drain).mul(shade);
+  cap.emissiveNode = glow;
 
   // ---- wall ---------------------------------------------------------------
   // Local y runs 0..depth: ExtrudeGeometry extrudes along +z and the geometry is
@@ -78,12 +111,15 @@ export function createSlabMaterials(terrain: THREE.Texture, depth: number): Slab
   const subsoil = mix(rock, linear(TERRAIN_WALL_SUBSOIL), step(float(0.55), band));
   const strata = mix(subsoil, linear(TERRAIN_WALL_TOPSOIL), step(float(0.8), band));
   const strataLum = strata.x.mul(0.2126).add(strata.y.mul(0.7152)).add(strata.z.mul(0.0722));
-  wall.colorNode = mix(strata, vec3(strataLum, strataLum, strataLum), drain);
+  wall.colorNode = mix(strata, vec3(strataLum, strataLum, strataLum), drain).mul(shade);
 
   return {
     cap,
     wall,
     lock,
+    dim,
+    focus,
+    sweep,
     dispose() {
       cap.dispose();
       wall.dispose();

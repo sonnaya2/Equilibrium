@@ -11,6 +11,16 @@ import {
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
 import { Hex, HexRow, hexClass } from "@/components/Hex";
+import { WorkbenchTabs } from "@/components/WorkbenchTabs";
+
+const BUILD_TABS = [
+  { id: "regions", label: "Regions" },
+  { id: "relics", label: "Relics" },
+  { id: "blessings", label: "Blessings" },
+  { id: "share", label: "Share" },
+] as const;
+
+type BuildTab = (typeof BUILD_TABS)[number]["id"];
 
 export type PlannerRegion = {
   id: string;
@@ -110,6 +120,7 @@ export function BuildPlanner({
   const alignments = godTierAlignments(build.blessingPicks);
   const resetsLeft = blessingResetsLeft(build);
 
+  const [segment, setSegment] = useState<BuildTab>("regions");
   const [copyFeedback, setCopyFeedback] = useState<"idle" | "ok" | "err">("idle");
   const flashCopy = (next: "ok" | "err") => {
     setCopyFeedback(next);
@@ -128,23 +139,21 @@ export function BuildPlanner({
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="flex flex-col gap-6">
+      <div className="flex min-h-0 flex-col gap-4">
+        <WorkbenchTabs
+          aria-label="Build sections"
+          tabs={BUILD_TABS}
+          active={segment}
+          onChange={setSegment}
+        />
+
+        {segment === "regions" ? (
         <section aria-busy={!loaded}>
-          <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
-              Regions
-            </h2>
+          <div className="mb-3 flex flex-wrap items-baseline gap-3">
             <span className={`num text-xs text-parch-400 ${loaded ? "" : "opacity-60"}`}>
               {openCount} of {regions.length} open · {pickCounter} picks
             </span>
-            <span className="h-px flex-1 bg-stone-750" />
-            <button
-              type="button"
-              onClick={copyShareLink}
-              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50"
-            >
-              {copyFeedback === "ok" ? "Copied" : copyFeedback === "err" ? "Copy failed" : "Copy link"}
-            </button>
+            <span className="h-px min-w-8 flex-1 bg-stone-750" />
             <button
               type="button"
               onClick={clearElectives}
@@ -210,16 +219,15 @@ export function BuildPlanner({
             ))}
           </div>
         </section>
+        ) : null}
 
-        <section className="border-t border-stone-750 pt-4">
-          <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
-              Relics
-            </h2>
+        {segment === "relics" ? (
+        <section>
+          <div className="mb-3 flex flex-wrap items-baseline gap-3">
             <span className="num text-xs text-parch-400">
               {revealedRelicTiers} of {relicTiers.length} tiers revealed
             </span>
-            <span className="h-px flex-1 bg-stone-750" />
+            <span className="h-px min-w-8 flex-1 bg-stone-750" />
             <span className="text-xs text-parch-400">
               {Object.values(build.relics).join(" · ") || "none picked"}
             </span>
@@ -286,16 +294,15 @@ export function BuildPlanner({
             );
           })}
         </section>
+        ) : null}
 
-        <section className="border-t border-stone-750 pt-4">
-          <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
-              Blessings
-            </h2>
+        {segment === "blessings" ? (
+        <section>
+          <div className="mb-3 flex flex-wrap items-baseline gap-3">
             <span className="text-xs text-parch-400">
               god tier at 4 and 8 · {resetsLeft} of {resetCount} resets left
             </span>
-            <span className="h-px flex-1 bg-stone-750" />
+            <span className="h-px min-w-8 flex-1 bg-stone-750" />
             <button
               type="button"
               onClick={resetBlessings}
@@ -397,6 +404,43 @@ export function BuildPlanner({
             )}
           </div>
         </section>
+        ) : null}
+
+        {segment === "share" ? (
+          <section className="panel p-4">
+            <p className="text-sm text-parch-300">
+              Copy a link that restores this region, relic, and blessing plan on another device.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={copyShareLink}
+                className="rounded-sm border border-gem-600 bg-stone-850 px-3 py-1.5 text-sm text-gem-300 hover:border-gem-400"
+              >
+                {copyFeedback === "ok"
+                  ? "Copied"
+                  : copyFeedback === "err"
+                    ? "Copy failed"
+                    : "Copy link"}
+              </button>
+              <button
+                type="button"
+                onClick={clearElectives}
+                disabled={!loaded || picks.length === 0}
+                className="rounded-sm border border-stone-750 px-3 py-1.5 text-sm text-parch-100 hover:border-stone-carve disabled:opacity-40"
+              >
+                Clear picks
+              </button>
+            </div>
+            <p className="mt-3 font-mono text-xs text-parch-400">
+              Picks {pickCounter}
+              {Object.keys(build.relics).length
+                ? ` · relics ${Object.values(build.relics).join(", ")}`
+                : ""}
+              {build.blessingPicks.length ? ` · path ${build.blessingPicks.join(" → ")}` : ""}
+            </p>
+          </section>
+        ) : null}
       </div>
 
       <aside className="flex flex-col gap-4 border-t border-stone-750 pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">

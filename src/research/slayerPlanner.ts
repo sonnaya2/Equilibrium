@@ -25,14 +25,22 @@ export function getSlayerMethodsByRegion(region: string): SlayerMethod[] {
   );
 }
 
+export function getAllInventionComponentChains(): InventionComponentChain[] {
+  return slayerSource.invention_component_chains;
+}
+
 export function getInventionComponentChainsByRegion(region: string): InventionComponentChain[] {
   const needle = region.trim().toLowerCase();
-  return slayerSource.invention_component_chains.filter((entry) => entry.region.toLowerCase() === needle);
+  return getAllInventionComponentChains().filter((entry) => entry.region.toLowerCase() === needle);
+}
+
+export function getAllArchaeologyRelicAcquisitions(): ArchaeologyRelicAcquisition[] {
+  return slayerSource.archaeology_relic_acquisition;
 }
 
 export function getArchaeologyRelicsByRegion(region: string): ArchaeologyRelicAcquisition[] {
   const needle = region.trim().toLowerCase();
-  return slayerSource.archaeology_relic_acquisition.filter((entry) =>
+  return getAllArchaeologyRelicAcquisitions().filter((entry) =>
     entry.acquisition_regions.some((candidate) => candidate.toLowerCase() === needle),
   );
 }

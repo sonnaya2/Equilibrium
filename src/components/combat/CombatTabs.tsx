@@ -20,10 +20,10 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
             key={label}
             type="button"
             onClick={() => setTab(label)}
-            className={`border px-3 py-1.5 text-sm ${
+            className={`border-b-2 px-3 py-1.5 text-sm ${
               tab === label
-                ? "border-stone-700 bg-stone-850 text-parch-50"
-                : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+                ? "border-gem-400 font-medium text-gem-300"
+                : "border-transparent text-parch-300 hover:text-parch-50"
             }`}
           >
             {label}

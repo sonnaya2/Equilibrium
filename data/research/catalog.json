@@ -26,10 +26,10 @@
     "spellbooks": "Standard, Ancient Magicks and Lunar are standalone planner data; Necromancy incantations and Daemonheim remain scoped special systems",
     "masterwork_staff": "tier-100 self-source chain mapped with explicit hard/conditional region pressure, current Abyssal synapse hotfix state, 2026 Havenhythe eternal-tree alternate location and weaker confidence retained where the complete flattened recipe is only cross-checked",
     "training": "all 29 named RS3 skills surface in the browser; combat-method candidates from PvME pages carrying the March 2026 site-wide stale warning are retained only as candidates and are no longer treated as current validation; no stale combat XP tables are promoted; gap-fill scrapes (training-gap-*.json, 2026-07-26) merged for Mining/Fishing/Farming/Woodcutting/artisan/production/Archaeology/Thieving/Fletching routes without inventing XP/h",
-    "slayer": "29 deduplicated high-value, collection-log and boundary-sensitive Slayer routes are preserved with alternate regions and source freshness visible; legacy PvME KPH/XP values remain guide context rather than optimizer-grade post-2026 rankings",
+    "slayer": "29 deduplicated high-value, collection-log and boundary-sensitive Slayer routes are preserved with alternate regions and source freshness visible; legacy PvME KPH/XP values remain guide context rather than optimizer-grade post-2026 rankings; Data page Slayer section surfaces all composed packs via slayerPlanner loaders",
     "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and the detailed Masterwork staff cross-region chain; optimizer-grade post-2026 XP benchmarks remain pending",
-    "invention": "unlock ladder, item-level milestones, Ancient Invention and Scavenging are joined by all 69 active perks, current rare-material taxonomy coverage, 20 current weapon/armour perk families, utility bridge recipes, the Spring cleaner tight-spring bottleneck and explicit account/non-region material bottlenecks for self-sufficient planning; all 15 perks removed on 20 July 2026 are excluded",
-    "archaeology": "qualification gates, dig-site unlocks, Ancient Invention, relic milestones, collection/repeatable routes and the authoritative Guild progression are composed with non-Guild duplicate mitigation, journal tracking/routing, museum overflow rules, monolith energy constraints and relic acquisition-region dependencies; uncertain League boundaries stay explicit",
+    "invention": "unlock ladder, item-level milestones, Ancient Invention and Scavenging are joined by all 69 active perks, current rare-material taxonomy coverage, 20 current weapon/armour perk families, utility bridge recipes, the Spring cleaner tight-spring bottleneck and explicit account/non-region material bottlenecks for self-sufficient planning; all 15 perks removed on 20 July 2026 are excluded; Data page Invention section surfaces active perks, recipes, supply and bottlenecks via inventionPlanner loaders",
+    "archaeology": "qualification gates, dig-site unlocks, Ancient Invention, relic milestones, collection/repeatable routes and the authoritative Guild progression are composed with non-Guild duplicate mitigation, journal tracking/routing, museum overflow rules, monolith energy constraints and relic acquisition-region dependencies; uncertain League boundaries stay explicit; Data page Archaeology section surfaces collections, guild, loadouts and corrections via archaeologyPlanner loaders",
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
   },
   "hardRules": [
@@ -44,7 +44,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 217,
+    "trainingMethods": 225,
     "regionalSkillingUnlocks": 54,
     "regionalSkillingActivities": 28,
     "regionalSkillingEquipment": 26,
@@ -726,7 +726,8 @@
         "thieving:safecracking-misthalin",
         "thieving:wizards-tower-master-mage-pickpocketing",
         "woodcutting:choking-ivy-by-region-including-fort-forinthry-grove-ivy-",
-        "woodcutting:magic-trees-by-region"
+        "woodcutting:magic-trees-by-region",
+        "fletching:ranger-s-workroom-fort-forinthry-infrastructure"
       ],
       "hardRules": [
         "Use Misthalin as the working League region for Fort Forinthry content. Catalyst explicitly labelled Fort Forinthry tasks as Misthalin; Equilibrium has not yet published a finer Fort locality rule.",
@@ -2136,7 +2137,8 @@
         "Mining",
         "Summoning",
         "Thieving",
-        "Woodcutting"
+        "Woodcutting",
+        "Fletching"
       ],
       "content": [
         {
@@ -2369,7 +2371,8 @@
         "thieving:fremennik-citizen-pickpocketing",
         "thieving:keldagrim-dwarf-traders",
         "thieving:keldagrim-multi-step-chests",
-        "woodcutting:dragon-hatchet-acquisition-dagannoth-kings-"
+        "woodcutting:dragon-hatchet-acquisition-dagannoth-kings-",
+        "fletching:material-source-maple-and-mid-tier-logs-miscellania-multi"
       ],
       "hardRules": [],
       "warnings": [],
@@ -3059,7 +3062,8 @@
         "Slayer",
         "Summoning",
         "Thieving",
-        "Woodcutting"
+        "Woodcutting",
+        "Fletching"
       ],
       "content": [
         {
@@ -3409,7 +3413,8 @@
         "woodcutting:acadia-trees",
         "woodcutting:acadia-trees-desert-midgame-detail-reinforcement-",
         "woodcutting:magic-trees-by-region",
-        "woodcutting:teak-trees-by-region"
+        "woodcutting:teak-trees-by-region",
+        "fletching:material-source-acadia-logs-tier-50-bows"
       ],
       "hardRules": [],
       "warnings": [],
@@ -5060,7 +5065,8 @@
         "smithing:combo-anachronia-orthen-iaia-accidental",
         "smithing:combo-smithing-afk-trinity",
         "smithing:orthen-furnace-core-obtain-craft-",
-        "thieving:asuran-arsenal-heist"
+        "thieving:asuran-arsenal-heist",
+        "fletching:dinarrows-construct-optional-imbue"
       ],
       "hardRules": [],
       "warnings": [],
@@ -7474,7 +7480,11 @@
       "regions": [
         "Misthalin",
         "Forinthry",
-        "Anachronia"
+        "Anachronia",
+        "misthalin",
+        "desert",
+        "fremennik",
+        "anachronia"
       ],
       "methods": [
         {
@@ -7499,6 +7509,180 @@
             "url": "https://runescape.wiki/w/2026_mid-game_rebalance",
             "title": "20 Jul 2026 mid-game rebalance re-tiered core bows, crossbows, arrows and bolts to align Fletching with modern Ranged / Woodcutting / Smithing ladders. Darts, knives and javelins were intentionally left for later work.",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "fletching:broad-arrows-ironman-weekly-shop-path",
+          "skill": "Fletching",
+          "method": "Broad arrows (ironman weekly shop path)",
+          "levelRange": "52+ Fletching (broad level confirmed unchanged at 52 post-rebalance)",
+          "xpRate": "no_official_xp_h_published; supply-gated weekly throughput not a continuous XP/h method",
+          "intensity": "low click intensity when fletching; bottleneck is weekly head stock not make speed",
+          "location": "Slayer Masters' shops (heads) + any bank/workroom to tip",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [],
+          "note": "Patch notes: broad arrows unchanged in re-tier tables (still 52). Ironman guide (obsolete banner, but supply logic still relevant): ~21,000 broad arrowheads per weekly shop restock for ~315,000 XP and ~1,050,000 coins per main shop week. Extra weekly stock from Turael/Spria (does not share slayer shop stock) and Noterazzo Bandit Camp reduces calendar weeks to 99. Still a time-efficient ironman path when heads are bought max each week; not removed by rebalance.",
+          "warning": "Wiki Ironman_Mode/Guide/Fletching is marked obsolete after mid-game rebalance. Broad remains level-valid, but coin/XP-to-99 arithmetic and 'most time-efficient' ranking should be re-benchmarked before optimizer use. Supply-gated: you cannot sustain continuous peak XP/h from shops alone.",
+          "freshness": "broad_level_confirmed_unchanged_2026-07-20; shop_economics_from_stale_ironman_guide",
+          "confidence": "level_and_supply_logic_confirmed; wiki_ironman_economics_stale_rebenchmark",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Fletching",
+            "title": "Broad arrows (ironman weekly shop path)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:dinarrows-construct-optional-imbue",
+          "skill": "Fletching",
+          "method": "Dinarrows (construct + optional imbue)",
+          "levelRange": "95 Fletching construct; 95 Ranged to wield; components via Accidental F&F (82/87/95 gates)",
+          "xpRate": "20 Fletching XP per dinarrow tipped (wiki creation); no official continuous XP/h published for full pipeline — not a peak-XP method vs primal ammo",
+          "intensity": "medium; component gather AFK-leaning, assemble banked",
+          "location": "Components from Accidental F&F south of Anachronia Dinosaur Farm; assemble at any bank/workroom/portable",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "Still valid T95 arrow path. Recipe: 15 tempered fungal shafts + 15 dinosaur 'propellant' -> 15 headless dinarrows; +15 sharp shell shards -> 15 dinarrows. Components exclusive to Accidental F&F activities (or trade for mains). Portable fletcher can save materials; Ranger's Workroom can grant extra product. Imbue with resonant anima into Bik/Ful/Wen/Jas dragonbane/Jas demonbane (Tune Bane Ore still works on dinarrows for Jas demonbane per patch notes). Workroom T3 Wisdom of Anima: imbue dinarrows efficiently but awards little XP — combat ammo path, not training.",
+          "warning": "Dinarrows are combat/self-ammo progression, not a substitute for official primal 900k/975k training rates. Mid-game rebalance did not delete dinarrows; it only reaffirmed Tune Bane Ore on dinarrows for Jas demonbane.",
+          "freshness": "2026_current_still_valid; not_removed_by_midgame_rebalance",
+          "confidence": "confirmed_wiki_still_valid",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dinarrow",
+            "title": "Dinarrows (construct + optional imbue)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:material-source-acadia-logs-tier-50-bows",
+          "skill": "Fletching",
+          "method": "Material source — acadia logs (tier-50 bows)",
+          "levelRange": "50 Fletching acadia shortbow / 55 acadia longbow (confirmed new tiers); Woodcutting for logs separate",
+          "xpRate": "not_an_xp_method; supply geography for post-rebalance tier-50 bow band",
+          "intensity": "gathering / supply planning",
+          "location": "Menaphos / desert acadia trees (self-source for ironman tier-50 bows)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "Acadia shortbow (Fletching 50) and longbow (55) were added to fill the tier-50 gap. Free-to-play mid options now rely on maple and acadia-class members progression rather than yew. Pair with desert region unlock for self-sufficient bow ladder.",
+          "warning": "This row is material geography, not a published Fletching XP/h method.",
+          "freshness": "2026-07-20_acadia_bows_added",
+          "confidence": "confirmed_official_new_tier; desert_tree_geography_wiki",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+            "title": "Material source — acadia logs (tier-50 bows)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:material-source-eternal-magic-logs-shafts-end-band-ammo-and-bows",
+          "skill": "Fletching",
+          "method": "Material source — eternal magic logs / shafts (end-band ammo and bows)",
+          "levelRange": "100 eternal magic shortbow / 105 eternal magic longbow / 100 primal arrows (shafts); Woodcutting gate separate",
+          "xpRate": "not_an_xp_method; supply geography for eternal magic shaft and bow pipeline",
+          "intensity": "gathering / supply planning",
+          "location": "Eternal magic trees: Piscatoris Hunter area / Heedi saplings (Kandarin) and Havenhythe nursery plots (since Mar 2026) for alternate chop location",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [],
+          "note": "Primal arrows still consume eternal magic shafts after rebalance. Eternal magic shortbow (100) and longbow (105) are the end bow band. Do not tag eternal magic supply as Anachronia-only; Anachronia is Accidental F&F / dinarrows, not the primary eternal magic tree home. Saplings from Heedi near Piscatoris; Havenhythe nursery is alternate grow/chop, not a full self-source chain by itself.",
+          "warning": "Region dual-home: kandarin_inferred + havenhythe. Planner must not hard-lock eternal magic behind a single elective without both locations.",
+          "freshness": "2026_current_multi_location_supply",
+          "confidence": "confirmed_wiki_tree_locations; fletching_consume_confirmed_rebalance",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/2026_mid-game_rebalance",
+            "title": "Material source — eternal magic logs / shafts (end-band ammo and bows)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:material-source-maple-and-mid-tier-logs-miscellania-multi",
+          "skill": "Fletching",
+          "method": "Material source — maple and mid-tier logs (Miscellania / multi)",
+          "levelRange": "40 maple shortbow / 45 maple longbow (confirmed re-tier); lower woods global",
+          "xpRate": "not_an_xp_method; bulk log supply for mid bow fletch",
+          "intensity": "passive kingdom or active woodcutting",
+          "location": "Managing Miscellania maple (Fremennik); Seers' Village maples; oaks/willows widely available (e.g. Draynor Misthalin)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "fremennik"
+          ],
+          "note": "Maple re-tiered to the 40 Ranged band (short 40 / long 45 Fletching). Managing Miscellania remains a strong ironman maple dump for bow fletch while waiting for higher self-source. Standard early logs (normal/oak/willow) remain multi-region on-ramps.",
+          "warning": "Ironman Fletching guide level bands for maple bows are pre-rebalance — only the maple level gates in the official table are trusted here.",
+          "freshness": "maple_levels_confirmed_rebalance; kingdom_supply_still_valid",
+          "confidence": "confirmed_official_maple_levels; miscellania_wiki_supply",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+            "title": "Material source — maple and mid-tier logs (Miscellania / multi)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:material-source-primal-bars-orikalkum-necronium-bane-elder-metals",
+          "skill": "Fletching",
+          "method": "Material source — primal bars / orikalkum-necronium-bane-elder metals",
+          "levelRange": "Smithing metal tiers track combat tiers; Fletching ammo 60/70/80/90/100+ as re-tiered",
+          "xpRate": "not_an_xp_method; Smithing-gated head/unf bolt supply",
+          "intensity": "mining/smithing supply planning",
+          "location": "Primal ores/bars: Forinthry / Daemonheim hard mining; mid metals from multi-region ore ladder",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [],
+          "note": "Rebalance cut Smithing XP on arrowheads and unfinished bolts hard (−27.5% iron scaling to −50% primal) so ironman head production is a larger Smithing tax per Fletching XP hour. Primal bolts: 50 unf per bar then feathers. Orikalkum/necronium/bane/elder rune ammo fill 60–90 bands. Bane: smith bane arrows/bolts then Tune Bane Ore for specialty (ironman effective gate higher than old 76 path).",
+          "warning": "Do not budget pre-rebalance Smithing XP-from-ammo rates. Primal is a hard Forinthry mining gate for self-source.",
+          "freshness": "2026-07-20_ammo_rebalance",
+          "confidence": "confirmed_official_process_changes; region_pressure_ironman",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+            "title": "Material source — primal bars / orikalkum-necronium-bane-elder metals",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "id": "fletching:post-rebalance-early-mid-bow-and-ammo-path-re-tiered-core-ladder",
+          "skill": "Fletching",
+          "method": "Post-rebalance early/mid bow and ammo path (re-tiered core ladder)",
+          "levelRange": "1–99+ (confirmed new Fletching gates from patch tables)",
+          "xpRate": "no_official_post_rebalance_midband_xp_h; follow confirmed level gates only",
+          "intensity": "medium banked production; slow on bows, faster on ammo once heads/unf bolts stocked",
+          "location": "Any bank/portable fletcher or Ranger's Workroom once built; materials self-sourced by region",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [],
+          "note": "Confirmed NEW shortbow Fletching: short 1, oak 10, willow 20, maple 40, acadia 50, yew 70, magic 80, elder 90, eternal magic 100. NEW longbow: long 5, oak 15, willow 25, maple 45, acadia 55, yew 75, magic 85, elder 95, eternal magic 105 (+5 Fletching vs same-tier shortbow). NEW arrows: bronze 1, iron 10, steel 20, mithril 30, adamant 40, rune 50, broad 52 (unchanged), orikalkum 60, necronium 70, bane 80, elder rune 90, primal 100. NEW bolts: bronze 3, iron 13, steel 23, mithril 33, adamant 43, rune 53, orikalkum 63, necronium 73, bane 83, elder rune 93, primal 103. Shieldbows retired into longbows (+1 attack range). Acadia fills tier-50 bow gap; yew/magic now 70/80 Ranged (members-only). Crossbow stocks re-aligned to Woodcutting tier (e.g. mithril uses teak stock). Primal bolts unified: 50 unf per bar then feathered. Bane ammo: Tune Bane Ore on finished bane arrows/bolts. Bolt/arrow proficiency benefits removed; first-unlock XP baseline raised. Path: shafts/headless -> re-tiered bows by wood band -> matching ammo -> orikalkum/necronium/bane/elder -> eternal magic/primal end band.",
+          "warning": "Do not use pre-20-Jul maple/yew/magic Fletching gates or pre-rebalance wiki 1-99 tables as truth. Per-action XP values on wiki bow/ammo rows may still lag the rebalance XP rebalance — recheck item pages before optimizer use.",
+          "freshness": "2026-07-20_official_rebalance_levels",
+          "confidence": "confirmed_official_level_gates; xp_h_not_published_midband",
+          "source": {
+            "source": "jagex",
+            "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+            "title": "Post-rebalance early/mid bow and ammo path (re-tiered core ladder)",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -7529,52 +7713,48 @@
           "id": "fletching:primal-arrows",
           "skill": "Fletching",
           "method": "Primal arrows",
-          "levelRange": "high-level / primal progression",
-          "xpRate": "900000",
-          "intensity": "production",
-          "location": "",
+          "levelRange": "100 Fletching (confirmed post-rebalance; Ranged 99 band combat)",
+          "xpRate": "900000 XP/h official mid-game rebalance high-end reference",
+          "intensity": "high material throughput; banked make-x when stocked",
+          "location": "Any fletching bank/workroom once materials banked",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "global_if_materials_available"
-          ],
-          "note": "The 20 July 2026 Mid-Game Rebalance retiered core Fletching and lists primal arrows at 900k XP/h in the high-end XP table.",
-          "warning": "",
-          "freshness": "2026-07-20_official",
-          "confidence": "confirmed_official",
+          "regionHints": [],
+          "note": "Official high-end reference rate from mid-game rebalance dataset (also stored in scraped-data/midgame-rebalance-2026-07-20.json). Primal arrows still use eternal magic shaft pipeline (unlike bolts, which were unified off eternal headless shafts). Proficiency levelling benefits removed; XP baseline raised. Ironman: not a mid-game method — needs high-end primal metal + eternal magic shafts.",
+          "warning": "900k is the published ceiling reference with materials available, not a guaranteed ironman/League self-source rate. Do not apply this number to lower-tier arrows.",
+          "freshness": "2026-07-20_official_reference_rate",
+          "confidence": "confirmed_official_rate_via_rebalance_dataset",
           "source": {
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
             "title": "Primal arrows",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
           "id": "fletching:primal-bolts",
           "skill": "Fletching",
           "method": "Primal bolts",
-          "levelRange": "103+ for primal bolts",
-          "xpRate": "975000",
-          "intensity": "production",
-          "location": "",
+          "levelRange": "103 Fletching (confirmed post-rebalance)",
+          "xpRate": "975000 XP/h official mid-game rebalance high-end reference",
+          "intensity": "high material throughput; banked make-x when stocked",
+          "location": "Any fletching bank/workroom once materials banked",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "global_if_materials_available"
-          ],
-          "note": "The 20 July 2026 Mid-Game Rebalance lists primal bolts at 975k XP/h. Primal bolts are tier-100 ammunition made from eternal magic headless shafts and primal bolt tips.",
-          "warning": "",
-          "freshness": "2026-07-20_official",
-          "confidence": "confirmed_official",
+          "regionHints": [],
+          "note": "Official high-end reference rate from mid-game rebalance dataset (scraped-data/midgame-rebalance-2026-07-20.json). Process unified with regular bolts: primal bolts (unf) are 50 per bar then feathered — no more primal bolt tips + eternal magic headless shafts. Brings quantity in line with other bolt tiers. Highest published Fletching XP/h reference post-rebalance.",
+          "warning": "975k is the published ceiling reference with materials available. Primal bars are Forinthry/Daemonheim mining-gated for ironman self-source.",
+          "freshness": "2026-07-20_official_reference_rate",
+          "confidence": "confirmed_official_rate_via_rebalance_dataset",
           "source": {
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
             "title": "Primal bolts",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -7605,6 +7785,32 @@
             "url": "https://runescape.wiki/w/Ranger%27s_Workroom",
             "title": "Ranger's Workroom (Fort Forinthry)",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "fletching:ranger-s-workroom-fort-forinthry-infrastructure",
+          "skill": "Fletching",
+          "method": "Ranger's Workroom (Fort Forinthry) infrastructure",
+          "levelRange": "Any Fletching once room built; Construction 50 (T1) / 65 (T2) / 80 (T3)",
+          "xpRate": "not_a_standalone_xp_method; T3 grants +5% base Fletching XP while inside the workroom",
+          "intensity": "passive infrastructure; train any banked method inside the room",
+          "location": "Ranger's Workroom, Fort Forinthry (built during Dead and Buried progress)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin"
+          ],
+          "note": "Region dual-note: physical building is Fort Forinthry (south-eastern Wilderness edge). Catalyst League historically filed Fort under Misthalin; planner may treat Fort+Raptor as Forinthry-adjacent. Keep dual-label until Equilibrium hard boundary. T1: 2% resource save on various weapons/ammo, 1% extra shaft bundle, bank chest, spinning wheel, fletching workbench, ranged target. T2: 1% extra ranged ammo/headless shafts (full XP on extras), 2% chance strung bows when fletching unstrung. T3: +5% base Fletching XP in room (multiplies with other XP boosts), Wisdom of Anima toggle on workbench (dinarrow imbue efficient, low XP). Bonuses apply while standing in room. Common setup: bank chest + portable fletcher inside room (W84 GE also common for mains).",
+          "warning": "Workroom does not replace materials; it only buffs save/XP while training other methods. Construction and fort quest progress are separate gates.",
+          "freshness": "2026_current_wiki_still_valid_post_rebalance",
+          "confidence": "confirmed_wiki_infrastructure",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ranger%27s_Workroom",
+            "title": "Ranger's Workroom (Fort Forinthry) infrastructure",
+            "verifiedAt": "2026-07-26"
           }
         },
         {

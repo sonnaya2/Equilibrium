@@ -16,7 +16,7 @@ export function Nav() {
   const pathname = usePathname();
   return (
     <header className="border-b border-stone-750">
-      <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
+      <nav className="mx-auto flex w-full max-w-[1600px] items-center gap-6 px-4 py-3">
         <Link
           href="/"
           className="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-gold-400"

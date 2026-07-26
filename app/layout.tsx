@@ -37,14 +37,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <footer className="border-t border-stone-750">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-2 px-4 py-4 text-xs text-parch-500">
+          <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-baseline justify-between gap-2 px-4 py-4 text-xs text-parch-500">
             <span>
               Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex
               Ltd.
             </span>
-            <Link href="/sources" className="text-parch-300 transition-colors duration-150 hover:text-parch-50">
-              Sources &amp; credits
-            </Link>
+            <span className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/concepts"
+                className="text-parch-400 transition-colors duration-150 hover:text-parch-50"
+              >
+                Concepts lab
+              </Link>
+              <Link
+                href="/sources"
+                className="text-parch-300 transition-colors duration-150 hover:text-parch-50"
+              >
+                Sources &amp; credits
+              </Link>
+            </span>
           </div>
         </footer>
       </body>

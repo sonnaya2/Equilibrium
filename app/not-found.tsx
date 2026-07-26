@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6">
+    <div className="mx-auto w-full max-w-[1600px] px-4 py-6">
       <section className="panel max-w-lg">
         <div className="panel-head">Page not found</div>
         <div className="panel-body space-y-3">

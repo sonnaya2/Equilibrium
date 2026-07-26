@@ -30,6 +30,9 @@ const STRUCTURAL_KEYS = new Set([
   "required_regions",
   "required_regions_for_collection_loop",
   "artifact_regions",
+  "region_options",
+  "acquisition_regions",
+  "planner_default_region",
   "entry_side",
   "final_arena_side",
   "destination_side",
@@ -37,8 +40,11 @@ const STRUCTURAL_KEYS = new Set([
   "component",
   "step",
   "relic_power",
+  "monster",
+  "perk",
   "source_url",
   "source_urls",
+  "source_refs",
   "secondary_source_url",
   "secondary_source_urls",
   "primary_source_url",
@@ -77,11 +83,33 @@ function text(value: unknown): string {
 }
 
 function title(row: ResearchRow): string {
-  return text(row.name || row.relic || row.relic_power || row.collection || row.component || row.step || row.content || row.method || row.unlock || row.id || "Entry");
+  return text(
+    row.name ||
+      row.monster ||
+      row.relic ||
+      row.relic_power ||
+      row.collection ||
+      row.component ||
+      row.perk ||
+      row.step ||
+      row.content ||
+      row.method ||
+      row.unlock ||
+      row.id ||
+      "Entry",
+  );
 }
 
 function subtitle(row: ResearchRow): string {
-  return text(row.category || row.location || row.effect_summary || row.support_item_effect || row.region_reason);
+  return text(
+    row.category ||
+      row.location ||
+      row.effect_summary ||
+      row.support_item_effect ||
+      row.region_reason ||
+      row.pvme_position ||
+      (row.slayer_level != null ? `Slayer ${row.slayer_level}` : ""),
+  );
 }
 
 function regionName(value: unknown): string {
@@ -123,6 +151,16 @@ function region(row: ResearchRow): string {
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
     return `Region unresolved: ${regionList(row.region_candidates, " / ")}`;
+  }
+
+  if (Array.isArray(row.region_options) && row.region_options.length) {
+    const options = regionList(row.region_options, " / ");
+    const preferred = row.planner_default_region ? ` · Default: ${regionName(row.planner_default_region)}` : "";
+    return `Region options: ${options}${preferred}`;
+  }
+
+  if (Array.isArray(row.acquisition_regions) && row.acquisition_regions.length) {
+    return `Acquisition: ${regionList(row.acquisition_regions, " / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
@@ -175,6 +213,7 @@ function links(row: ResearchRow): string[] {
     row.primary_source_url,
     row.secondary_source_url,
     ...(Array.isArray(row.source_urls) ? row.source_urls : []),
+    ...(Array.isArray(row.source_refs) ? row.source_refs : []),
     ...(Array.isArray(row.secondary_source_urls) ? row.secondary_source_urls : []),
   ];
   return [...new Set(values.filter((value): value is string => typeof value === "string" && value.startsWith("https://")))];

@@ -36,8 +36,7 @@ const POINT_TO_TIER = new Map<number, TaskTier>([
 /** Catalyst League task as a stand-in until Equilibrium ships its own list. */
 export interface CatalystTaskRecord extends TaskRecord {
   sourceLeague: "catalyst";
-  /** Present on some older rows; product no longer requires this flag. */
-  testingOnly?: boolean;
+  testingOnly: true;
   requirements?: string;
   catalystCompletionRate?: number;
   catalystCompletionRateQualifier?: "<";
@@ -152,6 +151,7 @@ export function parseCatalystTasksHtml(html: string): CatalystTaskRecord[] {
         ...(requirements && requirements !== "N/A" ? { requirements } : {}),
         ...parseCompletionRate(textFromHtml(completionHtml)),
         sourceLeague: "catalyst" as const,
+        testingOnly: true as const,
       },
     ];
   });
@@ -184,9 +184,11 @@ export function loadCatalystSnapshot(expectedRecords?: number): CatalystTaskLoad
     };
   }
   // Ensure progress keys use wiki ids even on older snapshots that lack `id`.
-  const records = raw.map((r) =>
-    typeof r.wikiTaskId === "number" && !r.id ? { ...r, id: `wiki:${r.wikiTaskId}` } : r,
-  );
+  const records = raw.map((r) => ({
+    ...r,
+    ...(typeof r.wikiTaskId === "number" && !r.id ? { id: `wiki:${r.wikiTaskId}` } : {}),
+    testingOnly: true as const,
+  }));
   return { records, fromSnapshot: true };
 }
 

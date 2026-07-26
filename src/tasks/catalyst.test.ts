@@ -68,6 +68,7 @@ describe("parseCatalystTasksHtml", () => {
       region: "Anachronia",
       catalystCompletionRate: 61.5,
       sourceLeague: "catalyst",
+      testingOnly: true,
     });
     expect(records[1]).toMatchObject({
       tier: "master",
@@ -125,6 +126,7 @@ describe("loadCatalystSnapshot", () => {
     expect(result.fromSnapshot).toBe(true);
     expect(result.records.length).toBeGreaterThanOrEqual(1006);
     expect(result.records.every((r) => r.sourceLeague === "catalyst")).toBe(true);
+    expect(result.records.every((r) => r.testingOnly === true)).toBe(true);
   });
 
   it("carries wiki task ids and Equilibrium region tags", () => {

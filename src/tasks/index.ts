@@ -29,6 +29,8 @@ export interface TaskRecord {
   localityLabel?: string;
   /** Wiki row id / data-taskid — deep-link + completion module key. */
   wikiTaskId?: number;
+  /** Optional source taxonomy. Catalyst currently does not publish one. */
+  category?: string;
   skills?: string[];
   areas?: string[];
   requirements?: string;

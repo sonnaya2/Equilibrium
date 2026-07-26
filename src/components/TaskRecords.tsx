@@ -1,9 +1,10 @@
 "use client";
 
 /**
- * Tasks — Cipher Gallery Board.
- * Crest-only region identity · points + Comp% stack · premium face · gem outline mark (no checkbox).
- * Focus band under selected row (expand ≠ complete). Spike law: no auto-open; re-click / Close collapses.
+ * Tasks — Cipher Gallery Board (hover-dock revision).
+ * Crest / world-map identity · pts + Comp% stack · gem outline when done.
+ * Hover (or keyboard focus) opens detail dock at TOP of board.
+ * Left-click toggles complete — expand ≠ complete (dock is hover-only).
  * Row-virtualized board (full filtered set; no 120 cap).
  */
 
@@ -24,18 +25,34 @@ import {
   useTasksDesk,
   wikiTaskUrl,
 } from "@/concepts/tasks-density/useTasksDesk";
+import { worldMapIconPath } from "@/lib/gameArt";
 import { isTaskTier, type TaskRecord, type TaskRegionId } from "@/tasks";
 import { CATALYST_TASKS_URL } from "@/tasks/regionMap";
 
 const CREST = 44;
 const TRACK_CREST = 22;
+const WORLD_ICON = worldMapIconPath();
 /** ~14rem — crest + name face with room for the stats stack. */
 const MIN_CARD_PX = 14 * 16;
 const GAP_PX = 0.4 * 16;
 /** Closed premium card height estimate (measureElement corrects live). */
 const ROW_EST_PX = 128;
-/** Focus band under selected row. */
-const ROW_BAND_EXTRA_PX = 176;
+/** Clear hover only after leaving tile+dock (lets pointer travel to dock). */
+const HOVER_CLEAR_MS = 140;
+
+function WorldIcon({ size }: { size: number }) {
+  return (
+    <span
+      aria-hidden
+      className="tasks-gallery__world"
+      style={{
+        width: size,
+        height: size,
+        backgroundImage: `url(${WORLD_ICON})`,
+      }}
+    />
+  );
+}
 
 export function TaskRecords({
   records: raw,
@@ -70,7 +87,6 @@ export function TaskRecords({
     isUnlocked,
     visible,
     completed,
-    selectedId,
     setSelectedId,
     doneVisible,
     earnedVisible,
@@ -83,8 +99,11 @@ export function TaskRecords({
     regionDisplayName,
   } = desk;
 
-  const bandRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const clearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [cols, setCols] = useState(3);
+  /** Hover / keyboard focus id for the top detail dock (not click-select). */
+  const [hoverId, setHoverId] = useState<string | null>(null);
 
   const showComp = useMemo(
     () => records.some((r) => typeof r.catalystCompletionRate === "number"),
@@ -111,34 +130,42 @@ export function TaskRecords({
     return () => ro.disconnect();
   }, [listRef, records.length, visible.length]);
 
+  // Filters / list change: drop hover and any legacy selectedId.
+  useEffect(() => {
+    setHoverId(null);
+    setSelectedId(null);
+  }, [tier, region, query, buildOnly, setSelectedId]);
+
+  useEffect(() => {
+    return () => {
+      if (clearTimer.current) clearTimeout(clearTimer.current);
+    };
+  }, []);
+
   const rowCount = visible.length === 0 ? 0 : Math.ceil(visible.length / cols);
 
-  const selectedIndex = useMemo(() => {
-    if (selectedId === null) return -1;
-    return visible.findIndex((r) => taskId(r) === selectedId);
-  }, [selectedId, visible, taskId]);
+  const hoverIndex = useMemo(() => {
+    if (hoverId === null) return -1;
+    return visible.findIndex((r) => taskId(r) === hoverId);
+  }, [hoverId, visible, taskId]);
 
-  const selectedRow = selectedIndex >= 0 ? Math.floor(selectedIndex / cols) : -1;
-  const selectedCol = selectedIndex >= 0 ? selectedIndex % cols : 0;
+  const hoverCol = hoverIndex >= 0 ? hoverIndex % cols : 0;
 
-  /** Spike law — ignore desk.selected first-row fallback. */
   const active = useMemo(() => {
-    if (selectedId === null || selectedIndex < 0) return null;
-    return visible[selectedIndex] ?? null;
-  }, [selectedId, selectedIndex, visible]);
+    if (hoverId === null || hoverIndex < 0) return null;
+    return visible[hoverIndex] ?? null;
+  }, [hoverId, hoverIndex, visible]);
 
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => listRef.current,
-    estimateSize: (index) =>
-      index === selectedRow ? ROW_EST_PX + ROW_BAND_EXTRA_PX : ROW_EST_PX,
+    estimateSize: () => ROW_EST_PX,
     overscan: 5,
     getItemKey: (index) => {
       const start = index * cols;
       const end = Math.min(start + cols, visible.length);
       let key = `r${index}`;
       for (let i = start; i < end; i++) key += `:${taskId(visible[i]!)}`;
-      if (index === selectedRow && selectedId) key += `:on:${selectedId}`;
       return key;
     },
   });
@@ -146,24 +173,29 @@ export function TaskRecords({
   useEffect(() => {
     rowVirtualizer.measure();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, selectedRow, cols, visible.length]);
+  }, [cols, visible.length]);
 
-  useEffect(() => {
-    if (!active || !bandRef.current) return;
-    const reduce =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    bandRef.current.scrollIntoView({
-      block: "nearest",
-      behavior: reduce ? "auto" : "smooth",
-    });
-  }, [active, selectedId, selectedRow]);
+  const cancelClear = useCallback(() => {
+    if (clearTimer.current) {
+      clearTimeout(clearTimer.current);
+      clearTimer.current = null;
+    }
+  }, []);
 
-  const toggleSelect = useCallback(
+  const scheduleClear = useCallback(() => {
+    cancelClear();
+    clearTimer.current = setTimeout(() => {
+      setHoverId(null);
+      clearTimer.current = null;
+    }, HOVER_CLEAR_MS);
+  }, [cancelClear]);
+
+  const openHover = useCallback(
     (id: string) => {
-      setSelectedId((cur) => (cur === id ? null : id));
+      cancelClear();
+      setHoverId(id);
     },
-    [setSelectedId],
+    [cancelClear],
   );
 
   if (records.length === 0) return null;
@@ -292,9 +324,7 @@ export function TaskRecords({
                       {isLeagueRegionId(id) ? (
                         <RegionCrest regionId={id} size={TRACK_CREST} />
                       ) : (
-                        <span className="tasks-gallery__crest-glyph" aria-hidden>
-                          G
-                        </span>
+                        <WorldIcon size={TRACK_CREST} />
                       )}
                       <span className="tasks-gallery__crest-n">{count}</span>
                     </button>
@@ -305,10 +335,37 @@ export function TaskRecords({
           ) : null}
         </div>
 
+        {active ? (
+          <FocusDock
+            dockRef={dockRef}
+            record={active}
+            done={completed.has(taskId(active))}
+            showComp={showComp}
+            tasksWikiUrl={tasksWikiUrl}
+            tierConfidence={tierConfidence}
+            taskPoints={taskPoints}
+            isLeagueRegionId={isLeagueRegionId}
+            regionDisplayName={regionDisplayName}
+            onClose={() => setHoverId(null)}
+            onPointerEnter={cancelClear}
+            onPointerLeave={scheduleClear}
+          />
+        ) : null}
+
         {visible.length === 0 ? (
           <p className="tasks-gallery__empty">No tasks match.</p>
         ) : (
-          <div ref={listRef} className="tasks-gallery__board" aria-label="Tasks">
+          <div
+            ref={listRef}
+            className="tasks-gallery__board"
+            aria-label="Tasks"
+            style={
+              {
+                ["--tg-cols" as string]: String(cols),
+                ["--tg-col" as string]: String(hoverCol),
+              } as CSSProperties
+            }
+          >
             <div
               className="tasks-gallery__virt"
               style={{ height: rowVirtualizer.getTotalSize() }}
@@ -316,21 +373,14 @@ export function TaskRecords({
               {virtualRows.map((vRow) => {
                 const start = vRow.index * cols;
                 const slice = visible.slice(start, start + cols);
-                const rowHasBand = vRow.index === selectedRow && active;
 
                 return (
                   <div
                     key={vRow.key}
                     data-index={vRow.index}
                     ref={rowVirtualizer.measureElement}
-                    className={`tasks-gallery__row${rowHasBand ? " has-band" : ""}`}
-                    style={
-                      {
-                        transform: `translateY(${vRow.start}px)`,
-                        ["--tg-cols" as string]: String(cols),
-                        ["--tg-col" as string]: String(selectedCol),
-                      } as CSSProperties
-                    }
+                    className="tasks-gallery__row"
+                    style={{ transform: `translateY(${vRow.start}px)` }}
                   >
                     <div className="tasks-gallery__tiles">
                       {slice.map((record) => {
@@ -341,36 +391,21 @@ export function TaskRecords({
                             id={id}
                             record={record}
                             done={completed.has(id)}
-                            on={selectedId === id}
+                            on={hoverId === id}
                             points={taskPoints(record)}
                             provisional={
                               tierConfidence[record.tier]?.startsWith("provisional") ??
                               false
                             }
                             showComp={showComp}
-                            tasksWikiUrl={tasksWikiUrl}
                             onToggle={() => onToggle(id)}
-                            onSelect={() => toggleSelect(id)}
+                            onHover={() => openHover(id)}
+                            onLeave={scheduleClear}
                             isLeagueRegionId={isLeagueRegionId}
                           />
                         );
                       })}
                     </div>
-
-                    {rowHasBand && active ? (
-                      <FocusBand
-                        bandRef={bandRef}
-                        record={active}
-                        done={completed.has(taskId(active))}
-                        showComp={showComp}
-                        tasksWikiUrl={tasksWikiUrl}
-                        tierConfidence={tierConfidence}
-                        taskPoints={taskPoints}
-                        isLeagueRegionId={isLeagueRegionId}
-                        regionDisplayName={regionDisplayName}
-                        onClose={() => setSelectedId(null)}
-                      />
-                    ) : null}
                   </div>
                 );
               })}
@@ -383,16 +418,15 @@ export function TaskRecords({
 }
 
 function GalleryTile({
-  id,
   record,
   done,
   on,
   points,
   provisional,
   showComp,
-  tasksWikiUrl,
   onToggle,
-  onSelect,
+  onHover,
+  onLeave,
   isLeagueRegionId,
 }: {
   id: string;
@@ -402,9 +436,9 @@ function GalleryTile({
   points: number | null;
   provisional: boolean;
   showComp: boolean;
-  tasksWikiUrl: string;
   onToggle: () => void;
-  onSelect: () => void;
+  onHover: () => void;
+  onLeave: () => void;
   isLeagueRegionId: (id: string) => boolean;
 }) {
   const rid = record.regionId;
@@ -412,91 +446,72 @@ function GalleryTile({
     typeof record.catalystCompletionRate === "number"
       ? record.catalystCompletionRate
       : null;
-  const wikiHref =
-    typeof record.wikiTaskId === "number"
-      ? wikiTaskUrl(tasksWikiUrl, record.wikiTaskId)
-      : null;
-
   return (
     <article
       className={`tasks-gallery__tile${on ? " is-on" : ""}${done ? " is-done" : ""}`}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      onPointerDown={(e) => {
+        // Touch has no hover — open dock on press; click still completes.
+        if (e.pointerType === "touch" || e.pointerType === "pen") onHover();
+      }}
+      onFocus={onHover}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) onLeave();
+      }}
     >
-      <div className="tasks-gallery__face">
-        <button
-          type="button"
+      <button
+        type="button"
+        className="tasks-gallery__face"
+        aria-pressed={done}
+        aria-label={
+          done
+            ? `Mark incomplete: ${record.name}`
+            : `Mark complete: ${record.name}`
+        }
+        onClick={onToggle}
+      >
+        <span
           className={`tasks-gallery__mark${done ? " is-done" : ""}`}
-          aria-pressed={done}
-          aria-label={
-            done
-              ? `Mark incomplete: ${record.name}`
-              : `Mark complete: ${record.name}`
-          }
-          onClick={onToggle}
+          aria-hidden
         >
           <span
             className={`tasks-gallery__crest${
               rid === "global" || !rid ? " is-global" : ""
             }`}
-            aria-hidden
           >
             {rid && isLeagueRegionId(rid) ? (
               <RegionCrest regionId={rid} size={CREST} />
             ) : (
-              <span className="tasks-gallery__crest-g">G</span>
+              <WorldIcon size={CREST} />
             )}
           </span>
-        </button>
+        </span>
 
-        <div
-          className="tasks-gallery__copy"
-          role="button"
-          tabIndex={0}
-          aria-expanded={on}
-          aria-controls={on ? "tasks-gallery-focus-band" : undefined}
-          onClick={onSelect}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              onSelect();
-            }
-          }}
-        >
-          <p className="tasks-gallery__name">{record.name}</p>
-        </div>
+        <span className="tasks-gallery__body">
+          <span className="tasks-gallery__name">{record.name}</span>
 
-        <div className="tasks-gallery__stats">
-          <span className="tasks-gallery__pts">
-            {points !== null ? `${points}${provisional ? "*" : ""}` : "—"}
-            <span className="unit">pts</span>
-          </span>
-          {showComp ? (
-            <span className="tasks-gallery__comp">
-              {rate !== null ? (
-                wikiHref ? (
-                  <a
-                    href={wikiHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Wiki Comp% for ${record.name}`}
-                  >
-                    {formatCompRate(rate, record.catalystCompletionRateQualifier)}
-                  </a>
-                ) : (
-                  formatCompRate(rate, record.catalystCompletionRateQualifier)
-                )
-              ) : (
-                "—"
-              )}
+          <span className="tasks-gallery__stats">
+            <span className="tasks-gallery__pts">
+              {points !== null ? `${points}${provisional ? "*" : ""}` : "—"}
+              <span className="unit">pts</span>
             </span>
-          ) : null}
-        </div>
-      </div>
+            {showComp ? (
+              <span className="tasks-gallery__comp">
+                {rate !== null
+                  ? formatCompRate(rate, record.catalystCompletionRateQualifier)
+                  : "—"}
+              </span>
+            ) : null}
+          </span>
+        </span>
+      </button>
     </article>
   );
 }
 
-function FocusBand({
-  bandRef,
+function FocusDock({
+  dockRef,
   record,
   done,
   showComp,
@@ -506,8 +521,10 @@ function FocusBand({
   isLeagueRegionId,
   regionDisplayName,
   onClose,
+  onPointerEnter,
+  onPointerLeave,
 }: {
-  bandRef: RefObject<HTMLDivElement | null>;
+  dockRef: RefObject<HTMLDivElement | null>;
   record: TaskRecord;
   done: boolean;
   showComp: boolean;
@@ -517,6 +534,8 @@ function FocusBand({
   isLeagueRegionId: (id: string) => boolean;
   regionDisplayName: (id: TaskRegionId) => string;
   onClose: () => void;
+  onPointerEnter: () => void;
+  onPointerLeave: () => void;
 }) {
   const points = taskPoints(record);
   const provisional = tierConfidence[record.tier]?.startsWith("provisional");
@@ -534,33 +553,36 @@ function FocusBand({
 
   return (
     <section
-      ref={bandRef}
+      ref={dockRef}
       id="tasks-gallery-focus-band"
-      className="tasks-gallery__band"
+      className="tasks-gallery__dock"
       aria-label={`Details: ${record.name}`}
+      onMouseEnter={onPointerEnter}
+      onMouseLeave={onPointerLeave}
     >
-      <div className="tasks-gallery__band-mark" aria-hidden />
-
-      <div className="tasks-gallery__band-head">
-        <div className="tasks-gallery__band-id">
+      <div className="tasks-gallery__dock-head">
+        <div className="tasks-gallery__dock-id">
           {rid && isLeagueRegionId(rid) ? (
-            <RegionCrest regionId={rid} size={32} />
-          ) : null}
+            <RegionCrest regionId={rid} size={36} />
+          ) : (
+            <WorldIcon size={36} />
+          )}
           <div>
-            <p className={`tasks-gallery__band-name${done ? " is-done" : ""}`}>
+            <p className={`tasks-gallery__dock-name${done ? " is-done" : ""}`}>
               {record.name}
               {done ? " · done" : ""}
             </p>
-            <p className="tasks-gallery__band-meta">
+            <p className="tasks-gallery__dock-meta">
               {isTaskTier(record.tier) ? record.tier : record.tier}
               {rid ? ` · ${regionLabel}` : ""}
+              <span className="tasks-gallery__dock-hint"> · hover · click marks done</span>
             </p>
           </div>
         </div>
 
-        <div className="tasks-gallery__band-facts">
+        <div className="tasks-gallery__dock-facts">
           {showComp ? (
-            <span className="tasks-gallery__band-comp">
+            <span className="tasks-gallery__dock-comp">
               {rate !== null ? (
                 wikiHref ? (
                   <a
@@ -591,15 +613,15 @@ function FocusBand({
       </div>
 
       {record.description ? (
-        <p className="tasks-gallery__band-body">{record.description}</p>
+        <p className="tasks-gallery__dock-body">{record.description}</p>
       ) : null}
       {record.requirements ? (
-        <p className="tasks-gallery__band-req">
+        <p className="tasks-gallery__dock-req">
           <strong>Requires:</strong> {record.requirements}
         </p>
       ) : null}
       {!hasBody ? (
-        <p className="tasks-gallery__band-empty">No detail text on this task.</p>
+        <p className="tasks-gallery__dock-empty">No detail text on this task.</p>
       ) : null}
       {wikiHref ? (
         <a

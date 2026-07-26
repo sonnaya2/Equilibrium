@@ -16,8 +16,6 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
-
 type UnknownItem = {
   key: string;
   known?: string;
@@ -32,6 +30,8 @@ const testFallback = (
       note: string;
       expectedRecords: number;
       completionSource?: string;
+      league?: string;
+      testingOnly?: boolean;
     };
   }
 ).testFallback;
@@ -57,54 +57,31 @@ export default async function TasksPage() {
     ? testFallback?.url ?? CATALYST_TASKS_URL
     : tasksData.source.url;
 
-  const pointsLine = TASK_ORDER.map((t) => `${t[0].toUpperCase()}${tasksData.tiers[t] ?? "?"}`).join(
-    " · ",
-  );
-
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill">
-        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 px-0.5 text-sm leading-snug text-parch-100">
-          {useCatalystStandIn ? (
-            <span className="tag text-chaos-300">Provisional · Catalyst</span>
-          ) : null}
-          <span className="font-display text-base font-semibold tracking-wide text-gold-400">
-            Tasks
-          </span>
-          <span className="font-mono text-[0.9375rem] text-parch-100">
-            {records.length} tasks loaded
-            {completion.live ? " · Comp% live" : useCatalystStandIn ? " · Comp% snap" : ""}
-          </span>
-          <span className="text-parch-100">
-            <span className="text-parch-300">Points</span> {pointsLine}
-          </span>
-          <a
-            href={sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-auto text-[0.9375rem] text-gem-300 hover:underline"
-          >
-            Source
-          </a>
-        </div>
-
         <TaskRecords
           records={records}
           tiers={tasksData.tiers}
           tierConfidence={tasksData.tierConfidence}
           tasksWikiUrl={useCatalystStandIn ? CATALYST_TASKS_URL : tasksData.source.url}
           completionLive={completion.live}
-        />
-
-        {records.length === 0 ? (
-          <p className="mt-1.5 text-sm text-parch-300">
-            {useCatalystStandIn && catalystResult.error
+          dataset={{
+            label: useCatalystStandIn
+              ? testFallback?.league ?? "Catalyst League"
+              : "Equilibrium",
+            testingOnly: useCatalystStandIn && testFallback?.testingOnly === true,
+            provisional: useCatalystStandIn,
+            sourceUrl,
+            verifiedAt: tasksData.source.verifiedAt,
+            note: useCatalystStandIn ? testFallback?.note : tasksData.note,
+          }}
+          emptyMessage={
+            useCatalystStandIn && catalystResult.error
               ? `Catalyst list failed: ${catalystResult.error}`
-              : (tasksData.note ??
-                taskUnknown?.known ??
-                "No tasks loaded.")}
-          </p>
-        ) : null}
+              : (tasksData.note ?? taskUnknown?.known ?? "No tasks loaded.")
+          }
+        />
       </div>
     </Page>
   );

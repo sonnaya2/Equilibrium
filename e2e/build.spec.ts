@@ -12,6 +12,18 @@ test("build shows region pick counter and Clear picks", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Clear picks" })).toBeVisible();
 });
 
+test("build caps elective regions without removing the fourth pick from focus", async ({ page }) => {
+  for (const name of ["Asgarnia", "Kandarin", "Fremennik Province"]) {
+    await page.getByRole("button", { name: new RegExp(`^${name},`) }).click();
+  }
+
+  await expect(page.getByText("3/3").first()).toBeVisible();
+  const fourth = page.getByRole("button", { name: /^Wilderness,/ });
+  await expect(fourth).toHaveAttribute("aria-disabled", "true");
+  await fourth.focus();
+  await expect(fourth).toBeFocused();
+});
+
 test("share hash with empty storage does not crash build", async ({ page }) => {
   // Empty #b= is not a valid payload — page must still render the planner chrome.
   await page.goto("/build#b=");

@@ -599,10 +599,14 @@
   .mc__crests {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .mc__seat {
-    width: 5.25rem;
-    min-width: 5.25rem;
-    max-width: 5.25rem;
+  .mc__seat,
+  .mc__seat.is-empty {
+    width: 3.75rem;
+    min-width: 3.75rem;
+    max-width: 3.75rem;
+  }
+  .mc__seat-name {
+    font-size: 0.75rem;
   }
   .mc__lattice {
     min-width: 35rem;

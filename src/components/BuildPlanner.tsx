@@ -76,7 +76,7 @@ function availLabel(value: string): string {
 }
 
 function shortName(name: string): string {
-  if (name.length <= 11) return name;
+  if (name.length <= 12) return name;
   const first = name.split(/\s+/)[0] ?? name;
   return first.length <= 11 ? first : `${first.slice(0, 10)}...`;
 }
@@ -215,7 +215,6 @@ export function BuildPlanner({
                   className={cls}
                   aria-pressed={isOn}
                   aria-disabled={blocked || undefined}
-                  disabled={blocked}
                   aria-label={`${region.name}, ${status}`}
                   onClick={() => {
                     if (elective && loaded && selectable) {

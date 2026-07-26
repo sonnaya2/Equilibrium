@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Shared Tasks desk state for density tournament previews + production parity.
- * Layouts vary; filter/progress logic does not.
+ * Shared task-page state for production and the density concept archive.
+ * Layouts vary; filtering, progress, build scope, and derived facts do not.
  */
 
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -26,8 +26,6 @@ import {
 import {
   EMPTY_PROGRESS,
   loadProgressForRecords,
-  pointsEarned,
-  pointsTotal,
   saveProgress,
   taskId,
   toggleComplete,
@@ -35,6 +33,72 @@ import {
 } from "@/tasks/progress";
 
 const SEARCH_DEBOUNCE_MS = 150;
+export const TASK_PAGE_SIZE = 40;
+
+export const TASK_SKILLS = [
+  "Agility",
+  "Archaeology",
+  "Attack",
+  "Constitution",
+  "Construction",
+  "Cooking",
+  "Crafting",
+  "Defence",
+  "Divination",
+  "Dungeoneering",
+  "Farming",
+  "Firemaking",
+  "Fishing",
+  "Fletching",
+  "Herblore",
+  "Hunter",
+  "Invention",
+  "Magic",
+  "Mining",
+  "Necromancy",
+  "Prayer",
+  "Ranged",
+  "Runecrafting",
+  "Slayer",
+  "Smithing",
+  "Strength",
+  "Summoning",
+  "Thieving",
+  "Woodcutting",
+] as const;
+
+export type TaskSort = "points" | "completion" | "rarest" | "name";
+export type TaskStatusFilter = "all" | "completed" | "unfinished";
+
+export type TaskPageFilters = {
+  search: string;
+  tier: TaskTier | "all";
+  region: TaskRegionId | "all";
+  category: string | "all";
+  skill: string | "all";
+  buildOnly: boolean;
+  status: TaskStatusFilter;
+  sort: TaskSort;
+};
+
+export type TaskPageStats = {
+  totalTasks: number;
+  completedTasks: number;
+  completionRate: number;
+  totalPoints: number;
+  completedPoints: number;
+  pointCompletionRate: number;
+  activeFilterCount: number;
+  buildTaskCount: number;
+  completedBuildTaskCount: number;
+};
+
+export type DifficultyAggregate = {
+  tier: TaskTier;
+  count: number;
+  completed: number;
+  percentage: number;
+};
 
 export function formatCompRate(rate: number, qualifier?: "<"): string {
   if (qualifier === "<") return "<0.1%";
@@ -50,34 +114,181 @@ export function wikiTaskUrl(base: string, wikiTaskId: number): string {
 /** Ordered region ids that appear in task data (global first, then league order). */
 export function regionsInTaskData(records: readonly TaskRecord[]): TaskRegionId[] {
   const seen = new Set<TaskRegionId>();
-  for (const r of records) {
-    if (r.regionId) seen.add(r.regionId);
-  }
+  for (const record of records) if (record.regionId) seen.add(record.regionId);
+
   const ordered: TaskRegionId[] = [];
   if (seen.has("global")) ordered.push("global");
-  for (const id of TASK_LEAGUE_REGION_IDS) {
-    if (seen.has(id)) ordered.push(id);
-  }
+  for (const id of TASK_LEAGUE_REGION_IDS) if (seen.has(id)) ordered.push(id);
   return ordered;
 }
 
-/** Full (unfiltered) per-region + all counts for the crest rail badges. */
+/** Full per-region counts; build scope never hides elective-region totals. */
 export function fullRegionCounts(
   records: readonly TaskRecord[],
 ): Map<TaskRegionId | "all", number> {
-  const m = new Map<TaskRegionId | "all", number>();
-  m.set("all", records.length);
-  for (const r of records) {
-    if (!r.regionId) continue;
-    m.set(r.regionId, (m.get(r.regionId) ?? 0) + 1);
+  const counts = new Map<TaskRegionId | "all", number>([["all", records.length]]);
+  for (const record of records) {
+    if (!record.regionId) continue;
+    counts.set(record.regionId, (counts.get(record.regionId) ?? 0) + 1);
   }
-  return m;
+  return counts;
+}
+
+/** Explicit source skills win; Catalyst falls back to skill names in requirements. */
+export function taskSkillNames(record: TaskRecord): string[] {
+  if (record.skills?.length) {
+    return [...new Set(record.skills.map((skill) => skill.trim()).filter(Boolean))];
+  }
+  const requirements = record.requirements?.toLowerCase() ?? "";
+  if (!requirements) return [];
+  return TASK_SKILLS.filter((skill) =>
+    new RegExp(`\\b${skill.toLowerCase()}\\b`, "i").test(requirements),
+  );
+}
+
+export function taskInBuild(
+  record: TaskRecord,
+  unlocked: ReadonlySet<string>,
+): boolean {
+  return record.regionId === "global" || Boolean(record.regionId && unlocked.has(record.regionId));
+}
+
+export function countActiveFilters(filters: TaskPageFilters): number {
+  return Number(Boolean(filters.search.trim())) +
+    Number(filters.tier !== "all") +
+    Number(filters.region !== "all") +
+    Number(filters.category !== "all") +
+    Number(filters.skill !== "all") +
+    Number(filters.buildOnly) +
+    Number(filters.status !== "all");
+}
+
+export function filterTaskPage(
+  records: readonly TaskRecord[],
+  filters: TaskPageFilters,
+  completed: ReadonlySet<string>,
+  unlocked: ReadonlySet<string>,
+): TaskRecord[] {
+  const allowedRegions = filters.buildOnly && filters.region === "all" ? unlocked : null;
+  return filterTasks(records, filters.tier, filters.search, filters.region, {
+    allowedRegions,
+    includeGlobal: true,
+  }).filter((record) => {
+    if (filters.category !== "all" && record.category !== filters.category) return false;
+    if (filters.skill !== "all" && !taskSkillNames(record).includes(filters.skill)) return false;
+    const done = completed.has(taskId(record));
+    if (filters.status === "completed" && !done) return false;
+    if (filters.status === "unfinished" && done) return false;
+    return true;
+  });
+}
+
+export function sortTasks(
+  records: readonly TaskRecord[],
+  sort: TaskSort,
+  tiers: Record<string, number>,
+): TaskRecord[] {
+  const completion = (record: TaskRecord) => record.catalystCompletionRate ?? Number.NaN;
+  const compareName = (a: TaskRecord, b: TaskRecord) => a.name.localeCompare(b.name);
+
+  return [...records].sort((a, b) => {
+    if (sort === "name") return compareName(a, b);
+    if (sort === "points") {
+      const pointDelta = (taskPoints(b, tiers) ?? -1) - (taskPoints(a, tiers) ?? -1);
+      if (pointDelta) return pointDelta;
+      const rateDelta = (completion(b) || -1) - (completion(a) || -1);
+      return rateDelta || compareName(a, b);
+    }
+
+    const aRate = completion(a);
+    const bRate = completion(b);
+    if (Number.isNaN(aRate) && Number.isNaN(bRate)) return compareName(a, b);
+    if (Number.isNaN(aRate)) return 1;
+    if (Number.isNaN(bRate)) return -1;
+    const delta = sort === "completion" ? bRate - aRate : aRate - bRate;
+    return delta || compareName(a, b);
+  });
+}
+
+const percentage = (part: number, whole: number) => (whole > 0 ? (part / whole) * 100 : 0);
+
+export function aggregateTaskStats(
+  records: readonly TaskRecord[],
+  buildRecords: readonly TaskRecord[],
+  completed: ReadonlySet<string>,
+  tiers: Record<string, number>,
+  activeFilterCount: number,
+): TaskPageStats {
+  let completedTasks = 0;
+  let totalPoints = 0;
+  let completedPoints = 0;
+  let completedBuildTaskCount = 0;
+
+  for (const record of records) {
+    const points = taskPoints(record, tiers) ?? 0;
+    const done = completed.has(taskId(record));
+    totalPoints += points;
+    if (!done) continue;
+    completedTasks += 1;
+    completedPoints += points;
+  }
+  for (const record of buildRecords) {
+    if (completed.has(taskId(record))) completedBuildTaskCount += 1;
+  }
+
+  return {
+    totalTasks: records.length,
+    completedTasks,
+    completionRate: percentage(completedTasks, records.length),
+    totalPoints,
+    completedPoints,
+    pointCompletionRate: percentage(completedPoints, totalPoints),
+    activeFilterCount,
+    buildTaskCount: buildRecords.length,
+    completedBuildTaskCount,
+  };
+}
+
+export function aggregateDifficulties(
+  records: readonly TaskRecord[],
+  completed: ReadonlySet<string>,
+): DifficultyAggregate[] {
+  return TASK_ORDER.map((tier) => {
+    const inTier = records.filter((record) => record.tier === tier);
+    return {
+      tier,
+      count: inTier.length,
+      completed: inTier.filter((record) => completed.has(taskId(record))).length,
+      percentage: percentage(inTier.length, records.length),
+    };
+  }).filter((entry) => entry.count > 0);
+}
+
+export function recommendTasks(
+  records: readonly TaskRecord[],
+  completed: ReadonlySet<string>,
+  tiers: Record<string, number>,
+  unlocked: ReadonlySet<string>,
+  limit = 4,
+): TaskRecord[] {
+  return records
+    .filter((record) => !completed.has(taskId(record)))
+    .sort((a, b) => {
+      const buildDelta = Number(taskInBuild(b, unlocked)) - Number(taskInBuild(a, unlocked));
+      if (buildDelta) return buildDelta;
+      const pointDelta = (taskPoints(b, tiers) ?? -1) - (taskPoints(a, tiers) ?? -1);
+      if (pointDelta) return pointDelta;
+      const rateDelta =
+        (b.catalystCompletionRate ?? -1) - (a.catalystCompletionRate ?? -1);
+      return rateDelta || a.name.localeCompare(b.name);
+    })
+    .slice(0, limit);
 }
 
 export function useTasksDesk(
   raw: unknown[],
   tiers: Record<string, number>,
-  opts?: { rowEstimatePx?: number; listMaxCss?: string },
+  opts?: { rowEstimatePx?: number; listMaxCss?: string; paginate?: boolean },
 ) {
   const rowEstimatePx = opts?.rowEstimatePx ?? 36;
   const records = useMemo(() => asTaskRecords(raw), [raw]);
@@ -88,10 +299,15 @@ export function useTasksDesk(
   const [buildOnly, setBuildOnly] = useState(true);
   const [tier, setTier] = useState<TaskTier | "all">("all");
   const [region, setRegion] = useState<TaskRegionId | "all">("all");
+  const [category, setCategory] = useState<string | "all">("all");
+  const [skill, setSkill] = useState<string | "all">("all");
+  const [status, setStatus] = useState<TaskStatusFilter>("all");
+  const [sort, setSort] = useState<TaskSort>("points");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [progress, setProgress] = useState<TaskProgress>(EMPTY_PROGRESS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,81 +324,114 @@ export function useTasksDesk(
   }, [records]);
 
   const completed = useMemo(() => new Set(progress.completed), [progress.completed]);
-
-  /**
-   * My build scopes the multi-region ("all") list via allowedRegions.
-   * A specific region leaf (incl. locked electives) stays viewable — do not
-   * intersect that pick with the unlock set or the leaf would empty out.
-   */
-  const filterOpts = useMemo(() => {
-    if (!buildOnly) {
-      return { allowedRegions: null as ReadonlySet<string> | null, includeGlobal: true as const };
-    }
-    if (region !== "all") {
-      return { allowedRegions: null as ReadonlySet<string> | null, includeGlobal: true as const };
-    }
-    return { allowedRegions: unlockedSet, includeGlobal: true as const };
-  }, [buildOnly, unlockedSet, region]);
+  const filters = useMemo<TaskPageFilters>(
+    () => ({
+      search: debouncedQuery,
+      tier,
+      region,
+      category,
+      skill,
+      buildOnly,
+      status,
+      sort,
+    }),
+    [debouncedQuery, tier, region, category, skill, buildOnly, status, sort],
+  );
 
   const visible = useMemo(
-    () => filterTasks(records, tier, debouncedQuery, region, filterOpts),
-    [records, tier, debouncedQuery, region, filterOpts],
+    () => sortTasks(filterTaskPage(records, filters, completed, unlockedSet), sort, tiers),
+    [records, filters, completed, unlockedSet, sort, tiers],
+  );
+  const buildRecords = useMemo(
+    () => records.filter((record) => taskInBuild(record, unlockedSet)),
+    [records, unlockedSet],
+  );
+  const activeFilterCount = countActiveFilters(filters);
+  const stats = useMemo(
+    () => aggregateTaskStats(records, buildRecords, completed, tiers, activeFilterCount),
+    [records, buildRecords, completed, tiers, activeFilterCount],
+  );
+  const difficultyBreakdown = useMemo(
+    () => aggregateDifficulties(records, completed),
+    [records, completed],
+  );
+  const recommendations = useMemo(
+    () => recommendTasks(visible, completed, tiers, unlockedSet),
+    [visible, completed, tiers, unlockedSet],
   );
 
   const tiersInUse = useMemo(
-    () => TASK_ORDER.filter((t) => records.some((r) => r.tier === t)),
+    () => TASK_ORDER.filter((taskTier) => records.some((record) => record.tier === taskTier)),
     [records],
   );
-
-  /** Option A: always every region that has tasks — never hide electives. */
   const regionRail = useMemo(() => regionsInTaskData(records), [records]);
-
-  /** Full data counts so locked electives still show their true totals. */
   const regionCounts = useMemo(() => fullRegionCounts(records), [records]);
-
   const crestRegionIds = useMemo(
     () => regionRail.filter((id) => isLeagueRegionId(id)),
     [regionRail],
   );
-
+  const availableCategories = useMemo(
+    () => [...new Set(records.map((record) => record.category).filter((value): value is string => Boolean(value)))].sort(),
+    [records],
+  );
+  const availableSkills = useMemo(
+    () => [...new Set(records.flatMap(taskSkillNames))].sort(),
+    [records],
+  );
+  const skillCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const record of records) {
+      for (const name of taskSkillNames(record)) counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+    return counts;
+  }, [records]);
+  const quickSkills = useMemo(
+    () => [...availableSkills].sort((a, b) => (skillCounts.get(b) ?? 0) - (skillCounts.get(a) ?? 0)).slice(0, 6),
+    [availableSkills, skillCounts],
+  );
   const unlockLabel = useMemo(
     () => unlocked.map((id) => regionDisplayName(id)).join(" · "),
     [unlocked],
   );
 
-  const isUnlocked = (id: string) => id === "global" || unlockedSet.has(id);
+  const pageCount = Math.max(1, Math.ceil(visible.length / TASK_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pagedRecords = useMemo(
+    () => visible.slice((currentPage - 1) * TASK_PAGE_SIZE, currentPage * TASK_PAGE_SIZE),
+    [visible, currentPage],
+  );
 
-  const doneVisible = useMemo(() => {
-    let n = 0;
-    for (const r of visible) if (completed.has(taskId(r))) n += 1;
-    return n;
-  }, [visible, completed]);
+  useEffect(() => {
+    setPage(1);
+    listRef.current?.scrollTo({ top: 0 });
+    setSelectedId(null);
+  }, [tier, region, category, skill, status, debouncedQuery, buildOnly, sort, unlocked]);
 
-  const earnedVisible = pointsEarned(progress, visible, tiers);
-  const totalVisible = pointsTotal(visible, tiers);
-
-  /** First-row fallback for previews that still use it — production ignores this. */
+  const doneVisible = visible.filter((record) => completed.has(taskId(record))).length;
+  const earnedVisible = visible.reduce(
+    (total, record) => total + (completed.has(taskId(record)) ? taskPoints(record, tiers) ?? 0 : 0),
+    0,
+  );
+  const totalVisible = visible.reduce(
+    (total, record) => total + (taskPoints(record, tiers) ?? 0),
+    0,
+  );
   const selected = useMemo(() => {
     if (!selectedId) return visible[0] ?? null;
-    return visible.find((r) => taskId(r) === selectedId) ?? visible[0] ?? null;
+    return visible.find((record) => taskId(record) === selectedId) ?? visible[0] ?? null;
   }, [visible, selectedId]);
 
   const virtualizer = useVirtualizer({
-    count: visible.length,
+    count: opts?.paginate ? 0 : visible.length,
     getScrollElement: () => listRef.current,
     estimateSize: () => rowEstimatePx,
     overscan: 14,
     getItemKey: (index) => taskId(visible[index]!),
   });
 
-  useEffect(() => {
-    listRef.current?.scrollTo({ top: 0 });
-    setSelectedId(null);
-  }, [tier, region, debouncedQuery, buildOnly, unlocked]);
-
   const onToggle = (id: string) => {
-    setProgress((prev) => {
-      const next = toggleComplete(prev, id);
+    setProgress((previous) => {
+      const next = toggleComplete(previous, id);
       saveProgress(next);
       return next;
     });
@@ -197,17 +446,37 @@ export function useTasksDesk(
     setTier,
     region,
     setRegion,
+    category,
+    setCategory,
+    skill,
+    setSkill,
+    status,
+    setStatus,
+    sort,
+    setSort,
     query,
     setQuery,
+    filters,
     tiersInUse,
     regionRail,
     regionCounts,
     crestRegionIds,
+    availableCategories,
+    availableSkills,
+    quickSkills,
+    skillCounts,
     unlockLabel,
     unlockedSet,
-    isUnlocked,
+    isUnlocked: (id: string) => id === "global" || unlockedSet.has(id),
     visible,
+    pagedRecords,
+    page: currentPage,
+    setPage,
+    pageCount,
     completed,
+    stats,
+    difficultyBreakdown,
+    recommendations,
     selected,
     selectedId,
     setSelectedId,
@@ -218,8 +487,9 @@ export function useTasksDesk(
     virtualizer,
     onToggle,
     taskId,
-    taskPoints: (r: TaskRecord) => taskPoints(r, tiers),
+    taskPoints: (record: TaskRecord) => taskPoints(record, tiers),
     isLeagueRegionId,
     regionDisplayName,
+    taskInBuild: (record: TaskRecord) => taskInBuild(record, unlockedSet),
   };
 }

@@ -11,6 +11,7 @@ import {
   getRunecraftingAltars,
   getSupportUniqueDropOverlay,
 } from "@/research/plannerExpansions";
+import { clipProse } from "./ResearchSection";
 
 
 type Row = Record<string, unknown>;
@@ -155,10 +156,17 @@ function keepEntry(key: string, item: unknown, primary?: string): boolean {
 
 function text(value: unknown): string {
   if (value == null || value === "") return "";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+  if (typeof value === "string") return clipProse(value);
+  if (typeof value === "number" || typeof value === "boolean") {
     return String(value);
   }
-  if (Array.isArray(value)) return value.map(text).filter(Boolean).join(" · ");
+  if (Array.isArray(value)) {
+    return value
+      .slice(0, 4)
+      .map(text)
+      .filter(Boolean)
+      .join(" · ");
+  }
   if (typeof value === "object") {
     if (isSourceRef(value)) return "";
     const row = value as Row;
@@ -166,25 +174,9 @@ function text(value: unknown): string {
       humanString(row.name) ||
       humanString(row.item) ||
       humanString(row.route) ||
-      humanString(row.source) ||
       humanString(row.method);
-    const rest = Object.entries(row)
-      .filter(([key, item]) => keepEntry(key, item, primary))
-      .map(([key, item]) => {
-        const rendered = text(item);
-        return rendered ? `${fieldLabel(key)} ${rendered}` : "";
-      })
-      .filter(Boolean)
-      .join(", ");
-    if (primary) return rest ? `${primary} (${rest})` : primary;
-    return Object.entries(row)
-      .filter(([key, item]) => keepEntry(key, item))
-      .map(([key, item]) => {
-        const rendered = text(item);
-        return rendered ? `${fieldLabel(key)}: ${rendered}` : "";
-      })
-      .filter(Boolean)
-      .join(" · ");
+    if (primary) return clipProse(primary, 80);
+    return "";
   }
   return String(value);
 }
@@ -315,19 +307,22 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
 ];
 
 function rowDetails(row: Row): string[] {
-  return DETAIL_FIELDS.map(({ key, label }) => {
-    // Skip subtitle-ish fields already shown under the title.
+  const lines: string[] = [];
+  for (const { key, label } of DETAIL_FIELDS) {
+    if (lines.length >= 2) break;
     if (key === "support_item_effect" && humanString(row.support_item_effect) === rowSubtitle(row)) {
-      return "";
+      continue;
     }
     if (key === "effect_summary" && humanString(row.effect_summary) === rowSubtitle(row)) {
-      return "";
+      continue;
     }
     const rendered = text(row[key]);
-    if (!rendered) return "";
-    if (typeof row[key] === "string" && rendered.length > 80) return rendered;
-    return `${label}: ${rendered}`;
-  }).filter(Boolean);
+    if (!rendered) continue;
+    lines.push(
+      typeof row[key] === "string" && rendered.length > 48 ? rendered : `${label}: ${rendered}`,
+    );
+  }
+  return lines.map((l) => clipProse(l)).filter(Boolean).slice(0, 2);
 }
 
 function rowsFor(section: SectionKey): Row[] {

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
+import { clipProse } from "./ResearchSection";
 
 
 type Row = Record<string, unknown>;
@@ -147,10 +148,17 @@ function keepEntry(key: string, item: unknown, primary?: string): boolean {
 
 function format(value: unknown): string {
   if (value == null || value === "") return "";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+  if (typeof value === "string") return clipProse(value);
+  if (typeof value === "number" || typeof value === "boolean") {
     return String(value);
   }
-  if (Array.isArray(value)) return value.map(format).filter(Boolean).join(" · ");
+  if (Array.isArray(value)) {
+    return value
+      .slice(0, 4)
+      .map(format)
+      .filter(Boolean)
+      .join(" · ");
+  }
   if (typeof value === "object") {
     if (isSourceRef(value)) return "";
     const row = value as Row;
@@ -158,25 +166,9 @@ function format(value: unknown): string {
       humanString(row.name) ||
       humanString(row.quest) ||
       humanString(row.item) ||
-      humanString(row.route) ||
-      humanString(row.source);
-    const rest = Object.entries(row)
-      .filter(([key, item]) => keepEntry(key, item, primary))
-      .map(([key, item]) => {
-        const rendered = format(item);
-        return rendered ? `${fieldLabel(key)} ${rendered}` : "";
-      })
-      .filter(Boolean)
-      .join(", ");
-    if (primary) return rest ? `${primary} (${rest})` : primary;
-    return Object.entries(row)
-      .filter(([key, item]) => keepEntry(key, item))
-      .map(([key, item]) => {
-        const rendered = format(item);
-        return rendered ? `${fieldLabel(key)}: ${rendered}` : "";
-      })
-      .filter(Boolean)
-      .join(" · ");
+      humanString(row.route);
+    if (primary) return clipProse(primary, 80);
+    return "";
   }
   return String(value);
 }
@@ -298,13 +290,16 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
 ];
 
 function details(row: Row): string[] {
-  return DETAIL_FIELDS.map(({ key, label }) => {
+  const lines: string[] = [];
+  for (const { key, label } of DETAIL_FIELDS) {
+    if (lines.length >= 2) break;
     const rendered = format(row[key]);
-    if (!rendered) return "";
-    // Scalars / short strings: prefix. Long prose (league/notes): body only when already self-describing.
-    if (typeof row[key] === "string" && rendered.length > 80) return rendered;
-    return `${label}: ${rendered}`;
-  }).filter(Boolean);
+    if (!rendered) continue;
+    lines.push(
+      typeof row[key] === "string" && rendered.length > 48 ? rendered : `${label}: ${rendered}`,
+    );
+  }
+  return lines.map((l) => clipProse(l)).filter(Boolean).slice(0, 2);
 }
 
 function mapKey(row: Row, index: number, prefix: string): string {

@@ -191,8 +191,18 @@ function MethodTable({
                   <div className="mt-0.5 text-[12px] text-parch-100">
                     {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
                   </div>
-                  {method.note ? <div className="mt-1 max-w-xl text-[14px] leading-5 text-parch-100">{cleanText(method.note)}</div> : null}
-                  {method.warning ? <div className="mt-1 max-w-xl text-[14px] leading-5 text-parch-100">{cleanText(method.warning)}</div> : null}
+                  {method.note ? (
+                    <div className="mt-0.5 max-w-lg truncate text-[12px] text-parch-300" title={cleanText(method.note)}>
+                      {cleanText(method.note).slice(0, 120)}
+                      {method.note.length > 120 ? "…" : ""}
+                    </div>
+                  ) : null}
+                  {method.warning ? (
+                    <div className="mt-0.5 max-w-lg truncate text-[12px] text-parch-400" title={cleanText(method.warning)}>
+                      {cleanText(method.warning).slice(0, 100)}
+                      {method.warning.length > 100 ? "…" : ""}
+                    </div>
+                  ) : null}
                 </td>
                 <td>{method.levelRange || "-"}</td>
                 <td className="max-w-[250px] font-mono leading-5">{method.xpRate || "—"}</td>
@@ -303,7 +313,14 @@ function RegionDetail({
                       <InlineSource source={row.source} stopClick />
                     </td>
                     <td className="secondary">{row.kind}</td>
-                    <td className="max-w-xl secondary leading-5">{row.detail ? cleanText(row.detail) : "—"}</td>
+                    <td className="max-w-md secondary truncate text-[13px] leading-5" title={row.detail || undefined}>
+                      {row.detail
+                        ? (() => {
+                            const d = cleanText(row.detail);
+                            return d.length > 120 ? `${d.slice(0, 119)}…` : d;
+                          })()
+                        : "—"}
+                    </td>
                   </tr>
                 );
               })}
@@ -339,9 +356,19 @@ function RegionDetail({
                   <div className="mt-0.5 text-[11px] text-parch-100">{upgrade.category}</div>
                   {regionAccess ? <div className="mt-0.5 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
                 </div>
-                <div className="text-[14px] leading-5 text-parch-100">
-                  {upgrade.detail ? cleanText(upgrade.detail) : "—"}
-                  {upgrade.requirements.length ? <div className="mt-0.5 text-parch-50">{upgrade.requirements.join(" · ")}</div> : null}
+                <div className="text-[13px] leading-5 text-parch-100">
+                  {upgrade.detail
+                    ? (() => {
+                        const d = cleanText(upgrade.detail);
+                        return d.length > 120 ? `${d.slice(0, 119)}…` : d;
+                      })()
+                    : "—"}
+                  {upgrade.requirements.length ? (
+                    <div className="mt-0.5 truncate text-[12px] text-parch-300">
+                      {upgrade.requirements.slice(0, 4).join(" · ")}
+                      {upgrade.requirements.length > 4 ? "…" : ""}
+                    </div>
+                  ) : null}
                 </div>
               </button>
             );

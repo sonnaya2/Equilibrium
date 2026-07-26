@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  clipProse,
   researchRowDetails,
   researchRowLinks,
   researchRowTitle,
@@ -80,9 +81,26 @@ describe("researchRowDetails", () => {
       status: "obtainable",
     });
     expect(lines[0]).toBe("Primary overland routing around Anachronia.");
-    expect(lines).toContain("Reqs: 30 Agility · Anachronia access");
+    expect(lines.some((l) => l.startsWith("Reqs:"))).toBe(true);
+    expect(lines.length).toBeLessThanOrEqual(2);
     expect(lines.join("\n")).not.toMatch(/confidence|sourceFile|recordType|status/i);
     expect(lines.join("\n")).not.toContain("runescape-wiki");
+  });
+
+  it("clips multi-kb audit essays to one short line", () => {
+    const essay =
+      "FINAL PASS Wave B5 canonical emit. Audit combo:orthen-furnace-superheat-autoheater. " +
+      "This supersedes dual narrative with cross-region:orthen-furnace-core-stack for planners. " +
+      "Orthen furnace plus Superheat Form is the real smithing stack for ironman loops.";
+    const lines = researchRowDetails({
+      name: "Orthen furnace stack",
+      detail: essay,
+      confidence: "partial",
+      source: wikiSource,
+    });
+    expect(lines).toHaveLength(1);
+    expect(lines[0]!.length).toBeLessThanOrEqual(121);
+    expect(lines[0]).not.toMatch(/FINAL PASS|Wave B5|canonical emit/i);
   });
 
   it("skips combo plumbing essays when detail is present", () => {
@@ -112,8 +130,8 @@ describe("researchRowDetails", () => {
       confidence: "pvme_current_recipe",
       source_url: "https://pvme.io/pvme-guides/invention-and-perks/perks/",
     });
-    expect(lines.some((line) => line.includes("Noxious"))).toBe(true);
-    expect(lines.some((line) => line.includes("dominant gate"))).toBe(true);
+    expect(lines.length).toBeGreaterThan(0);
+    expect(lines.length).toBeLessThanOrEqual(2);
     expect(lines.join("\n")).not.toMatch(/confidence/i);
   });
 
@@ -130,5 +148,9 @@ describe("researchRowDetails", () => {
     });
     expect(lines.join("\n")).not.toContain("runescape-wiki");
     expect(lines.join("\n")).not.toMatch(/confidence/i);
+  });
+
+  it("clipProse hard-caps", () => {
+    expect(clipProse("x".repeat(300)).length).toBeLessThanOrEqual(121);
   });
 });

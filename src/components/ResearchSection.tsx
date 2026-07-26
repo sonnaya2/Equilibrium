@@ -403,15 +403,45 @@ function isPlainObject(value: unknown): value is ResearchRow {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+/** Hard cap for any body line. Audit notes in JSON run 1–2k chars — never show that. */
+const LINE_MAX = 120;
+const BODY_MAX_LINES = 2;
+
+const AUDIT_NOISE =
+  /\b(wave[-\s]?\d|final pass|audit rank|rank-\d|first-class row|dual-claim|do not re-emit|does not re-emit|do not invent|do not dual|canonical emit|supersedes dual|residual-?[ab]|still-fucked|enrichment|planner stop|cross-region:|combat:|anachronia:|asgarnia:|kandarin:|tirannwn:|fremennik:|desert:|prifddinas:|slayer:|firemaking:)\b/i;
+
+/** One short human sentence — never the full audit dump. */
+export function clipProse(raw: string, max = LINE_MAX): string {
+  let s = raw.replace(/\s+/g, " ").trim();
+  if (!s) return "";
+
+  // Prefer a sentence that is not maintainance/audit meta.
+  const parts = s.split(/(?<=[.!?])\s+/).map((p) => p.trim()).filter(Boolean);
+  const human = parts.find(
+    (p) => p.length >= 24 && p.length <= max * 1.4 && !AUDIT_NOISE.test(p),
+  );
+  if (human) s = human;
+  else if (AUDIT_NOISE.test(s) && parts.length > 1) {
+    const next = parts.find((p) => !AUDIT_NOISE.test(p) && p.length >= 20);
+    if (next) s = next;
+  }
+
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  const sp = cut.lastIndexOf(" ");
+  return `${(sp > 40 ? cut.slice(0, sp) : cut).trimEnd()}…`;
+}
+
 function text(value: unknown, depth = 0): string {
   if (value == null || value === "") return "";
   if (typeof value === "boolean") return value ? "yes" : "no";
   if (typeof value === "number") return Number.isFinite(value) ? String(value) : "";
-  if (typeof value === "string") return value;
-  if (depth > 2) return "";
+  if (typeof value === "string") return clipProse(value);
+  if (depth > 1) return "";
   if (isSourceRef(value)) return "";
   if (Array.isArray(value)) {
     return value
+      .slice(0, 4)
       .map((item) => text(item, depth + 1))
       .filter(Boolean)
       .join(" · ");
@@ -423,22 +453,11 @@ function text(value: unknown, depth = 0): string {
       (typeof row.perk === "string" && row.perk) ||
       (typeof row.title === "string" && row.title) ||
       "";
-    const rest = Object.entries(row)
-      .filter(([key]) => {
-        if (NESTED_SKIP.has(key)) return false;
-        if (key === "name" || key === "perk" || key === "title") return false;
-        return true;
-      })
-      .map(([key, item]) => {
-        const rendered = text(item, depth + 1);
-        return rendered ? `${fieldLabel(key)} ${rendered}` : "";
-      })
-      .filter(Boolean)
-      .slice(0, 8);
-    if (label) return rest.length ? `${label} (${rest.join(", ")})` : label;
-    return rest.join(" · ");
+    if (label) return clipProse(label, 80);
+    // Never explode nested bags into multi-field essays.
+    return "";
   }
-  return String(value);
+  return clipProse(String(value));
 }
 
 /** Only string/number scalars — never a SourceReference or nested object. */
@@ -692,11 +711,8 @@ function pushLine(lines: string[], used: Set<string>, key: string, value: unknow
 }
 
 /**
- * Unit-testable detail lines:
- * 1. Prefer detail/description as bare main sentence
- * 2. Then requirements
- * 3. When detail is empty, show useful short lines from known fields
- * 4. Never dump source / confidence / combo plumbing / nested junk
+ * Unit-testable detail lines — dense tool chrome only.
+ * At most two short lines. Never the 1–2k char audit essay in `detail`.
  */
 export function researchRowDetails(row: ResearchRow): string[] {
   const lines: string[] = [];
@@ -711,59 +727,51 @@ export function researchRowDetails(row: ResearchRow): string[] {
     }
   }
 
-  // Requirements always sit under the lead when present.
+  // One short reqs line if present (capped).
   for (const key of REQ_KEYS) {
-    if (key in row) pushLine(lines, used, key, row[key]);
+    if (key in row && lines.length < BODY_MAX_LINES) pushLine(lines, used, key, row[key]);
   }
 
-  // Detail/description already is the body — do not re-emit packed sibling fields.
-  if (lead) {
-    const seen = new Set<string>();
-    return lines.filter((line) => {
-      if (seen.has(line)) return false;
+  // No essay lead: at most one extra known short field (role, recipe, level…).
+  if (!lead) {
+    for (const key of KNOWN_BODY_KEYS) {
+      if (lines.length >= BODY_MAX_LINES) break;
+      if (!(key in row) || used.has(key) || STRUCTURAL_KEYS.has(key)) continue;
+      if (
+        key === "effect_summary" ||
+        key === "support_item_effect" ||
+        key === "region_reason" ||
+        key === "pvme_position" ||
+        key === "role"
+      ) {
+        if (sub && text(row[key]) === sub) {
+          used.add(key);
+          continue;
+        }
+      }
+      // Skip long narrative keys when they smell like audit notes.
+      if (
+        (key === "notes" || key === "note" || key === "planner_value" || key === "league_note") &&
+        typeof row[key] === "string" &&
+        (AUDIT_NOISE.test(row[key] as string) || (row[key] as string).length > 200)
+      ) {
+        const clipped = text(row[key]);
+        if (!clipped || clipped.length < 16) continue;
+      }
+      pushLine(lines, used, key, row[key]);
+    }
+  }
+
+  // Hard stop — never scan remaining keys (that was the wall-of-text path).
+  const seen = new Set<string>();
+  return lines
+    .map((line) => clipProse(line, LINE_MAX))
+    .filter((line) => {
+      if (!line || seen.has(line)) return false;
       seen.add(line);
       return true;
-    });
-  }
-
-  // No detail: surface known useful fields, then any remaining short non-structural values.
-  for (const key of KNOWN_BODY_KEYS) {
-    if (!(key in row) || used.has(key) || STRUCTURAL_KEYS.has(key)) continue;
-    // Skip fields already used as subtitle so the body does not repeat them.
-    if (
-      key === "effect_summary" ||
-      key === "support_item_effect" ||
-      key === "region_reason" ||
-      key === "pvme_position" ||
-      key === "role"
-    ) {
-      if (sub && text(row[key]) === sub) {
-        used.add(key);
-        continue;
-      }
-    }
-    pushLine(lines, used, key, row[key]);
-  }
-
-  for (const [key, value] of Object.entries(row)) {
-    if (used.has(key) || STRUCTURAL_KEYS.has(key)) continue;
-    if ((LEAD_KEYS as readonly string[]).includes(key)) continue;
-    if ((REQ_KEYS as readonly string[]).includes(key)) continue;
-    if (isSourceRef(value)) continue;
-    // Skip deep nested bags unless they render compactly.
-    if (isPlainObject(value) && !("name" in value || "perk" in value)) {
-      const nested = text(value);
-      if (!nested || nested.length > 180) continue;
-    }
-    pushLine(lines, used, key, value);
-  }
-
-  const seen = new Set<string>();
-  return lines.filter((line) => {
-    if (seen.has(line)) return false;
-    seen.add(line);
-    return true;
-  });
+    })
+    .slice(0, BODY_MAX_LINES);
 }
 
 function details(row: ResearchRow): string[] {

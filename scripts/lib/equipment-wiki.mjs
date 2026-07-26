@@ -41,24 +41,57 @@ export const SLOT_MAP = {
   mainhand: "mainhand",
   "main-hand": "mainhand",
   "main hand slot": "mainhand",
+  "main-hand slot": "mainhand",
   "off hand": "offhand",
   offhand: "offhand",
   "off-hand": "offhand",
   "off hand slot": "offhand",
+  "off-hand slot": "offhand",
   "two-handed": "twohand",
   twohand: "twohand",
   "two hand": "twohand",
   "two-hand": "twohand",
+  "two-handed slot": "twohand",
+  "two hand slot": "twohand",
   "2h": "twohand",
+  "2h slot": "twohand",
 };
 
 const SKIP_TITLE_RE =
   /^(file|category|template|module|help|special|user|talk|mediawiki):/i;
 const SKIP_LINK_RE =
-  /^(head slot|torso slot|legs slot|hands slot|feet slot|main hand slot|off.?hand slot|two.?handed? slot|hit chance|life points|prayer|membership subscription|free-to-play|members|defence|attack|strength|ranged|magic|necromancy|constitution|melee|slayer|agility|smithing|fletching|dungeoneering|quest points)$/i;
-const WEAPON_SKIP_RE = /\b(hatchet|pickaxe|hatchets|pickaxes)\b/i;
+  /^(head slot|torso slot|legs slot|hands slot|feet slot|main hand slot|off.?hand slot|two.?handed? slot|equipment slot|hit chance|life points|prayer|membership subscription|free-to-play|members|defence|attack|strength|ranged|magic|necromancy|constitution|melee|slayer|agility|smithing|fletching|dungeoneering|quest points|skills?)$/i;
+const WEAPON_SKIP_RE = /\b(hatchet|pickaxe|hatchets|pickaxes|arrow|arrows|bolt|bolts|grapple)\b/i;
 const DISCONTINUED_RE = /\bdiscontinued\b/i;
 const FUN_RE = /\bfun\b/i;
+/**
+ * Sections that are not wearable combat gear tables.
+ * Note: do NOT bare-match "bolts" inside "Crossbows (bolts)" — that is a weapon section.
+ */
+function shouldSkipSection(heading) {
+  if (!heading) return false;
+  const h = String(heading).trim();
+  if (DISCONTINUED_RE.test(h) || FUN_RE.test(h)) return true;
+  if (/^(arrows?|bolts?|ammunition|pouches?|mithril grapple|update history|upgrading|other slots|best in slot equipment|best in slot|neckwear|rings?|capes?|ammo|f2p|p2p|free-to-play shields|members shields|defenders)$/i.test(h)) {
+    return true;
+  }
+  if (/\b(ogre and brutal arrows|core thrown weapons|other thrown weapons|other ranged equipment|mithril grapple)\b/i.test(h)) {
+    return true;
+  }
+  // Dedicated ammo subsections only (not "Crossbows (bolts)" / "Bows (arrows)")
+  if (/^arrows?\b/i.test(h) || /^bolts?\b/i.test(h) || /^ammunition\b/i.test(h)) return true;
+  if (/\b(pouches?|grapple)\b/i.test(h) && !/\b(weapon|crossbow|bow|guard|lantern)\b/i.test(h)) return true;
+  return false;
+}
+/** Non-item wiki titles that ride along in wikitext / notes. */
+const JUNK_TITLE_RE =
+  /\b(armoursmith|croesus|flakes?|abilit(y|ies)|achievements?|kili'?s knowledge|liberation of mazcab|sostratus|quest points?|music track|emote|title unlock|boss pet|familiar|summoning pouch|grand exchange)\b/i;
+const JUNK_EXACT_RE =
+  /^(armoursmith|croesus|croesus flakes|defence abilities|attack abilities|strength abilities|ranged abilities|magic abilities|necromancy abilities|constitution abilities|prayer abilities|liberation of mazcab|kili'?s knowledge|teci|starbloom cloth|masterwork white cloth|elite tectonic repair patch|elite tectonic repair patches|tectonic repair patch)$/i;
+const MATERIAL_RE =
+  /\b(flakes?|cloth|patch(es)?|bars?|ores?|logs?|hides?|leather|scales?|shards?|splinters?|tokens?|teci|essence|runes?|coins?)\b/i;
+const ARMOUR_PIECE_RE =
+  /\b(helm|helmet|hat|coif|hood|mask|visage|body|top|robe|platebody|chestplate|hauberk|cuirass|legs|skirt|tassets|chaps|cuisse|greaves|gloves|gauntlets|vambraces|cuffs|boots|shoes|sabatons|treads|sallet|coif|faceguard|armour \(top\)|armour \(legs\))\b/i;
 
 export function slugId(title) {
   const base = String(title ?? "")
@@ -87,10 +120,54 @@ export function stripTags(html) {
   return decodeHtml(String(html).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
 }
 
+/**
+ * Map wiki slot label / header text → equipment slot id.
+ * Armour headers often contain Head/Torso/Legs/Hands/Feet (with or without "slot").
+ */
 export function mapSlotLabel(label) {
   if (!label) return null;
   const key = String(label).toLowerCase().replace(/_/g, " ").replace(/\s+/g, " ").trim();
-  return SLOT_MAP[key] ?? null;
+  if (!key || key === "equipment slot") return null;
+  if (SLOT_MAP[key]) return SLOT_MAP[key];
+  // Containment match for icon titles / short headers (armour set tables)
+  if (/\bhead\b/.test(key) && !/chance|hit|behead/.test(key)) return "helmet";
+  if (/\btorso\b/.test(key)) return "body";
+  if (/\bbody\b/.test(key) && !/ability|damage/.test(key)) return "body";
+  if (/\blegs?\b/.test(key) && !/legacy/.test(key)) return "legs";
+  if (/\bhands?\b/.test(key)) return "gloves";
+  if (/\bfeet\b/.test(key)) return "boots";
+  if (/\bmain[-\s]?hand\b/.test(key)) return "mainhand";
+  if (/\boff[-\s]?hand\b/.test(key)) return "offhand";
+  if (/\btwo[-\s]?hand/.test(key) || /\b2h\b/.test(key)) return "twohand";
+  return null;
+}
+
+/** Section heading → default slot for items listed there. */
+export function sectionDefaultSlot(heading, kind) {
+  if (!heading) return null;
+  const h = String(heading);
+  if (kind === "armour") {
+    return mapSlotLabel(h) || (
+      /^head$/i.test(h) ? "helmet"
+        : /^(body|torso)$/i.test(h) ? "body"
+          : /^legs$/i.test(h) ? "legs"
+            : /^hands$/i.test(h) ? "gloves"
+              : /^feet$/i.test(h) ? "boots"
+                : /shield/i.test(h) ? "offhand"
+                  : null
+    );
+  }
+  // Weapon section families on Weapon/* pages
+  if (/\bsiphons?\b/i.test(h)) return "mainhand";
+  if (/\bconduits?\b/i.test(h)) return "offhand";
+  if (/\b(shortbows?|longbows?|shieldbows?|bows?\s*\(|bows?\s*$)/i.test(h)) return "twohand";
+  if (/\b(staves|staff)\b/i.test(h)) return "twohand";
+  if (/\borbs?\b/i.test(h)) return "offhand";
+  if (/\bwands?\b/i.test(h)) return "mainhand";
+  if (/\b(defenders?|shields?|books?)\b/i.test(h)) return "offhand";
+  if (/\bthrow/i.test(h)) return "mainhand";
+  // Crossbows / mixed dual-wield — leave null; infer from name
+  return null;
 }
 
 /** Fetch rendered page HTML via action=parse&prop=text. */
@@ -114,6 +191,8 @@ function isSkippableTitle(title) {
   if (SKIP_TITLE_RE.test(t)) return true;
   if (SKIP_LINK_RE.test(t)) return true;
   if (DISCONTINUED_RE.test(t) || FUN_RE.test(t)) return true;
+  if (JUNK_EXACT_RE.test(t)) return true;
+  if (JUNK_TITLE_RE.test(t)) return true;
   return false;
 }
 
@@ -121,13 +200,27 @@ export function shouldSkipCandidate(name, kind, sectionHint = "") {
   if (!name) return true;
   if (isSkippableTitle(name)) return true;
   if (DISCONTINUED_RE.test(sectionHint) || FUN_RE.test(sectionHint)) return true;
+  if (shouldSkipSection(sectionHint)) return true;
   if (kind === "weapon" && WEAPON_SKIP_RE.test(name)) return true;
+  // Materials / currencies / repair kits (not wearable pieces)
+  if (MATERIAL_RE.test(name) && !ARMOUR_PIECE_RE.test(name) && !/\b(staff|wand|bow|sword|rapier|dagger|mace|whip|orb|lantern|guard|crossbow|maul|scythe|spear|halberd|claw|khopesh|chinchompa|javelin|thrownaxe|siphon|conduit)\b/i.test(name)) {
+    return true;
+  }
+  // Armour set / family pages (not a single wearable piece)
+  if (kind === "armour") {
+    if (/\b(armour|armor|equipment|set)\s*$/i.test(name) && !ARMOUR_PIECE_RE.test(name)) {
+      return true;
+    }
+  }
   // Family / list pages that are not wearable pieces
   if (/\b(weapons?|equipment|armour|armor)\s*$/i.test(name) && !/\b(plate|chain|robe)\b/i.test(name)) {
-    // Keep specific named pieces; drop pure family indexes only when they look generic
     if (/^(bronze|iron|steel|black|white|mithril|adamant|rune|dragon|orikalkum|necronium|bane|elder rune|primal)\s+(weapons?|equipment)$/i.test(name)) {
       return true;
     }
+  }
+  // Generic plural family indexes
+  if (/^(siphons?|conduits?|shortbows?|longbows?|crossbows?|wands?|orbs?|staves|shields?|defenders?)$/i.test(name)) {
+    return true;
   }
   return false;
 }
@@ -135,6 +228,7 @@ export function shouldSkipCandidate(name, kind, sectionHint = "") {
 /** Extract article links from a cell: { title, name, href }. */
 export function extractItemLinks(cellHtml) {
   const links = [];
+  const seen = new Set();
   const re = /<a\b[^>]*href="\/w\/([^"#?]+)"[^>]*>([\s\S]*?)<\/a>/gi;
   let match;
   while ((match = re.exec(cellHtml)) !== null) {
@@ -144,8 +238,10 @@ export function extractItemLinks(cellHtml) {
     const wikiTitle = titleAttr ? decodeHtml(titleAttr[1]) : hrefTitle;
     const name = stripTags(match[2]) || wikiTitle;
     if (isSkippableTitle(wikiTitle) || isSkippableTitle(name)) continue;
-    // Image-only file links already filtered via File:
     if (/^File:/i.test(hrefTitle)) continue;
+    const key = wikiTitle.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
     links.push({ wikiTitle, name: name.trim() || wikiTitle, href: hrefTitle });
   }
   return links;
@@ -164,11 +260,12 @@ export function parseTierFromText(text) {
     return n >= 1 && n <= 120 ? n : null;
   }
   // Stripped skillreq: "90 Defence" / "90 Attack"
-  const skill = /^(\d{1,3})\s+(defence|attack|strength|ranged|magic|necromancy|constitution|prayer)\b/i.exec(t);
+  const skill = /^(\d{1,3})\s+(defence|attack|strength|ranged|magic|necromancy|constitution|prayer|dungeoneering|agility|smithing)\b/i.exec(t);
   if (skill) {
     const n = Number(skill[1]);
     return n >= 1 && n <= 120 ? n : null;
   }
+  // "70 (tier 70)" style leftovers — still reject free prose with multiple numbers
   return null;
 }
 
@@ -184,100 +281,199 @@ export function parseTierLoose(text) {
 export function inferWeaponSlot(name) {
   const n = String(name).toLowerCase();
   if (/^off[-\s]?hand\b/.test(n) || /\boff[-\s]?hand\b/.test(n)) return "offhand";
+  // Necromancy: siphons / death guards / omni guard = mainhand; lanterns / conduits = offhand
+  if (/\b(skull lantern|lantern|conduit|soulbound lantern|ruinous lantern|gravite lantern)\b/.test(n)) {
+    return "offhand";
+  }
+  if (/\b(death guard|gravite guard|ruinous guard|omni guard|devourer'?s guard|siphon|chaotic guard)\b/.test(n)) {
+    return "mainhand";
+  }
   if (
     /\b(2h|two[-\s]?handed?)\b/.test(n) ||
-    /\b(godsword|scythe|halberd|maul|battlestaff|staff of|noxious staff|noxious longbow|seren godbow|eldritch crossbow|bow of the last guardian|hexhunter bow|wyvern crossbow|zaryte bow|dark bow|sunspear|spear of annihilation|masterwork spear|terrasaur maul|ek-zekkil|tumeken'?s light)\b/.test(n)
+    /\b(godsword|scythe|halberd|maul|battlestaff|staff|longbow|shortbow|shieldbow|godbow|bow of|noxious longbow|seren godbow|hexhunter bow|zaryte bow|dark bow|chargebow|seercull|decimation|hellfire bow|gloomfire bow|masterwork bow|crystal bow|attuned crystal bow|winds of waiko|sunspear|spear of annihilation|masterwork spear|terrasaur maul|ek-zekkil|tumeken'?s light|bow of the last guardian)\b/.test(n)
   ) {
-    return "twohand";
+    // 1h crossbows are mainhand; 2h eldritch is twohand
+    if (/\bcrossbow\b/.test(n) && !/\beldritch crossbow\b/.test(n) && !/\b(2h|two[-\s]?hand)/.test(n)) {
+      // fall through — handled below
+    } else if (!/\bcrossbow\b/.test(n) || /\beldritch crossbow\b/.test(n)) {
+      return "twohand";
+    }
   }
+  if (/\b(eldritch crossbow)\b/.test(n)) return "twohand";
   if (/\b(defender|orb|book of|focus sight|shield|buckler|repriser|ward)\b/.test(n) && !/\bshieldbow\b/.test(n)) {
     return "offhand";
   }
   // Default 1h weapons to mainhand when no off-hand cue
-  if (/\b(wand|rapier|dagger|scimitar|longsword|sword|mace|whip|claw|khopesh|crossbow|thrownaxe|javelin|chinchompa)\b/.test(n)) {
+  if (/\b(wand|rapier|dagger|scimitar|longsword|sword|mace|whip|claw|khopesh|crossbow|thrownaxe|javelin|chinchompa|dart|knife|throwing)\b/.test(n)) {
     return "mainhand";
   }
+  // Generic "bow" leftover
+  if (/\bbow\b/.test(n)) return "twohand";
+  if (/\b(staff|spear|halberd|maul|scythe)\b/.test(n)) return "twohand";
   return null;
+}
+
+function cellColspan(attrs) {
+  const m = /\bcolspan\s*=\s*["']?(\d+)/i.exec(attrs);
+  return m ? Math.max(1, Number(m[1])) : 1;
+}
+
+function resolveHeaderLabel(cell) {
+  // Prefer slot icon titles / hrefs (Head slot, Two-handed slot, …)
+  const titleMatches = [...cell.html.matchAll(/title="([^"]+)"/gi)].map((m) => decodeHtml(m[1]));
+  for (const t of titleMatches) {
+    const slot = mapSlotLabel(t);
+    if (slot) return t;
+    if (/slot$/i.test(t) && !/^equipment slot$/i.test(t)) return t;
+  }
+  const hrefMatch = /href="\/w\/([^"#?]+)"/i.exec(cell.html);
+  if (hrefMatch) {
+    const t = decodeURIComponent(hrefMatch[1].replace(/_/g, " "));
+    if (mapSlotLabel(t) || (/slot$/i.test(t) && !/^equipment slot$/i.test(t))) return t;
+  }
+  // "Level" under a combat skill icon — keep as Level (tier)
+  const text = cell.text || "";
+  if (/^level$/i.test(text) || /level$/i.test(text)) return "Level";
+  // th title="Equipment slot" → Slot (handedness column, not a piece slot)
+  if (/equipment slot/i.test(cell.html) || /^slot$/i.test(text)) return "Slot";
+  return text;
 }
 
 /**
  * Parse one wikitable into header labels + raw cell HTML rows.
- * Header labels prefer link title attrs (slot icons) then stripped text.
+ * Expands colspan on headers so column indices align with data cells
+ * (Weapon/* pages use colspan=2 Item = image + name).
  */
 export function parseTable(tableHtml) {
-  const trs = tableHtml.match(/<tr[\s\S]*?<\/tr>/gi) ?? [];
+  // Skip navboxes / non-data tables early
+  if (/\bnavbox\b/i.test(tableHtml.slice(0, 200))) return null;
+
+  const trs = tableHtml.match(/<tr\b[\s\S]*?<\/tr>/gi) ?? [];
   if (trs.length === 0) return null;
   const rows = [];
   for (const tr of trs) {
-    const cells = [...tr.matchAll(/<t([dh])\b[^>]*>([\s\S]*?)<\/t\1>/gi)].map((m) => ({
-      tag: m[1].toLowerCase(),
-      html: m[2],
-      text: stripTags(m[2]),
-    }));
+    const cells = [...tr.matchAll(/<t([dh])(\s[^>]*)?>([\s\S]*?)<\/t\1>/gi)].map((m) => {
+      const attrs = m[2] || "";
+      return {
+        tag: m[1].toLowerCase(),
+        html: m[3],
+        text: stripTags(m[3]),
+        colspan: cellColspan(attrs),
+        attrs,
+      };
+    });
     if (cells.length) rows.push(cells);
   }
   if (rows.length === 0) return null;
 
-  // Find header row: first row with mostly th, or first row containing "Tier"/"Type"/"Set"
-  let headerIdx = rows.findIndex((r) => r.some((c) => c.tag === "th"));
+  // Header row: first row with th that isn't a single-cell spacer
+  let headerIdx = rows.findIndex(
+    (r) => r.some((c) => c.tag === "th") && r.filter((c) => c.tag === "th").length >= 2,
+  );
+  if (headerIdx < 0) {
+    headerIdx = rows.findIndex((r) => r.some((c) => c.tag === "th"));
+  }
   if (headerIdx < 0) {
     headerIdx = rows.findIndex((r) =>
-      r.some((c) => /^(type|tier|set|item|weapon|name|attack level|level)$/i.test(c.text)),
+      r.some((c) => /^(type|tier|set|item|weapon|name|attack level|level|slot)$/i.test(c.text)),
     );
   }
   if (headerIdx < 0) headerIdx = 0;
 
   const headerCells = rows[headerIdx];
-  const headers = headerCells.map((cell) => {
-    const titleMatch = /title="([^"]+)"/i.exec(cell.html);
-    if (titleMatch) {
-      const t = decodeHtml(titleMatch[1]);
-      const slot = mapSlotLabel(t);
-      if (slot) return t;
-      if (/slot$/i.test(t)) return t;
-    }
-    const hrefMatch = /href="\/w\/([^"#?]+)"/i.exec(cell.html);
-    if (hrefMatch) {
-      const t = decodeURIComponent(hrefMatch[1].replace(/_/g, " "));
-      if (mapSlotLabel(t) || /slot$/i.test(t)) return t;
-    }
-    return cell.text || "";
+  // Expand colspan so [Item colspan=2] → ["Item","Item"] aligning image+name data cells
+  const headers = [];
+  for (const cell of headerCells) {
+    const label = resolveHeaderLabel(cell);
+    for (let i = 0; i < cell.colspan; i++) headers.push(label);
+  }
+
+  // Drop pure continuation header rows (hidden th, empty) from data
+  const dataRows = rows.slice(headerIdx + 1).filter((r) => {
+    if (r.every((c) => c.tag === "th" && (!c.text || c.text.length < 2))) return false;
+    // spacer rows: single empty th colspan
+    if (r.length === 1 && r[0].tag === "th" && !r[0].text) return false;
+    return true;
   });
 
   return {
     headers,
     headerCells,
-    dataRows: rows.slice(headerIdx + 1),
+    dataRows,
   };
 }
 
 function colIndex(headers, predicates) {
   for (let i = 0; i < headers.length; i++) {
-    const h = headers[i].toLowerCase();
-    if (predicates.some((p) => (typeof p === "string" ? h === p || h.includes(p) : p.test(h)))) {
+    const h = headers[i].toLowerCase().trim();
+    if (predicates.some((p) => (typeof p === "string" ? h === p || (p.length > 3 && h.includes(p)) : p.test(h)))) {
       return i;
     }
   }
   return -1;
 }
 
+/** First combat-skill Level column (not secondary skill Level). */
+function tierColumnIndex(headers) {
+  // Prefer explicit Tier, then Attack/Ranged/Magic/Necromancy Level, then plain Level
+  let idx = colIndex(headers, [/^tier$/i]);
+  if (idx >= 0) return idx;
+  idx = colIndex(headers, [/^attack level$/i, /^ranged level$/i, /^magic level$/i, /^necromancy level$/i, /^defence level$/i]);
+  if (idx >= 0) return idx;
+  // Plain "Level" — take the first
+  return colIndex(headers, [/^level$/i, "level"]);
+}
+
+function nameColumnIndex(headers) {
+  // Exact item/name only — do NOT match "equipment slot" via includes("equipment")
+  return colIndex(headers, [/^item$/i, /^name$/i, /^weapon$/i, /^armour$/i, /^armor$/i]);
+}
+
 function slotColumns(headers) {
   const cols = [];
+  const seen = new Set();
   for (let i = 0; i < headers.length; i++) {
     const slot = mapSlotLabel(headers[i]);
-    if (slot) cols.push({ index: i, slot, label: headers[i] });
+    // Skip handedness "Slot" column — only piece columns (head/torso/… or main/off/two hand as set cols)
+    if (!slot) continue;
+    // Handedness column labeled just "Slot" / "Equipment slot" is not a piece column
+    if (/^slot$/i.test(headers[i].trim())) continue;
+    if (seen.has(i)) continue;
+    // Avoid treating a single handedness icon column as armour set columns
+    cols.push({ index: i, slot, label: headers[i] });
+    seen.add(i);
   }
   return cols;
 }
 
-function makeCandidate({ name, wikiTitle, style, kind, tier, slot, setName, sourcePage, section }) {
+/** Read slot from a data cell (icon link title or text). */
+export function parseSlotFromCell(cell) {
+  if (!cell) return null;
+  for (const m of cell.html.matchAll(/title="([^"]+)"/gi)) {
+    const s = mapSlotLabel(decodeHtml(m[1]));
+    if (s) return s;
+  }
+  for (const m of cell.html.matchAll(/href="\/w\/([^"#?]+)"/gi)) {
+    const s = mapSlotLabel(decodeURIComponent(m[1].replace(/_/g, " ")));
+    if (s) return s;
+  }
+  const text = cell.text || "";
+  if (/two/i.test(text)) return "twohand";
+  if (/off/i.test(text)) return "offhand";
+  if (/main/i.test(text)) return "mainhand";
+  return mapSlotLabel(text);
+}
+
+function makeCandidate({ name, wikiTitle, style, kind, tier, slot, setName, sourcePage, section, parsePath }) {
   const title = wikiTitle || name;
   if (shouldSkipCandidate(title, kind, section) || shouldSkipCandidate(name, kind, section)) {
     return null;
   }
+  // Prefer display name from text links over empty/image-derived
+  const display = (name && name.trim() && !/^\[/.test(name) ? name : title).trim();
   const out = {
     id: slugId(title),
-    name: name || title,
+    name: display || title,
     wikiTitle: title,
     style,
     kind,
@@ -287,6 +483,7 @@ function makeCandidate({ name, wikiTitle, style, kind, tier, slot, setName, sour
   if (slot) out.slot = slot;
   if (setName) out.setName = setName;
   if (section) out.section = section;
+  if (parsePath) out.parsePath = parsePath;
   return out;
 }
 
@@ -296,13 +493,16 @@ function makeCandidate({ name, wikiTitle, style, kind, tier, slot, setName, sour
  */
 export function parseArmourSetTable(table, { style, sourcePage, section, minTier }) {
   const { headers, dataRows } = table;
-  const tierIdx = colIndex(headers, ["tier"]);
-  const setIdx = colIndex(headers, [/^set$/, "set name", "armour set"]);
-  const slots = slotColumns(headers);
+  const tierIdx = colIndex(headers, [/^tier$/i, "tier"]);
+  const setIdx = colIndex(headers, [/^set$/i, /^set name$/i, "armour set"]);
+  const slots = slotColumns(headers).filter((s) =>
+    ["helmet", "body", "legs", "gloves", "boots"].includes(s.slot),
+  );
   if (tierIdx < 0 || slots.length === 0) return [];
 
   const candidates = [];
   for (const row of dataRows) {
+    // Align by min length when colspan left residual mismatch
     const tier = parseTierFromText(row[tierIdx]?.text ?? "");
     if (tier == null || tier < minTier) continue;
     const setLinks = setIdx >= 0 ? extractItemLinks(row[setIdx]?.html ?? "") : [];
@@ -310,6 +510,7 @@ export function parseArmourSetTable(table, { style, sourcePage, section, minTier
       setLinks[0]?.name ??
       (setIdx >= 0 ? row[setIdx]?.text : null) ??
       null;
+    // Skip if setName is the only link target (already filtered) — still harvest pieces
 
     for (const { index, slot } of slots) {
       const cell = row[index];
@@ -325,6 +526,7 @@ export function parseArmourSetTable(table, { style, sourcePage, section, minTier
           setName: setName || undefined,
           sourcePage,
           section,
+          parsePath: "table",
         });
         if (c) candidates.push(c);
       }
@@ -334,29 +536,68 @@ export function parseArmourSetTable(table, { style, sourcePage, section, minTier
 }
 
 /**
- * Non-set armour / generic item tables: Item|Name + Tier columns, optional slot from section.
+ * Collect item links from a name column, also checking adjacent image cell
+ * when Item is split image|name (plinkt-image + plinkt-link).
+ */
+function linksFromNameColumn(row, nameIdx) {
+  const cells = [];
+  if (nameIdx >= 0 && row[nameIdx]) cells.push(row[nameIdx]);
+  // Prefer text link cell next to image when present
+  if (nameIdx >= 0 && row[nameIdx + 1] && /plinkt-link|text-align:\s*left/i.test(row[nameIdx + 1].html + (row[nameIdx + 1].attrs || ""))) {
+    cells.unshift(row[nameIdx + 1]);
+  }
+  // If nameIdx points at first of two Item cols, also try nameIdx+1 always
+  if (nameIdx >= 0 && row[nameIdx + 1]) cells.push(row[nameIdx + 1]);
+  const out = [];
+  const seen = new Set();
+  for (const cell of cells) {
+    for (const link of extractItemLinks(cell.html)) {
+      const k = link.wikiTitle.toLowerCase();
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(link);
+    }
+  }
+  return out;
+}
+
+/**
+ * Non-set armour / generic item tables: Item|Name + Tier/Level columns, optional slot.
+ * Handles Weapon/Ranged (Item colspan image+name, Level, Slot icon) and
+ * Weapon/Necromancy (Item colspan, Level, no slot col — section default).
  */
 export function parseGenericItemTable(table, { style, kind, sourcePage, section, minTier, defaultSlot }) {
   const { headers, dataRows } = table;
-  const tierIdx = colIndex(headers, ["tier", "level", "attack level", "defence level", "requirement"]);
-  const nameIdx = colIndex(headers, [/^item$/, /^name$/, /^weapon$/, /^armour$/, "equipment"]);
-  const slotIdx = colIndex(headers, ["slot", "handedness"]);
-  const slots = slotColumns(headers);
+  const tierIdx = tierColumnIndex(headers);
+  const nameIdx = nameColumnIndex(headers);
+  const slotIdx = colIndex(headers, [/^slot$/i, /^handedness$/i]);
+  const slots = slotColumns(headers).filter((s) => {
+    // For weapons, piece-style columns rare; keep armour piece slots for hybrid tables
+    if (kind === "weapon") return ["mainhand", "offhand", "twohand"].includes(s.slot);
+    return true;
+  });
 
-  // Level-list style: Attack Level | Type (links) — common on Weapon/* pages
+  // Level-list style: Attack Level | Type (links) — common on Weapon/Melee|Magic pages
   const levelList =
     tierIdx >= 0 &&
     nameIdx < 0 &&
     headers.some((h) => /level|type|weapon/i.test(h));
 
+  // Material/upgrade tables: Tier + Material — skip for weapon kind
+  if (kind === "weapon" && /material/i.test(headers.join(" ")) && !/damage|accuracy|item/i.test(headers.join(" "))) {
+    return [];
+  }
+
   const candidates = [];
-  let rowspanTier = null; // inherit Attack Level across rowspan-collapsed rows
+  let rowspanTier = null;
 
   for (const row of dataRows) {
+    // Skip sub-header / material separator rows
+    if (row.every((c) => c.tag === "th")) continue;
+
     let tier = tierIdx >= 0 ? parseTierFromText(row[tierIdx]?.text ?? "") : null;
 
     if (levelList) {
-      // Rowspan: level cell only appears on the first row of a level group
       if (tier != null) rowspanTier = tier;
       else if (rowspanTier != null) tier = rowspanTier;
       else {
@@ -385,6 +626,7 @@ export function parseGenericItemTable(table, { style, kind, sourcePage, section,
             slot: slot || undefined,
             sourcePage,
             section,
+            parsePath: "table",
           });
           if (c) candidates.push(c);
         }
@@ -392,46 +634,85 @@ export function parseGenericItemTable(table, { style, kind, sourcePage, section,
       continue;
     }
 
-    // Explicit name column or harvest all item links with row tier
     if (tier != null) rowspanTier = tier;
     else if (rowspanTier != null && tierIdx >= 0 && !(row[tierIdx]?.text ?? "").trim()) {
       tier = rowspanTier;
     }
 
+    // Try scanning pure-number cells if tier column misaligned
+    if (tier == null) {
+      for (let i = 0; i < row.length; i++) {
+        if (i === nameIdx || i === nameIdx + 1) continue;
+        const t = parseTierFromText(row[i]?.text ?? "");
+        if (t != null) {
+          tier = t;
+          break;
+        }
+      }
+    }
+
     if (tier != null && tier < minTier) continue;
 
     if (nameIdx >= 0) {
-      const cell = row[nameIdx];
-      if (!cell) continue;
-      const links = extractItemLinks(cell.html);
-      if (tier == null) tier = parseTierFromText(row.map((c) => c.text).join(" "));
-      // Require a known tier that meets the floor — skip taxonomy rows (Dagger, Scimitar, …)
+      let links = linksFromNameColumn(row, nameIdx);
+      // Fallback: any item links in the row (image-only name col)
+      if (links.length === 0) {
+        for (const cell of row) {
+          links = links.concat(extractItemLinks(cell.html));
+        }
+        // Dedupe
+        const seen = new Set();
+        links = links.filter((l) => {
+          const k = l.wikiTitle.toLowerCase();
+          if (seen.has(k)) return false;
+          seen.add(k);
+          return true;
+        });
+      }
+      if (tier == null) {
+        // last resort: (tier N) in item name
+        for (const link of links) {
+          const m = /\(tier\s*(\d{1,3})\)/i.exec(link.wikiTitle);
+          if (m) {
+            const n = Number(m[1]);
+            if (n >= 1 && n <= 120) {
+              tier = n;
+              break;
+            }
+          }
+        }
+      }
       if (tier == null || tier < minTier) continue;
+
       let slot = defaultSlot;
       if (slotIdx >= 0) {
-        const handed = row[slotIdx]?.text ?? "";
-        if (/two/i.test(handed)) slot = "twohand";
-        else if (/off/i.test(handed)) slot = "offhand";
-        else if (/main/i.test(handed)) slot = "mainhand";
+        slot = parseSlotFromCell(row[slotIdx]) || slot;
       }
       if (slots.length === 1) slot = slots[0].slot;
+
       for (const link of links) {
+        // Skip price/members icon links already filtered; skip skill pages
+        const resolvedSlot =
+          slot ||
+          (kind === "weapon" ? inferWeaponSlot(link.wikiTitle) : mapSlotLabel(section)) ||
+          undefined;
         const c = makeCandidate({
           name: link.name,
           wikiTitle: link.wikiTitle,
           style,
           kind,
           tier,
-          slot: slot || (kind === "weapon" ? inferWeaponSlot(link.wikiTitle) : mapSlotLabel(section)) || undefined,
+          slot: resolvedSlot,
           sourcePage,
           section,
+          parsePath: "table",
         });
         if (c) candidates.push(c);
       }
       continue;
     }
 
-    // Slot columns without set structure (rare)
+    // Slot columns without set structure (rare hybrid tables)
     if (slots.length > 0 && tier != null) {
       for (const { index, slot } of slots) {
         for (const link of extractItemLinks(row[index]?.html ?? "")) {
@@ -444,6 +725,7 @@ export function parseGenericItemTable(table, { style, kind, sourcePage, section,
             slot,
             sourcePage,
             section,
+            parsePath: "table",
           });
           if (c) candidates.push(c);
         }
@@ -455,21 +737,30 @@ export function parseGenericItemTable(table, { style, kind, sourcePage, section,
 
 /**
  * Wikitext fallback: [[Item name]] near tier numbers in high-value sections only.
+ * Marked parsePath=wikitext — table rows with slots win on dedupe.
  */
 export function parseWikitextTierLinks(wikitext, { style, kind, sourcePage, minTier }) {
   const candidates = [];
-  // Split on == headings ==
   const sections = String(wikitext).split(/(?=^={2,3}\s*[^=].*?={2,3}\s*$)/m);
   for (const block of sections) {
     const headingMatch = /^={2,3}\s*(.*?)\s*={2,3}/.exec(block);
     const section = headingMatch ? stripTags(headingMatch[1].replace(/\[\[|\]\]/g, "")) : "";
     if (DISCONTINUED_RE.test(section) || FUN_RE.test(section)) continue;
+    if (shouldSkipSection(section)) continue;
     // Prefer high-level / requirements / combat stats / 70+
     if (
       kind === "weapon" &&
       section &&
-      !/(requirement|combat stat|stat comparison|high.?level|70|80|90|weaponry|equipment)/i.test(section) &&
+      !/(requirement|combat stat|stat comparison|high.?level|70|80|90|weaponry|equipment|siphon|conduit|shortbow|longbow|crossbow|wand|orb|staff|throw)/i.test(section) &&
       !/(drygore|noxious|chaotic|barrows|god wars|crystal|elite)/i.test(section)
+    ) {
+      continue;
+    }
+    // Armour wikitext: only high-level / tank / power sections
+    if (
+      kind === "armour" &&
+      section &&
+      !/(high.?level|70|80|90|tank|power|head|body|hands|feet|legs|non-set)/i.test(section)
     ) {
       continue;
     }
@@ -477,7 +768,6 @@ export function parseWikitextTierLinks(wikitext, { style, kind, sourcePage, minT
     let lastTier = null;
     for (const line of lines) {
       const cleaned = line.replace(/\{\{[^}]+\}\}/g, " ");
-      // Prefer strict cell-like match; fall back to leading "| 90" / "tier 90" patterns
       let tierInLine = parseTierFromText(cleaned.trim());
       if (tierInLine == null) {
         const labeled = /(?:tier|level|req(?:uirement)?s?)\s*[:=]?\s*(\d{1,3})\b/i.exec(cleaned)
@@ -497,8 +787,8 @@ export function parseWikitextTierLinks(wikitext, { style, kind, sourcePage, minT
         if (shouldSkipCandidate(wikiTitle, kind, section)) continue;
         const slot =
           kind === "weapon"
-            ? inferWeaponSlot(wikiTitle)
-            : mapSlotLabel(section) || undefined;
+            ? inferWeaponSlot(wikiTitle) || sectionDefaultSlot(section, kind)
+            : sectionDefaultSlot(section, kind) || mapSlotLabel(section) || undefined;
         const c = makeCandidate({
           name,
           wikiTitle,
@@ -508,11 +798,9 @@ export function parseWikitextTierLinks(wikitext, { style, kind, sourcePage, minT
           slot: slot || undefined,
           sourcePage,
           section: section || "wikitext",
+          parsePath: "wikitext",
         });
-        if (c) {
-          c.parsePath = "wikitext";
-          candidates.push(c);
-        }
+        if (c) candidates.push(c);
       }
     }
   }
@@ -532,7 +820,6 @@ export function splitSections(html) {
     const end = i + 1 < matches.length ? matches[i + 1].index : html.length;
     parts.push({ heading, body: html.slice(start, end) });
   }
-  // Preamble before first heading
   if (matches[0].index > 0) {
     parts.unshift({ heading: "", body: html.slice(0, matches[0].index) });
   }
@@ -541,7 +828,7 @@ export function splitSections(html) {
 
 /**
  * Extract all equipment candidates from a rendered list page.
- * Prefer HTML tables; optional wikitext fallback when HTML yields nothing useful.
+ * Prefer HTML tables; wikitext is a separate path in the sync script.
  */
 export function parseEquipmentPageHtml(html, { style, kind, sourcePage, minTier = 70 }) {
   const candidates = [];
@@ -550,22 +837,21 @@ export function parseEquipmentPageHtml(html, { style, kind, sourcePage, minTier 
 
   for (const { heading, body } of sections) {
     if (DISCONTINUED_RE.test(heading) || FUN_RE.test(heading)) continue;
-    // Slot context from non-set section headings
-    const sectionSlot = mapSlotLabel(heading) || (
-      /^head$/i.test(heading) ? "helmet"
-        : /^body$/i.test(heading) ? "body"
-          : /^hands$/i.test(heading) ? "gloves"
-            : /^feet$/i.test(heading) ? "boots"
-              : null
-    );
+    if (shouldSkipSection(heading)) continue;
 
+    const sectionSlot = sectionDefaultSlot(heading, kind);
+
+    // Only wikitables / sortable bonus tables — skip navboxes (parseTable already nulls navbox)
     const tables = body.match(/<table\b[\s\S]*?<\/table>/gi) ?? [];
     for (const tableHtml of tables) {
       const table = parseTable(tableHtml);
-      if (!table) continue;
-      const slots = slotColumns(table.headers);
-      const hasTier = table.headers.some((h) => /^tier$/i.test(h.trim()) || h.toLowerCase() === "tier");
-      const isArmourSet = kind === "armour" && hasTier && slots.length >= 2;
+      if (!table || table.headers.length < 2) continue;
+
+      const pieceSlots = slotColumns(table.headers).filter((s) =>
+        ["helmet", "body", "legs", "gloves", "boots"].includes(s.slot),
+      );
+      const hasTier = table.headers.some((h) => /^tier$/i.test(h.trim()));
+      const isArmourSet = kind === "armour" && hasTier && pieceSlots.length >= 2;
 
       let found = [];
       if (isArmourSet) {
@@ -575,6 +861,10 @@ export function parseEquipmentPageHtml(html, { style, kind, sourcePage, minTier 
           section: heading,
           minTier,
         });
+      } else if (kind === "armour" && !sectionSlot && pieceSlots.length === 0) {
+        // Detail/material tables under "Malevolent (90)" etc. — no piece columns, no
+        // Head/Body section context. Skip rather than harvest unslotted junk.
+        found = [];
       } else {
         found = parseGenericItemTable(table, {
           style,
@@ -584,6 +874,8 @@ export function parseEquipmentPageHtml(html, { style, kind, sourcePage, minTier 
           minTier,
           defaultSlot: sectionSlot || undefined,
         });
+        // Armour must carry a slot (set column or section heading)
+        if (kind === "armour") found = found.filter((c) => c.slot);
       }
       for (const c of found) candidates.push(c);
     }
@@ -595,19 +887,27 @@ export function parseEquipmentPageHtml(html, { style, kind, sourcePage, minTier 
   return { candidates, warnings };
 }
 
-/** Deduplicate candidates by id+slot+tier (keep richest row). */
+function candidateScore(x) {
+  // Prefer table-parsed rows with explicit slot over wikitext harvest junk
+  return (
+    (x.parsePath === "table" ? 10 : 0) +
+    (x.parsePath === "wikitext" ? 0 : x.parsePath ? 4 : 6) +
+    (x.slot ? 5 : 0) +
+    (x.setName ? 2 : 0) +
+    (x.tier != null ? 1 : 0)
+  );
+}
+
+/**
+ * Deduplicate candidates by id+style+kind (one slot per piece).
+ * Prefer table-parsed rows with explicit slot over wikitext harvest.
+ */
 export function dedupeCandidates(list) {
   const map = new Map();
   for (const c of list) {
-    const key = `${c.id}|${c.slot ?? ""}|${c.tier ?? ""}|${c.style}`;
+    const key = `${c.id}|${c.style}|${c.kind}`;
     const prev = map.get(key);
-    if (!prev) {
-      map.set(key, c);
-      continue;
-    }
-    // Prefer entry with setName / more fields
-    const score = (x) => (x.setName ? 2 : 0) + (x.slot ? 1 : 0) + (x.tier != null ? 1 : 0);
-    if (score(c) > score(prev)) map.set(key, c);
+    if (!prev || candidateScore(c) > candidateScore(prev)) map.set(key, c);
   }
   return [...map.values()].sort((a, b) => {
     const styleCmp = (a.style ?? "").localeCompare(b.style ?? "");
@@ -628,6 +928,19 @@ export function countByStyleSlot(candidates) {
     matrix[style][slot] = (matrix[style][slot] ?? 0) + 1;
   }
   return matrix;
+}
+
+/** Slot presence counts by style (for sync report). */
+export function countSlotPresence(candidates) {
+  const out = {};
+  for (const c of candidates) {
+    const style = c.style ?? "unknown";
+    out[style] ??= { withSlot: 0, withoutSlot: 0, total: 0 };
+    out[style].total += 1;
+    if (c.slot) out[style].withSlot += 1;
+    else out[style].withoutSlot += 1;
+  }
+  return out;
 }
 
 export function printStyleSlotMatrix(matrix, label = "style × slot") {
@@ -691,6 +1004,58 @@ export function selfCheck() {
 <tr><td><a href="/w/Drygore_rapier" title="Drygore rapier">Drygore rapier</a></td></tr>
 <tr><td>90</td><td><a href="/w/Noxious_scythe" title="Noxious scythe">Noxious scythe</a></td></tr>
 <tr><td>25</td><td><a href="/w/Rune_hatchet" title="Rune hatchet">Rune hatchet</a></td></tr>
+</table>
+<div class="mw-heading mw-heading3"><h3>Shortbows</h3></div>
+<table class="wikitable">
+<tr>
+  <th colspan="2">Item</th>
+  <th>Level</th>
+  <th title="Equipment slot">Slot</th>
+</tr>
+<tr>
+  <td class="plinkt-image"><a href="/w/Yew_shortbow" title="Yew shortbow"><img/></a></td>
+  <td class="plinkt-link"><a href="/w/Yew_shortbow" title="Yew shortbow">Yew shortbow</a></td>
+  <td>70</td>
+  <td><a href="/w/Two-handed_slot" title="Two-handed slot"><img/></a></td>
+</tr>
+<tr>
+  <td class="plinkt-image"><a href="/w/Oak_shortbow" title="Oak shortbow"><img/></a></td>
+  <td class="plinkt-link"><a href="/w/Oak_shortbow" title="Oak shortbow">Oak shortbow</a></td>
+  <td>10</td>
+  <td><a href="/w/Two-handed_slot" title="Two-handed slot"><img/></a></td>
+</tr>
+</table>
+<div class="mw-heading mw-heading2"><h2>Siphons</h2></div>
+<table class="wikitable">
+<tr><th colspan="2">Item</th><th>Level</th><th>Damage</th></tr>
+<tr>
+  <td class="plinkt-image"><a href="/w/Death_guard_(tier_70)" title="Death guard (tier 70)"><img/></a></td>
+  <td class="plinkt-link"><a href="/w/Death_guard_(tier_70)" title="Death guard (tier 70)">Death guard (tier 70)</a></td>
+  <td>70</td><td>672</td>
+</tr>
+<tr>
+  <td class="plinkt-image"><a href="/w/Omni_guard" title="Omni guard"><img/></a></td>
+  <td class="plinkt-link"><a href="/w/Omni_guard" title="Omni guard">Omni guard</a></td>
+  <td>95</td><td>912</td>
+</tr>
+</table>
+<div class="mw-heading mw-heading2"><h2>Conduits</h2></div>
+<table class="wikitable">
+<tr><th colspan="2">Item</th><th>Level</th></tr>
+<tr>
+  <td class="plinkt-image"><a href="/w/Skull_lantern_(tier_90)" title="Skull lantern (tier 90)"><img/></a></td>
+  <td class="plinkt-link"><a href="/w/Skull_lantern_(tier_90)" title="Skull lantern (tier 90)">Skull lantern (tier 90)</a></td>
+  <td>90</td>
+</tr>
+</table>
+<div class="mw-heading mw-heading2"><h2>Arrows</h2></div>
+<table class="wikitable">
+<tr><th colspan="2">Item</th><th>Level</th></tr>
+<tr>
+  <td><a href="/w/Rune_arrow" title="Rune arrow">Rune arrow</a></td>
+  <td></td>
+  <td>50</td>
+</tr>
 </table>`;
 
   const armour = parseEquipmentPageHtml(html, {
@@ -705,6 +1070,18 @@ export function selfCheck() {
     sourcePage: "Weapon/Melee weapons",
     minTier: 70,
   });
+  const ranged = parseEquipmentPageHtml(html, {
+    style: "ranged",
+    kind: "weapon",
+    sourcePage: "Weapon/Ranged weapons",
+    minTier: 70,
+  });
+  const necro = parseEquipmentPageHtml(html, {
+    style: "necromancy",
+    kind: "weapon",
+    sourcePage: "Weapon/Necromancy weapons",
+    minTier: 70,
+  });
 
   const helm = armour.candidates.find((c) => c.id === "item:malevolent-helm");
   const bronze = armour.candidates.find((c) => c.id === "item:bronze-full-helm");
@@ -712,6 +1089,14 @@ export function selfCheck() {
   const scythe = weapons.candidates.find((c) => c.id === "item:noxious-scythe");
   const hatchet = weapons.candidates.find((c) => /hatchet/i.test(c.name));
   const drygore = weapons.candidates.find((c) => c.id === "item:drygore-rapier");
+  const yew = ranged.candidates.find((c) => c.id === "item:yew-shortbow");
+  const oak = ranged.candidates.find((c) => c.id === "item:oak-shortbow");
+  const arrow = ranged.candidates.find((c) => /arrow/i.test(c.name));
+  const deathGuard = necro.candidates.find((c) => c.id === "item:death-guard-tier-70");
+  const omni = necro.candidates.find((c) => c.id === "item:omni-guard");
+  const lantern = necro.candidates.find((c) => c.id === "item:skull-lantern-tier-90");
+  const junk = shouldSkipCandidate("Armoursmith", "armour", "Tank armours");
+  const flakes = shouldSkipCandidate("croesus flakes", "armour", "Tank armours");
 
   const checks = [
     ["slugId plus", slugId("Iron full helm + 1") === "item:iron-full-helm-plus-1"],
@@ -723,11 +1108,25 @@ export function selfCheck() {
     ["noxious scythe twohand", scythe?.slot === "twohand" && scythe?.tier === 90],
     ["hatchet skipped", hatchet == null],
     ["rowspan drygore inherits 70", drygore?.tier === 70],
+    ["yew shortbow twohand tier 70", yew?.slot === "twohand" && yew?.tier === 70],
+    ["oak shortbow filtered", oak == null],
+    ["arrows section skipped", arrow == null],
+    ["death guard mainhand 70", deathGuard?.slot === "mainhand" && deathGuard?.tier === 70],
+    ["omni guard mainhand 95", omni?.slot === "mainhand" && omni?.tier === 95],
+    ["skull lantern offhand 90", lantern?.slot === "offhand" && lantern?.tier === 90],
+    ["junk Armoursmith skipped", junk === true],
+    ["junk flakes skipped", flakes === true],
+    ["table parsePath", helm?.parsePath === "table"],
   ];
   const failed = checks.filter(([, ok]) => !ok);
   for (const [name, ok] of checks) console.log(`  ${ok ? "[OK]" : "[FAIL]"} ${name}`);
   if (failed.length) {
-    console.log("selfCheck FAILED", { armour: armour.candidates, weapons: weapons.candidates });
+    console.log("selfCheck FAILED", {
+      armour: armour.candidates,
+      weapons: weapons.candidates,
+      ranged: ranged.candidates,
+      necro: necro.candidates,
+    });
     throw new Error(`equipment-wiki selfCheck: ${failed.length} failure(s)`);
   }
   console.log("equipment-wiki selfCheck OK");

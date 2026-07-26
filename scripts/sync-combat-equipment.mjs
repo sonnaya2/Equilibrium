@@ -26,6 +26,7 @@ import {
   parseWikitextTierLinks,
   dedupeCandidates,
   countByStyleSlot,
+  countSlotPresence,
   printStyleSlotMatrix,
 } from "./lib/equipment-wiki.mjs";
 
@@ -77,12 +78,19 @@ for (const page of pages) {
       minTier: opts.minTier,
     });
     let list = candidates;
+    const tableCount = candidates.length;
+    const tableWithSlot = candidates.filter((c) => c.slot).length;
     warnings.push(...pageWarnings);
 
-    // Weapons list pages are uneven in HTML; always merge high-value wikitext [[links]]
-    // near tier numbers (dedupe later). Armour only if HTML was thin or flag set.
+    // Prefer HTML tables. Wikitext only when:
+    //   --wikitext-fallback, OR weapon pages with thin/zero table yield.
+    // Armour tables carry explicit Head/Torso/… slots — avoid wikitext junk there
+    // unless the table path produced nothing usable.
+    const tableThin = tableCount < 5 || tableWithSlot < 3;
     const wantWikitext =
-      opts.wikitextFallback || page.kind === "weapon" || list.length < 8;
+      opts.wikitextFallback ||
+      (page.kind === "weapon" && tableThin) ||
+      (page.kind === "armour" && tableCount === 0);
     if (wantWikitext) {
       try {
         const src = await wikiSource(page.title);
@@ -94,7 +102,7 @@ for (const page of pages) {
         });
         if (wt.length) {
           list = [...list, ...wt];
-          warnings.push(`${page.title}: wikitext harvest added ${wt.length} raw links`);
+          warnings.push(`${page.title}: wikitext harvest added ${wt.length} raw links (table had ${tableCount})`);
         }
       } catch (err) {
         warnings.push(`${page.title}: wikitext harvest failed: ${err.message}`);
@@ -104,13 +112,19 @@ for (const page of pages) {
     // Light throttle — wiki is shared
     await new Promise((r) => setTimeout(r, 250));
 
-    console.log(`${list.length} candidates (revid ${rendered.revid ?? "?"})`);
+    const withSlot = list.filter((c) => c.slot).length;
+    console.log(
+      `${list.length} candidates (${tableCount} table, ${withSlot} w/slot) revid ${rendered.revid ?? "?"}`,
+    );
     pageReports.push({
       title: rendered.title,
       style: page.style,
       kind: page.kind,
       revid: rendered.revid,
       candidateCount: list.length,
+      tableCount,
+      withSlot,
+      withoutSlot: list.length - withSlot,
     });
     allCandidates.push(...list);
   } catch (err) {
@@ -128,12 +142,21 @@ for (const page of pages) {
 
 const candidates = dedupeCandidates(allCandidates);
 const matrix = countByStyleSlot(candidates);
+const slotPresence = countSlotPresence(candidates);
 
 const byKind = { armour: 0, weapon: 0 };
 const byStyle = Object.fromEntries(COMBAT_STYLES.map((s) => [s, 0]));
+const byParsePath = { table: 0, wikitext: 0, other: 0 };
+let withSlot = 0;
+let withoutSlot = 0;
 for (const c of candidates) {
   byKind[c.kind] = (byKind[c.kind] ?? 0) + 1;
   byStyle[c.style] = (byStyle[c.style] ?? 0) + 1;
+  if (c.slot) withSlot += 1;
+  else withoutSlot += 1;
+  if (c.parsePath === "table") byParsePath.table += 1;
+  else if (c.parsePath === "wikitext") byParsePath.wikitext += 1;
+  else byParsePath.other += 1;
 }
 
 const report = {
@@ -150,9 +173,13 @@ const report = {
   pages: pageReports,
   counts: {
     total: candidates.length,
+    withSlot,
+    withoutSlot,
     byKind,
     byStyle,
+    byParsePath,
     byStyleSlot: matrix,
+    slotPresenceByStyle: slotPresence,
   },
   warnings,
   candidates,
@@ -166,9 +193,14 @@ await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 console.log("");
 console.log("EQUIPMENT SYNC RESULT");
 console.log(`total candidates (deduped): ${candidates.length}`);
+console.log(`  with slot: ${withSlot}  without slot: ${withoutSlot}`);
 console.log(`  armour: ${byKind.armour ?? 0}  weapon: ${byKind.weapon ?? 0}`);
+console.log(`  parsePath table: ${byParsePath.table}  wikitext: ${byParsePath.wikitext}  other: ${byParsePath.other}`);
 for (const s of COMBAT_STYLES) {
-  if (opts.style === "all" || opts.style === s) console.log(`  ${s}: ${byStyle[s] ?? 0}`);
+  if (opts.style === "all" || opts.style === s) {
+    const sp = slotPresence[s] ?? { withSlot: 0, withoutSlot: 0, total: 0 };
+    console.log(`  ${s}: ${byStyle[s] ?? 0}  (slot ${sp.withSlot} / none ${sp.withoutSlot})`);
+  }
 }
 console.log("");
 printStyleSlotMatrix(matrix, "counts by style × slot");

@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import regionsData from "#data/league/regions.json";
 import { combatEquipment, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
+import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
-import { regionCrestPath } from "@/lib/gameArt";
+import { regionCrestPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import {
   clearEquipment,
@@ -21,6 +22,17 @@ const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
 type SortKey = "region" | "tier" | "name";
 type RegionFilter = RegionId | "base" | "all";
+/** `setup` follows loadout.style; `all` shows every style; else browse that style only. */
+type StyleBrowse = "setup" | "all" | CombatStyle;
+
+const COMBAT_STYLES: CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
+
+const STYLE_LABELS: Record<CombatStyle, string> = {
+  melee: "Melee",
+  ranged: "Ranged",
+  magic: "Magic",
+  necromancy: "Necromancy",
+};
 
 const SLOT_LABELS: Record<EquipmentSlot, string> = {
   mainhand: "Main-hand",
@@ -69,6 +81,8 @@ const DOLL_LAYOUT: Array<Array<EquipmentSlot | null>> = [
   [null, "aura", null],
 ];
 
+const WEARABLE_CAP = 80;
+
 function recordRegions(record: EquipmentRecord): RegionId[] {
   return record.unlock?.regions ?? [];
 }
@@ -84,19 +98,30 @@ function byId(id: string | null | undefined): EquipmentRecord | undefined {
   return combatEquipment.records.find((r) => r.id === id);
 }
 
-function styleMatches(record: EquipmentRecord, style: Loadout["style"]): boolean {
+function styleMatches(record: EquipmentRecord, style: CombatStyle): boolean {
   if (!record.style || record.style === "hybrid") return true;
   return record.style === style;
 }
 
-/** Show style tag when item is hybrid or not the active combat style. */
-function styleMismatchLabel(
+/** Effective combat style for the wearable list, or null when browsing all styles. */
+function effectiveBrowseStyle(
+  styleBrowse: StyleBrowse,
+  loadoutStyle: CombatStyle,
+): CombatStyle | null {
+  if (styleBrowse === "all") return null;
+  if (styleBrowse === "setup") return loadoutStyle;
+  return styleBrowse;
+}
+
+/** Show style tag when item is hybrid, mismatched, or browsing all styles. */
+function styleRowTag(
   record: EquipmentRecord,
-  style: Loadout["style"],
+  referenceStyle: CombatStyle | null,
 ): string | null {
   if (!record.style) return null;
   if (record.style === "hybrid") return "hybrid";
-  if (record.style !== style) return record.style;
+  if (referenceStyle == null) return record.style;
+  if (record.style !== referenceStyle) return record.style;
   return null;
 }
 
@@ -112,18 +137,23 @@ function hasSourcedBonuses(record: EquipmentRecord): boolean {
 
 function emptyPickerCopy(
   activeSlot: EquipmentSlot | null,
-  matchStyle: boolean,
-  style: Loadout["style"],
+  styleBrowse: StyleBrowse,
+  style: CombatStyle,
 ): string {
   const slotBit = activeSlot ? SLOT_LABELS[activeSlot] : null;
-  if (slotBit && matchStyle) {
-    return `No wearables for ${slotBit} under ${style} (or hybrid). Clear Match style, pick another slot, or broaden region/search.`;
+  const styleOn = styleBrowse !== "all";
+  const styleName =
+    styleBrowse === "setup" || styleBrowse === "all"
+      ? style
+      : styleBrowse;
+  if (slotBit && styleOn) {
+    return `No wearables for ${slotBit} under ${styleName} (or hybrid). Browse all styles, pick another slot, or broaden region/search.`;
   }
   if (slotBit) {
     return `No wearables for ${slotBit} with the current region/search. Materials and set aggregates stay under Unlocks.`;
   }
-  if (matchStyle) {
-    return `No wearables match ${style} (or hybrid) with the current filters. Wearables need a slot; try clearing Match style or region/search.`;
+  if (styleOn) {
+    return `No wearables match ${styleName} (or hybrid) with the current filters. Wearables need a slot; try Browse all styles or region/search.`;
   }
   return "No wearables match. Wearables need a slot; materials and set aggregates stay under Unlocks.";
 }
@@ -140,16 +170,21 @@ export function GearPanel({
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("tier");
   const [regionFilter, setRegionFilter] = useState<RegionFilter>("all");
-  /** Default on: only loadout.style / hybrid / unstyled wearables (items the player
-   *  can wear for the active style). Toggle off for cross-style region browse. */
-  const [matchStyle, setMatchStyle] = useState(true);
+  /** Default setup: only loadout.style / hybrid / unstyled. `all` = browse every style. */
+  const [styleBrowse, setStyleBrowse] = useState<StyleBrowse>("setup");
   /** Cap long catalogues; toggle expands past the first 80. */
   const [showAllWearables, setShowAllWearables] = useState(false);
+  /** Unlocks are secondary — collapsed so the wearable list owns the column. */
+  const [unlocksOpen, setUnlocksOpen] = useState(false);
 
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
   const slottedCount = equipmentIdList(slots).length;
   const activeItem = activeSlot ? byId(slots[activeSlot]) : undefined;
+
+  const matchStyle = styleBrowse === "setup";
+  const styleFilterOn = styleBrowse !== "all";
+  const browseStyle = effectiveBrowseStyle(styleBrowse, loadout.style);
 
   /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
@@ -166,7 +201,7 @@ export function GearPanel({
     const filtered = wearables.filter((record) => {
       if (record.slot == null) return false;
       if (activeSlot && record.slot !== activeSlot) return false;
-      if (matchStyle && !styleMatches(record, loadout.style)) return false;
+      if (browseStyle != null && !styleMatches(record, browseStyle)) return false;
       if (regionFilter === "base") {
         if (recordRegions(record).length > 0) return false;
       } else if (regionFilter !== "all") {
@@ -185,9 +220,8 @@ export function GearPanel({
       if (sortKey === "name") return byName(a, b);
       return byRegion(a, b) || (b.tier ?? 0) - (a.tier ?? 0) || byName(a, b);
     });
-  }, [wearables, activeSlot, matchStyle, loadout.style, regionFilter, search, sortKey]);
+  }, [wearables, activeSlot, browseStyle, regionFilter, search, sortKey]);
 
-  const WEARABLE_CAP = 80;
   const wearablesCapped = pickerRows.length > WEARABLE_CAP && !showAllWearables;
   const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
 
@@ -209,6 +243,11 @@ export function GearPanel({
     return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
   }, [unlocks, regionFilter, search]);
 
+  const setStyleBrowseAndReset = (next: StyleBrowse) => {
+    setStyleBrowse(next);
+    setShowAllWearables(false);
+  };
+
   const equip = (record: EquipmentRecord) => {
     if (record.slot == null) return;
     // Active slot filter is strict: twohand is its own doll cell (MH/OH exclusivity is
@@ -222,13 +261,15 @@ export function GearPanel({
     setLoadout(equipInSlot(loadout, slot, null));
   };
 
+  const countLine = `${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"} · style filter ${styleFilterOn ? "on" : "off"}`;
+
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Wearables require a slot. Match style keeps the list to your combat style (and hybrid).
-          Bonuses where sourced; tier feeds AD. Click a slot, then pick an item.
+          Wearables require a slot. Style filter defaults to setup (and hybrid). Browse chips let
+          you page another style without changing Setup. Bonuses where sourced; tier feeds AD.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
@@ -358,7 +399,10 @@ export function GearPanel({
             Region
             <select
               value={regionFilter}
-              onChange={(event) => setRegionFilter(event.target.value as RegionFilter)}
+              onChange={(event) => {
+                setRegionFilter(event.target.value as RegionFilter);
+                setShowAllWearables(false);
+              }}
               className="border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             >
               <option value="all">All regions</option>
@@ -375,16 +419,22 @@ export function GearPanel({
             <input
               type="search"
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setShowAllWearables(false);
+              }}
               placeholder="Name…"
               className="w-36 border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             />
           </label>
+          {/* Kept for e2e + keyboard: checked = follow setup style. */}
           <label className="flex items-center gap-1.5 text-parch-100">
             <input
               type="checkbox"
               checked={matchStyle}
-              onChange={(event) => setMatchStyle(event.target.checked)}
+              onChange={(event) =>
+                setStyleBrowseAndReset(event.target.checked ? "setup" : "all")
+              }
             />
             Match style
           </label>
@@ -393,7 +443,10 @@ export function GearPanel({
               <button
                 key={key}
                 type="button"
-                onClick={() => setSortKey(key)}
+                onClick={() => {
+                  setSortKey(key);
+                  setShowAllWearables(false);
+                }}
                 className={`border px-2 py-1 capitalize ${
                   sortKey === key
                     ? "border-stone-750 bg-stone-850 text-parch-50"
@@ -411,29 +464,69 @@ export function GearPanel({
           )}
         </div>
 
+        {/* Browse-style chips — independent of loadout; Setup chip follows loadout.style. */}
+        <div
+          className="mt-2 flex flex-wrap items-center gap-1"
+          role="group"
+          aria-label="Browse combat style"
+        >
+          <button
+            type="button"
+            aria-pressed={styleBrowse === "setup"}
+            onClick={() => setStyleBrowseAndReset("setup")}
+            className="facet-chip"
+            title={`Follow setup (${STYLE_LABELS[loadout.style]})`}
+          >
+            Setup
+          </button>
+          <button
+            type="button"
+            aria-pressed={styleBrowse === "all"}
+            onClick={() => setStyleBrowseAndReset("all")}
+            className="facet-chip"
+            title="Browse all styles"
+          >
+            Browse all styles
+          </button>
+          {COMBAT_STYLES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={styleBrowse === s}
+              onClick={() => setStyleBrowseAndReset(s)}
+              className="facet-chip flex items-center gap-1"
+              title={`Browse ${STYLE_LABELS[s]} only (does not change Setup)`}
+            >
+              <GameIcon src={styleIconPath(s)} size={12} />
+              {STYLE_LABELS[s]}
+            </button>
+          ))}
+        </div>
+
         <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
             Wearables
           </h3>
           <span className="text-xs text-parch-300">
-            {pickerRows.length === 0
-              ? "Showing 0 wearables"
-              : wearablesCapped
-                ? `Showing ${visiblePickerRows.length} of ${pickerRows.length} wearables`
-                : `Showing ${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"}`}
+            {countLine}
+            {wearablesCapped
+              ? ` · showing ${visiblePickerRows.length}`
+              : pickerRows.length > 0
+                ? " · showing all"
+                : ""}
           </span>
         </div>
-        <div className="mt-1 max-h-96 overflow-y-auto border-t border-stone-750">
+        <div className="mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
             <p className="px-2 py-3 text-xs leading-relaxed text-parch-300">
-              {emptyPickerCopy(activeSlot, matchStyle, loadout.style)}
+              {emptyPickerCopy(activeSlot, styleBrowse, loadout.style)}
             </p>
           ) : (
             <>
               {visiblePickerRows.map((record) => {
                 const equipped = slots[record.slot!] === record.id;
                 const noBonuses = !hasSourcedBonuses(record);
-                const styleTag = styleMismatchLabel(record, loadout.style);
+                const styleTag = styleRowTag(record, browseStyle);
                 return (
                   <button
                     key={record.id}
@@ -486,47 +579,61 @@ export function GearPanel({
           )}
         </div>
 
-        <h3 className="mt-4 text-xs font-medium uppercase tracking-wide text-parch-300">
-          Unlocks &amp; materials · {unlockRows.length}
-        </h3>
-        <p className="mt-1 text-xs text-parch-300">
-          No slot — materials, codices, and set aggregates. Pin only; never equip on the doll.
-        </p>
-        <div className="mt-1 max-h-72 overflow-y-auto border-t border-stone-750">
-          {unlockRows.length === 0 ? (
-            <p className="px-2 py-3 text-xs text-parch-300">
-              No unlocks match the current region/search.
-            </p>
-          ) : (
-            unlockRows.map((record) => {
-              const pinned = unlockPins.has(record.id);
-              return (
-                <button
-                  key={record.id}
-                  type="button"
-                  onClick={() => setLoadout(toggleUnlockPin(loadout, record.id))}
-                  className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
-                    pinned
-                      ? "bg-stone-850 text-parch-50"
-                      : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span>{record.name}</span>
-                    {record.tier != null ? (
-                      <span className="font-mono text-parch-100">T{record.tier}</span>
-                    ) : null}
-                  </span>
-                  <span className="flex items-center gap-1.5 text-parch-100">
-                    {recordRegions(record).map((id) => (
-                      <GameIcon key={id} src={regionCrestPath(id)} size={14} />
-                    ))}
-                    <span>{regionLabel(record)}</span>
-                  </span>
-                </button>
-              );
-            })
-          )}
+        <div className="mt-4 border-t border-stone-750 pt-2">
+          <button
+            type="button"
+            aria-expanded={unlocksOpen}
+            onClick={() => setUnlocksOpen((v) => !v)}
+            className="flex w-full flex-wrap items-baseline justify-between gap-2 text-left"
+          >
+            <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
+              Unlocks &amp; materials · {unlockRows.length}
+            </h3>
+            <span className="text-xs text-gem-400">
+              {unlocksOpen ? "Hide" : "Show"} · pin only
+            </span>
+          </button>
+          <p className="mt-1 text-xs text-parch-300">
+            No slot — materials, codices, and set aggregates. Never equip on the doll.
+          </p>
+          {unlocksOpen ? (
+            <div className="mt-1 max-h-48 overflow-y-auto border-t border-stone-750">
+              {unlockRows.length === 0 ? (
+                <p className="px-2 py-3 text-xs text-parch-300">
+                  No unlocks match the current region/search.
+                </p>
+              ) : (
+                unlockRows.map((record) => {
+                  const pinned = unlockPins.has(record.id);
+                  return (
+                    <button
+                      key={record.id}
+                      type="button"
+                      onClick={() => setLoadout(toggleUnlockPin(loadout, record.id))}
+                      className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
+                        pinned
+                          ? "bg-stone-850 text-parch-50"
+                          : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>{record.name}</span>
+                        {record.tier != null ? (
+                          <span className="font-mono text-parch-100">T{record.tier}</span>
+                        ) : null}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-parch-100">
+                        {recordRegions(record).map((id) => (
+                          <GameIcon key={id} src={regionCrestPath(id)} size={14} />
+                        ))}
+                        <span>{regionLabel(record)}</span>
+                      </span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

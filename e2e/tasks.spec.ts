@@ -29,6 +29,12 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
   );
   await expect(importWindow).toContainText("Wait for your completed tasks to turn green.");
   await expect(importWindow).toContainText("Ctrl+S");
+  await expect(importWindow).toContainText("Processed locally. Not uploaded.");
+  await expect(
+    importWindow.getByRole("link", {
+      name: "RuneScape Wiki: “publicly available to anyone”",
+    }),
+  ).toHaveAttribute("href", "https://runescape.wiki/w/RuneScape:WikiSync");
   await expect(importWindow.getByRole("button", { name: "Browse" })).toBeVisible();
   await expect(importWindow.getByRole("button", { name: "Upload" })).toBeDisabled();
 

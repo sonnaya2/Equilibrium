@@ -510,7 +510,16 @@ export function TaskRecords({
               <li>Press Ctrl+S (⌘S on Mac) and save the page as an .html file.</li>
               <li>Browse for that file below, then choose Upload.</li>
             </ol>
-            <p>Your file stays in this browser.</p>
+            <p>
+              Processed locally. Not uploaded.{" "}
+              <a
+                href="https://runescape.wiki/w/RuneScape:WikiSync"
+                target="_blank"
+                rel="noreferrer"
+              >
+                RuneScape Wiki: “publicly available to anyone”
+              </a>
+            </p>
             {wikiSyncNotice ? (
               <p className="tasks-import-dialog__notice" role="status">
                 {wikiSyncNotice}

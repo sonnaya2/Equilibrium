@@ -1,5 +1,5 @@
 {
-  "snapshotDate": "2026-07-25",
+  "snapshotDate": "2026-07-26",
   "sourcePolicy": {
     "defaultGroundTruth": "runescape-wiki",
     "explicitSourceGroundTruth": [
@@ -25,7 +25,7 @@
     "prayers": "46 Standard prayers, 45 Ancient Curses and the seven-prayer Seren subset now carry current effects, unlock profiles, source references and normal-game required regions; only Standard and Ancient Curses are switchable books",
     "spellbooks": "Standard, Ancient Magicks and Lunar are standalone planner data; Necromancy incantations and Daemonheim remain scoped special systems",
     "masterwork_staff": "tier-100 self-source chain mapped with explicit hard/conditional region pressure, current Abyssal synapse hotfix state, 2026 Havenhythe eternal-tree alternate location and weaker confidence retained where the complete flattened recipe is only cross-checked",
-    "training": "all 29 named RS3 skills surface in the browser; combat-method candidates from PvME pages carrying the March 2026 site-wide stale warning are retained only as candidates and are no longer treated as current validation; no stale combat XP tables are promoted",
+    "training": "all 29 named RS3 skills surface in the browser; combat-method candidates from PvME pages carrying the March 2026 site-wide stale warning are retained only as candidates and are no longer treated as current validation; no stale combat XP tables are promoted; gap-fill scrapes (training-gap-*.json, 2026-07-26) merged for Mining/Fishing/Farming/Woodcutting/artisan/production/Archaeology/Thieving/Fletching routes without inventing XP/h",
     "slayer": "29 deduplicated high-value, collection-log and boundary-sensitive Slayer routes are preserved with alternate regions and source freshness visible; legacy PvME KPH/XP values remain guide context rather than optimizer-grade post-2026 rankings",
     "runecrafting": "altar geography plus 110 Runecrafting progression mapped, including Time altar, expansive pouch, eternal-magic weapon imbuing and the detailed Masterwork staff cross-region chain; optimizer-grade post-2026 XP benchmarks remain pending",
     "invention": "unlock ladder, item-level milestones, Ancient Invention and Scavenging are joined by all 69 active perks, current rare-material taxonomy coverage, 20 current weapon/armour perk families, utility bridge recipes, the Spring cleaner tight-spring bottleneck and explicit account/non-region material bottlenecks for self-sufficient planning; all 15 perks removed on 20 July 2026 are excluded",
@@ -44,7 +44,7 @@
     "revealedBlessingTiers": 0,
     "publishedTasks": 0,
     "skills": 29,
-    "trainingMethods": 206,
+    "trainingMethods": 217,
     "regionalSkillingUnlocks": 54,
     "regionalSkillingActivities": 28,
     "regionalSkillingEquipment": 26,
@@ -75,6 +75,7 @@
         "Necromancy",
         "Prayer",
         "Runecrafting",
+        "Slayer",
         "Summoning",
         "Thieving",
         "Woodcutting"
@@ -659,7 +660,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/TzKal-Zuk",
             "title": "Igneous cape progression",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "misthalin",
           "regionHints": [
@@ -686,7 +687,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Asylum_surgeon%27s_ring",
             "title": "Asylum surgeon's ring",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "misthalin",
           "regionHints": [
@@ -714,6 +715,9 @@
         "necromancy:rituals",
         "prayer:supply-bones-dragonkin",
         "runecrafting:runespan-via-wizards-tower",
+        "slayer:chaeldar",
+        "slayer:the-raptor",
+        "slayer:vannaka",
         "summoning:supply-water-talismans-by-region",
         "thieving:archaeology-professors-pickpocketing",
         "thieving:city-of-um-multi-step-chest",
@@ -762,6 +766,7 @@
         "Fishing",
         "Hunter",
         "Mining",
+        "Ranged",
         "Slayer",
         "Summoning",
         "Woodcutting"
@@ -992,6 +997,7 @@
         "hunter:jackalope-hunting",
         "mining:necrite-rocks-level-70-",
         "mining:phasmatite-rocks-level-70-pair-with-necrite-",
+        "ranged:black-chinchompa",
         "summoning:shrine-of-inanna-obelisks",
         "woodcutting:choking-ivy-by-region-including-fort-forinthry-grove-ivy-",
         "woodcutting:creeping-ivy",
@@ -1135,7 +1141,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/TzKal-Zuk",
             "title": "Igneous cape progression",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "karamja",
           "regionHints": [
@@ -1161,7 +1167,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Obsidian_equipment",
             "title": "Fight Cauldron obsidian armour progression",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "karamja",
           "regionHints": [
@@ -1184,7 +1190,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/TokKul-Zo",
             "title": "TokKul-Zo",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "karamja",
           "regionHints": [
@@ -1215,7 +1221,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Blessed_flask",
             "title": "Blessed flask production chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "karamja",
           "regionHints": [
@@ -1236,6 +1242,7 @@
         "firemaking:curly-roots-with-superheat-form-or-always-adze-",
         "mining:banite-rocks-level-80-",
         "mining:drakolith-rocks-level-60-pair-with-orichalcite-",
+        "slayer:duradel-lapalok",
         "thieving:tzhaar-hur-trader-pickpocketing",
         "woodcutting:teak-trees-by-region"
       ],
@@ -1662,7 +1669,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Archaeology_training",
             "title": "Death Ward relic chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "asgarnia",
           "regionHints": [
@@ -1737,6 +1744,8 @@
         "Fishing",
         "Herblore",
         "Mining",
+        "Ranged",
+        "Slayer",
         "Summoning",
         "Thieving",
         "Woodcutting"
@@ -2003,7 +2012,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Enhanced_Excalibur",
             "title": "Seers' Village combat achievement rewards",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "kandarin",
           "regionHints": [
@@ -2028,7 +2037,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Archaeology_training",
             "title": "Death Ward relic chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "kandarin",
           "regionHints": [
@@ -2054,7 +2063,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Player-owned_farm",
             "title": "NopeNopeNope spider combat perk",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "kandarin",
           "regionHints": [
@@ -2085,6 +2094,9 @@
         "herblore:high-tier-herbs",
         "mining:necrite-rocks-level-70-",
         "mining:skillchompas-as-mining-critical-swing-consumable",
+        "ranged:chinchompa-grey-",
+        "ranged:red-chinchompa",
+        "slayer:kuradal",
         "summoning:standard-charms",
         "thieving:safecracking-kandarin",
         "woodcutting:choking-ivy-by-region-including-fort-forinthry-grove-ivy-",
@@ -2327,7 +2339,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Fremennik_achievements",
             "title": "Elite Fremennik combat rewards",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "fremennik",
           "regionHints": [
@@ -2757,7 +2769,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Spirit_cape",
             "title": "Spirit cape passive",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2783,7 +2795,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ring_of_vigour",
             "title": "Ring of Vigour and passive conversion",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2808,7 +2820,7 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
             "title": "Bonecrusher",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2833,7 +2845,7 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
             "title": "Charming imp",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2858,7 +2870,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Guthix_staff",
             "title": "Guthix staff and Claws of Guthix access",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2883,7 +2895,7 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
             "title": "Demon horn necklace",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2908,7 +2920,7 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
             "title": "Split dragontooth necklace",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2931,7 +2943,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Corporeal_Beast",
             "title": "Corporeal Beast holy-elixir supply",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2962,7 +2974,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Blessed_flask",
             "title": "Blessed flask production chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -2977,7 +2989,6 @@
       ],
       "trainingMethodIds": [
         "agility:wilderness-course",
-        "combat-styles:abyss-afk-combat-training",
         "crafting:combo-crafting-late-game-split",
         "crafting:crafteneering-dungeon-smuggler-leather-loop-",
         "divination:daemonheim-divination-time-worn-memories-",
@@ -2999,6 +3010,9 @@
         "prayer:supply-bones-dragon-generic",
         "runecrafting:abyss-runecrafting",
         "runecrafting:time-runes-through-the-abyss",
+        "slayer:mandrith",
+        "slayer:the-raptor",
+        "slayer:vannaka",
         "smithing:combo-forinthry-autoheater-crafteneering",
         "smithing:combo-smithing-afk-trinity",
         "smithing:smithing-autoheater-advanced-smithing-autoheater",
@@ -3042,6 +3056,7 @@
         "Mining",
         "Prayer",
         "Runecrafting",
+        "Slayer",
         "Summoning",
         "Thieving",
         "Woodcutting"
@@ -3300,7 +3315,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Keris",
             "title": "Hard Desert Keris upgrade",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
           "regionHints": [
@@ -3324,7 +3339,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Dreadnip",
             "title": "Dreadnips",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
           "regionHints": [
@@ -3355,7 +3370,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Blessed_flask",
             "title": "Blessed flask production chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
           "regionHints": [
@@ -3386,6 +3401,7 @@
         "mining:skillchompas-as-mining-critical-swing-consumable",
         "prayer:powder-of-burials-banked-bones",
         "runecrafting:soul-altar",
+        "slayer:sumona",
         "summoning:menaphos-merchant-district-obelisk",
         "summoning:standard-charms",
         "thieving:menaphite-marketeer-pickpocketing",
@@ -3646,7 +3662,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Morytania_achievements",
             "title": "Hard Morytania Barrows rewards",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3671,7 +3687,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
             "title": "Berserker's Fury relic chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3696,7 +3712,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Heightened_Senses",
             "title": "Heightened Senses relic chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3717,7 +3733,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sunspear_(melee)",
             "title": "Vyre combat and Sunspear progression",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3741,7 +3757,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Salve_amulet_(e)",
             "title": "Salve amulet (e)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3766,7 +3782,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Amulet_of_the_forsaken",
             "title": "Amulet of the forsaken to Berserker's Fury",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3790,7 +3806,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Holy_wrench",
             "title": "Holy wrench",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3815,7 +3831,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Asylum_surgeon%27s_ring",
             "title": "Asylum surgeon's ring",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "morytania",
           "regionHints": [
@@ -3838,6 +3854,7 @@
         "prayer:cremating-vyrewatch-with-sunspear",
         "prayer:supply-bones-dragon-generic",
         "prayer:vyrelords-vyreladies-with-sunspear",
+        "slayer:mazchna-achtryn",
         "summoning:celestial-dragons-steel-ingots-water-talismans-crimson-charms",
         "summoning:standard-charms",
         "summoning:supply-steel-ingots",
@@ -3877,6 +3894,7 @@
         "Herblore",
         "Mining",
         "Prayer",
+        "Slayer",
         "Smithing",
         "Summoning",
         "Thieving",
@@ -4448,7 +4466,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Tirannwn_achievements",
             "title": "Tirannwn combat achievement rewards",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "tirannwn",
           "regionHints": [
@@ -4479,7 +4497,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Blessed_flask",
             "title": "Blessed flask production chain",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "tirannwn",
           "regionHints": [
@@ -4511,6 +4529,7 @@
         "mining:skillchompas-as-mining-critical-swing-consumable",
         "prayer:cleansing-crystals",
         "prayer:cleansing-crystals-at-hefin-cathedral",
+        "slayer:morvran",
         "smithing:combo-smithing-afk-trinity",
         "smithing:combo-tirannwn-artisan-prayer-tools",
         "smithing:crystal-hammer-augmentable-",
@@ -4557,6 +4576,7 @@
         "Mining",
         "Prayer",
         "Runecrafting",
+        "Slayer",
         "Smithing",
         "Thieving"
       ],
@@ -4910,7 +4930,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Template:Anachronia_base_camp/Slayer_Lodge_tiers",
             "title": "Slayer Lodge progression",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "anachronia",
           "regionHints": [
@@ -4931,7 +4951,7 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
             "title": "Totem of Vitality",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "anachronia",
           "regionHints": [
@@ -4955,7 +4975,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
             "title": "King of Beasts bomb-conservation perk",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "anachronia",
           "regionHints": [
@@ -4979,7 +4999,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
             "title": "No Fear Meteor Strike perk",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "anachronia",
           "regionHints": [
@@ -5003,7 +5023,7 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
             "title": "Armoured Hide Barricade perk",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           },
           "regionId": "anachronia",
           "regionHints": [
@@ -5036,6 +5056,7 @@
         "prayer:supply-bones-dinosaur",
         "runecrafting:time-runes",
         "runecrafting:time-runes-through-the-abyss",
+        "slayer:laniakea",
         "smithing:combo-anachronia-orthen-iaia-accidental",
         "smithing:combo-smithing-afk-trinity",
         "smithing:orthen-furnace-core-obtain-craft-",
@@ -5237,7 +5258,7 @@
           "skill": "Archaeology",
           "method": "Bandos's sanctum debris for Spear of Annihilation tip, then return to Praetorian remains",
           "levelRange": "115-118",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation",
           "location": "",
           "requirements": [],
@@ -5245,15 +5266,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: excavate Bandos's sanctum debris for the Spear of Annihilation tip; once obtained, return to Praetorian remains. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: excavate Bandos's sanctum debris for the Spear of Annihilation tip; once obtained, return to Praetorian remains. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Bandos's sanctum debris for Spear of Annihilation tip, then return to Praetorian remains",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5261,7 +5282,7 @@
           "skill": "Archaeology",
           "method": "Bank artefacts from Armarium debris for Zarosian III / Museum - Zarosian III",
           "levelRange": "93-100",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation bank",
           "location": "",
           "requirements": [],
@@ -5269,15 +5290,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: prepare 70-90 sets from Armarium debris. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: prepare 70-90 sets from Armarium debris. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Bank artefacts from Armarium debris for Zarosian III / Museum - Zarosian III",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5285,7 +5306,7 @@
           "skill": "Archaeology",
           "method": "Bank artefacts from Culinarum debris for Zarosian III / Museum - Zarosian III",
           "levelRange": "100-107",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation bank",
           "location": "",
           "requirements": [],
@@ -5293,15 +5314,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: prepare 70-90 sets from Culinarum debris. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: prepare 70-90 sets from Culinarum debris. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Bank artefacts from Culinarum debris for Zarosian III / Museum - Zarosian III",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5309,7 +5330,7 @@
           "skill": "Archaeology",
           "method": "Bank artefacts from Orcus altar for Zarosian III / Museum - Zarosian III",
           "levelRange": "86-93",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation bank",
           "location": "",
           "requirements": [],
@@ -5317,15 +5338,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: prepare 70-90 sets of artefacts from Orcus altar hotspots for Museum - Zarosian III or Zarosian III., Orcus altar is at Kharid-et (Desert). · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: prepare 70-90 sets of artefacts from Orcus altar hotspots for Museum - Zarosian III or Zarosian III. · Orcus altar is at Kharid-et (Desert). · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Bank artefacts from Orcus altar for Zarosian III / Museum - Zarosian III",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5333,25 +5354,23 @@
           "skill": "Archaeology",
           "method": "Best available excavation hotspot (only when no mysteries/collections are ready)",
           "levelRange": "1-76",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "AFK-to-active",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "multi-region"
-          ],
-          "note": "Ironman guide: train using the best available excavation hotspot only if no mysteries/collections are available to complete. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "regionHints": [],
+          "note": "Ironman guide: train using the best available excavation hotspot only if no mysteries/collections are available to complete. · Planner coverage: present_as_generic",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Best available excavation hotspot (only when no mysteries/collections are ready)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5359,7 +5378,7 @@
           "skill": "Archaeology",
           "method": "Complete Zarosian III / Museum - Zarosian III via Ancient magick munitions (Inquisitor staff side-loot)",
           "levelRange": "107-114",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "active restoration loop",
           "location": "",
           "requirements": [],
@@ -5367,15 +5386,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: complete 70-90 Museum - Zarosian III or Zarosian III collections by excavating Ancient magick munitions., Museum - Zarosian III rewards 16,744 chronotes per completion; Zarosian III rewards 14,884 chronotes and 100 pylon batteries (guide footnote also cites 53k Archaeology XP from the batteries path — not treated here as a hotspot XP/h rate)., Ancient magick munitions also have a chance to drop Inquisitor staff pieces. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: complete 70-90 Museum - Zarosian III or Zarosian III collections by excavating Ancient magick munitions. · Museum - Zarosian III rewards 16,744 chronotes per completion; Zarosian III rewards 14,884 chronotes and 100 pylon batteries (guide footnote also cites 53k Archaeology XP from the batteries path — not treated here as a hotspot XP/h rate). · Ancient magick munitions also have a chance to drop Inquisitor staff pieces. · Planner coverage: gap_high_value",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Complete Zarosian III / Museum - Zarosian III via Ancient magick munitions (Inquisitor staff side-loot)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5383,7 +5402,7 @@
           "skill": "Archaeology",
           "method": "Daemonheim Dig Site excavation + Dragonkin V–VII (missing from ironman guide mystery table)",
           "levelRange": "73-113+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "mixed",
           "location": "",
           "requirements": [],
@@ -5391,15 +5410,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Requires 73 Archaeology and Skaldrun unlocked. Wiki Equilibrium League region badge: Wilderness., Depths excavation site needs research On the Threshold of the Mind + restored 'friendship bracelet' on toolbelt., Collections: Dragonkin V (77), Dragonkin VI (87, Pastkeeper's tapestry / Spirit Weaver), Dragonkin VII (113)., Mysteries A New Home / A New Form / A New Age are absent from Ironman Mode/Guide/Archaeology mystery order table. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Requires 73 Archaeology and Skaldrun unlocked. Wiki Equilibrium League region badge: Wilderness. · Depths excavation site needs research On the Threshold of the Mind + restored 'friendship bracelet' on toolbelt. · Collections: Dragonkin V (77), Dragonkin VI (87, Pastkeeper's tapestry / Spirit Weaver), Dragonkin VII (113). · Mysteries A New Home / A New Form / A New Age are absent from Ironman Mode/Guide/Archaeology mystery order table. · Planner coverage: partial_relic_route_training_method_gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Daemonheim_Dig_Site",
             "title": "Daemonheim Dig Site excavation + Dragonkin V–VII (missing from ironman guide mystery table)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5433,25 +5452,23 @@
           "skill": "Archaeology",
           "method": "Ironman priority stack: mysteries → first-time collections → special research → highest-level hotspot",
           "levelRange": "5-120",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "mixed",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "multi-region"
-          ],
-          "note": "Ironman Mode/Guide/Archaeology: prioritise mysteries you can complete, then first-time collections, then special research, then excavate the highest-level hotspots available., Materials lag artefacts: accumulate damaged artefacts first; material caches are catch-up only (no passive artefacts)., Prioritising mysteries keeps you on a site longer so excavation yields more passive materials. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "regionHints": [],
+          "note": "Ironman Mode/Guide/Archaeology: prioritise mysteries you can complete, then first-time collections, then special research, then excavate the highest-level hotspots available. · Materials lag artefacts: accumulate damaged artefacts first; material caches are catch-up only (no passive artefacts). · Prioritising mysteries keeps you on a site longer so excavation yields more passive materials. · Wiki does not publish a single XP/h for this stack; rates depend on level, hotspot, and restoration throughput. · Planner coverage: partially_covered_as_generic_highest_hotspot",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Ironman priority stack: mysteries → first-time collections → special research → highest-level hotspot",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5488,7 +5505,7 @@
           "skill": "Archaeology",
           "method": "Moonrise Dig Site hotspots + Guthixian I/II collections (missing from ironman guide training table)",
           "levelRange": "52-88",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "mixed mysteries + excavation",
           "location": "",
           "requirements": [],
@@ -5496,15 +5513,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Released 15 June 2026. Level 52 Archaeology + Secrets of Amberfell; speak to Utu before hotspots., Hotspots (XP per material listed on site page, not XP/h): Lunar wheel debris 52 (17.2), Arbour rubble 59 (18.4), Weaver's hut debris 66 (23.4), Shrine debris 75 (30.9), Cauldron debris 82 (39.3), Blood altar 88 (49.4)., Guthixian I (66, Artiefax) first-time reward: Guardian's tear → Hungry Like the Wolf relic path., Guthixian II (88) includes Fang of Kayazu for Ring of Kayazu., Ironman Mode/Guide/Archaeology mystery/collection/training tables still omit Moonrise entirely as of this snapshot — high-value gap for ironman/league. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Released 15 June 2026. Level 52 Archaeology + Secrets of Amberfell; speak to Utu before hotspots. · Hotspots (XP per material listed on site page, not XP/h): Lunar wheel debris 52 (17.2), Arbour rubble 59 (18.4), Weaver's hut debris 66 (23.4), Shrine debris 75 (30.9), Cauldron debris 82 (39.3), Blood altar 88 (49.4). · Guthixian I (66, Artiefax) first-time reward: Guardian's tear → Hungry Like the Wolf relic path. · Guthixian II (88) includes Fang of Kayazu for Ring of Kayazu. · Ironman Mode/Guide/Archaeology mystery/collection/training tables still omit Moonrise entirely as of this snapshot — high-value gap for ironman/league. · Planner coverage: gap_2026_content",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Moonrise_Dig_Site",
             "title": "Moonrise Dig Site hotspots + Guthixian I/II collections (missing from ironman guide training table)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5512,7 +5529,7 @@
           "skill": "Archaeology",
           "method": "Moonrise special research (Guthixian culture)",
           "levelRange": "75-88",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "passive research + chronotes sink",
           "location": "",
           "requirements": [],
@@ -5520,15 +5537,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "The Beast Within (75): 8,333.3 XP, 246 chronotes, starts at human remains outside Moonrise Temple; rewards Offering bowl (damaged)., Bloodwine, Sweat and Tears (82): 11,110.6 XP, 273 chronotes, broken cauldron in temple; rewards Bloodwine (damaged)., An Unceremonious End (88): 14,444 XP, 293 chronotes, dead colossus in temple; rewards Bloodletting dagger (damaged)., Ironman guide lists special research as priority #3 but does not enumerate Moonrise research rows. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "The Beast Within (75): 8,333.3 XP, 246 chronotes, starts at human remains outside Moonrise Temple; rewards Offering bowl (damaged). · Bloodwine, Sweat and Tears (82): 11,110.6 XP, 273 chronotes, broken cauldron in temple; rewards Bloodwine (damaged). · An Unceremonious End (88): 14,444 XP, 293 chronotes, dead colossus in temple; rewards Bloodletting dagger (damaged). · Ironman guide lists special research as priority #3 but does not enumerate Moonrise research rows. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Moonrise_Dig_Site",
             "title": "Moonrise special research (Guthixian culture)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5536,7 +5553,7 @@
           "skill": "Archaeology",
           "method": "Praetorian remains for higher Inquisitor staff piece chance",
           "levelRange": "114-115",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation",
           "location": "",
           "requirements": [],
@@ -5544,15 +5561,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: excavate Praetorian remains for a higher chance of Inquisitor staff pieces. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: excavate Praetorian remains for a higher chance of Inquisitor staff pieces. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Praetorian remains for higher Inquisitor staff piece chance",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5560,26 +5577,23 @@
           "skill": "Archaeology",
           "method": "Repeat Armadylean I collections for Howl's workshop blueprint fragments",
           "levelRange": "83+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "active restoration loop",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "kandarin",
-            "asgarnia"
-          ],
-          "note": "Ironman guide: complete 7 Armadylean I collections to obtain enough torn blueprint fragments (Howl's workshop) to unlock all Ancient Invention blueprints., Stormguard artefacts; Lowse collector at Armadyl's Tower (Asgarnia). · gap_file: training-gap-archaeology-2026-07-26.json",
+          "regionHints": [],
+          "note": "Ironman guide: complete 7 Armadylean I collections to obtain enough torn blueprint fragments (Howl's workshop) to unlock all Ancient Invention blueprints. · Stormguard artefacts; Lowse collector at Armadyl's Tower (Asgarnia). · Planner coverage: partial_relic_route_missing_count_target",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Repeat Armadylean I collections for Howl's workshop blueprint fragments",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5587,26 +5601,23 @@
           "skill": "Archaeology",
           "method": "Repeat Green Gobbo Goodies I collections",
           "levelRange": "76-83",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "active restoration loop",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "kandarin",
-            "asgarnia"
-          ],
-          "note": "Ironman guide recommends completing 46 Green Gobbo Goodies I collections in this band., Warforge artefacts; collector turn-ins at Goblin Village (Asgarnia) per existing planner mapping. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "regionHints": [],
+          "note": "Ironman guide recommends completing 46 Green Gobbo Goodies I collections in this band. · Warforge artefacts; collector turn-ins at Goblin Village (Asgarnia) per existing planner mapping. · Planner coverage: gap_high_value_repeatable_count_target",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Repeat Green Gobbo Goodies I collections",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5614,26 +5625,23 @@
           "skill": "Archaeology",
           "method": "Repeat Red Rum Relics I collections",
           "levelRange": "83-99",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "active restoration loop",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [
-            "kandarin",
-            "asgarnia"
-          ],
-          "note": "Ironman guide recommends completing 100 Red Rum Relics I collections across 83-99. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "regionHints": [],
+          "note": "Ironman guide recommends completing 100 Red Rum Relics I collections across 83-99. · Planner coverage: gap_high_value_repeatable_count_target",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "Repeat Red Rum Relics I collections",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5641,7 +5649,7 @@
           "skill": "Archaeology",
           "method": "Tetracompass pieces → powered tetracompass → ancient caskets (complete tomes)",
           "levelRange": "varies",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "secondary XP from tomes",
           "location": "",
           "requirements": [],
@@ -5649,15 +5657,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Archaeology skill page: tetracompass pieces from excavating or guaranteed from certain collection turn-ins; powered compass leads to ancient caskets with complete tomes as strong secondary XP., Not framed as a primary training method in the ironman guide but is a high-value ironman XP sink/source once chronotes collections are online. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Archaeology skill page: tetracompass pieces from excavating or guaranteed from certain collection turn-ins; powered compass leads to ancient caskets with complete tomes as strong secondary XP. · Not framed as a primary training method in the ironman guide but is a high-value ironman XP sink/source once chronotes collections are online. · Planner coverage: gap_as_training_method",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Archaeology",
             "title": "Tetracompass pieces → powered tetracompass → ancient caskets (complete tomes)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5665,7 +5673,7 @@
           "skill": "Archaeology",
           "method": "War table debris for highest Inquisitor staff piece chance",
           "levelRange": "118+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "excavation",
           "location": "",
           "requirements": [],
@@ -5673,15 +5681,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Ironman guide: excavate War table debris for the highest chance of Inquisitor staff pieces. · gap_file: training-gap-archaeology-2026-07-26.json",
+          "note": "Ironman guide: excavate War table debris for the highest chance of Inquisitor staff pieces. · Planner coverage: gap",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
             "title": "War table debris for highest Inquisitor staff piece chance",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         }
       ]
@@ -6812,7 +6820,7 @@
           "skill": "Farming",
           "method": "Anachronia Ranch Out of Time / Dinosaur Farm seed & animal loop",
           "levelRange": "high-level Farming / ranch progression",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "Anachronia Dinosaur Farm (Ranch Out of Time); Farmers' Market (Anachronia Dinosaur Farm) also sells seedicide for beans",
           "requirements": [],
@@ -6820,17 +6828,18 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "anachronia"
+            "anachronia",
+            "kandarin"
           ],
-          "note": "Existing training-methods row covers ranch XP as time-gated. Gap fill: Anachronia is a second Farmers' Market node and the dinosaur animal/food loop that feeds late PoF beans. Pair with Havenhythe/starting meat shops for dinosaur food bottlenecks per ironman guide. · seed_collection · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Existing training-methods row covers ranch XP as time-gated. Gap fill: Anachronia is a second Farmers' Market node and the dinosaur animal/food loop that feeds late PoF beans. Pair with Havenhythe/starting meat shops for dinosaur food bottlenecks per ironman guide. · Gap: seed_collection · Region options: anachronia / kandarin",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_ironman_guide",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Farming_training",
-            "title": "Farming training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Farming · https://runescape.wiki/w/Seedicide",
+            "title": "Anachronia Ranch Out of Time / Dinosaur Farm seed & animal loop",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -6838,9 +6847,9 @@
           "skill": "Farming",
           "method": "Boss and monster seed notables by region",
           "levelRange": "combat-gated",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "morytania · asgarnia · forinthry · fremennik · desert · tirannwn · karamja · misthalin",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -6855,15 +6864,15 @@
             "karamja",
             "misthalin"
           ],
-          "note": "Not exhaustive drop tables — Ironman Farming guide efficient-source map for region planning. Prefer individual seed pages for full rarities. No XP/h claimed. · seed_collection · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Not exhaustive drop tables — Ironman Farming guide efficient-source map for region planning. Prefer individual seed pages for full rarities. No XP/h claimed. · Gap: seed_collection · Region options: morytania / asgarnia / forinthry / fremennik / desert / tirannwn / karamja / misthalin",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_ironman_guide",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ironman_Mode/Guide/Farming",
             "title": "Boss and monster seed notables by region",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -6923,9 +6932,9 @@
           "skill": "Farming",
           "method": "Master Farmer pickpocket seed collection",
           "levelRange": "38+ Thieving",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "kandarin · misthalin · asgarnia",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -6935,15 +6944,15 @@
             "misthalin",
             "asgarnia"
           ],
-          "note": "seed_collection · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Gap: seed_collection · Region options: kandarin / misthalin / asgarnia",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_ironman_guide",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Farming_training",
-            "title": "Farming training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Master_Farmer · https://runescape.wiki/w/Ironman_Mode/Guide/Farming",
+            "title": "Master Farmer pickpocket seed collection",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -7003,7 +7012,7 @@
           "skill": "Farming",
           "method": "Seedicide combat multi (destroy seed drops for double plant XP)",
           "levelRange": "must be able to plant the seed for XP; destroys unplantable seeds with no XP",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "",
           "requirements": [],
@@ -7011,15 +7020,15 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [],
-          "note": "Pickpocketed Master Farmer seeds can be destroyed with no Farming XP — combat drops are the multi-skill path. Tool-belt unlock is 500 Slayer points (global once purchased). · seed_collection · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Pickpocketed Master Farmer seeds can be destroyed with no Farming XP — combat drops are the multi-skill path. Tool-belt unlock is 500 Slayer points (global once purchased). · Gap: seed_collection",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Farming_training",
-            "title": "Farming training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Seedicide · https://runescape.wiki/w/Ironman_Mode/Guide/Farming",
+            "title": "Seedicide combat multi (destroy seed drops for double plant XP)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ]
@@ -7290,7 +7299,7 @@
           "skill": "Fishing",
           "method": "Bait and Switch Archaeology relic power (auto-cook on catch)",
           "levelRange": "99 Archaeology (boostable from 96 potion / 97 soil tea) to excavate the death mask",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "",
           "requirements": [],
@@ -7300,15 +7309,15 @@
           "regionHints": [
             "anachronia"
           ],
-          "note": "Hard dependency: Anachronia Orthen + 99 Archaeology. Not a fishing XP method by itself — a no-trading League quality-of-life / dual-skill power that multiplies any available fishing region. · relic_unlock_dependency · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Hard dependency: Anachronia Orthen + 99 Archaeology. Not a fishing XP method by itself — a no-trading League quality-of-life / dual-skill power that multiplies any available fishing region. · Gap: relic_unlock_dependency",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Fishing_training",
-            "title": "Pay-to-play Fishing training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Bait_and_Switch · https://runescape.wiki/w/Death_mask",
+            "title": "Bait and Switch Archaeology relic power (auto-cook on catch)",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -7316,7 +7325,7 @@
           "skill": "Fishing",
           "method": "Crystal fishing rod unlock and craft (Prifddinas / Tirannwn)",
           "levelRange": "93 Fishing (boostable) for waterfall shop unlock path; 80 Smithing if singing; rod useable at any rod/fly/barbarian spot once owned",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "Prifddinas Waterfall Fishing Shop (unlock) + Ithell singing bowl or Ilfeen/Eluned/Islwyn/Rhodri Dail enchant",
           "requirements": [
@@ -7330,17 +7339,18 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "tirannwn"
+            "tirannwn",
+            "kandarin"
           ],
-          "note": "Strengthen as a hard Tirannwn unlock note for high-end rod fishing (Deep Sea Fishing hub still Kandarin for the spots themselves). The rod is not restricted to Prif; once crafted it works anywhere a rod can. · tooling_unlock · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Strengthen as a hard Tirannwn unlock note for high-end rod fishing (Deep Sea Fishing hub still Kandarin for the spots themselves). The rod is not restricted to Prif; once crafted it works anywhere a rod can. · Gap: tooling_unlock · Region options: tirannwn / kandarin",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Crystal_fishing_rod",
             "title": "Crystal fishing rod unlock and craft (Prifddinas / Tirannwn)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -7431,23 +7441,29 @@
           "skill": "Fishing",
           "method": "Skillchompas for Fishing catch-rate boost",
           "levelRange": "skill-tier dependent",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [],
-          "note": "Ironman-relevant consumable for Frenzy/sailfish and other active fishing. Do not invent XP/h; treat as regional supply dependency. · tooling_boost · gap_file: training-gap-gather-2026-07-26.json",
+          "regionHints": [
+            "kandarin",
+            "morytania",
+            "fremennik",
+            "desert",
+            "tirannwn"
+          ],
+          "note": "Ironman-relevant consumable for Frenzy/sailfish and other active fishing. Do not invent XP/h; treat as regional supply dependency. · Gap: tooling_boost · Region options: kandarin / morytania / fremennik / desert / tirannwn",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Skillchompa",
             "title": "Skillchompas for Fishing catch-rate boost",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         }
       ]
@@ -8216,27 +8232,30 @@
           "skill": "Mining",
           "method": "Banite rocks (level 80)",
           "levelRange": "80+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "fremennik: Arctic (azure) habitat mine in Rellekka Hunter area (7); Glacor cavern mine (3); Jatizso dungeon elite mine (4) · forinthry: Wilderness (level 54) Pirates' Hideout mine · karamja_inferred: Tarshak's sanctum (Abomination mine)",
+          "requirements": [
+            "Ritual of the Mahjarrat for Glacor Cave",
+            "Elite Fremennik achievements for Jatizso elite mine",
+            "Hero's Welcome"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "banite",
           "hardRegionRequirement": false,
           "regionHints": [
             "fremennik",
-            "forinthry",
-            "karamja_inferred"
+            "forinthry"
           ],
-          "note": "Fremennik is the clean elective for banite (multiple sites + Hallvar ore-noting at elite Jatizso). Forinthry is the no-quest alternative. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Fremennik is the clean elective for banite (multiple sites + Hallvar ore-noting at elite Jatizso). Forinthry is the no-quest alternative. · Gap: core_ore_above_runite · Region options: fremennik / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column_with_one_uncertain_site",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Banite_rock",
             "title": "Banite rocks (level 80)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8270,26 +8289,28 @@
           "skill": "Mining",
           "method": "Dark animica rocks (level 90 pair with light animica)",
           "levelRange": "90+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "anachronia: Anachronia Swamp mine, south-east Anachronia · misthalin: Empty Throne Room mine",
+          "requirements": [
+            "Setting The Foundation"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "dark_animica",
           "hardRegionRequirement": false,
           "regionHints": [
             "anachronia",
             "misthalin"
           ],
-          "note": "Critical League note: dark animica has a starting Misthalin site, so elder rune smithing supply is not strictly elective-locked for this half of the pair. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Critical League note: dark animica has a starting Misthalin site, so elder rune smithing supply is not strictly elective-locked for this half of the pair. · Gap: core_ore_above_runite · Region options: anachronia / misthalin",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Dark_animica_rock",
             "title": "Dark animica rocks (level 90 pair with light animica)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8297,12 +8318,20 @@
           "skill": "Mining",
           "method": "Drakolith rocks (level 60 pair with orichalcite)",
           "levelRange": "60+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "asgarnia: Heroes' Guild mine (17 rocks) or Mining Guild resource dungeon (4 rocks) · desert: Al Kharid resource dungeon · anachronia: Anachronia canyon mine · misthalin: Evil Chicken's Lair mine (Zanaris) · fremennik: Fremennik Isles mine, small island north of Neitiznot · morytania: Haunted Mine level 5 · karamja: Tai Bwo Wannai mine, north of Shilo Village · forinthry: Wilderness (level 14) volcano mine, south-east of Wilderness Crater",
+          "requirements": [
+            "Heroes' Quest for Heroes' Guild mine",
+            "60 Mining + 45 Dungeoneering for Mining Guild resource dungeon",
+            "75 Dungeoneering",
+            "Setting The Foundation",
+            "Recipe for Disaster: Freeing Sir Amik Varze (partial)",
+            "The Fremennik Isles",
+            "Haunted Mine"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "drakolith",
           "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia",
@@ -8314,15 +8343,15 @@
             "karamja",
             "forinthry"
           ],
-          "note": "Widest post-runite ore — nearly every elective can supply drakolith. Karamja is automatic-early so Tai Bwo Wannai is available without spending an elective slot. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Widest post-runite ore — nearly every elective can supply drakolith. Karamja is automatic-early so Tai Bwo Wannai is available without spending an elective slot. · Gap: core_ore_above_runite · Region options: asgarnia / desert / anachronia / misthalin / fremennik / morytania / karamja / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Drakolith_rock",
             "title": "Drakolith rocks (level 60 pair with orichalcite)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8330,27 +8359,30 @@
           "skill": "Mining",
           "method": "Light animica rocks (level 90)",
           "levelRange": "90+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "anachronia: Anachronia south-west mine · tirannwn: Lletya mine, west of Lletya · desert: Tumeken's remnant, north of the Smoke Dungeon",
+          "requirements": [
+            "Setting The Foundation",
+            "Regicide"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "light_animica",
           "hardRegionRequirement": false,
           "regionHints": [
             "anachronia",
             "tirannwn",
             "desert"
           ],
-          "note": "Desert Tumeken's remnant is the densest fixed cluster and has no quest gate on the rock page. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Desert Tumeken's remnant is the densest fixed cluster and has no quest gate on the rock page. · Gap: core_ore_above_runite · Region options: anachronia / tirannwn / desert",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Light_animica_rock",
             "title": "Light animica rocks (level 90)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8387,12 +8419,17 @@
           "skill": "Mining",
           "method": "Necrite rocks (level 70)",
           "levelRange": "70+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "desert: Al Kharid resource dungeon (6), Desert Mining Camp cave (3), Uzer mine (3) · havenhythe: Highweald Ruins mine · kandarin: Warforge south tunnel mine · forinthry: Wilderness (level 35) hobgoblin mine",
+          "requirements": [
+            "75 Dungeoneering for Al Kharid RD",
+            "The Tourist Trap for Mining Camp cave",
+            "Partial completion of Hearts of Sanguine",
+            "Out of the Crucible"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "necrite",
           "hardRegionRequirement": false,
           "regionHints": [
             "desert",
@@ -8400,15 +8437,15 @@
             "kandarin",
             "forinthry"
           ],
-          "note": "Havenhythe starting access is the League-critical note: necrite is not strictly elective-gated. Desert still has the densest non-Wilderness clusters. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Havenhythe starting access is the League-critical note: necrite is not strictly elective-gated. Desert still has the densest non-Wilderness clusters. · Gap: core_ore_above_runite · Region options: desert / havenhythe / kandarin / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Necrite_rock",
             "title": "Necrite rocks (level 70)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8416,27 +8453,30 @@
           "skill": "Mining",
           "method": "Orichalcite rocks (level 60, post-runite core ore)",
           "levelRange": "60+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "asgarnia: Mining Guild (southern Dwarven Mine) · anachronia: Anachronia canyon mine (north-east Anachronia) · forinthry: Wilderness (level 9) south-west mine, north-west of Edgeville",
+          "requirements": [
+            "60 Mining (boostable for guild access)",
+            "Setting The Foundation"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "orichalcite",
           "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia",
             "anachronia",
             "forinthry"
           ],
-          "note": "Any one of the three regions unlocks a rock cluster. Mining Guild is the clean elective hub (Artisans' Workshop / metal bank adjacency). Wiki League Region column marks Wilderness for the Edgeville cluster → map to forinthry. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Any one of the three regions unlocks a rock cluster. Mining Guild is the clean elective hub (Artisans' Workshop / metal bank adjacency). Wiki League Region column marks Wilderness for the Edgeville cluster → map to forinthry. · Gap: core_ore_above_runite · Region options: asgarnia / anachronia / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Orichalcite_rock",
             "title": "Orichalcite rocks (level 60, post-runite core ore)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8444,12 +8484,17 @@
           "skill": "Mining",
           "method": "Phasmatite rocks (level 70 pair with necrite)",
           "levelRange": "70+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "asgarnia: Dwarven Mine resource dungeon · morytania: Haunted Mine levels 2 and 6; Port Phasmatys south mine (south-west of Araxyte Hive) · havenhythe: Highweald Ruins mine · forinthry: Wilderness (level 47) Lava Maze mine",
+          "requirements": [
+            "15 Hard Daemonheim achievements (phasmatite rocks only)",
+            "Haunted Mine for Abandoned Mine floors",
+            "glowing fungus or hard Morytania achievements for level 6 route",
+            "Partial completion of Hearts of Sanguine"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "phasmatite",
           "hardRegionRequirement": false,
           "regionHints": [
             "asgarnia",
@@ -8457,15 +8502,15 @@
             "havenhythe",
             "forinthry"
           ],
-          "note": "Morytania is the thematic home (Port Phasmatys / Haunted Mine). Havenhythe starting access again softens the elective pressure for necrite+phasmatite pairing. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Morytania is the thematic home (Port Phasmatys / Haunted Mine). Havenhythe starting access again softens the elective pressure for necrite+phasmatite pairing. · Gap: core_ore_above_runite · Region options: asgarnia / morytania / havenhythe / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Phasmatite_rock",
             "title": "Phasmatite rocks (level 70 pair with necrite)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8499,25 +8544,27 @@
           "skill": "Mining",
           "method": "Primal ores (novite through promethium) on Daemonheim peninsula",
           "levelRange": "100+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
-          "requirements": [],
+          "location": "forinthry: Daemonheim peninsula surface mines (e.g. Novite Mine, Kratonium & Novite Mine, and sibling primal mines)",
+          "requirements": [
+            "100 Mining for all primal surface ores"
+          ],
           "requiredUnlock": "",
-          "resourceSource": "",
+          "resourceSource": "primal_family",
           "hardRegionRequirement": false,
           "regionHints": [
             "forinthry"
           ],
-          "note": "Already captured in training-high-value as forinthry-locked. Retained here as the explicit post-runite capstone: wiki League Region = Wilderness on novite (and sibling primal) rock pages. Shared primal stone spirit across the family. · core_ore_above_runite · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Already captured in training-high-value as forinthry-locked. Retained here as the explicit post-runite capstone: wiki League Region = Wilderness on novite (and sibling primal) rock pages. Shared primal stone spirit across the family. · Gap: core_ore_above_runite",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_plus_hard_region_mapping",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
-            "title": "Pay-to-play Mining training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Novite_rock · https://runescape.wiki/w/Pay-to-play_Mining_training",
+            "title": "Primal ores (novite through promethium) on Daemonheim peninsula",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8525,9 +8572,9 @@
           "skill": "Mining",
           "method": "Skillchompas as Mining critical-swing consumable",
           "levelRange": "skill-tier dependent (see skillchompa tiers)",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "kandarin: Tree Gnome Stronghold Hunter area · morytania: Port Phasmatys Hunter area, south of Port Phasmatys · fremennik: North of Rellekka Hunter area (snowy) · desert: Desert Quarry Hunter area · tirannwn: Isafdar forest, north of Tyras Camp · kandarin: Manor Farm chinchompa pens (Player-Owned Farm produce)",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -8539,15 +8586,15 @@
             "desert",
             "tirannwn"
           ],
-          "note": "For Mining, skillchompas are consumed on critical swings and add critical damage alongside a pickaxe (no direct XP boost). Not a rock location — a multi-skill supply dependency. Crystal skillchompas are the high-end League-relevant consumable and need Tirannwn (or PoF produce). · tooling_boost · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "For Mining, skillchompas are consumed on critical swings and add critical damage alongside a pickaxe (no direct XP boost). Not a rock location — a multi-skill supply dependency. Crystal skillchompas are the high-end League-relevant consumable and need Tirannwn (or PoF produce). · Gap: tooling_boost · Region options: kandarin / morytania / fremennik / desert / tirannwn",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Mining_training",
-            "title": "Pay-to-play Mining training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Skillchompa · https://runescape.wiki/w/Cobalt_skillchompa_(Hunter) · https://runescape.wiki/w/Azure_skillchompa_(Hunter) · https://runescape.wiki/w/Crystal_skillchompa",
+            "title": "Skillchompas as Mining critical-swing consumable",
+            "verifiedAt": "2026-07-26"
           }
         }
       ]
@@ -8761,26 +8808,25 @@
           "skill": "Prayer",
           "method": "Powder of burials + banked bones",
           "levelRange": "",
-          "xpRate": "dragon bones: 1184400 · dragonkin bones: 2632000 · dinosaur bones: 2796500 · frost dragon bones: 2961000",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "Het's Oasis (speedy whirligigs / hollyhock baskets) → grind 15 speedy whirligig shells per powder",
           "requirements": [],
           "requiredUnlock": "",
-          "resourceSource": "Het's Oasis",
+          "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "global_once_supplied",
             "desert"
           ],
-          "note": "With no trading, Desert access may matter primarily for obtaining powder rather than for where the bones are buried. · current wiki calls this the fastest Prayer training method",
+          "note": "Desert is required for self-sufficient powder production, not for where bones are buried. Dragon Rider amulet cancels powder. Already in training-high-value.json; retained here as the Desert production dependency row.",
           "warning": "",
-          "freshness": "",
+          "freshness": "2026_current",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+            "url": "https://runescape.wiki/w/Powder_of_burials",
             "title": "Powder of burials + banked bones",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -8923,7 +8969,10 @@
     {
       "id": "ranged",
       "name": "Ranged",
-      "regions": [],
+      "regions": [
+        "Havenhythe",
+        "Kandarin"
+      ],
       "methods": [
         {
           "id": "ranged:aoe-combat-slayer-routing",
@@ -8952,26 +9001,80 @@
           }
         },
         {
-          "id": "ranged:chinchompas-are-stackable-thrown-ranged-weapons-with-innate-3-3-aoe-up-to-9-targets-dealing-90-110-of-the-ability-damage-applied-to-the-primary-target-per-thrown-chin-combat-style-modernisation-2-mar-2026-",
+          "id": "ranged:black-chinchompa",
           "skill": "Ranged",
-          "method": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026).",
-          "levelRange": "",
+          "method": "Black chinchompa",
+          "levelRange": "Ranged 65+; Hunter 73",
           "xpRate": "",
           "intensity": "",
-          "location": "",
+          "location": "Highweald Forest, Havenhythe (west of Hollow Hill overlook)",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [],
-          "note": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "regionHints": [
+            "havenhythe"
+          ],
+          "note": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · User assumed black chins in Forinthry/Wilderness. Post–23 Mar 2026 Havenhythe release, live wiki places volatile/black chins in Havenhythe, not Forinthry. Do not region-gate black chins behind Forinthry. · Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · gap_file: training-gap-combat-fletching-2026-07-26.json",
           "warning": "",
           "freshness": "2026-07-26_gap_pass",
           "confidence": "confirmed_wiki_2026_locations",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Chinchompa",
-            "title": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026).",
+            "title": "Black chinchompa",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "ranged:chinchompa-grey-",
+          "skill": "Ranged",
+          "method": "Chinchompa (grey)",
+          "levelRange": "Ranged 45+; Hunter 53",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Piscatoris Hunter area (north of Eagles' Peak)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_2026_locations",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chinchompa",
+            "title": "Chinchompa (grey)",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "ranged:red-chinchompa",
+          "skill": "Ranged",
+          "method": "Red chinchompa",
+          "levelRange": "Ranged 55+; Hunter 63",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Feldip Hunter area",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026). · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_2026_locations",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chinchompa",
+            "title": "Red chinchompa",
             "verifiedAt": "2026-07-25"
           }
         }
@@ -9177,29 +9280,67 @@
     {
       "id": "slayer",
       "name": "Slayer",
-      "regions": [],
+      "regions": [
+        "Misthalin",
+        "Karamja",
+        "Kandarin",
+        "Forinthry",
+        "Desert",
+        "Morytania",
+        "Tirannwn",
+        "Anachronia"
+      ],
       "methods": [
         {
-          "id": "slayer:high-level-slayer-master-access-is-region-and-requirement-gated-no-task-lists-invented-here-only-master-location-access-gates-and-planner-region-mapping-",
+          "id": "slayer:chaeldar",
           "skill": "Slayer",
-          "method": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping.",
+          "method": "Chaeldar",
           "levelRange": "",
           "xpRate": "",
           "intensity": "",
-          "location": "",
+          "location": "Zanaris (Fairy Queen's house)",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [],
-          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "regionHints": [
+            "misthalin",
+            "unresolved_zanaris"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
           "warning": "",
           "freshness": "2026-07-26_gap_pass",
           "confidence": "confirmed_wiki_access_gates",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Slayer_Masters",
-            "title": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping.",
+            "title": "Chaeldar",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:duradel-lapalok",
+          "skill": "Slayer",
+          "method": "Duradel / Lapalok",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Shilo Village (Fernahei's Fishing Hut upper floor)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "karamja"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · Lapalok replaces Duradel after While Guthix Sleeps. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Duradel / Lapalok",
             "verifiedAt": "2026-07-25"
           }
         },
@@ -9226,6 +9367,216 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Slayer_training",
             "title": "High-value task routing",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:kuradal",
+          "skill": "Slayer",
+          "method": "Kuradal",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Ancient Cavern (stairs to Dragon Forge, SW)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "kandarin"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Kuradal",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:laniakea",
+          "skill": "Slayer",
+          "method": "Laniakea",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Anachronia",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "anachronia"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Laniakea",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:mandrith",
+          "skill": "Slayer",
+          "method": "Mandrith",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Deep Wilderness, east of Pirates' Hideout (NW of Mage Arena)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Mandrith",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:mazchna-achtryn",
+          "skill": "Slayer",
+          "method": "Mazchna / Achtryn",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Canifis",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "morytania"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Mazchna / Achtryn",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:morvran",
+          "skill": "Slayer",
+          "method": "Morvran",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Prifddinas Iorwerth district (SW of lodestone)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "tirannwn"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · Hosts famous-monster challenge D&D; highest standard point band among pre-Anachronia masters (20/100/300). · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Morvran",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:sumona",
+          "skill": "Slayer",
+          "method": "Sumona",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Pollnivneach",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "desert"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · Fewer-count variant of hard-task band; Smoking Kills also doubles points globally for standard masters. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Sumona",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:the-raptor",
+          "skill": "Slayer",
+          "method": "The Raptor",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Fort Forinthry (north of Guardhouse)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "forinthry",
+            "misthalin"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "The Raptor",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "id": "slayer:vannaka",
+          "skill": "Slayer",
+          "method": "Vannaka",
+          "levelRange": "",
+          "xpRate": "",
+          "intensity": "",
+          "location": "Edgeville ruins (south of bank)",
+          "requirements": [],
+          "requiredUnlock": "",
+          "resourceSource": "",
+          "hardRegionRequirement": false,
+          "regionHints": [
+            "misthalin",
+            "forinthry"
+          ],
+          "note": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping. · gap_file: training-gap-combat-fletching-2026-07-26.json",
+          "warning": "",
+          "freshness": "2026-07-26_gap_pass",
+          "confidence": "confirmed_wiki_access_gates",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Masters",
+            "title": "Vannaka",
             "verifiedAt": "2026-07-25"
           }
         }
@@ -10530,7 +10881,7 @@
           "skill": "Woodcutting",
           "method": "Acadia trees (Desert midgame — detail reinforcement)",
           "levelRange": "50+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "",
           "requirements": [],
@@ -10540,15 +10891,15 @@
           "regionHints": [
             "desert"
           ],
-          "note": "Already present in training-methods with XP table. Only reinforced here: pure Desert elective route with Menaphos reputation synergy. No new XP/h invented. · location_detail · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Already present in training-methods with XP table. Only reinforced here: pure Desert elective route with Menaphos reputation synergy. No new XP/h invented. · Gap: location_detail",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_existing_row_reinforced",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
             "title": "Acadia trees (Desert midgame — detail reinforcement)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10556,9 +10907,9 @@
           "skill": "Woodcutting",
           "method": "Choking ivy by region (including Fort Forinthry grove ivy)",
           "levelRange": "68+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "misthalin · asgarnia · kandarin · tirannwn · havenhythe",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -10570,15 +10921,15 @@
             "tirannwn",
             "havenhythe"
           ],
-          "note": "Choking ivy page lists level-scaled base XP/h examples (e.g. up to ~86k with orikalkum/dragon hatchet at 68; up to ~126k with Imcando at 99) — treat as wiki-stated ranges, not new optimizer numbers. Fort Forinthry ivy is the key gap row. · location_by_region · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Choking ivy page lists level-scaled base XP/h examples (e.g. up to ~86k with orikalkum/dragon hatchet at 68; up to ~126k with Imcando at 99) — treat as wiki-stated ranges, not new optimizer numbers. Fort Forinthry ivy is the key gap row. · Gap: location_by_region · Region options: misthalin / asgarnia / kandarin / tirannwn",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_with_fort_taxonomy_note",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Choking_ivy",
             "title": "Choking ivy by region (including Fort Forinthry grove ivy)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10612,7 +10963,7 @@
           "skill": "Woodcutting",
           "method": "Crystal hatchet upgrade (dragon hatchet + harmonic dust)",
           "levelRange": "70 Woodcutting to wield; Plague's End required for Lady Ithell",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "Lady Ithell, Ithell district, Prifddinas",
           "requirements": [
@@ -10624,17 +10975,18 @@
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "tirannwn"
+            "tirannwn",
+            "fremennik"
           ],
-          "note": "tooling_unlock · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Gap: tooling_unlock · Region options: fremennik / tirannwn",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Crystal_hatchet",
             "title": "Crystal hatchet upgrade (dragon hatchet + harmonic dust)",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10720,26 +11072,25 @@
           "skill": "Woodcutting",
           "method": "Eternal magic trees (existing high-value row — geography note only)",
           "levelRange": "100+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "kandarin_inferred: Piscatoris Hunter area original trees / Heedi sapling source · havenhythe: Nursery plots growing Heedi's eternal magic saplings after The Lute of Love path",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
           "regionHints": [
-            "kandarin_inferred",
             "havenhythe"
           ],
-          "note": "Already in training-high-value and masterwork-staff-chain. No XP/h restated beyond existing '300000+ with boosts' wiki summary already captured elsewhere. · location_detail · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Already in training-high-value and masterwork-staff-chain. No XP/h restated beyond existing '300000+ with boosts' wiki summary already captured elsewhere. · Gap: location_detail",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_existing_row_reinforced",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
-            "title": "Pay-to-play Woodcutting training",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Eternal_magic_tree · https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
+            "title": "Eternal magic trees (existing high-value row — geography note only)",
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10773,9 +11124,9 @@
           "skill": "Woodcutting",
           "method": "Magic trees by region",
           "levelRange": "80+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "desert · kandarin · havenhythe · tirannwn · misthalin · forinthry",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -10788,15 +11139,15 @@
             "misthalin",
             "forinthry"
           ],
-          "note": "location_by_region · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Gap: location_by_region · Region options: desert / kandarin / havenhythe / tirannwn / misthalin / forinthry",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Magic_tree",
             "title": "Magic trees by region",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10830,23 +11181,29 @@
           "skill": "Woodcutting",
           "method": "Skillchompas as hatchet-tier / XP boost tools",
           "levelRange": "skill-tier dependent",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
           "location": "",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
           "hardRegionRequirement": false,
-          "regionHints": [],
-          "note": "Crystal skillchompas (Tirannwn) are the top end. Kandarin PoF chinchompas provide produce without field hunting. · tooling_boost · gap_file: training-gap-gather-2026-07-26.json",
+          "regionHints": [
+            "kandarin",
+            "morytania",
+            "fremennik",
+            "desert",
+            "tirannwn"
+          ],
+          "note": "Crystal skillchompas (Tirannwn) are the top end. Kandarin PoF chinchompas provide produce without field hunting. · Gap: tooling_boost · Region options: kandarin / morytania / fremennik / desert / tirannwn",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Skillchompa",
             "title": "Skillchompas as hatchet-tier / XP boost tools",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -10854,9 +11211,9 @@
           "skill": "Woodcutting",
           "method": "Teak trees by region",
           "levelRange": "30+",
-          "xpRate": "",
+          "xpRate": "not normalized yet",
           "intensity": "",
-          "location": "",
+          "location": "karamja · kandarin · desert · morytania · unresolved_ape_atoll",
           "requirements": [],
           "requiredUnlock": "",
           "resourceSource": "",
@@ -10865,18 +11222,17 @@
             "karamja",
             "kandarin",
             "desert",
-            "morytania",
-            "unresolved_ape_atoll"
+            "morytania"
           ],
-          "note": "Karamja automatic-early makes hardwood grove the default League teak path without spending electives. Wiki cites 41k–92k XP/h band on the teak page as level-scaled base range (not re-benchmarked here as optimizer-grade). · location_by_region · gap_file: training-gap-gather-2026-07-26.json",
+          "note": "Karamja automatic-early makes hardwood grove the default League teak path without spending electives. Wiki cites 41k–92k XP/h band on the teak page as level-scaled base range (not re-benchmarked here as optimizer-grade). · Gap: location_by_region · Region options: karamja / kandarin / desert / morytania",
           "warning": "",
-          "freshness": "2026-07-26_gap_pass",
+          "freshness": "2026_gap_fill",
           "confidence": "confirmed_wiki_league_region_column",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Teak",
             "title": "Teak trees by region",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         }
       ]

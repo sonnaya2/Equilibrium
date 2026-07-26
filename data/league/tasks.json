@@ -21,11 +21,11 @@
   "testFallback": {
     "enabled": true,
     "league": "Catalyst League",
-    "testingOnly": false,
+    "testingOnly": true,
     "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
     "completionSource": "https://runescape.wiki/w/Module:Catalyst_League/Tasks/completion.json",
     "expectedRecords": 1117,
-    "note": "Showing Catalyst League tasks for now. This list will be replaced when the full Equilibrium task list is published."
+    "note": "Catalyst League tasks are temporarily shown on /tasks only to test the task browser. They are not Equilibrium tasks and must be replaced when the Equilibrium task list is published."
   },
   "source": {
     "source": "jagex",

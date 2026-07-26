@@ -1,24 +1,21 @@
 "use client";
 
 /**
- * Team Aperture · Select + Stage — Tasks density R1
- * No side rail. Region = <select> in facet bar + My build chip.
- * Full-width dense virtualized rows; compact inline stage under selected row.
+ * Team Aperture · Select + Stage (R1.1 surgery)
+ * No side rail. Region = <select> + crest badge in facets.
+ * Full-width dense rows; inline stage under selected row only.
+ * Spike law: no auto-open; re-click / Close collapses.
  */
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { RegionCrest, RegionCrestPreload } from "@/components/RegionCrest";
 import { isTaskTier, type TaskRegionId } from "@/tasks";
 import type { TasksDensityPreviewProps } from "../TasksDensityTeamMount";
-import {
-  formatCompRate,
-  useTasksDesk,
-  wikiTaskUrl,
-} from "../useTasksDesk";
+import { formatCompRate, useTasksDesk, wikiTaskUrl } from "../useTasksDesk";
 import "./aperture.css";
 
-const ROW_PX = 30;
+const ROW_PX = 28;
 
 export function AperturePreview({
   records: raw,
@@ -46,7 +43,6 @@ export function AperturePreview({
     unlockLabel,
     visible,
     completed,
-    selected,
     selectedId,
     setSelectedId,
     doneVisible,
@@ -61,19 +57,34 @@ export function AperturePreview({
     regionDisplayName,
   } = desk;
 
-  const showComp = records.some((r) => typeof r.catalystCompletionRate === "number");
+  const showComp = useMemo(
+    () => records.some((r) => typeof r.catalystCompletionRate === "number"),
+    [records],
+  );
   const showRegionFilter = regionRail.length > 0;
-  const selectedKey = selected ? taskId(selected) : null;
 
-  // Remeasure when the open stage changes height (inline expand).
+  /** Spike law — ignore desk.selected first-row fallback. */
+  const active = useMemo(() => {
+    if (selectedId === null) return null;
+    return visible.find((r) => taskId(r) === selectedId) ?? null;
+  }, [selectedId, visible, taskId]);
+
+  const activeKey = active ? taskId(active) : null;
+
   useEffect(() => {
     virtualizer.measure();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only remeasure on selection identity
-  }, [selectedId, selectedKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId, activeKey]);
 
   if (records.length === 0) return null;
 
   const virtualItems = virtualizer.getVirtualItems();
+  const selectCrest =
+    region !== "all" && isLeagueRegionId(region) ? region : null;
+
+  const toggleSelect = (id: string) => {
+    setSelectedId((cur) => (cur === id ? null : id));
+  };
 
   return (
     <div className="td-aperture">
@@ -93,12 +104,7 @@ export function AperturePreview({
                 {doneVisible > 0 ? ` · ${doneVisible} done` : null}
               </>
             ) : null}
-            {showComp ? (
-              <span>
-                {" "}
-                · Comp% {completionLive ? "live" : "snap"}
-              </span>
-            ) : null}
+            {showComp ? ` · Comp% ${completionLive ? "live" : "snap"}` : null}
           </span>
 
           <input
@@ -125,32 +131,28 @@ export function AperturePreview({
           </button>
 
           {showRegionFilter ? (
-            <select
-              value={region}
-              onChange={(e) =>
-                setRegion(e.target.value as TaskRegionId | "all")
-              }
-              aria-label="Filter by region"
-              className="td-aperture__select"
-              title="Region filter — no side rail"
-            >
-              <option value="all">
-                {buildOnly ? "All unlocked" : "All regions"} (
-                {regionCounts.get("all") ?? 0})
-              </option>
-              {regionRail.map((id) => (
-                <option key={id} value={id}>
-                  {regionDisplayName(id)} ({regionCounts.get(id) ?? 0})
+            <label className="td-aperture__region-wrap">
+              {selectCrest ? <RegionCrest regionId={selectCrest} size={14} /> : null}
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value as TaskRegionId | "all")}
+                aria-label="Filter by region"
+                className="td-aperture__select"
+              >
+                <option value="all">
+                  {buildOnly ? "All unlocked" : "All regions"} (
+                  {regionCounts.get("all") ?? 0})
                 </option>
-              ))}
-            </select>
+                {regionRail.map((id) => (
+                  <option key={id} value={id}>
+                    {regionDisplayName(id)} ({regionCounts.get(id) ?? 0})
+                  </option>
+                ))}
+              </select>
+            </label>
           ) : null}
 
-          <div
-            role="group"
-            aria-label="Filter by tier"
-            className="td-aperture__tiers"
-          >
+          <div role="group" aria-label="Filter by tier" className="td-aperture__tiers">
             {(["all", ...tiersInUse] as const).map((option) => (
               <button
                 key={option}
@@ -169,24 +171,15 @@ export function AperturePreview({
 
         {buildOnly && build.elective.length === 0 ? (
           <p className="td-aperture__hint">
-            My build · starters only — pick electives on{" "}
-            <Link href="/build">Build</Link>
+            Starters only — electives on <Link href="/build">Build</Link>
           </p>
         ) : null}
 
         {visible.length === 0 ? (
           <p className="td-aperture__empty">No tasks match.</p>
         ) : (
-          <div
-            ref={listRef}
-            className="td-aperture__list"
-            role="list"
-            aria-label="Tasks"
-          >
-            <div
-              className="td-aperture__colhead"
-              aria-hidden
-            >
+          <div ref={listRef} className="td-aperture__list" role="list" aria-label="Tasks">
+            <div className="td-aperture__colhead" aria-hidden>
               <span />
               <span>Task</span>
               <span>Region</span>
@@ -195,18 +188,14 @@ export function AperturePreview({
               <span className="is-end">Pts</span>
             </div>
 
-            <div
-              className="td-aperture__virt"
-              style={{ height: virtualizer.getTotalSize() }}
-            >
+            <div className="td-aperture__virt" style={{ height: virtualizer.getTotalSize() }}>
               {virtualItems.map((item) => {
                 const record = visible[item.index]!;
                 const id = taskId(record);
                 const done = completed.has(id);
-                const on = selectedKey === id;
+                const on = selectedId === id;
                 const points = taskPoints(record);
-                const provisional =
-                  tierConfidence[record.tier]?.startsWith("provisional");
+                const provisional = tierConfidence[record.tier]?.startsWith("provisional");
                 const rate =
                   typeof record.catalystCompletionRate === "number"
                     ? record.catalystCompletionRate
@@ -233,11 +222,11 @@ export function AperturePreview({
                   >
                     <div
                       className="td-aperture__row"
-                      onClick={() => setSelectedId(id)}
+                      onClick={() => toggleSelect(id)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
-                          setSelectedId(id);
+                          toggleSelect(id);
                         }
                       }}
                       tabIndex={0}
@@ -280,16 +269,10 @@ export function AperturePreview({
                                 aria-label={`Wiki Comp% for ${record.name}`}
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                {formatCompRate(
-                                  rate,
-                                  record.catalystCompletionRateQualifier,
-                                )}
+                                {formatCompRate(rate, record.catalystCompletionRateQualifier)}
                               </a>
                             ) : (
-                              formatCompRate(
-                                rate,
-                                record.catalystCompletionRateQualifier,
-                              )
+                              formatCompRate(rate, record.catalystCompletionRateQualifier)
                             )
                           ) : (
                             <span className="is-miss">—</span>
@@ -298,9 +281,7 @@ export function AperturePreview({
                       ) : (
                         <span />
                       )}
-                      <span
-                        className={`td-aperture__pts${done ? " is-done" : ""}`}
-                      >
+                      <span className={`td-aperture__pts${done ? " is-done" : ""}`}>
                         {points !== null ? (
                           <>
                             {points}
@@ -312,22 +293,14 @@ export function AperturePreview({
                       </span>
                     </div>
 
-                    {on ? (
-                      <div
-                        className="td-aperture__stage"
-                        aria-label="Selected task"
-                      >
+                    {on && active && activeKey === id ? (
+                      <div className="td-aperture__stage" aria-label="Selected task">
                         <div className="td-aperture__stage-head">
-                          {record.regionId &&
-                          isLeagueRegionId(record.regionId) ? (
-                            <RegionCrest regionId={record.regionId} size={22} />
+                          {record.regionId && isLeagueRegionId(record.regionId) ? (
+                            <RegionCrest regionId={record.regionId} size={20} />
                           ) : null}
                           <div className="td-aperture__stage-copy">
-                            <p
-                              className={`td-aperture__stage-name${
-                                done ? " is-done" : ""
-                              }`}
-                            >
+                            <p className={`td-aperture__stage-name${done ? " is-done" : ""}`}>
                               {record.name}
                               {done ? " · done" : ""}
                             </p>
@@ -343,9 +316,7 @@ export function AperturePreview({
                               <span>
                                 Pts{" "}
                                 <b className="is-pts">
-                                  {points !== null
-                                    ? `${points}${provisional ? "*" : ""}`
-                                    : "—"}
+                                  {points !== null ? `${points}${provisional ? "*" : ""}` : "—"}
                                 </b>
                               </span>
                               {showComp ? (
@@ -363,23 +334,26 @@ export function AperturePreview({
                               ) : null}
                             </p>
                           </div>
+                          <button
+                            type="button"
+                            className="td-aperture__close"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedId(null);
+                            }}
+                          >
+                            Close
+                          </button>
                         </div>
                         {record.description ? (
-                          <p className="td-aperture__stage-body">
-                            {record.description}
-                          </p>
+                          <p className="td-aperture__stage-body">{record.description}</p>
                         ) : null}
                         {record.requirements ? (
-                          <p className="td-aperture__stage-req">
-                            Requires: {record.requirements}
-                          </p>
+                          <p className="td-aperture__stage-req">Requires: {record.requirements}</p>
                         ) : null}
                         {record.skills?.length || record.areas?.length ? (
                           <p className="td-aperture__stage-tags">
-                            {[
-                              ...(record.skills ?? []),
-                              ...(record.areas ?? []),
-                            ].join(" · ")}
+                            {[...(record.skills ?? []), ...(record.areas ?? [])].join(" · ")}
                           </p>
                         ) : null}
                         <div className="td-aperture__stage-actions">
@@ -395,9 +369,7 @@ export function AperturePreview({
                             </a>
                           ) : null}
                           {record.localityLabel ? (
-                            <span className="td-aperture__local">
-                              {record.localityLabel}
-                            </span>
+                            <span className="td-aperture__local">{record.localityLabel}</span>
                           ) : null}
                         </div>
                       </div>

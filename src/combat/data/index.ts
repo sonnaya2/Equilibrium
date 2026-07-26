@@ -3,6 +3,7 @@ import effectsData from "#data/combat/effects.json";
 import equipmentData from "#data/combat/equipment.json";
 import perksData from "#data/combat/perks.json";
 import prayersData from "#data/combat/prayers.json";
+import revolutionBarsData from "#data/combat/revolution-bars.json";
 import type { RegionId } from "../../league";
 import type { CombatStyle } from "../types";
 import type {
@@ -12,6 +13,7 @@ import type {
   EquipmentRecord,
   PerkRecord,
   PrayerRecord,
+  RevolutionBarRecord,
 } from "./records";
 
 export type * from "./records";
@@ -28,8 +30,9 @@ export const combatEffects = effectsData as CombatDataset<EffectRecord>;
 export const combatEquipment = equipmentData as CombatDataset<EquipmentRecord>;
 export const combatPerks = perksData as CombatDataset<PerkRecord>;
 export const combatPrayers = prayersData as CombatDataset<PrayerRecord>;
+export const combatRevolutionBars = revolutionBarsData as CombatDataset<RevolutionBarRecord>;
 
-type AnyRecord = AbilityRecord | EffectRecord | EquipmentRecord | PerkRecord | PrayerRecord;
+type AnyRecord = AbilityRecord | EffectRecord | EquipmentRecord | PerkRecord | PrayerRecord | RevolutionBarRecord;
 
 export function recordById<T extends AnyRecord>(dataset: CombatDataset<T>, id: string): T | undefined {
   return dataset.records.find((record) => record.id === id);
@@ -65,6 +68,10 @@ export const equipmentByRegion = (region: RegionId, options?: { regionLockedOnly
 export const prayersByRegion = (region: RegionId, options?: { regionLockedOnly?: boolean }) =>
   recordsByRegion(combatPrayers.records, region, options);
 
+export const revolutionBarById = (id: string) => recordById(combatRevolutionBars, id);
+export const revolutionBarsByStyle = (style: CombatStyle) =>
+  combatRevolutionBars.records.filter((record) => record.style === style);
+
 /** Sync facts for the Combat > Reference surface, straight from the envelopes. */
 export function combatSyncFacts() {
   const datasets = {
@@ -73,6 +80,7 @@ export function combatSyncFacts() {
     equipment: combatEquipment,
     perks: combatPerks,
     prayers: combatPrayers,
+    "revolution-bars": combatRevolutionBars,
   } as const;
   return Object.entries(datasets).map(([kind, dataset]) => ({
     kind,

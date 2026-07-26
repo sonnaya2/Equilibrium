@@ -966,6 +966,215 @@
         }
       ],
       "displayDescription": "A weapon is permanently sacrificed to store its special attack in the amulet.; The stored special attack uses the player's current weapons for damage and accuracy rather than the sacrificed weapon.; The stored special attack must match the combat style currently being used."
+    },
+    {
+      "id": "item:salve-amulet-e",
+      "name": "Salve amulet (e)",
+      "slot": "amulet",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "Haunted Mine for the base salve amulet; Lair of Tarn Razorlor for Tarn's diary and the enchantment",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Salve_amulet_(e)",
+          "title": "Salve amulet (e)",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "This is one of Morytania's strongest cross-region combat support unlocks because it materially improves undead methods outside Morytania, including Lumbridge Catacombs skeletons, bound skeletons, armoured phantoms, and armoured zombies. · Keep Morytania as the normal self-sufficient acquisition region unless Equilibrium explicitly grants the amulet or quest rewards globally. · Effects: +20% damage against undead enemies, +20% hit chance against undead enemies, Stacks with the full Slayer helmet, Void Knight equipment, the Undead Slayer perk, and the Undead Slayer ability, The bonus is on-hit and does not increase damage-over-time abilities or conjures"
+    },
+    {
+      "id": "item:amulet-of-the-forsaken-to-berserkers-fury",
+      "name": "Amulet of the forsaken to Berserker's Fury",
+      "slot": "amulet",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "56 Archaeology to activate Berserker's Fury; Saradominist I collection progression for the Lock of hair; Amulet of the forsaken from Barrows",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Amulet_of_the_forsaken",
+          "title": "Amulet of the forsaken to Berserker's Fury",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Both the Barrows amulet and the Saradominist I/Everlight side of the relic chain are Morytania content, making this a real single-region combat relic unlock rather than a generic Archaeology passive. · Quest auto-completion can satisfy quest gates, but it should not silently remove the Barrows item dependency unless Equilibrium says the relic itself is granted. · Effects: Berserker's Fury deals up to 5.5% more damage as current life points fall below maximum, Consumes 250 monolith energy when active, Does not stack with Dharok's set effect · Unlocks: Amulet of the forsaken as a Barrows reward, Dharok's Memento by combining the amulet with the Lock of hair, Berserker's Fury relic power"
+    },
+    {
+      "id": "item:igneous-cape-progression",
+      "name": "Igneous cape progression",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "Karamja: Fire cape for the one-time Fight Kiln entry payment; Karamja: Fight Kiln completion for a TokHaar-Kal cape; Misthalin working Senntisten mapping: defeat TzKal-Zuk without checkpoints for an igneous stone",
+        "regions": [
+          "karamja",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzKal-Zuk",
+          "title": "Igneous cape progression",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "The Zuk encounter supplies the igneous stone, but the stone upgrades a TokHaar-Kal cape from Karamja's Fight Kiln. A planner that shows only Misthalin materially understates the cape chain. · Display this as Karamja + Misthalin under the current Senntisten working map. If Equilibrium later assigns Senntisten differently, update only that side of the chain. · Unlocks: Igneous Kal-Ket, Igneous Kal-Xil, Igneous Kal-Mej, Igneous Kal-Mor, Igneous Kal-Zuk after the hard-mode flawless requirement and all four style capes"
+    },
+    {
+      "id": "item:holy-wrench",
+      "name": "Holy wrench",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "Rum Deal; Pieces of Hate for the Dungeoneering prayer-necklace interaction",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Holy_wrench",
+          "title": "Holy wrench",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Morytania supplies the normal gameplay acquisition. Resolve the quests through the Equilibrium quest overlay separately. · Effects: Increases Prayer restored by supported prayer-restoring potions while carried or worn, After Pieces of Hate, Dungeoneering prayer necklaces restore 10% more Prayer"
+    },
+    {
+      "id": "item:demon-horn-necklace",
+      "name": "Demon horn necklace",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "75 Dungeoneering; 90 Prayer; 35,000 Dungeoneering tokens",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+          "title": "Demon horn necklace",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "The 11 May 2026 Dungeoneering remaster reduced the Dungeoneering requirement from 90 to 75 while retaining the 35,000-token cost. · Effects: Restores 50 to 150 Prayer points when qualifying bones are buried or supported ashes/ghost remains are processed with the attuned ectoplasmator"
+    },
+    {
+      "id": "item:split-dragontooth-necklace",
+      "name": "Split dragontooth necklace",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "41 Dungeoneering; 60 Prayer; 15,500 Dungeoneering tokens",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "jagex",
+          "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
+          "title": "Split dragontooth necklace",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "The 11 May 2026 remaster reduced its Dungeoneering requirement to 41 and token cost to 15,500. · Effects: Restores Prayer from qualifying buried bones and works with Bonecrusher-processed bones"
+    },
+    {
+      "id": "item:asylum-surgeons-ring",
+      "name": "Asylum surgeon's ring",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "Complete Broken Home once; Complete the post-quest challenges; Complete a replay in under 37 minutes",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Asylum_surgeon%27s_ring",
+          "title": "Asylum surgeon's ring",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "Show both possible region mappings without claiming both are required. Official Equilibrium quest locality can resolve this later. · Region status: unresolved_misthalin_morytania_boundary"
+    },
+    {
+      "id": "item:tokkul-zo",
+      "name": "TokKul-Zo",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "The Elder Kiln in the normal game",
+        "regions": [
+          "karamja"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TokKul-Zo",
+          "title": "TokKul-Zo",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "This is a Karamja support unlock for the wave portions of the Zuk encounter and for the earlier TzHaar progression. Do not describe it as a 10% damage bonus against Zuk himself. · Effects: 10% increased damage against TzHaar, TokHaar, TzekHaar and Igneous TzekHaar, The damage effect works on TzekHaar waves but not TzKal-Zuk himself, Teleports around TzHaar City including Fight Cave, Fight Kiln and Fight Cauldron"
+    },
+    {
+      "id": "item:corporeal-beast-holy-elixir-supply",
+      "name": "Corporeal Beast holy-elixir supply",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "Summer's End for the normal-game Corporeal Beast progression",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Corporeal_Beast",
+          "title": "Corporeal Beast holy-elixir supply",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "The Corporeal Beast cavern entrance is in the Wilderness. The lair itself is not dangerous Wilderness territory, but Forinthry is the useful region dependency for entering the normal self-supply chain. Holy elixir can also come from the tormented wraith, so this row describes the primary practical regional source rather than claiming Corp is the only source. · Unlocks: Holy elixir drop source, Spirit shield and sigil progression, Necrite and phasmatite stone-spirit supply relevant to Blessed flask crafting"
+    },
+    {
+      "id": "item:blessed-flask-production-chain",
+      "name": "Blessed flask production chain",
+      "bonuses": {},
+      "unlock": {
+        "type": "quest",
+        "requirement": "118 Herblore, boostable; 96 Crafting; Blessed flask shell and glorious silvthril chain; Holy elixir; Holy water; Five light cores; Five holy overload potions (6); Five extreme prayer potions (4); 500 positive energy",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Blessed_flask",
+          "title": "Blessed flask production chain",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "displayDescription": "This is a real region-planning chain because no trading makes the ingredient sources matter, but it would be wrong to display Desert + Tirannwn + Karamja + Forinthry as four unconditional required picks while alternate supply routes and the unresolved Arc exist. Keep the full pressure visible instead. · Re-evaluate individual ingredient gates when Equilibrium publishes external-area handling, quest auto-completion details, or League-specific supply passives. · Effects: Holds up to 80 doses of extreme prayer in one inventory slot, At level 99 Prayer, 80 doses can represent up to 45,200 Prayer points before other modifiers, Holy wrench increases the Prayer restored per extreme-prayer dose and works with the Blessed flask · Region pressure: Desert: the normal direct source for the 1,200 red sandstone used in the shell chain; alternate account sources can weaken this as a hard region gate., Tirannwn: crystal-flecked sandstone and 5,000 harmonic dust are naturally supplied through Prifddinas; some alternate sources mean this is recorded as pressure rather than an unconditional hard gate., Karamja: Holy water production is learned through Legends' Quest and uses the Kharazi Jungle water pool., Forinthry: Corporeal Beast is the practical normal self-supply source for the holy elixir and several required stone spirits; the tormented wraith is an alternate holy-elixir source., External unresolved: 250 alaea sea salt comes from the Arc/Wushanko chain, which is not currently assigned to an Equilibrium elective region."
     }
   ]
 }

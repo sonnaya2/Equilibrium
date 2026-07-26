@@ -35,7 +35,8 @@ interface CombatRecordBase {
 export type AbilityCategory = "basic" | "enhanced" | "ultimate" | "utility";
 
 export interface AbilityRecord extends CombatRecordBase {
-  style: CombatStyle;
+  /** "shared" for all-style abilities (Sacrifice is a Constitution ability). */
+  style: CombatStyle | "shared";
   category: AbilityCategory;
   level: number;
   /** Per-ability adrenaline is data, never a global constant. */
@@ -103,11 +104,27 @@ export interface EffectRecord extends CombatRecordBase {
 }
 
 export interface PrayerRecord extends CombatRecordBase {
-  book: "standard" | "ancient";
+  /** Seren prayers are a seven-prayer Ancient Curses extension (catalogue model note). */
+  book: "standard" | "ancient" | "seren";
   /** Absent when the corpus does not source one. */
   level?: number;
   drainRatePerMinute?: number;
   facts: string[];
+}
+
+/** A recommended Revolution++ bar (RuneScape Wiki, post-modernisation). */
+export interface RevolutionBarRecord extends CombatRecordBase {
+  style: CombatStyle;
+  setup: string;
+  /** How many slots Revolution manages on this bar (the wiki's own number). */
+  revolutionSize: number;
+  /** Slot names as the wiki lists them; abilityId is null when no sourced record
+   *  or engine spec exists — that slot is unmodelled, never invented. */
+  slots: Array<{ name: string; abilityId: string | null }>;
+  /** The wiki's swap notes for locked greater variants. */
+  replacements: Array<{ from: string; to: string }>;
+  supported: boolean;
+  unsupportedReason?: string;
 }
 
 export interface PerkRecord extends CombatRecordBase {

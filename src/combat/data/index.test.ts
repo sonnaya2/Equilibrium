@@ -9,6 +9,7 @@ import {
   combatEquipment,
   combatPerks,
   combatPrayers,
+  combatRevolutionBars,
   combatSyncFacts,
   recordsByRegion,
 } from "./index";
@@ -96,7 +97,31 @@ describe("combat data accessors", () => {
 
   it("reports sync facts per dataset", () => {
     const facts = combatSyncFacts();
-    expect(facts).toHaveLength(5);
+    expect(facts).toHaveLength(6);
     expect(facts.every((fact) => fact.records > 0 && fact.lastSynced)).toBe(true);
+  });
+
+  it("revolution bars resolve slots to records or engine ids, never invented ids", () => {
+    const ENGINE_IDS = new Set(["attack", "ranged_attack", "magic_attack", "necromancy_basic", "volley_of_souls"]);
+    const recordIds = new Set(combatAbilities.records.map((record) => record.id));
+    for (const bar of combatRevolutionBars.records) {
+      expect(bar.revolutionSize).toBeGreaterThanOrEqual(1);
+      for (const slot of bar.slots) {
+        if (slot.abilityId === null) continue;
+        expect(recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId)).toBe(true);
+      }
+    }
+    // The supported bars are mostly modelled; necromancy is honestly unsupported.
+    expect(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")?.supported).toBe(false);
+  });
+
+  it("prayer catalogue covers all three books with the codex overlay merged", () => {
+    const books = new Set(combatPrayers.records.map((record) => record.book));
+    expect(books).toEqual(new Set(["standard", "ancient", "seren"]));
+    const ruination = combatPrayers.records.find((record) => record.id === "curse:ruination");
+    expect(ruination?.level).toBe(99);
+    expect(ruination?.unlock?.type).toBe("drop");
+    // Overlay merged into the catalogue row, not duplicated.
+    expect(combatPrayers.records.filter((record) => record.name === "Ruination")).toHaveLength(1);
   });
 });

@@ -107,14 +107,25 @@ function buffMultiplier(id: string, multiplier: number, source: SourceReference)
   };
 }
 
+export interface CastContext {
+  getState(): RotationState;
+  costOf(ability: AbilitySpec): number;
+  firstLegalTick(abilityId: string): number;
+  performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void;
+  /** Off-GCD utility casts (Runic Charge): state-machine update and a cast record
+   *  without consuming or advancing the global cooldown. */
+  performOffGcdCast(ability: AbilitySpec): void;
+  finish(error?: string): RotationSummary;
+  byId: Map<string, AbilitySpec>;
+  basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
+}
+
 /**
- * Deterministic rotation run: expected values only, casts advance to their first
- * legal tick, and an unpayable adrenaline cost fails the run instead of silently
- * skipping — a rotation the game cannot perform is invalid input, not zero damage.
- * ponytail: channelled hits still land on the cast tick — the corpus carries no
- * per-hit tick schedule for channels; bleed tails use their sourced intervals.
+ * The shared cast machinery behind simulate and simulateRevolution: state, cost
+ * evaluation, the single cast path, and summary assembly. Behaviour is identical
+ * for queued and priority-driven rotations — only the driver differs.
  */
-export function simulate(input: SimulateInput): RotationSummary {
+export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoWeave">): CastContext {
   const byId = new Map(input.abilities.map((a) => [a.id, a]));
   const basicByStyle = new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]));
   const casts: CastRecord[] = [];
@@ -251,43 +262,71 @@ export function simulate(input: SimulateInput): RotationSummary {
     endTick = Math.max(endTick, state.tick);
   }
 
+  function performOffGcdCast(ability: AbilitySpec): void {
+    if (ability.buff === "runic_charge") {
+      state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
+    }
+    casts.push({ tick: state.tick, abilityId: ability.id, result: EMPTY_RESULT, adrenalineAfter: state.adrenaline });
+    endTick = Math.max(endTick, state.tick + 1);
+  }
+
+  return {
+    getState: () => state,
+    costOf,
+    firstLegalTick: (abilityId) => firstLegalTick(state, abilityId),
+    performCast,
+    performOffGcdCast,
+    finish,
+    byId,
+    basicByStyle,
+  };
+}
+
+/**
+ * Deterministic rotation run: expected values only, casts advance to their first
+ * legal tick, and an unpayable adrenaline cost fails the run instead of silently
+ * skipping — a rotation the game cannot perform is invalid input, not zero damage.
+ * ponytail: channelled hits still land on the cast tick — the corpus carries no
+ * per-hit tick schedule for channels; bleed tails use their sourced intervals.
+ */
+export function simulate(input: SimulateInput): RotationSummary {
+  const ctx = createCastContext(input);
+
   for (const action of input.rotation) {
-    const ability = byId.get(action.abilityId);
-    if (!ability) return finish(`unknown ability: ${action.abilityId}`);
+    const ability = ctx.byId.get(action.abilityId);
+    if (!ability) return ctx.finish(`unknown ability: ${action.abilityId}`);
 
     if (ability.buff === "runic_charge") {
-      if (!runicChargeReady(state.magic, state.tick)) {
-        return finish(`runic_charge is on cooldown at tick ${state.tick}`);
+      if (!runicChargeReady(ctx.getState().magic, ctx.getState().tick)) {
+        return ctx.finish(`runic_charge is on cooldown at tick ${ctx.getState().tick}`);
       }
-      state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
-      casts.push({ tick: state.tick, abilityId: ability.id, result: EMPTY_RESULT, adrenalineAfter: state.adrenaline });
-      endTick = Math.max(endTick, state.tick + 1);
+      ctx.performOffGcdCast(ability);
       continue;
     }
 
     if (input.autoWeave) {
-      const basic = basicByStyle.get(ability.style);
+      const basic = ctx.basicByStyle.get(ability.style);
       let guard = 0;
-      while (basic && (firstLegalTick(state, ability.id) > state.tick || costOf(ability) > state.adrenaline)) {
-        if (++guard > 200) return finish(`${ability.id} is unaffordable at tick ${state.tick}, even weaving basics`);
-        performCast(basic, state.tick, true);
+      while (basic && (ctx.firstLegalTick(ability.id) > ctx.getState().tick || ctx.costOf(ability) > ctx.getState().adrenaline)) {
+        if (++guard > 200) return ctx.finish(`${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`);
+        ctx.performCast(basic, ctx.getState().tick, true);
       }
     }
 
-    const readyTick = firstLegalTick(state, ability.id);
-    if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, readyTick)) {
-      return finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
+    const readyTick = ctx.firstLegalTick(ability.id);
+    if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(ctx.getState().magic, readyTick)) {
+      return ctx.finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
     }
 
-    const cost = costOf(ability);
-    if (cost > state.adrenaline) {
-      return finish(
-        `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${readyTick}`,
+    const cost = ctx.costOf(ability);
+    if (cost > ctx.getState().adrenaline) {
+      return ctx.finish(
+        `${ability.id} needs ${cost}% adrenaline, ${ctx.getState().adrenaline}% available at tick ${readyTick}`,
       );
     }
 
-    performCast(ability, readyTick, false);
+    ctx.performCast(ability, readyTick, false);
   }
 
-  return finish();
+  return ctx.finish();
 }

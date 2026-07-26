@@ -917,6 +917,161 @@
         "percent": 9
       },
       "displayDescription": "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust"
+    },
+    {
+      "id": "melee:flurry",
+      "name": "Flurry",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 45,
+      "unlock": {
+        "type": "level",
+        "requirement": "45",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Flurry",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "cooldownTicks": 34,
+      "hits": 8,
+      "damagePercent": [
+        60,
+        70
+      ],
+      "averageDamagePercent": 520,
+      "displayDescription": "Eight hits over 4.8 seconds, one every 0.6 seconds; Empowered at 4+ Bloodlust: +1% damage per 1% of the target's missing life points, cap +65%"
+    },
+    {
+      "id": "melee:greater-fury",
+      "name": "Greater Fury",
+      "style": "melee",
+      "category": "basic",
+      "level": 21,
+      "unlock": {
+        "type": "codex",
+        "requirement": "Verak Lith / Dragonkin Laboratory upgrades",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Fury",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 25,
+      "hits": 1,
+      "damagePercent": [
+        120,
+        140
+      ],
+      "displayDescription": "Upgrade of Fury; The next non-bleed melee attack within 15 seconds is a guaranteed critical strike (first hit of channelled abilities only)"
+    },
+    {
+      "id": "magic:greater-sunshine",
+      "name": "Greater Sunshine",
+      "style": "magic",
+      "category": "ultimate",
+      "level": 76,
+      "unlock": {
+        "type": "codex",
+        "requirement": "Greater Sunshine ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Sunshine",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "cooldownTicks": 100,
+      "hits": 1,
+      "damagePercent": [
+        315,
+        315
+      ],
+      "displayDescription": "Upgrade of Sunshine; Applies a damage-over-time to the primary target inside the beam: 10-20% ability damage every 1.8 seconds for 39 seconds; The DoT is not influenced by magic level or equipment stats; Damage buff begins 1 tick after cast and lasts 38.4 seconds"
+    },
+    {
+      "id": "magic:combust",
+      "name": "Combust",
+      "style": "magic",
+      "category": "basic",
+      "level": 38,
+      "unlock": {
+        "type": "level",
+        "requirement": "38",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Combust",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 30,
+      "hits": 10,
+      "damagePercent": [
+        27,
+        33
+      ],
+      "displayDescription": "Burn: ten hits over 18 seconds, one every 1.8 seconds; the percentage is rolled on the first hit and repeated; Burns cannot critically strike"
+    },
+    {
+      "id": "shared:sacrifice",
+      "name": "Sacrifice",
+      "style": "shared",
+      "category": "basic",
+      "level": 1,
+      "unlock": {
+        "type": "quest",
+        "requirement": "One Piercing Note",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sacrifice",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 50,
+      "hits": 1,
+      "damagePercent": [
+        70,
+        70
+      ],
+      "displayDescription": "Constitution ability, usable with any combat style"
     }
   ]
 }

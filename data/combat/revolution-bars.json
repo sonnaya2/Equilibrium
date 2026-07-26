@@ -1,0 +1,349 @@
+{
+  "lastSynced": "2026-07-25",
+  "trackedSince": "2024-03-04",
+  "records": [
+    {
+      "id": "melee-dual-wield",
+      "style": "melee",
+      "setup": "Dual wield",
+      "revolutionSize": 10,
+      "slots": [
+        {
+          "name": "Berserk",
+          "abilityId": "melee:berserk"
+        },
+        {
+          "name": "Meteor Strike",
+          "abilityId": "melee:meteor-strike"
+        },
+        {
+          "name": "Chaos Roar",
+          "abilityId": "melee:chaos-roar"
+        },
+        {
+          "name": "Overpower",
+          "abilityId": "melee:overpower"
+        },
+        {
+          "name": "Rend",
+          "abilityId": "melee:rend"
+        },
+        {
+          "name": "Dismember",
+          "abilityId": "melee:dismember"
+        },
+        {
+          "name": "Flurry",
+          "abilityId": "melee:flurry"
+        },
+        {
+          "name": "Adaptive Strike",
+          "abilityId": "melee:adaptive-strike"
+        },
+        {
+          "name": "Greater Fury",
+          "abilityId": "melee:greater-fury"
+        },
+        {
+          "name": "Assault",
+          "abilityId": "melee:assault"
+        }
+      ],
+      "replacements": [
+        {
+          "from": "Greater Fury",
+          "to": "Fury"
+        }
+      ],
+      "supported": true,
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "melee-two-handed",
+      "style": "melee",
+      "setup": "Two-handed",
+      "revolutionSize": 10,
+      "slots": [
+        {
+          "name": "Berserk",
+          "abilityId": "melee:berserk"
+        },
+        {
+          "name": "Meteor Strike",
+          "abilityId": "melee:meteor-strike"
+        },
+        {
+          "name": "Chaos Roar",
+          "abilityId": "melee:chaos-roar"
+        },
+        {
+          "name": "Overpower",
+          "abilityId": "melee:overpower"
+        },
+        {
+          "name": "Rend",
+          "abilityId": "melee:rend"
+        },
+        {
+          "name": "Dismember",
+          "abilityId": "melee:dismember"
+        },
+        {
+          "name": "Hurricane",
+          "abilityId": null
+        },
+        {
+          "name": "Adaptive Strike",
+          "abilityId": "melee:adaptive-strike"
+        },
+        {
+          "name": "Greater Fury",
+          "abilityId": "melee:greater-fury"
+        },
+        {
+          "name": "Assault",
+          "abilityId": "melee:assault"
+        }
+      ],
+      "replacements": [
+        {
+          "from": "Greater Fury",
+          "to": "Fury"
+        }
+      ],
+      "supported": true,
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "ranged",
+      "style": "ranged",
+      "setup": "Any",
+      "revolutionSize": 10,
+      "slots": [
+        {
+          "name": "Greater Death's Swiftness",
+          "abilityId": "ranged:greater-deaths-swiftness"
+        },
+        {
+          "name": "Greater Ricochet",
+          "abilityId": "ranged:greater-ricochet"
+        },
+        {
+          "name": "Sacrifice",
+          "abilityId": "shared:sacrifice"
+        },
+        {
+          "name": "Imbue: Shadows",
+          "abilityId": "ranged:imbue-shadows"
+        },
+        {
+          "name": "Shadow Tendrils",
+          "abilityId": "ranged:shadow-tendrils"
+        },
+        {
+          "name": "Galeshot",
+          "abilityId": "ranged:galeshot"
+        },
+        {
+          "name": "Rapid Fire",
+          "abilityId": "ranged:rapid-fire"
+        },
+        {
+          "name": "Deadshot",
+          "abilityId": "ranged:deadshot"
+        },
+        {
+          "name": "Snap Shot",
+          "abilityId": "ranged:snap-shot"
+        },
+        {
+          "name": "Piercing Shot",
+          "abilityId": "ranged:piercing-shot"
+        }
+      ],
+      "replacements": [
+        {
+          "from": "Greater Death's Swiftness",
+          "to": "Death's Swiftness"
+        },
+        {
+          "from": "Greater Ricochet",
+          "to": "Ricochet"
+        }
+      ],
+      "supported": true,
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "magic",
+      "style": "magic",
+      "setup": "Any",
+      "revolutionSize": 10,
+      "slots": [
+        {
+          "name": "Greater Sunshine",
+          "abilityId": "magic:greater-sunshine"
+        },
+        {
+          "name": "Tsunami",
+          "abilityId": null
+        },
+        {
+          "name": "Greater Concentrated Blast",
+          "abilityId": "magic:greater-concentrated-blast"
+        },
+        {
+          "name": "Asphyxiate",
+          "abilityId": "magic:asphyxiate"
+        },
+        {
+          "name": "Combust",
+          "abilityId": "magic:combust"
+        },
+        {
+          "name": "Omnipower",
+          "abilityId": null
+        },
+        {
+          "name": "Smoke Tendrils",
+          "abilityId": null
+        },
+        {
+          "name": "Sonic Wave",
+          "abilityId": "magic:sonic-wave"
+        },
+        {
+          "name": "Wild Magic",
+          "abilityId": "magic:wild-magic"
+        },
+        {
+          "name": "Dragon Breath",
+          "abilityId": null
+        }
+      ],
+      "replacements": [
+        {
+          "from": "Greater Sunshine",
+          "to": "Sunshine"
+        },
+        {
+          "from": "Greater Concentrated Blast",
+          "to": "Concentrated Blast"
+        }
+      ],
+      "supported": true,
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "necromancy",
+      "style": "necromancy",
+      "setup": "Any",
+      "revolutionSize": 11,
+      "slots": [
+        {
+          "name": "Conjure Undead Army",
+          "abilityId": null
+        },
+        {
+          "name": "Death Skulls",
+          "abilityId": null
+        },
+        {
+          "name": "Conjure Vengeful Ghost",
+          "abilityId": null
+        },
+        {
+          "name": "Living Death",
+          "abilityId": null
+        },
+        {
+          "name": "Soul Sap",
+          "abilityId": null
+        },
+        {
+          "name": "Conjure Skeleton Warrior",
+          "abilityId": null
+        },
+        {
+          "name": "Touch of Death",
+          "abilityId": null
+        },
+        {
+          "name": "Sacrifice",
+          "abilityId": "shared:sacrifice"
+        },
+        {
+          "name": "Volley of Souls",
+          "abilityId": "volley_of_souls"
+        },
+        {
+          "name": "Finger of Death",
+          "abilityId": null
+        },
+        {
+          "name": "Bloat",
+          "abilityId": null
+        }
+      ],
+      "replacements": [],
+      "supported": false,
+      "unsupportedReason": "Necromancy ability bands beyond Volley of Souls are not yet sourced in the corpus.",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Revolution/Bars",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    }
+  ]
+}

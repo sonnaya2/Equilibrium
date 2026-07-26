@@ -10,7 +10,8 @@ import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { loadState, saveState } from "@/lib/storage";
-import { loadoutStats } from "./loadoutStats";
+import { loadoutStats, type CalcStats } from "./loadoutStats";
+import { RevolutionPanel } from "./RevolutionPanel";
 import { useLoadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -35,6 +36,7 @@ function abilityName(id: string): string {
 
 export function RotationPlanner() {
   const [loadout] = useLoadout();
+  const [mode, setMode] = useState<"revolution" | "manual">("revolution");
   const [useBuild, setUseBuild] = useState(true);
   const [weave, setWeave] = useState(true);
   const [base, setBase] = useState(1000);
@@ -92,6 +94,16 @@ export function RotationPlanner() {
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
   const buildStats = loadoutStats(loadout);
+  const manualStats: CalcStats = {
+    base: Math.max(0, base),
+    level: Math.min(Math.max(1, level), 145),
+    dp: Math.min(Math.max(0, accuracy), 100) / 100,
+    critChance: Math.min(Math.max(0, critChance), 100) / 100,
+    critDamageBonus: 0,
+    globalModifiers: [],
+    castModifiersFor: () => [],
+  };
+  const activeStats = useBuild ? buildStats : manualStats;
 
   const contributions = result
     ? Object.entries(result.perAbility)
@@ -106,18 +118,20 @@ export function RotationPlanner() {
       <div>
         <h2 className="text-sm font-medium text-parch-50">Rotation</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Queue casts, run the tick sim. Volley of Souls runs in Quick and Analysis; the sim has
-          no soul tracking yet.
+          Revolution runs the wiki&apos;s recommended bars by default; switch to Manual for
+          deliberate cast-by-cast work.
         </p>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
             Use Build loadout
           </label>
-          <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">
-            <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
-            Auto-weave basics
-          </label>
+          {mode === "manual" ? (
+            <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">
+              <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
+              Auto-weave basics
+            </label>
+          ) : null}
         </div>
         {useBuild ? (
           <dl className="mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
@@ -169,40 +183,66 @@ export function RotationPlanner() {
           </label>
         </div>
 
-        <div className="mt-3 flex gap-1">
-          {PALETTE_FILTERS.map((filter) => (
+        <div className="mt-3 flex gap-1 border-t border-stone-750 pt-3">
+          {(["revolution", "manual"] as const).map((candidate) => (
             <button
-              key={filter.id}
+              key={candidate}
               type="button"
-              onClick={() => setPaletteStyle(filter.id)}
-              className={`border px-3 py-1.5 text-xs ${
-                paletteStyle === filter.id
+              onClick={() => setMode(candidate)}
+              className={`border px-3 py-1.5 text-xs capitalize ${
+                mode === candidate
                   ? "border-stone-700 bg-stone-850 text-parch-50"
                   : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
               }`}
             >
-              {filter.label}
+              {candidate}
             </button>
           ))}
         </div>
 
-        <div className="mt-3 border-t border-stone-750">
-          {palette.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              onClick={() => updateQueue([...queue, a.id])}
-              className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-            >
-              <span>{a.name}</span>
-              <span className="font-mono">
-                {a.adrenaline?.gain ? `+${a.adrenaline.gain}%` : a.adrenaline?.cost ? `${a.adrenaline.cost}%` : ""}
-              </span>
-            </button>
-          ))}
-        </div>
+        {mode === "manual" ? (
+          <>
+            <div className="mt-3 flex gap-1">
+              {PALETTE_FILTERS.map((filter) => (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setPaletteStyle(filter.id)}
+                  className={`border px-3 py-1.5 text-xs ${
+                    paletteStyle === filter.id
+                      ? "border-stone-700 bg-stone-850 text-parch-50"
+                      : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3 border-t border-stone-750">
+              {palette.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => updateQueue([...queue, a.id])}
+                  className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+                >
+                  <span>{a.name}</span>
+                  <span className="font-mono">
+                    {a.adrenaline?.gain ? `+${a.adrenaline.gain}%` : a.adrenaline?.cost ? `${a.adrenaline.cost}%` : ""}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
       </div>
 
+      {mode === "revolution" ? (
+        <div>
+          <RevolutionPanel stats={activeStats} />
+        </div>
+      ) : (
       <div>
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-sm font-medium text-parch-50">Queue · {queue.length} casts</h2>
@@ -316,6 +356,7 @@ export function RotationPlanner() {
           </div>
         ) : null}
       </div>
+      )}
     </div>
   );
 }

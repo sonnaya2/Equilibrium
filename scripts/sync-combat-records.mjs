@@ -40,10 +40,13 @@ const CATEGORY_BY_AUDIT_TYPE = {
 
 const ticks = (seconds) => Math.round(seconds / TICK_SECONDS);
 
-/** Parses "90-110" / "520-570%" into [min, max]; returns null otherwise. */
+/** Parses "90-110" / "520-570%" into [min, max], and single stated values like
+ *  "315" or "70%" into the degenerate band [v, v] — exactly what the page states. */
 function parseRange(text) {
-  const match = /^(\d+(?:\.\d+)?)\s*[-–]\s*(\d+(?:\.\d+)?)%?$/.exec(String(text).trim());
-  return match ? [Number(match[1]), Number(match[2])] : null;
+  const match = /^(\d+(?:\.\d+)?)\s*(?:[-–]\s*(\d+(?:\.\d+)?))?%?$/.exec(String(text).trim());
+  if (!match) return null;
+  const min = Number(match[1]);
+  return [min, match[2] != null ? Number(match[2]) : min];
 }
 
 /** Extracts a per-hit range from prose like "8 bleed hits at 25-35% each" or
@@ -59,7 +62,7 @@ function parseInitialHit(text) {
   return match ? [Number(match[1]), Number(match[2])] : null;
 }
 
-function auditRecord(style, entry) {
+function auditRecord(style, entry, verifiedAt = "2026-07-24") {
   const category = CATEGORY_BY_AUDIT_TYPE[entry.type];
   if (!category) throw new Error(`Unknown audit type "${entry.type}" on ${entry.name}`);
   const adrenaline = entry.adrenaline_cost_percent != null
@@ -69,7 +72,7 @@ function auditRecord(style, entry) {
       : category === "basic"
         ? { kind: "gain", percent: 9 } // §5.4: all basics generate 9%
         : undefined;
-  const rangeSource = entry.damage_range_percent ?? entry.damage_per_hit_percent;
+  const rangeSource = entry.damage_range_percent ?? entry.damage_per_hit_percent ?? entry.damage_percent;
   const range = rangeSource ? parseRange(rangeSource) : null;
   const notes = [];
   if (entry.name.startsWith("Greater ")) notes.push(`Upgrade of ${entry.name.slice(8)}`);
@@ -85,7 +88,7 @@ function auditRecord(style, entry) {
     level: entry.level,
     unlock: { type: "level", requirement: String(entry.level), regions: [] },
     sources: [
-      { source: "runescape-wiki", url: entry.source_url, verifiedAt: "2026-07-24" },
+      { source: "runescape-wiki", url: entry.source_url, verifiedAt },
     ],
   };
   if (adrenaline) record.adrenaline = adrenaline;
@@ -186,6 +189,10 @@ const unlocks = await readJson("scraped-data/progression-unlocks.json");
 const inventionPerks = await readJson("scraped-data/planner-expansions-invention-perks.json");
 const majorUpgrades = await readJson("scraped-data/major-upgrades-by-region.json");
 const quests = await readJson("data/league/quests.json");
+const prayerCatalogue = await readJson("data/reference/prayers.json");
+const regionalCombat = await readJson("data/research/regional-combat-unlocks.json");
+const abilitySupplement = await readJson("scraped-data/combat-ability-supplement-2026-07-25.json");
+const revolutionBars = await readJson("scraped-data/combat-revolution-bars-2026-07-25.json");
 
 /** Region join for abilities: codex packages, major-upgrade ability entries and quest
  *  unlocks stamp `unlock.regions` onto existing records. Corpus abilities with no matching
@@ -247,28 +254,67 @@ const abilities = [
   ...audit.magic.map((entry) => auditRecord("magic", entry)),
   ...audit.ranged.map((entry) => auditRecord("ranged", entry)),
   ...modernisation.melee.important_abilities_after_initial_patches.map(meleeRecord),
+  ...(abilitySupplement.abilities ?? []).map((entry) => auditRecord(entry.style, entry, abilitySupplement.snapshot_date)),
 ];
 const regionJoins = applyAbilityRegionJoins(abilities);
 
-/** Prayers: sourced unlock records only — book entries and unnamed groups are not prayers. */
-const prayers = (unlocks.prayer_unlocks ?? []).flatMap((group) =>
-  group.unlocks.map((entry) => {
+/** Prayers: the full catalogue from data/reference/prayers.json (46 standard, 45 ancient
+ *  curses, 7 Seren), with the progression-unlocks codex overlay merged by name. Effects are
+ *  the catalogue's own normalized text; levels stay absent where the catalogue has none. */
+const BOOK_MAP = {
+  "standard-prayers": { book: "standard", prefix: "prayer" },
+  "ancient-curses": { book: "ancient", prefix: "curse" },
+  "seren-prayers": { book: "seren", prefix: "seren" },
+};
+const prayers = [];
+for (const bookEntry of prayerCatalogue.books ?? []) {
+  const mapped = BOOK_MAP[bookEntry.id];
+  if (!mapped) throw new Error(`Unknown prayer book ${bookEntry.id}`);
+  for (const entry of bookEntry.prayers ?? []) {
+    const regionless = entry.region_requirement_type === "no_region_requirement";
+    prayers.push({
+      id: `${mapped.prefix}:${kebab(entry.name)}`,
+      name: entry.name,
+      book: mapped.book,
+      facts: [entry.category, entry.effect].filter(Boolean),
+      unlock: {
+        type: regionless ? "level" : "quest",
+        requirement: entry.unlock_requirements?.[0] ?? entry.category,
+        regions: regionless ? [] : (entry.required_regions ?? []).map((id) => regionList(id)[0]),
+      },
+      sources: wikiSources(prayerCatalogue.source_urls, prayerCatalogue.snapshot_date),
+    });
+  }
+}
+/** Codex overlay: progression-unlocks carries the drop unlock and explicit levels the
+ *  catalogue lacks (Praesul codex, 99 Prayer). Merge by name, never duplicate. */
+for (const group of unlocks.prayer_unlocks ?? []) {
+  for (const entry of group.unlocks) {
+    const record = prayers.find((p) => p.name.toLowerCase() === entry.name.toLowerCase());
     const facts = [];
     if (group.prerequisite) facts.push(`Requires ${group.prerequisite}`);
-    if (entry.necromancy_requirement != null)
-      facts.push(`Also requires ${entry.necromancy_requirement} Necromancy`);
-    return {
-      id: `curse:${kebab(entry.name)}`,
-      name: entry.name,
-      book: "ancient",
-      level: entry.prayer_requirement,
-      facts,
-      unlock: { type: "drop", requirement: `${group.name} (${group.id.split(":")[0]})`, regions: regionList(group.region_hint) },
-      sources: wikiSources(group.source_urls, unlocks.snapshot_date),
-      displayDescription: facts.join("; ") || undefined,
-    };
-  }),
-);
+    if (entry.necromancy_requirement != null) facts.push(`Also requires ${entry.necromancy_requirement} Necromancy`);
+    if (record) {
+      record.level = entry.prayer_requirement;
+      record.facts = [...new Set([...record.facts, ...facts])];
+      record.unlock = {
+        type: "drop",
+        requirement: `${group.name} (${group.id.split(":")[0]})`,
+        regions: record.unlock.regions.length ? record.unlock.regions : regionList(group.region_hint),
+      };
+    } else {
+      prayers.push({
+        id: `curse:${kebab(entry.name)}`,
+        name: entry.name,
+        book: "ancient",
+        level: entry.prayer_requirement,
+        facts,
+        unlock: { type: "drop", requirement: `${group.name} (${group.id.split(":")[0]})`, regions: regionList(group.region_hint) },
+        sources: wikiSources(group.source_urls, unlocks.snapshot_date),
+      });
+    }
+  }
+}
 
 /** Perks: current PvME recipes. PvME is discovery-grade here, never numeric ground truth. */
 const perks = (inventionPerks.current_armour_perk_recipes ?? []).map((entry) => {
@@ -321,6 +367,23 @@ effects.push({
   sources: [MODERNISATION_SOURCE],
 });
 
+/** Regional account/activity passives from the composed regional combat unlocks feed. */
+for (const record of regionalCombat.records ?? []) {
+  if (record.recordType === "equipment") continue;
+  effects.push({
+    id: `passive:${kebab(record.name)}`,
+    name: record.name,
+    kind: "passive",
+    facts: [record.category, record.detail].filter(Boolean),
+    unlock: {
+      type: "activity",
+      requirement: record.name,
+      regions: (record.requiredRegions ?? []).map((id) => regionList(id)[0]),
+    },
+    sources: [record.source],
+  });
+}
+
 /** Equipment: region-tagged unlock records from major upgrades. No sourced stats exist in
  *  the corpus yet, so bonuses stay empty and slot/tier appear only when the entry states them. */
 const COMBAT_CATEGORY = /weapon|armour|cape|boots|gloves|scripture|amulet|ring|combat gear|combat uniques|combat upgrades/i;
@@ -363,8 +426,50 @@ for (const model of unlocks.equipment_models ?? []) {
     displayDescription: model.rules.join("; "),
   });
 }
+/** Regional combat equipment (salve amulet (e) and kin) from the composed feed. */
+for (const record of regionalCombat.records ?? []) {
+  if (record.recordType !== "equipment") continue;
+  equipment.push({
+    id: `item:${kebab(record.name)}`,
+    name: record.name,
+    slot: /amulet/i.test(record.name) ? "amulet" : undefined,
+    bonuses: {},
+    unlock: {
+      type: "quest",
+      requirement: (record.requirements ?? []).join("; ") || record.detail,
+      regions: (record.requiredRegions ?? []).map((id) => regionList(id)[0]),
+    },
+    sources: [record.source],
+    displayDescription: record.detail,
+  });
+}
 
-const datasets = { abilities, equipment, prayers, perks, effects };
+/** Revolution++ bars: wiki slot names mapped to our record ids at build time; an
+ *  unmapped name means no sourced record exists and the slot is unmodelled. */
+const RECORD_ID_BY_WIKI_NAME = new Map(abilities.map((r) => [r.name.toLowerCase(), r.id]));
+const ENGINE_SLOT_IDS = {
+  "attack (ability)": "attack",
+  "ranged (ability)": "ranged_attack",
+  "magic (ability)": "magic_attack",
+  "necromancy (ability)": "necromancy_basic",
+  "volley of souls": "volley_of_souls",
+};
+const barRecords = (revolutionBars.bars ?? []).map((bar) => ({
+  id: bar.id,
+  style: bar.style,
+  setup: bar.setup,
+  revolutionSize: bar.revolution_size,
+  slots: bar.slots.map((name) => {
+    const recordId = RECORD_ID_BY_WIKI_NAME.get(name.toLowerCase()) ?? ENGINE_SLOT_IDS[name.toLowerCase()] ?? null;
+    return { name, abilityId: recordId };
+  }),
+  replacements: bar.replacements ?? [],
+  supported: bar.supported ?? true,
+  unsupportedReason: bar.unsupported_reason,
+  sources: wikiSources([revolutionBars.source.url, revolutionBars.source.parent_url], revolutionBars.snapshot_date),
+}));
+
+const datasets = { abilities, equipment, prayers, perks, effects, "revolution-bars": barRecords };
 for (const [kind, records] of Object.entries(datasets)) {
   const seen = new Set();
   const clean = records.filter((r) => {

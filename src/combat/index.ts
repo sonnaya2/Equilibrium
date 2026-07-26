@@ -30,5 +30,6 @@ export * from "./rotation/timeline";
 export * from "./rotation/state";
 export * from "./rotation/actions";
 export * from "./rotation/simulate";
+export * from "./rotation/revolution";
 export * from "./league/ruleset";
 export * from "./data/sources";

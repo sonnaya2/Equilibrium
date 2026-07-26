@@ -1,47 +1,334 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "trackedSince": "2024-03-04",
   "records": [
     {
       "entityId": "curse:affliction",
       "kind": "prayer",
-      "wikiPage": "Nex, Angel of Death",
-      "lastRevid": 37118149,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:anguish",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:berserker",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:chronicle-attraction",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:dark-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:deflect-magic",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:deflect-melee",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:deflect-necromancy",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:deflect-ranged",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:deflect-summoning",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "curse:desolation",
       "kind": "prayer",
-      "wikiPage": "Nex, Angel of Death",
-      "lastRevid": 37118149,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
       "lastVerifiedAt": "2026-07-25"
     },
     {
-      "entityId": "curse:divine-rage",
+      "entityId": "curse:fortitude",
       "kind": "prayer",
-      "wikiPage": "Sanctum of Rebirth",
-      "lastRevid": 37112710,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
       "lastVerifiedAt": "2026-07-25"
     },
     {
-      "entityId": "curse:eclipsed-soul",
+      "entityId": "curse:leech-adrenaline",
       "kind": "prayer",
-      "wikiPage": "The Gate of Elidinis",
-      "lastRevid": 37104464,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-defence",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-magic-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-magic-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-melee-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-melee-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-necromancy-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-necromancy-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-ranged-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-ranged-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:leech-run-energy",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:light-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "curse:malevolence",
       "kind": "prayer",
-      "wikiPage": "Nex, Angel of Death",
-      "lastRevid": 37118149,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:protect-item",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "curse:ruination",
       "kind": "prayer",
-      "wikiPage": "Nex, Angel of Death",
-      "lastRevid": 37118149,
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-adrenaline",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-defence",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-magic-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-magic-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-melee-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-melee-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-necromancy-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-necromancy-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-ranged-attack",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sap-ranged-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:sorrow",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:soul-link",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:soul-split",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:superheat-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:teamwork-protection",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:torment",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:turmoil",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "curse:wrath",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:amulet-of-the-forsaken-to-berserkers-fury",
+      "kind": "equipment",
+      "wikiPage": "Amulet of the forsaken",
+      "lastRevid": 37076299,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:asylum-surgeons-ring",
+      "kind": "equipment",
+      "wikiPage": "Asylum surgeon's ring",
+      "lastRevid": 37118121,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -52,31 +339,45 @@
       "lastVerifiedAt": "2026-07-25"
     },
     {
+      "entityId": "item:blessed-flask-production-chain",
+      "kind": "equipment",
+      "wikiPage": "Blessed flask",
+      "lastRevid": 37083795,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:corporeal-beast-holy-elixir-supply",
+      "kind": "equipment",
+      "wikiPage": "Corporeal Beast",
+      "lastRevid": 37122118,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
       "entityId": "item:croesus-foultorch",
       "kind": "equipment",
       "wikiPage": "Croesus",
-      "lastRevid": 37113659,
+      "lastRevid": 37122114,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:croesus-sporehammer",
       "kind": "equipment",
       "wikiPage": "Croesus",
-      "lastRevid": 37113659,
+      "lastRevid": 37122114,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:cryptbloom-armour",
       "kind": "equipment",
       "wikiPage": "Croesus",
-      "lastRevid": 37113659,
+      "lastRevid": 37122114,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:dark-nilas",
       "kind": "equipment",
       "wikiPage": "Arch-Glacor",
-      "lastRevid": 37107126,
+      "lastRevid": 37122113,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -104,14 +405,14 @@
       "entityId": "item:eclipsed-soul-prayer-codex",
       "kind": "equipment",
       "wikiPage": "The Gate of Elidinis",
-      "lastRevid": 37104464,
+      "lastRevid": 37122134,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:ek-zekkil",
       "kind": "equipment",
       "wikiPage": "TzKal-Zuk",
-      "lastRevid": 37113714,
+      "lastRevid": 37122115,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -132,7 +433,7 @@
       "entityId": "item:enhanced-glove-upgrades",
       "kind": "equipment",
       "wikiPage": "Arch-Glacor",
-      "lastRevid": 37107126,
+      "lastRevid": 37122113,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -146,28 +447,42 @@
       "entityId": "item:fractured-staff-of-armadyl-components",
       "kind": "equipment",
       "wikiPage": "Kerapac, the bound",
-      "lastRevid": 37106537,
+      "lastRevid": 37122112,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:frozen-core-of-leng",
       "kind": "equipment",
       "wikiPage": "Arch-Glacor",
-      "lastRevid": 37107126,
+      "lastRevid": 37122113,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:greater-concentrated-blast",
       "kind": "equipment",
       "wikiPage": "Kerapac, the bound",
-      "lastRevid": 37106537,
+      "lastRevid": 37122112,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:holy-wrench",
+      "kind": "equipment",
+      "wikiPage": "Holy wrench",
+      "lastRevid": 37015476,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:igneous-cape-progression",
+      "kind": "equipment",
+      "wikiPage": "TzKal-Zuk",
+      "lastRevid": 37122115,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:igneous-capes",
       "kind": "equipment",
       "wikiPage": "TzKal-Zuk",
-      "lastRevid": 37113714,
+      "lastRevid": 37122115,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -188,21 +503,21 @@
       "entityId": "item:kerapacs-wrist-wraps",
       "kind": "equipment",
       "wikiPage": "Kerapac, the bound",
-      "lastRevid": 37106537,
+      "lastRevid": 37122112,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:leng-artefact",
       "kind": "equipment",
       "wikiPage": "Arch-Glacor",
-      "lastRevid": 37107126,
+      "lastRevid": 37122113,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:magma-tempest",
       "kind": "equipment",
       "wikiPage": "TzKal-Zuk",
-      "lastRevid": 37113714,
+      "lastRevid": 37122115,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -223,7 +538,7 @@
       "entityId": "item:memory-dowser",
       "kind": "equipment",
       "wikiPage": "The Gate of Elidinis",
-      "lastRevid": 37104464,
+      "lastRevid": 37122134,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -265,7 +580,14 @@
       "entityId": "item:runic-attuner",
       "kind": "equipment",
       "wikiPage": "The Gate of Elidinis",
-      "lastRevid": 37104464,
+      "lastRevid": 37122134,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:salve-amulet-e",
+      "kind": "equipment",
+      "wikiPage": "Salve amulet (e)",
+      "lastRevid": 36963096,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -279,49 +601,49 @@
       "entityId": "item:scripture-of-bik",
       "kind": "equipment",
       "wikiPage": "Croesus",
-      "lastRevid": 37113659,
+      "lastRevid": 37122114,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:scripture-of-elidinis",
       "kind": "equipment",
       "wikiPage": "The Gate of Elidinis",
-      "lastRevid": 37104464,
+      "lastRevid": 37122134,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:scripture-of-ful",
       "kind": "equipment",
       "wikiPage": "TzKal-Zuk",
-      "lastRevid": 37113714,
+      "lastRevid": 37122115,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:scripture-of-jas",
       "kind": "equipment",
       "wikiPage": "Kerapac, the bound",
-      "lastRevid": 37106537,
+      "lastRevid": 37122112,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:scripture-of-wen",
       "kind": "equipment",
       "wikiPage": "Arch-Glacor",
-      "lastRevid": 37107126,
+      "lastRevid": 37122113,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:seismic-singularity",
       "kind": "equipment",
       "wikiPage": "Vorago",
-      "lastRevid": 37121582,
+      "lastRevid": 37122073,
       "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "item:seismic-wand",
       "kind": "equipment",
       "wikiPage": "Vorago",
-      "lastRevid": 37121582,
+      "lastRevid": 37122073,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -342,7 +664,14 @@
       "entityId": "item:tectonic-energy",
       "kind": "equipment",
       "wikiPage": "Vorago",
-      "lastRevid": 37121582,
+      "lastRevid": 37122073,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "item:tokkul-zo",
+      "kind": "equipment",
+      "wikiPage": "TokKul-Zo",
+      "lastRevid": 37043316,
       "lastVerifiedAt": "2026-07-25"
     },
     {
@@ -372,6 +701,13 @@
       "wikiPage": "Asphyxiate",
       "lastRevid": 37076065,
       "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:combust",
+      "kind": "ability",
+      "wikiPage": "Combust",
+      "lastRevid": 37076081,
+      "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "magic:concentrated-blast",
@@ -407,6 +743,13 @@
       "wikiPage": "Greater Sonic Wave",
       "lastRevid": 37076118,
       "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "magic:greater-sunshine",
+      "kind": "ability",
+      "wikiPage": "Greater Sunshine",
+      "lastRevid": 37076119,
+      "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "magic:runic-charge",
@@ -479,6 +822,20 @@
       "lastVerifiedAt": "2026-07-24"
     },
     {
+      "entityId": "melee:flurry",
+      "kind": "ability",
+      "wikiPage": "Flurry",
+      "lastRevid": 37076104,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "melee:greater-fury",
+      "kind": "ability",
+      "wikiPage": "Greater Fury",
+      "lastRevid": 37076117,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
       "entityId": "melee:massacre",
       "kind": "ability",
       "wikiPage": "Combat Style Modernisation",
@@ -519,6 +876,461 @@
       "wikiPage": "Combat Style Modernisation",
       "lastRevid": 37033522,
       "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "passive:armoured-hide-barricade-perk",
+      "kind": "effect",
+      "wikiPage": "Anachronia Dinosaur Farm",
+      "lastRevid": 37001079,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:berserkers-fury-relic-chain",
+      "kind": "effect",
+      "wikiPage": "Pay-to-play melee training",
+      "lastRevid": 37097368,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:death-ward-relic-chain",
+      "kind": "effect",
+      "wikiPage": "Archaeology training",
+      "lastRevid": 37119242,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:dreadnips",
+      "kind": "effect",
+      "wikiPage": "Dreadnip",
+      "lastRevid": 37120940,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:elite-fremennik-combat-rewards",
+      "kind": "effect",
+      "wikiPage": "Fremennik achievements",
+      "lastRevid": 37049709,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:fight-cauldron-obsidian-armour-progression",
+      "kind": "effect",
+      "wikiPage": "Obsidian equipment",
+      "lastRevid": 37087194,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:guthix-staff-and-claws-of-guthix-access",
+      "kind": "effect",
+      "wikiPage": "Guthix staff",
+      "lastRevid": 36751163,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:hard-desert-keris-upgrade",
+      "kind": "effect",
+      "wikiPage": "Keris",
+      "lastRevid": 37082370,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:hard-morytania-barrows-rewards",
+      "kind": "effect",
+      "wikiPage": "Morytania achievements",
+      "lastRevid": 37049729,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:heightened-senses-relic-chain",
+      "kind": "effect",
+      "wikiPage": "Heightened Senses",
+      "lastRevid": 36603859,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:king-of-beasts-bomb-conservation-perk",
+      "kind": "effect",
+      "wikiPage": "Anachronia Dinosaur Farm",
+      "lastRevid": 37001079,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:no-fear-meteor-strike-perk",
+      "kind": "effect",
+      "wikiPage": "Anachronia Dinosaur Farm",
+      "lastRevid": 37001079,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:nopenopenope-spider-combat-perk",
+      "kind": "effect",
+      "wikiPage": "Player-owned farm",
+      "lastRevid": 37110514,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:ring-of-vigour-and-passive-conversion",
+      "kind": "effect",
+      "wikiPage": "Ring of vigour",
+      "lastRevid": 37054163,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:seers-village-combat-achievement-rewards",
+      "kind": "effect",
+      "wikiPage": "Enhanced Excalibur",
+      "lastRevid": 37023418,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:slayer-lodge-progression",
+      "kind": "effect",
+      "wikiPage": "Template:Anachronia base camp/Slayer Lodge tiers",
+      "lastRevid": 36309211,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:spirit-cape-passive",
+      "kind": "effect",
+      "wikiPage": "Spirit cape",
+      "lastRevid": 36961622,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:tirannwn-combat-achievement-rewards",
+      "kind": "effect",
+      "wikiPage": "Tirannwn achievements",
+      "lastRevid": 37049734,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "passive:vyre-combat-and-sunspear-progression",
+      "kind": "effect",
+      "wikiPage": "Sunspear (melee)",
+      "lastRevid": 37073823,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:accelerated-decay",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:augury",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:burst-of-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:charge",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:chivalry",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:clarity-of-thought",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:decay",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:divine-rage",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:eagle-eye",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:eclipsed-soul",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:hand-of-doom",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:hand-of-fate",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:hand-of-judgement",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:hastened-decay",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:hawk-eye",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:improved-reflexes",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:incredible-reflexes",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:mystic-lore",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:mystic-might",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:mystic-will",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:overcharge",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:overpowering-force",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:piety",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-from-magic",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-from-melee",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-from-necromancy",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-from-ranged",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-from-summoning",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:protect-item",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:rapid-heal",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:rapid-renewal",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:rapid-restore",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:redemption",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:retribution",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:rigour",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:rock-skin",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:sanctity",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:sharp-eye",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:smite",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:steel-skin",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:super-charge",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:superhuman-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:thick-skin",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:ultimate-strength",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:unrelenting-force",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "prayer:unstoppable-force",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
     },
     {
       "entityId": "ranged:bombardment",
@@ -624,6 +1436,62 @@
       "wikiPage": "Enhanced abilities",
       "lastRevid": 36969850,
       "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "entityId": "seren:chronicle-attraction",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:dark-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:fortitude",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:light-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:soul-link",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:superheat-form",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "seren:teamwork-protection",
+      "kind": "prayer",
+      "wikiPage": "Prayer",
+      "lastRevid": 37054066,
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "entityId": "shared:sacrifice",
+      "kind": "ability",
+      "wikiPage": "Sacrifice",
+      "lastRevid": 37076163,
+      "lastVerifiedAt": "2026-07-25"
     }
   ]
 }

@@ -17,6 +17,7 @@ test("quick calculator runs the real pipeline", async ({ page }) => {
 
 test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
 
   const attack = page.getByRole("button", { name: /^Attack \+9%$/ });
   await attack.click();
@@ -30,11 +31,13 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
 
   await page.reload();
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 });
 
 test("rotation reports adrenaline starvation honestly in manual mode", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
   await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
@@ -43,6 +46,7 @@ test("rotation reports adrenaline starvation honestly in manual mode", async ({ 
 
 test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
 
   await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
@@ -78,6 +82,7 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
 
 test("rotation defaults to the shared build loadout", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
   const toggle = page.getByRole("checkbox", { name: "Use Build loadout" });
   await expect(toggle).toBeChecked();
 
@@ -94,4 +99,16 @@ test("build tab exposes target and perk sections", async ({ page }) => {
   await expect(page.getByText("Equilibrium rank (+10% +1%/rank AD)")).toBeVisible();
   await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
   await expect(page.getByText("Affinity")).toBeVisible();
+});
+
+test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
+  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+
+  await expect(page.getByText("8 of 10 slots modelled · 2 skipped")).toBeVisible();
+  await expect(page.getByText("Meteor Strike")).toBeVisible();
+  await expect(page.getByText("Chaos Roar")).toBeVisible();
+
+  await page.getByRole("button", { name: "Run revolution" }).click();
+  await expect(page.getByText("DPS")).toBeVisible();
+  await expect(page.getByText("Casts")).toBeVisible();
 });

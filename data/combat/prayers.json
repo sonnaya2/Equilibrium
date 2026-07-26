@@ -3,147 +3,929 @@
   "trackedSince": "2024-03-04",
   "records": [
     {
-      "id": "curse:malevolence",
-      "name": "Malevolence",
-      "book": "ancient",
-      "level": 99,
+      "id": "prayer:clarity-of-thought",
+      "name": "Clarity of Thought",
+      "book": "standard",
       "facts": [
-        "Requires Ancient Curses"
+        "Melee attack",
+        "Adds 2 Attack levels when calculating melee accuracy."
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "Praesul codex curses (nex-aod)",
-        "regions": [
-          "asgarnia"
-        ]
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
       },
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
+          "url": "https://runescape.wiki/w/Prayer",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Unlockable_content",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Necromancy",
           "verifiedAt": "2026-07-25"
-        }
-      ],
-      "displayDescription": "Requires Ancient Curses"
-    },
-    {
-      "id": "curse:desolation",
-      "name": "Desolation",
-      "book": "ancient",
-      "level": 99,
-      "facts": [
-        "Requires Ancient Curses"
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "Praesul codex curses (nex-aod)",
-        "regions": [
-          "asgarnia"
-        ]
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
-          "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:improved-reflexes",
+      "name": "Improved Reflexes",
+      "book": "standard",
+      "facts": [
+        "Melee attack",
+        "Adds 4 Attack levels when calculating melee accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Necromancy",
           "verifiedAt": "2026-07-25"
-        }
-      ],
-      "displayDescription": "Requires Ancient Curses"
-    },
-    {
-      "id": "curse:affliction",
-      "name": "Affliction",
-      "book": "ancient",
-      "level": 99,
-      "facts": [
-        "Requires Ancient Curses"
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "Praesul codex curses (nex-aod)",
-        "regions": [
-          "asgarnia"
-        ]
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
-          "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:incredible-reflexes",
+      "name": "Incredible Reflexes",
+      "book": "standard",
+      "facts": [
+        "Melee attack",
+        "Adds 6 Attack levels when calculating melee accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Necromancy",
           "verifiedAt": "2026-07-25"
-        }
-      ],
-      "displayDescription": "Requires Ancient Curses"
-    },
-    {
-      "id": "curse:ruination",
-      "name": "Ruination",
-      "book": "ancient",
-      "level": 99,
-      "facts": [
-        "Requires Ancient Curses",
-        "Also requires 95 Necromancy"
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "Praesul codex curses (nex-aod)",
-        "regions": [
-          "asgarnia"
-        ]
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Nex,_Angel_of_Death",
-          "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:burst-of-strength",
+      "name": "Burst of Strength",
+      "book": "standard",
+      "facts": [
+        "Melee strength",
+        "Increases melee damage by 2%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Necromancy",
           "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
         }
-      ],
-      "displayDescription": "Requires Ancient Curses; Also requires 95 Necromancy"
+      ]
     },
     {
-      "id": "curse:divine-rage",
+      "id": "prayer:superhuman-strength",
+      "name": "Superhuman Strength",
+      "book": "standard",
+      "facts": [
+        "Melee strength",
+        "Increases melee damage by 4%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:ultimate-strength",
+      "name": "Ultimate Strength",
+      "book": "standard",
+      "facts": [
+        "Melee strength",
+        "Increases melee damage by 6%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:sharp-eye",
+      "name": "Sharp Eye",
+      "book": "standard",
+      "facts": [
+        "Ranged attack",
+        "Adds 2 Ranged levels when calculating ranged accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:hawk-eye",
+      "name": "Hawk Eye",
+      "book": "standard",
+      "facts": [
+        "Ranged attack",
+        "Adds 4 Ranged levels when calculating ranged accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:eagle-eye",
+      "name": "Eagle Eye",
+      "book": "standard",
+      "facts": [
+        "Ranged attack",
+        "Adds 6 Ranged levels when calculating ranged accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:unstoppable-force",
+      "name": "Unstoppable Force",
+      "book": "standard",
+      "facts": [
+        "Ranged strength",
+        "Increases ranged damage by 2%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:unrelenting-force",
+      "name": "Unrelenting Force",
+      "book": "standard",
+      "facts": [
+        "Ranged strength",
+        "Increases ranged damage by 4%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:overpowering-force",
+      "name": "Overpowering Force",
+      "book": "standard",
+      "facts": [
+        "Ranged strength",
+        "Increases ranged damage by 6%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:mystic-will",
+      "name": "Mystic Will",
+      "book": "standard",
+      "facts": [
+        "Magic attack",
+        "Adds 2 Magic levels when calculating magic accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:mystic-lore",
+      "name": "Mystic Lore",
+      "book": "standard",
+      "facts": [
+        "Magic attack",
+        "Adds 4 Magic levels when calculating magic accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:mystic-might",
+      "name": "Mystic Might",
+      "book": "standard",
+      "facts": [
+        "Magic attack",
+        "Adds 6 Magic levels when calculating magic accuracy."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:charge",
+      "name": "Charge",
+      "book": "standard",
+      "facts": [
+        "Magic strength",
+        "Increases magic damage by 2%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:super-charge",
+      "name": "Super Charge",
+      "book": "standard",
+      "facts": [
+        "Magic strength",
+        "Increases magic damage by 4%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:overcharge",
+      "name": "Overcharge",
+      "book": "standard",
+      "facts": [
+        "Magic strength",
+        "Increases magic damage by 6%."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:hand-of-judgement",
+      "name": "Hand of Judgement",
+      "book": "standard",
+      "facts": [
+        "Necromancy attack",
+        "Adds 2 Necromancy levels when calculating necromancy accuracy."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:hand-of-fate",
+      "name": "Hand of Fate",
+      "book": "standard",
+      "facts": [
+        "Necromancy attack",
+        "Adds 4 Necromancy levels when calculating necromancy accuracy."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:hand-of-doom",
+      "name": "Hand of Doom",
+      "book": "standard",
+      "facts": [
+        "Necromancy attack",
+        "Adds 6 Necromancy levels when calculating necromancy accuracy."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:decay",
+      "name": "Decay",
+      "book": "standard",
+      "facts": [
+        "Necromancy strength",
+        "Increases necromancy damage by 2%."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:hastened-decay",
+      "name": "Hastened Decay",
+      "book": "standard",
+      "facts": [
+        "Necromancy strength",
+        "Increases necromancy damage by 4%."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:accelerated-decay",
+      "name": "Accelerated Decay",
+      "book": "standard",
+      "facts": [
+        "Necromancy strength",
+        "Increases necromancy damage by 6%."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:eclipsed-soul",
+      "name": "Eclipsed Soul",
+      "book": "standard",
+      "facts": [
+        "Hybrid",
+        "Increases critical strike chance by 4%. After a critical strike, restores 1% of maximum life points each tick for 10 ticks, for up to 10% maximum life points over 6 seconds."
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Eclipsed Soul (gate-of-elidinis)",
+        "regions": [
+          "desert",
+          "misthalin",
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:divine-rage",
       "name": "Divine Rage",
-      "book": "ancient",
-      "facts": [],
+      "book": "standard",
+      "facts": [
+        "Hybrid",
+        "Increases melee, ranged, magic and necromancy damage by 5%."
+      ],
       "unlock": {
         "type": "drop",
         "requirement": "Divine Rage (sanctum-of-rebirth)",
@@ -154,29 +936,595 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+          "url": "https://runescape.wiki/w/Prayer",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Divine_Rage_prayer_codex",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
           "verifiedAt": "2026-07-25"
         }
       ]
     },
     {
-      "id": "curse:eclipsed-soul",
-      "name": "Eclipsed Soul",
-      "book": "ancient",
-      "facts": [],
+      "id": "prayer:thick-skin",
+      "name": "Thick Skin",
+      "book": "standard",
+      "facts": [
+        "Defence",
+        "Adds 2 Defence levels when calculating block chance."
+      ],
       "unlock": {
-        "type": "drop",
-        "requirement": "Eclipsed Soul (gate-of-elidinis)",
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:rock-skin",
+      "name": "Rock Skin",
+      "book": "standard",
+      "facts": [
+        "Defence",
+        "Adds 4 Defence levels when calculating block chance."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:steel-skin",
+      "name": "Steel Skin",
+      "book": "standard",
+      "facts": [
+        "Defence",
+        "Adds 6 Defence levels when calculating block chance."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:chivalry",
+      "name": "Chivalry",
+      "book": "standard",
+      "facts": [
+        "Knight Waves",
+        "Adds 7 Attack levels for melee accuracy, increases melee damage by 7%, and adds 7 Defence levels for block chance."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "King's Ransom",
+        "regions": [
+          "kandarin",
+          "karamja"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:piety",
+      "name": "Piety",
+      "book": "standard",
+      "facts": [
+        "Knight Waves",
+        "Adds 8 Attack levels for melee accuracy, increases melee damage by 8%, and adds 8 Defence levels for block chance."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "King's Ransom",
+        "regions": [
+          "kandarin",
+          "karamja"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:rigour",
+      "name": "Rigour",
+      "book": "standard",
+      "facts": [
+        "Knight Waves",
+        "Adds 8 Ranged levels for ranged accuracy, increases ranged damage by 8%, and adds 8 Defence levels for block chance."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "King's Ransom",
+        "regions": [
+          "kandarin",
+          "karamja"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:augury",
+      "name": "Augury",
+      "book": "standard",
+      "facts": [
+        "Knight Waves",
+        "Adds 8 Magic levels for magic accuracy, increases magic damage by 8%, and adds 8 Defence levels for block chance."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "King's Ransom",
+        "regions": [
+          "kandarin",
+          "karamja"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:sanctity",
+      "name": "Sanctity",
+      "book": "standard",
+      "facts": [
+        "Knight Waves",
+        "Adds 8 Necromancy levels for necromancy accuracy, increases necromancy damage by 8%, and adds 8 Defence levels for block chance."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "King's Ransom",
+        "regions": [
+          "kandarin",
+          "karamja",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:rapid-heal",
+      "name": "Rapid Heal",
+      "book": "standard",
+      "facts": [
+        "Constitution",
+        "Doubles the normal life point regeneration rate."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:rapid-renewal",
+      "name": "Rapid Renewal",
+      "book": "standard",
+      "facts": [
+        "Constitution",
+        "Increases the normal life point regeneration rate to five times its base rate."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Purchase the Rapid Renewal Dungeoneering reward",
+        "regions": [
+          "forinthry"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:redemption",
+      "name": "Redemption",
+      "book": "standard",
+      "facts": [
+        "Constitution",
+        "If life points fall below 10%, consumes the remaining Prayer points and heals 25 life points per Prayer level."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-item",
+      "name": "Protect Item",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Protects one additional item on death."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-from-melee",
+      "name": "Protect from Melee",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Reduces incoming melee damage by 50% in PvM and 40% in PvP."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-from-ranged",
+      "name": "Protect from Ranged",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Reduces incoming ranged damage by 50% in PvM and 40% in PvP."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-from-magic",
+      "name": "Protect from Magic",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Reduces incoming magic damage by 50% in PvM and 40% in PvP."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-from-necromancy",
+      "name": "Protect from Necromancy",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Reduces incoming necromancy damage by 50% in PvM and 40% in PvP."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Meet the Prayer and Necromancy requirements",
         "regions": [
           "misthalin"
         ]
@@ -184,17 +1532,2373 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/The_Gate_of_Elidinis",
+          "url": "https://runescape.wiki/w/Prayer",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Eclipsed_Soul_prayer_codex",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
           "verifiedAt": "2026-07-25"
         },
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:protect-from-summoning",
+      "name": "Protect from Summoning",
+      "book": "standard",
+      "facts": [
+        "Protection",
+        "Reduces damage from Summoning familiars and protects against familiar special attacks."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:rapid-restore",
+      "name": "Rapid Restore",
+      "book": "standard",
+      "facts": [
+        "Miscellaneous",
+        "Doubles the natural restoration rate of lowered skills other than Constitution, Prayer and Summoning."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:retribution",
+      "name": "Retribution",
+      "book": "standard",
+      "facts": [
+        "Miscellaneous",
+        "On death, damages nearby enemies for 15 times the player's Prayer level."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "prayer:smite",
+      "name": "Smite",
+      "book": "standard",
+      "facts": [
+        "Miscellaneous",
+        "When dealing damage to another player, removes 1 Prayer point from the target for every 40 damage dealt."
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Meet the prayer's normal level requirements",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-melee-attack",
+      "name": "Sap Melee Attack",
+      "book": "ancient",
+      "facts": [
+        "Melee attack",
+        "Reduces the target's melee accuracy by 2 levels, stacking up to a 6-level reduction."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-melee-attack",
+      "name": "Leech Melee Attack",
+      "book": "ancient",
+      "facts": [
+        "Melee attack",
+        "Raises the user's melee accuracy by 2 to 5 levels while lowering the target's melee accuracy by 4 to 8 levels as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-melee-strength",
+      "name": "Sap Melee Strength",
+      "book": "ancient",
+      "facts": [
+        "Melee strength",
+        "Reduces the target's melee damage by 3%, stacking up to 9% in PvM. The PvP reduction is smaller."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-melee-strength",
+      "name": "Leech Melee Strength",
+      "book": "ancient",
+      "facts": [
+        "Melee strength",
+        "Raises the user's melee damage by 2% to 8% while lowering the target's melee damage by 6% to 12% in PvM as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:turmoil",
+      "name": "Turmoil",
+      "book": "ancient",
+      "facts": [
+        "Melee boost",
+        "Adds 10 Attack levels for melee accuracy, increases melee damage by 10%, and adds 10 Defence levels for block chance. It also drains the target's melee and Defence combat values over time."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:malevolence",
+      "name": "Malevolence",
+      "book": "ancient",
+      "facts": [
+        "Melee boost",
+        "Adds 12 Attack levels for melee accuracy, increases melee damage by 12%, and adds 12 Defence levels for block chance. It also applies the stronger high-level melee and Defence drain.",
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "level": 99
+    },
+    {
+      "id": "curse:sap-magic-attack",
+      "name": "Sap Magic Attack",
+      "book": "ancient",
+      "facts": [
+        "Magic attack",
+        "Reduces the target's magic accuracy by 2 levels, stacking up to a 6-level reduction."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-magic-attack",
+      "name": "Leech Magic Attack",
+      "book": "ancient",
+      "facts": [
+        "Magic attack",
+        "Raises the user's magic accuracy by 2 to 5 levels while lowering the target's magic accuracy by 4 to 8 levels as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-magic-strength",
+      "name": "Sap Magic Strength",
+      "book": "ancient",
+      "facts": [
+        "Magic strength",
+        "Reduces the target's magic damage by 3%, stacking up to 9% in PvM. The PvP reduction is smaller."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-magic-strength",
+      "name": "Leech Magic Strength",
+      "book": "ancient",
+      "facts": [
+        "Magic strength",
+        "Raises the user's magic damage by 2% to 8% while lowering the target's magic damage by 6% to 12% in PvM as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:light-form",
+      "name": "Light Form",
+      "book": "ancient",
+      "facts": [
+        "Magic boost",
+        "Doubles the activation chance of Seren-aligned spell secondary effects while active."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:dark-form",
+      "name": "Dark Form",
+      "book": "ancient",
+      "facts": [
+        "Magic boost",
+        "Doubles the activation chance of Ancient and Zaros-aligned spell secondary effects while active."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:torment",
+      "name": "Torment",
+      "book": "ancient",
+      "facts": [
+        "Magic boost",
+        "Adds 10 Magic levels for magic accuracy, increases magic damage by 10%, and adds 10 Defence levels for block chance. It also drains the target's magic and Defence combat values over time."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:affliction",
+      "name": "Affliction",
+      "book": "ancient",
+      "facts": [
+        "Magic boost",
+        "Adds 12 Magic levels for magic accuracy, increases magic damage by 12%, and adds 12 Defence levels for block chance. It also applies the stronger high-level magic and Defence drain.",
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "level": 99
+    },
+    {
+      "id": "curse:sap-ranged-attack",
+      "name": "Sap Ranged Attack",
+      "book": "ancient",
+      "facts": [
+        "Ranged attack",
+        "Reduces the target's ranged accuracy by 2 levels, stacking up to a 6-level reduction."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-ranged-attack",
+      "name": "Leech Ranged Attack",
+      "book": "ancient",
+      "facts": [
+        "Ranged attack",
+        "Raises the user's ranged accuracy by 2 to 5 levels while lowering the target's ranged accuracy by 4 to 8 levels as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-ranged-strength",
+      "name": "Sap Ranged Strength",
+      "book": "ancient",
+      "facts": [
+        "Ranged strength",
+        "Reduces the target's ranged damage by 3%, stacking up to 9% in PvM. The PvP reduction is smaller."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-ranged-strength",
+      "name": "Leech Ranged Strength",
+      "book": "ancient",
+      "facts": [
+        "Ranged strength",
+        "Raises the user's ranged damage by 2% to 8% while lowering the target's ranged damage by 6% to 12% in PvM as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:anguish",
+      "name": "Anguish",
+      "book": "ancient",
+      "facts": [
+        "Ranged boost",
+        "Adds 10 Ranged levels for ranged accuracy, increases ranged damage by 10%, and adds 10 Defence levels for block chance. It also drains the target's ranged and Defence combat values over time."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:desolation",
+      "name": "Desolation",
+      "book": "ancient",
+      "facts": [
+        "Ranged boost",
+        "Adds 12 Ranged levels for ranged accuracy, increases ranged damage by 12%, and adds 12 Defence levels for block chance. It also applies the stronger high-level ranged and Defence drain.",
+        "Requires Ancient Curses"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "level": 99
+    },
+    {
+      "id": "curse:sap-necromancy-attack",
+      "name": "Sap Necromancy Attack",
+      "book": "ancient",
+      "facts": [
+        "Necromancy attack",
+        "Reduces the target's necromancy accuracy by 2 levels, stacking up to a 6-level reduction."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-necromancy-attack",
+      "name": "Leech Necromancy Attack",
+      "book": "ancient",
+      "facts": [
+        "Necromancy attack",
+        "Raises the user's necromancy accuracy by 2 to 5 levels while lowering the target's necromancy accuracy by 4 to 8 levels as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-necromancy-strength",
+      "name": "Sap Necromancy Strength",
+      "book": "ancient",
+      "facts": [
+        "Necromancy strength",
+        "Reduces the target's necromancy damage by 3%, stacking up to 9% in PvM. The PvP reduction is smaller."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-necromancy-strength",
+      "name": "Leech Necromancy Strength",
+      "book": "ancient",
+      "facts": [
+        "Necromancy strength",
+        "Raises the user's necromancy damage by 2% to 8% while lowering the target's necromancy damage by 6% to 12% in PvM as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sorrow",
+      "name": "Sorrow",
+      "book": "ancient",
+      "facts": [
+        "Necromancy boost",
+        "Adds 10 Necromancy levels for necromancy accuracy, increases necromancy damage by 10%, and adds 10 Defence levels for block chance. It also drains the target's necromancy and Defence combat values over time."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:ruination",
+      "name": "Ruination",
+      "book": "ancient",
+      "facts": [
+        "Necromancy boost",
+        "Adds 12 Necromancy levels for necromancy accuracy, increases necromancy damage by 12%, and adds 12 Defence levels for block chance. It also applies the stronger high-level necromancy and Defence drain.",
+        "Requires Ancient Curses",
+        "Also requires 95 Necromancy"
+      ],
+      "unlock": {
+        "type": "drop",
+        "requirement": "Praesul codex curses (nex-aod)",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ],
+      "level": 99
+    },
+    {
+      "id": "curse:sap-defence",
+      "name": "Sap Defence",
+      "book": "ancient",
+      "facts": [
+        "Defence",
+        "Reduces the target's Defence level used for block chance by 2 levels, stacking up to a 6-level reduction."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-defence",
+      "name": "Leech Defence",
+      "book": "ancient",
+      "facts": [
+        "Defence",
+        "Raises the user's Defence level used for block chance by 2 to 5 levels while lowering the target's by 4 to 8 levels as the curse builds."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:fortitude",
+      "name": "Fortitude",
+      "book": "ancient",
+      "facts": [
+        "Defence",
+        "Increases Defence by 15%, reduces incoming damage by 3%, increases maximum life points by 10 plus 10 per Constitution level, increases defensive ability accuracy by 10%, doubles base life point regeneration, and allows natural regeneration during combat."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:soul-link",
+      "name": "Soul Link",
+      "book": "ancient",
+      "facts": [
+        "Constitution",
+        "Links to another player within 5 squares and shares half of incoming damage and healing between the linked players."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:soul-split",
+      "name": "Soul Split",
+      "book": "ancient",
+      "facts": [
+        "Constitution",
+        "Heals the user for 10% of damage dealt and drains 1 Prayer point from the target for every 66 damage dealt."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:sap-adrenaline",
+      "name": "Sap Adrenaline",
+      "book": "ancient",
+      "facts": [
+        "Adrenaline",
+        "Periodically drains 10% adrenaline from the target as attacks land."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-adrenaline",
+      "name": "Leech Adrenaline",
+      "book": "ancient",
+      "facts": [
+        "Adrenaline",
+        "Periodically drains adrenaline from the target and transfers the drained adrenaline to the user."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:protect-item",
+      "name": "Protect Item",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Protects one additional item on death."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:deflect-summoning",
+      "name": "Deflect Summoning",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Reduces damage from Summoning familiars, protects against familiar special attacks, and can reflect part of familiar damage back to the attacker."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:deflect-magic",
+      "name": "Deflect Magic",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Reduces incoming magic damage by 50% in PvM and 40% in PvP, with a chance to reflect part of the blocked damage."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:deflect-ranged",
+      "name": "Deflect Ranged",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Reduces incoming ranged damage by 50% in PvM and 40% in PvP, with a chance to reflect part of the blocked damage."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:deflect-melee",
+      "name": "Deflect Melee",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Reduces incoming melee damage by 50% in PvM and 40% in PvP, with a chance to reflect part of the blocked damage."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:deflect-necromancy",
+      "name": "Deflect Necromancy",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "Reduces incoming necromancy damage by 50% in PvM and 40% in PvP, with a chance to reflect part of the blocked damage."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:teamwork-protection",
+      "name": "Teamwork Protection",
+      "book": "ancient",
+      "facts": [
+        "Protection",
+        "For each nearby player also using Teamwork Protection, grants 5% damage reduction and 1% damage reflection, up to five contributors for 25% reduction and 5% reflection."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:chronicle-attraction",
+      "name": "Chronicle Attraction",
+      "book": "ancient",
+      "facts": [
+        "Skilling",
+        "Automatically attracts and captures chronicle fragments while training Divination."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:superheat-form",
+      "name": "Superheat Form",
+      "book": "ancient",
+      "facts": [
+        "Skilling",
+        "Automatically burns logs while Woodcutting, speeds smelting by 0.6 seconds, and treats low and medium smithing heat as the next higher heat band."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:leech-run-energy",
+      "name": "Leech Run Energy",
+      "book": "ancient",
+      "facts": [
+        "Miscellaneous",
+        "Periodically steals 10% run energy from the target."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:berserker",
+      "name": "Berserker",
+      "book": "ancient",
+      "facts": [
+        "Miscellaneous",
+        "Makes temporary boosted combat stats last 15% longer before decaying."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "curse:wrath",
+      "name": "Wrath",
+      "book": "ancient",
+      "facts": [
+        "Miscellaneous",
+        "On death, damages nearby enemies around the player."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:light-form",
+      "name": "Light Form",
+      "book": "seren",
+      "facts": [
+        "Magic boost",
+        "Doubles the activation chance of Seren-aligned spell secondary effects while active."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:dark-form",
+      "name": "Dark Form",
+      "book": "seren",
+      "facts": [
+        "Magic boost",
+        "Doubles the activation chance of Ancient and Zaros-aligned spell secondary effects while active."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:chronicle-attraction",
+      "name": "Chronicle Attraction",
+      "book": "seren",
+      "facts": [
+        "Skilling",
+        "Automatically attracts and captures chronicle fragments while training Divination."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:soul-link",
+      "name": "Soul Link",
+      "book": "seren",
+      "facts": [
+        "Constitution",
+        "Links to another player within 5 squares and shares half of incoming damage and healing between the linked players."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:teamwork-protection",
+      "name": "Teamwork Protection",
+      "book": "seren",
+      "facts": [
+        "Protection",
+        "For each nearby player also using Teamwork Protection, grants 5% damage reduction and 1% damage reflection, up to five contributors for 25% reduction and 5% reflection."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:superheat-form",
+      "name": "Superheat Form",
+      "book": "seren",
+      "facts": [
+        "Skilling",
+        "Automatically burns logs while Woodcutting, speeds smelting by 0.6 seconds, and treats low and medium smithing heat as the next higher heat band."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
+          "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "seren:fortitude",
+      "name": "Fortitude",
+      "book": "seren",
+      "facts": [
+        "Defence",
+        "Increases Defence by 15%, reduces incoming damage by 3%, increases maximum life points by 10 plus 10 per Constitution level, increases defensive ability accuracy by 10%, doubles base life point regeneration, and allows natural regeneration during combat."
+      ],
+      "unlock": {
+        "type": "quest",
+        "requirement": "Unlock Ancient Curses through The Temple at Senntisten",
+        "regions": [
+          "asgarnia",
+          "desert",
+          "fremennik",
+          "kandarin",
+          "misthalin",
+          "tirannwn"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Prayer",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Curses",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy",
+          "verifiedAt": "2026-07-25"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Unlockable_content",
           "verifiedAt": "2026-07-25"
         }
       ]

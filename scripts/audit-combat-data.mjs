@@ -13,14 +13,15 @@ const readJson = async (path) => JSON.parse(await readFile(join(ROOT, path), "ut
 
 const SOURCE_KINDS = new Set(["runescape-wiki", "jagex", "rs-analysis", "pvme", "derived"]);
 const ABILITY_CATEGORIES = new Set(["basic", "enhanced", "ultimate", "utility"]);
-const COMBAT_STYLES = new Set(["melee", "ranged", "magic", "necromancy"]);
+const COMBAT_STYLES = new Set(["melee", "ranged", "magic", "necromancy", "shared"]);
 const EQUIPMENT_SLOTS = new Set([
   "mainhand", "offhand", "twohand", "helmet", "body", "legs", "gloves", "boots",
   "cape", "amulet", "ring", "pocket", "ammo", "aura",
 ]);
 const EFFECT_KINDS = new Set(["passive", "set-bonus", "special-attack", "buff", "debuff", "prayer-effect", "perk-effect"]);
-const PRAYER_BOOKS = new Set(["standard", "ancient"]);
+const PRAYER_BOOKS = new Set(["standard", "ancient", "seren"]);
 const ID_PATTERN = /^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const failures = [];
@@ -55,6 +56,7 @@ const datasets = {
   prayers: await readJson("data/combat/prayers.json"),
   perks: await readJson("data/combat/perks.json"),
   effects: await readJson("data/combat/effects.json"),
+  "revolution-bars": await readJson("data/combat/revolution-bars.json"),
 };
 
 for (const [kind, dataset] of Object.entries(datasets)) {
@@ -65,7 +67,26 @@ for (const [kind, dataset] of Object.entries(datasets)) {
   for (const record of dataset.records) {
     check(!seen.has(record.id), `${kind}: duplicate id "${record.id}"`);
     seen.add(record.id);
-    auditBase(record, kind, regionIds);
+    if (kind === "revolution-bars") {
+      check(SLUG_PATTERN.test(record.id ?? ""), `revolution-bars: bad id "${record.id}"`);
+      check(typeof record.style === "string" && COMBAT_STYLES.has(record.style), `revolution-bars:${record.id} bad style`);
+      check(record.revolutionSize >= 1 && record.revolutionSize <= 14, `revolution-bars:${record.id} revolution size out of range`);
+      check(Array.isArray(record.slots) && record.slots.length > 0, `revolution-bars:${record.id} no slots`);
+      auditSources(record, kind);
+    } else {
+      auditBase(record, kind, regionIds);
+    }
+  }
+}
+const abilityIds = new Set(datasets.abilities.records.map((record) => record.id));
+const ENGINE_SLOT_IDS = new Set(["attack", "ranged_attack", "magic_attack", "necromancy_basic", "volley_of_souls"]);
+for (const bar of datasets["revolution-bars"].records) {
+  for (const slot of bar.slots) {
+    if (slot.abilityId == null) continue;
+    check(
+      abilityIds.has(slot.abilityId) || ENGINE_SLOT_IDS.has(slot.abilityId),
+      `revolution-bars:${bar.id} slot "${slot.name}" resolves to unknown id "${slot.abilityId}"`,
+    );
   }
 }
 

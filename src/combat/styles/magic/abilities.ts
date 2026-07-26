@@ -51,6 +51,51 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     requiresAnima: true,
     source: RUNIC_CHARGE_WIKI,
   },
+  {
+    // Greater Sunshine (wiki, June 2026): 315% initial hit, then a DoT of 10–20%
+    // every 1.8s over 39s against the primary target inside the beam — 21 hits,
+    // one every 3 ticks. The beam's damage buff is zone/target territory, not a cast effect.
+    id: "greater_sunshine",
+    name: "Greater Sunshine",
+    style: "magic",
+    category: "ultimate",
+    hits: [
+      { band: { minPct: 315, maxPct: 315 } },
+      ...Array.from({ length: 21 }, (_, i) => ({
+        band: { minPct: 10, maxPct: 20 },
+        critEligible: false,
+        tickOffset: (i + 1) * 3,
+      })),
+    ],
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Greater_Sunshine",
+      title: "Greater Sunshine",
+      verifiedAt: "2026-07-25",
+    },
+  },
+  {
+    // Combust per burn.ts constants: 10 crit-ineligible burn hits every 3 ticks.
+    id: "combust",
+    name: "Combust",
+    style: "magic",
+    category: "basic",
+    hits: Array.from({ length: 10 }, (_, i) => ({
+      band: { minPct: 27, maxPct: 33 },
+      critEligible: false,
+      tickOffset: (i + 1) * 3,
+    })),
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 18,
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Combust",
+      title: "Combust",
+      verifiedAt: "2026-07-25",
+    },
+  },
 ];
 
 /** Sourced numbers whose full hit bands are not yet pinned — notes, not calculable abilities. */

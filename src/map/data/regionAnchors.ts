@@ -20,10 +20,27 @@ export const MAP_IMAGE = {
   credit: "Region layout follows Jagex's Leagues II: Equilibrium map.",
 } as const;
 
-/** World plane the map texture lies on: x east, z south, origin at centre. */
+/**
+ * World plane the board lies on: x east, z south, origin at centre.
+ *
+ * Height is **not** MAP_IMAGE's aspect. That was a 865x404 banner crop — 2.14:1
+ * — and deriving the world frame from it squashed Gielinor's north-south axis by
+ * about 1.43x. It is why Fremennik rendered three times wider than tall and the
+ * Wilderness read as a letterbox: the rings were fine, the frame they were
+ * unpacked into was not.
+ *
+ * Sized against the real map instead (assets/rs3/1920px-RuneScape_Worldmap.png,
+ * land spanning roughly 1843x1406 of it, so 1.31:1). Our authored rings cover
+ * u 0.085..0.921 and v 0.018..0.976, so matching that ratio at width 2 gives
+ * 1.672 / (0.958 * h) = 1.31 -> h = 1.33.
+ *
+ * Everything downstream is in uv and scales with this: border nodes, place
+ * anchors, region framings, the flat board's viewBox. Nothing needed
+ * re-authoring — the number was the bug.
+ */
 export const MAP_WORLD = {
   width: 2,
-  height: (2 * MAP_IMAGE.height) / MAP_IMAGE.width,
+  height: 1.33,
 } as const;
 
 export interface RegionAnchor {

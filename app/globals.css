@@ -46,6 +46,15 @@
 
   --radius-sm: 2px;
   --radius-md: 4px;
+
+  /*
+    Height of the site header, border included. A token rather than a measured
+    value because the map route sizes its board off `100svh - var(--header-h)`,
+    and a board that guesses the chrome above it is a board with a scrollbar.
+    The header is locked to this from `md` up; below that its links wrap and it
+    is allowed to grow, which is why the tall shell is also `md`-and-up only.
+  */
+  --header-h: 3rem;
 }
 
 html {
@@ -1120,6 +1129,35 @@ textarea:focus-visible {
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
   }
+
+  /*
+    The map route is a full-viewport instrument, not a page with a picture on
+    it. The board fills whatever is left under the header, and every box between
+    this element and the <canvas> has to carry `min-height: 0` — a grid/flex
+    child defaults to `min-height: auto`, refuses to shrink below its content,
+    and the canvas then overflows instead of fitting. That single default is the
+    whole reason boards like this end up in a short letterboxed strip.
+
+    100vh first, 100svh second: browsers without svh keep a working (if
+    mobile-toolbar-naive) height, and everything since 2022 takes the second.
+    Below md the header's links wrap and its height is no longer the token, so
+    the tall shell starts at md and the route is ordinary document flow below.
+  */
+  @media (min-width: 768px) {
+    .map-shell {
+      height: calc(100vh - var(--header-h));
+      height: calc(100svh - var(--header-h));
+      overflow: hidden;
+    }
+  }
+
+  /* A pinned chip is a selection, not a hover: it stays after the pointer
+     leaves, so it has to look deliberate rather than like a stuck tooltip. */
+  .map-chip-pinned {
+    border-color: var(--color-gem-500);
+    background: rgb(13 10 7 / 94%);
+  }
+
   .map-chip-name {
     font-size: 11px;
     letter-spacing: 0.05em;

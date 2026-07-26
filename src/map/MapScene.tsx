@@ -9,6 +9,7 @@ import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
 import { Effects } from "./Effects";
+import { FitProbe } from "./FitProbe";
 import { FlatBoard } from "./FlatBoard";
 import { Ocean } from "./Ocean";
 import { useReducedMotion } from "./useReducedMotion";
@@ -128,12 +129,12 @@ export default function MapScene() {
   }, [narrow]);
 
   if (supported === null) {
-    return <div className="panel aspect-[1.88] w-full" aria-hidden="true" />;
+    return <div className="panel min-h-0 w-full flex-1" aria-hidden="true" />;
   }
 
   if (!supported) {
     return (
-      <div className="panel panel-body">
+      <div className="panel panel-body min-h-0 flex-1 overflow-y-auto">
         <p className="mb-3 text-sm text-parch-300">
           {narrow
             ? "Narrow layout uses the flat board so every region choice stays usable without the 3D table."
@@ -152,11 +153,14 @@ export default function MapScene() {
   }
 
   return (
-    <div>
-      {/* Sized by aspect, not viewport height. The table framing fits the board
-          to the canvas, so a tall box only ever pushes the camera further back
-          and leaves dead margins on both flanks. */}
-      <div className="panel relative aspect-[1.88] w-full overflow-hidden">
+    <div className="flex min-h-0 flex-1 flex-col">
+      {/* Sized by the viewport, not by an aspect ratio. The old aspect-[1.88]
+          box was the dead-space bug: it pinned the board to a strip whatever
+          the screen had to offer. CameraRig solves its radius from the live
+          aspect, so a taller canvas is simply a bigger board — but only if
+          every ancestor carries min-h-0, or this cell refuses to shrink and
+          the page grows a scrollbar instead. */}
+      <div className="panel relative min-h-0 w-full flex-1 overflow-hidden">
         <Canvas
           dpr={[1, 2]}
           frameloop="demand"
@@ -179,8 +183,13 @@ export default function MapScene() {
 
           <Ocean reducedMotion={reducedMotion} />
           <MapTable reducedMotion={reducedMotion} />
-          <CameraRig focus={focus.framed ? focus.region : null} reducedMotion={reducedMotion} />
+          <CameraRig
+            focus={focus.framed ? focus.region : null}
+            place={focus.place}
+            reducedMotion={reducedMotion}
+          />
           <InvalidateOnBuild />
+          {process.env.NODE_ENV === "production" ? null : <FitProbe />}
           {/* Bloom is scoped to the emissive MRT target, and nothing is emissive
               at rest — only the focus rim and the unlock sweep ever light up. */}
           <Effects />

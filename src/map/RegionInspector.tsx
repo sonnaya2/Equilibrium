@@ -1,24 +1,26 @@
 "use client";
 
 /**
- * Full-width region detail under Board Sky.
+ * Everything known about the region currently in focus, in one panel.
  *
- * Sits under the board + ledger as a deliberate instrument strip — not a
- * leftover side-rail panel. Crest + identity head, compact fact strip,
- * horizontal planner value, then the content/upgrade catalog at full width.
+ * This absorbed the two stacked sections that used to sit under the planner —
+ * "What each pick opens" repeated the ledger's numbers, and "Boundary rules"
+ * repeated rules already shown here — so comparing two regions is a click
+ * rather than a 2600px scroll.
  *
- * Filters exist because the content list mixes what Jagex has confirmed with
- * what we inferred. Filtering to `confirmed` is the one view that answers
- * "what do I actually know".
+ * The filters exist because the content list mixes what Jagex has confirmed
+ * with what we inferred. Filtering to `confirmed` is the one view that answers
+ * "what do I actually know", and it is why the status column carries provenance
+ * instead of being flattened to a yes.
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { GameIcon } from "@/components/GameIcon";
-import { regionCrestPath } from "@/lib/gameArt";
 import autoQuests from "#data/league/equilibrium-auto-quests.json";
+import { canSelectElective, isRegionUnlocked } from "@/league";
+import { useBuild } from "@/league/useBuild";
 import { getInventionComponentsByRegion } from "@/research/plannerExpansions";
 import { getSlayerMethodsByRegion } from "@/research/slayerPlanner";
-import { PLACES_BY_REGION } from "./data/placeAnchors";
+import { PLACES_BY_REGION, pinForHighlight } from "./data/placeAnchors";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { useMapFocus } from "./useMapFocus";
@@ -69,7 +71,8 @@ export function RegionInspector({
   regions: PlannerRegion[];
   boundaryRules: string[];
 }) {
-  const { focus, focusPlace, focusRegion } = useMapFocus();
+  const { focus, selectPlace, hoverPlace } = useMapFocus();
+  const { build, loaded, toggleRegion } = useBuild();
   const [kind, setKind] = useState<string>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [query, setQuery] = useState("");
@@ -83,7 +86,7 @@ export function RegionInspector({
     [detail],
   );
 
-  // Top content + upgrades for the compact value band (not a second table).
+  // Top content + upgrades for the compact planner-value strip (not a second table).
   // Dedup by name so content+upgrade twins do not React-key-collide.
   const plannerHighlights = useMemo(() => {
     if (!detail) return [] as string[];
@@ -101,6 +104,20 @@ export function RegionInspector({
     }
     return out;
   }, [detail]);
+
+  // How much of this region's content we can actually put on the board. Stated,
+  // not hidden: most rows are items, perks and outfits with no position on
+  // Gielinor, and the honest number is more useful than a map of guesses.
+  const pinStats = useMemo(() => {
+    const names = [
+      ...new Set([
+        ...(detail?.content ?? []).map((c) => c.name),
+        ...(detail?.upgrades ?? []).map((u) => u.name),
+      ]),
+    ];
+    const pinned = names.filter((n) => pinForHighlight(focus.region, n)).length;
+    return { pinned, total: names.length };
+  }, [detail, focus.region]);
 
   const slayerMethods = useMemo(
     () => getSlayerMethodsByRegion(focus.region),
@@ -124,6 +141,17 @@ export function RegionInspector({
     setQuery("");
   }, [focus.region]);
 
+  // Selecting a pin on the board brings its first row into view. One direction
+  // only — deliberately no scroll-spy driving selection back the other way,
+  // which would need a suppression flag to stop the two fighting and would
+  // overwrite a deliberate selection every time the rail moved.
+  useEffect(() => {
+    if (!focus.place) return;
+    document
+      .querySelector(`[data-place="${CSS.escape(focus.place)}"]`)
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [focus.place]);
+
   if (!detail) return null;
 
   const activeKind = kind === "all" || kinds.includes(kind) ? kind : "all";
@@ -137,57 +165,56 @@ export function RegionInspector({
     return true;
   });
 
-  // PlaceMarkers only mounts while framed. focusPlace alone lights the chip
-  // CSS but leaves the pin off the board after an unframe (or on first load).
-  const lightPlace = (area: string | null) => {
-    if (area !== null && !focus.framed) focusRegion(focus.region);
-    focusPlace(area);
-  };
-
   const sourcesLine = `${detail.sourceCount} source${detail.sourceCount === 1 ? "" : "s"} · verified ${detail.verifiedAt ?? "never"}`;
-  const researchBits: string[] = [];
-  if (slayerMethods.length > 0) {
-    researchBits.push(
-      `Slayer: ${slayerMethods.slice(0, 3).map(slayerLabel).join(", ")}${
-        slayerMethods.length > 3 ? ` +${slayerMethods.length - 3}` : ""
-      }`,
-    );
-  }
-  if (inventionComponents.length > 0) {
-    researchBits.push(
-      `Invention: ${inventionComponents
-        .slice(0, 3)
-        .map((c) => c.component)
-        .join(", ")}${inventionComponents.length > 3 ? ` +${inventionComponents.length - 3}` : ""}`,
-    );
-  }
+
+  // The board no longer toggles on click, so picking needs a control that says
+  // so. Named "Pick <region>" / "Remove <region>" rather than the bare region
+  // name: e2e locates ledger rows by /^<name>/ and a second match there is a
+  // Playwright strict-mode failure.
+  const elective = detail.availability === "elective";
+  const picked = build.elective.includes(detail.id);
+  const canPick = loaded && canSelectElective(build, detail.id);
+  const pickBlocked = elective && !picked && !canPick;
 
   return (
-    <section className="panel map-detail-dock" aria-label="Region detail">
-      <div className="panel-head flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-          <GameIcon src={regionCrestPath(detail.id)} size={20} className="shrink-0" />
-          <span className="text-parch-50">{detail.name}</span>
+    <section className="panel" aria-label="Region detail">
+      <div className="panel-head flex flex-wrap items-center justify-between gap-2">
+        {detail.name}
+        <span className="flex items-center gap-2.5">
           <span className="text-xs normal-case tracking-normal text-parch-100">
             {UNLOCK_TEXT[detail.availability]}
           </span>
-        </div>
-        <section aria-live="polite" className="num text-xs normal-case tracking-normal text-parch-300">
-          <span className="sr-only">
-            {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
-          </span>
-          {sourcesLine}
-        </section>
+          {elective ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (loaded && (picked || canPick)) toggleRegion(detail.id);
+              }}
+              aria-pressed={picked}
+              aria-disabled={pickBlocked || !loaded || undefined}
+              title={pickBlocked ? "All three elective picks are spent" : undefined}
+              className={`rounded-sm border px-2 py-0.5 text-xs normal-case tracking-normal transition-colors duration-150 ${
+                picked
+                  ? "border-gem-500 bg-stone-800 text-gem-300 hover:text-gem-200"
+                  : "border-stone-750 text-parch-100 hover:text-parch-50"
+              } ${pickBlocked || !loaded ? "cursor-not-allowed opacity-40" : ""}`}
+            >
+              {picked ? "Remove" : "Pick"} {detail.name}
+            </button>
+          ) : (
+            <span className="rounded-sm border border-stone-750 px-2 py-0.5 text-xs normal-case tracking-normal text-parch-300">
+              {isRegionUnlocked(build, detail.id) ? "Unlocked" : "Unlocks automatically"}
+            </span>
+          )}
+        </span>
       </div>
 
-      <div className="stat-strip border-b border-stone-800">
+      <div className="stat-strip border-b border-stone-800 px-3.5 py-2.5">
         {[
-          ["Quests", detail.quests],
+          ["Quests touching", detail.quests],
           ["Content", metrics?.content ?? detail.content.length],
           ["Upgrades", metrics?.upgrades ?? detail.upgrades.length],
           ["Training", metrics?.training ?? detail.training],
-          ["Combat", detail.combatUnlocks ?? 0],
-          ["Multi", detail.multiRegionUnlocks ?? 0],
         ].map(([label, value]) => (
           <div key={String(label)}>
             <div className="stat-label">{label}</div>
@@ -196,77 +223,114 @@ export function RegionInspector({
         ))}
       </div>
 
-      {(plannerHighlights.length > 0 || researchBits.length > 0 || autoEmpty) && (
-        <div className="border-b border-stone-800 px-3 py-1.5 text-xs text-parch-100">
-          {plannerHighlights.length > 0 ? plannerHighlights.slice(0, 4).join(" · ") : null}
-          {researchBits.length > 0 ? (
-            <span className="text-parch-300">
-              {plannerHighlights.length ? " · " : ""}
-              {researchBits.join(" · ")}
-            </span>
-          ) : null}
-          {autoEmpty ? (
-            <span className="text-parch-300">
-              {plannerHighlights.length || researchBits.length ? " · " : ""}
-              Auto-complete: none published
-            </span>
-          ) : null}
+      {/* Compact planner-value strip: highlights + cheap research joins + auto-quest honesty. */}
+      <div className="border-b border-stone-800 px-3.5 py-2.5">
+        <div className="text-xs font-medium uppercase tracking-[0.13em] text-parch-300">
+          Planner value
         </div>
-      )}
-
-      <div className="panel-body space-y-2 py-2">
-        {(detail.areas.length > 0 || detail.hardRules.length > 0) && (
-          <div className="space-y-1.5">
-            {detail.areas.length > 0 ? (
-              <div className="flex flex-wrap gap-1">
-                {[...new Set(detail.areas.filter(Boolean))].map((area, i) => {
-                  const isAnchored = anchored.has(area);
-                  const lit = focus.place === area;
-                  const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
-                    lit
-                      ? "bg-stone-800 text-gem-300"
-                      : isAnchored
-                        ? "text-parch-100"
-                        : "text-parch-300"
-                  }`;
-                  if (isAnchored) {
-                    return (
-                      <button
-                        key={`area-${i}-${area}`}
-                        type="button"
-                        onPointerEnter={() => lightPlace(area)}
-                        onPointerLeave={() => lightPlace(null)}
-                        onFocus={() => lightPlace(area)}
-                        onBlur={() => lightPlace(null)}
-                        onClick={() => lightPlace(area)}
-                        className={chipClass}
-                      >
-                        {area}
-                      </button>
-                    );
-                  }
-                  return (
-                    <span key={`area-${i}-${area}`} className={chipClass}>
-                      {area}
-                    </span>
-                  );
-                })}
-              </div>
-            ) : null}
-
-            {detail.hardRules.map((rule) => (
-              <p
-                key={rule}
-                className="border-l-2 border-gem-500 pl-2.5 text-sm leading-snug text-parch-100"
-              >
-                {rule}
-              </p>
+        {plannerHighlights.length > 0 ? (
+          <ul className="mt-1.5 space-y-0.5 text-xs text-parch-100">
+            {plannerHighlights.map((name) => (
+              <li key={name}>{name}</li>
             ))}
-          </div>
+          </ul>
+        ) : (
+          <p className="mt-1.5 text-xs text-parch-300">No content or upgrades mapped yet.</p>
         )}
+        {(slayerMethods.length > 0 || inventionComponents.length > 0) && (
+          <p className="mt-1.5 text-xs text-parch-100">
+            {slayerMethods.length > 0 ? (
+              <span>
+                Slayer: {slayerMethods.slice(0, 3).map(slayerLabel).join(", ")}
+                {slayerMethods.length > 3 ? ` +${slayerMethods.length - 3}` : ""}
+              </span>
+            ) : null}
+            {slayerMethods.length > 0 && inventionComponents.length > 0 ? " · " : null}
+            {inventionComponents.length > 0 ? (
+              <span>
+                Invention: {inventionComponents.slice(0, 3).map((c) => c.component).join(", ")}
+                {inventionComponents.length > 3 ? ` +${inventionComponents.length - 3}` : ""}
+              </span>
+            ) : null}
+          </p>
+        )}
+        <p className="mt-1.5 text-xs text-parch-300">
+          {pinStats.pinned} of {pinStats.total} pinned on the board — the rest are items,
+          perks and outfits with no place on Gielinor.
+        </p>
+        {autoEmpty ? (
+          <p className="mt-1.5 text-xs text-parch-300">
+            Official auto-complete: none published yet
+          </p>
+        ) : null}
+      </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          {/* Kind is a select, not chips: freeform catalog kinds would become a wall. */}
+      <div className="panel-body">
+        {detail.areas.length > 0 ? (
+          <div className="mb-3 flex flex-wrap gap-1.5">
+            {/* Anchored places are buttons so keyboard can light the marker;
+                unanchored areas stay text — nothing on the board to focus.
+                Sites join the same list, which is what keeps every pin on the
+                board keyboard-reachable without a second nav list competing
+                with the ledger for accessible names. */}
+            {[
+              ...new Set([
+                ...detail.areas.filter(Boolean),
+                ...(PLACES_BY_REGION.get(focus.region) ?? [])
+                  .filter((p) => p.site)
+                  .map((p) => p.area),
+              ]),
+            ].map((area) => {
+              const isAnchored = anchored.has(area);
+              const selected = focus.place === area;
+              const lit = selected || focus.hover === area;
+              // Selection is the sticky state a click makes, so it gets the ring;
+              // hover is a preview and only borrows the colour.
+              const chipClass = `rounded-sm border px-1.5 py-0.5 text-xs transition-colors duration-150 ${
+                selected
+                  ? "border-gem-500 bg-stone-800 text-gem-300"
+                  : lit
+                    ? "border-transparent bg-stone-800 text-gem-300"
+                    : isAnchored
+                      ? "border-transparent text-parch-100"
+                      : "border-transparent text-parch-300"
+              }`;
+              if (isAnchored) {
+                return (
+                  <button
+                    key={area}
+                    type="button"
+                    aria-pressed={selected}
+                    onPointerEnter={() => hoverPlace(area)}
+                    onPointerLeave={() => hoverPlace(null)}
+                    onFocus={() => hoverPlace(area)}
+                    onBlur={() => hoverPlace(null)}
+                    onClick={() => selectPlace(selected ? null : area)}
+                    className={chipClass}
+                  >
+                    {area}
+                  </button>
+                );
+              }
+              return (
+                <span key={area} className={chipClass}>
+                  {area}
+                </span>
+              );
+            })}
+          </div>
+        ) : null}
+
+        {detail.hardRules.map((rule) => (
+          <p key={rule} className="mb-3 border-l-2 border-gem-500 pl-3 text-sm text-parch-100">
+            {rule}
+          </p>
+        ))}
+
+        <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          {/* Kind is a select, not chips: the catalog's kinds are freeform
+              strings and Misthalin alone has twelve, which as buttons is a
+              two-row wall above a table with sixteen rows in it. */}
           <select
             value={activeKind}
             onChange={(e) => setKind(e.target.value)}
@@ -296,8 +360,11 @@ export function RegionInspector({
           />
         </div>
 
-        {/* Full-width catalog: two columns on lg so the strip uses the board span. */}
-        <div className="grid max-h-72 gap-3 overflow-y-auto lg:grid-cols-2">
+        {/* Capped and scrolled below lg, where this panel is the page. From lg
+            the section itself scrolls, so a second scrollbar here would nest
+            inside it. Two columns once there is width for them — beside the
+            ledger this panel runs most of the viewport. */}
+        <div className="grid max-h-80 gap-4 overflow-y-auto lg:max-h-none lg:overflow-visible">
           {rows.length > 0 ? (
             <table className="data-table">
               <thead>
@@ -308,9 +375,24 @@ export function RegionInspector({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((c, i) => (
-                  <tr key={`content-${i}-${c.name}`}>
-                    <td className="text-parch-50">{c.name}</td>
+                {rows.map((c) => {
+                  // A pinned row is a handle on the board. Pointer-only on
+                  // purpose: the chips above are already the keyboard route to
+                  // every pin, and a second focusable copy of the same name is
+                  // a Playwright strict-mode failure waiting to happen.
+                  const pin = pinForHighlight(focus.region, c.name);
+                  return (
+                  <tr
+                    key={c.name}
+                    onClick={pin ? () => selectPlace(pin.area === focus.place ? null : pin.area) : undefined}
+                    onPointerEnter={pin ? () => hoverPlace(pin.area) : undefined}
+                    onPointerLeave={pin ? () => hoverPlace(null) : undefined}
+                    data-place={pin ? pin.area : undefined}
+                    className={pin ? "cursor-pointer" : undefined}
+                  >
+                    <td className={pin && pin.area === focus.place ? "text-gem-300" : "text-parch-50"}>
+                      {c.name}
+                    </td>
                     <td>{c.kind}</td>
                     <td>
                       {c.confidence.startsWith("confirmed") ? (
@@ -320,7 +402,8 @@ export function RegionInspector({
                       )}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           ) : (
@@ -340,16 +423,9 @@ export function RegionInspector({
                 </tr>
               </thead>
               <tbody>
-                {detail.upgrades.map((u, i) => (
-                  <tr key={`upgrade-${i}-${u.name}`}>
-                    <td className="text-parch-50">
-                      <div>{u.name}</div>
-                      {u.comboLabel ? (
-                        <div className="mt-0.5 text-xs font-normal normal-case tracking-normal text-parch-300">
-                          {u.comboLabel}
-                        </div>
-                      ) : null}
-                    </td>
+                {detail.upgrades.map((u) => (
+                  <tr key={u.name}>
+                    <td className="text-parch-50">{u.name}</td>
                     <td>{u.kind}</td>
                   </tr>
                 ))}
@@ -359,12 +435,21 @@ export function RegionInspector({
         </div>
 
         {detail.warnings.map((w) => (
-          <p key={w} className="text-xs text-parch-300">
+          <p key={w} className="mt-3 text-xs text-parch-300">
             Note: {w}
           </p>
         ))}
 
-        <div className="flex flex-wrap items-baseline justify-end gap-2 border-t border-stone-800 pt-2">
+        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 border-t border-stone-800 pt-2">
+          {/* Compact live status: name/unlock/sources only. Filters and the
+              content table stay outside so chip/select churn is not announced.
+              e2e pins section[aria-live] + the sources pattern (must be visible). */}
+          <section aria-live="polite" className="num text-xs text-parch-300">
+            <span className="sr-only">
+              {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
+            </span>
+            {sourcesLine}
+          </section>
           <details className="text-xs text-parch-100">
             <summary className="cursor-pointer text-parch-300 hover:text-parch-100">
               Boundary rules ({boundaryRules.length})

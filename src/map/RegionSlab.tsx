@@ -29,24 +29,13 @@ import { type RegionShape } from "./data/regionShapes";
 import { MAP_WORLD, REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
 import { createSlabMaterials } from "./materials/slabMaterials";
 import { createBarrierMaterial } from "./materials/hexBarrier";
+import { BEVEL, FOCUS_LIFT, RAISED_Y, slabBaseY, SUNKEN_Y } from "./slabHeight";
 import { useMapFocus } from "./useMapFocus";
 
 /** Per-slab inset so shared seams never z-fight (bevelSize stays under half of it). */
 const INSET = 0.004;
-const RAISED_Y = 0.02;
-const SUNKEN_Y = -0.024;
-/** How much further the subject rises, and how far every other slab drops. */
-const FOCUS_LIFT = 0.028;
-const UNFOCUSED_DROP = 0.008;
 /** Ember-to-gem unlock sweep, in seconds. */
 const SWEEP_SECONDS = 0.6;
-/**
- * ExtrudeGeometry's bevel is added *outside* the requested depth, so a raised
- * cap's real top is `depth + bevelThickness`. Anything laid on the cap has to
- * clear that or it renders inside the slab — which is exactly what hid the
- * barrier lattice entirely and left the crests z-fighting with the terrain.
- */
-const BEVEL = 0.004;
 
 /** uv ring -> world -> extruded slab standing up in +y, caps on material group 0.
  *  The flat cap outline comes back with it, for the locked barrier lattice. */
@@ -88,8 +77,8 @@ function buildSlabGeometry(shape: RegionShape) {
 
 function statusLabel(id: RegionId, elective: boolean, unlocked: boolean, selectable: boolean): string {
   if (!elective) return id === MILESTONE_REGION ? "First milestone" : "Fixed start";
-  if (unlocked) return "Selected · click to remove";
-  return selectable ? "Click to unlock" : "Locked";
+  if (unlocked) return "Picked";
+  return selectable ? "Available pick" : "Locked · 3 of 3 spent";
 }
 
 export function RegionSlab({
@@ -103,7 +92,7 @@ export function RegionSlab({
   terrain: THREE.Texture;
   reducedMotion: boolean;
 }) {
-  const { build, toggleRegion } = useBuild();
+  const { build } = useBuild();
   const { focus, focusRegion } = useMapFocus();
   const invalidate = useThree((s) => s.invalidate);
   const [hovered, setHovered] = useState(false);
@@ -163,9 +152,7 @@ export function RegionSlab({
   // as a JSX prop would let R3F reapply the target in the same commit that flips
   // it, so `cur === targetY` before the lerp ever runs and the slab teleports.
   const groupRef = useRef<THREE.Group>(null);
-  const targetY =
-    (unlocked ? RAISED_Y : SUNKEN_Y) +
-    (subject ? FOCUS_LIFT : sidelined ? -UNFOCUSED_DROP : 0);
+  const targetY = slabBaseY(unlocked, subject, sidelined);
   const settled = useRef(false);
   useEffect(() => {
     // Seed the first mount at its resting height so the board does not animate in.
@@ -191,15 +178,19 @@ export function RegionSlab({
     if (busy) invalidate();
   });
 
+  // Focus only. This used to focus *and* toggle in one gesture, which made every
+  // board click an edit to persisted state — including the clicks that were
+  // really aimed at a place marker on top of the slab. Picking is an explicit
+  // button now, in the ledger and in the inspector header, so the board is safe
+  // to explore. Nothing was lost: the ledger already owned toggling.
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     focusRegion(id);
-    if (selectable) toggleRegion(id);
   };
   const over = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
-    document.body.style.cursor = selectable || !elective ? "pointer" : "not-allowed";
+    document.body.style.cursor = "pointer";
   };
   const out = () => {
     setHovered(false);

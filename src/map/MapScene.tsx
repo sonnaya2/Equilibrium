@@ -14,7 +14,7 @@ import { FlatBoard } from "./FlatBoard";
 import { Ocean } from "./Ocean";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE } from "./data/regionAnchors";
-import { LIGHT_FILL, LIGHT_KEY, LIGHT_RIM, SURFACE_VOID } from "./palette";
+import { SURFACE_VOID } from "./palette";
 import { useMapFocus } from "./useMapFocus";
 import { VineFrame } from "./VineFrame";
 
@@ -172,12 +172,13 @@ export default function MapScene() {
         >
           <color attach="background" args={[SURFACE_VOID]} />
 
-          {/* Warm key over a warm board, with a gem rim so raised slab edges
-              separate from the void. The cool sage/mint this replaced fought
-              the umber palette and flattened every extrusion. */}
-          <ambientLight intensity={0.42} color={LIGHT_FILL} />
-          <directionalLight position={[1.6, 2.4, 0.9]} intensity={1.7} color={LIGHT_KEY} />
-          <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.45} color={LIGHT_RIM} />
+          {/* Daylit noon clerestory: warm ambient + strong key, soft fill so
+              terrain midtones read, softer gem rim, warm hemisphere ground. */}
+          <ambientLight intensity={0.62} color={0xd4c4a8} />
+          <hemisphereLight args={[0xe8dcc0, 0x3a2e1c, 0.32]} />
+          <directionalLight position={[1.7, 2.9, 1.05]} intensity={2.4} color={0xffefd4} />
+          <directionalLight position={[-1.5, 1.5, -1.1]} intensity={0.6} color={0xa89878} />
+          <directionalLight position={[-1.7, 1.1, -1.7]} intensity={0.42} color={0x8ad4b8} />
 
           <Ocean reducedMotion={reducedMotion} />
           <MapTable reducedMotion={reducedMotion} />

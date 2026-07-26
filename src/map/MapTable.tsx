@@ -30,11 +30,14 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
     const n = REGION_SHAPES.length;
     loaded.forEach((t, i) => {
       t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 8;
-      // Terrain tiles are seamless; let them repeat across the larger slabs.
+      t.anisotropy = 16;
+      t.generateMipmaps = true;
+      t.minFilter = THREE.LinearMipmapLinearFilter;
+      t.magFilter = THREE.LinearFilter;
+      // Wiki terrain crops: mild repeat so plates do not kaleidoscope on large slabs.
       if (i >= n) {
         t.wrapS = t.wrapT = THREE.RepeatWrapping;
-        t.repeat.set(3, 3);
+        t.repeat.set(1.4, 1.4);
       }
     });
     return [loaded.slice(0, n), loaded.slice(n)];

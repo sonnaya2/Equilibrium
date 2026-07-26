@@ -29,12 +29,8 @@ import { PLACES_BY_REGION } from "./data/placeAnchors";
 import { MAP_WORLD } from "./data/regionAnchors";
 import { SHAPE_BY_ID } from "./data/regionShapes";
 import { GEM_200, GEM_400 } from "./palette";
+import { FOCUS_LIFT, RAISED_Y, SUNKEN_Y } from "./slabHeight";
 import { useMapFocus } from "./useMapFocus";
-
-/** Matches the resting heights in RegionSlab. */
-const RAISED_Y = 0.02;
-const SUNKEN_Y = -0.024;
-const FOCUS_LIFT = 0.028;
 
 const OUTER = 0.018;
 const INNER = 0.012;

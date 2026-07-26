@@ -1,0 +1,98 @@
+{
+  "round": 1,
+  "passBar": 9.0,
+  "champion": "cartographer",
+  "teams": [
+    {
+      "id": "cartographer",
+      "codename": "Cartographer's Desk",
+      "scores": {
+        "brightness": 9.5,
+        "selection": 9.0,
+        "vines": 7.5,
+        "water": 8.5,
+        "pinDossier": 9.0,
+        "uiShell": 9.5,
+        "craft": 9.5,
+        "remasterFeel": 9.0
+      },
+      "mean": 8.94,
+      "hardFail": false,
+      "hardFailReasons": [],
+      "rank": 1
+    },
+    {
+      "id": "boardsky",
+      "codename": "Deep Board Sky",
+      "scores": {
+        "brightness": 8.5,
+        "selection": 9.0,
+        "vines": 8.0,
+        "water": 9.0,
+        "pinDossier": 9.0,
+        "uiShell": 9.5,
+        "craft": 9.0,
+        "remasterFeel": 9.0
+      },
+      "mean": 8.88,
+      "hardFail": false,
+      "hardFailReasons": [],
+      "rank": 2
+    },
+    {
+      "id": "raised",
+      "codename": "Raised Court",
+      "scores": {
+        "brightness": 7.5,
+        "selection": 9.5,
+        "vines": 9.5,
+        "water": 8.0,
+        "pinDossier": 8.5,
+        "uiShell": 8.0,
+        "craft": 8.5,
+        "remasterFeel": 8.5
+      },
+      "mean": 8.5,
+      "hardFail": false,
+      "hardFailReasons": [],
+      "rank": 3
+    },
+    {
+      "id": "daylit",
+      "codename": "Daylit Reliquary",
+      "scores": {
+        "brightness": 8.5,
+        "selection": 8.5,
+        "vines": 7.5,
+        "water": 8.0,
+        "pinDossier": 8.5,
+        "uiShell": 9.0,
+        "craft": 8.5,
+        "remasterFeel": 8.0
+      },
+      "mean": 8.31,
+      "hardFail": false,
+      "hardFailReasons": [],
+      "rank": 4
+    },
+    {
+      "id": "crystal",
+      "codename": "Crystal Frontier",
+      "scores": {
+        "brightness": 7.5,
+        "selection": 8.5,
+        "vines": 7.0,
+        "water": 6.5,
+        "pinDossier": 8.5,
+        "uiShell": 8.5,
+        "craft": 8.0,
+        "remasterFeel": 7.5
+      },
+      "mean": 7.75,
+      "hardFail": false,
+      "hardFailReasons": [],
+      "rank": 5
+    }
+  ],
+  "productionRecommendation": "Ship Cartographer DNA as the planning surface (parchment-readable land, ink coasts, three-band desk under board, fixture-honest pin slip) fused with Boardsky materials (cliff-face slabs, multi-band swell water, triple-stroke seam tubes, pure board-majority stack) and Raised's elevation language (tall plinth + spotlight) plus volume hedge mass on locked frontiers. Do not ship Crystal's gem-flooded ivy or dark-abyss water as default; steal only the facet tray pattern and edge-only gem rule. Nobody cleared 9.0 — production must add real inter-slab vine volume and live WebGPU materials before claiming remaster done."
+}

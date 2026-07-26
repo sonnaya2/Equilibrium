@@ -29,7 +29,7 @@ import { type RegionShape } from "./data/regionShapes";
 import { MAP_WORLD, REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
 import { createSlabMaterials } from "./materials/slabMaterials";
 import { createBarrierMaterial } from "./materials/hexBarrier";
-import { BEVEL, FOCUS_LIFT, RAISED_Y, slabBaseY, SUNKEN_Y } from "./slabHeight";
+import { BEVEL, slabBaseY } from "./slabHeight";
 import { useMapFocus } from "./useMapFocus";
 
 /** Per-slab inset so shared seams never z-fight (bevelSize stays under half of it). */

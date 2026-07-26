@@ -17,7 +17,8 @@ export const MAP_IMAGE = {
   height: 404,
   // The plate is gone: the board is original geometry whose layout follows
   // Jagex's map, and the credit says exactly that.
-  credit: "Region layout follows Jagex's Leagues II: Equilibrium map.",
+  credit:
+    "Region layout follows Jagex's Leagues II: Equilibrium map. Slab terrain crops from the RuneScape Wiki world map (CC BY-NC-SA 3.0).",
 } as const;
 
 /**

@@ -1,25 +1,37 @@
 "use client";
 
 /**
- * The sea the board sits in.
+ * The sea the board sits in — Daylit Reliquary quality.
  *
- * Minimalist on purpose: two teals, a slow drift, and a few lighter bands where
- * a noise ridge crosses a threshold. It is not trying to look like water — it is
- * trying to make the coastlines read, which is the one job it has. Slabs stay
- * the brightest thing on the board.
+ * Lit multi-swell water (MeshStandardNodeMaterial) with fresnel graze and foam
+ * ridges. Cheap ALU only: three crossed sines, no fractal ocean. Coasts must
+ * read; slabs stay the brightest thing on the board.
  *
  * This is the one thing on the route that animates at rest, which the design law
- * otherwise bans. It ships because it was asked for, and because a still sea
- * makes the board look like a diagram. `prefers-reduced-motion` freezes it, and
- * it only drives the frameloop while the canvas is actually on screen.
+ * otherwise bans. `prefers-reduced-motion` freezes it, and it only drives the
+ * frameloop while the canvas is actually on screen.
  */
 
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three/webgpu";
 import { useFrame, useThree } from "@react-three/fiber";
-import { float, mix, positionWorld, smoothstep, uniform, vec3 } from "three/tsl";
+import {
+  float,
+  mix,
+  normalView,
+  positionViewDirection,
+  positionWorld,
+  smoothstep,
+  uniform,
+  vec3,
+} from "three/tsl";
 import { MAP_WORLD } from "./data/regionAnchors";
-import { OCEAN_DEEP, OCEAN_FOAM, OCEAN_SHALLOW, SURFACE_VOID } from "./palette";
+import { SURFACE_VOID } from "./palette";
+
+/** Daylit noon sea — brighter than the old dark teals so coasts separate at noon. */
+const DEEP = 0x0a242c;
+const SHALLOW = 0x1a5a52;
+const FOAM = 0x6ab8a0;
 
 /** Hex -> linear vec3, matching the decode TSL's color() would do. */
 function linear(hex: number) {
@@ -33,35 +45,45 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
   const running = useRef(!reducedMotion);
 
   const material = useMemo(() => {
-    const m = new THREE.MeshBasicNodeMaterial();
+    const m = new THREE.MeshStandardNodeMaterial({
+      roughness: 0.14,
+      metalness: 0.06,
+    });
     // Frozen under reduced motion: the clock stops, the surface stays.
     const clock = uniform(0);
 
     // Deliberately sines, not noise. This plane covers most of the viewport once
     // the camera descends, so its fragment cost is paid on nearly every pixel at
     // whatever dpr the display has. A 3-octave fractal noise here locked up real
-    // hardware at dpr 2 while headless dpr 1 looked fine. Two crossed waves cost
-    // a handful of ALU ops and read the same at this scale.
+    // hardware at dpr 2 while headless dpr 1 looked fine. Three crossed waves
+    // cost a handful of ALU ops and read as multi-swell at this scale.
     const p = positionWorld.xz;
-    // Short wavelengths on purpose. At the original 2.7/3.4 the crests were
-    // wider than a region, so the sea read as two soft glowing blobs sitting
-    // behind the board rather than as water — the "weird" in the brief.
-    const a = p.x.mul(17).add(p.y.mul(7)).add(clock.mul(0.9)).sin();
-    const b = p.y.mul(21).sub(p.x.mul(5)).sub(clock.mul(0.6)).sin();
-    const swell = a.mul(0.6).add(b.mul(0.4));
+    const t = clock;
+    const a = p.x.mul(15).add(p.y.mul(6.5)).add(t.mul(0.9)).sin();
+    const b = p.y.mul(19).sub(p.x.mul(7.5)).sub(t.mul(0.58)).sin();
+    const c = p.x.mul(10).add(p.y.mul(12)).add(t.mul(0.32)).sin();
+    const swell = a.mul(0.44).add(b.mul(0.36)).add(c.mul(0.2));
 
-    // Narrow band between the two teals: the sea is the ground the slabs sit
-    // in, and it has to stay quieter than every slab on it.
-    const base = mix(linear(OCEAN_DEEP), linear(OCEAN_SHALLOW), swell.mul(0.16).add(0.2));
-    // Thin crests where the two waves agree, rather than a full foam layer.
-    const ridge = smoothstep(float(0.84), float(0.99), swell.abs());
-    const water = mix(base, linear(OCEAN_FOAM), ridge.mul(0.14));
+    const deep = linear(DEEP);
+    const shallow = linear(SHALLOW);
+    const foam = linear(FOAM);
 
-    // The plane has to end somewhere, and a hard edge against the background
-    // read as a black bar across the top of the canvas. Dissolve it into the
-    // void instead, so the horizon is a falloff rather than a seam.
-    const horizon = smoothstep(float(1.15), float(2.6), p.length());
+    // Wider shallow band under noon so coasts separate from land.
+    const base = mix(deep, shallow, swell.mul(0.26).add(0.38));
+    const ridge = smoothstep(float(0.78), float(0.97), swell.abs());
+    let water = mix(base, foam, ridge.mul(0.32));
+
+    // Fresnel-ish graze: plane normal is +Y -> normalView.y high when facing camera.
+    // Grazing shots have lower N.V -> brighten toward foam.
+    const ndv = normalView.dot(positionViewDirection).clamp(0, 1);
+    const fresnel = float(1).sub(ndv).pow(2.4);
+    water = mix(water, foam.mul(0.85).add(shallow.mul(0.15)), fresnel.mul(0.28));
+
+    // Dissolve into the void at the horizon so there is no hard black bar.
+    const horizon = smoothstep(float(1.08), float(2.5), p.length());
     m.colorNode = mix(water, linear(SURFACE_VOID), horizon);
+    m.emissiveNode = shallow.mul(ridge.mul(0.07)).add(foam.mul(fresnel.mul(0.04)));
+    m.roughnessNode = float(0.12).add(ridge.mul(0.18)).add(fresnel.mul(0.08));
     m.fog = false;
     return { m, clock };
   }, []);
@@ -91,9 +113,7 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
    * happens because something asked for one, so the sea was the only thing
    * keeping the sea awake. The frame its own invalidate produced arrived one
    * rAF later — about 6ms on a 165Hz panel, far short of 1/30 — so it returned
-   * without asking again and the loop went to sleep for good. The result was a
-   * frozen sea that unfroze whenever the pointer moved, and only ever looked
-   * right while something else happened to be driving frames.
+   * without asking again and the loop went to sleep for good.
    *
    * A timer owns the cadence instead, so the sea drives itself at a real 30Hz.
    * Not created at all under reduced motion, and the IntersectionObserver above

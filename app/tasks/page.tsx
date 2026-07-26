@@ -17,14 +17,24 @@ type UnknownItem = {
   missing?: string[];
 };
 
+/**
+ * Optional stand-in while Equilibrium has published no tasks of its own: show
+ * Catalyst's list instead. tasks.json does not always carry the block — the
+ * generators do not emit it — so reading it blind threw on every request and
+ * made /tasks a 500 in production and four typecheck errors in CI.
+ */
+const testFallback = (
+  tasksData as { testFallback?: { enabled: boolean; url: string; note: string; expectedRecords: number } }
+).testFallback;
+
 export default async function TasksPage() {
   const taskUnknown = (unknownsData.items as UnknownItem[]).find((item) => item.key === "equilibrium_tasks");
-  const useCatalystTestData = tasksData.records.length === 0 && tasksData.testFallback.enabled;
+  const useCatalystTestData = tasksData.records.length === 0 && testFallback?.enabled === true;
   const catalystResult = useCatalystTestData
     ? await loadCatalystTestTasks()
     : { records: [], error: undefined };
   const records = useCatalystTestData ? catalystResult.records : tasksData.records;
-  const sourceUrl = useCatalystTestData ? tasksData.testFallback.url : tasksData.source.url;
+  const sourceUrl = useCatalystTestData ? testFallback?.url ?? tasksData.source.url : tasksData.source.url;
   const sourceLabel = useCatalystTestData ? "Catalyst task source" : "Jagex reveal";
 
   return (
@@ -39,7 +49,7 @@ export default async function TasksPage() {
             ) : null}
             <h1 className="text-xl font-semibold tracking-tight text-parch-50">Tasks</h1>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
-              {useCatalystTestData ? tasksData.testFallback.note : tasksData.pointValueNote}
+              {useCatalystTestData ? testFallback?.note ?? tasksData.pointValueNote : tasksData.pointValueNote}
             </p>
             {useCatalystTestData ? (
               <p className="mt-1 max-w-3xl text-xs leading-5 text-parch-400">
@@ -90,7 +100,7 @@ export default async function TasksPage() {
           <h2 className="text-sm font-medium text-parch-50">Task list</h2>
           <span className="text-xs text-parch-300">
             {records.length} tasks loaded
-            {useCatalystTestData ? ` · ${tasksData.testFallback.expectedRecords} expected from Catalyst` : ""}
+            {useCatalystTestData ? ` · ${testFallback?.expectedRecords ?? 0} expected from Catalyst` : ""}
           </span>
         </div>
         <div className="mt-2 border-t border-stone-750">

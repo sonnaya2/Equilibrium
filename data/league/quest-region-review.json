@@ -1,20 +1,10 @@
 {
-  "generated_at": "2026-07-25T18:13:08.262Z",
+  "generated_at": "2026-07-26T15:39:34.972Z",
   "source_revisions": {
-    "quest_requirements": 37092213,
+    "quest_requirements": 37122471,
     "globals": 37095341
   },
-  "count": 1,
+  "count": 0,
   "rule": "Resolve only when the Equilibrium boundary is known. Add stable mappings to quest-region-rules.json; keep genuinely unresolved League boundaries here.",
-  "quests": [
-    {
-      "title": "Impressing the Locals",
-      "start_area": "Port Sarim",
-      "series": "Tales of the Arc",
-      "mapping_reason": "Starts in Port Sarim, but the quest exists to open The Arc / Wushanko. Equilibrium has not assigned that external area to a planner region yet, so Port Sarim alone is not enough to classify it.",
-      "source_url": "https://runescape.wiki/w/Impressing_the_Locals",
-      "source_revision": 36964137,
-      "source_revision_timestamp": "2026-03-11T04:02:00Z"
-    }
-  ]
+  "quests": []
 }

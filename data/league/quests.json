@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-25T18:13:08.262Z",
-  "snapshot_date": "2026-07-25",
+  "generated_at": "2026-07-26T15:39:34.972Z",
+  "snapshot_date": "2026-07-26",
   "quest_count": 281,
   "quest_list_entry_count": 281,
   "wiki_numbered_quest_count": 276,
@@ -13,14 +13,14 @@
     "https://runescape.wiki/w/Module:Globals/data"
   ],
   "source_revisions": {
-    "quest_requirements": 37092213,
+    "quest_requirements": 37122471,
     "globals": 37095341
   },
   "region_group_counts": {
     "misthalin": 145,
     "havenhythe": 4,
     "karamja": 19,
-    "asgarnia": 90,
+    "asgarnia": 93,
     "kandarin": 94,
     "fremennik": 32,
     "forinthry": 4,
@@ -29,13 +29,13 @@
     "tirannwn": 10,
     "anachronia": 11,
     "global": 7,
-    "unmapped": 2
+    "unmapped": 0
   },
   "primary_region_counts": {
     "misthalin": 86,
     "havenhythe": 4,
     "karamja": 8,
-    "asgarnia": 43,
+    "asgarnia": 44,
     "kandarin": 57,
     "fremennik": 20,
     "forinthry": 4,
@@ -44,7 +44,7 @@
     "tirannwn": 6,
     "anachronia": 3,
     "global": 7,
-    "unmapped": 1
+    "unmapped": 0
   },
   "region_groups": {
     "misthalin": [
@@ -238,6 +238,7 @@
       "Cabin Fever",
       "Children of Mah",
       "City of Senntisten",
+      "Curse of the Black Stone",
       "Daughter of Chaos",
       "Death Plateau",
       "Defender of Varrock",
@@ -262,6 +263,7 @@
       "Hearts of Sanguine",
       "Hermit Permits",
       "Heroes' Quest",
+      "Impressing the Locals",
       "Kennith's Concerns",
       "Kindred Spirits",
       "King of the Dwarves",
@@ -311,7 +313,8 @@
       "While Guthix Sleeps",
       "Witch's House",
       "Wiz Kid",
-      "Wolf Whistle"
+      "Wolf Whistle",
+      "You Are It"
     ],
     "kandarin": [
       "A Fairy Tale III - Battle at Ork's Rift",
@@ -564,10 +567,7 @@
       "Guys and Dolls",
       "Pieces of Hate"
     ],
-    "unmapped": [
-      "Curse of the Black Stone",
-      "Impressing the Locals"
-    ]
+    "unmapped": []
   },
   "primary_region_groups": {
     "misthalin": [
@@ -693,6 +693,7 @@
       "Goblin Diplomacy",
       "Grim Tales",
       "Heroes' Quest",
+      "Impressing the Locals",
       "Kindred Spirits",
       "Let Them Eat Pie",
       "My Arm's Big Adventure",
@@ -874,9 +875,7 @@
       "Guys and Dolls",
       "Pieces of Hate"
     ],
-    "unmapped": [
-      "Impressing the Locals"
-    ]
+    "unmapped": []
   },
   "quests": [
     {
@@ -944,7 +943,8 @@
       "source_revision": 37056745,
       "source_revision_timestamp": "2026-05-30T03:30:36Z",
       "direct_prerequisites": [
-        "Rocking Out"
+        "Rocking Out",
+        "There's No Place Like Home..."
       ],
       "required_regions": [
         "asgarnia",
@@ -2157,10 +2157,10 @@
         "Impressing the Locals"
       ],
       "required_regions": [
-        "forinthry",
-        "unmapped"
+        "asgarnia",
+        "forinthry"
       ],
-      "cross_region": false,
+      "cross_region": true,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
       "equilibrium_auto_completion": {
         "status": "unknown_pending_official_jagex_list",
@@ -3928,7 +3928,7 @@
       "release": "11 July 2016",
       "members": "Yes",
       "primary_region": "asgarnia",
-      "mapping_reason": "Opens The Arc / Wushanko. User taxonomy 2026-07-26 packages Arc (Seiryu / ED1) as Asgarnia for planner pressure.",
+      "mapping_reason": "Opens The Arc / Wushanko. User taxonomy 2026-07-26 packages Arc (incl. Seiryu / ED1) as Asgarnia for planner region pressure; optional Desert Ports pressure may be added later.",
       "source_url": "https://runescape.wiki/w/Impressing_the_Locals",
       "source_revision": 36964137,
       "source_revision_timestamp": "2026-03-11T04:02:00Z",
@@ -3937,7 +3937,7 @@
         "asgarnia"
       ],
       "cross_region": false,
-      "region_confidence": "user_rule_arc_asgarnia_2026_07_26",
+      "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
       "equilibrium_auto_completion": {
         "status": "unknown_pending_official_jagex_list",
         "regions": [],
@@ -5963,8 +5963,8 @@
       "primary_region": "havenhythe",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Wendlewick",
       "source_url": "https://runescape.wiki/w/Secrets_of_Amberfell",
-      "source_revision": 37118913,
-      "source_revision_timestamp": "2026-07-24T04:20:42Z",
+      "source_revision": 37123133,
+      "source_revision_timestamp": "2026-07-26T03:50:33Z",
       "direct_prerequisites": [
         "Hearts of Sanguine"
       ],
@@ -6336,8 +6336,8 @@
       "primary_region": "kandarin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Kandarin North-west",
       "source_url": "https://runescape.wiki/w/Stellar_Born",
-      "source_revision": 37076753,
-      "source_revision_timestamp": "2026-06-22T07:12:04Z",
+      "source_revision": 37123007,
+      "source_revision_timestamp": "2026-07-26T01:44:29Z",
       "direct_prerequisites": [
         "Observatory Quest"
       ],
@@ -7551,8 +7551,8 @@
       "primary_region": "asgarnia",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Rimmington",
       "source_url": "https://runescape.wiki/w/There's_No_Place_Like_Home...",
-      "source_revision": 37115235,
-      "source_revision_timestamp": "2026-07-22T14:55:50Z",
+      "source_revision": 37122192,
+      "source_revision_timestamp": "2026-07-25T19:56:53Z",
       "direct_prerequisites": [],
       "required_regions": [
         "asgarnia"
@@ -8248,13 +8248,16 @@
       "primary_region": "kandarin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Seers' Village",
       "source_url": "https://runescape.wiki/w/You_Are_It",
-      "source_revision": 37121701,
-      "source_revision_timestamp": "2026-07-25T15:19:35Z",
-      "direct_prerequisites": [],
+      "source_revision": 37122472,
+      "source_revision_timestamp": "2026-07-25T21:37:37Z",
+      "direct_prerequisites": [
+        "There's No Place Like Home..."
+      ],
       "required_regions": [
+        "asgarnia",
         "kandarin"
       ],
-      "cross_region": false,
+      "cross_region": true,
       "region_confidence": "inferred_from_wiki_start_area_and_recursive_quest_requirements",
       "equilibrium_auto_completion": {
         "status": "unknown_pending_official_jagex_list",

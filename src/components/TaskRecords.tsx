@@ -171,10 +171,10 @@ export function TaskRecords({
     setRsn(playerName);
     saveState(RSN_STORAGE_KEY, playerName);
     window.open(tasksWikiUrl, "_blank", "noopener,noreferrer");
-    setWikiSyncNotice("Opening the Wiki. Run WikiSync, then save the page.");
+    setWikiSyncNotice("WikiSync opened. Paste your name, look it up, then save the page.");
     if (navigator.clipboard) {
       void navigator.clipboard.writeText(playerName).then(
-        () => setWikiSyncNotice("Name copied. Run WikiSync, then save the page."),
+        () => setWikiSyncNotice("Name copied. Paste it into WikiSync, look it up, then save the page."),
         () => undefined,
       );
     }
@@ -327,6 +327,18 @@ export function TaskRecords({
                           });
                         }}
                       />
+                      <details className="tasks-wikisync__guide">
+                        <summary>How to import</summary>
+                        <ol>
+                          <li>Enter your name, then choose Open WikiSync.</li>
+                          <li>
+                            Paste it into Display name and choose Look up. Wait for completed rows to
+                            turn green.
+                          </li>
+                          <li>Press Ctrl+S (⌘S on Mac) and save the page as an .html file.</li>
+                          <li>Come back here, choose Import saved page, and select the file.</li>
+                        </ol>
+                      </details>
                       {wikiSyncNotice ? (
                         <span className="tasks-wikisync__notice" role="status">
                           {wikiSyncNotice}

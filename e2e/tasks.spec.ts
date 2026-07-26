@@ -27,6 +27,12 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
   await page.reload();
   await expect(page.getByRole("textbox", { name: "RuneScape name" })).toHaveValue("JavaHomely");
 
+  const importGuide = page.locator(".tasks-wikisync__guide");
+  await importGuide.getByText("How to import", { exact: true }).click();
+  await expect(importGuide).toContainText("Wait for completed rows to turn green.");
+  await expect(importGuide).toContainText("Ctrl+S");
+  await expect(importGuide).toContainText("Import saved page");
+
   await expect(page.getByRole("navigation", { name: "Primary" })).toContainText("Overview");
   await expect(page.locator("body > footer")).toContainText("RuneScape is a trademark of Jagex Ltd.");
   await expect(page.locator("[data-nextjs-dialog]")).toHaveCount(0);

@@ -1470,6 +1470,25 @@ textarea:focus-visible {
     font-size: 0.75rem;
   }
 
+  .tasks-wikisync__guide {
+    flex-basis: 100%;
+    color: var(--color-parch-300);
+    font-size: 0.75rem;
+  }
+
+  .tasks-wikisync__guide summary {
+    width: fit-content;
+    cursor: pointer;
+    color: var(--color-parch-100);
+  }
+
+  .tasks-wikisync__guide ol {
+    margin: 0.45rem 0 0;
+    padding-left: 1.25rem;
+    list-style: decimal;
+    line-height: 1.55;
+  }
+
   .tasks-toggle__pip {
     width: 0.58rem;
     height: 0.58rem;

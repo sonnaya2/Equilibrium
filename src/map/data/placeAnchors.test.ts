@@ -1,21 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { RegionId } from "@/league";
 import { getResearchCatalog } from "@/research/catalog";
-import { PLACE_ANCHORS, PLACES_BY_REGION, SITE_ANCHORS } from "./placeAnchors";
-import { smoothRing } from "./regionCurve";
-import { SHAPE_BY_ID } from "./regionShapes";
-
-function pointInRing(point: readonly [number, number], ring: readonly [number, number][]): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    if (yi > point[1] !== yj > point[1] && point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
+import {
+  PLACE_ANCHORS,
+  PLACES_BY_REGION,
+  SITE_ANCHORS,
+  rasterPlaceUv,
+} from "./placeAnchors";
+import { placeMapCoord } from "./gameCoords";
 
 const AREAS_BY_REGION = new Map(
   getResearchCatalog().regions.map((region) => [region.id, region.areas]),
@@ -66,14 +58,22 @@ describe("placeAnchors", () => {
     }
   });
 
-  it("lands every anchor inside its own region ring", () => {
+  it("projects every anchor into the raster coordinate space", () => {
     for (const anchor of [...PLACE_ANCHORS, ...SITE_ANCHORS]) {
-      const shape = SHAPE_BY_ID.get(anchor.region);
-      expect(shape, anchor.region).toBeDefined();
+      const [u, v] = rasterPlaceUv(anchor);
+      expect(u, `${anchor.region}/${anchor.area} x`).toBeGreaterThanOrEqual(0);
+      expect(u, `${anchor.region}/${anchor.area} x`).toBeLessThanOrEqual(1);
+      expect(v, `${anchor.region}/${anchor.area} y`).toBeGreaterThanOrEqual(0);
+      expect(v, `${anchor.region}/${anchor.area} y`).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("gives every rendered POI a map coordinate", () => {
+    for (const anchor of [...PLACE_ANCHORS, ...SITE_ANCHORS]) {
       expect(
-        pointInRing(anchor.uv, smoothRing(shape!)),
-        `${anchor.region}/${anchor.area} at ${anchor.uv}`,
-      ).toBe(true);
+        placeMapCoord(anchor.region, anchor.area),
+        `${anchor.region}/${anchor.area}`,
+      ).toBeDefined();
     }
   });
 

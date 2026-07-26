@@ -8,10 +8,7 @@ import { Canvas, extend, useThree } from "@react-three/fiber";
 import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
-import { Effects } from "./Effects";
-import { FitProbe } from "./FitProbe";
 import { FlatBoard } from "./FlatBoard";
-import { Ocean } from "./Ocean";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE } from "./data/regionAnchors";
 import { SURFACE_VOID } from "./palette";
@@ -170,26 +167,13 @@ export default function MapScene() {
         >
           <color attach="background" args={[SURFACE_VOID]} />
 
-          {/* Daylit noon clerestory: warm ambient + strong key, soft fill so
-              terrain midtones read, softer gem rim, warm hemisphere ground. */}
-          <ambientLight intensity={0.62} color={0xd4c4a8} />
-          <hemisphereLight args={[0xe8dcc4, 0x3a2e20, 0.38]} />
-          <directionalLight position={[1.7, 2.9, 1.05]} intensity={2.45} color={0xffefd4} />
-          <directionalLight position={[-1.5, 1.5, -1.1]} intensity={0.62} color={0xa89878} />
-          <directionalLight position={[-1.7, 1.1, -1.7]} intensity={0.42} color={0x8ad4b8} />
-
-          <Ocean reducedMotion={reducedMotion} />
-          <MapTable reducedMotion={reducedMotion} />
+          <MapTable />
           <CameraRig
             focus={focus.framed ? focus.region : null}
             place={focus.place}
             reducedMotion={reducedMotion}
           />
           <InvalidateOnBuild />
-          {process.env.NODE_ENV === "production" ? null : <FitProbe />}
-          {/* Bloom is scoped to the emissive MRT target, and nothing is emissive
-              at rest — only the focus rim and the unlock sweep ever light up. */}
-          <Effects />
         </Canvas>
         <VineFrame />
       </div>

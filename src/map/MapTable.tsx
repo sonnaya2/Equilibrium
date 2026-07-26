@@ -1,75 +1,87 @@
 "use client";
 
-/**
- * The war table: eleven carved slabs on a dark umber board, one per region.
- * The flat league-map.jpg plate is gone — the board is original geometry now,
- * cut along shared seams so it visibly comes apart (wartable plan §1-2).
- */
-
 import { useEffect, useMemo } from "react";
-import * as THREE from "three/webgpu";
+import { Html } from "@react-three/drei";
 import { useLoader, useThree } from "@react-three/fiber";
-import { REGION_SHAPES } from "./data/regionShapes";
-
-import { RegionSlab } from "./RegionSlab";
+import * as THREE from "three/webgpu";
+import { isRegionUnlocked } from "@/league";
+import { useBuild } from "@/league/useBuild";
+import {
+  MAP_IMAGE,
+  MAP_WORLD,
+  REGION_ANCHORS,
+  anchorWorld,
+} from "./data/regionAnchors";
+import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { PlaceMarkers } from "./PlaceMarkers";
-import { SeamVines } from "./SeamVines";
+import { useMapFocus } from "./useMapFocus";
 
-export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
-  const loaded = useLoader(THREE.TextureLoader, [
-    ...REGION_SHAPES.map((s) => `/game/regions/${s.id}.png`),
-    ...REGION_SHAPES.map((s) => `/game/terrain/${s.id}.png`),
-  ]);
-  // Configured in place: the loader cache is shared, but the renderer is no
-  // longer torn down mid-replay (see the dispose deferral in MapScene), so the
-  // cached Source is never handed to a half-disposed renderer. Wrapping each
-  // image in a per-mount Texture also fixed the crash, but that treated the
-  // symptom — probe-map-texture.mjs is clean across load, reload, route
-  // away/back and click without it.
-  const [crests, terrain] = useMemo(() => {
-    const n = REGION_SHAPES.length;
-    loaded.forEach((t, i) => {
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 16;
-      t.generateMipmaps = true;
-      t.minFilter = THREE.LinearMipmapLinearFilter;
-      t.magFilter = THREE.LinearFilter;
-      // Wiki terrain crops: mild repeat so plates do not kaleidoscope on large slabs.
-      if (i >= n) {
-        t.wrapS = t.wrapT = THREE.RepeatWrapping;
-        t.repeat.set(1.4, 1.4);
-      }
+export function MapTable() {
+  const mapTexture = useLoader(THREE.TextureLoader, MAP_IMAGE.src);
+  const invalidate = useThree((state) => state.invalidate);
+  const { build } = useBuild();
+  const { focus, focusRegion } = useMapFocus();
+
+  const material = useMemo(() => {
+    mapTexture.colorSpace = THREE.SRGBColorSpace;
+    mapTexture.anisotropy = 16;
+    mapTexture.generateMipmaps = true;
+    mapTexture.minFilter = THREE.LinearMipmapLinearFilter;
+    mapTexture.magFilter = THREE.LinearFilter;
+    mapTexture.needsUpdate = true;
+    return new THREE.MeshBasicMaterial({
+      map: mapTexture,
+      transparent: true,
+      toneMapped: false,
     });
-    return [loaded.slice(0, n), loaded.slice(n)];
-  }, [loaded]);
+  }, [mapTexture]);
 
-  // Under frameloop="demand" the last frame can land before a texture finishes
-  // uploading, and nothing wakes the loop afterwards — which showed up as one
-  // or two crests missing per load, a different pair each time. Ask for one
-  // more frame once the textures are configured.
-  const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {
     invalidate();
-    const id = requestAnimationFrame(() => invalidate());
-    return () => cancelAnimationFrame(id);
-  }, [crests, terrain, invalidate]);
+    const frame = requestAnimationFrame(invalidate);
+    return () => {
+      cancelAnimationFrame(frame);
+      material.dispose();
+    };
+  }, [invalidate, material]);
 
   return (
     <group>
-      {/* No table plate: the sea is the ground, so it runs up to every
-          coastline and the shapes read as land rather than tiles on a board.
-          Locked regions sink toward it until the water is at their strata. */}
-      {REGION_SHAPES.map((shape, i) => (
-        <RegionSlab
-          key={shape.id}
-          shape={shape}
-          crest={crests[i]}
-          terrain={terrain[i]}
-          reducedMotion={reducedMotion}
-        />
-      ))}
-      {/* Drawn after the slabs so the ribbons composite over both caps. */}
-      <SeamVines />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} material={material}>
+        <planeGeometry args={[MAP_WORLD.width, MAP_WORLD.height]} />
+      </mesh>
+
+      {REGION_ANCHORS.map((region) => {
+        const [x, z] = anchorWorld(region.uv);
+        const unlocked = isRegionUnlocked(build, region.id);
+        const framed = focus.framed && focus.region === region.id;
+        const metrics = REGION_METRICS_BY_ID.get(region.id);
+        return (
+          <Html
+            key={region.id}
+            position={[x, 0.025, z]}
+            center
+            zIndexRange={[12, 0]}
+            style={{ pointerEvents: "auto" }}
+          >
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-hidden="true"
+              className={`map-region-marker${unlocked ? " is-unlocked" : " is-locked"}${framed ? " is-focus" : ""}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                focusRegion(region.id);
+              }}
+            >
+              <img src={`/game/regions/${region.id}.png`} alt="" />
+              <span className="map-region-marker__name">{region.name}</span>
+              <span className="map-region-marker__count">{metrics?.quests ?? 0} quests</span>
+            </button>
+          </Html>
+        );
+      })}
+
       <PlaceMarkers />
     </group>
   );

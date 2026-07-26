@@ -8,17 +8,13 @@
  * Every `area` string here must match one already in that region's catalog
  * areas list — these are positions for facts we hold, never new facts.
  *
- * Coordinates are map-uv (x east, y south), georeferenced from surface game
- * tiles via `gameCoords.ts` (wiki RuneScape:Map — game x east, y north; our
- * uv y is south). Pipeline: PLACE_GAME_COORDS → nearest GEOREF control +
- * affine residual → smoothRing point-in-ring check → nudge toward ring
- * centroid when outside. Board-local pins (Havenhythe, Anachronia, instances
- * like Zanaris / TzHaar) keep authored UV with light de-stack only.
- * placeAnchors.test.ts holds both invariants: the area resolves, and the
- * point lands inside its ring.
+ * `rasterPlaceUv` resolves every entry through its Wiki surface coordinate.
+ * The legacy `uv` values remain data history only; rendering never uses them.
  */
 
 import type { RegionId } from "@/league";
+import { placeMapCoord } from "./gameCoords";
+import { mapToUv } from "./regionAnchors";
 
 export interface PlaceAnchor {
   region: RegionId;
@@ -86,6 +82,9 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "karamja", area: "Brimhaven", uv: [0.264, 0.775] },
   { region: "karamja", area: "Hardwood Grove", uv: [0.285, 0.845] },
   { region: "karamja", area: "TzHaar City", uv: [0.338, 0.812] },
+  // Catalog region-level labels (board centre / volcano shoulder).
+  { region: "karamja", area: "Karamja", uv: [0.3, 0.82] },
+  { region: "karamja", area: "TzHaar area", uv: [0.34, 0.818] },
   { region: "karamja", area: "Tai Bwo Wannai", uv: [0.272, 0.85] },
   { region: "karamja", area: "Herblore Habitat", uv: [0.345, 0.914] },
   { region: "karamja", area: "Shilo Village", uv: [0.305, 0.882] },
@@ -118,6 +117,8 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "forinthry", area: "Demonic Ruins", uv: [0.567, 0.148] },
   { region: "forinthry", area: "Frozen Waste Plateau", uv: [0.465, 0.115] },
   { region: "forinthry", area: "Pirates' Hideout", uv: [0.498, 0.109] },
+  // Catalog label for wilderness slayer masters / task hubs.
+  { region: "forinthry", area: "Wilderness Slayer", uv: [0.52, 0.25] },
 
   // Kharidian Desert — Al Kharid / dig / oasis on the north band, Menaphite south.
   { region: "desert", area: "Al Kharid", uv: [0.492, 0.7] },
@@ -134,6 +135,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "morytania", area: "Everlight Dig Site", uv: [0.715, 0.568] },
   { region: "morytania", area: "Port Phasmatys", uv: [0.72, 0.52] },
   { region: "morytania", area: "Araxyte Hive", uv: [0.677, 0.534] },
+  { region: "morytania", area: "Araxxor", uv: [0.68, 0.536] },
   { region: "morytania", area: "Darkmeyer", uv: [0.698, 0.53] },
   { region: "morytania", area: "Barrows", uv: [0.68, 0.58] },
 
@@ -267,6 +269,12 @@ export const PLACES_BY_REGION: ReadonlyMap<RegionId, readonly PlaceAnchor[]> = (
   }
   return grouped;
 })();
+
+export function rasterPlaceUv(place: PlaceAnchor): readonly [number, number] {
+  const coordinate = placeMapCoord(place.region, place.area);
+  if (!coordinate) throw new Error(`Missing map coordinate: ${place.region}/${place.area}`);
+  return mapToUv(coordinate);
+}
 
 /**
  * Which pin a highlight row belongs to, or null when we do not know where it

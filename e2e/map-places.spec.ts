@@ -42,7 +42,7 @@ test("clicking the board focuses without spending a pick", async ({ page }) => {
 
   const box = await canvas.boundingBox();
   expect(box).not.toBeNull();
-  // A few pokes around the middle of the table, where the slabs are.
+  // A few pokes around the middle of the world surface.
   for (const [dx, dy] of [
     [0.5, 0.55],
     [0.42, 0.5],

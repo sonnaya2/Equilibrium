@@ -2319,6 +2319,132 @@
       "displayDescription": "Solo: finishing hit 117-143%. Channel 4x22-28% on non-primaries with heal conversion unmodelled in adapter"
     },
     {
+      "id": "necromancy:conjure-skeleton-warrior",
+      "name": "Conjure Skeleton Warrior",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 2,
+      "unlock": {
+        "type": "level",
+        "requirement": "2",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conjure_Skeleton_Warrior",
+          "title": "Conjure Skeleton Warrior",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "displayDescription": "Summon Skeleton Warrior spirit; auto damage is spirit-side, not a cast hit"
+    },
+    {
+      "id": "necromancy:conjure-vengeful-ghost",
+      "name": "Conjure Vengeful Ghost",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 40,
+      "unlock": {
+        "type": "level",
+        "requirement": "40",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conjure_Vengeful_Ghost",
+          "title": "Conjure Vengeful Ghost",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "displayDescription": "Summon Vengeful Ghost spirit; auto damage/heal is spirit-side, not a cast hit"
+    },
+    {
+      "id": "necromancy:conjure-putrid-zombie",
+      "name": "Conjure Putrid Zombie",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 40,
+      "unlock": {
+        "type": "level",
+        "requirement": "40",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conjure_Putrid_Zombie",
+          "title": "Conjure Putrid Zombie",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "cooldownTicks": 50,
+      "displayDescription": "Summon Putrid Zombie spirit; auto/poison is spirit-side; 30s CD if dismissed early"
+    },
+    {
+      "id": "necromancy:conjure-phantom-guardian",
+      "name": "Conjure Phantom Guardian",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 70,
+      "unlock": {
+        "type": "level",
+        "requirement": "70",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conjure_Phantom_Guardian",
+          "title": "Conjure Phantom Guardian",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "displayDescription": "Summon Phantom Guardian spirit; defensive Valour aura, no cast damage"
+    },
+    {
+      "id": "necromancy:conjure-undead-army",
+      "name": "Conjure Undead Army",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 99,
+      "unlock": {
+        "type": "level",
+        "requirement": "99",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conjure_Undead_Army",
+          "title": "Conjure Undead Army",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "displayDescription": "Custom multi-conjure; summons selected spirits in one cast, no cast damage"
+    },
+    {
       "id": "necromancy:command-skeleton-warrior",
       "name": "Command Skeleton Warrior",
       "style": "necromancy",

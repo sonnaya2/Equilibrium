@@ -186,11 +186,11 @@
       "label": "PvME ST",
       "revolutionSize": 11,
       "slots": [
-        { "name": "Conjure Undead Army", "abilityId": null },
+        { "name": "Conjure Undead Army", "abilityId": "necromancy:conjure-undead-army" },
         { "name": "Death Skulls", "abilityId": "necromancy:death-skulls" },
-        { "name": "Conjure Vengeful Ghost", "abilityId": null },
+        { "name": "Conjure Vengeful Ghost", "abilityId": "necromancy:conjure-vengeful-ghost" },
         { "name": "Living Death", "abilityId": "necromancy:living-death" },
-        { "name": "Conjure Skeleton Warrior", "abilityId": null },
+        { "name": "Conjure Skeleton Warrior", "abilityId": "necromancy:conjure-skeleton-warrior" },
         { "name": "Soul Sap", "abilityId": "necromancy:soul-sap" },
         { "name": "Touch of Death", "abilityId": "necromancy:touch-of-death" },
         { "name": "Sacrifice", "abilityId": "shared:sacrifice" },
@@ -334,9 +334,9 @@
       "label": "PvME basics",
       "revolutionSize": 5,
       "slots": [
-        { "name": "Conjure Undead Army", "abilityId": null },
-        { "name": "Conjure Vengeful Ghost", "abilityId": null },
-        { "name": "Conjure Skeleton Warrior", "abilityId": null },
+        { "name": "Conjure Undead Army", "abilityId": "necromancy:conjure-undead-army" },
+        { "name": "Conjure Vengeful Ghost", "abilityId": "necromancy:conjure-vengeful-ghost" },
+        { "name": "Conjure Skeleton Warrior", "abilityId": "necromancy:conjure-skeleton-warrior" },
         { "name": "Touch of Death", "abilityId": "necromancy:touch-of-death" },
         { "name": "Soul Sap", "abilityId": "necromancy:soul-sap" }
       ],

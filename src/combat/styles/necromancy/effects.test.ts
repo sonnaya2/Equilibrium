@@ -17,6 +17,12 @@ import {
   residualSoulCapFor,
   resolveNecromancyAbility,
 } from "./effects";
+import {
+  CONJURE_UNTIL_OFFSET_TICKS,
+  conjureActive,
+  newConjures,
+  summonConjure,
+} from "./conjures";
 import { NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } from "./necrosis";
 import { RESIDUAL_SOUL_CAP } from "./souls";
 
@@ -115,5 +121,34 @@ describe("necro rotation state machine", () => {
     const two = { ...empty, residualSouls: 2 };
     expect(necroCanCast(byId("soul_strike"), two)).toBe(true);
     expect(necroCanCast(volleyOfSouls(3), two)).toBe(true);
+  });
+
+  it("necroCanCast gates commands on active conjures", () => {
+    const necro = newNecroRotationState();
+    const empty = newConjures();
+    expect(necroCanCast(byId("command_skeleton_warrior"), necro, empty, 0)).toBe(false);
+    // Without conjure state, commands are closed.
+    expect(necroCanCast(byId("command_skeleton_warrior"), necro)).toBe(false);
+
+    const skel = summonConjure(empty, "skeleton_warrior", 0);
+    expect(necroCanCast(byId("command_skeleton_warrior"), necro, skel, 0)).toBe(true);
+    expect(necroCanCast(byId("conjure_skeleton_warrior"), necro, skel, 0)).toBe(false);
+    expect(necroCanCast(byId("conjure_skeleton_warrior"), necro, empty, 0)).toBe(true);
+  });
+
+  it("applyNecroOnCast summons conjures and dismisses zombie on command", () => {
+    const necro = newNecroRotationState();
+    const cast = applyNecroOnCast(necro, byId("conjure_skeleton_warrior"), 0, newConjures());
+    expect(cast.conjures).toBeDefined();
+    expect(conjureActive(cast.conjures!, "skeleton_warrior", 0)).toBe(true);
+    expect(cast.conjures!.spirits[0]!.untilTick).toBe(CONJURE_UNTIL_OFFSET_TICKS);
+
+    const army = applyNecroOnCast(necro, byId("conjure_undead_army"), 5, newConjures());
+    expect(army.conjures!.spirits).toHaveLength(3);
+
+    let z = applyNecroOnCast(necro, byId("conjure_putrid_zombie"), 0, newConjures()).conjures!;
+    expect(conjureActive(z, "putrid_zombie", 0)).toBe(true);
+    z = applyNecroOnCast(necro, byId("command_putrid_zombie"), 10, z).conjures!;
+    expect(conjureActive(z, "putrid_zombie", 10)).toBe(false);
   });
 });

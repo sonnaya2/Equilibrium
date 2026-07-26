@@ -93,15 +93,16 @@ export function GearPanel({
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("region");
   const [regionFilter, setRegionFilter] = useState<RegionFilter>("all");
-  /** When on, only loadout.style / hybrid / no-style records. Off by default so the
-   *  browser can still cross-style region browse (most weapons are style-tagged). */
-  const [matchStyle, setMatchStyle] = useState(false);
+  /** Default on: only loadout.style / hybrid / unstyled wearables (items the player
+   *  can wear for the active style). Toggle off for cross-style region browse. */
+  const [matchStyle, setMatchStyle] = useState(true);
 
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
   const slottedCount = equipmentIdList(slots).length;
   const activeItem = activeSlot ? byId(slots[activeSlot]) : undefined;
 
+  /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
     () => combatEquipment.records.filter((r) => r.slot != null),
     [],
@@ -114,6 +115,7 @@ export function GearPanel({
   const pickerRows = useMemo(() => {
     const q = search.trim().toLowerCase();
     const filtered = wearables.filter((record) => {
+      if (record.slot == null) return false;
       if (activeSlot && record.slot !== activeSlot) return false;
       if (matchStyle && !styleMatches(record, loadout.style)) return false;
       if (regionFilter === "base") {
@@ -137,8 +139,9 @@ export function GearPanel({
 
   const unlockRows = useMemo(() => {
     const q = search.trim().toLowerCase();
+    // No-slot only: materials, codices, set aggregates — never equip onto the doll.
     const filtered = unlocks.filter((record) => {
-      if (matchStyle && !styleMatches(record, loadout.style)) return false;
+      if (record.slot != null) return false;
       if (regionFilter === "base") {
         if (recordRegions(record).length > 0) return false;
       } else if (regionFilter !== "all") {
@@ -150,10 +153,13 @@ export function GearPanel({
       return true;
     });
     return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
-  }, [unlocks, matchStyle, loadout.style, regionFilter, search]);
+  }, [unlocks, regionFilter, search]);
 
   const equip = (record: EquipmentRecord) => {
-    if (!record.slot) return;
+    if (record.slot == null) return;
+    // Active slot filter is strict: twohand is its own doll cell (MH/OH exclusivity is
+    // handled inside equipInSlot when that cell is chosen).
+    if (activeSlot != null && record.slot !== activeSlot) return;
     setLoadout(equipInSlot(loadout, record.slot, record.id));
     setActiveSlot(record.slot);
   };
@@ -167,8 +173,8 @@ export function GearPanel({
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Click a slot, then pick an item. Placement is organisational — damage/accuracy bonuses
-          are not sourced yet. Only weapon tier (when tagged) feeds base AD.
+          Wearables require a slot. Set pieces expanded from aggregates. Bonuses still unsourced —
+          tier only. Click a slot, then pick an item. Only weapon tier (when tagged) feeds base AD.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
@@ -357,7 +363,8 @@ export function GearPanel({
         <div className="mt-1 border-t border-stone-750">
           {pickerRows.length === 0 ? (
             <p className="py-3 text-xs text-parch-300">
-              No wearables match. Most corpus rows still lack a slot — check Unlocks below.
+              No wearables match. Wearables need a slot; materials and set aggregates stay under
+              Unlocks. Try clearing Match style or the active slot filter.
             </p>
           ) : (
             pickerRows.map((record) => {
@@ -402,7 +409,7 @@ export function GearPanel({
           Unlocks &amp; materials · {unlockRows.length}
         </h3>
         <p className="mt-1 text-xs text-parch-300">
-          No slot on the doll — pin for organisation only.
+          No slot — materials, codices, and set aggregates. Pin only; never equip on the doll.
         </p>
         <div className="mt-1 border-t border-stone-750">
           {unlockRows.map((record) => {

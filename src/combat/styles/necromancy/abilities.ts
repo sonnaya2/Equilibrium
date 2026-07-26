@@ -15,6 +15,19 @@ import {
 import { CONJURES_CANNOT_CRIT } from "./conjures";
 import { SPECTRAL_SCYTHE_SOUL_CHANCE, VOLLEY_OF_SOULS_BAND } from "./souls";
 
+// Re-export conjure timing constants used by tests / parent agents.
+export {
+  CONJURE_UNTIL_OFFSET_TICKS,
+  SKELETON_AUTO_BAND,
+  SKELETON_AUTO_INTERVAL,
+  SKELETON_FIRST_AUTO_TICKS,
+  ZOMBIE_AUTO_BAND,
+  ZOMBIE_AUTO_INTERVAL,
+  GHOST_AUTO_BAND,
+  GHOST_AUTO_INTERVAL,
+  UNDEAD_ARMY_DEFAULT,
+} from "./conjures";
+
 /**
  * Post-modernisation Necromancy kit. Bands verified on current wiki ability pages
  * (2026-07-26). Necromancy was the modernisation template (changelog §5.10): only
@@ -46,6 +59,11 @@ export const COMMAND_SKELETON_WIKI = wiki("Command Skeleton Warrior", "Command_S
 export const COMMAND_PUTRID_WIKI = wiki("Command Putrid Zombie", "Command_Putrid_Zombie");
 export const COMMAND_PHANTOM_WIKI = wiki("Command Phantom Guardian", "Command_Phantom_Guardian");
 export const DEATH_GRASP_WIKI = wiki("Death Grasp", "Death_Grasp");
+export const CONJURE_SKELETON_WIKI = wiki("Conjure Skeleton Warrior", "Conjure_Skeleton_Warrior");
+export const CONJURE_GHOST_WIKI = wiki("Conjure Vengeful Ghost", "Conjure_Vengeful_Ghost");
+export const CONJURE_ZOMBIE_WIKI = wiki("Conjure Putrid Zombie", "Conjure_Putrid_Zombie");
+export const CONJURE_PHANTOM_WIKI = wiki("Conjure Phantom Guardian", "Conjure_Phantom_Guardian");
+export const CONJURE_ARMY_WIKI = wiki("Conjure Undead Army", "Conjure_Undead_Army");
 
 export interface NecromancyAbilitySpec extends AbilitySpec {
   style: "necromancy";
@@ -323,6 +341,58 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     cooldownSeconds: DEATH_GRASP_COOLDOWN_SECONDS,
     source: DEATH_GRASP_WIKI,
   },
+  // --- Conjure casts: 0 adren, no hits — summon only (spirit autos in conjures.ts) ---
+  {
+    id: "conjure_skeleton_warrior",
+    name: "Conjure Skeleton Warrior",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    buff: "conjure_skeleton_warrior",
+    source: CONJURE_SKELETON_WIKI,
+  },
+  {
+    id: "conjure_vengeful_ghost",
+    name: "Conjure Vengeful Ghost",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    buff: "conjure_vengeful_ghost",
+    source: CONJURE_GHOST_WIKI,
+  },
+  {
+    id: "conjure_putrid_zombie",
+    name: "Conjure Putrid Zombie",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    buff: "conjure_putrid_zombie",
+    source: CONJURE_ZOMBIE_WIKI,
+  },
+  {
+    id: "conjure_phantom_guardian",
+    name: "Conjure Phantom Guardian",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    buff: "conjure_phantom_guardian",
+    source: CONJURE_PHANTOM_WIKI,
+  },
+  {
+    // Default army = skeleton + ghost + zombie (phantom opt-in via customisation — unmodelled).
+    id: "conjure_undead_army",
+    name: "Conjure Undead Army",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    buff: "conjure_undead_army",
+    source: CONJURE_ARMY_WIKI,
+  },
 ];
 
 /**
@@ -544,7 +614,7 @@ export const NECROMANCY_EFFECTS = [
     id: "conjures",
     name: "Conjures",
     notes:
-      "Skeleton Warrior auto 22–28% / 3s; Putrid Zombie auto 18–22% / 3.6s + poison 8–12% / 1.8s; Vengeful Ghost auto 18–22% / 4.2s (heals 140% of damage). Spirits cannot crit. Auto ticks stay state (conjures.ts) — command bursts are AbilitySpecs.",
+      "SP3: untilTick = ready+105. Skeleton auto 22–28% first@+7 / 5 ticks + rage +3%/stack max 25; Zombie auto 18–22% first@+7 / 6 ticks + poison 8–12% first@+9 / 3 ticks; Ghost auto 18–22% first@+6 / 7 ticks (heal unmodelled); Phantom no auto. Army default skel+ghost+zombie. Spirits cannot crit. See conjures.ts.",
     source: MODERNISATION_WIKI,
   },
   {

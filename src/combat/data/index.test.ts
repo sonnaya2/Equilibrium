@@ -146,7 +146,7 @@ describe("combat data accessors", () => {
         expect(recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId)).toBe(true);
       }
     }
-    // Conjures stay null (honest unmodelled); damage/buff slots map to records/engine.
+    // Necro conjure slots map to records (engine specs via ENGINE_ID_BY_RECORD_ID).
     expect(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")?.supported).toBe(true);
   });
 

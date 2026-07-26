@@ -61,11 +61,83 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Vorago",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Tectonic_energy",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Magic weapons / tectonic armour materials"
+      "displayDescription": "Tectonic craft material — not wearable"
+    },
+    {
+      "id": "item:tectonic-helm",
+      "name": "Tectonic mask",
+      "slot": "helmet",
+      "tier": 90,
+      "style": "magic",
+      "setId": "tectonic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Tectonic_mask",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic power helmet"
+    },
+    {
+      "id": "item:tectonic-body",
+      "name": "Tectonic robe top",
+      "slot": "body",
+      "tier": 90,
+      "style": "magic",
+      "setId": "tectonic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Tectonic_robe_top",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic power body"
+    },
+    {
+      "id": "item:tectonic-legs",
+      "name": "Tectonic robe bottom",
+      "slot": "legs",
+      "tier": 90,
+      "style": "magic",
+      "setId": "tectonic",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Vorago progression",
+        "regions": [
+          "asgarnia"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Tectonic_robe_bottom",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic power legs"
     },
     {
       "id": "item:wand-of-the-praesul",
@@ -198,6 +270,7 @@
     {
       "id": "item:tumekens-resplendence-equipment",
       "name": "Tumeken's resplendence equipment",
+      "style": "magic",
       "bonuses": {},
       "unlock": {
         "type": "drop",
@@ -209,11 +282,131 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Tumeken%27s_resplendence_equipment",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+      "displayDescription": "set aggregate — equip pieces"
+    },
+    {
+      "id": "item:tumekens-resplendence-helm",
+      "name": "Mask of Tumeken's resplendence",
+      "slot": "helmet",
+      "tier": 95,
+      "style": "magic",
+      "setId": "tumekens-resplendence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Mask_of_Tumeken%27s_resplendence",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 magic power helmet"
+    },
+    {
+      "id": "item:tumekens-resplendence-body",
+      "name": "Robe top of Tumeken's resplendence",
+      "slot": "body",
+      "tier": 95,
+      "style": "magic",
+      "setId": "tumekens-resplendence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Robe_top_of_Tumeken%27s_resplendence",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 magic power body"
+    },
+    {
+      "id": "item:tumekens-resplendence-legs",
+      "name": "Robe bottom of Tumeken's resplendence",
+      "slot": "legs",
+      "tier": 95,
+      "style": "magic",
+      "setId": "tumekens-resplendence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Robe_bottom_of_Tumeken%27s_resplendence",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 magic power legs"
+    },
+    {
+      "id": "item:tumekens-resplendence-gloves",
+      "name": "Gloves of Tumeken's resplendence",
+      "slot": "gloves",
+      "tier": 95,
+      "style": "magic",
+      "setId": "tumekens-resplendence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gloves_of_Tumeken%27s_resplendence",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 magic power gloves"
+    },
+    {
+      "id": "item:tumekens-resplendence-boots",
+      "name": "Boots of Tumeken's resplendence",
+      "slot": "boots",
+      "tier": 95,
+      "style": "magic",
+      "setId": "tumekens-resplendence",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Amascut, the Devourer progression",
+        "regions": [
+          "desert"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Boots_of_Tumeken%27s_resplendence",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 magic power boots"
     },
     {
       "id": "item:shard-of-genesis-essence",
@@ -250,11 +443,11 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Malevolent_energy",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Melee armour / shields"
+      "displayDescription": "Malevolent craft material — not wearable"
     },
     {
       "id": "item:malevolent-armour",
@@ -271,11 +464,83 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Malevolent_armour",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Melee armour / shields"
+      "displayDescription": "set aggregate — equip pieces (helm, cuirass, greaves; no gloves/boots in set)"
+    },
+    {
+      "id": "item:malevolent-helm",
+      "name": "Malevolent helm",
+      "slot": "helmet",
+      "tier": 90,
+      "style": "melee",
+      "setId": "malevolent",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Malevolent_helm",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 melee power helmet"
+    },
+    {
+      "id": "item:malevolent-body",
+      "name": "Malevolent cuirass",
+      "slot": "body",
+      "tier": 90,
+      "style": "melee",
+      "setId": "malevolent",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Malevolent_cuirass",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 melee power body"
+    },
+    {
+      "id": "item:malevolent-legs",
+      "name": "Malevolent greaves",
+      "slot": "legs",
+      "tier": 90,
+      "style": "melee",
+      "setId": "malevolent",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Rise of the Six progression",
+        "regions": [
+          "morytania"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Malevolent_greaves",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 melee power legs"
     },
     {
       "id": "item:barrows-defenders-shields-progression",
@@ -505,11 +770,131 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Croesus",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Cryptbloom_armour",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Magic tank armour / skilling off-hands"
+      "displayDescription": "set aggregate — equip pieces"
+    },
+    {
+      "id": "item:cryptbloom-helm",
+      "name": "Cryptbloom helm",
+      "slot": "helmet",
+      "tier": 90,
+      "style": "magic",
+      "setId": "cryptbloom",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Cryptbloom_helm",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic tank helmet"
+    },
+    {
+      "id": "item:cryptbloom-body",
+      "name": "Cryptbloom top",
+      "slot": "body",
+      "tier": 90,
+      "style": "magic",
+      "setId": "cryptbloom",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Cryptbloom_top",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic tank body"
+    },
+    {
+      "id": "item:cryptbloom-legs",
+      "name": "Cryptbloom bottoms",
+      "slot": "legs",
+      "tier": 90,
+      "style": "magic",
+      "setId": "cryptbloom",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Cryptbloom_bottoms",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic tank legs"
+    },
+    {
+      "id": "item:cryptbloom-gloves",
+      "name": "Cryptbloom gloves",
+      "slot": "gloves",
+      "tier": 90,
+      "style": "magic",
+      "setId": "cryptbloom",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Cryptbloom_gloves",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic tank gloves"
+    },
+    {
+      "id": "item:cryptbloom-boots",
+      "name": "Cryptbloom boots",
+      "slot": "boots",
+      "tier": 90,
+      "style": "magic",
+      "setId": "cryptbloom",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Croesus progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Cryptbloom_boots",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 magic tank boots"
     },
     {
       "id": "item:scripture-of-bik",
@@ -548,11 +933,11 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Croesus",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Croesus_foultorch",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Magic tank armour / skilling off-hands"
+      "displayDescription": "Skilling material for Sana's fyrtorch — not a combat wearable"
     },
     {
       "id": "item:croesus-sporehammer",
@@ -569,11 +954,11 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Croesus",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Croesus_sporehammer",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Magic tank armour / skilling off-hands"
+      "displayDescription": "Skilling material for Tagga's corehammer — not a combat wearable"
     },
     {
       "id": "item:igneous-capes",
@@ -725,10 +1110,130 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "tier-95 Necromancy weapons and power armour"
+      "displayDescription": "set aggregate — equip pieces"
+    },
+    {
+      "id": "item:first-necromancer-helm",
+      "name": "Crown of the First Necromancer",
+      "slot": "helmet",
+      "tier": 95,
+      "style": "necromancy",
+      "setId": "first-necromancer",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Crown_of_the_First_Necromancer",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 necromancy power helmet"
+    },
+    {
+      "id": "item:first-necromancer-body",
+      "name": "Robe top of the First Necromancer",
+      "slot": "body",
+      "tier": 95,
+      "style": "necromancy",
+      "setId": "first-necromancer",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Robe_top_of_the_First_Necromancer",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 necromancy power body"
+    },
+    {
+      "id": "item:first-necromancer-legs",
+      "name": "Robe bottom of the First Necromancer",
+      "slot": "legs",
+      "tier": 95,
+      "style": "necromancy",
+      "setId": "first-necromancer",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Robe_bottom_of_the_First_Necromancer",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 necromancy power legs"
+    },
+    {
+      "id": "item:first-necromancer-gloves",
+      "name": "Hand wrap of the First Necromancer",
+      "slot": "gloves",
+      "tier": 95,
+      "style": "necromancy",
+      "setId": "first-necromancer",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Hand_wrap_of_the_First_Necromancer",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 necromancy power gloves"
+    },
+    {
+      "id": "item:first-necromancer-boots",
+      "name": "Foot wraps of the First Necromancer",
+      "slot": "boots",
+      "tier": 95,
+      "style": "necromancy",
+      "setId": "first-necromancer",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "First Necromancer's equipment",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Foot_wraps_of_the_First_Necromancer",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 95 necromancy power boots"
     },
     {
       "id": "item:eclipsed-soul-prayer-codex",
@@ -919,11 +1424,131 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Dracolich_armour",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Ranged armour / Necromancy invocation"
+      "displayDescription": "set aggregate — equip pieces"
+    },
+    {
+      "id": "item:dracolich-helm",
+      "name": "Dracolich coif",
+      "slot": "helmet",
+      "tier": 90,
+      "style": "ranged",
+      "setId": "dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dracolich_coif",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 ranged power helmet"
+    },
+    {
+      "id": "item:dracolich-body",
+      "name": "Dracolich hauberk",
+      "slot": "body",
+      "tier": 90,
+      "style": "ranged",
+      "setId": "dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dracolich_hauberk",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 ranged power body"
+    },
+    {
+      "id": "item:dracolich-legs",
+      "name": "Dracolich chaps",
+      "slot": "legs",
+      "tier": 90,
+      "style": "ranged",
+      "setId": "dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dracolich_chaps",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 ranged power legs"
+    },
+    {
+      "id": "item:dracolich-gloves",
+      "name": "Dracolich vambraces",
+      "slot": "gloves",
+      "tier": 90,
+      "style": "ranged",
+      "setId": "dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dracolich_vambraces",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 ranged power gloves"
+    },
+    {
+      "id": "item:dracolich-boots",
+      "name": "Dracolich boots",
+      "slot": "boots",
+      "tier": 90,
+      "style": "ranged",
+      "setId": "dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dracolich_boots",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 90 ranged power boots"
     },
     {
       "id": "item:elite-dracolich-armour",
@@ -940,11 +1565,131 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Zemouregal_%26_Vorkath",
-          "verifiedAt": "2026-07-25"
+          "url": "https://runescape.wiki/w/Elite_Dracolich_armour",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Ranged armour / Necromancy invocation"
+      "displayDescription": "set aggregate — equip pieces"
+    },
+    {
+      "id": "item:elite-dracolich-helm",
+      "name": "Elite Dracolich coif",
+      "slot": "helmet",
+      "tier": 92,
+      "style": "ranged",
+      "setId": "elite-dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Dracolich_coif",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 92 ranged power helmet"
+    },
+    {
+      "id": "item:elite-dracolich-body",
+      "name": "Elite Dracolich hauberk",
+      "slot": "body",
+      "tier": 92,
+      "style": "ranged",
+      "setId": "elite-dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Dracolich_hauberk",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 92 ranged power body"
+    },
+    {
+      "id": "item:elite-dracolich-legs",
+      "name": "Elite Dracolich chaps",
+      "slot": "legs",
+      "tier": 92,
+      "style": "ranged",
+      "setId": "elite-dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Dracolich_chaps",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 92 ranged power legs"
+    },
+    {
+      "id": "item:elite-dracolich-gloves",
+      "name": "Elite Dracolich vambraces",
+      "slot": "gloves",
+      "tier": 92,
+      "style": "ranged",
+      "setId": "elite-dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Dracolich_vambraces",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 92 ranged power gloves"
+    },
+    {
+      "id": "item:elite-dracolich-boots",
+      "name": "Elite Dracolich boots",
+      "slot": "boots",
+      "tier": 92,
+      "style": "ranged",
+      "setId": "elite-dracolich",
+      "bonuses": {},
+      "unlock": {
+        "type": "drop",
+        "requirement": "Zemouregal & Vorkath progression",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Dracolich_boots",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "displayDescription": "Tier 92 ranged power boots"
     },
     {
       "id": "item:invoke-lord-of-bones",

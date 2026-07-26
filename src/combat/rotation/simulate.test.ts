@@ -593,4 +593,53 @@ describe("simulate — necromancy resources", () => {
     const fodCast = s.casts.find((c) => c.abilityId === "finger_of_death")!;
     expect(fodCast.result.expected).toBeCloseTo(4500); // 1.5× of 3000
   });
+
+  it("conjure skeleton summons and spirit autos contribute EV (never crit)", () => {
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf("conjure_skeleton_warrior", ...Array(20).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0]!.abilityId).toBe("conjure_skeleton_warrior");
+    expect(s.casts[0]!.result.expected).toBe(0);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    // First auto at tick 7 lands during the basic weave.
+    expect(s.damageByTick[7]).toBeGreaterThan(0);
+    // Spirit damage is in the total.
+    expect(s.totalExpected).toBeGreaterThan(s.casts.reduce((n, c) => n + c.result.expected, 0));
+  });
+
+  it("command skeleton requires an active conjure", () => {
+    const blocked = simulate({
+      ...necroInput,
+      rotation: rotationOf("command_skeleton_warrior"),
+    });
+    expect(blocked.ok).toBe(false);
+
+    const ok = simulate({
+      ...necroInput,
+      rotation: rotationOf("conjure_skeleton_warrior", "command_skeleton_warrior"),
+    });
+    expect(ok.ok).toBe(true);
+    expect(ok.casts.at(-1)!.abilityId).toBe("command_skeleton_warrior");
+    // Command hits are spirit damage — critEligible false on every hit.
+    expect(ok.casts.at(-1)!.result.hits.every((h) => h.critChance === 0)).toBe(true);
+  });
+
+  it("conjure undead army summons three spirits with auto EV", () => {
+    const ctx = createCastContext(necroInput);
+    const army = NECROMANCY_ABILITIES.find((a) => a.id === "conjure_undead_army")!;
+    ctx.performCast(army, 0, false);
+    const ids = ctx.getState().conjures.spirits.map((s) => s.id).sort();
+    expect(ids).toEqual(["putrid_zombie", "skeleton_warrior", "vengeful_ghost"]);
+
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf("conjure_undead_army", ...Array(15).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_vengeful_ghost"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);
+  });
 });

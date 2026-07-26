@@ -108,6 +108,24 @@ describe("necromancy ability data", () => {
     expect(phantom.hits[0]!.band).toEqual({ ...COMMAND_PHANTOM_GUARDIAN_BAND });
   });
 
+  it("conjure casts are 0-adren enhanced setups with empty hits", () => {
+    const ids = [
+      "conjure_skeleton_warrior",
+      "conjure_vengeful_ghost",
+      "conjure_putrid_zombie",
+      "conjure_phantom_guardian",
+      "conjure_undead_army",
+    ] as const;
+    for (const id of ids) {
+      const a = NECROMANCY_ABILITIES.find((x) => x.id === id)!;
+      expect(a.category, id).toBe("enhanced");
+      expect(a.hits, id).toEqual([]);
+      expect(a.adrenaline?.cost, id).toBe(0);
+      expect(a.buff, id).toBe(id);
+      expect(a.source.verifiedAt, id).toBeTruthy();
+    }
+  });
+
   it("Death Grasp base band is 405–495% at 25% adrenaline", () => {
     const dg = NECROMANCY_ABILITIES.find((a) => a.id === "death_grasp")!;
     expect(dg.hits[0]!.band).toEqual({ ...DEATH_GRASP_BAND });

@@ -44,7 +44,7 @@ export function simulateRevolution(input: RevolutionInput): RotationSummary {
     // First-available scan: insufficient adren / CD / gate => not available => skip.
     const ready = input.bar.find((ability) => {
       if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, state.tick)) return false;
-      if (!necroCanCast(ability, state.necro)) return false;
+      if (!necroCanCast(ability, state.necro, state.conjures, state.tick)) return false;
       return ctx.firstLegalTick(ability.id) <= state.tick && ctx.costOf(ability) <= state.adrenaline;
     });
     if (ready) {

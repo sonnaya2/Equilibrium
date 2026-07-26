@@ -19,8 +19,9 @@ import {
   newNecroRotationState,
   type NecroRotationState,
 } from "../styles/necromancy/effects";
+import { newConjures, type ConjureState } from "../styles/necromancy/conjures";
 
-export type { NecroRotationState };
+export type { NecroRotationState, ConjureState };
 export const ADRENALINE_CAP = 100;
 
 export interface RangedRotationState {
@@ -67,6 +68,11 @@ export interface RotationState {
    * Mutate only via styles/necromancy/effects (applyNecroOnCast / patchNecro).
    */
   necro: NecroRotationState;
+  /**
+   * Active conjured spirits (timers + skeleton rage). Mutate via conjures.ts
+   * helpers and applyNecroOnCast summon hooks.
+   */
+  conjures: ConjureState;
 }
 
 export function newRotationState(opts: { lantern?: boolean } = {}): RotationState {
@@ -90,6 +96,7 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     },
     magic: newRunicCharge(),
     necro: newNecroRotationState({ lantern: opts.lantern }),
+    conjures: newConjures(),
   };
 }
 
@@ -131,6 +138,10 @@ export function patchNecro(
   patch: Partial<NecroRotationState>,
 ): RotationState {
   return { ...state, necro: { ...state.necro, ...patch } };
+}
+
+export function patchConjures(state: RotationState, conjures: ConjureState): RotationState {
+  return { ...state, conjures };
 }
 
 export function clearCooldowns(state: RotationState, ids: readonly string[]): RotationState {

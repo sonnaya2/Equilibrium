@@ -189,6 +189,11 @@ describe("ENGINE_ID_BY_RECORD_ID necromancy", () => {
     ["necromancy:living-death", "living_death"],
     ["necromancy:volley-of-souls", "volley_of_souls"],
     ["necromancy:blood-siphon", "blood_siphon"],
+    ["necromancy:conjure-skeleton-warrior", "conjure_skeleton_warrior"],
+    ["necromancy:conjure-vengeful-ghost", "conjure_vengeful_ghost"],
+    ["necromancy:conjure-putrid-zombie", "conjure_putrid_zombie"],
+    ["necromancy:conjure-phantom-guardian", "conjure_phantom_guardian"],
+    ["necromancy:conjure-undead-army", "conjure_undead_army"],
     ["necromancy:command-skeleton-warrior", "command_skeleton_warrior"],
     ["necromancy:command-putrid-zombie", "command_putrid_zombie"],
     ["necromancy:command-phantom-guardian", "command_phantom_guardian"],
@@ -202,13 +207,16 @@ describe("ENGINE_ID_BY_RECORD_ID necromancy", () => {
     }
   });
 
-  it("resolves necromancy Revo++ damage/buff slots via engine; conjures stay unmodelled", () => {
+  it("resolves necromancy Revo++ damage/buff/conjure slots via engine", () => {
     const bar = combatRevolutionBars.records.find((b) => b.id === "necromancy")!;
     expect(bar.supported).toBe(true);
     const resolved = resolveBar(bar, ENGINE_SPECS);
     for (const [name, id] of [
+      ["Conjure Undead Army", "conjure_undead_army"],
       ["Death Skulls", "death_skulls"],
+      ["Conjure Vengeful Ghost", "conjure_vengeful_ghost"],
       ["Living Death", "living_death"],
+      ["Conjure Skeleton Warrior", "conjure_skeleton_warrior"],
       ["Soul Sap", "soul_sap"],
       ["Touch of Death", "touch_of_death"],
       ["Volley of Souls", "volley_of_souls"],
@@ -220,9 +228,6 @@ describe("ENGINE_ID_BY_RECORD_ID necromancy", () => {
       expect(slot.spec?.id, name).toBe(id);
     }
     expect(resolved.find((s) => s.name === "Sacrifice")!.modelledBy).toBe("record");
-    for (const name of ["Conjure Undead Army", "Conjure Vengeful Ghost", "Conjure Skeleton Warrior"]) {
-      expect(resolved.find((s) => s.name === name)!.modelledBy, name).toBe("unmodelled");
-    }
   });
 });
 
@@ -244,8 +249,8 @@ describe("revolution bar resolve coverage matrix", () => {
     expect(matrix.ranged).toEqual({ engine: 10, record: 0, unmodelled: 0 });
     // PvME ST magic: all 10 engine.
     expect(matrix.magic).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // Necromancy ST: 7 engine + Sacrifice record + 3 conjure nulls.
-    expect(matrix.necromancy).toEqual({ engine: 7, record: 1, unmodelled: 3 });
+    // Necromancy ST: 10 engine (incl. 3 conjures) + Sacrifice record.
+    expect(matrix.necromancy).toEqual({ engine: 10, record: 1, unmodelled: 0 });
   });
 });
 

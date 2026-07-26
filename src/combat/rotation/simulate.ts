@@ -58,6 +58,10 @@ import {
   necroCanCast,
   resolveNecromancyAbility,
 } from "../styles/necromancy/effects";
+import {
+  processSpiritAutos,
+  type SpiritAutoEvent,
+} from "../styles/necromancy/conjures";
 import type { CombatContext, CombatModifier, SourceReference } from "../types";
 import type { RotationAction } from "./actions";
 import {
@@ -176,11 +180,58 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
   const damageByTick: Record<number, number> = {};
   let state = newRotationState();
   let endTick = 0;
+  /** Spirit auto EV outside ability casts (conjure passive damage). */
+  let spiritMin = 0;
+  let spiritMax = 0;
+  let spiritExpected = 0;
+  /** Inclusive upper bound of ticks already processed for spirit autos. */
+  let spiritCursor = 0;
+
+  function landSpiritEvents(events: SpiritAutoEvent[]): void {
+    for (const ev of events) {
+      const hit = calculateHit({
+        base: input.base,
+        band: {
+          minPct: ev.band.minPct * ev.mult,
+          maxPct: ev.band.maxPct * ev.mult,
+        },
+        level: input.level,
+        accuracy: input.accuracy,
+        crit: { chance: 0, eligible: false },
+        modifiers:
+          typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+        context: input.context,
+        cap: input.cap,
+      });
+      spiritMin += hit.min;
+      spiritMax += hit.max;
+      spiritExpected += hit.expected;
+      damageByTick[ev.tick] = (damageByTick[ev.tick] ?? 0) + hit.expected;
+      perAbility[ev.abilityId] = (perAbility[ev.abilityId] ?? 0) + hit.expected;
+      endTick = Math.max(endTick, ev.tick + 1);
+    }
+  }
+
+  /** Advance spirit autos from spiritCursor through toTick inclusive. */
+  function advanceSpirits(toTick: number): void {
+    if (toTick <= spiritCursor) return;
+    const { state: next, events } = processSpiritAutos(state.conjures, spiritCursor, toTick);
+    state = { ...state, conjures: next };
+    landSpiritEvents(events);
+    spiritCursor = toTick;
+  }
 
   function finish(error?: string, horizonTicks?: number): RotationSummary {
-    const totalExpected = casts.reduce((n, c) => n + c.result.expected, 0);
-    const totalMin = casts.reduce((n, c) => n + c.result.min, 0);
-    const totalMax = casts.reduce((n, c) => n + c.result.max, 0);
+    // Drain remaining spirit autos (tails past horizon still count, like DoT tails).
+    const spiritEnd = state.conjures.spirits.reduce(
+      (m, s) => Math.max(m, s.untilTick + 3),
+      spiritCursor,
+    );
+    if (spiritEnd > spiritCursor) advanceSpirits(spiritEnd);
+
+    const totalExpected = casts.reduce((n, c) => n + c.result.expected, 0) + spiritExpected;
+    const totalMin = casts.reduce((n, c) => n + c.result.min, 0) + spiritMin;
+    const totalMax = casts.reduce((n, c) => n + c.result.max, 0) + spiritMax;
     const denomTicks = horizonTicks != null && horizonTicks > 0 ? horizonTicks : endTick;
     const seconds = denomTicks * TICK_SECONDS;
     return {
@@ -221,7 +272,8 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
   /** Everything a real cast does at a fixed tick: damage, resources, buffs, style
    *  on-hit effects, and the GCD advance. Queued and woven casts share this path. */
   function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void {
-    // Passive adren for ticks spent waiting on the GCD / ability CD frontier.
+    // Spirit autos due while waiting on GCD / ability CD, then passive adren.
+    advanceSpirits(readyTick);
     grantMeteorPassive(state.tick, readyTick);
     state = { ...state, tick: readyTick };
     if (state.melee.berserk && readyTick >= state.berserkUntilTick) {
@@ -389,12 +441,16 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       state = startCooldown(state, ability.id, cdTicks);
     }
 
-    // Necromancy: souls / necrosis / Living Death window + ToD LD adren + CD resets.
+    // Necromancy: souls / necrosis / Living Death / conjure summon + ToD LD adren + CD resets.
     // Uses the bar ability (not the resolved FoD/volley rewrite) so declared
     // soulGain/necrosisGain/soulCost fields apply; id-based spends cover FoD/DG/Volley.
     if (ability.style === "necromancy") {
-      const patch = applyNecroOnCast(state.necro, ability, readyTick);
-      state = { ...state, necro: patch.necro };
+      const patch = applyNecroOnCast(state.necro, ability, readyTick, state.conjures);
+      state = {
+        ...state,
+        necro: patch.necro,
+        ...(patch.conjures ? { conjures: patch.conjures } : {}),
+      };
       if (patch.adrenalineBonus) state = gainAdrenaline(state, patch.adrenalineBonus);
       state = clearCooldowns(state, patch.clearCooldownIds);
     }
@@ -470,6 +526,8 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     casts.push({ tick: readyTick, abilityId: ability.id, result, adrenalineAfter: state.adrenaline, ...(auto ? { auto: true as const } : {}) });
     perAbility[ability.id] = (perAbility[ability.id] ?? 0) + result.expected;
     state = { ...state, tick: gcdEnd };
+    // Spirit autos that land during this GCD (e.g. first skeleton hit at cast+7).
+    advanceSpirits(gcdEnd);
     endTick = Math.max(endTick, state.tick);
   }
 
@@ -522,7 +580,7 @@ export function simulate(input: SimulateInput): RotationSummary {
         basic &&
         (ctx.firstLegalTick(ability.id) > ctx.getState().tick ||
           ctx.costOf(ability) > ctx.getState().adrenaline ||
-          !necroCanCast(ability, ctx.getState().necro))
+          !necroCanCast(ability, ctx.getState().necro, ctx.getState().conjures, ctx.getState().tick))
       ) {
         if (++guard > 200) return ctx.finish(`${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`);
         ctx.performCast(basic, ctx.getState().tick, true);
@@ -533,9 +591,10 @@ export function simulate(input: SimulateInput): RotationSummary {
     if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(ctx.getState().magic, readyTick)) {
       return ctx.finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
     }
-    if (!necroCanCast(ability, ctx.getState().necro)) {
+    if (!necroCanCast(ability, ctx.getState().necro, ctx.getState().conjures, readyTick)) {
+      const souls = ctx.getState().necro.residualSouls;
       return ctx.finish(
-        `${ability.id} needs residual souls, ${ctx.getState().necro.residualSouls} available at tick ${readyTick}`,
+        `${ability.id} needs residual souls or an active conjure, ${souls} souls available at tick ${readyTick}`,
       );
     }
 

@@ -16,11 +16,11 @@ export default function DataPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill">
-        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
+        <div className="mb-1 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
           <span className="font-medium text-parch-50">Data</span>
-          <span className="font-mono text-parch-300">
-            {catalog.datasets.regions}r · {catalog.datasets.skills}s ·{" "}
-            {catalog.datasets.trainingMethods}m · {catalog.snapshotDate}
+          <span className="text-parch-300">
+            {catalog.datasets.regions} regions · {catalog.datasets.skills} skills ·{" "}
+            {catalog.datasets.trainingMethods} methods
           </span>
           <Link href="/sources" className="ml-auto text-gem-300 hover:underline">
             Sources

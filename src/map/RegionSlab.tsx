@@ -208,9 +208,9 @@ export function RegionSlab({
     (shape.markerUv[0] - 0.5) * MAP_WORLD.width,
     (shape.markerUv[1] - 0.5) * MAP_WORLD.height,
   ];
-  // Crest sits north of the marker, count south of it. Stacked on one point they
-  // overlap on screen, because the crest lies flat and foreshortens while the
-  // count is a screen-space chip centred on the same projected pixel.
+  // Crest north of marker; name under it; quest chip further south. Crest is a
+  // flat decal (foreshortens); name/count are screen-space Html — they need
+  // distinct world-Z so long plates never sit on the quest number.
   //
   // Scaled to the slab, not fixed: regions differ by 3x in area, and a constant
   // offset walks the crest off the cap of a small one, where the overhang gets
@@ -235,9 +235,13 @@ export function RegionSlab({
     }
     return best;
   }, [shape]);
+  // Crest north of marker; name sits just under it (slightly south of marker);
+  // quest chip further south with a floor gap so long plates never sit on the count.
   const CREST_OFFSET = Math.min(0.055, inradius * 0.5);
-  const COUNT_OFFSET = Math.min(0.052, inradius * 0.48);
+  const NAME_OFFSET = Math.min(0.016, Math.max(0.01, inradius * 0.18));
+  const COUNT_OFFSET = Math.min(0.078, Math.max(NAME_OFFSET + 0.036, inradius * 0.55));
   const crestSize = Math.min(0.116, inradius * 1.05);
+  const labelY = shape.depth + BEVEL + 0.012;
 
   return (
     <group ref={groupRef}>
@@ -271,15 +275,37 @@ export function RegionSlab({
         />
       </mesh>
 
-      {/* Quest count on the cap. aria-hidden always: the DOM ledger owns names. */}
+      {/* Region name under crest. Decorative only — ledger owns a11y names.
+          aria-hidden + pointer-events none so e2e never matches these as buttons. */}
+      {anchor ? (
+        <Html
+          position={[mx, labelY, mz + NAME_OFFSET]}
+          center
+          distanceFactor={1}
+          zIndexRange={[10, 0]}
+          style={{ pointerEvents: "none" }}
+        >
+          <div
+            aria-hidden="true"
+            className={`slab-label${subject ? " is-focus" : ""}${unlocked ? "" : " is-locked"}`}
+          >
+            {anchor.name}
+          </div>
+        </Html>
+      ) : null}
+
+      {/* Quest count south of the name plate — gap floor in COUNT_OFFSET. */}
       <Html
-        position={[mx, shape.depth + BEVEL + 0.012, mz + COUNT_OFFSET]}
+        position={[mx, labelY, mz + COUNT_OFFSET]}
         center
         distanceFactor={1}
         zIndexRange={[10, 0]}
         style={{ pointerEvents: "none" }}
       >
-        <div aria-hidden="true" className="slab-chip">
+        <div
+          aria-hidden="true"
+          className={`slab-chip${subject ? " is-focus" : ""}${unlocked ? "" : " is-locked"}`}
+        >
           {quests}
         </div>
       </Html>

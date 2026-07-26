@@ -1,4 +1,15 @@
 /**
+ * ORPHAN (post tube-vines ship) — not imported by production or remaster lab.
+ *
+ * Production path: `SeamVines.tsx` → `createDaylitSeamMaterials` +
+ * `createDaylitLeafMaterial` (dual TubeGeometry + leaf instances). Remaster forks
+ * its own `daylitVine` / `remasterVine` under `concepts/map-remaster/scene/materials/`
+ * — do not re-wire this ribbon material into either path without a deliberate fork.
+ *
+ * Kept as historical reference for the flat-ribbon MeshBasic TSL graph
+ * (aAlong / aSide / aGrowth). Safe to delete once no one wants the ribbon recipe.
+ *
+ * ---
  * Vines along the borders between land masses — Daylit plant palette.
  *
  * Olive / moss plants on a merged ribbon, not gem wire. Two strands meander

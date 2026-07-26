@@ -1,0 +1,1991 @@
+/* R3 Build topologies — layout DNA only. Tokens from Editorial @theme. */
+
+.r3-build {
+  --r3-gap: 0.5rem;
+  color: var(--color-parch-100);
+  min-height: min(78vh, 52rem);
+}
+
+/* Plan seal — carved edge + material top-light (stone only; gold = title ink) */
+.r3-build__mast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 48%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 52%,
+      color-mix(in srgb, var(--color-stone-900) 38%, var(--color-stone-850)) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+}
+
+/* Mast title — display gold only (never button chrome) */
+.r3-build__title {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gold-400);
+}
+
+/* Key figure — gem stat energy, plan-seal scale */
+.r3-build__count {
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-gem-300);
+}
+
+/* Path trail micro-pips — data ink only (order / chaos / balance) */
+.r3-build__path-pips {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+}
+
+.r3-build__path-pip {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+.r3-build__path-pip.is-order {
+  color: var(--color-order-400);
+}
+
+.r3-build__path-pip.is-chaos {
+  color: var(--color-chaos-300);
+}
+
+.r3-build__path-pip.is-balance {
+  color: var(--color-balance-400);
+}
+
+.r3-build__btn {
+  min-height: 1.85rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.r3-build__btn:hover:not(:disabled) {
+  border-color: var(--color-gem-500);
+  color: var(--color-parch-50);
+}
+
+.r3-build__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.r3-build__btn--gem {
+  border-color: var(--color-gem-500);
+  background: color-mix(in srgb, var(--color-gem-600) 35%, var(--color-stone-800));
+  color: var(--color-parch-50);
+}
+
+.r3-build__btn.is-on,
+.r3-build__btn[aria-pressed="true"] {
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 50%, transparent);
+  color: var(--color-gem-200);
+}
+
+/* ── A · Court Rail ── */
+.r3-court {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1.2fr) minmax(11rem, 0.85fr);
+  grid-template-rows: minmax(18rem, 1fr) auto;
+  gap: var(--r3-gap);
+  min-height: min(72vh, 48rem);
+}
+
+.r3-court__rail {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+  overflow: auto;
+}
+
+.r3-court__stage {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+/* Court-rail relic stage: choices stacked, effects under — one bordered panel */
+.r3-court__stage > [role="listbox"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.r3-court__stage > [role="listbox"] + div {
+  margin-top: 0.15rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--color-stone-750);
+  min-width: 0;
+  overflow: auto;
+}
+
+.r3-court__hive {
+  grid-row: 1;
+  grid-column: 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(3.6rem, 1fr));
+  gap: 0.2rem;
+  align-content: start;
+  padding: 0.3rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+  overflow: auto;
+  max-height: min(60vh, 36rem);
+}
+
+.r3-court__lattice {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  padding: 0.3rem 0.45rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+/* ── B · Twin Desk Build ── */
+.r3-twin.twin-desk {
+  min-height: min(72vh, 48rem);
+}
+
+.r3-twin .twin-desk__grid {
+  min-height: min(70vh, 46rem);
+}
+
+.r3-twin__region {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.45rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: transparent;
+  color: var(--color-parch-100);
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.r3-twin__region:hover:not(:disabled) {
+  background: var(--color-stone-raised);
+}
+
+.r3-twin__region.is-on {
+  background: color-mix(in srgb, var(--color-gem-600) 22%, var(--color-stone-850));
+  color: var(--color-parch-50);
+}
+
+.r3-twin__region:disabled,
+.r3-twin__region[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.r3-twin__hex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.65rem;
+}
+
+.r3-twin__hex {
+  width: 4.25rem;
+  display: grid;
+  gap: 0.2rem;
+  justify-items: center;
+  padding: 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-850);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  font-size: 0.7rem;
+}
+
+.r3-twin__hex img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.r3-twin__hex.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 55%, transparent);
+}
+
+.r3-twin__mono {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-stone-750);
+  font-family: var(--font-display), serif;
+  font-size: 0.85rem;
+  color: var(--color-gold-400);
+}
+
+/* ── C · Menu Court ── */
+.r3-menu {
+  display: grid;
+  grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+  grid-template-rows: minmax(16rem, 1fr) auto auto;
+  gap: var(--r3-gap);
+  min-height: min(72vh, 48rem);
+}
+
+.r3-menu__choices {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.45rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+  overflow: auto;
+}
+
+.r3-menu__pad {
+  grid-row: 1;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, 14rem);
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.45rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+.r3-menu__slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(3.2rem, 1fr));
+  gap: 0.3rem;
+  align-content: start;
+}
+
+.r3-menu__slot {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-inset);
+  color: var(--color-parch-300);
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+}
+
+.r3-menu__slot.is-locked {
+  filter: saturate(0.35) brightness(0.75);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      color-mix(in srgb, var(--color-stone-750) 40%, transparent) 3px,
+      color-mix(in srgb, var(--color-stone-750) 40%, transparent) 4px
+    ),
+    var(--color-stone-inset);
+}
+
+.r3-menu__detail {
+  min-width: 0;
+  overflow: auto;
+}
+
+.r3-menu__regions {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  align-content: start;
+  padding: 0.3rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+}
+
+.r3-menu__regions .r3-region {
+  flex: 1 1 3.85rem;
+  max-width: 5.25rem;
+  min-width: 3.6rem;
+}
+
+.r3-menu__lattice {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  padding: 0.3rem 0.45rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+/* Shared pieces — region crest strip (Menu Court / Court hive) */
+.r3-region {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.08rem;
+  min-width: 0;
+  padding: 0.2rem 0.15rem 0.18rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  font-size: 0.6875rem; /* 11px name floor */
+  line-height: 1.12;
+  text-align: center;
+}
+
+/* Fallback for non-seal markup; seal structure uses .r3-seal__* */
+.r3-region > span:first-of-type:not(.r3-seal__crest) {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-parch-50);
+}
+
+.r3-region .r3-muted {
+  margin: 0;
+  font-size: 0.625rem;
+  line-height: 1.1;
+  color: var(--color-parch-300);
+}
+
+.r3-region img {
+  width: 1.35rem;
+  height: 1.55rem;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.r3-region.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 55%, transparent);
+  background: color-mix(in srgb, var(--color-gem-600) 22%, var(--color-stone-800));
+  color: var(--color-parch-50);
+}
+
+.r3-region.is-on .r3-muted {
+  color: var(--color-gem-300);
+}
+
+.r3-region[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Identity seals — crest · name · meta (Genshin-style character-row language) */
+.r3-seal {
+  gap: 0.1rem;
+}
+
+.r3-seal__crest {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+/* Court hive default — dense strip overrides size to ~44px */
+.r3-seal__crest-art {
+  display: block;
+}
+
+.r3-seal__name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem; /* 11px floor */
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-parch-50);
+}
+
+.r3-seal__meta {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.5625rem; /* tiny mono: start / early / pick */
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--color-parch-300);
+}
+
+.r3-seal.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 60%, transparent);
+  background: color-mix(in srgb, var(--color-gem-600) 24%, var(--color-stone-800));
+  color: var(--color-parch-50);
+  filter: none;
+  opacity: 1;
+}
+
+.r3-seal.is-on .r3-seal__name {
+  color: var(--color-parch-50);
+}
+
+.r3-seal.is-on .r3-seal__meta {
+  color: var(--color-gem-300);
+}
+
+.r3-seal.is-on .r3-seal__crest-art {
+  filter: none;
+  opacity: 1;
+}
+
+/* Unpicked elective: dim but readable */
+.r3-seal.is-dim:not(.is-on):not(.is-blocked) {
+  border-color: var(--color-stone-750);
+  background: var(--color-stone-800);
+  opacity: 0.72;
+}
+
+.r3-seal.is-dim:not(.is-on) .r3-seal__name {
+  color: var(--color-parch-100);
+}
+
+.r3-seal.is-dim:not(.is-on) .r3-seal__meta {
+  color: var(--color-parch-400);
+}
+
+.r3-seal.is-dim:not(.is-on):not(.is-blocked) .r3-seal__crest-art {
+  opacity: 0.88;
+  filter: saturate(0.65);
+}
+
+/* Blocked (4th elective / not loaded): reduced opacity, no click */
+.r3-seal.is-blocked,
+.r3-seal[aria-disabled="true"] {
+  opacity: 0.38;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
+.r3-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.4rem 0.45rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.r3-choice img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.r3-choice.is-on {
+  border-color: var(--color-gem-400);
+  color: var(--color-parch-50);
+}
+
+.r3-choice .mono {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-stone-750);
+  font-family: var(--font-display), serif;
+  color: var(--color-gold-400);
+  flex: 0 0 auto;
+}
+
+.r3-tier {
+  min-height: 1.7rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-800);
+  color: var(--color-parch-300);
+  font-size: 0.7rem;
+  font-family: ui-monospace, monospace;
+  cursor: pointer;
+}
+
+.r3-tier.is-on {
+  border-color: var(--color-gem-400);
+  color: var(--color-gem-200);
+}
+
+.r3-tier.is-sealed {
+  opacity: 0.55;
+}
+
+/* Fixed chip-scale lattice — not fluid full-width squares */
+.r3-lattice {
+  display: grid;
+  grid-template-columns: auto repeat(8, 1.65rem);
+  gap: 0.2rem;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+}
+
+.r3-lattice__head {
+  width: 1.65rem;
+  max-width: 1.65rem;
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+  color: var(--color-parch-300);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Path labels = tier-chip scale; path color is data ink only */
+.r3-lattice__path {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 1.7rem;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-800);
+  font-size: 0.7rem;
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.r3-lattice__path.is-order {
+  color: var(--color-order-400);
+}
+.r3-lattice__path.is-chaos {
+  color: var(--color-chaos-300);
+}
+.r3-lattice__path.is-balance {
+  color: var(--color-balance-400);
+}
+
+.r3-lattice__cell {
+  box-sizing: border-box;
+  width: 1.65rem;
+  height: 1.65rem;
+  max-width: 1.65rem;
+  min-height: 0;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-inset);
+  cursor: pointer;
+  padding: 0;
+}
+
+.r3-lattice__cell:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.r3-lattice__cell.is-on {
+  border-color: var(--color-gem-400);
+  background: color-mix(in srgb, var(--color-gem-500) 30%, var(--color-stone-inset));
+}
+
+.r3-lattice__cell.is-god {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.r3-lattice__cell.is-god.is-on {
+  opacity: 1;
+  border-color: var(--color-gold-400);
+}
+
+.r3-effects {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--color-parch-100);
+}
+
+.r3-effects li + li {
+  margin-top: 0.2rem;
+}
+
+.r3-muted {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-parch-300);
+}
+
+.r3-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+.r3-splash {
+  width: 100%;
+  max-height: 9rem;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid var(--color-stone-750);
+}
+
+@media (max-width: 960px) {
+  .r3-court {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+  .r3-court__rail,
+  .r3-court__stage,
+  .r3-court__hive,
+  .r3-court__lattice {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .r3-court__hive {
+    max-height: 14rem;
+  }
+  .r3-menu {
+    grid-template-columns: 1fr;
+  }
+  .r3-menu__choices,
+  .r3-menu__pad,
+  .r3-menu__regions,
+  .r3-menu__lattice {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .r3-menu__pad {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* legacy opt */
+/* ── D · Opt hybrid (Menu Court outer + Court-rail stage) — unused by MenuCourt dense ──
+   Outer: choice/stage left · pad/detail right · region strip · lattice belt.
+   Stage: choices stacked + effects below in one bordered panel (court-rail DNA).
+   Kept for other concepts / rollback; dense rules below must win cascade. */
+/* mast: .r3-build__mast shared — no local mast chrome */
+.r3-opt {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  grid-template-rows: minmax(16rem, 1fr) auto auto;
+  gap: var(--r3-gap);
+  min-height: min(72vh, 48rem);
+}
+
+.r3-opt__stage,
+.r3-opt > .r3-court__stage {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+  overflow: auto;
+}
+
+.r3-opt__stage-choices,
+.r3-opt__stage > [role="listbox"],
+.r3-opt > .r3-court__stage > [role="listbox"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.r3-opt__stage-effects,
+.r3-opt__stage > [role="listbox"] + div,
+.r3-opt > .r3-court__stage > [role="listbox"] + div {
+  margin-top: 0.1rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--color-stone-750);
+  min-width: 0;
+}
+
+.r3-opt__pad {
+  grid-row: 1;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 2.75rem);
+  gap: 0.3rem;
+  align-content: start;
+  justify-content: start;
+  min-width: 0;
+  padding: 0.45rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+.r3-opt__pad .r3-menu__slot,
+.r3-opt__hex {
+  width: 2.75rem;
+  height: 2.75rem;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-inset);
+  color: var(--color-parch-300);
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+}
+
+.r3-opt__pad .r3-menu__slot.is-locked,
+.r3-opt__hex.is-locked {
+  filter: saturate(0.35) brightness(0.75);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      color-mix(in srgb, var(--color-stone-750) 40%, transparent) 3px,
+      color-mix(in srgb, var(--color-stone-750) 40%, transparent) 4px
+    ),
+    var(--color-stone-inset);
+}
+
+.r3-opt__regions {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+}
+
+.r3-opt__lattice {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  max-height: none;
+  padding: 0.3rem 0.4rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+  /* belt only — cell size stays on shared .r3-lattice__cell */
+}
+
+@media (max-width: 960px) {
+  .r3-opt {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .r3-opt__stage,
+  .r3-opt__pad,
+  .r3-opt__regions,
+  .r3-opt__lattice {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .r3-opt__pad {
+    grid-template-columns: repeat(auto-fill, 2.75rem);
+  }
+}
+
+/* ── Dense champion (MenuCourt) — AFTER opt; compound beats .r3-build / .r3-opt ──
+   Showcase shell + plan seal: carved edge, editorial stone, material top-light.
+   Topology: regions top · relic tiers · bless belt. Gem = selection; gold = title. */
+.r3-build.r3-dense,
+.r3-dense {
+  --r3-gap: 0.4rem;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.45rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 14%, var(--color-stone-900)) 0%,
+      var(--color-stone-900) 42%,
+      color-mix(in srgb, var(--color-stone-950) 55%, var(--color-stone-900)) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+}
+
+/* Plan seal — stronger top-light bar only (stone material, not brand rainbow) */
+.r3-build.r3-dense > .r3-build__mast,
+.r3-dense .r3-build__mast {
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  padding: 0.55rem 0.85rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 58%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 48%,
+      color-mix(in srgb, var(--color-stone-900) 42%, var(--color-stone-850)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 55%, transparent);
+}
+
+.r3-build.r3-dense .r3-build__title,
+.r3-dense .r3-build__title {
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+}
+
+.r3-build.r3-dense .r3-build__count,
+.r3-dense .r3-build__count {
+  font-size: 1.75rem;
+  color: var(--color-gem-200);
+}
+
+/* Artifact section frames — carved stone panels, not gray admin boxes */
+.r3-build.r3-dense .r3-dense__regions,
+.r3-build.r3-dense .r3-dense__relics,
+.r3-build.r3-dense .r3-dense__bless,
+.r3-dense__regions,
+.r3-dense__relics,
+.r3-dense__bless {
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 22%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 48%,
+      color-mix(in srgb, var(--color-stone-900) 35%, var(--color-stone-850)) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  padding: 0.4rem 0.5rem 0.45rem;
+  min-width: 0;
+}
+
+.r3-build.r3-dense .r3-dense__regions,
+.r3-dense__regions {
+  flex: 0 0 auto;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 32%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 100%
+    );
+}
+
+/* Dense region strip — Genshin-style identity seals (crest row) */
+.r3-build.r3-dense .r3-dense__region-row,
+.r3-dense__region-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  align-items: stretch;
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-region,
+.r3-build.r3-dense .r3-dense__region-row .r3-seal,
+.r3-dense__region-row .r3-region,
+.r3-dense__region-row .r3-seal {
+  flex: 1 1 3.75rem;
+  min-width: 3.5rem;
+  max-width: 5.25rem;
+  padding: 0.28rem 0.18rem 0.22rem;
+  gap: 0.14rem;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent);
+}
+
+/* Crest ~40–48px in dense strip (RegionCrest size=44 + frame) */
+.r3-build.r3-dense .r3-dense__region-row .r3-seal__crest,
+.r3-dense__region-row .r3-seal__crest {
+  width: 2.75rem; /* 44px */
+  height: 2.75rem;
+  min-height: 2.5rem;
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-seal__crest-art,
+.r3-dense__region-row .r3-seal__crest-art {
+  width: 2.75rem !important; /* 44px — beat inline size when needed */
+  height: 2.75rem !important;
+  max-width: 3rem; /* 48px cap */
+  max-height: 3rem;
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-seal__name,
+.r3-dense__region-row .r3-seal__name {
+  font-size: 0.6875rem; /* ≥11px floor */
+  line-height: 1.12;
+  max-width: 100%;
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-seal__meta,
+.r3-dense__region-row .r3-seal__meta {
+  font-size: 0.5625rem;
+  line-height: 1.1;
+}
+
+/* Selected/on: full chroma (beats dim/blocked filters) */
+.r3-build.r3-dense .r3-dense__region-row .r3-seal.is-on,
+.r3-dense__region-row .r3-seal.is-on {
+  opacity: 1;
+  filter: none;
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 65%, transparent);
+  background: color-mix(in srgb, var(--color-gem-600) 26%, var(--color-stone-800));
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-seal.is-dim:not(.is-on),
+.r3-dense__region-row .r3-seal.is-dim:not(.is-on) {
+  opacity: 0.7;
+}
+
+.r3-build.r3-dense .r3-dense__region-row .r3-seal.is-blocked,
+.r3-build.r3-dense .r3-dense__region-row .r3-seal[aria-disabled="true"],
+.r3-dense__region-row .r3-seal.is-blocked,
+.r3-dense__region-row .r3-seal[aria-disabled="true"] {
+  opacity: 0.36;
+  filter: grayscale(0.4);
+}
+
+.r3-build.r3-dense .r3-dense__relics,
+.r3-dense__relics {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.r3-relic-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.r3-relic-row {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr) minmax(4.5rem, 7rem);
+  gap: 0.35rem;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: 0.15rem 0.25rem;
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-850);
+}
+
+/* Sealed rows keep full ink; wells carry timber+frost (not a muddy row fade) */
+.r3-relic-row.is-sealed {
+  opacity: 1;
+}
+
+.r3-relic-row.is-sealed .r3-relic-row__tier {
+  opacity: 0.55;
+}
+
+.r3-relic-row.is-sealed .r3-relic-row__seated {
+  opacity: 0.5;
+}
+
+.r3-relic-row__tier {
+  font-family: ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-parch-300);
+  text-align: center;
+}
+
+.r3-relic-row__slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.r3-relic-hex {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-height: 2rem;
+  max-width: 100%;
+  padding: 0.15rem 0.35rem 0.15rem 0.2rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  font-size: 0.7rem;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.r3-relic-hex img {
+  width: 1.55rem;
+  height: 1.55rem;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.r3-relic-hex__mono {
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 1px solid var(--color-stone-750);
+  font-family: var(--font-display), serif;
+  font-size: 0.65rem;
+  color: var(--color-gold-400);
+  flex: 0 0 auto;
+}
+
+.r3-relic-hex__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 7.5rem;
+}
+
+.r3-relic-hex.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 50%, transparent);
+  color: var(--color-parch-50);
+}
+
+/* Hover tip — Genshin/HSR-style item popup (absolute, not a page section) */
+.r3-relic-tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  bottom: calc(100% + 6px);
+  width: max-content;
+  max-width: min(19rem, 72vw);
+  min-width: 11rem;
+  padding: 0.55rem 0.65rem 0.6rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-950);
+  /* carved edge + soft hard offset shadow (no neon glow) */
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 70%, #000),
+    3px 5px 0 color-mix(in srgb, #000 55%, transparent),
+    0 8px 18px color-mix(in srgb, #000 45%, transparent);
+  color: var(--color-parch-100);
+  font-size: 0.8125rem; /* 13px body floor */
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  transition: opacity 120ms ease, visibility 0s linear 120ms;
+}
+
+/* Item title — gold display ink */
+.r3-relic-tip strong {
+  display: block;
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 85%, var(--color-gold-500));
+  font-family: var(--font-display), serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: var(--color-gold-400);
+}
+
+/* Effect list — 12–13px parchment, readable */
+.r3-relic-tip ul {
+  margin: 0;
+  padding-left: 0.95rem;
+  font-size: 0.75rem; /* 12px densest */
+  line-height: 1.4;
+  color: var(--color-parch-100);
+}
+
+.r3-relic-tip li {
+  color: var(--color-parch-100);
+}
+
+.r3-relic-tip li + li {
+  margin-top: 0.22rem;
+}
+
+.r3-relic-hex:hover .r3-relic-tip,
+.r3-relic-hex:focus-visible .r3-relic-tip {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 120ms ease, visibility 0s linear 0s;
+}
+
+/* Upper rows: tip opens below; lower rows keep tip above */
+.r3-relic-row:nth-child(-n + 2) .r3-relic-tip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r3-relic-tip,
+  .r3-relic-hex:hover .r3-relic-tip,
+  .r3-relic-hex:focus-visible .r3-relic-tip {
+    transition: none;
+  }
+}
+
+/*
+  Sealed / empty relic wells — timber slats + frost (game unrevealed).
+  Atom: ~40px square. Timber matches globals .cell-locked; frost is sanctioned.
+  Markup may use .r3-relic-well / .r3-relic-sealed-well / .r3-relic-hex.is-empty
+  as single wells, or one .r3-relic-sealed chip (MenuCourt) painted as 3 wells.
+*/
+.r3-relic-well,
+.r3-relic-sealed-well,
+.r3-relic-hex.is-empty {
+  --r3-well: 2.5rem; /* 40px */
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  width: var(--r3-well);
+  height: var(--r3-well);
+  min-width: var(--r3-well);
+  min-height: var(--r3-well);
+  max-width: var(--r3-well);
+  max-height: var(--r3-well);
+  padding: 0;
+  gap: 0;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  /* timber slats — same material as globals .cell-locked */
+  background:
+    linear-gradient(rgb(20 16 11 / 48%), rgb(20 16 11 / 48%)),
+    repeating-linear-gradient(90deg, #191309 0 7px, #221a0e 7px 8px, #12100a 8px 15px),
+    var(--color-stone-900);
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+  cursor: default;
+  pointer-events: none;
+  vertical-align: middle;
+  flex: 0 0 auto;
+  /* desaturate timber + slight frost blur (unrevealed exception) */
+  filter: saturate(0.36) brightness(0.72) blur(0.45px);
+  opacity: 0.84;
+}
+
+.r3-relic-well::after,
+.r3-relic-sealed-well::after,
+.r3-relic-hex.is-empty::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(20 16 11 / 28%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stone-750) 55%, transparent);
+  pointer-events: none;
+}
+
+/* Empty hex: kill filled-chip chrome (name / tip / mono) */
+.r3-relic-hex.is-empty img,
+.r3-relic-hex.is-empty .r3-relic-hex__mono,
+.r3-relic-hex.is-empty .r3-relic-hex__name,
+.r3-relic-hex.is-empty .r3-relic-tip {
+  display: none;
+}
+
+.r3-relic-hex.is-empty.is-on {
+  border-color: var(--color-stone-750);
+  box-shadow: none;
+}
+
+/*
+  MenuCourt sealed placeholder is a single .r3-relic-sealed span.
+  Paint it as three intentional empty wells (host + ::before + ::after).
+*/
+.r3-relic-sealed {
+  --r3-well: 2.5rem;
+  --r3-well-gap: 0.25rem;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  width: var(--r3-well);
+  height: var(--r3-well);
+  min-width: var(--r3-well);
+  min-height: var(--r3-well);
+  /* reserve flex-flow space for the two absolute sibling wells */
+  margin: 0 calc(2 * (var(--r3-well) + var(--r3-well-gap))) 0 0;
+  padding: 0;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(rgb(20 16 11 / 48%), rgb(20 16 11 / 48%)),
+    repeating-linear-gradient(90deg, #191309 0 7px, #221a0e 7px 8px, #12100a 8px 15px),
+    var(--color-stone-900);
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: inherit;
+  overflow: visible;
+  vertical-align: middle;
+  flex: 0 0 auto;
+  filter: saturate(0.36) brightness(0.72) blur(0.45px);
+  opacity: 0.84;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stone-750) 55%, transparent);
+}
+
+/* Wells 2 and 3 — same timber+frost atom as host */
+.r3-relic-sealed::before,
+.r3-relic-sealed::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: calc(var(--r3-well) + var(--r3-well-gap));
+  box-sizing: border-box;
+  width: var(--r3-well);
+  height: var(--r3-well);
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(rgb(20 16 11 / 48%), rgb(20 16 11 / 48%)),
+    repeating-linear-gradient(90deg, #191309 0 7px, #221a0e 7px 8px, #12100a 8px 15px),
+    var(--color-stone-900);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stone-750) 55%, transparent);
+  pointer-events: none;
+}
+
+.r3-relic-sealed::after {
+  left: calc(2 * (var(--r3-well) + var(--r3-well-gap)));
+}
+
+/* Three real well nodes in a sealed row (future / dual-class markup) */
+.r3-relic-row__slots:has(> .r3-relic-well),
+.r3-relic-row__slots:has(> .r3-relic-sealed-well) {
+  gap: 0.25rem;
+}
+
+.r3-relic-row.is-sealed .r3-relic-row__slots {
+  min-height: 2.5rem;
+  align-items: center;
+}
+
+.r3-relic-row__seated {
+  font-size: 0.65rem;
+  color: var(--color-gem-300);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.r3-relic-row__seated.is-empty {
+  color: var(--color-parch-300);
+}
+
+/* Constellation belt under relic court — same carved shell as .r3-dense__relics */
+.r3-build.r3-dense .r3-dense__bless,
+.r3-dense__bless {
+  flex: 0 0 auto;
+  overflow-x: auto;
+  /* belt only: do not flex-grow into court height */
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 18%, var(--color-stone-900)) 0%,
+      var(--color-stone-900) 55%,
+      color-mix(in srgb, var(--color-stone-950) 30%, var(--color-stone-900)) 100%
+    );
+}
+
+/* Subtle top-light on belt header only (not the lattice body) */
+.r3-build.r3-dense .r3-dense__bless > .r3-label,
+.r3-dense__bless > .r3-label {
+  margin: 0 0 0.3rem;
+  padding: 0.08rem 0 0.22rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 65%, transparent);
+}
+
+/* Pin chip lattice inside belt — 1.65–1.7rem cells, path chips stay chip-scale */
+.r3-build.r3-dense .r3-dense__bless .r3-lattice,
+.r3-dense__bless .r3-lattice {
+  grid-template-columns: auto repeat(8, 1.65rem);
+  gap: 0.2rem;
+  width: max-content;
+  max-width: 100%;
+}
+
+.r3-build.r3-dense .r3-dense__bless .r3-lattice__head,
+.r3-dense__bless .r3-lattice__head {
+  width: 1.65rem;
+  max-width: 1.65rem;
+}
+
+.r3-build.r3-dense .r3-dense__bless .r3-lattice__path,
+.r3-dense__bless .r3-lattice__path {
+  min-height: 1.7rem;
+  padding: 0.15rem 0.35rem;
+  font-size: 0.7rem;
+}
+
+.r3-build.r3-dense .r3-dense__bless .r3-lattice__cell,
+.r3-dense__bless .r3-lattice__cell {
+  width: 1.65rem;
+  height: 1.65rem;
+  max-width: 1.65rem;
+}
+
+/* Dense board ownership — compound after bare .r3-relic-* so cascade is explicit */
+.r3-build.r3-dense .r3-relic-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.r3-build.r3-dense .r3-relic-row,
+.r3-dense .r3-relic-row {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr) minmax(4.5rem, 7rem);
+  gap: 0.35rem;
+  align-items: center;
+  min-height: 2.55rem;
+  padding: 0.2rem 0.3rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 18%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+}
+
+/* Dense relic hex — larger icon presence on the board */
+.r3-build.r3-dense .r3-relic-hex,
+.r3-dense .r3-relic-hex {
+  min-height: 2.25rem;
+  padding: 0.2rem 0.4rem 0.2rem 0.22rem;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+}
+
+.r3-build.r3-dense .r3-relic-hex img,
+.r3-build.r3-dense .r3-relic-hex__mono,
+.r3-dense .r3-relic-hex img,
+.r3-dense .r3-relic-hex__mono {
+  width: 1.85rem;
+  height: 1.85rem;
+}
+
+.r3-build.r3-dense .r3-relic-hex__mono,
+.r3-dense .r3-relic-hex__mono {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 720px) {
+  .r3-build.r3-dense .r3-relic-row,
+  .r3-dense .r3-relic-row,
+  .r3-relic-row {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+  }
+  .r3-build.r3-dense .r3-relic-row__seated,
+  .r3-dense .r3-relic-row__seated,
+  .r3-relic-row__seated {
+    display: none;
+  }
+  .r3-build.r3-dense .r3-relic-hex__name,
+  .r3-dense .r3-relic-hex__name,
+  .r3-relic-hex__name {
+    max-width: 5.5rem;
+  }
+}
+
+
+/* ── Artifact medallion cards (showcase craft) ── */
+.r3-artifact {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  min-width: 4.25rem;
+  max-width: 5.5rem;
+  min-height: 4.5rem;
+  padding: 0.35rem 0.3rem 0.3rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-stone-raised) 55%, transparent) 0%, transparent 42%),
+    var(--color-stone-800);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+}
+
+.r3-artifact__medallion {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+}
+
+.r3-artifact__medallion img {
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+  object-fit: contain;
+}
+
+.r3-artifact .r3-relic-hex__mono {
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 0.85rem;
+}
+
+.r3-artifact .r3-relic-hex__name {
+  max-width: 5rem;
+  font-size: 0.65rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.r3-artifact.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 55%, transparent),
+    2px 3px 0 color-mix(in srgb, var(--color-stone-950) 70%, transparent);
+}
+
+.r3-artifact.is-on .r3-artifact__medallion {
+  border-color: var(--color-gem-500);
+}
+
+.r3-artifact.is-sealed,
+.r3-artifact.is-sealed .r3-artifact__well {
+  pointer-events: none;
+  cursor: default;
+}
+
+.r3-artifact.is-sealed {
+  min-width: 2.75rem;
+  max-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.r3-artifact.is-sealed .r3-relic-hex__name {
+  display: none;
+}
+
+.r3-artifact__well {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #191309 0 2px,
+      var(--color-stone-900) 2px 5px
+    );
+  filter: saturate(0.36) brightness(0.72);
+  opacity: 0.85;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stone-750) 50%, transparent);
+}
+
+.r3-build.r3-dense .r3-relic-row {
+  min-height: 5rem;
+  align-items: center;
+  padding: 0.3rem 0.4rem;
+}
+
+.r3-build.r3-dense .r3-label {
+  font-family: var(--font-display), serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--color-gold-400);
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   r3-board — design-target layout (regions · tiers · blessings)
+   Matches the approved showcase wireframe. Equilibrium tokens only.
+   ═══════════════════════════════════════════════════════════ */
+
+.r3-board {
+  --r3-gap: 0.55rem;
+  min-height: 0;
+  color: var(--color-parch-100);
+  padding: 0.15rem 0 0.5rem;
+}
+
+.r3-board__frame {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-gold-500) 55%, var(--color-stone-750));
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 22%, var(--color-stone-900)) 0%,
+      var(--color-stone-900) 18%,
+      var(--color-stone-950) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-gold-400) 18%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-stone-950) 50%, transparent);
+}
+
+/* Plan seal uses shared Mast — tighten to sit inside gold frame */
+.r3-board .r3-build__mast {
+  margin: 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+}
+
+.r3-board .r3-build__title {
+  color: var(--color-gold-400);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+}
+
+.r3-board .r3-build__count {
+  font-size: 1.5rem;
+  color: var(--color-gem-300);
+  font-weight: 700;
+}
+
+.r3-board__zone {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.45rem 0.5rem 0.55rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-stone-900) 88%, var(--color-stone-850));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent);
+}
+
+.r3-board__zone-title {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-400);
+}
+
+/* ── Regions: ONE grid, 11 equal tiles (ChatGPT window) ──
+   Only .r3-board__crests owns the grid. Children are direct .r3-seal buttons.
+   Do not nest another grid. Do not use flex-grow on tiles. */
+.r3-board__crests {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* Board tile skin — highest specificity so legacy .r3-seal / dense rules lose */
+.r3-board__crests > .r3-seal {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.22rem;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  min-height: 5.6rem;
+  height: auto;
+  margin: 0;
+  padding: 0.45rem 0.2rem 0.35rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 32%, var(--color-stone-800)) 0%,
+      var(--color-stone-800) 100%
+    );
+  color: var(--color-parch-100);
+  cursor: pointer;
+  flex: none;
+  opacity: 1;
+  filter: none;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+}
+
+.r3-board__crests > .r3-seal > .r3-seal__crest {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 0;
+}
+
+/* RegionCrest sets inline width/height — leave art alone; well is fixed */
+.r3-board__crests > .r3-seal > .r3-seal__crest > .r3-seal__crest-art {
+  display: block;
+}
+
+.r3-board__crests > .r3-seal > .r3-seal__name {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0.1rem;
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-parch-50);
+}
+
+.r3-board__crests > .r3-seal > .r3-seal__meta {
+  display: block;
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--color-parch-300);
+}
+
+.r3-board__crests > .r3-seal.is-on {
+  border-color: var(--color-gem-400);
+  opacity: 1;
+  filter: none;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-gem-600) 24%, var(--color-stone-800)) 0%,
+      var(--color-stone-800) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 22%, transparent);
+}
+
+.r3-board__crests > .r3-seal.is-on > .r3-seal__meta {
+  color: var(--color-gem-300);
+}
+
+.r3-board__crests > .r3-seal.is-dim:not(.is-on):not(.is-blocked) {
+  opacity: 0.7;
+  filter: saturate(0.72);
+  border-color: var(--color-stone-750);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 20%, var(--color-stone-800)) 0%,
+      var(--color-stone-800) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent);
+}
+
+.r3-board__crests > .r3-seal.is-blocked,
+.r3-board__crests > .r3-seal[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.4) saturate(0.45);
+}
+
+/* ── Relic tiers: full-width rows, 3 seats ── */
+.r3-board__relics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.r3-board__tier {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 1.25rem;
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 3.15rem;
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-stone-950) 55%, var(--color-stone-850));
+}
+
+.r3-board__tier-id {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-parch-300);
+  text-align: center;
+}
+
+.r3-board__seats {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.r3-board__seat {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 7.5rem;
+  max-width: 11rem;
+  min-height: 2.55rem;
+  padding: 0.25rem 0.45rem 0.25rem 0.3rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 35%, var(--color-stone-800)) 0%,
+      var(--color-stone-800) 100%
+    );
+  color: var(--color-parch-100);
+  cursor: pointer;
+  text-align: left;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+}
+
+.r3-board__seat-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+}
+
+.r3-board__seat-icon img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.r3-board__seat-mono {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-stone-750);
+  font-family: var(--font-display), serif;
+  font-size: 0.7rem;
+  color: var(--color-gold-400);
+}
+
+.r3-board__seat-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.r3-board__seat.is-on {
+  border-color: var(--color-gem-400);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 20%, transparent);
+}
+
+.r3-board__seat.is-empty {
+  min-width: 2.55rem;
+  max-width: 2.55rem;
+  justify-content: center;
+  padding: 0;
+  cursor: default;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--color-stone-inset) 80%, var(--color-stone-900));
+  opacity: 0.75;
+}
+
+.r3-board__seat-plus {
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--color-parch-300);
+  opacity: 0.55;
+}
+
+.r3-board__tier.is-sealed .r3-board__seat.is-empty {
+  filter: saturate(0.4) brightness(0.78);
+}
+
+.r3-board__tier-mark {
+  font-size: 0.55rem;
+  color: var(--color-parch-300);
+  opacity: 0.45;
+  text-align: center;
+}
+
+/* Hover tip — item popup */
+.r3-board__seat .r3-relic-tip {
+  display: none;
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  bottom: calc(100% + 6px);
+  width: min(19rem, 70vw);
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: var(--radius-sm);
+  background: var(--color-stone-950);
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    3px 5px 0 color-mix(in srgb, var(--color-stone-950) 75%, transparent);
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.r3-board__seat .r3-relic-tip strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--font-display), serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-gold-400);
+}
+
+.r3-board__seat .r3-relic-tip ul {
+  margin: 0;
+  padding-left: 0.95rem;
+  font-size: 0.75rem;
+  color: var(--color-parch-100);
+}
+
+.r3-board__seat .r3-relic-tip li + li {
+  margin-top: 0.15rem;
+}
+
+.r3-board__seat:hover .r3-relic-tip,
+.r3-board__seat:focus-visible .r3-relic-tip {
+  display: block;
+}
+
+.r3-board__tier:nth-child(-n + 2) .r3-board__seat .r3-relic-tip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+/* ── Blessings belt ── */
+.r3-board__zone--bless {
+  padding-bottom: 0.45rem;
+}
+
+.r3-board__lattice,
+.r3-board .r3-lattice {
+  display: grid;
+  grid-template-columns: auto repeat(8, 1.55rem);
+  gap: 0.18rem;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+}
+
+.r3-board .r3-lattice__path {
+  min-height: 1.55rem;
+  padding: 0.12rem 0.3rem;
+  font-size: 0.65rem;
+}
+
+.r3-board .r3-lattice__cell,
+.r3-board .r3-lattice__head {
+  width: 1.55rem;
+  height: 1.55rem;
+  max-width: 1.55rem;
+  min-height: 0;
+}
+
+@media (max-width: 1200px) {
+  .r3-board__crests {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .r3-board__crests {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .r3-board__seat {
+    min-width: 5.5rem;
+  }
+  .r3-board__seat-name {
+    max-width: 3.5rem;
+  }
+}

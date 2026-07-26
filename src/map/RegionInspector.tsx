@@ -11,6 +11,9 @@
  *
  * Hard rules and the source line stay outside the tabs — they qualify every tab,
  * and e2e pins both.
+ *
+ * Under-board Board Sky dossier: framed note + places-pinned meter over live
+ * catalog counts only. No concept fixture drops, no invented lore.
  */
 
 import { useMemo, useState } from "react";
@@ -140,6 +143,8 @@ export function RegionInspector({
 
   const planner = regions.find((r) => r.id === focus.region);
   const detail = REGION_DETAIL.get(focus.region);
+  // Names on the board (catalog areas + content-row sites). Sites never pad the
+  // places-pinned ratio — that meter is catalog areas only.
   const anchored = useMemo(
     () => new Set((PLACES_BY_REGION.get(focus.region) ?? []).map((p) => p.area)),
     [focus.region],
@@ -165,18 +170,62 @@ export function RegionInspector({
   );
   const places = detail.areas.filter((area) => !needle || area.toLowerCase().includes(needle));
 
-  const empty = <p className="py-3 text-sm text-parch-300">Nothing mapped.</p>;
+  // Honest meter: catalog areas with a board pin / catalog areas. Site pins
+  // (bosses, guilds) sit on the rail separately and do not inflate the ratio.
+  const placesTotal = detail.areas.length;
+  const pinnedTotal = detail.areas.reduce((n, area) => n + (anchored.has(area) ? 1 : 0), 0);
+  const pinSegs = Math.min(12, Math.max(placesTotal, 1));
+  const pinLit =
+    placesTotal <= pinSegs
+      ? pinnedTotal
+      : Math.round((pinnedTotal / Math.max(placesTotal, 1)) * pinSegs);
+  const framedNote = focus.framed ? "Framed" : "Unframed";
+
+  const empty = <p className="py-2 text-sm text-parch-300">Nothing mapped.</p>;
 
   return (
     <section className="panel" aria-label="Region detail" aria-live="polite">
-      <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
-        {planner.name}
-        <span className="text-xs normal-case tracking-normal text-parch-300">
-          {UNLOCK_TEXT[planner.availability]}
-        </span>
+      <div className="board-sky__dossier-band">
+        <div className="board-sky__dossier-copy">
+          <div className="panel-head flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-0 bg-transparent p-0">
+            <span>
+              {planner.name}
+              <span className="ml-2 text-xs normal-case tracking-normal text-parch-300">
+                · {framedNote}
+              </span>
+            </span>
+            <span className="text-xs normal-case tracking-normal text-parch-300">
+              {UNLOCK_TEXT[planner.availability]}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-parch-200">
+            {focus.framed
+              ? "Rail or board pin selects a place. Tables below are catalog rows only."
+              : "Frame from ledger or board to raise the slab and open places."}
+          </p>
+        </div>
+        <div className="board-sky__pin-meter" aria-label="Places pinned">
+          <div className="text-[11px] uppercase tracking-wide text-parch-400">Places pinned</div>
+          <div className="stat-key text-gem-400">
+            <span className="num">
+              {pinnedTotal}/{placesTotal}
+            </span>
+          </div>
+          <p className="mt-0.5 text-[11px] normal-case tracking-normal text-parch-500">
+            catalog areas on the board
+          </p>
+          <div className="board-sky__pin-track" aria-hidden="true">
+            {Array.from({ length: pinSegs }).map((_, i) => (
+              <span
+                key={i}
+                className={`board-sky__pin-seg${i < pinLit ? " is-on" : ""}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="stat-strip border-b border-stone-800 px-3.5 py-2.5">
+      <div className="stat-strip border-b border-stone-800 px-3.5 py-2">
         {[
           ["Quests", planner.quests],
           ["Bosses", detail.bosses.length],
@@ -191,21 +240,24 @@ export function RegionInspector({
       </div>
 
       {detail.hardRules.length > 0 || detail.skills.length > 0 ? (
-        <div className="border-b border-stone-800 px-3.5 py-2.5">
+        <div className="border-b border-stone-800 px-3.5 py-2">
           {detail.skills.length > 0 ? (
-            <p className="mb-2 text-xs text-parch-400">
+            <p className="mb-1.5 text-xs text-parch-400">
               Skills · <span className="text-parch-100">{detail.skills.join(" · ")}</span>
             </p>
           ) : null}
           {detail.hardRules.map((rule) => (
-            <p key={rule} className="mb-1.5 border-l-2 border-gem-500 pl-3 text-sm text-parch-100 last:mb-0">
+            <p
+              key={rule}
+              className="mb-1.5 border-l-2 border-gem-500 pl-3 text-sm text-parch-100 last:mb-0"
+            >
               {rule}
             </p>
           ))}
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-stone-800 px-3.5 py-2">
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-stone-800 px-3.5 py-1.5">
         {TABS.map(({ id, label }) => {
           const count = countFor(detail, id);
           return (

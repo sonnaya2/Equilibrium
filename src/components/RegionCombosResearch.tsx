@@ -91,13 +91,13 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "hard-required",
-    label: "Hard combos",
+    label: "Required",
     description: "",
     rows: hard as ResearchRow[],
   },
   {
     key: "pressure-only",
-    label: "Soft only",
+    label: "Optional",
     description: "",
     rows: pressure as ResearchRow[],
   },
@@ -115,19 +115,19 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "modeled",
-    label: "In catalog",
+    label: "Covered",
     description: "",
     rows: [...modeled, ...partial] as ResearchRow[],
   },
   {
     key: "gaps",
-    label: "Gaps",
+    label: "Missing",
     description: "",
     rows: gaps as ResearchRow[],
   },
   {
     key: "global-issues",
-    label: "Global issues",
+    label: "Open questions",
     description: "",
     rows: issues as ResearchRow[],
   },

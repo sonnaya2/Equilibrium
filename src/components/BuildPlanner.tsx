@@ -1,29 +1,21 @@
 "use client";
 
 /**
- * Build — Leagues II: Equilibrium client menu skin
- * (Jagex news screenshots: relicmenu.jpg / blessing.jpg).
- * Tabs: Regions · Relics · Blessings · Share
- * Relics: left choice column + locked tier grid.
- * Blessings: Order/Chaos/Balance path cells.
- * T1 relic portraits from official countdown news (CC fan use / credit Jagex).
+ * Production Build board — regions, all relic tiers, blessing lattice.
+ * Same surface as the Menu Court lab; live useBuild (shared with Map).
  */
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { canSelectElective, type RegionId } from "@/league";
 import {
-  blessingResetsLeft,
-  canSelectElective,
-  type RegionId,
-} from "@/league";
-import {
-  BLESSING_PATHS,
   godTierAlignments,
   PATH_TIERS,
   type BlessingPath,
 } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
-import { buildHasContent, useBuild } from "@/league/useBuild";
-import "./build-game-menu.css";
+import { useBuild } from "@/league/useBuild";
+import { regionCrestPath } from "@/lib/gameArt";
+import "./build-board.css";
 
 export type PlannerRegion = {
   id: string;
@@ -62,20 +54,12 @@ export type BlessingTier = {
   verified?: boolean;
 };
 
-const TABS = [
-  { id: "regions", label: "Regions" },
-  { id: "relics", label: "Relics" },
-  { id: "blessings", label: "Blessings" },
-  { id: "share", label: "Share" },
-] as const;
+const SEATS = 3;
 
-type TabId = (typeof TABS)[number]["id"];
-
-/** Official countdown portraits (Jagex CDN, mirrored under public/game/relics). */
-const RELIC_ART: Record<string, string> = {
-  Survivalist: "/game/relics/survivalist.jpg",
-  "Endless Harvest": "/game/relics/endless-harvest.jpg",
-  "Golden Touch": "/game/relics/golden-touch.jpg",
+const RELIC_ICON: Record<string, string> = {
+  Survivalist: "/game/relics/survivalist.png",
+  "Endless Harvest": "/game/relics/endless-harvest.png",
+  "Golden Touch": "/game/relics/golden-touch.png",
 };
 
 const RELIC_MONO: Record<string, string> = {
@@ -84,40 +68,36 @@ const RELIC_MONO: Record<string, string> = {
   "Golden Touch": "GT",
 };
 
-/** Passive XP line shown on client next to Tier 1 (from official menu). */
-const TIER_PASSIVE: Record<number, string> = {
-  1: "5 × XP",
-  2: "—",
-  3: "—",
-  4: "—",
-  5: "—",
-  6: "—",
-  7: "—",
-};
-
-function availabilityLabel(value: string): string {
-  if (value === "automatic_early") return "milestone";
+function availLabel(value: string): string {
+  if (value === "automatic_early") return "early";
   if (value === "starting") return "start";
-  return "elective";
+  if (value === "elective") return "pick";
+  return value.replaceAll("_", " ");
 }
 
-function pathClass(path: string): string {
-  if (path === "Chaos") return "build-game__path-chaos";
-  if (path === "Balance") return "build-game__path-balance";
-  if (path === "Order") return "build-game__path-order";
-  return "";
+function shortName(name: string): string {
+  if (name.length <= 11) return name;
+  const first = name.split(/\s+/)[0] ?? name;
+  return first.length <= 11 ? first : `${first.slice(0, 10)}...`;
+}
+
+function relicIcon(name: string): string | undefined {
+  return RELIC_ICON[name];
+}
+
+function relicMono(name: string): string {
+  return RELIC_MONO[name] ?? "·";
 }
 
 export function BuildPlanner({
   regions,
   relicTiers,
   blessingTiers,
-  resetCount,
 }: {
   regions: PlannerRegion[];
   relicTiers: RelicTier[];
   blessingTiers: BlessingTier[];
-  resetCount: number;
+  resetCount?: number;
 }) {
   const {
     build,
@@ -125,343 +105,298 @@ export function BuildPlanner({
     toggleRegion,
     toggleRelic,
     pickBlessing,
-    resetBlessings,
     clearElectives,
     resetBuild,
   } = useBuild();
 
-  const [tab, setTab] = useState<TabId>("relics");
-  const [focusRelicTier, setFocusRelicTier] = useState(1);
   const [copyFeedback, setCopyFeedback] = useState<"idle" | "ok" | "err">("idle");
 
   const picks = build.elective;
   const pickCounter = loaded ? `${picks.length}/3` : "…/3";
-  const hasFullBuild = buildHasContent(build);
-  const resetsLeft = blessingResetsLeft(build);
   const alignments = godTierAlignments(build.blessingPicks);
 
-  const paths = useMemo(
-    () => blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"],
-    [blessingTiers],
-  );
-
-  const focusTier =
-    relicTiers.find((t) => t.tier === focusRelicTier) ?? relicTiers[0];
-  const seatedName = focusTier ? build.relics[String(focusTier.tier)] ?? null : null;
-  const seated =
-    focusTier?.choices.find((c) => c.name === seatedName) ?? null;
-
-  /** Locked grid slots: remaining choices on this tier + unrevealed higher tiers. */
-  const lockedSlots = useMemo(() => {
-    const slots: { key: string; label: string }[] = [];
-    for (const tier of relicTiers) {
-      if (tier.tier === focusRelicTier && tier.revealed) {
-        for (let i = 0; i < 18; i++) {
-          slots.push({ key: `t${tier.tier}-pad-${i}`, label: "" });
-        }
-      } else if (!tier.revealed || tier.choices.length === 0) {
-        for (let i = 0; i < 3; i++) {
-          slots.push({ key: `t${tier.tier}-lock-${i}`, label: `T${tier.tier}` });
-        }
-      }
-    }
-    return slots.slice(0, 24);
-  }, [relicTiers, focusRelicTier]);
-
-  const flashCopy = (next: "ok" | "err") => {
+  const flash = (next: "ok" | "err") => {
     setCopyFeedback(next);
-    setTimeout(() => setCopyFeedback("idle"), 1500);
+    window.setTimeout(() => setCopyFeedback("idle"), 1400);
   };
 
   const copyShareLink = () => {
     if (!navigator.clipboard?.writeText) {
-      flashCopy("err");
+      flash("err");
       return;
     }
     void navigator.clipboard
       .writeText(buildShareUrl(build))
-      .then(() => flashCopy("ok"))
-      .catch(() => flashCopy("err"));
+      .then(() => flash("ok"))
+      .catch(() => flash("err"));
   };
 
-  const trackLit = Math.min(7, Object.keys(build.relics).length + (picks.length > 0 ? 1 : 0));
+  const copyLabel =
+    copyFeedback === "ok" ? "Copied" : copyFeedback === "err" ? "Failed" : "Copy link";
 
   return (
-    <div className="build-game build-screen">
-      <div className="build-game__frame">
-        <header className="build-game__titlebar">
-          <span className="build-game__logo" aria-hidden />
-          <h1 className="build-game__title">Leagues II: Equilibrium</h1>
-          <p className="build-game__title-meta" aria-live="polite">
-            Picks <strong>{pickCounter}</strong>
-            {seatedName ? (
-              <>
-                {" "}
-                · <strong>{RELIC_MONO[seatedName] ?? seatedName}</strong>
-              </>
-            ) : null}
-          </p>
+    <div className="mc">
+      <div className="mc__frame">
+        <header className="mc__seal">
+          <h1 className="mc__title">Build</h1>
+          <span className="mc__count" aria-live="polite">
+            {pickCounter}
+          </span>
+          {build.blessingPicks.length > 0 ? (
+            <span
+              className="mc__pips"
+              aria-label={`Path ${build.blessingPicks.join(" then ")}`}
+            >
+              {build.blessingPicks.map((p, i) => (
+                <span
+                  key={`${p}-${i}`}
+                  className={`mc__pip is-${p.toLowerCase()}`}
+                  title={p}
+                />
+              ))}
+            </span>
+          ) : null}
+          <div className="mc__actions">
+            <button
+              type="button"
+              className="mc__btn"
+              disabled={!loaded || picks.length === 0}
+              onClick={clearElectives}
+            >
+              Clear picks
+            </button>
+            <button
+              type="button"
+              className="mc__btn mc__btn--gem"
+              disabled={!loaded}
+              onClick={copyShareLink}
+            >
+              {copyLabel}
+            </button>
+            <button
+              type="button"
+              className="mc__btn"
+              disabled={!loaded}
+              onClick={resetBuild}
+            >
+              Reset build
+            </button>
+          </div>
         </header>
 
-        <div className="build-game__tabs" role="tablist" aria-label="Build sections">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.id}
-              className={`build-game__tab${tab === t.id ? " is-on" : ""}`}
-              onClick={() => setTab(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        <section className="mc__zone" aria-label="Regions">
+          <h2 className="mc__zone-title">Regions</h2>
+          <div className="mc__crests">
+            {regions.map((region) => {
+              const elective = region.availability === "elective";
+              const selectable =
+                elective && canSelectElective(build, region.id as RegionId);
+              const blocked = elective && (!loaded || !selectable);
+              const isOn = !elective || picks.includes(region.id as RegionId);
+              const meta = availLabel(region.availability);
+              const status = blocked
+                ? "blocked"
+                : isOn && elective
+                  ? "picked"
+                  : meta;
+              const cls = [
+                "mc__crest",
+                isOn ? "is-on" : "",
+                elective && !isOn ? "is-dim" : "",
+                blocked ? "is-blocked" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
 
-        <div className="build-game__track">
-          <span className="build-game__track-gem" aria-hidden />
-          <span>
-            {tab === "blessings"
-              ? `Blessing path · ${build.blessingPicks.length || 0} chosen`
-              : `League plan · ${Object.keys(build.relics).length} relics seated`}
-          </span>
-          <div className="build-game__track-bar" aria-hidden>
-            <div
-              className="build-game__track-fill"
-              style={{ width: `${Math.min(100, (trackLit / 7) * 100)}%` }}
-            />
-          </div>
-          <div className="build-game__track-pips" aria-hidden>
-            {Array.from({ length: 7 }, (_, i) => (
-              <span
-                key={i}
-                className={`build-game__track-pip${i < trackLit ? " is-lit" : ""}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="build-game__body">
-          {tab === "regions" ? (
-            <div className="build-game__regions" aria-busy={!loaded}>
-              <div className="build-game__tier-label">
-                <strong>Region unlocks</strong>
+              return (
                 <button
+                  key={region.id}
                   type="button"
-                  className="build-game__btn"
-                  disabled={!loaded || picks.length === 0}
-                  onClick={clearElectives}
+                  className={cls}
+                  aria-pressed={isOn}
+                  aria-disabled={blocked || undefined}
+                  disabled={blocked}
+                  aria-label={`${region.name}, ${status}`}
+                  onClick={() => {
+                    if (elective && loaded && selectable) {
+                      toggleRegion(region.id as RegionId);
+                    }
+                  }}
                 >
-                  Clear picks
-                </button>
-              </div>
-              <div
-                className={`build-game__region-grid${loaded ? "" : " build-game__loading"}`}
-              >
-                {regions.map((region) => {
-                  const elective = region.availability === "elective";
-                  const selectable =
-                    elective && canSelectElective(build, region.id as RegionId);
-                  const pickBlocked = elective && (!loaded || !selectable);
-                  const isOn = !elective || picks.includes(region.id as RegionId);
-                  return (
-                    <button
-                      key={region.id}
-                      type="button"
-                      aria-pressed={isOn}
-                      aria-disabled={pickBlocked || undefined}
-                      className={`build-game__region${isOn ? " is-on" : ""}${
-                        pickBlocked ? " is-blocked" : ""
-                      }`}
-                      onClick={() => {
-                        if (elective && loaded && selectable) {
-                          toggleRegion(region.id as RegionId);
-                        }
-                      }}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/game/regions/${region.id}.png`}
-                        alt=""
-                        width={28}
-                        height={32}
-                      />
-                      <span className="build-game__region-name">{region.name}</span>
-                      <span className="build-game__region-meta">
-                        {isOn
-                          ? elective
-                            ? "picked"
-                            : availabilityLabel(region.availability)
-                          : `${region.primaryQuests} quests`}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-
-          {tab === "relics" ? (
-            <div className="build-game__relics">
-              <div>
-                <div className="build-game__tier-label">
-                  <strong>Tier {focusTier?.tier ?? 1}</strong>
-                  <span className="build-game__passive">
-                    {TIER_PASSIVE[focusTier?.tier ?? 1] ?? "—"}
+                  <span
+                    className="mc__crest-art"
+                    aria-hidden
+                    style={{ backgroundImage: `url(${regionCrestPath(region.id)})` }}
+                  />
+                  <span className="mc__crest-name" aria-hidden>
+                    {region.name}
                   </span>
-                </div>
-                <div className="build-game__choice-col" role="listbox" aria-label="Relic choices">
-                  {(focusTier?.revealed ? focusTier.choices : []).map((relic) => {
-                    const on = build.relics[String(focusTier!.tier)] === relic.name;
-                    const art = RELIC_ART[relic.name];
-                    const mono = RELIC_MONO[relic.name] ?? "·";
-                    return (
-                      <button
-                        key={relic.name}
-                        type="button"
-                        role="option"
-                        aria-selected={on}
-                        aria-pressed={on}
-                        className={`build-game__choice${on ? " is-on" : ""}`}
-                        onClick={() => toggleRelic(focusTier!.tier, relic.name)}
-                      >
-                        <span className="build-game__choice-icon" aria-hidden>
-                          {art ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={art} alt="" />
-                          ) : (
-                            <span className="mono-fallback">{mono}</span>
-                          )}
-                        </span>
-                        <span className="build-game__choice-name">{relic.name}</span>
-                      </button>
-                    );
-                  })}
-                  {(!focusTier?.revealed || focusTier.choices.length === 0) && (
-                    <p className="build-game__hint">Sealed until reveal.</p>
-                  )}
-                </div>
+                  <span className="mc__crest-meta" aria-hidden>
+                    {meta}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
+        <section className="mc__zone" aria-label="Relics">
+          <h2 className="mc__zone-title">Relics · hover for effects</h2>
+          <div className="mc__relics">
+            {relicTiers.map((tier) => {
+              const open = tier.revealed && tier.choices.length > 0;
+              const seated = build.relics[String(tier.tier)] ?? null;
+              const choices = open ? tier.choices : [];
+              const seats = Array.from({ length: SEATS }, (_, i) => choices[i] ?? null);
+
+              return (
                 <div
-                  className="build-game__tier-rail"
-                  role="tablist"
-                  aria-label="Relic tiers"
+                  key={tier.tier}
+                  className={`mc__tier${open ? "" : " is-sealed"}`}
+                  role="group"
+                  aria-label={`Tier ${tier.tier}${open ? "" : " sealed"}`}
                 >
-                  {relicTiers.map((tier) => {
-                    const open = tier.revealed && tier.choices.length > 0;
-                    const on = focusRelicTier === tier.tier;
-                    return (
-                      <button
-                        key={tier.tier}
-                        type="button"
-                        role="tab"
-                        aria-selected={on}
-                        className={`build-game__btn${on ? " build-game__btn--gem" : ""}`}
-                        onClick={() => setFocusRelicTier(tier.tier)}
-                        title={open ? `Tier ${tier.tier}` : `Tier ${tier.tier} unrevealed`}
-                      >
-                        T{tier.tier}
-                        {!open ? " ·" : ""}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="build-game__relic-pane">
-                <div className="build-game__slot-grid" aria-label="Locked relic slots">
-                  {lockedSlots.map((slot) => (
-                    <div
-                      key={slot.key}
-                      className="build-game__slot is-locked"
-                      title="Unrevealed"
-                    >
-                      <span className="build-game__slot-hex" aria-hidden />
-                      {slot.label ? <span>{slot.label}</span> : null}
-                    </div>
-                  ))}
-                </div>
-                {seated ? (
-                  <div className="build-game__detail">
-                    <h3>{seated.name}</h3>
-                    <ul>
-                      {seated.effects.map((fx) => (
-                        <li key={fx}>{fx}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : focusTier?.revealed ? (
-                  <div className="build-game__detail">
-                    <h3>Select a relic</h3>
-                    <p>Pick one Tier {focusTier.tier} choice.</p>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          ) : null}
-
-          {tab === "blessings" ? (
-            <div className="build-game__bless">
-              <div className="build-game__bless-actions">
-                <div className="build-game__tier-label">
-                  <strong>Blessing paths</strong>
-                  <span className="build-game__bless-note">
-                    Order · Chaos · Balance · God 4 &amp; 8
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="build-game__btn"
-                  disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
-                  onClick={resetBlessings}
-                >
-                  Reset ({resetsLeft}/{resetCount})
-                </button>
-              </div>
-
-              <div className="build-game__bless-grid" role="grid" aria-label="Blessing lattice">
-                <span className="build-game__bless-corner" />
-                {blessingTiers.map((tier) => (
-                  <span key={tier.tier} className="build-game__bless-colhead">
+                  <span className="mc__tier-id" aria-hidden>
                     T{tier.tier}
-                    {tier.godTier ? "★" : ""}
                   </span>
-                ))}
-                {paths.flatMap((path) => {
-                  const label = (
-                    <span
-                      key={`${path}-label`}
-                      className={`build-game__bless-path ${pathClass(path)}`}
-                    >
-                      {path}
+                  <div
+                    className="mc__seats"
+                    role="listbox"
+                    aria-label={`Tier ${tier.tier} choices`}
+                  >
+                    {seats.map((relic, i) => {
+                      if (!relic) {
+                        return (
+                          <span
+                            key={`e-${tier.tier}-${i}`}
+                            className="mc__seat is-empty"
+                            title={open ? undefined : "Sealed until reveal"}
+                            aria-hidden
+                          >
+                            <span className="mc__seat-plus">+</span>
+                          </span>
+                        );
+                      }
+                      const on = seated === relic.name;
+                      const icon = relicIcon(relic.name);
+                      const mono = relicMono(relic.name);
+                      return (
+                        <button
+                          key={relic.name}
+                          type="button"
+                          role="option"
+                          aria-selected={on}
+                          aria-pressed={on}
+                          aria-label={relic.name}
+                          className={`mc__seat${on ? " is-on" : ""}`}
+                          onClick={() => toggleRelic(tier.tier, relic.name)}
+                        >
+                          {icon ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={icon} alt="" width={32} height={32} />
+                          ) : (
+                            <span className="mc__seat-mono" aria-hidden>
+                              {mono}
+                            </span>
+                          )}
+                          <span className="mc__seat-name">{shortName(relic.name)}</span>
+                          <span className="mc__tip" role="tooltip">
+                            <strong>{relic.name}</strong>
+                            <ul>
+                              {relic.effects.map((fx) => (
+                                <li key={fx}>{fx}</li>
+                              ))}
+                            </ul>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <span className="mc__tier-mark" aria-hidden />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mc__zone mc__zone--bless" aria-label="Blessings">
+          <h2 className="mc__zone-title">Blessings</h2>
+          <div className="mc__bless-board">
+            <div
+              className="mc__lattice"
+              role="grid"
+              aria-label="Blessing path lattice"
+              style={{
+                gridTemplateColumns: `7.25rem repeat(${blessingTiers.length}, 3.5rem)`,
+              }}
+            >
+              <span className="mc__lat-corner" aria-hidden />
+              {blessingTiers.map((t) => (
+                <span
+                  key={t.tier}
+                  className={`mc__lat-head${t.godTier ? " is-god" : ""}`}
+                >
+                  T{t.tier}
+                  {t.godTier ? "?" : ""}
+                </span>
+              ))}
+
+              {(["Order", "Balance", "Chaos"] as const).map((path) => (
+                <div key={path} style={{ display: "contents" }}>
+                  <div className={`mc__lat-path is-${path.toLowerCase()}`}>
+                    <span className="mc__lat-ico" aria-hidden>
+                      {path === "Order" ? (
+                        <svg viewBox="0 0 16 16" width="14" height="14">
+                          <path
+                            fill="currentColor"
+                            d="M8 1.2 8.9 5h3.6L9.7 7.3l1 3.9L8 9.2l-2.7 2 1-3.9L3.5 5h3.6L8 1.2z"
+                          />
+                        </svg>
+                      ) : path === "Balance" ? (
+                        <svg viewBox="0 0 16 16" width="14" height="14">
+                          <path
+                            fill="currentColor"
+                            d="M8 1v2.2L3.5 5.5 2 9.5h4L8 5.8l2 3.7h4L12.5 5.5 8 3.2V1zm0 9.5L5.8 14h4.4L8 10.5z"
+                          />
+                        </svg>
+                      ) : (
+                        <svg viewBox="0 0 16 16" width="14" height="14">
+                          <path
+                            fill="currentColor"
+                            d="M8 1c1.2 2.4 3.8 3.8 3.8 6.4A3.8 3.8 0 0 1 8 15a3.8 3.8 0 0 1-3.8-3.6C4.2 8.8 6.8 7.4 8 1z"
+                          />
+                        </svg>
+                      )}
                     </span>
-                  );
-                  const cells = blessingTiers.map((tier) => {
+                    <span className="mc__lat-path-name">{path}</span>
+                  </div>
+                  {blessingTiers.map((tier) => {
                     if (tier.godTier) {
                       const god = alignments[tier.tier];
                       const lit = god === path;
                       return (
                         <div
                           key={`${path}-${tier.tier}`}
-                          className={`build-game__bless-cell is-god${lit ? " is-on" : " is-locked"}`}
+                          className={`mc__lat-cell is-god${lit ? " is-on" : ""}`}
+                          role="img"
                           title={
-                            god
-                              ? `God Tier ${tier.tier}: ${god}`
-                              : `God Tier ${tier.tier} undecided`
+                            lit
+                              ? `God T${tier.tier}: ${path}`
+                              : `God T${tier.tier} undecided`
                           }
-                          aria-label={`Tier ${tier.tier} God ${path}${lit ? " active" : ""}`}
+                          aria-label={`${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`}
                         >
-                          <span className="build-game__bless-dot" aria-hidden />
+                          <span className="mc__lat-fill" aria-hidden />
                         </div>
                       );
                     }
                     const pickIndex = PATH_TIERS.indexOf(tier.tier);
-                    const validPath = (BLESSING_PATHS as readonly string[]).includes(path);
-                    if (pickIndex < 0 || !validPath) {
+                    if (pickIndex < 0) {
                       return (
                         <div
                           key={`${path}-${tier.tier}`}
-                          className="build-game__bless-cell is-locked"
+                          className="mc__lat-cell"
+                          aria-hidden
                         />
                       );
                     }
@@ -473,101 +408,19 @@ export function BuildPlanner({
                         type="button"
                         disabled={locked}
                         aria-pressed={selected}
-                        aria-label={`Tier ${tier.tier} ${path}`}
-                        className={`build-game__bless-cell${
-                          locked ? " is-locked" : " is-open"
-                        }${selected ? " is-on" : ""}`}
+                        aria-label={`${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`}
+                        className={`mc__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}`}
                         onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
                       >
-                        <span className="build-game__bless-dot" aria-hidden />
+                        <span className="mc__lat-fill" aria-hidden />
                       </button>
                     );
-                  });
-                  return [label, ...cells];
-                })}
-              </div>
-              <p className="build-game__hint">
-                {blessingTiers.some((t) => t.revealed)
-                  ? blessingTiers
-                      .filter((t) => t.godTier)
-                      .map((t) =>
-                        alignments[t.tier]
-                          ? `T${t.tier} ${alignments[t.tier]} God`
-                          : `T${t.tier} God undecided`,
-                      )
-                      .join(" · ")
-                  : "Paths plan now; choices unrevealed."}
-              </p>
+                  })}
+                </div>
+              ))}
             </div>
-          ) : null}
-
-          {tab === "share" ? (
-            <div className="build-game__share">
-              <div className="build-game__tier-label">
-                <strong>Share plan</strong>
-              </div>
-              <p className="build-game__hint">
-                Copies regions, relics, and blessing path.
-              </p>
-              <div className="build-game__footer">
-                <button
-                  type="button"
-                  className="build-game__btn build-game__btn--gem"
-                  onClick={copyShareLink}
-                >
-                  {copyFeedback === "ok"
-                    ? "Copied"
-                    : copyFeedback === "err"
-                      ? "Copy failed"
-                      : "Copy link"}
-                </button>
-                <button
-                  type="button"
-                  className="build-game__btn"
-                  disabled={!loaded || picks.length === 0}
-                  onClick={clearElectives}
-                >
-                  Clear picks
-                </button>
-                <button
-                  type="button"
-                  className="build-game__btn"
-                  disabled={!loaded || !hasFullBuild}
-                  onClick={resetBuild}
-                >
-                  Reset build
-                </button>
-              </div>
-              <p className="build-game__share-line">
-                {pickCounter}
-                {seatedName ? ` · ${seatedName}` : ""}
-                {build.blessingPicks.length
-                  ? ` · ${build.blessingPicks.join(" → ")}`
-                  : ""}
-              </p>
-            </div>
-          ) : null}
-
-          {tab !== "share" ? (
-            <div className="build-game__footer">
-              <button
-                type="button"
-                className="build-game__btn"
-                disabled={!loaded || picks.length === 0}
-                onClick={clearElectives}
-              >
-                Clear picks
-              </button>
-              <button
-                type="button"
-                className="build-game__btn build-game__btn--gem"
-                onClick={copyShareLink}
-              >
-                {copyFeedback === "ok" ? "Copied" : "Copy link"}
-              </button>
-            </div>
-          ) : null}
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const SECTIONS: Array<{ key: SectionKey; label: string }> = [
   { key: "prayer_unlocks", label: "Prayers" },
   { key: "account_unlocks", label: "Account" },
   { key: "activity_unlocks", label: "Activities" },
-  { key: "equipment_models", label: "Equipment rules" },
+  { key: "equipment_models", label: "Equipment" },
   { key: "consumable_unlocks", label: "Consumables" },
 ];
 
@@ -276,8 +276,8 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "effect", label: "Effect" },
   { key: "milestones", label: "Milestones" },
   { key: "tiers", label: "Tiers" },
-  { key: "rules", label: "Rules" },
-  { key: "account_rule", label: "Rule" },
+  { key: "rules", label: "How it works" },
+  { key: "account_rule", label: "Account" },
   { key: "stand_rule", label: "Stand" },
   { key: "tier_1_rule", label: "Tier 1" },
   { key: "tier_2_rule", label: "Tier 2" },
@@ -330,7 +330,12 @@ export function PermanentUnlockResearch() {
     const source = rowsFor(section);
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
-    return source.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));
+    return source.filter((row) => {
+      const hay = [title(row), region(row), ...details(row), ...links(row)]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(needle);
+    });
   }, [query, section]);
 
   return (
@@ -345,7 +350,7 @@ export function PermanentUnlockResearch() {
         />
       </div>
 
-      <div role="tablist" aria-label="Unlock sections" className="comp-seg mt-2 overflow-x-auto">
+      <div role="tablist" aria-label="Unlock sections" className="comp-seg mt-2 flex-nowrap overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (

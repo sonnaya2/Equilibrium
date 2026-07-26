@@ -1,0 +1,28 @@
+{
+  "surface": "crest-compact-polish",
+  "date": "2026-07-26",
+  "passBar": 9.0,
+  "winnerId": "ship",
+  "weightedTotal": 9.1,
+  "axes": {
+    "interactionCorrectness": { "score": 9.3, "weight": 25 },
+    "readability": { "score": 8.9, "weight": 20 },
+    "railUsefulness": { "score": 9.1, "weight": 20 },
+    "deadSpace": { "score": 9.2, "weight": 15 },
+    "fidelity": { "score": 9.1, "weight": 10 },
+    "antiSlopE2e": { "score": 8.5, "weight": 10 }
+  },
+  "hardFails": {
+    "expandStillChecksBox": false,
+    "anachroniaTirannwnInvisibleNoPath": false,
+    "rightInspectorBack": false,
+    "namesStillTiny": false
+  },
+  "mustFix": [],
+  "shipNits": [
+    "Σ / leaf counts stay full-corpus; under My build + All the badge overstates visible rows",
+    "All-view still has no row-level region signal (rail-only locality)",
+    "e2e soft on Option A path and expand≠check — unit/checklist only"
+  ],
+  "status": "ship"
+}

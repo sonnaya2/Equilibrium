@@ -67,59 +67,59 @@ export function DataWorkbench({
     <div className="data-screen flex min-h-0 flex-1 flex-col">
       <WorkbenchTabs aria-label="Data" tabs={TABS} active={tab} onChange={setTab} />
 
-      <div className="min-h-0 flex-1 overflow-hidden">
-      <WorkbenchPanel id="browse" active={tab}>
-        {browse}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="quests" active={tab}>
-        {quests}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="progression" active={tab}>
-        {progression}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="unlocks" active={tab}>
-        {unlocks}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="regional" active={tab}>
-        {regional}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="combatBis" active={tab}>
-        {combatBis}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="combos" active={tab}>
-        {combos}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="slayer" active={tab}>
-        {slayer}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="invention" active={tab}>
-        {invention}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="prayers" active={tab}>
-        {prayers}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="consumables" active={tab}>
-        {consumables}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="systems" active={tab}>
-        {systems}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="crafting" active={tab}>
-        <div className="space-y-8">
-          {archaeology}
-          {masterwork}
-        </div>
-      </WorkbenchPanel>
-      <WorkbenchPanel id="notes" active={tab}>
-        {referenceNotes}
-      </WorkbenchPanel>
-      <WorkbenchPanel id="boundaries" active={tab}>
-        <div className="h-full overflow-auto">{boundaries}</div>
-      </WorkbenchPanel>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <WorkbenchPanel id="browse" active={tab} clip>
+          {browse}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="quests" active={tab}>
+          {quests}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="progression" active={tab}>
+          {progression}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="unlocks" active={tab}>
+          {unlocks}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="regional" active={tab}>
+          {regional}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="combatBis" active={tab}>
+          {combatBis}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="combos" active={tab}>
+          {combos}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="slayer" active={tab}>
+          {slayer}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="invention" active={tab}>
+          {invention}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="prayers" active={tab}>
+          {prayers}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="consumables" active={tab}>
+          {consumables}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="systems" active={tab}>
+          {systems}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="crafting" active={tab}>
+          <div className="space-y-8">
+            {archaeology}
+            {masterwork}
+          </div>
+        </WorkbenchPanel>
+        <WorkbenchPanel id="notes" active={tab}>
+          {referenceNotes}
+        </WorkbenchPanel>
+        <WorkbenchPanel id="boundaries" active={tab}>
+          {boundaries}
+        </WorkbenchPanel>
       </div>
 
       {tab === "browse" ? (
-        <div className="mt-2 shrink-0 border-t border-stone-750 pt-2 text-xs">{notes}</div>
+        <div className="mt-1 shrink-0 border-t border-stone-750 pt-1 text-xs">{notes}</div>
       ) : null}
     </div>
   );

@@ -1,0 +1,522 @@
+/*
+  Sigil Focus R2 — denser closed tiles + full-width focus band under open row.
+  Full-set row virt. Idle multi-stop washes cut. Gem only for state.
+  Editorial tokens only under .td-gw-sigil.
+*/
+
+.td-gw-sigil {
+  --sg-void: var(--color-stone-950);
+  --sg-shell: var(--color-stone-900);
+  --sg-stage: var(--color-stone-800);
+  --sg-raised: var(--color-stone-raised);
+  --sg-inset: var(--color-stone-inset);
+  --sg-border: var(--color-stone-750);
+  --sg-carve: var(--color-stone-carve);
+  --sg-parch: var(--color-parch-50);
+  --sg-muted: var(--color-parch-100);
+  --sg-dim: var(--color-parch-300);
+  --sg-gem: var(--color-gem-300);
+  --sg-gem-deep: var(--color-gem-500);
+  --sg-gold: var(--color-gold-400);
+  --sg-min-card: 13.5rem;
+  --sg-gap: 0.35rem;
+  --sg-cols: 2;
+  --sg-col: 0;
+  --sg-pad: 0.45rem;
+
+  color: var(--sg-parch);
+  background: var(--sg-void);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  min-height: 0;
+}
+
+.td-gw-sigil :focus-visible {
+  outline: 1px solid var(--sg-gem);
+  outline-offset: 2px;
+}
+
+.td-gw-sigil button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* —— shell —— */
+.td-gw-sigil__shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
+  min-height: 24rem;
+  border: 1px solid var(--sg-border);
+  background: var(--sg-shell);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sg-carve) 32%, transparent);
+}
+
+/* —— facet bar —— */
+.td-gw-sigil__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.45rem;
+  padding: 0.38rem 0.55rem;
+  border-bottom: 1px solid var(--sg-border);
+  background: color-mix(in srgb, var(--sg-stage) 78%, var(--sg-shell));
+  flex-shrink: 0;
+}
+
+.td-gw-sigil__title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sg-gold);
+}
+
+.td-gw-sigil__count {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--sg-dim);
+}
+
+.td-gw-sigil__count .is-pts {
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__count .is-virt {
+  color: var(--sg-muted);
+}
+
+.td-gw-sigil__search {
+  flex: 0 1 11rem;
+  min-width: 7.5rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--sg-border);
+  border-radius: 2px;
+  background: var(--sg-inset);
+  color: var(--sg-parch);
+  font-size: 0.875rem;
+}
+
+.td-gw-sigil__chip {
+  border: 1px solid var(--sg-border);
+  background: var(--color-stone-850);
+  padding: 0.28rem 0.5rem;
+  font-size: 0.8125rem;
+  border-radius: 2px;
+  color: var(--sg-muted);
+  white-space: nowrap;
+}
+
+.td-gw-sigil__chip.is-on {
+  border-color: var(--sg-gem-deep);
+  color: var(--sg-gem);
+  background: var(--sg-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sg-gem) 22%, transparent);
+}
+
+.td-gw-sigil__chip--tier {
+  text-transform: capitalize;
+}
+
+.td-gw-sigil__region-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.td-gw-sigil__select {
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--sg-border);
+  border-radius: 2px;
+  background: var(--sg-inset);
+  color: var(--sg-muted);
+  font-size: 0.875rem;
+  max-width: 11.5rem;
+}
+
+.td-gw-sigil__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+  margin-left: auto;
+}
+
+.td-gw-sigil__hint {
+  margin: 0;
+  padding: 0.22rem 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--sg-border) 70%, transparent);
+  font-size: 0.75rem;
+  color: var(--sg-dim);
+  flex-shrink: 0;
+}
+
+.td-gw-sigil__hint a {
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--sg-muted);
+}
+
+/* —— board (virtualized) —— */
+.td-gw-sigil__board {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sg-pad);
+  scrollbar-width: thin;
+}
+
+.td-gw-sigil__virt {
+  position: relative;
+  width: 100%;
+}
+
+.td-gw-sigil__row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sg-gap);
+  box-sizing: border-box;
+  padding-bottom: var(--sg-gap);
+}
+
+.td-gw-sigil__row-tiles {
+  display: grid;
+  grid-template-columns: repeat(var(--sg-cols, 2), minmax(0, 1fr));
+  gap: var(--sg-gap);
+  align-items: start;
+}
+
+/* —— closed tile (tight; detail lives in the band) —— */
+.td-gw-sigil__tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--sg-border);
+  border-radius: 2px;
+  /* Flat rest — no multi-stop wash, no outer blur */
+  background: var(--sg-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sg-carve) 28%, transparent);
+  overflow: hidden;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.td-gw-sigil__tile.is-on {
+  border-color: var(--sg-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--sg-gem) 28%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--sg-gem) 14%, transparent);
+}
+
+.td-gw-sigil__tile.is-done .td-gw-sigil__tile-name {
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__tile-face {
+  display: grid;
+  grid-template-columns: 1.05rem auto minmax(0, 1fr);
+  gap: 0.32rem;
+  align-items: start;
+  padding: 0.38rem 0.4rem 0.28rem;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.td-gw-sigil__crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid color-mix(in srgb, var(--sg-border) 85%, transparent);
+  border-radius: 2px;
+  background: var(--sg-shell);
+  flex-shrink: 0;
+}
+
+.td-gw-sigil__crest.is-global {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--sg-dim);
+}
+
+.td-gw-sigil__check {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.2rem;
+  accent-color: var(--sg-gem-deep);
+  cursor: pointer;
+}
+
+.td-gw-sigil__tile-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.28;
+  color: var(--sg-parch);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* —— Cipher-grade mono ribbon —— */
+.td-gw-sigil__ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  margin: 0 0.32rem 0.28rem;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--sg-border) 80%, transparent);
+  border-radius: 2px;
+  background: var(--sg-inset);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.td-gw-sigil__tile.is-on .td-gw-sigil__ribbon {
+  border-color: color-mix(in srgb, var(--sg-gem-deep) 40%, var(--sg-border));
+}
+
+.td-gw-sigil__loc {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--sg-dim);
+  text-transform: capitalize;
+}
+
+.td-gw-sigil__figures {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.td-gw-sigil__comp,
+.td-gw-sigil__comp a {
+  color: var(--sg-muted);
+  text-decoration: none;
+}
+
+.td-gw-sigil__comp a:hover {
+  color: var(--sg-gem);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.td-gw-sigil__pts {
+  color: var(--sg-gem);
+  font-weight: 600;
+}
+
+.td-gw-sigil__pts .unit {
+  margin-left: 0.15rem;
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--sg-dim);
+}
+
+/* Foot: cue only — region already on ribbon */
+.td-gw-sigil__tile-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.18rem 0.4rem 0.28rem;
+  border-top: 1px solid color-mix(in srgb, var(--sg-border) 55%, transparent);
+  font-size: 0.625rem;
+  color: var(--sg-dim);
+}
+
+.td-gw-sigil__tile-cue {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sg-dim);
+}
+
+.td-gw-sigil__tile.is-on .td-gw-sigil__tile-cue {
+  color: var(--sg-gem);
+}
+
+/* —— focus band (full row width under selected row) —— */
+.td-gw-sigil__band {
+  position: relative;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--sg-gem-deep) 50%, var(--sg-border));
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--sg-raised) 55%, var(--sg-shell));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sg-gem) 12%, transparent);
+  padding: 0.5rem 0.6rem 0.55rem;
+  scroll-margin-block: 0.4rem;
+}
+
+/* Column-aligned sigil mark under the open tile */
+.td-gw-sigil__band-mark {
+  position: absolute;
+  top: 0;
+  left: calc(var(--sg-col) * 100% / var(--sg-cols));
+  width: calc(100% / var(--sg-cols));
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 10%,
+    var(--sg-gem) 32%,
+    var(--sg-gem) 68%,
+    transparent 90%
+  );
+  pointer-events: none;
+}
+
+.td-gw-sigil__band-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.4rem 0.65rem;
+}
+
+.td-gw-sigil__band-id {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.td-gw-sigil__band-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.28;
+  color: var(--sg-parch);
+}
+
+.td-gw-sigil__band-name.is-done {
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__band-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sg-dim);
+  text-transform: capitalize;
+}
+
+.td-gw-sigil__band-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  color: var(--sg-muted);
+}
+
+.td-gw-sigil__band-facts .is-pts {
+  color: var(--sg-gem);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.td-gw-sigil__band-facts a {
+  color: var(--sg-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--sg-border);
+  text-underline-offset: 2px;
+}
+
+.td-gw-sigil__band-facts a:hover {
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__close {
+  margin-left: auto;
+  border: 1px solid var(--sg-border);
+  background: var(--color-stone-850);
+  color: var(--sg-muted);
+  padding: 0.22rem 0.45rem;
+  font-size: 0.75rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.td-gw-sigil__close:hover {
+  border-color: var(--sg-gem-deep);
+  color: var(--sg-gem);
+}
+
+.td-gw-sigil__band-body {
+  margin: 0.4rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--sg-muted);
+  max-width: 72rem;
+}
+
+.td-gw-sigil__band-req {
+  margin: 0.3rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sg-dim);
+  max-width: 72rem;
+}
+
+.td-gw-sigil__band-req strong {
+  font-weight: 600;
+  color: var(--sg-muted);
+}
+
+.td-gw-sigil__wiki {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--sg-gem);
+  text-decoration: none;
+}
+
+.td-gw-sigil__wiki:hover {
+  text-decoration: underline;
+}
+
+.td-gw-sigil__band-empty {
+  margin: 0.3rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sg-dim);
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .td-gw-sigil__shell {
+    height: auto;
+    max-height: none;
+    min-height: 28rem;
+  }
+
+  .td-gw-sigil {
+    --sg-min-card: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .td-gw-sigil__tile {
+    transition: none;
+  }
+}

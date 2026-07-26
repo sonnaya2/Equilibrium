@@ -85,12 +85,15 @@ function midgameSectionRows(): ResearchRow[] {
         typeof obj.official_source === "string" && obj.official_source.startsWith("https://")
           ? obj.official_source
           : null;
+      const summary =
+        (typeof obj.summary === "string" && obj.summary) ||
+        (typeof obj.planner_impact === "string" && obj.planner_impact) ||
+        (typeof obj.note === "string" && obj.note) ||
+        "";
       rows.push({
         name: key.replaceAll("_", " "),
         category: "system",
-        detail: Object.entries(obj)
-          .map(([k, v]) => `${k}: ${typeof v === "object" ? JSON.stringify(v) : String(v)}`)
-          .join(" · "),
+        detail: summary,
         ...obj,
         source_url: nestedOfficial || rootSource,
       });
@@ -105,7 +108,7 @@ const midgameRows = midgameSectionRows();
 const TABS: ResearchTab[] = [
   {
     key: "harvest",
-    label: "Harvest",
+    label: "Site notes",
     description: "",
     rows: harvestMapped,
   },

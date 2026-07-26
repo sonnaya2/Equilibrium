@@ -45,15 +45,18 @@ test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", as
     }
   }
 
-  // Comp% values that have a wiki task id open the Wiki deep-link (hash id).
-  // Match aria-label (tile ribbon / focus band) or Catalyst Tasks#N href.
-  // Virtualized gallery only mounts viewport tiles — use .first() of what rendered.
+  // Hover a task tile → top dock with Wiki Comp% deep-link (hash id).
+  // Virtualized gallery only mounts viewport tiles — hover first rendered complete control.
   // Never pin rates or task names.
-  const wikiHref = /runescape\.wiki\/w\/Catalyst_League\/Tasks#\d+/;
-  const compByLabel = page.getByRole("link", { name: /Wiki Comp%/i });
-  const compByHref = page.locator(`a[href*="Catalyst_League/Tasks#"]`);
-  const compLink = compByLabel.or(compByHref).first();
-  if (await compLink.isVisible().catch(() => false)) {
-    await expect(compLink).toHaveAttribute("href", wikiHref);
+  const tile = page.getByRole("button", { name: /Mark (complete|incomplete):/i }).first();
+  if (await tile.isVisible().catch(() => false)) {
+    await tile.hover();
+    const wikiHref = /runescape\.wiki\/w\/Catalyst_League\/Tasks#\d+/;
+    const compByLabel = page.getByRole("link", { name: /Wiki Comp%/i });
+    const compByHref = page.locator(`a[href*="Catalyst_League/Tasks#"]`);
+    const compLink = compByLabel.or(compByHref).first();
+    if (await compLink.isVisible().catch(() => false)) {
+      await expect(compLink).toHaveAttribute("href", wikiHref);
+    }
   }
 });

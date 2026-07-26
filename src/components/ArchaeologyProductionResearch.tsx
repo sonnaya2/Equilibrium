@@ -159,7 +159,7 @@ const museumRows = museumMatrix.map((row) => {
 const TABS: ResearchTab[] = [
   {
     key: "museum-matrix",
-    label: "Museum matrix",
+    label: "Collections",
     description: "",
     rows: museumRows,
   },
@@ -213,7 +213,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "corrections",
-    label: "Corrections",
+    label: "Updates",
     description: "",
     rows: [...corrections, ...additions2026, ...pending2026],
   },

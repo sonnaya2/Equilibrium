@@ -8,10 +8,14 @@ import { FlatBoard } from "./FlatBoard";
 const MapScene = dynamic(() => import("./MapScene"), {
   ssr: false,
   loading: () => (
-    // Same min-h-0/flex-1 contract as the real scene, or the board cell jumps
-    // height the moment the 3D chunk lands.
-    <div className="panel panel-body min-h-0 flex-1 overflow-y-auto">
-      <FlatBoard />
+    // Same board-sky scene contract as MapScene, or the board cell jumps
+    // height the moment the 3D chunk lands. No nested .panel — board frames it.
+    // Host uses absolute fill (see .board-sky__canvas-host); no overflow-y
+    // path that lets SVG intrinsic height fight the under ledger.
+    <div className="board-sky__scene">
+      <div className="board-sky__canvas-host">
+        <FlatBoard />
+      </div>
     </div>
   ),
 });

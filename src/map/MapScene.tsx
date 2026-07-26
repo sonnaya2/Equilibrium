@@ -129,20 +129,21 @@ export default function MapScene() {
   }, [narrow]);
 
   if (supported === null) {
-    return <div className="panel min-h-0 w-full flex-1" aria-hidden="true" />;
+    return <div className="board-sky__scene" aria-hidden="true" />;
   }
 
   if (!supported) {
     return (
-      <div className="panel panel-body min-h-0 flex-1 overflow-y-auto">
-        <p className="mb-3 text-sm text-parch-300">
-          {narrow ? "Flat board · narrow." : "no WebGPU — flat board plans all regions."}
+      <div className="board-sky__scene">
+        {/* Visible copy always carries the frozen e2e substring (not sr-only-only). */}
+        <p className="shrink-0 px-2 pt-2 text-sm text-parch-300">
+          {narrow
+            ? "no WebGPU — flat board · narrow."
+            : "no WebGPU — flat board plans all regions."}
         </p>
-        {/* e2e/map3d.spec.ts matches /no WebGPU/ when the 3D path is unavailable. */}
-        <span className="sr-only">no WebGPU</span>
-        {/* The frame belongs to the board, not to the panel: wrapped any wider
-            it grows its corners over the copy above. */}
-        <div className="relative">
+        {/* Same canvas-host contract as the WebGPU path: absolute fill, no
+            intrinsic-SVG growth into the under ledger. */}
+        <div className="board-sky__canvas-host">
           <FlatBoard />
           <VineFrame />
         </div>
@@ -151,14 +152,11 @@ export default function MapScene() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      {/* Sized by the viewport, not by an aspect ratio. The old aspect-[1.88]
-          box was the dead-space bug: it pinned the board to a strip whatever
-          the screen had to offer. CameraRig solves its radius from the live
-          aspect, so a taller canvas is simply a bigger board — but only if
-          every ancestor carries min-h-0, or this cell refuses to shrink and
-          the page grows a scrollbar instead. */}
-      <div className="panel relative min-h-0 w-full flex-1 overflow-hidden">
+    <div className="board-sky__scene">
+      {/* Host is sized by the board flex cell, not an aspect-ratio strip.
+          CameraRig solves radius from live aspect; absolute canvas fill keeps
+          WebGPU glued to the host so min-h-0 ancestors actually work. */}
+      <div className="board-sky__canvas-host">
         <Canvas
           dpr={[1, 2]}
           frameloop="demand"
@@ -195,7 +193,7 @@ export default function MapScene() {
         </Canvas>
         <VineFrame />
       </div>
-      <p className="mt-1.5 text-xs text-parch-500">{MAP_IMAGE.credit}</p>
+      <p className="shrink-0 px-1.5 py-1 text-xs text-parch-500">{MAP_IMAGE.credit}</p>
     </div>
   );
 }

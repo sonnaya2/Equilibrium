@@ -39,7 +39,10 @@ export function FlatBoard() {
   return (
     <svg
       viewBox={`0 0 ${VB_W} ${VB_H}`}
-      className="block h-auto w-full"
+      // Fills board-sky__canvas-host (absolute inset) like the WebGPU canvas.
+      // h-auto grew the flex chain and could crush the under-board ledger.
+      className="block h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       role="presentation"
     >

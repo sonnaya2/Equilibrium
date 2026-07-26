@@ -1,0 +1,656 @@
+/*
+  Cipher Strip R3 DEATH FINALS
+  Mono ribbon scan + full-set virt + Sigil focus band.
+  Quill-thin track (~2.15rem) + shell 100vh-5.5rem.
+  Denser closed minmax ~12rem; no cue foot; solid rest; gem for state.
+  Editorial tokens under .td-gw-cipher.
+*/
+
+.td-gw-cipher {
+  --c-void: var(--color-stone-950);
+  --c-shell: var(--color-stone-900);
+  --c-stage: var(--color-stone-800);
+  --c-raised: var(--color-stone-raised);
+  --c-inset: var(--color-stone-inset);
+  --c-border: var(--color-stone-750);
+  --c-carve: var(--color-stone-carve);
+  --c-parch: var(--color-parch-50);
+  --c-muted: var(--color-parch-100);
+  --c-dim: var(--color-parch-300);
+  --c-faint: var(--color-parch-400);
+  --c-gem: var(--color-gem-300);
+  --c-gem-deep: var(--color-gem-500);
+  --c-gold: var(--color-gold-400);
+  --cf-min-card: 12rem;
+  --cf-gap: 0.3rem;
+  --cf-cols: 3;
+  --cf-col: 0;
+
+  color: var(--c-parch);
+  background: var(--c-void);
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  min-height: 0;
+}
+
+.td-gw-cipher :focus-visible {
+  outline: 1px solid var(--c-gem);
+  outline-offset: 2px;
+}
+
+.td-gw-cipher button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ── shell: Quill-grade majority board ──────────────── */
+
+.td-gw-cipher__shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5.5rem);
+  max-height: calc(100vh - 5.5rem);
+  min-height: 24rem;
+  border: 1px solid var(--c-border);
+  background: var(--c-shell);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-carve) 40%, transparent);
+}
+
+/* ── Quill-thin track (fixed cluster + crest rail) ─── */
+
+.td-gw-cipher__track {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.22rem 0.3rem;
+  padding: 0.2rem 0.38rem;
+  border-bottom: 1px solid var(--c-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--c-raised) 22%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-carve) 24%, transparent);
+  flex-shrink: 0;
+  min-height: 2.15rem;
+  max-height: 2.35rem;
+  overflow: hidden;
+}
+
+.td-gw-cipher__cluster {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.22rem 0.3rem;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.td-gw-cipher__cluster::-webkit-scrollbar {
+  display: none;
+}
+
+.td-gw-cipher__title {
+  margin: 0;
+  flex-shrink: 0;
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  white-space: nowrap;
+}
+
+.td-gw-cipher__count {
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-dim);
+  white-space: nowrap;
+}
+
+.td-gw-cipher__count .is-pts {
+  color: var(--c-gem);
+}
+
+.td-gw-cipher__count .is-virt {
+  color: var(--c-muted);
+}
+
+.td-gw-cipher__search {
+  flex: 0 0 7rem;
+  width: 7rem;
+  min-width: 5.25rem;
+  margin: 0;
+  padding: 0.16rem 0.32rem;
+  border: 1px solid var(--c-border);
+  border-radius: 2px;
+  background: var(--c-inset);
+  color: var(--c-parch);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.td-gw-cipher__search::placeholder {
+  color: var(--c-faint);
+}
+
+.td-gw-cipher__chip {
+  flex-shrink: 0;
+  border: 1px solid var(--c-border);
+  background: var(--c-shell);
+  padding: 0.14rem 0.34rem;
+  font-size: 0.625rem;
+  line-height: 1.2;
+  border-radius: 2px;
+  color: var(--c-muted);
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-carve) 22%, transparent);
+}
+
+.td-gw-cipher__chip:hover {
+  color: var(--c-parch);
+  border-color: var(--c-carve);
+}
+
+.td-gw-cipher__chip.is-on,
+.td-gw-cipher__chip[aria-pressed="true"] {
+  border-color: var(--c-gem-deep);
+  color: var(--c-gem);
+  background: color-mix(in srgb, var(--c-raised) 70%, var(--c-shell));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--c-gem-deep) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-gem) 24%, transparent);
+}
+
+.td-gw-cipher__chip--tier {
+  text-transform: capitalize;
+}
+
+.td-gw-cipher__tiers {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.14rem;
+  flex-shrink: 0;
+}
+
+.td-gw-cipher__note {
+  flex-shrink: 0;
+  font-size: 0.5625rem;
+  color: var(--c-dim);
+  white-space: nowrap;
+}
+
+.td-gw-cipher__note a {
+  color: var(--c-gem);
+  text-decoration: none;
+}
+
+.td-gw-cipher__note a:hover {
+  text-decoration: underline;
+}
+
+.td-gw-cipher__rule {
+  flex: 0 0 1px;
+  align-self: stretch;
+  width: 1px;
+  margin: 0.1rem 0.08rem;
+  background: color-mix(in srgb, var(--c-border) 80%, transparent);
+}
+
+/* Nested crest rail — only this scrolls on narrow desks */
+.td-gw-cipher__regions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.12rem;
+  flex: 1 1 auto;
+  min-width: 4.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  padding-right: 0.08rem;
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 calc(100% - 1rem),
+    transparent 100%
+  );
+}
+
+.td-gw-cipher__crest-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02rem;
+  min-width: 1.6rem;
+  padding: 0.06rem 0.12rem 0.08rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--c-dim);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.td-gw-cipher__crest-btn:hover {
+  border-color: color-mix(in srgb, var(--c-border) 70%, transparent);
+  background: color-mix(in srgb, var(--c-raised) 40%, transparent);
+}
+
+.td-gw-cipher__crest-btn.is-on {
+  border-color: var(--c-gem-deep);
+  background: color-mix(in srgb, var(--c-raised) 65%, var(--c-shell));
+  color: var(--c-gem);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-gem) 20%, transparent);
+}
+
+.td-gw-cipher__crest-btn.is-locked {
+  opacity: 0.55;
+}
+
+.td-gw-cipher__crest-btn.is-locked.is-on {
+  opacity: 1;
+}
+
+.td-gw-cipher__crest-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: inherit;
+}
+
+.td-gw-cipher__crest-n {
+  font-family: ui-monospace, monospace;
+  font-size: 0.5rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-dim);
+  line-height: 1;
+}
+
+.td-gw-cipher__crest-btn.is-on .td-gw-cipher__crest-n {
+  color: var(--c-gem);
+}
+
+/* ── board + virt ───────────────────────────────────── */
+
+.td-gw-cipher__board {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.35rem;
+  background: color-mix(in srgb, var(--c-stage) 55%, var(--c-shell));
+  scrollbar-width: thin;
+}
+
+.td-gw-cipher__empty {
+  margin: 0;
+  padding: 1rem 0.75rem;
+  color: var(--c-muted);
+  font-size: 0.875rem;
+}
+
+.td-gw-cipher__virt {
+  position: relative;
+  width: 100%;
+}
+
+.td-gw-cipher__row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  box-sizing: border-box;
+  padding-bottom: var(--cf-gap);
+}
+
+.td-gw-cipher__tiles {
+  display: grid;
+  grid-template-columns: repeat(var(--cf-cols, 3), minmax(0, 1fr));
+  gap: var(--cf-gap);
+  align-items: start;
+}
+
+/* ── tile (closed, no cue foot) ─────────────────────── */
+
+.td-gw-cipher__tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--c-border);
+  border-radius: 2px;
+  background: var(--c-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-carve) 32%, transparent);
+  overflow: hidden;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.td-gw-cipher__tile.is-on {
+  border-color: var(--c-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--c-gem) 28%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-gem) 16%, transparent);
+}
+
+.td-gw-cipher__tile.is-done .td-gw-cipher__name {
+  color: var(--c-gem);
+}
+
+.td-gw-cipher__head {
+  display: grid;
+  grid-template-columns: 1rem auto minmax(0, 1fr);
+  gap: 0.28rem;
+  align-items: start;
+  padding: 0.3rem 0.35rem 0.16rem;
+  cursor: pointer;
+}
+
+.td-gw-cipher__check {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.16rem;
+  accent-color: var(--c-gem-deep);
+  cursor: pointer;
+}
+
+.td-gw-cipher__crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--c-border) 85%, transparent);
+  border-radius: 2px;
+  background: var(--c-shell);
+  flex-shrink: 0;
+}
+
+.td-gw-cipher__crest.is-global {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--c-dim);
+}
+
+/* 15px names — keep readable under denser columns */
+.td-gw-cipher__name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.22;
+  color: var(--c-parch);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── cipher ribbon (signature) ──────────────────────── */
+
+.td-gw-cipher__ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.28rem;
+  margin: 0 0.28rem 0.28rem;
+  padding: 0.14rem 0.28rem;
+  border: 1px solid color-mix(in srgb, var(--c-border) 80%, transparent);
+  border-radius: 2px;
+  background: var(--c-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-carve) 18%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.td-gw-cipher__tile.is-on .td-gw-cipher__ribbon {
+  border-color: color-mix(in srgb, var(--c-gem-deep) 45%, var(--c-border));
+  background: color-mix(in srgb, var(--c-raised) 40%, var(--c-inset));
+}
+
+.td-gw-cipher__loc {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--c-dim);
+  text-transform: capitalize;
+}
+
+.td-gw-cipher__figures {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.td-gw-cipher__comp {
+  color: var(--c-muted);
+  min-width: 2.4rem;
+  text-align: right;
+}
+
+.td-gw-cipher__comp a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--c-border) 90%, transparent);
+  text-underline-offset: 2px;
+}
+
+.td-gw-cipher__comp a:hover {
+  color: var(--c-gem);
+  text-decoration-color: var(--c-gem-deep);
+}
+
+.td-gw-cipher__pts {
+  color: var(--c-gem);
+  font-weight: 600;
+  min-width: 1.55rem;
+  text-align: right;
+}
+
+.td-gw-cipher__pts .unit {
+  font-weight: 400;
+  font-size: 0.625rem;
+  color: var(--c-dim);
+  margin-left: 0.08rem;
+}
+
+/* ── focus band (Sigil structure; tighter R3 pad) ───── */
+
+.td-gw-cipher__band {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--c-gem-deep) 50%, var(--c-border));
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--c-raised) 55%, var(--c-shell));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-gem) 14%, transparent);
+  padding: 0.42rem 0.55rem 0.48rem;
+  scroll-margin-block: 0.4rem;
+}
+
+.td-gw-cipher__band-mark {
+  position: absolute;
+  top: 0;
+  left: calc(var(--cf-col) * 100% / var(--cf-cols));
+  width: calc(100% / var(--cf-cols));
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 10%,
+    var(--c-gem) 32%,
+    var(--c-gem) 68%,
+    transparent 90%
+  );
+  pointer-events: none;
+}
+
+.td-gw-cipher__band-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem 0.6rem;
+}
+
+.td-gw-cipher__band-id {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.td-gw-cipher__band-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--c-parch);
+}
+
+.td-gw-cipher__band-name.is-done {
+  color: var(--c-gem);
+}
+
+.td-gw-cipher__band-meta {
+  margin: 0.12rem 0 0;
+  font-size: 0.75rem;
+  color: var(--c-dim);
+  text-transform: capitalize;
+}
+
+.td-gw-cipher__band-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  color: var(--c-muted);
+}
+
+.td-gw-cipher__band-facts .is-pts {
+  color: var(--c-gem);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.td-gw-cipher__band-facts .unit {
+  font-weight: 400;
+  font-size: 0.625rem;
+  color: var(--c-dim);
+  margin-left: 0.1rem;
+}
+
+.td-gw-cipher__band-comp a {
+  color: var(--c-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--c-border);
+  text-underline-offset: 2px;
+}
+
+.td-gw-cipher__band-comp a:hover {
+  color: var(--c-gem);
+}
+
+.td-gw-cipher__close {
+  margin-left: auto;
+  border: 1px solid var(--c-border);
+  background: var(--color-stone-850);
+  color: var(--c-muted);
+  padding: 0.16rem 0.4rem;
+  font-size: 0.6875rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.td-gw-cipher__close:hover {
+  border-color: var(--c-gem-deep);
+  color: var(--c-gem);
+}
+
+.td-gw-cipher__band-body {
+  margin: 0.32rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.48;
+  color: var(--c-muted);
+  max-width: 72rem;
+}
+
+.td-gw-cipher__band-req {
+  margin: 0.24rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--c-dim);
+  max-width: 72rem;
+}
+
+.td-gw-cipher__band-req strong {
+  font-weight: 600;
+  color: var(--c-muted);
+}
+
+.td-gw-cipher__band-empty {
+  margin: 0.24rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--c-dim);
+  font-style: italic;
+}
+
+.td-gw-cipher__wiki {
+  display: inline-block;
+  margin-top: 0.28rem;
+  font-size: 0.75rem;
+  color: var(--c-gem);
+  text-decoration: none;
+}
+
+.td-gw-cipher__wiki:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .td-gw-cipher__shell {
+    height: auto;
+    max-height: none;
+    min-height: 28rem;
+  }
+
+  .td-gw-cipher {
+    --cf-min-card: 100%;
+  }
+
+  .td-gw-cipher__track {
+    max-height: none;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .td-gw-cipher__tile {
+    transition: none;
+  }
+}

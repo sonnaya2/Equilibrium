@@ -1,0 +1,81 @@
+{
+  "round": 2,
+  "passBar": 9.2,
+  "promoteToProduction": false,
+  "champion": null,
+  "arenaWinner": "cipher",
+  "teams": {
+    "cipher": {
+      "total": 9.13,
+      "axes": {
+        "scan": 9.15,
+        "viewport": 9.05,
+        "ops": 9.3,
+        "craft": 8.95,
+        "antiSlop": 9.2,
+        "signature": 9.15
+      },
+      "status": "alive",
+      "r1": 8.95,
+      "delta": 0.18
+    },
+    "sigil": {
+      "total": 9.09,
+      "axes": {
+        "scan": 9.05,
+        "viewport": 8.95,
+        "ops": 9.25,
+        "craft": 9.0,
+        "antiSlop": 9.1,
+        "signature": 9.3
+      },
+      "status": "alive",
+      "r1": 8.81,
+      "delta": 0.28
+    },
+    "quill": {
+      "total": 9.05,
+      "axes": {
+        "scan": 8.95,
+        "viewport": 9.2,
+        "ops": 9.2,
+        "craft": 8.75,
+        "antiSlop": 9.1,
+        "signature": 9.15
+      },
+      "status": "dead",
+      "r1": 8.81,
+      "delta": 0.24
+    },
+    "grove": {
+      "total": 8.99,
+      "axes": {
+        "scan": 8.85,
+        "viewport": 9.25,
+        "ops": 9.15,
+        "craft": 8.65,
+        "antiSlop": 9.05,
+        "signature": 8.95
+      },
+      "status": "dead",
+      "r1": 8.76,
+      "delta": 0.23
+    },
+    "crucible": {
+      "total": 8.9,
+      "axes": {
+        "scan": 8.9,
+        "viewport": 8.85,
+        "ops": 9.2,
+        "craft": 8.55,
+        "antiSlop": 9.0,
+        "signature": 8.8
+      },
+      "status": "dead",
+      "r1": 8.84,
+      "delta": 0.06
+    }
+  },
+  "survivors": ["cipher", "sigil"],
+  "killed": ["quill", "grove", "crucible"]
+}

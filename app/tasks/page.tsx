@@ -64,23 +64,25 @@ export default async function TasksPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill">
-        <div className="mb-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs leading-tight text-parch-100">
+        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 px-0.5 text-sm leading-snug text-parch-100">
           {useCatalystStandIn ? (
             <span className="tag text-chaos-300">Provisional · Catalyst</span>
           ) : null}
-          <span className="font-medium text-parch-50">Tasks</span>
-          <span className="font-mono text-parch-300">
+          <span className="font-display text-base font-semibold tracking-wide text-gold-400">
+            Tasks
+          </span>
+          <span className="font-mono text-[0.9375rem] text-parch-100">
             {records.length} tasks loaded
             {completion.live ? " · Comp% live" : useCatalystStandIn ? " · Comp% snap" : ""}
           </span>
-          <span className="text-parch-300">
-            <span>Points</span> {pointsLine}
+          <span className="text-parch-100">
+            <span className="text-parch-300">Points</span> {pointsLine}
           </span>
           <a
             href={sourceUrl}
             target="_blank"
             rel="noreferrer"
-            className="ml-auto text-gem-300 hover:underline"
+            className="ml-auto text-[0.9375rem] text-gem-300 hover:underline"
           >
             Source
           </a>

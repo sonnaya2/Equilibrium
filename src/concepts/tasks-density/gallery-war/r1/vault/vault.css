@@ -1,0 +1,458 @@
+/*
+  Gallery War R1 · Vault Medallion
+  Thesis: oversized crest medallion; name under crest; dense @1440.
+  Scoped under .td-gw-vault. Editorial tokens only.
+*/
+
+.td-gw-vault {
+  --v-void: var(--color-stone-950);
+  --v-shell: var(--color-stone-900);
+  --v-stage: var(--color-stone-800);
+  --v-raised: var(--color-stone-raised);
+  --v-inset: var(--color-stone-inset);
+  --v-panel: var(--color-stone-850);
+  --v-border: var(--color-stone-750);
+  --v-carve: var(--color-stone-carve);
+  --v-parch: var(--color-parch-50);
+  --v-muted: var(--color-parch-100);
+  --v-dim: var(--color-parch-300);
+  --v-gem: var(--color-gem-300);
+  --v-gem-deep: var(--color-gem-500);
+  --v-gold: var(--color-gold-400);
+
+  color: var(--v-parch);
+  background: var(--v-void);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  min-height: 0;
+}
+
+.td-gw-vault :focus-visible {
+  outline: 1px solid var(--v-gem);
+  outline-offset: 2px;
+}
+
+.td-gw-vault button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.td-gw-vault__shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
+  min-height: 24rem;
+  border: 1px solid var(--v-border);
+  background:
+    radial-gradient(
+      100% 70% at 50% 0%,
+      color-mix(in srgb, var(--v-gem-deep) 10%, transparent),
+      transparent 55%
+    ),
+    var(--v-shell);
+  box-shadow: inset 0 1px 0 var(--v-carve);
+}
+
+.td-gw-vault__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.45rem;
+  padding: 0.4rem 0.55rem;
+  border-bottom: 1px solid var(--v-border);
+  background: color-mix(in srgb, var(--v-stage) 78%, var(--v-shell));
+  flex-shrink: 0;
+}
+
+.td-gw-vault__title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v-gold);
+}
+
+.td-gw-vault__count {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--v-dim);
+}
+
+.td-gw-vault__count .is-pts {
+  color: var(--v-gem);
+}
+
+.td-gw-vault__search {
+  flex: 0 1 11rem;
+  min-width: 7.5rem;
+  padding: 0.32rem 0.45rem;
+  border: 1px solid var(--v-border);
+  border-radius: 2px;
+  background: var(--v-inset);
+  color: var(--v-parch);
+  font-size: 0.875rem;
+}
+
+.td-gw-vault__chip {
+  border: 1px solid var(--v-border);
+  background: var(--v-panel);
+  padding: 0.28rem 0.5rem;
+  font-size: 0.8125rem;
+  border-radius: 2px;
+  color: var(--v-muted);
+  white-space: nowrap;
+}
+
+.td-gw-vault__chip.is-on {
+  border-color: var(--v-gem-deep);
+  color: var(--v-gem);
+  background: var(--v-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--v-gem) 28%, transparent);
+}
+
+.td-gw-vault__chip--tier {
+  text-transform: capitalize;
+}
+
+.td-gw-vault__region-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.td-gw-vault__select {
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--v-border);
+  border-radius: 2px;
+  background: var(--v-inset);
+  color: var(--v-muted);
+  font-size: 0.875rem;
+  max-width: 11.5rem;
+}
+
+.td-gw-vault__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+  margin-left: auto;
+}
+
+.td-gw-vault__hint {
+  margin: 0;
+  padding: 0.22rem 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--v-border) 70%, transparent);
+  font-size: 0.75rem;
+  color: var(--v-dim);
+  flex-shrink: 0;
+}
+
+.td-gw-vault__hint a {
+  color: var(--v-gem);
+}
+
+.td-gw-vault__board {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.5rem;
+  scrollbar-width: thin;
+}
+
+.td-gw-vault__empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--v-muted);
+}
+
+/* Narrow cards → more columns @1440 despite tall medallion */
+.td-gw-vault__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  gap: 0.45rem;
+  align-content: start;
+}
+
+@media (min-width: 1280px) {
+  .td-gw-vault__grid {
+    grid-template-columns: repeat(auto-fill, minmax(12.75rem, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .td-gw-vault__grid {
+    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  }
+}
+
+/* ── Tile: medallion stack ── */
+
+.td-gw-vault__tile {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--v-border);
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--v-raised) 40%, var(--v-stage)) 0%,
+      var(--v-stage) 42%,
+      color-mix(in srgb, var(--v-shell) 45%, var(--v-stage)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--v-carve) 40%, transparent),
+    0 1px 4px color-mix(in srgb, var(--v-void) 30%, transparent);
+  overflow: hidden;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.td-gw-vault__tile.is-on {
+  border-color: var(--v-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--v-gem) 32%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--v-gem) 18%, transparent);
+}
+
+.td-gw-vault__tile.is-done .td-gw-vault__name {
+  color: var(--v-gem);
+}
+
+.td-gw-vault__face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.35rem 0.4rem 0.4rem;
+  cursor: pointer;
+  min-height: 0;
+}
+
+/* Checkbox / pts rail — not part of name label */
+.td-gw-vault__chrome {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.35rem;
+  margin-bottom: 0.15rem;
+}
+
+.td-gw-vault__check {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--v-gem-deep);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.td-gw-vault__pts {
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--v-gem);
+  line-height: 1.1;
+  text-align: right;
+}
+
+.td-gw-vault__pts-unit {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 400;
+  color: var(--v-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Oversized circular seal */
+.td-gw-vault__medallion {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  margin: 0.1rem 0 0.4rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--v-carve) 70%, var(--v-border));
+  background:
+    radial-gradient(
+      circle at 32% 28%,
+      color-mix(in srgb, var(--v-carve) 35%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(circle at 50% 55%, var(--v-raised), var(--v-shell) 72%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--v-carve) 50%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--v-void) 40%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--v-panel) 90%, var(--v-border)),
+    0 0 0 4px color-mix(in srgb, var(--v-border) 80%, transparent);
+  flex-shrink: 0;
+}
+
+.td-gw-vault__tile.is-on .td-gw-vault__medallion {
+  border-color: color-mix(in srgb, var(--v-gem) 45%, var(--v-border));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--v-gem) 25%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--v-void) 35%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--v-panel) 85%, var(--v-stage)),
+    0 0 0 4px color-mix(in srgb, var(--v-gem-deep) 55%, var(--v-border));
+}
+
+.td-gw-vault__medallion.is-global {
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--v-dim);
+}
+
+/* Name hierarchy under crest */
+.td-gw-vault__name {
+  margin: 0;
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.28;
+  text-align: center;
+  color: var(--v-parch);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.25em;
+}
+
+.td-gw-vault__meta {
+  margin: 0.28rem 0 0;
+  width: 100%;
+  font-size: 0.6875rem;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--v-dim);
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-gw-vault__strip {
+  margin-top: 0.35rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid color-mix(in srgb, var(--v-border) 60%, transparent);
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.6875rem;
+  color: var(--v-dim);
+}
+
+.td-gw-vault__comp a {
+  color: var(--v-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--v-border);
+  text-underline-offset: 2px;
+}
+
+.td-gw-vault__comp a:hover {
+  color: var(--v-gem);
+}
+
+.td-gw-vault__open {
+  color: var(--v-gem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.625rem;
+}
+
+/* In-tile expand */
+.td-gw-vault__detail {
+  padding: 0.45rem 0.5rem 0.55rem;
+  border-top: 1px solid color-mix(in srgb, var(--v-gem-deep) 32%, var(--v-border));
+  background: color-mix(in srgb, var(--v-raised) 68%, var(--v-shell));
+}
+
+.td-gw-vault__detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.td-gw-vault__detail-name {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--v-parch);
+}
+
+.td-gw-vault__detail-name.is-done {
+  color: var(--v-gem);
+}
+
+.td-gw-vault__close {
+  margin-left: auto;
+  border: 1px solid var(--v-border);
+  background: var(--v-panel);
+  color: var(--v-muted);
+  padding: 0.18rem 0.4rem;
+  font-size: 0.75rem;
+  border-radius: 2px;
+}
+
+.td-gw-vault__detail-body {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--v-muted);
+}
+
+.td-gw-vault__detail-req {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--v-dim);
+}
+
+.td-gw-vault__wiki {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--v-gem);
+  text-decoration: none;
+}
+
+.td-gw-vault__wiki:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .td-gw-vault__shell {
+    height: auto;
+    max-height: none;
+    min-height: 28rem;
+  }
+
+  .td-gw-vault__grid {
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  }
+
+  .td-gw-vault__medallion {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .td-gw-vault__tile {
+    transition: none;
+  }
+}

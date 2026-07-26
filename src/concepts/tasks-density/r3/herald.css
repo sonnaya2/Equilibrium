@@ -1,0 +1,396 @@
+/*
+  Herald Gallery — large side-by-side task tiles with crest chrome.
+  Editorial tokens only under .td-herald.
+*/
+
+.td-herald {
+  --h-void: var(--color-stone-950);
+  --h-shell: var(--color-stone-900);
+  --h-stage: var(--color-stone-800);
+  --h-raised: var(--color-stone-raised);
+  --h-border: var(--color-stone-750);
+  --h-carve: var(--color-stone-carve);
+  --h-parch: var(--color-parch-50);
+  --h-muted: var(--color-parch-100);
+  --h-dim: var(--color-parch-300);
+  --h-gem: var(--color-gem-300);
+  --h-gem-deep: var(--color-gem-500);
+  --h-gold: var(--color-gold-400);
+
+  color: var(--h-parch);
+  background: var(--h-void);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  min-height: 0;
+}
+
+.td-herald :focus-visible {
+  outline: 1px solid var(--h-gem);
+  outline-offset: 2px;
+}
+
+.td-herald button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.td-herald__shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
+  min-height: 24rem;
+  border: 1px solid var(--h-border);
+  background:
+    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--h-gem-deep) 12%, transparent), transparent 55%),
+    radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--h-gold) 8%, transparent), transparent 50%),
+    var(--h-shell);
+  box-shadow: inset 0 1px 0 var(--h-carve);
+}
+
+.td-herald__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border-bottom: 1px solid var(--h-border);
+  background: color-mix(in srgb, var(--h-stage) 80%, var(--h-shell));
+  flex-shrink: 0;
+}
+
+.td-herald__title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--h-gold);
+}
+
+.td-herald__count {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--h-dim);
+}
+
+.td-herald__count .is-pts {
+  color: var(--h-gem);
+}
+
+.td-herald__search {
+  flex: 0 1 12rem;
+  min-width: 8rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--h-border);
+  border-radius: 2px;
+  background: var(--color-stone-inset);
+  color: var(--h-parch);
+  font-size: 0.875rem;
+}
+
+.td-herald__chip {
+  border: 1px solid var(--h-border);
+  background: var(--color-stone-850);
+  padding: 0.3rem 0.55rem;
+  font-size: 0.8125rem;
+  border-radius: 2px;
+  color: var(--h-muted);
+  white-space: nowrap;
+}
+
+.td-herald__chip.is-on {
+  border-color: var(--h-gem-deep);
+  color: var(--h-gem);
+  background: var(--h-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--h-gem) 30%, transparent);
+}
+
+.td-herald__chip--tier {
+  text-transform: capitalize;
+}
+
+.td-herald__region-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.td-herald__select {
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--h-border);
+  border-radius: 2px;
+  background: var(--color-stone-inset);
+  color: var(--h-muted);
+  font-size: 0.875rem;
+  max-width: 12rem;
+}
+
+.td-herald__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.td-herald__hint {
+  margin: 0;
+  padding: 0.25rem 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--h-border) 70%, transparent);
+  font-size: 0.75rem;
+  color: var(--h-dim);
+  flex-shrink: 0;
+}
+
+.td-herald__hint a {
+  color: var(--h-gem);
+}
+
+.td-herald__board {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.65rem;
+  scrollbar-width: thin;
+}
+
+.td-herald__empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--h-muted);
+}
+
+/* Side-by-side tiles */
+.td-herald__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+  gap: 0.55rem;
+  align-content: start;
+}
+
+@media (min-width: 1200px) {
+  .td-herald__grid {
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 0.65rem;
+  }
+}
+
+.td-herald__tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 7.5rem;
+  border: 1px solid var(--h-border);
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--h-raised) 55%, var(--h-stage)) 0%,
+      var(--h-stage) 48%,
+      color-mix(in srgb, var(--h-shell) 40%, var(--h-stage)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--h-carve) 45%, transparent),
+    0 2px 8px color-mix(in srgb, var(--h-void) 35%, transparent);
+  overflow: hidden;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.td-herald__tile.is-on {
+  border-color: var(--h-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--h-gem) 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--h-gem) 20%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--h-gem-deep) 40%, transparent);
+}
+
+.td-herald__tile.is-done .td-herald__tile-name {
+  color: var(--h-gem);
+}
+
+.td-herald__tile-top {
+  display: grid;
+  grid-template-columns: auto 1.35rem minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: start;
+  padding: 0.55rem 0.55rem 0.4rem;
+  cursor: pointer;
+}
+
+.td-herald__crest-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--h-border) 80%, transparent);
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--h-carve) 40%, transparent), transparent 60%),
+    var(--h-shell);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--h-carve) 30%, transparent);
+}
+
+.td-herald__crest-slot.is-global {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--h-dim);
+}
+
+.td-herald__check {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.35rem;
+  accent-color: var(--h-gem-deep);
+  cursor: pointer;
+}
+
+.td-herald__tile-copy {
+  min-width: 0;
+}
+
+.td-herald__tile-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--h-parch);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.td-herald__tile-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--h-dim);
+  text-transform: capitalize;
+}
+
+.td-herald__tile-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+}
+
+.td-herald__tile-pts {
+  color: var(--h-gem);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.td-herald__tile-comp a {
+  color: var(--h-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--h-border);
+  text-underline-offset: 2px;
+}
+
+.td-herald__tile-comp a:hover {
+  color: var(--h-gem);
+}
+
+.td-herald__tile-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.55rem 0.45rem;
+  border-top: 1px solid color-mix(in srgb, var(--h-border) 65%, transparent);
+  background: color-mix(in srgb, var(--h-shell) 55%, transparent);
+  font-size: 0.6875rem;
+  color: var(--h-dim);
+}
+
+.td-herald__tile-region {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-herald__tile-open {
+  color: var(--h-gem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Expanded panel under tile (full width of card) */
+.td-herald__detail {
+  padding: 0.5rem 0.65rem 0.65rem;
+  border-top: 1px solid color-mix(in srgb, var(--h-gem-deep) 35%, var(--h-border));
+  background: color-mix(in srgb, var(--h-raised) 70%, var(--h-shell));
+}
+
+.td-herald__detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.td-herald__detail-name {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--h-parch);
+}
+
+.td-herald__detail-name.is-done {
+  color: var(--h-gem);
+}
+
+.td-herald__close {
+  margin-left: auto;
+  border: 1px solid var(--h-border);
+  background: var(--color-stone-850);
+  color: var(--h-muted);
+  padding: 0.2rem 0.45rem;
+  font-size: 0.75rem;
+  border-radius: 2px;
+}
+
+.td-herald__detail-body {
+  margin: 0.4rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--h-muted);
+}
+
+.td-herald__detail-req {
+  margin: 0.3rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--h-dim);
+}
+
+.td-herald__wiki {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--h-gem);
+  text-decoration: none;
+}
+
+.td-herald__wiki:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .td-herald__shell {
+    height: auto;
+    max-height: none;
+    min-height: 28rem;
+  }
+  .td-herald__grid {
+    grid-template-columns: 1fr;
+  }
+}

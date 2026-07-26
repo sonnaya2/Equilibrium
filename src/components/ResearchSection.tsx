@@ -426,6 +426,11 @@ export function clipProse(raw: string, max = LINE_MAX): string {
     if (next) s = next;
   }
 
+  // Pure audit noise with no clean sentence — hide rather than show 120 chars of meta.
+  if (AUDIT_NOISE.test(s) && !parts.some((p) => !AUDIT_NOISE.test(p) && p.length >= 20)) {
+    return "";
+  }
+
   if (s.length <= max) return s;
   const cut = s.slice(0, max - 1);
   const sp = cut.lastIndexOf(" ");
@@ -622,8 +627,8 @@ function region(row: ResearchRow): string {
     row.working_region ||
     row.required_region ||
     (hints && hints.length === 1 ? hints[0] : null) ||
-    row.region ||
-    row.region_status;
+    row.region;
+  // Never fall back to region_status / confidence meta — those are not place labels.
   if (!direct) return "—";
   return regionName(direct);
 }
@@ -800,7 +805,19 @@ export function ResearchSection({
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return selected.rows;
-    return selected.rows.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));
+    // Title + region + clipped details only — never stringify full audit bags.
+    return selected.rows.filter((row) => {
+      const hay = [
+        researchRowTitle(row),
+        region(row),
+        subtitle(row),
+        ...researchRowDetails(row),
+        ...researchRowLinks(row),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(needle);
+    });
   }, [query, selected]);
 
   return (
@@ -822,7 +839,7 @@ export function ResearchSection({
       <div
         role="tablist"
         aria-label={`${heading} sections`}
-        className="comp-seg mt-2 overflow-x-auto"
+        className="comp-seg mt-2 flex-nowrap overflow-x-auto"
       >
         {tabs.map((tab) => {
           const active = tabKey === tab.key;

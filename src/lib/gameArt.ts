@@ -18,6 +18,9 @@ export const styleIconPath = (style: keyof typeof STYLE_ICON) => gameIconPath("c
 
 export const regionCrestPath = (regionId: string) => gameIconPath("regions", regionId);
 
+/** Wiki World Map icon — global / multi-region task crest (CC BY-NC-SA 3.0). */
+export const worldMapIconPath = () => "/game/leagues/world-map-icon.png";
+
 /** Processed wiki hex icons for League relics (transparent PNG). */
 export function relicIconPath(slug: string): string {
   return `/game/relics/${slug}.png`;

@@ -1,0 +1,610 @@
+/* Production Build board (/build) — plan seal, regions, relic tiers, blessings. */
+
+.mc {
+  --mc-gap: 0.65rem;
+  --mc-line: var(--color-stone-750);
+  --mc-gold: var(--color-gold-400);
+  --mc-gem: var(--color-gem-400);
+  color: var(--color-parch-100);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 0.65rem 0.85rem 1rem;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.mc *,
+.mc *::before,
+.mc *::after {
+  box-sizing: border-box;
+}
+
+.mc__frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-gap);
+  min-height: 100%;
+  padding: 0.8rem 0.9rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--color-gold-500) 50%, var(--mc-line));
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 16%, var(--color-stone-950)) 0%,
+      var(--color-stone-950) 18%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-stone-750) 45%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--mc-gold) 18%, transparent);
+}
+
+/* ── Seal bar ── */
+.mc__seal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  min-height: 3.5rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: var(--color-stone-850);
+}
+
+.mc__title {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mc-gold);
+}
+
+.mc__count {
+  font-family: ui-monospace, monospace;
+  font-size: 1.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gem-300);
+}
+
+.mc__pips {
+  display: inline-flex;
+  gap: 0.22rem;
+  align-items: center;
+}
+
+.mc__pip {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 1px;
+  border: 1px solid var(--mc-line);
+  background: var(--color-stone-800);
+  transform: rotate(45deg);
+}
+
+.mc__pip.is-order {
+  background: var(--color-order-400);
+  border-color: var(--color-order-400);
+}
+.mc__pip.is-chaos {
+  background: var(--color-chaos-300);
+  border-color: var(--color-chaos-300);
+}
+.mc__pip.is-balance {
+  background: var(--color-balance-400);
+  border-color: var(--color-balance-400);
+}
+
+.mc__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-left: 1rem;
+}
+
+.mc__btn {
+  min-height: 2.15rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.mc__btn:hover:not(:disabled) {
+  border-color: var(--mc-gem);
+  color: var(--color-gem-200);
+}
+
+.mc__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.mc__btn--gem {
+  border-color: var(--color-gem-500);
+  background: color-mix(in srgb, var(--color-gem-600) 28%, var(--color-stone-800));
+  color: var(--color-parch-50);
+}
+
+/* ── Zones ── */
+.mc__zone {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.8rem 0.75rem 0.75rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 12%, var(--color-stone-900)) 0%,
+      var(--color-stone-900) 28%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent);
+}
+
+.mc__zone-title {
+  align-self: flex-start;
+  margin: -1.3rem 0 0;
+  padding: 0 0.55rem;
+  background: var(--color-stone-900);
+  font-family: var(--font-display), serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mc-gold);
+}
+
+/* ── Regions: single 11-col grid ── */
+.mc__crests {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.mc__crest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 6.35rem;
+  margin: 0;
+  padding: 0.55rem 0.2rem 0.4rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  text-align: center;
+}
+
+.mc__crest-art {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mc__crest-name {
+  display: block;
+  width: 100%;
+  padding: 0 0.1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-parch-50);
+}
+
+.mc__crest-meta {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: lowercase;
+  color: var(--color-parch-300);
+}
+
+.mc__crest.is-on {
+  border-color: var(--mc-gem);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-gem-600) 32%, var(--color-stone-raised)) 0%,
+      color-mix(in srgb, var(--color-gem-600) 15%, var(--color-stone-800)) 72%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 48%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 22%, transparent);
+}
+
+.mc__crest.is-on .mc__crest-meta {
+  color: var(--color-gem-300);
+}
+
+.mc__crest.is-dim:not(.is-on) {
+  opacity: 0.68;
+  filter: saturate(0.7);
+}
+
+.mc__crest.is-blocked,
+.mc__crest:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
+/* ── Relics ── */
+.mc__relics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.mc__tier {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 1.25rem;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 3.75rem;
+  padding: 0.32rem 0.45rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-stone-950) 50%, var(--color-stone-900));
+}
+
+.mc__tier-id {
+  font-family: var(--font-display), serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--mc-gold);
+  text-align: center;
+}
+
+.mc__seats {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.mc__seat {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  width: 6.4rem;
+  min-width: 6.4rem;
+  max-width: 6.4rem;
+  min-height: 3.25rem;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: var(--color-stone-800);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  text-align: center;
+}
+
+.mc__seat img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.mc__seat-mono {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--mc-line);
+  font-family: var(--font-display), serif;
+  font-size: 0.7rem;
+  color: var(--mc-gold);
+  flex: 0 0 auto;
+}
+
+.mc__seat-name {
+  width: 100%;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mc__seat.is-on {
+  border-color: var(--mc-gem);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 45%, transparent);
+}
+
+.mc__seat.is-empty {
+  width: 6.4rem;
+  min-width: 6.4rem;
+  max-width: 6.4rem;
+  justify-content: center;
+  padding: 0;
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.7;
+  background: var(--color-stone-inset);
+}
+
+.mc__seat-plus {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--mc-line);
+  clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%);
+  background: var(--color-stone-950);
+  color: var(--color-parch-300);
+  opacity: 0.55;
+  font-size: 0.95rem;
+}
+
+.mc__tier-mark {
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1px solid var(--mc-gold);
+  opacity: 0.45;
+  transform: rotate(45deg);
+  justify-self: center;
+}
+
+/* Hover tip */
+.mc__tip {
+  display: none;
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  bottom: calc(100% + 6px);
+  width: min(19rem, 72vw);
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background: var(--color-stone-950);
+  box-shadow: 3px 5px 0 color-mix(in srgb, var(--color-stone-950) 80%, transparent);
+  color: var(--color-parch-100);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.mc__tip strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-display), serif;
+  font-size: 0.875rem;
+  color: var(--mc-gold);
+}
+
+.mc__tip ul {
+  margin: 0;
+  padding-left: 0.95rem;
+  font-size: 0.8125rem;
+}
+
+.mc__tip li + li {
+  margin-top: 0.12rem;
+}
+
+.mc__seat:hover .mc__tip,
+.mc__seat:focus-visible .mc__tip {
+  display: block;
+}
+
+.mc__tier:nth-child(-n + 2) .mc__tip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+/* ── Blessings (ChatGPT window: path icons + full-width seats) ── */
+.mc__zone--bless {
+  padding-bottom: 0.55rem;
+}
+
+.mc__bless-board {
+  padding: 0.65rem 0.75rem 0.75rem;
+  border: 1px solid var(--mc-line);
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 18%, var(--color-stone-950)) 0%,
+      var(--color-stone-950) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+  overflow-x: auto;
+}
+
+.mc__lattice {
+  display: grid;
+  gap: 0.35rem 0.4rem;
+  align-items: center;
+  width: max-content;
+  min-width: 35rem;
+}
+
+.mc__lat-corner {
+  min-height: 1.1rem;
+}
+
+.mc__lat-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.1rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-parch-300);
+  text-align: center;
+}
+
+.mc__lat-head.is-god {
+  color: color-mix(in srgb, var(--mc-gold) 70%, var(--color-parch-300));
+}
+
+.mc__lat-path {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.35rem;
+  padding: 0 0.35rem 0 0.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mc__lat-ico {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  opacity: 0.95;
+}
+
+.mc__lat-path-name {
+  line-height: 1.1;
+}
+
+.mc__lat-path.is-order {
+  color: var(--color-order-400);
+}
+.mc__lat-path.is-chaos {
+  color: var(--color-chaos-300);
+}
+.mc__lat-path.is-balance {
+  color: var(--color-balance-400);
+}
+
+.mc__lat-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 2.35rem;
+  min-height: 2.35rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--mc-line) 90%, var(--color-stone-950));
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 22%, var(--color-stone-inset)) 0%,
+      var(--color-stone-inset) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
+  cursor: pointer;
+}
+
+.mc__lat-fill {
+  display: block;
+  width: calc(100% - 0.3rem);
+  height: calc(100% - 0.3rem);
+  border-radius: 2px;
+  background: transparent;
+}
+
+.mc__lat-cell:hover:not(:disabled):not(.is-god) {
+  border-color: color-mix(in srgb, var(--mc-gem) 45%, var(--mc-line));
+}
+
+.mc__lat-cell:disabled,
+.mc__lat-cell.is-locked {
+  opacity: 0.42;
+  cursor: not-allowed;
+  filter: brightness(0.85);
+}
+
+.mc__lat-cell.is-on {
+  border-color: color-mix(in srgb, var(--mc-gem) 70%, var(--mc-line));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 18%, transparent);
+}
+
+.mc__lat-cell.is-on .mc__lat-fill {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-gem-300) 55%, var(--color-gem-600)) 0%,
+      var(--color-gem-600) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 35%, transparent);
+}
+
+.mc__lat-cell.is-god {
+  cursor: default;
+  opacity: 0.78;
+  border-style: dashed;
+}
+
+.mc__lat-cell.is-god.is-on {
+  opacity: 1;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--mc-gold) 55%, var(--mc-gem));
+}
+
+.mc__lat-cell.is-god.is-on .mc__lat-fill {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--mc-gold) 40%, var(--color-gem-400)) 0%,
+      var(--color-gem-600) 100%
+    );
+}
+
+@media (max-width: 1200px) {
+  .mc__crests {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .mc__actions {
+    width: 100%;
+    margin-left: 0;
+  }
+  .mc__crests {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mc__seat {
+    width: 5.25rem;
+    min-width: 5.25rem;
+    max-width: 5.25rem;
+  }
+  .mc__lattice {
+    min-width: 35rem;
+  }
+}

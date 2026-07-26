@@ -15,7 +15,11 @@ export function WorkbenchTabs<T extends string>({
   "aria-label": string;
 }) {
   return (
-    <div role="tablist" aria-label={ariaLabel} className="comp-seg">
+    <div
+      role="tablist"
+      aria-label={ariaLabel}
+      className="comp-seg shrink-0 overflow-x-auto"
+    >
       {tabs.map((tab) => {
         const selected = tab.id === active;
         return (
@@ -26,7 +30,7 @@ export function WorkbenchTabs<T extends string>({
             aria-selected={selected}
             id={`tab-${tab.id}`}
             onClick={() => onChange(tab.id)}
-            className={`comp-seg__btn${selected ? " is-active" : ""}`}
+            className={`comp-seg__btn whitespace-nowrap${selected ? " is-active" : ""}`}
           >
             {tab.label}
           </button>
@@ -40,17 +44,24 @@ export function WorkbenchPanel({
   id,
   active,
   children,
+  clip = false,
 }: {
   id: string;
   active: string;
   children: ReactNode;
+  /** Browse desk owns scroll; other tabs use panel overflow-auto. */
+  clip?: boolean;
 }) {
   if (id !== active) return null;
   return (
     <div
       role="tabpanel"
       aria-labelledby={`tab-${id}`}
-      className="flex min-h-0 h-full flex-1 flex-col overflow-auto pt-1"
+      className={
+        clip
+          ? "flex h-full min-h-0 flex-1 flex-col overflow-hidden pt-1"
+          : "flex h-full min-h-0 flex-1 flex-col overflow-auto overscroll-contain pt-1"
+      }
     >
       {children}
     </div>

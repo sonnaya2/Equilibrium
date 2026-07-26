@@ -41,7 +41,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "stale",
-    label: "Stale fixes",
+    label: "Outdated",
     description: "",
     rows: stale,
   },

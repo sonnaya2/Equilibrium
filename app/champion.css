@@ -781,6 +781,8 @@
 }
 
 /* ── Map · Orbit Board Sky ────────────────────────────────── */
+/* Default .comp-map keeps a ledger|board grid for non-signature mocks.
+   Production /map is .board-sky (column). Signature + .board-sky win below. */
 
 .eq-champion .comp-map {
   display: grid;
@@ -795,6 +797,29 @@
     grid-template-columns: 1fr;
     min-height: auto;
   }
+}
+
+/* Board Sky column stack — board top, under stack; never side-rail on /map */
+.eq-champion .board-sky,
+.eq-champion .comp-map[data-signature="board-sky"] {
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: none;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.eq-champion .comp-map[data-signature="board-sky"] > .comp-board {
+  order: -1;
+  flex: 1 1 auto;
+  min-height: min(42vh, 420px);
+}
+
+.eq-champion .comp-map[data-signature="board-sky"] > .comp-ledger-col {
+  flex: 0 0 auto;
+  max-height: min(42vh, 420px);
+  border-right: 0;
+  box-shadow: inset 0 1px 0 var(--echo-carve);
 }
 
 .eq-champion .comp-ledger-col {
@@ -1780,16 +1805,16 @@
 }
 
 /* Map page: fill workbench width under Page shell */
-.eq-champion .comp-map {
+.eq-champion .comp-map:not([data-signature="board-sky"]) {
   min-height: min(70vh, 680px);
 }
 
-.eq-champion .comp-board {
+.eq-champion .comp-map:not([data-signature="board-sky"]) .comp-board {
   min-height: min(70vh, 680px);
 }
 
-/* Ledger in side rail: single column, not multi-col under-board grid */
-.eq-champion .comp-ledger-col .panel {
+/* Side-rail ledger (non–Board Sky): single column, not multi-col under-board grid */
+.eq-champion .comp-map:not([data-signature="board-sky"]) .comp-ledger-col .panel {
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -1797,10 +1822,107 @@
   height: 100%;
 }
 
-.eq-champion .comp-ledger-col ul.grid {
+.eq-champion .comp-map:not([data-signature="board-sky"]) .comp-ledger-col ul.grid {
   display: flex !important;
   flex-direction: column;
   grid-template-columns: none !important;
+}
+
+/* Production Map Board Sky — horizontal region chips (Daylit density) */
+.eq-champion .board-sky__regions-head {
+  gap: 0.35rem 0.55rem;
+}
+
+.eq-champion .board-sky__clear {
+  border: 1px solid var(--echo-border);
+  border-radius: 2px;
+  background: var(--echo-rail);
+  color: var(--echo-parch-100);
+  font-size: 0.72rem;
+  line-height: 1.2;
+  padding: 0.22rem 0.48rem;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .board-sky__clear:hover:not(:disabled) {
+  color: var(--echo-parch-50);
+  border-color: var(--echo-carve);
+}
+
+.eq-champion .board-sky__clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.eq-champion .board-sky__region-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.eq-champion .board-sky__region-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  max-width: 12.5rem;
+  padding: 0.26rem 0.46rem;
+  border: 1px solid var(--echo-border);
+  border-radius: 2px;
+  background: var(--echo-rail);
+  color: var(--echo-parch-100);
+  font-size: 0.72rem;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .board-sky__region-chip:hover:not([aria-disabled="true"]) {
+  color: var(--echo-parch-50);
+  border-color: var(--echo-carve);
+}
+
+.eq-champion .board-sky__region-chip.is-picked {
+  color: var(--echo-gem-bright);
+  border-color: var(--echo-gem-deep);
+  background: color-mix(in srgb, var(--echo-stage) 88%, var(--echo-gem-deep) 12%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--echo-gem) 18%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .board-sky__region-chip.is-focus {
+  box-shadow:
+    inset 0 0 0 1px var(--echo-gem),
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .board-sky__region-chip.is-picked.is-focus {
+  border-color: var(--echo-gem);
+  box-shadow:
+    inset 0 0 0 1px var(--echo-gem),
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .board-sky__region-chip[aria-disabled="true"]:not(.is-picked) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.eq-champion .board-sky__region-chip.is-locked:not(.is-picked) {
+  color: var(--echo-parch-300);
+  opacity: 0.72;
+}
+
+.eq-champion .board-sky__lock {
+  flex-shrink: 0;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--echo-parch-400);
 }
 
 
@@ -1972,7 +2094,8 @@
 @media (max-width: 960px) {
   .eq-champion .research-browse-desk {
     grid-template-columns: 1fr;
-    overflow: visible;
+    /* Keep bay scrollports under the workbench shell — visible broke height and froze nav. */
+    overflow: hidden;
     min-height: 0;
   }
 }
@@ -2097,7 +2220,7 @@
   }
 }
 
-/* Tasks / Data / Build / Combat: full workbench height */
+/* Tasks / Data / Build / Combat fill — document-safe (no body 100svh lock). */
 .eq-champion main.comp-stage {
   display: flex;
   flex-direction: column;
@@ -2114,6 +2237,12 @@
   padding: 0.4rem 0.65rem 0.55rem;
 }
 
+/* Data only: definite height so twin-desk bays scroll without freezing the shell. */
+.eq-champion .workbench-fill:has(> .data-screen) {
+  min-height: calc(100svh - 3.25rem);
+  overflow: hidden;
+}
+
 .eq-champion .workbench-fill > .comp-desk-route,
 .eq-champion .workbench-fill > .tasks-desk,
 .eq-champion .workbench-fill > .tasks-gallery,
@@ -2124,6 +2253,11 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+
+.eq-champion .workbench-fill:has(> .data-screen) > .data-screen {
+  flex: 1 1 0;
+  overflow: hidden;
 }
 
 /* Tasks gallery (Cipher R3): fill remaining height */
@@ -2600,7 +2734,7 @@
   padding: 0.28rem 0.4rem;
 }
 
-/* Twin desk: each bay scrolls; stage never collapses to empty height */
+/* Twin desk: each bay scrolls when height is known; never infinite-grow the page */
 .eq-champion .research-browse-desk > .comp-crest-rail,
 .eq-champion .research-browse-desk > .comp-stage-col {
   min-height: 0;
@@ -2610,6 +2744,13 @@
 }
 
 .eq-champion .research-browse-desk > .comp-stage-col {
-  min-height: 16rem;
+  /* Soft floor only — do not use min-height: 100vh (that froze the shell). */
+  min-height: 12rem;
+}
+
+/* Data tab strips stay one row (outer + nested section tabs). */
+.eq-champion .data-screen .comp-seg {
+  flex-wrap: nowrap;
+  max-width: 100%;
 }
 

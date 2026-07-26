@@ -1,0 +1,446 @@
+/*
+  Grove Grid R2 — dense cols + Cipher ribbon + content-height tiles.
+  Virt rows replace auto-fill; RO min track ~11.5–12.75rem. No idle gem chrome.
+*/
+
+.td-gw-grove {
+  --g-void: var(--color-stone-950);
+  --g-shell: var(--color-stone-900);
+  --g-stage: var(--color-stone-800);
+  --g-raised: var(--color-stone-raised);
+  --g-inset: var(--color-stone-inset);
+  --g-border: var(--color-stone-750);
+  --g-carve: var(--color-stone-carve);
+  --g-parch: var(--color-parch-50);
+  --g-muted: var(--color-parch-100);
+  --g-dim: var(--color-parch-300);
+  --g-gem: var(--color-gem-300);
+  --g-gem-deep: var(--color-gem-500);
+  --g-gold: var(--color-gold-400);
+  --g-gap: 0.3rem;
+
+  color: var(--g-parch);
+  background: var(--g-void);
+  font-size: 0.875rem;
+  line-height: 1.3;
+  min-height: 0;
+}
+
+.td-gw-grove :focus-visible {
+  outline: 1px solid var(--g-gem);
+  outline-offset: 2px;
+}
+
+.td-gw-grove button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.td-gw-grove__shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
+  min-height: 24rem;
+  border: 1px solid var(--g-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--g-stage) 55%, var(--g-shell)) 0%,
+      var(--g-shell) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--g-carve);
+}
+
+/* ── facets ─────────────────────────────────────────── */
+
+.td-gw-grove__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.4rem;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--g-border);
+  background: color-mix(in srgb, var(--g-stage) 72%, var(--g-shell));
+  flex-shrink: 0;
+}
+
+.td-gw-grove__title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--g-gold);
+}
+
+.td-gw-grove__count {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--g-dim);
+}
+
+.td-gw-grove__count .is-pts {
+  color: var(--g-gem);
+}
+
+.td-gw-grove__count .is-virt {
+  color: var(--g-muted);
+}
+
+.td-gw-grove__search {
+  flex: 0 1 10rem;
+  min-width: 7rem;
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--g-border);
+  border-radius: 2px;
+  background: var(--g-inset);
+  color: var(--g-parch);
+  font-size: 0.8125rem;
+}
+
+.td-gw-grove__chip {
+  border: 1px solid var(--g-border);
+  background: var(--color-stone-850);
+  padding: 0.22rem 0.45rem;
+  font-size: 0.75rem;
+  border-radius: 2px;
+  color: var(--g-muted);
+  white-space: nowrap;
+}
+
+.td-gw-grove__chip.is-on {
+  border-color: var(--g-gem-deep);
+  color: var(--g-gem);
+  background: var(--g-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--g-gem) 28%, transparent);
+}
+
+.td-gw-grove__chip--tier {
+  text-transform: capitalize;
+}
+
+.td-gw-grove__region-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.td-gw-grove__select {
+  padding: 0.22rem 0.35rem;
+  border: 1px solid var(--g-border);
+  border-radius: 2px;
+  background: var(--g-inset);
+  color: var(--g-muted);
+  font-size: 0.8125rem;
+  max-width: 11rem;
+}
+
+.td-gw-grove__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin-left: auto;
+}
+
+.td-gw-grove__hint {
+  margin: 0;
+  padding: 0.2rem 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--g-border) 70%, transparent);
+  font-size: 0.6875rem;
+  color: var(--g-dim);
+  flex-shrink: 0;
+}
+
+.td-gw-grove__hint a {
+  color: var(--g-gem);
+}
+
+/* ── board / virt ───────────────────────────────────── */
+
+.td-gw-grove__board {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.4rem;
+  scrollbar-width: thin;
+}
+
+.td-gw-grove__empty {
+  margin: 0;
+  padding: 0.75rem;
+  color: var(--g-muted);
+}
+
+.td-gw-grove__virt {
+  position: relative;
+  width: 100%;
+}
+
+.td-gw-grove__row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--g-cols, 4), minmax(0, 1fr));
+  gap: var(--g-gap);
+  align-items: start;
+  box-sizing: border-box;
+  padding-bottom: var(--g-gap);
+}
+
+/* ── tile (content-height, no min-height bloat) ─────── */
+
+.td-gw-grove__tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--g-border);
+  border-radius: 2px;
+  background: var(--g-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--g-carve) 35%, transparent);
+  overflow: hidden;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.td-gw-grove__tile.is-on {
+  border-color: var(--g-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--g-gem) 30%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--g-gem) 16%, transparent);
+}
+
+.td-gw-grove__tile.is-done .td-gw-grove__name {
+  color: var(--g-gem);
+}
+
+/* Head: check | crest | name — name owns the scan line */
+.td-gw-grove__head {
+  display: grid;
+  grid-template-columns: 0.95rem 1.5rem minmax(0, 1fr);
+  gap: 0.28rem;
+  align-items: start;
+  padding: 0.32rem 0.32rem 0.2rem;
+  cursor: pointer;
+}
+
+.td-gw-grove__check {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.18rem;
+  accent-color: var(--g-gem-deep);
+  cursor: pointer;
+}
+
+.td-gw-grove__crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--g-border) 85%, transparent);
+  border-radius: 2px;
+  background: var(--g-shell);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--g-carve) 22%, transparent);
+  flex-shrink: 0;
+}
+
+.td-gw-grove__crest.is-global {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--g-dim);
+}
+
+/* Readable name: 14px floor, 2-line clamp, no meta under it */
+.td-gw-grove__name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.28;
+  color: var(--g-parch);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ── cipher ribbon (stolen scan instrument) ─────────── */
+
+.td-gw-grove__ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.28rem;
+  margin: 0 0.28rem 0.28rem;
+  padding: 0.16rem 0.32rem;
+  border: 1px solid color-mix(in srgb, var(--g-border) 80%, transparent);
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--g-inset) 88%, var(--g-raised)) 0%,
+      var(--g-inset) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--g-carve) 18%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.td-gw-grove__tile.is-on .td-gw-grove__ribbon {
+  border-color: color-mix(in srgb, var(--g-gem-deep) 45%, var(--g-border));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--g-raised) 55%, var(--g-inset)) 0%,
+      var(--g-inset) 100%
+    );
+}
+
+.td-gw-grove__loc {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--g-dim);
+  text-transform: capitalize;
+}
+
+.td-gw-grove__figures {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.td-gw-grove__comp {
+  color: var(--g-muted);
+  min-width: 2.4rem;
+  text-align: right;
+}
+
+.td-gw-grove__comp a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--g-border) 90%, transparent);
+  text-underline-offset: 2px;
+}
+
+.td-gw-grove__comp a:hover {
+  color: var(--g-gem);
+  text-decoration-color: var(--g-gem-deep);
+}
+
+.td-gw-grove__pts {
+  color: var(--g-gem);
+  font-weight: 600;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.td-gw-grove__pts .unit {
+  font-weight: 400;
+  font-size: 0.5625rem;
+  color: var(--g-dim);
+  margin-left: 0.1rem;
+}
+
+/* ── in-tile expand (no foot; region already on ribbon) ─ */
+
+.td-gw-grove__detail {
+  padding: 0.32rem 0.38rem 0.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--g-gem-deep) 32%, var(--g-border));
+  background: color-mix(in srgb, var(--g-raised) 65%, var(--g-shell));
+}
+
+.td-gw-grove__detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.td-gw-grove__detail-name {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--g-parch);
+}
+
+.td-gw-grove__detail-name.is-done {
+  color: var(--g-gem);
+}
+
+.td-gw-grove__close {
+  margin-left: auto;
+  border: 1px solid var(--g-border);
+  background: var(--color-stone-850);
+  color: var(--g-muted);
+  padding: 0.15rem 0.35rem;
+  font-size: 0.6875rem;
+  border-radius: 2px;
+}
+
+.td-gw-grove__close:hover {
+  border-color: var(--g-gem-deep);
+  color: var(--g-gem);
+}
+
+.td-gw-grove__detail-body {
+  margin: 0.28rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--g-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.td-gw-grove__detail-req {
+  margin: 0.22rem 0 0;
+  font-size: 0.75rem;
+  color: var(--g-dim);
+}
+
+.td-gw-grove__wiki {
+  display: inline-block;
+  margin-top: 0.28rem;
+  font-size: 0.75rem;
+  color: var(--g-gem);
+  text-decoration: none;
+}
+
+.td-gw-grove__wiki:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .td-gw-grove__shell {
+    height: auto;
+    max-height: none;
+    min-height: 28rem;
+  }
+
+  .td-gw-grove__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .td-gw-grove__tile {
+    transition: none;
+  }
+}

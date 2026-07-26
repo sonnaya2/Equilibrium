@@ -61,7 +61,7 @@ const REGION_LABELS: Record<string, string> = {
   global_once_unlocked: "Global once unlocked",
   not_mapped_yet: "Unmapped",
   unresolved: "Unresolved",
-  unresolved_cross_boundary: "Cross-boundary unresolved",
+  unresolved_cross_boundary: "Cross-region unclear",
 };
 
 /** Nested keys that must never dump into titles or detail bodies. */
@@ -192,7 +192,7 @@ function rowRegionLabel(row: Row): string {
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+    return `Could be: ${row.region_candidates.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
@@ -275,7 +275,7 @@ function rowSubtitle(row: Row): string {
     humanString(row.support_item_effect) ||
     humanString(row.region_reason);
   if (!value || value === title) return "";
-  return value;
+  return clipProse(value, 80);
 }
 const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "methods", label: "Methods" },
@@ -289,9 +289,9 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "alternate_region_routes", label: "Alt routes" },
   { key: "dependency_note", label: "Depends on" },
   { key: "self_source_routes", label: "Routes" },
-  { key: "region_evidence", label: "Evidence" },
-  { key: "region_note", label: "Region note" },
-  { key: "training_rule", label: "Rule" },
+  { key: "region_evidence", label: "Why" },
+  { key: "region_note", label: "Region" },
+  { key: "training_rule", label: "How" },
   { key: "notes", label: "Notes" },
   { key: "requirements", label: "Reqs" },
   { key: "access_requirement", label: "Access" },
@@ -342,7 +342,18 @@ export function ProgressionResearch() {
     const needle = query.trim().toLowerCase();
     const source = rowsFor(section);
     if (!needle) return source;
-    return source.filter((row) => JSON.stringify(row).toLowerCase().includes(needle));
+    return source.filter((row) => {
+      const hay = [
+        rowTitle(row),
+        rowSubtitle(row),
+        rowRegionLabel(row),
+        ...rowDetails(row),
+        ...sourceLinks(row),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(needle);
+    });
   }, [query, section]);
 
   return (
@@ -357,7 +368,7 @@ export function ProgressionResearch() {
         />
       </div>
 
-      <div role="tablist" aria-label="Progression sections" className="comp-seg mt-2 overflow-x-auto">
+      <div role="tablist" aria-label="Progression sections" className="comp-seg mt-2 flex-nowrap overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (

@@ -60,10 +60,9 @@ export default function MapPage() {
 
   return (
     // The board is the route. `wide` drops the 1600px reading cap and
-    // `map-shell` hands the whole viewport under the header to the planner —
-    // the flex column plus min-h-0 chain is what lets the canvas fill it
-    // instead of sitting in a letterboxed strip with dead space underneath.
-    <Page wide className="map-shell flex flex-col md:py-4">
+    // `map-shell` fills main between header and footer — flex + min-h-0 lets
+    // the canvas take majority height instead of a letterboxed strip.
+    <Page wide className="map-shell flex min-h-0 flex-1 flex-col">
       <PageHeading note="Three electives · Build picks." />
       <RegionPlanner regions={plannerRegions} boundaryRules={catalog.hardRules} />
     </Page>

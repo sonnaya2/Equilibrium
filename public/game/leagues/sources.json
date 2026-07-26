@@ -106,5 +106,16 @@
       "public/game/relics/golden-touch.jpg",
       "assets/leagues/equilibrium/official/golden.jpg"
     ]
+  },
+  {
+    "file": "World_Map_icon.png",
+    "url": "https://runescape.wiki/images/World_Map_icon.png",
+    "bytes": 2613,
+    "license": "CC BY-NC-SA 3.0",
+    "credit": "RuneScape Wiki — File:World Map icon.png",
+    "dests": [
+      "public/game/leagues/world-map-icon.png",
+      "assets/rs3/leagues/world-map-icon.png"
+    ]
   }
 ]

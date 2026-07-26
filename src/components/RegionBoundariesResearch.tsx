@@ -10,13 +10,13 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "dependencies",
-    label: "Hard reqs",
+    label: "Must unlock",
     description: "",
     rows: dependencies.dependencies as unknown as ResearchRow[],
   },
   {
     key: "crossings",
-    label: "Unclear edges",
+    label: "Fuzzy edges",
     description: "",
     rows: dependencies.cross_boundary_cases.map((row) => ({
       ...row,

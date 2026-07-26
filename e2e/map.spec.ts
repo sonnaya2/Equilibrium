@@ -53,10 +53,12 @@ test("region detail joins against verified data", async ({ page }) => {
   // under the labelled panel. Live status still carries the sources line.
   const panel = page.locator('section[aria-label="Region detail"]');
   // Structural only — named content rows move with data sync; do not pin them.
+  // Default tab is Bosses (tabbed dossier under Board Sky; was a single Content table).
   await expect(panel.locator(".panel-head")).toContainText("Asgarnia");
-  await expect(panel.getByRole("columnheader", { name: "Content" })).toBeVisible();
+  await expect(panel.getByRole("columnheader", { name: "Boss" })).toBeVisible();
   await expect(panel.locator("tbody tr").first()).toBeVisible();
   // Date stays a pattern: pinning it makes every data sync fail this test.
+  // RegionInspector is section[aria-label="Region detail"][aria-live] under the board stack.
   await expect(page.locator("section[aria-live]").getByText(/sources? · verified \d{4}-\d{2}-\d{2}/)).toBeVisible();
 });
 

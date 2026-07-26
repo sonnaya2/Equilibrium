@@ -72,7 +72,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "2026",
-    label: "2026 routes",
+    label: "Current routes",
     description: "",
     rows: [...routes2026, ...perkDeps2026] as unknown as ResearchRow[],
   },

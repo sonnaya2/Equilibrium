@@ -1,0 +1,62 @@
+{
+  "snapshot_date": "2026-07-25",
+  "purpose": "Recommended Revolution++ bars from the RuneScape Wiki, normalized to our ability ids. Source pages are post-2026-modernisation (new ability names and categories).",
+  "source": {
+    "url": "https://runescape.wiki/w/Revolution/Bars/Single-target",
+    "revision": "2026-03-19",
+    "parent_url": "https://runescape.wiki/w/Revolution/Bars",
+    "parent_revision": "2026-07-20",
+    "mechanic_url": "https://runescape.wiki/w/Revolution"
+  },
+  "notes": "Bars assume Revolution triggers all ability types. revolution_size is the number of bar slots Revolution manages. replacements are the wiki's own swap notes for locked greater variants. necromancy ships for completeness but is unsupported by the engine beyond Volley of Souls.",
+  "bars": [
+    {
+      "id": "melee-dual-wield",
+      "style": "melee",
+      "setup": "Dual wield",
+      "revolution_size": 10,
+      "slots": ["Berserk", "Meteor Strike", "Chaos Roar", "Overpower", "Rend", "Dismember", "Flurry", "Adaptive Strike", "Greater Fury", "Assault"],
+      "replacements": [{ "from": "Greater Fury", "to": "Fury" }]
+    },
+    {
+      "id": "melee-two-handed",
+      "style": "melee",
+      "setup": "Two-handed",
+      "revolution_size": 10,
+      "slots": ["Berserk", "Meteor Strike", "Chaos Roar", "Overpower", "Rend", "Dismember", "Hurricane", "Adaptive Strike", "Greater Fury", "Assault"],
+      "replacements": [{ "from": "Greater Fury", "to": "Fury" }]
+    },
+    {
+      "id": "ranged",
+      "style": "ranged",
+      "setup": "Any",
+      "revolution_size": 10,
+      "slots": ["Greater Death's Swiftness", "Greater Ricochet", "Sacrifice", "Imbue: Shadows", "Shadow Tendrils", "Galeshot", "Rapid Fire", "Deadshot", "Snap Shot", "Piercing Shot"],
+      "replacements": [
+        { "from": "Greater Death's Swiftness", "to": "Death's Swiftness" },
+        { "from": "Greater Ricochet", "to": "Ricochet" }
+      ]
+    },
+    {
+      "id": "magic",
+      "style": "magic",
+      "setup": "Any",
+      "revolution_size": 10,
+      "slots": ["Greater Sunshine", "Tsunami", "Greater Concentrated Blast", "Asphyxiate", "Combust", "Omnipower", "Smoke Tendrils", "Sonic Wave", "Wild Magic", "Dragon Breath"],
+      "replacements": [
+        { "from": "Greater Sunshine", "to": "Sunshine" },
+        { "from": "Greater Concentrated Blast", "to": "Concentrated Blast" }
+      ]
+    },
+    {
+      "id": "necromancy",
+      "style": "necromancy",
+      "setup": "Any",
+      "revolution_size": 11,
+      "slots": ["Conjure Undead Army", "Death Skulls", "Conjure Vengeful Ghost", "Living Death", "Soul Sap", "Conjure Skeleton Warrior", "Touch of Death", "Sacrifice", "Volley of Souls", "Finger of Death", "Bloat"],
+      "replacements": [],
+      "supported": false,
+      "unsupported_reason": "Necromancy ability bands beyond Volley of Souls are not yet sourced in the corpus."
+    }
+  ]
+}

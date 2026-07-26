@@ -17,6 +17,16 @@ The goal is to keep source facts usable by code without copying wiki prose 1:1.
 - `2026-changes.json` — other 2026 changes that materially affect League planning.
 - `unknowns.json` — intentionally unresolved or not-yet-revealed data. Do not silently guess these values.
 
+Later research arrives in named families rather than new top-level files:
+
+- `progression-enrichment-*.json` — merge-only overlays applied to `progression-unlocks.json` by `sync-reference-data.mjs`.
+- `planner-enrichment-*.json` — merge-only overlays applied to `planner-expansions.json` by `sync-planner-expansions.mjs`.
+- `planner-expansions-*.json` — specialist Slayer, Invention and Archaeology supplements copied to `data/research/` by `sync-planner-supplements.mjs`.
+- `combat-consumables-pass-1.json` and `permanent-unlocks-pass-*.json` — permanent-unlock research passes copied to `data/reference/` by `sync-permanent-unlock-passes.mjs`; the consumables pass also enriches the overload chain in `progression-unlocks.json`.
+- `*-audit-*.json` — dated audit inputs consumed by sync scripts; they are pipeline inputs, not app data.
+- `postits.json` — source-linked working notes for facts still moving. Not app data.
+- `pr20-salvage-audit-2026-07-24.json` — PR salvage provenance record. Not app data.
+
 ## Confidence fields
 
 - `confirmed_official` — explicitly stated by Jagex.

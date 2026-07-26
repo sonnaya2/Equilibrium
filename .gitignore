@@ -103,3 +103,7 @@ design-previews/
 .shots/
 dev-server.log
 .kimi-code/
+
+# Scratch output of the dev-only region authoring scripts
+scripts/.region-draft.json
+scripts/.region-areas.json

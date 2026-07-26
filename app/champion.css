@@ -1962,7 +1962,8 @@
 .eq-champion .research-browse-desk {
   display: grid;
   grid-template-columns: 12rem minmax(0, 1fr);
-  min-height: calc(100vh - 11rem);
+  flex: 1;
+  min-height: 0;
   border: 1px solid var(--echo-border);
   background: var(--echo-stage);
   overflow: hidden;
@@ -2584,7 +2585,7 @@
 
 .eq-champion .research-browse-desk {
   flex: 1;
-  min-height: calc(100vh - 11rem);
+  min-height: 0 !important;
   margin-top: 0.15rem !important;
 }
 

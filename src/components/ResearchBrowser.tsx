@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
   ResearchCatalog,
-  ResearchContentRow,
   ResearchRegion,
   ResearchSkill,
   ResearchTrainingMethod,
@@ -16,6 +15,7 @@ import type { RegionId } from "@/league";
 import { GameIcon } from "@/components/GameIcon";
 
 import { regionCrestPath } from "@/lib/gameArt";
+import { clipProse } from "./ResearchSection";
 
 type Mode = "region" | "skill";
 
@@ -192,15 +192,8 @@ function MethodTable({
                     {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
                   </div>
                   {method.note ? (
-                    <div className="mt-0.5 max-w-lg truncate text-[12px] text-parch-300" title={cleanText(method.note)}>
-                      {cleanText(method.note).slice(0, 120)}
-                      {method.note.length > 120 ? "…" : ""}
-                    </div>
-                  ) : null}
-                  {method.warning ? (
-                    <div className="mt-0.5 max-w-lg truncate text-[12px] text-parch-400" title={cleanText(method.warning)}>
-                      {cleanText(method.warning).slice(0, 100)}
-                      {method.warning.length > 100 ? "…" : ""}
+                    <div className="mt-0.5 max-w-lg text-[12px] text-parch-300" title={method.note}>
+                      {clipProse(method.note, 100)}
                     </div>
                   ) : null}
                 </td>
@@ -257,12 +250,11 @@ function RegionDetail({
           <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="data-table min-w-[640px]">
+          <table className="data-table min-w-[480px]">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Kind</th>
-                <th>Detail</th>
               </tr>
             </thead>
             <tbody>
@@ -280,14 +272,6 @@ function RegionDetail({
                       <InlineSource source={row.source} stopClick />
                     </td>
                     <td className="secondary">{row.kind}</td>
-                    <td className="max-w-md secondary truncate text-[13px] leading-5" title={row.detail || undefined}>
-                      {row.detail
-                        ? (() => {
-                            const d = cleanText(row.detail);
-                            return d.length > 120 ? `${d.slice(0, 119)}…` : d;
-                          })()
-                        : "—"}
-                    </td>
                   </tr>
                 );
               })}
@@ -302,44 +286,32 @@ function RegionDetail({
           <span className="font-normal text-parch-100">{region.upgrades.length}</span>
         </div>
         <div>
-          {region.upgrades.length ? region.upgrades.map((upgrade, index) => {
-            const regionAccess = upgradeRegionAccess(upgrade);
-            const focused = focusedUpgrade === index;
-            return (
-              <button
-                type="button"
-                key={`upgrade-${index}-${upgrade.name}`}
-                onClick={() => onFocus({ kind: "upgrade", index })}
-                aria-pressed={focused}
-                className={`grid w-full gap-0.5 border-b border-stone-750/70 px-3 py-2 text-left last:border-b-0 md:grid-cols-[minmax(160px,0.3fr)_minmax(0,1fr)] md:gap-4 ${
-                  focused ? "bg-stone-raised" : index % 2 === 1 ? "bg-stone-zebra" : ""
-                }`}
-              >
-                <div>
-                  <div className="text-[14px] font-medium text-parch-50">
+          {region.upgrades.length ? (
+            region.upgrades.map((upgrade, index) => {
+              const focused = focusedUpgrade === index;
+              return (
+                <button
+                  type="button"
+                  key={`upgrade-${index}-${upgrade.name}`}
+                  onClick={() => onFocus({ kind: "upgrade", index })}
+                  aria-pressed={focused}
+                  className={`flex w-full flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-stone-750/70 px-3 py-1.5 text-left last:border-b-0 ${
+                    focused ? "bg-stone-raised" : index % 2 === 1 ? "bg-stone-zebra" : ""
+                  }`}
+                >
+                  <span className="text-[13px] font-medium text-parch-50">
                     {cleanText(upgrade.name)}
                     <InlineSource source={upgrade.source} stopClick />
-                  </div>
-                  <div className="mt-0.5 text-[11px] text-parch-100">{upgrade.category}</div>
-                  {regionAccess ? <div className="mt-0.5 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
-                </div>
-                <div className="text-[13px] leading-5 text-parch-100">
-                  {upgrade.detail
-                    ? (() => {
-                        const d = cleanText(upgrade.detail);
-                        return d.length > 120 ? `${d.slice(0, 119)}…` : d;
-                      })()
-                    : "—"}
-                  {upgrade.requirements.length ? (
-                    <div className="mt-0.5 truncate text-[12px] text-parch-300">
-                      {upgrade.requirements.slice(0, 4).join(" · ")}
-                      {upgrade.requirements.length > 4 ? "…" : ""}
-                    </div>
+                  </span>
+                  {upgrade.category ? (
+                    <span className="text-[11px] text-parch-300">{upgrade.category}</span>
                   ) : null}
-                </div>
-              </button>
-            );
-          }) : <p className="px-3 py-2 text-[13px] text-parch-100">No upgrades.</p>}
+                </button>
+              );
+            })
+          ) : (
+            <p className="px-3 py-2 text-[13px] text-parch-100">No upgrades.</p>
+          )}
         </div>
       </section>
 

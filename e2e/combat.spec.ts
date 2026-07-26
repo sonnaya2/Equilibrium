@@ -102,7 +102,7 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 
   await page.getByRole("button", { name: "Perks", exact: true }).click();
   await expect(page.getByText("Perks & sets")).toBeVisible();
-  await expect(page.getByText(/Equilibrium rank \(\+6% \+2%\/rank/)).toBeVisible();
+  await expect(page.getByText(/Equilibrium rank \(R1 \+8% AD/)).toBeVisible();
 
   await page.getByRole("button", { name: "Buffs", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();

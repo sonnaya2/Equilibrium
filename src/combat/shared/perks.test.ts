@@ -23,7 +23,7 @@ const applyAt = (damage: number, modifiers: Parameters<typeof runPipeline>[1]) =
   runPipeline({ damage }, modifiers, meleeContext).damage;
 
 describe("shared/perks", () => {
-  it("Equilibrium is +6% + 2%/rank (R1 +8% ... R4 +14%) and blocks crits", () => {
+  it("Equilibrium is R1 +8% AD then +2%/rank to +14% and blocks crits", () => {
     expect(equilibriumDamageBonus(1)).toBeCloseTo(0.08, 10);
     expect(equilibriumDamageBonus(4)).toBeCloseTo(0.14, 10);
     expect(applyAt(1000, [equilibriumPerkModifier(1)])).toBe(1080);
@@ -48,12 +48,13 @@ describe("shared/perks", () => {
     expect(preciseMinHitAddition(1100, 6)).toBeCloseTo(99, 10);
   });
 
-  it("Ultimatums applies only to ultimate casts, +3% plus 1%/rank", () => {
+  it("Ultimatums applies only to ultimate casts (R1 +4% ... R4 +7%)", () => {
+    expect(applyAt(1000, [ultimatumsPerkModifier(1, "ultimate")])).toBe(1040);
     expect(applyAt(1000, [ultimatumsPerkModifier(4, "ultimate")])).toBe(1070);
     expect(applyAt(1000, [ultimatumsPerkModifier(4, "basic")])).toBe(1000);
   });
 
-  it("Lunging matches engine and record ability ids at +10% + 3%/rank", () => {
+  it("Lunging matches engine and record ability ids (R1 +13% ... R4 +22%)", () => {
     expect(applyAt(1000, [lungingPerkModifier(4, "melee:dismember")])).toBe(1220);
     expect(applyAt(1000, [lungingPerkModifier(4, "dismember")])).toBe(1220);
     expect(applyAt(1000, [lungingPerkModifier(4, "combust")])).toBe(1220);

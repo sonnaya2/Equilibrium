@@ -4,12 +4,12 @@ import { NumberField } from "./NumberField";
 import type { Loadout } from "./useLoadout";
 
 const PERK_FIELDS = [
-  ["equilibrium", "Equilibrium rank (+6% +2%/rank AD, no crits)", 4],
-  ["eruptive", "Eruptive rank (+0.5%/rank AD)", 4],
-  ["biting", "Biting rank (+2%/rank crit; +2.2% if lvl20)", 4],
-  ["ultimatums", "Ultimatums rank (+3% +1%/rank ult)", 4],
-  ["lunging", "Lunging rank (+10% +3%/rank Combust/Dismember)", 4],
-  ["energising", "Energising rank (+50 +25/rank accuracy)", 4],
+  ["equilibrium", "Equilibrium rank (R1 +8% AD, +2%/rank to +14%, no crits)", 4],
+  ["eruptive", "Eruptive rank (R1 +0.5% AD, +0.5%/rank to +2%)", 4],
+  ["biting", "Biting rank (R1 +2% crit, +2%/rank; +2.2% if lvl20)", 4],
+  ["ultimatums", "Ultimatums rank (R1 +4% ult, +1%/rank to +7%)", 4],
+  ["lunging", "Lunging rank (R1 +13% Combust/Dismember, +3%/rank)", 4],
+  ["energising", "Energising rank (R1 +75 accuracy, +25/rank)", 4],
   ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 5],
   ["tumekensPieces", "Tumeken's pieces (+1.5%/piece crit)", 5],
 ] as const;

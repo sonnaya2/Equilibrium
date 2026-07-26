@@ -24,15 +24,17 @@ function wikiPerk(title: string, page: string): SourceReference {
 // --- Equilibrium (reworked 9 Mar 2026; former AD-range perk is now Eruptive) ---
 
 /**
- * Equilibrium perk (wiki). Ability damage +6% + 2% per rank (R1 +8% ... R4 +14%).
- * Prevents critical strikes (and 30s after unequip - modelled as hard no-crit while
- * active, not the cooldown). Source: https://runescape.wiki/w/Equilibrium
+ * Equilibrium perk (wiki). Rank 1 is +8% ability damage; each higher rank adds +2%
+ * (R2 +10%, R3 +12%, R4 +14%). Prevents critical strikes (and 30s after unequip —
+ * modelled as hard no-crit while active, not the cooldown).
+ * Source: https://runescape.wiki/w/Equilibrium
  */
 export function equilibriumDamageBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
     throw new RangeError(`equilibriumDamageBonus: rank ${rank} outside 1-4`);
   }
-  return 0.06 + 0.02 * rank;
+  // Rank 1 = 8%; +2% per rank after that (not "6% + 2%*rank" in the UI sense).
+  return 0.08 + 0.02 * (rank - 1);
 }
 
 export function equilibriumPerkModifier(rank: number): CombatModifier {
@@ -55,7 +57,7 @@ export function equilibriumBlocksCrits(rank: number): boolean {
 // --- Eruptive (formerly Equilibrium pre-2024 rework; current flat AD perk) ---
 
 /**
- * Eruptive: ability damage x (1 + 0.005 x rank). Max rank 4 -> +2%.
+ * Eruptive: rank 1 +0.5% ability damage; +0.5% per rank (R4 +2%).
  * Affects anything computed from the AD stat (DoTs, poison, conjures, Aftershock, Crackling).
  * Source: https://runescape.wiki/w/Eruptive
  */
@@ -63,7 +65,7 @@ export function eruptiveDamageBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
     throw new RangeError(`eruptiveDamageBonus: rank ${rank} outside 1-4`);
   }
-  return 0.005 * rank;
+  return 0.005 + 0.005 * (rank - 1);
 }
 
 export function eruptivePerkModifier(rank: number): CombatModifier {
@@ -81,7 +83,7 @@ export function eruptivePerkModifier(rank: number): CombatModifier {
 // --- Biting (crit chance) ---
 
 /**
- * Biting: +2% critical strike chance per rank (x1.1 on item level 20 gear -> +2.2%/rank).
+ * Biting: rank 1 +2% crit chance; +2% per rank (lvl20 gear: rank 1 +2.2%, +2.2%/rank).
  * Max rank 4. Does not affect DoT abilities.
  * Source: https://runescape.wiki/w/Biting
  */
@@ -90,7 +92,7 @@ export function bitingCritChanceBonus(rank: number, level20Gear = false): number
     throw new RangeError(`bitingCritChanceBonus: rank ${rank} outside 1-4`);
   }
   const perRank = level20Gear ? 0.022 : 0.02;
-  return perRank * rank;
+  return perRank + perRank * (rank - 1);
 }
 
 // --- Precise (min-hit raise; band-side, not a CombatModifier mult) ---
@@ -113,14 +115,22 @@ export function preciseMinHitAddition(maxDamage: number, rank: number): number {
 
 // --- Ultimatums / Lunging / Energising ---
 
-/** Ultimatums: ultimate abilities +3% + 1%/rank damage (R1 +4% ... R4 +7%). */
+/** Ultimatums: rank 1 +4% ultimate damage; +1% per rank (R4 +7%). */
+export function ultimatumsDamageBonus(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
+    throw new RangeError(`ultimatumsDamageBonus: rank ${rank} outside 1-4`);
+  }
+  return 0.04 + 0.01 * (rank - 1);
+}
+
 export function ultimatumsPerkModifier(rank: number, castCategory: string): CombatModifier {
+  const mult = 1 + ultimatumsDamageBonus(rank);
   return {
     id: `perk:ultimatums:${rank}`,
     stage: "base",
     priority: 100,
     applies: () => castCategory === "ultimate",
-    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1 + (3 + rank) / 100) }),
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
     source: wikiPerk("Ultimatums (perk)", "Ultimatums"),
   };
 }
@@ -133,21 +143,32 @@ const LUNGING_ABILITY_IDS = new Set([
   "magic:combust",
 ]);
 
-/** Lunging: Combust / Dismember +10% + 3%/rank (R1 +13% ... R4 +22%). */
+/** Lunging: Combust/Dismember rank 1 +13%; +3% per rank (R4 +22%). */
+export function lungingDamageBonus(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
+    throw new RangeError(`lungingDamageBonus: rank ${rank} outside 1-4`);
+  }
+  return 0.13 + 0.03 * (rank - 1);
+}
+
 export function lungingPerkModifier(rank: number, abilityId: string): CombatModifier {
+  const mult = 1 + lungingDamageBonus(rank);
   return {
     id: `perk:lunging:${rank}`,
     stage: "base",
     priority: 100,
     applies: () => LUNGING_ABILITY_IDS.has(abilityId),
-    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1 + (10 + 3 * rank) / 100) }),
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
     source: wikiPerk("Lunging (perk)", "Lunging"),
   };
 }
 
-/** Energising: flat accuracy 50 + 25/rank (R1 75 ... R4 150). */
+/** Energising: rank 1 +75 accuracy; +25 per rank (R4 +150). */
 export function energisingAccuracyBonus(rank: number): number {
-  return 50 + 25 * rank;
+  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
+    throw new RangeError(`energisingAccuracyBonus: rank ${rank} outside 1-4`);
+  }
+  return 75 + 25 * (rank - 1);
 }
 
 // --- Race slayers (rankless; +7% vs matching race) ---

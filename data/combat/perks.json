@@ -232,7 +232,7 @@
       "maxRank": 4,
       "facts": [
         "weapon and armour gizmo combat perk",
-        "Ability damage +6% + 2% per rank (R1 +8%, R2 +10%, R3 +12%, R4 +14%)",
+        "Ability damage R1 +8%, then +2% per rank (R2 +10%, R3 +12%, R4 +14%)",
         "Prevents critical strikes while equipped",
         "Prevents critical strikes for 30s after unequip (Equilibrium cooldown)",
         "Boosts AD-derived damage (DoTs, poison, conjures, Aftershock, Crackling, god books)",

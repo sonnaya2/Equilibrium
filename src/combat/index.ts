@@ -12,6 +12,7 @@ export * from "./pipeline/calculateAbility";
 export * from "./target/genericTarget";
 export * from "./shared/perks";
 export * from "./shared/equipment";
+export * from "./shared/auras";
 export * from "./shared/prayers";
 export * from "./shared/vulnerability";
 export * from "./shared/potions";

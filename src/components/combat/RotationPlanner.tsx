@@ -85,6 +85,7 @@ export function RotationPlanner() {
           adrenaline: stats.adrenaline,
           procs: stats.procs,
           plantedFeet: stats.plantedFeet,
+          conjureBasicDamageMult: stats.conjureBasicDamageMult,
           autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),
@@ -205,7 +206,7 @@ export function RotationPlanner() {
               onClick={() => setMode(candidate)}
               className={`border px-3 py-1.5 text-xs capitalize ${
                 mode === candidate
-                  ? "border-stone-700 bg-stone-850 text-parch-50"
+                  ? "border-stone-750 bg-stone-850 text-parch-50"
                   : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
               }`}
             >
@@ -224,7 +225,7 @@ export function RotationPlanner() {
                   onClick={() => setPaletteStyle(filter.id)}
                   className={`border px-3 py-1.5 text-xs ${
                     paletteStyle === filter.id
-                      ? "border-stone-700 bg-stone-850 text-parch-50"
+                      ? "border-stone-750 bg-stone-850 text-parch-50"
                       : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
                   }`}
                 >
@@ -273,7 +274,7 @@ export function RotationPlanner() {
               type="button"
               onClick={run}
               disabled={queue.length === 0}
-              className="border border-stone-700 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
+              className="border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Run
             </button>

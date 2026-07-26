@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   deathdealer90SetFacts,
+  equipmentSetById,
   equippedSetCounts,
+  firstNecromancerConjureDamageMult,
   firstNecromancerSetFacts,
+  loadoutFirstNecromancerConjureDamageMult,
   loadoutSetCritChance,
+  setDamageModifiers,
   setEffectsSummary,
   tectonicSet,
   tumekensSunshineSet,
@@ -124,5 +128,48 @@ describe("shared/equipment set effects", () => {
     const dd = deathdealer90SetFacts(5);
     expect(dd.modifiers).toEqual([]);
     expect(dd.facts.some((f) => /Death Mark/i.test(f))).toBe(true);
+  });
+
+  it("firstNecromancerConjureDamageMult is +7%/piece from set(2), cap 5", () => {
+    expect(firstNecromancerConjureDamageMult(0)).toBe(1);
+    expect(firstNecromancerConjureDamageMult(1)).toBe(1);
+    expect(firstNecromancerConjureDamageMult(2)).toBeCloseTo(1.14, 10);
+    expect(firstNecromancerConjureDamageMult(3)).toBeCloseTo(1.21, 10);
+    expect(firstNecromancerConjureDamageMult(5)).toBeCloseTo(1.35, 10);
+    expect(firstNecromancerConjureDamageMult(9)).toBeCloseTo(1.35, 10);
+  });
+
+  it("loadout First Necro gear drives conjure mult; not player setDamageModifiers", () => {
+    const loadout = {
+      equipmentSlots: {
+        helmet: "item:first-necromancer-helm",
+        body: "item:first-necromancer-body",
+        legs: "item:first-necromancer-legs",
+        gloves: "item:first-necromancer-gloves",
+        boots: "item:first-necromancer-boots",
+      },
+    };
+    expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(5);
+    expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
+    // Conjure mult is not a player ability AD set modifier.
+    expect(setDamageModifiers(equippedSetCounts(loadout))).toEqual([]);
+    expect(equipmentSetById("first-necromancer")?.effects).toEqual([]);
+  });
+
+  it("catalogue documents anima core / vestments / trimmed as non-player-AD", () => {
+    for (const id of [
+      "vestments-of-havoc",
+      "trimmed-masterwork",
+      "virtus",
+      "anima-core-zaros",
+      "anima-core-seren",
+      "anima-core-zamorak",
+      "anima-core-sliske",
+    ]) {
+      const def = equipmentSetById(id);
+      expect(def, id).toBeDefined();
+      expect(def!.effects, id).toEqual([]);
+      expect(def!.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
   });
 });

@@ -216,9 +216,11 @@ export function loadoutSetCritChance(
 }
 
 /**
- * Outgoing damage CombatModifiers from set catalogue (damageMult kinds only).
- * Current wiki-sourced sets in the catalogue have no player-AD mult effects —
- * returns [] until a sourced damage mult is added to equipment-sets.json.
+ * Outgoing player ability-damage CombatModifiers from set catalogue
+ * (damageMult / damageMultPerPiece only). First Necromancer conjure mult is
+ * separate (firstNecromancerConjureDamageMult) — not player AD.
+ * Catalogue currently has no player-AD mult effects; returns [] until one is
+ * sourced into equipment-sets.json.
  */
 export function setDamageModifiers(
   counts: Map<string, number>,
@@ -246,6 +248,27 @@ export function setDamageModifiers(
     }
   }
   return mods;
+}
+
+/**
+ * First Necromancer robes set(2+): +7% conjure spirit basic-attack damage per
+ * piece (wiki, cap 5). Returns 1 when pieces < 2. Not player ability AD —
+ * apply to spirit autos only (not poison / commands).
+ * https://runescape.wiki/w/First_Necromancer%27s_equipment
+ */
+export function firstNecromancerConjureDamageMult(pieces: number): number {
+  const n = Math.max(0, Math.min(5, Math.floor(pieces)));
+  if (n < 2) return 1;
+  return 1 + 0.07 * n;
+}
+
+/** Equipped first-necromancer piece count → conjure basic mult (1 if none / <2). */
+export function loadoutFirstNecromancerConjureDamageMult(
+  loadout: LoadoutEquipmentView,
+): number {
+  return firstNecromancerConjureDamageMult(
+    equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+  );
 }
 
 function setCritChance(id: string, pieces: number, perPiece: number, source: SourceReference): SetEffect {
@@ -297,7 +320,10 @@ function factsFor(setId: string, pieces: number): SetFactsResult {
   };
 }
 
-/** Conjure damage/duration only — 0 player modifiers. */
+/**
+ * Conjure damage/duration only — 0 player ability modifiers.
+ * Use firstNecromancerConjureDamageMult for the spirit basic mult.
+ */
 export const firstNecromancerSetFacts = (pieces: number) => factsFor("first-necromancer", pieces);
 
 /** Herald of Chaos adren/Berserk duration — 0 damage modifiers. */

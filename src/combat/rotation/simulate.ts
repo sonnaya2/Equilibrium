@@ -63,6 +63,7 @@ import {
 } from "../styles/necromancy/effects";
 import {
   processSpiritAutos,
+  SPIRIT_POISON_ABILITY_ID,
   type SpiritAutoEvent,
 } from "../styles/necromancy/conjures";
 import {
@@ -131,6 +132,11 @@ export interface SimulateInput {
   plantedFeet?: boolean;
   /** Crackling / Aftershock EV over the sim horizon (applied in finish). */
   procs?: ProcRules;
+  /**
+   * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).
+   * First Necromancer set: firstNecromancerConjureDamageMult(pieces). Default 1.
+   */
+  conjureBasicDamageMult?: number;
 }
 
 export interface CastRecord {
@@ -213,7 +219,11 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
   let spiritCursor = 0;
 
   function landSpiritEvents(events: SpiritAutoEvent[]): void {
+    const setMult = input.conjureBasicDamageMult ?? 1;
     for (const ev of events) {
+      // Spirit-internal mult (e.g. command windows) stays on the band.
+      // First Necro set mult is post-hit damage so intermediate AD rounding
+      // does not distort the exact +7%/piece ratio (wiki: conjure basics only).
       const hit = calculateHit({
         base: input.base,
         band: {
@@ -228,11 +238,16 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
         context: input.context,
         cap: input.cap,
       });
-      spiritMin += hit.min;
-      spiritMax += hit.max;
-      spiritExpected += hit.expected;
-      damageByTick[ev.tick] = (damageByTick[ev.tick] ?? 0) + hit.expected;
-      perAbility[ev.abilityId] = (perAbility[ev.abilityId] ?? 0) + hit.expected;
+      const scale =
+        ev.abilityId === SPIRIT_POISON_ABILITY_ID ? 1 : setMult;
+      const min = hit.min * scale;
+      const max = hit.max * scale;
+      const expected = hit.expected * scale;
+      spiritMin += min;
+      spiritMax += max;
+      spiritExpected += expected;
+      damageByTick[ev.tick] = (damageByTick[ev.tick] ?? 0) + expected;
+      perAbility[ev.abilityId] = (perAbility[ev.abilityId] ?? 0) + expected;
       endTick = Math.max(endTick, ev.tick + 1);
     }
   }

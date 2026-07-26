@@ -64,6 +64,19 @@ function hitBandLabel(a: AbilitySpec): string {
   return `${multi}${a.hits[0].band.minPct}–${a.hits[0].band.maxPct}%`;
 }
 
+function abilityMeta(ability: AbilitySpec): string {
+  return [
+    ability.category,
+    ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
+    ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
+    ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
+    (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
+    (ability as MagicAbilitySpec).requiresAnima ? "needs an active Runic Charge" : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 export function QuickCalculator() {
   const [style, setStyle] = useState<CombatStyle>("melee");
   const [level, setLevel] = useState(99);
@@ -94,130 +107,180 @@ export function QuickCalculator() {
       : null;
 
   return (
-    <div className="grid gap-5 py-5 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
-      <div>
-        <h2 className="text-sm font-medium text-parch-50">Quick</h2>
-        <p className="mt-1 text-xs text-parch-300">
-          Full post-CSM kit for every style. Necromancy Residual Souls scale Volley of Souls.
-        </p>
-        <div className="mt-3 flex gap-1">
-          {AVAILABLE_STYLES.map((s) => (
-            <button
-              key={s}
-              type="button"
-              onClick={() => {
-                setStyle(s);
-                setAbilityId(firstDamagingId(s));
-              }}
-              className={`flex items-center gap-1.5 border px-3 py-1.5 text-xs ${
-                style === s
-                  ? "border-stone-700 bg-stone-850 text-parch-50"
-                  : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
-            >
-              <GameIcon src={styleIconPath(s)} size={16} />
-              {STYLE_LABELS[s]}
-            </button>
-          ))}
-        </div>
-        <div className="mt-3 border-t border-stone-750">
-          <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
-          <NumberField label="Base ability damage" value={base} onChange={setBase} />
-          <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
-          <NumberField label="Crit chance" value={critChance} onChange={setCritChance} suffix="%" />
-          {style === "necromancy" && selectedId === "volley_of_souls" ? (
-            <NumberField
-              label="Residual Souls"
-              value={souls}
-              onChange={(value) =>
-                setSouls(Math.min(Math.max(VOLLEY_MIN_SOULS, Math.floor(value)), MAX_SOULS))
-              }
-            />
-          ) : null}
-        </div>
-        <div className="mt-3 border-t border-stone-750">
-          {palette.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              onClick={() => setAbilityId(a.id)}
-              className={`grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs ${
-                a.id === selectedId ? "bg-stone-850 text-parch-50" : "text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
-            >
-              <span>{a.name}</span>
-              <span className="font-mono">{hitBandLabel(a)}</span>
-            </button>
-          ))}
+    <div className="combat-quick">
+      <div
+        className="flex flex-wrap items-center gap-2 border-b border-stone-750 px-2 py-1.5"
+        style={{ background: "var(--echo-shell, var(--color-stone-900))" }}
+      >
+        <h2 className="m-0 text-[15px] font-medium text-parch-50">Quick</h2>
+        <span className="font-mono text-[11px] text-parch-300">facet desk · live math</span>
+        <div role="group" aria-label="Combat style" className="ml-auto flex flex-wrap gap-1">
+          {AVAILABLE_STYLES.map((s) => {
+            const active = style === s;
+            return (
+              <button
+                key={s}
+                type="button"
+                onClick={() => {
+                  setStyle(s);
+                  setAbilityId(firstDamagingId(s));
+                }}
+                aria-pressed={active}
+                className={`comp-facet inline-flex items-center gap-1.5${active ? " is-on" : ""}`}
+              >
+                <GameIcon src={styleIconPath(s)} size={14} />
+                {STYLE_LABELS[s]}
+              </button>
+            );
+          })}
         </div>
       </div>
 
+      <div className="combat-quick-grid">
+        <section className="flex min-h-0 flex-col border-r border-stone-750">
+          <div className="grid grid-cols-2 gap-x-2 border-b border-stone-750 px-2 sm:grid-cols-4">
+            <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
+            <NumberField label="Base ability damage" value={base} onChange={setBase} />
+            <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
+            <NumberField label="Crit chance" value={critChance} onChange={setCritChance} suffix="%" />
+            {style === "necromancy" && selectedId === "volley_of_souls" ? (
+              <NumberField
+                label="Residual Souls"
+                value={souls}
+                onChange={(value) =>
+                  setSouls(Math.min(Math.max(VOLLEY_MIN_SOULS, Math.floor(value)), MAX_SOULS))
+                }
+              />
+            ) : null}
+          </div>
+
+          <div
+            role="listbox"
+            aria-label={`${STYLE_LABELS[style]} abilities`}
+            className="combat-ability-scroll"
+          >
+            <table className="comp-table w-full">
+              <thead>
+                <tr>
+                  <th scope="col">Ability</th>
+                  <th scope="col">Band</th>
+                </tr>
+              </thead>
+              <tbody>
+                {palette.map((a) => {
+                  const selected = a.id === selectedId;
+                  return (
+                    <tr
+                      key={a.id}
+                      role="option"
+                      aria-selected={selected}
+                      className={selected ? "is-selected" : undefined}
+                      tabIndex={0}
+                      onClick={() => setAbilityId(a.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setAbilityId(a.id);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <td className="font-medium">{a.name}</td>
+                      <td className="mono secondary">{hitBandLabel(a)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
       {ability && result ? (
-        <div>
-          <h2 className="text-sm font-medium text-parch-50">{ability.name}</h2>
-          <p className="mt-1 text-xs text-parch-300">
-            {[
-              ability.category,
-              ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
-              ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
-              ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
-              (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
-              (ability as MagicAbilitySpec).requiresAnima ? "needs an active Runic Charge" : null,
-            ]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
-          <dl className="mt-3 border-t border-stone-750 text-sm">
-            <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-              <dt className="text-parch-300">Expected</dt>
-              <dd className="text-right font-mono text-parch-50">{formatNumber(result.expected)}</dd>
+        <div className="panel panel--facet min-w-0">
+          <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
+            <h3 className="m-0 text-inherit font-medium">{ability.name}</h3>
+            <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
+              {hitBandLabel(ability)}
+            </span>
+          </div>
+          <div className="panel-body space-y-3">
+            <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability)}</p>
+
+            <div className="flex flex-wrap items-end gap-x-6 gap-y-2 border-b border-stone-750 pb-3">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">Expected</div>
+                <div className="stat-key mt-1">{formatNumber(result.expected)}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">Min – max</div>
+                <div className="mt-1 font-mono text-lg text-parch-50">
+                  {formatNumber(result.min)} – {formatNumber(result.max)}
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-              <dt className="text-parch-300">Min – max</dt>
-              <dd className="text-right font-mono text-parch-50">
-                {formatNumber(result.min)} – {formatNumber(result.max)}
-              </dd>
-            </div>
-            <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-              <dt className="text-parch-300">Crit min – max</dt>
-              <dd className="text-right font-mono text-parch-50">
-                {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
-                {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
-              </dd>
-            </div>
-            <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-              <dt className="text-parch-300">Damage Potential</dt>
-              <dd className="text-right font-mono text-parch-50">
-                {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
-              </dd>
-            </div>
-            <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-              <dt className="text-parch-300">Adrenaline after cast</dt>
-              <dd className="text-right font-mono text-parch-50">
-                {result.adrenalineDelta >= 0 ? "+" : ""}
-                {result.adrenalineDelta}%
-              </dd>
-            </div>
-            {(ability as MeleeAbilitySpec).bloodlustGain ? (
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-                <dt className="text-parch-300">Bloodlust</dt>
+
+            <dl className="text-sm">
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                <dt className="text-parch-300">Crit min – max</dt>
                 <dd className="text-right font-mono text-parch-50">
-                  +{(ability as MeleeAbilitySpec).bloodlustGain} stack{(ability as MeleeAbilitySpec).bloodlustGain! > 1 ? "s" : ""}
+                  {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
+                  {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
                 </dd>
               </div>
-            ) : null}
-            {(ability as MeleeAbilitySpec).bloodlustScale ? (
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
-                <dt className="text-parch-300">At {(ability as MeleeAbilitySpec).bloodlustScale!.threshold} Bloodlust</dt>
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                <dt className="text-parch-300">Damage Potential</dt>
                 <dd className="text-right font-mono text-parch-50">
-                  {(ability as MeleeAbilitySpec).bloodlustScale!.band.minPct}–
-                  {(ability as MeleeAbilitySpec).bloodlustScale!.band.maxPct}% per hit
+                  {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                 </dd>
               </div>
-            ) : null}
-          </dl>
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                <dt className="text-parch-300">Adrenaline after cast</dt>
+                <dd className="text-right font-mono text-parch-50">
+                  {result.adrenalineDelta >= 0 ? "+" : ""}
+                  {result.adrenalineDelta}%
+                </dd>
+              </div>
+              {(ability as MeleeAbilitySpec).bloodlustGain ? (
+                <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                  <dt className="text-parch-300">Bloodlust</dt>
+                  <dd className="text-right font-mono text-parch-50">
+                    +{(ability as MeleeAbilitySpec).bloodlustGain} stack
+                    {(ability as MeleeAbilitySpec).bloodlustGain! > 1 ? "s" : ""}
+                  </dd>
+                </div>
+              ) : null}
+              {(ability as MeleeAbilitySpec).bloodlustScale ? (
+                <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                  <dt className="text-parch-300">
+                    At {(ability as MeleeAbilitySpec).bloodlustScale!.threshold} Bloodlust
+                  </dt>
+                  <dd className="text-right font-mono text-parch-50">
+                    {(ability as MeleeAbilitySpec).bloodlustScale!.band.minPct}–
+                    {(ability as MeleeAbilitySpec).bloodlustScale!.band.maxPct}% per hit
+                  </dd>
+                </div>
+              ) : null}
+            </dl>
+          </div>
         </div>
-      ) : null}
+      ) : ability && ability.hits.length === 0 ? (
+        <div className="panel panel--facet min-w-0">
+          <div className="panel-head">
+            <h3 className="m-0 text-inherit font-medium">{ability.name}</h3>
+          </div>
+          <div className="panel-body">
+            <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
+            <p className="mt-2 text-sm text-parch-300">
+              No damage hits — summons and buffs do not produce an expected damage figure here.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="panel panel--facet min-w-0 p-3 text-sm text-parch-300">
+          Select an ability.
+        </div>
+      )}
+      </div>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
   const [tab, setTab] = useState<Tab>("Quick");
 
   return (
-    <div className="flex min-h-0 flex-col">
+    <div className="combat-screen flex min-h-0 flex-1 flex-col">
       <WorkbenchTabs
         aria-label="Combat sections"
         tabs={COMBAT_TABS}
@@ -29,21 +29,29 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
         onChange={setTab}
       />
 
-      <WorkbenchPanel id="Quick" active={tab}>
-        <QuickCalculator />
-      </WorkbenchPanel>
-      <WorkbenchPanel id="Setup" active={tab}>
-        <SetupTab />
-      </WorkbenchPanel>
-      <WorkbenchPanel id="Rotation" active={tab}>
-        <RotationPlanner />
-      </WorkbenchPanel>
-      <WorkbenchPanel id="Analysis" active={tab}>
-        <AnalysisTab />
-      </WorkbenchPanel>
-      <WorkbenchPanel id="Reference" active={tab}>
-        {reference}
-      </WorkbenchPanel>
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <WorkbenchPanel id="Quick" active={tab}>
+          <QuickCalculator />
+        </WorkbenchPanel>
+        <WorkbenchPanel id="Setup" active={tab}>
+          <div className="h-full min-h-0 overflow-auto">
+            <SetupTab />
+          </div>
+        </WorkbenchPanel>
+        <WorkbenchPanel id="Rotation" active={tab}>
+          <div className="h-full min-h-0 overflow-auto">
+            <RotationPlanner />
+          </div>
+        </WorkbenchPanel>
+        <WorkbenchPanel id="Analysis" active={tab}>
+          <div className="h-full min-h-0 overflow-auto">
+            <AnalysisTab />
+          </div>
+        </WorkbenchPanel>
+        <WorkbenchPanel id="Reference" active={tab}>
+          <div className="h-full min-h-0 overflow-auto">{reference}</div>
+        </WorkbenchPanel>
+      </div>
     </div>
   );
 }

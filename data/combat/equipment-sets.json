@@ -83,14 +83,15 @@
       "maxPieces": 5,
       "effects": [],
       "facts": [
-        "Set(2): +7% conjure spirit basic-attack damage per piece (cap 5) — conjure damage, not player ability AD",
-        "Set(4): +5% conjure duration per piece (cap 5)",
+        "Set(2): +7% conjure spirit basic-attack damage per piece (cap 5) — conjure damage only, not player ability AD (helper: firstNecromancerConjureDamageMult)",
+        "Does not increase putrid zombie poison, skeleton rage mechanic base, or Command ability damage",
+        "Set(4): +5% conjure duration per piece (cap 5) — duration not modelled as AD mult",
         "Visage of the First Necromancer counts as 2 pieces toward the set"
       ],
       "source": {
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/First_Necromancer%27s_equipment",
-        "title": "First Necromancer's equipment — set bonus",
+        "title": "First Necromancer's equipment — set bonus (Robes of the First Necromancer)",
         "verifiedAt": "2026-07-26"
       }
     },
@@ -220,6 +221,128 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Deathdealer_robe_armour",
         "title": "Deathdealer robe armour — Death Mark set chance",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "anima-core-zaros",
+      "label": "Anima core of Zaros",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (T80 Heart of Gielinor melee power; stats-only vs Torva)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
+        "title": "Anima core of Zaros armour",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "refined-anima-core-zaros",
+      "label": "Refined anima core of Zaros",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (refined charges only; no outgoing damage/crit set passive)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
+        "title": "Anima core of Zaros armour — refined",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "anima-core-seren",
+      "label": "Anima core of Seren",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (T80 Heart of Gielinor magic power; stats-only vs Virtus)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Seren_armour",
+        "title": "Anima core of Seren armour",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "refined-anima-core-seren",
+      "label": "Refined anima core of Seren",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (refined charges only; no outgoing damage/crit set passive)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Seren_armour",
+        "title": "Anima core of Seren armour — refined",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "anima-core-zamorak",
+      "label": "Anima core of Zamorak",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (T80 Heart of Gielinor ranged power; stats-only vs Pernix)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Zamorak_armour",
+        "title": "Anima core of Zamorak armour",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "refined-anima-core-zamorak",
+      "label": "Refined anima core of Zamorak",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "No combat set bonus on wiki (refined charges only; no outgoing damage/crit set passive)"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Zamorak_armour",
+        "title": "Anima core of Zamorak armour — refined",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "anima-core-sliske",
+      "label": "Anima core of Sliske (Sliske's Parody)",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "Set(3): Sliske's Parody — replicates one owned warpriest set effect (player-selected)",
+        "Optional Tuska's Might: +6% crit chance when that warpriest effect is selected — not auto-wired (requires UI choice + owned Tuska warpriest)",
+        "Divine Shield / Divine Surge are defensive or CD procs — not player AD mult"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Sliske_armour",
+        "title": "Anima core of Sliske armour — Sliske's Parody",
+        "verifiedAt": "2026-07-26"
+      }
+    },
+    {
+      "id": "refined-anima-core-sliske",
+      "label": "Refined anima core of Sliske (Sliske's Parody)",
+      "maxPieces": 3,
+      "effects": [],
+      "facts": [
+        "Same Sliske's Parody set(3) as unrefined — optional Tuska +6% crit not auto-wired"
+      ],
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anima_core_of_Sliske_armour",
+        "title": "Anima core of Sliske armour — refined / Sliske's Parody",
         "verifiedAt": "2026-07-26"
       }
     }

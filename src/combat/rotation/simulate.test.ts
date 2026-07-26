@@ -827,6 +827,36 @@ describe("simulate — necromancy resources", () => {
     expect(s.totalExpected).toBeGreaterThan(s.casts.reduce((n, c) => n + c.result.expected, 0));
   });
 
+  it("First Necromancer conjureBasicDamageMult scales spirit basic autos (not poison)", () => {
+    const rot = rotationOf("conjure_skeleton_warrior", ...Array(20).fill("necromancy_basic"));
+    const base = simulate({ ...necroInput, rotation: rot });
+    const boosted = simulate({
+      ...necroInput,
+      rotation: rot,
+      conjureBasicDamageMult: 1.35, // 5-piece First Necro
+    });
+    expect(base.ok && boosted.ok).toBe(true);
+    const baseSpirit = base.perAbility["spirit_skeleton_warrior"] ?? 0;
+    const boostSpirit = boosted.perAbility["spirit_skeleton_warrior"] ?? 0;
+    expect(baseSpirit).toBeGreaterThan(0);
+    expect(boostSpirit / baseSpirit).toBeCloseTo(1.35, 5);
+
+    // Poison path: set mult must not apply to spirit_putrid_zombie_poison.
+    const zRot = rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic"));
+    const zBase = simulate({ ...necroInput, rotation: zRot });
+    const zBoost = simulate({ ...necroInput, rotation: zRot, conjureBasicDamageMult: 1.35 });
+    const poisonBase = zBase.perAbility["spirit_putrid_zombie_poison"] ?? 0;
+    const poisonBoost = zBoost.perAbility["spirit_putrid_zombie_poison"] ?? 0;
+    if (poisonBase > 0) {
+      expect(poisonBoost / poisonBase).toBeCloseTo(1, 5);
+    }
+    const autoBase = zBase.perAbility["spirit_putrid_zombie"] ?? 0;
+    const autoBoost = zBoost.perAbility["spirit_putrid_zombie"] ?? 0;
+    if (autoBase > 0) {
+      expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
+    }
+  });
+
   it("command skeleton requires an active conjure", () => {
     const blocked = simulate({
       ...necroInput,

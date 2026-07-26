@@ -246,6 +246,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         adrenaline: stats.adrenaline,
         procs: stats.procs,
         plantedFeet: stats.plantedFeet,
+        conjureBasicDamageMult: stats.conjureBasicDamageMult,
       }),
     );
   };

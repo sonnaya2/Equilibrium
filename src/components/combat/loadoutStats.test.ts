@@ -255,6 +255,35 @@ describe("loadoutStats", () => {
     }
   });
 
+  it("historical Berserker aura slot adds +10% melee damage and does not block crits", () => {
+    const withAura = loadoutStats({
+      ...base,
+      style: "melee",
+      critChance: 20,
+      equipmentSlots: { aura: "item:berserker-aura" },
+    });
+    const mod = withAura.globalModifiers.find((m) => m.id === "aura:berserker:damage");
+    expect(mod).toBeDefined();
+    expect(withAura.critChance).toBeCloseTo(0.2, 10);
+    expect(runPipeline({ damage: 1000 }, withAura.globalModifiers, { style: "melee" }).damage).toBe(
+      1100,
+    );
+    // Style gate: magic loadout with Berserker equipped does not apply the mult.
+    expect(runPipeline({ damage: 1000 }, withAura.globalModifiers, { style: "magic" }).damage).toBe(
+      1000,
+    );
+
+    const equilibriumAura = loadoutStats({
+      ...base,
+      critChance: 25,
+      equipmentSlots: { aura: "item:equilibrium-aura" },
+    });
+    expect(equilibriumAura.critChance).toBe(0);
+    expect(
+      runPipeline({ damage: 1000 }, equilibriumAura.globalModifiers, { style: "melee" }).damage,
+    ).toBe(1120);
+  });
+
   it("Vulnerability + style curse damage + overload accuracy boost apply when buffs present", () => {
     const turmoil = styleCurseById("turmoil")!;
     const loadout: Loadout = {
@@ -476,6 +505,22 @@ describe("loadoutStats", () => {
     expect(loadoutStats({ ...base, perks: { ...base.perks, plantedFeet: true } }).plantedFeet).toBe(
       true,
     );
+  });
+
+  it("First Necromancer gear surfaces conjureBasicDamageMult for spirit autos", () => {
+    expect(loadoutStats(base).conjureBasicDamageMult).toBe(1);
+    const full = loadoutStats({
+      ...base,
+      equipmentSlots: {
+        ...base.equipmentSlots,
+        helmet: "item:first-necromancer-helm",
+        body: "item:first-necromancer-body",
+        legs: "item:first-necromancer-legs",
+        gloves: "item:first-necromancer-gloves",
+        boots: "item:first-necromancer-boots",
+      },
+    });
+    expect(full.conjureBasicDamageMult).toBeCloseTo(1.35, 10);
   });
 
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {

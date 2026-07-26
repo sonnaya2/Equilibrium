@@ -10,8 +10,10 @@ import { Effects } from "./Effects";
 import { FlatBoard } from "./FlatBoard";
 import { Ocean } from "./Ocean";
 import { useReducedMotion } from "./useReducedMotion";
-import { MAP_IMAGE, type RegionAnchor } from "./data/regionAnchors";
+import { MAP_IMAGE } from "./data/regionAnchors";
 import { LIGHT_FILL, LIGHT_KEY, LIGHT_RIM, SURFACE_VOID } from "./palette";
+import { useMapFocus } from "./useMapFocus";
+import { VineFrame } from "./VineFrame";
 
 extend(THREE as never);
 
@@ -62,7 +64,7 @@ export default function MapScene() {
   // Gate on a real adapter, not just the API — three would otherwise fall back
   // to WebGL2 silently, and the honest-unsupported state is the spec.
   const [supported, setSupported] = useState<boolean | null>(null);
-  const [focus, setFocus] = useState<RegionAnchor | null>(null);
+  const { focus, unframe } = useMapFocus();
   const reducedMotion = useReducedMotion();
   // Exactly one renderer, and it must be built from R3F's own canvas — the
   // factory's `props` carry it, so constructing without them makes three spin up
@@ -95,7 +97,7 @@ export default function MapScene() {
   }, []);
 
   if (supported === null) {
-    return <div className="panel h-[62vh]" aria-hidden="true" />;
+    return <div className="panel aspect-[1.88] w-full" aria-hidden="true" />;
   }
 
   if (!supported) {
@@ -105,21 +107,29 @@ export default function MapScene() {
           This browser has no WebGPU, so the 3D table stays off. The board below is the full
           planner - every region choice works here.
         </p>
-        <FlatBoard />
+        {/* The frame belongs to the board, not to the panel: wrapped any wider
+            it grows its corners over the copy above. */}
+        <div className="relative">
+          <FlatBoard />
+          <VineFrame />
+        </div>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="panel h-[62vh] overflow-hidden">
+      {/* Sized by aspect, not viewport height. The table framing fits the board
+          to the canvas, so a tall box only ever pushes the camera further back
+          and leaves dead margins on both flanks. */}
+      <div className="panel relative aspect-[1.88] w-full overflow-hidden">
         <Canvas
           dpr={[1, 2]}
           frameloop="demand"
-          // Starts wide and high; the rig settles to MAP_FRAME as the intro
-          // descent (a hard cut under reduced motion).
+          // Starts wide and high; the rig settles to the table framing as the
+          // intro descent (a hard cut under reduced motion).
           camera={{ position: [0.9, 2.4, 2.1], fov: 42, near: 0.05, far: 20 }}
-          onPointerMissed={() => setFocus(null)}
+          onPointerMissed={unframe}
           gl={(props) => rendererFor(props as unknown as Record<string, unknown>)}
         >
           <color attach="background" args={[SURFACE_VOID]} />
@@ -132,11 +142,14 @@ export default function MapScene() {
           <directionalLight position={[-1.8, 1.2, -1.6]} intensity={0.45} color={LIGHT_RIM} />
 
           <Ocean reducedMotion={reducedMotion} />
-          <MapTable onFocus={setFocus} reducedMotion={reducedMotion} />
-          <CameraRig focus={focus} reducedMotion={reducedMotion} />
+          <MapTable reducedMotion={reducedMotion} />
+          <CameraRig focus={focus.framed ? focus.region : null} reducedMotion={reducedMotion} />
           <InvalidateOnBuild />
-          {/* <Effects /> */}
+          {/* Bloom is scoped to the emissive MRT target, and nothing is emissive
+              at rest — only the focus rim and the unlock sweep ever light up. */}
+          <Effects />
         </Canvas>
+        <VineFrame />
       </div>
       <p className="mt-1.5 text-xs text-parch-500">{MAP_IMAGE.credit}</p>
     </div>

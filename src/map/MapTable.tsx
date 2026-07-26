@@ -6,22 +6,15 @@
  * cut along shared seams so it visibly comes apart (wartable plan §1-2).
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three/webgpu";
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import { REGION_SHAPES } from "./data/regionShapes";
-import { MAP_WORLD, type RegionAnchor } from "./data/regionAnchors";
 
 import { RegionSlab } from "./RegionSlab";
+import { PlaceMarkers } from "./PlaceMarkers";
 
-
-export function MapTable({
-  onFocus,
-  reducedMotion,
-}: {
-  onFocus: (anchor: RegionAnchor) => void;
-  reducedMotion: boolean;
-}) {
+export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
   const loaded = useLoader(THREE.TextureLoader, [
     ...REGION_SHAPES.map((s) => `/game/regions/${s.id}.png`),
     ...REGION_SHAPES.map((s) => `/game/terrain/${s.id}.png`),
@@ -46,6 +39,17 @@ export function MapTable({
     return [loaded.slice(0, n), loaded.slice(n)];
   }, [loaded]);
 
+  // Under frameloop="demand" the last frame can land before a texture finishes
+  // uploading, and nothing wakes the loop afterwards — which showed up as one
+  // or two crests missing per load, a different pair each time. Ask for one
+  // more frame once the textures are configured.
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    invalidate();
+    const id = requestAnimationFrame(() => invalidate());
+    return () => cancelAnimationFrame(id);
+  }, [crests, terrain, invalidate]);
+
   return (
     <group>
       {/* No table plate: the sea is the ground, so it runs up to every
@@ -57,10 +61,10 @@ export function MapTable({
           shape={shape}
           crest={crests[i]}
           terrain={terrain[i]}
-          onFocus={onFocus}
           reducedMotion={reducedMotion}
         />
       ))}
+      <PlaceMarkers />
     </group>
   );
 }

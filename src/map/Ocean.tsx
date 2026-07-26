@@ -19,7 +19,7 @@ import * as THREE from "three/webgpu";
 import { useFrame, useThree } from "@react-three/fiber";
 import { float, mix, positionWorld, smoothstep, uniform, vec3 } from "three/tsl";
 import { MAP_WORLD } from "./data/regionAnchors";
-import { OCEAN_DEEP, OCEAN_FOAM, OCEAN_SHALLOW } from "./palette";
+import { OCEAN_DEEP, OCEAN_FOAM, OCEAN_SHALLOW, SURFACE_VOID } from "./palette";
 
 /** Hex -> linear vec3, matching the decode TSL's color() would do. */
 function linear(hex: number) {
@@ -43,14 +43,25 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
     // hardware at dpr 2 while headless dpr 1 looked fine. Two crossed waves cost
     // a handful of ALU ops and read the same at this scale.
     const p = positionWorld.xz;
-    const a = p.x.mul(2.7).add(p.y.mul(1.1)).add(clock.mul(0.35)).sin();
-    const b = p.y.mul(3.4).sub(p.x.mul(0.8)).sub(clock.mul(0.22)).sin();
+    // Short wavelengths on purpose. At the original 2.7/3.4 the crests were
+    // wider than a region, so the sea read as two soft glowing blobs sitting
+    // behind the board rather than as water — the "weird" in the brief.
+    const a = p.x.mul(17).add(p.y.mul(7)).add(clock.mul(0.9)).sin();
+    const b = p.y.mul(21).sub(p.x.mul(5)).sub(clock.mul(0.6)).sin();
     const swell = a.mul(0.6).add(b.mul(0.4));
 
-    const base = mix(linear(OCEAN_DEEP), linear(OCEAN_SHALLOW), swell.mul(0.5).add(0.5));
+    // Narrow band between the two teals: the sea is the ground the slabs sit
+    // in, and it has to stay quieter than every slab on it.
+    const base = mix(linear(OCEAN_DEEP), linear(OCEAN_SHALLOW), swell.mul(0.16).add(0.2));
     // Thin crests where the two waves agree, rather than a full foam layer.
-    const ridge = smoothstep(float(0.72), float(0.95), swell.abs());
-    m.colorNode = mix(base, linear(OCEAN_FOAM), ridge.mul(0.3));
+    const ridge = smoothstep(float(0.84), float(0.99), swell.abs());
+    const water = mix(base, linear(OCEAN_FOAM), ridge.mul(0.14));
+
+    // The plane has to end somewhere, and a hard edge against the background
+    // read as a black bar across the top of the canvas. Dissolve it into the
+    // void instead, so the horizon is a falloff rather than a seam.
+    const horizon = smoothstep(float(1.15), float(2.6), p.length());
+    m.colorNode = mix(water, linear(SURFACE_VOID), horizon);
     m.fog = false;
     return { m, clock };
   }, []);
@@ -86,7 +97,7 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.028, 0]} material={material.m}>
-      <planeGeometry args={[MAP_WORLD.width * 2.2, MAP_WORLD.height * 2.4]} />
+      <planeGeometry args={[MAP_WORLD.width * 4, MAP_WORLD.width * 4]} />
     </mesh>
   );
 }

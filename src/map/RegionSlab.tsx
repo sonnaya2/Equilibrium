@@ -24,18 +24,34 @@ import {
 } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
-import { ringPoints, type RegionShape } from "./data/regionShapes";
-import { MAP_WORLD, REGION_ANCHOR_BY_ID, type RegionAnchor } from "./data/regionAnchors";
+import { smoothRing } from "./data/regionCurve";
+import { type RegionShape } from "./data/regionShapes";
+import { MAP_WORLD, REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
 import { createSlabMaterials } from "./materials/slabMaterials";
+import { createBarrierMaterial } from "./materials/hexBarrier";
+import { useMapFocus } from "./useMapFocus";
 
 /** Per-slab inset so shared seams never z-fight (bevelSize stays under half of it). */
 const INSET = 0.004;
 const RAISED_Y = 0.02;
 const SUNKEN_Y = -0.024;
+/** How much further the subject rises, and how far every other slab drops. */
+const FOCUS_LIFT = 0.028;
+const UNFOCUSED_DROP = 0.008;
+/** Ember-to-gem unlock sweep, in seconds. */
+const SWEEP_SECONDS = 0.6;
+/**
+ * ExtrudeGeometry's bevel is added *outside* the requested depth, so a raised
+ * cap's real top is `depth + bevelThickness`. Anything laid on the cap has to
+ * clear that or it renders inside the slab — which is exactly what hid the
+ * barrier lattice entirely and left the crests z-fighting with the terrain.
+ */
+const BEVEL = 0.004;
 
-/** uv ring -> world -> extruded slab standing up in +y, caps on material group 0. */
-function buildSlabGeometry(shape: RegionShape): THREE.ExtrudeGeometry {
-  const world = ringPoints(shape).map(
+/** uv ring -> world -> extruded slab standing up in +y, caps on material group 0.
+ *  The flat cap outline comes back with it, for the locked barrier lattice. */
+function buildSlabGeometry(shape: RegionShape) {
+  const world = smoothRing(shape).map(
     ([u, v]) =>
       [(u - 0.5) * MAP_WORLD.width, (v - 0.5) * MAP_WORLD.height] as [number, number],
   );
@@ -52,17 +68,22 @@ function buildSlabGeometry(shape: RegionShape): THREE.ExtrudeGeometry {
     if (i === 0) outline.moveTo(ix, -iz);
     else outline.lineTo(ix, -iz);
   });
-  const geometry = new THREE.ExtrudeGeometry(outline, {
+  const slab = new THREE.ExtrudeGeometry(outline, {
     depth: shape.depth,
     steps: 1,
     bevelEnabled: true,
-    bevelThickness: 0.004,
+    bevelThickness: BEVEL,
     bevelSize: 0.0015,
     bevelSegments: 2,
   });
   // (x, y, z) shape -> (x, z, -y) world: extrusion up, shape-y back to world z.
-  geometry.rotateX(-Math.PI / 2);
-  return geometry;
+  slab.rotateX(-Math.PI / 2);
+
+  const barrier = new THREE.ShapeGeometry(outline);
+  barrier.rotateX(-Math.PI / 2);
+  barrier.translate(0, shape.depth + BEVEL + 0.002, 0);
+
+  return { slab, barrier };
 }
 
 function statusLabel(id: RegionId, elective: boolean, unlocked: boolean, selectable: boolean): string {
@@ -75,16 +96,15 @@ export function RegionSlab({
   shape,
   crest,
   terrain,
-  onFocus,
   reducedMotion,
 }: {
   shape: RegionShape;
   crest: THREE.Texture;
   terrain: THREE.Texture;
-  onFocus: (anchor: RegionAnchor) => void;
   reducedMotion: boolean;
 }) {
   const { build, toggleRegion } = useBuild();
+  const { focus, focusRegion } = useMapFocus();
   const invalidate = useThree((s) => s.invalidate);
   const [hovered, setHovered] = useState(false);
 
@@ -94,27 +114,58 @@ export function RegionSlab({
   const selectable = elective && canSelectElective(build, id);
   const quests = REGION_METRICS_BY_ID.get(id)?.quests ?? 0;
   const anchor = REGION_ANCHOR_BY_ID.get(id);
+  const subject = focus.framed && focus.region === id;
+  const sidelined = focus.framed && focus.region !== id;
 
   const geometry = useMemo(() => buildSlabGeometry(shape), [shape]);
-  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(
+    () => () => {
+      geometry.slab.dispose();
+      geometry.barrier.dispose();
+    },
+    [geometry],
+  );
 
-  // One graph per slab; lock state rides a uniform so nothing rebuilds on toggle.
+  // One graph per slab; state rides uniforms so nothing rebuilds on a toggle.
   const mats = useMemo(
     () => createSlabMaterials(terrain, shape.depth),
     [terrain, shape.depth],
   );
+  const barrier = useMemo(() => createBarrierMaterial(), []);
   useEffect(() => () => mats.dispose(), [mats]);
+  useEffect(() => () => barrier.dispose(), [barrier]);
   useEffect(() => {
     mats.lock.value = unlocked ? 0 : 1;
+    barrier.lock.value = unlocked ? 0 : 1;
     invalidate();
-  }, [mats, unlocked, invalidate]);
+  }, [mats, barrier, unlocked, invalidate]);
+  useEffect(() => {
+    mats.dim.value = sidelined ? 1 : 0;
+    mats.focus.value = subject || hovered ? 1 : 0;
+    invalidate();
+  }, [mats, subject, sidelined, hovered, invalidate]);
 
-  // Raise/sink spring: one damped number, keyed off lock state, asleep at rest.
-  // The group's y is owned by this frame loop alone — passing `position` as a JSX
-  // prop would let R3F reapply the target in the same commit that flips it, so
-  // `cur === targetY` before the lerp ever runs and the slab teleports instead.
+  // The unlock sweep: one ramp, ember resolving to gem, then gone. Fires on the
+  // transition into unlocked only — never on mount, or the board lights up on
+  // every page load with the starting regions already open.
+  const sweep = useRef(0);
+  const wasUnlocked = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (wasUnlocked.current !== null && unlocked && !wasUnlocked.current && !reducedMotion) {
+      sweep.current = 1;
+      invalidate();
+    }
+    wasUnlocked.current = unlocked;
+  }, [unlocked, reducedMotion, invalidate]);
+
+  // Raise/sink spring: one damped number, keyed off lock and focus state, asleep
+  // at rest. The group's y is owned by this frame loop alone — passing `position`
+  // as a JSX prop would let R3F reapply the target in the same commit that flips
+  // it, so `cur === targetY` before the lerp ever runs and the slab teleports.
   const groupRef = useRef<THREE.Group>(null);
-  const targetY = unlocked ? RAISED_Y : SUNKEN_Y;
+  const targetY =
+    (unlocked ? RAISED_Y : SUNKEN_Y) +
+    (subject ? FOCUS_LIFT : sidelined ? -UNFOCUSED_DROP : 0);
   const settled = useRef(false);
   useEffect(() => {
     // Seed the first mount at its resting height so the board does not animate in.
@@ -124,18 +175,25 @@ export function RegionSlab({
     }
   }, [targetY]);
   useFrame((_, delta) => {
+    let busy = false;
+    if (sweep.current > 0) {
+      sweep.current = Math.max(0, sweep.current - delta / SWEEP_SECONDS);
+      mats.sweep.value = sweep.current;
+      busy = true;
+    }
     const g = groupRef.current;
-    if (!g) return;
-    const cur = g.position.y;
-    if (cur === targetY) return;
-    const next = reducedMotion ? targetY : cur + (targetY - cur) * (1 - Math.exp(-delta * 6.5));
-    g.position.y = Math.abs(next - targetY) < 0.0005 ? targetY : next;
-    invalidate();
+    if (g && g.position.y !== targetY) {
+      const cur = g.position.y;
+      const next = reducedMotion ? targetY : cur + (targetY - cur) * (1 - Math.exp(-delta * 6.5));
+      g.position.y = Math.abs(next - targetY) < 0.0005 ? targetY : next;
+      busy = true;
+    }
+    if (busy) invalidate();
   });
 
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    if (anchor) onFocus(anchor);
+    focusRegion(id);
     if (elective) toggleRegion(id);
   };
   const over = (e: ThreeEvent<PointerEvent>) => {
@@ -160,7 +218,7 @@ export function RegionSlab({
   // offset walks the crest off the cap of a small one, where the overhang gets
   // occluded by whatever is behind it and reads as a clipped shield.
   const inradius = useMemo(() => {
-    const pts = ringPoints(shape).map(
+    const pts = smoothRing(shape).map(
       ([u, v]) =>
         [(u - 0.5) * MAP_WORLD.width, (v - 0.5) * MAP_WORLD.height] as [number, number],
     );
@@ -186,17 +244,23 @@ export function RegionSlab({
   return (
     <group ref={groupRef}>
       <mesh
-        geometry={geometry}
+        geometry={geometry.slab}
         material={[mats.cap, mats.wall]}
         onClick={click}
         onPointerOver={over}
         onPointerOut={out}
       />
 
+      {/* The locked-region barrier. Its lattice is read from world XZ, so
+          neighbouring locked slabs share one continuous grid. Mounted always;
+          the lock uniform fades it, which is what keeps the unlock a single
+          animating number rather than a mount/unmount. */}
+      <mesh geometry={geometry.barrier} material={barrier.material} raycast={() => null} />
+
       {/* Crest decal on the cap — real game art, unlit, alpha-tested. */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[mx, shape.depth + 0.004, mz - CREST_OFFSET]}
+        position={[mx, shape.depth + BEVEL + 0.005, mz - CREST_OFFSET]}
       >
         <planeGeometry args={[crestSize, crestSize * 1.14]} />
         <meshBasicMaterial
@@ -211,7 +275,7 @@ export function RegionSlab({
 
       {/* Quest count on the cap. aria-hidden always: the DOM ledger owns names. */}
       <Html
-        position={[mx, shape.depth + 0.012, mz + COUNT_OFFSET]}
+        position={[mx, shape.depth + BEVEL + 0.012, mz + COUNT_OFFSET]}
         center
         distanceFactor={1}
         zIndexRange={[10, 0]}
@@ -224,7 +288,7 @@ export function RegionSlab({
 
       {hovered && anchor ? (
         <Html
-          position={[mx, shape.depth + 0.075, mz]}
+          position={[mx, shape.depth + BEVEL + 0.075, mz]}
           center
           distanceFactor={1}
           zIndexRange={[20, 0]}

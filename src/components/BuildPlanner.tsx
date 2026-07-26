@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Build — modelled on official Leagues II: Equilibrium client menu
+ * Build — Leagues II: Equilibrium client menu skin
  * (Jagex news screenshots: relicmenu.jpg / blessing.jpg).
  * Tabs: Regions · Relics · Blessings · Share
  * Relics: left choice column + locked tier grid.
@@ -156,7 +156,6 @@ export function BuildPlanner({
     const slots: { key: string; label: string }[] = [];
     for (const tier of relicTiers) {
       if (tier.tier === focusRelicTier && tier.revealed) {
-        // Filler empty cells like the client right pane (blurred hexes)
         for (let i = 0; i < 18; i++) {
           slots.push({ key: `t${tier.tier}-pad-${i}`, label: "" });
         }
@@ -188,7 +187,7 @@ export function BuildPlanner({
   const trackLit = Math.min(7, Object.keys(build.relics).length + (picks.length > 0 ? 1 : 0));
 
   return (
-    <div className="build-game">
+    <div className="build-game build-screen">
       <div className="build-game__frame">
         <header className="build-game__titlebar">
           <span className="build-game__logo" aria-hidden />
@@ -243,17 +242,13 @@ export function BuildPlanner({
         </div>
 
         <div className="build-game__body">
-          {/* ── Regions ───────────────────────────────────── */}
           {tab === "regions" ? (
             <div className="build-game__regions" aria-busy={!loaded}>
               <div className="build-game__tier-label">
                 <strong>Region unlocks</strong>
-                <span className="text-[12px] text-[color:var(--parch-dim)]">
-                  2 start + Karamja · 3 electives
-                </span>
                 <button
                   type="button"
-                  className="build-game__btn ml-auto"
+                  className="build-game__btn"
                   disabled={!loaded || picks.length === 0}
                   onClick={clearElectives}
                 >
@@ -261,9 +256,7 @@ export function BuildPlanner({
                 </button>
               </div>
               <div
-                className={`build-game__region-grid${
-                  loaded ? "" : " pointer-events-none opacity-60"
-                }`}
+                className={`build-game__region-grid${loaded ? "" : " build-game__loading"}`}
               >
                 {regions.map((region) => {
                   const elective = region.availability === "elective";
@@ -290,8 +283,8 @@ export function BuildPlanner({
                       <img
                         src={`/game/regions/${region.id}.png`}
                         alt=""
-                        width={32}
-                        height={36}
+                        width={28}
+                        height={32}
                       />
                       <span className="build-game__region-name">{region.name}</span>
                       <span className="build-game__region-meta">
@@ -308,7 +301,6 @@ export function BuildPlanner({
             </div>
           ) : null}
 
-          {/* ── Relics (official menu layout) ─────────────── */}
           {tab === "relics" ? (
             <div className="build-game__relics">
               <div>
@@ -346,15 +338,12 @@ export function BuildPlanner({
                     );
                   })}
                   {(!focusTier?.revealed || focusTier.choices.length === 0) && (
-                    <p className="text-xs text-[color:var(--parch-dim)] px-1">
-                      Tier sealed until Jagex reveals choices.
-                    </p>
+                    <p className="build-game__hint">Sealed until reveal.</p>
                   )}
                 </div>
 
-                {/* Tier rail under choices */}
                 <div
-                  className="mt-2 flex flex-wrap gap-1"
+                  className="build-game__tier-rail"
                   role="tablist"
                   aria-label="Relic tiers"
                 >
@@ -368,7 +357,6 @@ export function BuildPlanner({
                         role="tab"
                         aria-selected={on}
                         className={`build-game__btn${on ? " build-game__btn--gem" : ""}`}
-                        style={{ padding: "0.25rem 0.45rem", fontSize: "0.7rem" }}
                         onClick={() => setFocusRelicTier(tier.tier)}
                         title={open ? `Tier ${tier.tier}` : `Tier ${tier.tier} unrevealed`}
                       >
@@ -380,7 +368,7 @@ export function BuildPlanner({
                 </div>
               </div>
 
-              <div className="flex min-h-0 flex-col">
+              <div className="build-game__relic-pane">
                 <div className="build-game__slot-grid" aria-label="Locked relic slots">
                   {lockedSlots.map((slot) => (
                     <div
@@ -405,29 +393,25 @@ export function BuildPlanner({
                 ) : focusTier?.revealed ? (
                   <div className="build-game__detail">
                     <h3>Select a relic</h3>
-                    <p className="m-0 text-sm text-[color:var(--parch-dim)]">
-                      Pick one Tier {focusTier.tier} choice on the left. Higher tiers stay
-                      sealed until official reveal.
-                    </p>
+                    <p>Pick one Tier {focusTier.tier} choice.</p>
                   </div>
                 ) : null}
               </div>
             </div>
           ) : null}
 
-          {/* ── Blessings (official path grid) ────────────── */}
           {tab === "blessings" ? (
             <div className="build-game__bless">
               <div className="build-game__bless-actions">
-                <div className="build-game__tier-label" style={{ marginBottom: 0 }}>
+                <div className="build-game__tier-label">
                   <strong>Blessing paths</strong>
-                  <span className="text-[12px] text-[color:var(--parch-dim)]">
-                    Order · Chaos · Balance · God Tier at 4 &amp; 8
+                  <span className="build-game__bless-note">
+                    Order · Chaos · Balance · God 4 &amp; 8
                   </span>
                 </div>
                 <button
                   type="button"
-                  className="build-game__btn ml-auto"
+                  className="build-game__btn"
                   disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
                   onClick={resetBlessings}
                 >
@@ -502,7 +486,7 @@ export function BuildPlanner({
                   return [label, ...cells];
                 })}
               </div>
-              <p className="m-0 text-xs text-[color:var(--parch-dim)]">
+              <p className="build-game__hint">
                 {blessingTiers.some((t) => t.revealed)
                   ? blessingTiers
                       .filter((t) => t.godTier)
@@ -512,22 +496,25 @@ export function BuildPlanner({
                           : `T${t.tier} God undecided`,
                       )
                       .join(" · ")
-                  : "Blessing choices empty until Jagex publishes tier details — path picks still plan ahead."}
+                  : "Paths plan now; choices unrevealed."}
               </p>
             </div>
           ) : null}
 
-          {/* ── Share ─────────────────────────────────────── */}
           {tab === "share" ? (
-            <div className="flex flex-col gap-3 p-1">
+            <div className="build-game__share">
               <div className="build-game__tier-label">
                 <strong>Share plan</strong>
               </div>
-              <p className="m-0 text-sm text-[color:var(--parch)]">
-                Copy a link that restores regions, relics, and blessing path on another device.
+              <p className="build-game__hint">
+                Copies regions, relics, and blessing path.
               </p>
-              <div className="build-game__footer" style={{ borderTop: 0, marginTop: 0, paddingTop: 0 }}>
-                <button type="button" className="build-game__btn build-game__btn--gem" onClick={copyShareLink}>
+              <div className="build-game__footer">
+                <button
+                  type="button"
+                  className="build-game__btn build-game__btn--gem"
+                  onClick={copyShareLink}
+                >
                   {copyFeedback === "ok"
                     ? "Copied"
                     : copyFeedback === "err"
@@ -551,7 +538,7 @@ export function BuildPlanner({
                   Reset build
                 </button>
               </div>
-              <p className="m-0 font-mono text-xs text-[color:var(--parch-dim)]">
+              <p className="build-game__share-line">
                 {pickCounter}
                 {seatedName ? ` · ${seatedName}` : ""}
                 {build.blessingPicks.length
@@ -561,7 +548,6 @@ export function BuildPlanner({
             </div>
           ) : null}
 
-          {/* Persistent actions on non-share tabs */}
           {tab !== "share" ? (
             <div className="build-game__footer">
               <button
@@ -583,18 +569,6 @@ export function BuildPlanner({
           ) : null}
         </div>
       </div>
-
-      <p className="build-game__credit">
-        Layout modelled on the official Leagues II: Equilibrium client menu.{" "}
-        <a
-          href="https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Countdown blog
-        </a>
-        . T1 portraits from Jagex news art (fan tool, not affiliated).
-      </p>
     </div>
   );
 }

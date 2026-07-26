@@ -18,8 +18,7 @@ export const metadata: Metadata = {
     default: "RS3 Equilibrium",
     template: "%s · Equilibrium",
   },
-  description:
-    "Planner and combat calculator for RuneScape 3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
+  description: "Planner for RS3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="eq-champion flex min-h-screen flex-col font-sans antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-sm focus:border focus:border-stone-750 focus:bg-stone-850 focus:px-3 focus:py-2 focus:text-sm focus:text-gem-400"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-2 focus:z-50 focus:border focus:border-stone-750 focus:bg-stone-850 focus:px-2 focus:py-1.5 focus:text-xs focus:text-gem-400"
         >
           Skip to main content
         </a>
@@ -38,22 +37,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <footer className="comp-foot">
-          <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-baseline justify-between gap-2 px-4">
+          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
             <span>
-              Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex
-              Ltd.
+              Fan tool · not Jagex. RuneScape is a trademark of Jagex Ltd.
             </span>
-            <span className="flex flex-wrap items-center gap-3">
-              <Link href="/concepts" className="hover:text-parch-50">
-                Concepts lab
-              </Link>
-              <Link href="/concepts/hybrid" className="hover:text-parch-50">
-                Hybrid · Composite
-              </Link>
-              <Link href="/sources" className="text-parch-100 hover:text-parch-50">
-                Sources &amp; credits
-              </Link>
+            <span className="text-stone-750" aria-hidden>
+              ·
             </span>
+            <Link href="/concepts" className="hover:text-parch-50">
+              Concepts
+            </Link>
+            <Link href="/concepts/hybrid" className="hover:text-parch-50">
+              Hybrid
+            </Link>
+            <Link href="/sources" className="hover:text-parch-50">
+              Sources
+            </Link>
           </div>
         </footer>
       </body>

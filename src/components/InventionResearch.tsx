@@ -31,43 +31,43 @@ const TABS: ResearchTab[] = [
   {
     key: "active",
     label: "Active perks",
-    description: `${activePerks.length} current Invention perks after the July 2026 removals. Names and categories only — recipes live in the armour/utility tabs.`,
+    description: "",
     rows: activePerks as unknown as ResearchRow[],
   },
   {
     key: "armour",
     label: "Armour recipes",
-    description: "Current weapon/armour perk families with component dependencies.",
+    description: "",
     rows: armour as unknown as ResearchRow[],
   },
   {
     key: "utility",
     label: "Utility recipes",
-    description: "Utility bridge perk recipes used for account QoL and skilling tools.",
+    description: "",
     rows: utility as unknown as ResearchRow[],
   },
   {
     key: "supply",
     label: "Component supply",
-    description: "Where perk components come from, including global/account routes.",
+    description: "",
     rows: [...supply, ...globalRoutes, ...account] as unknown as ResearchRow[],
   },
   {
     key: "rare",
     label: "Rare components",
-    description: `Rare component routes and remaining coverage (coverage after this file: ${rareCoverage}).`,
+    description: "",
     rows: [...rare, ...remaining] as unknown as ResearchRow[],
   },
   {
     key: "2026",
     label: "2026 routes",
-    description: "Post-2026 component routes and perk dependencies that changed with the mid-game rebalance.",
+    description: "",
     rows: [...routes2026, ...perkDeps2026] as unknown as ResearchRow[],
   },
   {
     key: "bottlenecks",
     label: "Material bottlenecks",
-    description: "Account-level material bottlenecks for self-sufficient Invention planning.",
+    description: "",
     rows: bottlenecks as unknown as ResearchRow[],
   },
 ];
@@ -76,7 +76,7 @@ export function InventionResearch() {
   return (
     <ResearchSection
       title="Invention"
-      intro="Active perks, recipes and component supply for self-sufficient League Invention. Removed July 2026 perks are excluded from the active list."
+      intro=""
       tabs={TABS}
       searchPlaceholder="Search Invention"
       searchLabel="Search Invention data"

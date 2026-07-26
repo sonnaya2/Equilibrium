@@ -15,25 +15,25 @@ const TABS: ResearchTab[] = [
   {
     key: "methods",
     label: "Slayer routes",
-    description: `${methods.length} high-value, collection-log and boundary-sensitive Slayer routes. Region options stay multi-choice; PvME metrics are guide context, not optimizer ranks.`,
+    description: "",
     rows: methods as unknown as ResearchRow[],
   },
   {
     key: "stale",
     label: "Stale corrections",
-    description: "Methods still carried as candidates after the March 2026 combat modernisation. Do not treat them as current XP tables.",
+    description: "",
     rows: stale as unknown as ResearchRow[],
   },
   {
     key: "invention-chains",
     label: "Invention chains",
-    description: "Slayer-adjacent invention component chains from the same expansion pack.",
+    description: "",
     rows: inventionChains as unknown as ResearchRow[],
   },
   {
     key: "arch-relics",
     label: "Archaeology relics",
-    description: "Combat/relic acquisition rows indexed next to Slayer routes in the expansion pack.",
+    description: "",
     rows: archRelics as unknown as ResearchRow[],
   },
 ];
@@ -42,7 +42,7 @@ export function SlayerResearch() {
   return (
     <ResearchSection
       title="Slayer routes"
-      intro="Deduplicated high-value Slayer routes with alternate regions and source freshness. Use these when picking electives for task access — not as a kill-time calculator."
+      intro=""
       tabs={TABS}
       searchPlaceholder="Search Slayer routes"
       searchLabel="Search Slayer routes"

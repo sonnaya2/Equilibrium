@@ -78,7 +78,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
         >
           <Hex on={unlocked} />
           <span className="min-w-0 flex-1 truncate font-medium">{region.name}</span>
-          <span className="comp-pick-count text-[11px]" title="Quests touching this region">
+          <span className="comp-pick-count text-[11px]" title="Quests">
             {region.quests}
           </span>
         </button>
@@ -91,7 +91,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
   return (
     <section className="flex h-full min-h-0 flex-col" aria-busy={!loaded}>
       <div className="comp-ledger-head">
-        <h2 className="comp-ledger-title">Region ledger</h2>
+        <h2 className="comp-ledger-title">Regions</h2>
         <span className={`comp-pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
           {counterLabel}
         </span>
@@ -101,15 +101,15 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
           label={
             loaded
               ? `${pickCount} of ${ELECTIVE_CAP} elective picks used`
-              : "Loading elective picks"
+              : "Loading picks"
           }
         />
       </div>
       <ul className={`comp-region-list${loaded ? "" : " pointer-events-none opacity-60"}`}>
         {[...STARTING_REGIONS, MILESTONE_REGION].map(row)}
       </ul>
-      <div className="border-t border-stone-750 px-3 py-1 text-[11px] uppercase tracking-wide text-parch-300">
-        Elective — pick 3 of 8
+      <div className="border-t border-stone-750 px-3 py-1 text-[11px] text-parch-300">
+        Elective · 3 of 8
       </div>
       <ul className={`comp-region-list${loaded ? "" : " pointer-events-none opacity-60"}`}>
         {ELECTIVE_REGIONS.map(row)}

@@ -11,6 +11,7 @@ import {
   getRunecraftingAltars,
   getSupportUniqueDropOverlay,
 } from "@/research/plannerExpansions";
+import { confidenceLabel } from "@/components/researchStatus";
 
 type Row = Record<string, unknown>;
 type SectionKey =
@@ -22,14 +23,14 @@ type SectionKey =
   | "archaeology_combat_relics"
   | "regional_unique_drops";
 
-const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> = [
-  { key: "combat_training_spots", label: "Combat spots", description: "Current method candidates with important support unlocks kept separate from hard access requirements." },
-  { key: "runecrafting_altars", label: "Runecrafting", description: "Altar locations, levels and the access that can make a region matter." },
-  { key: "invention_progression", label: "Invention", description: "Unlock milestones and the routes needed to reach them." },
-  { key: "invention_component_sources", label: "Components", description: "Region-sensitive component supply for a self-sufficient account." },
-  { key: "archaeology_progression", label: "Archaeology", description: "Dig sites, qualifications and progression gates." },
-  { key: "archaeology_combat_relics", label: "Arch relics", description: "Combat relic milestones. Cross-region acquisition chains stay visible instead of collapsing to one region." },
-  { key: "regional_unique_drops", label: "Unique drops", description: "Notable reward and support-item chains that can change the value of a region pick." },
+const SECTIONS: Array<{ key: SectionKey; label: string }> = [
+  { key: "combat_training_spots", label: "Combat spots" },
+  { key: "runecrafting_altars", label: "Runecrafting" },
+  { key: "invention_progression", label: "Invention" },
+  { key: "invention_component_sources", label: "Components" },
+  { key: "archaeology_progression", label: "Archaeology" },
+  { key: "archaeology_combat_relics", label: "Arch relics" },
+  { key: "regional_unique_drops", label: "Unique drops" },
 ];
 
 /** Section loaders via plannerExpansions typed getters (not raw JSON). */
@@ -103,17 +104,7 @@ function rowRegionLabel(row: Row): string {
   return regionName(direct);
 }
 
-function statusLabel(value: unknown): string {
-  const raw = text(value).toLowerCase();
-  if (!raw) return "Not checked";
-  if (raw.includes("unresolved") || raw.includes("pending")) return "Still unresolved";
-  if (raw.includes("historical") || raw.includes("working_") || raw.includes("inferred")) return "Working region map";
-  if (raw.includes("pvme") && raw.includes("no_xp")) return "Current method; no XP claim";
-  if (raw.includes("pvme")) return "PvME method";
-  if (raw.includes("official")) return "Jagex checked";
-  if (raw.includes("wiki") || raw.includes("confirmed")) return "Wiki checked";
-  return "Needs review";
-}
+
 
 function sourceName(url: string): string {
   if (url.includes("pvme.io")) return "PvME";
@@ -179,7 +170,6 @@ function rowsFor(section: SectionKey): Row[] {
 export function ProgressionResearch() {
   const [section, setSection] = useState<SectionKey>("combat_training_spots");
   const [query, setQuery] = useState("");
-  const selected = SECTIONS.find((item) => item.key === section) ?? SECTIONS[0];
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -189,12 +179,12 @@ export function ProgressionResearch() {
   }, [query, section]);
 
   return (
-    <section className="border-t border-stone-750 pt-7">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-parch-50">Progression research</h2>
-          <p className="mt-1 max-w-3xl text-[15px] leading-6 text-parch-100">
-            Region-sensitive methods and unlock chains that do not fit cleanly in the skill catalog. Base-game access and League exceptions stay separate.
+    <section className="border-t border-stone-750 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">Progression</h2>
+          <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
+            Methods and unlock chains outside the skill catalog.
           </p>
         </div>
         <input
@@ -202,11 +192,11 @@ export function ProgressionResearch() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search progression"
           aria-label="Search progression research"
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-[15px] text-parch-50 placeholder:text-parch-100/70 focus:border-gem-400 sm:w-64"
+          className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
         />
       </div>
 
-      <div role="tablist" aria-label="Progression research sections" className="mt-5 flex gap-1 overflow-x-auto border-b border-stone-750 pb-px">
+      <div role="tablist" aria-label="Progression research sections" className="comp-seg mt-2 overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -216,11 +206,7 @@ export function ProgressionResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`whitespace-nowrap border-b-2 px-3 py-2 text-[12px] transition-colors duration-150 ${
-                active
-                  ? "border-gem-400 text-gem-300"
-                  : "border-transparent text-parch-100 hover:text-parch-50"
-              }`}
+              className={`comp-seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>
@@ -228,34 +214,34 @@ export function ProgressionResearch() {
         })}
       </div>
 
-      <div className="py-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className="text-[15px] leading-6 text-parch-100">{selected.description}</p>
-          <span className="text-[12px] text-parch-100">{rows.length} shown</span>
+      <div className="py-2">
+        <div className="flex justify-end">
+          <span className="font-mono text-[11px] text-parch-400">{rows.length} shown</span>
         </div>
 
-        <div className="mt-3 border-t border-stone-750">
+        <div className="mt-1.5 border-t border-stone-750">
           {rows.length ? rows.map((row, index) => {
             const rowLinks = sourceLinks(row);
             const details = rowDetails(row);
+            const subtitle = rowSubtitle(row);
             return (
               <article
                 key={String(row.id || `${rowTitle(row)}-${index}`)}
-                className={`grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)_140px] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
               >
-                <div>
-                  <h3 className="text-[15px] font-medium text-parch-50">{rowTitle(row)}</h3>
-                  {rowSubtitle(row) ? <p className="mt-1 text-[12px] leading-5 text-parch-100">{rowSubtitle(row)}</p> : null}
-                  <p className="mt-1 text-[12px] text-parch-100">{rowRegionLabel(row)}</p>
+                <div className="min-w-0">
+                  <h3 className="m-0 text-[14px] font-medium text-parch-50">{rowTitle(row)}</h3>
+                  {subtitle ? <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{subtitle}</p> : null}
+                  <p className="m-0 mt-0.5 text-[11px] text-parch-400">{rowRegionLabel(row)}</p>
                 </div>
-                <div className="space-y-1 text-[15px] leading-6 text-parch-50">
-                  {details.length ? details.map((detail, detailIndex) => <p key={detailIndex}>{detail}</p>) : <p className="text-parch-100">No extra detail listed.</p>}
+                <div className="space-y-0.5 text-[13px] leading-5 text-parch-50">
+                  {details.map((detail, detailIndex) => <p key={detailIndex} className="m-0">{detail}</p>)}
                 </div>
-                <div className="text-[12px] lg:text-right">
-                  <div className="text-parch-100">{statusLabel(row.confidence)}</div>
-                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
+                <div className="text-[11px] lg:text-right">
+                  <div className="text-parch-300">{confidenceLabel(row.confidence)}</div>
+                  <div className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 lg:justify-end">
                     {rowLinks.map((url, linkIndex) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100">
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-gem-300 hover:underline">
                         {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
                       </a>
                     ))}
@@ -263,7 +249,7 @@ export function ProgressionResearch() {
                 </div>
               </article>
             );
-          }) : <p className="py-5 text-[15px] text-parch-100">Nothing matches that search.</p>}
+          }) : <p className="py-3 text-[13px] text-parch-300">No matches.</p>}
         </div>
       </div>
     </section>

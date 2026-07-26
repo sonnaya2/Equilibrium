@@ -136,27 +136,12 @@ function hasSourcedBonuses(record: EquipmentRecord): boolean {
   return false;
 }
 
-function emptyPickerCopy(
-  activeSlot: EquipmentSlot | null,
-  styleBrowse: StyleBrowse,
-  style: CombatStyle,
-): string {
+function emptyPickerCopy(activeSlot: EquipmentSlot | null): string {
   const slotBit = activeSlot ? SLOT_LABELS[activeSlot] : null;
-  const styleOn = styleBrowse !== "all";
-  const styleName =
-    styleBrowse === "setup" || styleBrowse === "all"
-      ? style
-      : styleBrowse;
-  if (slotBit && styleOn) {
-    return `No wearables for ${slotBit} under ${styleName} (or hybrid). Browse all styles, pick another slot, or broaden region/search.`;
-  }
   if (slotBit) {
-    return `No wearables for ${slotBit} with the current region/search. Materials and set aggregates stay under Unlocks.`;
+    return `No wearables for ${slotBit} with this filter.`;
   }
-  if (styleOn) {
-    return `No wearables match ${styleName} (or hybrid) with the current filters. Wearables need a slot; try Browse all styles or region/search.`;
-  }
-  return "No wearables match. Wearables need a slot; materials and set aggregates stay under Unlocks.";
+  return "No wearables for this slot/filter.";
 }
 
 /** Paper doll + item picker. Item bonuses unsourced — placement is organisational. */
@@ -265,14 +250,10 @@ export function GearPanel({
   const countLine = `${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"} · style filter ${styleFilterOn ? "on" : "off"}`;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
-        <p className="mt-1 text-xs text-parch-300">
-          Wearables require a slot. Style filter defaults to setup (and hybrid). Browse chips let
-          you page another style without changing Setup. Item combat stats and set piece counts
-          come from the wiki where sourced; weapon tier still drives base AD.
-        </p>
+        <p className="mt-1 text-xs text-parch-300">Wearables need a slot · tier drives base AD</p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
           {DOLL_LAYOUT.flatMap((row, rowIdx) =>
@@ -343,7 +324,7 @@ export function GearPanel({
                 ))}
               </ul>
               <p className="mt-1 text-[11px] text-parch-300">
-                Combat-relevant set crits (Tectonic / Tumeken) apply automatically from gear.
+                Tectonic / Tumeken set crits apply from gear
               </p>
             </div>
           );
@@ -555,8 +536,8 @@ export function GearPanel({
         </div>
         <div className="mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
-            <p className="px-2 py-3 text-xs leading-relaxed text-parch-300">
-              {emptyPickerCopy(activeSlot, styleBrowse, loadout.style)}
+            <p className="px-2 py-2 text-xs text-parch-300">
+              {emptyPickerCopy(activeSlot)}
             </p>
           ) : (
             <>
@@ -636,13 +617,13 @@ export function GearPanel({
             </span>
           </button>
           <p className="mt-1 text-xs text-parch-300">
-            No slot — materials, codices, and set aggregates. Never equip on the doll.
+            No slot — materials, codices, set aggregates (pin only)
           </p>
           {unlocksOpen ? (
             <div className="mt-1 max-h-48 overflow-y-auto border-t border-stone-750">
               {unlockRows.length === 0 ? (
-                <p className="px-2 py-3 text-xs text-parch-300">
-                  No unlocks match the current region/search.
+                <p className="px-2 py-2 text-xs text-parch-300">
+                  No unlocks match region/search
                 </p>
               ) : (
                 unlockRows.map((record) => {

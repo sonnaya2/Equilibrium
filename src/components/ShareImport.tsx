@@ -59,33 +59,22 @@ export function ShareImport() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/75 px-4 pt-[12vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/80 px-3 pt-[10vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="share-import-title"
     >
-      <section className="panel w-full max-w-md">
-        <div className="panel-head" id="share-import-title">
+      <section className="comp-panel w-full max-w-sm">
+        <div className="comp-panel__head" id="share-import-title">
           Shared build
         </div>
-        <div className="panel-body space-y-4">
-          <p className="text-sm text-parch-300">
-            This link carries a build that differs from what is saved in this browser. Import it, or
-            keep yours.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={importShared}
-              className="rounded-sm border border-gem-500 bg-gem-600 px-3 py-1.5 text-sm text-parch-50 transition-colors duration-150 hover:bg-gem-500"
-            >
-              Import shared build
+        <div className="comp-panel__body space-y-2.5">
+          <p className="text-sm text-parch-300">Link differs from the build saved here.</p>
+          <div className="flex flex-wrap gap-1.5">
+            <button type="button" onClick={importShared} className="comp-btn comp-btn--gem">
+              Import
             </button>
-            <button
-              type="button"
-              onClick={keepMine}
-              className="rounded-sm border border-stone-750 bg-stone-800 px-3 py-1.5 text-sm text-parch-50 transition-colors duration-150 hover:border-stone-carve hover:text-parch-50"
-            >
+            <button type="button" onClick={keepMine} className="comp-btn">
               Keep mine
             </button>
           </div>

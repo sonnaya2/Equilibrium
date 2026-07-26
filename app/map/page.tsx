@@ -10,8 +10,6 @@ import type { RegionId } from "@/league";
 
 export const metadata: Metadata = {
   title: "Map",
-  description:
-    "Three elective region picks for RS3 Leagues II: Equilibrium — what each region opens.",
 };
 
 /** Category matches combat gear / BiS / boss drop / wearables for planner counts. */
@@ -66,10 +64,7 @@ export default function MapPage() {
     // the flex column plus min-h-0 chain is what lets the canvas fill it
     // instead of sitting in a letterboxed strip with dead space underneath.
     <Page wide className="map-shell flex flex-col md:py-4">
-      <PageHeading
-        title="Region map"
-        note="Misthalin and Havenhythe fixed. Karamja at the first milestone. Three picks from the other eight. Same picks on Map, Build, and Combat."
-      />
+      <PageHeading note="Three electives · Build picks." />
       <RegionPlanner regions={plannerRegions} boundaryRules={catalog.hardRules} />
     </Page>
   );

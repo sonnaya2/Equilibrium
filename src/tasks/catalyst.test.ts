@@ -75,7 +75,7 @@ describe("parseCatalystTasksHtml", () => {
       wikiTaskId: 900,
       localityKey: "wilderness",
       regionId: "forinthry",
-      region: "Forinthry",
+      region: "Wilderness",
       requirements: "92 Ranged, 96 Fletching",
       catalystCompletionRate: 0.1,
       catalystCompletionRateQualifier: "<",

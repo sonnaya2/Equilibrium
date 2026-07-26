@@ -15,31 +15,31 @@ const TABS: ResearchTab[] = [
   {
     key: "skilling-activities",
     label: "Skilling activities",
-    description: `${skillingActivities.length} region-defining training activities, shops and infrastructure.`,
+    description: "",
     rows: skillingActivities,
   },
   {
     key: "skilling-equipment",
     label: "Skilling equipment",
-    description: `${skillingEquipment.length} outfits, off-hands, tools and consumable skilling supply chains.`,
+    description: "",
     rows: skillingEquipment,
   },
   {
     key: "combat-accounts",
     label: "Combat account",
-    description: `${combatAccounts.length} account-level combat unlocks and achievement passives with region pressure.`,
+    description: "",
     rows: combatAccounts,
   },
   {
     key: "combat-activities",
     label: "Combat activities",
-    description: `${combatActivities.length} combat activities that change routing without becoming hard gates.`,
+    description: "",
     rows: combatActivities,
   },
   {
     key: "combat-equipment",
     label: "Combat equipment",
-    description: `${combatEquipment.length} combat equipment unlocks including BiS chains with region combos.`,
+    description: "",
     rows: combatEquipment,
   },
 ];
@@ -54,7 +54,7 @@ export function RegionalUnlocksResearch() {
   return (
     <ResearchSection
       title="Regional unlocks"
-      intro={`Skilling and combat unlocks that change what a region is worth. ${combatRows.length} combat records (${combatCombos.length} multi-region labeled). Support-region notes stay optional unless marked all-required.`}
+      intro={`${combatRows.length} combat unlocks · ${combatCombos.length} multi-region`}
       tabs={TABS}
       searchPlaceholder="Search regional unlocks"
       searchLabel="Search regional unlocks"

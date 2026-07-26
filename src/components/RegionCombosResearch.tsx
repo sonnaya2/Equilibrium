@@ -86,49 +86,49 @@ const TABS: ResearchTab[] = [
   {
     key: "all-combos",
     label: "All combos",
-    description: `${combos.length} multi-region skilling dependency edges for ironman / no-trade planning.`,
+    description: "",
     rows: combos as ResearchRow[],
   },
   {
     key: "hard-required",
     label: "Hard multi-region",
-    description: `${hard.length} combos with required regions on the self-sufficient path.`,
+    description: "",
     rows: hard as ResearchRow[],
   },
   {
     key: "pressure-only",
     label: "Pressure only",
-    description: `${pressure.length} supply / routing pressure stacks without a single hard lock.`,
+    description: "",
     rows: pressure as ResearchRow[],
   },
   {
     key: "museum-multi",
     label: "Museum multi-region",
-    description: `${museumMulti.length} museum/dig-site collections needing 2+ regions of ${museumMatrix.length} permanent collections (seasonals excluded).`,
+    description: "",
     rows: museumRows,
   },
   {
     key: "combat-multi",
     label: "Combat multi-region",
-    description: `${combatCombos.length} combat unlocks with multi-region required stacks or combo labels.`,
+    description: "",
     rows: combatCombos,
   },
   {
     key: "modeled",
     label: "Already modeled",
-    description: `${modeled.length} fully encoded · ${partial.length} partial.`,
+    description: "",
     rows: [...modeled, ...partial] as ResearchRow[],
   },
   {
     key: "gaps",
     label: "Planner gaps",
-    description: `${gaps.length} combos not yet encoded as cross-region edges.`,
+    description: "",
     rows: gaps as ResearchRow[],
   },
   {
     key: "global-issues",
     label: "Global issues",
-    description: `${issues.length} taxonomy / dual-home issues that affect many skills.`,
+    description: "",
     rows: issues as ResearchRow[],
   },
 ];
@@ -138,7 +138,7 @@ export function RegionCombosResearch() {
   return (
     <ResearchSection
       title="Region combos"
-      intro={`Self-sufficient multi-region stacks Leagues planners miss when scoring one region at a time. ${counts?.combos ?? combos.length} skilling combos · ${museumMulti.length} museum multi-region · ${combatCombos.length} combat multi-region · ${counts?.globalIssues ?? issues.length} global issues. Ironman / no-trade only — no GE dual mode.`}
+      intro={`${counts?.combos ?? combos.length} skilling · ${museumMulti.length} museum · ${combatCombos.length} combat · ${counts?.globalIssues ?? issues.length} issues`}
       tabs={TABS}
       searchPlaceholder="Search region combos"
       searchLabel="Search region combos"

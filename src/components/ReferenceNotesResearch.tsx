@@ -51,13 +51,13 @@ const TABS: ResearchTab[] = [
   {
     key: "harvest",
     label: "Site harvest notes",
-    description: `${harvestRows.length} PvME / RS Analysis mechanic and dependency notes. Not optimizer constants or boss guides.`,
+    description: "",
     rows: harvestRows,
   },
   {
     key: "midgame",
     label: "July 2026 rebalance",
-    description: `Official mid-game rebalance reference (${midgame.date ?? "2026-07-20"}). Use for freshness, not as a second combat engine.`,
+    description: "",
     rows: midgameRows,
   },
 ];
@@ -66,7 +66,7 @@ export function ReferenceNotesResearch() {
   return (
     <ResearchSection
       title="Reference notes"
-      intro="Sourced research notes and official rebalance tables kept out of the combat calculator. Read as context when planning skills and unlocks."
+      intro=""
       tabs={TABS}
       searchPlaceholder="Search reference notes"
       searchLabel="Search reference notes"

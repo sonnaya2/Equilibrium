@@ -30,9 +30,7 @@ export function PerksPanel({
   return (
     <div>
       <h2 className="text-sm font-medium text-parch-50">Perks &amp; sets</h2>
-      <p className="mt-1 text-xs text-parch-300">
-        Only sourced current values — unsourced perks stay out rather than guessed.
-      </p>
+      <p className="mt-1 text-xs text-parch-300">Unsourced perks stay out</p>
       <div className="mt-3 border-t border-stone-750">
         {PERK_FIELDS.map(([key, label, max]) => (
           <NumberField

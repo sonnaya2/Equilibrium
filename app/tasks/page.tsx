@@ -12,8 +12,6 @@ import {
 
 export const metadata: Metadata = {
   title: "Tasks",
-  description:
-    "League tasks and points for RS3 Leagues II: Equilibrium. Catalyst stand-in until Equilibrium list publishes.",
 };
 
 export const revalidate = 3600;
@@ -66,7 +64,7 @@ export default async function TasksPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill">
-        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
+        <div className="mb-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs leading-tight text-parch-100">
           {useCatalystStandIn ? (
             <span className="tag text-chaos-300">Provisional · Catalyst</span>
           ) : null}
@@ -97,12 +95,12 @@ export default async function TasksPage() {
         />
 
         {records.length === 0 ? (
-          <p className="mt-2 text-sm text-parch-300">
+          <p className="mt-1.5 text-sm text-parch-300">
             {useCatalystStandIn && catalystResult.error
               ? `Catalyst list failed: ${catalystResult.error}`
               : (tasksData.note ??
                 taskUnknown?.known ??
-                "No tasks loaded yet.")}
+                "No tasks loaded.")}
           </p>
         ) : null}
       </div>

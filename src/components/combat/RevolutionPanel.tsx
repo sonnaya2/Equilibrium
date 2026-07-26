@@ -277,16 +277,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   return (
     <div>
       <p className="mb-2 text-xs text-parch-300">
-        Continuous revo over the duration: each GCD fires the first bar ability that is off
-        cooldown and affordable; otherwise the style basic auto-weaves. Expected values only.
-        Unaffordable high-priority slots (e.g. Berserk) are skipped — revo never banks adrenaline
-        for a later ultimate.
-      </p>
-      <p className="mb-3 text-xs text-parch-300">
-        Single-target bars from{" "}
-        <span className="text-parch-50">PvME Revolution Bars</span>. Revo++ config: Auto-retaliate
-        on · Revolution on · auto-trigger Basic + Threshold + Enhanced + Ultimate · size 14 · Auto
-        Attack off.
+        First ready affordable bar ability each GCD ·{" "}
+        <span className="text-parch-50">PvME Revolution Bars</span>
       </p>
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">
@@ -326,13 +318,13 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       {styleMismatch && bar ? (
         <p className="mt-2 text-xs text-chaos-300">
-          Setup is {loadout.style}; this bar is {bar.style} — AD/crit from Setup may not match.
+          Setup {loadout.style} · bar {bar.style} — AD/crit may not match
         </p>
       ) : null}
 
       {hybrid ? (
         <p className="mt-2 text-xs text-parch-300">
-          Revo manages first {revoSize} slots; remaining are manual keybinds (wiki).
+          Revo manages first {revoSize} slots · rest are keybinds
         </p>
       ) : null}
 
@@ -375,7 +367,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       {!result ? (
         <p className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300" data-testid="revo-empty">
-          Run revolution for a full duration cast log
+          Run revolution for the cast log
         </p>
       ) : null}
 
@@ -418,9 +410,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             </div>
           </dl>
 
-          <h3 className="mt-5 text-xs font-medium text-parch-50">Cast timeline</h3>
+          <h3 className="mt-4 text-xs font-medium text-parch-50">Cast timeline</h3>
           <p className="mt-1 text-xs text-parch-300">
-            One row per GCD. Basics are auto-woven when the bar has nothing ready or affordable.
+            One row per GCD · basics auto-weave when bar is idle
           </p>
           <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
             <table className="w-full min-w-[520px] border-collapse text-left text-xs">
@@ -493,7 +485,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             </button>
           ) : null}
 
-          <h3 className="mt-5 text-xs font-medium text-parch-50">Damage by ability</h3>
+          <h3 className="mt-4 text-xs font-medium text-parch-50">Damage by ability</h3>
           <div className="mt-2 border-t border-stone-750">
             {contributions.map((row) => (
               <div

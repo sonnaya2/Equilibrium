@@ -6,8 +6,6 @@ import { DataWorkbenchHost } from "./DataWorkbenchHost";
 
 export const metadata: Metadata = {
   title: "Data",
-  description:
-    "Region content, progression, and sourced game data for the Equilibrium planner.",
 };
 
 export default function DataPage() {
@@ -31,11 +29,7 @@ export default function DataPage() {
           catalog={catalog}
           notes={
             <p className="text-sm text-parch-100">
-              Ironman / self-sufficient only. Each row carries its own source. Policy on{" "}
-              <Link href="/sources" className="text-gem-300 hover:underline">
-                Sources
-              </Link>
-              .
+              Ironman only. Each row has a source.
             </p>
           }
         />

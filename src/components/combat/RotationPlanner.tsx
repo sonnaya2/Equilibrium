@@ -136,13 +136,10 @@ export function RotationPlanner() {
   const inputCls = "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
 
   return (
-    <div className="grid gap-5 py-5 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
+    <div className="grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
       <div>
         <h2 className="text-sm font-medium text-parch-50">Rotation</h2>
-        <p className="mt-1 text-xs text-parch-300">
-          Revolution runs the wiki&apos;s recommended bars by default; switch to Manual for
-          deliberate cast-by-cast work.
-        </p>
+        <p className="mt-1 text-xs text-parch-300">Revo = wiki bars · manual = cast-by-cast</p>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
@@ -293,7 +290,7 @@ export function RotationPlanner() {
         </div>
 
         {queue.length === 0 ? (
-          <p className="mt-3 text-xs text-parch-300">Add abilities from the list to build a rotation.</p>
+          <p className="mt-3 text-xs text-parch-300">Add abilities to the queue</p>
         ) : (
           <div className="mt-3 border-t border-stone-750">
             {queue.map((id, index) => (

@@ -16,8 +16,7 @@ export function TargetPanel({
     <div>
       <h2 className="text-sm font-medium text-parch-50">Target</h2>
       <p className="mt-1 text-xs text-parch-300">
-        Model an NPC instead of entering accuracy directly — Damage Potential follows the verified
-        hit-chance chain.
+        NPC model drives hit chance and Damage Potential
       </p>
       <div className="mt-3 border-t border-stone-750">
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">

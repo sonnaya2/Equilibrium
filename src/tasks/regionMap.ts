@@ -55,6 +55,7 @@ export const CATALYST_LOCALITY_TO_REGION: Readonly<Record<string, TaskRegionId>>
   fort: "misthalin",
 };
 
+/** Display names match map/league anchors (not Catalyst short labels). */
 const REGION_DISPLAY: Readonly<Record<TaskRegionId, string>> = {
   global: "Global",
   misthalin: "Misthalin",
@@ -62,9 +63,9 @@ const REGION_DISPLAY: Readonly<Record<TaskRegionId, string>> = {
   karamja: "Karamja",
   asgarnia: "Asgarnia",
   kandarin: "Kandarin",
-  fremennik: "Fremennik",
-  forinthry: "Forinthry",
-  desert: "Desert",
+  fremennik: "Fremennik Province",
+  forinthry: "Wilderness",
+  desert: "Kharidian Desert",
   morytania: "Morytania",
   tirannwn: "Tirannwn",
   anachronia: "Anachronia",

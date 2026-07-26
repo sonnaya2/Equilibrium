@@ -2,9 +2,10 @@
 
 /**
  * Tasks — Crest Compact (Quarry DNA) without right inspector.
- * 2-bay: crest rail (~7.5rem) + stage. 28px single-line rows.
+ * 2-bay: crest rail (~5.5rem) + stage. 32px rows · inline expand under row.
  * Spike selection law: no auto-open; re-click / Close collapses.
- * My build defaults on.
+ * My build defaults on — filters list only; rail always shows all regions with tasks.
+ * Density: dual-mode rail counts, All-view micro-crests, compact stage.
  */
 
 import Link from "next/link";
@@ -15,10 +16,13 @@ import {
   useTasksDesk,
   wikiTaskUrl,
 } from "@/concepts/tasks-density/useTasksDesk";
-import { isTaskTier } from "@/tasks";
+import { isTaskTier, type TaskRegionId } from "@/tasks";
 import { CATALYST_TASKS_URL } from "@/tasks/regionMap";
 
-const ROW_PX = 28;
+const ROW_PX = 32;
+const RAIL_CREST_PX = 30;
+const STAGE_CREST_PX = 18;
+const ROW_CREST_PX = 14;
 
 export function TaskRecords({
   records: raw,
@@ -50,6 +54,8 @@ export function TaskRecords({
     regionCounts,
     crestRegionIds,
     unlockLabel,
+    unlockedSet,
+    isUnlocked,
     visible,
     completed,
     selectedId,
@@ -71,6 +77,33 @@ export function TaskRecords({
     [records],
   );
   const showRegionFilter = regionRail.length > 0;
+
+  /**
+   * Dual-mode rail badges (CEO nit): under My build, Σ / unlocked leaves show
+   * build-scoped counts; locked electives keep full corpus totals.
+   */
+  const railCounts = useMemo(() => {
+    if (!buildOnly) return regionCounts;
+    const m = new Map<TaskRegionId | "all", number>();
+    let all = 0;
+    for (const r of records) {
+      const rid = r.regionId;
+      if (!rid) continue;
+      const locked = isLeagueRegionId(rid) && !unlockedSet.has(rid);
+      if (locked) continue;
+      all += 1;
+      m.set(rid, (m.get(rid) ?? 0) + 1);
+    }
+    m.set("all", all);
+    for (const id of regionRail) {
+      if (isLeagueRegionId(id) && !unlockedSet.has(id)) {
+        m.set(id, regionCounts.get(id) ?? 0);
+      } else if (!m.has(id)) {
+        m.set(id, 0);
+      }
+    }
+    return m;
+  }, [buildOnly, records, regionCounts, regionRail, unlockedSet, isLeagueRegionId]);
 
   /** Spike law — ignore desk.selected first-row fallback. */
   const active = useMemo(() => {
@@ -96,12 +129,14 @@ export function TaskRecords({
     setSelectedId((cur) => (cur === id ? null : id));
   };
 
+  const allCount = railCounts.get("all") ?? 0;
+
   return (
     <div className="tasks-desk">
       {crestRegionIds.length > 0 ? <RegionCrestPreload regionIds={crestRegionIds} /> : null}
 
       <div className="tasks-desk__grid">
-        {/* Crest-only rail — title tooltip carries the name */}
+        {/* Crest-only rail — title tooltip carries the name / lock state */}
         <aside className="tasks-desk__rail" aria-label="Filter by region">
           <p className="tasks-desk__rail-label">Region</p>
           <button
@@ -111,38 +146,56 @@ export function TaskRecords({
             title={buildOnly ? "All unlocked" : "All regions"}
             aria-label={
               buildOnly
-                ? `All unlocked, ${regionCounts.get("all") ?? 0} tasks`
-                : `All regions, ${regionCounts.get("all") ?? 0} tasks`
+                ? `All unlocked, ${allCount} tasks`
+                : `All regions, ${allCount} tasks`
             }
             onClick={() => setRegion("all")}
           >
             <span className="tasks-desk__leaf-glyph" aria-hidden>
               Σ
             </span>
-            <span className="tasks-desk__leaf-count">{regionCounts.get("all") ?? 0}</span>
+            <span className="tasks-desk__leaf-count">{allCount}</span>
           </button>
           {showRegionFilter
             ? regionRail.map((id) => {
                 const label = regionDisplayName(id);
-                const count = regionCounts.get(id) ?? 0;
+                const count = railCounts.get(id) ?? 0;
+                const locked =
+                  buildOnly && isLeagueRegionId(id) && !isUnlocked(id);
+                const title = locked ? `${label} · not in Build (still viewable)` : label;
                 return (
                   <button
                     key={id}
                     type="button"
-                    className={`tasks-desk__leaf${region === id ? " is-on" : ""}`}
+                    className={`tasks-desk__leaf${region === id ? " is-on" : ""}${locked ? " is-locked" : ""}`}
                     aria-pressed={region === id}
-                    title={label}
-                    aria-label={`${label}, ${count} tasks`}
+                    title={title}
+                    aria-label={
+                      locked
+                        ? `${label}, ${count} tasks, not in Build`
+                        : `${label}, ${count} tasks`
+                    }
                     onClick={() => setRegion(id)}
                   >
                     {isLeagueRegionId(id) ? (
-                      <RegionCrest regionId={id} size={18} />
+                      <RegionCrest regionId={id} size={RAIL_CREST_PX} />
                     ) : (
                       <span className="tasks-desk__leaf-glyph" aria-hidden>
                         G
                       </span>
                     )}
-                    <span className="tasks-desk__leaf-count">{count}</span>
+                    <span className="tasks-desk__leaf-count">
+                      {locked ? (
+                        <>
+                          <span className="tasks-desk__leaf-lock" aria-hidden>
+                            ×
+                          </span>
+                          {count}
+                        </>
+                      ) : (
+                        count
+                      )}
+                    </span>
                   </button>
                 );
               })
@@ -183,8 +236,8 @@ export function TaskRecords({
                 aria-pressed={buildOnly}
                 title={
                   buildOnly
-                    ? `Unlocked: ${unlockLabel}. Global tasks stay included.`
-                    : "Show every region, not only your Build picks"
+                    ? `Unlocked: ${unlockLabel}. Global included.`
+                    : "All regions, not only Build picks"
                 }
                 onClick={() => setBuildOnly((v) => !v)}
               >
@@ -198,7 +251,9 @@ export function TaskRecords({
                   aria-pressed={tier === option}
                   onClick={() => setTier(option)}
                 >
-                  {option === "all" ? "All" : option}
+                  {option === "all"
+                    ? "All"
+                    : option.charAt(0).toUpperCase() + option.slice(1)}
                 </button>
               ))}
             </div>
@@ -206,8 +261,7 @@ export function TaskRecords({
 
           {buildOnly && build.elective.length === 0 ? (
             <p className="tasks-desk__hint">
-              My build · starters only — pick electives on{" "}
-              <Link href="/build">Build</Link>
+              Starters only — electives on <Link href="/build">Build</Link>
             </p>
           ) : null}
 
@@ -221,6 +275,7 @@ export function TaskRecords({
                 <div className="tasks-desk__th-num">Tier</div>
                 {showComp ? <div className="tasks-desk__th-num">Comp%</div> : null}
                 <div className="tasks-desk__th-num">Pts</div>
+                <div aria-hidden />
               </div>
 
               <div className="tasks-desk__body" style={{ height: virtualizer.getTotalSize() }}>
@@ -239,11 +294,14 @@ export function TaskRecords({
                     typeof record.wikiTaskId === "number"
                       ? wikiTaskUrl(tasksWikiUrl, record.wikiTaskId)
                       : null;
-                  const domId = `task-${id.replace(/[^a-zA-Z0-9_-]+/g, "-")}`;
                   const tags = [
                     ...(record.skills ?? []),
                     ...(record.areas ?? []),
                   ];
+                  const showRowCrest =
+                    region === "all" &&
+                    !!record.regionId &&
+                    isLeagueRegionId(record.regionId);
 
                   return (
                     <div
@@ -268,9 +326,11 @@ export function TaskRecords({
                       >
                         <input
                           type="checkbox"
-                          id={domId}
                           checked={done}
-                          onChange={() => onToggle(id)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            onToggle(id);
+                          }}
                           onClick={(e) => e.stopPropagation()}
                           className="tasks-desk__check"
                           aria-label={
@@ -279,13 +339,16 @@ export function TaskRecords({
                               : `Mark complete: ${record.name}`
                           }
                         />
-                        <label
-                          htmlFor={domId}
-                          className="tasks-desk__name"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {record.name}
-                        </label>
+                        <span className="tasks-desk__name-cell">
+                          {showRowCrest ? (
+                            <RegionCrest
+                              regionId={record.regionId!}
+                              size={ROW_CREST_PX}
+                              className="tasks-desk__row-crest"
+                            />
+                          ) : null}
+                          <span className="tasks-desk__name">{record.name}</span>
+                        </span>
                         <div className="tasks-desk__tier">
                           {isTaskTier(record.tier) ? record.tier : "—"}
                         </div>
@@ -327,19 +390,16 @@ export function TaskRecords({
                             <span className="is-mute">—</span>
                           )}
                         </div>
+                        <div className="tasks-desk__filler" aria-hidden />
                       </div>
 
                       {on && active && activeKey === id ? (
                         <div className="tasks-desk__stage" aria-label="Selected task">
                           <div className="tasks-desk__stage-head">
                             {record.regionId && isLeagueRegionId(record.regionId) ? (
-                              <RegionCrest regionId={record.regionId} size={20} />
+                              <RegionCrest regionId={record.regionId} size={STAGE_CREST_PX} />
                             ) : null}
                             <div className="tasks-desk__stage-copy">
-                              <p className={`tasks-desk__stage-name${done ? " is-done" : ""}`}>
-                                {record.name}
-                                {done ? " · done" : ""}
-                              </p>
                               <p className="tasks-desk__stage-meta">
                                 <span className="capitalize">{record.tier}</span>
                                 {record.regionId ? (
@@ -363,6 +423,7 @@ export function TaskRecords({
                                 {record.localityLabel ? (
                                   <span> · {record.localityLabel}</span>
                                 ) : null}
+                                {done ? <span className="is-done-mark"> · done</span> : null}
                               </p>
                             </div>
                             <button
@@ -381,7 +442,7 @@ export function TaskRecords({
                           ) : null}
                           {record.requirements ? (
                             <p className="tasks-desk__stage-req">
-                              Requires: {record.requirements}
+                              Req: {record.requirements}
                             </p>
                           ) : null}
                           {tags.length > 0 ? (
@@ -395,7 +456,7 @@ export function TaskRecords({
                               className="tasks-desk__stage-link"
                               aria-label={`Wiki Comp% for ${record.name}`}
                             >
-                              Open on Wiki
+                              Wiki
                             </a>
                           ) : null}
                         </div>

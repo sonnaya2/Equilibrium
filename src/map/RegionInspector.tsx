@@ -21,9 +21,9 @@ import type { PlannerRegion } from "./data/plannerRegion";
 import { useMapFocus } from "./useMapFocus";
 
 const UNLOCK_TEXT = {
-  starting: "Unlocked from the start",
-  automatic_early: "Unlocks at the first task milestone",
-  elective: "Elective pick — 3 of 8",
+  starting: "From start",
+  automatic_early: "First milestone",
+  elective: "Elective · 3 of 8",
 } as const;
 
 type TabId = "bosses" | "skilling" | "gear" | "items" | "training" | "places";
@@ -31,8 +31,8 @@ type TabId = "bosses" | "skilling" | "gear" | "items" | "training" | "places";
 const TABS: { id: TabId; label: string }[] = [
   { id: "bosses", label: "Bosses" },
   { id: "skilling", label: "Skilling" },
-  { id: "gear", label: "Combat gear" },
-  { id: "items", label: "Skill items" },
+  { id: "gear", label: "Gear" },
+  { id: "items", label: "Items" },
   { id: "training", label: "Training" },
   { id: "places", label: "Places" },
 ];
@@ -116,7 +116,7 @@ function TrainingTable({ rows }: { rows: TrainingRow[] }) {
             <td>
               {row.location || "—"}
               {row.regionLocked ? (
-                <span className="ml-1.5 text-xs text-gem-300">needs this region</span>
+                <span className="ml-1.5 text-xs text-gem-300">needs region</span>
               ) : null}
             </td>
           </tr>
@@ -165,10 +165,10 @@ export function RegionInspector({
   );
   const places = detail.areas.filter((area) => !needle || area.toLowerCase().includes(needle));
 
-  const empty = <p className="py-3 text-sm text-parch-300">Nothing mapped here yet.</p>;
+  const empty = <p className="py-3 text-sm text-parch-300">Nothing mapped.</p>;
 
   return (
-    <section className="panel" aria-live="polite">
+    <section className="panel" aria-label="Region detail" aria-live="polite">
       <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
         {planner.name}
         <span className="text-xs normal-case tracking-normal text-parch-300">
@@ -194,7 +194,7 @@ export function RegionInspector({
         <div className="border-b border-stone-800 px-3.5 py-2.5">
           {detail.skills.length > 0 ? (
             <p className="mb-2 text-xs text-parch-400">
-              Skills trained here: <span className="text-parch-100">{detail.skills.join(" · ")}</span>
+              Skills · <span className="text-parch-100">{detail.skills.join(" · ")}</span>
             </p>
           ) : null}
           {detail.hardRules.map((rule) => (
@@ -238,7 +238,7 @@ export function RegionInspector({
                   : "border-stone-750 text-parch-300 hover:text-parch-50"
               }`}
             >
-              confirmed only
+              confirmed
             </button>
           ) : null}
           <input
@@ -246,7 +246,7 @@ export function RegionInspector({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Find"
-            aria-label="Filter this region's records"
+            aria-label="Filter region"
             className="w-36 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 placeholder:text-parch-500 focus:border-gem-500 focus:outline-none"
           />
         </div>
@@ -295,7 +295,7 @@ export function RegionInspector({
         <div className="border-t border-stone-800 px-3.5 py-2">
           {detail.warnings.map((w) => (
             <p key={w} className="text-xs text-parch-500">
-              Note: {w}
+              {w}
             </p>
           ))}
         </div>
@@ -308,7 +308,7 @@ export function RegionInspector({
         </p>
         <details className="text-xs text-parch-300">
           <summary className="cursor-pointer text-parch-500 hover:text-parch-300">
-            Boundary rules ({boundaryRules.length})
+            Boundaries ({boundaryRules.length})
           </summary>
           <div className="mt-2 space-y-1.5">
             {boundaryRules.map((rule) => (

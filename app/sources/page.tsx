@@ -4,30 +4,28 @@ import { PageHeading } from "@/components/Heading";
 
 export const metadata: Metadata = {
   title: "Sources",
-  description:
-    "Sources and credits for RS3 Equilibrium — wiki, combat math references, and Jagex policy notes.",
 };
 
 const CREDITS = [
   {
     name: "RuneScape Wiki",
     url: "https://runescape.wiki",
-    note: "Primary source for current-game mechanics, ability and equipment values, and update histories. Wiki text and imagery, including region crests and map art, are used under CC BY-NC-SA 3.0. Facts are rewritten in our own words rather than copied.",
+    note: "Mechanics under CC BY-NC-SA 3.0. Facts rewritten for this tool.",
   },
   {
     name: "RS Analysis",
     url: "https://rs-analysis.xyz",
-    note: 'Math and validation reference, including the authors of "Quantitative Analysis of RuneScape 3 Combat" where its concepts or results are referenced. No code, UI, or copy taken.',
+    note: "Math reference only — no code or UI taken.",
   },
   {
     name: "PvM Encyclopedia (PvME)",
     url: "https://pvme.io",
-    note: "Used to discover mechanics and interactions worth investigating. Values are re-verified against current sources before use.",
+    note: "Used for mechanics discovery. Values re-verified here.",
   },
   {
     name: "Jagex",
     url: "https://www.runescape.com",
-    note: "Official game and League information. RuneScape is a trademark of Jagex Ltd. This is a fan tool, not affiliated with or endorsed by Jagex.",
+    note: "Fan tool. Not affiliated with Jagex.",
   },
 ];
 
@@ -35,10 +33,10 @@ export default function SourcesPage() {
   return (
     <Page>
       <PageHeading
-        title="Sources & credits"
-        note="Every combat number in this tool traces back to a source. When a figure disagrees with the game, the source reference attached to it is the place to start."
+        title="Sources"
+        note="Where combat and data numbers come from."
       />
-      <dl>
+      <dl className="mt-1">
         {CREDITS.map((c) => (
           <div key={c.name} className="border-b border-stone-800 py-3 last:border-b-0">
             <dt className="text-sm">
@@ -51,7 +49,7 @@ export default function SourcesPage() {
                 {c.name}
               </a>
             </dt>
-            <dd className="mt-0.5 max-w-prose text-sm text-parch-300">{c.note}</dd>
+            <dd className="mt-0.5 max-w-prose text-sm leading-5 text-parch-300">{c.note}</dd>
           </div>
         ))}
       </dl>

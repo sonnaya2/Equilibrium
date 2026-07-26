@@ -14,6 +14,7 @@ import { isRegionUnlocked } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import type { RegionId } from "@/league";
 import { GameIcon } from "@/components/GameIcon";
+import { confidenceLabel, freshnessLabel } from "@/components/researchStatus";
 import { regionCrestPath } from "@/lib/gameArt";
 
 type Mode = "region" | "skill";
@@ -42,35 +43,6 @@ function availabilityLabel(value: string): string {
   return value.replaceAll("_", " ");
 }
 
-function confidenceLabel(value: string): string {
-  const normalized = value.toLowerCase();
-  if (!normalized || normalized === "unclassified") return "Not checked";
-  if (normalized.includes("stale")) return "Needs update";
-  if (normalized.includes("unresolved")) return "Unresolved";
-  if (normalized.includes("incomplete")) return "Incomplete";
-  if (normalized.includes("legacy")) return "Legacy reference";
-  if (normalized.includes("historical_league_taxonomy") || normalized.includes("working_league_region_taxonomy")) return "League precedent";
-  if (normalized.includes("confirmed_wiki")) return "Wiki checked";
-  if (normalized.includes("confirmed_official")) return "Jagex";
-  if (normalized.includes("inferred_region") || normalized.includes("region_inferred")) return "Region inferred";
-  if (normalized.includes("base_game")) return "Base game";
-  if (normalized.includes("current_2026_content")) return "Current";
-  return value.replaceAll("_", " ");
-}
-
-function freshnessLabel(value: string): string {
-  const normalized = value.toLowerCase();
-  if (!normalized) return "-";
-  if (normalized === "2026_current" || normalized === "current" || normalized === "current_wiki") return "Current";
-  if (normalized.includes("2026-07-20")) return "Jul 20, 2026";
-  if (normalized.includes("2026_remastered")) return "2026 remaster";
-  if (normalized.includes("current_page_stale_xp_tables")) return "Current page; rates stale";
-  if (normalized.includes("stale")) return "Needs update";
-  if (normalized.includes("current_content_region_confirmed")) return "Current";
-  if (normalized.includes("current_wiki_main_game_ceiling")) return "Current main-game ceiling";
-  return value.replaceAll("_", " ");
-}
-
 function regionName(value: string): string {
   return value
     .replaceAll("_", " ")
@@ -82,22 +54,22 @@ function upgradeRegionAccess(upgrade: ResearchUpgrade): string {
 
   const required = upgrade.requiredRegions ?? [];
   if (required.length > 1) {
-    return `Region combo (all required): ${required.map(regionName).join(" + ")}`;
+    return `Combo: ${required.map(regionName).join(" + ")}`;
   }
 
   const hints = upgrade.regionHints ?? [];
   if (hints.length > 1) {
     if (upgrade.regionRequirementType === "all_required") {
-      return `Region combo (all required): ${hints.map(regionName).join(" + ")}`;
+      return `Combo: ${hints.map(regionName).join(" + ")}`;
     }
-    return `Region chain (support pressure): ${hints.map(regionName).join(" / ")}`;
+    return `Chain: ${hints.map(regionName).join(" / ")}`;
   }
 
   return "";
 }
 
 function methodAccess(method: ResearchTrainingMethod): string {
-  if (!method.regionHints.length) return "no region set";
+  if (!method.regionHints.length) return "—";
 
   return cleanText(method.regionHints.join(" · "))
     .replaceAll("_plus_", " + ")
@@ -127,7 +99,7 @@ function SourceLink({ source }: { source: SourceReference | null }) {
       target="_blank"
       rel="noreferrer"
       title={source.title}
-      className="whitespace-nowrap text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100"
+      className="whitespace-nowrap text-gem-300 underline-offset-2 hover:underline"
     >
       {sourceKindLabel(source.source)}
     </a>
@@ -157,7 +129,7 @@ function MethodTable({
   onFocus?: (id: string) => void;
 }) {
   if (!methods.length) {
-    return <p className="px-3.5 py-2.5 text-[15px] text-parch-100">No method listed yet.</p>;
+    return <p className="px-3 py-2 text-[13px] text-parch-100">None yet.</p>;
   }
 
   return (
@@ -167,7 +139,7 @@ function MethodTable({
           <tr>
             <th>Method</th>
             <th>Level</th>
-            <th>Base rate / throughput</th>
+            <th>Rate</th>
             <th>Where</th>
             <th>Needs</th>
             <th>Status</th>
@@ -193,16 +165,16 @@ function MethodTable({
                   {method.warning ? <div className="mt-1 max-w-xl text-[14px] leading-5 text-parch-100">{cleanText(method.warning)}</div> : null}
                 </td>
                 <td>{method.levelRange || "-"}</td>
-                <td className="max-w-[250px] font-mono leading-5">{method.xpRate || "not listed"}</td>
+                <td className="max-w-[250px] font-mono leading-5">{method.xpRate || "—"}</td>
                 <td className="max-w-[230px] secondary leading-5">
                   {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
-                  <div className={method.location ? "mt-1" : ""}>{methodAccess(method)}</div>
-                  {method.hardRegionRequirement ? <div className="mt-1 text-parch-50">region required</div> : null}
+                  <div className={method.location ? "mt-0.5" : ""}>{methodAccess(method)}</div>
+                  {method.hardRegionRequirement ? <div className="mt-0.5 text-parch-50">region required</div> : null}
                 </td>
                 <td className="max-w-[240px] secondary leading-5">
                   {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
-                  {method.requirements.length ? <div className="mt-1">{method.requirements.join(" · ")}</div> : null}
-                  {method.resourceSource ? <div className="mt-1">Supply: {cleanText(method.resourceSource)}</div> : null}
+                  {method.requirements.length ? <div className="mt-0.5">{method.requirements.join(" · ")}</div> : null}
+                  {method.resourceSource ? <div className="mt-0.5">Supply: {cleanText(method.resourceSource)}</div> : null}
                   {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
                 </td>
                 <td className="secondary leading-5">
@@ -233,16 +205,16 @@ function RegionDetail({
   const focusedUpgrade = focus?.kind === "upgrade" ? focus.index : null;
 
   return (
-    <article className="space-y-4">
-      <header className="pb-1">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+    <article className="space-y-3">
+      <header>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <div>
-            <h2 className="text-2xl font-semibold text-parch-50">{cleanText(region.name)}</h2>
-            <div className="mt-1 text-[12px] text-parch-100">
-              {availabilityLabel(region.availability)} · {region.content.length} entries · {region.training.length} training methods · {region.upgrades.length} upgrades
+            <h2 className="text-xl font-semibold text-parch-50">{cleanText(region.name)}</h2>
+            <div className="mt-0.5 text-[11px] text-parch-100">
+              {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} methods · {region.upgrades.length} upgrades
             </div>
           </div>
-          <div className="text-[12px] text-parch-100"><SourceLink source={region.source} /></div>
+          <div className="text-[12px]"><SourceLink source={region.source} /></div>
         </div>
       </header>
 
@@ -250,22 +222,22 @@ function RegionDetail({
         <section className="panel">
           <div className="panel-head">Requirements</div>
           <div className="panel-body space-y-1">
-            {region.hardRules.map((rule) => <p key={rule} className="text-[15px] leading-6 text-parch-50">{cleanText(rule)}</p>)}
+            {region.hardRules.map((rule) => <p key={rule} className="text-[14px] leading-5 text-parch-50">{cleanText(rule)}</p>)}
           </div>
         </section>
       ) : null}
 
-      <section className="grid gap-4 lg:grid-cols-2">
+      <section className="grid gap-3 lg:grid-cols-2">
         <div className="panel">
           <div className="panel-head">Areas</div>
-          <div className="px-3.5">
-            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-2 text-[15px] text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2.5 text-[15px] text-parch-100">No area list yet.</div>}
+          <div className="px-3">
+            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2 text-[13px] text-parch-100">None.</div>}
           </div>
         </div>
         <div className="panel">
-          <div className="panel-head">Skills here</div>
-          <div className="px-3.5">
-            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-[15px] text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2.5 text-[15px] text-parch-100">No skills listed yet.</div>}
+          <div className="panel-head">Skills</div>
+          <div className="px-3">
+            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-1.5 text-[14px] text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2 text-[13px] text-parch-100">None.</div>}
           </div>
         </div>
       </section>
@@ -273,14 +245,14 @@ function RegionDetail({
       {region.warnings.length ? (
         <section className="panel">
           <div className="panel-head">Notes</div>
-          <div className="px-3.5">
-            {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-2 text-[15px] leading-6 text-parch-100 last:border-b-0">{cleanText(warning)}</p>)}
+          <div className="px-3">
+            {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-1.5 text-[14px] leading-5 text-parch-100 last:border-b-0">{cleanText(warning)}</p>)}
           </div>
         </section>
       ) : null}
 
       <section className="panel">
-        <div className="panel-head flex items-baseline justify-between gap-4">
+        <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Content</span>
           <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
@@ -307,7 +279,7 @@ function RegionDetail({
                   >
                     <td>{cleanText(row.name)}</td>
                     <td className="secondary">{row.kind}</td>
-                    <td className="max-w-xl secondary leading-6">{row.detail ? cleanText(row.detail) : "-"}</td>
+                    <td className="max-w-xl secondary leading-5">{row.detail ? cleanText(row.detail) : "-"}</td>
                     <td className="secondary text-[12px]">{confidenceLabel(row.confidence)}</td>
                     <td className="text-[12px]"><SourceLink source={row.source} /></td>
                   </tr>
@@ -319,8 +291,8 @@ function RegionDetail({
       </section>
 
       <section className="panel">
-        <div className="panel-head flex items-baseline justify-between gap-4">
-          <span>Major upgrades</span>
+        <div className="panel-head flex items-baseline justify-between gap-3">
+          <span>Upgrades</span>
           <span className="font-normal text-parch-100">{region.upgrades.length}</span>
         </div>
         <div>
@@ -333,31 +305,31 @@ function RegionDetail({
                 key={`upgrade-${index}-${upgrade.name}`}
                 onClick={() => onFocus({ kind: "upgrade", index })}
                 aria-pressed={focused}
-                className={`grid w-full gap-1 border-b border-stone-750/70 px-3.5 py-2.5 text-left last:border-b-0 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5 ${
+                className={`grid w-full gap-0.5 border-b border-stone-750/70 px-3 py-2 text-left last:border-b-0 md:grid-cols-[minmax(160px,0.3fr)_minmax(0,1fr)_110px_90px] md:gap-4 ${
                   focused ? "bg-stone-raised" : index % 2 === 1 ? "bg-stone-zebra" : ""
                 }`}
               >
                 <div>
-                  <div className="text-[15px] font-medium text-parch-50">{cleanText(upgrade.name)}</div>
-                  <div className="mt-0.5 text-[12px] text-parch-100">{upgrade.category}</div>
-                  {regionAccess ? <div className="mt-1 text-[12px] font-medium text-parch-50">{regionAccess}</div> : null}
+                  <div className="text-[14px] font-medium text-parch-50">{cleanText(upgrade.name)}</div>
+                  <div className="mt-0.5 text-[11px] text-parch-100">{upgrade.category}</div>
+                  {regionAccess ? <div className="mt-0.5 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
                 </div>
-                <div className="text-[15px] leading-6 text-parch-100">
-                  {upgrade.detail ? cleanText(upgrade.detail) : "No details yet."}
-                  {upgrade.requirements.length ? <div className="mt-1 text-parch-50">Requires: {upgrade.requirements.join(" · ")}</div> : null}
+                <div className="text-[14px] leading-5 text-parch-100">
+                  {upgrade.detail ? cleanText(upgrade.detail) : "—"}
+                  {upgrade.requirements.length ? <div className="mt-0.5 text-parch-50">Needs: {upgrade.requirements.join(" · ")}</div> : null}
                 </div>
-                <div className="text-[12px] text-parch-100">{confidenceLabel(upgrade.confidence)}</div>
+                <div className="text-[11px] text-parch-100">{confidenceLabel(upgrade.confidence)}</div>
                 <div className="text-[12px] md:text-right" onClick={(e) => e.stopPropagation()}>
                   <SourceLink source={upgrade.source} />
                 </div>
               </button>
             );
-          }) : <p className="px-3.5 py-2.5 text-[15px] text-parch-100">No major upgrades listed yet.</p>}
+          }) : <p className="px-3 py-2 text-[13px] text-parch-100">None yet.</p>}
         </div>
       </section>
 
       <section className="panel">
-        <div className="panel-head flex items-baseline justify-between gap-4">
+        <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Training</span>
           <span className="font-normal text-parch-100">{region.training.length}</span>
         </div>
@@ -383,16 +355,17 @@ function SkillDetail({
   const focusedMethodId = focus?.kind === "method" ? focus.id : null;
 
   return (
-    <article className="space-y-4">
-      <header className="pb-1">
-        <h2 className="text-2xl font-semibold text-parch-50">{skill.name}</h2>
-        <div className="mt-1 text-[12px] text-parch-100">{skill.methods.length} methods · {skill.regions.length} regions</div>
-        <p className="mt-3 text-[15px] leading-6 text-parch-100">
-          {skill.regions.length ? `Relevant regions: ${cleanText(skill.regions.join(", "))}.` : "No single region requirement listed yet."} Rates are before Equilibrium XP multipliers.
-        </p>
+    <article className="space-y-3">
+      <header>
+        <h2 className="text-xl font-semibold text-parch-50">{skill.name}</h2>
+        <div className="mt-0.5 text-[11px] text-parch-100">
+          {skill.methods.length} methods · {skill.regions.length} regions
+          {skill.regions.length ? ` · ${cleanText(skill.regions.join(", "))}` : ""}
+          {" · rates ignore League mult"}
+        </div>
       </header>
       <section className="panel">
-        <div className="panel-head flex items-baseline justify-between gap-4">
+        <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Training</span>
           <span className="font-normal text-parch-100">{skill.methods.length}</span>
         </div>
@@ -552,7 +525,7 @@ function buildInspectorModel(
           title: row.name,
           subtitle: `Content · ${region.name}`,
           crestId: region.id,
-          scope: "content row",
+          scope: "content",
           facts: contentFacts(row),
           rules: [],
           notes: [],
@@ -572,7 +545,7 @@ function buildInspectorModel(
           title: row.name,
           subtitle: `Upgrade · ${region.name}`,
           crestId: region.id,
-          scope: "upgrade row",
+          scope: "upgrade",
           facts: upgradeFacts(row),
           rules: [],
           notes: [],
@@ -592,7 +565,7 @@ function buildInspectorModel(
           title: row.method,
           subtitle: `Training · ${region.name}`,
           crestId: region.id,
-          scope: "method row",
+          scope: "method",
           facts: methodFacts(row),
           rules: [],
           notes: row.warning ? [row.warning] : [],
@@ -609,7 +582,7 @@ function buildInspectorModel(
       title: region.name,
       subtitle: availabilityLabel(region.availability),
       crestId: region.id,
-      scope: "region record",
+      scope: "region",
       facts: regionRecordFacts(region),
       rules: region.hardRules,
       notes: region.warnings,
@@ -625,7 +598,7 @@ function buildInspectorModel(
           title: row.method,
           subtitle: `Training · ${skill.name}`,
           crestId: null,
-          scope: "method row",
+          scope: "method",
           facts: methodFacts(row),
           rules: [],
           notes: row.warning ? [row.warning] : [],
@@ -642,7 +615,7 @@ function buildInspectorModel(
       title: skill.name,
       subtitle: `${skill.regions.length} regions · ${skill.methods.length} methods`,
       crestId: null,
-      scope: "skill record",
+      scope: "skill",
       facts: skillRecordFacts(skill),
       rules: [],
       notes: [],
@@ -770,11 +743,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
           onClick={() => setMineOnly((on) => !on)}
           aria-pressed={mineOnly}
           disabled={!loaded}
-          title={
-            loaded
-              ? "Show only regions unlocked by your Map/Build picks"
-              : "Loading your region picks…"
-          }
+          title={loaded ? "Unlocked by your Map/Build picks" : "Loading picks…"}
           className={`comp-facet disabled:cursor-not-allowed disabled:opacity-40${
             mineOnly ? " is-on" : ""
           }`}
@@ -793,7 +762,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
       {/* Prism twin desk: crest rail | stage | full sources */}
       <div className="research-browse-desk">
         <aside className="comp-crest-rail border-0">
-          <p className="border-b border-stone-750 px-2.5 py-1.5 text-[11px] uppercase tracking-[0.08em] text-parch-100">
+          <p className="border-b border-stone-750 px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-parch-100">
             {mode === "region" ? "Regions" : "Skills"}
           </p>
           <div
@@ -844,11 +813,11 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
                   );
                 })}
             {(mode === "region" ? filteredRegions.length : filteredSkills.length) === 0 ? (
-              <p className="px-3 py-3 text-[13px] text-parch-100">No matches.</p>
+              <p className="px-2.5 py-2 text-[12px] text-parch-100">No matches.</p>
             ) : null}
           </div>
         </aside>
-        <div className="comp-stage-col min-w-0 overflow-auto px-3 py-3">
+        <div className="comp-stage-col min-w-0 overflow-auto px-2.5 py-2">
           {mode === "region" && selectedRegion ? (
             <RegionDetail region={selectedRegion} focus={focus} onFocus={setFocus} />
           ) : null}
@@ -901,43 +870,43 @@ function BrowseSourcesInspector({
   onClearFocus?: () => void;
 }) {
   return (
-    <div className="text-[15px]">
+    <div className="text-[14px]">
       <div className="flex items-baseline justify-between gap-2">
-        <p className="font-display text-xs uppercase tracking-[0.14em] text-gold-400">Sources</p>
+        <p className="font-display text-[11px] uppercase tracking-[0.12em] text-gold-400">Sources</p>
         {onClearFocus ? (
           <button
             type="button"
             onClick={onClearFocus}
-            className="text-[12px] text-parch-100 underline decoration-stone-750 underline-offset-2 hover:text-parch-50"
+            className="text-[11px] text-gem-300 underline-offset-2 hover:underline"
           >
             Full record
           </button>
         ) : null}
       </div>
-      <div className="mt-2 flex items-start gap-2">
-        {crestId ? <GameIcon src={regionCrestPath(crestId)} size={28} className="shrink-0" /> : null}
+      <div className="mt-1.5 flex items-start gap-1.5">
+        {crestId ? <GameIcon src={regionCrestPath(crestId)} size={22} className="shrink-0" /> : null}
         <div className="min-w-0">
-          <p className="text-[15px] font-medium leading-5 text-parch-50">{cleanText(title)}</p>
-          <p className="mt-0.5 text-[12px] text-parch-100">
+          <p className="text-[14px] font-medium leading-4 text-parch-50">{cleanText(title)}</p>
+          <p className="mt-0.5 text-[11px] text-parch-100">
             {subtitle}
             {focused ? ` · ${scope}` : ""}
           </p>
         </div>
       </div>
 
-      <dl className="mt-4 space-y-2 border-t border-stone-750 pt-3">
+      <dl className="mt-2.5 space-y-1 border-t border-stone-750 pt-2">
         {facts.map(([k, v]) => (
-          <div key={k} className="grid grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] gap-x-2 gap-y-0.5">
-            <dt className="text-[12px] leading-5 text-parch-100">{k}</dt>
-            <dd className="break-words text-[15px] leading-5 text-parch-50">{v}</dd>
+          <div key={k} className="grid grid-cols-[minmax(0,0.38fr)_minmax(0,0.62fr)] gap-x-1.5">
+            <dt className="text-[11px] leading-4 text-parch-100">{k}</dt>
+            <dd className="break-words text-[13px] leading-4 text-parch-50">{v}</dd>
           </div>
         ))}
       </dl>
 
       {rules.length ? (
-        <div className="mt-4 border-t border-stone-750 pt-3">
-          <p className="text-[11px] uppercase tracking-[0.08em] text-parch-100">Hard rules</p>
-          <ul className="mt-2 space-y-1.5 text-[15px] leading-5 text-parch-50">
+        <div className="mt-2.5 border-t border-stone-750 pt-2">
+          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Rules</p>
+          <ul className="mt-1 space-y-1 text-[13px] leading-4 text-parch-50">
             {rules.map((r) => (
               <li key={r}>{cleanText(r)}</li>
             ))}
@@ -946,9 +915,9 @@ function BrowseSourcesInspector({
       ) : null}
 
       {notes.length ? (
-        <div className="mt-4 border-t border-stone-750 pt-3">
-          <p className="text-[11px] uppercase tracking-[0.08em] text-parch-100">Notes</p>
-          <ul className="mt-2 space-y-1.5 text-[15px] leading-5 text-parch-100">
+        <div className="mt-2.5 border-t border-stone-750 pt-2">
+          <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">Notes</p>
+          <ul className="mt-1 space-y-1 text-[13px] leading-4 text-parch-100">
             {notes.map((n) => (
               <li key={n}>{cleanText(n)}</li>
             ))}
@@ -956,35 +925,35 @@ function BrowseSourcesInspector({
         </div>
       ) : null}
 
-      <div className="mt-4 border-t border-stone-750 pt-3">
-        <p className="text-[11px] uppercase tracking-[0.08em] text-parch-100">
-          Source references · {sources.length}
+      <div className="mt-2.5 border-t border-stone-750 pt-2">
+        <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">
+          Links · {sources.length}
         </p>
         {sources.length === 0 ? (
-          <p className="mt-2 text-[15px] text-parch-100">No source links on this record.</p>
+          <p className="mt-1 text-[12px] text-parch-100">None.</p>
         ) : (
-          <ul className="mt-2 space-y-3">
+          <ul className="mt-1.5 space-y-1.5">
             {sources.map((s) => (
               <li
                 key={`${s.source}-${s.url}-${s.verifiedAt}-${s.title ?? ""}`}
-                className="border border-stone-750 bg-stone-850 p-2.5"
+                className="border border-stone-750 bg-stone-850 px-2 py-1.5"
               >
-                <p className="text-[12px] font-medium uppercase tracking-[0.06em] text-gem-300">
+                <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-gem-300">
                   {SOURCE_LABEL[s.source] ?? s.source}
                 </p>
-                <p className="mt-1 text-[15px] leading-5 text-parch-50">
+                <p className="mt-0.5 text-[13px] leading-4 text-parch-50">
                   {s.title || SOURCE_LABEL[s.source] || s.source}
                 </p>
-                <p className="mt-1 text-[12px] leading-4 text-parch-100">
-                  verified {s.verifiedAt}
-                  {s.publishedAt ? ` · published ${s.publishedAt}` : ""}
+                <p className="mt-0.5 text-[11px] leading-3 text-parch-100">
+                  {s.verifiedAt}
+                  {s.publishedAt ? ` · ${s.publishedAt}` : ""}
                   {s.revision ? ` · rev ${s.revision}` : ""}
                 </p>
                 <a
                   href={s.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-1.5 block break-all text-[13px] leading-4 text-gem-300 underline-offset-2 hover:underline"
+                  className="mt-1 block break-all text-[12px] leading-3 text-gem-300 underline-offset-2 hover:underline"
                 >
                   {s.url}
                 </a>

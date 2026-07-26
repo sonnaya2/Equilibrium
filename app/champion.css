@@ -222,7 +222,7 @@
 }
 
 .eq-champion .comp-panel__head {
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   border-bottom: 1px solid var(--echo-border);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -236,7 +236,7 @@
 }
 
 .eq-champion .comp-panel__body {
-  padding: 0.75rem;
+  padding: 0.55rem 0.65rem;
 }
 
 /* ── Segment tabs ─────────────────────────────────────────── */
@@ -437,7 +437,7 @@
 
 .eq-champion .comp-sources {
   margin: 0;
-  padding: 0.5rem 0.75rem 0.85rem;
+  padding: 0.4rem 0.55rem 0.6rem;
   border-top: 1px solid var(--echo-border);
 }
 
@@ -509,7 +509,7 @@
   color: var(--echo-parch-400);
 }
 
-/* ── Overview · Nova courtyard gate ───────────────────────── */
+/* ── Overview · Nova courtyard gate (band + plan desk) ────── */
 
 .eq-champion .comp-courtyard {
   display: flex;
@@ -519,9 +519,9 @@
   overflow-y: auto;
   background:
     radial-gradient(
-      ellipse 120% 60% at 50% 0%,
-      color-mix(in srgb, var(--echo-rail) 55%, var(--echo-void)) 0%,
-      var(--echo-void) 70%
+      ellipse 120% 50% at 50% 0%,
+      color-mix(in srgb, var(--echo-rail) 45%, var(--echo-void)) 0%,
+      var(--echo-void) 68%
     );
 }
 
@@ -530,8 +530,8 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding: 0.65rem 1rem 0.55rem;
+  gap: 0.35rem 0.85rem;
+  padding: 0.45rem 0.75rem 0.4rem;
   background:
     linear-gradient(
       180deg,
@@ -563,12 +563,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--echo-parch-300);
+  font-variant-numeric: tabular-nums;
 }
 
 .eq-champion .comp-gate {
   display: grid;
-  grid-template-columns: minmax(7.5rem, 10.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem);
-  min-height: min(42vh, 380px);
+  grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr) minmax(7.5rem, 10rem);
+  min-height: min(26vh, 240px);
+  max-height: min(38vh, 300px);
   border-bottom: 1px solid var(--echo-border);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--echo-carve) 20%, transparent);
 }
@@ -577,14 +579,15 @@
   .eq-champion .comp-gate {
     grid-template-columns: 1fr;
     min-height: 0;
+    max-height: none;
   }
 }
 
 .eq-champion .comp-jamb {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem 0.65rem;
+  gap: 0.3rem;
+  padding: 0.45rem 0.45rem;
   background:
     linear-gradient(
       180deg,
@@ -616,11 +619,11 @@
 
 .eq-champion .comp-standing {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.55rem 0.4rem;
-  text-align: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  text-align: left;
   background:
     linear-gradient(
       180deg,
@@ -630,18 +633,18 @@
     );
   border: 1px solid var(--echo-border);
   border-radius: 2px 2px 1px 1px;
+  /* Carved inset only — drop ambient float */
   box-shadow:
     inset 0 1px 0 var(--echo-carve),
-    inset 0 -2px 0 rgb(10 8 6 / 45%),
-    0 2px 3px rgb(10 8 6 / 40%);
+    inset 0 -2px 0 rgb(10 8 6 / 45%);
 }
 
 .eq-champion .comp-standing.is-empty {
-  min-height: 4.25rem;
+  min-height: 2.25rem;
   justify-content: center;
   border-style: dashed;
   background: color-mix(in srgb, var(--echo-inset) 70%, var(--echo-shell));
-  box-shadow: inset 0 1px 2px rgb(10 8 6 / 50%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-void) 55%, transparent);
   color: var(--echo-parch-400);
   font-size: 0.6875rem;
 }
@@ -650,19 +653,21 @@
   margin: 0;
   font-family: var(--font-display), Cinzel, "Times New Roman", serif;
   font-size: 0.6875rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--echo-gold);
-  line-height: 1.2;
+  line-height: 1.15;
+  min-width: 0;
 }
 
 .eq-champion .comp-aperture {
   position: relative;
-  min-height: min(36vh, 340px);
+  min-height: min(22vh, 200px);
   overflow: hidden;
   background: var(--echo-inset);
+  /* Hard frame + tight carved inset — no soft ambient well */
   box-shadow:
     inset 0 0 0 1px var(--echo-border),
-    inset 0 2px 8px rgb(10 8 6 / 55%);
+    inset 0 1px 0 color-mix(in srgb, var(--echo-void) 55%, transparent);
 }
 
 .eq-champion .comp-aperture img {
@@ -671,7 +676,7 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 35%;
-  min-height: min(36vh, 340px);
+  min-height: min(22vh, 200px);
 }
 
 .eq-champion .comp-aperture__caption {
@@ -680,7 +685,7 @@
   left: 0;
   right: 0;
   margin: 0;
-  padding: 0.35rem 0.65rem;
+  padding: 0.3rem 0.55rem;
   background: linear-gradient(transparent, rgb(10 8 6 / 78%));
   font-size: 0.625rem;
   letter-spacing: 0.1em;
@@ -691,14 +696,12 @@
 .eq-champion .comp-milestone {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.5rem 0.55rem;
+  gap: 0.1rem;
+  padding: 0.35rem 0.45rem;
   background: color-mix(in srgb, var(--echo-inset) 55%, var(--echo-shell));
   border: 1px solid var(--comp-mortar);
   border-radius: 2px;
-  box-shadow:
-    inset 0 1px 2px rgb(10 8 6 / 50%),
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 25%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 25%, transparent);
 }
 
 .eq-champion .comp-milestone__k {
@@ -712,7 +715,7 @@
 .eq-champion .comp-milestone__v {
   margin: 0;
   font-family: ui-monospace, monospace;
-  font-size: 1.125rem;
+  font-size: 1rem;
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
   color: var(--echo-gem);
@@ -726,19 +729,39 @@
 }
 
 .eq-champion .comp-desk {
-  padding: 0.85rem;
+  padding: 0.5rem 0.6rem 0.65rem;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .eq-champion .comp-desk__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+  height: 100%;
+  align-content: start;
+}
+
+.eq-champion .comp-desk__checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.eq-champion .comp-desk__check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--echo-parch-100);
 }
 
 .eq-champion .comp-ledger {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.35rem 0.75rem;
+  gap: 0.25rem 0.55rem;
   margin: 0;
   font-size: 0.8125rem;
 }
@@ -918,10 +941,11 @@
   margin: 0 1rem 1rem;
   border: 1px solid var(--echo-carve);
   background: var(--echo-rail);
+  /* Keep lattice top-light (comp-sun); kill soft 24px ambient float */
   box-shadow:
     inset 0 1px 0 var(--comp-sun),
-    0 8px 24px rgb(0 0 0 / 45%),
-    0 0 0 1px var(--echo-border);
+    0 1px 0 var(--echo-border),
+    0 2px 0 rgb(10 8 6 / 55%);
   overflow: hidden;
 }
 
@@ -1101,8 +1125,8 @@
 .eq-champion .comp-inspector-head {
   display: flex;
   align-items: flex-start;
-  gap: 0.55rem;
-  padding: 0.75rem 0.75rem 0.5rem;
+  gap: 0.45rem;
+  padding: 0.55rem 0.55rem 0.4rem;
 }
 
 .eq-champion .comp-inspector-title {
@@ -1119,9 +1143,9 @@
 .eq-champion .comp-field-grid {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.35rem 0.75rem;
+  gap: 0.3rem 0.6rem;
   margin: 0;
-  padding: 0 0.75rem 0.65rem;
+  padding: 0 0.55rem 0.5rem;
   font-size: 0.8125rem;
 }
 
@@ -1155,8 +1179,8 @@
 .eq-champion .comp-court {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding: 0.85rem;
+  gap: 0.65rem;
+  padding: 0.65rem;
   min-height: 0;
   flex: 1;
   overflow-y: auto;
@@ -1283,8 +1307,8 @@
 .eq-champion .comp-relic-card {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  padding: 0.85rem;
+  gap: 0.45rem;
+  padding: 0.6rem;
   text-align: left;
   cursor: pointer;
   color: inherit;
@@ -1653,7 +1677,7 @@
 }
 
 .eq-champion .panel-head {
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   border-bottom: 1px solid var(--echo-border);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -1662,7 +1686,7 @@
 }
 
 .eq-champion .panel-body {
-  padding: 0.75rem;
+  padding: 0.55rem 0.65rem;
 }
 
 .eq-champion .data-table {
@@ -1747,7 +1771,7 @@
 
 .eq-champion .comp-aperture {
   position: relative;
-  min-height: 14rem;
+  min-height: min(22vh, 200px);
 }
 
 .eq-champion .comp-aperture img,
@@ -1790,17 +1814,18 @@
 }
 
 .eq-champion .comp-gate {
-  min-height: min(42vh, 380px) !important;
-  grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) minmax(9rem, 12rem) !important;
+  min-height: min(26vh, 240px) !important;
+  max-height: min(38vh, 300px);
+  grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
 }
 
 .eq-champion .comp-aperture {
-  min-height: min(36vh, 340px) !important;
+  min-height: min(22vh, 200px) !important;
   height: 100%;
 }
 
 .eq-champion .comp-aperture img {
-  min-height: min(36vh, 340px) !important;
+  min-height: 0 !important;
   position: absolute !important;
   inset: 0;
   width: 100% !important;
@@ -1809,12 +1834,12 @@
 }
 
 .eq-champion .comp-desk {
-  padding: 1rem 1.1rem 1.25rem;
+  padding: 0.5rem 0.65rem 0.7rem;
 }
 
 .eq-champion .comp-desk__grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.5rem;
 }
 
 @media (max-width: 960px) {
@@ -1824,10 +1849,11 @@
   .eq-champion .comp-gate {
     grid-template-columns: 1fr !important;
     min-height: 0 !important;
+    max-height: none;
   }
   .eq-champion .comp-aperture,
   .eq-champion .comp-aperture img {
-    min-height: 220px !important;
+    min-height: 180px !important;
   }
 }
 
@@ -1852,7 +1878,7 @@
 
 .eq-champion .comp-inspector {
   max-height: none;
-  padding: 0.65rem;
+  padding: 0.5rem 0.55rem;
 }
 
 /* Build court density */
@@ -1966,10 +1992,10 @@
    USER PASS — full viewport work surfaces (overrides above)
    ============================================================ */
 
-/* Overview: true splash — lintel + gate fills remaining viewport + slim desk */
+/* Overview: gate band + working plan desk (not keyart splash) */
 .eq-champion .comp-courtyard {
   display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  grid-template-rows: auto minmax(10rem, min(32vh, 280px)) minmax(0, 1fr) !important;
   height: calc(100vh - 3.25rem) !important;
   min-height: calc(100vh - 3.25rem) !important;
   max-width: none !important;
@@ -1979,8 +2005,9 @@
 
 .eq-champion .comp-gate {
   display: grid !important;
-  grid-template-columns: minmax(8.5rem, 11rem) minmax(0, 1fr) minmax(8.5rem, 11rem) !important;
+  grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
   min-height: 0 !important;
+  max-height: none !important;
   height: 100% !important;
   border-bottom: 1px solid var(--echo-border);
 }
@@ -2008,24 +2035,41 @@
 }
 
 .eq-champion .comp-desk {
-  flex: 0 0 auto;
-  padding: 0.55rem 0.85rem 0.7rem !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.4rem 0.55rem 0.55rem !important;
   border-top: 1px solid var(--echo-border);
   background: var(--echo-shell);
 }
 
 .eq-champion .comp-desk__grid {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 0.55rem !important;
+  gap: 0.4rem !important;
+  height: 100%;
+  align-content: stretch;
+}
+
+.eq-champion .comp-desk .comp-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .eq-champion .comp-desk .comp-panel__body {
-  padding: 0.5rem 0.65rem !important;
+  padding: 0.4rem 0.55rem !important;
+  flex: 1 1 auto;
 }
 
 .eq-champion .comp-desk .comp-panel__head {
-  padding: 0.35rem 0.65rem !important;
-  font-size: 0.75rem !important;
+  padding: 0.28rem 0.55rem !important;
+  font-size: 0.6875rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eq-champion .comp-desk .comp-note {
+  margin-top: 0.35rem;
 }
 
 @media (max-width: 900px) {
@@ -2038,10 +2082,11 @@
   .eq-champion .comp-gate {
     grid-template-columns: 1fr !important;
     height: auto !important;
+    max-height: none !important;
   }
   .eq-champion .comp-aperture {
-    height: min(50vh, 320px) !important;
-    min-height: 220px !important;
+    height: min(36vh, 240px) !important;
+    min-height: 160px !important;
   }
   .eq-champion .comp-desk__grid {
     grid-template-columns: 1fr !important;
@@ -2062,7 +2107,7 @@
   max-width: 1680px;
   width: 100%;
   margin: 0 auto;
-  padding: 0.55rem 0.85rem 0.75rem;
+  padding: 0.4rem 0.65rem 0.55rem;
 }
 
 .eq-champion .workbench-fill > .comp-desk-route,

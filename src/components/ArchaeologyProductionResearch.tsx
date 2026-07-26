@@ -96,61 +96,61 @@ const TABS: ResearchTab[] = [
   {
     key: "museum-matrix",
     label: "Museum matrix",
-    description: `${museumMatrix.length} permanent museum/dig-site collections with region combos. Seasonal Harvest Hollow content excluded. Waiko charms not tracked.`,
+    description: "",
     rows: museumRows,
   },
   {
     key: "collections",
     label: "Collection relics",
-    description: `${collectionRoutes.length} culture/collection routes that grant relic powers. Required dig-site and collector regions stay explicit.`,
+    description: "",
     rows: collectionRoutes as unknown as ResearchRow[],
   },
   {
     key: "repeatables",
     label: "Repeatable rewards",
-    description: "Repeatable collection rewards that act as material or chronote loops.",
+    description: "",
     rows: repeatables as unknown as ResearchRow[],
   },
   {
     key: "production",
     label: "Production routes",
-    description: `Alternate supply loops. ${production.alternate_supply_guard.rule}`,
+    description: "",
     rows: production.production_collection_routes as unknown as ResearchRow[],
   },
   {
     key: "qualifications",
     label: "Qualifications",
-    description: "Archaeology qualification milestones that gate dig sites and tools.",
+    description: "",
     rows: qualifications as unknown as ResearchRow[],
   },
   {
     key: "guild",
     label: "Guild shop",
-    description: "Archaeology Guild shop progression and collection-completion infrastructure.",
+    description: "",
     rows: [...guildShop, ...completionTools] as unknown as ResearchRow[],
   },
   {
     key: "relic-system",
     label: "Relic system",
-    description: "Active-slot and monolith power progression. Stale loadout claims are filtered via the archaeology loader correction.",
+    description: "",
     rows: relicSystemRows,
   },
   {
     key: "relic-loadouts",
     label: "Relic loadouts",
-    description: "Corrected loadout-tab unlock ladder: tutorial (2), Professor purchase (3), Guildmaster award (4).",
+    description: "",
     rows: relicLoadoutRows,
   },
   {
     key: "special-relics",
     label: "Special relics",
-    description: "Relic chains outside the culture-specific collections, including mixed-dig-site collections.",
+    description: "",
     rows: specialRelics.collection_relic_routes as unknown as ResearchRow[],
   },
   {
     key: "corrections",
     label: "Corrections",
-    description: "Existing data corrections and 2026 relic additions still pending exact collection metadata.",
+    description: "",
     rows: [...corrections, ...additions2026, ...specialRelics.current_2026_pending_exact_collection] as unknown as ResearchRow[],
   },
 ];
@@ -159,7 +159,7 @@ export function ArchaeologyProductionResearch() {
   return (
     <ResearchSection
       title="Archaeology"
-      intro="Collections, guild progression, supply loops and relic unlocks. Alternate sources stay visible rather than flattened into certainty."
+      intro=""
       tabs={TABS}
       searchPlaceholder="Search Archaeology"
       searchLabel="Search Archaeology data"

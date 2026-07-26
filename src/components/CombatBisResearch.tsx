@@ -16,25 +16,25 @@ const TABS: ResearchTab[] = [
   {
     key: "accounts",
     label: "Accounts",
-    description: `${accounts.length} account-level combat unlocks and achievement passives with region pressure.`,
+    description: "",
     rows: accounts,
   },
   {
     key: "activities",
     label: "Activities",
-    description: `${activities.length} combat activities that change routing without becoming hard gates.`,
+    description: "",
     rows: activities,
   },
   {
     key: "equipment",
     label: "Equipment",
-    description: `${equipment.length} combat equipment unlocks including BiS chains with region combos.`,
+    description: "",
     rows: equipment,
   },
   {
     key: "combos",
     label: "Combos",
-    description: `${combos.length} multi-region BiS chains (combo label or multiple required regions).`,
+    description: "",
     rows: combos,
   },
 ];
@@ -43,7 +43,7 @@ export function CombatBisResearch() {
   return (
     <ResearchSection
       title="Combat BiS"
-      intro={`Regional combat BiS and support unlocks that change what a region is worth. ${combatRows.length} records (${combos.length} multi-region). Snapshot ${combat.snapshotDate}. Support-region notes stay optional unless marked all-required.`}
+      intro={`${combatRows.length} unlocks · ${combos.length} multi-region · ${combat.snapshotDate}`}
       tabs={TABS}
       searchPlaceholder="Search combat BiS unlocks"
       searchLabel="Search combat BiS unlocks"

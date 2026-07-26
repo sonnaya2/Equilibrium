@@ -82,7 +82,7 @@ export default function CombatPage() {
       <div className="workbench-fill">
         <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
           <span className="font-medium text-parch-50">Combat</span>
-          <span className="text-parch-300">Post-March 2026 kit · live math on Quick</span>
+          <span className="text-parch-300">Live math on Quick · post-March 2026 kit</span>
           <span className="ml-auto flex gap-3">
             <SourceLink source={combatWiki} label="Wiki" />
             <SourceLink source={patchOne} label="Patch 1" />
@@ -93,8 +93,8 @@ export default function CombatPage() {
       <CombatTabs
         reference={
           <>
-      <section className="border-b border-stone-750 py-5">
-        <div className="mb-2 flex items-baseline justify-between gap-4">
+      <section className="border-b border-stone-750 py-3">
+        <div className="mb-1.5 flex items-baseline justify-between gap-4">
           <h2 className="text-sm font-medium text-parch-50">Data sync</h2>
           <span className="text-xs text-parch-300">
             {updateIndexData.records.length} tracked entities · polled {updateIndexData.lastSynced}
@@ -121,7 +121,7 @@ export default function CombatPage() {
         {Object.entries(combat.style_identity).map(([style, identity], index) => (
           <div
             key={style}
-            className={`py-4 md:px-4 ${index > 0 ? "border-t border-stone-750 md:border-l md:border-t-0" : ""}`}
+            className={`py-3 md:px-3 ${index > 0 ? "border-t border-stone-750 md:border-l md:border-t-0" : ""}`}
           >
             <h2 className="text-sm font-medium capitalize text-parch-50">{style}</h2>
             <p className="mt-1 text-xs leading-5 text-parch-300">{identity}</p>
@@ -129,7 +129,7 @@ export default function CombatPage() {
         ))}
       </section>
 
-      <section className="border-b border-stone-750 py-5">
+      <section className="border-b border-stone-750 py-3">
         <div className="mb-2 flex items-baseline justify-between gap-4">
           <h2 className="text-sm font-medium text-parch-50">2026 changes</h2>
           <span className="text-xs text-parch-300">Road to Restoration</span>
@@ -147,10 +147,10 @@ export default function CombatPage() {
             <tbody>
               {changes.map((change) => (
                 <tr key={`${change.date}-${change.name}`} className="border-b border-stone-750/70 align-top">
-                  <td className="whitespace-nowrap py-3 pr-4 font-mono text-xs text-parch-300">{change.date}</td>
-                  <td className="py-3 pr-4 text-parch-50">{change.name}</td>
-                  <td className="max-w-lg py-3 pr-4 text-xs leading-5 text-parch-300">{change.summary}</td>
-                  <td className="max-w-lg py-3 text-xs leading-5 text-parch-300">{change.league_impact}</td>
+                  <td className="whitespace-nowrap py-2 pr-4 font-mono text-xs text-parch-300">{change.date}</td>
+                  <td className="py-2 pr-4 text-parch-50">{change.name}</td>
+                  <td className="max-w-lg py-2 pr-4 text-xs leading-5 text-parch-300">{change.summary}</td>
+                  <td className="max-w-lg py-2 text-xs leading-5 text-parch-300">{change.league_impact}</td>
                 </tr>
               ))}
             </tbody>
@@ -158,21 +158,21 @@ export default function CombatPage() {
         </div>
       </section>
 
-      <section className="border-b border-stone-750 py-5">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]">
+      <section className="border-b border-stone-750 py-3">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Melee / Bloodlust</h2>
-            <p className="mt-2 text-sm leading-6 text-parch-300">{combat.melee.bloodlust.summary}</p>
-            <dl className="mt-4 border-t border-stone-750 text-sm">
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
+            <p className="mt-1.5 text-sm leading-5 text-parch-300">{combat.melee.bloodlust.summary}</p>
+            <dl className="mt-3 border-t border-stone-750 text-sm">
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                 <dt className="text-parch-300">Normal cap</dt>
                 <dd className="text-right text-parch-50">{combat.melee.bloodlust.normal_max_stacks} stacks</dd>
               </div>
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                 <dt className="text-parch-300">Berserk cap</dt>
                 <dd className="text-right text-parch-50">{combat.melee.bloodlust.berserk_max_stacks} stacks</dd>
               </div>
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-2">
+              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                 <dt className="text-parch-300">Ability books</dt>
                 <dd className="text-right text-parch-50">Strength folded into Attack</dd>
               </div>
@@ -192,54 +192,54 @@ export default function CombatPage() {
               <tbody>
                 {meleeAbilities.map((ability) => (
                   <tr key={ability.name} className="border-b border-stone-750/70 align-top">
-                    <td className="py-2.5 pr-4 text-parch-50">{ability.name}</td>
-                    <td className="py-2.5 pr-4 text-xs text-parch-300">{ability.unlock_level ?? "—"}</td>
-                    <td className="py-2.5 pr-4 text-xs text-parch-300">
+                    <td className="py-2 pr-4 text-parch-50">{ability.name}</td>
+                    <td className="py-2 pr-4 text-xs text-parch-300">{ability.unlock_level ?? "—"}</td>
+                    <td className="py-2 pr-4 text-xs text-parch-300">
                       {ability.adrenaline_cost_percent
                         ? `${ability.adrenaline_cost_percent}% cost`
                         : ability.adrenaline_gain_percent
                           ? `+${ability.adrenaline_gain_percent}%`
                           : "—"}
                     </td>
-                    <td className="py-2.5 text-xs leading-5 text-parch-300">{abilityEffect(ability)}</td>
+                    <td className="py-2 text-xs leading-5 text-parch-300">{abilityEffect(ability)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
-        <p className="mt-3 text-xs leading-5 text-parch-300">
+        <p className="mt-2 text-xs leading-5 text-parch-300">
           Retired legacy examples: {combat.melee.removed_or_retired_legacy_examples.join(", ")}.
         </p>
       </section>
 
-      <section className="border-b border-stone-750 py-5">
-        <div className="grid gap-6 lg:grid-cols-2">
+      <section className="border-b border-stone-750 py-3">
+        <div className="grid gap-4 lg:grid-cols-2">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Ranged ammunition</h2>
-            <div className="mt-2 border-t border-stone-750">
+            <div className="mt-1.5 border-t border-stone-750">
               {combat.ranged.ammo_system.map((ammo) => (
-                <div key={ammo.name} className="border-b border-stone-750/70 py-3">
+                <div key={ammo.name} className="border-b border-stone-750/70 py-2">
                   <div className="text-sm text-parch-50">{ammo.name}</div>
-                  <p className="mt-1 text-xs leading-5 text-parch-300">{ammo.effect}</p>
+                  <p className="mt-0.5 text-xs leading-5 text-parch-300">{ammo.effect}</p>
                 </div>
               ))}
             </div>
           </div>
           <div>
             <h2 className="text-sm font-medium text-parch-50">Ranged ability changes</h2>
-            <div className="mt-2 border-t border-stone-750">
+            <div className="mt-1.5 border-t border-stone-750">
               {combat.ranged.important_ability_changes.map((ability) => (
-                <div key={ability.name} className="border-b border-stone-750/70 py-3">
+                <div key={ability.name} className="border-b border-stone-750/70 py-2">
                   <div className="flex items-baseline justify-between gap-4">
                     <div className="text-sm text-parch-50">{ability.name}</div>
                     {"adrenaline_cost_percent" in ability ? (
                       <div className="text-xs text-parch-300">{ability.adrenaline_cost_percent}% adrenaline</div>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-xs leading-5 text-parch-300">{ability.effect}</p>
+                  <p className="mt-0.5 text-xs leading-5 text-parch-300">{ability.effect}</p>
                   {"duration_seconds" in ability ? (
-                    <p className="mt-1 text-xs text-parch-300">
+                    <p className="mt-0.5 text-xs text-parch-300">
                       {ability.duration_seconds}s base{"greater_duration_seconds" in ability ? ` · ${ability.greater_duration_seconds}s greater` : ""}
                     </p>
                   ) : null}
@@ -250,25 +250,25 @@ export default function CombatPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 border-b border-stone-750 py-5 lg:grid-cols-2">
+      <section className="grid gap-4 border-b border-stone-750 py-3 lg:grid-cols-2">
         <div>
           <h2 className="text-sm font-medium text-parch-50">Magic</h2>
-          <p className="mt-2 text-sm leading-6 text-parch-300">{combat.magic.identity}</p>
-          <p className="mt-2 text-xs leading-5 text-parch-300">{combat.magic.data_status}</p>
+          <p className="mt-1.5 text-sm leading-5 text-parch-300">{combat.magic.identity}</p>
+          <p className="mt-1 text-xs leading-5 text-parch-300">{combat.magic.data_status}</p>
         </div>
         <div>
           <h2 className="text-sm font-medium text-parch-50">Aura overhaul</h2>
-          <p className="mt-2 text-sm leading-6 text-parch-300">{combat.aura_overhaul_follow_up.summary}</p>
-          <p className="mt-2 text-xs leading-5 text-parch-300">{combat.aura_overhaul_follow_up.vampyrism_and_penance}</p>
-          <p className="mt-2 text-xs leading-5 text-parch-300">{combat.aura_overhaul_follow_up.league_relevance}</p>
+          <p className="mt-1.5 text-sm leading-5 text-parch-300">{combat.aura_overhaul_follow_up.summary}</p>
+          <p className="mt-1 text-xs leading-5 text-parch-300">{combat.aura_overhaul_follow_up.vampyrism_and_penance}</p>
+          <p className="mt-1 text-xs leading-5 text-parch-300">{combat.aura_overhaul_follow_up.league_relevance}</p>
         </div>
       </section>
 
-      <section className="border-b border-stone-750 py-5">
-        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
+      <section className="border-b border-stone-750 py-3">
+        <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-4">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Catalyst baseline</h2>
-            <p className="mt-1 text-xs text-parch-300">History only — not Equilibrium multipliers or relics.</p>
+            <p className="mt-0.5 text-xs text-parch-300">History only — not Equilibrium multipliers</p>
           </div>
           <SourceLink source={catalystWiki} label="Catalyst Wiki" />
         </div>
@@ -286,11 +286,11 @@ export default function CombatPage() {
             <tbody>
               {catalyst.tiers.map((tier) => (
                 <tr key={tier.tier} className="border-b border-stone-750/70 align-top">
-                  <td className="py-3 pr-4 text-parch-50">{tier.tier}</td>
-                  <td className="py-3 pr-4 font-mono text-xs text-parch-300">{formatNumber(tier.points_required)}</td>
-                  <td className="py-3 pr-4 font-mono text-xs text-parch-50">{tier.xp_multiplier}x</td>
-                  <td className="max-w-sm py-3 pr-4 text-xs leading-5 text-parch-300">{tier.relic_choices.join(" · ")}</td>
-                  <td className="max-w-xl py-3 text-xs leading-5 text-parch-300">{tier.passives.join(" ")}</td>
+                  <td className="py-2 pr-4 text-parch-50">{tier.tier}</td>
+                  <td className="py-2 pr-4 font-mono text-xs text-parch-300">{formatNumber(tier.points_required)}</td>
+                  <td className="py-2 pr-4 font-mono text-xs text-parch-50">{tier.xp_multiplier}x</td>
+                  <td className="max-w-sm py-2 pr-4 text-xs leading-5 text-parch-300">{tier.relic_choices.join(" · ")}</td>
+                  <td className="max-w-xl py-2 text-xs leading-5 text-parch-300">{tier.passives.join(" ")}</td>
                 </tr>
               ))}
             </tbody>
@@ -298,11 +298,11 @@ export default function CombatPage() {
         </div>
       </section>
 
-      <section className="py-5">
-        <h2 className="text-sm font-medium text-parch-50">Do not carry these forward</h2>
-        <div className="mt-2 border-t border-stone-750">
+      <section className="py-3">
+        <h2 className="text-sm font-medium text-parch-50">Do not carry forward</h2>
+        <div className="mt-1.5 border-t border-stone-750">
           {catalyst.equilibrium_comparison_notes.map((note) => (
-            <p key={note} className="border-b border-stone-750/70 py-2.5 text-sm leading-6 text-parch-300">{note}</p>
+            <p key={note} className="border-b border-stone-750/70 py-2 text-sm leading-5 text-parch-300">{note}</p>
           ))}
         </div>
       </section>

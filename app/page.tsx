@@ -6,8 +6,6 @@ import { OverviewCourtyard } from "@/components/OverviewCourtyard";
 
 export const metadata: Metadata = {
   title: { absolute: "RS3 Equilibrium" },
-  description:
-    "Planner, task tracker, and combat calculator for RuneScape 3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
 };
 
 function taskListTotal(): number {

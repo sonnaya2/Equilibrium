@@ -4,18 +4,19 @@ import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
+import { confidenceLabel } from "@/components/researchStatus";
 
 type Row = Record<string, unknown>;
 type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models" | "consumable_unlocks";
 
-const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> = [
-  { key: "quest_unlocks", label: "Quest unlocks", description: "Normal-game quest dependencies before the official Equilibrium auto-quest overlay is applied." },
-  { key: "ability_unlocks", label: "Abilities", description: "Codices, materials and region hints for permanent ability unlocks." },
-  { key: "prayer_unlocks", label: "Prayers", description: "Prayer and curse unlocks, including their base prerequisites." },
-  { key: "account_unlocks", label: "Account", description: "Skill, boss-kill and account-wide progression milestones." },
-  { key: "activity_unlocks", label: "Activities", description: "Permanent rewards earned through repeatable activities." },
-  { key: "equipment_models", label: "Equipment rules", description: "Persistent equipment interactions the planner and combat model need to understand." },
-  { key: "consumable_unlocks", label: "Consumables", description: "Permanent consumable progression such as the overload recipe chain, with per-step levels, costs and unlock sources." },
+const SECTIONS: Array<{ key: SectionKey; label: string }> = [
+  { key: "quest_unlocks", label: "Quest unlocks" },
+  { key: "ability_unlocks", label: "Abilities" },
+  { key: "prayer_unlocks", label: "Prayers" },
+  { key: "account_unlocks", label: "Account" },
+  { key: "activity_unlocks", label: "Activities" },
+  { key: "equipment_models", label: "Equipment rules" },
+  { key: "consumable_unlocks", label: "Consumables" },
 ];
 
 const SUPPLEMENTS: Record<SectionKey, Row[]> = {
@@ -91,14 +92,7 @@ function region(row: Row): string {
   return regionName(value);
 }
 
-function status(value: unknown): string {
-  const raw = format(value).toLowerCase();
-  if (raw.includes("unresolved")) return "Region unresolved";
-  if (raw.includes("historical") || raw.includes("working")) return "Working League map";
-  if (raw.includes("official")) return "Jagex checked";
-  if (raw.includes("wiki") || raw.includes("confirmed")) return "Wiki checked";
-  return "Needs review";
-}
+
 
 function links(row: Row): string[] {
   const values = row.source_urls || row.source_url;
@@ -171,7 +165,6 @@ function rowsFor(section: SectionKey): Row[] {
 export function PermanentUnlockResearch() {
   const [section, setSection] = useState<SectionKey>("quest_unlocks");
   const [query, setQuery] = useState("");
-  const selected = SECTIONS.find((item) => item.key === section) ?? SECTIONS[0];
 
   const rows = useMemo(() => {
     const source = rowsFor(section);
@@ -181,12 +174,12 @@ export function PermanentUnlockResearch() {
   }, [query, section]);
 
   return (
-    <section className="border-t border-stone-750 pt-7">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-parch-50">Permanent unlocks</h2>
-          <p className="mt-1 max-w-3xl text-[15px] leading-6 text-parch-100">
-            Base-game dependencies first, League overrides second. An auto-completed quest can satisfy a requirement later without rewriting what normally unlocks the reward.
+    <section className="border-t border-stone-750 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">Permanent unlocks</h2>
+          <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
+            Base-game deps first; League overrides second.
           </p>
         </div>
         <input
@@ -194,11 +187,11 @@ export function PermanentUnlockResearch() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search unlocks"
           aria-label="Search permanent unlocks"
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-[15px] text-parch-50 placeholder:text-parch-100/70 focus:border-gem-400 sm:w-64"
+          className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
         />
       </div>
 
-      <div role="tablist" aria-label="Permanent unlock sections" className="mt-5 flex gap-1 overflow-x-auto border-b border-stone-750 pb-px">
+      <div role="tablist" aria-label="Permanent unlock sections" className="comp-seg mt-2 overflow-x-auto">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -208,11 +201,7 @@ export function PermanentUnlockResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`whitespace-nowrap border-b-2 px-3 py-2 text-[12px] transition-colors duration-150 ${
-                active
-                  ? "border-gem-400 text-gem-300"
-                  : "border-transparent text-parch-100 hover:text-parch-50"
-              }`}
+              className={`comp-seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>
@@ -220,42 +209,44 @@ export function PermanentUnlockResearch() {
         })}
       </div>
 
-      <div className="py-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className="text-[15px] leading-6 text-parch-100">{selected.description}</p>
-          <span className="text-[12px] text-parch-100">{rows.length} shown</span>
+      <div className="py-2">
+        <div className="flex justify-end">
+          <span className="font-mono text-[11px] text-parch-400">{rows.length} shown</span>
         </div>
 
-        <div className="mt-3 border-t border-stone-750">
+        <div className="mt-1.5 border-t border-stone-750">
           {rows.length ? rows.map((row, index) => {
             const sourceLinks = links(row);
             const rowDetails = details(row);
+            const category = format(row.category);
             return (
               <article
                 key={mapKey(row, index, "row")}
-                className={`grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)_140px] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
               >
-                <div>
-                  <h3 className="text-[15px] font-medium text-parch-50">{title(row)}</h3>
-                  <p className="mt-1 text-[12px] text-parch-100">{format(row.category)}</p>
-                  <p className="mt-1 text-[12px] text-parch-100">{region(row)}</p>
+                <div className="min-w-0">
+                  <h3 className="m-0 text-[14px] font-medium text-parch-50">{title(row)}</h3>
+                  {category ? <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{category}</p> : null}
+                  <p className="m-0 mt-0.5 text-[11px] text-parch-400">{region(row)}</p>
                 </div>
-                <div className="space-y-1 text-[15px] leading-6 text-parch-50">
-                  {rowDetails.length ? rowDetails.map((item, index) => <p key={index}>{item}</p>) : <p className="text-parch-100">No extra dependency detail listed.</p>}
+                <div className="space-y-0.5 text-[13px] leading-5 text-parch-50">
+                  {rowDetails.map((item, i) => (
+                    <p key={i} className="m-0">{item}</p>
+                  ))}
                 </div>
-                <div className="text-[12px] lg:text-right">
-                  <div className="text-parch-100">{status(row.confidence)}</div>
-                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
-                    {sourceLinks.map((url, index) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100">
-                        {index === 0 ? sourceLabel(url) : `Source ${index + 1}`}
+                <div className="text-[11px] lg:text-right">
+                  <div className="text-parch-300">{confidenceLabel(row.confidence)}</div>
+                  <div className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 lg:justify-end">
+                    {sourceLinks.map((url, i) => (
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-gem-300 hover:underline">
+                        {i === 0 ? sourceLabel(url) : `Source ${i + 1}`}
                       </a>
                     ))}
                   </div>
                 </div>
               </article>
             );
-          }) : <p className="py-5 text-[15px] text-parch-100">Nothing matches that search.</p>}
+          }) : <p className="py-3 text-[13px] text-parch-300">No matches.</p>}
         </div>
       </div>
     </section>

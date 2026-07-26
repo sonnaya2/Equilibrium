@@ -11,7 +11,7 @@ const specialMagic = getSpecialMagicSystems();
 const prayerTabs: ResearchTab[] = books.map((book) => ({
   key: book.id,
   label: book.name,
-  description: `${book.prayer_count ?? book.prayers.length} ${book.book_type || "prayers"} with effects and region pressure.`,
+  description: "",
   rows: book.prayers.map((prayer) => ({
     ...prayer,
     category: book.name,
@@ -26,19 +26,19 @@ const TABS: ResearchTab[] = [
   {
     key: "books-model",
     label: "Book unlocks",
-    description: "Which prayer books are switchable and how they unlock for the planner.",
+    description: "",
     rows: prayerBooks as unknown as ResearchRow[],
   },
   {
     key: "spellbooks",
     label: "Spellbooks",
-    description: "Standard, Ancient Magicks and Lunar as planner books. Necromancy and Daemonheim stay special systems.",
+    description: "",
     rows: spellbooks as unknown as ResearchRow[],
   },
   {
     key: "special-magic",
     label: "Special systems",
-    description: "Magic systems that are not full switchable spellbooks.",
+    description: "",
     rows: specialMagic as unknown as ResearchRow[],
   },
 ];
@@ -47,7 +47,7 @@ export function PrayerSpellbookResearch() {
   return (
     <ResearchSection
       title="Prayers and spellbooks"
-      intro="Standard prayers, Ancient Curses, the Seren subset, and the three main magic books. Effects and region pressure stay on each row."
+      intro=""
       tabs={TABS}
       searchPlaceholder="Search prayers or spellbooks"
       searchLabel="Search prayers and spellbooks"

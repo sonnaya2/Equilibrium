@@ -115,19 +115,18 @@ textarea:focus-visible {
       );
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
-    box-shadow:
-      inset 0 1px 0 var(--color-stone-carve),
-      0 1px 3px color-mix(in srgb, var(--color-stone-950) 40%, transparent);
+    /* Carved inset only — no ambient float shadow */
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
   }
   .panel-head {
-    padding: 0.625rem 0.875rem;
+    padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--color-stone-750);
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--color-parch-100);
   }
   .panel-body {
-    padding: 0.875rem;
+    padding: 0.65rem 0.75rem;
   }
 
   .data-table {
@@ -302,8 +301,8 @@ textarea:focus-visible {
   .courtyard-jamb {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem 0.65rem;
+    gap: 0.4rem;
+    padding: 0.55rem 0.5rem;
     background:
       linear-gradient(
         180deg,
@@ -459,7 +458,7 @@ textarea:focus-visible {
   .board-sky {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
   .board-sky__board {
     min-height: min(58vh, 560px);
@@ -471,7 +470,7 @@ textarea:focus-visible {
   .board-sky__under {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
   .board-sky__ledger {
     max-height: none;
@@ -524,8 +523,8 @@ textarea:focus-visible {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem 0.75rem;
-    padding: 0.55rem 0.75rem;
+    gap: 0.4rem 0.6rem;
+    padding: 0.4rem 0.6rem;
     border-bottom: 1px solid var(--color-stone-750);
     background: var(--color-stone-850);
   }
@@ -546,7 +545,7 @@ textarea:focus-visible {
   }
   .twin-desk__inspector {
     background: var(--color-stone-900);
-    padding: 0.75rem;
+    padding: 0.55rem 0.6rem;
     max-height: min(70vh, 40rem);
     overflow-y: auto;
   }
@@ -559,8 +558,8 @@ textarea:focus-visible {
     display: flex;
     width: 100%;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 0.65rem;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
     border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
     text-align: left;
     font-size: 0.8125rem;
@@ -586,16 +585,17 @@ textarea:focus-visible {
 
   /*
     Tasks desk — Crest Compact (Quarry DNA, no right inspector).
-    2-bay: crest rail (~7.5rem) + stage. 28px rows · inline expand under row.
+    2-bay: crest rail (~5.5rem) + stage. ~32px rows · inline expand under row.
     Spike law: detail only when selectedId set. Scoped .tasks-desk only.
     Does not touch .twin-desk (Data).
   */
   .tasks-desk {
-    --tasks-row-h: 1.75rem;
-    --tasks-head-h: 1.5rem;
+    --tasks-row-h: 2rem;
+    --tasks-head-h: 1.4rem;
     --tasks-gap: 0.35rem;
     --tasks-pad-x: 0.4rem;
-    --tasks-rail-w: 7.5rem;
+    --tasks-rail-w: 5.5rem;
+    --tasks-check: 1.125rem;
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -628,17 +628,17 @@ textarea:focus-visible {
   .tasks-desk__rail {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.08rem;
     min-height: 0;
     overflow-y: auto;
-    padding: 0.3rem;
+    padding: 0.15rem;
     background: var(--color-stone-900);
     border-right: 1px solid var(--color-stone-750);
     scrollbar-width: thin;
   }
   .tasks-desk__rail-label {
-    margin: 0 0 0.15rem;
-    padding: 0.15rem 0.2rem;
+    margin: 0;
+    padding: 0.05rem 0.1rem;
     font-size: 0.625rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -650,10 +650,10 @@ textarea:focus-visible {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.15rem;
+    gap: 0.05rem;
     width: 100%;
-    min-height: 2.65rem;
-    padding: 0.3rem 0.2rem;
+    min-height: 2.95rem;
+    padding: 0.15rem 0.1rem;
     border: 1px solid var(--color-stone-750);
     border-radius: 2px;
     background: var(--color-stone-800);
@@ -672,19 +672,52 @@ textarea:focus-visible {
       inset 0 0 0 1px var(--color-gem-500),
       inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
   }
+  /* Locked elective: dashed edge + mute, still clickable / viewable */
+  .tasks-desk__leaf.is-locked {
+    opacity: 0.62;
+    color: var(--color-parch-300);
+    border-style: dashed;
+  }
+  .tasks-desk__leaf.is-locked:hover {
+    opacity: 0.8;
+    color: var(--color-parch-100);
+  }
+  .tasks-desk__leaf.is-locked.is-on {
+    opacity: 0.88;
+    color: var(--color-parch-100);
+    border-style: dashed;
+    border-color: var(--color-stone-carve);
+    background: color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-900));
+    box-shadow: inset 0 0 0 1px var(--color-stone-carve);
+  }
+  .tasks-desk__leaf.is-locked .tasks-desk__leaf-count {
+    color: var(--color-parch-400);
+  }
+  .tasks-desk__leaf.is-locked.is-on .tasks-desk__leaf-count {
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__leaf-lock {
+    margin-right: 0.12rem;
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--color-parch-400);
+  }
   .tasks-desk__leaf-glyph {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.875rem;
+    height: 1.875rem;
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     color: inherit;
   }
   .tasks-desk__leaf-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.625rem;
     font-variant-numeric: tabular-nums;
@@ -706,8 +739,8 @@ textarea:focus-visible {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.35rem 0.5rem;
-    padding: 0.3rem 0.45rem;
+    gap: 0.3rem 0.4rem;
+    padding: 0.22rem 0.4rem;
     border-bottom: 1px solid var(--color-stone-750);
     background:
       linear-gradient(
@@ -722,7 +755,7 @@ textarea:focus-visible {
   .tasks-desk__title {
     margin: 0;
     flex-shrink: 0;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-parch-50);
     white-space: nowrap;
@@ -730,18 +763,18 @@ textarea:focus-visible {
   .tasks-desk__count {
     flex-shrink: 0;
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-variant-numeric: tabular-nums;
     color: var(--color-parch-300);
     white-space: nowrap;
   }
   .tasks-desk__count .is-pts { color: var(--color-gem-300); }
   .tasks-desk__search {
-    flex: 1 1 7rem;
-    min-width: 5.5rem;
-    max-width: 14rem;
+    flex: 1 1 6.5rem;
+    min-width: 5rem;
+    max-width: 12rem;
     margin: 0;
-    padding: 0.2rem 0.4rem;
+    padding: 0.15rem 0.35rem;
     font-size: 0.75rem;
     line-height: 1.2;
     color: var(--color-parch-50);
@@ -754,7 +787,7 @@ textarea:focus-visible {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.15rem;
     margin-left: auto;
     flex-shrink: 0;
   }
@@ -763,7 +796,7 @@ textarea:focus-visible {
     align-items: center;
     border: 1px solid var(--color-stone-750);
     background: transparent;
-    padding: 0.18rem 0.4rem;
+    padding: 0.12rem 0.35rem;
     font-size: 0.6875rem;
     line-height: 1.2;
     color: var(--color-parch-100);
@@ -786,7 +819,7 @@ textarea:focus-visible {
   .tasks-desk__chip--tier { text-transform: capitalize; }
   .tasks-desk__hint {
     margin: 0;
-    padding: 0.15rem 0.45rem;
+    padding: 0.1rem 0.4rem;
     border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
     font-size: 0.625rem;
     color: var(--color-parch-300);
@@ -795,15 +828,30 @@ textarea:focus-visible {
   .tasks-desk__hint a { color: var(--color-gem-300); text-decoration: none; }
   .tasks-desk__hint a:hover { text-decoration: underline; }
   /* check · name · tier · Comp% · pts — no region col (rail owns region) */
+  /* Name hugs meta; leftover flex space sits AFTER pts (not between Task and Tier). */
   .tasks-desk__cols {
     display: grid;
-    grid-template-columns: 1.1rem minmax(0, 1fr) 3.5rem 3.25rem 2.5rem;
-    column-gap: var(--tasks-gap);
+    grid-template-columns:
+      var(--tasks-check)
+      minmax(8rem, max-content)
+      max-content
+      max-content
+      max-content
+      minmax(0, 1fr);
+    column-gap: 0.45rem;
     align-items: center;
     padding-inline: var(--tasks-pad-x);
   }
   .tasks-desk__cols--no-comp {
-    grid-template-columns: 1.1rem minmax(0, 1fr) 3.5rem 2.5rem;
+    grid-template-columns:
+      var(--tasks-check)
+      minmax(8rem, max-content)
+      max-content
+      max-content
+      minmax(0, 1fr);
+  }
+  .tasks-desk__filler {
+    min-width: 0;
   }
   .tasks-desk__list {
     flex: 1 1 auto;
@@ -815,8 +863,8 @@ textarea:focus-visible {
   }
   .tasks-desk__empty {
     margin: 0;
-    padding: 0.75rem 0.5rem;
-    font-size: 0.875rem;
+    padding: 0.5rem 0.45rem;
+    font-size: 0.8125rem;
     color: var(--color-parch-100);
   }
   .tasks-desk__thead {
@@ -860,30 +908,41 @@ textarea:focus-visible {
     outline-offset: -1px;
   }
   .tasks-desk__check {
-    width: 0.85rem;
-    height: 0.85rem;
+    width: var(--tasks-check);
+    height: var(--tasks-check);
     margin: 0;
     accent-color: var(--color-gem-500);
     cursor: pointer;
+  }
+  /* Name cell: optional micro-crest (All-view locality) + 15px name */
+  .tasks-desk__name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 0;
+    max-width: min(42rem, 52vw);
+  }
+  .tasks-desk__row-crest {
+    flex-shrink: 0;
   }
   .tasks-desk__name {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.25;
     color: var(--color-parch-50);
-    cursor: pointer;
   }
   .tasks-desk__tier {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     text-align: right;
     text-transform: capitalize;
     color: var(--color-parch-100);
   }
   .tasks-desk__num {
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
     text-align: right;
     color: var(--color-parch-50);
@@ -900,7 +959,7 @@ textarea:focus-visible {
   .tasks-desk__wiki:hover { color: var(--color-gem-300); }
   /* Inline expand under selected row (not a side inspector) */
   .tasks-desk__stage {
-    padding: 0.4rem 0.55rem 0.5rem 1.75rem;
+    padding: 0.3rem 0.45rem 0.4rem 1.75rem;
     border-top: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
     background: color-mix(in srgb, var(--color-stone-raised) 80%, var(--color-stone-900));
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 12%, transparent);
@@ -908,32 +967,29 @@ textarea:focus-visible {
   .tasks-desk__stage-head {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 0.4rem 0.55rem;
+    align-items: center;
+    gap: 0.3rem 0.45rem;
   }
   .tasks-desk__stage-copy { min-width: 0; flex: 1 1 auto; }
-  .tasks-desk__stage-name {
-    margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.3;
-    color: var(--color-parch-50);
-  }
-  .tasks-desk__stage-name.is-done { color: var(--color-gem-300); }
   .tasks-desk__stage-meta {
-    margin: 0.1rem 0 0;
-    font-size: 0.6875rem;
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.3;
     color: var(--color-parch-100);
   }
   .tasks-desk__stage-meta .is-pts {
     color: var(--color-gem-300);
     font-family: var(--font-mono), ui-monospace, monospace;
   }
+  .tasks-desk__stage-meta .is-done-mark {
+    color: var(--color-gem-300);
+  }
   .tasks-desk__close {
     margin-left: auto;
     border: 1px solid var(--color-stone-750);
     background: var(--color-stone-850);
     color: var(--color-parch-100);
-    padding: 0.12rem 0.4rem;
+    padding: 0.1rem 0.4rem;
     font-size: 0.6875rem;
     border-radius: 2px;
     white-space: nowrap;
@@ -943,25 +999,25 @@ textarea:focus-visible {
     border-color: var(--color-stone-carve);
   }
   .tasks-desk__stage-body {
-    margin: 0.3rem 0 0;
+    margin: 0.25rem 0 0;
     max-width: 72rem;
     font-size: 0.8125rem;
     line-height: 1.4;
     color: var(--color-parch-100);
   }
   .tasks-desk__stage-req {
-    margin: 0.2rem 0 0;
+    margin: 0.15rem 0 0;
     font-size: 0.75rem;
     color: var(--color-parch-300);
   }
   .tasks-desk__stage-tags {
-    margin: 0.2rem 0 0;
+    margin: 0.12rem 0 0;
     font-size: 0.6875rem;
     color: var(--color-parch-300);
   }
   .tasks-desk__stage-link {
     display: inline-block;
-    margin-top: 0.3rem;
+    margin-top: 0.25rem;
     font-size: 0.75rem;
     color: var(--color-gem-300);
     text-decoration: none;
@@ -981,7 +1037,7 @@ textarea:focus-visible {
     }
     .tasks-desk__leaf {
       width: auto;
-      min-width: 3.25rem;
+      min-width: 3.5rem;
     }
     .tasks-desk__bar {
       flex-wrap: wrap;
@@ -991,10 +1047,16 @@ textarea:focus-visible {
       margin-left: 0;
     }
     .tasks-desk__cols {
-      grid-template-columns: 1.1rem minmax(0, 1fr) 3rem 2.75rem 2.35rem;
+      grid-template-columns:
+        var(--tasks-check) minmax(0, 1fr) max-content max-content max-content 0fr;
+      column-gap: 0.4rem;
     }
     .tasks-desk__cols--no-comp {
-      grid-template-columns: 1.1rem minmax(0, 1fr) 3rem 2.35rem;
+      grid-template-columns:
+        var(--tasks-check) minmax(0, 1fr) max-content max-content 0fr;
+    }
+    .tasks-desk__name-cell {
+      max-width: none;
     }
   }
 
@@ -1041,24 +1103,24 @@ textarea:focus-visible {
   .relic-court {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
   .relic-court__banner {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.5rem 1rem;
+    gap: 0.4rem 0.75rem;
   }
   .relic-court__grid {
     display: grid;
-    gap: 0.75rem;
+    gap: 0.55rem;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   }
   .relic-card {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
-    padding: 0.75rem;
+    gap: 0.5rem;
+    padding: 0.6rem;
     text-align: left;
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
@@ -1251,7 +1313,7 @@ textarea:focus-visible {
   .stat-strip {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
   .stat-strip .stat-label {
     font-size: 0.6875rem;

@@ -54,13 +54,12 @@ export function QuestBrowser() {
   }, [region, query]);
 
   return (
-    <section className="border-t border-stone-750 pt-7">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-parch-50">Quests</h2>
-          <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
-            {questsData.quest_count} Wiki quest-list entries with primary and recursive required
-            regions. Planner mappings only — official League auto-completion is a separate overlay.
+    <section className="border-t border-stone-750 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">Quests</h2>
+          <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
+            {questsData.quest_count} Wiki quests · primary/required regions.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -68,7 +67,7 @@ export function QuestBrowser() {
             value={region}
             onChange={(e) => setRegion(e.target.value)}
             aria-label="Filter quests by region"
-            className="rounded-sm border border-stone-750 bg-stone-900 px-2 py-1.5 text-sm text-parch-100 focus:border-gem-400"
+            className="rounded-sm border border-stone-750 bg-stone-900 px-2 py-1.5 text-[13px] text-parch-100 focus:border-gem-400"
           >
             <option value="all">All regions</option>
             {REGION_OPTIONS.map((id) => (
@@ -86,76 +85,78 @@ export function QuestBrowser() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search quest name"
             aria-label="Search quests by name"
-            className="w-full border border-stone-750 bg-transparent px-3 py-1.5 text-sm text-parch-50 placeholder:text-parch-300/70 focus:border-gem-400 sm:w-56"
+            className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
           />
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 text-xs text-parch-300">
-        <span>
-          Snapshot {questsData.snapshot_date}
-          {region !== "all" ? ` · ${regionLabel(region)}` : ""}
-        </span>
-        <span className="num">{rows.length} shown</span>
-      </div>
+      <div className="py-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 text-[11px] text-parch-400">
+          <span>
+            Snapshot {questsData.snapshot_date}
+            {region !== "all" ? ` · ${regionLabel(region)}` : ""}
+          </span>
+          <span className="font-mono">{rows.length} shown</span>
+        </div>
 
-      <div className="panel mt-3 max-h-[min(70vh,40rem)] overflow-auto">
-        <table className="data-table">
-          <thead className="sticky top-0 bg-stone-850">
-            <tr>
-              <th>Quest</th>
-              <th>Primary</th>
-              <th>Series</th>
-              <th>Access</th>
-              <th>Required regions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 ? (
+        <div className="panel mt-1.5 max-h-[min(70vh,40rem)] overflow-auto">
+          <table className="data-table text-[13px] leading-5 [&_td]:py-1.5 [&_th]:py-1.5">
+            <thead className="sticky top-0 bg-stone-850">
               <tr>
-                <td colSpan={5} className="text-parch-300">
-                  Nothing matches those filters.
-                </td>
+                <th>Quest</th>
+                <th>Primary</th>
+                <th>Series</th>
+                <th>Access</th>
+                <th>Required regions</th>
               </tr>
-            ) : (
-              rows.map((q) => {
-                const required = q.required_regions ?? [];
-                const extra = required.filter((r) => r !== q.primary_region);
-                return (
-                  <tr key={q.title}>
-                    <td className="text-parch-50">
-                      {q.source_url ? (
-                        <a
-                          href={q.source_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300"
-                        >
-                          {q.title}
-                        </a>
-                      ) : (
-                        q.title
-                      )}
-                      {q.cross_region ? (
-                        <span className="ml-1.5 text-[11px] text-parch-500">cross-region</span>
-                      ) : null}
-                    </td>
-                    <td>{regionLabel(q.primary_region)}</td>
-                    <td>{q.series || "—"}</td>
-                    <td>{membersLabel(q.members)}</td>
-                    <td className="text-xs text-parch-300">
-                      {required.length === 0
-                        ? "—"
-                        : extra.length === 0
-                          ? regionLabel(q.primary_region)
-                          : `${regionLabel(q.primary_region)} + ${extra.map(regionLabel).join(", ")}`}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-parch-300">
+                    No matches.
+                  </td>
+                </tr>
+              ) : (
+                rows.map((q) => {
+                  const required = q.required_regions ?? [];
+                  const extra = required.filter((r) => r !== q.primary_region);
+                  return (
+                    <tr key={q.title}>
+                      <td className="text-parch-50">
+                        {q.source_url ? (
+                          <a
+                            href={q.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-gem-300 hover:underline"
+                          >
+                            {q.title}
+                          </a>
+                        ) : (
+                          q.title
+                        )}
+                        {q.cross_region ? (
+                          <span className="ml-1.5 text-[11px] text-parch-400">cross-region</span>
+                        ) : null}
+                      </td>
+                      <td>{regionLabel(q.primary_region)}</td>
+                      <td>{q.series || "—"}</td>
+                      <td>{membersLabel(q.members)}</td>
+                      <td className="text-parch-300">
+                        {required.length === 0
+                          ? "—"
+                          : extra.length === 0
+                            ? regionLabel(q.primary_region)
+                            : `${regionLabel(q.primary_region)} + ${extra.map(regionLabel).join(", ")}`}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

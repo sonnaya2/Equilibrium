@@ -21,7 +21,7 @@ const RELIC_MONO: Record<string, string> = {
 };
 
 /**
- * Composite mast — gold brand, gem active tabs, live pick / T1 mono meta.
+ * Mast instrument — gold brand, gem active tabs, live pick / T1 mono.
  * Frozen: accessible name EQUILIBRIUM; six primary links.
  */
 export function Nav() {

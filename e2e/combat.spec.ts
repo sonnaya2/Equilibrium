@@ -120,7 +120,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
 
   // Revolution is the default Rotation mode — no need to switch away from manual.
   await expect(page.getByRole("button", { name: "Run revolution" })).toBeVisible();
-  await expect(page.getByText("Run revolution for a full duration cast log")).toBeVisible();
+  await expect(page.getByText("Run revolution for the cast log")).toBeVisible();
   await expect(page.getByText(/Horizon 60s · 100 ticks/)).toBeVisible();
 
   // Default melee dual-wield bar is fully engine-mapped post-audit.

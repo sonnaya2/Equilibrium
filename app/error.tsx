@@ -15,34 +15,22 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="mx-auto w-full max-w-[1600px] px-4 py-6">
-      <section className="panel max-w-lg">
-        <div className="panel-head">Something went wrong</div>
-        <div className="panel-body space-y-3">
-          <p className="text-sm text-parch-300">
-            This page hit an error. Try again, or open Overview or Map.
-          </p>
+    <div className="px-3 py-3">
+      <section className="comp-panel max-w-sm">
+        <div className="comp-panel__head">Page error</div>
+        <div className="comp-panel__body space-y-2">
+          <p className="text-sm text-parch-300">Try again, or open Overview or Map.</p>
           {error.digest ? (
             <p className="font-mono text-xs text-parch-500">Ref {error.digest}</p>
           ) : null}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button
-              type="button"
-              onClick={reset}
-              className="rounded-sm border border-stone-750 bg-stone-800 px-3 py-1.5 text-sm text-parch-50 transition-colors duration-150 hover:border-gem-500 hover:text-gem-300"
-            >
+          <div className="flex flex-wrap items-center gap-2 pt-0.5">
+            <button type="button" onClick={reset} className="comp-btn comp-btn--gem">
               Try again
             </button>
-            <Link
-              href="/"
-              className="text-sm text-parch-300 transition-colors duration-150 hover:text-parch-50"
-            >
+            <Link href="/" className="text-sm text-parch-300 hover:text-parch-50">
               Overview
             </Link>
-            <Link
-              href="/map"
-              className="text-sm text-parch-300 transition-colors duration-150 hover:text-parch-50"
-            >
+            <Link href="/map" className="text-sm text-parch-300 hover:text-parch-50">
               Map
             </Link>
           </div>

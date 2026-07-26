@@ -21,9 +21,6 @@ export function StatsPanel({
   return (
     <div>
       <h2 className="text-sm font-medium text-parch-50">Stats</h2>
-      <p className="mt-1 text-xs text-parch-300">
-        Item bonuses empty until sourced — weapon tier still drives damage.
-      </p>
       <div className="mt-3 border-t border-stone-750">
         {loadout.style === "melee" ? (
           <>

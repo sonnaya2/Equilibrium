@@ -136,9 +136,7 @@ export default function MapScene() {
     return (
       <div className="panel panel-body min-h-0 flex-1 overflow-y-auto">
         <p className="mb-3 text-sm text-parch-300">
-          {narrow
-            ? "Narrow layout uses the flat board so every region choice stays usable without the 3D table."
-            : "This browser has no WebGPU, so the 3D table stays off. The board below is the full planner - every region choice works here."}
+          {narrow ? "Flat board · narrow." : "no WebGPU — flat board plans all regions."}
         </p>
         {/* e2e/map3d.spec.ts matches /no WebGPU/ when the 3D path is unavailable. */}
         <span className="sr-only">no WebGPU</span>

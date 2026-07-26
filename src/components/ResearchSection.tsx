@@ -1,13 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { confidenceLabel } from "@/components/researchStatus";
 
 export type ResearchRow = Record<string, unknown>;
 
 export interface ResearchTab {
   key: string;
   label: string;
-  description: string;
+  /** Optional one-liner under the tab; omit or "" when the label is enough. */
+  description?: string;
   rows: ResearchRow[];
 }
 
@@ -216,17 +218,6 @@ function region(row: ResearchRow): string {
   return regionName(direct);
 }
 
-function status(value: unknown): string {
-  const raw = text(value).toLowerCase();
-  if (!raw) return "Not checked";
-  if (raw.includes("unresolved") || raw.includes("pending")) return "Still unresolved";
-  if (raw.includes("historical") || raw.includes("working") || raw.includes("inferred")) return "Working region map";
-  if (raw.includes("official")) return "Jagex checked";
-  if (raw.includes("wiki") || raw.includes("confirmed")) return "Wiki checked";
-  if (raw.includes("pvme")) return "PvME method";
-  return "Needs review";
-}
-
 function sourceName(url: string): string {
   if (url.includes("runescape.wiki")) return "Wiki";
   if (url.includes("runescape.com")) return "Jagex";
@@ -265,7 +256,7 @@ export function ResearchSection({
   searchLabel,
 }: {
   title: string;
-  intro: string;
+  intro?: string;
   tabs: ResearchTab[];
   searchPlaceholder: string;
   searchLabel: string;
@@ -273,6 +264,8 @@ export function ResearchSection({
   const [tabKey, setTabKey] = useState(tabs[0]?.key ?? "");
   const [query, setQuery] = useState("");
   const selected = tabs.find((tab) => tab.key === tabKey) ?? tabs[0];
+  const blurb = (selected?.description ?? "").trim();
+  const lead = (intro ?? "").trim();
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -281,22 +274,26 @@ export function ResearchSection({
   }, [query, selected]);
 
   return (
-    <section className="border-t border-stone-750 pt-7">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-parch-50">{heading}</h2>
-          <p className="mt-1 max-w-3xl text-[15px] leading-6 text-parch-100">{intro}</p>
+    <section className="border-t border-stone-750 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">{heading}</h2>
+          {lead ? <p className="m-0 mt-0.5 max-w-2xl text-[13px] leading-5 text-parch-300">{lead}</p> : null}
         </div>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={searchPlaceholder}
           aria-label={searchLabel}
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-[15px] text-parch-50 placeholder:text-parch-100/70 focus:border-gem-400 sm:w-64"
+          className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
         />
       </div>
 
-      <div role="tablist" aria-label={`${heading} sections`} className="mt-5 flex gap-1 overflow-x-auto border-b border-stone-750 pb-px">
+      <div
+        role="tablist"
+        aria-label={`${heading} sections`}
+        className="comp-seg mt-2 overflow-x-auto"
+      >
         {tabs.map((tab) => {
           const active = tabKey === tab.key;
           return (
@@ -306,11 +303,7 @@ export function ResearchSection({
               role="tab"
               aria-selected={active}
               onClick={() => setTabKey(tab.key)}
-              className={`whitespace-nowrap border-b-2 px-3 py-2 text-[12px] transition-colors duration-150 ${
-                active
-                  ? "border-gem-400 text-gem-300"
-                  : "border-transparent text-parch-100 hover:text-parch-50"
-              }`}
+              className={`comp-seg__btn${active ? " is-active" : ""}`}
             >
               {tab.label}
             </button>
@@ -318,42 +311,56 @@ export function ResearchSection({
         })}
       </div>
 
-      <div className="py-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className="text-[15px] leading-6 text-parch-100">{selected.description}</p>
-          <span className="text-[12px] text-parch-100">{rows.length} shown</span>
+      <div className="py-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          {blurb ? <p className="m-0 text-[12px] leading-5 text-parch-300">{blurb}</p> : <span />}
+          <span className="font-mono text-[11px] text-parch-400">{rows.length} shown</span>
         </div>
 
-        <div className="mt-3 border-t border-stone-750">
-          {rows.length ? rows.map((row, index) => {
-            const sourceLinks = links(row);
-            const rowDetails = details(row);
-            return (
-              <article
-                key={String(row.id || `${title(row)}-${index}`)}
-                className={`grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
-              >
-                <div>
-                  <h3 className="text-[15px] font-medium text-parch-50">{title(row)}</h3>
-                  {subtitle(row) ? <p className="mt-1 text-[12px] leading-5 text-parch-100">{subtitle(row)}</p> : null}
-                  <p className="mt-1 text-[12px] text-parch-100">{region(row)}</p>
-                </div>
-                <div className="space-y-1 text-[15px] leading-6 text-parch-50">
-                  {rowDetails.length ? rowDetails.map((item, itemIndex) => <p key={itemIndex}>{item}</p>) : <p className="text-parch-100">No extra detail listed.</p>}
-                </div>
-                <div className="text-[12px] lg:text-right">
-                  <div className="text-parch-100">{status(row.confidence)}</div>
-                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
-                    {sourceLinks.map((url, linkIndex) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100">
-                        {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
-                      </a>
-                    ))}
+        <div className="mt-1.5 border-t border-stone-750">
+          {rows.length ? (
+            rows.map((row, index) => {
+              const sourceLinks = links(row);
+              const rowDetails = details(row);
+              return (
+                <article
+                  key={String(row.id || `${title(row)}-${index}`)}
+                  className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)_140px] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                >
+                  <div className="min-w-0">
+                    <h3 className="m-0 text-[14px] font-medium text-parch-50">{title(row)}</h3>
+                    {subtitle(row) ? (
+                      <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{subtitle(row)}</p>
+                    ) : null}
+                    <p className="m-0 mt-0.5 text-[11px] text-parch-400">{region(row)}</p>
                   </div>
-                </div>
-              </article>
-            );
-          }) : <p className="py-5 text-[15px] text-parch-100">Nothing matches that search.</p>}
+                  <div className="space-y-0.5 text-[13px] leading-5 text-parch-50">
+                    {rowDetails.length
+                      ? rowDetails.map((item, itemIndex) => <p key={itemIndex} className="m-0">{item}</p>)
+                      : null}
+                  </div>
+                  <div className="text-[11px] lg:text-right">
+                    <div className="text-parch-300">{confidenceLabel(row.confidence)}</div>
+                    <div className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 lg:justify-end">
+                      {sourceLinks.map((url, linkIndex) => (
+                        <a
+                          key={url}
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gem-300 hover:underline"
+                        >
+                          {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <p className="py-3 text-[13px] text-parch-300">No matches.</p>
+          )}
         </div>
       </div>
     </section>

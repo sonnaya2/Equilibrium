@@ -68,13 +68,12 @@ export function SetupTab() {
   };
 
   return (
-    <div className="py-5">
+    <div className="py-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-medium text-parch-50">Setup</h2>
           <p className="mt-1 text-xs text-parch-300">
-            Shared with Rotation and Analysis. Item bonuses empty until sourced — weapon tier still
-            drives damage.
+            Shared loadout · tier drives AD until bonuses sourced
           </p>
         </div>
         <div className="flex flex-wrap gap-1" role="group" aria-label="Combat style">
@@ -96,7 +95,7 @@ export function SetupTab() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-5 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
+      <div className="mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
         {/* Sub-tabs — vertical on lg */}
         <nav className="flex flex-row flex-wrap gap-1 lg:flex-col" aria-label="Setup sections">
           {SUB_TABS.map((tab) => (

@@ -10,7 +10,6 @@ import { getResearchCatalog } from "@/research/catalog";
 
 export const metadata: Metadata = {
   title: "Build",
-  description: "Regions, Relics, and Blessings for RS3 Leagues II: Equilibrium.",
 };
 
 export default function BuildPage() {

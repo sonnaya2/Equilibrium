@@ -80,13 +80,10 @@ export function AnalysisTab() {
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
 
   return (
-    <div className="grid gap-5 py-5 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
+    <div className="grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
       <div>
         <h2 className="text-sm font-medium text-parch-50">Analysis</h2>
-        <p className="mt-1 text-xs text-parch-300">
-          A is the shared loadout from the Setup tab. B is a scratch line — edit it to judge a
-          change before committing to it.
-        </p>
+        <p className="mt-1 text-xs text-parch-300">A = Setup · B = scratch compare</p>
         <div className="mt-3 border-t border-stone-750">
           {ALL_ENTRIES.map(({ style, ability: candidate }) => (
             <button
@@ -151,7 +148,7 @@ export function AnalysisTab() {
           </div>
         </div>
 
-        <h3 className="mt-5 text-xs font-medium text-parch-50">
+        <h3 className="mt-4 text-xs font-medium text-parch-50">
           {entry.ability.name} <span className="font-normal text-parch-300">· {entry.ability.category}</span>
         </h3>
         <div className="mt-2 overflow-x-auto">

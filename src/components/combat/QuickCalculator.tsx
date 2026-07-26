@@ -114,7 +114,6 @@ export function QuickCalculator() {
         style={{ background: "var(--echo-shell, var(--color-stone-900))" }}
       >
         <h2 className="m-0 text-[15px] font-medium text-parch-50">Quick</h2>
-        <span className="font-mono text-[11px] text-parch-300">facet desk · live math</span>
         <div role="group" aria-label="Combat style" className="ml-auto flex flex-wrap gap-1">
           {AVAILABLE_STYLES.map((s) => {
             const active = style === s;
@@ -297,9 +296,7 @@ export function QuickCalculator() {
           </div>
           <div className="panel-body">
             <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
-            <p className="mt-2 text-sm text-parch-300">
-              No damage hits — summons and buffs do not produce an expected damage figure here.
-            </p>
+            <p className="mt-2 text-sm text-parch-300">No damage hits — summon/buff only</p>
           </div>
         </div>
       ) : (

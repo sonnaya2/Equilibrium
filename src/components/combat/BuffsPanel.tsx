@@ -39,8 +39,7 @@ export function BuffsPanel({
     <div>
       <h2 className="text-sm font-medium text-parch-50">Buffs</h2>
       <p className="mt-1 text-xs text-parch-300">
-        Player-controlled, wiki-sourced only. Overload raises accuracy levels, not ability damage
-        (post-2024 DPL rule).
+        Overload raises accuracy levels, not ability damage
       </p>
       <div className="mt-3 border-t border-stone-750">
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">

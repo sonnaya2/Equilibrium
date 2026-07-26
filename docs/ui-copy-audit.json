@@ -1,0 +1,219 @@
+{
+  "product": "RS3 Equilibrium",
+  "phase": "inventory_proposals_only",
+  "date": "2026-07-26",
+  "skills_run": [
+    "equilibrium-ui",
+    "human-grade",
+    "bot-audit",
+    "no-slop-ui",
+    "data-readability",
+    "ui-humanizer",
+    "text-humanizer"
+  ],
+  "verdict": {
+    "current_corpus": "SUSPICIOUS",
+    "on_proposals": "PASSES"
+  },
+  "summary": {
+    "inventoried_approx": 520,
+    "priority_rows": 118,
+    "problem_board": 18,
+    "dedup_clusters": 12
+  },
+  "problem_board": [
+    {
+      "id": "P01",
+      "flag": "CONFLICT",
+      "severity": "high",
+      "issue": "Tasks region display names (Forinthry/Desert/Fremennik) disagree with Map (Wilderness/Kharidian Desert/Fremennik Province)"
+    },
+    {
+      "id": "P02",
+      "flag": "REDUNDANT",
+      "severity": "high",
+      "issue": "Overview repeats pick count four times"
+    },
+    {
+      "id": "P03",
+      "flag": "REDUNDANT",
+      "severity": "med",
+      "issue": "Blessings unrevealed stated three+ ways"
+    },
+    {
+      "id": "P04",
+      "flag": "VERBOSE",
+      "severity": "med",
+      "issue": "Map PageHeading note is four facts"
+    },
+    {
+      "id": "P05",
+      "flag": "VERBOSE",
+      "severity": "med",
+      "issue": "Gear/Setup multi-sentence helpers"
+    },
+    {
+      "id": "P06",
+      "flag": "VERBOSE",
+      "severity": "med",
+      "issue": "RevolutionPanel long paragraphs"
+    },
+    {
+      "id": "P07",
+      "flag": "VERBOSE",
+      "severity": "med",
+      "issue": "Data research intros and tab descriptions too long"
+    },
+    {
+      "id": "P08",
+      "flag": "FROZEN",
+      "severity": "high",
+      "issue": "equilibrium-ui / smoke+map frozen strings"
+    },
+    {
+      "id": "P09",
+      "flag": "FROZEN",
+      "severity": "med",
+      "issue": "combat.spec and tasks.spec hard pins beyond skill list"
+    },
+    {
+      "id": "P10",
+      "flag": "DATA_MISMATCH",
+      "severity": "low",
+      "issue": "Map note implies Combat is full pick UX"
+    },
+    {
+      "id": "P11",
+      "flag": "MARKETING",
+      "severity": "low",
+      "issue": "Fort gate · living world caption"
+    },
+    {
+      "id": "P12",
+      "flag": "REDUNDANT",
+      "severity": "med",
+      "issue": "Meta description duplication"
+    },
+    {
+      "id": "P13",
+      "flag": "CONFLICT",
+      "severity": "low",
+      "issue": "ResearchBrowser vs ResearchSection confidence labels diverge"
+    },
+    {
+      "id": "P14",
+      "flag": "WRONG_TERM",
+      "severity": "low",
+      "issue": "Task tier chip casing"
+    },
+    {
+      "id": "P17",
+      "flag": "REDUNDANT",
+      "severity": "med",
+      "issue": "Region structure taught on Map and Build"
+    },
+    {
+      "id": "P18",
+      "flag": "VERBOSE",
+      "severity": "med",
+      "issue": "Sources legal credits multi-sentence (allowed trim only)"
+    }
+  ],
+  "dedup_clusters": [
+    { "id": "D01", "canonical": "EQUILIBRIUM nav brand" },
+    { "id": "D02", "canonical": "Primary nav six labels" },
+    { "id": "D03", "canonical": "Nav picks n/3 + Map ledger counter" },
+    { "id": "D04", "canonical": "Clear picks" },
+    { "id": "D05", "canonical": "Unrevealed (blessings)" },
+    { "id": "D06", "canonical": "No matches." },
+    { "id": "D07", "canonical": "Ironman only" },
+    { "id": "D08", "canonical": "2 start + Karamja + 3 electives" },
+    { "id": "D09", "canonical": "Weapon tier drives base AD until item bonuses are sourced." },
+    { "id": "D10", "canonical": "Footer trademark sentence" },
+    { "id": "D11", "canonical": "Shared confidence mapper" },
+    { "id": "D12", "canonical": "Map regionAnchors display names" }
+  ],
+  "frozen": [
+    "EQUILIBRIUM",
+    "Overview",
+    "Map",
+    "Tasks",
+    "Build",
+    "Combat",
+    "Data",
+    "RuneScape is a trademark of Jagex Ltd.",
+    "Clear picks",
+    "0/3",
+    "3/3",
+    "no WebGPU"
+  ],
+  "pattern_rules": [
+    {
+      "id": "research.tab.desc",
+      "proposed": "",
+      "length_rule": "zero_ok",
+      "when": "tab title + rows already communicate meaning"
+    },
+    {
+      "id": "research.intro",
+      "proposed": "<=1 short sentence",
+      "length_rule": "one_sentence"
+    },
+    {
+      "id": "research.empty.search",
+      "proposed": "No matches.",
+      "length_rule": "one_sentence"
+    },
+    {
+      "id": "combat.e2e_hard",
+      "proposed": "keep until tests updated",
+      "length_rule": "frozen_keep"
+    }
+  ],
+  "priority_rows_sample": [
+    {
+      "id": "ov.caption",
+      "current": "Fort gate · living world",
+      "proposed": "",
+      "length_rule": "zero_ok",
+      "flags": ["MARKETING"]
+    },
+    {
+      "id": "map.note",
+      "current": "Misthalin and Havenhythe fixed. Karamja at the first milestone. Three picks from the other eight. Same picks on Map, Build, and Combat.",
+      "proposed": "Three electives · same picks as Build.",
+      "length_rule": "one_sentence",
+      "flags": ["VERBOSE"]
+    },
+    {
+      "id": "tasks.region.names",
+      "current": "Forinthry / Desert / Fremennik",
+      "proposed": "Wilderness / Kharidian Desert / Fremennik Province",
+      "length_rule": "one_sentence",
+      "flags": ["CONFLICT"]
+    },
+    {
+      "id": "combat.gear.helper",
+      "current": "Wearables require a slot. Style filter defaults… (long multi-sentence)",
+      "proposed": "Wearables need a slot; tier drives base AD.",
+      "length_rule": "one_sentence",
+      "flags": ["VERBOSE"]
+    },
+    {
+      "id": "data.cons.poison.desc",
+      "current": "Weapon poison tiers worth planning around.",
+      "proposed": "Weapon poison tiers.",
+      "length_rule": "one_sentence",
+      "flags": ["MARKETING"]
+    }
+  ],
+  "apply_backlog": [
+    "P01 region name alignment",
+    "P13 confidence mapper unify + D06 empty search",
+    "zero_ok redundant Overview/meta/captions",
+    "one_sentence verbose Map/combat/data helpers",
+    "FROZEN only with e2e updates",
+    "Tier C concepts lab"
+  ],
+  "catalog_md": "docs/ui-copy-audit.md"
+}

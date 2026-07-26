@@ -16,9 +16,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import autoQuests from "#data/league/equilibrium-auto-quests.json";
+import { canSelectElective, isRegionUnlocked } from "@/league";
+import { useBuild } from "@/league/useBuild";
 import { getInventionComponentsByRegion } from "@/research/plannerExpansions";
 import { getSlayerMethodsByRegion } from "@/research/slayerPlanner";
-import { PLACES_BY_REGION } from "./data/placeAnchors";
+import { PLACES_BY_REGION, pinForHighlight } from "./data/placeAnchors";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { useMapFocus } from "./useMapFocus";
@@ -69,7 +71,8 @@ export function RegionInspector({
   regions: PlannerRegion[];
   boundaryRules: string[];
 }) {
-  const { focus, focusPlace, focusRegion } = useMapFocus();
+  const { focus, selectPlace, hoverPlace } = useMapFocus();
+  const { build, loaded, toggleRegion } = useBuild();
   const [kind, setKind] = useState<string>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [query, setQuery] = useState("");
@@ -102,6 +105,20 @@ export function RegionInspector({
     return out;
   }, [detail]);
 
+  // How much of this region's content we can actually put on the board. Stated,
+  // not hidden: most rows are items, perks and outfits with no position on
+  // Gielinor, and the honest number is more useful than a map of guesses.
+  const pinStats = useMemo(() => {
+    const names = [
+      ...new Set([
+        ...(detail?.content ?? []).map((c) => c.name),
+        ...(detail?.upgrades ?? []).map((u) => u.name),
+      ]),
+    ];
+    const pinned = names.filter((n) => pinForHighlight(focus.region, n)).length;
+    return { pinned, total: names.length };
+  }, [detail, focus.region]);
+
   const slayerMethods = useMemo(
     () => getSlayerMethodsByRegion(focus.region),
     [focus.region],
@@ -124,6 +141,17 @@ export function RegionInspector({
     setQuery("");
   }, [focus.region]);
 
+  // Selecting a pin on the board brings its first row into view. One direction
+  // only — deliberately no scroll-spy driving selection back the other way,
+  // which would need a suppression flag to stop the two fighting and would
+  // overwrite a deliberate selection every time the rail moved.
+  useEffect(() => {
+    if (!focus.place) return;
+    document
+      .querySelector(`[data-place="${CSS.escape(focus.place)}"]`)
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [focus.place]);
+
   if (!detail) return null;
 
   const activeKind = kind === "all" || kinds.includes(kind) ? kind : "all";
@@ -137,21 +165,47 @@ export function RegionInspector({
     return true;
   });
 
-  // PlaceMarkers only mounts while framed. focusPlace alone lights the chip
-  // CSS but leaves the pin off the board after an unframe (or on first load).
-  const lightPlace = (area: string | null) => {
-    if (area !== null && !focus.framed) focusRegion(focus.region);
-    focusPlace(area);
-  };
-
   const sourcesLine = `${detail.sourceCount} source${detail.sourceCount === 1 ? "" : "s"} · verified ${detail.verifiedAt ?? "never"}`;
+
+  // The board no longer toggles on click, so picking needs a control that says
+  // so. Named "Pick <region>" / "Remove <region>" rather than the bare region
+  // name: e2e locates ledger rows by /^<name>/ and a second match there is a
+  // Playwright strict-mode failure.
+  const elective = detail.availability === "elective";
+  const picked = build.elective.includes(detail.id);
+  const canPick = loaded && canSelectElective(build, detail.id);
+  const pickBlocked = elective && !picked && !canPick;
 
   return (
     <section className="panel" aria-label="Region detail">
-      <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
+      <div className="panel-head flex flex-wrap items-center justify-between gap-2">
         {detail.name}
-        <span className="text-xs normal-case tracking-normal text-parch-100">
-          {UNLOCK_TEXT[detail.availability]}
+        <span className="flex items-center gap-2.5">
+          <span className="text-xs normal-case tracking-normal text-parch-100">
+            {UNLOCK_TEXT[detail.availability]}
+          </span>
+          {elective ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (loaded && (picked || canPick)) toggleRegion(detail.id);
+              }}
+              aria-pressed={picked}
+              aria-disabled={pickBlocked || !loaded || undefined}
+              title={pickBlocked ? "All three elective picks are spent" : undefined}
+              className={`rounded-sm border px-2 py-0.5 text-xs normal-case tracking-normal transition-colors duration-150 ${
+                picked
+                  ? "border-gem-500 bg-stone-800 text-gem-300 hover:text-gem-200"
+                  : "border-stone-750 text-parch-100 hover:text-parch-50"
+              } ${pickBlocked || !loaded ? "cursor-not-allowed opacity-40" : ""}`}
+            >
+              {picked ? "Remove" : "Pick"} {detail.name}
+            </button>
+          ) : (
+            <span className="rounded-sm border border-stone-750 px-2 py-0.5 text-xs normal-case tracking-normal text-parch-300">
+              {isRegionUnlocked(build, detail.id) ? "Unlocked" : "Unlocks automatically"}
+            </span>
+          )}
         </span>
       </div>
 
@@ -200,6 +254,10 @@ export function RegionInspector({
             ) : null}
           </p>
         )}
+        <p className="mt-1.5 text-xs text-parch-300">
+          {pinStats.pinned} of {pinStats.total} pinned on the board — the rest are items,
+          perks and outfits with no place on Gielinor.
+        </p>
         {autoEmpty ? (
           <p className="mt-1.5 text-xs text-parch-300">
             Official auto-complete: none published yet
@@ -211,27 +269,43 @@ export function RegionInspector({
         {detail.areas.length > 0 ? (
           <div className="mb-3 flex flex-wrap gap-1.5">
             {/* Anchored places are buttons so keyboard can light the marker;
-                unanchored areas stay text — nothing on the board to focus. */}
-            {[...new Set(detail.areas.filter(Boolean))].map((area) => {
+                unanchored areas stay text — nothing on the board to focus.
+                Sites join the same list, which is what keeps every pin on the
+                board keyboard-reachable without a second nav list competing
+                with the ledger for accessible names. */}
+            {[
+              ...new Set([
+                ...detail.areas.filter(Boolean),
+                ...(PLACES_BY_REGION.get(focus.region) ?? [])
+                  .filter((p) => p.site)
+                  .map((p) => p.area),
+              ]),
+            ].map((area) => {
               const isAnchored = anchored.has(area);
-              const lit = focus.place === area;
-              const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
-                lit
-                  ? "bg-stone-800 text-gem-300"
-                  : isAnchored
-                    ? "text-parch-100"
-                    : "text-parch-300"
+              const selected = focus.place === area;
+              const lit = selected || focus.hover === area;
+              // Selection is the sticky state a click makes, so it gets the ring;
+              // hover is a preview and only borrows the colour.
+              const chipClass = `rounded-sm border px-1.5 py-0.5 text-xs transition-colors duration-150 ${
+                selected
+                  ? "border-gem-500 bg-stone-800 text-gem-300"
+                  : lit
+                    ? "border-transparent bg-stone-800 text-gem-300"
+                    : isAnchored
+                      ? "border-transparent text-parch-100"
+                      : "border-transparent text-parch-300"
               }`;
               if (isAnchored) {
                 return (
                   <button
                     key={area}
                     type="button"
-                    onPointerEnter={() => lightPlace(area)}
-                    onPointerLeave={() => lightPlace(null)}
-                    onFocus={() => lightPlace(area)}
-                    onBlur={() => lightPlace(null)}
-                    onClick={() => lightPlace(area)}
+                    aria-pressed={selected}
+                    onPointerEnter={() => hoverPlace(area)}
+                    onPointerLeave={() => hoverPlace(null)}
+                    onFocus={() => hoverPlace(area)}
+                    onBlur={() => hoverPlace(null)}
+                    onClick={() => selectPlace(selected ? null : area)}
                     className={chipClass}
                   >
                     {area}
@@ -286,9 +360,11 @@ export function RegionInspector({
           />
         </div>
 
-        {/* Capped and scrolled rather than pushing the page down: comparing two
-            regions has to stay a click, and Misthalin alone runs to 16 rows. */}
-        <div className="grid max-h-80 gap-4 overflow-y-auto lg:grid-cols-2">
+        {/* Capped and scrolled below lg, where this panel is the page. From lg
+            the section itself scrolls, so a second scrollbar here would nest
+            inside it. Two columns once there is width for them — beside the
+            ledger this panel runs most of the viewport. */}
+        <div className="grid max-h-80 gap-4 overflow-y-auto lg:max-h-none lg:overflow-visible">
           {rows.length > 0 ? (
             <table className="data-table">
               <thead>
@@ -299,9 +375,24 @@ export function RegionInspector({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((c) => (
-                  <tr key={c.name}>
-                    <td className="text-parch-50">{c.name}</td>
+                {rows.map((c) => {
+                  // A pinned row is a handle on the board. Pointer-only on
+                  // purpose: the chips above are already the keyboard route to
+                  // every pin, and a second focusable copy of the same name is
+                  // a Playwright strict-mode failure waiting to happen.
+                  const pin = pinForHighlight(focus.region, c.name);
+                  return (
+                  <tr
+                    key={c.name}
+                    onClick={pin ? () => selectPlace(pin.area === focus.place ? null : pin.area) : undefined}
+                    onPointerEnter={pin ? () => hoverPlace(pin.area) : undefined}
+                    onPointerLeave={pin ? () => hoverPlace(null) : undefined}
+                    data-place={pin ? pin.area : undefined}
+                    className={pin ? "cursor-pointer" : undefined}
+                  >
+                    <td className={pin && pin.area === focus.place ? "text-gem-300" : "text-parch-50"}>
+                      {c.name}
+                    </td>
                     <td>{c.kind}</td>
                     <td>
                       {c.confidence.startsWith("confirmed") ? (
@@ -311,7 +402,8 @@ export function RegionInspector({
                       )}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           ) : (

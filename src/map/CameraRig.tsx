@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
 import type { RegionId } from "@/league";
+import { PLACES_BY_REGION } from "./data/placeAnchors";
+import { MAP_WORLD } from "./data/regionAnchors";
 import { SHAPE_BY_ID, TABLE_FRAMING, type Framing } from "./data/regionShapes";
 
 /**
@@ -23,8 +25,30 @@ import { SHAPE_BY_ID, TABLE_FRAMING, type Framing } from "./data/regionShapes";
  * spans u 0.085..0.921, so fitting the full 2-unit plane parks the camera far
  * enough back to leave a sixth of the canvas empty on both flanks.
  */
-const FIT_HALF_WIDTH = 0.92;
-const FIT_HALF_DEPTH = 0.4;
+/**
+ * Land runs u 0.085..0.921, so its half-width is 0.836. The rest is margin for
+ * pointer parallax, which swings the view about 0.048 world units at the table
+ * radius — 0.89 covers it with a little to spare. Anything under ~0.884 clips
+ * the Tirannwn and Havenhythe coasts whenever the mouse moves.
+ */
+const FIT_HALF_WIDTH = 0.89;
+/**
+ * Derived, not a literal: the land runs nearly the full v range, so half the
+ * world depth is the extent plus a little margin. Hardcoding it meant every
+ * change to MAP_WORLD.height silently clipped the Wilderness off the top and
+ * the Desert off the bottom.
+ */
+const FIT_HALF_DEPTH = MAP_WORLD.height * 0.5;
+/**
+ * Both fits above solve against the *target plane*, which is a flat
+ * approximation of a perspective shot. Under the ~46 degree tilt the south
+ * coast sits well nearer the camera than the target does and perspective
+ * magnifies it, so the honest fit runs the board off the bottom and flanks.
+ * Rather than solve the projected hull in closed form, this is a measured
+ * margin: `window.__mapFitProbe().overflow` reports the cut on each side in CSS
+ * pixels, and this is the smallest value that keeps all four negative.
+ */
+const FIT_MARGIN = 1.03;
 
 /** Pointer parallax, in radians. ~1.7 deg of yaw, ~0.9 of pitch. */
 const PARALLAX_AZIMUTH = 0.03;
@@ -41,16 +65,19 @@ function lerpAngle(a: number, b: number, k: number): number {
 }
 
 /** Spherical around the target. Azimuth 0 is due south, elevation is above the board. */
-function place(out: THREE.Vector3, target: THREE.Vector3, az: number, el: number, r: number) {
+function orbit(out: THREE.Vector3, target: THREE.Vector3, az: number, el: number, r: number) {
   const flat = Math.cos(el) * r;
   out.set(target.x + Math.sin(az) * flat, target.y + Math.sin(el) * r, target.z + Math.cos(az) * flat);
 }
 
 export function CameraRig({
   focus,
+  place,
   reducedMotion,
 }: {
   focus: RegionId | null;
+  /** Selected place, if any. Pushes in on its anchor without a new shot. */
+  place?: string | null;
   reducedMotion: boolean;
 }) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
@@ -67,11 +94,35 @@ export function CameraRig({
   const table = useMemo<Framing>(() => {
     const halfFov = (TABLE_FRAMING.fov * Math.PI) / 360;
     const forWidth = FIT_HALF_WIDTH / (Math.tan(halfFov) * aspect);
-    const forDepth = FIT_HALF_DEPTH / Math.tan(halfFov);
-    return { ...TABLE_FRAMING, radius: Math.max(TABLE_FRAMING.radius, forWidth, forDepth) };
+    // Foreshortened, not flat. The board is seen at ~46 degrees, so its depth
+    // covers `sin(elevation)` of the screen height it would cover top-down.
+    // Fitting the raw depth asked for a 39% bigger radius than the shot needs
+    // and was the second half of the small-board problem, after the aspect box.
+    const forDepth = (FIT_HALF_DEPTH * Math.sin(TABLE_FRAMING.elevation)) / Math.tan(halfFov);
+    return {
+      ...TABLE_FRAMING,
+      radius: Math.max(TABLE_FRAMING.radius, forWidth, forDepth) * FIT_MARGIN,
+    };
   }, [aspect]);
 
-  const want = focus ? (SHAPE_BY_ID.get(focus)?.framing ?? table) : table;
+  // Selecting a place reuses that region's authored shot and only swaps the
+  // target and closes the distance — no second camera path, and the framing
+  // stays one someone chose. Memoised because the settle effect keys off it.
+  const want = useMemo<Framing>(() => {
+    const base = focus ? (SHAPE_BY_ID.get(focus)?.framing ?? table) : table;
+    if (!focus || !place) return base;
+    const anchor = PLACES_BY_REGION.get(focus)?.find((p) => p.area === place);
+    if (!anchor) return base;
+    return {
+      ...base,
+      target: [
+        (anchor.uv[0] - 0.5) * MAP_WORLD.width,
+        base.target[1],
+        (anchor.uv[1] - 0.5) * MAP_WORLD.height,
+      ],
+      radius: base.radius * 0.6,
+    };
+  }, [focus, place, table]);
 
   // Current solved framing. Seeded high and wide so the first frames are an
   // intro descent onto the table, exactly once.
@@ -130,6 +181,12 @@ export function CameraRig({
       c.target.copy(wantTarget);
       parallax.current.x = 0;
       parallax.current.y = 0;
+      // Snapping *is* settled. Without this, `moving` is only ever cleared in
+      // the animated branch below, so under reduced motion it stays true and
+      // the tail of this function invalidates on every single frame — pinning
+      // frameloop="demand" at the display's refresh rate for as long as the
+      // route is open. Exactly backwards for the setting that asks for less.
+      moving.current = false;
     } else if (moving.current) {
       const k = 1 - Math.exp(-delta * 6.5);
       c.azimuth = lerpAngle(c.azimuth, want.azimuth, k);
@@ -160,7 +217,7 @@ export function CameraRig({
         Math.abs(parallax.current.y - targetY) > 0.0002;
     }
 
-    place(
+    orbit(
       position,
       c.target,
       c.azimuth + parallax.current.x,

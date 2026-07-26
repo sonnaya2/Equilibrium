@@ -7,12 +7,18 @@ import type { ReactNode } from "react";
 export function Page({
   children,
   className = "",
+  wide = false,
 }: {
   children: ReactNode;
   className?: string;
+  /** Drops the reading cap. For routes whose subject *is* the width — the map
+   *  board is the product's centrepiece and every pixel of it is information. */
+  wide?: boolean;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-[1600px] px-4 py-5 ${className}`.trim()}>
+    <div
+      className={`mx-auto w-full ${wide ? "max-w-none" : "max-w-[1600px]"} px-4 py-5 ${className}`.trim()}
+    >
       {children}
     </div>
   );

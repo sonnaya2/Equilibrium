@@ -83,16 +83,34 @@ export function Ocean({ reducedMotion }: { reducedMotion: boolean }) {
     return () => io.disconnect();
   }, [gl, invalidate, reducedMotion]);
 
-  // Throttled to ~30Hz. The sea does not need 165 frames a second, and every
-  // frame it asks for is a full-viewport repaint of the whole scene.
-  const accum = useRef(0);
+  /**
+   * The 30Hz throttle is a timer, not a frame accumulator.
+   *
+   * Accumulating delta inside useFrame and invalidating when it crossed 1/30
+   * looked equivalent and was not: under frameloop="demand" a frame only
+   * happens because something asked for one, so the sea was the only thing
+   * keeping the sea awake. The frame its own invalidate produced arrived one
+   * rAF later — about 6ms on a 165Hz panel, far short of 1/30 — so it returned
+   * without asking again and the loop went to sleep for good. The result was a
+   * frozen sea that unfroze whenever the pointer moved, and only ever looked
+   * right while something else happened to be driving frames.
+   *
+   * A timer owns the cadence instead, so the sea drives itself at a real 30Hz.
+   * Not created at all under reduced motion, and the IntersectionObserver above
+   * still parks it when the canvas is off screen.
+   */
+  useEffect(() => {
+    if (reducedMotion) return;
+    const id = window.setInterval(() => {
+      if (running.current) invalidate();
+    }, 1000 / 30);
+    return () => window.clearInterval(id);
+  }, [invalidate, reducedMotion]);
+
+  // Frames the timer asked for: advance the clock, ask for nothing.
   useFrame((_, delta) => {
     if (!running.current) return;
     material.clock.value += delta;
-    accum.current += delta;
-    if (accum.current < 1 / 30) return;
-    accum.current = 0;
-    invalidate();
   });
 
   return (

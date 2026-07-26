@@ -15,8 +15,10 @@ const LINKS = [
 export function Nav() {
   const pathname = usePathname();
   return (
-    <header className="border-b border-stone-750">
-      <nav className="mx-auto flex w-full max-w-[1600px] items-center gap-6 px-4 py-3">
+    /* Locked to --header-h from md up so `100svh - var(--header-h)` is exact on
+       the map route. Below md the links wrap and the header grows instead. */
+    <header className="border-b border-stone-750 md:h-[var(--header-h)]">
+      <nav className="mx-auto flex h-full w-full max-w-[1600px] items-center gap-6 px-4 py-3 md:py-0">
         <Link
           href="/"
           className="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-gold-400"

@@ -13,6 +13,7 @@ import { REGION_SHAPES } from "./data/regionShapes";
 
 import { RegionSlab } from "./RegionSlab";
 import { PlaceMarkers } from "./PlaceMarkers";
+import { SeamVines } from "./SeamVines";
 
 export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
   const loaded = useLoader(THREE.TextureLoader, [
@@ -64,6 +65,8 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
           reducedMotion={reducedMotion}
         />
       ))}
+      {/* Drawn after the slabs so the ribbons composite over both caps. */}
+      <SeamVines />
       <PlaceMarkers />
     </group>
   );

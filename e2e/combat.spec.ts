@@ -16,7 +16,7 @@ test("quick calculator runs the real pipeline", async ({ page }) => {
 });
 
 test("rotation planner queues, simulates, and persists", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
 
   const attack = page.getByRole("button", { name: /^Attack \+9%$/ });
@@ -30,13 +30,13 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await expect(page.getByText("18%")).toBeVisible();
 
   await page.reload();
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 });
 
 test("rotation reports adrenaline starvation honestly in manual mode", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
   await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
@@ -45,7 +45,7 @@ test("rotation reports adrenaline starvation honestly in manual mode", async ({ 
 });
 
 test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
 
@@ -57,7 +57,7 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
 });
 
 test("setup gear filters equipment by region", async ({ page }) => {
-  await page.getByRole("button", { name: "Setup", exact: true }).click();
+  await page.getByRole("tab", { name: "Setup", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Setup" })).toBeVisible();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
 
@@ -67,7 +67,7 @@ test("setup gear filters equipment by region", async ({ page }) => {
 });
 
 test("analysis tab compares two stat lines", async ({ page }) => {
-  await page.getByRole("button", { name: "Analysis", exact: true }).click();
+  await page.getByRole("tab", { name: "Analysis", exact: true }).click();
   await expect(page.getByText("A · Setup loadout")).toBeVisible();
   await expect(page.getByText("B · Comparison")).toBeVisible();
   await expect(page.getByText("B − A")).toBeVisible();
@@ -82,7 +82,7 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
 });
 
 test("rotation defaults to the shared setup loadout", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   const toggle = page.getByRole("checkbox", { name: "Use Setup loadout" });
   await expect(toggle).toBeChecked();
@@ -95,10 +95,13 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
 });
 
 test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
-  await page.getByRole("button", { name: "Setup", exact: true }).click();
+  await page.getByRole("tab", { name: "Setup", exact: true }).click();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
-  await expect(page.getByText("Main-hand")).toBeVisible();
-  await expect(page.getByText("Empty").first()).toBeVisible();
+  // Scoped to the doll: every item row in the picker also names its slot, so
+  // an unscoped "Main-hand" matches seven elements and fails strict mode.
+  const doll = page.getByRole("group", { name: "Equipment slots" });
+  await expect(doll.getByText("Main-hand")).toBeVisible();
+  await expect(doll.getByText("Empty").first()).toBeVisible();
 
   await page.getByRole("button", { name: "Perks", exact: true }).click();
   await expect(page.getByText("Perks & sets")).toBeVisible();
@@ -113,7 +116,7 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 });
 
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
 
   // Revolution is the default Rotation mode — no need to switch away from manual.
   await expect(page.getByRole("button", { name: "Run revolution" })).toBeVisible();
@@ -121,7 +124,9 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByText(/Horizon 60s · 100 ticks/)).toBeVisible();
 
   // Default melee dual-wield bar is fully engine-mapped post-audit.
-  await expect(page.getByText(/10 of 10 slots modelled/)).toBeVisible();
+  // Backreference, not a literal count: the assertion is "every slot on the bar
+  // is engine-mapped", and pinning 10 turns a bar change into a red suite.
+  await expect(page.getByText(/(\d+) of \1 revo slots modelled/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
@@ -138,7 +143,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
 });
 
 test("manual rotation still exposes necromancy abilities", async ({ page }) => {
-  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("button", { name: "Necromancy", exact: true }).click();
   await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();

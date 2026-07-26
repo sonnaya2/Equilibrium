@@ -158,8 +158,17 @@ export interface Framing {
 export const TABLE_FRAMING: Framing = {
   azimuth: 0,
   elevation: 0.8,
-  radius: 1.42,
-  target: [0, 0, 0.03],
+  // A floor, not the shot: CameraRig solves the real radius from the live
+  // aspect. Was 1.42, then 1.05, and both won on the wide board cell and pulled
+  // the camera back past the fit they were meant to guard — the floor was
+  // costing ~25% of on-screen region size. Low enough now to never bind in
+  // practice, kept only so a degenerate canvas cannot solve to zero.
+  radius: 0.7,
+  // Aimed south of board centre on purpose. The tilt makes the near half
+  // project larger, so a shot centred on the geometric middle sits low in the
+  // frame with dead sky above it — measured at 94px of slack up top against a
+  // 26px cut along the bottom.
+  target: [0, 0, 0.095],
   fov: 38,
 };
 

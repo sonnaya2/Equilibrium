@@ -17,9 +17,13 @@ import type { RegionId } from "@/league";
 
 export interface PlaceAnchor {
   region: RegionId;
-  /** Must equal a catalog area name for that region, exactly. */
+  /** A catalog area name (exactly), or — when `site` — a place named by that
+   *  region's content/upgrade rows. */
   area: string;
   uv: readonly [number, number];
+  /** Set on anchors that are not catalog areas: named sites the highlight rows
+   *  refer to (bosses, dungeons, guilds). Held to the same two invariants. */
+  site?: true;
 }
 
 export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
@@ -134,10 +138,118 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "havenhythe", area: "Amberfell", uv: [0.826, 0.68] },
 ];
 
+/**
+ * Places named by content and upgrade rows rather than by the catalog's `areas`
+ * list — the bosses, dungeons and guilds a region's highlights actually happen
+ * at. Same two invariants as above, held by the same test.
+ *
+ * Deliberately partial. Most of the 680 content+upgrade rows are items, perks,
+ * outfits, scrolls and spells, which have no position on Gielinor and get no
+ * marker; the rest are pinned only where the location is known. The alternative
+ * the brief floated — falling back to the region centroid — would stack
+ * hundreds of pins on one point and pass off a guess as a coordinate, which is
+ * the one thing this repo does not ship. Unpinned rows are counted, not hidden:
+ * the inspector says "N of M pinned" out loud.
+ */
+export const SITE_ANCHORS: readonly PlaceAnchor[] = [
+  // Misthalin — the Necromancy sites hang off the City of Um.
+  { region: "misthalin", area: "Sanctum of Rebirth", uv: [0.508, 0.626], site: true },
+  { region: "misthalin", area: "Rasial", uv: [0.514, 0.616], site: true },
+
+  // Asgarnia — the five God Wars generals sit in the GWD, the rest ring Falador.
+  { region: "asgarnia", area: "General Graardor", uv: [0.412, 0.325], site: true },
+  { region: "asgarnia", area: "Kree'arra", uv: [0.428, 0.322], site: true },
+  { region: "asgarnia", area: "Commander Zilyana", uv: [0.414, 0.338], site: true },
+  { region: "asgarnia", area: "K'ril Tsutsaroth", uv: [0.43, 0.338], site: true },
+  { region: "asgarnia", area: "Nex", uv: [0.421, 0.316], site: true },
+  { region: "asgarnia", area: "Giant Mole", uv: [0.404, 0.462], site: true },
+  { region: "asgarnia", area: "Vorago", uv: [0.43, 0.455], site: true },
+  { region: "asgarnia", area: "Queen Black Dragon", uv: [0.42, 0.512], site: true },
+  { region: "asgarnia", area: "Mining Guild", uv: [0.418, 0.481], site: true },
+  { region: "asgarnia", area: "Living Rock Caverns", uv: [0.443, 0.432], site: true },
+  { region: "asgarnia", area: "Crafting Guild", uv: [0.397, 0.5], site: true },
+  { region: "asgarnia", area: "Rogues' Den", uv: [0.372, 0.392], site: true },
+  { region: "asgarnia", area: "Artisans' Workshop", uv: [0.421, 0.49], site: true },
+  { region: "asgarnia", area: "Invention Guild", uv: [0.407, 0.483], site: true },
+
+  // Kandarin.
+  { region: "kandarin", area: "Legiones", uv: [0.292, 0.614], site: true },
+  { region: "kandarin", area: "Elemental Workshop", uv: [0.263, 0.374], site: true },
+  { region: "kandarin", area: "Fishing Trawler", uv: [0.302, 0.594], site: true },
+  { region: "kandarin", area: "Gnome Restaurant", uv: [0.224, 0.454], site: true },
+
+  // Karamja — the TzHaar arenas share the volcano.
+  { region: "karamja", area: "Duradel", uv: [0.308, 0.876], site: true },
+  { region: "karamja", area: "TzHaar Fight Cave", uv: [0.342, 0.818], site: true },
+  { region: "karamja", area: "Fight Kiln", uv: [0.345, 0.822], site: true },
+  { region: "karamja", area: "Fight Cauldron", uv: [0.339, 0.825], site: true },
+  { region: "karamja", area: "Brimhaven Agility Arena", uv: [0.262, 0.782], site: true },
+  { region: "karamja", area: "Nature altar", uv: [0.296, 0.848], site: true },
+  { region: "karamja", area: "Jadinko Lair", uv: [0.323, 0.864], site: true },
+
+  // Fremennik.
+  { region: "fremennik", area: "Dagannoth Kings", uv: [0.242, 0.153], site: true },
+
+  // Forinthry — the Wilderness bosses, plus the Daemonheim dungeoneering fronts.
+  { region: "forinthry", area: "Corporeal Beast", uv: [0.47, 0.176], site: true },
+  { region: "forinthry", area: "Chaos Elemental", uv: [0.508, 0.132], site: true },
+  { region: "forinthry", area: "Dragonkin Laboratory", uv: [0.528, 0.162], site: true },
+  { region: "forinthry", area: "The Shadow Reef", uv: [0.617, 0.288], site: true },
+
+  // Kharidian Desert — Kalphite lair north, Heart of Gielinor mid, Menaphos south.
+  { region: "desert", area: "Kalphite Queen", uv: [0.512, 0.77], site: true },
+  { region: "desert", area: "Kalphite King", uv: [0.518, 0.776], site: true },
+  { region: "desert", area: "Telos", uv: [0.535, 0.8], site: true },
+  { region: "desert", area: "Heart of Gielinor", uv: [0.532, 0.807], site: true },
+  { region: "desert", area: "Amascut", uv: [0.575, 0.911], site: true },
+  { region: "desert", area: "Pyramid Plunder", uv: [0.582, 0.893], site: true },
+  { region: "desert", area: "Shifting Tombs", uv: [0.565, 0.921], site: true },
+  { region: "desert", area: "Soul altar", uv: [0.554, 0.931], site: true },
+
+  // Morytania.
+  { region: "morytania", area: "Rise of the Six", uv: [0.684, 0.585], site: true },
+  { region: "morytania", area: "Ectofuntus", uv: [0.716, 0.514], site: true },
+  { region: "morytania", area: "Blood altar", uv: [0.694, 0.545], site: true },
+  { region: "morytania", area: "Shades of Mort'ton", uv: [0.664, 0.568], site: true },
+  { region: "morytania", area: "Abandoned Mine", uv: [0.652, 0.53], site: true },
+  { region: "morytania", area: "Temple Trekking", uv: [0.67, 0.598], site: true },
+
+  // Tirannwn — everything but Solak is inside the Prifddinas walls.
+  { region: "tirannwn", area: "Solak", uv: [0.14, 0.695], site: true },
+  { region: "tirannwn", area: "Max Guild", uv: [0.158, 0.514], site: true },
+  { region: "tirannwn", area: "Hefin Agility Course", uv: [0.151, 0.526], site: true },
+  { region: "tirannwn", area: "Motherlode Maw", uv: [0.16, 0.512], site: true },
+
+  // Anachronia.
+  { region: "anachronia", area: "Raksha", uv: [0.783, 0.146], site: true },
+  { region: "anachronia", area: "Rex Matriarchs", uv: [0.774, 0.254], site: true },
+
+  // Havenhythe.
+  { region: "havenhythe", area: "Ivar, King of Bones", uv: [0.818, 0.55], site: true },
+  { region: "havenhythe", area: "Silverquill", uv: [0.844, 0.618], site: true },
+  { region: "havenhythe", area: "Sanguine Crawler", uv: [0.868, 0.526], site: true },
+];
+
 export const PLACES_BY_REGION: ReadonlyMap<RegionId, readonly PlaceAnchor[]> = (() => {
   const grouped = new Map<RegionId, PlaceAnchor[]>();
-  for (const anchor of PLACE_ANCHORS) {
+  for (const anchor of [...PLACE_ANCHORS, ...SITE_ANCHORS]) {
     grouped.set(anchor.region, [...(grouped.get(anchor.region) ?? []), anchor]);
   }
   return grouped;
 })();
+
+/**
+ * Which pin a highlight row belongs to, or null when we do not know where it
+ * happens. Substring rather than equality because the rows are prose — "Canifis
+ * farming and Slayer Tower hub" is a Slayer Tower row. Longest match wins so a
+ * row naming two places lands on the more specific one.
+ */
+export function pinForHighlight(region: RegionId, rowName: string): PlaceAnchor | null {
+  const hay = rowName.toLowerCase();
+  let best: PlaceAnchor | null = null;
+  for (const anchor of PLACES_BY_REGION.get(region) ?? []) {
+    if (!hay.includes(anchor.area.toLowerCase())) continue;
+    if (!best || anchor.area.length > best.area.length) best = anchor;
+  }
+  return best;
+}

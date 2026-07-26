@@ -53,7 +53,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "asgarnia", area: "Entrana", uv: [0.385, 0.55] },
   { region: "asgarnia", area: "Ice Mountain", uv: [0.445, 0.4] },
   { region: "asgarnia", area: "Armadyl's Tower", uv: [0.42, 0.5] },
-  { region: "asgarnia", area: "Invention Guild", uv: [0.43, 0.48] },
+  // Invention Guild is the site pin below (do not duplicate area name).
 
   // Kandarin — Piscatoris/Hall north-west, Seers–Catherby band, Ardougne/POF
   // south, Feldip Warforge on the south coast, DSF off the southern pier.

@@ -133,7 +133,7 @@ export function RegionInspector({
   regions: PlannerRegion[];
   boundaryRules: string[];
 }) {
-  const { focus, focusPlace } = useMapFocus();
+  const { focus, selectPlace, hoverPlace } = useMapFocus();
   const [tab, setTab] = useState<TabId>("bosses");
   const [query, setQuery] = useState("");
   const [confirmedOnly, setConfirmedOnly] = useState(false);
@@ -267,8 +267,13 @@ export function RegionInspector({
                   {places.map((area) => (
                     <span
                       key={area}
-                      onPointerEnter={() => anchored.has(area) && focusPlace(area)}
-                      onPointerLeave={() => focusPlace(null)}
+                      onPointerEnter={() => anchored.has(area) && hoverPlace(area)}
+                      onPointerLeave={() => hoverPlace(null)}
+                      onClick={() =>
+                        anchored.has(area)
+                          ? selectPlace(focus.place === area ? null : area)
+                          : undefined
+                      }
                       className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
                         focus.place === area
                           ? "bg-stone-800 text-gem-300"

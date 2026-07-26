@@ -154,18 +154,18 @@ describe("pruneUnknownEquipment", () => {
     expect(next.equipmentIds).toEqual([]);
   });
 
-  it("default known drops catalogue-absent ids (retired auras deleted from JSON)", () => {
+  it("default known drops catalogue-absent ids (deleted corpus items)", () => {
     const raw = {
       ...DEFAULT_LOADOUT,
       equipmentSlots: {
-        // Post-2026 combat auras were stripped from equipment.json entirely.
-        aura: "item:berserker-aura",
+        // Historical combat auras were stripped from equipment.json entirely.
+        pocket: "item:berserker-aura",
         helmet: "item:sirenic-mask",
       },
       equipmentIds: ["item:berserker-aura", "item:sirenic-mask", "item:not-in-catalogue"],
     };
     const next = pruneUnknownEquipment(raw);
-    expect(next.equipmentSlots.aura).toBeUndefined();
+    expect(next.equipmentSlots.pocket).toBeUndefined();
     expect(next.equipmentSlots.helmet).toBe("item:sirenic-mask");
     expect(next.equipmentIds).toEqual(["item:sirenic-mask"]);
     expect(unlockOnlyIds(next)).toEqual([]);

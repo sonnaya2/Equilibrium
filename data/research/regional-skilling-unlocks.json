@@ -1351,7 +1351,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "external skilling island cluster under Equilibrium Asgarnia",
-      "detail": "Equilibrium League Areas/Asgarnia lists The Arc under notable settlements and lists golden bamboo, ornate tortles, mushroom clusters, dead moai, and wobbegong under non-combat activities. Older combat enrichment treated Arc as an unresolved external destination — for Equilibrium region taxonomy, prefer this Asgarnia mapping for skilling until Jagex publishes a split · Use Equilibrium's Asgarnia area page as the region assignment for Arc skilling. Ports voyage requirements still apply unless League auto-unlocks travel · Unlocks: Golden Bamboo woodcutting, Ornate tortles Hunter, Mushroom clusters, Dead moai, Wobbegong fishing, Arc contracts (skilling contract track; combat contracts stay combat data) · Region status: confirmed_equilibrium_area_page_lists_the_arc_under_asgarnia",
+      "detail": "Equilibrium League Areas/Asgarnia lists The Arc under notable settlements and lists golden bamboo, ornate tortles, mushroom clusters, dead moai, and wobbegong under non-combat activities. Older combat enrichment treated Arc as an unresolved external destination · Use Equilibrium's Asgarnia area page as the region assignment for Arc skilling. Ports voyage requirements still apply unless League auto-unlocks travel · Unlocks: Golden Bamboo woodcutting, Ornate tortles Hunter, Mushroom clusters, Dead moai, Wobbegong fishing, Arc contracts (skilling contract track; combat contracts stay combat data) · Region status: confirmed_equilibrium_area_page_lists_the_arc_under_asgarnia",
       "requirements": [
         "Player-owned port / Arc voyage unlocks in the normal game",
         "Island-specific skill levels for bamboo, tortles, mushrooms, moai, wobbegong"
@@ -3924,7 +3924,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "cross-region Invention boost supply stack",
-      "detail": "Combo. Prefer this when scoring multi-region Invention power · Hard Kandarin for Manor Farm mycelial webbing (Invention craft is global). Kandarin POF can substitute webbing in some plans · Unlocks: End-to-end ironman checklist: make super invention → add mycelial webbing → drink at Guild for blueprint/perk attempts, Separates temporary boost logistics from permanent machine power and Ancient Invention blueprint unlocks · Region pressure: Kandarin hard for Manor Farm webbing self-supply; Invention craft is global., Kandarin optional if Manor Farm zygomites cover webbing without Anachronia · Invention workbench craft is global (not region-locked)",
+      "detail": "Hard Kandarin for Manor Farm mycelial webbing (Invention craft is global). Kandarin POF can substitute webbing in some plans · Unlocks: End-to-end ironman checklist: make super invention → add mycelial webbing → drink at Guild for blueprint/perk attempts, Separates temporary boost logistics from permanent machine power and Ancient Invention blueprint unlocks · Region pressure: Kandarin hard for Manor Farm webbing self-supply; Invention craft is global., Kandarin optional if Manor Farm zygomites cover webbing without Anachronia · Invention workbench craft is global (not region-locked)",
       "requirements": [
         "Invention boost usable at any workbench (not Asgarnia-gated)",
         "Anachronia or Ranch/POF fungus path for reliable mycelial webbing self-supply",
@@ -6407,7 +6407,7 @@
       "comboLabel": "Region chain (support pressure): desert / asgarnia",
       "isRegionCombo": false,
       "category": "Ports voyage economy and Eastern lands gate",
-      "detail": "Arc reward depth; this is the Ports hub itself · Primary Desert/Menaphos. Asgarnia Arc shops support only · Unlocks: Player-owned port voyage interface and trade goods, Eastern lands / Arc voyage gate materials, Ports resources for scroll of proficiency and related crafts",
+      "detail": "Player-owned port hub. · Primary Desert/Menaphos. Asgarnia Arc shops support only · Unlocks: Player-owned port voyage interface and trade goods, Eastern lands / Arc voyage gate materials, Ports resources for scroll of proficiency and related crafts",
       "requirements": [
         "Ports access via Menaphos / Port district portal",
         "Captain and crew progression for voyage success"

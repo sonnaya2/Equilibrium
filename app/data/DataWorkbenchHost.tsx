@@ -5,7 +5,6 @@ import { useState } from "react";
 import { DataWorkbench } from "@/components/DataWorkbench";
 import { DataRegionRail, ResearchBrowser } from "@/components/ResearchBrowser";
 import type { ResearchCatalog } from "@/research/catalog";
-import type { ReactNode } from "react";
 
 const panelFallback = () => (
   <p className="py-6 text-xs text-parch-300" aria-busy="true">
@@ -70,10 +69,17 @@ const InventionResearch = dynamic(
     })),
   { ssr: false, loading: panelFallback },
 );
-const PrayerSpellbookResearch = dynamic(
+const PrayerResearch = dynamic(
   () =>
     import("@/components/PrayerSpellbookResearch").then((m) => ({
-      default: m.PrayerSpellbookResearch,
+      default: m.PrayerResearch,
+    })),
+  { ssr: false, loading: panelFallback },
+);
+const MagicResearch = dynamic(
+  () =>
+    import("@/components/PrayerSpellbookResearch").then((m) => ({
+      default: m.MagicResearch,
     })),
   { ssr: false, loading: panelFallback },
 );
@@ -84,13 +90,6 @@ const ConsumablesResearch = dynamic(
     })),
   { ssr: false, loading: panelFallback },
 );
-const ProgressionSystemsResearch = dynamic(
-  () =>
-    import("@/components/ProgressionSystemsResearch").then((m) => ({
-      default: m.ProgressionSystemsResearch,
-    })),
-  { ssr: false, loading: panelFallback },
-);
 const ArchaeologyProductionResearch = dynamic(
   () =>
     import("@/components/ArchaeologyProductionResearch").then((m) => ({
@@ -98,34 +97,10 @@ const ArchaeologyProductionResearch = dynamic(
     })),
   { ssr: false, loading: panelFallback },
 );
-const MasterworkChainResearch = dynamic(
-  () =>
-    import("@/components/MasterworkChainResearch").then((m) => ({
-      default: m.MasterworkChainResearch,
-    })),
-  { ssr: false, loading: panelFallback },
-);
-const RegionBoundariesResearch = dynamic(
-  () =>
-    import("@/components/RegionBoundariesResearch").then((m) => ({
-      default: m.RegionBoundariesResearch,
-    })),
-  { ssr: false, loading: panelFallback },
-);
-const ReferenceNotesResearch = dynamic(
-  () =>
-    import("@/components/ReferenceNotesResearch").then((m) => ({
-      default: m.ReferenceNotesResearch,
-    })),
-  { ssr: false, loading: panelFallback },
-);
-
 export function DataWorkbenchHost({
   catalog,
-  notes,
 }: {
   catalog: ResearchCatalog;
-  notes: ReactNode;
 }) {
   const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
   const region = catalog.regions.find((item) => item.id === regionId) ?? catalog.regions[0] ?? null;
@@ -136,7 +111,16 @@ export function DataWorkbenchHost({
       regionRail={
         <DataRegionRail catalog={catalog} regionId={region?.id ?? ""} onChange={setRegionId} />
       }
-      browse={<ResearchBrowser catalog={catalog} />}
+      browse={
+        <ResearchBrowser
+          catalog={catalog}
+          skillDetails={{
+            archaeology: <ArchaeologyProductionResearch />,
+            magic: <MagicResearch />,
+            prayer: <PrayerResearch />,
+          }}
+        />
+      }
       quests={<QuestBrowser />}
       progression={<ProgressionResearch />}
       unlocks={<PermanentUnlockResearch />}
@@ -145,14 +129,7 @@ export function DataWorkbenchHost({
       combos={<RegionCombosResearch />}
       slayer={<SlayerResearch />}
       invention={<InventionResearch />}
-      prayers={<PrayerSpellbookResearch />}
       consumables={<ConsumablesResearch />}
-      systems={<ProgressionSystemsResearch />}
-      archaeology={<ArchaeologyProductionResearch />}
-      masterwork={<MasterworkChainResearch />}
-      referenceNotes={<ReferenceNotesResearch />}
-      boundaries={<RegionBoundariesResearch />}
-      notes={notes}
     />
   );
 }

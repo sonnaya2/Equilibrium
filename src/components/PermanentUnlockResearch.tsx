@@ -4,6 +4,9 @@ import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
+import { GameIcon } from "@/components/GameIcon";
+import { dataEntityIconPath } from "@/lib/gameArt";
+import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
@@ -34,95 +37,6 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   consumable_unlocks: [],
 };
 
-/** Nested/detail keys that must never dump into the body. */
-const NOISE_KEYS = new Set([
-  "id",
-  "source_url",
-  "source_urls",
-  "sourceUrls",
-  "source_refs",
-  "sourceFile",
-  "secondary_source_url",
-  "secondary_source_urls",
-  "primary_source_url",
-  "confidence",
-  "recordType",
-  "region_status",
-  "region_requirement_type",
-  "hard_region_requirement",
-  "type",
-]);
-
-/** Provenance `source` (URL / SourceReference) is noise; plain labels like boss names stay. */
-function isProvenanceSource(value: unknown): boolean {
-  if (isSourceRef(value)) return true;
-  return typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://"));
-}
-const FIELD_LABELS: Record<string, string> = {
-  unlocks: "Unlocks",
-  rewards: "Rewards",
-  access_requirements: "Access",
-  requirements: "Reqs",
-  quest_dependencies: "Quests",
-  dependency_notes: "Depends on",
-  acquisition_routes: "Routes",
-  materials: "Mats",
-  base: "Base",
-  base_overload: "Base overload",
-  recipe_shop_gate: "Recipe shop",
-  records: "Records",
-  boost: "Boost",
-  gem_storage: "Gems",
-  base_device_recipe: "Device recipe",
-  tight_spring_recipe: "Spring recipe",
-  upgrade_ladder: "Upgrades",
-  supply_bottleneck: "Bottleneck",
-  upgrade: "Upgrade",
-  charges: "Charges",
-  toolbelt_unlock: "Toolbelt",
-  pickup_upgrade: "Pickup",
-  effects: "Effects",
-  effect: "Effect",
-  milestones: "Milestones",
-  rules: "Rules",
-  prerequisite: "Prereq",
-  historical_requirement: "Was",
-  historical_source: "Was from",
-  league_treatment: "League",
-  notes: "Notes",
-  tiers: "Tiers",
-  stand_rule: "Stand",
-  account_rule: "Rule",
-  tier_1_rule: "Tier 1",
-  tier_2_rule: "Tier 2",
-  token_cost: "Tokens",
-  base_requirements: "Base reqs",
-  boss_kills: "Boss kills",
-  quantity: "Qty",
-  recipe: "Recipe",
-  affected_item: "Affects",
-  animal: "Animal",
-  farming_level: "Farming",
-  herblore_level: "Herblore",
-  style: "Style",
-  item: "Item",
-  cost: "Cost",
-  route: "Route",
-  currency: "Currency",
-  region_hint: "Region",
-  source: "From",
-};
-function fieldLabel(key: string): string {
-  if (FIELD_LABELS[key]) return FIELD_LABELS[key];
-  return key
-    .replaceAll("boss_kills", "boss kills")
-    .replaceAll("prayer_requirement", "Prayer")
-    .replaceAll("necromancy_requirement", "Necromancy")
-    .replaceAll("invention_requirement", "Invention")
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 /** Plain player-facing string — never a URL, never a SourceReference dump. */
 function humanString(value: unknown): string {
   if (typeof value !== "string") return "";
@@ -135,16 +49,6 @@ function isSourceRef(value: unknown): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as Row;
   return typeof row.url === "string" || (typeof row.source === "string" && "verifiedAt" in row);
-}
-
-function keepEntry(key: string, item: unknown, primary?: string): boolean {
-  if (NOISE_KEYS.has(key)) return false;
-  if (key === "name" || key === "quest" || key === "item" || key === "route") return false;
-  if (key === "source") {
-    if (isProvenanceSource(item)) return false;
-    if (primary && primary === humanString(item)) return false;
-  }
-  return true;
 }
 
 function format(value: unknown): string {
@@ -213,10 +117,9 @@ function region(row: Row): string {
 }
 
 function pullUrl(value: unknown): string | null {
-  if (typeof value === "string" && value.startsWith("https://")) return value;
+  if (typeof value === "string") return safeExternalHref(value);
   if (value && typeof value === "object" && "url" in value) {
-    const url = (value as { url?: unknown }).url;
-    if (typeof url === "string" && url.startsWith("https://")) return url;
+    return safeExternalHref((value as { url?: unknown }).url);
   }
   return null;
 }
@@ -252,6 +155,9 @@ function sourceLabel(url: string): string {
 const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "unlocks", label: "Unlocks" },
   { key: "rewards", label: "Rewards" },
+  { key: "location_note", label: "Where" },
+  { key: "source_shop", label: "Shop" },
+  { key: "source", label: "Source" },
   { key: "access_requirements", label: "Access" },
   { key: "requirements", label: "Reqs" },
   { key: "base_requirements", label: "Base reqs" },
@@ -275,8 +181,20 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "pickup_upgrade", label: "Pickup" },
   { key: "effects", label: "Effects" },
   { key: "effect", label: "Effect" },
+  { key: "cost", label: "Cost" },
+  { key: "currency", label: "Currency" },
+  { key: "cost_per_rank", label: "Cost / rank" },
+  { key: "ranks", label: "Ranks" },
+  { key: "spellbook", label: "Spellbook" },
+  { key: "magic_level", label: "Magic" },
+  { key: "duration_minutes", label: "Duration (min)" },
   { key: "milestones", label: "Milestones" },
+  { key: "thresholds", label: "Thresholds" },
+  { key: "bonuses", label: "Bonuses" },
   { key: "tiers", label: "Tiers" },
+  { key: "tool_bonuses", label: "Tool bonuses" },
+  { key: "familiar_bonuses", label: "Familiar bonuses" },
+  { key: "migration", label: "If you owned the aura" },
   { key: "rules", label: "How it works" },
   { key: "account_rule", label: "Account" },
   { key: "stand_rule", label: "Stand" },
@@ -286,6 +204,7 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "prerequisite", label: "Prereq" },
   { key: "historical_requirement", label: "Was" },
   { key: "historical_source", label: "Was from" },
+  { key: "removed_auras", label: "Removed auras" },
   { key: "token_cost", label: "Tokens" },
   { key: "league_treatment", label: "League" },
 ];
@@ -345,7 +264,6 @@ export function PermanentUnlockResearch() {
     <section className="data-record-view">
       <DataViewHeader
         title="Unlocks"
-        description={sectionLabel}
         count={rows.length}
       >
         <input
@@ -386,32 +304,43 @@ export function PermanentUnlockResearch() {
             const sourceLinks = links(row);
             const rowDetails = details(row);
             const category = humanString(row.category);
+            const rowTitle = title(row);
+            const iconSrc = dataEntityIconPath({
+              name: rowTitle !== "Unlock" ? rowTitle : typeof row.name === "string" ? row.name : null,
+              kind: String(row.recordType || row.category || row.kind || ""),
+              id: row.id != null ? String(row.id) : null,
+            });
             return (
               <article
                 key={mapKey(row, index, "row")}
                 className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
               >
-                <div className="min-w-0">
-                  <h3 className="m-0 text-[14px] font-medium text-parch-50">
-                    {title(row)}
-                    {sourceLinks.length ? (
-                      <span className="ml-1.5 font-normal">
-                        {sourceLinks.map((url, i) => (
-                          <a
-                            key={url}
-                            href={url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-gem-300 hover:underline"
-                          >
-                            {i > 0 ? " · " : "· "}
-                            {sourceLabel(url)}
-                          </a>
-                        ))}
-                      </span>
-                    ) : null}
-                  </h3>
-                  {category ? <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{category}</p> : null}
+                <div className="data-record-row__identity">
+                  <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
+                    {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
+                  </span>
+                  <div className="data-record-row__copy min-w-0">
+                    <h3 className="m-0 text-[15px] font-medium text-parch-50">
+                      {rowTitle}
+                      {sourceLinks.length ? (
+                        <span className="ml-1.5 font-normal">
+                          {sourceLinks.map((url, i) => (
+                            <a
+                              key={url}
+                              href={url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-gem-300 hover:underline"
+                            >
+                              {i > 0 ? " · " : "· "}
+                              {sourceLabel(url)}
+                            </a>
+                          ))}
+                        </span>
+                      ) : null}
+                    </h3>
+                    {category ? <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">{category}</p> : null}
+                  </div>
                 </div>
                 <p className="data-record-row__region">{region(row)}</p>
                 <div className="data-record-row__details">

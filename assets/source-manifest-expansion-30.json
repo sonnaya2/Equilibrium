@@ -1,0 +1,371 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-26",
+  "notes": [
+    "Data browse icon gap fill: concrete inventory items, jewellery, diary T4, and permanent-unlock tools missing from public/game after the 488-file publish pass.",
+    "Skips abstract catalog packages (Kerapac progression, set families, hubs). Prefer exact RuneScape Wiki inventory File titles.",
+    "Resolver aliases for boss epithets remain UI-side work; this expansion only adds harvestable art."
+  ],
+  "assets": [
+    {
+      "id": "unlock-amulet-of-glory",
+      "label": "Amulet of glory",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/amulet-of-glory",
+      "fileTitle": "Amulet of glory.png",
+      "canonicalPage": "https://runescape.wiki/w/Amulet_of_glory",
+      "search": "Amulet of glory inventory icon"
+    },
+    {
+      "id": "unlock-grace-of-the-elves",
+      "label": "Grace of the elves",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/grace-of-the-elves",
+      "fileTitle": "Grace of the elves.png",
+      "canonicalPage": "https://runescape.wiki/w/Grace_of_the_elves",
+      "search": "Grace of the elves inventory icon"
+    },
+    {
+      "id": "unlock-ring-of-fortune",
+      "label": "Ring of Fortune",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/ring-of-fortune",
+      "fileTitle": "Ring of Fortune.png",
+      "canonicalPage": "https://runescape.wiki/w/Ring_of_Fortune",
+      "search": "Ring of Fortune inventory icon"
+    },
+    {
+      "id": "unlock-ring-of-wealth",
+      "label": "Ring of Wealth",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/ring-of-wealth",
+      "fileTitle": "Ring of Wealth.png",
+      "canonicalPage": "https://runescape.wiki/w/Ring_of_Wealth",
+      "search": "Ring of Wealth inventory icon"
+    },
+    {
+      "id": "unlock-hazelmeres-signet-ring",
+      "label": "Hazelmere's signet ring",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/hazelmeres-signet-ring",
+      "fileTitle": "Hazelmere's signet ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Hazelmere%27s_signet_ring",
+      "search": "Hazelmere's signet ring inventory icon"
+    },
+    {
+      "id": "unlock-amulet-of-fury",
+      "label": "Amulet of fury",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/amulet-of-fury",
+      "fileTitle": "Amulet of fury.png",
+      "canonicalPage": "https://runescape.wiki/w/Amulet_of_fury",
+      "search": "Amulet of fury inventory icon"
+    },
+    {
+      "id": "unlock-blood-amulet-of-fury",
+      "label": "Blood amulet of fury",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/blood-amulet-of-fury",
+      "fileTitle": "Blood amulet of fury.png",
+      "canonicalPage": "https://runescape.wiki/w/Blood_amulet_of_fury",
+      "search": "Blood amulet of fury inventory icon"
+    },
+    {
+      "id": "equip-archers-ring",
+      "label": "Archers' ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/archers-ring",
+      "fileTitle": "Archers' ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Archers%27_ring",
+      "search": "Archers' ring inventory icon"
+    },
+    {
+      "id": "equip-seers-ring",
+      "label": "Seers' ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/seers-ring",
+      "fileTitle": "Seers' ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Seers%27_ring",
+      "search": "Seers' ring inventory icon"
+    },
+    {
+      "id": "equip-warrior-ring",
+      "label": "Warrior ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/warrior-ring",
+      "fileTitle": "Warrior ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Warrior_ring",
+      "search": "Warrior ring inventory icon"
+    },
+    {
+      "id": "equip-ferocious-ring",
+      "label": "Ferocious ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/ferocious-ring",
+      "fileTitle": "Ferocious ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Ferocious_ring",
+      "search": "Ferocious ring inventory icon"
+    },
+    {
+      "id": "equip-leviathan-ring",
+      "label": "Leviathan ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/leviathan-ring",
+      "fileTitle": "Leviathan ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Leviathan_ring",
+      "search": "Leviathan ring inventory icon"
+    },
+    {
+      "id": "equip-superior-leviathan-ring",
+      "label": "Superior leviathan ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/superior-leviathan-ring",
+      "fileTitle": "Superior leviathan ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Superior_leviathan_ring",
+      "search": "Superior leviathan ring inventory icon"
+    },
+    {
+      "id": "unlock-expansive-essence-pouch",
+      "label": "Expansive essence pouch",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/expansive-essence-pouch",
+      "fileTitle": "Expansive pouch.png",
+      "canonicalPage": "https://runescape.wiki/w/Expansive_essence_pouch",
+      "search": "Expansive essence pouch inventory icon"
+    },
+    {
+      "id": "unlock-grasping-rune-pouch",
+      "label": "Grasping rune pouch",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/grasping-rune-pouch",
+      "fileTitle": "Grasping rune pouch.png",
+      "canonicalPage": "https://runescape.wiki/w/Grasping_rune_pouch",
+      "search": "Grasping rune pouch inventory icon"
+    },
+    {
+      "id": "unlock-seed-bag",
+      "label": "Seed bag",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/seed-bag",
+      "fileTitle": "Seed bag.png",
+      "canonicalPage": "https://runescape.wiki/w/Seed_bag",
+      "search": "Seed bag inventory icon"
+    },
+    {
+      "id": "unlock-herb-bag",
+      "label": "Herb bag",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/herb-bag",
+      "fileTitle": "Herb bag.png",
+      "canonicalPage": "https://runescape.wiki/w/Herb_bag",
+      "search": "Herb bag inventory icon"
+    },
+    {
+      "id": "unlock-wood-box",
+      "label": "Wood box",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/wood-box",
+      "fileTitle": "Wood box.png",
+      "canonicalPage": "https://runescape.wiki/w/Wood_box",
+      "search": "Wood box inventory icon"
+    },
+    {
+      "id": "unlock-brooch-of-the-gods",
+      "label": "Brooch of the Gods",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/brooch-of-the-gods",
+      "fileTitle": "Brooch of the Gods.png",
+      "canonicalPage": "https://runescape.wiki/w/Brooch_of_the_Gods",
+      "search": "Brooch of the Gods inventory icon"
+    },
+    {
+      "id": "unlock-dig-site-pendant",
+      "label": "Dig Site pendant",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/dig-site-pendant",
+      "fileTitle": "Dig Site pendant.png",
+      "canonicalPage": "https://runescape.wiki/w/Dig_Site_pendant",
+      "search": "Dig Site pendant inventory icon"
+    },
+    {
+      "id": "unlock-cooking-gauntlets",
+      "label": "Cooking gauntlets",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/cooking-gauntlets",
+      "fileTitle": "Cooking gauntlets.png",
+      "canonicalPage": "https://runescape.wiki/w/Cooking_gauntlets",
+      "search": "Cooking gauntlets inventory icon"
+    },
+    {
+      "id": "unlock-auto-screener",
+      "label": "Auto-screener v1.080",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/auto-screener",
+      "fileTitle": "Auto-screener v1.080.png",
+      "canonicalPage": "https://runescape.wiki/w/Auto-screener_v1.080",
+      "search": "Auto-screener v1.080 inventory icon"
+    },
+    {
+      "id": "unlock-guildmaster-tonys-mattock",
+      "label": "Guildmaster Tony's mattock",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/guildmaster-tonys-mattock",
+      "fileTitle": "Guildmaster Tony's mattock.png",
+      "canonicalPage": "https://runescape.wiki/w/Guildmaster_Tony%27s_mattock",
+      "search": "Guildmaster Tony's mattock inventory icon"
+    },
+    {
+      "id": "unlock-passing-bracelet",
+      "label": "Passing bracelet",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/passing-bracelet",
+      "fileTitle": "Passing bracelet.png",
+      "canonicalPage": "https://runescape.wiki/w/Passing_bracelet",
+      "search": "Passing bracelet inventory icon"
+    },
+    {
+      "id": "equip-occultists-ring",
+      "label": "Occultist's ring",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/occultists-ring",
+      "fileTitle": "Occultist's ring.png",
+      "canonicalPage": "https://runescape.wiki/w/Occultist%27s_ring",
+      "search": "Occultist's ring inventory icon"
+    },
+    {
+      "id": "unlock-binding-contract",
+      "label": "Binding contract",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/binding-contract",
+      "fileTitle": "Binding contract.png",
+      "canonicalPage": "https://runescape.wiki/w/Binding_contract",
+      "search": "Binding contract inventory icon"
+    },
+    {
+      "id": "unlock-divine-charge",
+      "label": "Divine charge",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/divine-charge",
+      "fileTitle": "Divine charge.png",
+      "canonicalPage": "https://runescape.wiki/w/Divine_charge",
+      "search": "Divine charge inventory icon"
+    },
+    {
+      "id": "unlock-elder-overload-potion",
+      "label": "Elder overload potion",
+      "category": "rs3/upgrades/combat-utility",
+      "path": "assets/rs3/upgrades/combat-utility/elder-overload-potion",
+      "fileTitle": "Elder overload potion.png",
+      "canonicalPage": "https://runescape.wiki/w/Elder_overload_potion",
+      "search": "Elder overload potion inventory icon"
+    },
+    {
+      "id": "unlock-vulnerability-bomb",
+      "label": "Vulnerability bomb",
+      "category": "rs3/upgrades/combat-utility",
+      "path": "assets/rs3/upgrades/combat-utility/vulnerability-bomb",
+      "fileTitle": "Vulnerability bomb.png",
+      "canonicalPage": "https://runescape.wiki/w/Vulnerability_bomb",
+      "search": "Vulnerability bomb inventory icon"
+    },
+    {
+      "id": "unlock-adrenaline-renewal-potion",
+      "label": "Adrenaline renewal potion",
+      "category": "rs3/upgrades/combat-utility",
+      "path": "assets/rs3/upgrades/combat-utility/adrenaline-renewal-potion",
+      "fileTitle": "Adrenaline renewal potion.png",
+      "canonicalPage": "https://runescape.wiki/w/Adrenaline_renewal_potion",
+      "search": "Adrenaline renewal potion inventory icon"
+    },
+    {
+      "id": "unlock-weapon-poison-plus-plus-plus",
+      "label": "Weapon poison+++",
+      "category": "rs3/upgrades/combat-utility",
+      "path": "assets/rs3/upgrades/combat-utility/weapon-poison-plus-plus-plus",
+      "fileTitle": "Weapon poison+++.png",
+      "canonicalPage": "https://runescape.wiki/w/Weapon_poison%2B%2B%2B",
+      "search": "Weapon poison+++ inventory icon"
+    },
+    {
+      "id": "unlock-fury-of-the-small",
+      "label": "Fury of the Small",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/fury-of-the-small",
+      "fileTitle": "Fury of the Small.png",
+      "canonicalPage": "https://runescape.wiki/w/Fury_of_the_Small",
+      "search": "Fury of the Small inventory icon"
+    },
+    {
+      "id": "equip-gemstone-hauberk",
+      "label": "Gemstone hauberk",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/gemstone-hauberk",
+      "fileTitle": "Gemstone hauberk.png",
+      "canonicalPage": "https://runescape.wiki/w/Gemstone_hauberk",
+      "search": "Gemstone hauberk inventory icon"
+    },
+    {
+      "id": "equip-deathwarden-robe-top",
+      "label": "Deathwarden robe top",
+      "category": "rs3/combat/equipment",
+      "path": "assets/rs3/combat/equipment/deathwarden-robe-top",
+      "fileTitle": "Deathwarden robe top (tier 90).png",
+      "canonicalPage": "https://runescape.wiki/w/Deathwarden_robe_top",
+      "search": "Deathwarden robe top inventory icon"
+    },
+    {
+      "id": "unlock-avas-alerter",
+      "label": "Ava's alerter",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/avas-alerter",
+      "fileTitle": "Ava's alerter.png",
+      "canonicalPage": "https://runescape.wiki/w/Ava%27s_alerter",
+      "search": "Ava's alerter inventory icon"
+    },
+    {
+      "id": "unlock-drakans-medallion",
+      "label": "Drakan's medallion",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/drakans-medallion",
+      "fileTitle": "Drakan's medallion.png",
+      "canonicalPage": "https://runescape.wiki/w/Drakan%27s_medallion",
+      "search": "Drakan's medallion inventory icon"
+    },
+    {
+      "id": "unlock-explorers-ring-4",
+      "label": "Explorer's ring 4",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/explorers-ring-4",
+      "fileTitle": "Explorer's ring 4.png",
+      "canonicalPage": "https://runescape.wiki/w/Explorer%27s_ring_4",
+      "search": "Explorer's ring 4 inventory icon"
+    },
+    {
+      "id": "unlock-varrock-armour-4",
+      "label": "Varrock armour 4",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/varrock-armour-4",
+      "fileTitle": "Varrock armour 4.png",
+      "canonicalPage": "https://runescape.wiki/w/Varrock_armour_4",
+      "search": "Varrock armour 4 inventory icon"
+    },
+    {
+      "id": "unlock-sixth-age-circuit",
+      "label": "Sixth-Age circuit",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/sixth-age-circuit",
+      "fileTitle": "Sixth-Age circuit.png",
+      "canonicalPage": "https://runescape.wiki/w/Sixth-Age_circuit",
+      "search": "Sixth-Age circuit inventory icon"
+    },
+    {
+      "id": "unlock-camulet",
+      "label": "Camulet",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/camulet",
+      "fileTitle": "Camulet.png",
+      "canonicalPage": "https://runescape.wiki/w/Camulet",
+      "search": "Camulet inventory icon"
+    }
+  ]
+}

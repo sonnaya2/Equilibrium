@@ -6,14 +6,14 @@ import { combatEquipment, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
-import { equipmentIconPath, regionCrestPath, styleIconPath } from "@/lib/gameArt";
+import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { RegionCrest } from "../RegionCrest";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { setEffectsSummary } from "@/combat/shared/equipment";
 import {
   clearEquipment,
   equipInSlot,
-  EQUIPMENT_SLOTS,
   equipmentIdList,
   toggleUnlockPin,
   unlockOnlyIds,
@@ -24,7 +24,10 @@ const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
 type SortKey = "region" | "tier" | "name";
 type RegionFilter = RegionId | "base" | "all";
-/** `setup` follows loadout.style; `all` shows every style; else browse that style only. */
+/**
+ * `setup` (default) = loadout.style + hybrid/unstyled only — other combat styles are hidden.
+ * Use `all` or a style chip to browse the rest of the catalogue.
+ */
 type StyleBrowse = "setup" | "all" | CombatStyle;
 
 const COMBAT_STYLES: CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
@@ -50,7 +53,6 @@ const SLOT_LABELS: Record<EquipmentSlot, string> = {
   ring: "Ring",
   pocket: "Pocket",
   ammo: "Ammo",
-  aura: "Aura",
 };
 
 /** Compact slot tag on picker rows. */
@@ -68,33 +70,51 @@ const SLOT_SHORT: Record<EquipmentSlot, string> = {
   ring: "Ring",
   pocket: "Pocket",
   ammo: "Ammo",
-  aura: "Aura",
 };
 
 type DollCell = EquipmentSlot | "weapons" | null;
+type PickerSlot = EquipmentSlot | "weapon";
 
 /** Equipment grid positions. Weapons render as one linked block. */
 const DOLL_LAYOUT: DollCell[][] = [
-  [null, "helmet", null],
+  [null, "helmet", "pocket"],
   ["cape", "amulet", "ammo"],
-  [null, "body", null],
   ["weapons"],
-  ["gloves", "legs", "boots"],
-  [null, "ring", null],
-  [null, "pocket", null],
-  [null, "aura", null],
+  ["gloves", "legs", "ring"],
+  [null, "boots", null],
 ];
 
 const WEARABLE_CAP = 80;
 
 function recordRegions(record: EquipmentRecord): RegionId[] {
-  return record.unlock?.regions ?? [];
+  const raw = record.unlock?.regions;
+  if (!Array.isArray(raw)) return [];
+  // Drop non-string / empty tokens so multi-crest map never sees null keys.
+  return raw.filter((id): id is RegionId => typeof id === "string" && id.length > 0);
 }
 
+/** Short catalogue names (regions.json); multi-region stays comma-joined. */
 function regionLabel(record: EquipmentRecord): string {
   const regions = recordRegions(record);
-  if (!regions.length) return "Base game";
+  if (!regions.length) return "Unverified";
   return regions.map((id) => REGION_NAMES.get(id) ?? id).join(", ");
+}
+
+/** Every region crest for multi-region unlocks; Unverified is muted metadata. */
+function RegionMarks({ record }: { record: EquipmentRecord }) {
+  const regions = recordRegions(record);
+  const label = regionLabel(record);
+  if (!regions.length) {
+    return <span className="text-[11px] text-parch-300">{label}</span>;
+  }
+  return (
+    <span className="flex shrink-0 items-center gap-1 text-parch-100" title={label}>
+      {regions.map((id) => (
+        <RegionCrest key={id} regionId={id} size={14} />
+      ))}
+      <span className="text-[11px]">{label}</span>
+    </span>
+  );
 }
 
 function byId(id: string | null | undefined): EquipmentRecord | undefined {
@@ -139,10 +159,9 @@ function hasSourcedBonuses(record: EquipmentRecord): boolean {
   return false;
 }
 
-function emptyPickerCopy(activeSlot: EquipmentSlot | null): string {
-  const slotBit = activeSlot ? SLOT_LABELS[activeSlot] : null;
-  if (slotBit) {
-    return `No wearables for ${slotBit} with this filter.`;
+function emptyPickerCopy(activeSlotLabel: string | null): string {
+  if (activeSlotLabel) {
+    return `No wearables for ${activeSlotLabel} with this filter.`;
   }
   return "No wearables for this slot/filter.";
 }
@@ -184,7 +203,12 @@ function EquipmentSlotButton({
         {item ? <GameIcon src={equipmentIconPath(item.id)} size={28} /> : <EmptySlotMark />}
       </span>
       <span className="equipment-slot__name">{item?.name ?? (disabled ? "Locked" : "Empty")}</span>
-      {item?.tier != null ? <span className="equipment-slot__tier">T{item.tier}</span> : null}
+      {item?.tier != null ? (
+        <span className="equipment-slot__tier">
+          T{item.tier}
+          {item.slot === "twohand" ? " · 2H" : ""}
+        </span>
+      ) : null}
       {noBonuses ? <span className="equipment-slot__note">stats not sourced</span> : null}
     </button>
   );
@@ -198,11 +222,11 @@ export function GearPanel({
   loadout: Loadout;
   setLoadout: (next: Loadout) => void;
 }) {
-  const [activeSlot, setActiveSlot] = useState<EquipmentSlot | null>(null);
+  const [activeSlot, setActiveSlot] = useState<PickerSlot | null>(null);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("tier");
   const [regionFilter, setRegionFilter] = useState<RegionFilter>("all");
-  /** Default setup: only loadout.style / hybrid / unstyled. `all` = browse every style. */
+  /** Default setup: loadout.style + hybrid/unstyled only (other styles hidden until All styles). */
   const [styleBrowse, setStyleBrowse] = useState<StyleBrowse>("setup");
   /** Cap long catalogues; toggle expands past the first 80. */
   const [showAllWearables, setShowAllWearables] = useState(false);
@@ -212,18 +236,30 @@ export function GearPanel({
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
   const slottedCount = equipmentIdList(slots).length;
-  const activeItem = activeSlot ? byId(slots[activeSlot]) : undefined;
+  const primaryWeapon = byId(slots.twohand ?? slots.mainhand);
+  const activeItem =
+    activeSlot === "weapon" ? primaryWeapon : activeSlot ? byId(slots[activeSlot]) : undefined;
+  const activeSlotLabel =
+    activeSlot === "weapon" ? SLOT_LABELS.mainhand : activeSlot ? SLOT_LABELS[activeSlot] : null;
+  const clearableSlot =
+    activeSlot === "weapon" ? (slots.twohand ? "twohand" : "mainhand") : activeSlot;
 
   const matchStyle = styleBrowse === "setup";
   const browseStyle = effectiveBrowseStyle(styleBrowse, loadout.style);
 
   /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
-    () => combatEquipment.records.filter((r) => r.slot != null),
+    () =>
+      combatEquipment.records.filter(
+        (r) => r.slot != null && r.unlock?.type !== "removed",
+      ),
     [],
   );
   const unlocks = useMemo(
-    () => combatEquipment.records.filter((r) => r.slot == null),
+    () =>
+      combatEquipment.records.filter(
+        (r) => r.slot == null && r.unlock?.type !== "removed",
+      ),
     [],
   );
 
@@ -231,7 +267,11 @@ export function GearPanel({
     const q = search.trim().toLowerCase();
     const filtered = wearables.filter((record) => {
       if (record.slot == null) return false;
-      if (activeSlot && record.slot !== activeSlot) return false;
+      if (activeSlot === "weapon") {
+        if (record.slot !== "mainhand" && record.slot !== "twohand") return false;
+      } else if (activeSlot && record.slot !== activeSlot) {
+        return false;
+      }
       if (browseStyle != null && !styleMatches(record, browseStyle)) return false;
       if (regionFilter === "base") {
         if (recordRegions(record).length > 0) return false;
@@ -253,8 +293,15 @@ export function GearPanel({
     });
   }, [wearables, activeSlot, browseStyle, regionFilter, search, sortKey]);
 
-  const wearablesCapped = pickerRows.length > WEARABLE_CAP && !showAllWearables;
-  const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
+  // Cap only on full unfiltered catalogue. Region / search / active slot filters
+  // must not hide lower-tier matches under tier sort (All styles + weapon = 160+).
+  const pickerFiltered =
+    regionFilter !== "all" || search.trim().length > 0 || activeSlot != null;
+  const wearablesCapped =
+    !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
+  const visiblePickerRows = wearablesCapped
+    ? pickerRows.slice(0, WEARABLE_CAP)
+    : pickerRows;
 
   const unlockRows = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -281,18 +328,23 @@ export function GearPanel({
 
   const equip = (record: EquipmentRecord) => {
     if (record.slot == null) return;
-    // Active slot filter is strict: twohand is its own doll cell (MH/OH exclusivity is
-    // handled inside equipInSlot when that cell is chosen).
-    if (activeSlot != null && record.slot !== activeSlot) return;
+    if (activeSlot === "weapon") {
+      if (record.slot !== "mainhand" && record.slot !== "twohand") return;
+    } else if (activeSlot != null && record.slot !== activeSlot) {
+      return;
+    }
     setLoadout(equipInSlot(loadout, record.slot, record.id));
-    setActiveSlot(record.slot);
+    setActiveSlot(record.slot === "mainhand" || record.slot === "twohand" ? "weapon" : record.slot);
   };
 
   const clearSlot = (slot: EquipmentSlot) => {
     setLoadout(equipInSlot(loadout, slot, null));
   };
 
-  const countLine = `${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"} · ${browseStyle ? STYLE_LABELS[browseStyle] : "all styles"}`;
+  const countLine =
+    styleBrowse === "setup"
+      ? `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${STYLE_LABELS[loadout.style]} + hybrid`
+      : `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${browseStyle ? STYLE_LABELS[browseStyle] : "all styles"}`;
 
   return (
     <div className="gear-layout grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
@@ -308,21 +360,31 @@ export function GearPanel({
               }
               if (slot === "weapons") {
                 return (
-                  <div key="weapons" className="weapon-slot-block" role="group" aria-label="Weapon slots">
-                    {(["mainhand", "twohand", "offhand"] as const).map((weaponSlot) => {
-                      const item = byId(slots[weaponSlot]);
-                      const disabled = weaponSlot === "offhand" && Boolean(slots.twohand);
-                      return (
-                        <EquipmentSlotButton
-                          key={weaponSlot}
-                          slot={weaponSlot}
-                          item={item}
-                          selected={activeSlot === weaponSlot}
-                          disabled={disabled}
-                          onClick={() => setActiveSlot(activeSlot === weaponSlot ? null : weaponSlot)}
-                        />
-                      );
-                    })}
+                  <div
+                    key="weapons"
+                    className="weapon-slot-block"
+                    role="group"
+                    aria-label="Weapon and body slots"
+                  >
+                    <EquipmentSlotButton
+                      slot="mainhand"
+                      item={primaryWeapon}
+                      selected={activeSlot === "weapon"}
+                      onClick={() => setActiveSlot(activeSlot === "weapon" ? null : "weapon")}
+                    />
+                    <EquipmentSlotButton
+                      slot="body"
+                      item={byId(slots.body)}
+                      selected={activeSlot === "body"}
+                      onClick={() => setActiveSlot(activeSlot === "body" ? null : "body")}
+                    />
+                    <EquipmentSlotButton
+                      slot="offhand"
+                      item={byId(slots.offhand)}
+                      selected={activeSlot === "offhand"}
+                      disabled={Boolean(slots.twohand)}
+                      onClick={() => setActiveSlot(activeSlot === "offhand" ? null : "offhand")}
+                    />
                   </div>
                 );
               }
@@ -371,8 +433,8 @@ export function GearPanel({
               {activeItem.tier != null ? (
                 <span className="font-mono text-parch-100">T{activeItem.tier}</span>
               ) : null}
-              {activeSlot ? (
-                <span className="text-parch-300">{SLOT_LABELS[activeSlot]}</span>
+              {activeSlotLabel ? (
+                <span className="text-parch-300">{activeSlotLabel}</span>
               ) : null}
             </div>
             {hasSourcedBonuses(activeItem) ? (
@@ -399,10 +461,10 @@ export function GearPanel({
           {activeSlot ? (
             <button
               type="button"
-              onClick={() => clearSlot(activeSlot)}
+              onClick={() => clearableSlot && clearSlot(clearableSlot)}
               className="combat-button border border-stone-750 px-2 py-1 text-parch-100 hover:text-parch-50"
             >
-              Clear {SLOT_LABELS[activeSlot]}
+              Clear {activeSlotLabel}
             </button>
           ) : null}
           <button
@@ -418,32 +480,6 @@ export function GearPanel({
           </span>
         </div>
 
-        {/* Full slot list for a11y / narrow screens */}
-        <div className="mt-3 border-t border-stone-750 lg:hidden">
-          {EQUIPMENT_SLOTS.map((slot) => {
-            const item = byId(slots[slot]);
-            const disabled = slot === "offhand" && Boolean(slots.twohand);
-            return (
-              <button
-                key={slot}
-                type="button"
-                disabled={disabled}
-                onClick={() => setActiveSlot(slot)}
-                className={`grid w-full grid-cols-[7rem_1fr] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs ${
-                  activeSlot === slot ? "bg-stone-850 text-parch-50" : "text-parch-100"
-                }`}
-              >
-                <span className="text-parch-300">{SLOT_LABELS[slot]}</span>
-                <span className="min-w-0">
-                  <span className="block truncate">{item?.name ?? (disabled ? "Locked" : "Empty")}</span>
-                  {item && !hasSourcedBonuses(item) ? (
-                    <span className="block text-[11px] text-parch-300">stats not sourced</span>
-                  ) : null}
-                </span>
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       <div className="combat-frame wearables-browser">
@@ -454,13 +490,19 @@ export function GearPanel({
             <select
               value={regionFilter}
               onChange={(event) => {
-                setRegionFilter(event.target.value as RegionFilter);
+                const next = event.target.value as RegionFilter;
+                setRegionFilter(next);
                 setShowAllWearables(false);
+                // Region browse with Loadout style filter often looks empty —
+                // open All styles so region gear is visible.
+                if (next !== "all" && styleBrowse === "setup") {
+                  setStyleBrowse("all");
+                }
               }}
               className="border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             >
               <option value="all">All regions</option>
-              <option value="base">Base game</option>
+              <option value="base">Unverified</option>
               {regionsData.records.map((region) => (
                 <option key={region.id} value={region.id}>
                   {region.name}
@@ -512,8 +554,8 @@ export function GearPanel({
               </button>
             ))}
           </div>
-          {activeSlot ? (
-            <span className="text-gem-400">{SLOT_LABELS[activeSlot]} only</span>
+          {activeSlotLabel ? (
+            <span className="text-gem-400">{activeSlotLabel} only</span>
           ) : (
             <span className="text-parch-300">All wearable slots</span>
           )}
@@ -530,7 +572,7 @@ export function GearPanel({
             aria-pressed={styleBrowse === "setup"}
             onClick={() => setStyleBrowseAndReset("setup")}
             className="facet-chip"
-            title={`Follow loadout (${STYLE_LABELS[loadout.style]})`}
+            title={`Follow loadout style (${STYLE_LABELS[loadout.style]}) + hybrid only — other styles stay hidden`}
           >
             Loadout
           </button>
@@ -539,7 +581,7 @@ export function GearPanel({
             aria-pressed={styleBrowse === "all"}
             onClick={() => setStyleBrowseAndReset("all")}
             className="facet-chip"
-            title="Browse all styles"
+            title="Browse every combat style (not limited to loadout)"
           >
             All styles
           </button>
@@ -550,31 +592,30 @@ export function GearPanel({
               aria-pressed={styleBrowse === s}
               onClick={() => setStyleBrowseAndReset(s)}
               className="facet-chip flex items-center gap-1"
-              title={`Show ${STYLE_LABELS[s]} only`}
+              title={`Show ${STYLE_LABELS[s]} + hybrid only`}
             >
               <GameIcon src={styleIconPath(s)} size={12} />
               {STYLE_LABELS[s]}
             </button>
           ))}
         </div>
+        {styleBrowse === "setup" ? (
+          <p className="mt-1 text-[11px] text-parch-300">
+            Loadout filter shows {STYLE_LABELS[loadout.style]} and hybrid gear only — pick All styles
+            if an expected item is missing.
+          </p>
+        ) : null}
 
         <div className="wearables-heading mt-3 flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">
             Wearables
           </h3>
-          <span className="text-xs text-parch-300">
-            {countLine}
-            {wearablesCapped
-              ? ` · showing ${visiblePickerRows.length}`
-              : pickerRows.length > 0
-                ? " · showing all"
-                : ""}
-          </span>
+          <span className="text-xs text-parch-300">{countLine}</span>
         </div>
         <div className="wearables-list mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
             <p className="px-2 py-2 text-xs text-parch-300">
-              {emptyPickerCopy(activeSlot)}
+              {emptyPickerCopy(activeSlotLabel)}
             </p>
           ) : (
             <>
@@ -613,16 +654,11 @@ export function GearPanel({
                         <span className="text-[11px] text-parch-300">stats not sourced</span>
                       ) : null}
                     </span>
-                    <span className="flex items-center gap-1.5 text-parch-100">
-                      {recordRegions(record).map((id) => (
-                        <GameIcon key={id} src={regionCrestPath(id)} size={14} />
-                      ))}
-                      <span>{regionLabel(record)}</span>
-                    </span>
+                    <RegionMarks record={record} />
                   </button>
                 );
               })}
-              {pickerRows.length > WEARABLE_CAP ? (
+              {!pickerFiltered && pickerRows.length > WEARABLE_CAP ? (
                 <div className="sticky bottom-0 border-t border-stone-750 bg-stone-900 px-2 py-1.5">
                   <button
                     type="button"
@@ -682,12 +718,7 @@ export function GearPanel({
                           <span className="font-mono text-parch-100">T{record.tier}</span>
                         ) : null}
                       </span>
-                      <span className="flex items-center gap-1.5 text-parch-100">
-                        {recordRegions(record).map((id) => (
-                          <GameIcon key={id} src={regionCrestPath(id)} size={14} />
-                        ))}
-                        <span>{regionLabel(record)}</span>
-                      </span>
+                      <RegionMarks record={record} />
                     </button>
                   );
                 })

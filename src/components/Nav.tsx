@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ELECTIVE_CAP } from "@/league";
-import { useBuild } from "@/league/useBuild";
 
 const LINKS = [
   ["/", "Overview"],
@@ -14,14 +12,9 @@ const LINKS = [
   ["/data", "Data"],
 ] as const;
 
-/**
- * Mast instrument — gold brand, gem active tab, live region picks.
- * Frozen: accessible name EQUILIBRIUM; six primary links.
- */
+/** Gold brand and the six primary routes. */
 export function Nav() {
   const pathname = usePathname();
-  const { build, loaded } = useBuild();
-  const picks = loaded ? build.elective.length : null;
 
   return (
     <header className="comp-mast">
@@ -46,12 +39,6 @@ export function Nav() {
           })}
         </ul>
       </nav>
-      <p className="comp-nav__meta" aria-live="polite">
-        picks{" "}
-        <strong>
-          {picks === null ? `…/${ELECTIVE_CAP}` : `${picks}/${ELECTIVE_CAP}`}
-        </strong>
-      </p>
     </header>
   );
 }

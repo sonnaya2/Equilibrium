@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-26",
+  "notes": [
+    "Data icon batch 31: skilling outfits, archaeology tools, guild utility, focus storage."
+  ],
+  "assets": [
+    {
+      "id": "outfit-archaeologists",
+      "label": "Archaeologist's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/archaeologists",
+      "fileTitle": "Archaeologist's hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Archaeologist%27s_outfit",
+      "search": "Archaeologist's hat inventory icon"
+    },
+    {
+      "id": "outfit-artisans",
+      "label": "Artisan's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/artisans",
+      "fileTitle": "Artisan's top.png",
+      "canonicalPage": "https://runescape.wiki/w/Artisan%27s_outfit",
+      "search": "Artisan's top inventory icon"
+    },
+    {
+      "id": "outfit-master-runecrafter",
+      "label": "Master runecrafter robes",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/master-runecrafter",
+      "fileTitle": "Master runecrafter hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Master_runecrafter_robes",
+      "search": "Master runecrafter hat inventory icon"
+    },
+    {
+      "id": "outfit-sous-chef",
+      "label": "Sous chef's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/sous-chef",
+      "fileTitle": "Sous chef's toque.png",
+      "canonicalPage": "https://runescape.wiki/w/Sous_chef%27s_outfit",
+      "search": "Sous chef's toque inventory icon"
+    },
+    {
+      "id": "outfit-farmers",
+      "label": "Farmer's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/farmers",
+      "fileTitle": "Farmer's hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Farmer%27s_outfit",
+      "search": "Farmer's hat inventory icon"
+    },
+    {
+      "id": "outfit-botanists",
+      "label": "Botanist's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/botanists",
+      "fileTitle": "Botanist's mask.png",
+      "canonicalPage": "https://runescape.wiki/w/Botanist%27s_outfit",
+      "search": "Botanist's mask inventory icon"
+    },
+    {
+      "id": "outfit-factory",
+      "label": "Factory outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/factory",
+      "fileTitle": "Factory mask.png",
+      "canonicalPage": "https://runescape.wiki/w/Factory_outfit",
+      "search": "Factory mask inventory icon"
+    },
+    {
+      "id": "outfit-first-age",
+      "label": "First age outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/first-age",
+      "fileTitle": "First age tiara.png",
+      "canonicalPage": "https://runescape.wiki/w/First_age_outfit",
+      "search": "First age tiara inventory icon"
+    },
+    {
+      "id": "outfit-golden-mining",
+      "label": "Golden mining suit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/golden-mining-suit",
+      "fileTitle": "Golden mining helmet.png",
+      "canonicalPage": "https://runescape.wiki/w/Golden_mining_suit",
+      "search": "Golden mining helmet inventory icon"
+    },
+    {
+      "id": "outfit-trahaearn",
+      "label": "Trahaearn exoskeleton",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/trahaearn-exoskeleton",
+      "fileTitle": "Trahaearn exoskeleton headband.png",
+      "canonicalPage": "https://runescape.wiki/w/Trahaearn_exoskeleton_set",
+      "search": "Trahaearn exoskeleton headband inventory icon"
+    },
+    {
+      "id": "outfit-black-ibis",
+      "label": "Black ibis outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/black-ibis",
+      "fileTitle": "Black ibis mask.png",
+      "canonicalPage": "https://runescape.wiki/w/Black_ibis_outfit",
+      "search": "Black ibis mask inventory icon"
+    },
+    {
+      "id": "outfit-ritualists",
+      "label": "Ritualist's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/ritualists",
+      "fileTitle": "Ritualist's mask.png",
+      "canonicalPage": "https://runescape.wiki/w/Ritualist%27s_outfit",
+      "search": "Ritualist's mask inventory icon"
+    },
+    {
+      "id": "tool-tony-mattock",
+      "label": "Guildmaster Tony's mattock",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/guildmaster-tonys-mattock",
+      "fileTitle": "Guildmaster Tony's mattock.png",
+      "canonicalPage": "https://runescape.wiki/w/Guildmaster_Tony%27s_mattock",
+      "search": "Guildmaster Tony's mattock inventory icon"
+    },
+    {
+      "id": "tool-mattock-time-space",
+      "label": "Mattock of Time and Space",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/mattock-of-time-and-space",
+      "fileTitle": "Mattock of Time and Space.png",
+      "canonicalPage": "https://runescape.wiki/w/Mattock_of_Time_and_Space",
+      "search": "Mattock of Time and Space inventory icon"
+    },
+    {
+      "id": "tool-crystal-mattock",
+      "label": "Crystal mattock",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-mattock",
+      "fileTitle": "Crystal mattock.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_mattock",
+      "search": "Crystal mattock inventory icon"
+    },
+    {
+      "id": "tool-crystal-fishing-rod",
+      "label": "Crystal fishing rod",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-fishing-rod",
+      "fileTitle": "Crystal fishing rod.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_fishing_rod",
+      "search": "Crystal fishing rod inventory icon"
+    },
+    {
+      "id": "tool-crystal-pickaxe",
+      "label": "Crystal pickaxe",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-pickaxe",
+      "fileTitle": "Crystal pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_pickaxe",
+      "search": "Crystal pickaxe inventory icon"
+    },
+    {
+      "id": "tool-imcando-pickaxe",
+      "label": "Imcando pickaxe",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/imcando-pickaxe",
+      "fileTitle": "Imcando pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Imcando_pickaxe",
+      "search": "Imcando pickaxe inventory icon"
+    },
+    {
+      "id": "tool-tavias-fishing-rod",
+      "label": "Tavia's fishing rod",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/tavias-fishing-rod",
+      "fileTitle": "Tavia's fishing rod.png",
+      "canonicalPage": "https://runescape.wiki/w/Tavia%27s_fishing_rod",
+      "search": "Tavia's fishing rod inventory icon"
+    },
+    {
+      "id": "util-focus-storage",
+      "label": "Focus storage",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/focus-storage",
+      "fileTitle": "Focus storage.png",
+      "canonicalPage": "https://runescape.wiki/w/Focus_storage",
+      "search": "Focus storage inventory icon"
+    },
+    {
+      "id": "util-auto-screener",
+      "label": "Auto-screener v1.080",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/auto-screener-v1080",
+      "fileTitle": "Auto-screener v1.080.png",
+      "canonicalPage": "https://runescape.wiki/w/Auto-screener_v1.080",
+      "search": "Auto-screener v1.080 inventory icon"
+    },
+    {
+      "id": "util-material-manual",
+      "label": "Material manual",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/material-manual",
+      "fileTitle": "Material manual.png",
+      "canonicalPage": "https://runescape.wiki/w/Material_manual",
+      "search": "Material manual inventory icon"
+    },
+    {
+      "id": "util-archaeologists-tea",
+      "label": "Archaeologist's tea",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/archaeologists-tea",
+      "fileTitle": "Archaeologist's tea.png",
+      "canonicalPage": "https://runescape.wiki/w/Archaeologist%27s_tea",
+      "search": "Archaeologist's tea inventory icon"
+    },
+    {
+      "id": "util-lorehound",
+      "label": "Lorehound",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/lorehound",
+      "fileTitle": "Lorehound.png",
+      "canonicalPage": "https://runescape.wiki/w/Lorehound",
+      "search": "Lorehound pet inventory icon"
+    },
+    {
+      "id": "util-master-thief-lockpick",
+      "label": "Master thief's lockpick",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/master-thiefs-lockpick",
+      "fileTitle": "Master thief's lockpick.png",
+      "canonicalPage": "https://runescape.wiki/w/Master_thief%27s_lockpick",
+      "search": "Master thief's lockpick inventory icon"
+    },
+    {
+      "id": "util-master-thief-stethoscope",
+      "label": "Master thief's stethoscope",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/master-thiefs-stethoscope",
+      "fileTitle": "Master thief's stethoscope.png",
+      "canonicalPage": "https://runescape.wiki/w/Master_thief%27s_stethoscope",
+      "search": "Master thief's stethoscope inventory icon"
+    },
+    {
+      "id": "util-modified-artisans-bandana",
+      "label": "Modified artisan's bandana",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/modified-artisans-bandana",
+      "fileTitle": "Modified artisan's bandana.png",
+      "canonicalPage": "https://runescape.wiki/w/Modified_artisan%27s_bandana",
+      "search": "Modified artisan's bandana inventory icon"
+    },
+    {
+      "id": "util-crystal-tool-seed",
+      "label": "Crystal tool seed",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-tool-seed",
+      "fileTitle": "Crystal tool seed.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_tool_seed",
+      "search": "Crystal tool seed inventory icon"
+    },
+    {
+      "id": "util-harmonic-dust",
+      "label": "Harmonic dust",
+      "category": "rs3/upgrades",
+      "path": "assets/rs3/upgrades/harmonic-dust",
+      "fileTitle": "Harmonic dust.png",
+      "canonicalPage": "https://runescape.wiki/w/Harmonic_dust",
+      "search": "Harmonic dust inventory icon"
+    },
+    {
+      "id": "util-rune-pouch",
+      "label": "Rune pouch",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/rune-pouch",
+      "fileTitle": "Large rune pouch.png",
+      "canonicalPage": "https://runescape.wiki/w/Large_rune_pouch",
+      "search": "Large rune pouch inventory icon"
+    },
+    {
+      "id": "util-magic-notepaper",
+      "label": "Magic notepaper",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/magic-notepaper",
+      "fileTitle": "Magic notepaper.png",
+      "canonicalPage": "https://runescape.wiki/w/Magic_notepaper",
+      "search": "Magic notepaper inventory icon"
+    },
+    {
+      "id": "util-grace-of-elves-porter",
+      "label": "Sign of the porter VI",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/sign-of-the-porter-vi",
+      "fileTitle": "Sign of the porter VI.png",
+      "canonicalPage": "https://runescape.wiki/w/Sign_of_the_porter_VI",
+      "search": "Sign of the porter VI inventory icon"
+    },
+    {
+      "id": "util-ornament-kit-box",
+      "label": "Ornament kit box",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/ornament-kit-box",
+      "fileTitle": "Fury ornament kit.png",
+      "canonicalPage": "https://runescape.wiki/w/Fury_ornament_kit",
+      "search": "Fury ornament kit inventory icon"
+    },
+    {
+      "id": "util-plank-box",
+      "label": "Plank box",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/plank-box",
+      "fileTitle": "Plank box.png",
+      "canonicalPage": "https://runescape.wiki/w/Plank_box",
+      "search": "Plank box inventory icon"
+    },
+    {
+      "id": "util-gem-bag",
+      "label": "Gem bag",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/gem-bag",
+      "fileTitle": "Gem bag.png",
+      "canonicalPage": "https://runescape.wiki/w/Gem_bag",
+      "search": "Gem bag inventory icon"
+    }
+  ]
+}

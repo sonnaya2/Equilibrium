@@ -27,7 +27,7 @@ const regionPressure = (chain.region_pressure as PressureRow[]).map((row) => {
   };
 }) as unknown as ResearchRow[];
 
-const TABS: ResearchTab[] = [
+export const MASTERWORK_CHAIN_TABS: ResearchTab[] = [
   {
     key: "region-pressure",
     label: "Region needs",
@@ -53,7 +53,7 @@ export function MasterworkChainResearch() {
     <ResearchSection
       title="Masterwork staff"
       intro=""
-      tabs={TABS}
+      tabs={MASTERWORK_CHAIN_TABS}
       searchPlaceholder="Search"
       searchLabel="Search masterwork staff"
     />

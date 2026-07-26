@@ -471,9 +471,12 @@ textarea:focus-visible {
     flex: 1 1 0;
     min-height: 14rem;
     overflow: hidden;
-    border: 1px solid var(--color-stone-750);
+    border: 1px solid color-mix(in srgb, var(--color-gold-500) 40%, var(--color-stone-750));
     border-radius: var(--radius-sm);
-    background: var(--color-stone-900);
+    background: #173742;
+    box-shadow:
+      inset 0 0 0 1px rgb(224 178 100 / 8%),
+      inset 0 0 36px rgb(0 0 0 / 35%);
     display: flex;
     flex-direction: column;
   }
@@ -1037,87 +1040,144 @@ textarea:focus-visible {
     pointer-events: none;
   }
 
-  .map-chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-    padding: 3px 8px;
-    white-space: nowrap;
-    user-select: none;
-    background: rgb(10 8 6 / 90%);
-    border: 1px solid var(--color-stone-750);
-    border-radius: var(--radius-sm);
+  .map-region-marker {
+    display: grid;
+    justify-items: center;
+    min-width: 64px;
+    padding: 0;
+    border: 0;
+    color: var(--color-parch-50);
+    background: transparent;
+    cursor: pointer;
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 90%));
+    transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
   }
-
-  /* Cap name plate under crest — decorative; ledger owns a11y names */
-  .slab-label {
-    pointer-events: none;
-    padding: 1px 7px;
+  .map-region-marker:hover,
+  .map-region-marker.is-focus {
+    z-index: 2;
+    transform: translateY(-2px) scale(1.06);
+    filter:
+      drop-shadow(0 0 4px rgb(46 203 143 / 68%))
+      drop-shadow(0 2px 4px rgb(0 0 0 / 95%));
+  }
+  .map-region-marker img {
+    width: 36px;
+    height: 41px;
+    object-fit: contain;
+  }
+  .map-region-marker.is-locked {
+    opacity: 0.58;
+  }
+  .map-region-marker.is-locked img {
+    filter: grayscale(0.7) brightness(0.72);
+  }
+  .map-region-marker.is-unlocked img {
+    filter: drop-shadow(0 0 5px rgb(46 203 143 / 70%));
+  }
+  .map-region-marker__name,
+  .map-region-marker__count {
+    padding: 1px 4px;
     white-space: nowrap;
-    user-select: none;
-    line-height: 1.25;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.055em;
+    background: rgb(6 10 13 / 72%);
+    text-shadow: 0 1px 2px #000;
+  }
+  .map-region-marker__name {
+    margin-top: -3px;
+    font-family: var(--font-display);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.045em;
     text-transform: uppercase;
-    color: var(--color-parch-100);
-    text-shadow: 0 1px 2px rgb(0 0 0 / 80%);
-    background: rgb(10 8 6 / 78%);
-    border: 1px solid var(--color-stone-750);
-    border-radius: var(--radius-sm);
-    opacity: 0.88;
   }
-  .slab-label.is-focus {
-    color: var(--color-parch-50);
-    border-color: var(--color-gem-500);
-    opacity: 1;
-  }
-  .slab-label.is-locked {
-    color: var(--color-parch-400);
-    opacity: 0.55;
-  }
-  .slab-chip {
-    pointer-events: none;
-    padding: 1px 5px;
-    white-space: nowrap;
-    user-select: none;
-    font-size: 10px;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-parch-200);
-    text-shadow: 0 1px 2px rgb(0 0 0 / 75%);
-    background: rgb(10 8 6 / 72%);
-    border: 1px solid var(--color-stone-750);
-    border-radius: var(--radius-sm);
-    opacity: 0.9;
-  }
-  .slab-chip.is-focus {
-    color: var(--color-parch-50);
-    border-color: color-mix(in srgb, var(--color-gem-500) 55%, var(--color-stone-750));
-    opacity: 1;
-  }
-  .slab-chip.is-locked {
-    color: var(--color-parch-400);
-    opacity: 0.55;
-  }
-
-  /* A pinned chip is a selection, not a hover: it stays after the pointer
-     leaves, so it has to look deliberate rather than like a stuck tooltip. */
-  .map-chip-pinned {
-    border-color: var(--color-gem-500);
-    background: rgb(13 10 7 / 94%);
-  }
-
-  .map-chip-name {
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    color: var(--color-parch-50);
-  }
-  .map-chip-state {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .map-region-marker__count {
     color: var(--color-parch-300);
+    font-family: var(--font-mono);
+    font-size: 7px;
+  }
+  .map-region-marker.is-focus .map-region-marker__name,
+  .map-region-marker.is-focus .map-region-marker__count {
+    color: var(--color-gem-100);
+    background: rgb(5 16 15 / 88%);
+  }
+
+  .flat-map-marker {
+    cursor: pointer;
+  }
+  .flat-map-marker image {
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 90%));
+  }
+  .flat-map-marker.is-locked {
+    opacity: 0.65;
+  }
+  .flat-map-marker.is-focus image,
+  .flat-map-marker.is-unlocked image {
+    filter: drop-shadow(0 0 5px rgb(46 203 143 / 80%));
+  }
+  .flat-map-marker text {
+    fill: var(--color-parch-50);
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    paint-order: stroke;
+    stroke: rgb(5 8 10 / 90%);
+    stroke-width: 3px;
+    text-transform: uppercase;
+  }
+  .flat-map-marker .flat-map-marker__count {
+    fill: var(--color-parch-300);
+    font-family: var(--font-mono);
+    font-size: 8px;
+  }
+
+  .map-poi-marker {
+    position: relative;
+    display: grid;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .map-poi-marker__dot {
+    width: 8px;
+    height: 8px;
+    border: 1px solid rgb(234 222 189 / 88%);
+    border-radius: 50%;
+    background: rgb(7 26 25 / 92%);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 90%),
+      0 0 0 2px rgb(8 18 20 / 45%);
+    transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
+  }
+  .map-poi-marker.is-site .map-poi-marker__dot {
+    border-color: rgb(211 175 94 / 92%);
+  }
+  .map-poi-marker:hover .map-poi-marker__dot,
+  .map-poi-marker.is-selected .map-poi-marker__dot {
+    transform: scale(1.35);
+    background: var(--color-gem-400);
+    box-shadow:
+      0 1px 3px rgb(0 0 0 / 92%),
+      0 0 0 3px rgb(46 203 143 / 22%);
+  }
+  .map-poi-marker__label {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    padding: 2px 6px;
+    color: var(--color-parch-50);
+    font-family: var(--font-display);
+    font-size: 10px;
+    line-height: 1.15;
+    letter-spacing: 0.035em;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px #000;
+    background: rgb(7 11 12 / 92%);
+    border-bottom: 1px solid var(--color-gem-500);
+    transform: translateX(-50%);
+    pointer-events: none;
   }
 
   .stat-strip {

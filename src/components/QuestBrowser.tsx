@@ -9,6 +9,7 @@
 
 import { useMemo, useState } from "react";
 import questsData from "#data/league/quests.json";
+import { safeExternalHref } from "@/lib/safeHref";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 type Quest = (typeof questsData.quests)[number];
@@ -50,7 +51,6 @@ export function QuestBrowser() {
     <section className="data-record-view">
       <DataViewHeader
         title="Quests"
-        description={`Region access mappings · snapshot ${questsData.snapshot_date}`}
         count={rows.length}
         countLabel="quests"
       >
@@ -86,12 +86,13 @@ export function QuestBrowser() {
                 rows.map((q) => {
                   const required = q.required_regions ?? [];
                   const extra = required.filter((r) => r !== q.primary_region);
+                  const sourceHref = safeExternalHref(q.source_url);
                   return (
                     <tr key={q.title}>
                       <td className="text-parch-50">
-                        {q.source_url ? (
+                        {sourceHref ? (
                           <a
-                            href={q.source_url}
+                            href={sourceHref}
                             target="_blank"
                             rel="noreferrer"
                             className="text-gem-300 hover:underline"
@@ -102,7 +103,7 @@ export function QuestBrowser() {
                           q.title
                         )}
                         {q.cross_region ? (
-                          <span className="ml-1.5 text-[11px] text-parch-400">cross-region</span>
+                          <span className="ml-1.5 text-[12px] text-parch-400">cross-region</span>
                         ) : null}
                       </td>
                       <td>{regionLabel(q.primary_region)}</td>

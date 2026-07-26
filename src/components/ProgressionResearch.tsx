@@ -11,9 +11,12 @@ import {
   getRunecraftingAltars,
   getSupportUniqueDropOverlay,
 } from "@/research/plannerExpansions";
+import { GameIcon } from "@/components/GameIcon";
+import { dataEntityIconPath } from "@/lib/gameArt";
+import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
-
+import { PROGRESSION_SYSTEM_TABS } from "./ProgressionSystemsResearch";
 
 type Row = Record<string, unknown>;
 type SectionKey =
@@ -25,7 +28,9 @@ type SectionKey =
   | "archaeology_combat_relics"
   | "regional_unique_drops";
 
-const SECTIONS: Array<{ key: SectionKey; label: string }> = [
+const SYSTEM_TABS = PROGRESSION_SYSTEM_TABS.filter((tab) => tab.key !== "archaeology");
+
+const SECTIONS: Array<{ key: string; label: string }> = [
   { key: "combat_training_spots", label: "Combat spots" },
   { key: "runecrafting_altars", label: "Runecrafting" },
   { key: "invention_progression", label: "Invention" },
@@ -33,6 +38,10 @@ const SECTIONS: Array<{ key: SectionKey; label: string }> = [
   { key: "archaeology_progression", label: "Archaeology" },
   { key: "archaeology_combat_relics", label: "Arch relics" },
   { key: "regional_unique_drops", label: "Unique drops" },
+  ...SYSTEM_TABS.map((tab) => ({
+    key: `system-${tab.key}`,
+    label: tab.label,
+  })),
 ];
 
 /** Section loaders via plannerExpansions typed getters (not raw JSON). */
@@ -65,72 +74,6 @@ const REGION_LABELS: Record<string, string> = {
   unresolved_cross_boundary: "Cross-region unclear",
 };
 
-/** Nested keys that must never dump into titles or detail bodies. */
-const NOISE_KEYS = new Set([
-  "id",
-  "source_url",
-  "source_urls",
-  "sourceUrls",
-  "source_refs",
-  "sourceFile",
-  "source_type",
-  "secondary_source_url",
-  "secondary_source_urls",
-  "primary_source_url",
-  "region_evidence_url",
-  "confidence",
-  "recordType",
-  "region_status",
-  "type",
-]);
-
-/** Provenance `source` (URL / SourceReference) is noise; plain labels like boss names stay. */
-function isProvenanceSource(value: unknown): boolean {
-  if (isSourceRef(value)) return true;
-  return typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://"));
-}
-const FIELD_LABELS: Record<string, string> = {
-  methods: "Methods",
-  target_tags: "Tags",
-  planner_value: "Value",
-  effect: "Effect",
-  effect_summary: "Effect",
-  support_item_effect: "Support",
-  recommended_unlocks: "Unlocks",
-  supporting_regions: "Also needs",
-  alternate_region_routes: "Alt routes",
-  dependency_note: "Depends on",
-  self_source_routes: "Routes",
-  region_evidence: "Evidence",
-  region_note: "Region note",
-  training_rule: "Rule",
-  notes: "Notes",
-  requirements: "Reqs",
-  access_requirement: "Access",
-  uniques: "Uniques",
-  sources: "Sources",
-  alternate_sources: "Also from",
-  current_metrics: "Metrics",
-  archaeology_level: "Arch",
-  monolith_energy: "Energy",
-  acquisition: "How",
-  level: "Level",
-  skills: "Skills",
-  drop_rate_on_slayer_task: "On task",
-  drop_rate_off_slayer_task: "Off task",
-  drop_rate_per_player: "Per player",
-  region: "Region",
-  source: "From",
-};
-function fieldLabel(key: string): string {
-  if (FIELD_LABELS[key]) return FIELD_LABELS[key];
-  return key
-    .replaceAll("kph", "kills per hour")
-    .replaceAll("xp", "XP")
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 /** Plain player-facing string — never a URL, never a SourceReference dump. */
 function humanString(value: unknown): string {
   if (typeof value !== "string") return "";
@@ -143,16 +86,6 @@ function isSourceRef(value: unknown): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as Row;
   return typeof row.url === "string" || (typeof row.source === "string" && "verifiedAt" in row);
-}
-
-function keepEntry(key: string, item: unknown, primary?: string): boolean {
-  if (NOISE_KEYS.has(key)) return false;
-  if (key === "name" || key === "item" || key === "route" || key === "method") return false;
-  if (key === "source") {
-    if (isProvenanceSource(item)) return false;
-    if (primary && primary === humanString(item)) return false;
-  }
-  return true;
 }
 
 function text(value: unknown): string {
@@ -218,10 +151,9 @@ function sourceName(url: string): string {
 }
 
 function pullUrl(value: unknown): string | null {
-  if (typeof value === "string" && value.startsWith("https://")) return value;
+  if (typeof value === "string") return safeExternalHref(value);
   if (value && typeof value === "object" && "url" in value) {
-    const url = (value as { url?: unknown }).url;
-    if (typeof url === "string" && url.startsWith("https://")) return url;
+    return safeExternalHref((value as { url?: unknown }).url);
   }
   return null;
 }
@@ -326,18 +258,26 @@ function rowDetails(row: Row): string[] {
   return lines.map((l) => clipProse(l)).filter(Boolean).slice(0, 2);
 }
 
-function rowsFor(section: SectionKey): Row[] {
-  const base = BASE[section]();
+function rowsFor(section: string): Row[] {
+  const system = SYSTEM_TABS.find((tab) => `system-${tab.key}` === section);
+  if (system) return system.rows as Row[];
+
+  const key = section as SectionKey;
+  const base = BASE[key]();
   const rows = new Map<string, Row>();
   // Base first, then supplements — on id collision the newer supplement wins.
   for (const row of base) rows.set(String(row.id || rowTitle(row)), row);
-  for (const row of SUPPLEMENTS[section]) rows.set(String(row.id || rowTitle(row)), row);
+  for (const row of SUPPLEMENTS[key]) rows.set(String(row.id || rowTitle(row)), row);
+  if (key === "archaeology_combat_relics") {
+    const relics = PROGRESSION_SYSTEM_TABS.find((tab) => tab.key === "archaeology")?.rows ?? [];
+    for (const row of relics as Row[]) rows.set(String(row.id || rowTitle(row)), row);
+  }
   return [...rows.values()];
 }
 
 export function ProgressionResearch() {
   const selectedRegion = useDataRegion();
-  const [section, setSection] = useState<SectionKey>("combat_training_spots");
+  const [section, setSection] = useState("combat_training_spots");
   const [query, setQuery] = useState("");
 
   const rows = useMemo(() => {
@@ -363,7 +303,6 @@ export function ProgressionResearch() {
     <section className="data-progression">
       <DataViewHeader
         title="Progression"
-        description={`${sectionLabel} · requirements and permanent value`}
         count={rows.length}
         countLabel="routes"
       >
@@ -406,32 +345,43 @@ export function ProgressionResearch() {
             const rowLinks = sourceLinks(row);
             const details = rowDetails(row);
             const subtitle = rowSubtitle(row);
+            const heading = rowTitle(row);
+            const iconSrc = dataEntityIconPath({
+              name: heading !== "—" ? heading : typeof row.name === "string" ? row.name : null,
+              kind: String(row.recordType || row.category || row.kind || ""),
+              id: row.id != null ? String(row.id) : null,
+            });
             return (
               <article
-                key={String(row.id || `${rowTitle(row)}-${index}`)}
+                key={String(row.id || `${heading}-${index}`)}
                 className={`data-progression__row${index % 2 === 1 ? " is-zebra" : ""}`}
               >
-                <div className="data-progression__identity">
-                  <h4>
-                    {rowTitle(row)}
-                    {rowLinks.length ? (
-                      <span className="ml-1.5 font-normal">
-                        {rowLinks.map((url, linkIndex) => (
-                          <a
-                            key={url}
-                            href={url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-gem-300 hover:underline"
-                          >
-                            {linkIndex > 0 ? " · " : "· "}
-                            {sourceName(url)}
-                          </a>
-                        ))}
-                      </span>
-                    ) : null}
-                  </h4>
-                  {subtitle ? <p>{subtitle}</p> : null}
+                <div className="data-progression__identity data-record-row__identity">
+                  <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
+                    {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
+                  </span>
+                  <div className="data-record-row__copy min-w-0">
+                    <h4>
+                      {heading}
+                      {rowLinks.length ? (
+                        <span className="ml-1.5 font-normal">
+                          {rowLinks.map((url, linkIndex) => (
+                            <a
+                              key={url}
+                              href={url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-gem-300 hover:underline"
+                            >
+                              {linkIndex > 0 ? " · " : "· "}
+                              {sourceName(url)}
+                            </a>
+                          ))}
+                        </span>
+                      ) : null}
+                    </h4>
+                    {subtitle ? <p>{subtitle}</p> : null}
+                  </div>
                 </div>
                 <p className="data-progression__region">{rowRegionLabel(row)}</p>
                 <div className="data-progression__details">

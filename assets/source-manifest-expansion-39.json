@@ -1,0 +1,1341 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-26",
+  "notes": [
+    "Batch 39: high-value extracted subjects from remaining data gaps"
+  ],
+  "assets": [
+    {
+      "id": "bulk39-alchemiser",
+      "label": "Alchemiser",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/alchemiser",
+      "fileTitle": "Alchemiser.png",
+      "canonicalPage": "https://runescape.wiki/w/Alchemiser",
+      "search": "Alchemiser inventory icon"
+    },
+    {
+      "id": "bulk39-alchemiser-mk-ii",
+      "label": "Alchemiser mk. II",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/alchemiser-mk-ii",
+      "fileTitle": "Alchemiser mk. II.png",
+      "canonicalPage": "https://runescape.wiki/w/Alchemiser_mk._II",
+      "search": "Alchemiser mk. II inventory icon"
+    },
+    {
+      "id": "bulk39-auto-disassembler",
+      "label": "Auto disassembler",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/auto-disassembler",
+      "fileTitle": "Auto disassembler.png",
+      "canonicalPage": "https://runescape.wiki/w/Auto_disassembler",
+      "search": "Auto disassembler inventory icon"
+    },
+    {
+      "id": "bulk39-auto-disassembler-mk-ii",
+      "label": "Auto disassembler mk. II",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/auto-disassembler-mk-ii",
+      "fileTitle": "Auto disassembler mk. II.png",
+      "canonicalPage": "https://runescape.wiki/w/Auto_disassembler_mk._II",
+      "search": "Auto disassembler mk. II inventory icon"
+    },
+    {
+      "id": "bulk39-optimised-hide-tanner",
+      "label": "Optimised hide tanner",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/optimised-hide-tanner",
+      "fileTitle": "Optimised hide tanner.png",
+      "canonicalPage": "https://runescape.wiki/w/Optimised_hide_tanner",
+      "search": "Optimised hide tanner inventory icon"
+    },
+    {
+      "id": "bulk39-auto-sanctifier",
+      "label": "Auto-sanctifier",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/auto-sanctifier",
+      "fileTitle": "Auto-sanctifier.png",
+      "canonicalPage": "https://runescape.wiki/w/Auto-sanctifier",
+      "search": "Auto-sanctifier inventory icon"
+    },
+    {
+      "id": "bulk39-divine-o-matic-vacuum",
+      "label": "Divine-o-matic vacuum",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/divine-o-matic-vacuum",
+      "fileTitle": "Divine-o-matic vacuum.png",
+      "canonicalPage": "https://runescape.wiki/w/Divine-o-matic_vacuum",
+      "search": "Divine-o-matic vacuum inventory icon"
+    },
+    {
+      "id": "bulk39-diviners-headwear",
+      "label": "Diviner's headwear",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/diviners-headwear",
+      "fileTitle": "Diviner's headwear.png",
+      "canonicalPage": "https://runescape.wiki/w/Diviner's_headwear",
+      "search": "Diviner's headwear inventory icon"
+    },
+    {
+      "id": "bulk39-elder-divination-headwear",
+      "label": "Elder divination headwear",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/elder-divination-headwear",
+      "fileTitle": "Elder divination head.png",
+      "canonicalPage": "https://runescape.wiki/w/Elder_divination_headwear",
+      "search": "Elder divination headwear inventory icon"
+    },
+    {
+      "id": "bulk39-farmers-hat",
+      "label": "Farmer's hat",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/farmers-hat",
+      "fileTitle": "Farmer's hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Farmer's_hat",
+      "search": "Farmer's hat inventory icon"
+    },
+    {
+      "id": "bulk39-fishing-rod-o-matic",
+      "label": "Fishing rod-o-matic",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/fishing-rod-o-matic",
+      "fileTitle": "Fishing rod-o-matic.png",
+      "canonicalPage": "https://runescape.wiki/w/Fishing_rod-o-matic",
+      "search": "Fishing rod-o-matic inventory icon"
+    },
+    {
+      "id": "bulk39-hammer-tron",
+      "label": "Hammer-tron",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/hammer-tron",
+      "fileTitle": "Hammer-tron.png",
+      "canonicalPage": "https://runescape.wiki/w/Hammer-tron",
+      "search": "Hammer-tron inventory icon"
+    },
+    {
+      "id": "bulk39-pyro-matic",
+      "label": "Pyro-matic",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/pyro-matic",
+      "fileTitle": "Pyro-matic.png",
+      "canonicalPage": "https://runescape.wiki/w/Pyro-matic",
+      "search": "Pyro-matic inventory icon"
+    },
+    {
+      "id": "bulk39-enhanced-fishing-rod-o-matic",
+      "label": "Enhanced fishing rod-o-matic",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/enhanced-fishing-rod-o-matic",
+      "fileTitle": "Enhanced fishing rod-o-matic.png",
+      "canonicalPage": "https://runescape.wiki/w/Enhanced_fishing_rod-o-matic",
+      "search": "Enhanced fishing rod-o-matic inventory icon"
+    },
+    {
+      "id": "bulk39-enhanced-hammer-tron",
+      "label": "Enhanced hammer-tron",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/enhanced-hammer-tron",
+      "fileTitle": "Enhanced hammer-tron.png",
+      "canonicalPage": "https://runescape.wiki/w/Enhanced_hammer-tron",
+      "search": "Enhanced hammer-tron inventory icon"
+    },
+    {
+      "id": "bulk39-enhanced-pyro-matic",
+      "label": "Enhanced pyro-matic",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/enhanced-pyro-matic",
+      "fileTitle": "Enhanced pyro-matic.png",
+      "canonicalPage": "https://runescape.wiki/w/Enhanced_pyro-matic",
+      "search": "Enhanced pyro-matic inventory icon"
+    },
+    {
+      "id": "bulk39-crystal-chisel",
+      "label": "Crystal chisel",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-chisel",
+      "fileTitle": "Crystal chisel.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_chisel",
+      "search": "Crystal chisel inventory icon"
+    },
+    {
+      "id": "bulk39-crystal-knife",
+      "label": "Crystal knife",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-knife",
+      "fileTitle": "Crystal knife.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_knife",
+      "search": "Crystal knife inventory icon"
+    },
+    {
+      "id": "bulk39-crystal-saw",
+      "label": "Crystal saw",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-saw",
+      "fileTitle": "Crystal saw.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_saw",
+      "search": "Crystal saw inventory icon"
+    },
+    {
+      "id": "bulk39-ardougne-cloak-2",
+      "label": "Ardougne cloak 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/ardougne-cloak-2",
+      "fileTitle": "Ardougne cloak 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Ardougne_cloak_2",
+      "search": "Ardougne cloak 2 inventory icon"
+    },
+    {
+      "id": "bulk39-ardougne-cloak-3",
+      "label": "Ardougne cloak 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/ardougne-cloak-3",
+      "fileTitle": "Ardougne cloak 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Ardougne_cloak_3",
+      "search": "Ardougne cloak 3 inventory icon"
+    },
+    {
+      "id": "bulk39-desert-amulet-2",
+      "label": "Desert amulet 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/desert-amulet-2",
+      "fileTitle": "Desert amulet 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Desert_amulet_2",
+      "search": "Desert amulet 2 inventory icon"
+    },
+    {
+      "id": "bulk39-desert-amulet-3",
+      "label": "Desert amulet 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/desert-amulet-3",
+      "fileTitle": "Desert amulet 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Desert_amulet_3",
+      "search": "Desert amulet 3 inventory icon"
+    },
+    {
+      "id": "bulk39-falador-shield-2",
+      "label": "Falador shield 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/falador-shield-2",
+      "fileTitle": "Falador shield 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Falador_shield_2",
+      "search": "Falador shield 2 inventory icon"
+    },
+    {
+      "id": "bulk39-falador-shield-3",
+      "label": "Falador shield 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/falador-shield-3",
+      "fileTitle": "Falador shield 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Falador_shield_3",
+      "search": "Falador shield 3 inventory icon"
+    },
+    {
+      "id": "bulk39-varrock-armour-2",
+      "label": "Varrock armour 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/varrock-armour-2",
+      "fileTitle": "Varrock armour 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Varrock_armour_2",
+      "search": "Varrock armour 2 inventory icon"
+    },
+    {
+      "id": "bulk39-varrock-armour-3",
+      "label": "Varrock armour 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/varrock-armour-3",
+      "fileTitle": "Varrock armour 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Varrock_armour_3",
+      "search": "Varrock armour 3 inventory icon"
+    },
+    {
+      "id": "bulk39-karamja-gloves-2",
+      "label": "Karamja gloves 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/karamja-gloves-2",
+      "fileTitle": "Karamja gloves 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Karamja_gloves_2",
+      "search": "Karamja gloves 2 inventory icon"
+    },
+    {
+      "id": "bulk39-karamja-gloves-3",
+      "label": "Karamja gloves 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/karamja-gloves-3",
+      "fileTitle": "Karamja gloves 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Karamja_gloves_3",
+      "search": "Karamja gloves 3 inventory icon"
+    },
+    {
+      "id": "bulk39-fremennik-sea-boots-2",
+      "label": "Fremennik sea boots 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/fremennik-sea-boots-2",
+      "fileTitle": "Fremennik sea boots 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Fremennik_sea_boots_2",
+      "search": "Fremennik sea boots 2 inventory icon"
+    },
+    {
+      "id": "bulk39-fremennik-sea-boots-3",
+      "label": "Fremennik sea boots 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/fremennik-sea-boots-3",
+      "fileTitle": "Fremennik sea boots 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Fremennik_sea_boots_3",
+      "search": "Fremennik sea boots 3 inventory icon"
+    },
+    {
+      "id": "bulk39-seers-headband-2",
+      "label": "Seer's headband 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/seers-headband-2",
+      "fileTitle": "Seer's headband 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Seer's_headband_2",
+      "search": "Seer's headband 2 inventory icon"
+    },
+    {
+      "id": "bulk39-seers-headband-3",
+      "label": "Seer's headband 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/seers-headband-3",
+      "fileTitle": "Seer's headband 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Seer's_headband_3",
+      "search": "Seer's headband 3 inventory icon"
+    },
+    {
+      "id": "bulk39-wilderness-sword-2",
+      "label": "Wilderness sword 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/wilderness-sword-2",
+      "fileTitle": "Wilderness sword 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Wilderness_sword_2",
+      "search": "Wilderness sword 2 inventory icon"
+    },
+    {
+      "id": "bulk39-wilderness-sword-3",
+      "label": "Wilderness sword 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/wilderness-sword-3",
+      "fileTitle": "Wilderness sword 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Wilderness_sword_3",
+      "search": "Wilderness sword 3 inventory icon"
+    },
+    {
+      "id": "bulk39-tirannwn-quiver-2",
+      "label": "Tirannwn quiver 2",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/tirannwn-quiver-2",
+      "fileTitle": "Tirannwn quiver 2.png",
+      "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_2",
+      "search": "Tirannwn quiver 2 inventory icon"
+    },
+    {
+      "id": "bulk39-tirannwn-quiver-3",
+      "label": "Tirannwn quiver 3",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/tirannwn-quiver-3",
+      "fileTitle": "Tirannwn quiver 3.png",
+      "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_3",
+      "search": "Tirannwn quiver 3 inventory icon"
+    },
+    {
+      "id": "bulk39-mind-altar",
+      "label": "Mind altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/mind-altar",
+      "fileTitle": "Mind Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Mind_altar",
+      "search": "Mind altar inventory icon"
+    },
+    {
+      "id": "bulk39-body-altar",
+      "label": "Body altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/body-altar",
+      "fileTitle": "Body Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Body_altar",
+      "search": "Body altar inventory icon"
+    },
+    {
+      "id": "bulk39-law-altar",
+      "label": "Law altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/law-altar",
+      "fileTitle": "Law Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Law_altar",
+      "search": "Law altar inventory icon"
+    },
+    {
+      "id": "bulk39-ourania-altar",
+      "label": "Ourania Altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ourania-altar",
+      "fileTitle": "Ourania.png",
+      "canonicalPage": "https://runescape.wiki/w/Ourania_Altar",
+      "search": "Ourania Altar inventory icon"
+    },
+    {
+      "id": "bulk39-blood-altar",
+      "label": "Blood altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/blood-altar",
+      "fileTitle": "Blood Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Blood_altar",
+      "search": "Blood altar inventory icon"
+    },
+    {
+      "id": "bulk39-fire-altar",
+      "label": "Fire altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/fire-altar",
+      "fileTitle": "Fire altar.png",
+      "canonicalPage": "https://runescape.wiki/w/Fire_altar",
+      "search": "Fire altar inventory icon"
+    },
+    {
+      "id": "bulk39-water-altar",
+      "label": "Water altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/water-altar",
+      "fileTitle": "Water Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Water_altar",
+      "search": "Water altar inventory icon"
+    },
+    {
+      "id": "bulk39-earth-altar",
+      "label": "Earth altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/earth-altar",
+      "fileTitle": "Earth Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Earth_altar",
+      "search": "Earth altar inventory icon"
+    },
+    {
+      "id": "bulk39-air-altar",
+      "label": "Air altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/air-altar",
+      "fileTitle": "Air Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Air_altar",
+      "search": "Air altar inventory icon"
+    },
+    {
+      "id": "bulk39-chaos-altar",
+      "label": "Chaos altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/chaos-altar",
+      "fileTitle": "Chaos Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Chaos_altar",
+      "search": "Chaos altar inventory icon"
+    },
+    {
+      "id": "bulk39-cosmic-altar",
+      "label": "Cosmic altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/cosmic-altar",
+      "fileTitle": "Cosmic Altar inside.png",
+      "canonicalPage": "https://runescape.wiki/w/Cosmic_altar",
+      "search": "Cosmic altar inventory icon"
+    },
+    {
+      "id": "bulk39-wizards-tower",
+      "label": "Wizards' Tower",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/wizards-tower",
+      "fileTitle": "Wizards' Tower.png",
+      "canonicalPage": "https://runescape.wiki/w/Wizards'_Tower",
+      "search": "Wizards' Tower inventory icon"
+    },
+    {
+      "id": "bulk39-wizards-guild",
+      "label": "Wizards' Guild",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/wizards-guild",
+      "fileTitle": "Wizards' Guild.png",
+      "canonicalPage": "https://runescape.wiki/w/Wizards'_Guild",
+      "search": "Wizards' Guild inventory icon"
+    },
+    {
+      "id": "bulk39-neitiznot",
+      "label": "Neitiznot",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/neitiznot",
+      "fileTitle": "Neitiznot scenery.png",
+      "canonicalPage": "https://runescape.wiki/w/Neitiznot",
+      "search": "Neitiznot inventory icon"
+    },
+    {
+      "id": "bulk39-jatizso",
+      "label": "Jatizso",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/jatizso",
+      "fileTitle": "Jatizso town.png",
+      "canonicalPage": "https://runescape.wiki/w/Jatizso",
+      "search": "Jatizso inventory icon"
+    },
+    {
+      "id": "bulk39-howls-workshop",
+      "label": "Howl's workshop",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/howls-workshop",
+      "fileTitle": "Stormguard Citadel - Howl's workshop excavation site.png",
+      "canonicalPage": "https://runescape.wiki/w/Howl's_workshop",
+      "search": "Howl's workshop inventory icon"
+    },
+    {
+      "id": "bulk39-waiko",
+      "label": "Waiko",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/waiko",
+      "fileTitle": "Waiko.png",
+      "canonicalPage": "https://runescape.wiki/w/Waiko",
+      "search": "Waiko inventory icon"
+    },
+    {
+      "id": "bulk39-big-chinchompa",
+      "label": "Big Chinchompa",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/big-chinchompa",
+      "fileTitle": "Big Chinchompa.png",
+      "canonicalPage": "https://runescape.wiki/w/Big_Chinchompa",
+      "search": "Big Chinchompa inventory icon"
+    },
+    {
+      "id": "bulk39-overgrown-idol",
+      "label": "Overgrown idol",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/overgrown-idol",
+      "fileTitle": "Overgrown idol icon.png",
+      "canonicalPage": "https://runescape.wiki/w/Overgrown_idol",
+      "search": "Overgrown idol inventory icon"
+    },
+    {
+      "id": "bulk39-dark-facet-of-luck",
+      "label": "Dark Facet of Luck",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/dark-facet-of-luck",
+      "fileTitle": "Dark Facet of Luck.png",
+      "canonicalPage": "https://runescape.wiki/w/Dark_Facet_of_Luck",
+      "search": "Dark Facet of Luck inventory icon"
+    },
+    {
+      "id": "bulk39-eye-of-het",
+      "label": "Eye of Het",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/eye-of-het",
+      "fileTitle": "Eye of Het.png",
+      "canonicalPage": "https://runescape.wiki/w/Eye_of_Het",
+      "search": "Eye of Het inventory icon"
+    },
+    {
+      "id": "bulk39-light-form",
+      "label": "Light Form",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/light-form",
+      "fileTitle": "Light Form.png",
+      "canonicalPage": "https://runescape.wiki/w/Light_Form",
+      "search": "Light Form inventory icon"
+    },
+    {
+      "id": "bulk39-font-of-life",
+      "label": "Font of Life",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/font-of-life",
+      "fileTitle": "Font of Life.png",
+      "canonicalPage": "https://runescape.wiki/w/Font_of_Life",
+      "search": "Font of Life inventory icon"
+    },
+    {
+      "id": "bulk39-holy-elixir",
+      "label": "Holy elixir",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/holy-elixir",
+      "fileTitle": "Holy elixir.png",
+      "canonicalPage": "https://runescape.wiki/w/Holy_elixir",
+      "search": "Holy elixir inventory icon"
+    },
+    {
+      "id": "bulk39-tormented-demon",
+      "label": "Tormented demon",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/tormented-demon",
+      "fileTitle": "Tormented Demon.png",
+      "canonicalPage": "https://runescape.wiki/w/Tormented_demon",
+      "search": "Tormented demon inventory icon"
+    },
+    {
+      "id": "bulk39-bork",
+      "label": "Bork",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/bork",
+      "fileTitle": "Bork.png",
+      "canonicalPage": "https://runescape.wiki/w/Bork",
+      "search": "Bork inventory icon"
+    },
+    {
+      "id": "bulk39-legio-primus",
+      "label": "Legio Primus",
+      "category": "rs3/bosses",
+      "path": "assets/rs3/bosses/legio-primus",
+      "fileTitle": "Legio Primus.png",
+      "canonicalPage": "https://runescape.wiki/w/Legio_Primus",
+      "search": "Legio Primus inventory icon"
+    },
+    {
+      "id": "bulk39-deaths-office",
+      "label": "Death's office",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/deaths-office",
+      "fileTitle": "Death's office interior.png",
+      "canonicalPage": "https://runescape.wiki/w/Death's_office",
+      "search": "Death's office inventory icon"
+    },
+    {
+      "id": "bulk39-sophanem",
+      "label": "Sophanem",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/sophanem",
+      "fileTitle": "Sophanem.png",
+      "canonicalPage": "https://runescape.wiki/w/Sophanem",
+      "search": "Sophanem inventory icon"
+    },
+    {
+      "id": "bulk39-underworld",
+      "label": "Underworld",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/underworld",
+      "fileTitle": "Grim Underworld gates.png",
+      "canonicalPage": "https://runescape.wiki/w/Underworld",
+      "search": "Underworld inventory icon"
+    },
+    {
+      "id": "bulk39-port-sarim",
+      "label": "Port Sarim",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/port-sarim",
+      "fileTitle": "Port Sarim.png",
+      "canonicalPage": "https://runescape.wiki/w/Port_Sarim",
+      "search": "Port Sarim inventory icon"
+    },
+    {
+      "id": "bulk39-draynor-village",
+      "label": "Draynor Village",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/draynor-village",
+      "fileTitle": "NewDraynor.png",
+      "canonicalPage": "https://runescape.wiki/w/Draynor_Village",
+      "search": "Draynor Village inventory icon"
+    },
+    {
+      "id": "bulk39-varrock",
+      "label": "Varrock",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/varrock",
+      "fileTitle": "Varrock.png",
+      "canonicalPage": "https://runescape.wiki/w/Varrock",
+      "search": "Varrock inventory icon"
+    },
+    {
+      "id": "bulk39-falador",
+      "label": "Falador",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/falador",
+      "fileTitle": "Falador.png",
+      "canonicalPage": "https://runescape.wiki/w/Falador",
+      "search": "Falador inventory icon"
+    },
+    {
+      "id": "bulk39-lumbridge",
+      "label": "Lumbridge",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/lumbridge",
+      "fileTitle": "Lumbridge.png",
+      "canonicalPage": "https://runescape.wiki/w/Lumbridge",
+      "search": "Lumbridge inventory icon"
+    },
+    {
+      "id": "bulk39-edgeville",
+      "label": "Edgeville",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/edgeville",
+      "fileTitle": "Edgeville.png",
+      "canonicalPage": "https://runescape.wiki/w/Edgeville",
+      "search": "Edgeville inventory icon"
+    },
+    {
+      "id": "bulk39-catherby",
+      "label": "Catherby",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/catherby",
+      "fileTitle": "Catherby.png",
+      "canonicalPage": "https://runescape.wiki/w/Catherby",
+      "search": "Catherby inventory icon"
+    },
+    {
+      "id": "bulk39-seers-village",
+      "label": "Seers' Village",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/seers-village",
+      "fileTitle": "Seers' Village.png",
+      "canonicalPage": "https://runescape.wiki/w/Seers'_Village",
+      "search": "Seers' Village inventory icon"
+    },
+    {
+      "id": "bulk39-yanille",
+      "label": "Yanille",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/yanille",
+      "fileTitle": "Yanille.png",
+      "canonicalPage": "https://runescape.wiki/w/Yanille",
+      "search": "Yanille inventory icon"
+    },
+    {
+      "id": "bulk39-ardougne",
+      "label": "Ardougne",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ardougne",
+      "fileTitle": "East Ardougne.png",
+      "canonicalPage": "https://runescape.wiki/w/Ardougne",
+      "search": "Ardougne inventory icon"
+    },
+    {
+      "id": "bulk39-burgh-de-rott",
+      "label": "Burgh de Rott",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/burgh-de-rott",
+      "fileTitle": "Burgh de Rott.png",
+      "canonicalPage": "https://runescape.wiki/w/Burgh_de_Rott",
+      "search": "Burgh de Rott inventory icon"
+    },
+    {
+      "id": "bulk39-darkmeyer",
+      "label": "Darkmeyer",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/darkmeyer",
+      "fileTitle": "Darkmeyer NXT.png",
+      "canonicalPage": "https://runescape.wiki/w/Darkmeyer",
+      "search": "Darkmeyer inventory icon"
+    },
+    {
+      "id": "bulk39-meiyerditch",
+      "label": "Meiyerditch",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/meiyerditch",
+      "fileTitle": "Meiyerditch.png",
+      "canonicalPage": "https://runescape.wiki/w/Meiyerditch",
+      "search": "Meiyerditch inventory icon"
+    },
+    {
+      "id": "bulk39-ooglog",
+      "label": "Oo'glog",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ooglog",
+      "fileTitle": "Oo'glog.png",
+      "canonicalPage": "https://runescape.wiki/w/Oo'glog",
+      "search": "Oo'glog inventory icon"
+    },
+    {
+      "id": "bulk39-taverley",
+      "label": "Taverley",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/taverley",
+      "fileTitle": "Taverley.png",
+      "canonicalPage": "https://runescape.wiki/w/Taverley",
+      "search": "Taverley inventory icon"
+    },
+    {
+      "id": "bulk39-burthorpe",
+      "label": "Burthorpe",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/burthorpe",
+      "fileTitle": "Burthorpe.png",
+      "canonicalPage": "https://runescape.wiki/w/Burthorpe",
+      "search": "Burthorpe inventory icon"
+    },
+    {
+      "id": "bulk39-trollheim",
+      "label": "Trollheim",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/trollheim",
+      "fileTitle": "Trollheim.png",
+      "canonicalPage": "https://runescape.wiki/w/Trollheim",
+      "search": "Trollheim inventory icon"
+    },
+    {
+      "id": "bulk39-kuradals-dungeon",
+      "label": "Kuradal's Dungeon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/kuradals-dungeon",
+      "fileTitle": "Kuradal's dungeon.png",
+      "canonicalPage": "https://runescape.wiki/w/Kuradal's_Dungeon",
+      "search": "Kuradal's Dungeon inventory icon"
+    },
+    {
+      "id": "bulk39-polypore-dungeon",
+      "label": "Polypore Dungeon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/polypore-dungeon",
+      "fileTitle": "Polypore Dungeon.png",
+      "canonicalPage": "https://runescape.wiki/w/Polypore_Dungeon",
+      "search": "Polypore Dungeon inventory icon"
+    },
+    {
+      "id": "bulk39-grotworm-lair",
+      "label": "Grotworm Lair",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/grotworm-lair",
+      "fileTitle": "Grotworm Lair entrance.png",
+      "canonicalPage": "https://runescape.wiki/w/Grotworm_Lair",
+      "search": "Grotworm Lair inventory icon"
+    },
+    {
+      "id": "bulk39-chaos-tunnels",
+      "label": "Chaos Tunnels",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/chaos-tunnels",
+      "fileTitle": "Chaos Tunnels.png",
+      "canonicalPage": "https://runescape.wiki/w/Chaos_Tunnels",
+      "search": "Chaos Tunnels inventory icon"
+    },
+    {
+      "id": "bulk39-crystal-flecked-sandstone-mine",
+      "label": "Crystal-flecked sandstone mine",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/crystal-flecked-sandstone-mine",
+      "fileTitle": "Crystal-flecked sandstone.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal-flecked_sandstone_mine",
+      "search": "Crystal-flecked sandstone mine inventory icon"
+    },
+    {
+      "id": "bulk39-iorwerth-dungeon",
+      "label": "Iorwerth Dungeon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/iorwerth-dungeon",
+      "fileTitle": "Prifddinas Iorwerth district.png",
+      "canonicalPage": "https://runescape.wiki/w/Iorwerth_Dungeon",
+      "search": "Iorwerth Dungeon inventory icon"
+    },
+    {
+      "id": "bulk39-hefin-cathedral",
+      "label": "Hefin cathedral",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/hefin-cathedral",
+      "fileTitle": "Prifddinas Hefin Cathedral.png",
+      "canonicalPage": "https://runescape.wiki/w/Hefin_cathedral",
+      "search": "Hefin cathedral inventory icon"
+    },
+    {
+      "id": "bulk39-seren-stones",
+      "label": "Seren stones",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/seren-stones",
+      "fileTitle": "Trahaearn Seren stones.png",
+      "canonicalPage": "https://runescape.wiki/w/Seren_stones",
+      "search": "Seren stones inventory icon"
+    },
+    {
+      "id": "bulk39-voice-of-seren",
+      "label": "Voice of Seren",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/voice-of-seren",
+      "fileTitle": "Voice of Seren icon.png",
+      "canonicalPage": "https://runescape.wiki/w/Voice_of_Seren",
+      "search": "Voice of Seren icon"
+    },
+    {
+      "id": "bulk39-meilyr-clan-district",
+      "label": "Meilyr Clan district",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/meilyr-clan-district",
+      "fileTitle": "Prifddinas Meilyr district.png",
+      "canonicalPage": "https://runescape.wiki/w/Meilyr_Clan_district",
+      "search": "Meilyr Clan district inventory icon"
+    },
+    {
+      "id": "bulk39-material-cache",
+      "label": "Material cache",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/material-cache",
+      "fileTitle": "Material cache (felt).png",
+      "canonicalPage": "https://runescape.wiki/w/Material_cache",
+      "search": "Material cache inventory icon"
+    },
+    {
+      "id": "bulk39-soil-box",
+      "label": "Soil box",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/soil-box",
+      "fileTitle": "Archaeological soil box.png",
+      "canonicalPage": "https://runescape.wiki/w/Soil_box",
+      "search": "Soil box inventory icon"
+    },
+    {
+      "id": "bulk39-archaeological-soil-box",
+      "label": "Archaeological soil box",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/archaeological-soil-box",
+      "fileTitle": "Archaeological soil box.png",
+      "canonicalPage": "https://runescape.wiki/w/Archaeological_soil_box",
+      "search": "Archaeological soil box inventory icon"
+    },
+    {
+      "id": "bulk39-restoration-station",
+      "label": "Restoration station",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/restoration-station",
+      "fileTitle": "Artefact restoration station.png",
+      "canonicalPage": "https://runescape.wiki/w/Restoration_station",
+      "search": "Artefact restoration station"
+    },
+    {
+      "id": "bulk39-research-bench",
+      "label": "Research bench",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/research-bench",
+      "fileTitle": "Research (Archaeology).png",
+      "canonicalPage": "https://runescape.wiki/w/Research_bench",
+      "search": "Archaeology research"
+    },
+    {
+      "id": "bulk39-guildmaster-tony",
+      "label": "Guildmaster Tony",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/guildmaster-tony",
+      "fileTitle": "Guildmaster Tony.png",
+      "canonicalPage": "https://runescape.wiki/w/Guildmaster_Tony",
+      "search": "Guildmaster Tony inventory icon"
+    },
+    {
+      "id": "bulk39-velucia",
+      "label": "Velucia",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/velucia",
+      "fileTitle": "Velucia.png",
+      "canonicalPage": "https://runescape.wiki/w/Velucia",
+      "search": "Velucia inventory icon"
+    },
+    {
+      "id": "bulk39-collectors-badge",
+      "label": "Collector's badge",
+      "category": "rs3/upgrades/skilling-utility",
+      "path": "assets/rs3/upgrades/skilling-utility/collectors-badge",
+      "fileTitle": "Collector's badge.png",
+      "canonicalPage": "https://runescape.wiki/w/Collector's_badge",
+      "search": "Collector's badge inventory"
+    },
+    {
+      "id": "bulk39-master-archaeologists-outfit",
+      "label": "Master archaeologist's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/master-archaeologists-outfit",
+      "fileTitle": "Master archaeologist's hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Master_archaeologist's_outfit",
+      "search": "Master archaeologist hat"
+    },
+    {
+      "id": "bulk39-archaeologists-hat",
+      "label": "Archaeologist's hat",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/archaeologists-hat",
+      "fileTitle": "Archaeologist's hat.png",
+      "canonicalPage": "https://runescape.wiki/w/Archaeologist's_hat",
+      "search": "Archaeologist's hat inventory icon"
+    },
+    {
+      "id": "bulk39-inert-extreme-invention-potion",
+      "label": "Inert extreme invention potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/inert-extreme-invention-potion",
+      "fileTitle": "Extreme invention flask (6).png",
+      "canonicalPage": "https://runescape.wiki/w/Inert_extreme_invention_potion",
+      "search": "Extreme invention flask"
+    },
+    {
+      "id": "bulk39-extreme-invention-potion",
+      "label": "Extreme invention potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-invention-potion",
+      "fileTitle": "Extreme invention flask (6).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_invention_potion",
+      "search": "Extreme invention flask"
+    },
+    {
+      "id": "bulk39-super-inventiveness-potion",
+      "label": "Super inventiveness potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/super-inventiveness-potion",
+      "fileTitle": "Super inventiveness potion (4).png",
+      "canonicalPage": "https://runescape.wiki/w/Super_inventiveness_potion",
+      "search": "Super inventiveness potion"
+    },
+    {
+      "id": "bulk39-invention-potion",
+      "label": "Invention potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/invention-potion",
+      "fileTitle": "Invention potion.png",
+      "canonicalPage": "https://runescape.wiki/w/Invention_potion",
+      "search": "Invention potion inventory icon"
+    },
+    {
+      "id": "bulk39-armour-gizmo-shell",
+      "label": "Armour gizmo shell",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/armour-gizmo-shell",
+      "fileTitle": "Armour gizmo shell.png",
+      "canonicalPage": "https://runescape.wiki/w/Armour_gizmo_shell",
+      "search": "Armour gizmo shell inventory icon"
+    },
+    {
+      "id": "bulk39-tool-gizmo-shell",
+      "label": "Tool gizmo shell",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/tool-gizmo-shell",
+      "fileTitle": "Tool gizmo shell.png",
+      "canonicalPage": "https://runescape.wiki/w/Tool_gizmo_shell",
+      "search": "Tool gizmo shell inventory icon"
+    },
+    {
+      "id": "bulk39-ancient-gizmo",
+      "label": "Ancient gizmo",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/ancient-gizmo",
+      "fileTitle": "'Ancient gizmos' blueprint.png",
+      "canonicalPage": "https://runescape.wiki/w/Ancient_gizmo",
+      "search": "Ancient gizmos blueprint"
+    },
+    {
+      "id": "bulk39-blueprints",
+      "label": "Blueprints",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/blueprints",
+      "fileTitle": "Blueprint.png",
+      "canonicalPage": "https://runescape.wiki/w/Blueprints",
+      "search": "Blueprint invention inventory"
+    },
+    {
+      "id": "bulk39-mechanism",
+      "label": "Mechanism",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/mechanism",
+      "fileTitle": "Mechanism.png",
+      "canonicalPage": "https://runescape.wiki/w/Mechanism",
+      "search": "Mechanism invention component"
+    },
+    {
+      "id": "bulk39-simple-parts",
+      "label": "Simple parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/simple-parts",
+      "fileTitle": "Simple parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Simple_parts",
+      "search": "Simple parts inventory icon"
+    },
+    {
+      "id": "bulk39-base-parts",
+      "label": "Base parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/base-parts",
+      "fileTitle": "Base parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Base_parts",
+      "search": "Base parts inventory icon"
+    },
+    {
+      "id": "bulk39-blade-parts",
+      "label": "Blade parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/blade-parts",
+      "fileTitle": "Blade parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Blade_parts",
+      "search": "Blade parts inventory icon"
+    },
+    {
+      "id": "bulk39-clear-parts",
+      "label": "Clear parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/clear-parts",
+      "fileTitle": "Clear parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Clear_parts",
+      "search": "Clear parts inventory icon"
+    },
+    {
+      "id": "bulk39-connector-parts",
+      "label": "Connector parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/connector-parts",
+      "fileTitle": "Connector parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Connector_parts",
+      "search": "Connector parts inventory icon"
+    },
+    {
+      "id": "bulk39-cover-parts",
+      "label": "Cover parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/cover-parts",
+      "fileTitle": "Cover parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Cover_parts",
+      "search": "Cover parts inventory icon"
+    },
+    {
+      "id": "bulk39-crafted-parts",
+      "label": "Crafted parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/crafted-parts",
+      "fileTitle": "Crafted parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Crafted_parts",
+      "search": "Crafted parts inventory icon"
+    },
+    {
+      "id": "bulk39-crystal-parts",
+      "label": "Crystal parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/crystal-parts",
+      "fileTitle": "Crystal parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_parts",
+      "search": "Crystal parts inventory icon"
+    },
+    {
+      "id": "bulk39-deflecting-parts",
+      "label": "Deflecting parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/deflecting-parts",
+      "fileTitle": "Deflecting parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Deflecting_parts",
+      "search": "Deflecting parts inventory icon"
+    },
+    {
+      "id": "bulk39-delicate-parts",
+      "label": "Delicate parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/delicate-parts",
+      "fileTitle": "Delicate parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Delicate_parts",
+      "search": "Delicate parts inventory icon"
+    },
+    {
+      "id": "bulk39-enhancing-components",
+      "label": "Enhancing components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/enhancing-components",
+      "fileTitle": "Enhancing components.png",
+      "canonicalPage": "https://runescape.wiki/w/Enhancing_components",
+      "search": "Enhancing components inventory icon"
+    },
+    {
+      "id": "bulk39-evasive-components",
+      "label": "Evasive components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/evasive-components",
+      "fileTitle": "Evasive components.png",
+      "canonicalPage": "https://runescape.wiki/w/Evasive_components",
+      "search": "Evasive components inventory icon"
+    },
+    {
+      "id": "bulk39-explosive-components",
+      "label": "Explosive components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/explosive-components",
+      "fileTitle": "Explosive components.png",
+      "canonicalPage": "https://runescape.wiki/w/Explosive_components",
+      "search": "Explosive components inventory icon"
+    },
+    {
+      "id": "bulk39-flexible-parts",
+      "label": "Flexible parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/flexible-parts",
+      "fileTitle": "Flexible parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Flexible_parts",
+      "search": "Flexible parts inventory icon"
+    },
+    {
+      "id": "bulk39-fungal-components",
+      "label": "Fungal components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/fungal-components",
+      "fileTitle": "Fungal components.png",
+      "canonicalPage": "https://runescape.wiki/w/Fungal_components",
+      "search": "Fungal components inventory icon"
+    },
+    {
+      "id": "bulk39-heavy-components",
+      "label": "Heavy components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/heavy-components",
+      "fileTitle": "Heavy components.png",
+      "canonicalPage": "https://runescape.wiki/w/Heavy_components",
+      "search": "Heavy components inventory icon"
+    },
+    {
+      "id": "bulk39-imbued-components",
+      "label": "Imbued components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/imbued-components",
+      "fileTitle": "Imbued components.png",
+      "canonicalPage": "https://runescape.wiki/w/Imbued_components",
+      "search": "Imbued components inventory icon"
+    },
+    {
+      "id": "bulk39-light-components",
+      "label": "Light components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/light-components",
+      "fileTitle": "Light components.png",
+      "canonicalPage": "https://runescape.wiki/w/Light_components",
+      "search": "Light components inventory icon"
+    },
+    {
+      "id": "bulk39-living-components",
+      "label": "Living components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/living-components",
+      "fileTitle": "Living components.png",
+      "canonicalPage": "https://runescape.wiki/w/Living_components",
+      "search": "Living components inventory icon"
+    },
+    {
+      "id": "bulk39-magic-parts",
+      "label": "Magic parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/magic-parts",
+      "fileTitle": "Magic parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Magic_parts",
+      "search": "Magic parts inventory icon"
+    },
+    {
+      "id": "bulk39-metallic-parts",
+      "label": "Metallic parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/metallic-parts",
+      "fileTitle": "Metallic parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Metallic_parts",
+      "search": "Metallic parts inventory icon"
+    },
+    {
+      "id": "bulk39-organic-parts",
+      "label": "Organic parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/organic-parts",
+      "fileTitle": "Organic parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Organic_parts",
+      "search": "Organic parts inventory icon"
+    },
+    {
+      "id": "bulk39-padded-parts",
+      "label": "Padded parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/padded-parts",
+      "fileTitle": "Padded parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Padded_parts",
+      "search": "Padded parts inventory icon"
+    },
+    {
+      "id": "bulk39-powerful-components",
+      "label": "Powerful components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/powerful-components",
+      "fileTitle": "Powerful components.png",
+      "canonicalPage": "https://runescape.wiki/w/Powerful_components",
+      "search": "Powerful components inventory icon"
+    },
+    {
+      "id": "bulk39-precious-components",
+      "label": "Precious components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/precious-components",
+      "fileTitle": "Precious components.png",
+      "canonicalPage": "https://runescape.wiki/w/Precious_components",
+      "search": "Precious components inventory icon"
+    },
+    {
+      "id": "bulk39-precise-components",
+      "label": "Precise components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/precise-components",
+      "fileTitle": "Precise components.png",
+      "canonicalPage": "https://runescape.wiki/w/Precise_components",
+      "search": "Precise components inventory icon"
+    },
+    {
+      "id": "bulk39-refined-components",
+      "label": "Refined components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/refined-components",
+      "fileTitle": "Refined components.png",
+      "canonicalPage": "https://runescape.wiki/w/Refined_components",
+      "search": "Refined components inventory icon"
+    },
+    {
+      "id": "bulk39-sharp-components",
+      "label": "Sharp components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/sharp-components",
+      "fileTitle": "Sharp components.png",
+      "canonicalPage": "https://runescape.wiki/w/Sharp_components",
+      "search": "Sharp components inventory icon"
+    },
+    {
+      "id": "bulk39-stave-parts",
+      "label": "Stave parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/stave-parts",
+      "fileTitle": "Stave parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Stave_parts",
+      "search": "Stave parts inventory icon"
+    },
+    {
+      "id": "bulk39-strong-components",
+      "label": "Strong components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/strong-components",
+      "fileTitle": "Strong components.png",
+      "canonicalPage": "https://runescape.wiki/w/Strong_components",
+      "search": "Strong components inventory icon"
+    },
+    {
+      "id": "bulk39-stunning-components",
+      "label": "Stunning components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/stunning-components",
+      "fileTitle": "Stunning components.png",
+      "canonicalPage": "https://runescape.wiki/w/Stunning_components",
+      "search": "Stunning components inventory icon"
+    },
+    {
+      "id": "bulk39-subtle-components",
+      "label": "Subtle components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/subtle-components",
+      "fileTitle": "Subtle components.png",
+      "canonicalPage": "https://runescape.wiki/w/Subtle_components",
+      "search": "Subtle components inventory icon"
+    },
+    {
+      "id": "bulk39-swift-components",
+      "label": "Swift components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/swift-components",
+      "fileTitle": "Swift components.png",
+      "canonicalPage": "https://runescape.wiki/w/Swift_components",
+      "search": "Swift components inventory icon"
+    },
+    {
+      "id": "bulk39-tensile-parts",
+      "label": "Tensile parts",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/tensile-parts",
+      "fileTitle": "Tensile parts.png",
+      "canonicalPage": "https://runescape.wiki/w/Tensile_parts",
+      "search": "Tensile parts inventory icon"
+    },
+    {
+      "id": "bulk39-variable-components",
+      "label": "Variable components",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/variable-components",
+      "fileTitle": "Variable components.png",
+      "canonicalPage": "https://runescape.wiki/w/Variable_components",
+      "search": "Variable components inventory icon"
+    }
+  ]
+}

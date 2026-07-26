@@ -76,6 +76,10 @@ const STRIP_CLAUSES = [
   /\bPrefer this row[^.·]*[.·]?/gi,
   /\bPrefer this equipment row[^.·]*[.·]?/gi,
   /\bPrefer this over TH acquisition assumptions\.?/gi,
+  /\bPrefer this when scoring[^.·]*[.·]?/gi,
+  /\bprefer this Asgarnia mapping[^.·]*[.·]?/gi,
+  /\bfor Equilibrium region taxonomy,\s*/gi,
+  /\buntil Jagex publishes a split\.?/gi,
   /\bPrefer the existing id[^.·]*[.·]?/gi,
   /\bPrefer the existing [a-z0-9:_-]+ (equipment )?row[^.·]*[.·]?/gi,
   /\bPrefer existing [a-z0-9:_-]+ (equipment )?row[^.·]*[.·]?/gi,
@@ -230,6 +234,9 @@ function polishPlayerCopy(seg) {
     .replace(/^Was buried[^.·]*[.·]?\s*/i, "")
     .replace(/^Was fully missing\.?\s*/i, "")
     .replace(/^Missing (?:named |combat[^.·]*|t\d+[^.·]*|mid-high[^.·]*)[.·]?\s*/i, "")
+    // orphan clause after wiping a leading region:id subject
+    .replace(/^Arc reward depth;\s*/i, "")
+    .replace(/^this is the Ports hub itself\.?\s*/i, "Player-owned port hub. ")
     // hanging em-dash before segment glue left by agent strip
     .replace(/\s*[—–]\s*$/g, "")
     .replace(/^[—–]\s*/g, "")

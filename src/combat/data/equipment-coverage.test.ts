@@ -20,7 +20,6 @@ const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
   "ring",
   "pocket",
   "ammo",
-  "aura",
 ] as const;
 
 const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);

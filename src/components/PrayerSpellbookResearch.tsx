@@ -1,13 +1,12 @@
 import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
 import { getPrayerCatalogueBooks } from "@/research/prayers";
 import { getPrayerBooks } from "@/research/prayerBooks";
-import { getSpecialMagicSystems, getSpellbooks } from "@/research/spellbooks";
+import { getSpellbooks } from "@/research/spellbooks";
 import prayerSource from "../../data/reference/prayers.json";
 
 const books = getPrayerCatalogueBooks();
 const prayerBooks = getPrayerBooks();
 const spellbooks = getSpellbooks();
-const specialMagic = getSpecialMagicSystems();
 
 /** source_refs are keys into prayers.json `sources`, not bare URLs. */
 const REF_URLS = (prayerSource.sources ?? {}) as Record<string, string>;
@@ -37,17 +36,24 @@ const prayerTabs: ResearchTab[] = books.map((book) => ({
     const urls = resolveSourceRefs(
       "source_refs" in prayer ? (prayer as { source_refs?: unknown }).source_refs : undefined,
     );
+    const required = (prayer as { required_regions?: string[] }).required_regions;
+    const regionType = (prayer as { region_requirement_type?: string }).region_requirement_type;
     return {
       ...prayer,
       category: book.name,
       book_id: book.id,
-      requiredRegions: (prayer as { required_regions?: string[] }).required_regions,
+      // Empty [] alone is unmapped; explicit no_region_requirement is global.
+      requiredRegions:
+        regionType === "no_region_requirement"
+          ? ["global"]
+          : required,
+      region_requirement_type: regionType,
       source_urls: urls.length ? urls : undefined,
     } as unknown as ResearchRow;
   }),
 }));
 
-const TABS: ResearchTab[] = [
+const PRAYER_TABS: ResearchTab[] = [
   ...prayerTabs,
   {
     key: "books-model",
@@ -55,28 +61,46 @@ const TABS: ResearchTab[] = [
     description: "",
     rows: prayerBooks as unknown as ResearchRow[],
   },
+];
+
+const MAGIC_TABS: ResearchTab[] = [
   {
     key: "spellbooks",
     label: "Spellbooks",
     description: "",
-    rows: spellbooks as unknown as ResearchRow[],
-  },
-  {
-    key: "special-magic",
-    label: "Special systems",
-    description: "",
-    rows: specialMagic as unknown as ResearchRow[],
+    rows: spellbooks.map((book) => ({
+      ...book,
+      requiredRegions: book.default_book
+        ? ["global"]
+        : "region_hint" in book
+          ? [book.region_hint]
+          : book.id === "ancient-magicks"
+            ? ["desert"]
+            : undefined,
+    })) as unknown as ResearchRow[],
   },
 ];
 
-export function PrayerSpellbookResearch() {
+export function PrayerResearch() {
   return (
     <ResearchSection
       title="Prayers"
       intro=""
-      tabs={TABS}
+      tabs={PRAYER_TABS}
       searchPlaceholder="Search prayers"
       searchLabel="Search prayers"
+    />
+  );
+}
+
+export function MagicResearch() {
+  return (
+    <ResearchSection
+      title="Magic"
+      intro=""
+      tabs={MAGIC_TABS}
+      searchPlaceholder="Search Magic"
+      searchLabel="Search Magic"
     />
   );
 }

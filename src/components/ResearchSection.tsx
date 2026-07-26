@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import type { ResearchRegion } from "@/research/catalog";
+import { GameIcon } from "@/components/GameIcon";
+import { dataEntityIconPath } from "@/lib/gameArt";
+import { safeExternalHref } from "@/lib/safeHref";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 export type ResearchRow = Record<string, unknown>;
@@ -410,11 +413,15 @@ const LINE_MAX = 120;
 const BODY_MAX_LINES = 2;
 
 const AUDIT_NOISE =
-  /\b(wave[-\s]?\d|final pass|audit rank|rank-\d|first-class row|dual-claim|do not re-emit|does not re-emit|do not invent|do not dual|canonical emit|supersedes dual|residual-?[ab]|still-fucked|enrichment|planner stop|cross-region:|combat:|anachronia:|asgarnia:|kandarin:|tirannwn:|fremennik:|desert:|prifddinas:|slayer:|firemaking:)\b/i;
+  /\b(wave[-\s]?\d|final pass|audit rank|rank-\d|first-class row|first-class residual|dual-claim|do not re-emit|does not re-emit|do not invent|do not dual|do not claim|do not hard-require|canonical emit|supersedes dual|residual-?[ab]|economy residual|infrastructure residual|residual package|explicitly requested|named list expansion|named residual|planner checklists?|still-fucked|enrichment|planner stop|missing from regional-skilling|cross-region:|combat:|anachronia:|asgarnia:|kandarin:|tirannwn:|fremennik:|desert:|prifddinas:|slayer:|firemaking:)\b/i;
 
 /** One short human sentence — never the full audit dump. */
 export function clipProse(raw: string, max = LINE_MAX): string {
-  let s = raw.replace(/\s+/g, " ").trim();
+  let s = raw
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[·•-]\s*/, "")
+    .replace(/\s+—\s+/g, "; ");
   if (!s) return "";
 
   // Prefer a sentence that is not maintainance/audit meta.
@@ -635,33 +642,48 @@ function region(row: ResearchRow): string {
   return regionName(direct);
 }
 
-const REGION_SCOPE_KEYS = [
+/** Hard elective locks — when present, these alone decide region filter membership. */
+const HARD_REGION_KEYS = [
+  "requiredRegions",
+  "required_regions",
+  "required_region",
+  "required_regions_for_collection_loop",
+] as const;
+
+/**
+ * Host / geography labels used only when there is no hard requiredRegions list.
+ * Soft pressure fields (region_pressure, supporting_regions, optionalRegions, comboLabel)
+ * must NOT expand filter membership — that was parking invent/support trash under every
+ * region that appeared as a soft hint.
+ */
+const HOST_REGION_KEYS = [
   "region",
   "regionId",
   "region_hint",
   "region_hints",
   "regionHints",
-  "region_candidates",
-  "region_pressure",
-  "region_options",
   "regions",
-  "optionalRegions",
-  "allRegions",
-  "required_region",
-  "required_regions",
-  "requiredRegions",
-  "required_regions_for_collection_loop",
-  "artifact_regions",
-  "collector_region",
-  "collector_regions",
-  "acquisition_region",
-  "acquisition_regions",
   "working_region",
   "geographic_region",
-  "supporting_regions",
-  "alternate_region_routes",
-  "comboLabel",
+  "acquisition_region",
+  "acquisition_regions",
+  "collector_region",
+  "collector_regions",
 ] as const;
+
+/** Id prefixes that are not Equilibrium elective region ids. */
+const NON_REGION_ID_PREFIXES = new Set([
+  "invention",
+  "crossregion",
+  "cross-region",
+  "multiregion",
+  "multi-region",
+  "global",
+  "combat",
+  "boss",
+  "item",
+  "prifddinas", // mapped via regionHints/tirannwn, not a league elective id
+]);
 
 function collectRegionScope(value: unknown, out: string[]): void {
   if (typeof value === "string" && value.trim()) out.push(value);
@@ -675,26 +697,60 @@ function normalizeRegionScope(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
 }
 
-/** Strict regional rows plus records explicitly marked global. Unmapped rows stay out. */
+function regionAliases(
+  selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases">,
+): string[] {
+  return [selectedRegion.id, selectedRegion.name, ...selectedRegion.aliases]
+    .map(normalizeRegionScope)
+    .filter(Boolean);
+}
+
+function scopeMatchesAliases(scope: string[], aliases: string[]): boolean {
+  const normalized = scope.map(normalizeRegionScope).filter(Boolean);
+  const concrete = normalized.filter(
+    (value) =>
+      !value.includes("global") &&
+      !value.includes("allregions") &&
+      !value.includes("anyregion"),
+  );
+  // Pure global markers (global_once_unlocked) match every region filter.
+  if (!concrete.length) return normalized.length > 0;
+  return concrete.some((value) => aliases.some((alias) => value.includes(alias) || alias.includes(value)));
+}
+
+/**
+ * Region filter membership.
+ * - Hard requiredRegions (when non-empty) are the only match keys.
+ * - Soft support hints / combo labels / pressure fields do not expand membership.
+ * - Empty hard reqs fall back to host geography (hints + real region id prefix).
+ * - Explicit `no_region_requirement` is global (standard prayers, etc.).
+ * - Unmapped rows stay out. Explicit global markers still match all regions.
+ */
 export function researchRowMatchesRegion(
   row: ResearchRow,
   selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases"> | null,
 ): boolean {
   if (!selectedRegion) return true;
-  const scope: string[] = [];
-  for (const key of REGION_SCOPE_KEYS) collectRegionScope(row[key], scope);
-  if (typeof row.id === "string" && row.id.includes(":")) scope.push(row.id.split(":", 1)[0]!);
 
-  const normalized = scope.map(normalizeRegionScope).filter(Boolean);
-  const concrete = normalized.filter(
-    (value) => !value.includes("global") && !value.includes("allregions") && !value.includes("anyregion"),
-  );
-  if (!concrete.length) return normalized.length > 0;
+  // Catalogue mark for items available with no elective-region lock.
+  if (row.region_requirement_type === "no_region_requirement") return true;
 
-  const aliases = [selectedRegion.id, selectedRegion.name, ...selectedRegion.aliases]
-    .map(normalizeRegionScope)
-    .filter(Boolean);
-  return concrete.some((value) => aliases.some((alias) => value.includes(alias)));
+  const aliases = regionAliases(selectedRegion);
+
+  const hard: string[] = [];
+  for (const key of HARD_REGION_KEYS) collectRegionScope(row[key], hard);
+  if (hard.length) return scopeMatchesAliases(hard, aliases);
+
+  const host: string[] = [];
+  for (const key of HOST_REGION_KEYS) collectRegionScope(row[key], host);
+  if (typeof row.id === "string" && row.id.includes(":")) {
+    const prefix = row.id.split(":", 1)[0]!;
+    const norm = normalizeRegionScope(prefix);
+    if (norm && !NON_REGION_ID_PREFIXES.has(norm) && !NON_REGION_ID_PREFIXES.has(prefix)) {
+      host.push(prefix);
+    }
+  }
+  return scopeMatchesAliases(host, aliases);
 }
 
 function sourceName(url: string): string {
@@ -706,10 +762,9 @@ function sourceName(url: string): string {
 }
 
 function pullUrl(value: unknown): string | null {
-  if (typeof value === "string" && value.startsWith("https://")) return value;
+  if (typeof value === "string") return safeExternalHref(value);
   if (value && typeof value === "object" && "url" in value) {
-    const url = (value as { url?: unknown }).url;
-    if (typeof url === "string" && url.startsWith("https://")) return url;
+    return safeExternalHref((value as { url?: unknown }).url);
   }
   return null;
 }
@@ -890,7 +945,7 @@ export function ResearchSection({
     <section className="data-record-view">
       <DataViewHeader
         title={heading}
-        description={blurb || lead || selected.label}
+        description={blurb || lead || undefined}
         count={rows.length}
       >
         <input
@@ -935,34 +990,46 @@ export function ResearchSection({
             rows.map((row, index) => {
               const sourceLinks = links(row);
               const rowDetails = details(row);
+              const rowSubtitle = clipProse(subtitle(row), 80);
+              const rowTitle = title(row);
+              const iconSrc = dataEntityIconPath({
+                name: rowTitle !== "—" ? rowTitle : typeof row.name === "string" ? row.name : null,
+                kind: String(row.recordType || row.category || row.kind || ""),
+                id: row.id != null ? String(row.id) : null,
+              });
               return (
                 <article
-                  key={String(row.id || `${title(row)}-${index}`)}
+                  key={String(row.id || `${rowTitle}-${index}`)}
                   className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
                 >
-                  <div className="min-w-0">
-                    <h3 className="m-0 text-[14px] font-medium text-parch-50">
-                      {title(row)}
-                      {sourceLinks.length ? (
-                        <span className="ml-1.5 font-normal">
-                          {sourceLinks.map((url, linkIndex) => (
-                            <a
-                              key={url}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-gem-300 hover:underline"
-                            >
-                              {linkIndex > 0 ? " · " : "· "}
-                              {sourceName(url)}
-                            </a>
-                          ))}
-                        </span>
+                  <div className="data-record-row__identity">
+                    <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
+                      {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
+                    </span>
+                    <div className="data-record-row__copy min-w-0">
+                      <h3 className="m-0 text-[15px] font-medium text-parch-50">
+                        {rowTitle}
+                        {sourceLinks.length ? (
+                          <span className="ml-1.5 font-normal">
+                            {sourceLinks.map((url, linkIndex) => (
+                              <a
+                                key={url}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-gem-300 hover:underline"
+                              >
+                                {linkIndex > 0 ? " · " : "· "}
+                                {sourceName(url)}
+                              </a>
+                            ))}
+                          </span>
+                        ) : null}
+                      </h3>
+                      {rowSubtitle ? (
+                        <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">{rowSubtitle}</p>
                       ) : null}
-                    </h3>
-                    {subtitle(row) ? (
-                      <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{subtitle(row)}</p>
-                    ) : null}
+                    </div>
                   </div>
                   <p className="data-record-row__region">{region(row)}</p>
                   <div className="data-record-row__details">

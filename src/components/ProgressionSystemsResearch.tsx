@@ -22,7 +22,7 @@ const farmPerks = pass5.farm_combat_perks.records.map((record) => ({
   confidence: pass5.farm_combat_perks.confidence,
 }));
 
-const TABS: ResearchTab[] = [
+export const PROGRESSION_SYSTEM_TABS: ResearchTab[] = [
   {
     key: "necromancy",
     label: "Necromancy talents",
@@ -72,7 +72,7 @@ export function ProgressionSystemsResearch() {
     <ResearchSection
       title="Progression"
       intro=""
-      tabs={TABS}
+      tabs={PROGRESSION_SYSTEM_TABS}
       searchPlaceholder="Search systems"
       searchLabel="Search systems"
     />

@@ -40,4 +40,15 @@ describe("research catalog", () => {
     }
     expect(orphans).toEqual([]);
   });
+
+  it("normalizes structured Wiki XP rates", () => {
+    const divination = catalogSource.skills.find((skill) => skill.id === "divination");
+    expect(divination?.methods.find((method) => method.method === "Pale wisps")?.xpRate).toBe(
+      "4,000–5,000 XP/h",
+    );
+    expect(
+      divination?.methods.find((method) => method.method === "Gate of Elidinis corrupt shard cleansing")
+        ?.xpRate,
+    ).toBe("285,000 XP/h at 99");
+  });
 });

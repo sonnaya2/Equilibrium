@@ -75,6 +75,63 @@ describe("researchRowMatchesRegion", () => {
     expect(researchRowMatchesRegion({ requiredRegions: ["desert"] }, misthalin)).toBe(false);
     expect(researchRowMatchesRegion({ name: "Unknown" }, misthalin)).toBe(false);
   });
+
+  it("does not expand hard-req rows via soft regionHints", () => {
+    const row = {
+      id: "anachronia:laniakea-slayer-master",
+      requiredRegions: ["anachronia"],
+      regionHints: ["anachronia", "tirannwn", "kandarin", "forinthry", "desert"],
+    };
+    expect(researchRowMatchesRegion(row, { id: "anachronia", name: "Anachronia", aliases: [] })).toBe(
+      true,
+    );
+    expect(researchRowMatchesRegion(row, misthalin)).toBe(false);
+    expect(
+      researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] }),
+    ).toBe(false);
+  });
+
+  it("does not treat invention: id prefix as every-region membership", () => {
+    const row = {
+      id: "invention:augmentor",
+      requiredRegions: [] as string[],
+      regionHints: [] as string[],
+    };
+    expect(researchRowMatchesRegion(row, misthalin)).toBe(false);
+    expect(
+      researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] }),
+    ).toBe(false);
+  });
+
+  it("still hosts empty-req place rows via regionHints / region id prefix", () => {
+    expect(
+      researchRowMatchesRegion(
+        { id: "asgarnia:invention-guild", regionHints: ["asgarnia"], requiredRegions: [] },
+        { id: "asgarnia", name: "Asgarnia", aliases: [] },
+      ),
+    ).toBe(true);
+    expect(
+      researchRowMatchesRegion(
+        { id: "asgarnia:invention-guild", regionHints: ["asgarnia"], requiredRegions: [] },
+        misthalin,
+      ),
+    ).toBe(false);
+  });
+
+  it("treats no_region_requirement as global (standard prayers)", () => {
+    const row = {
+      name: "Clarity of Thought",
+      required_regions: [] as string[],
+      region_requirement_type: "no_region_requirement",
+    };
+    expect(researchRowMatchesRegion(row, misthalin)).toBe(true);
+    expect(
+      researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] }),
+    ).toBe(true);
+    expect(
+      researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] }),
+    ).toBe(true);
+  });
 });
 
 

@@ -241,10 +241,10 @@ export function isKnownEquipmentId(id: string): boolean {
 
 /**
  * Drop slotted ids / unlock pins that no longer exist in the combat equipment
- * catalogue (removed after a corpus trim) or are unlock.type "removed"
- * (retired live, e.g. 2026 combat auras). Inject `known` in tests; default
- * uses isKnownEquipmentId. Orphans leave empty doll cells while still counting
- * as equipped — prune on load/update so counts and localStorage stay honest.
+ * catalogue (removed after a corpus trim) or are unlock.type "removed".
+ * Inject `known` in tests; default uses isKnownEquipmentId. Orphans leave empty
+ * doll cells while still counting as equipped — prune on load/update so counts
+ * and localStorage stay honest.
  */
 export function pruneUnknownEquipment(
   loadout: Loadout,

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Page } from "@/components/Page";
 import { getResearchCatalog } from "@/research/catalog";
 import { DataWorkbenchHost } from "./DataWorkbenchHost";
@@ -16,21 +15,7 @@ export default function DataPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill data-workbench">
-        <header className="data-workbench__header">
-          <span className="data-workbench__title">Data</span>
-          <span className="data-workbench__summary">
-            {catalog.datasets.regions} regions · {catalog.datasets.skills} skills ·{" "}
-            {catalog.datasets.trainingMethods} methods
-          </span>
-          <Link href="/sources" className="data-workbench__sources">
-            Sources
-          </Link>
-        </header>
-
-        <DataWorkbenchHost
-          catalog={catalog}
-          notes={<p className="text-parch-300">Ironman only.</p>}
-        />
+        <DataWorkbenchHost catalog={catalog} />
       </div>
     </Page>
   );

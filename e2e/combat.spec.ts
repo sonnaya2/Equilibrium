@@ -67,13 +67,15 @@ test("setup gear filters equipment by region", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Seismic wand/ })).toBeHidden();
 });
 
-test("two-handed weapons lock the linked off-hand slot", async ({ page }) => {
+test("the main-hand picker accepts two-handed weapons and locks off-hand", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  const weapons = page.getByRole("group", { name: "Weapon slots" });
+  const weapons = page.getByRole("group", { name: "Weapon and body slots" });
 
-  await weapons.getByRole("button", { name: /^Two-hand/ }).click();
+  await expect(weapons.getByRole("button", { name: /^Two-hand/ })).toHaveCount(0);
+  await weapons.getByRole("button", { name: /^Main-hand/ }).click();
   await page.getByRole("button", { name: /Masterwork 2h sword/ }).click();
 
+  await expect(weapons.getByRole("button", { name: /^Main-hand.*Masterwork 2h sword/ })).toBeVisible();
   await expect(weapons.getByRole("button", { name: /^Off-hand/ })).toBeDisabled();
   await expect(weapons.getByText("Locked")).toBeVisible();
 });

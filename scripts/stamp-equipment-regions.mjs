@@ -119,6 +119,8 @@ const ALIASES = new Map([
   ["devourers-guard", "devourers-guard"],
   ["masterwork-spear-of-annihilation", "masterwork-spear-of-annihilation"],
   // trimmed-masterwork-spear-of-annihilation: pass7 REMOVE_IDS phantom (wiki redirect only)
+  // ancient-rebounder: pass9 REMOVE_IDS phantom (wiki redirects to Ancient lantern)
+  ["ancient-rebounder", "ancient-lantern"],
   ["kerapacs-wrist-wraps", "kerapacs-wrist-wraps"],
   ["enhanced-kerapacs-wrist-wraps", "enhanced-kerapacs-wrist-wraps"],
   ["erethdors-grimoire", "erethdors-grimoire"],
@@ -550,7 +552,7 @@ for (const row of [
   { id: "item:farseer-kiteshield", name: "Farseer kiteshield", style: "magic", slot: "offhand", tier: 80, wiki: "Farseer_kiteshield" },
   // Style OH defender ladder siblings (defender/repriser already present)
   { id: "item:kalphite-rebounder", name: "Kalphite rebounder", style: "magic", slot: "offhand", tier: 90, wiki: "Kalphite_rebounder" },
-  { id: "item:ancient-rebounder", name: "Ancient rebounder", style: "magic", slot: "offhand", tier: 80, wiki: "Ancient_rebounder" },
+  // pass9: ancient-rebounder removed — wiki redirect phantom of Ancient lantern (item:ancient-lantern)
   // Hexhunter ammo residual (wiki: Stalker arrows, not "Hexhunter arrows")
   { id: "item:stalker-arrows", name: "Stalker arrows", style: "ranged", slot: "ammo", tier: 80, wiki: "Stalker_arrow", bonuses: { damage: 768 } },
   // EoF melee special residual (Tormented demons — Misthalin Ancient Guthix Temple)
@@ -924,9 +926,10 @@ const FAMILY = [
     // pass2: reclaim corrupted/tainted from false Forinthry DG claim.
     requirement: "Barrows defenders / corruption sigil ladder",
     source: "family:morytania-defenders",
-    // pass6: +ancient rebounder magic OH sibling.
+    // pass6 had "ancient rebounder" — pass9: that name is a wiki redirect to Ancient lantern
+    // (invent-global USER_FORCE clear). Keep defender/repriser/t70 ladder only.
     test: (r) =>
-      /^(ancient defender|ancient repriser|ancient rebounder|corrupted defender|tainted repriser|sunspear)/i.test(
+      /^(ancient defender|ancient repriser|corrupted defender|tainted repriser|sunspear)/i.test(
         r.name,
       ),
   },
@@ -1950,7 +1953,7 @@ const USER_FORCE = new Map([
   ["spirit-cape", ["forinthry"]],
   ["chaotic-kiteshield", ["forinthry"]],
   ["farseer-kiteshield", ["forinthry"]],
-  ["ancient-rebounder", ["morytania"]],
+  // pass9: ancient-rebounder removed (wiki redirect → ancient-lantern; invent-global empty)
   ["stalker-arrows", ["forinthry"]],
   // phantom wiki id — strip if re-scraped
   // hexhunter-arrows removed; stalker-arrows is the real ammo
@@ -2527,6 +2530,9 @@ const REMOVE_IDS = new Set([
   // Wiki family scrape "Limitless staves" — Invention Limitless ability category, not a single weapon.
   "item:limitless-staff",
   "item:limitless-staves", // scrape alias guard
+  // pass9 — catalog hygiene: wiki-redirect phantom duplicate of a kept wearable
+  // "Ancient rebounder" redirects to "Ancient lantern" (same item); pass6 inject invented a twin row.
+  "item:ancient-rebounder",
 ]);
 
 for (const rule of FAMILY) {
@@ -2923,8 +2929,7 @@ const KEY_BIS = [
   // pass6 BiS residual inject
   "item:occultists-ring", "item:ring-of-vigour", "item:guthix-staff", "item:spirit-cape",
   "item:chaotic-kiteshield", "item:farseer-kiteshield", "item:kalphite-rebounder",
-  "item:ancient-rebounder", "item:stalker-arrows", "item:dragon-claws", "item:off-hand-dragon-claw",
-  "item:off-hand-dragon-claw",
+  "item:ancient-lantern", "item:stalker-arrows", "item:dragon-claws", "item:off-hand-dragon-claw",
   "item:enhanced-excalibur", "item:nightmare-gauntlets", "item:enhanced-nightmare-gauntlets",
   "item:decimation", "item:obliteration", "item:annihilation", "item:off-hand-shadow-glaive",
   "item:orb-of-the-cywir-elders",
@@ -2990,7 +2995,7 @@ write(REPORT_OUT, report);
     "item:chaotic-kiteshield",
     "item:farseer-kiteshield",
     "item:kalphite-rebounder",
-    "item:ancient-rebounder",
+    // pass9: ancient-rebounder dropped (phantom of ancient-lantern)
     "item:stalker-arrows",
     "item:dragon-claws",
   ];

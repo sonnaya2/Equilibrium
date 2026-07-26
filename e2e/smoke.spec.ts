@@ -26,17 +26,47 @@ test("all routes respond", async ({ page }) => {
 test("data region rail owns every downstream filter", async ({ page }) => {
   await page.goto("/data");
 
-  await expect(page.getByRole("listbox", { name: "Skills in Misthalin" })).toBeVisible();
-  await expect(page.getByRole("option", { name: /^Archaeology/ })).toHaveCount(0);
+  const misthalinSkills = page.getByRole("listbox", { name: "Skills in Misthalin" });
+  await expect(misthalinSkills).toBeVisible();
+  await expect(misthalinSkills.getByRole("option", { name: /^Archaeology/ })).toBeVisible();
+  await expect(misthalinSkills.getByRole("option", { name: /^Magic/ })).toBeVisible();
+  await expect(misthalinSkills.getByRole("option", { name: /^Prayer/ })).toBeVisible();
+  await misthalinSkills.getByRole("option", { name: /^Magic/ }).click();
+  await expect(page.getByRole("heading", { name: /^Standard spellbook/ })).toBeVisible();
+  await misthalinSkills.getByRole("option", { name: "All skills", exact: true }).click();
+  await expect(
+    page.locator(".data-upgrade-row__name").filter({ hasText: /^Ancient Summoning/ }),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator(".data-upgrade-row")
+      .filter({ hasText: /^Expansive essence pouch/ })
+      .getByLabel("Region combo: misthalin + forinthry"),
+  ).toHaveCount(1);
+  await expect(
+    page.locator(".data-region-content-table tbody tr").filter({ hasText: "Kerapac" }),
+  ).toContainText("Fractured Staff of Armadyl");
+  await expect(page.getByText("Major unlocks", { exact: true })).toBeVisible();
+  await expect(page.locator(".data-region-content-table")).not.toContainText("Vermyx");
+  await page.getByRole("button", { name: "View Varrock Dig Site image" }).click();
+  await expect(page.getByRole("dialog", { name: "Varrock Dig Site image" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("combobox", { name: "Sort browse data" }).selectOption("name");
+  await expect(page.locator(".data-region-content-table tbody tr").first()).toContainText("Arch-Glacor");
 
   await page.getByRole("option", { name: /^Havenhythe,/ }).click();
   const skills = page.getByRole("listbox", { name: "Skills in Havenhythe" });
   await expect(skills.getByRole("option", { name: /^Archaeology/ })).toBeVisible();
   await skills.getByRole("option", { name: /^Archaeology/ }).click();
   await expect(page.getByRole("heading", { name: "Archaeology" })).toBeVisible();
-  await expect(page.getByText(/methods in Havenhythe/)).toBeVisible();
+  await expect(page.getByRole("table", { name: "Archaeology training in Havenhythe" })).toBeVisible();
 
   const dataTabs = page.getByRole("tablist", { name: "Data" });
+  await expect(dataTabs.getByRole("tab", { name: "Systems", exact: true })).toHaveCount(0);
+  await expect(dataTabs.getByRole("tab", { name: "Crafting", exact: true })).toHaveCount(0);
+  await expect(dataTabs.getByRole("tab", { name: "Prayers", exact: true })).toHaveCount(0);
+  await expect(dataTabs.getByRole("tab", { name: "Notes", exact: true })).toHaveCount(0);
+  await expect(dataTabs.getByRole("tab", { name: "Boundaries", exact: true })).toHaveCount(0);
   await dataTabs.getByRole("tab", { name: "Quests", exact: true }).click();
   await expect(page.getByRole("combobox", { name: "Region" })).toHaveCount(0);
   await expect(page.getByText("Hearts of Sanguine", { exact: false })).toBeVisible();
@@ -48,10 +78,10 @@ test("data region rail owns every downstream filter", async ({ page }) => {
 
   await dataTabs.getByRole("tab", { name: "Progression", exact: true }).click();
   await expect(page.getByRole("option", { name: /^Misthalin,/ })).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel").getByText(/^[1-9]\d* shown$/)).toBeVisible();
+  await expect(page.getByRole("tabpanel").getByLabel(/^[1-9]\d* routes$/)).toBeVisible();
 
   await page.getByRole("option", { name: /^Havenhythe,/ }).click();
-  await expect(page.getByText("0 shown", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("0 routes", { exact: true })).toBeVisible();
   await dataTabs.getByRole("tab", { name: "Unlocks", exact: true }).click();
-  await expect(page.getByText("0 shown", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("0 records", { exact: true })).toBeVisible();
 });

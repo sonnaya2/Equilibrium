@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-07-26",
+  "notes": [
+    "Batch 40: concrete icons for remaining unresolved data labels"
+  ],
+  "assets": [
+    {
+      "id": "u40-hunters-outfit",
+      "label": "Hunter's outfit",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/hunters-outfit",
+      "fileTitle": "Hunter's headwear.png",
+      "canonicalPage": "https://runescape.wiki/w/Hunter%27s_outfit",
+      "search": "Hunter's headwear inventory icon"
+    },
+    {
+      "id": "u40-calquat",
+      "label": "Calquat tree",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/calquat-tree",
+      "fileTitle": "Calquat tree seed.png",
+      "canonicalPage": "https://runescape.wiki/w/Calquat_tree",
+      "search": "Calquat tree seed inventory"
+    },
+    {
+      "id": "u40-camdozaal",
+      "label": "Camdozaal",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/camdozaal",
+      "fileTitle": "Camdozaal.png",
+      "canonicalPage": "https://runescape.wiki/w/Camdozaal",
+      "search": "Camdozaal location image"
+    },
+    {
+      "id": "u40-sacred-forge",
+      "label": "Sacred Forge",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/sacred-forge",
+      "fileTitle": "Sacred Forge.png",
+      "canonicalPage": "https://runescape.wiki/w/Sacred_Forge",
+      "search": "Sacred Forge Camdozaal"
+    },
+    {
+      "id": "u40-canifis",
+      "label": "Canifis",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/canifis",
+      "fileTitle": "Canifis.png",
+      "canonicalPage": "https://runescape.wiki/w/Canifis",
+      "search": "Canifis location"
+    },
+    {
+      "id": "u40-mortton",
+      "label": "Mort'ton",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/mortton",
+      "fileTitle": "Mort'ton.png",
+      "canonicalPage": "https://runescape.wiki/w/Mort%27ton",
+      "search": "Mort'ton location"
+    },
+    {
+      "id": "u40-decorated-fishing-urn",
+      "label": "Decorated fishing urn",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/decorated-fishing-urn",
+      "fileTitle": "Decorated fishing urn (r).png",
+      "canonicalPage": "https://runescape.wiki/w/Decorated_fishing_urn",
+      "search": "Decorated fishing urn inventory"
+    },
+    {
+      "id": "u40-exquisite-cooking-urn",
+      "label": "Exquisite cooking urn",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/exquisite-cooking-urn",
+      "fileTitle": "Exquisite cooking urn (r).png",
+      "canonicalPage": "https://runescape.wiki/w/Exquisite_cooking_urn",
+      "search": "Exquisite cooking urn inventory"
+    },
+    {
+      "id": "u40-cactus",
+      "label": "Cactus",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/cactus",
+      "fileTitle": "Cactus.png",
+      "canonicalPage": "https://runescape.wiki/w/Cactus",
+      "search": "Cactus farming inventory"
+    },
+    {
+      "id": "u40-fruit-tree",
+      "label": "Fruit tree seed",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/fruit-tree-seed",
+      "fileTitle": "Apple tree seed.png",
+      "canonicalPage": "https://runescape.wiki/w/Apple_tree_seed",
+      "search": "Apple tree seed inventory"
+    },
+    {
+      "id": "u40-urn",
+      "label": "Cracked cooking urn",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/cracked-cooking-urn",
+      "fileTitle": "Cracked cooking urn (r).png",
+      "canonicalPage": "https://runescape.wiki/w/Cracked_cooking_urn",
+      "search": "Cracked cooking urn inventory"
+    },
+    {
+      "id": "u40-summoning-obelisk",
+      "label": "Summoning obelisk",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/summoning-obelisk",
+      "fileTitle": "Summoning obelisk.png",
+      "canonicalPage": "https://runescape.wiki/w/Summoning_obelisk",
+      "search": "Summoning obelisk"
+    },
+    {
+      "id": "u40-spirit-plane",
+      "label": "Spirit Plane",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/spirit-plane",
+      "fileTitle": "Summoning spirit plane portal.png",
+      "canonicalPage": "https://runescape.wiki/w/Spirit_Plane",
+      "search": "Spirit plane portal"
+    },
+    {
+      "id": "u40-infinity-ethereal",
+      "label": "Infinity ethereal head",
+      "category": "rs3/upgrades/skilling-outfits",
+      "path": "assets/rs3/upgrades/skilling-outfits/infinity-ethereal-head",
+      "fileTitle": "Infinity ethereal head.png",
+      "canonicalPage": "https://runescape.wiki/w/Infinity_ethereal_outfit",
+      "search": "Infinity ethereal head inventory"
+    },
+    {
+      "id": "u40-iorwerth",
+      "label": "Iorwerth Clan district",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/iorwerth-clan",
+      "fileTitle": "Iorwerth Clan district.png",
+      "canonicalPage": "https://runescape.wiki/w/Iorwerth_Clan",
+      "search": "Iorwerth Clan district"
+    },
+    {
+      "id": "u40-ithell",
+      "label": "Ithell Clan district",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ithell-clan",
+      "fileTitle": "Ithell Clan district.png",
+      "canonicalPage": "https://runescape.wiki/w/Ithell_Clan",
+      "search": "Ithell Clan district"
+    },
+    {
+      "id": "u40-singing-bowl",
+      "label": "Crystal singing bowl",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/crystal-singing-bowl",
+      "fileTitle": "Crystal-singing bowl.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_singing_bowl",
+      "search": "Crystal singing bowl"
+    },
+    {
+      "id": "u40-harmonium",
+      "label": "Harmonium",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/harmonium",
+      "fileTitle": "Harmonic dust.png",
+      "canonicalPage": "https://runescape.wiki/w/Harmonium",
+      "search": "Harmonic dust inventory"
+    },
+    {
+      "id": "u40-jackalope",
+      "label": "Jackalope",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/jackalope",
+      "fileTitle": "Jackalope.png",
+      "canonicalPage": "https://runescape.wiki/w/Jackalope",
+      "search": "Jackalope inventory"
+    },
+    {
+      "id": "u40-overgrown-idol",
+      "label": "Overgrown idol",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/overgrown-idol",
+      "fileTitle": "Overgrown idol.png",
+      "canonicalPage": "https://runescape.wiki/w/Overgrown_idol",
+      "search": "Overgrown idol"
+    },
+    {
+      "id": "u40-keldagrim",
+      "label": "Keldagrim",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/keldagrim",
+      "fileTitle": "Keldagrim.png",
+      "canonicalPage": "https://runescape.wiki/w/Keldagrim",
+      "search": "Keldagrim location"
+    },
+    {
+      "id": "u40-laughing-miner",
+      "label": "Laughing Miner Pub",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/laughing-miner-pub",
+      "fileTitle": "Laughing Miner Pub.png",
+      "canonicalPage": "https://runescape.wiki/w/Laughing_Miner_Pub",
+      "search": "Laughing Miner Pub"
+    },
+    {
+      "id": "u40-lunar-farming",
+      "label": "Fertile Soil",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/fertile-soil",
+      "fileTitle": "Fertile Soil.png",
+      "canonicalPage": "https://runescape.wiki/w/Fertile_Soil",
+      "search": "Fertile Soil spell icon"
+    },
+    {
+      "id": "u40-masterwork-ranged",
+      "label": "Masterwork ranged body",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/masterwork-ranged-body",
+      "fileTitle": "Masterwork ranged body.png",
+      "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_body",
+      "search": "Masterwork ranged body inventory"
+    },
+    {
+      "id": "u40-sandstone",
+      "label": "Sandstone",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/sandstone",
+      "fileTitle": "Sandstone (1kg).png",
+      "canonicalPage": "https://runescape.wiki/w/Sandstone",
+      "search": "Sandstone inventory"
+    },
+    {
+      "id": "u40-water-altar",
+      "label": "Water altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/water-altar",
+      "fileTitle": "Water altar.png",
+      "canonicalPage": "https://runescape.wiki/w/Water_altar",
+      "search": "Water altar"
+    },
+    {
+      "id": "u40-earth-altar",
+      "label": "Earth altar",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/earth-altar",
+      "fileTitle": "Earth altar.png",
+      "canonicalPage": "https://runescape.wiki/w/Earth_altar",
+      "search": "Earth altar"
+    },
+    {
+      "id": "u40-pure-essence",
+      "label": "Pure essence",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/pure-essence",
+      "fileTitle": "Pure essence.png",
+      "canonicalPage": "https://runescape.wiki/w/Pure_essence",
+      "search": "Pure essence inventory"
+    },
+    {
+      "id": "u40-area-tasks",
+      "label": "Area Tasks",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/area-tasks",
+      "fileTitle": "Area Tasks.png",
+      "canonicalPage": "https://runescape.wiki/w/Area_Tasks",
+      "search": "Area Tasks icon"
+    },
+    {
+      "id": "u40-velucia",
+      "label": "Velucia",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/velucia",
+      "fileTitle": "Velucia chathead.png",
+      "canonicalPage": "https://runescape.wiki/w/Velucia",
+      "search": "Velucia chathead"
+    },
+    {
+      "id": "u40-guildmaster-tony",
+      "label": "Guildmaster Tony",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/guildmaster-tony",
+      "fileTitle": "Guildmaster Tony chathead.png",
+      "canonicalPage": "https://runescape.wiki/w/Guildmaster_Tony",
+      "search": "Guildmaster Tony chathead"
+    },
+    {
+      "id": "u40-anachronia-totem",
+      "label": "Anachronia totem",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/anachronia-totem",
+      "fileTitle": "Totem of the Abyss.png",
+      "canonicalPage": "https://runescape.wiki/w/Anachronia_totem",
+      "search": "Anachronia totem"
+    },
+    {
+      "id": "u40-barricade",
+      "label": "Barricade",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/barricade",
+      "fileTitle": "Barricade.png",
+      "canonicalPage": "https://runescape.wiki/w/Barricade",
+      "search": "Barricade ability icon"
+    },
+    {
+      "id": "u40-armoured-hide",
+      "label": "Armoured Hide",
+      "category": "rs3/combat/abilities/defence",
+      "path": "assets/rs3/combat/abilities/defence/armoured-hide",
+      "fileTitle": "Debilitate.png",
+      "canonicalPage": "https://runescape.wiki/w/Armoured_Hide",
+      "search": "Armoured Hide ability"
+    },
+    {
+      "id": "u40-dragon-pickaxe",
+      "label": "Dragon pickaxe",
+      "category": "rs3/upgrades",
+      "path": "assets/rs3/upgrades/dragon-pickaxe",
+      "fileTitle": "Dragon pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Dragon_pickaxe",
+      "search": "Dragon pickaxe inventory"
+    },
+    {
+      "id": "u40-dragon-hatchet",
+      "label": "Dragon hatchet",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/dragon-hatchet",
+      "fileTitle": "Dragon hatchet.png",
+      "canonicalPage": "https://runescape.wiki/w/Dragon_hatchet",
+      "search": "Dragon hatchet inventory"
+    },
+    {
+      "id": "u40-crystal-pickaxe",
+      "label": "Crystal pickaxe",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/crystal-pickaxe",
+      "fileTitle": "Crystal pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Crystal_pickaxe",
+      "search": "Crystal pickaxe inventory"
+    },
+    {
+      "id": "u40-imcando-pickaxe",
+      "label": "Imcando pickaxe",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/imcando-pickaxe",
+      "fileTitle": "Imcando pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Imcando_pickaxe",
+      "search": "Imcando pickaxe inventory"
+    },
+    {
+      "id": "u40-tai-bwo-wannai",
+      "label": "Tai Bwo Wannai",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/tai-bwo-wannai",
+      "fileTitle": "Tai Bwo Wannai.png",
+      "canonicalPage": "https://runescape.wiki/w/Tai_Bwo_Wannai",
+      "search": "Tai Bwo Wannai location"
+    },
+    {
+      "id": "u40-gara-dul",
+      "label": "Gara-Dul",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/gara-dul",
+      "fileTitle": "Gara-Dul.png",
+      "canonicalPage": "https://runescape.wiki/w/Gara-Dul",
+      "search": "Gara-Dul"
+    },
+    {
+      "id": "u40-museum",
+      "label": "Varrock Museum",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/varrock-museum",
+      "fileTitle": "Varrock Museum.png",
+      "canonicalPage": "https://runescape.wiki/w/Varrock_Museum",
+      "search": "Varrock Museum"
+    },
+    {
+      "id": "u40-collectors",
+      "label": "Collectors",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/collectors",
+      "fileTitle": "Collector's badge.png",
+      "canonicalPage": "https://runescape.wiki/w/Collectors_Assemble",
+      "search": "Collector's badge inventory"
+    },
+    {
+      "id": "u40-hefin-serenity",
+      "label": "Serenity posts",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/serenity-posts",
+      "fileTitle": "Serenity posts.png",
+      "canonicalPage": "https://runescape.wiki/w/Serenity_posts",
+      "search": "Serenity posts Hefin"
+    },
+    {
+      "id": "u40-fish-farm",
+      "label": "Fish farm",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/fish-farm",
+      "fileTitle": "Raw giant crayfish.png",
+      "canonicalPage": "https://runescape.wiki/w/Fish_farm",
+      "search": "Raw giant crayfish"
+    },
+    {
+      "id": "u40-open-water",
+      "label": "Raw sailfish",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/raw-sailfish",
+      "fileTitle": "Raw sailfish.png",
+      "canonicalPage": "https://runescape.wiki/w/Raw_sailfish",
+      "search": "Raw sailfish inventory"
+    },
+    {
+      "id": "u40-mineral-deposit",
+      "label": "Mineral deposit",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/mineral-deposit",
+      "fileTitle": "Mineral deposit.png",
+      "canonicalPage": "https://runescape.wiki/w/Mineral_deposit",
+      "search": "Mineral deposit Menaphos"
+    },
+    {
+      "id": "u40-vip-area",
+      "label": "VIP skilling area",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/vip-skilling-area",
+      "fileTitle": "VIP skilling area.png",
+      "canonicalPage": "https://runescape.wiki/w/VIP_skilling_area",
+      "search": "VIP skilling area Menaphos"
+    },
+    {
+      "id": "u40-worker-district",
+      "label": "Worker district",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/worker-district",
+      "fileTitle": "Worker district.png",
+      "canonicalPage": "https://runescape.wiki/w/Worker_district",
+      "search": "Worker district Menaphos"
+    },
+    {
+      "id": "u40-ramarno",
+      "label": "Ramarno",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/ramarno",
+      "fileTitle": "Ramarno chathead.png",
+      "canonicalPage": "https://runescape.wiki/w/Ramarno",
+      "search": "Ramarno chathead"
+    },
+    {
+      "id": "u40-pickaxe",
+      "label": "Rune pickaxe",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/rune-pickaxe",
+      "fileTitle": "Rune pickaxe.png",
+      "canonicalPage": "https://runescape.wiki/w/Rune_pickaxe",
+      "search": "Rune pickaxe inventory"
+    },
+    {
+      "id": "u40-hatchet",
+      "label": "Rune hatchet",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/rune-hatchet",
+      "fileTitle": "Rune hatchet.png",
+      "canonicalPage": "https://runescape.wiki/w/Rune_hatchet",
+      "search": "Rune hatchet inventory"
+    },
+    {
+      "id": "u40-mattock",
+      "label": "Rune mattock",
+      "category": "rs3/upgrades/skilling-tools",
+      "path": "assets/rs3/upgrades/skilling-tools/rune-mattock",
+      "fileTitle": "Rune mattock.png",
+      "canonicalPage": "https://runescape.wiki/w/Rune_mattock",
+      "search": "Rune mattock inventory"
+    },
+    {
+      "id": "u40-slayer-helmet",
+      "label": "Corrupted slayer helmet",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/corrupted-slayer-helmet",
+      "fileTitle": "Corrupted slayer helmet.png",
+      "canonicalPage": "https://runescape.wiki/w/Corrupted_slayer_helmet",
+      "search": "Corrupted slayer helmet"
+    },
+    {
+      "id": "u40-full-slayer",
+      "label": "Full slayer helmet",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/full-slayer-helmet",
+      "fileTitle": "Full slayer helmet.png",
+      "canonicalPage": "https://runescape.wiki/w/Full_slayer_helmet",
+      "search": "Full slayer helmet"
+    },
+    {
+      "id": "u40-daemonheim",
+      "label": "Daemonheim",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/daemonheim",
+      "fileTitle": "Daemonheim.png",
+      "canonicalPage": "https://runescape.wiki/w/Daemonheim",
+      "search": "Daemonheim location"
+    },
+    {
+      "id": "u40-rewards-trader",
+      "label": "Rewards trader",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/rewards-trader",
+      "fileTitle": "Rewards trader chathead.png",
+      "canonicalPage": "https://runescape.wiki/w/Rewards_trader",
+      "search": "Rewards trader chathead"
+    },
+    {
+      "id": "u40-marmaros",
+      "label": "Marmaros",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/marmaros",
+      "fileTitle": "Marmaros chathead.png",
+      "canonicalPage": "https://runescape.wiki/w/Marmaros",
+      "search": "Marmaros chathead"
+    },
+    {
+      "id": "u40-chaos-druid",
+      "label": "Chaos druid",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/chaos-druid",
+      "fileTitle": "Chaos druid.png",
+      "canonicalPage": "https://runescape.wiki/w/Chaos_druid",
+      "search": "Chaos druid"
+    },
+    {
+      "id": "u40-nechryael",
+      "label": "Nechryael",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/nechryael",
+      "fileTitle": "Nechryael.png",
+      "canonicalPage": "https://runescape.wiki/w/Nechryael",
+      "search": "Nechryael"
+    },
+    {
+      "id": "u40-abyssal-demon",
+      "label": "Abyssal demon",
+      "category": "rs3/activities",
+      "path": "assets/rs3/activities/abyssal-demon",
+      "fileTitle": "Abyssal demon.png",
+      "canonicalPage": "https://runescape.wiki/w/Abyssal_demon",
+      "search": "Abyssal demon"
+    }
+  ]
+}

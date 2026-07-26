@@ -27,8 +27,10 @@ export function DataViewHeader({
   return (
     <header className="data-view-head">
       <div className="data-view-head__copy">
-        <p className="data-view-head__region">{region?.name ?? "All regions"}</p>
         <h2>{title}</h2>
+        <p className="data-view-head__region">
+          {region ? `in ${region.name}` : "all regions"}
+        </p>
         {description ? <p className="data-view-head__description">{description}</p> : null}
       </div>
       <div className="data-view-head__count" aria-label={`${count} ${countLabel}`}>
@@ -50,17 +52,12 @@ const TABS = [
   { id: "combos", label: "Combos" },
   { id: "slayer", label: "Slayer" },
   { id: "invention", label: "Invention" },
-  { id: "prayers", label: "Prayers" },
   { id: "consumables", label: "Consumables" },
-  { id: "systems", label: "Systems" },
-  { id: "crafting", label: "Crafting" },
-  { id: "notes", label: "Notes" },
-  { id: "boundaries", label: "Boundaries" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
-/** Active tab only. Crafting stacks Archaeology + Masterwork. */
+/** Active tab only. */
 export function DataWorkbench({
   browse,
   quests,
@@ -71,14 +68,7 @@ export function DataWorkbench({
   combos,
   slayer,
   invention,
-  prayers,
   consumables,
-  systems,
-  archaeology,
-  masterwork,
-  referenceNotes,
-  boundaries,
-  notes,
   region,
   regionRail,
 }: {
@@ -91,14 +81,7 @@ export function DataWorkbench({
   combos: ReactNode;
   slayer: ReactNode;
   invention: ReactNode;
-  prayers: ReactNode;
   consumables: ReactNode;
-  systems: ReactNode;
-  archaeology: ReactNode;
-  masterwork: ReactNode;
-  referenceNotes: ReactNode;
-  boundaries: ReactNode;
-  notes: ReactNode;
   region: ResearchRegion | null;
   regionRail: ReactNode;
 }) {
@@ -120,17 +103,8 @@ export function DataWorkbench({
           <WorkbenchPanel id="combos" active={tab}>{combos}</WorkbenchPanel>
           <WorkbenchPanel id="slayer" active={tab}>{slayer}</WorkbenchPanel>
           <WorkbenchPanel id="invention" active={tab}>{invention}</WorkbenchPanel>
-          <WorkbenchPanel id="prayers" active={tab}>{prayers}</WorkbenchPanel>
           <WorkbenchPanel id="consumables" active={tab}>{consumables}</WorkbenchPanel>
-          <WorkbenchPanel id="systems" active={tab}>{systems}</WorkbenchPanel>
-          <WorkbenchPanel id="crafting" active={tab}>
-            <div className="space-y-8">{archaeology}{masterwork}</div>
-          </WorkbenchPanel>
-          <WorkbenchPanel id="notes" active={tab}>{referenceNotes}</WorkbenchPanel>
-          <WorkbenchPanel id="boundaries" active={tab}>{boundaries}</WorkbenchPanel>
         </div>
-
-        {tab === "browse" ? <div className="data-workbench__note">{notes}</div> : null}
       </DataRegionContext.Provider>
     </div>
   );

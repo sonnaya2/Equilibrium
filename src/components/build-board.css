@@ -88,10 +88,6 @@
   background: transparent;
 }
 
-.eq-champion:has(.mc) .comp-nav__meta {
-  font-size: 0.8125rem;
-}
-
 .eq-champion .workbench-fill:has(.mc) {
   padding-top: 0;
   padding-inline: 0;

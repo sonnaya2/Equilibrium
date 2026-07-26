@@ -82,7 +82,6 @@ const SLOT_LABEL: Record<EquipmentSlot, string> = {
   ring: "Ring",
   pocket: "Pocket",
   ammo: "Ammo",
-  aura: "Aura",
 };
 
 const LOADOUT_DOLL: Array<EquipmentSlot | "style" | null> = [

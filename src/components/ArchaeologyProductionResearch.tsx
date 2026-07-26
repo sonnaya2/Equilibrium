@@ -14,6 +14,7 @@ import {
   getRepeatableCollectionRewards,
   type MuseumCollectionMatrixRow,
 } from "@/research/archaeologyPlanner";
+import { MASTERWORK_CHAIN_TABS } from "./MasterworkChainResearch";
 
 // Loader drops the stale guildmaster-second-loadout claim (see guild stale_data_correction).
 const relicSystemRows = getRelicSystemProgression().map((row) => ({
@@ -217,6 +218,11 @@ const TABS: ResearchTab[] = [
     description: "",
     rows: [...corrections, ...additions2026, ...pending2026],
   },
+  ...MASTERWORK_CHAIN_TABS.map((tab) => ({
+    ...tab,
+    key: `staff-${tab.key}`,
+    label: `Staff ${tab.label.toLowerCase()}`,
+  })),
 ];
 
 export function ArchaeologyProductionResearch() {

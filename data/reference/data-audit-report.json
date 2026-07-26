@@ -18,12 +18,12 @@
     "removed combat unlocks excluded from active progression"
   ],
   "stats": {
-    "files": 115,
-    "jsonObjects": 5276,
-    "arrays": 4806,
-    "ids": 1055,
-    "sourceUrls": 2594,
-    "unresolvedRows": 330,
+    "files": 121,
+    "jsonObjects": 5525,
+    "arrays": 5462,
+    "ids": 1144,
+    "sourceUrls": 2774,
+    "unresolvedRows": 334,
     "unverifiedRows": 44
   },
   "note": "Domain-specific progression, 2026 remaster, Aura overhaul, reference, boundary, Masterwork and supplement audits run through npm run audit:all-data."

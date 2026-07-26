@@ -1958,10 +1958,10 @@
   margin-top: 0.35rem;
 }
 
-/* Data browse fills viewport — denser bay widths (less rail/inspector air) */
+/* Data browse: crest rail + stage only (no right inspector) */
 .eq-champion .research-browse-desk {
   display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr) 15.5rem;
+  grid-template-columns: 12rem minmax(0, 1fr);
   min-height: calc(100vh - 11rem);
   border: 1px solid var(--echo-border);
   background: var(--echo-stage);
@@ -2601,8 +2601,7 @@
 
 /* Twin desk: each bay scrolls; stage never collapses to empty height */
 .eq-champion .research-browse-desk > .comp-crest-rail,
-.eq-champion .research-browse-desk > .comp-stage-col,
-.eq-champion .research-browse-desk > .comp-inspector {
+.eq-champion .research-browse-desk > .comp-stage-col {
   min-height: 0;
   max-height: none !important;
   overflow-x: hidden;

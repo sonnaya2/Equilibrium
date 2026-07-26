@@ -6,7 +6,7 @@ import { combatEquipment, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
-import { regionCrestPath, styleIconPath } from "@/lib/gameArt";
+import { equipmentIconPath, regionCrestPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { setEffectsSummary } from "@/combat/shared/equipment";
 import {
@@ -299,16 +299,29 @@ export function GearPanel({
                         : "border-stone-750 bg-stone-900 text-parch-50 hover:bg-stone-850"
                   }`}
                 >
-                  <span className="block text-[11px] uppercase tracking-wide text-parch-300">
-                    {SLOT_LABELS[slot]}
+                  <span className="flex items-start gap-1">
+                    {item ? (
+                      <GameIcon
+                        src={equipmentIconPath(item.id)}
+                        size={18}
+                        className="mt-0.5 shrink-0"
+                      />
+                    ) : null}
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[11px] uppercase tracking-wide text-parch-300">
+                        {SLOT_LABELS[slot]}
+                      </span>
+                      <span className="block truncate">{item?.name ?? "Empty"}</span>
+                      {item?.tier != null ? (
+                        <span className="block font-mono text-[11px] text-parch-100">
+                          T{item.tier}
+                        </span>
+                      ) : null}
+                      {noBonuses ? (
+                        <span className="block text-[11px] text-parch-300">no bonus numbers</span>
+                      ) : null}
+                    </span>
                   </span>
-                  <span className="block truncate">{item?.name ?? "Empty"}</span>
-                  {item?.tier != null ? (
-                    <span className="block font-mono text-[11px] text-parch-100">T{item.tier}</span>
-                  ) : null}
-                  {noBonuses ? (
-                    <span className="block text-[11px] text-parch-300">no bonus numbers</span>
-                  ) : null}
                 </button>
               );
             }),
@@ -338,7 +351,8 @@ export function GearPanel({
 
         {activeItem ? (
           <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">
-            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              <GameIcon src={equipmentIconPath(activeItem.id)} size={24} className="shrink-0" />
               <span className="text-parch-50">{activeItem.name}</span>
               {activeItem.tier != null ? (
                 <span className="font-mono text-parch-100">T{activeItem.tier}</span>
@@ -562,6 +576,11 @@ export function GearPanel({
                     }`}
                   >
                     <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <GameIcon
+                        src={equipmentIconPath(record.id)}
+                        size={20}
+                        className="shrink-0"
+                      />
                       <span>{record.name}</span>
                       {record.tier != null ? (
                         <span className="font-mono text-parch-100">T{record.tier}</span>

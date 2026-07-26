@@ -1093,7 +1093,7 @@
           "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "set aggregate / unlock-only — equip Igneous Kal-Ket/Xil/Mej/Mor/Zuk pieces",
+      "displayDescription": "Igneous cape set aggregate — equip Kal-Xil/Mej/Mor/Zuk individually.",
       "setId": "igneous"
     },
     {
@@ -1424,8 +1424,7 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Skilling off-hand — no combat Infobox Bonuses",
-      "slot": "offhand"
+      "displayDescription": "Archaeology skilling off-hand — not combat gear."
     },
     {
       "id": "item:runic-attuner",
@@ -1445,8 +1444,7 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Skilling off-hand — no combat Infobox Bonuses",
-      "slot": "offhand"
+      "displayDescription": "Runecrafting skilling off-hand — not combat gear."
     },
     {
       "id": "item:scripture-of-elidinis",
@@ -3510,11 +3508,10 @@
       "id": "item:vestments-of-havoc-gloves",
       "name": "Gloves of the Vestments of Havoc",
       "style": "melee",
-      "slot": "gloves",
       "tier": 95,
       "setId": "vestments-of-havoc",
       "bonuses": {},
-      "displayDescription": "No gloves piece on wiki",
+      "displayDescription": "No gloves piece on wiki Vestments of Havoc set.",
       "sources": [
         {
           "source": "runescape-wiki",
@@ -5126,10 +5123,9 @@
       "id": "item:glacier-boots",
       "name": "Glacyte boots",
       "style": "ranged",
-      "slot": "boots",
       "tier": 80,
       "bonuses": {},
-      "displayDescription": "Wiki disambiguation (Steadfast / Glaiven / Ragefire) — no single Infobox; equip style-specific rows",
+      "displayDescription": "Glacyte boots disambiguation — equip Steadfast / Glaiven / Ragefire individually.",
       "sources": [
         {
           "source": "runescape-wiki",
@@ -8170,19 +8166,22 @@
     },
     {
       "id": "item:enchanted-bakriminel-bolts",
-      "name": "Enchanted bakriminel bolts",
+      "name": "Onyx bakriminel bolts (e)",
       "style": "ranged",
       "slot": "ammo",
-      "tier": 90,
-      "bonuses": {},
+      "tier": 95,
+      "bonuses": {
+        "damage": 912
+      },
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Bakriminel_bolts",
+          "url": "https://runescape.wiki/w/Onyx_bakriminel_bolts_(e)",
+          "title": "Onyx bakriminel bolts (e)",
           "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Ammo bag aggregate — pick a specific enchantment for Infobox stats"
+      "displayDescription": "Enchanted onyx bakriminel bolts (wiki). Aggregate enchanted bag remapped to onyx (e) for static ammo damage."
     },
     {
       "id": "item:deathspore-arrows",
@@ -8346,19 +8345,22 @@
     },
     {
       "id": "item:slayer-helmet-i",
-      "name": "Slayer helmet (i)",
+      "name": "Full slayer helmet",
       "style": "hybrid",
       "slot": "helmet",
-      "tier": 70,
-      "bonuses": {},
+      "tier": 25,
+      "bonuses": {
+        "armour": 40.4
+      },
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Slayer_helmet_(i)",
+          "url": "https://runescape.wiki/w/Full_slayer_helmet",
+          "title": "Full slayer helmet",
           "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "No RS3 wiki page for Slayer helmet (i) — OSRS-style id. Use Corrupted slayer helmet for high-tier static armour; base Slayer helmet is tier 10 armour 40.4 life 100."
+      "displayDescription": "Full slayer helmet (RS3). Id kept as slayer-helmet-i for loadout stability; wiki has no (i) suffix."
     },
     {
       "id": "item:corrupted-slayer-helmet",
@@ -9709,7 +9711,6 @@
       "id": "item:godsword",
       "name": "Godswords",
       "style": "melee",
-      "slot": "twohand",
       "tier": 75,
       "bonuses": {},
       "sources": [
@@ -9720,7 +9721,7 @@
         }
       ],
       "setId": "godsword",
-      "displayDescription": "Set aggregate — use individual godsword weapon records for stats"
+      "displayDescription": "Godsword set aggregate — equip individual godswords (Armadyl/Bandos/Saradomin/Zamorak)."
     },
     {
       "id": "item:saradomin-godsword",

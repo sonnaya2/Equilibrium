@@ -1,6 +1,7 @@
 /**
  * Game art image. Inside a button or link, keep the default alt="" — a named alt
  * changes the element's accessible name, which the e2e suite pins (AGENTS.md).
+ * Missing local files hide quietly (equipment icons sync is progressive).
  */
 export function GameIcon({
   src,
@@ -15,5 +16,18 @@ export function GameIcon({
 }) {
   // Plain img: game art is small static PNG from public/, next/image buys nothing here.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} width={size} height={size} className={className} />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      width={size}
+      height={size}
+      className={className}
+      loading="lazy"
+      decoding="async"
+      onError={(event) => {
+        event.currentTarget.style.visibility = "hidden";
+      }}
+    />
+  );
 }

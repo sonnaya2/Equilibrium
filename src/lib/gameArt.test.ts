@@ -1,7 +1,13 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { gameIconPath, regionCrestPath, STYLE_ICON, styleIconPath } from "./gameArt";
+import {
+  equipmentIconPath,
+  gameIconPath,
+  regionCrestPath,
+  STYLE_ICON,
+  styleIconPath,
+} from "./gameArt";
 
 const PUBLIC = join(process.cwd(), "public");
 
@@ -9,6 +15,10 @@ describe("gameArt", () => {
   it("builds conventional public paths", () => {
     expect(gameIconPath("combat", "melee-abilities")).toBe("/game/combat/melee-abilities.png");
     expect(regionCrestPath("karamja")).toBe("/game/regions/karamja.png");
+    expect(equipmentIconPath("item:seismic-wand")).toBe(
+      "/game/combat/equipment/seismic-wand.png",
+    );
+    expect(equipmentIconPath("seismic-wand")).toBe("/game/combat/equipment/seismic-wand.png");
   });
 
   it("every style icon is published to public/game", () => {

@@ -1,10 +1,12 @@
 import type { TaskRecord, TaskTier } from "./index";
+import snapshot from "#data/league/catalyst-tasks-snapshot.json";
 
 export const CATALYST_TASKS_URL = "https://runescape.wiki/w/Catalyst_League/Tasks";
 
 /** Wiki table size used when callers omit expectedRecords (Catalyst stand-in integrity gate). */
 export const CATALYST_EXPECTED_RECORDS = 1117;
 
+/** Product path: static snapshot. Live fetch is only for scripts/refresh-catalyst-snapshot.mjs. */
 const CATALYST_TASKS_API =
   "https://runescape.wiki/api.php?action=parse&page=Catalyst_League%2FTasks&prop=text&format=json&formatversion=2&disableeditsection=1";
 
@@ -19,8 +21,8 @@ const POINT_TO_TIER = new Map<number, TaskTier>([
 /** Catalyst League task as a stand-in until Equilibrium ships its own list. */
 export interface CatalystTaskRecord extends TaskRecord {
   sourceLeague: "catalyst";
-  /** Marks non-Equilibrium rows in shared renderers; not a product "test data" flag. */
-  testingOnly: true;
+  /** Present on some older rows; product no longer requires this flag. */
+  testingOnly?: boolean;
   requirements?: string;
   catalystCompletionRate?: number;
   catalystCompletionRateQualifier?: "<";
@@ -29,6 +31,7 @@ export interface CatalystTaskRecord extends TaskRecord {
 export interface CatalystTaskLoadResult {
   records: CatalystTaskRecord[];
   error?: string;
+  fromSnapshot?: boolean;
 }
 
 function decodeHtmlEntities(value: string): string {
@@ -102,7 +105,6 @@ export function parseCatalystTasksHtml(html: string): CatalystTaskRecord[] {
         ...(requirements && requirements !== "N/A" ? { requirements } : {}),
         ...parseCompletionRate(textFromHtml(completionHtml)),
         sourceLeague: "catalyst" as const,
-        testingOnly: true as const,
       },
     ];
   });
@@ -117,10 +119,37 @@ export function catalystRecordsPassIntegrity(
 }
 
 /**
- * Load Catalyst League tasks as a stand-in until Equilibrium publishes its list.
- * Export name kept for import stability; product copy treats this as provisional, not "test data".
+ * Product path: read the static Catalyst snapshot (no network).
+ * Refresh offline with: node scripts/refresh-catalyst-snapshot.mjs
+ */
+export function loadCatalystSnapshot(expectedRecords?: number): CatalystTaskLoadResult {
+  const expected = expectedRecords ?? CATALYST_EXPECTED_RECORDS;
+  const records = (snapshot.records ?? []) as CatalystTaskRecord[];
+  if (records.length === 0) {
+    return { records: [], error: "Catalyst task snapshot is empty", fromSnapshot: true };
+  }
+  if (!catalystRecordsPassIntegrity(records.length, expected)) {
+    return {
+      records: [],
+      error: `Catalyst snapshot incomplete: got ${records.length}, expected at least ${Math.ceil(expected * 0.9)} of ${expected}`,
+      fromSnapshot: true,
+    };
+  }
+  return { records, fromSnapshot: true };
+}
+
+/**
+ * @deprecated Prefer loadCatalystSnapshot for product. Kept for name stability;
+ * now returns the static snapshot (no live fetch).
  */
 export async function loadCatalystTestTasks(
+  expectedRecords?: number,
+): Promise<CatalystTaskLoadResult> {
+  return loadCatalystSnapshot(expectedRecords);
+}
+
+/** Dev-only live fetch — used by refresh-catalyst-snapshot.mjs logic parity tests only. */
+export async function fetchCatalystTasksLive(
   expectedRecords?: number,
 ): Promise<CatalystTaskLoadResult> {
   const expected = expectedRecords ?? CATALYST_EXPECTED_RECORDS;
@@ -129,30 +158,21 @@ export async function loadCatalystTestTasks(
       headers: {
         "User-Agent": "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)",
       },
-      next: { revalidate: 60 * 60 * 24 },
-      // Bound SSR so a hung wiki cannot hold the whole /tasks render open.
-      signal: AbortSignal.timeout(8_000),
+      signal: AbortSignal.timeout(120_000),
     });
-
-    if (!response.ok) {
-      throw new Error(`RuneScape Wiki returned ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`RuneScape Wiki returned ${response.status}`);
     const payload = (await response.json()) as { parse?: { text?: string } };
     const html = payload.parse?.text;
     if (!html) throw new Error("RuneScape Wiki response did not include parsed task HTML");
-
     const records = parseCatalystTasksHtml(html);
     if (records.length === 0) {
       throw new Error("Catalyst task table was not found in the RuneScape Wiki response");
     }
-
     if (!catalystRecordsPassIntegrity(records.length, expected)) {
       throw new Error(
         `Catalyst task list incomplete: got ${records.length}, expected at least ${Math.ceil(expected * 0.9)} of ${expected}`,
       );
     }
-
     return { records };
   } catch (error) {
     return {

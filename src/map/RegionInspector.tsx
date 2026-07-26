@@ -15,10 +15,19 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import autoQuests from "#data/league/equilibrium-auto-quests.json";
+import { getInventionComponentsByRegion } from "@/research/plannerExpansions";
+import { getSlayerMethodsByRegion } from "@/research/slayerPlanner";
 import { PLACES_BY_REGION } from "./data/placeAnchors";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { useMapFocus } from "./useMapFocus";
+
+type AutoQuestRegionKey = keyof typeof autoQuests.regions;
+
+function slayerLabel(method: { monster?: string; id?: string }): string {
+  return method.monster || method.id || "Slayer route";
+}
 
 const UNLOCK_TEXT = {
   starting: "Unlocked from the start",
@@ -45,7 +54,7 @@ function Chip({
       className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
         on
           ? "border-gem-500 bg-stone-800 text-gem-300"
-          : "border-stone-750 text-parch-300 hover:text-parch-50"
+          : "border-stone-750 text-parch-100 hover:text-parch-50"
       }`}
     >
       {children}
@@ -73,6 +82,29 @@ export function RegionInspector({
     () => [...new Set((detail?.content ?? []).map((c) => c.kind))].sort(),
     [detail],
   );
+
+  // Top content + upgrades for the compact planner-value strip (not a second table).
+  const plannerHighlights = useMemo(() => {
+    if (!detail) return [] as string[];
+    const fromContent = detail.content.slice(0, 3).map((c) => c.name);
+    const fromUpgrades = detail.upgrades.slice(0, 2).map((u) => u.name);
+    return [...fromContent, ...fromUpgrades].slice(0, 5);
+  }, [detail]);
+
+  const slayerMethods = useMemo(
+    () => getSlayerMethodsByRegion(focus.region),
+    [focus.region],
+  );
+  const inventionComponents = useMemo(
+    () => getInventionComponentsByRegion(focus.region),
+    [focus.region],
+  );
+
+  const autoRegion =
+    focus.region in autoQuests.regions
+      ? autoQuests.regions[focus.region as AutoQuestRegionKey]
+      : null;
+  const autoEmpty = !autoRegion || autoRegion.auto_completed_quests.length === 0;
 
   // Stale kind from a previous region would empty the table with no chip on.
   useEffect(() => {
@@ -107,7 +139,7 @@ export function RegionInspector({
     <section className="panel" aria-label="Region detail">
       <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
         {detail.name}
-        <span className="text-xs normal-case tracking-normal text-parch-300">
+        <span className="text-xs normal-case tracking-normal text-parch-100">
           {UNLOCK_TEXT[detail.availability]}
         </span>
       </div>
@@ -126,6 +158,44 @@ export function RegionInspector({
         ))}
       </div>
 
+      {/* Compact planner-value strip: highlights + cheap research joins + auto-quest honesty. */}
+      <div className="border-b border-stone-800 px-3.5 py-2.5">
+        <div className="text-xs font-medium uppercase tracking-[0.13em] text-parch-300">
+          Planner value
+        </div>
+        {plannerHighlights.length > 0 ? (
+          <ul className="mt-1.5 space-y-0.5 text-xs text-parch-100">
+            {plannerHighlights.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-1.5 text-xs text-parch-300">No content or upgrades mapped yet.</p>
+        )}
+        {(slayerMethods.length > 0 || inventionComponents.length > 0) && (
+          <p className="mt-1.5 text-xs text-parch-100">
+            {slayerMethods.length > 0 ? (
+              <span>
+                Slayer: {slayerMethods.slice(0, 3).map(slayerLabel).join(", ")}
+                {slayerMethods.length > 3 ? ` +${slayerMethods.length - 3}` : ""}
+              </span>
+            ) : null}
+            {slayerMethods.length > 0 && inventionComponents.length > 0 ? " · " : null}
+            {inventionComponents.length > 0 ? (
+              <span>
+                Invention: {inventionComponents.slice(0, 3).map((c) => c.component).join(", ")}
+                {inventionComponents.length > 3 ? ` +${inventionComponents.length - 3}` : ""}
+              </span>
+            ) : null}
+          </p>
+        )}
+        {autoEmpty ? (
+          <p className="mt-1.5 text-xs text-parch-300">
+            Official auto-complete: none published yet
+          </p>
+        ) : null}
+      </div>
+
       <div className="panel-body">
         {detail.areas.length > 0 ? (
           <div className="mb-3 flex flex-wrap gap-1.5">
@@ -139,7 +209,7 @@ export function RegionInspector({
                   ? "bg-stone-800 text-gem-300"
                   : isAnchored
                     ? "text-parch-100"
-                    : "text-parch-500"
+                    : "text-parch-300"
               }`;
               if (isAnchored) {
                 return (
@@ -224,7 +294,7 @@ export function RegionInspector({
                     <td>{c.kind}</td>
                     <td>
                       {c.confidence.startsWith("confirmed") ? (
-                        <span className="text-parch-500">confirmed</span>
+                        <span className="text-parch-300">confirmed</span>
                       ) : (
                         <span className="tag">inferred</span>
                       )}
@@ -234,7 +304,7 @@ export function RegionInspector({
               </tbody>
             </table>
           ) : (
-            <p className="text-sm text-parch-300">
+            <p className="text-sm text-parch-100">
               {detail.content.length === 0
                 ? "No content mapped yet."
                 : "Nothing matches those filters."}
@@ -262,7 +332,7 @@ export function RegionInspector({
         </div>
 
         {detail.warnings.map((w) => (
-          <p key={w} className="mt-3 text-xs text-parch-500">
+          <p key={w} className="mt-3 text-xs text-parch-300">
             Note: {w}
           </p>
         ))}
@@ -271,14 +341,14 @@ export function RegionInspector({
           {/* Compact live status: name/unlock/sources only. Filters and the
               content table stay outside so chip/select churn is not announced.
               e2e pins section[aria-live] + the sources pattern (must be visible). */}
-          <section aria-live="polite" className="num text-xs text-parch-500">
+          <section aria-live="polite" className="num text-xs text-parch-300">
             <span className="sr-only">
               {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
             </span>
             {sourcesLine}
           </section>
-          <details className="text-xs text-parch-300">
-            <summary className="cursor-pointer text-parch-500 hover:text-parch-300">
+          <details className="text-xs text-parch-100">
+            <summary className="cursor-pointer text-parch-300 hover:text-parch-100">
               Boundary rules ({boundaryRules.length})
             </summary>
             <div className="mt-2 space-y-1.5">

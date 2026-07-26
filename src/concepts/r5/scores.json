@@ -1,0 +1,236 @@
+{
+  "round": 5,
+  "theme": "production debt — crests, shared tabs, residual ink (M/N/O)",
+  "passBar": 9.0,
+  "winnerId": "r5-crests-data",
+  "passStatement": "R5 PASS — production debt cleared; proceed to R6 final multi-perspective approval",
+  "combinedDebtScore": 9.0,
+  "rankOrder": ["r5-crests-data", "r5-combat-tabs", "r5-ink"],
+  "submissionStatus": "complete",
+  "botAuditPost": "PASSES",
+  "hardFails": {
+    "marketingHero": false,
+    "pinkPrint": false,
+    "orderBlueChrome": false,
+    "goldActiveNav": false,
+    "inventedLeagueNumbersAsReal": false
+  },
+  "judgedArtifacts": [
+    "src/concepts/r5/agent-m-notes.md",
+    "src/concepts/r5/agent-n-notes.md",
+    "src/concepts/r5/agent-o-notes.md",
+    "src/concepts/r5/bot-audit.md",
+    "src/concepts/r5/must-fix.md",
+    "src/components/ResearchBrowser.tsx",
+    "src/components/WorkbenchTabs.tsx",
+    "src/components/combat/CombatTabs.tsx",
+    "src/components/BuildPlanner.tsx",
+    "app/globals.css",
+    "app/data/page.tsx",
+    "app/layout.tsx"
+  ],
+  "concepts": [
+    {
+      "id": "r5-crests-data",
+      "name": "Crests + Data table + tab idle",
+      "agent": "M",
+      "files": [
+        "src/components/ResearchBrowser.tsx",
+        "src/components/WorkbenchTabs.tsx",
+        "src/concepts/r5/agent-m-notes.md"
+      ],
+      "score": 9.1,
+      "status": "winner",
+      "axes": {
+        "workbenchFill": {
+          "pts": 17.5,
+          "max": 20,
+          "note": "list+crest+sticky dense tables; catalog tile band removed"
+        },
+        "categorization": {
+          "pts": 18.0,
+          "max": 20,
+          "note": "single meta line under tabs; no fourth Browse title"
+        },
+        "readability": {
+          "pts": 14.0,
+          "max": 15,
+          "note": "method+content on .data-table sticky opaque thead zebra 15/12"
+        },
+        "gameIdentity": {
+          "pts": 13.5,
+          "max": 15,
+          "note": "GameIcon crests on region leaves alt empty; R1-R4 identity floor paid"
+        },
+        "antiSlop": {
+          "pts": 14.5,
+          "max": 15,
+          "note": "clears TELL #1 triple-label Browse"
+        },
+        "operability": {
+          "pts": 9.0,
+          "max": 10,
+          "note": "listbox/option preserved; no e2e string churn"
+        },
+        "consistency": {
+          "pts": 4.5,
+          "max": 5,
+          "note": "WorkbenchTabs idle parch-100 matches Nav; shared table class"
+        }
+      },
+      "totalPts": 91.0,
+      "mustFix": [
+        "Optional: crests on region-bearing dense table cells",
+        "Optional: .data-table selected-row raised+gem outline helper"
+      ]
+    },
+    {
+      "id": "r5-combat-tabs",
+      "name": "Combat WorkbenchTabs + stat-strip",
+      "agent": "N",
+      "files": [
+        "src/components/combat/CombatTabs.tsx",
+        "src/components/WorkbenchTabs.tsx",
+        "app/globals.css",
+        "src/concepts/r5/agent-n-notes.md"
+      ],
+      "score": 9.0,
+      "status": "contender",
+      "axes": {
+        "workbenchFill": {
+          "pts": 17.0,
+          "max": 20,
+          "note": "existing five panels; no fake density"
+        },
+        "categorization": {
+          "pts": 18.0,
+          "max": 20,
+          "note": "Quick Build Rotation Analysis Reference; Build mounts SetupTab"
+        },
+        "readability": {
+          "pts": 13.5,
+          "max": 15,
+          "note": "stat-strip labels parch-300; combat form floors left correct"
+        },
+        "gameIdentity": {
+          "pts": 12.5,
+          "max": 15,
+          "note": "gem underline owned once; no new art"
+        },
+        "antiSlop": {
+          "pts": 14.5,
+          "max": 15,
+          "note": "clears TELL #2 forked tab chrome"
+        },
+        "operability": {
+          "pts": 9.5,
+          "max": 10,
+          "note": "tablist/tab/tabpanel roles; mount-active-only"
+        },
+        "consistency": {
+          "pts": 5.0,
+          "max": 5,
+          "note": "Data/Build/Combat share one WorkbenchTabs implementation"
+        }
+      },
+      "totalPts": 90.0,
+      "mustFix": []
+    },
+    {
+      "id": "r5-ink",
+      "name": "Residual ink / SMELL cleanup",
+      "agent": "O",
+      "files": [
+        "app/data/page.tsx",
+        "app/layout.tsx",
+        "src/components/ResearchBrowser.tsx",
+        "src/components/BuildPlanner.tsx",
+        "src/components/ResearchSection.tsx",
+        "src/components/QuestBrowser.tsx",
+        "src/components/PermanentUnlockResearch.tsx",
+        "src/components/ProgressionResearch.tsx",
+        "src/concepts/r5/agent-o-notes.md"
+      ],
+      "score": 8.8,
+      "status": "contender",
+      "axes": {
+        "workbenchFill": {
+          "pts": 16.5,
+          "max": 20,
+          "note": "catalog strip delete removes dashboard tiles only"
+        },
+        "categorization": {
+          "pts": 17.0,
+          "max": 20,
+          "note": "single meta count line correct"
+        },
+        "readability": {
+          "pts": 14.0,
+          "max": 15,
+          "note": "notes parch-100; footer parch-300; trademark string frozen"
+        },
+        "gameIdentity": {
+          "pts": 12.5,
+          "max": 15,
+          "note": "tier caption off gem; gem reserved for selected+active"
+        },
+        "antiSlop": {
+          "pts": 14.5,
+          "max": 15,
+          "note": "tracking-tight cleared; catalog strip gone"
+        },
+        "operability": {
+          "pts": 8.5,
+          "max": 10,
+          "note": "no control changes"
+        },
+        "consistency": {
+          "pts": 4.5,
+          "max": 5,
+          "note": "shared secondary-ink ladder layout+data+research shells"
+        }
+      },
+      "totalPts": 87.5,
+      "mustFix": [
+        "BuildPlanner effect lines still use em-dash (must-fix §6 language SMELL)"
+      ]
+    }
+  ],
+  "debtMatrix": {
+    "crestsRegionLeaves": "paid",
+    "workbenchTabsIdle": "paid",
+    "researchDataTable": "paid",
+    "dataTableSelectedRow": "open",
+    "statStripLabels": "paid",
+    "combatWorkbenchTabs": "paid",
+    "browseTitleTell": "paid",
+    "researchNotesInk": "paid",
+    "footerInk": "paid",
+    "emDashEffects": "open",
+    "tierCaptionGem": "paid",
+    "catalogStrip": "paid",
+    "trackingTight": "paid",
+    "ladderLock": "held"
+  },
+  "carryForward": {
+    "r1Winner": { "id": "r1-control", "name": "Control Surface", "score": 9.1 },
+    "r4Winner": { "id": "r4-tokens", "name": "Production tokens + .data-table", "score": 9.0 },
+    "r4CombinedShip": 8.9,
+    "r5Rank": [
+      { "id": "r5-crests-data", "name": "Crests + Data table + tab idle", "score": 9.1 },
+      { "id": "r5-combat-tabs", "name": "Combat WorkbenchTabs + stat-strip", "score": 9.0 },
+      { "id": "r5-ink", "name": "Residual ink / SMELL cleanup", "score": 8.8 }
+    ],
+    "combinedDebtScore": 9.0,
+    "botAuditPost": "PASSES"
+  },
+  "tournament": {
+    "colorSystemTrack": "PASS",
+    "debtTrack": "PASS",
+    "fullGuiTournamentClose": false,
+    "r6Required": true,
+    "r6IsMockContest": false,
+    "r6Purpose": "Final multi-perspective approval of combined production product"
+  },
+  "round6Brief": "Score combined production as three ranked perspectives (not competing mocks): r6-readability (arm's-length, contrast, type floors), r6-identity (RS3 dark warm, gem chrome, crests, no sterile), r6-system (Control Surface + WorkbenchTabs shell consistency). Pass bar 9.0 for FINAL APPROVAL. Fair read: R4 tokens 9.0 + R5 debt paid → overall can pass. Residual SMELLs only (em-dash, selected-row helper) are non-blockers."
+}

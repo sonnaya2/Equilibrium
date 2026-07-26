@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { blessingResetsLeft, type RegionId } from "@/league";
+import {
+  blessingResetsLeft,
+  canSelectElective,
+  type RegionId,
+} from "@/league";
 import {
   BLESSING_PATHS,
   godTierAlignments,
@@ -9,7 +13,7 @@ import {
   type BlessingPath,
 } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
-import { useBuild } from "@/league/useBuild";
+import { buildHasContent, useBuild } from "@/league/useBuild";
 import { Hex, HexRow, hexClass } from "@/components/Hex";
 import { WorkbenchTabs } from "@/components/WorkbenchTabs";
 
@@ -102,6 +106,7 @@ export function BuildPlanner({
     pickBlessing,
     resetBlessings,
     clearElectives,
+    resetBuild,
   } = useBuild();
   const picks = build.elective;
   const [focusId, setFocusId] = useState<string>(regions[0]?.id ?? "");
@@ -112,6 +117,7 @@ export function BuildPlanner({
   const openCount = regions.filter(isOpen).length;
   const pickCounter = loaded ? `${picks.length}/3` : "…/3";
   const paths = blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"];
+  const hasFullBuild = buildHasContent(build);
 
   const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0).length;
   const anyBlessingRevealed = blessingTiers.some(
@@ -150,7 +156,7 @@ export function BuildPlanner({
         {segment === "regions" ? (
         <section aria-busy={!loaded}>
           <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className={`num text-xs text-parch-400 ${loaded ? "" : "opacity-60"}`}>
+            <span className={`num text-xs text-parch-300 ${loaded ? "" : "opacity-60"}`}>
               {openCount} of {regions.length} open · {pickCounter} picks
             </span>
             <span className="h-px min-w-8 flex-1 bg-stone-750" />
@@ -172,23 +178,30 @@ export function BuildPlanner({
                 {row.map((region) => {
                   const open = isOpen(region);
                   const elective = region.availability === "elective";
+                  const selectable =
+                    elective && canSelectElective(build, region.id as RegionId);
+                  // Cap and pre-hydrate block toggle only — keep the button
+                  // focusable so the inspector still works (mirror RegionLedger).
+                  const pickBlocked = elective && (!loaded || !selectable);
                   const barred = !open && picks.length >= 3;
                   const selected = focusId === region.id;
                   return (
                     <button
                       key={region.id}
                       type="button"
-                      disabled={barred || (elective && !loaded)}
                       aria-pressed={picked(region.id)}
+                      aria-disabled={pickBlocked || undefined}
                       onClick={() => {
-                        if (elective && loaded) toggleRegion(region.id as RegionId);
                         setFocusId(region.id);
+                        if (elective && loaded && selectable) {
+                          toggleRegion(region.id as RegionId);
+                        }
                       }}
                       // Content sits above the bottom slope, which the next row overlaps.
                       className={hexClass(
                         "lg",
                         barred ? "locked" : selected ? "selected" : "open",
-                        "gap-1 pb-2.5",
+                        `gap-1 pb-2.5${pickBlocked ? " cursor-not-allowed" : ""}`,
                       )}
                     >
                       {barred ? (
@@ -206,12 +219,12 @@ export function BuildPlanner({
                         {region.name}
                       </span>
                       <span
-                        className={`num text-[19px] leading-none ${barred ? "text-parch-500" : "text-gem-400"}`}
+                        className={`num text-[19px] leading-none ${barred ? "text-parch-300" : "text-gem-400"}`}
                         title="Quests starting here (primary_region_counts)"
                       >
                         {region.primaryQuests}
                       </span>
-                      <span className="text-[9px] leading-none text-parch-500">starting here</span>
+                      <span className="text-xs leading-none text-parch-100">starting here</span>
                     </button>
                   );
                 })}
@@ -224,11 +237,11 @@ export function BuildPlanner({
         {segment === "relics" ? (
         <section>
           <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className="num text-xs text-parch-400">
+            <span className="num text-xs text-parch-300">
               {revealedRelicTiers} of {relicTiers.length} tiers revealed
             </span>
             <span className="h-px min-w-8 flex-1 bg-stone-750" />
-            <span className="text-xs text-parch-400">
+            <span className="text-xs text-parch-100">
               {Object.values(build.relics).join(" · ") || "none picked"}
             </span>
           </div>
@@ -238,7 +251,7 @@ export function BuildPlanner({
               if (!tier.revealed || tier.choices.length === 0) {
                 return (
                   <Hex key={tier.tier} size="md" state="unrevealed">
-                    <span className="num text-[11px] text-parch-500">T{tier.tier}</span>
+                    <span className="num text-xs text-parch-300">T{tier.tier}</span>
                   </Hex>
                 );
               }
@@ -247,7 +260,7 @@ export function BuildPlanner({
                   key={tier.tier}
                   className="relative mr-3.5 flex gap-1 border-r border-stone-750 pr-5"
                 >
-                  <span className="absolute -top-5 left-0 whitespace-nowrap text-[11px] uppercase tracking-[0.09em] text-gem-400">
+                  <span className="absolute -top-5 left-0 whitespace-nowrap text-xs uppercase tracking-[0.09em] text-parch-100">
                     Tier {tier.tier} · pick one
                   </span>
                   {tier.choices.map((relic) => {
@@ -275,8 +288,8 @@ export function BuildPlanner({
             const choice = tier.choices.find((c) => c.name === build.relics[String(tier.tier)]);
             if (!choice) return null;
             return (
-              <p key={tier.tier} className="mt-2 text-xs leading-5 text-parch-400">
-                <span className="text-parch-100">{choice.name}</span> — {choice.effects.join(" ")}
+              <p key={tier.tier} className="mt-2 text-xs leading-5 text-parch-300">
+                <span className="text-parch-50">{choice.name}</span> — {choice.effects.join(" ")}
                 {choice.sourceUrl ? (
                   <>
                     {" "}
@@ -299,7 +312,7 @@ export function BuildPlanner({
         {segment === "blessings" ? (
         <section>
           <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className="text-xs text-parch-400">
+            <span className="text-xs text-parch-300">
               god tier at 4 and 8 · {resetsLeft} of {resetCount} resets left
             </span>
             <span className="h-px min-w-8 flex-1 bg-stone-750" />
@@ -318,7 +331,7 @@ export function BuildPlanner({
               {blessingTiers.map((tier) => (
                 <span
                   key={tier.tier}
-                  className="num w-[52px] text-center text-[10.5px] text-parch-500"
+                  className="num w-[52px] text-center text-xs text-parch-300"
                 >
                   {tier.tier}
                 </span>
@@ -331,8 +344,8 @@ export function BuildPlanner({
                   className={`flex items-center gap-1 ${pathIndex ? "-mt-[13px]" : ""}`}
                 >
                   <span
-                    className={`w-[58px] shrink-0 text-[11px] uppercase tracking-[0.1em] ${
-                      PATH_INK[path] ?? "text-parch-300"
+                    className={`w-[58px] shrink-0 text-xs uppercase tracking-[0.1em] ${
+                      PATH_INK[path] ?? "text-parch-100"
                     }`}
                   >
                     {path}
@@ -370,7 +383,7 @@ export function BuildPlanner({
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-xs text-parch-400">
+            <p className="mt-2 text-xs text-parch-300">
               {blessingTiers
                 .filter((t) => t.godTier)
                 .map((t) =>
@@ -379,7 +392,7 @@ export function BuildPlanner({
                 .join(" · ")}
             </p>
             {!anyBlessingRevealed ? (
-              <p className="mt-1 text-xs text-parch-400">
+              <p className="mt-1 text-xs text-parch-100">
                 No blessing is revealed yet. The lattice is the shape of the choice, not a guess at
                 its contents.
               </p>
@@ -391,7 +404,7 @@ export function BuildPlanner({
                     asBlessingChoices(tier.choices).map((choice) => (
                       <div
                         key={`${tier.tier}-${choice.name}`}
-                        className="text-xs leading-5 text-parch-300"
+                        className="text-xs leading-5 text-parch-100"
                       >
                         <span className="text-parch-50">
                           T{tier.tier} {choice.name}
@@ -408,7 +421,7 @@ export function BuildPlanner({
 
         {segment === "share" ? (
           <section className="panel p-4">
-            <p className="text-sm text-parch-300">
+            <p className="text-sm text-parch-100">
               Copy a link that restores this region, relic, and blessing plan on another device.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -427,12 +440,26 @@ export function BuildPlanner({
                 type="button"
                 onClick={clearElectives}
                 disabled={!loaded || picks.length === 0}
+                title="Remove elective region picks only; relics and blessings stay"
                 className="rounded-sm border border-stone-750 px-3 py-1.5 text-sm text-parch-100 hover:border-stone-carve disabled:opacity-40"
               >
                 Clear picks
               </button>
+              <button
+                type="button"
+                onClick={resetBuild}
+                disabled={!loaded || !hasFullBuild}
+                title="Wipe regions, relics, and blessings"
+                className="rounded-sm border border-stone-750 px-3 py-1.5 text-sm text-parch-100 hover:border-stone-carve disabled:opacity-40"
+              >
+                Reset build
+              </button>
             </div>
-            <p className="mt-3 font-mono text-xs text-parch-400">
+            <p className="mt-2 text-xs text-parch-300">
+              Clear picks removes elective regions only. Reset build wipes regions, relics, and
+              blessings.
+            </p>
+            <p className="mt-3 font-mono text-xs text-parch-100">
               Picks {pickCounter}
               {Object.keys(build.relics).length
                 ? ` · relics ${Object.values(build.relics).join(", ")}`
@@ -457,27 +484,27 @@ export function BuildPlanner({
               {focus.name}
             </h3>
             <div>
-              <div className="text-[11px] uppercase tracking-[0.13em] text-parch-500">
+              <div className="text-xs uppercase tracking-[0.13em] text-parch-300">
                 Quests starting here
               </div>
               <div className="stat-key mt-1">{focus.primaryQuests}</div>
             </div>
             <dl className="flex flex-col border-t border-stone-750">
               <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[12.5px] text-parch-300">Quests touching</dt>
+                <dt className="text-[13px] text-parch-100">Quests touching</dt>
                 <dd className="num text-[15px] text-parch-50">{focus.touchedQuests}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[12.5px] text-parch-300">Training methods</dt>
+                <dt className="text-[13px] text-parch-100">Training methods</dt>
                 <dd className="num text-[15px] text-parch-50">{focus.trainingCount}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[12.5px] text-parch-300">Upgrades</dt>
+                <dt className="text-[13px] text-parch-100">Upgrades</dt>
                 <dd className="num text-[15px] text-parch-50">{focus.upgradeCount}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[12.5px] text-parch-300">Access</dt>
-                <dd className="text-[12.5px] text-parch-50">
+                <dt className="text-[13px] text-parch-100">Access</dt>
+                <dd className="text-[13px] text-parch-50">
                   {availabilityLabel(focus.availability)}
                 </dd>
               </div>
@@ -487,7 +514,7 @@ export function BuildPlanner({
                 {focus.skills.slice(0, 8).map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-sm border border-stone-750 bg-stone-850 px-1.5 py-0.5 text-[11.5px] text-parch-100"
+                    className="rounded-sm border border-stone-750 bg-stone-850 px-1.5 py-0.5 text-xs text-parch-100"
                   >
                     {skill}
                   </span>
@@ -495,7 +522,7 @@ export function BuildPlanner({
               </div>
             ) : null}
             {focus.hardRules.map((rule) => (
-              <p key={rule} className="text-[13px] leading-relaxed text-parch-100">
+              <p key={rule} className="text-sm leading-relaxed text-parch-100">
                 {rule}
               </p>
             ))}

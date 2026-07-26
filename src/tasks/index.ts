@@ -8,6 +8,8 @@ export const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const
 export type TaskTier = (typeof TASK_ORDER)[number];
 
 export interface TaskRecord {
+  /** Stable id when the source provides one; else progress uses `${tier}:${name}`. */
+  id?: string;
   name: string;
   tier: string;
   points?: number;

@@ -5,6 +5,7 @@
   "scripts": {
     "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/sync-training-gaps.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs",
     "sync:training-gaps": "node scripts/sync-training-gaps.mjs",
+    "sync:catalyst-snapshot": "node scripts/refresh-catalyst-snapshot.mjs",
     "audit:combat": "node scripts/audit-combat-data.mjs",
     "audit:data": "node scripts/audit-main-data.mjs",
     "audit:progression": "node scripts/audit-progression-unlocks.mjs",
@@ -26,7 +27,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "sync:combat": "node scripts/sync-combat-data.ts",
-    "sync:league": "node scripts/sync-league-data.ts",
+    "sync:league:disabled": "node scripts/sync-league-data.ts",
     "sync:assets": "node scripts/sync-assets-expanded.mjs && node scripts/publish-assets.mjs",
     "sync:quests": "node scripts/sync-quest-regions.mjs",
     "sync:quests:auto": "node scripts/sync-equilibrium-auto-quests.mjs",

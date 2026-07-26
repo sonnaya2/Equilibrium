@@ -7,12 +7,26 @@
  */
 
 import regionsData from "#data/league/regions.json";
+import relicsData from "#data/league/relics.json";
 import {
   BLESSING_PATHS,
   BLESSING_RESET_COUNT,
   PATH_TIERS,
   type BlessingPath,
 } from "./blessings";
+
+/** Revealed tiers with published choices only — unrevealed empty tiers stay open. */
+const REVEALED_RELIC_NAMES_BY_TIER: ReadonlyMap<string, ReadonlySet<string>> = (() => {
+  const map = new Map<string, ReadonlySet<string>>();
+  for (const tier of relicsData.records) {
+    if (!tier.revealed || tier.choices.length === 0) continue;
+    map.set(
+      String(tier.tier),
+      new Set(tier.choices.map((c) => c.name).filter((n): n is string => typeof n === "string")),
+    );
+  }
+  return map;
+})();
 
 export const REGION_IDS = [
   "misthalin",
@@ -86,13 +100,18 @@ export function normalizeBuild(value: unknown): BuildState {
     for (const [tier, name] of Object.entries(relics)) {
       if (Object.keys(base.relics).length >= MAX_RELIC_KEYS) break;
       if (
-        /^\d+$/.test(tier) &&
-        typeof name === "string" &&
-        name.length > 0 &&
-        name.length <= MAX_RELIC_NAME_LEN
+        !/^\d+$/.test(tier) ||
+        typeof name !== "string" ||
+        name.length === 0 ||
+        name.length > MAX_RELIC_NAME_LEN
       ) {
-        base.relics[tier] = name;
+        continue;
       }
+      // Revealed tiers with choices: name must be one of them. Unrevealed /
+      // empty tiers keep any well-formed name so we do not strip placeholders.
+      const allowed = REVEALED_RELIC_NAMES_BY_TIER.get(tier);
+      if (allowed && !allowed.has(name)) continue;
+      base.relics[tier] = name;
     }
   }
 

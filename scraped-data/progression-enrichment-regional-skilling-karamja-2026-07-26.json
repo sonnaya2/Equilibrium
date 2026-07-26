@@ -1,0 +1,399 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Karamja region-defining skilling activities, shops, bank QoL, and tool/outfit unlocks for Equilibrium no-trading planning. Fills ironman audit gaps: curly roots, Herblore Habitat, Hardwood Grove / Musa Point teaks, Nature altar, gleaming wisps, Tai Bwo Wannai, Brimhaven Agility Arena, Deadliest Catch deposit boxes. Also records negative region checks (Warforge = Kandarin; Fishing Trawler = Kandarin; Crafteneering = Forinthry/Daemonheim, not TzHaar).",
+  "policy": {
+    "region_rule": "region_hint marks where the unlock or activity lives in the current planner taxonomy. region_hints marks a cross-region chain. required_regions is only used when both regions are needed for a full stack, not for dual dig-site claims. Quest auto-completion and League-specific overrides must be applied separately.",
+    "no_trade_rule": "Prioritise unlocks that materially change self-sufficient progression, training throughput, supply access, or tool progression. Do not mirror every shop item.",
+    "rate_rule": "Do not promote stale XP/hour figures. Training rates belong in training datasets; this file records unlock state and effects.",
+    "boundary_checks": {
+      "warforge_dig_site": "South Feldip Hills. Wiki Equilibrium League region on excavation hotspots is Kandarin, not Karamja. Matches planner-expansions region_note (Feldip under Kandarin / Catalyst).",
+      "fishing_trawler": "Port Khazard — Kandarin League badge. Not a Karamja activity.",
+      "crafteneering": "Daemonheim leather/rusty-coin Crafting loop — Forinthry. Not a TzHaar shop or supply chain."
+    }
+  },
+  "activity_additions": [
+    {
+      "id": "karamja:jadinko-lair-curly-roots",
+      "name": "Jadinko Lair curly roots",
+      "category": "Firemaking and Woodcutting regional method",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja",
+        "tirannwn"
+      ],
+      "requirements": [
+        "83 Woodcutting to chop and collect curly jade roots",
+        "83 Firemaking to light dry-patch firepits and burn curly roots",
+        "Jadinko Lair access (south-eastern Karamja; speak to Dotmatrix at first entry)"
+      ],
+      "unlocks": [
+        "Curly root chop/collect loop (161.6 Woodcutting XP per root cycle; 4 roots per collect)",
+        "Firepit burning of curly roots (378.7 Firemaking XP per root)",
+        "Jadinko Favour from lighting firepits and adding roots (favour spendable at offering stone for Habitat seeds/fruits/spiritbags)",
+        "Optional Superheat Form / Always Adze ceiling that auto-burns roots while chopping"
+      ],
+      "notes": "Core free high-end Firemaking site on automatic-early Karamja. Baseline is chop curly roots then burn on lair dry-patch firepits. Superheat Form (Tirannwn Seren prayer / The Light Within, 91 Prayer) or Always Adze relic is the XP ceiling and yields no Jadinko Favour on that variant. Inferno adze / Nature's sentinel incinerate also burn roots on chop. Training rates live in training-gap-artisan; this row is the regional unlock pointer.",
+      "source_urls": [
+        "https://runescape.wiki/w/Curly_root",
+        "https://runescape.wiki/w/Jadinko_Lair",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja owns the method site and favour loop. Tirannwn is optional ceiling pressure via Superheat Form; Anachronia Orthen furnace core can sustain Superheat Form drain but is not required to name the Karamja method."
+    },
+    {
+      "id": "karamja:herblore-habitat",
+      "name": "Herblore Habitat",
+      "category": "regional skilling infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "No quest gate to enter; effective start around 54 Farming / 70 Hunter / 54 Herblore",
+        "Full content up to 80 Farming, 81 Hunter, 75 Herblore; 55 Agility for eastern god-jadinko island",
+        "56+ Construction strongly recommended (80 ideal) for environmental features; Papa Mambo can build for coins"
+      ],
+      "unlocks": [
+        "Vine blossom, vine bush, vine herb (x2), fruit tree, and environmental feature patches",
+        "Jadinko attraction via Farming + Construction habitats (marasamaw box traps and tracking)",
+        "Vine secondary ingredients and juju / perfect juju potion production path",
+        "Papa Mambo's Shop seed and supply stock for self-sufficient Habitat loops",
+        "Weekly catch-all-jadinkos reward path into witchdoctor camo outfit",
+        "Optional permanent tunnel link to Jadinko Lair near Habitat deposit box (opened from lair side, 40 Woodcutting)"
+      ],
+      "notes": "South-east Karamja multi-skill hub: Farming habitats attract jadinkos; Hunter vines feed Herblore juju potions. Ironman seed supply is a real Habitat value (Papa Mambo stock + offering-stone / jadinko seed drops). Anachronia jadinko hunting counts toward the same weekly witchdoctor outfit D&D but does not replace Habitat as the Karamja juju production site.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_Habitat",
+        "https://runescape.wiki/w/Papa_Mambo%27s_Shop",
+        "https://runescape.wiki/w/Juju_potion"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja activity. Witchdoctor mask teleports are a Habitat QoL unlock, not a separate region."
+    },
+    {
+      "id": "karamja:hardwood-grove",
+      "name": "Hardwood Grove teaks and mahoganies",
+      "category": "Woodcutting and Construction log supply",
+      "region_hint": "karamja",
+      "requirements": [
+        "100 trading sticks paid to Murcaily per entry (Tai Bwo Wannai Cleanup / shops / GE; no-trade: Cleanup or self-supply)",
+        "30 Woodcutting for teak; 60 Woodcutting for mahogany",
+        "Jungle Potion not required to enter"
+      ],
+      "unlocks": [
+        "Nine teak trees and four mahogany trees in one fenced grove (highest hardwood density site)",
+        "In-grove burn training (vines do not block fires)",
+        "Rionasta parcel service bank-send at 10 trading sticks per log",
+        "Synergy with Deadliest Catch Brimhaven beach deposit box and porters"
+      ],
+      "notes": "Primary midgame teak/mahogany Construction plank source for iron accounts that do not yet have Miscellania or other dense hardwoods. Entry fee is every visit. Banking options: Rionasta (sticks), TokKul-Zo + Tai Bwo Wannai teleport, Brimhaven POH, porters, or Deadliest Catch south-Brimhaven deposit box.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hardwood_grove",
+        "https://runescape.wiki/w/Trading_sticks",
+        "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja owns the grove and trading-stick economy. Pair with Deadliest Catch deposit QoL when ranking teak banking efficiency."
+    },
+    {
+      "id": "karamja:musa-point-teaks",
+      "name": "Musa Point free teaks",
+      "category": "Woodcutting early teak access",
+      "region_hint": "karamja",
+      "requirements": [
+        "30 Woodcutting for teak",
+        "Musa Point access (glory teleport, Port Sarim boat, or overland Karamja)"
+      ],
+      "unlocks": [
+        "Four free teak trees behind Karamja General Store (no trading sticks)",
+        "Same-area Stiles fish-noting for Musa Point lobster/tuna/swordfish dock",
+        "Early Construction plank path without Hardwood Grove fee"
+      ],
+      "notes": "Four teaks were added behind the general store in the 9 December 2024 Woodcutting/Fletching/Firemaking update. Lower density than Hardwood Grove but zero entry cost — useful before trading-stick supply is online. Not a substitute for grove density once sticks are available.",
+      "source_urls": [
+        "https://runescape.wiki/w/Musa_Point",
+        "https://runescape.wiki/w/Update:110_Woodcutting_%26_Fletching_%28%26_Firemaking%29_-_New_Skilling_Update"
+      ],
+      "confidence": "confirmed_wiki_2024_spawn_update",
+      "league_treatment": "Automatic-early Karamja free teak pointer. Prefer Hardwood Grove once sticks exist."
+    },
+    {
+      "id": "karamja:nature-altar",
+      "name": "Nature altar",
+      "category": "Runecrafting altar and catalytic supply",
+      "region_hint": "karamja",
+      "requirements": [
+        "44 Runecrafting to craft nature runes",
+        "Nature talisman/tiara/omni/wicked hood access, or Abyss entry without talisman"
+      ],
+      "unlocks": [
+        "Nature rune crafting at the Nature Rune Temple (ruins north-east of Shilo Village)",
+        "9 Runecrafting XP per pure essence (protean essence 160 XP each at this altar)",
+        "Nature tiara creation (45 RC XP)",
+        "Local access via Karamja gloves 3/4 gemstone cavern route, fairy ring CKR, nature altar teleport tablets, spirit graahk"
+      ],
+      "notes": "Karamja's permanent catalytic Runecrafting site. Abyss remains a global alternative path; this row values the surface ruins living in Karamja for self-sufficient nature rune production and regional travel synergies with gleaming wisps / Hardwood Grove.",
+      "source_urls": [
+        "https://runescape.wiki/w/Nature_altar",
+        "https://runescape.wiki/w/Nature_rune"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja owns the surface ruins and local teleport routes. Abyss path does not reassign the altar to Forinthry."
+    },
+    {
+      "id": "karamja:gleaming-wisps",
+      "name": "Gleaming wisp colony",
+      "category": "Divination gathering colony",
+      "region_hint": "karamja",
+      "requirements": [
+        "50 Divination"
+      ],
+      "unlocks": [
+        "Tier 6 gleaming wisp / spring colony north-east of Shilo Village",
+        "Gleaming memories and gleaming energy (tier used for midgame divination products and boons)",
+        "Colony near Nature altar / CKR / spirit graahk / Karamja gloves routes"
+      ],
+      "notes": "Karamja's named mid-tier Divination colony. Watch wandering warriors on the western side for lower-level accounts. Do not invent post-rebalance XP/h here; midgame energy success-rate notes live in training-gap Divination files.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gleaming_wisp",
+        "https://runescape.wiki/w/Gleaming_energy"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja Divination site at 50+."
+    },
+    {
+      "id": "karamja:tai-bwo-wannai-cleanup",
+      "name": "Tai Bwo Wannai Cleanup and trading sticks",
+      "category": "regional currency and jungle skilling hub",
+      "region_hint": "karamja",
+      "requirements": [
+        "Tai Bwo Wannai village access (Jungle Potion recommended for village progress but not strictly for all Cleanup actions)",
+        "Machete for jungle cutting; combat readiness for broodoo victims and jungle spawns"
+      ],
+      "unlocks": [
+        "Trading sticks as local currency from Cleanup favour",
+        "Hardwood Grove entry fee supply without GE",
+        "Gabooty cooperative / drinky stores and village shops priced in sticks",
+        "Gout tuber, gem rocks, thatch spars, broodoo materials as Cleanup byproducts",
+        "Calquat Farming patch and village services (Tiadeche karambwan stall after quests, etc.)"
+      ],
+      "notes": "Trading sticks are the gate currency for Hardwood Grove density teaks/mahoganies on no-trade accounts. Cleanup is the durable self-supply loop; treat sticks as infrastructure currency, not a GE convenience.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup",
+        "https://runescape.wiki/w/Trading_sticks",
+        "https://runescape.wiki/w/Tai_Bwo_Wannai"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja currency hub. Quest auto-complete may open shops; stick grinding remains activity time."
+    },
+    {
+      "id": "karamja:brimhaven-agility-arena",
+      "name": "Brimhaven Agility Arena",
+      "category": "Agility minigame and ticket shop",
+      "region_hint": "karamja",
+      "requirements": [
+        "200 coins entry (waived after Rocking Out)",
+        "Useful obstacle tiers open further at 20 and 40 Agility; food for failure damage"
+      ],
+      "unlocks": [
+        "Agility Arena tickets from tagging active pillars",
+        "Ticket exchange: Agility XP lamps (1/10/100/1000 tickets) and herb stock (toadflax, wergali, snapdragon noted/unnoted)",
+        "Pirate hook (left) at 800 tickets",
+        "Karamja gloves 2–3: +10% Arena XP; gloves 4: 25% chance of double tickets"
+      ],
+      "notes": "Dangerous minigame (death loses items). Tickets fund Agility lamps and a clean herb sink for iron Herblore. Pirate hook is a prestige hand-slot cosmetic/money item, not core combat gear. Keep as Karamja Agility infrastructure rather than pure XP/h ranking.",
+      "source_urls": [
+        "https://runescape.wiki/w/Brimhaven_Agility_Arena",
+        "https://runescape.wiki/w/Agility_Arena_Ticket_Exchange",
+        "https://runescape.wiki/w/Agility_Arena_ticket"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja minigame. Diary gloves amplify returns but live on the Karamja achievement set."
+    },
+    {
+      "id": "karamja:deadliest-catch-deposit-boxes",
+      "name": "Deadliest Catch skilling deposit boxes",
+      "category": "banking QoL from quest reward",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja",
+        "kandarin"
+      ],
+      "requirements": [
+        "Deadliest Catch completed (quest starts at Fishing Guild / Kandarin; skill reqs 70 Fishing, 67 Hunter, 70 Thieving, 3 Herblore, Tower of Life)",
+        "Local access to each deposit location after unlock"
+      ],
+      "unlocks": [
+        "South of Brimhaven deposit box (Hardwood Grove teak banking path)",
+        "South coast of Ape Atoll deposit box (Ape Atoll woodcutting / bank pressure under Karamja quest taxonomy)",
+        "Six further deposit boxes outside Karamja (Bedabin Camp, Elf Camp, Harmony Island, Mort Myre, Piscatoris, Pollnivneach) as global quest reward"
+      ],
+      "notes": "Quest is Kandarin-started but the Brimhaven and Ape Atoll deposit boxes are the Karamja-relevant skilling unlocks called out by ironman Woodcutting guidance (teak banking + Ape Atoll). Do not reclassify the whole quest as Karamja; mark dual pressure: Kandarin to unlock, Karamja to spend the local boxes.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deadliest_Catch",
+        "https://runescape.wiki/w/Hardwood_grove",
+        "https://runescape.wiki/w/Deposit_chest"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Quest completion is Kandarin-gated in start location; Brimhaven box is the Hardwood Grove partner. Ape Atoll sits under Karamja terms in quest-region-rules."
+    },
+    {
+      "id": "karamja:musa-point-fishing-stiles",
+      "name": "Musa Point fishing dock and Stiles",
+      "category": "Fishing and fish-noting infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "Fishing levels for tuna / lobster / swordfish cages and harpoons as used"
+      ],
+      "unlocks": [
+        "Primary F2P-safe lobster/tuna/swordfish dock",
+        "Stiles notes raw and cooked tuna, lobster, and swordfish on southern Musa Point",
+        "Banana plantation and volcano cooking logistics nearby"
+      ],
+      "notes": "Early/mid Fishing infrastructure on automatic-early Karamja. Stiles removes the classic bank run. Members usually outgrow this dock for Deep Sea Fishing (Kandarin) but Stiles remains a regional QoL landmark.",
+      "source_urls": [
+        "https://runescape.wiki/w/Musa_Point",
+        "https://runescape.wiki/w/Stiles"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja early Fishing pointer; do not rank above Kandarin Deep Sea hub for late training."
+    },
+    {
+      "id": "kandarin:warforge-dig-site-boundary",
+      "name": "Warforge Dig Site (not Karamja)",
+      "category": "Archaeology dig site region boundary",
+      "region_hint": "kandarin",
+      "region_status": "confirmed_wiki_equilibrium_league_kandarin",
+      "requirements": [
+        "76 Archaeology and assistant qualification for site access",
+        "Warforge invitation at level gate"
+      ],
+      "unlocks": [
+        "Warforge excavation hotspots, mysteries, and collections",
+        "Imcando mattock / Thalmund forge archaeology progression",
+        "Goblin warpaints cave-painting path"
+      ],
+      "notes": "BOUNDARY CHECK for Karamja skilling pass: physical map is South Feldip Hills near Oo'glog. Wiki tags every listed Warforge excavation hotspot League region as Kandarin. Catalyst/planner already groups Feldip under Kandarin. Ironman-gap text that said Warforge/Karamja is incorrect for Equilibrium taxonomy — do not dual-claim Karamja.",
+      "source_urls": [
+        "https://runescape.wiki/w/Warforge_Dig_Site",
+        "https://runescape.wiki/w/Equilibrium_League/Areas/Kandarin"
+      ],
+      "confidence": "confirmed_wiki_league_region_badge",
+      "league_treatment": "Map to Kandarin only. Karamja skilling files must not absorb Warforge."
+    },
+    {
+      "id": "kandarin:fishing-trawler-boundary",
+      "name": "Fishing Trawler (not Karamja)",
+      "category": "Fishing minigame region boundary",
+      "region_hint": "kandarin",
+      "region_status": "confirmed_wiki_equilibrium_league_kandarin",
+      "requirements": [
+        "Port Khazard access; 15 Fishing minimum to catch fish",
+        "Swamp paste, bailing buckets, rope for successful trips"
+      ],
+      "unlocks": [
+        "Trawler raw fish rewards including sea turtle / manta ray / tiger shark by level",
+        "Solo-viable with paste/rope/bailing strategy"
+      ],
+      "notes": "BOUNDARY CHECK: Port Khazard, Kandarin League badge. Commonly confused with Karamja coastal content; keep out of Karamja region unlock lists.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fishing_Trawler"
+      ],
+      "confidence": "confirmed_wiki_league_region_badge",
+      "league_treatment": "Kandarin minigame only."
+    },
+    {
+      "id": "forinthry:crafteneering-boundary",
+      "name": "Crafteneering (not TzHaar)",
+      "category": "Crafting training method region boundary",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_daemonheim_forinthry",
+      "requirements": [
+        "Daemonheim / Dungeoneering smuggler leather loop access"
+      ],
+      "unlocks": [
+        "Crafteneering leather-body loop for Crafting XP and rusty coins inside Daemonheim"
+      ],
+      "notes": "BOUNDARY CHECK for 'TzHaar crafteneering supplies' prompt: Crafteneering is the Daemonheim smuggler leather training method (Forinthry), not a TzHaar City shop or TokKul supply chain. TzHaar remains combat/obsidian/TokKul-Zo territory (see regional combat pass-3).",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting"
+      ],
+      "confidence": "confirmed_wiki_plus_training_gap_id",
+      "league_treatment": "Forinthry/Daemonheim only. Do not attach to Karamja or TzHaar."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "karamja:witchdoctor-camo-outfit",
+      "name": "Witchdoctor camo outfit",
+      "category": "Hunter camouflage outfit and Habitat teleport",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja",
+        "anachronia"
+      ],
+      "requirements": [
+        "Weekly D&D: catch all 10 normal jadinkos in one week (00:00 UTC Wednesday reset) for robes or legs from Papa Mambo",
+        "Same week plus all 3 god jadinkos for the witchdoctor mask",
+        "Herblore Habitat path: up to 81 Hunter / 77 Farming / 54 Herblore (boostable); Anachronia path: 90 Hunter (boostable)"
+      ],
+      "effects": [
+        "Improved jadinko catch chance at Herblore Habitat when worn",
+        "Witchdoctor mask teleports to Papa Mambo / Herblore Habitat",
+        "After first outfit piece: speak to Pauline Polaris (Livid Farm) for Mambo's potion (3,000 Farming XP)"
+      ],
+      "notes": "Outfit pieces awarded randomly (robes vs legs) so full set can take multiple weeks. Anachronia jadinko catches count toward the weekly set, but the reward NPC and Habitat teleport are Karamja-rooted. Storeable in costume-room armour case.",
+      "source_urls": [
+        "https://runescape.wiki/w/Witchdoctor_camo_outfit",
+        "https://runescape.wiki/w/Witchdoctor_mask",
+        "https://runescape.wiki/w/Herblore_Habitat"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja reward claim. Anachronia can accelerate weekly catches but does not move the outfit off Karamja."
+    },
+    {
+      "id": "karamja:karamja-gloves-skilling",
+      "name": "Karamja gloves skilling perks",
+      "category": "achievement diary skilling utility",
+      "region_hint": "karamja",
+      "requirements": [
+        "Karamja achievements tiers for gloves 1–4",
+        "Claim from Pirate Jackie the Fruit / diary NPCs per tier"
+      ],
+      "effects": [
+        "Gloves 2–3: +10% Agility XP from Brimhaven Agility Arena obstacles and ticket lamps",
+        "Gloves 3–4: Shilo Village underground mine teleport (Habitat / Nature altar access routing)",
+        "Gloves 4: 25% chance of double Agility Arena tickets when tagging pillars"
+      ],
+      "notes": "Diary utility bundle for Karamja skilling, especially Arena ticket farming and Shilo routing. Combat/TokKul interactions stay in combat enrichment; this row is the skilling half.",
+      "source_urls": [
+        "https://runescape.wiki/w/Karamja_gloves",
+        "https://runescape.wiki/w/Karamja_achievements",
+        "https://runescape.wiki/w/Brimhaven_Agility_Arena"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja achievement set. Resolve quest gates via Equilibrium auto-quest overlays."
+    },
+    {
+      "id": "karamja:juju-potions-pointer",
+      "name": "Juju and perfect juju potions",
+      "category": "Herblore product chain from Habitat",
+      "region_hint": "karamja",
+      "requirements": [
+        "Herblore Habitat vine herbs and secondaries",
+        "Herblore levels matching each juju / perfect juju recipe"
+      ],
+      "effects": [
+        "Juju hunter / farming / fishing / woodcutting / mining / divinity-style skill potions from Habitat produce",
+        "Perfect juju upgrades as higher Herblore targets (including perfect juju fishing and herblore variants used in late stacks)"
+      ],
+      "notes": "Production-site pointer: juju secondaries are Habitat-native. Perfect juju recipes and exact dose effects may also appear in aura/herblore ladder files — keep this row as the Karamja supply dependency so region planners do not orphan Habitat when reading only potion lists.",
+      "source_urls": [
+        "https://runescape.wiki/w/Juju_potion",
+        "https://runescape.wiki/w/Perfect_juju_potion",
+        "https://runescape.wiki/w/Herblore_Habitat"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Karamja for vine-herb supply. Potion use is global once mixed."
+    }
+  ]
+}

@@ -12,7 +12,7 @@
     {
       "id": "herblore:flash-powder-factory-outfits",
       "skill": "Herblore",
-      "method": "Flash Powder Factory — botanist's and factory outfits",
+      "method": "Flash Powder Factory botanist and factory outfits (Asgarnia unlock)",
       "region": "asgarnia",
       "location": "Rogues' Den under the Pick and Lute, Taverley",
       "level_range": "50 Herblore; 75 Thieving and Agility to access the factory",
@@ -170,7 +170,10 @@
       "location": "Wilderness charming moth area",
       "level_range": "88+ Hunter; 83+ Agility",
       "category": "skilling_charm_source",
-      "linked_skills": ["Hunter", "Agility"],
+      "linked_skills": [
+        "Hunter",
+        "Agility"
+      ],
       "effect": "Barehanded moth catching produces large volumes of gold/green charms (wiki obtaining-charms guide: high gold/green output; training-methods.json cites ~360 Summoning charms/hour near 99 alongside Hunter XP).",
       "notes": "Link to existing Hunter training-methods.json row. Ignore legacy Demonic Skull XP bonus (removed July 2026 mid-game rebalance). Primary League value is simultaneous Hunter XP and charm banking under no trade.",
       "source": "https://runescape.wiki/w/Summoning_training/Obtaining_charms",
@@ -209,10 +212,26 @@
       "location": "Dragontooth Island resource dungeon (One of a Kind)",
       "category": "combat_tertiary_and_charm_camp",
       "drop_table_verified": {
-        "steel_ingot": { "quantity": "8 noted", "rarity": "8/136", "status": "confirmed" },
-        "water_talisman": { "quantity": "2 noted", "rarity": "6/136", "status": "confirmed" },
-        "crimson_charm": { "quantity": 2, "rarity": "749/1000", "status": "confirmed" },
-        "dragon_bones": { "quantity": 1, "rarity": "Always", "status": "confirmed" }
+        "steel_ingot": {
+          "quantity": "8 noted",
+          "rarity": "8/136",
+          "status": "confirmed"
+        },
+        "water_talisman": {
+          "quantity": "2 noted",
+          "rarity": "6/136",
+          "status": "confirmed"
+        },
+        "crimson_charm": {
+          "quantity": 2,
+          "rarity": "749/1000",
+          "status": "confirmed"
+        },
+        "dragon_bones": {
+          "quantity": 1,
+          "rarity": "Always",
+          "status": "confirmed"
+        }
       },
       "effect": "Steel ingots are a Summoning tertiary (steel titan line and related pouches). Water talismans are tertiaries for geyser titan and ice titan. Extremely high crimson charm rate makes this a dual tertiary+charm camp.",
       "notes": "Claim 'celestial dragons drop steel ingots in Morytania' is correct. They also drop water talismans (not only steel). Requires One of a Kind for access.",
@@ -232,7 +251,14 @@
       "skill": "Herblore",
       "item_family": "high_tier_herbs",
       "category": "farming",
-      "items": ["torstol", "fellstalk", "dwarf_weed", "lantadyme", "snapdragon", "cadantine"],
+      "items": [
+        "torstol",
+        "fellstalk",
+        "dwarf_weed",
+        "lantadyme",
+        "snapdragon",
+        "cadantine"
+      ],
       "routes": [
         {
           "region": "asgarnia",
@@ -281,38 +307,118 @@
         {
           "item": "grimy_torstol",
           "sources": [
-            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
-            { "name": "Nex", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Nex" },
-            { "name": "Vorago", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Vorago" },
-            { "name": "Queen Black Dragon", "region": "forinthry", "source_url": "https://runescape.wiki/w/Queen_Black_Dragon" },
-            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
-            { "name": "Rasial, the First Necromancer", "region": "misthalin", "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer" }
+            {
+              "name": "Telos, the Warden",
+              "region": "forinthry",
+              "source_url": "https://runescape.wiki/w/Telos,_the_Warden"
+            },
+            {
+              "name": "Nex",
+              "region": "asgarnia",
+              "source_url": "https://runescape.wiki/w/Nex"
+            },
+            {
+              "name": "Vorago",
+              "region": "asgarnia",
+              "source_url": "https://runescape.wiki/w/Vorago"
+            },
+            {
+              "name": "Queen Black Dragon",
+              "region": "forinthry",
+              "source_url": "https://runescape.wiki/w/Queen_Black_Dragon"
+            },
+            {
+              "name": "Sunspear vyrelords/ladies",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Vyrelord"
+            },
+            {
+              "name": "Rasial, the First Necromancer",
+              "region": "misthalin",
+              "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer"
+            }
           ],
           "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
         },
         {
           "item": "grimy_dwarf_weed",
           "sources": [
-            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
-            { "name": "Araxxi", "region": "morytania", "source_url": "https://runescape.wiki/w/Araxxi" },
-            { "name": "Nex", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Nex" },
-            { "name": "Heart of Gielinor generals", "region": "desert", "source_url": "https://runescape.wiki/w/Heart_of_Gielinor" },
-            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
-            { "name": "Croesus", "region": "morytania", "source_url": "https://runescape.wiki/w/Croesus" },
-            { "name": "Rasial, the First Necromancer", "region": "misthalin", "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer" },
-            { "name": "Vault of Hereditas (95 Thieving)", "region": "anachronia", "source_url": "https://runescape.wiki/w/Vault_of_Hereditas" }
+            {
+              "name": "Telos, the Warden",
+              "region": "forinthry",
+              "source_url": "https://runescape.wiki/w/Telos,_the_Warden"
+            },
+            {
+              "name": "Araxxi",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Araxxi"
+            },
+            {
+              "name": "Nex",
+              "region": "asgarnia",
+              "source_url": "https://runescape.wiki/w/Nex"
+            },
+            {
+              "name": "Heart of Gielinor generals",
+              "region": "desert",
+              "source_url": "https://runescape.wiki/w/Heart_of_Gielinor"
+            },
+            {
+              "name": "Sunspear vyrelords/ladies",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Vyrelord"
+            },
+            {
+              "name": "Croesus",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Croesus"
+            },
+            {
+              "name": "Rasial, the First Necromancer",
+              "region": "misthalin",
+              "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer"
+            },
+            {
+              "name": "Vault of Hereditas (95 Thieving)",
+              "region": "anachronia",
+              "source_url": "https://runescape.wiki/w/Vault_of_Hereditas"
+            }
           ],
           "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
         },
         {
           "item": "grimy_lantadyme",
           "sources": [
-            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
-            { "name": "Helwyr", "region": "tirannwn", "source_url": "https://runescape.wiki/w/Helwyr" },
-            { "name": "Araxxi", "region": "morytania", "source_url": "https://runescape.wiki/w/Araxxi" },
-            { "name": "Beastmaster Durzag / Liberation of Mazcab", "region": "unresolved_mazcab", "source_url": "https://runescape.wiki/w/Beastmaster_Durzag" },
-            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
-            { "name": "Exiled kalphite marauder/guardian", "region": "desert", "source_url": "https://runescape.wiki/w/Exiled_kalphite_marauder" }
+            {
+              "name": "Telos, the Warden",
+              "region": "forinthry",
+              "source_url": "https://runescape.wiki/w/Telos,_the_Warden"
+            },
+            {
+              "name": "Helwyr",
+              "region": "tirannwn",
+              "source_url": "https://runescape.wiki/w/Helwyr"
+            },
+            {
+              "name": "Araxxi",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Araxxi"
+            },
+            {
+              "name": "Beastmaster Durzag / Liberation of Mazcab",
+              "region": "unresolved_mazcab",
+              "source_url": "https://runescape.wiki/w/Beastmaster_Durzag"
+            },
+            {
+              "name": "Sunspear vyrelords/ladies",
+              "region": "morytania",
+              "source_url": "https://runescape.wiki/w/Vyrelord"
+            },
+            {
+              "name": "Exiled kalphite marauder/guardian",
+              "region": "desert",
+              "source_url": "https://runescape.wiki/w/Exiled_kalphite_marauder"
+            }
           ],
           "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
         },
@@ -349,14 +455,19 @@
         {
           "region": "anachronia",
           "source": "Vault of Hereditas / Asuran Arsenal",
-          "items": ["grimy dwarf weed (hereditas completion path)", "dinosaur bones and dragonkin bones from Asuran Arsenal"],
+          "items": [
+            "grimy dwarf weed (hereditas completion path)",
+            "dinosaur bones and dragonkin bones from Asuran Arsenal"
+          ],
           "level_range": "up to 108 Thieving for Asuran Arsenal",
           "source_url": "https://runescape.wiki/w/Vault_of_Hereditas"
         },
         {
           "region": "tirannwn",
           "source": "Prifddinas worker pickpocketing / district chests",
-          "items": ["herb-related and general resources; Hefin workers rarely drop cleansing crystals"],
+          "items": [
+            "herb-related and general resources; Hefin workers rarely drop cleansing crystals"
+          ],
           "source_url": "https://runescape.wiki/w/Hefin_worker"
         }
       ],
@@ -375,7 +486,9 @@
       "base_prayer_xp_bury": 180,
       "region": "asgarnia",
       "source": "Frost dragons in Asgarnian Ice Dungeon resource dungeon",
-      "requirements": ["85 Dungeoneering"],
+      "requirements": [
+        "85 Dungeoneering"
+      ],
       "notes": "Always drop frost dragon bones. Also drop water talismans (2 noted, 3/128) as a minor Summoning tertiary side-product. Access via fairy ring AIQ / Port Sarim area.",
       "source_url": "https://runescape.wiki/w/Frost_dragon",
       "source_urls": [
@@ -565,7 +678,11 @@
       "skill": "Summoning",
       "item": "water_talisman",
       "category": "tertiary_source",
-      "used_for": ["geyser_titan_pouch", "ice_titan_pouch", "combination_runes"],
+      "used_for": [
+        "geyser_titan_pouch",
+        "ice_titan_pouch",
+        "combination_runes"
+      ],
       "routes": [
         {
           "region": "morytania",
@@ -609,7 +726,9 @@
       "skill": "Summoning",
       "item": "steel_ingot",
       "category": "tertiary_source",
-      "used_for": ["steel_titan_and_related_summoning_tertiaries"],
+      "used_for": [
+        "steel_titan_and_related_summoning_tertiaries"
+      ],
       "routes": [
         {
           "region": "morytania",
@@ -643,7 +762,9 @@
       "skill": "Summoning",
       "item": "yak-hide",
       "category": "tertiary_source",
-      "used_for": ["pack_yak_pouch"],
+      "used_for": [
+        "pack_yak_pouch"
+      ],
       "routes": [
         {
           "region": "fremennik",

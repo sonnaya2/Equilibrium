@@ -1,0 +1,514 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Region-defining Anachronia and Havenhythe skilling unlocks and infrastructure missing from earlier regional-skilling enrichment: dig-site hubs, base-camp / Dream of Iaia / Ranch Out of Time loops, Time altar, Accidental F&F, Agility course, Always Adze planning note, and Havenhythe Hunter/Woodcutting/Farming/Summoning content (Moonrise, BGH, birdhouses, creeping ivy, eternal-magic nursery, volatile chins, shaman outfit). Does not re-emit already-indexed ids (bait-and-switch, herb bag, furnace core, lodges, ring of Kayazu, empowered obelisks, jackalope, cross-region Skeka hypnowand).",
+  "policy": {
+    "region_rule": "region_hint is only anachronia or havenhythe. region_hints marks optional cross-region pressure. required_regions only when both regions are needed for a full stack. Quest auto-completion and League-specific overrides are applied separately.",
+    "no_trade_rule": "Prioritise unlocks that materially change self-sufficient progression, training throughput, supply access, or tool progression. Do not mirror every shop item or animal breed.",
+    "rate_rule": "Do not promote stale XP/hour figures as optimizer truth. Training rates belong in training datasets; this file records unlock state and effects. Wiki hourly bands may be mentioned as unlock context only.",
+    "id_policy": "New ids only. Do not re-emit anachronia:bait-and-switch-relic, anachronia:herby-werby-herb-bag, anachronia:herb-bag-current, anachronia:herb-bag-skilling-pointer, anachronia:orthen-furnace-core, anachronia:slayer-lodge, anachronia:player-lodge, anachronia:totem-of-vitality, anachronia:totem-of-summoning, cross-region:skekas-hypnowand, havenhythe:ring-of-kayazu, havenhythe:empowered-summoning-obelisks, havenhythe:jackalope-familiar."
+  },
+  "activity_additions": [
+    {
+      "id": "anachronia:orthen-dig-site",
+      "name": "Orthen Dig Site",
+      "category": "Archaeology dig-site hub",
+      "region_hint": "anachronia",
+      "requirements": [
+        "90 Archaeology and Archaeology Guild associate qualification",
+        "Anachronia base camp tutorial completed",
+        "Orthen invitation on reaching 90 Archaeology"
+      ],
+      "unlocks": [
+        "Four permanent excavation sites: Crypt of Varanus (90), Observation outpost (101), Moksha ritual site (106), Xolo City (113+)",
+        "Orthen teleportation devices between base camp and sites (Teleport Node On mystery; 90 Archaeology plus 70 Runecrafting/Crafting/Divination for full network)",
+        "Death mask artefacts used for Bait and Switch (separate id anachronia:bait-and-switch-relic)",
+        "Dragon burners for Orthen furnace core craft (separate id anachronia:orthen-furnace-core)",
+        "Dragonkin potion recipes and monolith power cap expansion on full site mastery (120 Archaeology + Mysterious City)"
+      ],
+      "notes": "Anachronia-only dig site. Do not claim dual dig sites for furnace-core or Bait and Switch chains. Base camp holds the archaeologist's workbench and material storage for Orthen work.",
+      "source_urls": [
+        "https://runescape.wiki/w/Orthen_Dig_Site",
+        "https://runescape.wiki/w/Orthen_Dig_Site/Unlocking_excavation_sites",
+        "https://runescape.wiki/w/Teleport_Node_On"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Archaeology hub. Prefer existing specialised rows for herb bag, furnace core, and Bait and Switch when ranking those unlocks."
+    },
+    {
+      "id": "anachronia:base-camp",
+      "name": "Anachronia base camp",
+      "category": "regional passive resource and structure hub",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Arrive on Anachronia and complete Giles base-camp management tutorial",
+        "Worker count scales with Sleeping Quarters tiers and Fort Forinthry Command Centre"
+      ],
+      "unlocks": [
+        "Passive gathering of wood, vines, leaves, hides, stone, and clay (60 per worker per hour until storehouse cap)",
+        "Tiered Town Hall / Storehouse / Sleeping Quarters / Spa / Hunter Lodge / Slayer Lodge / Player Lodge / bank / lodestone / remote totem access",
+        "Compacted resources from skilling and kills feed the camp; Town Hall tier multiplies compacted deposits",
+        "Resource supply for Ranch Out of Time pen builds and Dream of Iaia station builds"
+      ],
+      "notes": "Slayer Lodge damage/helmet-stand and Player Lodge skillcape rack already have combat/support rows; this hub row covers the passive resource economy and structure dependency graph. Spa gives Anachronia-only Agility XP boosts (5/7/10% by tier). Hunter Lodge improves Big Game Hunter convenience.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_base_camp",
+        "https://runescape.wiki/w/Calculator:Other/Anachronia_base_camp"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia infrastructure. Fort Command Centre worker bonuses are a Forinthry pressure on max worker count, not a second Anachronia claim."
+    },
+    {
+      "id": "anachronia:dream-of-iaia",
+      "name": "Dream of Iaia",
+      "category": "passive multi-skill XP stations",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Extinction completed",
+        "Speak to Hannibus at the Effigy Incubator after Extinction",
+        "75 unboostable in each station skill to build that station",
+        "50,000 of each base-camp resource type per station (300,000 of each to build all six)"
+      ],
+      "unlocks": [
+        "Permanent Construction, Crafting, Fishing, Fletching, Herblore, and Hunter stations charged with base-camp resources",
+        "AFK stockpiled XP draw (wiki: up to 175 XP every 1.8s while stocked; 350k XP storage cap per station)",
+        "Chance at compacted base-camp resources, dinosaur farm animals, tier-3 camp upgrade materials, and Necklace of Salamancy"
+      ],
+      "notes": "Base-camp workers are the durable resource supply. Each resource maps to one station (wood→Fletching, hides→Crafting/tannery, leaves→Herblore, clay→Fishing, vines→Hunter, stone→Construction). Do not invent League XP multipliers here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dream_of_Iaia",
+        "https://runescape.wiki/w/Anachronia_base_camp",
+        "https://runescape.wiki/w/Extinction"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Anachronia owns the island resource loop and Effigy Incubator access. Extinction quest chain region rules still apply via quest overlays."
+    },
+    {
+      "id": "anachronia:ranch-out-of-time",
+      "name": "Ranch Out of Time (Anachronia Dinosaur Farm)",
+      "category": "player-owned farm expansion",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Player-owned farm tutorial completed at Manor Farm",
+        "Visited Anachronia at least once",
+        "Beans to unlock pens; Anachronia base-camp resources to construct pens",
+        "Farming 42–118 and Construction 45–90 band for pen builds by animal tier"
+      ],
+      "unlocks": [
+        "Five dinosaur-farm paddocks (two large, one medium, one small, one breeding) for frogs, salamanders, jadinkos, and dinosaurs",
+        "Shared bean currency and Farmers' Market with Manor Farm",
+        "Unchecked animal sources from Anachronia Hunter, Slayer, Big Game Hunter, and Dream of Iaia",
+        "Farm produce and bean economy supporting high-level Farming progression"
+      ],
+      "notes": "Meat supply for dinos often pressures external meat shops (Oo'glog Fresh Meat after As a First Resort, and/or Havenhythe meat traders). Treat meat access as optional region pressure, not a hard dual-region lock for unlocking the ranch itself.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+        "https://runescape.wiki/w/Player-owned_farm",
+        "https://runescape.wiki/w/Farmers%27_Market_(Anachronia_Dinosaur_Farm)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia farm expansion. Meat shop dependencies are secondary supply edges only."
+    },
+    {
+      "id": "anachronia:accidental-fletching-firemaking",
+      "name": "Prehistoric Potterington's 'Accidental' Fletching and Firemaking",
+      "category": "Fletching and Firemaking production activity",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Extinction completed",
+        "82 Fletching or 82 Firemaking to start Zygomite Carestyling",
+        "87 Firemaking for Seggregation",
+        "95 Firemaking for Eggsperimentation; 95 Fletching for dinarrow construction"
+      ],
+      "unlocks": [
+        "Seggregation egg-sorting for sharp shell shards",
+        "Zygomite Carestyling for tempered fungal shafts (Fletching and/or Firemaking XP modes)",
+        "Eggsperimentation for dinosaur propellant",
+        "Tier-95 dinarrows and resonant-anima imbued arrow variants (Bik/Ful/Wen/Jas baned)"
+      ],
+      "notes": "Located on the Anachronia Dinosaur Farm peninsula. Components also feed fungal bowstring, ultracompost, and pure Firemaking via shell shards. Strong self-sufficient Ranged ammo path in no-trade planning.",
+      "source_urls": [
+        "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking",
+        "https://runescape.wiki/w/Dinarrow",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia after Extinction. Imbued arrow anima supply may pull Elder God Wars / other regions separately."
+    },
+    {
+      "id": "anachronia:time-altar",
+      "name": "Time altar",
+      "category": "Runecrafting altar infrastructure",
+      "region_hint": "anachronia",
+      "region_hints": [
+        "anachronia",
+        "forinthry"
+      ],
+      "requirements": [
+        "100 unboostable Runecrafting to craft time runes",
+        "Enchanted key from Making History or Meeting History to anchor ruins on first entry (key not consumed)",
+        "Pure essence (protean essence cannot be used)"
+      ],
+      "unlocks": [
+        "Time rune crafting at 15.5 XP per essence",
+        "Time Rune Temple access via north-west Anachronia ruins or Abyss time rift after anchoring",
+        "Weapon imbuing and catalysed elemental diamond support at the altar",
+        "Time runes for high-level magic and Masterwork staff pressure"
+      ],
+      "notes": "Altar geography is Anachronia. Highest-throughput Abyss route uses Wilderness/Forinthry Mage of Zamorak entrance — surface Forinthry as optional throughput pressure, not a dual dig-site claim. North-western Anachronia teleport and Orthen observation-outpost paths are pure Anachronia routes.",
+      "source_urls": [
+        "https://runescape.wiki/w/Time_altar",
+        "https://runescape.wiki/w/Time_rune",
+        "https://runescape.wiki/w/Time_Rune_Temple"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Anachronia owns the altar. Efficient Abyss loops optionally pressure Forinthry/Wilderness access."
+    },
+    {
+      "id": "anachronia:agility-course",
+      "name": "Anachronia Agility Course",
+      "category": "Agility course and island transit",
+      "region_hint": "anachronia",
+      "requirements": [
+        "30 Agility for beginner sections; 50 / 70 / 85 for full island lap",
+        "Anachronia access"
+      ],
+      "unlocks": [
+        "Primary overland routing around Anachronia (sections A–G)",
+        "Full lap bonus XP and guaranteed codex pages for Double Surge/Escape codex grinding",
+        "Totem piece rolls, compacted base-camp resources, tier-3 camp materials, and Skeka hypnowand piece rolls (after Daemonheim aged journal)",
+        "Synergy with base-camp Spa Anachronia Agility XP boosts and Roar of Osseous"
+      ],
+      "notes": "Also the practical path from base camp toward the Time ruins and northern content. Skeka hypnowand acquisition remains a Forinthry journal + Anachronia piece chain (cross-region:skekas-hypnowand).",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Agility_Course",
+        "https://runescape.wiki/w/Codex_page",
+        "https://runescape.wiki/w/Skeka%27s_hypnowand"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Agility and codex infrastructure."
+    },
+    {
+      "id": "anachronia:big-game-hunter",
+      "name": "Anachronia Big Game Hunter",
+      "category": "Hunter dinosaur encounters",
+      "region_hint": "anachronia",
+      "requirements": [
+        "75+ Hunter for classic Anachronia dinosaur tiers (higher tiers scale upward)",
+        "Hunter Lodge base-camp upgrades improve BGH QoL",
+        "Bait, camouflage, and encounter routing knowledge"
+      ],
+      "unlocks": [
+        "High-value Hunter XP and dinosaur hide/produce tables",
+        "Dragon mattock drop path feeding crystal mattock / tool chains",
+        "Unchecked dinosaur animals for Ranch Out of Time",
+        "Skeka hypnowand piece rolls among other Anachronia activities"
+      ],
+      "notes": "Distinct from Havenhythe Big Game Hunter, which is the 2026 top-end Hunter XP route. Keep both region rows; do not merge.",
+      "source_urls": [
+        "https://runescape.wiki/w/Big_Game_Hunter",
+        "https://runescape.wiki/w/Hunter_training",
+        "https://runescape.wiki/w/Hunter_Lodge"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Anachronia classic BGH. Havenhythe BGH is a separate starting-region Hunter flagship."
+    },
+    {
+      "id": "anachronia:always-adze-relic",
+      "name": "Always Adze (Seed of the Charyou Tree)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "anachronia",
+      "region_hints": [
+        "anachronia",
+        "karamja"
+      ],
+      "requirements": [
+        "83 Archaeology (boostable path via Warforge Into the Forge mystery)",
+        "Flame gloves (79 Firemaking) to activate inactive seed",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Always Adze relic power at the mysterious monolith",
+        "Logs cut while Woodcutting auto-burn for Firemaking XP (no prayer drain)",
+        "Also burns some non-inventory-lightable cut resources such as curly roots and timber fungus (with documented exclusions)"
+      ],
+      "notes": "Unlock item is Seed of the Charyou Tree from Thalmund's Forge / Warforge (planner taxonomy typically karamja), not Orthen. Included in this Anachronia pack because dual WC/FM is a core Anachronia planning stack alongside Superheat Form and Orthen furnace core. Exclusions include divine locations, Big Game Hunter jungle logs, bloodwood, Arc bamboo, ivy, and Daemonheim logs. Does not stack as a second firemaking prayer drain remover; it is a monolith alternative to Superheat Form for log burn.",
+      "source_urls": [
+        "https://runescape.wiki/w/Always_Adze",
+        "https://runescape.wiki/w/Seed_of_the_Charyou_Tree",
+        "https://runescape.wiki/w/Into_the_Forge"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Do not label unlock as Anachronia-only. Warforge/Karamja owns the seed; Anachronia benefits from the harnessed power on island woodcutting routes."
+    },
+    {
+      "id": "anachronia:skeka-piece-sources",
+      "name": "Skeka hypnowand Anachronia piece sources",
+      "category": "Hunter off-hand piece farm pointer",
+      "region_hint": "anachronia",
+      "region_hints": [
+        "anachronia",
+        "forinthry"
+      ],
+      "requirements": [
+        "Read the aged journal in the Warped Depths (Daemonheim Dig Site) before pieces can drop",
+        "Anachronia activities that roll pieces: Big Game Hunter, Rex Matriarchs, vile blooms, Agility Course"
+      ],
+      "unlocks": [
+        "Anachronia-side Skeka hypnowand piece acquisition after the Forinthry journal gate",
+        "Pointer into full cross-region:skekas-hypnowand equipment chain"
+      ],
+      "notes": "Not a second full equipment row. Prefer cross-region:skekas-hypnowand for the completed off-hand effects and requirements. This row makes Anachronia planners surface the island piece farms.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skeka%27s_hypnowand",
+        "https://runescape.wiki/w/Anachronia_Agility_Course",
+        "https://runescape.wiki/w/Big_Game_Hunter"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry journal gate is mandatory on the normal path. Anachronia is the piece farm side."
+    },
+    {
+      "id": "havenhythe:moonrise-dig-site",
+      "name": "Moonrise Dig Site",
+      "category": "Archaeology dig-site hub",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Partial Secrets of Amberfell for Amberfell access",
+        "52 Archaeology",
+        "Speak to Utu at Moonrise Temple entrance to enable hotspots"
+      ],
+      "unlocks": [
+        "Excavation ladder from 52 through 88 Archaeology (temple periphery and depths)",
+        "Five mysteries culminating in The Final Revolution",
+        "Guthixian I/II collections; Guardian's tear → Tear of Inanna (Hungry Like the Wolf) with Expensive spices",
+        "Fang of Kayazu path into Ring of Kayazu (separate id havenhythe:ring-of-kayazu)",
+        "Anzagar pet on full mystery completion"
+      ],
+      "notes": "Live First Age / Guthixian dig site on Havenhythe (15 June 2026). Starting-region Archaeology progression for Equilibrium, not future elective content. Ring of Kayazu ritual use is primarily outside Havenhythe (Um / Ungael).",
+      "source_urls": [
+        "https://runescape.wiki/w/Moonrise_Dig_Site",
+        "https://runescape.wiki/w/Update:Digging_up_the_past_at_Moonrise",
+        "https://runescape.wiki/w/The_Final_Revolution",
+        "https://runescape.wiki/w/Tear_of_Inanna"
+      ],
+      "confidence": "confirmed_wiki_2026_release",
+      "league_treatment": "Hard Havenhythe starting-region Archaeology. Prefer havenhythe:ring-of-kayazu for the ritual ring equipment details."
+    },
+    {
+      "id": "havenhythe:big-game-hunter",
+      "name": "Havenhythe Big Game Hunter",
+      "category": "Hunter apex encounters",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access",
+        "High Hunter (up to 110 content band per 2026 Hunter update)"
+      ],
+      "unlocks": [
+        "2026 flagship Hunter XP route described by Jagex as the best Hunter XP in the game",
+        "New BGH encounters native to Havenhythe",
+        "Hunter progression without spending an elective region slot (starting region)"
+      ],
+      "notes": "Keep separate from anachronia:big-game-hunter. Exact optimizer-grade post-launch XP/hour tables still belong in training datasets once re-benchmarked.",
+      "source_urls": [
+        "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter",
+        "https://runescape.wiki/w/Big_Game_Hunter",
+        "https://runescape.wiki/w/Hunter_update"
+      ],
+      "confidence": "confirmed_wiki_plus_official_2026",
+      "league_treatment": "Starting-region Hunter flagship. Do not require Anachronia for Havenhythe BGH access."
+    },
+    {
+      "id": "havenhythe:birdhouses",
+      "name": "Havenhythe birdhouses",
+      "category": "Hunter passive route",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "5–101 Hunter by birdhouse tier",
+        "Logs + clockwork to craft (10 Fletching; Crafting scales with log tier)",
+        "Seeds to bait; eight birdhouse plots across Havenhythe"
+      ],
+      "unlocks": [
+        "Birdhouse tiers from regular through eternal magic (101 Hunter / 100 Crafting craft)",
+        "Passive Hunter XP plus raw bird meat, feathers, bird nests, and occasional oaken keys",
+        "Clockwork returned on harvest; birdhouse consumed",
+        "Nest rolls can include Imcando hatchet fragments if Fort Grove tier 3 is built"
+      ],
+      "notes": "Eight plots (Wendlewick, Marigold Farm x3, Eastfold Farm, Shrine of Inanna, fairy ring BKS, Dalia's Tree Nursery). Wait times are short (30–75 seconds by tier). Strong early-to-late starting-region Hunter QoL.",
+      "source_urls": [
+        "https://runescape.wiki/w/Birdhouses",
+        "https://runescape.wiki/w/Birdhouse_plot",
+        "https://runescape.wiki/w/Eternal_birdhouse"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe. Imcando nest fragments still require Fort Forinthry Grove tier 3 for that specific nest subtype."
+    },
+    {
+      "id": "havenhythe:creeping-ivy",
+      "name": "Creeping ivy",
+      "category": "Woodcutting vine training",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "35 Woodcutting",
+        "Havenhythe wall vines (Wendlewick, Marigold Farm, Highweald Forest cabins)"
+      ],
+      "unlocks": [
+        "No-log vine chopping at 162.5 Woodcutting XP per successful chop",
+        "Lower-level analogue of choking ivy for starting-region mid Woodcutting",
+        "Nest and oaken-key side rolls"
+      ],
+      "notes": "Does not yield logs (Always Adze and Superheat Form do not apply). Distinct from global choking ivy. Useful 35–68ish Havenhythe WC ladder before higher trees.",
+      "source_urls": [
+        "https://runescape.wiki/w/Creeping_ivy",
+        "https://runescape.wiki/w/Choking_ivy"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe starting-region Woodcutting."
+    },
+    {
+      "id": "havenhythe:eternal-magic-nursery",
+      "name": "Dalia's Tree Nursery eternal magic plots",
+      "category": "Woodcutting and Farming supply infrastructure",
+      "region_hint": "havenhythe",
+      "region_hints": [
+        "havenhythe",
+        "kandarin"
+      ],
+      "requirements": [
+        "The Lute of Love achievement (craft a lute for Dalia) to use nursery patches",
+        "Heedi's eternal magic saplings (obtained from Heedi near Piscatoris)",
+        "From Here to Eternity achievement for planting an eternal magic tree at the nursery"
+      ],
+      "unlocks": [
+        "Three empty tree plots that grow Heedi's eternal magic saplings into mature eternal magic trees next game day",
+        "Havenhythe-local eternal magic log supply once saplings are planted",
+        "Standard tree and fruit tree patches plus nearby bank and birdhouse plot"
+      ],
+      "notes": "Alternate chopping location, not proof that the full self-source chain is Havenhythe-only. Saplings still come from Heedi / Piscatoris (Kandarin pressure). Eternal magic logs feed Masterwork staff, eternal birdhouses, high Construction, and weapon imbuing.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dalia%27s_Tree_Nursery",
+        "https://runescape.wiki/w/Heedi%27s_eternal_magic_sapling",
+        "https://runescape.wiki/w/Eternal_magic_tree",
+        "https://runescape.wiki/w/The_Lute_of_Love"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Havenhythe owns the nursery plots. Kandarin still owns the original sapling NPC source unless Equilibrium adds another rule."
+    },
+    {
+      "id": "havenhythe:volatile-chinchompas",
+      "name": "Volatile chinchompas",
+      "category": "Hunter black-chin supply",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "73 Hunter",
+        "Box traps; spicy tomato bait optional",
+        "Highweald Forest catch sites"
+      ],
+      "unlocks": [
+        "270 Hunter XP per catch",
+        "Caught creatures become stackable black chinchompas (Ranged weapon from 65 Ranged)",
+        "Unchecked volatile chinchompa rare farm drop",
+        "Safe black-chin supply without Wilderness/Forinthry risk"
+      ],
+      "notes": "Explode if attacked/killed in combat — use box traps and disable left-click attack on NPCs while hunting. Guaranteed minimum 2 black chins at 87 Agility. Distinct from Wilderness black chin hunting.",
+      "source_urls": [
+        "https://runescape.wiki/w/Volatile_chinchompa",
+        "https://runescape.wiki/w/Black_chinchompa",
+        "https://runescape.wiki/w/Highweald_Forest"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Starting-region black-chin path. Strong no-trade Ranged ammo/self-supply value."
+    },
+    {
+      "id": "havenhythe:shrine-of-inanna-summoning-hub",
+      "name": "Shrine of Inanna Summoning hub",
+      "category": "regional Summoning production hub pointer",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe / Visions of Havenhythe progression for shrine access",
+        "Fairy ring BKS later access"
+      ],
+      "unlocks": [
+        "Empowered Summoning obelisks with Spirit Plane Connection (see havenhythe:empowered-summoning-obelisks for full connection math)",
+        "Shaman's outfit shop path via Pikkenflix at Shrine of the Spirit Wolves",
+        "Jackalope antler hunting nearby for Archaeology soil familiar (havenhythe:jackalope-familiar)"
+      ],
+      "notes": "Hub pointer only. Do not re-encode Spirit Plane Connection percentages here — keep havenhythe:empowered-summoning-obelisks as the canonical connection row. Do not conflate with Desert Holy scarab or Amlodd Voice of Seren.",
+      "source_urls": [
+        "https://runescape.wiki/w/Shrine_of_Inanna",
+        "https://runescape.wiki/w/Spirit_Plane_Connection",
+        "https://runescape.wiki/w/Shrine_of_the_Spirit_Wolves"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Havenhythe Summoning production advantage. Pair with shaman outfit and jackalope equipment rows."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "havenhythe:shaman-outfit",
+      "name": "Shaman's outfit",
+      "category": "Summoning experience-boosting set",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Access to Pikkenflix / Shrine of the Spirit Wolves shop in Havenhythe",
+        "Shop currency / pouch-infusion unlock path post-23-March-2026 (no longer box-of-summoning-ingredients)"
+      ],
+      "effects": [
+        "+1% Summoning XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Modified shaman's headdress: retains 1% XP, 5% chance to save a charm on pouch infusion, and Bogrog teleports"
+      ],
+      "notes": "High-priority ironman Summoning gear. Available to ironmen via the Havenhythe shop path. Full set also improves Familiarisation new-familiar odds. Distinct from empowered-obelisk connection bonuses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Shaman%27s_outfit",
+        "https://runescape.wiki/w/Modified_shaman%27s_headdress",
+        "https://runescape.wiki/w/Shrine_of_the_Spirit_Wolves"
+      ],
+      "confidence": "confirmed_wiki_2026_shop_path",
+      "league_treatment": "Hard Havenhythe Summoning outfit unlock. Prefer this equipment row over training-method-only pointers."
+    },
+    {
+      "id": "havenhythe:tear-of-inanna-hungry-like-the-wolf",
+      "name": "Tear of Inanna / Hungry Like the Wolf",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Complete Guthixian I collection at Moonrise for Artiefax first-time reward Guardian's tear",
+        "Combine Guardian's tear with Expensive spices to form Tear of Inanna",
+        "Harness at the mysterious monolith"
+      ],
+      "effects": [
+        "Hungry Like the Wolf relic power",
+        "Every food consumed restores an additional 100 life points",
+        "Food no longer drains adrenaline when the relic is active"
+      ],
+      "notes": "Moonrise collection relic, not a combat-style gear piece. Useful skilling/PvM sustain unlock sourced from Havenhythe Archaeology.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tear_of_Inanna",
+        "https://runescape.wiki/w/Hungry_Like_the_Wolf",
+        "https://runescape.wiki/w/Guthixian_I",
+        "https://runescape.wiki/w/Moonrise_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki_2026_release",
+      "league_treatment": "Havenhythe owns Moonrise collection reward. Monolith energy remains global Archaeology."
+    },
+    {
+      "id": "anachronia:necklace-of-salamancy",
+      "name": "Necklace of Salamancy",
+      "category": "dinosaur combat and drop support necklace",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Dream of Iaia access (Extinction + station training)",
+        "Very rare roll while training Dream of Iaia stations"
+      ],
+      "effects": [
+        "Damage and rare-drop boost against dinosaur combat monsters"
+      ],
+      "notes": "Unique Dream of Iaia reward. Situational dinosaur Slayer/PvM QoL, not a general BiS neck. Prefer listing under Anachronia skilling infrastructure because acquisition is station training, not a shop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Necklace_of_Salamancy",
+        "https://runescape.wiki/w/Dream_of_Iaia"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Anachronia Dream of Iaia drop. Do not invent exact drop rates beyond wiki very-rare framing."
+    }
+  ]
+}

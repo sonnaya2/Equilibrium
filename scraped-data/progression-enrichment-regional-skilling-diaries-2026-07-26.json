@@ -1,0 +1,414 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Consolidated Area Tasks (achievement diary) skilling-relevant rewards for every Equilibrium region mapping. Expands thin or partial diary pointers elsewhere (gloves, cloak Ourania-only, desert amulet 4 stub, sea boots, explorer ring) into full tier 1-4 skilling effect bundles. No Anachronia or Havenhythe Area Tasks set exists on the wiki.",
+  "policy": {
+    "region_rule": "region_hint maps diary geography to Equilibrium planner regions: Varrock/Lumbridge/Underworld -> misthalin; Falador -> asgarnia; Ardougne/Seers -> kandarin; Fremennik -> fremennik; Karamja -> karamja; Desert -> desert; Morytania -> morytania; Wilderness/Daemonheim -> forinthry; Tirannwn -> tirannwn. City of Um Underworld tasks use historical Misthalin working taxonomy.",
+    "no_trade_rule": "Prioritise permanent skilling throughput, supply, patch, RC, Prayer, Agility, teleports, and shop QoL. Pure combat damage/PvP-only effects are omitted or one-line notes only.",
+    "rate_rule": "Do not invent XP/hour. Record unlock state and wiki-stated chance/percent effects only.",
+    "scope_rule": "Canonical RS3 Area Tasks reward set only. Daemonheim aura items were removed 13 April 2026 (Aura Overhaul); effects remain as passive achievement unlocks. Anachronia and Havenhythe have no diary reward item.",
+    "id_rule": "Ids use area-tasks infix so this catalog coexists with thinner regional rows without Map overwrite of partial ids."
+  },
+  "activity_additions": [
+    {
+      "id": "global:area-tasks-overview",
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "category": "achievement diary acquisition frame",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "karamja",
+        "desert",
+        "morytania",
+        "forinthry",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Members for all Area Tasks sets except some free Lumbridge achievements",
+        "Prior reward tier claimed before the next (e.g. armour 2 before armour 3)",
+        "Skill, quest, and activity gates per easy/medium/hard/elite subcategory"
+      ],
+      "unlocks": [
+        "One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire)",
+        "Task Master emote after completing all Area Tasks achievements",
+        "Daemonheim Area Tasks benefits are passive (aura items removed)"
+      ],
+      "notes": "This file is the diary-first skilling catalog. Prefer equipment rows below for stacking; regional skilling files may still carry activity context (e.g. Ourania, Abyss, Miscellania).",
+      "source_urls": [
+        "https://runescape.wiki/w/Area_Tasks_achievements",
+        "https://runescape.wiki/w/Tasks_set"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Achievement and quest gates follow Equilibrium auto-quest overlays. Region ownership of reward items follows diary geography, not task-start locality for every single task."
+    },
+    {
+      "id": "forinthry:area-tasks-daemonheim-passives",
+      "name": "Daemonheim Area Tasks passive rewards",
+      "category": "achievement diary passive Dungeoneering unlocks",
+      "region_hint": "forinthry",
+      "location": "Daemonheim (Equilibrium: Forinthry)",
+      "requirements": [
+        "Easy through elite Daemonheim achievements claimed in order",
+        "Aura items themselves removed in Aura Overhaul (13 April 2026); unlocks remain"
+      ],
+      "unlocks": [
+        "Easy: secondary ring of kinship role at 25% effectiveness; daily boss choice; one consequence-free death per day in a dungeon (not hard mode)",
+        "Medium: secondary role 50%; potion bind slot; Smuggler 40 law + cosmic runes each dungeon; Daemonheim Peninsula Island extension (yew trees + deposit box); in-dungeon ammo return and auto-bury when the old aura-worn effects apply as passives",
+        "Hard: secondary role 75%; +2 bind pool slots; 5% recharge cost reduction; +10% Sinkholes rewards; Dwarven Mine resource dungeon extension (phasmatite)",
+        "Elite: secondary role 100%; hard mode party-leader start; 10% Smuggler discount; Brimhaven resource dungeon extension (mithril dragons); Gatestone 2 access; bone-to-prayer restore operate effect (1 hour, 3 hour cooldown) as documented historically"
+      ],
+      "notes": "Not a wearable diary item post-Aura Overhaul. Track as Forinthry Dungeoneering permanent unlocks. Resource-dungeon extensions are the main skilling geography side-effect outside floors.",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim_aura",
+        "https://runescape.wiki/w/Daemonheim_achievements",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Aura_Overhaul"
+      ],
+      "confidence": "confirmed_wiki_aura_removed_passives_remain",
+      "league_treatment": "Hard Forinthry (Daemonheim). Do not list a Daemonheim aura equipment piece for live Equilibrium planning."
+    },
+    {
+      "id": "anachronia:no-area-tasks-diary",
+      "name": "Anachronia has no Area Tasks diary reward",
+      "category": "absence note",
+      "region_hint": "anachronia",
+      "requirements": [],
+      "unlocks": [],
+      "notes": "Wiki Area Tasks areas list does not include Anachronia. Skilling rewards on Anachronia (Herby Werby, Orthen, base camp, totems) are not diary equipment. Do not invent a diary item.",
+      "source_urls": [
+        "https://runescape.wiki/w/Area_Tasks_achievements"
+      ],
+      "confidence": "confirmed_wiki_absence",
+      "league_treatment": "No diary gate for Anachronia region planning."
+    },
+    {
+      "id": "havenhythe:no-area-tasks-diary",
+      "name": "Havenhythe has no Area Tasks diary reward",
+      "category": "absence note",
+      "region_hint": "havenhythe",
+      "requirements": [],
+      "unlocks": [],
+      "notes": "Wiki Area Tasks areas list does not include Havenhythe / Moonrise. Ritual ring and dig-site unlocks are separate Archaeology/Necromancy systems.",
+      "source_urls": [
+        "https://runescape.wiki/w/Area_Tasks_achievements"
+      ],
+      "confidence": "confirmed_wiki_absence",
+      "league_treatment": "No diary gate for Havenhythe region planning."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "misthalin:area-tasks-varrock-armour",
+      "name": "Varrock armour 1-4",
+      "category": "achievement diary Mining and Smithing utility",
+      "region_hint": "misthalin",
+      "location": "Varrock achievements",
+      "requirements": [
+        "Easy through elite Varrock achievements claimed in order",
+        "Optional New Varrock achievements double several chance effects and relax wear requirements"
+      ],
+      "effects": [
+        "Tier 1 worn: 4% chance double copper/tin/iron/coal; 4% extra bronze/iron/steel bar to metal bank; 4% double Smithing progress on bronze/iron/steel; 1% bonus Mining XP (not part of golden mining suit set); increased skull sceptre part chance",
+        "Tier 2 worn: 3% chance double mithril/adamantite/luminite; 3% extra mithril/adamant bars; 3% double progress on mithril/adamant",
+        "Tier 3 worn: 2% chance double runite/orichalcite/drakolith/necrite/phasmatite; 2% extra rune/orikalkum/necronium bars; 2% double progress on those metals",
+        "Tier 4 worn: 1% chance double banite/light animica/dark animica; 1% extra bane/elder rune bars; 1% double progress on bane/elder rune; 5 free bolt enchantments/day (ruby and below, runes still required)",
+        "Always tier 1+: Edgeville furnace access; Naff battlestaff stock 16/32/64/80 by tier; Varrock Teleport destination toggles",
+        "Always tier 3+: Cooks' Guild entry without chef hat/Cooking cape and bank access",
+        "Operate tier 4: unlimited Chaos Tunnels teleport; always log storage boxes near beacons; halved house move/redecorate cost",
+        "New Varrock easy: mining/smithing/smelting chance effects no longer require wearing armour (1% Mining XP still worn-only)",
+        "New Varrock medium/hard/elite: doubles double-ore / double-bar / double-progress chances respectively on all armour tiers"
+      ],
+      "notes": "Primary Misthalin Mining/Smithing diary stack. Extra bars go to metal bank with chat log confirmation. Do not invent ore XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Varrock_armour",
+        "https://runescape.wiki/w/Varrock_achievements",
+        "https://runescape.wiki/w/New_Varrock_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Starting-region diary reward. Keep skill gates; New Varrock doubling is a second achievement set if available in League."
+    },
+    {
+      "id": "misthalin:area-tasks-explorers-ring",
+      "name": "Explorer's ring 1-4",
+      "category": "achievement diary skilling utility ring",
+      "region_hint": "misthalin",
+      "location": "Lumbridge achievements (beginner/easy/medium/hard)",
+      "requirements": [
+        "Beginner through hard Lumbridge achievements claimed in order"
+      ],
+      "effects": [
+        "Tier 1 operate: 1x daily restore 50% run energy",
+        "Tier 2 worn: 10% chance extra air/earth/fire/water rune per essence at matching altar (not Ourania), with extra XP; operate: 2 run restores/day; 30 runeless Low Level Alchemy/day (Magic 21)",
+        "Tier 3 operate: 3 run restores/day; unlimited cabbage-port to Falador farm cabbage patch",
+        "Tier 4 operate: 27 runeless Superheat Item/day (Magic 43); 15 runeless High Level Alchemy/day (Magic 55)",
+        "Always tier 4: 50% chance free Bones to Bananas runes up to 10/day; daily hamper from Lumbridge cook"
+      ],
+      "notes": "Ring is skilling/travel QoL, not combat. Low alch and run-restore charges are shared across upgrades same day. Cabbage-port is major early farm/bank adjacency for Asgarnia patches from a Misthalin diary.",
+      "source_urls": [
+        "https://runescape.wiki/w/Explorer%27s_ring",
+        "https://runescape.wiki/w/Lumbridge_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin Lumbridge Area Tasks. No elite ring tier exists."
+    },
+    {
+      "id": "asgarnia:area-tasks-falador-shield",
+      "name": "Falador shield 1-4",
+      "category": "achievement diary Farming and Artisans utility",
+      "region_hint": "asgarnia",
+      "location": "Falador achievements",
+      "requirements": [
+        "Easy through elite Falador achievements claimed in order"
+      ],
+      "effects": [
+        "Operate prayer restore once/day: 25% / 50% / 100% prayer points by tiers 1-3; tier 4 twice/day soft reset full restore",
+        "Tier 2 worn: +10% Farming XP from herb, flower, and allotment patches at the Falador farm",
+        "Always tier 3: Crafting Guild bank deposit box upgraded to bank chest; Wyson gives white lily seed per mole skin; trade up to 50 white lily seeds/day for 100 Farming XP each",
+        "Tier 4 worn: +5% Artisans' Workshop respect gain; mole-shield damage reduction vs Giant mole (not dragonfire)",
+        "Always tier 4: +20 prayer points when restoring at Falador Castle altar; can convert that altar to Zarosian with ancient hymnal; always mole nose drop for better nest trades"
+      ],
+      "notes": "Hard skilling hooks are Falador farm XP (shield 2 worn), Crafting Guild bank chest (3), and Artisans respect (4 worn). Combat mole notes kept minimal.",
+      "source_urls": [
+        "https://runescape.wiki/w/Falador_shield",
+        "https://runescape.wiki/w/Falador_achievements",
+        "https://runescape.wiki/w/Artisans%27_Workshop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia diary. Pair Artisans respect with asgarnia Artisans Workshop rows."
+    },
+    {
+      "id": "kandarin:area-tasks-ardougne-cloak",
+      "name": "Ardougne cloak 1-4",
+      "category": "achievement diary Thieving RC Farming utility",
+      "region_hint": "kandarin",
+      "location": "Ardougne achievements",
+      "requirements": [
+        "Easy through elite Ardougne achievements claimed in order"
+      ],
+      "effects": [
+        "Always tier 1: better Ardougne stall steal chance; some Tower of Life Creature Creation drops noted; unlimited Kandarin monastery teleport; cat trade 200 death runes; 25% extra chompy spawn while hunting",
+        "Always tier 2: Ourania Altar roughly +15% rune yield (no extra XP; does not need cloak worn); +10 pickpocket success threshold in Ardougne; more Creature Creation noted; Wizard Cromperty 700 pure essence/week; daily Manor Farm teleport; 50% extra chompy spawn",
+        "Always tier 3: +10 pickpocket threshold and stall success worldwide; ~80% Creature Creation noted; Cromperty 1050 essence/week; Ardougne Castle/Chaos Druid Tower chests bank to north bank; Watchtower teleport toggle to Yanille; 75% extra chompy",
+        "Always tier 4: unlimited Manor Farm teleport; daily full Summoning restore (globe); Bert 420 buckets of sand/week; 100% extra chompy; Fishing Trawler junk replaced with useful items",
+        "Tier 4 worn note: 5% chance double rune crossbow limbs smithing in Yanille (wiki flags currently bugged)",
+        "Operate: unlimited monastery teleport (1+); Manor Farm daily then unlimited (2/4); daily Summoning restore (4)"
+      ],
+      "notes": "Full cloak skilling bundle beyond the Ourania-only pointer elsewhere. Ourania bonus is permanent once medium diary claimed.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ardougne_cloak",
+        "https://runescape.wiki/w/Ardougne_achievements",
+        "https://runescape.wiki/w/Ourania_Runecrafting_Altar"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin. Ourania and Manor Farm are the high-value skilling gates."
+    },
+    {
+      "id": "kandarin:area-tasks-seers-headband",
+      "name": "Seer's headband 1-4",
+      "category": "achievement diary Woodcutting Crafting coal utility",
+      "region_hint": "kandarin",
+      "location": "Seers' Village achievements",
+      "requirements": [
+        "Easy through elite Seers' Village achievements claimed in order"
+      ],
+      "effects": [
+        "Carried light source dim/medium/bright by tiers 1-3",
+        "Tier 1 worn: 2 normal logs per normal tree (no extra XP); always +28 coal truck capacity (252); weekly 210 noted flax from Geoffrey",
+        "Tier 2 worn: +10 maple WC XP per maple log; double normal logs with XP for both; 33% faster Seers spinning wheel; coal trucks 280; weekly flax 420",
+        "Always tier 3: Enhanced Excalibur path from Lady of the Lake; Thormac mystic staff enchant 27k; Seers altar +20 prayer; coal trucks 308; weekly flax 840; Camelot teleport toggle to Seers centre",
+        "Always tier 4: Enhanced Excalibur heal duration doubled; +2% enchanted bolt special chance; weekly flax 1400; first 200 coal on trucks each day auto-bank"
+      ],
+      "notes": "Flax, coal trucks, maple XP, and spinning wheel are the pure skilling core. Bolt/Excalibur notes are minor combat-adjacent.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seer%27s_headband",
+        "https://runescape.wiki/w/Seers%27_Village_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin Seers diary."
+    },
+    {
+      "id": "fremennik:area-tasks-sea-boots",
+      "name": "Fremennik sea boots 1-4",
+      "category": "achievement diary Miscellania and travel utility",
+      "region_hint": "fremennik",
+      "location": "Fremennik achievements",
+      "requirements": [
+        "Easy through elite Fremennik achievements claimed in order"
+      ],
+      "effects": [
+        "Always tier 1: Peer the Seer acts as bank deposit; lyre recharge gives +20 charges per fish in person; operate remote Fossegrimen recharge at reduced charges",
+        "Tier 2 worn: Misc/Etceteria broken pier shortcut; operate free lyre teleport once/day without charge; always increased Managing Miscellania approval gain rate",
+        "Always tier 3: Skulgrimen 1:1 suqah hide to teeth; lyre destinations Waterbirth and Rellekka market; Cadarn grimoire Lunar swap in Prifddinas after access",
+        "Tier 4 worn: noted Dagannoth bones; Jatizso mine banite section + Hallvar ore noting; always further improved Misc approval; lyre to Jatizso/Neitiznot/Misc/Etceteria; daily suqah teeth/hides for pure essence (up to 28 each at 9 essence); NPC Contact can swap to normal spellbook via Oneiromancer; unlimited Rellekka market teleport operate"
+      ],
+      "notes": "Miscellania approval rate and lyre logistics dominate skilling value. Combat DKS damage bonus is out of scope beyond noted bones.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fremennik_sea_boots",
+        "https://runescape.wiki/w/Fremennik_achievements",
+        "https://runescape.wiki/w/Managing_Miscellania"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik. Lunar/Prif grimoire swap needs Tirannwn access separately."
+    },
+    {
+      "id": "karamja:area-tasks-karamja-gloves",
+      "name": "Karamja gloves 1-4",
+      "category": "achievement diary Agility Mining supply utility",
+      "region_hint": "karamja",
+      "location": "Karamja achievements",
+      "requirements": [
+        "Easy through elite Karamja achievements claimed in order",
+        "Claim from Pirate Jackie the Fruit / diary NPCs per tier"
+      ],
+      "effects": [
+        "Always tier 1: boat fares Port Sarim-Musa and Ardougne-Brimhaven reduced to 15 coins; weekly 140 pineapples from Dell Monti",
+        "Tier 2 worn and always: +10% Agility XP from Brimhaven Agility Arena obstacles and ticket lamp trades",
+        "Tier 3 worn: ladder access to Shilo underground mine and gemstone cavern; operate teleport to Shilo underground mine; always free Brimhaven Dungeon entry; gemstone dragons as Slayer assignment option",
+        "Tier 4 worn: 25% chance double Agility Arena tickets; always +140 cooking apples weekly from Dell Monti; one-time 150k tokkul; Lapalok +5 Slayer points every 10th task (80 total); northern Shilo shortcut (Agility 74)"
+      ],
+      "notes": "Expands the thinner karamja-gloves-skilling pointer: pineapple/apple supply, boat fares, Shilo mining teleport, Arena XP/tickets. Fight Cave resurrection is combat QoL only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Karamja_gloves",
+        "https://runescape.wiki/w/Karamja_achievements",
+        "https://runescape.wiki/w/Brimhaven_Agility_Arena"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja. Gemstone cavern routes Habitat/Nature altar logistics."
+    },
+    {
+      "id": "desert:area-tasks-desert-amulet",
+      "name": "Desert amulet 1-4",
+      "category": "achievement diary Crafting Farming glass utility",
+      "region_hint": "desert",
+      "location": "Desert achievements",
+      "requirements": [
+        "Easy through elite Desert achievements claimed in order"
+      ],
+      "effects": [
+        "Tier 1 worn: successful Kharidian cactus cut gives 2 water units; always Mage Training Arena prices -2%; daily bag of lost items from rug merchants; sparkly dung kalphites double loot",
+        "Operate tier 2+: unlimited Nardah teleport; convert soda ash to molten glass in desert (50/100/150 per day at tiers 2/3/4)",
+        "Always tier 2: respawning teak near Uzer; MTA -5%; chance noted desert goat horns; weekly 140 potato cactus from Weird Old Man; Sceptre of the gods charge cap 20",
+        "Always tier 3: MTA -10%; weekly 210 potato cactus; Al Kharid/Menaphos/Het's Oasis cactus patches disease-free and double cactus spines/potato cacti harvest; double charges when recharging pharaoh/sceptre of the gods; SotG cap 60",
+        "Tier 4 worn: 20% chance 4-dose super antifire instead of 3-dose while in desert including Al Kharid (stacks with factory outfit)",
+        "Always tier 4: double phoenix feathers per pluck; Clay golem enhances ancient staff; Sophanem red sandstone mine; Aligra Nite buys granite at 20% GE; weekly 280 potato cactus; pyramid tops 10k to Simon Templeton; operate unlimited Uzer teleport"
+      ],
+      "notes": "Full 1-4 ladder supersedes desert-amulet-4 stub. Glass conversion, cactus patches, red sandstone, and potato cactus claims are the ironman skilling core.",
+      "source_urls": [
+        "https://runescape.wiki/w/Desert_amulet",
+        "https://runescape.wiki/w/Desert_achievements",
+        "https://runescape.wiki/w/Desert_amulet_4"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert. Elite gates late glass/red-sandstone QoL."
+    },
+    {
+      "id": "morytania:area-tasks-morytania-legs",
+      "name": "Morytania legs 1-4",
+      "category": "achievement diary Prayer RC Farming utility",
+      "region_hint": "morytania",
+      "location": "Morytania achievements (claim Old Man Ral)",
+      "requirements": [
+        "Easy through elite Morytania achievements claimed in order"
+      ],
+      "effects": [
+        "Tier 1 worn: double fungi from Bloom; 50% ghast ignore; always +5% Temple Trekking rewards",
+        "Tier 2 worn: 10% second blood rune per essence at blood altar; Port Phasmatys regular cannonballs 7 ticks to 4; operate slime-pit teleport 5/day",
+        "Always tier 2: Robin 13 bones to bonemeal + 13 free slime daily (noted bones ok); Razmire weekly free planks (10 teak/20 oak/30 plank); Mort'ton pyre log chests; Canifis mushroom patch disease-free; 4-dose olive oil from Razmire",
+        "Tier 3 worn: +50% Prayer XP burning shades; better shade keys; 50% blood altar teleports do not break; operate slime teleports 10/day",
+        "Always tier 3: Robin 26 bones + 26 slime; ghostspeak-passive; bank Barrows loot from chest; +10% Temple Trekking; crystal outcrop shortcut; Big Book o' Piracy cap 20",
+        "Tier 4 worn: +50% Firemaking and Prayer XP cremating vyre corpses (including Sunspear); +10% Slayer XP on Slayer Tower tasks; 20% chance 4-dose prayer renewal in Morytania; operate unlimited slime-pit teleports",
+        "Always tier 4: Robin 39 bones + 39 slime; double mushroom yield at Canifis, Isafdar, and City of Um (XP not doubled); Big Book o' Piracy cap 60"
+      ],
+      "notes": "Single consolidated ladder for legs 1-4 skilling effects (regional files split 1-3 and elite 4). Isafdar double mushrooms still require owning elite Morytania legs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Morytania_legs",
+        "https://runescape.wiki/w/Morytania_achievements",
+        "https://runescape.wiki/w/Morytania_legs_4"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania. Resolve quest/achievement access through Equilibrium overlays."
+    },
+    {
+      "id": "forinthry:area-tasks-wilderness-sword",
+      "name": "Wilderness sword 1-4",
+      "category": "achievement diary Runecrafting Prayer Agility utility",
+      "region_hint": "forinthry",
+      "location": "Wilderness achievements",
+      "requirements": [
+        "Easy through elite Wilderness achievements claimed in order"
+      ],
+      "effects": [
+        "Worn or backpack Abyss Runecrafting magical thread chance: 5% / 10% / 15% / 33.3% cumulative by tiers 1-4",
+        "Always Chaos Altar bone/ash Prayer XP multiplier: +100% / +150% / +200% / +250% by tiers 1-4",
+        "Operate free teleports: Wilderness herb patch + Edgeville (1+); Forinthry Dungeon (2+); Wilderness Agility Course (4+)",
+        "Tier 2 worn/carried: +5% XP per Wilderness Agility Course lap; always improved Rogue pickpocket rates in Wilderness",
+        "Tier 3: Mage of Zamorak chance to inner Abyss (sword worn or backpack); Harrison un-note near Chaos Temple; Air Obelisk shortcut; Wilderness herb patch never diseased; choose Ancient Obelisk arrival; Wilderness Crater lodestone always quick teleport",
+        "Tier 4: searing ashes always noted when sword worn/carried; teleports bypass level-20 wildy teleport restriction to level 30 in PVP mode"
+      ],
+      "notes": "Skilling core is Abyss thread, Chaos Altar Prayer, Agility lap XP, disease-free wildy herb patch, and herb-patch teleport. Revenant gear chance is combat-adjacent only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wilderness_sword",
+        "https://runescape.wiki/w/Wilderness_achievements",
+        "https://runescape.wiki/w/Abyss"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Abyss entrance is Forinthry geography; inside Abyss is not Wilderness for combat rules."
+    },
+    {
+      "id": "tirannwn:area-tasks-tirannwn-quiver",
+      "name": "Tirannwn quiver 1-4",
+      "category": "achievement diary Farming Hunter Divination utility",
+      "region_hint": "tirannwn",
+      "location": "Tirannwn achievements",
+      "requirements": [
+        "Easy through elite Tirannwn achievements claimed in order"
+      ],
+      "effects": [
+        "Worn tier 1: ammo storage up to 20k; no leaf trap falls; 5% noted tortoise shells from warped tortoises; acts as crystal chime; Poison Waste crystal end teleport",
+        "Operate teleports scaling: Lletya + Eluned/Islwyn (1); + Poison Waste dungeon + Tyras Camp (2); + Elf Camp + Tirannwn mushroom patch (3); + Harmony pillars (4); Death Altar 5/day at tier 3",
+        "Always tier 1: sell limestone to Meredith; Lletya shop 15 swamp tar/day",
+        "Always tier 2: Tirannwn mushroom patch between Tyras and Poison Waste (not disease-protected by Morytania medium; double harvest if Morytania elite owned); Lletya 30 swamp tar/day; grenwalls no bait; chance crystal bow charges saved",
+        "Tier 3 worn: 10% more harmony moss per harvest; auto-use cleansing crystals after first; no stick trap fails",
+        "Always tier 3: Lord Amlodd +10% shard swaps; Eilwynn takes chronicle fragments at 75% Guthix shrine XP; Lunet sells 16 battlestaves",
+        "Always tier 4: weekly 98 free logs from Coeden (yew/magic/elder mix); double crystal tree blossoms from player-grown crystal trees; dense forest fast travel when worn; charge saves on Most Wanted cards and attuned crystal bow/ward"
+      ],
+      "notes": "Skilling focus: mushroom patch, harmony moss, grenwalls, chronicle fragments, Coeden logs, crystal blossoms, cleansing crystals. Pure damage-vs-elf notes omitted.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tirannwn_quiver",
+        "https://runescape.wiki/w/Tirannwn_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn. Cross-link Morytania elite for Isafdar/Tirannwn mushroom double yield."
+    },
+    {
+      "id": "misthalin:area-tasks-underworld-grimoire",
+      "name": "Underworld Grimoire 1-4",
+      "category": "achievement diary Necromancy RC ritual utility",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "location": "Underworld achievements (City of Um claims)",
+      "requirements": [
+        "Easy through elite Underworld achievements claimed in order",
+        "Prior grimoire tier claimed before the next"
+      ],
+      "effects": [
+        "Worn: toggleable auto-deposit of tiered bones into focus storage (priority over bonecrusher); bank ashes when picked up from tier 1",
+        "Worn impure essence extra-rune chance: 2.5% / 5% / 7.5% / 10% by tiers 1-4",
+        "Worn ritual disturbance dispel XP: 3% / 6% / 9% / 12% total by tier (scaled from Um site base)",
+        "Worn extra necroplasm from rituals: 5% / 10% / 15% from tiers 2-4 (additive with Multiply glyphs)",
+        "Worn City of Um 10% chance 4-dose necromancy / super / extreme potions by tiers 1-3; elite removes City-of-Um-only potion restriction",
+        "Operate: smithy teleports (10/day then unlimited); ritual site teleports (shared Um/Ungael) scaling to unlimited at tier 3; daily Lupe teleport at tier 4",
+        "Always: weekly Lupe bones/ink/candles scaling by tier; Soul Supplies daily slime stock at tier 3; Um mushroom patch disease-free at tier 3; elite free daily Death reclaim and banked weekly supplies"
+      ],
+      "notes": "Diary-catalog twin of misthalin:underworld-grimoire with full numeric tier ladder. Core ironman Necromancy skilling pocket.",
+      "source_urls": [
+        "https://runescape.wiki/w/Underworld_Grimoire",
+        "https://runescape.wiki/w/Underworld_achievements",
+        "https://runescape.wiki/w/Focus_storage"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "City of Um under Misthalin working taxonomy until Equilibrium splits Underworld locality."
+    }
+  ]
+}

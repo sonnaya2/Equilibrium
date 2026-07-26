@@ -1,0 +1,73 @@
+{
+  "round": 2,
+  "passBar": 9.0,
+  "winnerId": null,
+  "rankOrder": ["r2-raised", "r2-wiki", "r2-parchment"],
+  "concepts": [
+    {
+      "id": "r2-parchment",
+      "name": "Parchment Lift",
+      "agent": "D",
+      "score": 6.9,
+      "axes": {
+        "workbenchFill": 12,
+        "categorization": 13,
+        "readability": 11,
+        "gameIdentity": 10,
+        "antiSlop": 14,
+        "operability": 6,
+        "consistency": 3
+      },
+      "status": "eliminated",
+      "mustFix": [
+        "Restore full tree · table · inspector shell; drop or collapse swatch strip from the work stage",
+        "Pair any parch lift with zebra + sticky opaque thead (Wiki Dense table law)",
+        "Secondary table cells use body-secondary ink (parch-100), not muted mid steps"
+      ]
+    },
+    {
+      "id": "r2-raised",
+      "name": "Raised Bench",
+      "agent": "E",
+      "score": 8.4,
+      "axes": {
+        "workbenchFill": 17,
+        "categorization": 18,
+        "readability": 12,
+        "gameIdentity": 10,
+        "antiSlop": 14,
+        "operability": 8,
+        "consistency": 5
+      },
+      "status": "contender",
+      "mustFix": [
+        "Pull stage/rail hexes back so void and rails stay league-dark; meter contrast",
+        "Adopt Wiki Dense table law: 15px body, 12px bright headers, zebra or hairline, sticky opaque head",
+        "Map surfaces into @theme (stone reassignment or bench-*); no production inline hex",
+        "Inject GameIcon / region crests into tree and rows"
+      ]
+    },
+    {
+      "id": "r2-wiki",
+      "name": "Wiki Dense",
+      "agent": "F",
+      "score": 7.9,
+      "axes": {
+        "workbenchFill": 16,
+        "categorization": 13,
+        "readability": 14,
+        "gameIdentity": 11,
+        "antiSlop": 14,
+        "operability": 7,
+        "consistency": 4
+      },
+      "status": "contender",
+      "mustFix": [
+        "Wire full Control Surface system tree; mount-active-only leaves",
+        "Promote zebra + sticky + 15px body into .data-table / globals as the readability contract",
+        "Crests/icons in dense rows; keep void dark if hybridizing with Raised Bench surfaces"
+      ]
+    }
+  ],
+  "round3Brief": "Hybrid: Raised Bench shell (full CS tree·table·inspector) + Wiki Dense table/type law; optional small parch @theme bump after surfaces/type fixed; stay dark umber; tokens only; crests debt open"
+}

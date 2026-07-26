@@ -1,0 +1,642 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Expand Forinthry / Wilderness / Daemonheim regional skilling beyond the generic forinthry:daemonheim-skilling-rewards blob: named Daemonheim Rewards shop permanent unlocks, Wilderness Prayer/Agility/Hunter routes, Abyss RC access, Mandrith, Warped Depths Archaeology, primal ores, and the Demonic skull removal note.",
+  "policy": {
+    "region_rule": "region_hint forinthry marks unlocks that live on Daemonheim, the Wilderness, or hard Forinthry planner geography. region_hints is used only for explicit dual-pressure rows. Quest auto-completion and League-specific overrides apply separately.",
+    "no_trade_rule": "Prioritise permanent unlocks and region-defining activities that change self-sufficient throughput, inventory QoL, supply access, or tool progression. Do not mirror every shop line.",
+    "rate_rule": "Do not promote stale XP/hour figures. This file records unlock state, costs, requirements, and effects.",
+    "supersedes_blob": "Named rows here supersede relying on forinthry:daemonheim-skilling-rewards as a single opaque unlock list. Keep that hub pointer if useful, but planners must resolve individual ids."
+  },
+  "activity_additions": [
+    {
+      "id": "forinthry:abyss-entrance",
+      "name": "Abyss entrance (Mage of Zamorak)",
+      "category": "Runecrafting access infrastructure",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Enter the Abyss miniquest completed",
+        "Travel through low-level Wilderness (roughly levels 4-6) to the Mage of Zamorak north of Edgeville"
+      ],
+      "unlocks": [
+        "Teleport into the Abyss outer ring",
+        "Rifts to nearly all standard Runecrafting altars without talisman/tiara",
+        "Free runecrafting pouch repair from the Dark Mage in the inner ring",
+        "Increased magical thread chance when crafting via the Abyss"
+      ],
+      "notes": "Hard Forinthry geography for the Mage of Zamorak entrance. Inside the Abyss the player is not in the Wilderness. As of 29 September 2025 the Abyss no longer grants a Runecrafting XP buff; XP scaling was moved into base Runecrafting levels. Magical thread chance still improves with Wilderness achievement tiers (easy 5%, medium 10%, hard 15%, elite 33%). Wilderness sword 3/4 can chance-teleport to the inner ring. Necromantic and Ourania altars are excluded from Abyss rifts.",
+      "source_urls": [
+        "https://runescape.wiki/w/Abyss",
+        "https://runescape.wiki/w/Enter_the_Abyss_(miniquest)",
+        "https://runescape.wiki/w/Mage_of_Zamorak",
+        "https://runescape.wiki/w/Magical_thread"
+      ],
+      "confidence": "confirmed_wiki_2025_2026_current",
+      "league_treatment": "Forinthry owns the Wilderness entrance. Individual altar quest gates (Lost City, Lunar Diplomacy, MEP2, Legacy of Seergaze, 'Phite Club, Making/Meeting History for Time) remain separate."
+    },
+    {
+      "id": "forinthry:chaos-altar-prayer",
+      "name": "Wilderness Chaos altars (Prayer Offer)",
+      "category": "Prayer training infrastructure",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Access to Chaos Temple (Wilderness, level 12) and/or Chaos Temple hut (level 38)",
+        "Wilderness achievements for full XP scaling"
+      ],
+      "unlocks": [
+        "Offer bones/ashes for Prayer XP instead of bury/scatter",
+        "Base +50% Prayer XP from Offer (Early-Game Rebalance, 16 February 2026)",
+        "Additional +50% per Wilderness achievement tier, up to +250% from achievements (total 350% of bury/scatter base with Elite set)"
+      ],
+      "notes": "Current Wilderness Prayer offer ladder: base Offer is +50%, then Easy/Medium/Hard/Elite Wilderness achievements each add +50% at these altars, peaking at gilded-altar-with-burners equivalent (350% base) at Elite with no incense cost. 16 March 2026 patched the Forgotten Cemetery-adjacent chaos altar to match the Fort Forinthry-adjacent chaos altar boosts. Do not use pre-2026 'flat 350% from day one' wording. Brawling gloves (Prayer) negate the altar boost when worn. Double XP does not apply to the altar Offer action.",
+      "source_urls": [
+        "https://runescape.wiki/w/Chaos_altar_(Wilderness)",
+        "https://runescape.wiki/w/Wilderness_achievements",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Early-Game_Rebalance"
+      ],
+      "confidence": "confirmed_wiki_2026_current_rule",
+      "league_treatment": "Hard Forinthry Prayer infrastructure. Achievement-set access follows Wilderness diary locality."
+    },
+    {
+      "id": "forinthry:wilderness-agility-course",
+      "name": "Wilderness Agility Course",
+      "category": "Agility training activity",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "52 Agility to open the gate/cross the ridge (49 for the pipe; temporary boosts can enter earlier)",
+        "Deep Wilderness travel"
+      ],
+      "unlocks": [
+        "Wilderness Agility Course laps (base 571.4 XP per clean lap)",
+        "5% lap-bonus XP with Wilderness sword 2+ equipped or in backpack (596.3 XP clean lap)",
+        "Chance at obelisk shard, portable obelisk, or dark onyx core on lap completion",
+        "Medium Wilderness achievement Hardcore Parkour (full lap)"
+      ],
+      "notes": "Demonic skull used to scale course XP heavily and was removed 20 July 2026 — do not plan skull multipliers. Course remains a deep-Wilderness PvP-risk method when opted into PvP. Talent scout can pull successful laps into The Pit. 16 March 2026 redistributed former Sack of Wild Rewards drops onto Wilderness activities including finishing a course lap.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wilderness_Agility_Course",
+        "https://runescape.wiki/w/Wilderness_sword_2",
+        "https://runescape.wiki/w/Demonic_skull"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Forinthry Agility activity. Do not assume Demonic skull still exists."
+    },
+    {
+      "id": "forinthry:charming-moths",
+      "name": "Charming moths",
+      "category": "Hunter and Agility activity with Summoning supply",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "88 Hunter and 83 Agility for barehand catch (boostable for training; elite diary achievement Harming Moths requires real levels)",
+        "Eastern Wilderness coast west of Daemonheim"
+      ],
+      "unlocks": [
+        "Barehand charming moth catches (570 Hunter XP and 90 Agility XP per successful catch; multi-catch before flee)",
+        "Gold/green/crimson/blue charm supply (approx 4/10, 3/10, 2/10, 1/10)",
+        "Rare crystal triskelion fragment chance",
+        "Elite Wilderness achievement Harming Moths"
+      ],
+      "notes": "Primary mid-deep Wilderness charm source next to Daemonheim. Tellervo net/lantern path trades multi-catch and Agility XP for higher Hunter XP. Demonic skull formerly added +40% Hunter/Agility here; skull removed 20 July 2026 — do not plan that bonus. Rare soulgazer aggro if pulled too far west.",
+      "source_urls": [
+        "https://runescape.wiki/w/Charming_moth",
+        "https://runescape.wiki/w/Demonic_skull",
+        "https://runescape.wiki/w/Wilderness_achievements"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Forinthry Hunter/Agility/Summoning-supply activity. Post-skull rates are base-only."
+    },
+    {
+      "id": "forinthry:mandrith-wilderness-slayer",
+      "name": "Mandrith (Wilderness Slayer Master)",
+      "category": "Wilderness Slayer master and artefact sink",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "95 Slayer and combat level 120 for tasks",
+        "Deep Wilderness location east of Pirates' Hideout (level 54)"
+      ],
+      "unlocks": [
+        "Wilderness-only Slayer assignments (kills outside Wilderness do not count)",
+        "22 Slayer points per task with Smoking Kills (11 without); 110/330 on 10th/50th",
+        "Wilderness slayer chest on task completion",
+        "Optional reaper point when task finishes without death/skip and under weekly reaper limit",
+        "Unnoted ancient artefact exchange for coins (revenant economy sink)",
+        "Medium Wilderness achievement rewards including Wilderness sword 2 hand-in"
+      ],
+      "notes": "Mandrith ignores prefer/block lists. Assignments include abyssal beasts/lords/savages, revenants, lava/ice strykewyrms, soulgazers, and other Wilderness-capable high-level tasks. Sunken Pyramid farm kills do not progress his tasks. This is the deep-Wilderness Slayer hub for Forinthry planning, distinct from Erskine Wilderness contracts.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mandrith",
+        "https://runescape.wiki/w/Wilderness_slayer_chest",
+        "https://runescape.wiki/w/Ancient_artefacts"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry Slayer master. Combat/Slayer level gates remain."
+    },
+    {
+      "id": "forinthry:warped-depths",
+      "name": "Warped Depths (Daemonheim Depths excavation)",
+      "category": "high-level Archaeology site",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Daemonheim Dig Site access",
+        "Research On the Threshold of the Mind completed",
+        "Restored 'friendship bracelet' (tool-belt eligible) to pass the imposing door",
+        "103+ Archaeology for Projection space; 107 Security booth; 113 Traveller's station",
+        "95 Dungeoneering listed on site entry"
+      ],
+      "unlocks": [
+        "Daemonheim - Depths excavation site (Warped Depths)",
+        "Dragonkin VII artefacts (projection attuner, golden projection 'needle', comfort gatestone, Halak's cube, portable portal generator, warped trinket)",
+        "Aged-journal / brush-piece gates for late Archaeology tool chains that also pressure Anachronia hand-ins"
+      ],
+      "notes": "Named high-level Daemonheim Archaeology floor, not a generic dig-site blob. Wiki League region tags hotspots as Wilderness. Cross-links existing forinthry+anachronia Daemonheim Dragonkin collection pressure without replacing those collection rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim_-_Depths_excavation_site",
+        "https://runescape.wiki/w/Daemonheim_Dig_Site",
+        "https://runescape.wiki/w/On_the_Threshold_of_the_Mind"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry Archaeology. Anachronia remains required only for specific collection hand-ins, not site entry."
+    },
+    {
+      "id": "forinthry:primal-ores",
+      "name": "Primal ores (Daemonheim peninsula Mining)",
+      "category": "high-level Mining supply",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "100 Mining for all surface primal ores (novite through promethium)",
+        "Daemonheim peninsula access"
+      ],
+      "unlocks": [
+        "Surface primal ore rocks: novite, bathus, marmaros, kratonium, fractite, zephyrium, argonite, katagon, gorgonite, promethium",
+        "Shared primal stone spirits across the primal tier",
+        "Prime Time achievement path (mine all 10 surface ores under 5 minutes)"
+      ],
+      "notes": "Level-100 Mining core tier introduced with Mining & Smithing 110 (12 August 2024). Rocks are on the Daemonheim peninsula surface and are tagged Wilderness in Equilibrium League region data. Distinct from in-dungeon Dungeoneering ore variants.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ores#Primal_ores",
+        "https://runescape.wiki/w/Novite_rock",
+        "https://runescape.wiki/w/Daemonheim"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry high-level Mining. Do not invent XP/hour here."
+    },
+    {
+      "id": "forinthry:demonic-skull-removed",
+      "name": "Demonic skull (REMOVED)",
+      "category": "removed Wilderness XP item — planner hazard",
+      "region_hint": "forinthry",
+      "region_status": "removed_from_game",
+      "requirements": [],
+      "unlocks": [],
+      "effects_historical": [
+        "Scaled Wilderness Agility Course XP with Agility level",
+        "+20% Wilderness Slayer and Farming patch XP",
+        "+40% charming moth Hunter and Agility XP",
+        "Forced temporary PvP skull while possessed in the Wilderness"
+      ],
+      "notes": "REMOVED on 20 July 2026 (Mid-Game Rebalance). Remaining skulls converted to 550,000 coins on login. Abyss RC XP buffs were already removed earlier (29 September 2025). Planners and guides must not list Demonic skull as an available Forinthry multiplier for Agility, Hunter moths, Slayer, or Farming.",
+      "source_urls": [
+        "https://runescape.wiki/w/Demonic_skull",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Mid-Game_Rebalance",
+        "https://runescape.wiki/w/Abyss"
+      ],
+      "confidence": "confirmed_wiki_removed_2026-07-20",
+      "league_treatment": "Treat as historical only. No acquisition path in Equilibrium."
+    },
+    {
+      "id": "misthalin:infernal-source-dig-site",
+      "name": "Infernal Source Dig Site",
+      "category": "Archaeology dig site and Ancient Summoning materials",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "forinthry"
+      ],
+      "region_status": "confirmed_wiki_misthalin_entrance_with_source_under_wilderness_crater",
+      "requirements": [
+        "20 Archaeology plus Movario invitation for Star Lodge cellar",
+        "Progressive mysteries (Eyes in Their Stars, Embrace the Chaos) for deeper Source access",
+        "Higher Archaeology for Vestibule/Harrowing/Dagon Overlook hotspots"
+      ],
+      "unlocks": [
+        "Star Lodge cellar and Dungeon of Disorder excavation",
+        "The Source rings under the Wilderness Crater (safe instance)",
+        "Hellfire metal, chaotic brimstone, Eye of Dagon, demonhide caches",
+        "Ancient Summoning demon-materials pipeline",
+        "Chaos star tool-belt unlock for reliable chaos portals"
+      ],
+      "notes": "Included because Forinthry gap lists often name Infernal Source. Wiki Equilibrium League region tags excavation hotspots as Misthalin (entrance west of Jolly Boar Inn / north of Varrock). The Source itself sits under the Wilderness Crater but is not dangerous Wilderness. Do not hard-require Forinthry for Star Lodge entry; do surface Forinthry only as optional geographic context for the crater.",
+      "source_urls": [
+        "https://runescape.wiki/w/Infernal_Source_Dig_Site",
+        "https://runescape.wiki/w/The_Source",
+        "https://runescape.wiki/w/Ancient_Summoning"
+      ],
+      "confidence": "confirmed_wiki_league_region_misthalin",
+      "league_treatment": "Primary region_hint is Misthalin. Keep Forinthry as secondary geography note only."
+    },
+    {
+      "id": "forinthry:daemonheim-rewards-shop-hub",
+      "name": "Daemonheim Rewards shop (Marmaros)",
+      "category": "Dungeoneering token shop hub",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Daemonheim camp access (Forinthry / Wilderness region)",
+        "Dungeoneering tokens from floors, elite dungeons, and related content"
+      ],
+      "unlocks": [
+        "Named utility purchases: Bonecrusher, Herbicide, Charming imp, gem bag chain, smithing autoheater chain",
+        "Named permanent scrolls: life, cleansing, efficiency, proficiency, dexterity, restoration, renewal, gathering, quick teleportation",
+        "Warped gorajan trailblazer outfit 7% shop discount when owned"
+      ],
+      "notes": "Hub pointer only. Individual permanent unlocks are separate named rows in equipment_additions. Seedicide is NOT sold here — multi-route non-Daemonheim drop cleaner (see seedicide-not-daemonheim).",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://runescape.wiki/w/Marmaros_the_rewards_trader",
+        "https://runescape.wiki/w/Daemonheim"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_mapping",
+      "league_treatment": "Hard Forinthry dependency for the shop. Token costs assume post-11-May-2026 remaster values unless Equilibrium multiplies them."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "forinthry:bonecrusher",
+      "name": "Bonecrusher",
+      "category": "permanent Prayer drop cleaner (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "41 Dungeoneering",
+        "21 Prayer",
+        "50,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Configured bone drops auto-convert into bury Prayer XP",
+        "Synergises with Dungeoneering prayer necklaces that restore Prayer from crushed bones"
+      ],
+      "notes": "Post-11-May-2026 remaster cost/req. Named row so it is not buried in forinthry:daemonheim-skilling-rewards. Matches dungeoneering:bonecrusher-current overlay costs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bonecrusher",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards."
+    },
+    {
+      "id": "forinthry:charming-imp",
+      "name": "Charming imp",
+      "category": "permanent Summoning drop cleaner (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "41 Dungeoneering",
+        "21 Summoning",
+        "50,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Auto-collects dropped charms and spirit gems",
+        "Optional convert selected charm types into small Summoning XP instead of keeping them"
+      ],
+      "notes": "Remaster reduced cost from 100,000 to 50,000 tokens and set DG req to 41. Named Forinthry permanent unlock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Charming_imp",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards."
+    },
+    {
+      "id": "forinthry:herbicide",
+      "name": "Herbicide",
+      "category": "permanent Herblore drop cleaner (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "41 Dungeoneering",
+        "21 Herblore",
+        "50,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Configured grimy herb drops are destroyed",
+        "Awards twice the normal cleaning XP for destroyed herbs"
+      ],
+      "notes": "Remaster raised cost from 34,000 to 50,000 tokens and set DG req to 41. Named permanent Herblore cleaner.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herbicide",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered"
+      ],
+      "confidence": "confirmed_2026_remaster_and_current_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards."
+    },
+    {
+      "id": "forinthry:gem-bag",
+      "name": "Gem bag",
+      "category": "Mining/Crafting inventory container (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "25 Dungeoneering",
+        "25 Crafting",
+        "2,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Holds up to 100 uncut sapphire/emerald/ruby/diamond total (not 100 each)",
+        "Auto-stores eligible uncut gems on pickup",
+        "Fill/Empty-to-bank support"
+      ],
+      "notes": "Base gem bag. Upgrade is a separate named purchase. Useful for gem rocks, Slayer gem drops, and Rogues' Den safes.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gem_bag",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards."
+    },
+    {
+      "id": "forinthry:gem-bag-upgraded",
+      "name": "Gem bag (upgraded)",
+      "category": "upgraded gem inventory container (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Empty base gem bag owned",
+        "35 Dungeoneering (shop table; product row also lists 40 DG)",
+        "45 Crafting",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Expanded gem storage over base gem bag",
+        "Members-only upgraded bag behaviour"
+      ],
+      "notes": "Upgrade purchase while carrying gem bag. Prefer this id when planners need the upgraded capacity; keep base bag as the first milestone.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gem_bag_(upgraded)",
+        "https://runescape.wiki/w/Gem_bag",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Track base then upgrade as two milestones."
+    },
+    {
+      "id": "forinthry:smithing-autoheater",
+      "name": "Smithing autoheater",
+      "category": "permanent Smithing heat tool (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "35 Dungeoneering",
+        "35 Smithing",
+        "4,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "On 0% heat, consumes 5 coal from the metal bank to restore 30% heat"
+      ],
+      "notes": "Base autoheater. Advanced upgrade is a separate named row. Core AFK Smithing partner with Superheat Form and Orthen furnace core.",
+      "source_urls": [
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Complements Anachronia furnace core and Tirannwn Superheat Form without requiring them."
+    },
+    {
+      "id": "forinthry:advanced-smithing-autoheater",
+      "name": "Advanced smithing autoheater",
+      "category": "permanent Smithing heat tool upgrade (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Base smithing autoheater owned",
+        "70 Dungeoneering",
+        "70 Smithing",
+        "40,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Overheat mode: on 0% heat, consumes 50 coal to restore 60% heat"
+      ],
+      "notes": "Upgrade of base autoheater. Named so advanced mode is not implied by the base purchase alone.",
+      "source_urls": [
+        "https://runescape.wiki/w/Advanced_smithing_autoheater",
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry second Smithing autoheater milestone."
+    },
+    {
+      "id": "forinthry:scroll-of-cleansing",
+      "name": "Scroll of cleansing",
+      "category": "permanent Herblore scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "49 Dungeoneering",
+        "49 Herblore",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Wasteless Herblore trait after reading",
+        "1 in 8 (12.5%) chance to mix the next queued potion one tick faster",
+        "1 in 10 (10%) chance to save a secondary ingredient (including clean herbs when making unfinished potions)"
+      ],
+      "notes": "Does not affect tea or herb tars. High-value permanent Herblore QoL for no-trade potion production.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry permanent unlock."
+    },
+    {
+      "id": "forinthry:scroll-of-efficiency",
+      "name": "Scroll of efficiency",
+      "category": "permanent Smithing scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "55 Dungeoneering",
+        "55 Smithing",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Efficient Smithing trait after reading",
+        "2% chance per bar in a recipe to refund that bar on project completion",
+        "Orthen furnace core multiplies chance to 2.5%"
+      ],
+      "notes": "Effect does not work inside Dungeoneering. Completes the late Smithing package with autoheater and furnace core.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_efficiency",
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Pair with Anachronia furnace core when valuing sustained smithing efficiency."
+    },
+    {
+      "id": "forinthry:scroll-of-gathering",
+      "name": "Scroll of gathering",
+      "category": "permanent Daemonheim gathering XP scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "80,000 Dungeoneering tokens (no secondary skill req on shop table)"
+      ],
+      "effects": [
+        "Permanent +25% XP from gathering activities while inside Daemonheim after reading",
+        "Applies to Hunter, Mining, Fishing, Woodcutting, Farming, Divination (including converting memories) inside Daemonheim"
+      ],
+      "notes": "Daemonheim-only XP trait, not a surface-world gathering boost. Still a named Forinthry permanent because the shop and effect are Daemonheim-gated.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_gathering",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Valuable for in-Daemonheim skilling loops, not surface training."
+    },
+    {
+      "id": "forinthry:scroll-of-life",
+      "name": "Scroll of life",
+      "category": "permanent Farming scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "25 Dungeoneering",
+        "25 Farming",
+        "10,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Wasteless Farming trait after reading",
+        "10% chance to recover seeds from most non-flower patches when fully harvesting or clearing",
+        "5% chance on fruit tree and tree patches",
+        "Spirit tree and calquat patches excluded"
+      ],
+      "notes": "Works on free worlds after unlock. Farmers digging trees still allow seed recovery chance.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_life",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry permanent Farming QoL."
+    },
+    {
+      "id": "forinthry:scroll-of-proficiency",
+      "name": "Scroll of proficiency",
+      "category": "permanent Construction scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "60 Construction",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Construction material-saving trait after reading (Wasteless Construction family)"
+      ],
+      "notes": "Named Construction scroll so it is not lost in the generic Daemonheim rewards blob. Orthen furnace core multiplies related proficiency chance by 1.25 in documented smithing/construction stacks where applicable — verify per-activity interactions when ranking stacks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_proficiency",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki_shop_row",
+      "league_treatment": "Hard Forinthry permanent Construction unlock."
+    },
+    {
+      "id": "forinthry:scroll-of-dexterity",
+      "name": "Scroll of dexterity",
+      "category": "permanent Crafting scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "60 Crafting",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Crafting resource-saving trait after reading"
+      ],
+      "notes": "Named Crafting scroll from the Unlocks tab of Daemonheim Rewards.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_dexterity",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki_shop_row",
+      "league_treatment": "Hard Forinthry permanent Crafting unlock."
+    },
+    {
+      "id": "forinthry:scroll-of-restoration",
+      "name": "Scroll of restoration",
+      "category": "permanent Archaeology scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "44 Dungeoneering",
+        "44 Archaeology",
+        "20,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent Archaeology material-saving trait after reading"
+      ],
+      "notes": "Named Archaeology scroll; pairs with Forinthry dig-site progression (Daemonheim Dig Site / Warped Depths) without replacing dig-site rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_restoration",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki_shop_row",
+      "league_treatment": "Hard Forinthry permanent Archaeology unlock."
+    },
+    {
+      "id": "forinthry:scroll-of-renewal",
+      "name": "Scroll of renewal",
+      "category": "permanent Prayer unlock scroll (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "65 Dungeoneering",
+        "65 Prayer",
+        "38,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Unlocks Rapid Renewal prayer after reading"
+      ],
+      "notes": "Prayer unlock via Daemonheim shop, not a combat-only item. Keep skill requirement separate from token purchase.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_renewal",
+        "https://runescape.wiki/w/Rapid_Renewal",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry permanent Prayer unlock."
+    },
+    {
+      "id": "seedicide-not-daemonheim",
+      "name": "Seedicide (not a Daemonheim reward)",
+      "category": "Farming drop cleaner — acquisition correction",
+      "region_status": "multiple_acquisition_routes",
+      "requirements": [
+        "One of: 2,200 Cabbage Facepunch renown (Asgarnia), 10,000 Farmers' Market beans (Kandarin or Anachronia farm market), or 360 Thaler"
+      ],
+      "effects": [
+        "Destroys selected seed drops for double plant XP when Farming level is high enough to plant them",
+        "Optional collector upgrade (25,000 beans) and tool-belt unlock (500 Slayer points)"
+      ],
+      "notes": "Explicit correction: Seedicide is often listed beside Bonecrusher/Herbicide but is NOT sold at Daemonheim Rewards. Do not hard-assign it to Forinthry. Canonical multi-route data also lives in progression-enrichment-drop-cleaners-2026-07-25 as drop-cleaner:seedicide.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seedicide",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://runescape.wiki/w/Farmers%27_Market"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Not a Forinthry dependency. Asgarnia, Kandarin, Anachronia farm market, or Thaler routes are alternatives."
+    }
+  ]
+}

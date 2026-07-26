@@ -1,0 +1,419 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Named equipment_additions for skilling XP outfits that exist only as activity pointers (or not at all) in regional-skilling-unlocks after prior 2026-07-25/26 region files. Complements activity rows; does not re-author existing equipment ids.",
+  "policy": {
+    "skip_existing_equipment_ids": [
+      "havenhythe:shaman-outfit",
+      "asgarnia:blacksmiths-outfit",
+      "asgarnia:factory-outfit",
+      "asgarnia:botanists-outfit",
+      "desert:black-ibis-outfit",
+      "fremennik:golden-mining-suit",
+      "asgarnia:ring-of-fire",
+      "asgarnia:flame-gloves",
+      "kandarin:seers-headband",
+      "kandarin:agile-top",
+      "karamja:witchdoctor-camo-outfit",
+      "morytania:first-age-outfit-equipment"
+    ],
+    "skip_combat": ["refined anima core of Zaros/Zamorak/Sliske — combat armour, not skilling XP outfit"],
+    "region_rule": "region_hint is the practical self-sufficient acquisition geography for League planning. Elite Invention fragment outfits are global craft once fragments exist — region_hint still marks the best associated hub or pressure.",
+    "outfit_rule": "Gameplay acquisition only. Do not treat Treasure Hunter or DXP Token Store as the League path.",
+    "id_rule": "Skip if the same id already exists as equipment in regional-skilling-unlocks. New ids may share a name with an activity row when the activity is only a hub pointer."
+  },
+  "skipped_already_present": {
+    "diviner_activity_only": "kandarin:diviners-outfit-guthixian-cache is activity — equipment row added below",
+    "shark_activity_only": "kandarin:shark-outfit-deep-sea is activity — equipment row added below",
+    "flame_ring": "asgarnia:ring-of-fire + asgarnia:flame-gloves already equipment",
+    "blacksmith_factory_botanist": "already equipment from asgarnia pass",
+    "black_ibis_golden_mining_shaman_first_age_witchdoctor_seers_agile_top": "already equipment"
+  },
+  "equipment_additions": [
+    {
+      "id": "kandarin:diviners-outfit",
+      "name": "Diviner's outfit",
+      "category": "Divination XP outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Guthixian Cache completion with Divination XP awarded",
+        "Missing piece roll chance scales with cache score (wiki: 0.5% per point; e.g. 50% at 100 points)"
+      ],
+      "effects": [
+        "1% Divination XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Modified diviner's headwear path via headwear add-on for extra QoL",
+        "Free Diango / holiday-outfit reclaim if lost"
+      ],
+      "notes": "Named equipment split from kandarin:diviners-outfit-guthixian-cache activity. Primary ironman route is Cache (not TH). Memorial to Guthix / Hall of Memories geography pressures Kandarin for efficient cache play.",
+      "source_urls": [
+        "https://runescape.wiki/w/Diviner%27s_outfit",
+        "https://runescape.wiki/w/Guthixian_Cache"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Surface Kandarin Cache as the gameplay acquisition path. Prefer this equipment row for set-effect planning."
+    },
+    {
+      "id": "kandarin:fury-shark-outfit",
+      "name": "Fury shark outfit (elite Fishing)",
+      "category": "Fishing elite skilling outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "80 Fishing and 20 Invention to craft outfit pieces at an Inventor's workbench after discovering shark outfit blueprints",
+        "54,000 shark fragments total to assemble shark + tiger + burnt tiers into fury (3,600 fragments per base piece × 15 pieces across three tiers)",
+        "Combine shark, tiger shark, and burnt shark outfits into fury"
+      ],
+      "effects": [
+        "Full fury set: +7% catch chance while Fishing (stacks with crystal fishing rod)",
+        "+10% chance to catch an extra fish (no XP on the extra fish; works at Prif waterfall without extra Invention XP)",
+        "50–60% chance to save bait per catch",
+        "Removes living rock creature aggression",
+        "Inherits Fishing outfit 5% XP (1% per piece) after those pieces worn at least once — even if the base fishing outfit is destroyed",
+        "Toggle consume-all vs catch-all on the head (consume grants fish XP without inventory fish; double XP if extra-fish proc also consumes)"
+      ],
+      "notes": "Equipment split from thin kandarin:shark-outfit-deep-sea activity. Fragments are global Invention from Fishing; Kandarin Deep Sea hub remains the practical high-volume fishing association. Do not invent fragment rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fury_shark_outfit",
+        "https://runescape.wiki/w/Shark_outfit",
+        "https://runescape.wiki/w/Shark_fragments"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Gameplay path is Invention fragments, not TH. Pair with Living Rock Caverns tolerance needs and crystal rod (Tirannwn) as optional stacks."
+    },
+    {
+      "id": "cross-region:natures-sentinel-outfit",
+      "name": "Nature's sentinel outfit",
+      "category": "Woodcutting elite skilling outfit",
+      "region_hint": "cross-region",
+      "region_hints": ["asgarnia", "kandarin", "misthalin"],
+      "requirements": [
+        "70 Woodcutting to collect sentinel fragments; 80 Woodcutting and 20 Invention to craft oaken/willow/maple pieces",
+        "54,000 sentinel fragments total for the three base outfits then combine into Nature's sentinel"
+      ],
+      "effects": [
+        "Full set: 7% increased Woodcutting success chance",
+        "7% increased bird's nest and crystal geode chance (stacks with strung rabbit foot, Woodcutting cape, tree-shaking scrimshaw)",
+        "Optional auto-burn (Firemaking XP) or auto-fletch-and-consume (Fletching XP) on cut logs — 25% chance, additive with Inferno adze; level gates still apply",
+        "Inherits lumberjack outfit XP (1% per sentinel piece) after lumberjack worn once — even while lumberjack is banked (wiki notes a bugged 1% baseline on some worlds)",
+        "20 daily teleports to Woodcutting locations via helm (elder, magic, yew, ivy, acadia, overgrown idols, Havenhythe creeping ivy / eternal magic destinations added 2026)",
+        "Contact active Evil Tree via helm (miniature evil tree daily spawn removed in March 2026 DailyScape overhaul)"
+      ],
+      "notes": "No prior equipment row. Fragment craft is global; region_hints mark major tree-teleport and training geography, not a hard exclusive region. Complements morytania:lumberjack-outfit for the inherited XP layer.",
+      "source_urls": [
+        "https://runescape.wiki/w/Nature%27s_sentinel_outfit",
+        "https://runescape.wiki/w/Sentinel_fragments",
+        "https://runescape.wiki/w/Lumberjack_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Do not hard-gate the finished outfit to one region. Prefer Invention fragment path; skip TH."
+    },
+    {
+      "id": "cross-region:magic-golem-outfit",
+      "name": "Magic golem outfit",
+      "category": "Mining elite skilling outfit",
+      "region_hint": "cross-region",
+      "region_hints": ["asgarnia", "fremennik"],
+      "requirements": [
+        "70 Mining for gemstone golem fragments; 80 Mining and 20 Invention to craft sapphire/emerald/ruby golem pieces",
+        "54,000 gemstone golem fragments total then combine three outfits into magic golem"
+      ],
+      "effects": [
+        "Full set: +5% Mining critical-hit chance",
+        "+1 rockertunity multiplier",
+        "Removes living rock creature aggression (pairs with Asgarnia LRC)",
+        "Daily teleport to active Shooting Star crashed star (from magic golem head)",
+        "Inherits owned Varrock armour double-ore behaviour after that armour worn once",
+        "Inherits highest golden mining suit XP (up to 6%) after full suit worn once and stored in bank/armour case — not while destroyed at Diango without re-equip"
+      ],
+      "notes": "Not previously an equipment id. Asgarnia LRC tolerance is a key use-case; Fremennik golden mining suit is the XP inheritance source. Fragment acquisition is global Mining Invention.",
+      "source_urls": [
+        "https://runescape.wiki/w/Magic_golem_outfit",
+        "https://runescape.wiki/w/Gemstone_golem_fragments",
+        "https://runescape.wiki/w/Golden_mining_suit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Cross-region pressure (LRC + golden suit + Invention). Prefer fragment craft over TH."
+    },
+    {
+      "id": "desert:farmers-outfit",
+      "name": "Farmer's outfit",
+      "category": "Farming XP outfit",
+      "region_hint": "desert",
+      "requirements": [
+        "Sydekix's Shop of Balance (Garden of Kharid): 10,000 Crux Eqal favour per piece (50,000 full set)",
+        "Alternate historical: Cabbage Facepunch Bonanza renown (not League default)"
+      ],
+      "effects": [
+        "1% Farming XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Modified farmer's hat path (seed-save chance and teleports) when add-on applied",
+        "XP bonus is the base layer inherited by master farmer elite set once farmer outfit worn"
+      ],
+      "notes": "Equipment split from desert:garden-of-kharid-rewards activity unlocks list. Distinct from kandarin:master-farmer-outfit (POF beans + fragments).",
+      "source_urls": [
+        "https://runescape.wiki/w/Farmer%27s_outfit",
+        "https://runescape.wiki/w/Sydekix%27s_Shop_of_Balance",
+        "https://runescape.wiki/w/Garden_of_Kharid"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert favour shop path for ironman-style acquisition. Keep separate from Kandarin master farmer."
+    },
+    {
+      "id": "morytania:lumberjack-outfit",
+      "name": "Lumberjack outfit",
+      "category": "Woodcutting XP outfit",
+      "region_hint": "morytania",
+      "requirements": [
+        "Temple Trekking / Burgh de Rott Ramble broken-bridge undead lumberjack events",
+        "44 Woodcutting to wear",
+        "Pieces drop in fixed order (boots → hat → legs → top); 1/10 per undead lumberjack kill for next missing piece (wiki Mod Timbo rates)"
+      ],
+      "effects": [
+        "1% Woodcutting XP per piece for four pieces (4% before set)",
+        "+1% set bonus when full set worn (5% total)",
+        "Applies to ivy, Evil Tree, overgrown idols, clan woodcutting plots, Tai Bwo Wannai spars/fences as documented on wiki",
+        "Free Diango reclaim if piece dropped and not picked up during trek"
+      ],
+      "notes": "Equipment split from morytania:temple-trekking-skilling-outfits activity. Nature's sentinel inherits this XP layer after lumberjack worn once.",
+      "source_urls": [
+        "https://runescape.wiki/w/Lumberjack_outfit",
+        "https://runescape.wiki/w/Temple_Trekking",
+        "https://runescape.wiki/w/Undead_Lumberjack"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania Temple Trekking. Resolve In Aid of the Myreque via quest auto-completion overlay."
+    },
+    {
+      "id": "morytania:constructors-outfit",
+      "name": "Constructor's outfit",
+      "category": "Construction XP outfit",
+      "region_hint": "morytania",
+      "requirements": [
+        "Temple Trekking noticeboard companion level rewards",
+        "In Aid of the Myreque for trek access; Darkness of Hallowvale for garb-tier total levels",
+        "44 Construction to wear",
+        "Gloves: Pazuzu level 85; Boots: Zachory Bragg level 25; Hat total NPC level 200; Trousers total 300; Garb total 400"
+      ],
+      "effects": [
+        "1% Construction XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Stacks with sculpting chisel (up to 7% combined with full outfit)",
+        "Applies to long/curved bone turn-ins at Barlak"
+      ],
+      "notes": "Equipment split from morytania:temple-trekking-skilling-outfits. Distinct from Tower of Life builder costume and from master constructor elite set.",
+      "source_urls": [
+        "https://runescape.wiki/w/Constructor%27s_outfit",
+        "https://runescape.wiki/w/Temple_Trekking"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania. Elite Morytania Thoroughly A-Ghast (all companions 99) unlocks full set as a side effect but is not required if total levels/rewards are claimed earlier."
+    },
+    {
+      "id": "kandarin:sous-chefs-outfit",
+      "name": "Sous chef's outfit",
+      "category": "Cooking XP outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Hard Gnome Restaurant deliveries (Grand Tree)",
+        "Random piece rewards from hard deliveries until set complete"
+      ],
+      "effects": [
+        "1% Cooking XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Cooking gauntlets substitute for sous chef mitts set contribution when both owned (wear gauntlets)",
+        "Sous chef toque grants Cooks' Guild entry",
+        "Stacks with bonfire Cooking boost",
+        "Modified toque path via toque add-on"
+      ],
+      "notes": "Equipment split from kandarin:gnome-restaurant-sous-chef activity. Pair with misthalin:cooking-gauntlets for mitts substitution.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sous_chef%27s_outfit",
+        "https://runescape.wiki/w/Gnome_Restaurant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin gameplay path. Never TH."
+    },
+    {
+      "id": "kandarin:master-farmer-outfit",
+      "name": "Master farmer outfit",
+      "category": "Farming elite skilling outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "1,000 beans blueprint from Granny Potterington at Farmers' Market (Manor Farm)",
+        "80 Farming and 20 Invention; 54,000 master farmer fragments to craft animal + crop + tree tiers then combine"
+      ],
+      "effects": [
+        "Inherits farmer's outfit XP if that set owned and worn once",
+        "Animals age 7% faster while player is at Manor Farm",
+        "10% more beans from Farmers' Market sales",
+        "10% higher chance of positive breeding/checking traits",
+        "10% chance to save harvest life on hops/herbs/nightshade/allotments (crop tier)",
+        "Herbs auto-cleaned on harvest with Herblore cleaning XP",
+        "Auto-water hop/herb/flower/allotment plantings",
+        "Protection payment discount (reduce by 2, min 1)",
+        "Rapid Growth up to twice per patch per day",
+        "10% chance bonus produce on fruit trees and bushes",
+        "Conditional teleports (Manor Farm with Ardougne cloak 2+, Habitat with juju bag/witchdoctor, Morytania allotment with modified farmer hat, grand seed pod teleports if owned)"
+      ],
+      "notes": "Equipment split from kandarin:farmers-market-master-farmer activity. Desert farmer's outfit is the separate base XP set — not a Desert master farmer source (see desert:no-master-farmer-outfit).",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_farmer_outfit",
+        "https://runescape.wiki/w/Farmers%27_Market",
+        "https://runescape.wiki/w/Master_farmer_fragments"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin POF beans + Invention fragments."
+    },
+    {
+      "id": "misthalin:master-runecrafter-robes",
+      "name": "Master runecrafter robes",
+      "category": "Runecrafting XP outfit",
+      "region_hint": "misthalin",
+      "requirements": [
+        "50 Runecrafting to obtain",
+        "Runespan: 4,000 points per piece (16,000 full set) from Wizard Rinsit",
+        "Or Great Orb Project: 15,000 Runecrafting guild tokens per piece (60,000 full set) from Wizard Elriss",
+        "Or 500 thaler per piece (2,000 full set) from Stanley Limelight"
+      ],
+      "effects": [
+        "1% Runecrafting XP per piece for four pieces (4% before set)",
+        "+1% set bonus when full set worn (5% total)",
+        "Wiki also documents up to 700 additional Runecrafting XP per action across RC activities with full set",
+        "Infinity ethereal elite outfit inherits the highest master-runecrafter XP previously achieved"
+      ],
+      "notes": "Equipment split from misthalin:runespan-master-runecrafter-robes activity. Wizards' Tower / Runespan is Misthalin-accessible, not region-exclusive (thaler / GOP alternate currencies).",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_runecrafter_robes",
+        "https://runescape.wiki/w/Runespan",
+        "https://runescape.wiki/w/The_Great_Orb_Project"
+      ],
+      "confidence": "confirmed_wiki_access_route_not_exclusive",
+      "league_treatment": "Surface Misthalin Runespan as primary self-sufficient route without forcing a mandatory region dependency."
+    },
+    {
+      "id": "cross-region:master-camouflage-outfit",
+      "name": "Master camouflage outfit",
+      "category": "Thieving elite skilling outfit",
+      "region_hint": "cross-region",
+      "region_hints": ["desert", "tirannwn", "fremennik"],
+      "requirements": [
+        "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
+        "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
+        "Black ibis outfit worn once to inherit Thieving XP (up to 5%)"
+      ],
+      "effects": [
+        "Unlimited teleports to thieving hubs (Prif clan districts, Pyramid Plunder, Keldagrim Consortium, Lletya, Thieves' Guild, Pollnivneach) when full set worn",
+        "7% chance to double pickpocket loot (no extra XP)",
+        "7% chance to avoid stun on failed pickpocket",
+        "7% better chance to avoid Pyramid Plunder snake bites; acts as lockpick in Pyramid Plunder",
+        "Acts as Trahaearn exoskeleton after Plague's End (gloves-of-silence style effect with full set + 75 Hunter/Thieving rules per wiki)",
+        "Inherits black ibis XP if owned and worn once",
+        "As of 16 Feb 2026 early-game rebalance: no longer boosts Sceptre of the Gods or black ibis piece rates"
+      ],
+      "notes": "Complements desert:black-ibis-outfit. Auto-pickpocket removed November 2022. Fragment grind pressures Desert Shifting Tombs heavily; teleports pull Tirannwn/Fremennik/Misthalin hubs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_camouflage_outfit",
+        "https://runescape.wiki/w/Camouflage_fragments",
+        "https://runescape.wiki/w/Black_ibis_outfit",
+        "https://runescape.wiki/w/Shifting_Tombs"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Cross-region elite. Prefer Invention fragments + black ibis desert grind; skip TH."
+    },
+    {
+      "id": "misthalin:ritualists-outfit",
+      "name": "Ritualist's outfit",
+      "category": "Necromancy XP outfit",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "requirements": [
+        "68 Necromancy",
+        "Bring Austin a ghost impling jar to unlock Austin's Place permanent shop in City of Um",
+        "1,500 ectoplasm per piece (7,500 full base set); mask add-on 2,500 ectoplasm after 70 deathshead moths caught"
+      ],
+      "effects": [
+        "1% Necromancy XP per worn piece (combat and rituals)",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Modified ritualist's mask: 5% chance to save ritual focus objects; operate to spawn a deathshead moth once per day"
+      ],
+      "notes": "Equipment split from misthalin:city-of-um-ritualist-outfit activity. Permanent non-MTX shop path from July 2025 — not Grim Harvest TH.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ritualist%27s_outfit",
+        "https://runescape.wiki/w/Austin%27s_Place",
+        "https://runescape.wiki/w/City_of_Um"
+      ],
+      "confidence": "confirmed_2025_gameplay_source_working_league_taxonomy",
+      "league_treatment": "City of Um remains historical Misthalin working mapping until Equilibrium publishes locality rules."
+    },
+    {
+      "id": "kandarin:agile-legs",
+      "name": "Agile legs",
+      "category": "weight-reducing Agility reward",
+      "region_hint": "kandarin",
+      "requirements": [
+        "250 perfect (no-fail) laps of Advanced Gnome Stronghold Agility Course",
+        "85 Agility to train the advanced course efficiently (boostable; 80 with summer pie)",
+        "Claim from a gnome trainer after the chatbox perfect-lap milestone"
+      ],
+      "effects": [
+        "−10 kg weight when worn",
+        "Hybrid legs armour (tier 36) — primarily a weight/Agility QoL piece, not a combat BiS",
+        "Free reclaim from gnome trainers if lost (no re-grind)"
+      ],
+      "notes": "Companion to existing kandarin:agile-top (Barbarian Outpost advanced). Legs are Gnome Stronghold advanced course; top is Barbarian advanced — both Kandarin.",
+      "source_urls": [
+        "https://runescape.wiki/w/Agile_legs",
+        "https://runescape.wiki/w/Gnome_Stronghold_Agility_Course",
+        "https://runescape.wiki/w/Agile_top"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin. Completes Agile from Head to Toe with agile top."
+    },
+    {
+      "id": "misthalin:archaeologists-outfit",
+      "name": "Archaeologist's outfit",
+      "category": "Archaeology XP outfit",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Qualification - Associate (70 Archaeology) for Archaeology Guild Shop outfit section",
+        "10,000 chronotes per piece (50,000 full set)"
+      ],
+      "effects": [
+        "1% Archaeology XP per piece through four pieces",
+        "6% Archaeology XP when all five pieces worn (+1% set bonus)",
+        "Free Diango reclaim if lost",
+        "Master archaeologist's outfit at Guildmaster qualification is a separate elite upgrade path (success/precision/teleports) — keep on guild shop activity row"
+      ],
+      "notes": "Equipment split from misthalin:archaeology-guild-shop activity unlocks. Master archaeologist benefits stay on the guild shop / master outfit documentation rather than duplicating here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeologist%27s_outfit",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Master_archaeologist%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Starting-region Misthalin Guild shop. Qualification gates still apply."
+    },
+    {
+      "id": "misthalin:artisans-outfit",
+      "name": "Artisan's outfit",
+      "category": "Crafting XP outfit",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Stealing Creation reward shop: 100 points per random missing piece (500 full set)",
+        "Or 360 thaler per piece from Stanley Limelight Traders (added 16 March 2026 DailyScape overhaul)"
+      ],
+      "effects": [
+        "1% Crafting XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Modified artisan's bandana: up to 3 daily teleports outside Crafting Guild; 5% chance to save one leather when crafting leather items"
+      ],
+      "notes": "Not previously catalogued. Stealing Creation / Gamers' Grotto access is Misthalin-adjacent; thaler is multi-minigame currency. Do not confuse with Artisans' Workshop blacksmith outfit (Smithing).",
+      "source_urls": [
+        "https://runescape.wiki/w/Artisan%27s_outfit",
+        "https://runescape.wiki/w/Stealing_Creation",
+        "https://runescape.wiki/w/Stanley_Limelight_Traders"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Gameplay SC or thaler path. Distinct from asgarnia:blacksmiths-outfit."
+    }
+  ]
+}

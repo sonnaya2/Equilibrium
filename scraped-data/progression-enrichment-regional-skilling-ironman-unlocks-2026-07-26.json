@@ -1,0 +1,282 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "High-value permanent unlocks called out by Ironman skill guides still missing after regional enrichment passes.",
+  "policy": {
+    "region_rule": "region_hint is acquisition geography; multi-region use is noted in league_treatment.",
+    "no_trade_rule": "Ironman self-sufficient acquisition paths only.",
+    "rate_rule": "Unlock state and effects; no invented XP/h."
+  },
+  "activity_additions": [
+    {
+      "id": "kandarin:diviners-outfit-guthixian-cache",
+      "name": "Diviner's outfit (Guthixian Cache)",
+      "category": "Divination XP outfit acquisition",
+      "region_hint": "kandarin",
+      "unlocks": [
+        "Diviner's outfit pieces from Guthixian Cache",
+        "Up to 6% Divination XP with full set",
+        "Modified headpiece path when available"
+      ],
+      "notes": "Primary ironman Divination outfit route. Cache entry is player-driven after depositing memories (DailyScape overhaul).",
+      "source_urls": [
+        "https://runescape.wiki/w/Diviner%27s_outfit",
+        "https://runescape.wiki/w/Guthixian_Cache"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Memorial/HoM and Cache geography pressure Kandarin for efficient acquisition."
+    },
+    {
+      "id": "kandarin:elder-divination-outfit",
+      "name": "Elder divination outfit",
+      "category": "high-tier Divination outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Full divination chronicle, energy, or memory outfit pieces as wiki recipe"
+      ],
+      "unlocks": [
+        "Elder divination outfit combined set",
+        "Improved chronicle/enriched and energy effects vs base outfits"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Elder_divination_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Late Divination QoL; still Kandarin-linked via base outfit acquisition."
+    },
+    {
+      "id": "asgarnia:all-fired-up-beacons",
+      "name": "All Fired Up beacons (Ring of fire / Flame gloves)",
+      "category": "Firemaking minigame reward infrastructure",
+      "region_hint": "asgarnia",
+      "unlocks": [
+        "Access to All Fired Up beacon network rewards",
+        "Route to Ring of fire and Flame gloves for Firemaking XP"
+      ],
+      "notes": "Beacon line runs through Asgarnia-heavy geography; confirm individual beacon regions if League remaps borders.",
+      "source_urls": [
+        "https://runescape.wiki/w/All_Fired_Up",
+        "https://runescape.wiki/w/Ring_of_fire",
+        "https://runescape.wiki/w/Flame_gloves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Important FM permanent XP gear for ironmen before late Anachronia/Prif methods."
+    },
+    {
+      "id": "kandarin:shark-outfit-deep-sea",
+      "name": "Shark / fury shark fishing outfits",
+      "category": "Fishing outfit acquisition",
+      "region_hint": "kandarin",
+      "unlocks": [
+        "Fishing outfit / shark outfit pieces from Deep Sea Fishing activities",
+        "Fury shark outfit as higher tier when assembled"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Shark_outfit",
+        "https://runescape.wiki/w/Fury_shark_outfit",
+        "https://runescape.wiki/w/Deep_Sea_Fishing"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin Deep Sea Fishing hub is the self-sufficient acquisition route."
+    },
+    {
+      "id": "misthalin:runespan-ethereal-outfits",
+      "name": "Infinity ethereal and Runespan utility rewards",
+      "category": "Runecrafting outfit and utility shop",
+      "region_hint": "misthalin",
+      "unlocks": [
+        "Infinity ethereal outfit path via Runespan points",
+        "Runespan reward shop utilities beyond master runecrafter robes"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Infinity_ethereal_outfit",
+        "https://runescape.wiki/w/Runespan"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Complements existing master runecrafter robes row; Wizards Tower portal is Misthalin."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "asgarnia:ring-of-fire",
+      "name": "Ring of fire",
+      "category": "Firemaking XP ring",
+      "region_hint": "asgarnia",
+      "effects": [
+        "Firemaking XP boost while worn (All Fired Up reward)"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_fire"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Pair with Flame gloves for classic ironman FM setup."
+    },
+    {
+      "id": "asgarnia:flame-gloves",
+      "name": "Flame gloves",
+      "category": "Firemaking XP gloves",
+      "region_hint": "asgarnia",
+      "effects": [
+        "Firemaking XP boost while worn (All Fired Up reward)"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Flame_gloves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia All Fired Up acquisition."
+    },
+    {
+      "id": "misthalin:plank-box",
+      "name": "Plank box",
+      "category": "Construction supply container",
+      "region_hint": "misthalin",
+      "effects": [
+        "Stores planks for Construction training logistics"
+      ],
+      "notes": "Often acquired via Construction/Fort or related skilling reward paths; treat as Misthalin-pressure QoL unless wiki maps elsewhere.",
+      "source_urls": [
+        "https://runescape.wiki/w/Plank_box"
+      ],
+      "confidence": "confirmed_wiki_region_inferred",
+      "league_treatment": "Materially improves contract/prawnbroker logistics in no-trading."
+    },
+    {
+      "id": "forinthry:herbicide-deployable-herb-burner",
+      "name": "Deployable herb burner",
+      "category": "Herblore training utility",
+      "region_hint": "forinthry",
+      "effects": [
+        "Portable herb-cleaning training station when owned"
+      ],
+      "notes": "Ironman guides list herb burner setups with botanist gear. Confirm exact acquisition (TH vs gameplay) before treating as guaranteed League item.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deployable_herb_burner"
+      ],
+      "confidence": "confirmed_wiki_availability_may_be_restricted",
+      "league_treatment": "Do not assume Treasure Hunter-only items exist in Equilibrium unless confirmed."
+    },
+    {
+      "id": "anachronia:death-note-relic",
+      "name": "Death Note relic power",
+      "category": "Archaeology relic power",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Archaeology relic unlock path for Death Note"
+      ],
+      "effects": [
+        "Bones converted to ashes behaviour for Prayer training logistics"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Death_Note"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Prayer supply QoL; dig-site region depends on relic source — verify Orthen vs other sites if needed."
+    },
+    {
+      "id": "kandarin:divine-o-matic-vacuum",
+      "name": "Divine-o-matic vacuum",
+      "category": "Divination utility device",
+      "region_hint": "kandarin",
+      "effects": [
+        "Automates aspects of Divination energy/memory handling when used"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Divine-o-matic_vacuum"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Invention-crafted utility often used at Memorial/HoM/colony training; materials multi-region."
+    },
+    {
+      "id": "misthalin:ring-of-whispers",
+      "name": "Ring of Whispers",
+      "category": "invisible Divination level ring",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Sliske's Endgame"
+      ],
+      "effects": [
+        "+3 invisible Divination levels while worn"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_Whispers"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Quest region pressure may be multi; item is high-value Div gather QoL."
+    },
+    {
+      "id": "desert:pontifex-observation-ring",
+      "name": "Pontifex observation ring",
+      "category": "Divination XP and chronicle utility ring",
+      "region_hint": "desert",
+      "requirements": [
+        "Azzanadra's Quest path / archaeology-related upgrades as wiki"
+      ],
+      "effects": [
+        "Divination XP boost",
+        "Increased chronicle fragment spawn rate",
+        "Upgradeable after Extinction"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Pontifex_observation_ring"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Desert/quest archaeology pressure; strong Divination permanent."
+    },
+    {
+      "id": "anachronia:ring-of-imbuing",
+      "name": "Ring of imbuing",
+      "category": "Runecrafting moonstone ring",
+      "region_hint": "anachronia",
+      "effects": [
+        "Runecrafting-related imbue benefits when worn (moonstone jewellery line)"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_imbuing"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Moonstone jewellery chain; Anachronia/Necromancy materials often pressure."
+    },
+    {
+      "id": "desert:desert-amulet-4",
+      "name": "Desert amulet 4",
+      "category": "Desert elite diary reward",
+      "region_hint": "desert",
+      "effects": [
+        "Elite Desert diary teleports and skilling conveniences per wiki"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Desert_amulet_4"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert diary gate for late Desert QoL."
+    },
+    {
+      "id": "misthalin:lorehound",
+      "name": "Lorehound",
+      "category": "skilling familiar / pet utility",
+      "region_hint": "misthalin",
+      "effects": [
+        "Divination and other skilling conveniences per wiki familiar effects"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Lorehound"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Nice-to-have ironman QoL; not a hard region gate for most skills."
+    },
+    {
+      "id": "forinthry:seedicide-named",
+      "name": "Seedicide",
+      "category": "Farming drop cleaner",
+      "region_hint": "forinthry",
+      "notes": "Not a Daemonheim token purchase. Acquisition via Asgarnia renown / Kandarin beans / thaler-style currencies per wiki; still list for planner visibility with multi-currency pressure.",
+      "effects": [
+        "Converts seed drops to Farming XP when on toolbelt"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Seedicide"
+      ],
+      "confidence": "confirmed_wiki_multi_currency",
+      "league_treatment": "Pair with Forinthry toolbelt attach unlocks; currency region depends on chosen shop."
+    }
+  ]
+}

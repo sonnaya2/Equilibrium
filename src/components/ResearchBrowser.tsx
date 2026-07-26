@@ -9,6 +9,11 @@ import type {
   ResearchUpgrade,
   SourceReference,
 } from "@/research/catalog";
+import { isRegionUnlocked } from "@/league";
+import { useBuild } from "@/league/useBuild";
+import type { RegionId } from "@/league";
+import { GameIcon } from "@/components/GameIcon";
+import { regionCrestPath } from "@/lib/gameArt";
 
 type Mode = "region" | "skill";
 
@@ -100,7 +105,7 @@ function sourceKindLabel(kind: string | undefined): string {
 }
 
 function SourceLink({ source }: { source: SourceReference | null }) {
-  if (!source?.url) return <span className="text-parch-300">-</span>;
+  if (!source?.url) return <span className="text-parch-100">-</span>;
 
   return (
     <a
@@ -108,7 +113,7 @@ function SourceLink({ source }: { source: SourceReference | null }) {
       target="_blank"
       rel="noreferrer"
       title={source.title}
-      className="whitespace-nowrap text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300"
+      className="whitespace-nowrap text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100"
     >
       {sourceKindLabel(source.source)}
     </a>
@@ -117,52 +122,52 @@ function SourceLink({ source }: { source: SourceReference | null }) {
 
 function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
   if (!methods.length) {
-    return <p className="px-3.5 py-2.5 text-sm text-parch-300">No method listed yet.</p>;
+    return <p className="px-3.5 py-2.5 text-[15px] text-parch-100">No method listed yet.</p>;
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
-        <thead className="text-xs text-parch-300">
-          <tr className="border-b border-stone-750">
-            <th className="px-3.5 py-2 pr-4 font-medium">Method</th>
-            <th className="py-2 pr-4 font-medium">Level</th>
-            <th className="py-2 pr-4 font-medium">Base rate / throughput</th>
-            <th className="py-2 pr-4 font-medium">Where</th>
-            <th className="py-2 pr-4 font-medium">Needs</th>
-            <th className="py-2 pr-4 font-medium">Status</th>
-            <th className="py-2 pr-3.5 font-medium">Source</th>
+      <table className="data-table min-w-[1120px]">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Level</th>
+            <th>Base rate / throughput</th>
+            <th>Where</th>
+            <th>Needs</th>
+            <th>Status</th>
+            <th>Source</th>
           </tr>
         </thead>
         <tbody>
           {methods.map((method) => (
-            <tr key={method.id} className="border-b border-stone-750/70 align-top last:border-b-0">
-              <td className="px-3.5 py-2.5 pr-4">
-                <div className="font-medium text-parch-50">{cleanText(method.method)}</div>
-                <div className="mt-0.5 text-xs text-parch-300">
+            <tr key={method.id} className="align-top">
+              <td>
+                <div className="font-medium">{cleanText(method.method)}</div>
+                <div className="mt-0.5 text-[12px] text-parch-100">
                   {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
                 </div>
-                {method.note ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300">{cleanText(method.note)}</div> : null}
-                {method.warning ? <div className="mt-1 max-w-xl text-xs leading-5 text-parch-300/80">{cleanText(method.warning)}</div> : null}
+                {method.note ? <div className="mt-1 max-w-xl text-[14px] leading-5 text-parch-100">{cleanText(method.note)}</div> : null}
+                {method.warning ? <div className="mt-1 max-w-xl text-[14px] leading-5 text-parch-100">{cleanText(method.warning)}</div> : null}
               </td>
-              <td className="py-2.5 pr-4 text-parch-300">{method.levelRange || "-"}</td>
-              <td className="max-w-[250px] py-2.5 pr-4 font-mono text-xs leading-5 text-parch-50">{method.xpRate || "not listed"}</td>
-              <td className="max-w-[230px] py-2.5 pr-4 text-xs leading-5 text-parch-300">
+              <td>{method.levelRange || "-"}</td>
+              <td className="max-w-[250px] font-mono leading-5">{method.xpRate || "not listed"}</td>
+              <td className="max-w-[230px] secondary leading-5">
                 {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
                 <div className={method.location ? "mt-1" : ""}>{methodAccess(method)}</div>
                 {method.hardRegionRequirement ? <div className="mt-1 text-parch-50">region required</div> : null}
               </td>
-              <td className="max-w-[240px] py-2.5 pr-4 text-xs leading-5 text-parch-300">
+              <td className="max-w-[240px] secondary leading-5">
                 {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
                 {method.requirements.length ? <div className="mt-1">{method.requirements.join(" · ")}</div> : null}
                 {method.resourceSource ? <div className="mt-1">Supply: {cleanText(method.resourceSource)}</div> : null}
                 {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
               </td>
-              <td className="py-2.5 pr-4 text-xs leading-5 text-parch-300">
-                <div>{freshnessLabel(method.freshness)}</div>
-                <div className="mt-0.5 text-[11px] text-parch-300/70">{confidenceLabel(method.confidence)}</div>
+              <td className="secondary leading-5">
+                <div className="text-parch-50">{freshnessLabel(method.freshness)}</div>
+                <div className="mt-0.5 text-[12px] text-parch-100">{confidenceLabel(method.confidence)}</div>
               </td>
-              <td className="py-2.5 pr-3.5 text-xs"><SourceLink source={method.source} /></td>
+              <td className="text-[12px]"><SourceLink source={method.source} /></td>
             </tr>
           ))}
         </tbody>
@@ -177,12 +182,12 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       <header className="pb-1">
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{cleanText(region.name)}</h2>
-            <div className="mt-1 text-xs text-parch-300">
+            <h2 className="text-2xl font-semibold text-parch-50">{cleanText(region.name)}</h2>
+            <div className="mt-1 text-[12px] text-parch-100">
               {availabilityLabel(region.availability)} · {region.content.length} entries · {region.training.length} training methods · {region.upgrades.length} upgrades
             </div>
           </div>
-          <div className="text-xs text-parch-300"><SourceLink source={region.source} /></div>
+          <div className="text-[12px] text-parch-100"><SourceLink source={region.source} /></div>
         </div>
       </header>
 
@@ -190,7 +195,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         <section className="panel">
           <div className="panel-head">Requirements</div>
           <div className="panel-body space-y-1">
-            {region.hardRules.map((rule) => <p key={rule} className="text-sm leading-6 text-parch-300">{cleanText(rule)}</p>)}
+            {region.hardRules.map((rule) => <p key={rule} className="text-[15px] leading-6 text-parch-50">{cleanText(rule)}</p>)}
           </div>
         </section>
       ) : null}
@@ -199,13 +204,13 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         <div className="panel">
           <div className="panel-head">Areas</div>
           <div className="px-3.5">
-            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-2 text-sm text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2.5 text-sm text-parch-300">No area list yet.</div>}
+            {region.areas.length ? region.areas.map((area) => <div key={area} className="border-b border-stone-750/70 py-2 text-[15px] text-parch-50 last:border-b-0">{cleanText(area)}</div>) : <div className="py-2.5 text-[15px] text-parch-100">No area list yet.</div>}
           </div>
         </div>
         <div className="panel">
           <div className="panel-head">Skills here</div>
           <div className="px-3.5">
-            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-sm text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2.5 text-sm text-parch-300">No skills listed yet.</div>}
+            {region.skills.length ? region.skills.map((skill) => <div key={skill} className="border-b border-stone-750/70 py-2 text-[15px] text-parch-50 last:border-b-0">{skill}</div>) : <div className="py-2.5 text-[15px] text-parch-100">No skills listed yet.</div>}
           </div>
         </div>
       </section>
@@ -214,7 +219,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         <section className="panel">
           <div className="panel-head">Notes</div>
           <div className="px-3.5">
-            {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-2 text-xs leading-5 text-parch-300 last:border-b-0">{cleanText(warning)}</p>)}
+            {region.warnings.map((warning) => <p key={warning} className="border-b border-stone-750/70 py-2 text-[15px] leading-6 text-parch-100 last:border-b-0">{cleanText(warning)}</p>)}
           </div>
         </section>
       ) : null}
@@ -222,27 +227,27 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       <section className="panel">
         <div className="panel-head flex items-baseline justify-between gap-4">
           <span>Content</span>
-          <span className="font-normal text-parch-300">{region.content.length}</span>
+          <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px] border-collapse text-left text-sm">
-            <thead className="text-xs text-parch-300">
-              <tr className="border-b border-stone-750">
-                <th className="px-3.5 py-2 pr-4 font-medium">Content</th>
-                <th className="py-2 pr-4 font-medium">Type</th>
-                <th className="py-2 pr-4 font-medium">Details</th>
-                <th className="py-2 pr-4 font-medium">Status</th>
-                <th className="py-2 pr-3.5 font-medium">Source</th>
+          <table className="data-table min-w-[820px]">
+            <thead>
+              <tr>
+                <th>Content</th>
+                <th>Type</th>
+                <th>Details</th>
+                <th>Status</th>
+                <th>Source</th>
               </tr>
             </thead>
             <tbody>
               {region.content.map((row, index) => (
-                <tr key={`${row.name}-${index}`} className="border-b border-stone-750/70 align-top last:border-b-0">
-                  <td className="px-3.5 py-2.5 pr-4 text-parch-50">{cleanText(row.name)}</td>
-                  <td className="py-2.5 pr-4 text-xs text-parch-300">{row.kind}</td>
-                  <td className="max-w-xl py-2.5 pr-4 text-xs leading-5 text-parch-300">{row.detail ? cleanText(row.detail) : "-"}</td>
-                  <td className="py-2.5 pr-4 text-[11px] text-parch-300">{confidenceLabel(row.confidence)}</td>
-                  <td className="py-2.5 pr-3.5 text-xs"><SourceLink source={row.source} /></td>
+                <tr key={`${row.name}-${index}`} className="align-top">
+                  <td>{cleanText(row.name)}</td>
+                  <td className="secondary">{row.kind}</td>
+                  <td className="max-w-xl secondary leading-6">{row.detail ? cleanText(row.detail) : "-"}</td>
+                  <td className="secondary text-[12px]">{confidenceLabel(row.confidence)}</td>
+                  <td className="text-[12px]"><SourceLink source={row.source} /></td>
                 </tr>
               ))}
             </tbody>
@@ -253,34 +258,37 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       <section className="panel">
         <div className="panel-head flex items-baseline justify-between gap-4">
           <span>Major upgrades</span>
-          <span className="font-normal text-parch-300">{region.upgrades.length}</span>
+          <span className="font-normal text-parch-100">{region.upgrades.length}</span>
         </div>
         <div>
-          {region.upgrades.length ? region.upgrades.map((upgrade) => {
+          {region.upgrades.length ? region.upgrades.map((upgrade, index) => {
             const regionAccess = upgradeRegionAccess(upgrade);
             return (
-              <div key={upgrade.name} className="grid gap-1 border-b border-stone-750/70 px-3.5 py-2.5 last:border-b-0 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5">
+              <div
+                key={upgrade.name}
+                className={`grid gap-1 border-b border-stone-750/70 px-3.5 py-2.5 last:border-b-0 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_120px_100px] md:gap-5 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+              >
                 <div>
-                  <div className="text-sm font-medium text-parch-50">{cleanText(upgrade.name)}</div>
-                  <div className="mt-0.5 text-xs text-parch-300">{upgrade.category}</div>
-                  {regionAccess ? <div className="mt-1 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
+                  <div className="text-[15px] font-medium text-parch-50">{cleanText(upgrade.name)}</div>
+                  <div className="mt-0.5 text-[12px] text-parch-100">{upgrade.category}</div>
+                  {regionAccess ? <div className="mt-1 text-[12px] font-medium text-parch-50">{regionAccess}</div> : null}
                 </div>
-                <div className="text-xs leading-5 text-parch-300">
+                <div className="text-[15px] leading-6 text-parch-100">
                   {upgrade.detail ? cleanText(upgrade.detail) : "No details yet."}
                   {upgrade.requirements.length ? <div className="mt-1 text-parch-50">Requires: {upgrade.requirements.join(" · ")}</div> : null}
                 </div>
-                <div className="text-[11px] text-parch-300">{confidenceLabel(upgrade.confidence)}</div>
-                <div className="text-xs md:text-right"><SourceLink source={upgrade.source} /></div>
+                <div className="text-[12px] text-parch-100">{confidenceLabel(upgrade.confidence)}</div>
+                <div className="text-[12px] md:text-right"><SourceLink source={upgrade.source} /></div>
               </div>
             );
-          }) : <p className="px-3.5 py-2.5 text-sm text-parch-300">No major upgrades listed yet.</p>}
+          }) : <p className="px-3.5 py-2.5 text-[15px] text-parch-100">No major upgrades listed yet.</p>}
         </div>
       </section>
 
       <section className="panel">
         <div className="panel-head flex items-baseline justify-between gap-4">
           <span>Training</span>
-          <span className="font-normal text-parch-300">{region.training.length}</span>
+          <span className="font-normal text-parch-100">{region.training.length}</span>
         </div>
         <MethodTable methods={region.training} />
       </section>
@@ -292,16 +300,16 @@ function SkillDetail({ skill }: { skill: ResearchSkill }) {
   return (
     <article className="space-y-4">
       <header className="pb-1">
-        <h2 className="text-2xl font-semibold tracking-tight text-parch-50">{skill.name}</h2>
-        <div className="mt-1 text-xs text-parch-300">{skill.methods.length} methods · {skill.regions.length} regions</div>
-        <p className="mt-3 text-sm leading-6 text-parch-300">
+        <h2 className="text-2xl font-semibold text-parch-50">{skill.name}</h2>
+        <div className="mt-1 text-[12px] text-parch-100">{skill.methods.length} methods · {skill.regions.length} regions</div>
+        <p className="mt-3 text-[15px] leading-6 text-parch-100">
           {skill.regions.length ? `Relevant regions: ${cleanText(skill.regions.join(", "))}.` : "No single region requirement listed yet."} Rates are before Equilibrium XP multipliers.
         </p>
       </header>
       <section className="panel">
         <div className="panel-head flex items-baseline justify-between gap-4">
           <span>Training</span>
-          <span className="font-normal text-parch-300">{skill.methods.length}</span>
+          <span className="font-normal text-parch-100">{skill.methods.length}</span>
         </div>
         <MethodTable methods={skill.methods} />
       </section>
@@ -324,11 +332,22 @@ function methodSearchText(method: ResearchTrainingMethod): string {
 }
 
 export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
+  const { build, loaded } = useBuild();
   const [mode, setMode] = useState<Mode>("region");
   const [query, setQuery] = useState("");
+  const [mineOnly, setMineOnly] = useState(false);
   const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
   const [skillId, setSkillId] = useState(catalog.skills[0]?.id ?? "");
   const normalizedQuery = query.trim().toLowerCase();
+
+  const unlockedIds = useMemo(() => {
+    if (!loaded || !mineOnly) return null;
+    return new Set(
+      catalog.regions
+        .map((r) => r.id as RegionId)
+        .filter((id) => isRegionUnlocked(build, id)),
+    );
+  }, [build, catalog.regions, loaded, mineOnly]);
 
   const regionSearchText = useMemo(
     () =>
@@ -373,36 +392,32 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
   );
 
   const filteredRegions = useMemo(() => {
-    if (!normalizedQuery) return catalog.regions;
-    return catalog.regions.filter((region) => regionSearchText.get(region.id)?.includes(normalizedQuery));
-  }, [catalog.regions, regionSearchText, normalizedQuery]);
+    let rows = catalog.regions;
+    if (unlockedIds) rows = rows.filter((region) => unlockedIds.has(region.id as RegionId));
+    if (!normalizedQuery) return rows;
+    return rows.filter((region) => regionSearchText.get(region.id)?.includes(normalizedQuery));
+  }, [catalog.regions, regionSearchText, normalizedQuery, unlockedIds]);
 
   const filteredSkills = useMemo(() => {
-    if (!normalizedQuery) return catalog.skills;
-    return catalog.skills.filter((skill) => skillSearchText.get(skill.id)?.includes(normalizedQuery));
-  }, [catalog.skills, skillSearchText, normalizedQuery]);
+    let rows = catalog.skills;
+    if (unlockedIds) {
+      rows = rows.filter((skill) => skill.regions.some((id) => unlockedIds.has(id as RegionId)));
+    }
+    if (!normalizedQuery) return rows;
+    return rows.filter((skill) => skillSearchText.get(skill.id)?.includes(normalizedQuery));
+  }, [catalog.skills, skillSearchText, normalizedQuery, unlockedIds]);
 
   const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? filteredRegions[0] ?? catalog.regions[0];
   const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? filteredSkills[0] ?? catalog.skills[0];
 
   return (
     <section>
-      <div className="flex flex-wrap items-end justify-between gap-2 border-b border-stone-750 pb-3">
-        <h2 className="text-sm font-medium text-parch-50">Browse</h2>
-        <div className="text-xs text-parch-300">{catalog.datasets.regions} regions · {catalog.datasets.skills} skills · {catalog.datasets.trainingMethods} methods</div>
-      </div>
-
-      <div className="panel mt-3 grid text-xs text-parch-300 sm:grid-cols-3 lg:grid-cols-6">
-        <div className="border-b border-stone-750 px-3.5 py-2 sm:border-r lg:border-b-0"><span className="text-parch-50">{catalog.datasets.regions}</span> regions</div>
-        <div className="border-b border-stone-750 px-3.5 py-2 sm:border-r lg:border-b-0"><span className="text-parch-50">{catalog.datasets.relicTiers}</span> relic tiers</div>
-        <div className="border-b border-stone-750 px-3.5 py-2 lg:border-b-0 lg:border-r"><span className="text-parch-50">{catalog.datasets.blessingTiers}</span> blessing tiers</div>
-        <div className="border-b border-stone-750 px-3.5 py-2 sm:border-b-0 sm:border-r lg:border-b-0"><span className="text-parch-50">{catalog.datasets.skills}</span> skills</div>
-        <div className="border-b border-stone-750 px-3.5 py-2 sm:border-b-0 sm:border-r lg:border-b-0"><span className="text-parch-50">{catalog.datasets.trainingMethods}</span> methods</div>
-        <div className="px-3.5 py-2">{catalog.datasets.publishedTasks ? <><span className="text-parch-50">{catalog.datasets.publishedTasks}</span> tasks</> : <span>task list pending</span>}</div>
+      <div className="border-b border-stone-750 pb-3 text-[12px] text-parch-100">
+        {catalog.datasets.regions} regions · {catalog.datasets.skills} skills · {catalog.datasets.trainingMethods} methods
       </div>
 
       {catalog.hardRules.length ? (
-        <div className="panel mt-3 px-3.5 py-2 text-xs leading-5 text-parch-300">
+        <div className="panel mt-3 px-3.5 py-2 text-[14px] leading-5 text-parch-100">
           {cleanText(catalog.hardRules.join(" · "))}
         </div>
       ) : null}
@@ -413,10 +428,10 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
             type="button"
             onClick={() => setMode("region")}
             aria-pressed={mode === "region"}
-            className={`rounded-sm border px-3 py-1.5 text-xs transition-colors duration-150 ${
+            className={`rounded-sm border px-3 py-1.5 text-[12px] transition-colors duration-150 ${
               mode === "region"
-                ? "border-gem-400 bg-stone-800 text-gem-300"
-                : "border-stone-750 text-parch-300 hover:text-parch-50"
+                ? "border-gem-400 bg-stone-raised text-gem-300"
+                : "border-stone-750 text-parch-100 hover:text-parch-50"
             }`}
           >
             Regions
@@ -425,18 +440,36 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
             type="button"
             onClick={() => setMode("skill")}
             aria-pressed={mode === "skill"}
-            className={`rounded-sm border px-3 py-1.5 text-xs transition-colors duration-150 ${
+            className={`rounded-sm border px-3 py-1.5 text-[12px] transition-colors duration-150 ${
               mode === "skill"
-                ? "border-gem-400 bg-stone-800 text-gem-300"
-                : "border-stone-750 text-parch-300 hover:text-parch-50"
+                ? "border-gem-400 bg-stone-raised text-gem-300"
+                : "border-stone-750 text-parch-100 hover:text-parch-50"
             }`}
           >
             Skills
           </button>
         </div>
+        <button
+          type="button"
+          onClick={() => setMineOnly((on) => !on)}
+          aria-pressed={mineOnly}
+          disabled={!loaded}
+          title={
+            loaded
+              ? "Show only regions unlocked by your Map/Build picks"
+              : "Loading your region picks…"
+          }
+          className={`rounded-sm border px-3 py-1.5 text-[12px] transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40 ${
+            mineOnly
+              ? "border-gem-400 bg-stone-raised text-gem-300"
+              : "border-stone-750 text-parch-100 hover:text-parch-50"
+          }`}
+        >
+          My regions
+        </button>
         <label className="ml-auto flex min-w-[240px] flex-1 items-center gap-2 border border-stone-750 px-2 py-1 md:max-w-sm">
-          <span className="text-xs text-parch-300">Search</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={mode === "region" ? "region, boss, item, skill" : "skill, method, location"} className="min-w-0 flex-1 bg-transparent text-sm text-parch-50 outline-none placeholder:text-parch-300/55 focus:border-gem-400" />
+          <span className="text-[12px] text-parch-100">Search</span>
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={mode === "region" ? "region, boss, item, skill" : "skill, method, location"} className="min-w-0 flex-1 bg-transparent text-[15px] text-parch-50 outline-none placeholder:text-parch-100/55 focus:border-gem-400" />
         </label>
       </div>
 
@@ -452,15 +485,16 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
                   role="option"
                   aria-selected={active}
                   onClick={() => setRegionId(region.id)}
-                  className={`grid w-full grid-cols-[1fr_auto] gap-3 border-b border-stone-750/70 px-3 py-2.5 text-left transition-colors duration-150 ${
-                    active ? "bg-stone-800" : "hover:bg-white/[0.02]"
+                  className={`grid w-full grid-cols-[auto_1fr_auto] items-center gap-2.5 border-b border-stone-750/70 px-3 py-2.5 text-left transition-colors duration-150 ${
+                    active ? "bg-stone-raised" : "hover:bg-stone-raised/60"
                   }`}
                 >
+                  <GameIcon src={regionCrestPath(region.id)} size={18} className="shrink-0" />
                   <span>
-                    <span className={`block text-sm ${active ? "text-gem-300" : "text-parch-50"}`}>{cleanText(region.name)}</span>
-                    <span className="mt-0.5 block text-[11px] text-parch-300">{availabilityLabel(region.availability)}</span>
+                    <span className={`block text-[15px] ${active ? "text-gem-300" : "text-parch-50"}`}>{cleanText(region.name)}</span>
+                    <span className="mt-0.5 block text-[12px] text-parch-100">{availabilityLabel(region.availability)}</span>
                   </span>
-                  <span className="font-mono text-[10px] text-parch-300">{region.training.length}</span>
+                  <span className="font-mono text-[12px] text-parch-100">{region.training.length}</span>
                 </button>
               );
             }) : filteredSkills.map((skill) => {
@@ -473,18 +507,18 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
                   aria-selected={active}
                   onClick={() => setSkillId(skill.id)}
                   className={`grid w-full grid-cols-[1fr_auto] gap-3 border-b border-stone-750/70 px-3 py-2.5 text-left transition-colors duration-150 ${
-                    active ? "bg-stone-800" : "hover:bg-white/[0.02]"
+                    active ? "bg-stone-raised" : "hover:bg-stone-raised/60"
                   }`}
                 >
                   <span>
-                    <span className={`block text-sm ${active ? "text-gem-300" : "text-parch-50"}`}>{skill.name}</span>
-                    <span className="mt-0.5 block text-[11px] text-parch-300">{skill.regions.length} regions</span>
+                    <span className={`block text-[15px] ${active ? "text-gem-300" : "text-parch-50"}`}>{skill.name}</span>
+                    <span className="mt-0.5 block text-[12px] text-parch-100">{skill.regions.length} regions</span>
                   </span>
-                  <span className="font-mono text-[10px] text-parch-300">{skill.methods.length}</span>
+                  <span className="font-mono text-[12px] text-parch-100">{skill.methods.length}</span>
                 </button>
               );
             })}
-            {(mode === "region" ? filteredRegions.length : filteredSkills.length) === 0 ? <p className="px-3 py-3 text-sm text-parch-300">No matches.</p> : null}
+            {(mode === "region" ? filteredRegions.length : filteredSkills.length) === 0 ? <p className="px-3 py-3 text-[15px] text-parch-100">No matches.</p> : null}
           </div>
         </aside>
         <div className="min-w-0 px-3.5 py-4 lg:px-5">

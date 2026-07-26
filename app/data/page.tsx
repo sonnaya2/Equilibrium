@@ -2,20 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
-import { PermanentUnlockResearch } from "@/components/PermanentUnlockResearch";
-import { ProgressionResearch } from "@/components/ProgressionResearch";
-import { ResearchBrowser } from "@/components/ResearchBrowser";
-import { ConsumablesResearch } from "@/components/ConsumablesResearch";
-import { ProgressionSystemsResearch } from "@/components/ProgressionSystemsResearch";
-import { ArchaeologyProductionResearch } from "@/components/ArchaeologyProductionResearch";
-import { InventionResearch } from "@/components/InventionResearch";
-import { SlayerResearch } from "@/components/SlayerResearch";
-import { PrayerSpellbookResearch } from "@/components/PrayerSpellbookResearch";
-import { RegionalUnlocksResearch } from "@/components/RegionalUnlocksResearch";
-import { MasterworkChainResearch } from "@/components/MasterworkChainResearch";
-import { RegionBoundariesResearch } from "@/components/RegionBoundariesResearch";
-import { DataWorkbench } from "@/components/DataWorkbench";
 import { getResearchCatalog } from "@/research/catalog";
+import { DataWorkbenchHost } from "./DataWorkbenchHost";
 
 export const metadata: Metadata = {
   title: "Data",
@@ -30,26 +18,15 @@ export default function DataPage() {
     <Page>
       <PageHeading
         title="Data"
-        note={`Region unlocks, upgrades and training routes checked on ${catalog.snapshotDate}. Most links go to the Wiki; PvME, RS Analysis and fresh Jagex updates stay attached when they are the actual source.`}
+        note={`Region unlocks, upgrades and training routes checked on ${catalog.snapshotDate}. Planning assumes ironman / self-sufficient play (no trade). Most links go to the Wiki; PvME, RS Analysis and Jagex updates stay attached when they are the actual source.`}
       />
 
-      <DataWorkbench
-        browse={<ResearchBrowser catalog={catalog} />}
-        progression={<ProgressionResearch />}
-        unlocks={<PermanentUnlockResearch />}
-        regional={<RegionalUnlocksResearch />}
-        slayer={<SlayerResearch />}
-        invention={<InventionResearch />}
-        prayers={<PrayerSpellbookResearch />}
-        consumables={<ConsumablesResearch />}
-        systems={<ProgressionSystemsResearch />}
-        archaeology={<ArchaeologyProductionResearch />}
-        masterwork={<MasterworkChainResearch />}
-        boundaries={<RegionBoundariesResearch />}
+      <DataWorkbenchHost
+        catalog={catalog}
         notes={
           <section>
             <h2 className="text-base font-medium text-parch-50">Research notes</h2>
-            <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-100">
               Slayer, Invention, Archaeology, prayers and regional unlocks load through typed research
               loaders so corrections apply. Each row links its own source. Policy and credits live on
               the{" "}

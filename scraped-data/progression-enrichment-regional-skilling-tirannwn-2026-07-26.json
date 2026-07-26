@@ -1,0 +1,371 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Expand Tirannwn/Prifddinas regional skilling beyond the existing crystal-tool, waterfall, Meilyr-recipe, crystal-flask, Seren-stone, Superheat Form, and Trahaearn-exoskeleton rows. Covers Voice of Seren, Ithell harps, Hefin, Amlodd, corrupted-ore smithing detail, Seren Light Form / Crystal Mask / Crystallise, Plague's End city unlocks, elven clan thieving, Grace of the elves, and 2026 Motherlode Maw status.",
+  "policy": {
+    "region_rule": "region_hint is tirannwn for Prifddinas content under Equilibrium taxonomy. required_regions only when a full stack needs multiple region picks. Quest auto-completion remains a separate overlay.",
+    "no_trade_rule": "Prioritise unlocks that change self-sufficient training, tool supply, prayer/spell skilling stacks, or permanent district infrastructure. Do not re-list every clan shop item.",
+    "rate_rule": "Do not promote stale XP/hour figures into training truth. Record unlock state, effects, and level gates. Hourly rates on wiki are illustrative only.",
+    "no_duplicate_ids": "Does not re-emit prifddinas:skilling-hub, prifddinas:crystal-tool-workshop, prifddinas:waterfall-fishing-shop, prifddinas:meilyr-recipe-shop, prifddinas:crystal-flasks, prifddinas:motherlode-maw, prifddinas:seren-stones, tirannwn:superheat-form, tirannwn:crystal-fishing-rod, tirannwn:trahaearn-exoskeleton, tirannwn:crystal-hammer, tirannwn:crystal-tinderbox, or cross-region:artificers-measure / cross-region:orthen-furnace-core-stack."
+  },
+  "activity_additions": [
+    {
+      "id": "prifddinas:voice-of-seren",
+      "name": "Voice of Seren district rotations",
+      "category": "city-wide skilling blessing",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Plague's End / Prifddinas access in the normal game"
+      ],
+      "unlocks": [
+        "Hourly two-clan Voice of Seren blessing across Prifddinas (same on all worlds)",
+        "Universal: +20% base XP pickpocketing that clan's workers; higher golden-rock chance in clan skills; crystal-impling spawn chance at affected heralds",
+        "Amlodd: +20% Summoning pouch/scroll XP and +20% scrolls per pouch; +20% Divination XP converting shadow cores",
+        "Crwys: +20% Woodcutting XP on ivy/magic/yew with nests replaced by crystal geodes; +20% Farming XP on bush/herb/elder; growth-skip chance",
+        "Hefin: +20% Agility on the Hefin course, doubled velocity gain, +25% of Agility XP as Prayer while lapping, +20% Prayer from Corrupted Seren Stone cleansing, more course shortcuts",
+        "Ithell: +20% Crafting/Construction on harps and lower detune chance; +20% Crafting on crystal flasks; soft clay bank chance; doubled Construction Supplies stock",
+        "Meilyr: +20% Farming on fruit tree and harmony pillars; +20% Herblore on combination potions",
+        "Trahaearn: +20% Smithing XP smelting corrupted ore; chance for dark/light animica rock replacements; +20% extra ore chance mining in district; +20% tree-patch Farming"
+      ],
+      "notes": "Player must stand in the illuminated district to receive that clan's effects. Two-hour cool-down per clan after its hour ends. Cadarn/Iorwerth Voice rows are combat XP side-effects, not skilling unlocks. Do not invent League-specific VoS schedules.",
+      "source_urls": [
+        "https://runescape.wiki/w/Voice_of_Seren",
+        "https://runescape.wiki/w/Prifddinas"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn / Prifddinas. Schedule VoS-sensitive methods (harps, corrupted ore, Hefin, Meilyr combos, clan thieving) as flexible rather than fixed-time dependencies."
+    },
+    {
+      "id": "prifddinas:ithell-harps",
+      "name": "Ithell harmonium harps (harmonic dust)",
+      "category": "Crafting and Construction harmonic-dust activity",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "75 Crafting to play",
+        "75 Construction to retune",
+        "Prifddinas Ithell district access"
+      ],
+      "unlocks": [
+        "Harmonic dust production for crystal tools and crystal-related crafts",
+        "80 Crafting XP and 1 harmonic dust per successful note",
+        "50 Construction XP per 10% retune when out of tune",
+        "Low-attention Crafting loop that feeds crystal pickaxe/hatchet/mattock/hammer/tinderbox/rod infrastructure"
+      ],
+      "notes": "Four harps around the Ithell statue. Rolls every 5 ticks; detune chance only on failed dust rolls (40% base, 20% with Ithell Voice of Seren or artificer's measure). Artificer's measure permanently applies the Ithell harp VoS benefit and is redundant with active Ithell VoS. Wiki dust/hour simulations favour retuning around 20% out-of-tune without VoS. Do not hard-code dust/hour into training tables from this row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Harp",
+        "https://runescape.wiki/w/Harmonic_dust",
+        "https://runescape.wiki/w/Artificer%27s_measure"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn owns harps and dust. Crystal tool seed bases still pull dragon-tier tools from other regions."
+    },
+    {
+      "id": "prifddinas:hefin-agility-course",
+      "name": "Hefin Agility Course",
+      "category": "Agility course and incidental Prayer",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "77 Agility (boosts do not work)",
+        "Plague's End / Prifddinas access"
+      ],
+      "unlocks": [
+        "Fail-safe high-level Agility course with level-scaled lap XP every 5 levels",
+        "Velocity system that auto-completes the next obstacle when full",
+        "Window and light-creature shortcuts that can skip sections",
+        "During Hefin Voice of Seren: +20% Agility XP, doubled velocity fill, Prayer XP equal to 25% of base Agility XP per action",
+        "Lap rewards path toward Prifddinian worker's outfit pieces, Hefin emotes, and course multipliers"
+      ],
+      "notes": "Teleports blocked mid-lap. Collector's insignia does not stack with Hefin VoS. Perfect juju agility increases shortcut frequency. XP/hour tables on wiki are illustrative; keep training rates out of this unlock row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hefin_Agility_Course",
+        "https://runescape.wiki/w/Voice_of_Seren"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn. Prefer for mid-high Agility when Prif is unlocked; VoS Prayer side-XP is a bonus, not a primary Prayer plan."
+    },
+    {
+      "id": "prifddinas:hefin-corrupted-seren-stone",
+      "name": "Corrupted Seren Stone cleansing (Hefin Cathedral)",
+      "category": "Prayer training infrastructure",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "75 Prayer",
+        "Prifddinas Hefin Cathedral access",
+        "Cleansing crystals purchased from Hefin monks (110,000 coins each in the normal game)"
+      ],
+      "unlocks": [
+        "Cleansing-crystal Prayer method at the Corrupted Seren Stone",
+        "9,800 Prayer XP per crystal base; 11,760 during Hefin Voice of Seren (+20%)",
+        "Coin-sink Prayer route that accepts knowledge bombs and perfect juju prayer unlike some burial methods"
+      ],
+      "notes": "Distinct from Trahaearn Seren stones (Mining). This is the Hefin cathedral Prayer rock. Do not invent Equilibrium crystal prices; use wiki cost until League economy is published.",
+      "source_urls": [
+        "https://runescape.wiki/w/Corrupted_Seren_Stone",
+        "https://runescape.wiki/w/Cleansing_crystal",
+        "https://runescape.wiki/w/Hefin_Cathedral"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn Prayer sink. Compare against powder/Ectofuntus/bonecrusher stacks rather than assuming BiS."
+    },
+    {
+      "id": "prifddinas:amlodd-district",
+      "name": "Amlodd Summoning and Divination hub",
+      "category": "Summoning and Divination district infrastructure",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Prifddinas Amlodd district access"
+      ],
+      "unlocks": [
+        "Bank-adjacent Summoning obelisk and Lord Amlodd shard-swap / Summoning shop",
+        "Light rift shadow-creature cores converted for Divination XP and light cores",
+        "Light creature familiar path from light cores (Tears of Guthix / Ancient Guthix Temple teleports, memory auto-convert passive)",
+        "Daffyd impling checklist rewards (thinker robes/trousers, Hunter XP, toggleable impling XP or loot boost outside Puro-Puro)",
+        "Amlodd Voice of Seren: +20% Summoning pouch/scroll XP and extra scrolls; +20% Divination XP on shadow cores"
+      ],
+      "notes": "Core conversion of 15 of each shadow core type for Lord Amlodd's 50k Divination lamp is a completionist-style milestone, not required for basic hub value. Fairy ring DJS sits in the district.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amlodd_Clan",
+        "https://runescape.wiki/w/Light_rift",
+        "https://runescape.wiki/w/Light_creature_(familiar)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn owns the Amlodd hub. Charm supply and spirit shards remain multi-region pressures."
+    },
+    {
+      "id": "prifddinas:corrupted-ore-smithing",
+      "name": "Corrupted ore smelting loop",
+      "category": "Smithing from Seren-stone Mining",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "89 Mining for Seren stones",
+        "89 Smithing to smelt (boostable)",
+        "Trahaearn district / furnace access"
+      ],
+      "unlocks": [
+        "Stackable corrupted ore that cannot enter the metal bank",
+        "160 Smithing XP per ore base; 192 during Trahaearn Voice of Seren",
+        "Superheat Form reduces smelt time by 1 tick (wiki: up to 2,000 ore/hour theoretical vs 1,500 base)",
+        "Lady Trahaearn 50,000 Smithing XP lamp after first 100 ores smelted",
+        "Augmented crystal hammer or hammer-tron equipment XP while smelting"
+      ],
+      "notes": "Companion detail row to prifddinas:seren-stones (Mining side). Seren stones use 1.2x Mining XP multiplier without rockertunities. Corrupted ore does not grant Artisans' Workshop respect. Pair Superheat Form with Orthen furnace core or Grace of the elves for drain management.",
+      "source_urls": [
+        "https://runescape.wiki/w/Corrupted_ore",
+        "https://runescape.wiki/w/Seren_stone",
+        "https://runescape.wiki/w/Superheat_Form"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn Mining-to-Smithing AFK loop. Keep separate from pure XP/hour rankings."
+    },
+    {
+      "id": "prifddinas:elven-clan-thieving",
+      "name": "Elven clan worker pickpocketing",
+      "category": "high-level Thieving activity",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "91–98 Thieving by clan (Iorwerth 91 through Meilyr 98)",
+        "Prifddinas access"
+      ],
+      "unlocks": [
+        "Eight clan-worker pickpocket targets with continuous auto-pickpocket",
+        "+20% base Thieving XP on workers when that clan's Voice of Seren is active",
+        "Hard/elite clue-heavy loot tables",
+        "Three-strike clan lockout (20 minutes; 15 with Totem of Crystal; skippable with Elf thieving reset token)"
+      ],
+      "notes": "February 2026 Early-Game Rebalance aligned Prif workers with the global pickpocket success model (base 75% at unlock level +1%/level, then decaying success; Crystal Mask recast resets target). Pair with Crystal Mask (15%, 30% with Light Form) and Trahaearn exoskeleton stun avoidance. Do not invent League catch rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elven_clan_worker",
+        "https://runescape.wiki/w/Crystal_Mask",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Early-Game_Rebalance"
+      ],
+      "confidence": "confirmed_wiki_with_2026_thieving_rebalance",
+      "league_treatment": "Hard Tirannwn Thieving destination once Plague's End / Light Within overlays resolve."
+    },
+    {
+      "id": "prifddinas:edimmu-resource-dungeon",
+      "name": "Edimmu resource dungeon (post-Maw DailyScape)",
+      "category": "high-level resource dungeon access",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "115 Dungeoneering (non-boostable) for Edimmu resource dungeon entry",
+        "Prifddinas Meilyr inner-circle access"
+      ],
+      "unlocks": [
+        "Edimmu resource dungeon geography still reachable for Meilyr-side content",
+        "Crystal sandstone / Meilyr dungeon access independent of the removed Maw daily pull"
+      ],
+      "notes": "2026 DailyScape Overhaul removed Motherlode Maw daily arm-pull rewards; the scenery is examine-only. This row documents what remains after that removal. Do not plan around daily Maw enhancers, strange/golden rocks, or Meilyr unreadable pages from the Maw. prifddinas:motherlode-maw remains the historical hub pointer and should be treated as partially stale on daily rewards.",
+      "source_urls": [
+        "https://runescape.wiki/w/Motherlode_Maw",
+        "https://runescape.wiki/w/Edimmu_resource_dungeon",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Dailyscape_Overhaul"
+      ],
+      "confidence": "confirmed_wiki_2026_dailyscape",
+      "league_treatment": "Tirannwn location with Forinthry Dungeoneering pressure for 115 entry. Strip daily-Maw planning from League guides."
+    },
+    {
+      "id": "tirannwn:plagues-end-unlocks",
+      "name": "Plague's End Prifddinas unlock package",
+      "category": "quest city-access skilling gate",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Plague's End completed in the normal game (or Equilibrium auto-quest overlay)",
+        "Normal-game skill gates include 75 in Agility, Construction, Crafting, Dungeoneering, Herblore, Mining, Prayer, Ranged, Summoning, Woodcutting"
+      ],
+      "unlocks": [
+        "Full Prifddinas city access and district skilling hubs",
+        "Trahaearn exoskeleton set (see tirannwn:trahaearn-exoskeleton for effects)",
+        "Ten 50,000 XP lamps across the quest skill set",
+        "Prifddinas undercity access",
+        "Foundation for Max Guild garden / crystal-tree infrastructure once skill requirements are met"
+      ],
+      "notes": "Equilibrium markets Prifddinas as Tirannwn content with intended immediate access after region quest completion — keep individual item skill requirements. Exoskeleton effect detail lives on the existing equipment row; this row is the city-gate unlock package.",
+      "source_urls": [
+        "https://runescape.wiki/w/Plague%27s_End",
+        "https://runescape.wiki/w/Prifddinas",
+        "https://runescape.wiki/w/Trahaearn_exoskeleton_set"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Resolve through Equilibrium quest auto-completion before treating Plague's End as a manual multi-skill grind."
+    },
+    {
+      "id": "tirannwn:light-form",
+      "name": "Light Form (Seren prayer)",
+      "category": "skilling prayer unlock",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "The Light Within completed in the normal game",
+        "80 Prayer",
+        "Ancient Curses book unlocked"
+      ],
+      "unlocks": [
+        "Light Form curse",
+        "Doubles Seren aurora spell proc chances when using abilities",
+        "Doubles Crystallise XP bonuses (Mining/Woodcutting/Fishing 20%→40%; Hunter 10%→20%)",
+        "Doubles Crystal Mask pickpocket success bonus (15%→30%)",
+        "Saves one of each requisite rune per Prism of Dowsing / Rapid Growth cast"
+      ],
+      "notes": "Drain is 300 prayer points/minute base; Grace of the elves halves to 150; Dark Facet of Grace with GoTE can fully negate. Opposite of Dark Form. Superheat Form is a separate Seren prayer already indexed as tirannwn:superheat-form.",
+      "source_urls": [
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Grace_of_the_elves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn owns Light Within Seren prayers. Essential for Crystallise and Crystal Mask skilling stacks."
+    },
+    {
+      "id": "tirannwn:crystal-mask",
+      "name": "Crystal Mask (Seren skilling spell)",
+      "category": "Thieving skilling spell",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "The Light Within completed",
+        "90 Magic",
+        "Ancient Magicks spellbook"
+      ],
+      "unlocks": [
+        "Crystal Mask: 5-minute buff adding 15% pickpocket success (30% with Light Form)",
+        "Recast resets pickpocket target / threat and restores success toward 100% (19 February 2026 coldfix)",
+        "Does not interrupt ongoing pickpocketing; 10-second recast cooldown",
+        "One-hit protection from Croesus fungus attacks per cast; +1 minute duration under Harmonious Resonance"
+      ],
+      "notes": "16 February 2026 Early-Game Rebalance reduced the bonus from 25%/50% to 15%/30% and removed the 1/4 stun-protection chance. 24 November 2025 limited the boost to pickpocketing only. Pair with Trahaearn exoskeleton and elven clan workers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_Mask",
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Early-Game_Rebalance"
+      ],
+      "confidence": "confirmed_wiki_2026_thieving_rebalance",
+      "league_treatment": "Tirannwn Magic+Prayer thieving stack. Record post-February-2026 15%/30% values only."
+    },
+    {
+      "id": "tirannwn:crystallise",
+      "name": "Crystallise (Seren skilling spell)",
+      "category": "gathering XP spell",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "The Light Within completed",
+        "88 Magic",
+        "Ancient Magicks spellbook"
+      ],
+      "unlocks": [
+        "Crystallise target node for 30 seconds: increased XP, no resources",
+        "Mining/Woodcutting/Fishing: +20% XP (+40% with Light Form) after December 2024 rate adjustment",
+        "Hunter empty box traps: +10% XP (+20% with Light Form) and auto-reset",
+        "Overrides Superheat Form / Inferno Adze / Always Adze log-burning while active (no Firemaking XP from crystallised chops)"
+      ],
+      "notes": "Cannot crystallise Seren stones, crystal trees, elders, ivy, Arc/Menaphos nodes, divine locations, or crystal skillchompas. Only one Crystallise or Paradox at a time. 9 December 2024 reduced Woodcutting/Fishing Light Form stack from the old 50%/87.5% values to 20%/40%.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystallise",
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/The_Light_Within"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn-owned XP-over-loot gathering spell. Use current 20%/40% figures only."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "tirannwn:grace-of-the-elves",
+      "name": "Grace of the elves",
+      "category": "Seren prayer drain and porter necklace",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Alchemical onyx necklace enchanted with Lvl-6 Enchant",
+        "Max Guild garden skill portals for dual teleport attunement (Prifddinas / Plague's End pressure for garden access)"
+      ],
+      "effects": [
+        "Halves drain of Light Form (300→150), Superheat Form (100→50), and Chronicle Attraction (to 50 points per minute)",
+        "Dark Facet of Grace further halves those drains to zero while worn and raises porter capacity to 2,000",
+        "Stores up to 500 sign-of-the-porter charges (2,000 with Dark Facet)",
+        "Seren spirit rare-drop-table spawns while gathering",
+        "Operated Max Guild garden portal teleports"
+      ],
+      "notes": "Tradeable until first equip/charge/attune. Orthen furnace core takes priority over GoTE for Superheat Form drain negation when both would apply. Ancient elven ritual shard can sustain Superheat Form / Chronicle Attraction under GoTE halved drain. Not a combat necklace.",
+      "source_urls": [
+        "https://runescape.wiki/w/Grace_of_the_elves",
+        "https://runescape.wiki/w/Dark_Facet_of_Grace",
+        "https://runescape.wiki/w/Superheat_Form"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Seren-prayer sustain QoL with strong Tirannwn thematic pressure via Max Guild/Prif teleports. Alchemical onyx craft is global once materials exist; do not hard-gate the finished necklace to Tirannwn alone."
+    },
+    {
+      "id": "cross-region:thieving-crystal-mask-light-form",
+      "name": "Crystal Mask + Light Form thieving stack",
+      "category": "cross-region Thieving stack",
+      "region_hint": "tirannwn",
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "requirements": [
+        "The Light Within for Crystal Mask (90 Magic) and Light Form (80 Prayer)",
+        "Prifddinas access for elven clan workers (primary consumer activity)",
+        "Trahaearn exoskeleton optional for stun/damage avoidance while pickpocketing"
+      ],
+      "effects": [
+        "Crystal Mask +15% pickpocket success for 5 minutes; +30% with Light Form",
+        "Crystal Mask recast resets pickpocket target awareness (post-19-Feb-2026)",
+        "Light Form also doubles Crystallise and other Seren skilling spell effects when used outside pure thieving",
+        "Exoskeleton: 25% chance to avoid stun and damage on failed pickpockets"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Light Within Seren spells/prayers and Prif worker targets.",
+        "Hard Ardougne diary and Sticky Fingers are optional non-Tirannwn multipliers, not required to name this core stack."
+      ],
+      "notes": "Planner stack companion called out by region-combo audit. Surface Tirannwn when valuing high-level pickpocket AFK. Use post-February-2026 15%/30% numbers only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_Mask",
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/Elven_clan_worker",
+        "https://runescape.wiki/w/Trahaearn_exoskeleton_set"
+      ],
+      "confidence": "confirmed_wiki_cross_region_chain",
+      "league_treatment": "Single-region Tirannwn stack in practice; keep region_hints tirannwn-only unless diary/relic partners are explicitly valued."
+    }
+  ]
+}

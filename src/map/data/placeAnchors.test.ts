@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { RegionId } from "@/league";
 import { getResearchCatalog } from "@/research/catalog";
 import { PLACE_ANCHORS, PLACES_BY_REGION } from "./placeAnchors";
 import { smoothRing } from "./regionCurve";
@@ -19,6 +20,17 @@ function pointInRing(point: readonly [number, number], ring: readonly [number, n
 const AREAS_BY_REGION = new Map(
   getResearchCatalog().regions.map((region) => [region.id, region.areas]),
 );
+
+/** Catalog areas with no PLACE_ANCHORS entry, grouped by region. */
+export function unanchoredAreasByRegion(): Map<RegionId, string[]> {
+  const out = new Map<RegionId, string[]>();
+  for (const [region, areas] of AREAS_BY_REGION) {
+    const anchored = new Set((PLACES_BY_REGION.get(region as RegionId) ?? []).map((a) => a.area));
+    const missing = areas.filter((area) => !anchored.has(area));
+    if (missing.length > 0) out.set(region as RegionId, missing);
+  }
+  return out;
+}
 
 describe("placeAnchors", () => {
   it("names only areas the catalog already carries", () => {
@@ -47,5 +59,13 @@ describe("placeAnchors", () => {
       const names = anchors.map((a) => a.area);
       expect(new Set(names).size, region).toBe(names.length);
     }
+  });
+
+  it("anchors every catalog area (inventory of gaps)", () => {
+    // After the place-anchor expansion pass, every catalog area is a real place
+    // with a board position. If a new area is added without an anchor, this
+    // fails with the region → missing list rather than silently dropping it.
+    const gaps = unanchoredAreasByRegion();
+    expect(Object.fromEntries(gaps), "unanchored catalog areas").toEqual({});
   });
 });

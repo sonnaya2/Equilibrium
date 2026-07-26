@@ -99,7 +99,21 @@ export default function MapScene() {
   // the entry goes with it. No manual dispose, so nothing can tear down a
   // renderer that the replayed mount is still driving.
 
+  // Sub-760px: FlatBoard is the planner (comments + mobile cost). Skip WebGPU.
+  const [narrow, setNarrow] = useState(false);
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 760px)");
+    const apply = () => setNarrow(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    if (narrow) {
+      setSupported(false);
+      return;
+    }
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
     if (!gpu) {
       setSupported(false);
@@ -109,7 +123,7 @@ export default function MapScene() {
       .requestAdapter()
       .then((adapter) => setSupported(adapter !== null))
       .catch(() => setSupported(false));
-  }, []);
+  }, [narrow]);
 
   if (supported === null) {
     return <div className="panel aspect-[1.88] w-full" aria-hidden="true" />;
@@ -119,9 +133,12 @@ export default function MapScene() {
     return (
       <div className="panel panel-body">
         <p className="mb-3 text-sm text-parch-300">
-          This browser has no WebGPU, so the 3D table stays off. The board below is the full
-          planner - every region choice works here.
+          {narrow
+            ? "Narrow layout uses the flat board so every region choice stays usable without the 3D table."
+            : "This browser has no WebGPU, so the 3D table stays off. The board below is the full planner - every region choice works here."}
         </p>
+        {/* e2e/map3d.spec.ts matches /no WebGPU/ when the 3D path is unavailable. */}
+        <span className="sr-only">no WebGPU</span>
         {/* The frame belongs to the board, not to the panel: wrapped any wider
             it grows its corners over the copy above. */}
         <div className="relative">

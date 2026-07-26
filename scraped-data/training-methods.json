@@ -116,18 +116,22 @@
       "region": "kandarin",
       "level_range": "70+",
       "xp_rate": {
+        "level_99_summary_band": "110000-225000",
         "level_70_2tick": 140000,
         "level_80_2tick": 170000,
         "level_85_2tick": 205000,
         "level_90_2tick": 245000,
         "level_95_2tick": 310000,
         "level_95_afk": 205000,
-        "level_99_with_outfit_scrimshaw_and_corehunting": "400000+"
+        "level_99_high_setup": "400000+"
       },
       "intensity": "AFK to very active depending on method",
-      "freshness": "current_page_but_page_marks_some_divination_data_incomplete",
+      "freshness": "wiki_hom_and_summary_2026-07-26",
       "confidence": "confirmed_wiki",
-      "location": "Hall of Memories, beneath the Memorial to Guthix in the Piscatoris Hunter area"
+      "location": "Hall of Memories, beneath the Memorial to Guthix in the Piscatoris Hunter area",
+      "notes": "AFK to 2-tick active. Usually better pure XP than surface lustrous/brilliant once unlocked. Mid-game rebalance did not change HoM XP tables.",
+      "warning": "Parent Divination_training page still incomplete for some packaging; rates from Hall of Memories / training detail.",
+      "source": "https://runescape.wiki/w/Hall_of_Memories"
     },
     {
       "skill": "Smithing",

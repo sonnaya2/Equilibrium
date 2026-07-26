@@ -2,24 +2,30 @@
 
 /*
   Sampled from the in-game league panel and RuneScape: DragonWilds key art.
-  Ground is warm umber and the chrome accent is gem green: 130 degrees of hue
-  separation, so the accent has somewhere to punch. Gold is engraved display
-  ink only and never marks an interactive state. The god-path triad is data.
-  Full rationale and the sanctioned exceptions live in the equilibrium-ui skill.
+  Tournament R2–R4 (color/readability): lifted parch ink + slight stage raise
+  so labels clear 4.5:1 without bleaching the room. Void stays league-dark.
+  Chrome accent gem green; gold = display only; path triad = data only.
+  Full rationale: equilibrium-ui skill + /concepts tournament ledger.
 */
 @theme {
-  --color-parch-50: #efe7d5;
-  --color-parch-100: #d3c8b0;
-  --color-parch-300: #a99f88;
-  --color-parch-400: #948a73;
-  --color-parch-500: #8b7f68;
+  /* Body / secondary ink — quiet end of ramp lifted for caption contrast */
+  --color-parch-50: #f0e9d7;
+  --color-parch-100: #e0d4ba;
+  --color-parch-300: #c8b89c;
+  --color-parch-400: #b5a68c;
+  --color-parch-500: #a3967e;
 
-  --color-stone-750: #332a1e;
-  --color-stone-800: #231d15;
-  --color-stone-850: #1b1610;
-  --color-stone-900: #14100b;
+  /* Surfaces: void dark · shell · rail/panel · stage · border · carve */
+  --color-stone-750: #463a29;
+  --color-stone-800: #231c14;
+  --color-stone-850: #1c1711;
+  --color-stone-900: #12100c;
   --color-stone-950: #0d0a07;
-  --color-stone-carve: #463a29;
+  --color-stone-carve: #5c4a34;
+  /* Table zebra + selected row fill (not a second chrome accent) */
+  --color-stone-zebra: #1a1510;
+  --color-stone-raised: #2a2218;
+  --color-stone-inset: #18140f;
 
   --color-gold-300: #f3c97b;
   --color-gold-400: #e0b264;
@@ -103,35 +109,54 @@ textarea:focus-visible {
     border-bottom: 1px solid var(--color-stone-750);
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-parch-300);
+    color: var(--color-parch-100);
   }
   .panel-body {
     padding: 0.875rem;
   }
 
-  /* Dense data table — the default way to show records. */
+  /*
+    Dense data table — Wiki Dense law (tournament R2–R4):
+    15px body, 12px bright headers, zebra, sticky opaque thead.
+  */
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: 0.9375rem; /* 15px */
+    line-height: 1.4;
+    background: var(--color-stone-800);
   }
   .data-table th {
-    padding: 0.375rem 0.625rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.5rem 0.625rem;
     border-bottom: 1px solid var(--color-stone-750);
-    font-size: 0.6875rem;
+    background: var(--color-stone-800);
+    font-size: 0.75rem; /* 12px */
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-align: left;
     text-transform: uppercase;
-    color: var(--color-parch-300);
+    color: var(--color-parch-100);
   }
   .data-table td {
-    padding: 0.4375rem 0.625rem;
-    border-bottom: 1px solid var(--color-stone-800);
-    color: var(--color-parch-100);
+    padding: 0.5rem 0.625rem;
+    border-bottom: 1px solid var(--color-stone-750);
+    color: var(--color-parch-50);
     font-variant-numeric: tabular-nums;
   }
-  .data-table tr:last-child td {
+  .data-table td.secondary,
+  .data-table .cell-secondary {
+    color: var(--color-parch-100);
+  }
+  .data-table tbody tr:nth-child(odd) td {
+    background: var(--color-stone-zebra);
+  }
+  .data-table tbody tr:hover td {
+    background: var(--color-stone-raised);
+  }
+  .data-table tbody tr:last-child td {
     border-bottom: 0;
   }
 
@@ -157,7 +182,14 @@ textarea:focus-visible {
     font-size: 0.6875rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-parch-300);
+    color: var(--color-parch-100);
+  }
+
+  /* Input wells dig in darker than table stage */
+  .field-inset {
+    background: var(--color-stone-inset);
+    border: 1px solid var(--color-stone-750);
+    color: var(--color-parch-50);
   }
 
   /* Lattice cell: the hexagon is the layout grid, not a logo. */
@@ -188,7 +220,7 @@ textarea:focus-visible {
     background: var(--color-stone-800);
   }
   .cell-selected {
-    background: #20301f;
+    background: var(--color-stone-raised);
   }
   .cell-selected::before {
     content: "";
@@ -286,7 +318,7 @@ textarea:focus-visible {
     font-size: 0.6875rem;
     letter-spacing: 0.13em;
     text-transform: uppercase;
-    color: var(--color-parch-500);
+    color: var(--color-parch-300);
   }
   .stat-strip .stat-value {
     font-family: var(--font-mono);

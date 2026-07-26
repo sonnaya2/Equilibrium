@@ -4,20 +4,15 @@ import unknownsData from "#data/reference/unknowns.json";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
 import { TaskRecords } from "@/components/TaskRecords";
-import { loadCatalystTestTasks } from "@/tasks/catalyst";
+import { loadCatalystSnapshot } from "@/tasks/catalyst";
 
 export const metadata: Metadata = {
   title: "Tasks",
   description:
-    "Track League tasks and points for RS3 Leagues II: Equilibrium. Provisional Catalyst list until Equilibrium tasks publish.",
+    "Track League tasks and points for RS3 Leagues II: Equilibrium. Provisional Catalyst list until Equilibrium tasks publish. Ironman / self-sufficient play only.",
 };
 
 const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
-
-// Literal, not an expression: Next statically analyses segment config exports
-// and rejects anything it cannot read off the AST, which fails the build at
-// page-data collection rather than at compile.
-export const revalidate = 86400; // 24h
 
 type UnknownItem = {
   key: string;
@@ -27,9 +22,8 @@ type UnknownItem = {
 
 /**
  * Catalyst stand-in while Equilibrium has published no tasks of its own.
- * tasks.json does not always carry the block — generators do not emit it —
- * so reading it blind threw on every request and made /tasks a 500 in
- * production and four typecheck errors in CI.
+ * Product path is the static snapshot (data/league/catalyst-tasks-snapshot.json),
+ * not a live wiki scrape. Refresh: node scripts/refresh-catalyst-snapshot.mjs
  */
 const testFallback = (
   tasksData as {
@@ -42,15 +36,15 @@ const testFallback = (
   }
 ).testFallback;
 
-export default async function TasksPage() {
+export default function TasksPage() {
   const taskUnknown = (unknownsData.items as UnknownItem[]).find((item) => item.key === "equilibrium_tasks");
   const useCatalystStandIn = tasksData.records.length === 0 && testFallback?.enabled === true;
   const catalystResult = useCatalystStandIn
-    ? await loadCatalystTestTasks(testFallback?.expectedRecords)
-    : { records: [], error: undefined };
+    ? loadCatalystSnapshot(testFallback?.expectedRecords)
+    : { records: [] as typeof tasksData.records, error: undefined };
   const records = useCatalystStandIn ? catalystResult.records : tasksData.records;
   const sourceUrl = useCatalystStandIn ? testFallback?.url ?? tasksData.source.url : tasksData.source.url;
-  const sourceLabel = useCatalystStandIn ? "Catalyst task source" : "Jagex reveal";
+  const sourceLabel = useCatalystStandIn ? "Catalyst task source (static snapshot)" : "Jagex reveal";
 
   return (
     <Page>
@@ -62,7 +56,12 @@ export default async function TasksPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeading
           title="Tasks"
-          note={useCatalystStandIn ? testFallback?.note ?? tasksData.pointValueNote : tasksData.pointValueNote}
+          note={
+            useCatalystStandIn
+              ? (testFallback?.note ??
+                "Showing Catalyst League tasks for now. This list will be replaced when the full Equilibrium task list is published.")
+              : tasksData.pointValueNote
+          }
         />
         <div className="flex gap-3 pt-1">
           <a
@@ -87,8 +86,8 @@ export default async function TasksPage() {
       </div>
       {useCatalystStandIn ? (
         <p className="-mt-4 mb-6 max-w-3xl text-xs leading-5 text-parch-400">
-          Catalyst completion rate is the historical Comp% shown by the RuneScape Wiki for each Catalyst task.
-          The Equilibrium task list will replace this when published.
+          Static snapshot of the Catalyst task list (ironman / no-trade play). Comp% is historical
+          Catalyst completion on the Wiki. Equilibrium will replace this when published.
         </p>
       ) : null}
 
@@ -96,7 +95,10 @@ export default async function TasksPage() {
         <h2 className="text-sm font-medium text-parch-50">Points</h2>
         <div className="mt-2 grid border-t border-stone-750 sm:grid-cols-5">
           {TASK_ORDER.map((tier, index) => (
-            <div key={tier} className={`py-3 sm:px-3 ${index > 0 ? "border-t border-stone-750 sm:border-l sm:border-t-0" : ""}`}>
+            <div
+              key={tier}
+              className={`py-3 sm:px-3 ${index > 0 ? "border-t border-stone-750 sm:border-l sm:border-t-0" : ""}`}
+            >
               <div className="text-xs capitalize text-parch-300">{tier}</div>
               <div className="mt-1 font-mono text-lg text-parch-50">{tasksData.tiers[tier]}</div>
               {!useCatalystStandIn && tasksData.tierConfidence[tier]?.startsWith("provisional") ? (
@@ -112,7 +114,7 @@ export default async function TasksPage() {
           <h2 className="text-sm font-medium text-parch-50">Task list</h2>
           <span className="text-xs text-parch-300">
             {records.length} tasks loaded
-            {useCatalystStandIn ? ` · ${testFallback?.expectedRecords ?? 0} expected from Catalyst` : ""}
+            {useCatalystStandIn ? ` · static Catalyst snapshot` : ""}
           </span>
         </div>
         <div className="mt-2 border-t border-stone-750">
@@ -123,12 +125,20 @@ export default async function TasksPage() {
                   Catalyst task list could not be loaded: {catalystResult.error}
                 </p>
               ) : null}
-              <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{tasksData.note}</p>
-              {taskUnknown?.known ? <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">{taskUnknown.known}</p> : null}
+              <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">
+                {tasksData.note}
+              </p>
+              {taskUnknown?.known ? (
+                <p className="border-b border-stone-750/70 py-3 text-sm leading-6 text-parch-300">
+                  {taskUnknown.known}
+                </p>
+              ) : null}
               {taskUnknown?.missing?.length ? (
                 <div className="border-b border-stone-750/70 py-3">
                   <div className="text-xs text-parch-300">Waiting on</div>
-                  <div className="mt-1 text-sm leading-6 text-parch-50">{taskUnknown.missing.join(" · ")}</div>
+                  <div className="mt-1 text-sm leading-6 text-parch-50">
+                    {taskUnknown.missing.join(" · ")}
+                  </div>
                 </div>
               ) : null}
             </>

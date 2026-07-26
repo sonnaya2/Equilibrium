@@ -1,0 +1,855 @@
+{
+  "snapshot_date": "2026-07-26",
+  "audit_type": "read-only gap audit: regional-skilling-unlocks vs major wiki hubs",
+  "source_file": "data/research/regional-skilling-unlocks.json",
+  "policy": {
+    "present_count": "Count of records in regional-skilling-unlocks.json whose regionHints include this region (including multi-region / cross-region rows).",
+    "missing_rule": "HIGH-VALUE only: permanent tools, outfits, shops, relics, diaries, production infrastructure, or region-defining hubs that materially change no-trade skilling. Training methods / XP rates alone are excluded. Combat-only unlocks excluded unless they are primarily skilling infrastructure.",
+    "harshness": "If a region-defining hub is only named inside a multi-tool bundle sentence and not as its own planner-visible unlock, it is MISSING. If an elective region has zero skilling rows, that is a critical failure."
+  },
+  "sources_consulted": [
+    "https://runescape.wiki/w/Fort_Forinthry",
+    "https://runescape.wiki/w/Menaphos",
+    "https://runescape.wiki/w/Reputation_(Menaphos)",
+    "https://runescape.wiki/w/VIP_skilling_area",
+    "https://runescape.wiki/w/Soul_altar",
+    "https://runescape.wiki/w/Herblore_Habitat",
+    "https://runescape.wiki/w/Anachronia_base_camp",
+    "https://runescape.wiki/w/Orthen_Dig_Site",
+    "https://runescape.wiki/w/Invention_Guild",
+    "https://runescape.wiki/w/Grace_of_the_elves",
+    "https://runescape.wiki/w/Always_Adze",
+    "https://runescape.wiki/w/Hefin_Agility_Course",
+    "https://runescape.wiki/w/Havenhythe",
+    "https://runescape.wiki/w/Big_Game_Hunter",
+    "https://runescape.wiki/w/Prifddinas"
+  ],
+  "summary": {
+    "total_records_in_source": 54,
+    "regions_audited": 11,
+    "regions_with_zero_or_near_zero_coverage": ["karamja", "havenhythe"],
+    "worst_gaps": [
+      "karamja has ZERO skilling unlock records — automatic_early region with Herblore Habitat / juju / Jadinko Lair entirely absent",
+      "desert omits entire Menaphos hub (VIP skilling area, reputation tiers, Soul altar, Shifting Tombs) while only tracking Pyramid Plunder / red sandstone / Garden of Kharid",
+      "misthalin omits Fort Forinthry building stack beyond Grove/Imcando hatchet (Workshop machines, Town Hall rested XP, Chapel prayer, Command Centre, Botanist's Workbench, Ranger's Workroom)",
+      "havenhythe is a starting region with only Ring of Kayazu — missing BGH/apex path, birdhouses, fish farm, Moonrise dig site, empowered obelisks",
+      "anachronia omits base camp infrastructure and Orthen dig-site as a hub (only furnace core / bait-and-switch / herb bag named)"
+    ]
+  },
+  "by_region": {
+    "misthalin": {
+      "present_count": 12,
+      "present_ids": [
+        "misthalin:woodcutters-grove",
+        "misthalin:ghostly-sole-fishing",
+        "misthalin:archaeology-guild-shop",
+        "misthalin:city-of-um-ritualist-outfit",
+        "misthalin:runespan-master-runecrafter-robes",
+        "misthalin:sanas-fyrtorch",
+        "misthalin:taggas-corehammer",
+        "misthalin:memory-dowser",
+        "misthalin:runic-attuner",
+        "misthalin:imcando-hatchet",
+        "cross-region:hatchet-of-ember-and-glade",
+        "cross-region:hatchet-of-bloom-and-blight"
+      ],
+      "missing": [
+        {
+          "name": "Fort Forinthry Construction hub (full building stack)",
+          "why_important": "Wiki lists nine upgradable buildings (Workshop, Town Hall, Kitchen, Chapel, Command Centre, Guardhouse, Grove, Ranger's Workroom, Botanist's Workbench). App only surfaces Tier-3 Grove for Imcando hatchet fragments. Missing: Workshop Invention-machine power + Construction XP, Town Hall rested XP offline/online, Chapel high-rate Prayer + book swap, Command Centre Anachronia worker bonus, Botanist's Workbench Herblore, Ranger's Workroom Fletching. This is the largest starting-region Construction/skilling infrastructure miss.",
+          "wiki_url": "https://runescape.wiki/w/Fort_Forinthry",
+          "suggested_id": "misthalin:fort-forinthry-building-stack"
+        },
+        {
+          "name": "Fort Forinthry Workshop (Invention machines + fort Construction)",
+          "why_important": "Tier 2–3 Workshop enables remote machine management and +25% machine power capacity. Fort is the practical home for Invention automation while machines themselves are Asgarnia-gated by the Invention Guild — both ends must be modeled.",
+          "wiki_url": "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
+          "suggested_id": "misthalin:fort-workshop-machines"
+        },
+        {
+          "name": "Fort Forinthry Chapel (Prayer altar stack)",
+          "why_important": "Tiered Prayer XP (200–300%+) on bones/ashes plus herb burners and prayer-book swap inside the fort. Competes with Ectofuntus as a self-contained Prayer infrastructure choice for starting-region planners.",
+          "wiki_url": "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
+          "suggested_id": "misthalin:fort-chapel-prayer"
+        },
+        {
+          "name": "Fort Forinthry Town Hall rested experience",
+          "why_important": "Offline and fort-skilling rested XP converted to bonus XP (cap scales with tier). Permanent multi-skill throughput unlock for the starting region.",
+          "wiki_url": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
+          "suggested_id": "misthalin:fort-town-hall-rested-xp"
+        },
+        {
+          "name": "Mysterious monolith / Archaeology relic harness (global hub at Guild)",
+          "why_important": "Monolith energy capacity and harnessing every Archaeology relic power is Guild-adjacent starting infrastructure. App tracks individual relics (Bait and Switch) but not the monolith power-cap / energy progression itself as a Misthalin unlock.",
+          "wiki_url": "https://runescape.wiki/w/Mysterious_monolith",
+          "suggested_id": "misthalin:mysterious-monolith-relic-hub"
+        },
+        {
+          "name": "Memorial to Guthix / engrams (Divination permanent buffs)",
+          "why_important": "Engrams charge with memory strands for permanent Divination and multi-skill relic-style buffs. Region-local training produces strands globally, but Memorial is Misthalin geography and is a classic ironman permanent-unlock checklist item absent from the file.",
+          "wiki_url": "https://runescape.wiki/w/Memorial_to_Guthix",
+          "suggested_id": "misthalin:memorial-to-guthix-engrams"
+        },
+        {
+          "name": "Varrock Dig Site early Archaeology progression",
+          "why_important": "Default early dig site and tutorial geography for Archaeology. App has Guild shop but not the dig site as a regional activity unlock.",
+          "wiki_url": "https://runescape.wiki/w/Varrock_Dig_Site",
+          "suggested_id": "misthalin:varrock-dig-site"
+        }
+      ]
+    },
+    "havenhythe": {
+      "present_count": 1,
+      "present_ids": ["havenhythe:ring-of-kayazu"],
+      "missing": [
+        {
+          "name": "Havenhythe Big Game Hunter + Apex Hide / Masterwork Ranged material path",
+          "why_important": "Starting-region Hunter 96+ BGH expansion feeds Apex Hide Armour (t85 Ranged) and Masterwork Ranged materials. This is THE Havenhythe skilling power spike for Equilibrium and is completely absent from regional-skilling-unlocks (only appears in major-upgrades-by-region combat notes).",
+          "wiki_url": "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter",
+          "suggested_id": "havenhythe:big-game-hunter-apex-path"
+        },
+        {
+          "name": "Moonrise Dig Site (Archaeology hub)",
+          "why_important": "First-Age dig site (52+ Archaeology, Secrets of Amberfell). Unlocks collections, mysteries, Hungry Like the Wolf relic power, and Ring of Kayazu chain. App has the ring only — not the dig site hub, collections, or Hungry Like the Wolf.",
+          "wiki_url": "https://runescape.wiki/w/Moonrise_Dig_Site",
+          "suggested_id": "havenhythe:moonrise-dig-site"
+        },
+        {
+          "name": "Birdhouses (Hunter 5–101)",
+          "why_important": "New 2026 clockwork birdhouse method spanning nearly the entire Hunter ladder, exclusive to Havenhythe geography. Permanent low-attention Hunter infrastructure for a starting region.",
+          "wiki_url": "https://runescape.wiki/w/Birdhouses",
+          "suggested_id": "havenhythe:birdhouses"
+        },
+        {
+          "name": "Wendlewick fish farm",
+          "why_important": "Active multi-pool Fishing method for lobster/swordfish/shark/giant crayfish unique to Havenhythe. Region-defining Fishing infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Fish_farm",
+          "suggested_id": "havenhythe:wendlewick-fish-farm"
+        },
+        {
+          "name": "Shrine of Inanna empowered obelisks (Summoning)",
+          "why_important": "Empowered Summoning obelisks with stacking material-save and XP buffs. Starting-region Summoning production infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Shrine_of_Inanna",
+          "suggested_id": "havenhythe:empowered-obelisks"
+        },
+        {
+          "name": "Dalia's Tree Nursery + Marigold Farm patch cluster",
+          "why_important": "Extra tree/fruit-tree/allotment/herb patches plus Heedi eternal-magic sapling plots. Material Farming density for a starting region.",
+          "wiki_url": "https://runescape.wiki/w/Dalia%27s_Tree_Nursery",
+          "suggested_id": "havenhythe:farming-patch-cluster"
+        },
+        {
+          "name": "Spirit moths + volatile chinchompas (Highweald Hunter)",
+          "why_important": "Charm supply via spirit moths and high-level chinchompa variant. Summoning/Hunter self-supply loop unique to Havenhythe.",
+          "wiki_url": "https://runescape.wiki/w/Highweald_Forest",
+          "suggested_id": "havenhythe:highweald-hunter-supply"
+        },
+        {
+          "name": "Hungry Like the Wolf (Archaeology relic)",
+          "why_important": "Moonrise Dig Site monolith relic — combat-adjacent but Archaeology-gated regional unlock often valued with skilling region decisions. Not present under any skilling id.",
+          "wiki_url": "https://runescape.wiki/w/Hungry_Like_the_Wolf",
+          "suggested_id": "havenhythe:hungry-like-the-wolf"
+        }
+      ]
+    },
+    "karamja": {
+      "present_count": 0,
+      "present_ids": [],
+      "missing": [
+        {
+          "name": "Herblore Habitat (juju potion infrastructure)",
+          "why_important": "ZERO records for automatic_early Karamja is indefensible. Herblore Habitat is the sole source of vine herbs and juju potions (woodcutting, farming, fishing, mining, hunter, etc.). Perfect juju potions define mid/late skilling efficiency across the account. Region-defining Herblore/Farming/Hunter hub.",
+          "wiki_url": "https://runescape.wiki/w/Herblore_Habitat",
+          "suggested_id": "karamja:herblore-habitat"
+        },
+        {
+          "name": "Witchdoctor camouflage outfit + Papa Mambo shop",
+          "why_important": "Habitat weekly jadinko set rewards the witchdoctor outfit (Hunter XP + teleports to Habitat). Permanent Hunter QoL tied hard to Karamja.",
+          "wiki_url": "https://runescape.wiki/w/Witchdoctor_outfit",
+          "suggested_id": "karamja:witchdoctor-outfit"
+        },
+        {
+          "name": "Jadinko Lair (curly roots / Woodcutting–Fletching–Firemaking)",
+          "why_important": "High-level multi-skill lair under Habitat. Curly roots feed Always Adze / Superheat Form style dual-training. Completely absent.",
+          "wiki_url": "https://runescape.wiki/w/Jadinko_Lair",
+          "suggested_id": "karamja:jadinko-lair"
+        },
+        {
+          "name": "Karamja gloves (achievement diary utility)",
+          "why_important": "Elite gloves teleport, gem mine access, and other diary utilities. Same diary-class as Morytania legs 4 which IS in the file — inconsistent omission.",
+          "wiki_url": "https://runescape.wiki/w/Karamja_gloves",
+          "suggested_id": "karamja:karamja-gloves"
+        },
+        {
+          "name": "Brimhaven Agility Arena (pirates' hook / tickets)",
+          "why_important": "Classic Agility minigame with permanent rewards (pirates' hook vanity + XP). Region-locked Agility infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Brimhaven_Agility_Arena",
+          "suggested_id": "karamja:brimhaven-agility-arena"
+        },
+        {
+          "name": "Shilo Village gem mine / underground mine",
+          "why_important": "Dense gem rock mining for Crafting self-supply. Early-mid ironman Crafting staple in Karamja.",
+          "wiki_url": "https://runescape.wiki/w/Shilo_Village_mine",
+          "suggested_id": "karamja:shilo-gem-mine"
+        },
+        {
+          "name": "Nature altar (Karamja Runecrafting)",
+          "why_important": "Nature rune altar is Karamja geography. Nature runes gate high Alchemy and many production loops — altar access matters when Abyss is Forinthry-gated.",
+          "wiki_url": "https://runescape.wiki/w/Nature_altar",
+          "suggested_id": "karamja:nature-altar"
+        },
+        {
+          "name": "Tai Bwo Wannai Cleanup / hardwood grove",
+          "why_important": "Teak/mahogany access and tribal currency for hardwood. Construction/Fletching timber supply on Karamja.",
+          "wiki_url": "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup",
+          "suggested_id": "karamja:hardwood-grove"
+        }
+      ]
+    },
+    "asgarnia": {
+      "present_count": 4,
+      "present_ids": [
+        "asgarnia:artisans-workshop-rewards",
+        "asgarnia:flash-powder-factory-herblore-outfits",
+        "cross-region:hatchet-of-ember-and-glade",
+        "cross-region:hatchet-of-bloom-and-blight"
+      ],
+      "missing": [
+        {
+          "name": "Invention Guild (skill unlock + machines room)",
+          "why_important": "CRITICAL. NE of Falador. Invention tutorial + workbench + technology trees + six machine hotspots (Alchemiser, etc.). major-upgrades-by-region already flags it for combat/skill unlock, but regional-skilling-unlocks does not — planners valuing skilling automation cannot see Asgarnia Invention pressure.",
+          "wiki_url": "https://runescape.wiki/w/Invention_Guild",
+          "suggested_id": "asgarnia:invention-guild"
+        },
+        {
+          "name": "Crafting Guild",
+          "why_important": "Bank chest, crafting facilities, soft clay, and guild access for mid-game Crafting. Standard elective-region Crafting infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Crafting_Guild",
+          "suggested_id": "asgarnia:crafting-guild"
+        },
+        {
+          "name": "Mining Guild / Living Rock Caverns",
+          "why_important": "Falador Mining Guild + LRC concentrated ore/fish. Core mid-game Mining hub for Asgarnia electives.",
+          "wiki_url": "https://runescape.wiki/w/Mining_Guild",
+          "suggested_id": "asgarnia:mining-guild-lrc"
+        },
+        {
+          "name": "Warriors' Guild (defender / token shop — combat-edge but token skilling adjacent)",
+          "why_important": "Lower priority than Invention Guild; included only as note that Asgarnia guild coverage beyond Artisans/FPF is thin. Prefer Invention first.",
+          "wiki_url": "https://runescape.wiki/w/Warriors%27_Guild",
+          "suggested_id": "asgarnia:warriors-guild"
+        },
+        {
+          "name": "Artisans' Workshop full reward depth (ceremonial swords, cannon upgrades)",
+          "why_important": "Row exists for blacksmith outfit + luminite injectors but under-specifies ceremonial sword reward track and dwarf multicannon upgrade path as permanent smithing/combat-adjacent unlocks inside the shop.",
+          "wiki_url": "https://runescape.wiki/w/Artisans%27_Workshop",
+          "suggested_id": "asgarnia:artisans-reward-depth"
+        }
+      ]
+    },
+    "kandarin": {
+      "present_count": 6,
+      "present_ids": [
+        "kandarin:deep-sea-fishing-hub",
+        "kandarin:farmers-market-master-farmer",
+        "kandarin:skillchompa-supply",
+        "kandarin:gnome-restaurant-sous-chef",
+        "kandarin:tavias-fishing-rod",
+        "kandarin:skillchompas"
+      ],
+      "missing": [
+        {
+          "name": "Fishing Guild",
+          "why_important": "Level 68 Fishing guild bank, shop, and high-density fishing. Deep Sea hub is covered; the Guild itself as permanent infrastructure is not.",
+          "wiki_url": "https://runescape.wiki/w/Fishing_Guild",
+          "suggested_id": "kandarin:fishing-guild"
+        },
+        {
+          "name": "Barbarian training (Otto — Firemaking/Fishing/Smithing)",
+          "why_important": "Permanent multi-skill unlocks: barbarian fishing (leaping fish + strength XP), pyre ships, spear/hasta smithing. Lives at Baxtorian / Otto's grotto — Kandarin.",
+          "wiki_url": "https://runescape.wiki/w/Barbarian_Training",
+          "suggested_id": "kandarin:barbarian-training"
+        },
+        {
+          "name": "Spirit tree network (Tree Gnome Stronghold)",
+          "why_important": "Farmable spirit trees + Stronghold network are the backbone of ironman travel for patch runs and multi-region logistics. Kandarin owns the hub.",
+          "wiki_url": "https://runescape.wiki/w/Spirit_tree",
+          "suggested_id": "kandarin:spirit-tree-network"
+        },
+        {
+          "name": "Ourania / ZMI altar (Runecrafting)",
+          "why_important": "Ourania Runecrafting Altar is Kandarin geography and a major mid-game RC method with pure essence multi-rune crafting. Absent.",
+          "wiki_url": "https://runescape.wiki/w/Ourania_Runecrafting_Altar",
+          "suggested_id": "kandarin:ourania-altar"
+        },
+        {
+          "name": "Ardougne cloaks (achievement diary)",
+          "why_important": "Diary utility (teleports, monastery Prayer bonus, etc.) at same class as Morytania legs which is modeled. Inconsistent diary coverage.",
+          "wiki_url": "https://runescape.wiki/w/Ardougne_cloak",
+          "suggested_id": "kandarin:ardougne-cloaks"
+        },
+        {
+          "name": "Seers' Village headband / diary utility",
+          "why_important": "Flax, maples, and diary teleports. Kandarin diary set for skilling QoL.",
+          "wiki_url": "https://runescape.wiki/w/Seers%27_headband",
+          "suggested_id": "kandarin:seers-headband"
+        },
+        {
+          "name": "Player-Owned Farm full infrastructure (beyond skillchompa supply)",
+          "why_important": "Manor Farm is mentioned only as skillchompa supply. POF beans, breeding, animal traits, and Farmers' Market depth deserve a dedicated activity row for Farming value of Kandarin.",
+          "wiki_url": "https://runescape.wiki/w/Player-owned_farm",
+          "suggested_id": "kandarin:player-owned-farm-hub"
+        }
+      ]
+    },
+    "fremennik": {
+      "present_count": 5,
+      "present_ids": [
+        "fremennik:lava-flow-mine",
+        "fremennik:imcando-pickaxe",
+        "cross-region:pickaxe-of-earth-and-song",
+        "cross-region:hatchet-of-ember-and-glade",
+        "cross-region:hatchet-of-bloom-and-blight"
+      ],
+      "missing": [
+        {
+          "name": "Lunar Diplomacy / Astral altar + Lunar spellbook skilling spells",
+          "why_important": "Astral altar on Lunar Isle + spells (Plank Make, String Jewellery, Humidify, Fertile Soil, NPC Contact, etc.) are massive multi-skill permanent unlocks. Fremennik owns Lunar geography.",
+          "wiki_url": "https://runescape.wiki/w/Lunar_Diplomacy",
+          "suggested_id": "fremennik:lunar-spellbook-skilling"
+        },
+        {
+          "name": "Dagannoth Kings dragon hatchet / dragon pickaxe source pressure",
+          "why_important": "DK waterbirth is Fremennik. Dragon hatchet/pickaxe are the base for crystal tool upgrades and Earth and Song. App tracks Imcando pickaxe and crystal side but not DK as regional tool-base pressure.",
+          "wiki_url": "https://runescape.wiki/w/Dagannoth_Kings",
+          "suggested_id": "fremennik:dragon-tool-dk-pressure"
+        },
+        {
+          "name": "Fremennik sea boots (achievement diary)",
+          "why_important": "Diary utility set for Fremennik — same diary class already modeled for Morytania.",
+          "wiki_url": "https://runescape.wiki/w/Fremennik_sea_boots",
+          "suggested_id": "fremennik:sea-boots"
+        },
+        {
+          "name": "Stonemason Construction supplies (Keldagrim)",
+          "why_important": "Bulk Construction materials (gold leaf, marble, magic stone) from Keldagrim stonemason. Critical for high-end POH and fort materials planning under Fremennik geography.",
+          "wiki_url": "https://runescape.wiki/w/Stonemason",
+          "suggested_id": "fremennik:keldagrim-stonemason"
+        },
+        {
+          "name": "Blast Furnace / Keldagrim smithing infrastructure",
+          "why_important": "Keldagrim hosts smithing infrastructure beyond Lava Flow Mine. Bar production efficiency for ironman Smithing under Fremennik.",
+          "wiki_url": "https://runescape.wiki/w/Blast_Furnace",
+          "suggested_id": "fremennik:blast-furnace"
+        },
+        {
+          "name": "Enchanted lyre / Rellekka travel unlocks",
+          "why_important": "Permanent travel QoL after Fremennik Trials chain. Soft infrastructure but high daily-use value.",
+          "wiki_url": "https://runescape.wiki/w/Enchanted_lyre",
+          "suggested_id": "fremennik:enchanted-lyre"
+        }
+      ]
+    },
+    "forinthry": {
+      "present_count": 6,
+      "present_ids": [
+        "forinthry:daemonheim-skilling-rewards",
+        "forinthry:scroll-of-cleansing",
+        "forinthry:smithing-autoheater",
+        "forinthry:scroll-of-efficiency",
+        "cross-region:skekas-hypnowand",
+        "cross-region:balaraks-sash-brush"
+      ],
+      "missing": [
+        {
+          "name": "Named Daemonheim permanent unlocks beyond 4 rows (expansive pouch, scroll of life, scroll of proficiency, wild card, etc.)",
+          "why_important": "Generic daemonheim-skilling-rewards bundle names bonecrusher/charming imp/herbicide/gem bag/autoheater but planners need first-class rows for Scroll of life, Scroll of proficiency, Expansive pouch, Gemstone golem outfits fragments path, and other high-token skilling perms — same treatment already given to cleansing/efficiency/autoheater.",
+          "wiki_url": "https://runescape.wiki/w/Dungeoneering/Rewards",
+          "suggested_id": "forinthry:daemonheim-named-skilling-perms"
+        },
+        {
+          "name": "Abyss Runecrafting entrance (Mage of Zamorak)",
+          "why_important": "Abyss is Forinthry/Wilderness. Gates efficient RC including Time runes combo with Anachronia altar. Combo audit already flags this; still no first-class regional skilling unlock row.",
+          "wiki_url": "https://runescape.wiki/w/Abyss",
+          "suggested_id": "forinthry:abyss-runecrafting"
+        },
+        {
+          "name": "Wilderness sword / Wilderness achievements diary",
+          "why_important": "Sword teleports + Abyss magical-thread boost + multi-skill diary utilities. Forinthry diary equivalent of Morytania legs.",
+          "wiki_url": "https://runescape.wiki/w/Wilderness_sword",
+          "suggested_id": "forinthry:wilderness-sword"
+        },
+        {
+          "name": "Demonic skull (Wilderness skilling XP)",
+          "why_important": "Optional risk XP lamp-style boost for Wilderness skilling. Region-defining risk/reward skilling toggle.",
+          "wiki_url": "https://runescape.wiki/w/Demonic_skull",
+          "suggested_id": "forinthry:demonic-skull"
+        },
+        {
+          "name": "Always Adze (Warforge / Into the Forge — Seed of the Charyou Tree)",
+          "why_important": "Monolith relic auto-burns logs for Firemaking XP while Woodcutting. Unlock path is Warforge Dig Site / Thalmund's Forge (Daemonheim dig site — Forinthry). Superheat Form alternative without prayer drain. Only mentioned in Superheat Form notes, not as its own Forinthry relic unlock.",
+          "wiki_url": "https://runescape.wiki/w/Always_Adze",
+          "suggested_id": "forinthry:always-adze"
+        },
+        {
+          "name": "Daemonheim Dig Site (Warped Depths archaeology)",
+          "why_important": "Dig site that gates Skeka's hypnowand journal and Balarak's brush pieces. Present only as cross-region equipment pressure, not as the dig site hub itself.",
+          "wiki_url": "https://runescape.wiki/w/Daemonheim_Dig_Site",
+          "suggested_id": "forinthry:daemonheim-dig-site"
+        }
+      ]
+    },
+    "desert": {
+      "present_count": 3,
+      "present_ids": [
+        "desert:pyramid-plunder-black-ibis",
+        "desert:red-sandstone-potion-flasks",
+        "desert:garden-of-kharid-rewards"
+      ],
+      "missing": [
+        {
+          "name": "Menaphos city skilling hub (reputation + districts)",
+          "why_important": "CRITICAL. Menaphos is a Prif-tier mid/high skilling city: acadia WC, mineral deposits, desert sole/catfish/beltfish, marketeer thieving, plover hunter, district banks, and permanent reputation rewards. App has three desert rows and ZERO Menaphos. Equivalent gap to omitting Prifddinas from Tirannwn.",
+          "wiki_url": "https://runescape.wiki/w/Menaphos",
+          "suggested_id": "desert:menaphos-skilling-hub"
+        },
+        {
+          "name": "VIP skilling area (Tier 7 overall reputation)",
+          "why_important": "Half-depletion acadia/mineral/fish with bank chest. Signature Menaphos permanent unlock for banked multi-skill AFK.",
+          "wiki_url": "https://runescape.wiki/w/VIP_skilling_area",
+          "suggested_id": "desert:menaphos-vip-skilling-area"
+        },
+        {
+          "name": "Soul altar (Menaphos Imperial district)",
+          "why_important": "Level 90+ Soul rune crafting altar under Menaphos fountain after 'Phite Club. High-value Runecrafting infrastructure hard-locked to Desert/Menaphos.",
+          "wiki_url": "https://runescape.wiki/w/Soul_altar",
+          "suggested_id": "desert:soul-altar"
+        },
+        {
+          "name": "Shifting Tombs",
+          "why_important": "Multi-skill XP minigame + reputation + Menaphite gift offerings. Core Menaphos activity loop.",
+          "wiki_url": "https://runescape.wiki/w/Shifting_Tombs",
+          "suggested_id": "desert:shifting-tombs"
+        },
+        {
+          "name": "Menaphos district skilling boosts (Tier 8 reputation)",
+          "why_important": "Permanent success/damage boosts for WC (Imperial), Fishing (Port), Thieving (Merchant), Mining (Worker), including VIP area. Permanent throughput unlocks.",
+          "wiki_url": "https://runescape.wiki/w/Reputation_(Menaphos)",
+          "suggested_id": "desert:menaphos-district-skilling-boosts"
+        },
+        {
+          "name": "Player-owned port (Port district entry)",
+          "why_important": "Ports portal is in Menaphos Port district. Ports is major mid-game resource (trade goods, scroll of proficiency mats, Eastern lands). Desert/Menaphos is the canonical entry.",
+          "wiki_url": "https://runescape.wiki/w/Player-owned_port",
+          "suggested_id": "desert:player-owned-port"
+        },
+        {
+          "name": "Desert amulet (achievement diary)",
+          "why_important": "Diary teleports and utilities. Same class as Morytania legs 4 which is modeled.",
+          "wiki_url": "https://runescape.wiki/w/Desert_amulet",
+          "suggested_id": "desert:desert-amulet"
+        },
+        {
+          "name": "Mage Training Arena rewards",
+          "why_important": "Bones to peaches unlock, wand progression, infinity ethereal pieces path adjacency. Al Kharid / desert MTA is a permanent Magic/skilling utility shop.",
+          "wiki_url": "https://runescape.wiki/w/Mage_Training_Arena",
+          "suggested_id": "desert:mage-training-arena"
+        },
+        {
+          "name": "Het's Oasis (Farming/Agility)",
+          "why_important": "Post-2022 desert skilling hub with unique Farming/Agility content near Al Kharid.",
+          "wiki_url": "https://runescape.wiki/w/Het%27s_Oasis",
+          "suggested_id": "desert:hets-oasis"
+        }
+      ]
+    },
+    "morytania": {
+      "present_count": 3,
+      "present_ids": [
+        "morytania:temple-trekking-skilling-outfits",
+        "morytania:ectofuntus-first-age-outfit",
+        "morytania:morytania-legs-4"
+      ],
+      "missing": [
+        {
+          "name": "Blood altar",
+          "why_important": "Blood rune altar is Morytania geography (Meiyerditch). Blood runes gate ancient spells and high-end Magic. Hard region lock for RC.",
+          "wiki_url": "https://runescape.wiki/w/Blood_altar",
+          "suggested_id": "morytania:blood-altar"
+        },
+        {
+          "name": "Vyre corpse cremation Prayer training",
+          "why_important": "Darkmeyer/vyre corpses + Sunspear cremation is a premier Prayer method. Legs 4 mentions the XP boost but the activity/source is not a first-class row.",
+          "wiki_url": "https://runescape.wiki/w/Vyre_corpse",
+          "suggested_id": "morytania:vyre-cremation"
+        },
+        {
+          "name": "Werewolf Agility Course",
+          "why_important": "Morytania Agility course with skullball adjacency. Region Agility infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Werewolf_Agility_Course",
+          "suggested_id": "morytania:werewolf-agility"
+        },
+        {
+          "name": "Polypore Dungeon (Farming spores / Magic training resource)",
+          "why_important": "Polypore stick + spore farming resource dungeon. Mid-game Magic/Farming adjacency in Morytania.",
+          "wiki_url": "https://runescape.wiki/w/Polypore_Dungeon",
+          "suggested_id": "morytania:polypore-dungeon"
+        },
+        {
+          "name": "Canifis / Port Phasmatys Farming patches (mushroom)",
+          "why_important": "Mushroom patch and Canifis patches double with legs 4. Farming infrastructure density.",
+          "wiki_url": "https://runescape.wiki/w/Mushroom_patch",
+          "suggested_id": "morytania:mushroom-patch"
+        },
+        {
+          "name": "Drakan's medallion teleports",
+          "why_important": "Post-quest permanent teleport network across Morytania (Barrows, Darkmeyer, etc.). High daily-use travel infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Drakan%27s_medallion",
+          "suggested_id": "morytania:drakans-medallion"
+        }
+      ]
+    },
+    "tirannwn": {
+      "present_count": 18,
+      "present_ids": [
+        "prifddinas:skilling-hub",
+        "prifddinas:crystal-tool-workshop",
+        "prifddinas:waterfall-fishing-shop",
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:crystal-flasks",
+        "prifddinas:motherlode-maw",
+        "prifddinas:seren-stones",
+        "tirannwn:superheat-form",
+        "tirannwn:crystal-fishing-rod",
+        "tirannwn:trahaearn-exoskeleton",
+        "tirannwn:crystal-hammer",
+        "tirannwn:crystal-tinderbox",
+        "kandarin:skillchompa-supply",
+        "kandarin:skillchompas",
+        "cross-region:pickaxe-of-earth-and-song",
+        "cross-region:orthen-furnace-core-stack",
+        "cross-region:hatchet-of-ember-and-glade",
+        "cross-region:hatchet-of-bloom-and-blight"
+      ],
+      "missing": [
+        {
+          "name": "Grace of the elves",
+          "why_important": "BIS skilling necklace: Seren prayer drain reduction (Light Form / Superheat Form / Chronicle Attraction), 500–2000 porter charges, Seren spirit rare drops while gathering, Max Guild portal teleports. Prif/alchemical-onyx chain is a defining Tirannwn gathering unlock. Completely absent.",
+          "wiki_url": "https://runescape.wiki/w/Grace_of_the_elves",
+          "suggested_id": "tirannwn:grace-of-the-elves"
+        },
+        {
+          "name": "Light Form + Crystal Mask (Seren prayers beyond Superheat Form)",
+          "why_important": "Light Form (thieving/divination focus) and Crystal Mask are Seren prayer skilling unlocks from The Light Within. Only Superheat Form is modeled — incomplete Seren skilling prayer set.",
+          "wiki_url": "https://runescape.wiki/w/Light_Form",
+          "suggested_id": "tirannwn:seren-skilling-prayers"
+        },
+        {
+          "name": "Hefin Agility Course + Serenity posts",
+          "why_important": "Premier high-level Agility course with Voice of Seren Prayer XP, course multipliers, worker robes. Prif Agility is not represented outside the generic hub blurb.",
+          "wiki_url": "https://runescape.wiki/w/Hefin_Agility_Course",
+          "suggested_id": "tirannwn:hefin-agility"
+        },
+        {
+          "name": "Max Guild (Prifddinas)",
+          "why_important": "Skill portals, thrall of the max guild teleports, gathering hub. Requires Prif access + 99s. Major late-game Tirannwn infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Max_Guild",
+          "suggested_id": "tirannwn:max-guild"
+        },
+        {
+          "name": "Crystal tree Farming (crystal acorns)",
+          "why_important": "Unique Prif Farming tree for crystal weapon seeds / harmonic-adjacent rewards. Named crystal skilling content missing as a row.",
+          "wiki_url": "https://runescape.wiki/w/Crystal_tree",
+          "suggested_id": "tirannwn:crystal-tree-farming"
+        },
+        {
+          "name": "Cleansing crystals (Hefin Prayer)",
+          "why_important": "AFK Prayer method in Hefin cathedral using cleansing crystals. Complements Superheat Form / Hefin package.",
+          "wiki_url": "https://runescape.wiki/w/Cleansing_crystal",
+          "suggested_id": "tirannwn:cleansing-crystals"
+        },
+        {
+          "name": "Amlodd Divination / Cadarn hunting district features",
+          "why_important": "District-specific high-level gathering under Voice of Seren. Hub blurb mentions Voice of Seren rotations but not Amlodd/Cadarn as planner-visible unlocks.",
+          "wiki_url": "https://runescape.wiki/w/Prifddinas",
+          "suggested_id": "tirannwn:prif-district-gathering"
+        },
+        {
+          "name": "Ancient elven ritual shard",
+          "why_important": "Prayer restore on cooldown that pairs with Grace of the elves for sustained Superheat Form / Light Form. Common Tirannwn skilling stack piece.",
+          "wiki_url": "https://runescape.wiki/w/Ancient_elven_ritual_shard",
+          "suggested_id": "tirannwn:ancient-elven-ritual-shard"
+        }
+      ]
+    },
+    "anachronia": {
+      "present_count": 7,
+      "present_ids": [
+        "anachronia:bait-and-switch-relic",
+        "anachronia:herby-werby-herb-bag",
+        "anachronia:orthen-furnace-core",
+        "anachronia:herb-bag-skilling-pointer",
+        "cross-region:skekas-hypnowand",
+        "cross-region:balaraks-sash-brush",
+        "cross-region:orthen-furnace-core-stack"
+      ],
+      "missing": [
+        {
+          "name": "Anachronia base camp (full infrastructure)",
+          "why_important": "CRITICAL. Town Hall / Storehouse / Sleeping Quarters / Spa / Hunter Lodge / Slayer Lodge / Player Lodge / bank / lodestone / remote totem access. Worker material economy feeds dinosaur farm and Dream of Iaia. App has zero base-camp rows.",
+          "wiki_url": "https://runescape.wiki/w/Anachronia_base_camp",
+          "suggested_id": "anachronia:base-camp"
+        },
+        {
+          "name": "Orthen Dig Site (full hub)",
+          "why_important": "Level 90–120 Archaeology dig site with four excavation sites, teleport devices, collections, mysteries, potion recipes, skilling off-hands, relics, and +150 monolith power at 120. App only extracts furnace core + bait-and-switch — not the dig site as a region-defining Archaeology hub.",
+          "wiki_url": "https://runescape.wiki/w/Orthen_Dig_Site",
+          "suggested_id": "anachronia:orthen-dig-site"
+        },
+        {
+          "name": "Anachronia Big Game Hunter (classic dinosaurs + dragon mattock)",
+          "why_important": "Original BGH for Hunter XP and dragon mattock (crystal mattock base). Distinct from Havenhythe BGH. Also feeds Skeka's hypnowand piece pressure.",
+          "wiki_url": "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+          "suggested_id": "anachronia:big-game-hunter"
+        },
+        {
+          "name": "Anachronia Dinosaur Farm (Ranch Out of Time)",
+          "why_important": "Dinosaur breeding/Farming extension of POF. Beans market, unique produce, max-guild portal unlock purchase. Major Anachronia Farming unlock.",
+          "wiki_url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+          "suggested_id": "anachronia:dinosaur-farm"
+        },
+        {
+          "name": "Anachronia Agility Course",
+          "why_important": "High-level Agility course with totem pieces and dinosaur materials. Region Agility infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Anachronia_Agility_Course",
+          "suggested_id": "anachronia:agility-course"
+        },
+        {
+          "name": "Anachronia totems (multi-skill permanent buffs)",
+          "why_important": "Buildable totems (xp, drop cleaners adjacency, combat, etc.) from Agility/island materials. Permanent account-wide buffs gated by Anachronia progress.",
+          "wiki_url": "https://runescape.wiki/w/Totem_(Anachronia)",
+          "suggested_id": "anachronia:totems"
+        },
+        {
+          "name": "Dream of Iaia skilling stations",
+          "why_important": "End-game multi-skill AFK stations fed by base-camp materials. Region-defining late Anachronia infrastructure.",
+          "wiki_url": "https://runescape.wiki/w/Dream_of_Iaia",
+          "suggested_id": "anachronia:dream-of-iaia"
+        },
+        {
+          "name": "Time altar (Anachronia Runecrafting)",
+          "why_important": "Time runes altar on Anachronia. Cross-region with Forinthry Abyss for efficient runs. Masterwork staff chain pressure.",
+          "wiki_url": "https://runescape.wiki/w/Time_altar",
+          "suggested_id": "anachronia:time-altar"
+        },
+        {
+          "name": "Player Lodge skillcape rack + Slayer helmet stand",
+          "why_important": "Base camp Tier-3 Player Lodge skillcape rack and Slayer Lodge helmet stand grant passive cape/helmet effects without wearing them — huge permanent QoL unique to Anachronia base camp upgrades.",
+          "wiki_url": "https://runescape.wiki/w/Player_Lodge",
+          "suggested_id": "anachronia:skillcape-rack-helmet-stand"
+        }
+      ]
+    }
+  },
+  "global_missing": [
+    {
+      "name": "Grace of the elves (crafted; alchemical onyx)",
+      "why_important": "Account-wide gathering necklace; not strictly one-region but Prif/Tirannwn access and high Crafting/Magic define practical obtain. Missing entirely from regional file despite being top-tier skilling equipment.",
+      "wiki_url": "https://runescape.wiki/w/Grace_of_the_elves",
+      "suggested_id": "cross-region:grace-of-the-elves",
+      "regions_pressured": ["tirannwn"]
+    },
+    {
+      "name": "Signs of the porter / porters as system",
+      "why_important": "Divination porter charges power Grace and all gathering. Not modeled as a supply unlock (Divination energy + signs).",
+      "wiki_url": "https://runescape.wiki/w/Sign_of_the_porter",
+      "suggested_id": "global:signs-of-the-porter",
+      "regions_pressured": ["misthalin", "tirannwn"]
+    },
+    {
+      "name": "Invention machines as system (not just guild location)",
+      "why_important": "Alchemiser, auto-disassembler, etc. are permanent production infrastructure. Split across Asgarnia (guild) and Misthalin (Fort Workshop power).",
+      "wiki_url": "https://runescape.wiki/w/Machines",
+      "suggested_id": "cross-region:invention-machines",
+      "regions_pressured": ["asgarnia", "misthalin"]
+    },
+    {
+      "name": "Achievement diary set coverage is incomplete",
+      "why_important": "Only Morytania legs 4 is first-class. Karamja gloves, Desert amulet, Ardougne cloaks, Fremennik sea boots, Wilderness sword, Seers headband missing. Diaries are permanent multi-skill utility by design.",
+      "wiki_url": "https://runescape.wiki/w/Achievements",
+      "suggested_id": "global:achievement-diary-skilling-bundle",
+      "regions_pressured": ["karamja", "desert", "kandarin", "fremennik", "forinthry"]
+    },
+    {
+      "name": "The Arc / Uncharted Isles (Ports eastern lands)",
+      "why_important": "Chimes, supplies, waiko shop, uncharted resources. Entered via Menaphos Ports / Ports system. Major mid-game skilling island set not in regional-skilling-unlocks.",
+      "wiki_url": "https://runescape.wiki/w/The_Arc",
+      "suggested_id": "cross-region:the-arc",
+      "regions_pressured": ["desert"]
+    },
+    {
+      "name": "Crystal mattock (named tool)",
+      "why_important": "Crystal tool workshop lists mattock in unlock text but there is no equipment row for crystal mattock (unlike rod/hammer/tinderbox). Dragon mattock is Anachronia BGH pressure.",
+      "wiki_url": "https://runescape.wiki/w/Crystal_mattock",
+      "suggested_id": "tirannwn:crystal-mattock",
+      "regions_pressured": ["tirannwn", "anachronia"]
+    },
+    {
+      "name": "Mattock of Time and Space",
+      "why_important": "End-game Archaeology mattock using energised meteorite shard from Guild shop (present in guild row text) plus other components. No first-class equipment chain row.",
+      "wiki_url": "https://runescape.wiki/w/Mattock_of_Time_and_Space",
+      "suggested_id": "cross-region:mattock-of-time-and-space",
+      "regions_pressured": ["misthalin"]
+    }
+  ],
+  "top_20_priority": [
+    {
+      "rank": 1,
+      "name": "Herblore Habitat + juju potion infrastructure",
+      "region": "karamja",
+      "suggested_id": "karamja:herblore-habitat",
+      "why": "Automatic_early region with ZERO skilling rows. Juju/perfect juju define multi-skill efficiency for the whole league."
+    },
+    {
+      "rank": 2,
+      "name": "Menaphos skilling hub (reputation + VIP + districts)",
+      "region": "desert",
+      "suggested_id": "desert:menaphos-skilling-hub",
+      "why": "Prif-scale city omitted while Desert only has 3 rows. VIP area alone is a permanent multi-skill banked hub."
+    },
+    {
+      "rank": 3,
+      "name": "Invention Guild",
+      "region": "asgarnia",
+      "suggested_id": "asgarnia:invention-guild",
+      "why": "Skill unlock + machines. Elective Asgarnia without Invention is a planner lie."
+    },
+    {
+      "rank": 4,
+      "name": "Fort Forinthry full building stack",
+      "region": "misthalin",
+      "suggested_id": "misthalin:fort-forinthry-building-stack",
+      "why": "Starting-region Construction/Prayer/Invention/rested-XP hub reduced to Grove hatchet fragments only."
+    },
+    {
+      "rank": 5,
+      "name": "Havenhythe Big Game Hunter + Apex/Masterwork Ranged path",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:big-game-hunter-apex-path",
+      "why": "Starting-region Hunter 110 power spike completely missing from skilling unlocks."
+    },
+    {
+      "rank": 6,
+      "name": "Anachronia base camp",
+      "region": "anachronia",
+      "suggested_id": "anachronia:base-camp",
+      "why": "Worker economy, lodges, spa, skillcape rack, helmet stand — none modeled."
+    },
+    {
+      "rank": 7,
+      "name": "Grace of the elves",
+      "region": "tirannwn",
+      "suggested_id": "tirannwn:grace-of-the-elves",
+      "why": "Top gathering necklace (porters + Seren prayer drain + Seren spirits). Not in file."
+    },
+    {
+      "rank": 8,
+      "name": "Soul altar",
+      "region": "desert",
+      "suggested_id": "desert:soul-altar",
+      "why": "90 RC soul runes hard-locked under Menaphos after 'Phite Club."
+    },
+    {
+      "rank": 9,
+      "name": "Orthen Dig Site hub",
+      "region": "anachronia",
+      "suggested_id": "anachronia:orthen-dig-site",
+      "why": "90–120 Archaeology hub reduced to furnace core + one relic."
+    },
+    {
+      "rank": 10,
+      "name": "Moonrise Dig Site",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:moonrise-dig-site",
+      "why": "Starting-region dig site + Hungry Like the Wolf; only ring-of-kayazu present."
+    },
+    {
+      "rank": 11,
+      "name": "Lunar spellbook skilling suite",
+      "region": "fremennik",
+      "suggested_id": "fremennik:lunar-spellbook-skilling",
+      "why": "Plank Make / Fertile Soil / Humidify permanently change production and Farming."
+    },
+    {
+      "rank": 12,
+      "name": "Always Adze",
+      "region": "forinthry",
+      "suggested_id": "forinthry:always-adze",
+      "why": "Warforge relic dual WC+FM; only footnoted under Superheat Form."
+    },
+    {
+      "rank": 13,
+      "name": "Birdhouses",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:birdhouses",
+      "why": "New 2026 Hunter ladder method exclusive to starting Havenhythe."
+    },
+    {
+      "rank": 14,
+      "name": "Abyss Runecrafting",
+      "region": "forinthry",
+      "suggested_id": "forinthry:abyss-runecrafting",
+      "why": "Hard Forinthry RC infrastructure; Time-rune combo incomplete without it."
+    },
+    {
+      "rank": 15,
+      "name": "VIP skilling area",
+      "region": "desert",
+      "suggested_id": "desert:menaphos-vip-skilling-area",
+      "why": "Tier-7 Menaphos permanent multi-skill banked area."
+    },
+    {
+      "rank": 16,
+      "name": "Light Form + Crystal Mask (Seren skilling prayers)",
+      "region": "tirannwn",
+      "suggested_id": "tirannwn:seren-skilling-prayers",
+      "why": "Incomplete Seren set; only Superheat Form modeled."
+    },
+    {
+      "rank": 17,
+      "name": "Anachronia Big Game Hunter + dragon mattock",
+      "region": "anachronia",
+      "suggested_id": "anachronia:big-game-hunter",
+      "why": "Crystal mattock base + Hunter XP; mattock chain incomplete."
+    },
+    {
+      "rank": 18,
+      "name": "Barbarian training",
+      "region": "kandarin",
+      "suggested_id": "kandarin:barbarian-training",
+      "why": "Permanent multi-skill unlocks still core to ironman accounts."
+    },
+    {
+      "rank": 19,
+      "name": "Player-owned port + The Arc",
+      "region": "desert",
+      "suggested_id": "desert:player-owned-port",
+      "why": "Mid-game resource system entered via Menaphos Ports; absent."
+    },
+    {
+      "rank": 20,
+      "name": "Named Daemonheim skilling perms (scroll of life, expansive pouch, proficiency)",
+      "region": "forinthry",
+      "suggested_id": "forinthry:daemonheim-named-skilling-perms",
+      "why": "Generic Dungeoneering bag hides high-value permanent purchases; promote to first-class like cleansing/efficiency."
+    }
+  ],
+  "methodology_notes": [
+    "Compared data/research/regional-skilling-unlocks.json (54 records, snapshotDate 2026-07-26) against major wiki region/hub pages.",
+    "present_count includes multi-region rows that list the region in regionHints.",
+    "Combat gear, boss drops, and pure XP methods intentionally deprioritized unless they are tools/outfits/shops/relics/infrastructure.",
+    "Fort Forinthry mapped to Misthalin per league regions hardRules / Catalyst precedent noted in-file.",
+    "City of Um / Underworld content already partially present under Misthalin taxonomy; Fort buildings still under-modeled.",
+    "This audit does not edit regional-skilling-unlocks.json (read-only)."
+  ]
+}

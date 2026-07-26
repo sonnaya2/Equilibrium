@@ -139,7 +139,7 @@ Shape: the selected region set plus derived unlock order. Misthalin and Havenhyt
 
 ### Task system
 
-`data/league/tasks.json` may still be empty until launch data exists. `npm run sync:league` / `scripts/sync-league-data.ts` is **disabled** (exits 1; would write an incompatible schema). League planner JSON is owned by `npm run normalize:data`. Tasks are region-gated, tiered Easy→Master at 10–400 points, and points drive both the League Trophy tier and Relic tier unlocks.
+`data/league/tasks.json` may still be empty until launch data exists. `npm run sync:league:disabled` / `scripts/sync-league-data.ts` is **disabled** (exits 1; would write an incompatible schema). League planner JSON is owned by `npm run normalize:data`. Tasks are region-gated, tiered Easy→Master at 10–400 points, and points drive both the League Trophy tier and Relic tier unlocks.
 
 The map's surface is a per-region summary — task count and points available — joined at render time. Until verified data exists, show the explicit unverified state. **The map must not reimplement task tracking**; `/tasks` owns that interface.
 

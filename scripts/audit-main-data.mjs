@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSy
 import { dirname, join, relative } from "node:path";
 
 const ROOT = process.cwd();
-const TODAY = "2026-07-25";
+const TODAY = new Date().toISOString().slice(0, 10);
 const REPORT_PATH = "data/reference/data-audit-report.json";
 const failures = [];
 const stats = {

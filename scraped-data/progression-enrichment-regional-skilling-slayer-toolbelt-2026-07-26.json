@@ -1,0 +1,630 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Permanent Slayer helmet craft chain (components + upgrades), Slayer Rewards toolbelt-attach unlocks for drop cleaners, ring of slaying craft, Slayer Codex, ferocious rings / Kuradal dungeon, and remaining Daemonheim gold-accumulator rewards missing from forinthry skilling rows. Fills audit ranks 1-2 and 36 (helmet chain, toolbelt attaches, ferocious fuse).",
+  "policy": {
+    "region_rule": "region_hint marks acquisition geography. region_hints marks multi-region craft/farm chains. required_regions only when both ends of a stack are hard gates. Do not re-emit forinthry:bonecrusher / charming-imp / herbicide / gem-bag / seedicide-not-daemonheim item rows — this file adds the permanent toolbelt-attach unlocks and missing gold accumulators.",
+    "no_trade_rule": "Ironman / Equilibrium no-trade framing: component farms and token/point sinks, not GE fills.",
+    "rate_rule": "Unlock state, point/token costs, and effects only. No invented kill times or XP/hour.",
+    "duplicate_guard": "Checked data/research/regional-skilling-unlocks.json — none of the ids in this file already exist. Item rows forinthry:bonecrusher, forinthry:charming-imp, forinthry:herbicide, forinthry:gem-bag*, seedicide-not-daemonheim, forinthry:scroll-of-* remain canonical for the items themselves."
+  },
+  "activity_additions": [
+    {
+      "id": "multi-region:slayer-helmet-component-farms",
+      "name": "Slayer helmet component farms",
+      "category": "multi-region Slayer equipment acquisition",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "morytania",
+        "karamja",
+        "desert",
+        "misthalin"
+      ],
+      "requirements": [
+        "Smoking Kills for helmet craft unlock path",
+        "58 Slayer + Cabin Fever for Mos Le'Harmless cave/unspeakable horrors (black mask)",
+        "73 Slayer for jungle strykewyrms (hexcrest)",
+        "77 Slayer for desert strykewyrms (focus sight)",
+        "Profane Scabarites / Scabarites access for spectral lens (Necromancy style component)",
+        "80 Necromancy for ensoul spectral lens ritual (City of Um / ritual site)"
+      ],
+      "unlocks": [
+        "Black mask farm geography (melee helm component)",
+        "Hexcrest farm geography (Magic helm component)",
+        "Focus sight farm geography (Ranged helm component)",
+        "Spectral lens farm + ensoul ritual path (Necromancy helm component)",
+        "Shop-bought protective pieces: spiny helmet, face mask, earmuffs, nose peg"
+      ],
+      "notes": "Planner activity hub for the full style-coverage helmet. Individual equipment rows below carry region_hint and effects. Spiny/face/earmuffs/nose peg are Slayer Master shop items (any master with stock) — not region-locked drops. Black mask also has a rare Shadow Reef sea-horror path (not the practical ironman farm).",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_helmet",
+        "https://runescape.wiki/w/Black_mask",
+        "https://runescape.wiki/w/Hexcrest",
+        "https://runescape.wiki/w/Focus_sight",
+        "https://runescape.wiki/w/Spectral_lens",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Slayer"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Surface Morytania (horrors), Karamja (jungle strykewyrms), Desert (desert strykewyrms + profane scabarites), and Misthalin/City of Um (ensoul ritual) when ranking full-style helmet completion. Shop protection pieces are multi-master and not a hard single-region gate."
+    },
+    {
+      "id": "kandarin:kuradal-dungeon-ferocious-ring-hub",
+      "name": "Kuradal's Dungeon and ferocious ring hub",
+      "category": "Slayer dungeon infrastructure and ring farm",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Kuradal permission to enter (combat 110 and 75 Slayer typical gate for her assignments)",
+        "Assignment from Kuradal, Morvran, or Laniakea to attack dungeon monsters",
+        "Ancient Cavern access for Kuradal"
+      ],
+      "unlocks": [
+        "Kuradal's Dungeon high-density task rooms",
+        "Ferocious ring drops from dungeon monsters on task",
+        "4% damage while wearing a ferocious ring inside the dungeon",
+        "Optional 100-point unlock for ferocious ring bonuses in Morvran's Dungeon (Tirannwn pressure)"
+      ],
+      "notes": "Skilling-adjacent permanent combat QoL and teleport sink, not a general BiS ring outside the dungeon. Ferocious ring fuse into full slayer helmet is a separate 500-point Learn unlock (see multi-region:slayer-helmet-ring-fuse).",
+      "source_urls": [
+        "https://runescape.wiki/w/Kuradal%27s_Dungeon",
+        "https://runescape.wiki/w/Ferocious_ring",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin via Ancient Cavern / Kuradal. Morvran dungeon upgrade and Morvran teleport are Tirannwn pressure, not a second hard Kandarin claim."
+    },
+    {
+      "id": "desert:slayer-codex-and-sunken-pyramid",
+      "name": "Slayer Codex and Sunken Pyramid soul system",
+      "category": "Slayer permanent utility and reputation",
+      "region_hint": "desert",
+      "requirements": [
+        "99 Slayer to claim Codex from Faiza (Order of the Slayer Masters / Menaphos)",
+        "Ushabti captures placed in chest of souls or personal Slayer dungeon",
+        "50 unique souls for Sunken Pyramid teleport via Codex",
+        "Up to 117 Slayer (boostable) and 115 Dungeoneering (not boostable) for full Codex completion set"
+      ],
+      "unlocks": [
+        "Slayer Codex soul log",
+        "+1% Slayer XP in slayer helmet (or stand) per 20 unique souls, to +5% at 100 souls",
+        "250 base Menaphos reputation per first soul of a type",
+        "Sunken Pyramid teleport after 50 souls",
+        "Personal Slayer dungeon (Sunken Pyramid) soul placement"
+      ],
+      "notes": "Region-important Desert endgame Slayer utility. Corrupted slayer helmet can open the Codex while worn. Fourth Sunken Pyramid room is a separate 3,000-point Buy unlock. Not a combat BiS item.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Codex",
+        "https://runescape.wiki/w/Sunken_Pyramid",
+        "https://runescape.wiki/w/Ushabti"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert / Menaphos for Faiza, Codex claim, reputation, and pyramid access. Soul farm geography is multi-region by monster."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "morytania:black-mask",
+      "name": "Black mask",
+      "category": "Slayer helmet melee component",
+      "region_hint": "morytania",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "58 Slayer",
+        "Cabin Fever for Mos Le'Harmless Caves access",
+        "10 Defence, 20 Strength, combat 40 to wear",
+        "Uncharged mask required before assembling a slayer helmet"
+      ],
+      "effects": [
+        "On task: +7.5% melee damage and +12.5% melee accuracy (Slayer Spirit)",
+        "Required component of the base slayer helmet"
+      ],
+      "notes": "Primary ironman farm: cave horrors / unspeakable horrors (Mos Le'Harmless). Wiki marks cave horror drops as Morytania league region. Rare uncharged drop from Shadow Reef sea horrors is not the practical farm. Remove charges before helmet craft.",
+      "source_urls": [
+        "https://runescape.wiki/w/Black_mask",
+        "https://runescape.wiki/w/Cave_horror",
+        "https://runescape.wiki/w/Mos_Le%27Harmless_Caves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Morytania owns the practical black-mask farm. Cabin Fever remains a quest gate."
+    },
+    {
+      "id": "karamja:hexcrest",
+      "name": "Hexcrest",
+      "category": "Slayer helmet Magic component",
+      "region_hint": "karamja",
+      "requirements": [
+        "73 Slayer to fight jungle strykewyrms",
+        "20 Magic and 20 Defence to wear",
+        "On-task drop rate better than off-task"
+      ],
+      "effects": [
+        "On task: +7.5% Magic damage and +12.5% Magic accuracy",
+        "Required with focus sight to upgrade slayer helmet to full slayer helmet"
+      ],
+      "notes": "Jungle strykewyrms south of Shilo Village. Pair with desert:focus-sight for full-style coverage.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hexcrest",
+        "https://runescape.wiki/w/Jungle_strykewyrm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja farm geography for Magic-style helm component."
+    },
+    {
+      "id": "desert:focus-sight",
+      "name": "Focus sight",
+      "category": "Slayer helmet Ranged component",
+      "region_hint": "desert",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "77 Slayer to fight desert strykewyrms",
+        "20 Ranged and 20 Defence to wear",
+        "On-task drop rate better than off-task"
+      ],
+      "effects": [
+        "On task: +7.5% Ranged damage and +12.5% Ranged accuracy",
+        "Required with hexcrest to upgrade slayer helmet to full slayer helmet"
+      ],
+      "notes": "Desert strykewyrms. Completes Magic+Ranged pair with karamja:hexcrest for full slayer helmet.",
+      "source_urls": [
+        "https://runescape.wiki/w/Focus_sight",
+        "https://runescape.wiki/w/Desert_strykewyrm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert farm geography for Ranged-style helm component."
+    },
+    {
+      "id": "desert:spectral-lens",
+      "name": "Spectral lens",
+      "category": "Slayer helmet Necromancy component",
+      "region_hint": "desert",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "Profane Scabarite / Elite Profane Scabarite kills (Desert)",
+        "20 Necromancy, 20 Defence, Necromancy! quest to wear",
+        "On-task (Profane Scabarites or Scabarites) improves drop rate"
+      ],
+      "effects": [
+        "On task: +7.5% Necromancy damage and +12.5% Necromancy accuracy",
+        "Transforms via ensoul spectral lens ritual into ensouled spectral lens for attachment to full slayer helmet or better"
+      ],
+      "notes": "Necromancy-style counterpart to hexcrest/focus sight. Ensouled form attaches to full+ helmets so all four styles share one worn helm. Ritual is 80 Necromancy at a tier-2 ritual site (City of Um / Misthalin pressure for ensoul step, not for the drop).",
+      "source_urls": [
+        "https://runescape.wiki/w/Spectral_lens",
+        "https://runescape.wiki/w/Ensouled_spectral_lens",
+        "https://runescape.wiki/w/Profane_Scabarite"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Desert owns the drop. Misthalin/City of Um owns the practical ensoul ritual site for ironman."
+    },
+    {
+      "id": "multi-region:slayer-helmet-shop-protections",
+      "name": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
+      "category": "Slayer helmet protective components",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "misthalin",
+        "morytania",
+        "desert",
+        "karamja",
+        "kandarin",
+        "tirannwn",
+        "anachronia",
+        "forinthry"
+      ],
+      "requirements": [
+        "Coins at any Slayer Master equipment/rewards shop stocking the pieces",
+        "Combined with uncharged black mask at 55 Crafting after Learn how to craft Slayer helmets"
+      ],
+      "effects": [
+        "Spiny helmet: wall-beast protection (Lumbridge Swamp Caves)",
+        "Face mask: Smoke Dungeon dust and dust devil drain protection",
+        "Earmuffs: banshee scream protection",
+        "Nose peg: aberrant spectre drain protection",
+        "All four effects merge into the crafted slayer helmet"
+      ],
+      "notes": "Do not treat as a single-region gate. Any accessible Slayer Master stock works. Masked earmuffs must be split before craft.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spiny_helmet",
+        "https://runescape.wiki/w/Face_mask",
+        "https://runescape.wiki/w/Earmuffs",
+        "https://runescape.wiki/w/Nose_peg",
+        "https://runescape.wiki/w/Slayer_helmet"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Multi-master shop pack. Region pressure is whichever masters the league unlocks, not a fixed region."
+    },
+    {
+      "id": "multi-region:slayer-helmet-craft",
+      "name": "Slayer helmet (craft unlock + base helm)",
+      "category": "permanent Slayer equipment unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "morytania",
+        "misthalin"
+      ],
+      "requirements": [
+        "Smoking Kills completed",
+        "400 Slayer points: Learn how to craft Slayer helmets",
+        "55 Crafting (boostable; Assist System cannot craft)",
+        "35 Slayer (Smoking Kills gate)",
+        "Uncharged black mask + spiny helmet + face mask + earmuffs + nose peg"
+      ],
+      "effects": [
+        "Combines all protective piece effects into one head slot",
+        "On-task melee: +7.5% damage and +12.5% accuracy from black mask (base tier)",
+        "Can be disassembled into components and reassembled",
+        "Eligible for Slayer Lodge helmet stand (Anachronia tier 3) for passive task bonuses without wearing stats/teleports"
+      ],
+      "notes": "Ironman guide top permanent. Point sink is global; black mask farm is Morytania-pressure; shop pieces multi-master. Base tier is melee-only damage/accuracy boost until full upgrade.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_helmet",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Smoking_Kills"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Track as multi-region permanent. Component farms still apply regional pressure (especially Morytania black mask)."
+    },
+    {
+      "id": "multi-region:full-slayer-helmet-and-upgrades",
+      "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+      "category": "permanent multi-style Slayer helmet ladder",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "karamja",
+        "desert",
+        "morytania",
+        "anachronia"
+      ],
+      "requirements": [
+        "Base slayer helmet owned",
+        "Hexcrest + focus sight for full slayer helmet (all combat styles at base 7.5%/12.5%)",
+        "Optional ensouled spectral lens for Necromancy on full+",
+        "First upgrades: reinforced 100 pts, strong 400, mighty 600, corrupted 1,000 (+ corrupted gem)",
+        "Re-upgrade costs are 10% of first-upgrade cost after initial purchase",
+        "Defence gates: full 20, reinforced 30, strong 50, mighty/corrupted 70"
+      ],
+      "effects": [
+        "Full: on-task +7.5% damage / +12.5% accuracy for Melee, Magic, and Ranged (Necromancy with ensouled lens)",
+        "Reinforced: +8% damage / +13% accuracy",
+        "Strong: +8.5% / +13.5%",
+        "Mighty: +9% / +14%",
+        "Corrupted: +9.5% / +14.5% (highest helm tier)",
+        "Higher tiers improve Defence armour tier and unlock more ferocious-ring fuse capacity"
+      ],
+      "notes": "Single planner ladder for full → reinforced → strong → mighty → corrupted. Corrupted gem is a Desert / Sophanem-style pressure on the final step — verify current gem sources in-league. Anachronia Slayer Lodge stand accepts placed helmets for passive bonuses without worn stats/teleports/ring effects.",
+      "source_urls": [
+        "https://runescape.wiki/w/Full_slayer_helmet",
+        "https://runescape.wiki/w/Reinforced_slayer_helmet",
+        "https://runescape.wiki/w/Strong_slayer_helmet",
+        "https://runescape.wiki/w/Mighty_slayer_helmet",
+        "https://runescape.wiki/w/Corrupted_slayer_helmet",
+        "https://runescape.wiki/w/Slayer_helmet"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Multi-region: Karamja hexcrest + Desert focus sight (and spectral lens) feed full; point upgrades are global; stand is Anachronia."
+    },
+    {
+      "id": "multi-region:slayer-helmet-ring-fuse",
+      "name": "Fuse rings to full Slayer helmet",
+      "category": "permanent Slayer helmet utility unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "kandarin",
+        "multi-region"
+      ],
+      "requirements": [
+        "500 Slayer points: Learn how to fuse rings to full Slayer helmets",
+        "60 Crafting",
+        "Smoking Kills",
+        "Any full slayer helmet variant (full / reinforced / strong / mighty / corrupted)",
+        "Fully charged rings of slaying and/or ferocious rings to fuse"
+      ],
+      "effects": [
+        "Fuse up to five fully charged rings of slaying (40 teleports) into the helmet",
+        "Fuse up to six fully charged ferocious rings (30 teleports); capacity scales with helm tier",
+        "Helmet gains ring teleports while worn",
+        "Fused ferocious damage boost applies only when the helmet is worn (not on Slayer Lodge stand)",
+        "Helmet does not inherit ferocious ring-of-life property"
+      ],
+      "notes": "Completes the permanent helmet utility package with multi-region:ring-of-slaying-craft and kandarin:ferocious-ring. 500-point sink is the same tier as each toolbelt attach.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_helmet",
+        "https://runescape.wiki/w/Ferocious_ring",
+        "https://runescape.wiki/w/Ring_of_slaying",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Point unlock is global. Ferocious ring supply pressures Kandarin (Kuradal's Dungeon)."
+    },
+    {
+      "id": "multi-region:ring-of-slaying-craft",
+      "name": "Ring of slaying (craft unlock)",
+      "category": "permanent Slayer teleport jewellery unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "desert",
+        "morytania",
+        "fremennik",
+        "misthalin"
+      ],
+      "requirements": [
+        "300 Slayer points: Learn how to craft rings of slaying",
+        "75 Crafting at a furnace (boostable / Assist allowed if unlock owned)",
+        "Enchanted gem + gold bar per ring",
+        "Alternate: buy finished rings for 75 points each without craft unlock"
+      ],
+      "effects": [
+        "8 teleports per crafted ring: Sumona (Pollnivneach), Slayer Tower, Fremennik Slayer Dungeon, Tarn's Lair (Haunted Mine)",
+        "Contact Slayer Masters / check task and points without spending charges (enchanted-gem functions)",
+        "Social Slayer invite via use-on-player",
+        "Fusable into full slayer helmet after multi-region:slayer-helmet-ring-fuse"
+      ],
+      "notes": "Core midgame teleport QoL. Enchanted gem stock is daily-limited from Slayer Masters (including Turael/Spria separate stock). Compacted ring exists via teleportation compactor (Invention).",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_slaying",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Enchanted_gem"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Craft unlock is global points. Teleport destinations pressure Desert, Morytania, Fremennik, and Morytania/Misthalin for Tarn's Lair quest gate."
+    },
+    {
+      "id": "kandarin:ferocious-ring",
+      "name": "Ferocious ring",
+      "category": "Kuradal dungeon ring and teleport",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Kuradal dungeon access and on-task kills for drops",
+        "Optional 100 Slayer points: ferocious ring upgrade for Morvran's Dungeon",
+        "Optional fuse path via multi-region:slayer-helmet-ring-fuse"
+      ],
+      "effects": [
+        "While worn in Kuradal's Dungeon: +4% damage (including bleeds/DoT)",
+        "While worn in dungeon: ring-of-life style teleport to Kuradal under 10% LP (destroys ring)",
+        "Charges: teleport to Kuradal (and Morvran after 100-point upgrade)",
+        "Fused into full slayer helmet for teleports and worn damage boost inside the dungeon"
+      ],
+      "notes": "Not global BiS jewellery. Skilling-adjacent only as permanent dungeon QoL and helmet fuse feedstock. Pair with kandarin:kuradal-dungeon-ferocious-ring-hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ferocious_ring",
+        "https://runescape.wiki/w/Kuradal%27s_Dungeon",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin acquisition and Kuradal effect. Tirannwn for Morvran dungeon upgrade and Morvran teleport."
+    },
+    {
+      "id": "multi-region:toolbelt-bonecrusher-attach",
+      "name": "Toolbelt attach: Bonecrusher",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "forinthry",
+        "multi-region"
+      ],
+      "requirements": [
+        "Bonecrusher owned (Daemonheim Rewards — forinthry:bonecrusher)",
+        "500 Slayer points: Learn how to attach the bonecrusher to your tool belt"
+      ],
+      "effects": [
+        "Bonecrusher functions from the tool belt (no inventory slot)",
+        "Configured bone drops still convert to bury Prayer XP",
+        "Settings interface can disable the effect"
+      ],
+      "notes": "Item purchase is Forinthry (Daemonheim). Attach unlock is global Slayer points. Do not collapse into forinthry:bonecrusher — planners need both milestones.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bonecrusher",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for the item; attach is multi-region points. Prayer stacks still pair with Desert powders and other bone sources."
+    },
+    {
+      "id": "multi-region:toolbelt-herbicide-attach",
+      "name": "Toolbelt attach: Herbicide",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "forinthry",
+        "multi-region"
+      ],
+      "requirements": [
+        "Herbicide owned (Daemonheim Rewards — forinthry:herbicide)",
+        "500 Slayer points: Learn how to attach herbicide to your tool belt"
+      ],
+      "effects": [
+        "Herbicide functions from the tool belt",
+        "Configured grimy herbs destroyed for double clean XP"
+      ],
+      "notes": "Separate permanent from the token purchase. Pairs with Herblore training and drop-heavy Slayer.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herbicide",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry item + global attach points."
+    },
+    {
+      "id": "multi-region:toolbelt-charming-imp-attach",
+      "name": "Toolbelt attach: Charming imp",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "forinthry",
+        "multi-region"
+      ],
+      "requirements": [
+        "Charming imp owned (Daemonheim Rewards — forinthry:charming-imp)",
+        "500 Slayer points: Learn how to attach the charming imp on your tool belt"
+      ],
+      "effects": [
+        "Charming imp functions from the tool belt",
+        "Auto-collects charms/spirit gems or converts configured charm types to Summoning XP"
+      ],
+      "notes": "Critical Summoning supply AFK permanent. Item is Forinthry; attach is points.",
+      "source_urls": [
+        "https://runescape.wiki/w/Charming_imp",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry item + global attach points."
+    },
+    {
+      "id": "multi-region:toolbelt-seedicide-attach",
+      "name": "Toolbelt attach: Seedicide",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "asgarnia",
+        "kandarin",
+        "anachronia",
+        "multi-region"
+      ],
+      "requirements": [
+        "Seedicide owned (NOT Daemonheim — seedicide-not-daemonheim / drop-cleaner:seedicide routes)",
+        "500 Slayer points: Learn how to attach seedicide to your tool belt"
+      ],
+      "effects": [
+        "Seedicide functions from the tool belt",
+        "Configured seed drops convert to double plant XP when Farming level can plant them"
+      ],
+      "notes": "Attach is the missing permanent; acquisition remains multi-route (Asgarnia renown, Kandarin/Anachronia beans, Thaler). Optional 25,000-bean collector upgrade is separate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seedicide",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Do not assign Seedicide item to Forinthry. Attach unlock is global points after any acquisition route."
+    },
+    {
+      "id": "multi-region:toolbelt-advanced-gold-accumulator-attach",
+      "name": "Toolbelt attach: Advanced gold accumulator",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "region_hint": "multi-region",
+      "region_hints": [
+        "forinthry",
+        "multi-region"
+      ],
+      "requirements": [
+        "Advanced gold accumulator owned (Daemonheim Rewards — forinthry:advanced-gold-accumulator)",
+        "500 Slayer points: Attach the gold accumulator on your tool belt (advanced version)"
+      ],
+      "effects": [
+        "Advanced gold accumulator functions from the tool belt",
+        "Auto-collects monster coin drops to money pouch (90% kept / 10% destroyed on advanced)"
+      ],
+      "notes": "Learn text says gold accumulator but wiki/shop targets the advanced permanent. Regular gold accumulator is a charged consumable and is not the 500-point attach target.",
+      "source_urls": [
+        "https://runescape.wiki/w/Advanced_gold_accumulator",
+        "https://runescape.wiki/w/Gold_accumulator",
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry item + global attach points."
+    },
+    {
+      "id": "forinthry:gold-accumulator",
+      "name": "Gold accumulator",
+      "category": "charged coin drop cleaner (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "20,000 Dungeoneering tokens first purchase (price steps +20,000 to max 60,000 per purchase)",
+        "Optional overcharge at 60k price tier: 250,000 tokens per +5,000,000 coins capacity (stackable)"
+      ],
+      "effects": [
+        "Auto-collects monster coin drops into money pouch",
+        "Base capacity 1,000,000 coins before dust",
+        "Does not permanently tax coin drops (unlike advanced)"
+      ],
+      "notes": "Missing named Forinthry row after forinthry file pass (hub listed utilities but not this). Degrades; not the toolbelt permanent. Prefer advanced for long-run ironman once tokens allow.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gold_accumulator",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards."
+    },
+    {
+      "id": "forinthry:advanced-gold-accumulator",
+      "name": "Advanced gold accumulator",
+      "category": "permanent coin drop cleaner (Daemonheim Rewards)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "1,500,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Permanent coin auto-collect to money pouch",
+        "Destroys 10% of collected coin drops",
+        "Toolbelt-eligible after multi-region:toolbelt-advanced-gold-accumulator-attach"
+      ],
+      "notes": "Also tracked as dungeoneering:advanced-gold-accumulator-current in drop-cleaners enrichment. Named Forinthry regional-skilling id so Daemonheim permanent list is complete beside bonecrusher/herbicide/charming imp.",
+      "source_urls": [
+        "https://runescape.wiki/w/Advanced_gold_accumulator",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Pair with multi-region toolbelt attach as a second milestone."
+    },
+    {
+      "id": "desert:slayer-codex",
+      "name": "Slayer Codex",
+      "category": "permanent Slayer utility book",
+      "region_hint": "desert",
+      "requirements": [
+        "99 Slayer",
+        "Claim from Faiza in Menaphos Order of the Slayer Masters"
+      ],
+      "effects": [
+        "Records captured ushabti souls",
+        "Up to +5% Slayer XP while using slayer helmet / stand (1% per 20 souls to 100)",
+        "Teleport to Sunken Pyramid after 50 unique souls",
+        "Menaphos reputation on first soul of each type"
+      ],
+      "notes": "Equipment/pocket form of desert:slayer-codex-and-sunken-pyramid. Prefer activity row for system detail; this id for ownership tracking.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Codex",
+        "https://runescape.wiki/w/Faiza"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert / Menaphos claim."
+    }
+  ],
+  "explicitly_not_added": [
+    {
+      "name": "Gem bag toolbelt attach (500 Slayer points)",
+      "reason": "Gem bag is NOT on the Slayer Rewards 500-point toolbelt attach list (bonecrusher, herbicide, seedicide, charming imp, advanced gold accumulator only). Gem bag remains inventory/container QoL already indexed as forinthry:gem-bag and forinthry:gem-bag-upgraded."
+    },
+    {
+      "name": "Spring cleaner toolbelt attach",
+      "reason": "Spring cleaner is an Invention pocket/device cleaner, not a Slayer Rewards toolbelt unlock. Already covered by invention:spring-cleaner-current."
+    },
+    {
+      "name": "Scroll of ranging / magic / attack (Daemonheim)",
+      "reason": "Combat-style permanent scrolls, not skilling. Out of scope for this skilling enrichment; combat datasets own them if needed."
+    },
+    {
+      "name": "Mask of X series (full catalog)",
+      "reason": "Most Mask of X are limited/cosmetic or non-core ironman routes. No region-defining skilling permanent comparable to Codex/helmet; skip bulk catalog. Spectral lens covers the region-important Necromancy helm component instead."
+    },
+    {
+      "name": "forinthry:bonecrusher / charming-imp / herbicide / gem-bag* / scrolls",
+      "reason": "Already present in progression-enrichment-regional-skilling-forinthry-2026-07-26.json and regional-skilling-unlocks.json. This file only adds toolbelt-attach permanents and gold accumulators."
+    }
+  ]
+}

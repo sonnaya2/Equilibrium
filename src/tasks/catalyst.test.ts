@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { catalystRecordsPassIntegrity, parseCatalystTasksHtml } from "./catalyst";
+import {
+  catalystRecordsPassIntegrity,
+  loadCatalystSnapshot,
+  parseCatalystTasksHtml,
+} from "./catalyst";
 
 const HTML = `
 <table><tbody><tr><th>Tier</th><th>Total tasks</th></tr><tr><td>Easy</td><td>229</td></tr></tbody></table>
@@ -37,7 +41,6 @@ describe("parseCatalystTasksHtml", () => {
       region: "Anachronia",
       catalystCompletionRate: 61.5,
       sourceLeague: "catalyst",
-      testingOnly: true,
     });
     expect(records[1]).toMatchObject({
       tier: "master",
@@ -58,5 +61,15 @@ describe("catalystRecordsPassIntegrity", () => {
   it("rejects truncated scrapes", () => {
     expect(catalystRecordsPassIntegrity(1005, 1117)).toBe(false);
     expect(catalystRecordsPassIntegrity(2, 1117)).toBe(false);
+  });
+});
+
+describe("loadCatalystSnapshot", () => {
+  it("loads the static snapshot with integrity", () => {
+    const result = loadCatalystSnapshot();
+    expect(result.error).toBeUndefined();
+    expect(result.fromSnapshot).toBe(true);
+    expect(result.records.length).toBeGreaterThanOrEqual(1006);
+    expect(result.records.every((r) => r.sourceLeague === "catalyst")).toBe(true);
   });
 });

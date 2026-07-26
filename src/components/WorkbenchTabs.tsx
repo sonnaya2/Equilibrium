@@ -33,7 +33,7 @@ export function WorkbenchTabs<T extends string>({
             className={`border-b-2 px-3 py-2 text-sm transition-colors duration-150 ${
               selected
                 ? "border-gem-400 font-medium text-gem-300"
-                : "border-transparent text-parch-300 hover:text-parch-50"
+                : "border-transparent text-parch-100 hover:text-parch-50"
             }`}
           >
             {tab.label}

@@ -43,7 +43,7 @@ export function Nav() {
                   className={`transition-colors duration-150 ${
                     active
                       ? "font-medium text-gem-400"
-                      : "text-parch-300 hover:text-parch-50"
+                      : "text-parch-100 hover:text-parch-50"
                   }`}
                 >
                   {label}

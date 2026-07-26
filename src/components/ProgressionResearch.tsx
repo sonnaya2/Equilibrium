@@ -1,8 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import plannerData from "../../data/research/planner-expansions.json";
-import supportItems from "../../data/research/planner-support-items-2026-07-25.json";
+import {
+  getAllRegionalUniqueDrops,
+  getArchaeologyCombatRelics,
+  getArchaeologyProgression,
+  getCombatTrainingSpots,
+  getInventionComponentSources,
+  getInventionProgression,
+  getRunecraftingAltars,
+  getSupportUniqueDropOverlay,
+} from "@/research/plannerExpansions";
 
 type Row = Record<string, unknown>;
 type SectionKey =
@@ -24,6 +32,18 @@ const SECTIONS: Array<{ key: SectionKey; label: string; description: string }> =
   { key: "regional_unique_drops", label: "Unique drops", description: "Notable reward and support-item chains that can change the value of a region pick." },
 ];
 
+/** Section loaders via plannerExpansions typed getters (not raw JSON). */
+const BASE: Record<SectionKey, () => Row[]> = {
+  combat_training_spots: () => getCombatTrainingSpots() as unknown as Row[],
+  runecrafting_altars: () => getRunecraftingAltars() as unknown as Row[],
+  invention_progression: () => getInventionProgression() as unknown as Row[],
+  invention_component_sources: () => getInventionComponentSources() as unknown as Row[],
+  archaeology_progression: () => getArchaeologyProgression() as unknown as Row[],
+  archaeology_combat_relics: () => getArchaeologyCombatRelics() as unknown as Row[],
+  regional_unique_drops: () => getAllRegionalUniqueDrops() as unknown as Row[],
+};
+
+// Overlay only — base unique drops come from getAllRegionalUniqueDrops.
 const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   combat_training_spots: [],
   runecrafting_altars: [],
@@ -31,7 +51,7 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   invention_component_sources: [],
   archaeology_progression: [],
   archaeology_combat_relics: [],
-  regional_unique_drops: supportItems.regional_unique_drops as unknown as Row[],
+  regional_unique_drops: getSupportUniqueDropOverlay() as unknown as Row[],
 };
 
 const REGION_LABELS: Record<string, string> = {
@@ -148,7 +168,7 @@ function rowDetails(row: Row): string[] {
 }
 
 function rowsFor(section: SectionKey): Row[] {
-  const base = plannerData[section] as unknown as Row[];
+  const base = BASE[section]();
   const rows = new Map<string, Row>();
   // Base first, then supplements — on id collision the newer supplement wins.
   for (const row of base) rows.set(String(row.id || rowTitle(row)), row);
@@ -172,8 +192,8 @@ export function ProgressionResearch() {
     <section className="border-t border-stone-750 pt-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-parch-50">Progression research</h2>
-          <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
+          <h2 className="text-lg font-semibold text-parch-50">Progression research</h2>
+          <p className="mt-1 max-w-3xl text-[15px] leading-6 text-parch-100">
             Region-sensitive methods and unlock chains that do not fit cleanly in the skill catalog. Base-game access and League exceptions stay separate.
           </p>
         </div>
@@ -182,7 +202,7 @@ export function ProgressionResearch() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search progression"
           aria-label="Search progression research"
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-sm text-parch-50 placeholder:text-parch-300/70 focus:border-gem-400 sm:w-64"
+          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-[15px] text-parch-50 placeholder:text-parch-100/70 focus:border-gem-400 sm:w-64"
         />
       </div>
 
@@ -196,10 +216,10 @@ export function ProgressionResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`whitespace-nowrap border-b-2 px-3 py-2 text-xs transition-colors duration-150 ${
+              className={`whitespace-nowrap border-b-2 px-3 py-2 text-[12px] transition-colors duration-150 ${
                 active
                   ? "border-gem-400 text-gem-300"
-                  : "border-transparent text-parch-300 hover:text-parch-50"
+                  : "border-transparent text-parch-100 hover:text-parch-50"
               }`}
             >
               {item.label}
@@ -210,8 +230,8 @@ export function ProgressionResearch() {
 
       <div className="py-3">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className="text-sm leading-6 text-parch-300">{selected.description}</p>
-          <span className="text-xs text-parch-300">{rows.length} shown</span>
+          <p className="text-[15px] leading-6 text-parch-100">{selected.description}</p>
+          <span className="text-[12px] text-parch-100">{rows.length} shown</span>
         </div>
 
         <div className="mt-3 border-t border-stone-750">
@@ -219,20 +239,23 @@ export function ProgressionResearch() {
             const rowLinks = sourceLinks(row);
             const details = rowDetails(row);
             return (
-              <article key={String(row.id || `${rowTitle(row)}-${index}`)} className="grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6">
+              <article
+                key={String(row.id || `${rowTitle(row)}-${index}`)}
+                className={`grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)_150px] lg:gap-6 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+              >
                 <div>
-                  <h3 className="text-sm font-medium text-parch-50">{rowTitle(row)}</h3>
-                  {rowSubtitle(row) ? <p className="mt-1 text-xs leading-5 text-parch-300">{rowSubtitle(row)}</p> : null}
-                  <p className="mt-1 text-[11px] text-parch-300/80">{rowRegionLabel(row)}</p>
+                  <h3 className="text-[15px] font-medium text-parch-50">{rowTitle(row)}</h3>
+                  {rowSubtitle(row) ? <p className="mt-1 text-[12px] leading-5 text-parch-100">{rowSubtitle(row)}</p> : null}
+                  <p className="mt-1 text-[12px] text-parch-100">{rowRegionLabel(row)}</p>
                 </div>
-                <div className="space-y-1 text-xs leading-5 text-parch-300">
-                  {details.length ? details.map((detail, detailIndex) => <p key={detailIndex}>{detail}</p>) : <p>No extra detail listed.</p>}
+                <div className="space-y-1 text-[15px] leading-6 text-parch-50">
+                  {details.length ? details.map((detail, detailIndex) => <p key={detailIndex}>{detail}</p>) : <p className="text-parch-100">No extra detail listed.</p>}
                 </div>
-                <div className="text-xs lg:text-right">
-                  <div className="text-parch-300">{statusLabel(row.confidence)}</div>
+                <div className="text-[12px] lg:text-right">
+                  <div className="text-parch-100">{statusLabel(row.confidence)}</div>
                   <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
                     {rowLinks.map((url, linkIndex) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100">
                         {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
                       </a>
                     ))}
@@ -240,7 +263,7 @@ export function ProgressionResearch() {
                 </div>
               </article>
             );
-          }) : <p className="py-5 text-sm text-parch-300">Nothing matches that search.</p>}
+          }) : <p className="py-5 text-[15px] text-parch-100">Nothing matches that search.</p>}
         </div>
       </div>
     </section>

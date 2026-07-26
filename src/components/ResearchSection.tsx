@@ -256,15 +256,15 @@ export function ResearchSection({
     <section className="border-t border-stone-750 pt-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-parch-50">{heading}</h2>
-          <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">{intro}</p>
+          <h2 className="text-lg font-semibold text-parch-50">{heading}</h2>
+          <p className="mt-1 max-w-3xl text-[15px] leading-6 text-parch-100">{intro}</p>
         </div>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={searchPlaceholder}
           aria-label={searchLabel}
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-sm text-parch-50 placeholder:text-parch-300/70 focus:border-gem-400 sm:w-64"
+          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-[15px] text-parch-50 placeholder:text-parch-100/70 focus:border-gem-400 sm:w-64"
         />
       </div>
 
@@ -278,10 +278,10 @@ export function ResearchSection({
               role="tab"
               aria-selected={active}
               onClick={() => setTabKey(tab.key)}
-              className={`whitespace-nowrap border-b-2 px-3 py-2 text-xs transition-colors duration-150 ${
+              className={`whitespace-nowrap border-b-2 px-3 py-2 text-[12px] transition-colors duration-150 ${
                 active
                   ? "border-gem-400 text-gem-300"
-                  : "border-transparent text-parch-300 hover:text-parch-50"
+                  : "border-transparent text-parch-100 hover:text-parch-50"
               }`}
             >
               {tab.label}
@@ -292,8 +292,8 @@ export function ResearchSection({
 
       <div className="py-3">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className="text-sm leading-6 text-parch-300">{selected.description}</p>
-          <span className="text-xs text-parch-300">{rows.length} shown</span>
+          <p className="text-[15px] leading-6 text-parch-100">{selected.description}</p>
+          <span className="text-[12px] text-parch-100">{rows.length} shown</span>
         </div>
 
         <div className="mt-3 border-t border-stone-750">
@@ -301,20 +301,23 @@ export function ResearchSection({
             const sourceLinks = links(row);
             const rowDetails = details(row);
             return (
-              <article key={String(row.id || `${title(row)}-${index}`)} className="grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6">
+              <article
+                key={String(row.id || `${title(row)}-${index}`)}
+                className={`grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+              >
                 <div>
-                  <h3 className="text-sm font-medium text-parch-50">{title(row)}</h3>
-                  {subtitle(row) ? <p className="mt-1 text-xs leading-5 text-parch-300">{subtitle(row)}</p> : null}
-                  <p className="mt-1 text-[11px] text-parch-300/80">{region(row)}</p>
+                  <h3 className="text-[15px] font-medium text-parch-50">{title(row)}</h3>
+                  {subtitle(row) ? <p className="mt-1 text-[12px] leading-5 text-parch-100">{subtitle(row)}</p> : null}
+                  <p className="mt-1 text-[12px] text-parch-100">{region(row)}</p>
                 </div>
-                <div className="space-y-1 text-xs leading-5 text-parch-300">
-                  {rowDetails.length ? rowDetails.map((item, itemIndex) => <p key={itemIndex}>{item}</p>) : <p>No extra detail listed.</p>}
+                <div className="space-y-1 text-[15px] leading-6 text-parch-50">
+                  {rowDetails.length ? rowDetails.map((item, itemIndex) => <p key={itemIndex}>{item}</p>) : <p className="text-parch-100">No extra detail listed.</p>}
                 </div>
-                <div className="text-xs lg:text-right">
-                  <div className="text-parch-300">{status(row.confidence)}</div>
+                <div className="text-[12px] lg:text-right">
+                  <div className="text-parch-100">{status(row.confidence)}</div>
                   <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:justify-end">
                     {sourceLinks.map((url, linkIndex) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-300">
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-parch-50 underline decoration-stone-750 underline-offset-4 hover:decoration-parch-100">
                         {linkIndex === 0 ? sourceName(url) : `Source ${linkIndex + 1}`}
                       </a>
                     ))}
@@ -322,7 +325,7 @@ export function ResearchSection({
                 </div>
               </article>
             );
-          }) : <p className="py-5 text-sm text-parch-300">Nothing matches that search.</p>}
+          }) : <p className="py-5 text-[15px] text-parch-100">Nothing matches that search.</p>}
         </div>
       </div>
     </section>

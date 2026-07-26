@@ -73,17 +73,17 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
           className={`flex w-full items-center gap-2.5 border-b border-stone-800 px-3 py-1.5 text-left transition-colors duration-150 last:border-b-0 ${
             focus.region === id ? "bg-stone-800" : ""
           } ${pickBlocked ? "cursor-not-allowed opacity-40" : ""} ${
-            selected ? "text-gem-300" : unlocked ? "text-parch-50" : "text-parch-300"
+            selected ? "text-gem-300" : unlocked ? "text-parch-50" : "text-parch-100"
           } hover:text-parch-50`}
         >
           <Hex on={unlocked} />
           <span className="text-sm font-medium">{region.name}</span>
           {/* The row's one data value, so it clears the 13px floor the labels
               around it do not have to. */}
-          <span className="num ml-auto text-sm text-parch-300" title="Quests touching this region">
+          <span className="num ml-auto text-sm text-parch-100" title="Quests touching this region">
             {region.quests}
           </span>
-          <span className="w-20 text-right text-xs text-parch-500">
+          <span className="w-20 text-right text-xs text-parch-300">
             {region.availability === "starting"
               ? "start"
               : region.availability === "automatic_early"
@@ -125,7 +125,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
       <ul className={loaded ? undefined : "pointer-events-none opacity-60"}>
         {[...STARTING_REGIONS, MILESTONE_REGION].map(row)}
       </ul>
-      <div className="border-t border-stone-750 px-3 py-1.5 text-xs text-parch-500">
+      <div className="border-t border-stone-750 px-3 py-1.5 text-xs text-parch-300">
         Elective — pick 3 of 8
       </div>
       <ul className={loaded ? undefined : "pointer-events-none opacity-60"}>
@@ -136,7 +136,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
           type="button"
           disabled={!loaded || !hasElectives}
           onClick={clearElectives}
-          className="text-xs text-parch-300 transition-colors duration-150 hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-parch-300"
+          className="text-xs text-parch-100 transition-colors duration-150 hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-parch-100"
         >
           Clear picks
         </button>

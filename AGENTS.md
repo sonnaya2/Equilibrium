@@ -60,13 +60,15 @@ of `app/globals.css`.
 there is no served `public/map/league-map.jpg`. Do not reintroduce a Regions-tab screenshot as the
 board texture (it doubles Jagex markers and fights the slab model).
 
-**`npm run sync:league` is disabled** — it used to write a blessings/relics envelope the app cannot
-read. League planner JSON is produced by `npm run normalize:data`.
+**`npm run sync:league:disabled` (was `sync:league`) exits 1** — it used to write a blessings/relics
+envelope the app cannot read. League planner JSON is produced by `npm run normalize:data`.
 
 **`assets/` is not web-served.** It holds 121 real RS3 PNGs (11 region crests, 29 skill icons, 10
 combat icons) managed by `scripts/sync-assets.mjs`. Art reaches the app through `public/game/`.
 
 ## Boundaries that carry weight
+
+**League planning is ironman / self-sufficient.** No GE dual mode and no trade-path splits — region picks, unlocks, and combos assume you source everything yourself. Blessings stay empty until official reveals.
 
 **One data store.** Root `data/combat/*.json` and `data/league/*.json` are canonical, written by the
 sync scripts. `src/combat/data/` only reads and types them — a parallel copy under `src/` means two
@@ -123,7 +125,7 @@ Top-level IA:
 EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 ```
 
-`Build` holds Regions, Relics and Blessings (no Gear tab). `Combat` holds Quick, Build, Analysis,
+`Build` holds Regions, Relics and Blessings (no Gear tab). `Combat` holds Quick, Setup, Analysis,
 Rotation. Tasks gets a purpose-built interface rather than a generic checklist grid; while
 Equilibrium has no published list it may show Catalyst stand-in data, marked provisional.
 

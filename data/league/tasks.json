@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "verified": false,
   "records": [],
   "tiers": {
@@ -21,17 +21,18 @@
   "testFallback": {
     "enabled": true,
     "league": "Catalyst League",
-    "testingOnly": true,
+    "staticSnapshot": true,
     "url": "https://runescape.wiki/w/Catalyst_League/Tasks",
+    "snapshotPath": "data/league/catalyst-tasks-snapshot.json",
     "completionSource": "https://runescape.wiki/w/Module:Catalyst_League/Tasks/completion.json",
     "expectedRecords": 1117,
-    "note": "Catalyst League tasks are temporarily shown on /tasks only to test the task browser. They are not Equilibrium tasks and must be replaced when the Equilibrium task list is published."
+    "note": "Showing Catalyst League tasks for now (static snapshot, ironman / no-trade). This list will be replaced when the full Equilibrium task list is published."
   },
   "source": {
     "source": "jagex",
     "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
     "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
     "publishedAt": "2026-07-23",
-    "verifiedAt": "2026-07-25"
+    "verifiedAt": "2026-07-26"
   }
 }

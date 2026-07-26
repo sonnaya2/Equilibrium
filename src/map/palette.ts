@@ -3,20 +3,23 @@
  * The CSS custom properties stay canonical; this module exists because TSL
  * uniforms and light colors want numbers, not custom property strings.
  * Inline hex anywhere else in src/map/ is a defect (equilibrium-ui).
+ *
+ * SURFACE/PARCH/EDGE match tournament R4 ship ladder (readable ink + slight stage lift).
  */
 
 export const SURFACE_VOID = 0x0d0a07;
-export const SURFACE_DEEP = 0x14100b;
-export const SURFACE_PANEL = 0x1b1610;
-export const SURFACE_RAISED = 0x231d15;
-export const EDGE_LINE = 0x332a1e;
-export const EDGE_CARVE = 0x463a29;
+export const SURFACE_DEEP = 0x12100c;
+export const SURFACE_PANEL = 0x1c1711;
+export const SURFACE_RAISED = 0x231c14;
+export const SURFACE_ROW = 0x2a2218;
+export const EDGE_LINE = 0x463a29;
+export const EDGE_CARVE = 0x5c4a34;
 
-export const PARCH_50 = 0xefe7d5;
-export const PARCH_100 = 0xd3c8b0;
-export const PARCH_300 = 0xa99f88;
-export const PARCH_400 = 0x948a73;
-export const PARCH_500 = 0x8b7f68;
+export const PARCH_50 = 0xf0e9d7;
+export const PARCH_100 = 0xe0d4ba;
+export const PARCH_300 = 0xc8b89c;
+export const PARCH_400 = 0xb5a68c;
+export const PARCH_500 = 0xa3967e;
 
 export const GEM_200 = 0x8ff0cd;
 export const GEM_300 = 0x57e0ae;
@@ -38,9 +41,8 @@ export const EMBER_400 = 0xe2622a;
  * a reason worth spelling out, because it has already been got wrong once:
  * chrome tokens are the value a flat DOM panel should *end up* being on screen.
  * Feed one to a lit PBR material and the light multiplies it down — SURFACE_RAISED
- * (0x231d15) decodes to ~0.017 linear and renders far darker than the token it
- * names, which is what made the whole board read as near-black. Albedo has to
- * start brighter than the value you want back.
+ * decodes very dark under a key light. Albedo has to start brighter than the
+ * value you want back.
  *
  * Terrain caps sample a texture; these are the fallbacks and the tints under it.
  */

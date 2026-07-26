@@ -1,0 +1,529 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Crawl Ironman_Mode/Guide/* permanent unlocks, tools, and outfits; flag those missing from data/research/regional-skilling-unlocks.json and data/research/catalog.json as first-class permanent-unlock / equipment records (training-method footnotes do not count as ownership).",
+  "scope": {
+    "wiki_guides": [
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Divination",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Farming",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Fishing",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Fletching",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Mining",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Prayer",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Runecrafting",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Slayer",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Summoning",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Thieving",
+      "https://runescape.wiki/w/Ironman_Mode/Guide/Woodcutting"
+    ],
+    "app_sources_checked": [
+      "data/research/regional-skilling-unlocks.json",
+      "data/research/catalog.json",
+      "data/research/regional-combat-unlocks.json (cross-check only)",
+      "scraped-data/progression-enrichment-regional-skilling*.json"
+    ],
+    "in_app_rule": "in_app is true only when a dedicated regional-skilling or catalog permanent-unlock/equipment record exists by name. Mentions inside training-method notes, XP rate footnotes, or planner expansions do not satisfy the permanent-unlock index. Superheat Form, sous chef, first age, botanist/factory, blacksmith, constructor/lumberjack, crystal tools, skillchompas, herb bag, scroll of cleansing, autoheater, ectofuntus outfit, master runecrafter, etc. are already indexed and excluded from this missing list.",
+    "importance_sort": "Ironman planner impact: multi-skill permanent boosts, self-sufficient tool/outfit chains, region-pick pressure, and guide Essential/Equipment-table callouts ranked above niche cosmetics."
+  },
+  "already_present_high_value_examples": [
+    "prifddinas:crystal-tool-workshop / waterfall-fishing / meilyr / crystal-flasks",
+    "asgarnia:artisans-workshop-rewards (blacksmith outfit)",
+    "asgarnia:flash-powder-factory-herblore-outfits",
+    "kandarin:gnome-restaurant-sous-chef",
+    "kandarin:skillchompas / deep-sea-fishing-hub / farmers-market-master-farmer",
+    "morytania:ectofuntus-first-age-outfit / temple-trekking-skilling-outfits / morytania-legs-4",
+    "misthalin:archaeology-guild-shop / runespan-master-runecrafter-robes / memory-dowser / runic-attuner",
+    "forinthry:daemonheim-skilling-rewards / scroll-of-cleansing / smithing-autoheater / scroll-of-efficiency",
+    "tirannwn:superheat-form / crystal-fishing-rod / trahaearn-exoskeleton / crystal-hammer / crystal-tinderbox",
+    "anachronia:bait-and-switch-relic / herb-bag / orthen-furnace-core",
+    "cross-region late tool chains (earth-and-song, ember-and-glade, bloom-and-blight, balarak, skeka, artificers-measure)"
+  ],
+  "missing_count_reported": 40,
+  "missing_unlocks": [
+    {
+      "rank": 1,
+      "importance": "critical",
+      "skill": "Slayer",
+      "unlock_name": "Slayer helmet craft + full upgrade chain",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Slayer_helmet",
+      "in_app": false,
+      "why": "Ironman Slayer guide calls the helmet the most essential gear; craft learn costs 400 points after Smoking Kills; full/reinforced/corrupted upgrades + ring-fuse are permanent combat/skilling multipliers. Helmet part farms (black mask, focus sight, hexcrest, spectral lens) are multi-region. No dedicated permanent-unlock record in regional-skilling-unlocks or catalog equipment index."
+    },
+    {
+      "rank": 2,
+      "importance": "critical",
+      "skill": "Slayer",
+      "unlock_name": "Toolbelt attach unlocks (bonecrusher, seedicide, herbicide, charming imp, gold accumulator)",
+      "region": "forinthry",
+      "wiki_url": "https://runescape.wiki/w/Slayer_Rewards",
+      "in_app": false,
+      "why": "Ironman Slayer notable rewards: 500 points each to attach drop-cleaners permanently. Items themselves partly exist (bonecrusher/seedicide/charming imp rows) but the permanent toolbelt-attach unlock is not indexed as a planner permanent."
+    },
+    {
+      "rank": 3,
+      "importance": "critical",
+      "skill": "Prayer",
+      "unlock_name": "Underworld Grimoire 1–4 (bone auto-storage)",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Underworld_Grimoire_1",
+      "in_app": false,
+      "why": "Ironman Prayer Essential items lead with easy/medium/hard/elite Underworld achievements for automatic bone→focus storage and tiered bone quality. City of Um starting-region QoL with no regional-skilling record."
+    },
+    {
+      "rank": 4,
+      "importance": "critical",
+      "skill": "Divination",
+      "unlock_name": "Diviner's outfit (Guthixian Cache)",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Diviner%27s_outfit",
+      "in_app": false,
+      "why": "Ironman Divination Helpful unlocks table + Cache path for permanent XP set and modified headwear. Only mentioned as a Cache method reward note in catalog, not as an outfit unlock row."
+    },
+    {
+      "rank": 5,
+      "importance": "critical",
+      "skill": "Divination",
+      "unlock_name": "Memorial to Guthix boons (permanent energy tier unlocks)",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Divination#Boons",
+      "in_app": false,
+      "why": "Boons are permanent +10% XP/energy unlocks and the ironman 1–99 backbone. Catalog has a training method for engram pipeline but no permanent-unlock records per boon tier for planner checklists."
+    },
+    {
+      "rank": 6,
+      "importance": "critical",
+      "skill": "Fishing",
+      "unlock_name": "Fury shark outfit",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Fury_shark_outfit",
+      "in_app": false,
+      "why": "Ironman Fishing Equipment table: full set inherits fishing outfit bonuses, consume-mode enables full AFK with ghostly sole/porters, and pairs with Bait and Switch. No regional-skilling or catalog equipment unlock."
+    },
+    {
+      "rank": 7,
+      "importance": "high",
+      "skill": "Fishing",
+      "unlock_name": "Fishing outfit (Fish Flingers)",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Fishing_outfit",
+      "in_app": false,
+      "why": "Ironman Fishing Equipment: up to 5% Fishing XP. Gameplay acquisition via Fish Flingers; not indexed beside crystal/Tavia rods."
+    },
+    {
+      "rank": 8,
+      "importance": "high",
+      "skill": "Firemaking",
+      "unlock_name": "Ring of Fire + Flame gloves (All Fired Up)",
+      "region": "asgarnia",
+      "wiki_url": "https://runescape.wiki/w/Ring_of_fire",
+      "in_app": false,
+      "why": "Ironman Firemaking high-end curly-roots stack uses Flame gloves + Ring of Fire with Superheat Form/Always Adze. Only XP-rate footnotes in catalog; no permanent-unlock equipment rows."
+    },
+    {
+      "rank": 9,
+      "importance": "high",
+      "skill": "Woodcutting",
+      "unlock_name": "Nature's Sentinel outfit",
+      "region": "karamja",
+      "wiki_url": "https://runescape.wiki/w/Nature%27s_sentinel_outfit",
+      "in_app": false,
+      "why": "Ironman Firemaking curly-roots rates quote full Nature's Sentinel + Ring of Fire. Jadinko Lair / Karamja outfit chain is not in regional-skilling-unlocks."
+    },
+    {
+      "rank": 10,
+      "importance": "high",
+      "skill": "Multi-skill",
+      "unlock_name": "Always Adze (monolith relic power)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Always_Adze",
+      "in_app": false,
+      "why": "Ironman Woodcutting (acadia) and Firemaking ceiling path. Only mentioned as a method note under Superheat Form / Always Adze curly roots; not a first-class regional-skilling relic record (unlike Bait and Switch)."
+    },
+    {
+      "rank": 11,
+      "importance": "high",
+      "skill": "Prayer",
+      "unlock_name": "Light Form (Seren prayer, skilling)",
+      "region": "tirannwn",
+      "wiki_url": "https://runescape.wiki/w/Light_Form",
+      "in_app": false,
+      "why": "Required with Crystallise for ironman optimal Fishing 70–93, acadia WC, and thieving stacks. Superheat Form is indexed; Light Form is not as a skilling permanent unlock in regional-skilling."
+    },
+    {
+      "rank": 12,
+      "importance": "high",
+      "skill": "Cooking",
+      "unlock_name": "Cooking gauntlets (Family Crest)",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Cooking_gauntlets",
+      "in_app": false,
+      "why": "Ironman Cooking Important equipment: early burn reduction for Menaphos fish and swarm food. Only catalog method notes; no permanent equipment unlock."
+    },
+    {
+      "rank": 13,
+      "importance": "high",
+      "skill": "Smithing",
+      "unlock_name": "Smelting gauntlets (Family Crest)",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Smelting_gauntlets",
+      "in_app": false,
+      "why": "Ironman Crafting necklace/porter loop and Smithing equipment tables auto-bank bars to metal bank. No equipment unlock record."
+    },
+    {
+      "rank": 14,
+      "importance": "high",
+      "skill": "Construction",
+      "unlock_name": "Plank box (and capacity upgrades)",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Plank_box",
+      "in_app": false,
+      "why": "Ironman Construction Contracts setup: obtain and max plank box ASAP. Only mentioned in contract method notes; not a permanent tool unlock."
+    },
+    {
+      "rank": 15,
+      "importance": "high",
+      "skill": "Fletching",
+      "unlock_name": "Ranger's Workroom (Fort Forinthry T1–T3)",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Ranger%27s_Workroom",
+      "in_app": false,
+      "why": "Ironman Fletching has a full section: resource save, extra ammo, 5% XP at T3, Wisdom of Anima. Catalog has training methods but no regional-skilling infrastructure unlock row (unlike Artisans' Workshop rewards)."
+    },
+    {
+      "rank": 16,
+      "importance": "high",
+      "skill": "Divination",
+      "unlock_name": "Elder divination outfit",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Elder_divination_outfit",
+      "in_app": false,
+      "why": "Ironman Divination Helpful unlocks table. Higher-tier Divination XP set; not indexed."
+    },
+    {
+      "rank": 17,
+      "importance": "high",
+      "skill": "Runecrafting",
+      "unlock_name": "Infinity ethereal outfit",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Infinity_ethereal_outfit",
+      "in_app": false,
+      "why": "Ironman RC Helpful unlocks: essence storage + XP set via rune ethereal fragments. Master runecrafter robes are indexed; ethereal chain is not."
+    },
+    {
+      "rank": 18,
+      "importance": "high",
+      "skill": "Thieving",
+      "unlock_name": "Master thief's lockpick + master thief's stethoscope",
+      "region": "asgarnia",
+      "wiki_url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
+      "in_app": false,
+      "why": "Ironman Thieving: required for efficient Keldagrim chests (94+) and safecracking/heists QoL. Thieves' Guild permanent tools not in regional-skilling (Trahaearn exoskeleton is)."
+    },
+    {
+      "rank": 19,
+      "importance": "high",
+      "skill": "Thieving",
+      "unlock_name": "Sticky Fingers (Archaeology relic)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Sticky_Fingers",
+      "in_app": false,
+      "why": "Ironman Thieving helpful unlocks + pickpocket rate multiplier; also Farming guide master-farmer seed rates. No relic permanent-unlock row (Bait and Switch is indexed)."
+    },
+    {
+      "rank": 20,
+      "importance": "high",
+      "skill": "Thieving",
+      "unlock_name": "Master camouflage outfit",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Master_camouflage_outfit",
+      "in_app": false,
+      "why": "Ironman Thieving: +5% pickpocket success and extra loot utility; stacks with exoskeleton discussion. Not indexed as a skilling outfit."
+    },
+    {
+      "rank": 21,
+      "importance": "high",
+      "skill": "Multi-skill",
+      "unlock_name": "Ring of Whispers",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Ring_of_Whispers",
+      "in_app": false,
+      "why": "Ironman Divination and Fishing equipment: invisible +3 to gathering skills. Sliske's Endgame permanent ring; no skilling unlock record."
+    },
+    {
+      "rank": 22,
+      "importance": "high",
+      "skill": "Prayer",
+      "unlock_name": "Death Note (Archaeology relic)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Death_Note",
+      "in_app": false,
+      "why": "Ironman Prayer Obtaining bones: pairs with upgraded bonecrusher / Underworld Grimoire for noted bones. Only listed as a collection relic_power in planner expansions, not regional-skilling permanent unlock."
+    },
+    {
+      "rank": 23,
+      "importance": "high",
+      "skill": "Divination",
+      "unlock_name": "Pontifex shadow ring / Enriched pontifex shadow ring",
+      "region": "desert",
+      "wiki_url": "https://runescape.wiki/w/Pontifex_shadow_ring",
+      "in_app": false,
+      "why": "Ironman Divination Helpful unlocks table. Archaeology ring for Divination AFK/energy; not indexed beside memory dowser."
+    },
+    {
+      "rank": 24,
+      "importance": "high",
+      "skill": "Fishing",
+      "unlock_name": "Aquarium room + Prawn Perks",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Aquarium",
+      "in_app": false,
+      "why": "Ironman Fishing Equipment: golden fish eggs unlock baitless fishing and local XP boosts via Prawnbroker perks. Construction 63 POH permanent; no regional-skilling record (prawnbroker flatpacks exist as Construction XP only)."
+    },
+    {
+      "rank": 25,
+      "importance": "medium-high",
+      "skill": "Smithing",
+      "unlock_name": "Varrock armour 1–4 (smithing progress/bar chance)",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Varrock_armour",
+      "in_app": false,
+      "why": "Ironman Smithing Equipment: bonus bars and double progress by tier; New Varrock can make effects passive. Achievement set not indexed as Smithing permanent unlock."
+    },
+    {
+      "rank": 26,
+      "importance": "medium-high",
+      "skill": "Dungeoneering",
+      "unlock_name": "Scroll of gathering",
+      "region": "forinthry",
+      "wiki_url": "https://runescape.wiki/w/Scroll_of_gathering",
+      "in_app": false,
+      "why": "Ironman Divination Daemonheim path and Crafteneering note: +25% skilling XP in Daemonheim including Divination. Permanent DG token unlock missing beside scroll of cleansing/efficiency."
+    },
+    {
+      "rank": 27,
+      "importance": "medium-high",
+      "skill": "Herblore",
+      "unlock_name": "Deployable herb burner",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Deployable_herb_burner",
+      "in_app": false,
+      "why": "Ironman Herblore Equipment table: burn grimy herbs for XP; ghost drop. Not indexed with factory/botanist outfits."
+    },
+    {
+      "rank": 28,
+      "importance": "medium-high",
+      "skill": "Herblore",
+      "unlock_name": "Botanist's amulet",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Botanist%27s_amulet",
+      "in_app": false,
+      "why": "Ironman Herblore ideal setup: 5% chance 4-dose potions (5 charges). Stacks with factory outfit; no equipment unlock record."
+    },
+    {
+      "rank": 29,
+      "importance": "medium-high",
+      "skill": "Herblore",
+      "unlock_name": "Desert amulet 4 (super antifire 4-dose chance)",
+      "region": "desert",
+      "wiki_url": "https://runescape.wiki/w/Desert_amulet_4",
+      "in_app": false,
+      "why": "Ironman Herblore equipment: 20% 4-dose super antifire while in desert. Achievement passive not in regional-skilling (Morytania legs 4 is)."
+    },
+    {
+      "rank": 30,
+      "importance": "medium-high",
+      "skill": "Magic",
+      "unlock_name": "Crystal Mask (skilling spell)",
+      "region": "tirannwn",
+      "wiki_url": "https://runescape.wiki/w/Crystal_Mask",
+      "in_app": false,
+      "why": "Ironman Thieving/Heists: pairs with Light Form for pickpocket success. Light Within Seren spell; not indexed as skilling permanent unlock."
+    },
+    {
+      "rank": 31,
+      "importance": "medium-high",
+      "skill": "Multi-skill",
+      "unlock_name": "Passing bracelet",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Passing_bracelet",
+      "in_app": false,
+      "why": "Ironman Fishing ghostly sole AFK bank loop and RC helpful unlocks. Underworld/City of Um teleport jewelry; no permanent unlock record."
+    },
+    {
+      "rank": 32,
+      "importance": "medium",
+      "skill": "Runecrafting",
+      "unlock_name": "Ring of imbuing",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Ring_of_imbuing",
+      "in_app": false,
+      "why": "Ironman RC Helpful unlocks table. Permanent RC efficiency ring; not indexed."
+    },
+    {
+      "rank": 33,
+      "importance": "medium",
+      "skill": "Mining",
+      "unlock_name": "Ore box tier upgrades",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Ore_box",
+      "in_app": false,
+      "why": "Ironman Mining guide: upgrade pickaxe and ore box every 10 levels. Tool progression not indexed (unlike pickaxe of earth and song)."
+    },
+    {
+      "rank": 34,
+      "importance": "medium",
+      "skill": "Woodcutting",
+      "unlock_name": "Wood box tier upgrades",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Wood_box",
+      "in_app": false,
+      "why": "Ironman Woodcutting Tips: wood box stores hundreds of logs. No permanent tool-chain record."
+    },
+    {
+      "rank": 35,
+      "importance": "medium",
+      "skill": "Slayer",
+      "unlock_name": "Necklace of Salamancy",
+      "region": "anachronia",
+      "wiki_url": "https://runescape.wiki/w/Necklace_of_Salamancy",
+      "in_app": false,
+      "why": "Ironman Slayer situational equipment: +15% accuracy/damage vs dinosaurs and Rex Matriarchs. Anachronia permanent; not in regional-skilling or combat unlocks as necklace."
+    },
+    {
+      "rank": 36,
+      "importance": "medium",
+      "skill": "Slayer",
+      "unlock_name": "Ferocious ring fuse to full slayer helmet (500 points)",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Ferocious_ring",
+      "in_app": false,
+      "why": "Ironman Slayer notable rewards + Kuradal dungeon 4% damage while wearing any ring. Permanent helmet fuse unlock missing."
+    },
+    {
+      "rank": 37,
+      "importance": "medium",
+      "skill": "Divination",
+      "unlock_name": "Divine-o-matic vacuum",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Divine-o-matic_vacuum",
+      "in_app": false,
+      "why": "Ironman Divination Helpful unlocks table. Invention tool for memory conversion AFK; not indexed with memory dowser."
+    },
+    {
+      "rank": 38,
+      "importance": "medium",
+      "skill": "Prayer",
+      "unlock_name": "Cremation ability unlock",
+      "region": "multi-region",
+      "wiki_url": "https://runescape.wiki/w/Cremation",
+      "in_app": false,
+      "why": "Ironman Prayer alternate offering path (250% Prayer + Firemaking). Rare ghost drop permanent ability; not an unlock record (vyre Sunspear cremation methods exist separately)."
+    },
+    {
+      "rank": 39,
+      "importance": "medium",
+      "skill": "Archaeology",
+      "unlock_name": "Lorehound (May's Quest Caravan)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Lorehound",
+      "in_app": false,
+      "why": "Ironman Archaeology Mysteries section: speeds page finds for mysteries. Permanent pet utility; not in regional-skilling."
+    },
+    {
+      "rank": 40,
+      "importance": "medium",
+      "skill": "Summoning",
+      "unlock_name": "Shaman's outfit + modified shaman's headdress",
+      "region": "havenhythe",
+      "wiki_url": "https://runescape.wiki/w/Shaman%27s_outfit",
+      "in_app": false,
+      "why": "Ironman Summoning Equipment lead: up to 6% Summoning XP; modified headdress saves charms. Catalog training-method id summoning:shaman-outfit-havenhythe exists as a gap fill note but regional-skilling-unlocks has no Havenhythe Summoning outfit record (unlike ritualist's outfit)."
+    }
+  ],
+  "honorable_mentions_beyond_top_40": [
+    {
+      "skill": "Slayer",
+      "unlock_name": "Ring of slaying craft unlock (300 points)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Ring_of_slaying",
+      "note": "Invention component farm + teleports; catalog lacks dedicated unlock row"
+    },
+    {
+      "skill": "Slayer",
+      "unlock_name": "Quicker killing blows (400 points)",
+      "region": "global",
+      "wiki_url": "https://runescape.wiki/w/Slayer_Rewards",
+      "note": "Gargoyle/finisher permanent"
+    },
+    {
+      "skill": "Fletching",
+      "unlock_name": "Broad fletching learn (300 Slayer points)",
+      "region": "desert",
+      "wiki_url": "https://runescape.wiki/w/Broad_arrow",
+      "note": "Catalog has broad-arrow training methods / smoking-kills rows; still weak as a named permanent-unlock checklist item"
+    },
+    {
+      "skill": "Woodcutting",
+      "unlock_name": "Seers' headband 1+ (double logs on regular trees)",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Seers%27_headband_1",
+      "note": "Ironman Woodcutting early tip"
+    },
+    {
+      "skill": "Multi-skill",
+      "unlock_name": "Dwarven army axe",
+      "region": "asgarnia",
+      "wiki_url": "https://runescape.wiki/w/Dwarven_army_axe",
+      "note": "Cooking + Woodcutting early flat XP; low rank"
+    },
+    {
+      "skill": "Summoning",
+      "unlock_name": "Spirit Weaver relic",
+      "region": "forinthry",
+      "wiki_url": "https://runescape.wiki/w/Spirit_Weaver",
+      "note": "Ironman Summoning equipment; Dragonkin VI collection"
+    },
+    {
+      "skill": "Farming",
+      "unlock_name": "Adam Antite farmhand",
+      "region": "kandarin",
+      "wiki_url": "https://runescape.wiki/w/Adam_Antite",
+      "note": "Ironman PoF first major beans unlock"
+    },
+    {
+      "skill": "Firemaking",
+      "unlock_name": "Yeti Town permanent bonfire (Violet is Blue)",
+      "region": "asgarnia",
+      "wiki_url": "https://runescape.wiki/w/Bonfire_(Yeti_Town)",
+      "note": "Catalog has bonfire location training methods; not a regional-skilling unlock row"
+    },
+    {
+      "skill": "Prayer",
+      "unlock_name": "Fort Forinthry chapel offering tiers",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
+      "note": "Catalog has prayer training method; missing as Fort infrastructure unlock bundle with kitchen/workroom"
+    },
+    {
+      "skill": "Cooking",
+      "unlock_name": "Fort Forinthry tier-3 kitchen",
+      "region": "misthalin",
+      "wiki_url": "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
+      "note": "Catalog cooking methods exist; not regional-skilling infrastructure"
+    }
+  ],
+  "recommended_ingest_targets": [
+    "data/research/regional-skilling-unlocks.json — add permanent outfit/tool/relic rows for ranks 1–40 with regionHints and source URLs",
+    "Prefer dedicated equipment/unlock records over burying effects only in training-method notes",
+    "Slayer helmet + toolbelt attaches may also belong in regional-combat-unlocks with skilling cross-links",
+    "Pair Light Form with existing tirannwn:superheat-form as Seren skilling prayer bundle",
+    "Pair Always Adze as anachronia/global monolith relic sibling to anachronia:bait-and-switch-relic"
+  ]
+}

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import tasksData from "#data/league/tasks.json";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
 import { Pips } from "@/components/Pips";
+
+const TASK_POINT_TIERS = ["easy", "medium", "hard", "elite", "master"] as const;
 
 export const metadata: Metadata = {
   title: { absolute: "RS3 Equilibrium" },
@@ -43,8 +46,8 @@ export default function OverviewPage() {
           <dl className="panel-body space-y-3">
             {STATUS.map(([label, text]) => (
               <div key={label}>
-                <dt className="text-xs uppercase tracking-[0.08em] text-parch-300">{label}</dt>
-                <dd className="mt-0.5 text-sm text-parch-100">{text}</dd>
+                <dt className="text-xs uppercase tracking-[0.08em] text-parch-100">{label}</dt>
+                <dd className="mt-0.5 text-sm text-parch-50">{text}</dd>
               </div>
             ))}
           </dl>
@@ -64,7 +67,7 @@ export default function OverviewPage() {
                 >
                   {name}
                 </Link>
-                <span className="text-sm text-parch-300">{purpose}</span>
+                <span className="text-sm text-parch-100">{purpose}</span>
               </li>
             ))}
           </ul>
@@ -114,7 +117,30 @@ export default function OverviewPage() {
             <tr>
               <td className="font-medium text-parch-50">Tasks</td>
               <td>Easy to Master</td>
-              <td>10 / 30 / 80 / 200 / 400 League Points by tier.</td>
+              <td>
+                {TASK_POINT_TIERS.map((tier, i) => {
+                  const pts = tasksData.tiers[tier];
+                  const provisional = tasksData.tierConfidence[tier]?.startsWith("provisional");
+                  return (
+                    <span key={tier}>
+                      {i > 0 ? " / " : null}
+                      <span
+                        className={provisional ? "text-parch-100" : undefined}
+                        title={provisional ? tasksData.tierConfidence[tier] : undefined}
+                      >
+                        {pts}
+                        {provisional ? "*" : null}
+                      </span>
+                    </span>
+                  );
+                })}{" "}
+                League Points by tier
+                {TASK_POINT_TIERS.some((t) =>
+                  tasksData.tierConfidence[t]?.startsWith("provisional"),
+                )
+                  ? " (* provisional)."
+                  : "."}
+              </td>
             </tr>
             <tr>
               <td className="font-medium text-parch-50">League Points</td>

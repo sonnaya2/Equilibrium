@@ -1,14 +1,12 @@
 {
   "snapshot_date": "2026-07-26",
-  "purpose": "Fill Divination planner gaps for Equilibrium: multi-region wisp colony progression with boons/chronicles, Daemonheim (Forinthry) Time-Worn Memories route, Hall of Memories (Kandarin) refresh, Incandescent 95+, Skillchompas, and Tirannwn Amlodd energy pickpocket for Memorial prestige. Mid-Game Rebalance (2026-07-20) raised mid/high energy success rates but did not publish a new XP/h table — do not invent wisp rates. Divination_training wiki page is still bannered incomplete post-Div Improvements.",
+  "purpose": "Non-wisp Divination support routes (Daemonheim, Memorial, Cache, Skillchompas, Amlodd). Per-tier wisp XP/h lives in training-gap-divination-wisp-rates-2026-07-26.json.",
   "wiki_incompleteness_flags": [
-    "https://runescape.wiki/w/Divination_training is bannered incomplete: needs more Hall of Memories XP rates on that page, non-enhanced and incandescent wisp rates, and a full update since the Div Improvements update.",
-    "July 2026 Mid-Game Rebalance only published average energy success rate increases for gleaming–incandescent (see midgame-rebalance-2026-07-20.json); no official post-rework wisp XP/h rebenchmark exists.",
-    "Hall of Memories has a dedicated rate table (urns + diviner's outfit assumptions) on https://runescape.wiki/w/Hall_of_Memories — more complete than the incomplete training-page summary line (110k–225k at 99).",
-    "Wisp colony summary XP/h table on Divination_training (5k–97k by tier) is present on-wiki but treated as stale/incomplete for optimizer ranking; numeric rates omitted from wisp progression methods below.",
-    "Incandescent detailed boosted rates (Divine Conversion / scrimshaw / bought energy) remain on the incomplete training page — included only as wiki-quoted candidates with explicit freshness warning.",
-    "Daemonheim Divination rates (350k–500k solo / 1m+ elite teams) are wiki estimates that vary heavily with floor speed and party; not a fixed post-rework table.",
-    "Amlodd worker pickpocket is an energy/prestige support route, not a primary Divination XP method; no reliable Divination XP/h on wiki for it."
+    "Per-tier wisp XP/h now shipped from wiki summary table in training-gap-divination-wisp-rates-2026-07-26.json with mid-game success-delta provenance (Jagex did not publish a replacement XP/h curve).",
+    "July 2026 Mid-Game Rebalance only published average energy success rate increases for gleaming-incandescent; no official post-rework wisp XP/h rebenchmark exists.",
+    "Hall of Memories rate detail lives in the wisp-rates gap file / Hall of Memories page.",
+    "Daemonheim Divination rates (350k-500k solo / 1m+ elite teams) are wiki estimates that vary with floor speed.",
+    "Amlodd worker pickpocket is energy/prestige support, not primary Divination XP."
   ],
   "midgame_rebalance_energy_success": {
     "source": "scraped-data/midgame-rebalance-2026-07-20.json",
@@ -24,126 +22,6 @@
     }
   },
   "methods": [
-    {
-      "skill": "Divination",
-      "method": "Wisp colony progression (boons + chronicles)",
-      "region": "multi-region",
-      "level_range": "1–99+",
-      "xp_rate": "numeric_wiki_summary_rates_omitted_as_stale_incomplete; see colony table geography and midgame energy success deltas instead of ranking by XP/h",
-      "intensity": "low-to-medium AFK gathering; higher if chasing enriched springs / Memory Overflow on world 79",
-      "freshness": "colony_geography_current_wiki_2026-07-26; xp_table_stale_incomplete_post_div_improvements_and_midgame_rebalance",
-      "confidence": "confirmed_wiki_geography_rates_stale",
-      "location": "Progress through standard wisp colonies; train on community Divination world 79 for enriched/Memory Overflow uptime",
-      "notes": "Core 1–99 path: harvest memories → convert at energy rift; craft each tier's boon ASAP (permanent +10% XP and energy when converting that tier). Empower rifts with chronicle / enhanced chronicle fragments for Memory Overflow and enriched wisp spawns (Abyssal Transit at Memorial doubles chronicle charge from 60 Div). Catch chronicles for Hunter XP (or Guthixian butterflies with Naragi engram). Charge Memorial to Guthix engrams with matching energy while gathering. Midgame rebalance improved energy success from gleaming upward — better energy stock for boons/porters/products, not a verified XP/h table rewrite.",
-      "warning": "Divination_training wiki is incomplete and still needs post-Div Improvements / post-rebalance XP rebenchmarks. Do not invent or promote summary 5k–97k wisp XP/h as post-rework optimizer truth. Enhanced-experience convert burns energy at high GP/XP and is usually avoided for iron/League self-supply.",
-      "source": "https://runescape.wiki/w/Divination_training",
-      "colony_geography": [
-        {
-          "level": 1,
-          "tier": "Pale",
-          "location": "South of Draynor jail / Divination camp",
-          "region": "misthalin"
-        },
-        {
-          "level": 10,
-          "tier": "Flickering",
-          "location": "North of Falador near Guthix memorial / Standing Stones",
-          "region": "asgarnia"
-        },
-        {
-          "level": 20,
-          "tier": "Bright",
-          "location": "Between Varrock and Varrock Dig Site",
-          "region": "misthalin"
-        },
-        {
-          "level": 30,
-          "tier": "Glowing",
-          "location": "South-east of Seers' Village, south of the flax field / near Sorcerer's Tower",
-          "region": "kandarin"
-        },
-        {
-          "level": 40,
-          "tier": "Sparkling",
-          "location": "South-east of Rellekka near Golden Apple Tree / Fremennik Slayer Dungeon (fairy AJR)",
-          "region": "fremennik"
-        },
-        {
-          "level": 50,
-          "tier": "Gleaming",
-          "location": "Central Karamja jungle, north-east of Shilo Village / nature altar",
-          "region": "karamja",
-          "midgame_energy_success": "+4.0% average (2026-07-20 rebalance)"
-        },
-        {
-          "level": 60,
-          "tier": "Vibrant",
-          "location": "West of Oo'glog (Feldip Hills)",
-          "region": "multi-region",
-          "region_note": "Feldip/Oo'glog is not an official Equilibrium elective id; locality sits outside the hard-listed electives. Ironman guide values vibrant for Sign of the Porter IV (emerald necklace transmute). Planner should treat geography as Feldip/Oo'glog until Equilibrium publishes a boundary.",
-          "midgame_energy_success": "+3.0% average"
-        },
-        {
-          "level": 70,
-          "tier": "Lustrous",
-          "location": "North of Canifis, east of Slayer Tower",
-          "region": "morytania",
-          "midgame_energy_success": "+2.0% average"
-        },
-        {
-          "level": 75,
-          "tier": "Elder",
-          "location": "Elder Halls on Freneskae (Fate of the Gods); access via World Gate",
-          "region": "multi-region",
-          "region_note": "Freneskae/World Gate is quest-gated content, not a single Equilibrium elective. Wiki lists ~66k XP/h candidate on the incomplete training page — omitted from xp_rate."
-        },
-        {
-          "level": 80,
-          "tier": "Brilliant",
-          "location": "East of the Mage Training Arena",
-          "region": "desert",
-          "region_note": "MTA corridor north of Al Kharid; planner maps to desert. Max Guild portals (Prifddinas/Tirannwn) can teleport here later.",
-          "midgame_energy_success": "+1.0% average"
-        },
-        {
-          "level": 85,
-          "tier": "Radiant",
-          "location": "Dragontooth Island",
-          "region": "morytania",
-          "midgame_energy_success": "+1.0% average"
-        },
-        {
-          "level": 90,
-          "tier": "Luminous",
-          "location": "Southern Sophanem",
-          "region": "desert",
-          "midgame_energy_success": "+0.6% average"
-        },
-        {
-          "level": 95,
-          "tier": "Incandescent",
-          "location": "South of the Poison Waste (west of Castle Wars / Yanille approach)",
-          "region": "tirannwn",
-          "midgame_energy_success": "+0.5% average"
-        }
-      ],
-      "boons": {
-        "effect": "Permanent +10% experience and energy when converting memories of that tier",
-        "craft_from": "Same-tier or previous-tier energy; unlock ASAP at each colony",
-        "daemonheim_note": "Boons do not affect Divination XP while Dungeoneering in Daemonheim"
-      },
-      "chronicles": {
-        "spawn_chance": "1/25 while harvesting; catch within 6s for enhanced chronicle (double empower XP/charge)",
-        "uses": "Empower energy rifts (base ~3.33% regular / ~6.66% enhanced per fragment) or deposit at Guthix's Cave altar after The World Wakes for equal Divination XP",
-        "hunter_side": "Catching chronicles grants Hunter XP; Naragi engram swaps spawns to Guthixian butterflies (lowest-total skill XP, cannot empower rifts)"
-      },
-      "sources": [
-        "https://runescape.wiki/w/Divination_training",
-        "https://runescape.wiki/w/Energy_rift",
-        "https://runescape.wiki/w/Ironman_Mode/Guide/Divination",
-        "scraped-data/midgame-rebalance-2026-07-20.json"
-      ]
-    },
     {
       "skill": "Divination",
       "method": "Memorial to Guthix engrams + boon pipeline",
@@ -179,63 +57,6 @@
         "https://runescape.wiki/w/Ironman_Mode/Guide/Divination",
         "https://runescape.wiki/w/Scroll_of_gathering"
       ]
-    },
-    {
-      "skill": "Divination",
-      "method": "Hall of Memories",
-      "region": "kandarin",
-      "level_range": "70+",
-      "xp_rate": {
-        "level_70_afk_faded": 45000,
-        "level_70_afk_level_appropriate": 93000,
-        "level_70_2tick_level_appropriate": 140000,
-        "level_80_afk_faded": 47000,
-        "level_80_afk_level_appropriate": 110000,
-        "level_80_2tick_level_appropriate": 170000,
-        "level_85_afk_faded": 50000,
-        "level_85_afk_level_appropriate": 135000,
-        "level_85_2tick_level_appropriate": 205000,
-        "level_90_afk_faded": 85000,
-        "level_90_afk_level_appropriate": 165000,
-        "level_90_2tick_level_appropriate": 245000,
-        "level_95_afk_faded": 90000,
-        "level_95_afk_level_appropriate": 205000,
-        "level_95_2tick_level_appropriate": 310000,
-        "level_99_outfit_scrimshaw_corehunting": "400000+ on training-page high-end claim with 2-tick + elite outfit + energy-gathering scrimshaw; Hall page notes 300k+ at 99 with urns + elder outfit + clan avatar on 2-tick"
-      },
-      "intensity": "AFK faded/level-appropriate to very active 2-tick + corehunting",
-      "freshness": "hall_of_memories_page_table_current_wiki_2026-07-26; training_page_still_banners_incomplete_for_hom_coverage",
-      "confidence": "confirmed_wiki",
-      "location": "Hall of Memories, beneath the Memorial to Guthix in the Piscatoris Hunter area",
-      "notes": "Equilibrium official Kandarin example. Rate table assumes decorated divination urns + full diviner's outfit. Fill memory jars from faded / level-appropriate / core memories and deposit at unstable rift (3,400 XP per jar). 2-tick = re-click after each XP drop (1.2s vs 1.8s). Core memory fragments + knowledge overflow (~hourly) add burst XP; community world 79 / Corehunting FC for shared cores. Memory-storage bots: Aagi 70 (second Memorial buff), Seren 80 (strand gain), Juna 85 (chronicle spawn chance — March 2026 effect rewrite), Edicts 90 (double faded jar fill), Cres 95 (+1 energy on convert). Backup bots after the five named ones give 10k Div XP each. Preferred surface alternative from 70+ when Forinthry Daemonheim is unavailable.",
-      "warning": "Divination_training still claims the page needs more Hall rates; prefer the dedicated Hall of Memories table above. Rates exclude corehunt/knowledge burst variance.",
-      "source": "https://runescape.wiki/w/Hall_of_Memories",
-      "sources": [
-        "https://runescape.wiki/w/Hall_of_Memories",
-        "https://runescape.wiki/w/Divination_training",
-        "https://runescape.wiki/w/Ironman_Mode/Guide/Divination"
-      ]
-    },
-    {
-      "skill": "Divination",
-      "method": "Incandescent wisps (95+ route)",
-      "region": "tirannwn",
-      "level_range": "95–99+ (81+ with extreme divination + 89 Herblore boost path noted on wiki)",
-      "xp_rate": {
-        "base_summary_table": "omitted_as_stale_incomplete_summary_line",
-        "wiki_detail_unenhanced_divine_conversion": "around 290,000 XP/h converting memories without enhanced energy spend (Divine Conversion relic)",
-        "wiki_detail_enhanced_with_energy_gathering_scrimshaw": "around 398,000 XP/h enhanced convert + energy-gathering scrimshaw",
-        "wiki_detail_enhanced_bought_energy": "around 500,000 XP/h enhanced convert buying ~9,000–10,000 extra incandescent energy/h",
-        "wiki_boosted_ceiling_claim": "upwards of 420,000 XP/h at 99 with full useful-equipment list (training-page claim; not a clean post-rebalance rebench)",
-        "ironman_energy_yield": "over 30,000 incandescent energy/h with most boosts (money-making / iron gather note; not XP)"
-      },
-      "intensity": "low-medium AFK on world 79 with Memory Overflow; higher if tracking enriched spawns and chronicle empower",
-      "freshness": "wiki_detail_section_on_incomplete_training_page_plus_midgame_energy_success_+0.5%_not_rebenchmarked",
-      "confidence": "wiki_candidate_rates_need_post_rebalance_live_benchmark",
-      "location": "Incandescent colony south of the Poison Waste (spirit tree Poison Waste / fairy BKP approaches); Max Guild portal optional",
-      "notes": "End-game surface colony. World 79 commonly keeps near-constant enriched spawns. Stack elder/diviner outfits, skillchompas, nightmare muspah / light creature, memory dowser, Chronicle Attraction, energy- or memory-crushing scrimshaw depending on energy vs XP goal, Prism of Dowsing, Divine Conversion relic. Cres Hall bot permanently improves energy on convert. Extreme divination boost path from 81 is a wiki-noted shortcut when potions are available. Midgame rebalance: +0.5% average energy success — small consistency buff only.",
-      "warning": "Quoted XP/h come from the incomplete Divination_training page and predate a clean post-midgame rebench. Prefer live measurement before optimizer ranking. Enhanced+bought-energy path is a cash sink, not League-default.",
-      "source": "https://runescape.wiki/w/Divination_training"
     },
     {
       "skill": "Divination",
@@ -278,20 +99,6 @@
       "notes": "Consistent burst XP and chance at Diviner's outfit pieces (including ironmen). Max 100 points per entry. Complements colony/HoM/Daemonheim ladders rather than replacing them.",
       "warning": "Outfit RNG and short session length; not a continuous training method.",
       "source": "https://runescape.wiki/w/Guthixian_Cache"
-    },
-    {
-      "skill": "Divination",
-      "method": "Vibrant colony porter energy (Sign of the Porter IV)",
-      "region": "multi-region",
-      "level_range": "60–70+ (stay past 70 if farming porter energy)",
-      "xp_rate": "numeric_colony_rate_omitted_stale; secondary goal is vibrant energy stock",
-      "intensity": "standard wisp AFK",
-      "freshness": "method_current_ironman_guide; xp_stale_with_other_wisp_rates",
-      "confidence": "confirmed_wiki_ironman_guide",
-      "location": "Vibrant wisps west of Oo'glog",
-      "notes": "Ironman guide: vibrant energy + emerald necklace → Sign of the Porter IV (20 charges). Midgame rebalance +3.0% average energy success on vibrant improves self-supply consistency. Keep this colony visible in League planners for archaeology/mining porter loops even when HoM/Daemonheim outpace pure XP.",
-      "warning": "Feldip/Oo'glog region elective mapping is unresolved in Equilibrium data — geography only.",
-      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Divination"
     }
   ]
 }

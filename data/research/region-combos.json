@@ -1,0 +1,1566 @@
+{
+  "snapshotDate": "2026-07-26",
+  "purpose": "Multi-region skilling dependency combos and global region-combo issues for ironman / no-trade League planning.",
+  "policy": {
+    "required_regions": "Regions needed on the normal self-sufficient unlock path.",
+    "optional_regions": "Regions that improve the chain but are not hard locks.",
+    "ironman": "Leagues = ironman / no trade. Prefer self-sufficient unlocks and region combos. No GE dual mode."
+  },
+  "sourceFiles": [
+    "audit-region-combos-skilling-2026-07-26.json",
+    "audit-ironman-gaps-crosscheck-2026-07-26.json"
+  ],
+  "combos": [
+    {
+      "id": "combo:crystal-tools-dragon-base-prif",
+      "name": "Crystal tools (dragon base + Prifddinas)",
+      "regions": [
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "fremennik",
+        "anachronia",
+        "forinthry"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "fremennik",
+        "anachronia",
+        "forinthry"
+      ],
+      "skills": [
+        "Woodcutting",
+        "Mining",
+        "Smithing",
+        "Archaeology",
+        "Fishing",
+        "Firemaking",
+        "Crafting"
+      ],
+      "detail": "Lady Ithell upgrades dragon-tier tools with harmonic dust in Prifddinas: hatchet/pickaxe need dragon hatchet/pickaxe, hammer needs a dragon hammer, mattock needs a dragon mattock (Anachronia Big Game Hunter), and the crystal fishing rod is a separate urchin-point unlock. Planners that treat 'crystal tools' as Tirannwn-only miss the dragon-base sourcing pressure.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — promote prifddinas:crystal-tool-workshop into per-tool cross-region records with dragon-base region pressure (hatchet/pick → Fremennik DK path; mattock → Anachronia; hammer → Forinthry/wildy sources).",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_hatchet",
+        "title": "Crystal tools (dragon base + Prifddinas)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Crystal_hatchet",
+        "https://runescape.wiki/w/Crystal_pickaxe",
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Crystal_mattock",
+        "https://runescape.wiki/w/Crystal_fishing_rod",
+        "https://runescape.wiki/w/Crystal_tool"
+      ]
+    },
+    {
+      "id": "combo:orthen-furnace-superheat-autoheater",
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "regions": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "optionalRegions": [
+        "asgarnia"
+      ],
+      "allRegions": [
+        "anachronia",
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "skills": [
+        "Smithing",
+        "Firemaking",
+        "Woodcutting",
+        "Prayer"
+      ],
+      "detail": "Orthen furnace core (Anachronia dig-site materials, 99 Smithing / 102 Archaeology) removes Superheat Form prayer drain and stacks with Superheat Form's heat uplift; smithing autoheater (Daemonheim / Forinthry) keeps heat without re-heating. Full AFK smithing and top Firemaking ceilings need all three, and core also consumes curved masterwork plates (Asgarnia Artisans pressure).",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:orthen-superheat-autoheater stack; link anachronia:orthen-furnace-core, Seren Superheat Form (tirannwn Light Within), and forinthry:daemonheim-skilling-rewards autoheater.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Orthen_furnace_core",
+        "title": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/The_Light_Within"
+      ]
+    },
+    {
+      "id": "combo:bait-and-switch",
+      "name": "Bait and Switch (Orthen death mask + 99 Archaeology)",
+      "regions": [
+        "anachronia"
+      ],
+      "optionalRegions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "allRegions": [
+        "anachronia",
+        "kandarin",
+        "misthalin"
+      ],
+      "skills": [
+        "Fishing",
+        "Cooking",
+        "Archaeology"
+      ],
+      "detail": "Bait and Switch is unlocked via Evil Bob's Catspaw from offering an Orthen Dig Site death mask (99 Archaeology self-source) to Bob the cat; once harnessed it auto-cooks fish at 50% Cooking XP while fishing. Planners often treat fishing methods as region-local and miss that the permanent dual-skill relic is hard-gated by Anachronia Archaeology.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add anachronia:bait-and-switch relic unlock with hard Anachronia death-mask dependency and Fishing/Cooking method edges.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Bait_and_Switch",
+        "title": "Bait and Switch (Orthen death mask + 99 Archaeology)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Bait_and_Switch",
+        "https://runescape.wiki/w/Evil_Bob%27s_Catspaw",
+        "https://runescape.wiki/w/Death_mask"
+      ]
+    },
+    {
+      "id": "combo:time-runes-abyss",
+      "name": "Time runes via Abyss (Forinthry entrance + Anachronia altar)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Runecrafting",
+        "Magic"
+      ],
+      "detail": "Time altar sits on Anachronia with no talisman, but the high-throughput Abyss route still uses the Wilderness/Forinthry Mage of Zamorak entrance. Either region alone cannot self-supply efficient Time-rune crafting; Masterwork staff chains also pressure Time runes.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/catalog.json training method runecrafting:time-runes-through-the-abyss already warns both regions — promote hardRegionRequirement true and mirror into data/league/region-dependencies.json as a hard multi-region dependency.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Time_rune",
+        "title": "Time runes via Abyss (Forinthry entrance + Anachronia altar)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Time_rune",
+        "https://runescape.wiki/w/Abyss",
+        "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+        "https://runescape.wiki/w/Masterwork_staff"
+      ]
+    },
+    {
+      "id": "combo:scroll-cleansing-herb-bag-factory",
+      "name": "Scroll of Cleansing / herb bag / botanist-factory Herblore stack",
+      "regions": [
+        "forinthry",
+        "anachronia",
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "tirannwn"
+      ],
+      "allRegions": [
+        "forinthry",
+        "anachronia",
+        "asgarnia",
+        "tirannwn"
+      ],
+      "skills": [
+        "Herblore",
+        "Farming"
+      ],
+      "detail": "Scroll of cleansing (Daemonheim tokens, Forinthry) permanently saves secondaries and speeds mixes; herb bag (Herby Werby spirit points, Anachronia) is the grimy-herb inventory container; botanist + factory outfits (Flash Powder Factory / Taverley, Asgarnia) add XP and 4-dose chance. Optimized no-trade Herblore pulls all three regions, often with Tirannwn crystal flasks for combination potions.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:herblore-efficiency-stack linking forinthry scroll, anachronia herb bag, and asgarnia:flash-powder-factory-herblore-outfits; surface crystal-flask pressure from prifddinas:crystal-flasks.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Scroll_of_cleansing",
+        "title": "Scroll of Cleansing / herb bag / botanist-factory Herblore stack",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Herby_Werby",
+        "https://runescape.wiki/w/Botanist%27s_outfit",
+        "https://runescape.wiki/w/Factory_outfit"
+      ]
+    },
+    {
+      "id": "combo:hatchet-ember-and-glade",
+      "name": "Hatchet of Ember and Glade (and Bloom and Blight follow-on)",
+      "regions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "fremennik"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "skills": [
+        "Woodcutting",
+        "Smithing",
+        "Fletching",
+        "Necromancy"
+      ],
+      "detail": "Finished t90 hatchet needs crystal hatchet (Prif + dragon hatchet), Imcando hatchet (Woodcutter's Grove / Fort → Misthalin working taxonomy), and Shard of the Lumberjack (Wilfred north of Falador, Asgarnia). Dragon hatchet self-source commonly pulls Fremennik Dagannoth Kings. Bloom and Blight inherits the full chain plus tier-100 Ramarno/moonstone progression.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:hatchet-of-ember-and-glade / bloom-and-blight; keep component-level region pressure current when quest overlays change.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+        "title": "Hatchet of Ember and Glade (and Bloom and Blight follow-on)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+        "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+        "https://runescape.wiki/w/Crystal_hatchet",
+        "https://runescape.wiki/w/Imcando_hatchet",
+        "https://runescape.wiki/w/Shard_of_the_Lumberjack"
+      ]
+    },
+    {
+      "id": "combo:pickaxe-earth-and-song",
+      "name": "Pickaxe of Earth and Song",
+      "regions": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "forinthry",
+        "asgarnia"
+      ],
+      "allRegions": [
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "skills": [
+        "Mining",
+        "Smithing"
+      ],
+      "detail": "Normal self-sufficient chain fuses Imcando pickaxe (Keldagrim / Lava Flow Mine, Fremennik) with crystal pickaxe (Prifddinas) plus blast fusion hammer and 90 Smithing. Planners that pick only one of Fremennik or Tirannwn cannot finish the tool without trade or League overrides.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:pickaxe-of-earth-and-song; verify blast-fusion-hammer geography if Artisans/Dragon Forge region rules change.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+        "title": "Pickaxe of Earth and Song",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+        "https://runescape.wiki/w/Imcando_pickaxe",
+        "https://runescape.wiki/w/Crystal_pickaxe"
+      ]
+    },
+    {
+      "id": "combo:masterwork-artisan-skilling-gates",
+      "name": "Masterwork-adjacent artisan gates for skilling",
+      "regions": [
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "anachronia",
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "havenhythe"
+      ],
+      "allRegions": [
+        "asgarnia",
+        "anachronia",
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "havenhythe"
+      ],
+      "skills": [
+        "Smithing",
+        "Firemaking",
+        "Runecrafting",
+        "Crafting",
+        "Ranged"
+      ],
+      "detail": "Artisans Workshop masterwork melee plate / glorious-bar infrastructure (Asgarnia) feeds skilling off-hands like Orthen furnace core and broader masterwork material chains. Masterwork staff already maps multi-region weapon essence pressure; masterwork ranged materials pull Havenhythe Hunter/Crafting. Skilling-relevant masterwork is not a single-region checkbox.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/masterwork-staff-chain.json already maps staff; extend regional-skilling-unlocks.json with asgarnia masterwork-plate gate edges into Orthen furnace core and any other skilling off-hand that consumes masterwork plates.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Orthen_furnace_core",
+        "title": "Masterwork-adjacent artisan gates for skilling",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Masterwork_staff",
+        "https://runescape.wiki/w/Masterwork_ranged_equipment",
+        "https://runescape.wiki/w/Artisans%27_Workshop"
+      ]
+    },
+    {
+      "id": "combo:thieving-light-form-crystal-mask",
+      "name": "Thieving Light Form + Crystal Mask",
+      "regions": [
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "desert",
+        "morytania",
+        "misthalin"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "desert",
+        "morytania",
+        "misthalin"
+      ],
+      "skills": [
+        "Thieving",
+        "Magic",
+        "Prayer"
+      ],
+      "detail": "Crystal Mask (Seren spell, 90 Magic) and Light Form (Seren prayer, 91 Prayer) both unlock from The Light Within and stack for pickpocket success (15% → 30% with Light Form post-2026). Unlock is Tirannwn-gated, but the payoff is often spent in other regions (Pyramid Plunder, masters, heists). Planners that score only Desert/Morytania thieving miss the Tirannwn spell/prayer pair.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:thieving-crystal-mask-light-form; also link scraped-data/prayer-effects-regions.json Light Form to Thieving method edges.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_Mask",
+        "title": "Thieving Light Form + Crystal Mask",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Crystal_Mask",
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Thieving_training"
+      ]
+    },
+    {
+      "id": "combo:prayer-powder-desert-bones",
+      "name": "Prayer powder (Desert whirligigs) + multi-region bone sources",
+      "regions": [
+        "desert"
+      ],
+      "optionalRegions": [
+        "morytania",
+        "forinthry",
+        "misthalin",
+        "anachronia"
+      ],
+      "allRegions": [
+        "desert",
+        "morytania",
+        "forinthry",
+        "misthalin",
+        "anachronia"
+      ],
+      "skills": [
+        "Prayer",
+        "Hunter"
+      ],
+      "detail": "Prayer powders (powder of burials, pulverising, penance, etc.) are ground from Het's Oasis whirligig shells in the Desert. Powder of burials multiplies bone bury XP and powder of pulverising enables inventory bone grinding at Ectofuntus (Morytania), while high-volume bone sources and bonecrusher (Daemonheim / Forinthry) sit in other regions. Desert alone does not complete the Prayer training loop.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add desert:prayer-powder-production and a cross-region Prayer-training stack linking powders, Ectofuntus, and Forinthry bonecrusher.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Prayer_powder",
+        "title": "Prayer powder (Desert whirligigs) + multi-region bone sources",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Prayer_powder",
+        "https://runescape.wiki/w/Powder_of_burials",
+        "https://runescape.wiki/w/Powder_of_pulverising",
+        "https://runescape.wiki/w/Whirligig",
+        "https://runescape.wiki/w/Ectofuntus",
+        "https://runescape.wiki/w/Bonecrusher"
+      ]
+    },
+    {
+      "id": "combo:summoning-charms-multi-region",
+      "name": "Summoning charms multi-region supply",
+      "regions": [],
+      "optionalRegions": [
+        "forinthry",
+        "fremennik",
+        "anachronia",
+        "desert",
+        "morytania",
+        "kandarin"
+      ],
+      "allRegions": [
+        "forinthry",
+        "fremennik",
+        "anachronia",
+        "desert",
+        "morytania",
+        "kandarin"
+      ],
+      "skills": [
+        "Summoning",
+        "Slayer",
+        "Combat"
+      ],
+      "detail": "Charms are combat/Slayer drops distributed across regions; Forinthry supplies Charming imp + charming moths, Fremennik Waterbirth is a high-volume charm farm, and tertiary ingredients for high pouches are region-locked. No single region owns Summoning supply — charm acquisition, imp, and tertiaries must be planned as multi-region pressure.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "scraped-data/progression-enrichment-summoning-supply-2026-07-25.json and planner-enrichment combat-method charm farms exist — fold into regional-skilling-unlocks.json as cross-region:summoning-charm-supply with Forinthry imp hard edge + region-tagged charm sources.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Charming_imp",
+        "title": "Summoning charms multi-region supply",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Charming_imp",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms",
+        "https://runescape.wiki/w/Charming_moth"
+      ]
+    },
+    {
+      "id": "combo:slayer-masters-vs-task-regions",
+      "name": "High Slayer masters vs task monster regions",
+      "regions": [],
+      "optionalRegions": [
+        "tirannwn",
+        "anachronia",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "asgarnia",
+        "morytania",
+        "fremennik"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "anachronia",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "asgarnia",
+        "morytania",
+        "fremennik"
+      ],
+      "skills": [
+        "Slayer",
+        "Combat"
+      ],
+      "detail": "High masters are region-placed (Morvran Prifddinas/Tirannwn, Laniakea Anachronia, Mandrith Forinthry, Sumona Desert, Kuradal Ancient Cavern/Kandarin-adjacent) while assigned tasks often require different regions for the actual monsters. Unlocking a master without its task geography (or vice versa) produces blocked or low-value task lists in a no-trade League.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/planner-expansions-slayer.json — add master→region map and task-monster region edges; surface in region-dependencies or a slayer-routing planner layer.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_Masters",
+        "title": "High Slayer masters vs task monster regions",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Morvran",
+        "https://runescape.wiki/w/Laniakea",
+        "https://runescape.wiki/w/Mandrith",
+        "https://runescape.wiki/w/Sumona",
+        "https://runescape.wiki/w/Kuradal"
+      ]
+    },
+    {
+      "id": "combo:skillchompas-hunter-vs-skills",
+      "name": "Skillchompas hunter regions vs skills used",
+      "regions": [],
+      "optionalRegions": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "kandarin",
+        "asgarnia"
+      ],
+      "allRegions": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "kandarin",
+        "asgarnia"
+      ],
+      "skills": [
+        "Hunter",
+        "Woodcutting",
+        "Mining",
+        "Fishing",
+        "Divination",
+        "Archaeology"
+      ],
+      "detail": "Skillchompas are caught in Hunter-region camps (e.g. crimson at Desert Quarry, crystal in Prifddinas/Tirannwn, azure polar/Fremennik, lower tiers elsewhere) but consumed to boost Woodcutting, Mining, Fishing, Divination, and Archaeology anywhere. League builds often score only the Hunter catch region and ignore the multi-skill throughput they enable (or the need to import them).",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add hunter:skillchompa-tiers with catch-region tags and consumer-skill edges; note POF alternate supply does not remove catch-region pressure for self-sufficiency.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Skillchompa",
+        "title": "Skillchompas hunter regions vs skills used",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Crimson_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Crystal_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Azure_skillchompa_(Hunter)"
+      ]
+    },
+    {
+      "id": "combo:ring-of-kayazu-rituals",
+      "name": "Ring of Kayazu (Havenhythe) + Necromancy rituals",
+      "regions": [
+        "havenhythe"
+      ],
+      "optionalRegions": [
+        "misthalin",
+        "fremennik"
+      ],
+      "allRegions": [
+        "havenhythe",
+        "misthalin",
+        "fremennik"
+      ],
+      "skills": [
+        "Necromancy",
+        "Archaeology",
+        "Crafting"
+      ],
+      "detail": "Ring of Kayazu is crafted at an archaeologist's workbench from a moonstone ring + restored Fang of Kayazu (Moonrise Dig Site / Havenhythe mystery The Final Revolution) and grants +80% soul attraction plus 20% double disturbance loot during rituals. Ritual sites themselves are primarily City of Um (Misthalin working taxonomy) and Ungael (Fremennik), so the best ritual ring is a Havenhythe dig-site unlock used outside Havenhythe.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add havenhythe:ring-of-kayazu with ritual-site optional pressure (misthalin Um, fremennik Ungael); also surface in Necromancy progression enrichment.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ring_of_Kayazu",
+        "title": "Ring of Kayazu (Havenhythe) + Necromancy rituals",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Ring_of_Kayazu",
+        "https://runescape.wiki/w/Fang_of_Kayazu",
+        "https://runescape.wiki/w/Rituals",
+        "https://runescape.wiki/w/The_Final_Revolution"
+      ]
+    },
+    {
+      "id": "combo:balaraks-sash-brush",
+      "name": "Balarak's sash brush (Daemonheim pieces + Anachronia restore)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Archaeology"
+      ],
+      "detail": "Brush pieces drop in the Warped Depths of the Daemonheim Dig Site (Forinthry); restoration is taught by Sharrigan outside Anachronia Base Camp. Already a documented cross-region Archaeology off-hand but easy for single-region Archaeology scoring to miss.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:balaraks-sash-brush; keep both regions hard-required in planner UI.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Balarak%27s_sash_brush",
+        "title": "Balarak's sash brush (Daemonheim pieces + Anachronia restore)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Balarak%27s_sash_brush",
+        "https://runescape.wiki/w/Balarak%27s_sash_brush/Effect"
+      ]
+    },
+    {
+      "id": "combo:skekas-hypnowand",
+      "name": "Skeka's hypnowand (Daemonheim journal + Anachronia pieces)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Hunter",
+        "Archaeology",
+        "Dungeoneering"
+      ],
+      "detail": "Journal gate in Warped Depths (Forinthry/Daemonheim Dig Site) must be read before pieces drop from Anachronia activities (Big Game Hunter, Rex Matriarchs, vile blooms, Agility Course). Not Anachronia-only.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:skekas-hypnowand; keep Forinthry journal gate explicit.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Skeka%27s_hypnowand",
+        "title": "Skeka's hypnowand (Daemonheim journal + Anachronia pieces)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Skeka%27s_hypnowand",
+        "https://runescape.wiki/w/Skeka%27s_hypnowand_base"
+      ]
+    }
+  ],
+  "globalIssues": [
+    {
+      "id": "global-issue:1",
+      "name": "Fort Forinthry dual taxonomy",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Construction/Slayer/Raptor/Chapel content tagged misthalin (Catalyst working) while physical location is south-eastern Wilderness edge. Affects Construction, Prayer chapel, Fletching Ranger's Workroom, Crafting Fort smelt loops.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:2",
+      "name": "City of Um / Underworld as Misthalin working",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Necromancy rituals, Um chests, Necromantic runecrafting, Underworld Grimoire bone storage all assume Misthalin starting bucket. Correct per Catalyst taxonomy but unconfirmed for Equilibrium boundaries.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:3",
+      "name": "The Arc / Uncharted Isles unresolved",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Alaea crablets, golden bamboo, Tavia's fishing rod remain arc_unresolved — consistent with catalog.region_boundaries.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:4",
+      "name": "Time runes dual-region inconsistency",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "training-high-value maps Abyss Time runes as forinthry_plus_anachronia; training-current-audit maps Time runes method_region anachronia only. Abyss path needs Forinthry entrance.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:5",
+      "name": "Eternal magic multi-home",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Woodcutting eternal magic trees kandarin_inferred vs Havenhythe nursery; Construction/FM/RC imbuing all depend on eternal magic supply without unified multi-region resource graph.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:6",
+      "name": "Telekinetic Grind multi-region methods",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Crafting sandstone + Herblore herb tar correctly flag Fremennik Lunar unlock; resource regions partial. Good pattern to extend to Construction Contracts (Lunar NPC Contact).",
+      "confidence": "low",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "low"
+    },
+    {
+      "id": "global-issue:7",
+      "name": "Daemonheim / Forinthry hard rule underused in skill methods",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Primal mining/smithing and Dungeoneering present; Crafteneering, Daemonheim Divination, phasmatite resource dungeon achievement pressure not modelled as Forinthry combos.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:8",
+      "name": "Portables / TH items / DXP",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Ironman guides ban portable workbenches/ranges; app already warns portables for Summoning. Extend explicit no-portable assumptions to Construction, Cooking, Smithing planner text.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:9",
+      "name": "Managing Miscellania (Fremennik) as silent supply backbone",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Construction planks, Firemaking maple/mahogany, Cooking fish, Farming seeds, Summoning dragon food — rarely modelled as Fremennik region combo pressure.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    }
+  ],
+  "records": [
+    {
+      "id": "combo:crystal-tools-dragon-base-prif",
+      "name": "Crystal tools (dragon base + Prifddinas)",
+      "regions": [
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "fremennik",
+        "anachronia",
+        "forinthry"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "fremennik",
+        "anachronia",
+        "forinthry"
+      ],
+      "skills": [
+        "Woodcutting",
+        "Mining",
+        "Smithing",
+        "Archaeology",
+        "Fishing",
+        "Firemaking",
+        "Crafting"
+      ],
+      "detail": "Lady Ithell upgrades dragon-tier tools with harmonic dust in Prifddinas: hatchet/pickaxe need dragon hatchet/pickaxe, hammer needs a dragon hammer, mattock needs a dragon mattock (Anachronia Big Game Hunter), and the crystal fishing rod is a separate urchin-point unlock. Planners that treat 'crystal tools' as Tirannwn-only miss the dragon-base sourcing pressure.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — promote prifddinas:crystal-tool-workshop into per-tool cross-region records with dragon-base region pressure (hatchet/pick → Fremennik DK path; mattock → Anachronia; hammer → Forinthry/wildy sources).",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_hatchet",
+        "title": "Crystal tools (dragon base + Prifddinas)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Crystal_hatchet",
+        "https://runescape.wiki/w/Crystal_pickaxe",
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Crystal_mattock",
+        "https://runescape.wiki/w/Crystal_fishing_rod",
+        "https://runescape.wiki/w/Crystal_tool"
+      ]
+    },
+    {
+      "id": "combo:orthen-furnace-superheat-autoheater",
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "regions": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "optionalRegions": [
+        "asgarnia"
+      ],
+      "allRegions": [
+        "anachronia",
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "skills": [
+        "Smithing",
+        "Firemaking",
+        "Woodcutting",
+        "Prayer"
+      ],
+      "detail": "Orthen furnace core (Anachronia dig-site materials, 99 Smithing / 102 Archaeology) removes Superheat Form prayer drain and stacks with Superheat Form's heat uplift; smithing autoheater (Daemonheim / Forinthry) keeps heat without re-heating. Full AFK smithing and top Firemaking ceilings need all three, and core also consumes curved masterwork plates (Asgarnia Artisans pressure).",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:orthen-superheat-autoheater stack; link anachronia:orthen-furnace-core, Seren Superheat Form (tirannwn Light Within), and forinthry:daemonheim-skilling-rewards autoheater.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Orthen_furnace_core",
+        "title": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/The_Light_Within"
+      ]
+    },
+    {
+      "id": "combo:bait-and-switch",
+      "name": "Bait and Switch (Orthen death mask + 99 Archaeology)",
+      "regions": [
+        "anachronia"
+      ],
+      "optionalRegions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "allRegions": [
+        "anachronia",
+        "kandarin",
+        "misthalin"
+      ],
+      "skills": [
+        "Fishing",
+        "Cooking",
+        "Archaeology"
+      ],
+      "detail": "Bait and Switch is unlocked via Evil Bob's Catspaw from offering an Orthen Dig Site death mask (99 Archaeology self-source) to Bob the cat; once harnessed it auto-cooks fish at 50% Cooking XP while fishing. Planners often treat fishing methods as region-local and miss that the permanent dual-skill relic is hard-gated by Anachronia Archaeology.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add anachronia:bait-and-switch relic unlock with hard Anachronia death-mask dependency and Fishing/Cooking method edges.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Bait_and_Switch",
+        "title": "Bait and Switch (Orthen death mask + 99 Archaeology)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Bait_and_Switch",
+        "https://runescape.wiki/w/Evil_Bob%27s_Catspaw",
+        "https://runescape.wiki/w/Death_mask"
+      ]
+    },
+    {
+      "id": "combo:time-runes-abyss",
+      "name": "Time runes via Abyss (Forinthry entrance + Anachronia altar)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Runecrafting",
+        "Magic"
+      ],
+      "detail": "Time altar sits on Anachronia with no talisman, but the high-throughput Abyss route still uses the Wilderness/Forinthry Mage of Zamorak entrance. Either region alone cannot self-supply efficient Time-rune crafting; Masterwork staff chains also pressure Time runes.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/catalog.json training method runecrafting:time-runes-through-the-abyss already warns both regions — promote hardRegionRequirement true and mirror into data/league/region-dependencies.json as a hard multi-region dependency.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Time_rune",
+        "title": "Time runes via Abyss (Forinthry entrance + Anachronia altar)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Time_rune",
+        "https://runescape.wiki/w/Abyss",
+        "https://runescape.wiki/w/Pay-to-play_Runecrafting_training",
+        "https://runescape.wiki/w/Masterwork_staff"
+      ]
+    },
+    {
+      "id": "combo:scroll-cleansing-herb-bag-factory",
+      "name": "Scroll of Cleansing / herb bag / botanist-factory Herblore stack",
+      "regions": [
+        "forinthry",
+        "anachronia",
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "tirannwn"
+      ],
+      "allRegions": [
+        "forinthry",
+        "anachronia",
+        "asgarnia",
+        "tirannwn"
+      ],
+      "skills": [
+        "Herblore",
+        "Farming"
+      ],
+      "detail": "Scroll of cleansing (Daemonheim tokens, Forinthry) permanently saves secondaries and speeds mixes; herb bag (Herby Werby spirit points, Anachronia) is the grimy-herb inventory container; botanist + factory outfits (Flash Powder Factory / Taverley, Asgarnia) add XP and 4-dose chance. Optimized no-trade Herblore pulls all three regions, often with Tirannwn crystal flasks for combination potions.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:herblore-efficiency-stack linking forinthry scroll, anachronia herb bag, and asgarnia:flash-powder-factory-herblore-outfits; surface crystal-flask pressure from prifddinas:crystal-flasks.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Scroll_of_cleansing",
+        "title": "Scroll of Cleansing / herb bag / botanist-factory Herblore stack",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Herby_Werby",
+        "https://runescape.wiki/w/Botanist%27s_outfit",
+        "https://runescape.wiki/w/Factory_outfit"
+      ]
+    },
+    {
+      "id": "combo:hatchet-ember-and-glade",
+      "name": "Hatchet of Ember and Glade (and Bloom and Blight follow-on)",
+      "regions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "fremennik"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "skills": [
+        "Woodcutting",
+        "Smithing",
+        "Fletching",
+        "Necromancy"
+      ],
+      "detail": "Finished t90 hatchet needs crystal hatchet (Prif + dragon hatchet), Imcando hatchet (Woodcutter's Grove / Fort → Misthalin working taxonomy), and Shard of the Lumberjack (Wilfred north of Falador, Asgarnia). Dragon hatchet self-source commonly pulls Fremennik Dagannoth Kings. Bloom and Blight inherits the full chain plus tier-100 Ramarno/moonstone progression.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:hatchet-of-ember-and-glade / bloom-and-blight; keep component-level region pressure current when quest overlays change.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+        "title": "Hatchet of Ember and Glade (and Bloom and Blight follow-on)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Hatchet_of_ember_and_glade",
+        "https://runescape.wiki/w/Hatchet_of_bloom_and_blight",
+        "https://runescape.wiki/w/Crystal_hatchet",
+        "https://runescape.wiki/w/Imcando_hatchet",
+        "https://runescape.wiki/w/Shard_of_the_Lumberjack"
+      ]
+    },
+    {
+      "id": "combo:pickaxe-earth-and-song",
+      "name": "Pickaxe of Earth and Song",
+      "regions": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "forinthry",
+        "asgarnia"
+      ],
+      "allRegions": [
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "skills": [
+        "Mining",
+        "Smithing"
+      ],
+      "detail": "Normal self-sufficient chain fuses Imcando pickaxe (Keldagrim / Lava Flow Mine, Fremennik) with crystal pickaxe (Prifddinas) plus blast fusion hammer and 90 Smithing. Planners that pick only one of Fremennik or Tirannwn cannot finish the tool without trade or League overrides.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:pickaxe-of-earth-and-song; verify blast-fusion-hammer geography if Artisans/Dragon Forge region rules change.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+        "title": "Pickaxe of Earth and Song",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+        "https://runescape.wiki/w/Imcando_pickaxe",
+        "https://runescape.wiki/w/Crystal_pickaxe"
+      ]
+    },
+    {
+      "id": "combo:masterwork-artisan-skilling-gates",
+      "name": "Masterwork-adjacent artisan gates for skilling",
+      "regions": [
+        "asgarnia"
+      ],
+      "optionalRegions": [
+        "anachronia",
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "havenhythe"
+      ],
+      "allRegions": [
+        "asgarnia",
+        "anachronia",
+        "fremennik",
+        "tirannwn",
+        "forinthry",
+        "havenhythe"
+      ],
+      "skills": [
+        "Smithing",
+        "Firemaking",
+        "Runecrafting",
+        "Crafting",
+        "Ranged"
+      ],
+      "detail": "Artisans Workshop masterwork melee plate / glorious-bar infrastructure (Asgarnia) feeds skilling off-hands like Orthen furnace core and broader masterwork material chains. Masterwork staff already maps multi-region weapon essence pressure; masterwork ranged materials pull Havenhythe Hunter/Crafting. Skilling-relevant masterwork is not a single-region checkbox.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "data/research/masterwork-staff-chain.json already maps staff; extend regional-skilling-unlocks.json with asgarnia masterwork-plate gate edges into Orthen furnace core and any other skilling off-hand that consumes masterwork plates.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Orthen_furnace_core",
+        "title": "Masterwork-adjacent artisan gates for skilling",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Masterwork_staff",
+        "https://runescape.wiki/w/Masterwork_ranged_equipment",
+        "https://runescape.wiki/w/Artisans%27_Workshop"
+      ]
+    },
+    {
+      "id": "combo:thieving-light-form-crystal-mask",
+      "name": "Thieving Light Form + Crystal Mask",
+      "regions": [
+        "tirannwn"
+      ],
+      "optionalRegions": [
+        "desert",
+        "morytania",
+        "misthalin"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "desert",
+        "morytania",
+        "misthalin"
+      ],
+      "skills": [
+        "Thieving",
+        "Magic",
+        "Prayer"
+      ],
+      "detail": "Crystal Mask (Seren spell, 90 Magic) and Light Form (Seren prayer, 91 Prayer) both unlock from The Light Within and stack for pickpocket success (15% → 30% with Light Form post-2026). Unlock is Tirannwn-gated, but the payoff is often spent in other regions (Pyramid Plunder, masters, heists). Planners that score only Desert/Morytania thieving miss the Tirannwn spell/prayer pair.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add cross-region:thieving-crystal-mask-light-form; also link scraped-data/prayer-effects-regions.json Light Form to Thieving method edges.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_Mask",
+        "title": "Thieving Light Form + Crystal Mask",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Crystal_Mask",
+        "https://runescape.wiki/w/Light_Form",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Thieving_training"
+      ]
+    },
+    {
+      "id": "combo:prayer-powder-desert-bones",
+      "name": "Prayer powder (Desert whirligigs) + multi-region bone sources",
+      "regions": [
+        "desert"
+      ],
+      "optionalRegions": [
+        "morytania",
+        "forinthry",
+        "misthalin",
+        "anachronia"
+      ],
+      "allRegions": [
+        "desert",
+        "morytania",
+        "forinthry",
+        "misthalin",
+        "anachronia"
+      ],
+      "skills": [
+        "Prayer",
+        "Hunter"
+      ],
+      "detail": "Prayer powders (powder of burials, pulverising, penance, etc.) are ground from Het's Oasis whirligig shells in the Desert. Powder of burials multiplies bone bury XP and powder of pulverising enables inventory bone grinding at Ectofuntus (Morytania), while high-volume bone sources and bonecrusher (Daemonheim / Forinthry) sit in other regions. Desert alone does not complete the Prayer training loop.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add desert:prayer-powder-production and a cross-region Prayer-training stack linking powders, Ectofuntus, and Forinthry bonecrusher.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Prayer_powder",
+        "title": "Prayer powder (Desert whirligigs) + multi-region bone sources",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Prayer_powder",
+        "https://runescape.wiki/w/Powder_of_burials",
+        "https://runescape.wiki/w/Powder_of_pulverising",
+        "https://runescape.wiki/w/Whirligig",
+        "https://runescape.wiki/w/Ectofuntus",
+        "https://runescape.wiki/w/Bonecrusher"
+      ]
+    },
+    {
+      "id": "combo:summoning-charms-multi-region",
+      "name": "Summoning charms multi-region supply",
+      "regions": [],
+      "optionalRegions": [
+        "forinthry",
+        "fremennik",
+        "anachronia",
+        "desert",
+        "morytania",
+        "kandarin"
+      ],
+      "allRegions": [
+        "forinthry",
+        "fremennik",
+        "anachronia",
+        "desert",
+        "morytania",
+        "kandarin"
+      ],
+      "skills": [
+        "Summoning",
+        "Slayer",
+        "Combat"
+      ],
+      "detail": "Charms are combat/Slayer drops distributed across regions; Forinthry supplies Charming imp + charming moths, Fremennik Waterbirth is a high-volume charm farm, and tertiary ingredients for high pouches are region-locked. No single region owns Summoning supply — charm acquisition, imp, and tertiaries must be planned as multi-region pressure.",
+      "confidence": "partial",
+      "modeled": "partial",
+      "gapAction": "scraped-data/progression-enrichment-summoning-supply-2026-07-25.json and planner-enrichment combat-method charm farms exist — fold into regional-skilling-unlocks.json as cross-region:summoning-charm-supply with Forinthry imp hard edge + region-tagged charm sources.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Charming_imp",
+        "title": "Summoning charms multi-region supply",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Charming_imp",
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms",
+        "https://runescape.wiki/w/Charming_moth"
+      ]
+    },
+    {
+      "id": "combo:slayer-masters-vs-task-regions",
+      "name": "High Slayer masters vs task monster regions",
+      "regions": [],
+      "optionalRegions": [
+        "tirannwn",
+        "anachronia",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "asgarnia",
+        "morytania",
+        "fremennik"
+      ],
+      "allRegions": [
+        "tirannwn",
+        "anachronia",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "asgarnia",
+        "morytania",
+        "fremennik"
+      ],
+      "skills": [
+        "Slayer",
+        "Combat"
+      ],
+      "detail": "High masters are region-placed (Morvran Prifddinas/Tirannwn, Laniakea Anachronia, Mandrith Forinthry, Sumona Desert, Kuradal Ancient Cavern/Kandarin-adjacent) while assigned tasks often require different regions for the actual monsters. Unlocking a master without its task geography (or vice versa) produces blocked or low-value task lists in a no-trade League.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/planner-expansions-slayer.json — add master→region map and task-monster region edges; surface in region-dependencies or a slayer-routing planner layer.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_Masters",
+        "title": "High Slayer masters vs task monster regions",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Morvran",
+        "https://runescape.wiki/w/Laniakea",
+        "https://runescape.wiki/w/Mandrith",
+        "https://runescape.wiki/w/Sumona",
+        "https://runescape.wiki/w/Kuradal"
+      ]
+    },
+    {
+      "id": "combo:skillchompas-hunter-vs-skills",
+      "name": "Skillchompas hunter regions vs skills used",
+      "regions": [],
+      "optionalRegions": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "kandarin",
+        "asgarnia"
+      ],
+      "allRegions": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "kandarin",
+        "asgarnia"
+      ],
+      "skills": [
+        "Hunter",
+        "Woodcutting",
+        "Mining",
+        "Fishing",
+        "Divination",
+        "Archaeology"
+      ],
+      "detail": "Skillchompas are caught in Hunter-region camps (e.g. crimson at Desert Quarry, crystal in Prifddinas/Tirannwn, azure polar/Fremennik, lower tiers elsewhere) but consumed to boost Woodcutting, Mining, Fishing, Divination, and Archaeology anywhere. League builds often score only the Hunter catch region and ignore the multi-skill throughput they enable (or the need to import them).",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add hunter:skillchompa-tiers with catch-region tags and consumer-skill edges; note POF alternate supply does not remove catch-region pressure for self-sufficiency.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Skillchompa",
+        "title": "Skillchompas hunter regions vs skills used",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Crimson_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Crystal_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Azure_skillchompa_(Hunter)"
+      ]
+    },
+    {
+      "id": "combo:ring-of-kayazu-rituals",
+      "name": "Ring of Kayazu (Havenhythe) + Necromancy rituals",
+      "regions": [
+        "havenhythe"
+      ],
+      "optionalRegions": [
+        "misthalin",
+        "fremennik"
+      ],
+      "allRegions": [
+        "havenhythe",
+        "misthalin",
+        "fremennik"
+      ],
+      "skills": [
+        "Necromancy",
+        "Archaeology",
+        "Crafting"
+      ],
+      "detail": "Ring of Kayazu is crafted at an archaeologist's workbench from a moonstone ring + restored Fang of Kayazu (Moonrise Dig Site / Havenhythe mystery The Final Revolution) and grants +80% soul attraction plus 20% double disturbance loot during rituals. Ritual sites themselves are primarily City of Um (Misthalin working taxonomy) and Ungael (Fremennik), so the best ritual ring is a Havenhythe dig-site unlock used outside Havenhythe.",
+      "confidence": "gap",
+      "modeled": false,
+      "gapAction": "data/research/regional-skilling-unlocks.json — add havenhythe:ring-of-kayazu with ritual-site optional pressure (misthalin Um, fremennik Ungael); also surface in Necromancy progression enrichment.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ring_of_Kayazu",
+        "title": "Ring of Kayazu (Havenhythe) + Necromancy rituals",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Ring_of_Kayazu",
+        "https://runescape.wiki/w/Fang_of_Kayazu",
+        "https://runescape.wiki/w/Rituals",
+        "https://runescape.wiki/w/The_Final_Revolution"
+      ]
+    },
+    {
+      "id": "combo:balaraks-sash-brush",
+      "name": "Balarak's sash brush (Daemonheim pieces + Anachronia restore)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Archaeology"
+      ],
+      "detail": "Brush pieces drop in the Warped Depths of the Daemonheim Dig Site (Forinthry); restoration is taught by Sharrigan outside Anachronia Base Camp. Already a documented cross-region Archaeology off-hand but easy for single-region Archaeology scoring to miss.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:balaraks-sash-brush; keep both regions hard-required in planner UI.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Balarak%27s_sash_brush",
+        "title": "Balarak's sash brush (Daemonheim pieces + Anachronia restore)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Balarak%27s_sash_brush",
+        "https://runescape.wiki/w/Balarak%27s_sash_brush/Effect"
+      ]
+    },
+    {
+      "id": "combo:skekas-hypnowand",
+      "name": "Skeka's hypnowand (Daemonheim journal + Anachronia pieces)",
+      "regions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "optionalRegions": [],
+      "allRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "skills": [
+        "Hunter",
+        "Archaeology",
+        "Dungeoneering"
+      ],
+      "detail": "Journal gate in Warped Depths (Forinthry/Daemonheim Dig Site) must be read before pieces drop from Anachronia activities (Big Game Hunter, Rex Matriarchs, vile blooms, Agility Course). Not Anachronia-only.",
+      "confidence": "modeled",
+      "modeled": true,
+      "gapAction": "data/research/regional-skilling-unlocks.json — already present as cross-region:skekas-hypnowand; keep Forinthry journal gate explicit.",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Skeka%27s_hypnowand",
+        "title": "Skeka's hypnowand (Daemonheim journal + Anachronia pieces)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceUrls": [
+        "https://runescape.wiki/w/Skeka%27s_hypnowand",
+        "https://runescape.wiki/w/Skeka%27s_hypnowand_base"
+      ]
+    },
+    {
+      "id": "global-issue:1",
+      "name": "Fort Forinthry dual taxonomy",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Construction/Slayer/Raptor/Chapel content tagged misthalin (Catalyst working) while physical location is south-eastern Wilderness edge. Affects Construction, Prayer chapel, Fletching Ranger's Workroom, Crafting Fort smelt loops.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:2",
+      "name": "City of Um / Underworld as Misthalin working",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Necromancy rituals, Um chests, Necromantic runecrafting, Underworld Grimoire bone storage all assume Misthalin starting bucket. Correct per Catalyst taxonomy but unconfirmed for Equilibrium boundaries.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:3",
+      "name": "The Arc / Uncharted Isles unresolved",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Alaea crablets, golden bamboo, Tavia's fishing rod remain arc_unresolved — consistent with catalog.region_boundaries.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:4",
+      "name": "Time runes dual-region inconsistency",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "training-high-value maps Abyss Time runes as forinthry_plus_anachronia; training-current-audit maps Time runes method_region anachronia only. Abyss path needs Forinthry entrance.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    },
+    {
+      "id": "global-issue:5",
+      "name": "Eternal magic multi-home",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Woodcutting eternal magic trees kandarin_inferred vs Havenhythe nursery; Construction/FM/RC imbuing all depend on eternal magic supply without unified multi-region resource graph.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:6",
+      "name": "Telekinetic Grind multi-region methods",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Crafting sandstone + Herblore herb tar correctly flag Fremennik Lunar unlock; resource regions partial. Good pattern to extend to Construction Contracts (Lunar NPC Contact).",
+      "confidence": "low",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "low"
+    },
+    {
+      "id": "global-issue:7",
+      "name": "Daemonheim / Forinthry hard rule underused in skill methods",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Primal mining/smithing and Dungeoneering present; Crafteneering, Daemonheim Divination, phasmatite resource dungeon achievement pressure not modelled as Forinthry combos.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:8",
+      "name": "Portables / TH items / DXP",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Ironman guides ban portable workbenches/ranges; app already warns portables for Summoning. Extend explicit no-portable assumptions to Construction, Cooking, Smithing planner text.",
+      "confidence": "medium",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "medium"
+    },
+    {
+      "id": "global-issue:9",
+      "name": "Managing Miscellania (Fremennik) as silent supply backbone",
+      "regions": [],
+      "optionalRegions": [],
+      "allRegions": [],
+      "skills": [],
+      "detail": "Construction planks, Firemaking maple/mahogany, Cooking fish, Farming seeds, Summoning dragon food — rarely modelled as Fremennik region combo pressure.",
+      "confidence": "high",
+      "modeled": false,
+      "gapAction": "",
+      "source": null,
+      "sourceUrls": [],
+      "kind": "global_issue",
+      "severity": "high"
+    }
+  ],
+  "counts": {
+    "combos": 16,
+    "globalIssues": 9,
+    "modeledTrue": 4,
+    "modeledPartial": 6,
+    "modeledFalse": 6
+  }
+}

@@ -127,7 +127,11 @@
       "luminous": "+0.6%",
       "incandescent": "+0.5%"
     },
-    "note": "New unlocks receive a larger initial improvement before settling toward these average values. The patch targeted gathering consistency rather than publishing a new XP/h table."
+    "unlock_success_target": "about 70% success when first unlocking a new energy type (example: gleaming ~64.9% pre-update to 70% at level 50)",
+    "published_xp_per_hour_table": false,
+    "colony_locations_changed": false,
+    "official_source": "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+    "note": "Jagex explicitly did not publish a new wisp XP/h table. Changes raise energy-gather success (largest on unlock, settling to the averages above), which yields only a modest XP/h uplift through more successful gathers. Pair with 2026 early-game rebalance for pale-sparkling memory XP and energy-yield changes. Wiki Divination_training summary XP/h remains the baseline published series until rebenchmarked."
   },
   "god_wars_dungeon_1": {
     "killcount_persists_after_leaving": true,

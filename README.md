@@ -64,7 +64,7 @@ that server if you've got a dev server running from the same checkout, so stop y
 ```bash
 npm run normalize:data   # rebuild app-facing data from scraped-data/ (includes league planner JSON)
 npm run sync:combat      # refresh combat data
-npm run sync:league      # disabled — exits 1; use normalize:data for data/league/*
+npm run sync:league:disabled  # exits 1 on purpose; use normalize:data for data/league/*
 npm run sync:assets      # refresh sourced RS3 and League media
 npm run sync:quests      # rebuild quest and region data from the Wiki
 npm run sync:quests:auto # apply official auto-completion lists when published

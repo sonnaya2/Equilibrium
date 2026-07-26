@@ -1,0 +1,932 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Herblore XP ladder + ironman supply for Equilibrium",
+  "verification_notes": [
+    "No invented XP/h. Rates below are wiki-published figures from Herblore training and Ironman Mode/Guide/Herblore (fetched 2026-07-26). Where the guide only lists XP per potion, xp_rate is left null with a freshness warning.",
+    "Pay-to-play Herblore training redirects to Herblore training on the wiki.",
+    "Equilibrium region IDs: forinthry = Daemonheim/Wilderness peninsula; City of Um uses misthalin working taxonomy; Flash Powder Factory is Asgarnia (Rogues' Den / Taverley).",
+    "Telekinetic Grind harralander tar already exists in training-high-value.json (~3.9m XP/h). This file improves notes and multi-region supply; does not invent a lower rate."
+  ],
+  "methods": [
+    {
+      "skill": "Herblore",
+      "method": "Quest unlock ladder to ~19 Herblore",
+      "region": "multi_region",
+      "method_region": "multi_region",
+      "level_range": "1-19",
+      "xp_rate": null,
+      "intensity": "one-time questing",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Druidic Ritual (Asgarnia) then Jungle Potion (Karamja automatic-early), Recruitment Drive (Asgarnia), The Dig Site (Misthalin)",
+      "notes": "Herblore training guide lists these quests as the clean 1-19 path before potions or tar. Prefer putting other XP rewards into Herblore on ironman/league (ironman guide).",
+      "warning": "No XP/h for quest XP; treat as unlock ladder only.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Clean grimy herbs (early bank-stand)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "1-91+ (herb-dependent clean levels)",
+      "xp_rate": null,
+      "intensity": "low-click bank-stand",
+      "freshness": "2026_current_xp_per_clean_only",
+      "confidence": "confirmed_wiki_no_published_xph",
+      "location": "Any bank; herbs from farming patches, bosses, Miscellania, Temple Trekking, slayer",
+      "notes": "Cleaning is the first half of every ironman potion chain. Factory full-set unfinished-potion path grants cleaning-equivalent XP when making unfinished potions (see factory outfit). Ironman guide prioritises useful potions over pure clean-for-XP.",
+      "warning": "Wiki does not publish a single clean-herbs XP/h for the main ladder; leave blank rather than invent.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Herbs"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Unfinished potions (herb + vial of water / coconut milk)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "1-99+",
+      "xp_rate": null,
+      "intensity": "low-click bank-stand",
+      "freshness": "2026_current_xp_per_action_only",
+      "confidence": "confirmed_wiki_no_published_xph",
+      "location": "Any bank; portable well worlds for +10% XP and 5% extra unfinished when available",
+      "notes": "Fastest GE ladder uses pre-bought unfinished. Ironman must make them. Full factory outfit: unfinished potions grant XP equivalent to cleaning the herb. Scroll of cleansing: 10% chance to save the herb when making unfinished. Modified botanist's mask: prefer when making unfinished for 5% extra potions (XP per action is 1, so small XP mods need 10%+ to matter).",
+      "warning": "No single unfinished XP/h on the training guide; throughput is inventory/bank-speed bound.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Unfinished_potions",
+        "https://runescape.wiki/w/Factory_outfit"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Early finished potions ladder (attack / strength / energy / prayer)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "1-45",
+      "xp_rate": null,
+      "intensity": "medium bank-stand production",
+      "freshness": "2026_current_xp_per_potion",
+      "confidence": "confirmed_wiki",
+      "location": "Any bank; portable well for +10% XP when available",
+      "notes": "Wiki fastest 1-99 alternative path XP per potion (from unfinished + secondary): Attack 25 XP (lvl 1, guam + eye of newt); Strength 40 XP (tarromin + limpwurt); Energy 67.5 XP (harralander + chocolate dust); Prayer 87.5 XP (ranarr + snape grass). Ironman recommended uses: guam attack or burner; tarromin Serum 207 or burner; harralander cooking/energy potion or tar; ranarr always prayer potions.",
+      "warning": "Guide does not publish XP/h for these bands; only XP/potion. No-trading League throughput is herb/secondary limited.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Mid finished potions ladder (super attack / super restore / super ranging / sara brew)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "45-88",
+      "xp_rate": null,
+      "intensity": "medium bank-stand production",
+      "freshness": "2026_current_xp_per_potion",
+      "confidence": "confirmed_wiki",
+      "location": "Any bank; portable well preferred",
+      "notes": "Wiki XP per potion on the main ladder: Super attack 125 XP (irit + limpwurt); Super restore 142.5 XP (snapdragon + red spiders' eggs); Super ranging 162.5 XP (dwarf weed + wine of zamorak); Saradomin brew 180 XP (toadflax + crushed nest) to 88. Ironman guide: irit super attack or super antipoison; toadflax sara brew; keep high herbs for extremes/overloads where possible.",
+      "warning": "No XP/h for mid ladder on wiki; XP/potion only. Secondary bottlenecks (crushed nests, wine of zamorak, eggs) dominate ironman pace.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Extreme potions ladder (attack through necromancy)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "88-96",
+      "xp_rate": null,
+      "intensity": "medium-high bank-stand production",
+      "freshness": "2026_current_xp_per_potion",
+      "confidence": "confirmed_wiki",
+      "location": "Any bank; portable well + dose/outfit stack",
+      "notes": "Wiki XP per extreme (highest-level extreme for speed): Extreme attack 220 (88, super attack + avantoe); Extreme strength 230 (89, super strength + dwarf weed); Extreme defence 240 (90, super defence + lantadyme); Extreme magic 250 (91, super magic + ground mud runes); Extreme ranging 260 (92, super ranging + 5 grenwall spikes); Extreme necromancy 265 (93, super necromancy + ground miasma rune). Guide: always brew the highest unlockable extreme for max XP/h among extremes.",
+      "warning": "No absolute XP/h listed for extremes; only XP/potion. Ironman must bank super potions first.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Overload (base) and overload product chain",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "96-99+",
+      "xp_rate": null,
+      "intensity": "high material cost; medium click intensity",
+      "freshness": "2026_current_xp_per_potion",
+      "confidence": "confirmed_wiki",
+      "location": "Any bank; Herblore master cape batch at 120 Herblore (master cape perk)",
+      "notes": "Base overload at 96: all six extreme (3) + clean torstol; 1,000 base XP / 1,100 with portable well per wiki table. Guide 96-99 example: 3,000 overloads ~3.0m base XP, ~3.6m with 20% portable+pulse. Untradeable - ironman must self-make for use. Higher chain (salves, supreme, elder) uses Meilyr combination recipes and/or primal extract - see combination and primal methods. Master cape: batch 5 overloads/elder from ingredients of 4; supreme overload 4 from ingredients of 3.",
+      "warning": "No standalone overload XP/h on guide (material-limited). GE cost example on page is mainscape only.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Overload",
+        "https://runescape.wiki/w/Herblore_master_cape"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Combination potions (Meilyr Recipe Shop + crystal flasks)",
+      "region": "tirannwn",
+      "method_region": "tirannwn",
+      "level_range": "75-99+ (recipe-dependent; no level req to buy recipes)",
+      "xp_rate": "Grand-style combinations over 350,000 XP/h with constant focus; Super melee over 450,000 XP/h; Super warmaster's over 720,000 XP/h (wiki Other methods).",
+      "intensity": "very high click intensity; short inventories",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Meilyr district, Prifddinas (Recipe Shop + Meilyr Voice of Seren hour for +20% combo XP); crystal flasks from Prif crafting",
+      "notes": "Plague's End unlocks combination potions. All recipes purchased from Meilyr Recipe Shop (100k-1.5m each; 15.2m for all). Nine recipes also need Daemonheim unreadable pages (or 100k tokens each) - Forinthry dependency for those pages. Grand ranging/magic/strength/defence and super prayer renewal: no unreadable page. Meilyr hour + perfect juju herblore/perfect plus (+5% on 6-dose combos) + full botanist outfit is the ironman ideal combo setup. Scroll of cleansing treats every component potion as a secondary (10% save on each) - nearly mandatory for ironman cost. Portable well: +10% XP only, no extra potion on combinations.",
+      "warning": "XP/h figures are lower-bound wiki phrasing ('over X'); exact rates depend on banking speed and recipe. Untradeable combos often worse than extremes for training cost.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Combination_potions",
+        "https://runescape.wiki/w/Recipe_Shop",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ],
+      "multi_region_combo": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "multi_region_combo_note": "Tirannwn for shop/crystal flasks/Meilyr hour; Forinthry/Daemonheim for unreadable-page recipes (super melee, super warmaster, many overload variants)."
+    },
+    {
+      "skill": "Herblore",
+      "method": "Primal fruit pulp to primal extract",
+      "region": "multi_region",
+      "method_region": "multi_region",
+      "level_range": "90-120",
+      "xp_rate": "Wiki GE path (pulp bought, extract only): 355,250 XP/h (90-101), 297,250 (102-111), 261,000 (112-120). Ironman guide including pulp-making time: 312,109.3 / 266,684.9 / 237,378.9 XP/h for the same bands.",
+      "intensity": "medium; farm-run gated on ironman",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Bank standing for extract; fruit from Farming bushes/fruit trees/cacti (lychee, carambola, golden dragonfruit) requiring 95+ Farming to start the fruit path",
+      "notes": "90 Herblore + 90 Cooking to make pulp; 90 Herblore to vial into primal extract. Ironman: full fruit run ~488 pulp base / ~70,760 Herblore XP in extract; with wolpertinger, giant ent, master farmer, Bountiful Harvest ~1,095 pulp / ~158,775 Herblore XP plus large Farming XP; full run every 6h (trees/cacti regrow 2h). Extract is the high-end ingredient for elder overloads, bombs, powerbursts.",
+      "warning": "Do not mix GE-path XP/h with ironman pulp-inclusive XP/h; they measure different loops.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Primal_extract",
+        "https://runescape.wiki/w/Primal_fruit_pulp"
+      ],
+      "multi_region_combo": [
+        "multi_region_farming_patches",
+        "global_bank"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Weapon poison+++ (ironman high-level alternative to pure pulp)",
+      "region": "multi_region",
+      "method_region": "multi_region",
+      "level_range": "100+",
+      "xp_rate": null,
+      "intensity": "farm-run + gathering; less tedious than pure pulp past 102 per ironman guide",
+      "freshness": "2026_current_daily_xp_not_xph",
+      "confidence": "confirmed_wiki",
+      "location": "Bush/fruit tree patches + Skavid caves (cave nightshade) + Anachronia Dinosaur Farm frogs for poison slime",
+      "notes": "Ironman guide: less daily XP than max pulp but less tedious after 102. Optimal average gather cited: 45 poison ivy, 52.5 coconut, 16.5 carambola, 10.35 golden dragonfruit for ~81,798.5 Herblore XP and ~38,291 Farming XP per cycle. Poison slime from raising frogs on Anachronia farm (150 beans per 270 slime).",
+      "warning": "Wiki gives per-cycle XP, not XP/h; do not invent hourly rate.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Weapon_poison%2B%2B%2B"
+      ],
+      "multi_region_combo": [
+        "anachronia",
+        "kandarin",
+        "multi_region_farming_patches"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "High-end bombs and powerbursts (primal extract products)",
+      "region": "anachronia",
+      "method_region": "anachronia",
+      "level_range": "99-120",
+      "xp_rate": null,
+      "intensity": "medium production; supply-gated",
+      "freshness": "2026_current_xp_per_product",
+      "confidence": "confirmed_wiki",
+      "location": "Bank standing; secondaries heavily Anachronia farm/dinosaur (poison slime, beak snot, dinosaur claws, bottled dinosaur roar)",
+      "notes": "Wiki fastest 99-120 alternative path XP each: Poison bomb 950 (irit + primal extract + 2 poison slime + weapon poison++ (4)); Sticky bomb 1,000 (cadantine + primal extract + beak snot/dinosaur claws); Vulnerability bomb 1,100 (dwarf weed + primal extract + runes + bottled dinosaur roar); Powerburst of feats 1,600 (snapdragon + primal extract + summoning potion (3) + bottled dinosaur roar). Primary training page positions these as non-tar alternatives to 120.",
+      "warning": "No XP/h published for bomb/powerburst banks; only XP per product and potion counts to level milestones.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Poison_bomb",
+        "https://runescape.wiki/w/Powerburst_of_feats"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Harralander tar - pestle and mortar (AFK)",
+      "region": "global_once_supplied",
+      "method_region": "global_once_supplied",
+      "level_range": "44+",
+      "xp_rate": "Roughly 140,000 XP/h (wiki Herblore training Other methods)",
+      "intensity": "low AFK; stackable swamp tar allows up to 27 herbs per inventory",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Any bank; 1 clean harralander + 15 swamp tar = 15 tar for 72.5 Herblore XP",
+      "notes": "Slower tar method. Tarromin tar is 25% less XP. Swamp tar stackable. Does not benefit from scroll of cleansing (scroll does not apply to herb tars).",
+      "warning": null,
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Harralander_tar"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Telekinetic Grind herb tar (harralander)",
+      "region": "multi_region_dependency",
+      "method_region": "multi_region_dependency",
+      "level_range": "44 Herblore + 85 Magic; Lunar Diplomacy for Lunar spellbook (tar fastest from 19+ once spell unlocked)",
+      "xp_rate": "Roughly 3,900,000 Herblore XP/h (wiki high-speed Telekinetic Grind example for harralander tar)",
+      "intensity": "very high; full-inventory casts + banking",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_with_league_resource_warning",
+      "location": "Bank standing with Lunar spellbook; spell unlock Fremennik (Lunar Isle / Lunar Diplomacy)",
+      "notes": "Already seeded in training-high-value.json. Wiki: Telekinetic Grind on full inventory ~3.9m Herblore XP/h depending on banking speed. Fastest Herblore XP method at any level once available. Upfront swamp tar + harralander volume is extreme. Swamp tar major ground supply: Lumbridge Swamp (Misthalin starting). Astral + law runes per cast. Improve vs high-value row: call out pestle baseline 140k for comparison; scroll of cleansing does not apply to tar; GE buy limits (20k swamp tar / 4h) are mainscape-only pressure - league/ironman is pure gather.",
+      "warning": "Extremely resource-hungry. GE assumptions on the training page do not transfer to no-trading League. Do not invent rates below 3.9m for the telekinetic path; if supply cannot support it, fall back to pestle ~140k or potion ladder.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Telekinetic_Grind",
+        "https://runescape.wiki/w/Harralander_tar",
+        "https://runescape.wiki/w/Lunar_Diplomacy"
+      ],
+      "multi_region_combo": [
+        "fremennik",
+        "misthalin"
+      ],
+      "multi_region_combo_note": "Fremennik for Lunar/Telekinetic Grind unlock; Misthalin Lumbridge Swamp for bulk swamp tar. Herb supply is multi-region farming/bossing."
+    },
+    {
+      "skill": "Herblore",
+      "method": "Flash Powder Factory - botanist's and factory outfits",
+      "region": "asgarnia",
+      "method_region": "asgarnia",
+      "level_range": "50 Herblore; 75 Thieving and 75 Agility to enter factory (unboostable)",
+      "xp_rate": null,
+      "intensity": "minigame for outfit unlock; then passive worn boosts",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Flash Powder Factory / Rogues' Den under Pick and Lute, Taverley",
+      "notes": "Botanist's outfit: 1% Herblore XP per piece + 1% set = 6% full. Modified botanist's mask: +1% XP and 5% chance to duplicate potions (no extra XP on duplicate). Factory outfit: 3/5 pieces = 10% chance 4-dose instead of 3-dose (stacks with Morytania legs 4 / Desert amulet 4 on specific potions); full 5/5 unfinished-potion XP equal to cleaning the herb. Ironman optimized mix often: modified mask + selected factory pieces for dose economy rather than one full set always. Prefer Minigame Spotlight for thaler if buying via thaler.",
+      "warning": "Unlock XP/h not published; this row is outfit infrastructure, not a primary XP method.",
+      "source": "https://runescape.wiki/w/Flash_Powder_Factory",
+      "source_urls": [
+        "https://runescape.wiki/w/Flash_Powder_Factory",
+        "https://runescape.wiki/w/Botanist%27s_outfit",
+        "https://runescape.wiki/w/Factory_outfit",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Scroll of cleansing (Wasteless Herblore)",
+      "region": "forinthry",
+      "method_region": "forinthry",
+      "level_range": "49 Herblore and 49 Dungeoneering",
+      "xp_rate": null,
+      "intensity": "permanent unlock; passive during potion making",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_region_via_daemonheim_mapping",
+      "location": "Daemonheim Rewards (Marmaros); 20,000 Dungeoneering tokens",
+      "notes": "12.5% chance to mix twice as fast; 10% chance to save secondary when adding herb to vial/coconut milk or secondary to unfinished (also juju, combination, extreme). Effect is global after unlock. Does not apply to herb tars or cups of tea; does not save the vial/flask base. Strongest relative value on multi-ingredient combination potions.",
+      "warning": "Purchase geography is Daemonheim (Equilibrium forinthry). Not a Wilderness drop.",
+      "source": "https://runescape.wiki/w/Scroll_of_cleansing",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Herb bag (Herby Werby)",
+      "region": "anachronia",
+      "method_region": "anachronia",
+      "level_range": "Herby Werby access (Anachronia)",
+      "xp_rate": null,
+      "intensity": "storage QoL; weekly D&D for spirit points",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Ancient Zygomite elder / Herby Werby Reward Shop, Anachronia",
+      "notes": "200 spirit points base (50 of each grimy herb); +200 upgrade to 100 each. Auto-stores unnoted grimy pickups and most herb-patch harvests while carried. Works with upgraded Herbicide auto-collect into bag. Primary ironman/league inventory tool for herb logistics - not an XP method by itself.",
+      "warning": null,
+      "source": "https://runescape.wiki/w/Herb_bag",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_bag",
+        "https://runescape.wiki/w/Herby_Werby",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Herby Werby weekly D&D (Herblore focus)",
+      "region": "anachronia",
+      "method_region": "anachronia",
+      "level_range": "any; XP multiplies at 85/95/105/115 Herblore (150%/200%/250%/300%)",
+      "xp_rate": null,
+      "intensity": "weekly active D&D",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Ancient Zygomites' cavern, Anachronia",
+      "notes": "Stop zygomites with healthy/green herbs for Herblore XP; burning corrupt flora is Firemaking. Max 100 points weekly. Outfit, pulse cores, DXB apply. Spirit points fund herb bag.",
+      "warning": "No single XP/h published for a Herblore-maxed run; weekly points-capped.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Herby_Werby"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Dream of Iaia apothecary station",
+      "region": "anachronia",
+      "method_region": "anachronia",
+      "level_range": "post-Extinction; station build uses base camp resources",
+      "xp_rate": "350,000 XP/h while withdrawing stored station XP",
+      "intensity": "very AFK withdraw; restock with Anachronia base camp leaves",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Dream of Iaia apothecary (Extinction)",
+      "notes": "Build costs 50k of each Anachronia base camp resource; awards 135k XP stored + 15k direct. Restock: 2 leaves = 1 stored XP; max store 350k. AFK Herblore sink after Extinction.",
+      "warning": null,
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Dream_of_Iaia",
+        "https://runescape.wiki/w/Apothecary_(scenery)"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Mazcab supply runs (Herblore option)",
+      "region": "multi_region",
+      "method_region": "multi_region",
+      "level_range": "1-99+ (XP scales with level)",
+      "xp_rate": "Equivalent rate if finished in 5 minutes: 5,940 XP/h at level 1 up to 582,180 XP/h at level 99 (10 goebie supplies; 495-48,515 raw XP)",
+      "intensity": "timed safe activity every 12h; 25-minute window",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Mazcab Kanatah supply rock to Otot (Nemi Forest); skill choice Farming or Herblore on offered worlds",
+      "notes": "Up to 10 goebie supplies/day. Safe PvP flag while carrying supplies. Logging out/hopping deletes carried supplies.",
+      "warning": "Mazcab region mapping for Equilibrium electives may need planner confirmation; treat as multi_region until locality rule is fixed.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Supply_run"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Herbicide passive (combat)",
+      "region": "forinthry",
+      "method_region": "forinthry",
+      "level_range": "Dungeoneering token purchase; toolbelt via 500 slayer points",
+      "xp_rate": null,
+      "intensity": "passive during combat/slayer",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki",
+      "location": "Daemonheim Rewards purchase (34,000 tokens); effect global",
+      "notes": "Destroys dropped herbs in combat for double clean XP. Slow primary training; good passive on slayer. Tool belt unlock 500 slayer points.",
+      "warning": "Guide calls this quite slow; no XP/h published.",
+      "source": "https://runescape.wiki/w/Herblore_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Herbicide"
+      ]
+    },
+    {
+      "skill": "Herblore",
+      "method": "Efficiency stack note - scroll + herb bag + botanist/factory (+ Meilyr combos)",
+      "region": "multi_region",
+      "method_region": "multi_region",
+      "level_range": "49+ (scroll) through high-level combos",
+      "xp_rate": null,
+      "intensity": "planner stack, not a single activity",
+      "freshness": "2026_current",
+      "confidence": "confirmed_wiki_plus_repo_region_combo_audit",
+      "location": "Cross-region unlocks used at any bank / Meilyr for combos",
+      "notes": "Optimized no-trade Herblore pulls Forinthry (scroll of cleansing), Anachronia (herb bag + farm produce), Asgarnia (Flash Powder Factory outfits), and Tirannwn (Meilyr recipes, crystal flasks, Voice of Seren). Planner should treat these as a linked stack, not isolated optional cosmetics.",
+      "warning": "Not an XP method; multi-region dependency edge for the planner.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Herblore_training",
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Herb_bag",
+        "https://runescape.wiki/w/Flash_Powder_Factory",
+        "https://runescape.wiki/w/Combination_potions"
+      ],
+      "multi_region_combo": [
+        "forinthry",
+        "anachronia",
+        "asgarnia",
+        "tirannwn"
+      ]
+    }
+  ],
+  "supply_routes": [
+    {
+      "id": "supply:herbs-farming-patches",
+      "skill": "Herblore",
+      "category": "farming",
+      "item_family": "grimy_herbs_all_tiers",
+      "region": "multi_region",
+      "method": "Herb patches (primary self-sufficient herb volume)",
+      "notes": "Core ironman herb spine. Standard patches include Falador south (Asgarnia), Port Phasmatys west (Morytania), Catherby north (Kandarin), plus others on the farming loop. Bloodweed and fellstalk are farming-primary per ironman herb table. Garden of Kharid (Desert) permanent upgrades (Bountiful Harvest, Speedy Growth) amplify yields.",
+      "sources_by_region": [
+        {
+          "region": "asgarnia",
+          "source": "Herb patch south of Falador",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "morytania",
+          "source": "Herb patch west of Port Phasmatys",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "kandarin",
+          "source": "Herb patch north of Catherby (classic multi-patch hub)",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "desert",
+          "source": "Garden of Kharid Farming upgrades (yield infrastructure)",
+          "source_url": "https://runescape.wiki/w/Garden_of_Kharid"
+        },
+        {
+          "region": "tirannwn",
+          "source": "Cadarn / Prif farming support and seed sources",
+          "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Farming"
+        }
+      ],
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Herb_patch",
+        "https://runescape.wiki/w/Herbs"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-managing-miscellania",
+      "skill": "Herblore",
+      "category": "kingdom",
+      "item_family": "mid_to_high_herbs",
+      "region": "fremennik",
+      "method": "Managing Miscellania herb plot",
+      "notes": "Ironman guide: 61 random herbs from tarromin to dwarf weed per day at 50,000 coins/day. Passive daily herb trickle for Fremennik unlock.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Managing_Miscellania"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-temple-trekking",
+      "skill": "Herblore",
+      "category": "minigame",
+      "item_family": "early_herbs",
+      "region": "morytania",
+      "method": "Temple Trekking rewards",
+      "notes": "Easy route yields 10-30 herbs from guam to harralander - early Herblore supply while medium combat. Morytania region.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Temple_Trekking"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-vyre-sunspear",
+      "skill": "Herblore",
+      "category": "boss_combat",
+      "item_family": "mid_high_herbs",
+      "region": "morytania",
+      "method": "Sunspear vyrelords/ladies herb drops",
+      "notes": "Ironman herb table lists Sunspear vyres for ranarr, toadflax, avantoe, snapdragon, lantadyme, dwarf weed, torstol among others. Pairs with Prayer cremation training in Morytania.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Vyrelord"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-aberrant-spectres",
+      "skill": "Herblore",
+      "category": "slayer",
+      "item_family": "broad_herb_table",
+      "region": "morytania",
+      "method": "Aberrant spectres (Slayer)",
+      "notes": "Ironman guide lists spectres across guam through many mid herbs (marrentill, tarromin, harralander, ranarr, irit, avantoe, kwuarm). Also good for deployable herb burner drop hunting. Classic Morytania slayer herb camp.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Aberrant_spectre"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-araxxi",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "morytania",
+      "method": "Araxxi",
+      "notes": "Ironman table: avantoe, lantadyme, dwarf weed among others. High-intensity Morytania boss herb source.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Araxxi"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-croesus",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "misthalin",
+      "method": "Croesus (Senntisten)",
+      "notes": "Ironman table: toadflax, kwuarm, dwarf weed. Equilibrium maps Senntisten-linked content to Misthalin working taxonomy.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Croesus"
+      ],
+      "confidence": "confirmed_wiki_plus_repo_senntisten_mapping"
+    },
+    {
+      "id": "supply:herbs-telos",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "forinthry",
+      "method": "Telos, the Warden",
+      "notes": "Ironman table: toadflax, lantadyme, dwarf weed, torstol. Wilderness/Forinthry high-end herb boss.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Telos,_the_Warden"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-vorago",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "torstol_tier",
+      "region": "asgarnia",
+      "method": "Vorago",
+      "notes": "Ironman table lists torstol among Vorago herb drops. Asgarnia endgame boss supply.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Vorago"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-nex",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "desert",
+      "method": "Nex / Nex Angel of Death",
+      "notes": "Ironman table: avantoe (Nex); snapdragon/cadantine (AoD); dwarf weed, torstol. God Wars dungeon 2 / ancient prison access is Desert elective pressure for league planning.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Nex",
+        "https://runescape.wiki/w/Nex,_Angel_of_Death"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-solak",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "tirannwn",
+      "method": "Solak, Guardian of the Grove",
+      "notes": "Ironman table: irit, kwuarm, cadantine. Tirannwn boss herb source; pairs with Meilyr herblore infrastructure.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Solak,_Guardian_of_the_Grove"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-crystal-shapeshifters",
+      "skill": "Herblore",
+      "category": "slayer_combat",
+      "item_family": "mid_high_herbs",
+      "region": "tirannwn",
+      "method": "Crystal Shapeshifters",
+      "notes": "Ironman table: toadflax, irit, kwuarm. Tirannwn combat herb camp.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Crystal_Shapeshifter"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-helwyr",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "lantadyme_tier",
+      "region": "tirannwn",
+      "method": "Helwyr",
+      "notes": "Ironman table lists lantadyme from Helwyr. Tirannwn GWD2-style boss supply.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Helwyr"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-kalphite-exiled",
+      "skill": "Herblore",
+      "category": "slayer_combat",
+      "item_family": "broad_mid_high_herbs",
+      "region": "desert",
+      "method": "Exiled kalphite marauder/guardian and Kalphite King",
+      "notes": "Ironman table: guam/ranarr/lantadyme from exiled kalphites; kwuarm/snapdragon from Kalphite King. Desert herb combat route.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Exiled_kalphite_marauder",
+        "https://runescape.wiki/w/Kalphite_King"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-thieving-vaults",
+      "skill": "Herblore",
+      "category": "thieving_heists",
+      "item_family": "high_herbs",
+      "region": "multi_region",
+      "method": "Vault of Hereditas and Asuran Arsenal herb rewards",
+      "notes": "Ironman table: Vault of Hereditas (95 Thieving, Desert/Kharid-et) for cadantine and dwarf weed; Asuran Arsenal (108 Thieving, Anachronia) for kwuarm and arbuck. Dual-skill supply (Thieving XP + herbs).",
+      "sources_by_region": [
+        {
+          "region": "desert",
+          "source": "Vault of Hereditas heist",
+          "source_url": "https://runescape.wiki/w/Vault_of_Hereditas"
+        },
+        {
+          "region": "anachronia",
+          "source": "Asuran Arsenal heist",
+          "source_url": "https://runescape.wiki/w/Asuran_Arsenal"
+        }
+      ],
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Vault_of_Hereditas",
+        "https://runescape.wiki/w/Asuran_Arsenal"
+      ],
+      "confidence": "confirmed_wiki",
+      "multi_region_combo": [
+        "desert",
+        "anachronia"
+      ]
+    },
+    {
+      "id": "supply:herbs-chaos-druid-tower-chest",
+      "skill": "Herblore",
+      "category": "thieving",
+      "item_family": "snapdragon",
+      "region": "kandarin",
+      "method": "Chaos Druid Tower chest (75 Thieving)",
+      "notes": "Ironman table lists snapdragon from Chaos Druid Tower chest. Kandarin thieving herb source.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Chest_(Chaos_Druid_Tower,_75_Thieving)"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-qbd",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "torstol_tier",
+      "region": "forinthry",
+      "method": "Queen Black Dragon",
+      "notes": "Ironman table lists torstol from QBD. Forinthry/Wilderness access path.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Queen_Black_Dragon"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-rasial",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "high_herbs",
+      "region": "misthalin",
+      "method": "Rasial, the First Necromancer",
+      "notes": "Ironman table: dwarf weed, torstol. City of Um / Underworld content uses Misthalin working taxonomy in Equilibrium data.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Rasial,_the_First_Necromancer"
+      ],
+      "confidence": "confirmed_wiki_plus_repo_um_mapping"
+    },
+    {
+      "id": "supply:herbs-zilyana",
+      "skill": "Herblore",
+      "category": "boss",
+      "item_family": "ranarr",
+      "region": "asgarnia",
+      "method": "Commander Zilyana",
+      "notes": "Ironman table lists ranarr from Zilyana. Asgarnia GWD herb/prayer potion support.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Commander_Zilyana"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:swamp-tar-lumbridge",
+      "skill": "Herblore",
+      "category": "gather",
+      "item_family": "swamp_tar",
+      "region": "misthalin",
+      "method": "Lumbridge Swamp tar (Telekinetic Grind fuel)",
+      "notes": "Major ground swamp tar supply for herb tar training. Starting-region friendly. Bottleneck for 3.9m XP/h telekinetic tar path under no trade.",
+      "source": "https://runescape.wiki/w/Swamp_tar",
+      "source_urls": [
+        "https://runescape.wiki/w/Swamp_tar",
+        "https://runescape.wiki/w/Herblore_training"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:primal-fruit-farming",
+      "skill": "Herblore",
+      "category": "farming",
+      "item_family": "primal_fruit_pulp",
+      "region": "multi_region",
+      "method": "Lychee bushes, carambola fruit trees, golden dragonfruit cacti",
+      "notes": "95+ Farming start; 90 Cooking/Herblore to pulp. Patch locations span standard Farming network (multi-region). Feeds primal extract and high-end overload/bomb chain.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Primal_fruit_pulp",
+        "https://runescape.wiki/w/Money_making_guide/Picking_primal_fruit"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:anachronia-dinosaur-farm-produce",
+      "skill": "Herblore",
+      "category": "farm",
+      "item_family": "poison_slime_beak_snot_roars_chitin",
+      "region": "anachronia",
+      "method": "Anachronia Dinosaur Farm produce for high-level potions/bombs",
+      "notes": "Poison slime (frogs), beak snot, bottled dinosaur roar, spark chitin, etc. for weapon poison+++, bombs, powerbursts, adrenaline crystals. Ironman high-level Herblore secondary spine after 90+.",
+      "source": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:meilyr-recipe-shop",
+      "skill": "Herblore",
+      "category": "shop_unlock",
+      "item_family": "combination_potion_recipes",
+      "region": "tirannwn",
+      "method": "Meilyr Recipe Shop (Prifddinas)",
+      "notes": "All combination potion recipes bought here (no Herblore level to buy). Crystal flasks also Tirannwn crafting pressure. Mandatory for overload salves / many combat combos and for high combo XP methods.",
+      "source": "https://runescape.wiki/w/Recipe_Shop",
+      "source_urls": [
+        "https://runescape.wiki/w/Recipe_Shop",
+        "https://runescape.wiki/w/Combination_potions"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:unreadable-pages-daemonheim",
+      "skill": "Herblore",
+      "category": "dungeoneering_unlock",
+      "item_family": "combination_recipe_pages",
+      "region": "forinthry",
+      "method": "Daemonheim unreadable pages / 100k tokens per recipe",
+      "notes": "Nine combination recipes (including super melee, super warmaster, many overload variants) need unreadable pages from Daemonheim or 100k Dungeoneering tokens each. Forinthry elective pressure for full combo unlock set.",
+      "source": "https://runescape.wiki/w/Combination_potions",
+      "source_urls": [
+        "https://runescape.wiki/w/Combination_potions",
+        "https://runescape.wiki/w/Unreadable_page"
+      ],
+      "confidence": "confirmed_wiki"
+    }
+  ],
+  "multi_region_combos_summary": [
+    {
+      "name": "Herblore efficiency stack",
+      "regions": [
+        "forinthry",
+        "anachronia",
+        "asgarnia",
+        "tirannwn"
+      ],
+      "pieces": [
+        "Scroll of cleansing (Daemonheim / forinthry)",
+        "Herb bag (Herby Werby / anachronia)",
+        "Botanist + factory outfits (Flash Powder Factory / asgarnia)",
+        "Meilyr recipes + crystal flasks + Voice of Seren (tirannwn)"
+      ]
+    },
+    {
+      "name": "Telekinetic Grind harralander tar",
+      "regions": [
+        "fremennik",
+        "misthalin"
+      ],
+      "pieces": [
+        "Lunar Diplomacy / Telekinetic Grind (fremennik)",
+        "Lumbridge Swamp tar gather (misthalin)",
+        "Harralander from multi-region farming/combat"
+      ]
+    },
+    {
+      "name": "Combination potions with full recipe set",
+      "regions": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "pieces": [
+        "Meilyr Recipe Shop + crystal flasks (tirannwn)",
+        "Unreadable pages or token unlocks (forinthry Daemonheim)"
+      ]
+    },
+    {
+      "name": "Weapon poison+++ ironman loop",
+      "regions": [
+        "anachronia",
+        "kandarin",
+        "multi_region_farming_patches"
+      ],
+      "pieces": [
+        "Anachronia frog poison slime",
+        "Skavid caves cave nightshade (kandarin)",
+        "Poison ivy / coconut / fruit patches multi-region"
+      ]
+    },
+    {
+      "name": "Thieving vault herb supply",
+      "regions": [
+        "desert",
+        "anachronia"
+      ],
+      "pieces": [
+        "Vault of Hereditas (desert)",
+        "Asuran Arsenal (anachronia)"
+      ]
+    }
+  ],
+  "counts": {
+    "methods": 21,
+    "supply_routes": 24,
+    "multi_region_combos": 5
+  }
+}

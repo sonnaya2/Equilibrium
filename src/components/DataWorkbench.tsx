@@ -5,15 +5,18 @@ import { WorkbenchPanel, WorkbenchTabs } from "./WorkbenchTabs";
 
 const TABS = [
   { id: "browse", label: "Browse" },
+  { id: "quests", label: "Quests" },
   { id: "progression", label: "Progression" },
   { id: "unlocks", label: "Permanent unlocks" },
   { id: "regional", label: "Regional unlocks" },
+  { id: "combos", label: "Region combos" },
   { id: "slayer", label: "Slayer" },
   { id: "invention", label: "Invention" },
   { id: "prayers", label: "Prayers & books" },
   { id: "consumables", label: "Consumables" },
   { id: "systems", label: "Systems" },
   { id: "crafting", label: "Crafting" },
+  { id: "notes", label: "Reference notes" },
   { id: "boundaries", label: "Boundaries" },
 ] as const;
 
@@ -25,9 +28,11 @@ type TabId = (typeof TABS)[number]["id"];
  */
 export function DataWorkbench({
   browse,
+  quests,
   progression,
   unlocks,
   regional,
+  combos,
   slayer,
   invention,
   prayers,
@@ -35,13 +40,16 @@ export function DataWorkbench({
   systems,
   archaeology,
   masterwork,
+  referenceNotes,
   boundaries,
   notes,
 }: {
   browse: ReactNode;
+  quests: ReactNode;
   progression: ReactNode;
   unlocks: ReactNode;
   regional: ReactNode;
+  combos: ReactNode;
   slayer: ReactNode;
   invention: ReactNode;
   prayers: ReactNode;
@@ -49,6 +57,7 @@ export function DataWorkbench({
   systems: ReactNode;
   archaeology: ReactNode;
   masterwork: ReactNode;
+  referenceNotes: ReactNode;
   boundaries: ReactNode;
   notes: ReactNode;
 }) {
@@ -61,6 +70,9 @@ export function DataWorkbench({
       <WorkbenchPanel id="browse" active={tab}>
         {browse}
       </WorkbenchPanel>
+      <WorkbenchPanel id="quests" active={tab}>
+        {quests}
+      </WorkbenchPanel>
       <WorkbenchPanel id="progression" active={tab}>
         {progression}
       </WorkbenchPanel>
@@ -69,6 +81,9 @@ export function DataWorkbench({
       </WorkbenchPanel>
       <WorkbenchPanel id="regional" active={tab}>
         {regional}
+      </WorkbenchPanel>
+      <WorkbenchPanel id="combos" active={tab}>
+        {combos}
       </WorkbenchPanel>
       <WorkbenchPanel id="slayer" active={tab}>
         {slayer}
@@ -90,6 +105,9 @@ export function DataWorkbench({
           {archaeology}
           {masterwork}
         </div>
+      </WorkbenchPanel>
+      <WorkbenchPanel id="notes" active={tab}>
+        {referenceNotes}
       </WorkbenchPanel>
       <WorkbenchPanel id="boundaries" active={tab}>
         {boundaries}

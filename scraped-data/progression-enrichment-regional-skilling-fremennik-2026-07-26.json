@@ -1,0 +1,571 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Fill Fremennik regional skilling gaps missing from progression-enrichment-regional-skilling-2026-07-25 and gaps-2026-07-26: Lunar spellbook skilling utility (Bake Pie, Telekinetic Grind, NPC Contact, Plank Make and related), Managing Miscellania supply backbone, Neitiznot yak/Crafting loop, Keldagrim infrastructure, Waterbirth/Rellekka hubs, sparkling wisps, and diary boots. Does not re-row fremennik:lava-flow-mine or fremennik:imcando-pickaxe except as cross-links.",
+  "policy": {
+    "region_rule": "region_hint marks where the unlock or activity lives in the current planner taxonomy. region_hints marks a cross-region chain. required_regions is only used when both regions are needed for a full stack, not for dual dig-site claims. Quest auto-completion and League-specific overrides must be applied separately.",
+    "no_trade_rule": "Prioritise unlocks that materially change self-sufficient progression, training throughput, supply access, or tool progression. Do not mirror every shop item.",
+    "rate_rule": "Do not promote stale XP/hour figures. Training rates belong in training datasets; this file records unlock state and effects.",
+    "dupe_rule": "Skip exact re-rows of fremennik:lava-flow-mine and fremennik:imcando-pickaxe from 2026-07-25. Expand only missing infrastructure (Birthright geyser path, Keldagrim hub, Miscellania, Lunar utility)."
+  },
+  "activity_additions": [
+    {
+      "id": "fremennik:lunar-spellbook",
+      "name": "Lunar spellbook unlock",
+      "category": "Magic spellbook skilling infrastructure",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy completed (Fremennik Trials plus Lost City chain in the normal game)",
+        "Astral altar on Lunar Isle to switch to the Lunar spellbook",
+        "Astral runes for nearly all Lunar casts (Baba Yaga shop / astral altar craft after Lunar Diplomacy)"
+      ],
+      "unlocks": [
+        "Lunar spellbook (non-combat / skilling-heavy utility book)",
+        "Base skilling spells including Bake Pie, NPC Contact, Cure Plant, String Jewellery, Magic Imbue, Fertile Soil, Make Leather, and later Telekinetic Grind",
+        "Lunar Isle lodestone and Moonclan teleport network once unlocked",
+        "Access path into Livid Farm produce-point spell unlocks on Lunar Isle"
+      ],
+      "notes": "Fremennik owns the normal-game Lunar unlock geography (Lunar Isle / Fremennik Trials line). Dream Mentor and Livid Farm layer additional spells on top of the base book. Do not invent League auto-quest behaviour; resolve via Equilibrium quest overlay. Elven grimoire spellbook swap is a Tirannwn cross-pressure after hard Fremennik achievements, not a substitute for unlocking Lunar itself.",
+      "source_urls": [
+        "https://runescape.wiki/w/Lunar_spells",
+        "https://runescape.wiki/w/Lunar_Diplomacy",
+        "https://runescape.wiki/w/Astral_altar"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik dependency for the normal Lunar unlock path. Lost City is a pre-quest outside Fremennik; treat as quest-chain pressure, not a second region claim for the spellbook itself."
+    },
+    {
+      "id": "fremennik:bake-pie",
+      "name": "Bake Pie (Lunar)",
+      "category": "Cooking skilling spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook active",
+        "65 Magic",
+        "1 astral, 5 fire, 4 water runes per inventory bake cycle"
+      ],
+      "unlocks": [
+        "Bake Pie spell: cooks all uncooked pies in the backpack without a range or fire",
+        "100% success cook path for pies (no burn risk from the spell path)",
+        "Bankstanding Cooking processing for high-value pie ladder once ingredients are stocked"
+      ],
+      "notes": "Ironman food and Cooking progression pressure is often Fremennik-skewed because Bake Pie is the clean pie-cook tool. Ingredient supply remains multi-region; the spell unlock is Fremennik. Pair with Neitiznot yak meat / Miscellania fish when valuing self-sufficient food, not as a substitute for Menaphos or other food trains.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bake_Pie",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Lunar dependency. Do not invent pie XP/hour; surface unlock state only."
+    },
+    {
+      "id": "fremennik:telekinetic-grind",
+      "name": "Telekinetic Grind (Lunar)",
+      "category": "multi-skill processing spell",
+      "region_hint": "fremennik",
+      "region_hints": [
+        "fremennik"
+      ],
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook active",
+        "85 Magic",
+        "1 law and 2 astral runes per cast"
+      ],
+      "unlocks": [
+        "Telekinetic Grind: pestle-and-mortar grind up to 60 stackable targeted items (or a backpack set of non-stackables) in one action",
+        "High-throughput Herblore herb-tar processing when swamp tar and clean herbs are stocked",
+        "High-throughput Crafting extra-fine sand processing from sandstone",
+        "Bulk secondary prep (chocolate dust, dragon scale dust, goat horn dust, crushed nests, Armadyl dust, and other pestle products)"
+      ],
+      "notes": "Spell unlock is Fremennik. Resource regions are separate pressure: swamp tar often Misthalin, red sandstone Desert, crystal sandstone Tirannwn, desert goat horns Desert. App training rows already flag multi_region_dependency for tar and sandstone; this row is the Fremennik unlock gate those methods share. Does not grind noted items, Beast of Burden inventories, or dragonstones.",
+      "source_urls": [
+        "https://runescape.wiki/w/Telekinetic_Grind",
+        "https://runescape.wiki/w/Lunar_spells",
+        "https://runescape.wiki/w/Lunar_Diplomacy"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Always pair the spell region (Fremennik) with the resource region of the method being planned. Never score Telekinetic Grind methods as Fremennik-only XP."
+    },
+    {
+      "id": "fremennik:npc-contact",
+      "name": "NPC Contact (Lunar)",
+      "category": "skilling QoL spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook active",
+        "67 Magic",
+        "1 astral, 1 cosmic, 2 air runes per cast"
+      ],
+      "unlocks": [
+        "NPC Contact spell: telepathic dialogue with a closed set of useful NPCs from anywhere",
+        "Remote collection / approval check dialogue with Advisor Ghrim for Managing Miscellania (cannot change coffer investment via the spell)",
+        "Remote contact paths used by Construction contract / estate-agent style loops when those NPCs are on the contact list",
+        "Slayer master contact and other utility NPC shortcuts without travel"
+      ],
+      "notes": "High-value ironman QoL. Miscellania management still requires physical visits (or Fort Miscellania table) to change worker distribution and coffer deposits; Contact is collection/status, not full remote kingdom control. After all Livid Farm spells, Pauline can also appear on the contact list for wishes.",
+      "source_urls": [
+        "https://runescape.wiki/w/NPC_Contact",
+        "https://runescape.wiki/w/Managing_Miscellania",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Lunar dependency. Surface as Construction and kingdom-management QoL, not as a combat unlock."
+    },
+    {
+      "id": "fremennik:plank-make",
+      "name": "Plank Make (Lunar)",
+      "category": "Construction processing spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Dream Mentor completed (Lunar Diplomacy pre-req)",
+        "Lunar spellbook active",
+        "86 Magic",
+        "2 astral, 15 earth, 1 nature runes plus coins per log converted"
+      ],
+      "unlocks": [
+        "Plank Make: convert one targeted log into the matching plank without a sawmill run",
+        "Bankstanding Construction material conversion when logs and coins are available",
+        "Pair with Managing Miscellania hardwood/maple supply for self-sufficient plank loops"
+      ],
+      "notes": "Dream Mentor is the Fremennik Lunar expansion quest (Lunar Isle / dream sequence). Coin costs scale by log tier (wiki: wood/oak/teak/mahogany). Plank Make does not replace sawmill or Invention plank-maker machines; it is the portable Lunar conversion path. Cross-pressure with Asgarnia house-teleport plank makers and Morytania Razmire remains optional supply, not a second hard region for the spell.",
+      "source_urls": [
+        "https://runescape.wiki/w/Plank_Make",
+        "https://runescape.wiki/w/Dream_Mentor",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik via Dream Mentor + Lunar. Log supply often Miscellania (same region) or multi-region Woodcutting."
+    },
+    {
+      "id": "fremennik:superglass-make",
+      "name": "Superglass Make (Lunar)",
+      "category": "Crafting processing spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Dream Mentor completed",
+        "Lunar spellbook active",
+        "77 Magic",
+        "2 astral, 6 fire, 10 air runes per inventory cast"
+      ],
+      "unlocks": [
+        "Superglass Make: convert backpack sand + soda ash / seaweed pairs into molten glass without a furnace",
+        "Chance of bonus molten glass pieces per cast",
+        "Also processes robust glass and crystal glass resource sets without the robust glass machine / furnace path"
+      ],
+      "notes": "Core ironman Crafting glass route. Buckets of sand are destroyed on molten-glass casts. Resource pressure for sand/seaweed is multi-region; the spell unlock is Fremennik Dream Mentor.",
+      "source_urls": [
+        "https://runescape.wiki/w/Superglass_Make",
+        "https://runescape.wiki/w/Dream_Mentor",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Dream Mentor spell. Do not invent glass XP rates here."
+    },
+    {
+      "id": "fremennik:lunar-farming-utility",
+      "name": "Lunar Farming utility spells",
+      "category": "Farming skilling spell bundle",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy for Cure Plant and Fertile Soil",
+        "Livid Farm produce points for Remote Farm (and other Livid spells)",
+        "Magic levels: Cure Plant 66, Fertile Soil 83, Remote Farm 78"
+      ],
+      "unlocks": [
+        "Cure Plant: cure a targeted farming patch of disease",
+        "Fertile Soil: treat a targeted patch as supercomposted",
+        "Remote Farm (Livid Farm unlock): inspect any farming patch status remotely, cure disease, and cast Fertile Soil through the interface",
+        "Remote farm device later reuses Remote Farm without runes once Farming reputation and Livid unlocks allow construction"
+      ],
+      "notes": "Bundle the Farming-facing Lunar spells so planners surface Fremennik as a Farming QoL region, not only a Magic unlock. Remote Farm is Livid Farm gated; base Cure Plant / Fertile Soil are not. Remote farm device also needs Farming reputation (global/POF system) — that is not a second Fremennik hard gate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Cure_Plant",
+        "https://runescape.wiki/w/Fertile_Soil",
+        "https://runescape.wiki/w/Remote_Farm",
+        "https://runescape.wiki/w/Livid_Farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik owns Lunar + Livid Farm geography on Lunar Isle. Treat Remote Farm as a second milestone after base Lunar Diplomacy."
+    },
+    {
+      "id": "fremennik:livid-farm",
+      "name": "Livid Farm Lunar spell unlocks",
+      "category": "Lunar spell progression activity",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy completed",
+        "Lunar Isle / Livid Farm access",
+        "Produce points from Livid Farm cycles (or livid plant redemptions) to buy each spell"
+      ],
+      "unlocks": [
+        "Eleven additional Lunar spells purchased with produce points (teleports, Repair Rune Pouch, Remote Farm, Borrowed Power, and related Livid rewards)",
+        "Post-spell wishes that modify selected Lunar skilling spell behaviour once every spell is learned",
+        "NPC Contact entry for Pauline after the full Livid spell set"
+      ],
+      "notes": "Livid Farm is the long-tail Lunar completion activity on Lunar Isle. Do not list every teleport cost here; surface that full Lunar skilling utility is not finished at Lunar Diplomacy / Dream Mentor alone. Produce-point totals are wiki-volatile for planning tables — keep this as unlock-state infrastructure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Livid_Farm",
+        "https://runescape.wiki/w/Lunar_spells",
+        "https://runescape.wiki/w/Lunar_Isle"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik activity on Lunar Isle. Resolve produce-point costs from current wiki if a planner needs exact purchase order."
+    },
+    {
+      "id": "fremennik:managing-miscellania",
+      "name": "Managing Miscellania",
+      "category": "passive resource kingdom supply",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Throne of Miscellania completed to start the kingdom",
+        "Royal Trouble completed for 15 workers, +50% resources per GP, and 7.5M coffer cap",
+        "Coffers funded (500k / 750k minimum for max daily salary before / after Royal Trouble)",
+        "Approval rating maintained via Miscellania tasks or Fort Command Centre Miscellania table (tier 3 holds approval)"
+      ],
+      "unlocks": [
+        "Daily subject labour across mining, maple wood, herbs/flax, fishing (raw or cooked), hardwood teak/mahogany, and farming seeds",
+        "Self-sufficient maple/teak/mahogany log supply for Firemaking and Construction",
+        "Passive coal, herbs, fish, bird nests, and seed packages for multi-skill sustain",
+        "NPC Contact collection path and Fort Forinthry Miscellania table management path"
+      ],
+      "notes": "Silent supply backbone called out in ironman gap audits: Construction planks, Firemaking maple/mahogany, Cooking fish, Farming seeds, Summoning dragon food pressure. Resources are calculated from average daily approval and coffer spend, then applied using the subject distribution active at collection time. Hard Fremennik geography (Miscellania / Etceteria). Do not invent daily GE profit tables here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Managing_Miscellania",
+        "https://runescape.wiki/w/Throne_of_Miscellania",
+        "https://runescape.wiki/w/Royal_Trouble",
+        "https://runescape.wiki/w/Advisor_Ghrim"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik passive supply. Fort Miscellania table is Forinthry cross-QoL for management, not a second hard region for kingdom unlock."
+    },
+    {
+      "id": "fremennik:neitiznot-yak-crafting",
+      "name": "Neitiznot yak Crafting and Cooking loop",
+      "category": "Crafting and Cooking hub activity",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Partial The Fremennik Isles progress for Neitiznot access via King Gjuki Sorvott IV / Maria Gunnars boat from Rellekka",
+        "Started The Fremennik Isles to craft yak-hide armour pieces"
+      ],
+      "unlocks": [
+        "Yak pen with guaranteed yak-hide, hair, raw yak meat, and bones",
+        "Bank chests, spinning wheel, furnace, and local tanner (Thakkrad Sigmundson cures yak-hides for 5 coins)",
+        "Yak-hide armour Crafting (cured hides + needle/thread) and hair-to-rope spinning",
+        "Dense early Crafting training loop colocated with bank"
+      ],
+      "notes": "Classic Fremennik early-mid Crafting hub. Yaks also drop raw yak meat for Cooking food stock. POF Fremennik yak (unchecked) is a rare tertiary (1/3000 after farm tutorial) — do not treat as the primary skilling unlock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Neitiznot",
+        "https://runescape.wiki/w/Yak",
+        "https://runescape.wiki/w/Yak-hide",
+        "https://runescape.wiki/w/The_Fremennik_Isles"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Isles access is Fremennik-region geography. Resolve Fremennik Isles quest auto-completion separately."
+    },
+    {
+      "id": "fremennik:yak-hide-shop",
+      "name": "Contraband yak produce (Jatizso)",
+      "category": "Crafting supply shop",
+      "region_hint": "fremennik",
+      "requirements": [
+        "The Fremennik Isles progress",
+        "Pay Vanligga Gastfrihet's 5,000 coin tax during the quest to unlock the shop"
+      ],
+      "unlocks": [
+        "Contraband yak produce shop on Jatizso selling yak-hides (50 coins each, limited stock)",
+        "Optional hide stock without killing yaks when the shop is restocked"
+      ],
+      "notes": "Secondary to the Neitiznot kill/cure loop. Useful when a planner wants a shop-sourced yak-hide path. Primary self-sufficient route remains killing yaks on Neitiznot and curing with Thakkrad.",
+      "source_urls": [
+        "https://runescape.wiki/w/Yak-hide",
+        "https://runescape.wiki/w/The_Fremennik_Isles",
+        "https://runescape.wiki/w/Vanligga_Gastfrihet"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Isles shop unlock. Prefer neitiznot-yak-crafting as the main Crafting hub row."
+    },
+    {
+      "id": "fremennik:keldagrim-hub",
+      "name": "Keldagrim dwarven hub",
+      "category": "Mining Smithing Thieving infrastructure hub",
+      "region_hint": "fremennik",
+      "requirements": [
+        "The Giant Dwarf started/completed for normal Keldagrim access in the quest chain",
+        "King of the Dwarves for Lava Flow Mine training access",
+        "Birthright of the Dwarves for lava geyser Imcando fragment path"
+      ],
+      "unlocks": [
+        "Keldagrim city infrastructure treated as Fremennik-region geography in Equilibrium / wiki League badges",
+        "Lava Flow Mine path into golden mining suit, gilded pickaxes, and Imcando pickaxe fragments (see existing fremennik:lava-flow-mine / fremennik:imcando-pickaxe rows)",
+        "Dwarven multi-step thieving chests and trader loops used in ironman Thieving planning",
+        "Blast furnace and Consortium-facing Smithing/Mining support geography"
+      ],
+      "notes": "Planner taxonomy already maps Keldagrim under Fremennik (confirmed on Lava Flow Mine wiki League region badge). This hub row exists so Keldagrim is not only visible through the Imcando pickaxe equipment line. Do not restate fragment counts or suit XP % here — keep those on the existing LFM/Imcando records.",
+      "source_urls": [
+        "https://runescape.wiki/w/Keldagrim",
+        "https://runescape.wiki/w/Lava_Flow_Mine",
+        "https://runescape.wiki/w/The_Giant_Dwarf",
+        "https://runescape.wiki/w/Birthright_of_the_Dwarves"
+      ],
+      "confidence": "confirmed_wiki_region_inferred",
+      "league_treatment": "Keldagrim = Fremennik. Quest chain auto-completion still resolved separately."
+    },
+    {
+      "id": "fremennik:lava-geyser-imcando-path",
+      "name": "Lava geyser Imcando fragment path",
+      "category": "Mining tool fragment activity",
+      "region_hint": "fremennik",
+      "requirements": [
+        "King of the Dwarves for Lava Flow Mine access",
+        "Birthright of the Dwarves for lava geyser distraction",
+        "Water spells to cool geysers before mining fragments"
+      ],
+      "unlocks": [
+        "Lava geyser distraction inside Lava Flow Mine",
+        "Sequential Imcando pickaxe fragments 1-4 from fully mined cooled geysers",
+        "World-hop fragment acquisition path for the four pieces"
+      ],
+      "notes": "Fills the Birthright-gated detail that the 2026-07-25 lava-flow-mine / imcando-pickaxe rows only mentioned at unlock-list level. Golden mining suit still comes from Liquid Gold Nymph progress bars, not geysers. After four fragments, fuse path continues via existing imcando-pickaxe equipment row and cross-region Earth and Song.",
+      "source_urls": [
+        "https://runescape.wiki/w/Lava_geyser",
+        "https://runescape.wiki/w/Imcando_pickaxe_fragment",
+        "https://runescape.wiki/w/Lava_Flow_Mine",
+        "https://runescape.wiki/w/Birthright_of_the_Dwarves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Keldagrim chain. Prefer existing imcando-pickaxe equipment row for the finished tool effects."
+    },
+    {
+      "id": "fremennik:rellekka-hub",
+      "name": "Rellekka Fremennik hub",
+      "category": "coastal skilling hub",
+      "region_hint": "fremennik",
+      "requirements": [
+        "The Fremennik Trials for full Fremennik province peer status in the normal game",
+        "Boat access to Neitiznot/Jatizso and Miscellania routes from the docks"
+      ],
+      "unlocks": [
+        "Rellekka as the surface capital: bank, crafting stalls, market, and dock network",
+        "Fremennik Trials peer status for regional shop and diary progress",
+        "Jarvald boat access toward Waterbirth Island",
+        "Enchanted lyre / Fremennik sea boots teleport network endpoints into Rellekka"
+      ],
+      "notes": "Rellekka is the ordinary Fremennik logistics hub rather than a single unique XP method. Surface it so region planners do not treat Fremennik as only Lunar Isle + Keldagrim + bosses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rellekka",
+        "https://runescape.wiki/w/The_Fremennik_Trials",
+        "https://runescape.wiki/w/Fremennik_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Core Fremennik surface hub. Trials quest gating resolved via League auto-quest overlay."
+    },
+    {
+      "id": "fremennik:waterbirth-island",
+      "name": "Waterbirth Island access",
+      "category": "Slayer combat and charm supply hub",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Jarvald boat from Rellekka (or Lunar Waterbirth teleport / diary / tablet alternatives)",
+        "Combat readiness for dagannoth dungeon layers; pet rock or partner for two-person doors deeper in"
+      ],
+      "unlocks": [
+        "Waterbirth Island dungeon dagannoth charm and bone farm geography",
+        "Path to Dagannoth Kings (dragon hatchet / berserker/archers/seers ring combat pressure, already noted on hatchet chains)",
+        "Hard Fremennik achievement dagannoth tasks and elite diary adjacency"
+      ],
+      "notes": "Primarily combat/Slayer, but ironman Summoning charm audits treat Waterbirth as high-volume Fremennik charm geography. Keep this as regional access infrastructure, not a boss DPS row. Dragon hatchet DK sourcing remains cross-linked from outfits/hatchet enrichment.",
+      "source_urls": [
+        "https://runescape.wiki/w/Waterbirth_Island",
+        "https://runescape.wiki/w/Waterbirth_Island_Dungeon",
+        "https://runescape.wiki/w/Dagannoth_Kings"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik. Combat methods stay in combat datasets; this row is access + skilling-adjacent supply pressure."
+    },
+    {
+      "id": "fremennik:sparkling-wisps",
+      "name": "Sparkling wisp colony",
+      "category": "Divination training colony",
+      "region_hint": "fremennik",
+      "requirements": [
+        "40 Divination",
+        "Access south-east of Rellekka near the golden apple tree / south-west of Fremennik Slayer Dungeon (fairy ring A J R)"
+      ],
+      "unlocks": [
+        "Tier-5 sparkling wisps and sparkling energy",
+        "Mid-level Divination colony inside Fremennik geography",
+        "Boon of sparkling energy path using glowing or sparkling energy"
+      ],
+      "notes": "Fills the Divination gap for Fremennik so the region is not invisible between early and late wisp tiers. Do not promote stale XP/hour; training datasets own rates. Enriched sparkling wisps follow normal chronicle contribution rules.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sparkling_wisp",
+        "https://runescape.wiki/w/Sparkling_energy",
+        "https://runescape.wiki/w/Divination"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik Divination colony at 40+."
+    },
+    {
+      "id": "fremennik:ungael-ritual-site",
+      "name": "Ungael ritual site pressure",
+      "category": "Necromancy ritual geography",
+      "region_hint": "fremennik",
+      "region_hints": [
+        "fremennik",
+        "havenhythe",
+        "misthalin"
+      ],
+      "requirements": [
+        "Fremennik access to Ungael ritual geography",
+        "Necromancy ritual progression (City of Um remains the primary Misthalin working taxonomy site)"
+      ],
+      "unlocks": [
+        "Ungael as a Fremennik-side ritual site option",
+        "Cross-pressure with Ring of Kayazu (Havenhythe Moonrise craft) when valuing ritual QoL outside City of Um"
+      ],
+      "notes": "Audit row: best ritual ring is Havenhythe-crafted but used at Um/Ungael. This does not re-own Ring of Kayazu; it marks Fremennik ritual geography so region combo planners see Ungael pressure. Prefer havenhythe:ring-of-kayazu for the item.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ungael",
+        "https://runescape.wiki/w/Ring_of_Kayazu",
+        "https://runescape.wiki/w/Rituals"
+      ],
+      "confidence": "confirmed_wiki_cross_region_chain",
+      "league_treatment": "Optional Fremennik ritual-site pressure; Kayazu remains Havenhythe."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "fremennik:fremennik-sea-boots",
+      "name": "Fremennik sea boots",
+      "category": "achievement diary skilling utility",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Fremennik achievements claimed tier-by-tier (easy through elite)",
+        "Normal-game quest and skill gates for each diary tier"
+      ],
+      "effects": [
+        "Tiered Fremennik teleports including Rellekka market and Waterbirth options at higher tiers",
+        "Fremennik sea boots 2+: increased approval rating gain per Managing Miscellania help task (does not need to be worn for the rating boost; worn for related shortcuts)",
+        "Higher tiers add lyre and travel QoL used heavily by Fremennik skilling logistics",
+        "Hard achievements enable flatpack payments into Miscellania coffers and elven grimoire Lunar swap synergy after Prif access"
+      ],
+      "notes": "Diary utility bundle for Fremennik, analogous to morytania:morytania-legs-4 in the gaps file. Exact elite combat perks stay out of scope; keep skilling/travel/Miscellania framing.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fremennik_sea_boots",
+        "https://runescape.wiki/w/Fremennik_achievements",
+        "https://runescape.wiki/w/Managing_Miscellania"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik achievement set. Resolve quest/achievement auto-completion before treating elite tasks as manual gates."
+    },
+    {
+      "id": "fremennik:golden-mining-suit",
+      "name": "Golden mining suit",
+      "category": "Mining XP outfit",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lava Flow Mine access (King of the Dwarves)",
+        "Fill Liquid Gold Nymph progress bars to receive each suit piece in order"
+      ],
+      "effects": [
+        "Full five-piece golden mining suit: 6% Mining XP (1% set effect pattern like lumberjack)",
+        "Mining top inherits Varrock armour extra-ore behaviour when Varrock armour is owned",
+        "After full suit, Liquid Gold Nymph can gild basic bronze-through-dragon pickaxes or grant 2,500 Mining XP instead"
+      ],
+      "notes": "Named equipment split from the 2026-07-25 lava-flow-mine activity list so outfit progress is first-class. Gilded dragon pickaxe is a cosmetics/progress step on the Imcando path, not a separate DPS tier. Do not invent LFM XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Golden_mining_suit",
+        "https://runescape.wiki/w/Liquid_Gold_Nymph",
+        "https://runescape.wiki/w/Lava_Flow_Mine"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Keldagrim / Lava Flow Mine dependency."
+    },
+    {
+      "id": "fremennik:yak-hide-armour",
+      "name": "Yak-hide armour",
+      "category": "early Crafting product",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Started The Fremennik Isles",
+        "Cured yak-hides from Thakkrad Sigmundson",
+        "Needle and thread (or costume needle); Crafting level for body/legs as per wiki"
+      ],
+      "effects": [
+        "Craftable yak-hide body and legs from cured hides",
+        "Quest-facing mid armour and Crafting XP product from the Neitiznot loop"
+      ],
+      "notes": "Equipment pointer for the Neitiznot Crafting product. Not late-game gear; kept so Crafting production from Fremennik has a named output row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Yak-hide_armour",
+        "https://runescape.wiki/w/Yak-hide_armour_(top)",
+        "https://runescape.wiki/w/Cured_yak-hide"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Isles Crafting product."
+    },
+    {
+      "id": "fremennik:humidify",
+      "name": "Humidify (Lunar)",
+      "category": "skilling utility spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Dream Mentor completed",
+        "Lunar spellbook active",
+        "68 Magic"
+      ],
+      "effects": [
+        "Fills all water-fillable containers in the backpack in one cast",
+        "Supports Farming watering-can refill, clay softening, and other container-water loops without a sink run"
+      ],
+      "notes": "Dream Mentor Lunar utility often bundled with Superglass / Plank Make planning. Kept as equipment/utility-style effects row for container QoL.",
+      "source_urls": [
+        "https://runescape.wiki/w/Humidify",
+        "https://runescape.wiki/w/Dream_Mentor"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Dream Mentor spell."
+    },
+    {
+      "id": "fremennik:string-jewellery",
+      "name": "String Jewellery (Lunar)",
+      "category": "Crafting processing spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook active",
+        "80 Magic"
+      ],
+      "effects": [
+        "Strings all unstrung amulets in the backpack in one cast",
+        "Removes ball-of-wool manual stringing for amulet production runs"
+      ],
+      "notes": "Base Lunar Crafting QoL. Complements Superglass Make and Make Leather for Fremennik artisan spell coverage.",
+      "source_urls": [
+        "https://runescape.wiki/w/String_Jewellery",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Lunar Diplomacy spell."
+    },
+    {
+      "id": "fremennik:make-leather",
+      "name": "Make Leather (Lunar)",
+      "category": "Crafting processing spell",
+      "region_hint": "fremennik",
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook active",
+        "83 Magic"
+      ],
+      "effects": [
+        "Magically tans all hides of a targeted type in the backpack",
+        "Bankstanding hide tanning without a tanner NPC when runes are available"
+      ],
+      "notes": "Pairs with Neitiznot/other hide supply. Neitiznot still has a local yak-hide specialist tanner; Make Leather is the global Lunar tan tool.",
+      "source_urls": [
+        "https://runescape.wiki/w/Make_Leather",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Lunar Diplomacy spell."
+    }
+  ]
+}

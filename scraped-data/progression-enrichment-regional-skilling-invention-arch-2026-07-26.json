@@ -1,0 +1,609 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Fill thin permanent Invention + Archaeology unlock coverage: Asgarnia Invention Guild machines as named infrastructure, gizmo shells, charge-pack research ladder, Ancient Invention blueprints; Misthalin Archaeology Guildmaster / screening / research / collectors / material manuals / mattock precision; skilling monolith relics with dig-site regions. Does not re-emit already-indexed ids.",
+  "policy": {
+    "region_rule": "region_hint marks where the unlock or activity lives in the current planner taxonomy. region_hints marks a cross-region chain. required_regions is only used when both regions are needed for a full stack. Quest auto-completion and League-specific overrides must be applied separately.",
+    "no_trade_rule": "Prioritise permanent tools, shop upgrades, machines, blueprints, relic powers, and infrastructure that change self-sufficient skilling throughput. Invention combat perks are intentionally out of scope.",
+    "rate_rule": "Do not promote stale XP/hour figures. Training rates belong in training datasets; this file records unlock state and effects.",
+    "id_policy": "New ids only. Skip duplicates of asgarnia:invention-guild, cross-region:invention-machines-guild, anachronia:always-adze-relic, anachronia:death-note-relic, anachronia:bait-and-switch-relic, misthalin:archaeology-guild-shop, misthalin:archaeology-campus-hub, cross-region:mattock-of-time-and-space, havenhythe:tear-of-inanna-hungry-like-the-wolf, and related equipment chains already indexed."
+  },
+  "skipped_existing_ids": [
+    "asgarnia:invention-guild",
+    "cross-region:invention-machines-guild",
+    "anachronia:always-adze-relic",
+    "anachronia:death-note-relic",
+    "anachronia:bait-and-switch-relic",
+    "misthalin:archaeology-guild-shop",
+    "misthalin:archaeology-campus-hub",
+    "cross-region:mattock-of-time-and-space",
+    "havenhythe:tear-of-inanna-hungry-like-the-wolf"
+  ],
+  "activity_additions": [
+    {
+      "id": "asgarnia:auto-disassembler",
+      "name": "Auto disassembler / mk. II (Invention Guild machine)",
+      "category": "Invention Guild machine infrastructure",
+      "region_hint": "asgarnia",
+      "location": "Invention Guild basement machine hotspots, north-east of Falador",
+      "requirements": [
+        "Invention unlocked and machine tutorial available at 60 Invention",
+        "Simple generator built in the Guild (60 Invention)",
+        "60 Invention for Auto disassembler; 81 Invention for mk. II upgrade"
+      ],
+      "unlocks": [
+        "Offline hourly auto-disassemble of input items into Invention components",
+        "Mk. I: 35 items/hour, 30 power, 180 machine charge/hour, capacity 7,500",
+        "Mk. II: 60 items/hour, 40 power, 230 machine charge/hour, capacity 13,000",
+        "Primary AFK component farm for gizmo shells, devices, and divine-charge loops"
+      ],
+      "notes": "Machines only build in the Invention Guild basement — not portable. Complements the system blob cross-region:invention-machines-guild with a named permanent unlock. Power allotment competes with other machines; jumbo generator is 160 power (200 with Fort Forinthry tier-3 Workshop).",
+      "source_urls": [
+        "https://runescape.wiki/w/Auto_disassembler",
+        "https://runescape.wiki/w/Auto_disassembler_mk._II",
+        "https://runescape.wiki/w/Machines",
+        "https://runescape.wiki/w/Invention_Guild"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia machine room. Fort power bonus is Misthalin optional pressure, not machine placement."
+    },
+    {
+      "id": "asgarnia:alchemiser",
+      "name": "Alchemiser / mk. II (Invention Guild machine)",
+      "category": "Invention Guild machine infrastructure",
+      "region_hint": "asgarnia",
+      "location": "Invention Guild basement machine hotspots",
+      "requirements": [
+        "72 Invention for Alchemiser; 108 Invention for mk. II",
+        "Generator with free power allotment (20 power mk. I / 55 power mk. II)",
+        "Nature runes per item; fire runes only on mk. I (5 fire per item)"
+      ],
+      "unlocks": [
+        "Offline High Alchemy processing on machine ticks",
+        "Mk. I: 8 items/hour; mk. II: 25 items/hour and drops fire-rune cost",
+        "Cap of two alchemisers built at once (unique among machine families)"
+      ],
+      "notes": "AFK alch infrastructure for ironman cash and item disposal. Does not replace portable alchemy methods; it is Guild-gated permanent scenery.",
+      "source_urls": [
+        "https://runescape.wiki/w/Alchemiser",
+        "https://runescape.wiki/w/Alchemiser_mk._II",
+        "https://runescape.wiki/w/Machines"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia."
+    },
+    {
+      "id": "asgarnia:plank-maker-machine",
+      "name": "Plank maker / high capacity plank maker (Invention Guild)",
+      "category": "Invention Guild machine infrastructure",
+      "region_hint": "asgarnia",
+      "location": "Invention Guild basement machine hotspots",
+      "requirements": [
+        "99 Invention for Plank maker; 117 Invention for High capacity plank maker",
+        "30 power (mk. I) or 65 power (high capacity); generator charge from divine charges"
+      ],
+      "unlocks": [
+        "Offline logs → planks without sawmill coin fees",
+        "Mk. I: 13 planks/hour, 2,500 capacity; high capacity: 40 planks/hour, 7,500 capacity",
+        "Construction material AFK path complementary to Lunar Plank Make and Rimmington plank maker NPC"
+      ],
+      "notes": "Distinct from Rimmington NPC plank maker and Lunar Plank Make (fremennik:plank-make). Machine path costs divine/machine charge instead of coins per plank.",
+      "source_urls": [
+        "https://runescape.wiki/w/Plank_maker_(machine)",
+        "https://runescape.wiki/w/High_capacity_plank_maker",
+        "https://runescape.wiki/w/Machines"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia. Log supply may pull other regions."
+    },
+    {
+      "id": "asgarnia:partial-potion-producer",
+      "name": "Partial potion producer / DX (Invention Guild)",
+      "category": "Invention Guild machine infrastructure",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "90 Invention for Partial potion producer; 114 Invention for DX",
+        "Clean herbs + vials of water as inputs; 20 / 50 power allotment"
+      ],
+      "unlocks": [
+        "Offline unfinished-potion production from cleaned herbs",
+        "Mk. I: 13/hour; DX: 40/hour",
+        "Herblore material prep while offline"
+      ],
+      "notes": "Pairs with scroll of cleansing / herb bag stacks for ironman Herblore prep. Machine room still Asgarnia-only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Partial_potion_producer",
+        "https://runescape.wiki/w/Partial_potion_producer_DX",
+        "https://runescape.wiki/w/Machines"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia."
+    },
+    {
+      "id": "asgarnia:automatic-hide-tanner",
+      "name": "Automatic / optimised hide tanner (Invention Guild)",
+      "category": "Invention Guild machine infrastructure",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "93 Invention for Automatic hide tanner; 111 Invention for Optimised hide tanner",
+        "25 / 50 power allotment"
+      ],
+      "unlocks": [
+        "Offline free hide tanning (no coin tan cost)",
+        "Mk. I: 45 hides/hour; optimised: 140 hides/hour",
+        "Crafting/construction hide supply AFK path"
+      ],
+      "notes": "Free tanning is the planner-relevant permanent effect versus paying NPC tanners.",
+      "source_urls": [
+        "https://runescape.wiki/w/Automatic_hide_tanner",
+        "https://runescape.wiki/w/Optimised_hide_tanner",
+        "https://runescape.wiki/w/Machines"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia."
+    },
+    {
+      "id": "asgarnia:invention-gizmo-shells",
+      "name": "Gizmo shells (weapon / armour / tool + ancient)",
+      "category": "Invention device permanent unlocks",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "Weapon gizmo blueprint at 3 Invention (tutorial)",
+        "Armour gizmo blueprint at 16 Invention",
+        "Tool gizmo blueprint at 22 Invention",
+        "Ancient gizmos blueprint at 85 Invention via Stormguard Howl blueprints or GE tradeable blueprint (no-trade: Archaeology path)"
+      ],
+      "unlocks": [
+        "Empty weapon / armour / tool gizmo shells manufacturable at inventor's workbench",
+        "Fill shells with materials to create perks, then install into augmented gear",
+        "Ancient weapon / armour / tool gizmo shells (9 slots) after Ancient gizmos blueprint",
+        "Ancient shells enable higher perk ranks and ancient-only perks (Fortune, Relentless, Ruthless)"
+      ],
+      "notes": "Shell discovery/manufacture is workbench Invention progression; natural hub is Invention Guild (Asgarnia). Ancient shells depend on Ancient Invention blueprints (asgarnia:ancient-invention-blueprints). Combat perk recipes stay in planner-expansions-invention-* — not duplicated here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gizmo",
+        "https://runescape.wiki/w/Weapon_gizmo_shell",
+        "https://runescape.wiki/w/Armour_gizmo_shell",
+        "https://runescape.wiki/w/Tool_gizmo_shell",
+        "https://runescape.wiki/w/Ancient_Invention"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia owns primary workbench/guild discovery geography. Ancient path pressures Stormguard / Asgarnia Armadylean Archaeology for no-trade blueprints."
+    },
+    {
+      "id": "asgarnia:charge-pack-infrastructure",
+      "name": "Charge pack + maximum charge + charge drain reduction",
+      "category": "Invention charge infrastructure",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "Charge pack built in Invention tutorial and added to tool belt",
+        "Maximum charge improvement research ranks at Invention 22 / 40 / 64 / 87 / 95",
+        "Charge drain reduction research ranks at Invention 34 through 105 (nine ranks)"
+      ],
+      "unlocks": [
+        "Universal charge pool for augmented equipment and skilling tools",
+        "Divine charge adds 3,000 charge to the pack (and 3,000 machine charge to the Guild generator)",
+        "Max pack capacity ladder: 200k base → 250k / 300k / 350k / 400k / 500k at rank 5",
+        "Charge drain reduction up to 20% at rank 9 (105 Invention research)",
+        "Without charge: perks inactive, most augmented gear falls to tier-1 stats, no item XP"
+      ],
+      "notes": "Permanent account infrastructure, not a consumable. Divine energy → divine charge is the refill loop (Divination multi-region). Machine generators share the same divine-charge currency as the pack.",
+      "source_urls": [
+        "https://runescape.wiki/w/Charge_pack",
+        "https://runescape.wiki/w/Divine_charge",
+        "https://runescape.wiki/w/Maximum_charge_improvement",
+        "https://runescape.wiki/w/Charge_drain_reduction"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tutorial/charge-pack research is Asgarnia Invention Guild geography. Energy supply is multi-region Divination."
+    },
+    {
+      "id": "asgarnia:ancient-invention-blueprints",
+      "name": "Ancient Invention blueprints (Howl's workshop)",
+      "category": "Ancient Invention permanent unlock path",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "requirements": [
+        "95 Archaeology for Howl's Floating Workshop / drafting bench path (self-sufficient)",
+        "Torn blueprint fragments (Howl's workshop) from Stormguard Citadel excavation",
+        "85 Invention to use Ancient gizmos blueprint; 93 for Ancient tools; 106 for XP Capacitor",
+        "Tradeable GE blueprints exist for main-game buyers — no-trade League must self-craft"
+      ],
+      "unlocks": [
+        "Permanent discovery of ancient weapon / armour / tool gizmos (9-slot shells)",
+        "Enhanced hammer-tron / pyro-matic / fishing rod-o-matic (level-80-class ancient tools)",
+        "XP Capacitor 5000 blueprint",
+        "Theoretical blueprints path for Experimental Aether Reactor and Subtle Blade after Back to the Drawing Board research",
+        "Ancient component discovery (Classic/Historic 85, Vintage 94, Timeworn 103 Invention) for restored-artefact disassembly"
+      ],
+      "notes": "Stormguard Citadel is Armadylean dig-site geography under Asgarnia in current Equilibrium mapping. Lowse at Armadyl's Tower is the Armadylean collector for related collections (Inspire Genius). Do not invent fragment counts beyond wiki fragment costs (200 for targeted untradeable blueprint; 150 random).",
+      "source_urls": [
+        "https://runescape.wiki/w/Ancient_Invention",
+        "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+        "https://runescape.wiki/w/Torn_blueprint_fragments_(Howl%27s_workshop)",
+        "https://runescape.wiki/w/%27Ancient_gizmos%27_blueprint"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia hard-gates Stormguard / Howl self-sufficient blueprint unlock. GE tradeable blueprints are not a League no-trade path."
+    },
+    {
+      "id": "misthalin:guildmaster-qualification",
+      "name": "Archaeology Guildmaster qualification permanent rewards",
+      "category": "Archaeology Guild permanent unlock",
+      "region_hint": "misthalin",
+      "location": "Archaeology Guild / Campus at Varrock Dig Site",
+      "requirements": [
+        "Qualification - Professor already complete",
+        "99 Archaeology",
+        "Discoverer IX / Restorer IX (1,000 excavate and restore each)",
+        "Collectors Assemble VII (25 unique collections)",
+        "Mystery Solver VI (20 mysteries)",
+        "Researcher IV (168 research hours)"
+      ],
+      "unlocks": [
+        "Research team size 5 and access to research professors",
+        "Fourth relic loadout tab (after tutorial 2 + Professor purchase 3)",
+        "Guildmaster Archaeology Guild Shop tab: master archaeologist's outfit, energised meteorite shard, final +2 mattock precision",
+        "Claim pack from Acting Guildmaster Reiniger: 5 material manuals, 5 hi-spec monocles, 5 tarpaulin sheets, 5 archaeologist's tea"
+      ],
+      "notes": "Acting Guildmaster Reiniger awards ceremony/claimables; Guildmaster Tony is the missing prior guildmaster (Tony's mattock is a separate end-game tool). Expands misthalin:archaeology-guild-shop without re-emitting that id. Fixate daily energy requires wearing full master outfit (99 Arch + Guildmaster shop).",
+      "source_urls": [
+        "https://runescape.wiki/w/Qualification_-_Guildmaster",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Acting_Guildmaster_Reiniger",
+        "https://runescape.wiki/w/Master_archaeologist%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Starting Misthalin Guild infrastructure. Collection/mystery counts still require multi-region dig sites."
+    },
+    {
+      "id": "misthalin:material-manuals",
+      "name": "Material manuals (Guild shop Archaeology boost)",
+      "category": "Archaeology consumable shop infrastructure",
+      "region_hint": "misthalin",
+      "location": "Archaeology Guild Shop (Ezreal)",
+      "requirements": [
+        "Qualification - Intern for shop access",
+        "2,000 chronotes per manual (or Reiniger qualification claim packs / pickpocket / ancient casket)"
+      ],
+      "unlocks": [
+        "Read for +10% material find chance while excavating",
+        "20 minutes base duration; 30 minutes in full master archaeologist's outfit",
+        "Stackable up to 1 hour of uptime"
+      ],
+      "notes": "Consumable but permanent shop unlock / self-supply loop. Pair with hi-spec monocle (+20% base mattock precision temporary) and tarpaulin sheet (soil boost) sold at the same Guild shop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Material_manual",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Hi-spec_monocle"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin Guild shop geography. Chronotes come from all dig sites."
+    },
+    {
+      "id": "misthalin:screening-station",
+      "name": "Screening station (Archaeology Campus)",
+      "category": "Archaeology campus infrastructure",
+      "region_hint": "misthalin",
+      "location": "Archaeology Campus",
+      "requirements": [
+        "Archaeology tutorial / soil box access",
+        "Soil gathered from excavation or caches"
+      ],
+      "unlocks": [
+        "Screen up to 100 soil at a time for materials (+ rare 1/1,000 damaged artefacts)",
+        "1.8s per soil (1.2s with full master outfit)",
+        "Wet vs dry meshes are visual-only; XP per soil scales with Archaeology level bands"
+      ],
+      "notes": "Baseline campus soil processing. Auto-screener and Sift Soil are alternatives — auto-screener is the permanent device upgrade path.",
+      "source_urls": [
+        "https://runescape.wiki/w/Screening_station",
+        "https://runescape.wiki/w/Archaeology_Campus",
+        "https://runescape.wiki/w/Soil"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Starting Misthalin campus infrastructure."
+    },
+    {
+      "id": "misthalin:auto-screener",
+      "name": "Auto-screener v1.080",
+      "category": "Archaeology Invention device permanent unlock",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "requirements": [
+        "Associate Archaeology qualification",
+        "70 Archaeology minimum for blueprint shop access",
+        "50,000 chronotes for Auto-screener v1.080 blueprint at Archaeology Guild Shop",
+        "67 Invention to discover and manufacture at an inventor's workbench"
+      ],
+      "unlocks": [
+        "While excavating, auto-converts gathered soil into hotspot-matching materials",
+        "Drains charge pack (~3.33 charge per soil / ~900 soil per divine charge)",
+        "Toggle on/off free; materials can bank via porters / Imp Souled",
+        "No soil-box bank trips and no screening-station time"
+      ],
+      "notes": "Does not yield screening XP or damaged artefacts; only materials available at the current hotspot/cache. Blueprint is Misthalin Guild; manufacture is Invention workbench (Asgarnia natural hub).",
+      "source_urls": [
+        "https://runescape.wiki/w/Auto-screener_v1.080",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Auto-screener_v1.080_(blueprint)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin owns blueprint purchase. Invention manufacture pressures Asgarnia workbench/guild. Charge pack is shared Invention infrastructure."
+    },
+    {
+      "id": "misthalin:archaeology-research",
+      "name": "Archaeology research system",
+      "category": "Archaeology research infrastructure",
+      "region_hint": "misthalin",
+      "location": "Research notes table, Exam Centre, Archaeology Campus",
+      "requirements": [
+        "Assistant qualification for research tutorial unlock",
+        "Chronotes to fund general and special research expeditions",
+        "Guildmaster for research team size 5 and professor researchers"
+      ],
+      "unlocks": [
+        "General research: timed offline dig-site expeditions for Arch XP, materials, rare damaged artefacts",
+        "Special research: one-time higher-value studies (culture and dig-site gated), including Back to the Drawing Board for Ancient Invention theoretical blueprints",
+        "Fort Forinthry Command Centre: −3% chronote cost (T2) and +3% research speed (T3) as optional Misthalin fort pressure"
+      ],
+      "notes": "Campus-managed system with dig-site-specific research destinations. Prefer special research first for permanent unlocks and better XP efficiency.",
+      "source_urls": [
+        "https://runescape.wiki/w/Research",
+        "https://runescape.wiki/w/Research_notes",
+        "https://runescape.wiki/w/Back_to_the_Drawing_Board",
+        "https://runescape.wiki/w/Command_Centre"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Management hub is Misthalin campus. Destination dig sites still need their regions. Fort Command Centre is optional same-region fort pressure."
+    },
+    {
+      "id": "misthalin:archaeology-collectors",
+      "name": "Archaeology collectors and collection system",
+      "category": "Archaeology collection infrastructure",
+      "region_hint": "misthalin",
+      "location": "Collectors around Archaeology Campus and culture-specific NPCs",
+      "requirements": [
+        "Restored artefacts matching each collection",
+        "Dig-site access for artefact sources (multi-region)",
+        "Collectors Assemble progression for Guildmaster (25 unique collections)"
+      ],
+      "unlocks": [
+        "Chronote payouts for artefact turn-ins vs museum bin (collectors pay full; bin pays 40%)",
+        "Collection completion rewards including many monolith relic unlock items",
+        "Museum / Velucia training collections and culture experts as permanent progression tracks"
+      ],
+      "notes": "Collectors live on campus and at culture hubs; artefact geography is dig-site regional. Relic powers unlocked via collections should keep their dig-site region_hints on their own rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Collectors",
+        "https://runescape.wiki/w/Archaeology_collections",
+        "https://runescape.wiki/w/Velucia",
+        "https://runescape.wiki/w/Museum_donation_bin"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Campus collectors are Misthalin. Collection completion often multi-region."
+    },
+    {
+      "id": "misthalin:mattock-precision-upgrades",
+      "name": "Mattock precision upgrades (Guild shop permanent)",
+      "category": "Archaeology tool permanent upgrade",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Assistant: 8,000 chronotes for first +2 precision",
+        "Associate: 30,000 chronotes for next +2 (cumulative +4)",
+        "Professor: 75,000 chronotes for next +2 (cumulative +6)",
+        "Guildmaster: 150,000 chronotes for final +2 (cumulative +8 base precision)"
+      ],
+      "unlocks": [
+        "Permanent +2 base mattock precision per qualification shop purchase",
+        "Applies to every mattock used (reflected on tooltips)",
+        "Stacks with Flow State (+20% base precision) and hi-spec monocle (+20% base for duration)"
+      ],
+      "notes": "Account-wide permanent upgrades, not per-tool. Distinct from mattock tier ladder and Mattock of Time and Space craft.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mattocks",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Precision"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin Guild shop purchases. Qualification gates still apply."
+    },
+    {
+      "id": "anachronia:flow-state-relic",
+      "name": "Flow State (Soma)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "anachronia",
+      "requirements": [
+        "102 Archaeology (boostable) to craft Soma from Orthen orthenglass flask path",
+        "Dragon metal, clean arbuck, guarana, sweet honeycomb, Anachronia waterfall pool fill",
+        "4,000 chronotes and 200 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Flow State relic power at the mysterious monolith",
+        "+20% mattock base precision while active",
+        "No soil received while active (including with tarpaulin sheet)"
+      ],
+      "notes": "Orthen / Anachronia Soma craft is the regional unlock path. Precision-focused excavation trade-off versus material/soil methods. Always Adze is a separate relic (already indexed as anachronia:always-adze-relic).",
+      "source_urls": [
+        "https://runescape.wiki/w/Flow_State",
+        "https://runescape.wiki/w/Soma",
+        "https://runescape.wiki/w/Orthen_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia for Soma. Monolith harness is global Archaeology."
+    },
+    {
+      "id": "asgarnia:divine-conversion-relic",
+      "name": "Divine Conversion (Cres Framework)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "requirements": [
+        "98 Archaeology (boostable) for golem heart/instruction artefacts at Stormguard",
+        "86 Invention (boostable) to manufacture golem framework",
+        "85 Divination (boostable) for large memory transfer in Guthixian Cache",
+        "Howl's Floating Workshop mystery; Back to the Drawing Board research; The World Wakes",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Divine Conversion relic power",
+        "Convert entire backpack of Divination memories (including familiar inventory) at an energy rift in one action",
+        "Does not work in Daemonheim"
+      ],
+      "notes": "Stormguard / Howl's workshop is the hard Archaeology geography (Asgarnia). Guthixian Cache sits under Kandarin in current taxonomy for the personality-transfer step. High-value Divination QoL for energy/charge loops.",
+      "source_urls": [
+        "https://runescape.wiki/w/Divine_Conversion",
+        "https://runescape.wiki/w/Cres_Framework",
+        "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+        "https://runescape.wiki/w/Guthixian_Cache"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia owns Stormguard relic craft. Kandarin optional for Cache step; do not hard-require both unless valuing the full path."
+    },
+    {
+      "id": "morytania:sticky-fingers-relic",
+      "name": "Sticky Fingers (Andvaranaut)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "morytania",
+      "requirements": [
+        "84 Archaeology (boostable) to excavate Dominarian device at Everlight Oikos fishing hut remnants",
+        "Restore Dominarian device and hand to Reldo for Andvaranaut",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Sticky Fingers relic power",
+        "+50% auto-pickpocket rate (3-tick → 2-tick) with −33% pickpocket XP (net XP roughly flat; more loot)",
+        "Reduced success-penalty per attempt (0.17% vs 0.25%) after 2026 Thieving rebalance"
+      ],
+      "notes": "Everlight Dig Site is Morytania. Reldo hand-in is Misthalin campus but the artefact gate is Everlight. Pairs with Tirannwn Crystal Mask / Light Form stacks as optional partners — not required for this unlock row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sticky_Fingers",
+        "https://runescape.wiki/w/Andvaranaut",
+        "https://runescape.wiki/w/Dominarian_device",
+        "https://runescape.wiki/w/Everlight_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for Dominarian device. Reldo is starting-region NPC."
+    },
+    {
+      "id": "asgarnia:inspire-genius-relic",
+      "name": "Inspire Genius (Howl's Thinking Cap)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "Armadylean III collection for Lowse (Howl's Thinking Cap)",
+        "118 Archaeology listed on relic; boosts can restore/excavate as early as ~110 with pulse cores",
+        "5,000 chronotes and 250 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Inspire Genius relic power",
+        "+2% XP in artisan skills: Crafting, Construction, Cooking, Firemaking, Fletching, Herblore, Runecrafting, Smithing"
+      ],
+      "notes": "Stormguard / Lowse Armadylean collector path. Planner-relevant permanent XP multiplier for production skills. Related Inspire Awe / Effort / Love are separate experience relics not expanded here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Inspire_Genius",
+        "https://runescape.wiki/w/Howl%27s_Thinking_Cap",
+        "https://runescape.wiki/w/Armadylean_III",
+        "https://runescape.wiki/w/Lowse"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia via Stormguard collections and Lowse at Armadyl's Tower."
+    },
+    {
+      "id": "misthalin:guildmaster-tonys-mattock",
+      "name": "Guildmaster Tony's mattock",
+      "category": "end-game Archaeology mattock",
+      "region_hint": "misthalin",
+      "requirements": [
+        "99 Archaeology to use",
+        "Shadowy key to open the display case in the main Archaeology Guild building",
+        "Augmentor path for augmented Tony's mattock (22 Invention + augmented mattock research)"
+      ],
+      "unlocks": [
+        "Precision 85 / focus 9 — strongest base mattock stats (above Mattock of Time and Space 80/7)",
+        "Augmentable for tool gizmos"
+      ],
+      "notes": "Named after Guildmaster Tony (predecessor to Acting Guildmaster Reiniger). Rare display-case unlock, not the Qualification Guildmaster shop chain. Prefer MoTaS as the craftable no-trade end-game path; Tony's is best-in-slot when obtained.",
+      "source_urls": [
+        "https://runescape.wiki/w/Guildmaster_Tony%27s_mattock",
+        "https://runescape.wiki/w/Mattocks",
+        "https://runescape.wiki/w/Shadowy_key"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin Guild building. Shadowy key acquisition may involve multi-region content — verify if treating as guaranteed."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "misthalin:mattock-tier-ladder",
+      "name": "Mattock tier ladder (bronze through elder rune + specials)",
+      "category": "Archaeology tool progression",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "anachronia",
+        "tirannwn",
+        "kandarin"
+      ],
+      "requirements": [
+        "Archaeology level matching mattock tier (1–90 smithable; 60 dragon; 70 crystal; 80 Imcando; 99 MoTaS / Tony)",
+        "Smithing for bronze–elder rune mattocks; Matty Ock's Mattock Shop sells early tiers at campus",
+        "Dragon mattock: Anachronia BGH / ancient casket",
+        "Crystal: dragon mattock + 4,000 harmonic dust (Tirannwn)",
+        "Imcando: dragon mattock + imcando metal pieces (Warforge / Thalmund path)",
+        "Mattock of Time and Space: crystal + Imcando + energised meteorite shard (already indexed as cross-region:mattock-of-time-and-space)"
+      ],
+      "effects": [
+        "Precision scales excavation artefact speed; focus scales material find rate",
+        "Dragon / crystal / Imcando / MoTaS / Tony's are augmentable",
+        "Imcando (80) matches elder rune (90) precision/focus while remaining augmentable — preferred mid-late tool"
+      ],
+      "notes": "Campus Matty Ock shop is Misthalin starting infrastructure for early mattocks. Special mattocks pressure Anachronia (dragon), Tirannwn (crystal), Warforge (Imcando pieces; Warforge boundary often Kandarin/Forinthry depending on mapping). Do not re-emit MoTaS id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mattocks",
+        "https://runescape.wiki/w/Matty_Ock%27s_Mattock_Shop",
+        "https://runescape.wiki/w/Dragon_mattock",
+        "https://runescape.wiki/w/Imcando_mattock"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Early ladder is Misthalin. Flag optional region_hints for special mattock bases rather than hard-requiring every region."
+    },
+    {
+      "id": "asgarnia:ancient-gizmo-shells",
+      "name": "Ancient weapon / armour / tool gizmo shells",
+      "category": "Ancient Invention equipment shells",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "Ancient gizmos blueprint unlocked (85 Invention)",
+        "Classic / Historic (and higher) ancient components discovered for full shell recipes",
+        "Inventor's workbench access"
+      ],
+      "effects": [
+        "Nine material slots per ancient shell vs five on standard shells",
+        "Enables perk ranks and combos unavailable on standard gizmos",
+        "Required chassis for Fortune (tool), Relentless, Ruthless and high-rank combat perk recipes"
+      ],
+      "notes": "Companion equipment row to asgarnia:invention-gizmo-shells and asgarnia:ancient-invention-blueprints. Perk recipes remain in invention planner expansions.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ancient_weapon_gizmo_shell",
+        "https://runescape.wiki/w/Ancient_armour_gizmo_shell",
+        "https://runescape.wiki/w/Ancient_tool_gizmo_shell",
+        "https://runescape.wiki/w/Ancient_Invention"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia manufacture hub; ancient components from multi-region restored artefacts."
+    }
+  ],
+  "notes_on_existing_relics": {
+    "always_adze": "Already indexed as anachronia:always-adze-relic (Seed of the Charyou Tree / Warforge Into the Forge path; dual WC+FM without prayer drain).",
+    "death_note": "Already indexed as anachronia:death-note-relic. Correct unlock is Dragonkin III → Kaladanda at Orthen (108 Archaeology); notes guaranteed bone/ash drops. Prefer Anachronia, not a second id.",
+    "bait_and_switch": "Already indexed as anachronia:bait-and-switch-relic (Orthen death mask / Evil Bob's Catspaw)."
+  }
+}

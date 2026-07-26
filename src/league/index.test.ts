@@ -128,6 +128,24 @@ describe("normalizeBuild", () => {
     });
   });
 
+  it("drops relic names outside revealed choices; keeps unrevealed-tier picks", () => {
+    expect(
+      normalizeBuild({
+        elective: [],
+        relics: {
+          "1": "Not A Real Relic",
+          "2": "Placeholder for unrevealed tier",
+        },
+      }).relics,
+    ).toEqual({ "2": "Placeholder for unrevealed tier" });
+    expect(
+      normalizeBuild({
+        elective: [],
+        relics: { "1": "Golden Touch", "2": "Still open" },
+      }).relics,
+    ).toEqual({ "1": "Golden Touch", "2": "Still open" });
+  });
+
   it("clamps resets to the data-owned count and caps picks at the path tier count", () => {
     const state = normalizeBuild({
       elective: [],

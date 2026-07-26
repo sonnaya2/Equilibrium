@@ -1,4 +1,4 @@
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
@@ -17,10 +17,7 @@ const upgrades = read("scraped-data/major-upgrades-by-region.json");
 const trainingSeed = read("scraped-data/training-methods.json");
 const trainingHigh = read("scraped-data/training-high-value.json");
 const trainingAudit = read("scraped-data/training-current-audit.json");
-const trainingGapFiles = readdirSync(join(ROOT, "scraped-data"))
-  .filter((name) => /^training-gap-.*\.json$/i.test(name))
-  .sort();
-const trainingGaps = trainingGapFiles.map((name) => ({ name, data: read(`scraped-data/${name}`) }));
+// training-gap-*.json merged only by scripts/sync-training-gaps.mjs (sole post-step; avoids dual-merge notes)
 const sourceManifest = read("scraped-data/sources.json");
 
 const verifiedAt = index.snapshot_date;
@@ -213,157 +210,7 @@ function regionHints(record) {
   return [...result];
 }
 
-/** Coerce agent-authored training-gap rows into the training method shape. */
-function coerceGapRecord(raw, sourceFile) {
-  if (!raw || typeof raw !== "object") return null;
-  const skill = text(raw.skill);
-  if (!skill || skill.toLowerCase() === "multi" || skill.toLowerCase() === "unknown") return null;
-
-  const method = text(
-    raw.method ||
-      raw.name ||
-      raw.summary ||
-      raw.item_family ||
-      raw.category ||
-      raw.id,
-  );
-  if (!method) return null;
-
-  const sourceUrl =
-    text(raw.source) ||
-    text(list(raw.source_urls || raw.sources)[0]?.url || list(raw.source_urls || raw.sources)[0]) ||
-    "";
-
-  const noteParts = [
-    raw.notes,
-    raw.note,
-    raw.summary,
-    raw.ironman_notes,
-    raw.league_note,
-    raw.importance,
-    raw.validity_note,
-    raw.usage_notes,
-    raw.path_notes && (typeof raw.path_notes === "string" ? raw.path_notes : compact(raw.path_notes)),
-    raw.region_note,
-    raw.gap,
-    sourceFile ? `gap_file: ${sourceFile}` : "",
-  ]
-    .map((value) => (typeof value === "string" ? value : value ? compact(value) : ""))
-    .filter(Boolean);
-
-  const xp =
-    raw.xp_rate ??
-    raw.base_xp_per_hour ??
-    raw.example_base_xp_per_hour ??
-    raw.throughput ??
-    raw.rates_wiki ??
-    raw.known_high_end_rates;
-
-  return {
-    ...raw,
-    skill,
-    method,
-    region: raw.region || raw.method_region,
-    source: sourceUrl || raw.source,
-    notes: noteParts.join(" · "),
-    warning: raw.warning || raw.region_warning,
-    xp_rate: xp,
-    freshness: raw.freshness || "2026-07-26_gap_pass",
-    confidence: raw.confidence || "confirmed_wiki_gap_pass",
-  };
-}
-
-function expandNestedGapRows(raw) {
-  const out = [];
-  // Chinchompa-style variants with their own region_hints
-  for (const variant of list(raw.variants)) {
-    out.push({
-      ...raw,
-      method: text(variant.item || variant.name || variant.method) || text(raw.method || raw.summary),
-      region: text(list(variant.region_hints)[0] || variant.region),
-      region_hints: list(variant.region_hints).length ? list(variant.region_hints) : list(raw.region_hints),
-      location: text(variant.catch_location || variant.location || raw.location),
-      level_range: text(
-        variant.ranged_level
-          ? `Ranged ${variant.ranged_level}+; Hunter ${variant.hunter_level || "?"}`
-          : raw.level_range,
-      ),
-      notes: [raw.summary, variant.stale_assumption_corrected, raw.notes].filter(Boolean).join(" · "),
-      source: list(raw.source_urls)[0] || raw.source,
-    });
-  }
-  // Slayer master access rows
-  for (const master of list(raw.masters)) {
-    out.push({
-      ...raw,
-      method: text(master.name || master.master || master.method) || "Slayer master access",
-      region: text(master.region || master.method_region || list(master.region_hints)[0]),
-      region_hints: list(master.region_hints).length
-        ? list(master.region_hints)
-        : [master.region].filter(Boolean),
-      location: text(master.location),
-      level_range: text(master.level_range || master.combat_level || raw.level_range),
-      notes: [raw.summary, master.notes, master.access_notes, master.combo_note].filter(Boolean).join(" · "),
-      warning: master.warning || raw.warning,
-      source: list(raw.source_urls)[0] || master.source || raw.source,
-    });
-  }
-  return out;
-}
-
-function expandGapFile(file) {
-  const rows = [];
-  for (const raw of list(file.data.methods)) {
-    const nested = expandNestedGapRows(raw);
-    if (nested.length) {
-      for (const row of nested) {
-        const coerced = coerceGapRecord(row, file.name);
-        if (coerced) rows.push(coerced);
-      }
-      // Keep parent summary only when it has a usable method name distinct from variants
-      if (raw.method || raw.name) {
-        const coerced = coerceGapRecord(raw, file.name);
-        if (coerced) rows.push(coerced);
-      }
-      continue;
-    }
-    const coerced = coerceGapRecord(raw, file.name);
-    if (coerced) rows.push(coerced);
-  }
-  for (const raw of list(file.data.supply_routes)) {
-    const asMethod = {
-      ...raw,
-      skill: raw.skill || "Herblore",
-      method: raw.method || raw.item_family || raw.name || raw.id || "Supply route",
-      category: raw.category || "supply",
-    };
-    // Prefer first route region when top-level region missing
-    if (!asMethod.region && list(raw.routes).length) {
-      const regions = list(raw.routes)
-        .map((route) => text(route.region))
-        .filter(Boolean);
-      asMethod.region_options = regions;
-      asMethod.region = regions.length === 1 ? regions[0] : regions.length ? "multi-region" : undefined;
-    }
-    const coerced = coerceGapRecord(asMethod, file.name);
-    if (coerced) rows.push(coerced);
-  }
-  for (const raw of list(file.data.unlock_notes || file.data.unlocks)) {
-    // Unlocks that are clearly training/utility with a skill tag
-    if (!raw?.skill && !raw?.skills) continue;
-    const skill = text(raw.skill) || text(list(raw.skills)[0]);
-    const coerced = coerceGapRecord(
-      {
-        ...raw,
-        skill,
-        method: raw.method || raw.name || raw.id,
-      },
-      file.name,
-    );
-    if (coerced) rows.push(coerced);
-  }
-  return rows;
-}
+// Gap coerce/expand lives in scripts/lib/training-gaps.mjs — consumed by sync-training-gaps only.
 
 function wikiEntitySource(name) {
   const override = ENTITY_SOURCE_OVERRIDES[name];
@@ -448,23 +295,7 @@ for (const rows of [trainingSeed.methods, trainingHigh.methods, trainingAudit.me
     training.set(trainingKey(method), method);
   }
 }
-// Gap-pass files from multi-agent ironman audit (do not override existing keys unless fresher gap)
-let gapIngested = 0;
-let gapSkippedNoSource = 0;
-for (const file of trainingGaps) {
-  for (const raw of expandGapFile(file)) {
-    const method = normalizeTraining(raw);
-    if (!method.source?.url) {
-      gapSkippedNoSource += 1;
-      continue;
-    }
-    const key = trainingKey(method);
-    if (!training.has(key)) {
-      training.set(key, method);
-      gapIngested += 1;
-    }
-  }
-}
+// Gaps: run `npm run sync:training-gaps` (or normalize:data pipeline post-step). Do not merge here.
 const allTraining = [...training.values()].sort((a, b) =>
   a.skill === b.skill ? a.method.localeCompare(b.method) : a.skill.localeCompare(b.skill),
 );
@@ -763,5 +594,5 @@ write("data/research/sources.json", {
 });
 
 console.log(
-  `DATA NORMALIZE\nRegions: ${normalizedRegions.length}   Relic tiers: ${relicTiers.length}   Blessing tiers: ${blessingTiers.length}   Skills: ${normalizedSkills.length}   Training methods: ${allTraining.filter((method) => ACTUAL_SKILLS.has(method.skill)).length}   Gap files: ${trainingGapFiles.length}   Gap ingested: ${gapIngested}   Gap skipped (no source): ${gapSkippedNoSource}`,
+  `DATA NORMALIZE\nRegions: ${normalizedRegions.length}   Relic tiers: ${relicTiers.length}   Blessing tiers: ${blessingTiers.length}   Skills: ${normalizedSkills.length}   Training methods: ${allTraining.filter((method) => ACTUAL_SKILLS.has(method.skill)).length}   Gap merge: deferred to sync-training-gaps`,
 );

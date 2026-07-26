@@ -5,7 +5,7 @@ combat *mechanics* from the pre-March-2024 model to the current date. Content ad
 quests) are only noted when they introduced player-facing mechanics, abilities, or gear with new
 mechanics. Pure drop-rate, XP, and cosmetic changes are omitted.
 
-**Status date:** 24 Jul 2026. Update this file when new combat patches land — do not treat
+**Status date:** 26 Jul 2026. Update this file when new combat patches land — do not treat
 2 Mar 2026 as the final state.
 
 ## Conventions and sourcing
@@ -858,3 +858,9 @@ Sources: wiki `Update:` pages linked per entry; enumerated against the full 2026
     `secure.runescape.com` originals were independently confirmed only for Part 2 of the 2 Mar
     2026 patch notes and Beta Update 3. The RS Analysis PDF was only partially machine-readable
     (extraction stopped around §8.3 of 27 pages).
+
+---
+
+## 26 Jul 2026 — revolution bars (engine data)
+
+Revolution catalogue replaced wiki-only ST BiS with **PvME single-target** bars (Revo++ + Basics only per style). Multi-target omitted for simplicity. Source: [PvME Revolution Bars](https://pvme.io/pvme-guides/miscellaneous-information/revolution-bars/); config = Auto-retaliate on, Revolution on, auto-trigger Basic/Threshold/Enhanced/Ultimate, size 14, Auto Attack off.

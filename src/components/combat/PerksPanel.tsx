@@ -7,6 +7,8 @@ const PERK_FIELDS = [
   ["equilibrium", "Equilibrium rank (R1 +8% AD, +2%/rank to +14%, no crits)", 4],
   ["eruptive", "Eruptive rank (R1 +0.5% AD, +0.5%/rank to +2%)", 4],
   ["biting", "Biting rank (R1 +2% crit, +2%/rank; +2.2% if lvl20)", 4],
+  ["invigorating", "Invigorating rank (basic adren ×1.05 per rank; R4 ×1.20)", 4],
+  ["impatient", "Impatient rank (R1 9% for +3 adren on basics; 9.9% if lvl20)", 4],
   ["ultimatums", "Ultimatums rank (R1 +4% ult, +1%/rank to +7%)", 4],
   ["lunging", "Lunging rank (R1 +13% Combust/Dismember, +3%/rank)", 4],
   ["energising", "Energising rank (R1 +75 accuracy, +25/rank)", 4],
@@ -57,6 +59,19 @@ export function PerksPanel({
             }
           />
           Biting on level-20 item (+2.2%/rank)
+        </label>
+        <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+          <input
+            type="checkbox"
+            checked={loadout.perks.impatientLevel20}
+            onChange={(event) =>
+              setLoadout({
+                ...loadout,
+                perks: { ...loadout.perks, impatientLevel20: event.target.checked },
+              })
+            }
+          />
+          Impatient on level-20 item (9.9%/rank)
         </label>
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
           <input

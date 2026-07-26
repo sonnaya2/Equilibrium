@@ -85,6 +85,55 @@ describe("simulate", () => {
   });
 });
 
+describe("simulate — Invigorating / Impatient adrenaline", () => {
+  it("Invigorating multiplies basic adrenaline gains (R4: 9 → 9×1.2)", () => {
+    const s = simulate({
+      ...baseInput,
+      adrenaline: { basicGainMultiplier: 1.2 },
+      rotation: rotationOf("attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].adrenalineAfter).toBeCloseTo(9 * 1.2);
+  });
+
+  it("Impatient adds EV extra on basic gains (R4 non-l20: 0.36×3 = 1.08)", () => {
+    const s = simulate({
+      ...baseInput,
+      adrenaline: { impatientExpectedExtra: 0.36 * 3 },
+      rotation: rotationOf("attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].adrenalineAfter).toBeCloseTo(9 + 1.08);
+  });
+
+  it("stacks Invigorating multiplier then Impatient EV on the same basic", () => {
+    const s = simulate({
+      ...baseInput,
+      adrenaline: { basicGainMultiplier: 1.2, impatientExpectedExtra: 1.08 },
+      rotation: rotationOf("attack", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    // Per cast: 9*1.2 + 1.08 = 11.88
+    expect(s.casts[0].adrenalineAfter).toBeCloseTo(11.88);
+    expect(s.casts[1].adrenalineAfter).toBeCloseTo(23.76);
+  });
+
+  it("does not apply Invigorating/Impatient when there is no adrenaline gain", () => {
+    // Rules only fire inside ability.adrenaline?.gain for basic/autoAttack casts.
+    const plain = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack"),
+    });
+    const noGain = simulate({
+      ...baseInput,
+      adrenaline: { basicGainMultiplier: 1.2, impatientExpectedExtra: 1.08 },
+      rotation: rotationOf("dismember"), // enhanced bleed — no adrenaline field
+    });
+    expect(plain.casts[0].adrenalineAfter).toBe(9);
+    expect(noGain.casts[0].adrenalineAfter).toBe(0);
+  });
+});
+
 describe("simulate — damage-over-time scheduling", () => {
   it("bleed tails land on their sourced ticks and extend the timeline", () => {
     const s = simulate({ ...baseInput, rotation: rotationOf("dismember") });

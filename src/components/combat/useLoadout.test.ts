@@ -57,6 +57,18 @@ describe("normalizeLoadout", () => {
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
     expect(next.perks.equilibrium).toBe(0);
+    expect(next.perks.invigorating).toBe(0);
+    expect(next.perks.impatient).toBe(0);
+    expect(next.perks.impatientLevel20).toBe(false);
+  });
+
+  it("clamps Invigorating / Impatient ranks and preserves impatientLevel20", () => {
+    const next = normalizeLoadout({
+      perks: { invigorating: 9, impatient: -2, impatientLevel20: true },
+    });
+    expect(next.perks.invigorating).toBe(4);
+    expect(next.perks.impatient).toBe(0);
+    expect(next.perks.impatientLevel20).toBe(true);
   });
 
   it("preserves valid buffs and drops invalid enum values", () => {

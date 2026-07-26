@@ -161,10 +161,18 @@ export function resolveBarSlot(
   return { name: slot.name, modelledBy: "unmodelled", spec: null };
 }
 
-/** Resolves a whole bar. */
+/** Resolves a whole bar (all slots — UI shows keybind slots past revolutionSize). */
 export function resolveBar(
   bar: RevolutionBarRecord,
   engineSpecs: ReadonlyMap<string, AbilitySpec>,
 ): ResolvedSlot[] {
   return bar.slots.map((slot) => resolveBarSlot(slot, engineSpecs, bar.style, bar.setup));
+}
+
+/** Wiki hybrid bars list keybind slots past revolutionSize; only the prefix is auto-fired. */
+export function revoManagedSlots(
+  bar: RevolutionBarRecord,
+  engineSpecs: ReadonlyMap<string, AbilitySpec>,
+): ResolvedSlot[] {
+  return resolveBar(bar, engineSpecs).slice(0, bar.revolutionSize);
 }

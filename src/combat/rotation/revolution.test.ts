@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { combatRevolutionBars, abilityById } from "../data";
+import type { RevolutionBarRecord } from "../data/records";
 import { resolveBar, specFromRecord } from "../data/specs";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
@@ -20,6 +21,32 @@ const ENGINE_SPECS = new Map(
 
 const baseInput = { base: 1000, level: 99, accuracy: 1, crit: { chance: 0 } };
 
+type BarExtras = {
+  target?: "single" | "multi";
+  mode?: "revo++" | "hybrid";
+};
+type RevolutionBarWithMeta = RevolutionBarRecord & BarExtras;
+
+function barById(id: string): RevolutionBarWithMeta | undefined {
+  return combatRevolutionBars.records.find((bar) => bar.id === id) as RevolutionBarWithMeta | undefined;
+}
+
+/** Revo-managed slots only — hybrid bars pad beyond revolutionSize for manual tail. */
+function revoModelled(bar: RevolutionBarWithMeta) {
+  const window =
+    bar.mode === "hybrid"
+      ? resolveBar(bar, ENGINE_SPECS).slice(0, bar.revolutionSize)
+      : resolveBar(bar, ENGINE_SPECS);
+  return window.filter((slot) => slot.spec !== null).map((slot) => slot.spec!);
+}
+
+const BASIC_BY_STYLE = {
+  melee: "attack",
+  ranged: "ranged_attack",
+  magic: "magic_attack",
+  necromancy: "necromancy_basic",
+} as const;
+
 describe("resolveBar", () => {
   it("prefers engine specs over record adapters for the same ability", () => {
     const meleeBar = combatRevolutionBars.records.find((bar) => bar.id === "melee-dual-wield")!;
@@ -27,11 +54,9 @@ describe("resolveBar", () => {
     const rend = slots.find((slot) => slot.name === "Rend")!;
     expect(rend.modelledBy).toBe("engine");
     expect(rend.spec?.id).toBe("rend");
-    const flurry = slots.find((slot) => slot.name === "Flurry")!;
+    const flurry = slots.find((slot) => slot.name === "Greater Flurry")!;
     expect(flurry.modelledBy).toBe("engine");
-    expect(flurry.spec?.id).toBe("flurry");
-    expect(flurry.spec?.hits).toHaveLength(8);
-    expect(flurry.spec?.hits[0].band).toEqual({ minPct: 60, maxPct: 70 });
+    expect(flurry.spec?.id).toBe("greater_flurry");
     const meteor = slots.find((slot) => slot.name === "Meteor Strike")!;
     expect(meteor.modelledBy).toBe("engine");
     expect(meteor.spec?.id).toBe("meteor_strike");
@@ -44,18 +69,19 @@ describe("resolveBar", () => {
     const th = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "melee-two-handed")!, ENGINE_SPECS);
     expect(th.find((slot) => slot.name === "Adaptive Strike")!.spec?.id).toBe("adaptive_strike_2h");
 
-    const ranged = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "ranged")!, ENGINE_SPECS);
-    const sacrifice = ranged.find((slot) => slot.name === "Sacrifice")!;
+    // PvME ranged ST has no Sacrifice; necro ST does (shared record → bar style).
+    const necro = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")!, ENGINE_SPECS);
+    const sacrifice = necro.find((slot) => slot.name === "Sacrifice")!;
     expect(sacrifice.modelledBy).toBe("record");
-    expect(sacrifice.spec?.style).toBe("ranged");
+    expect(sacrifice.spec?.style).toBe("necromancy");
   });
 
-  it("resolves magic Revo++ damage slots via engine specs", () => {
+  it("resolves magic PvME ST damage slots via engine specs", () => {
     const magic = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "magic")!, ENGINE_SPECS);
     for (const [name, id] of [
       ["Tsunami", "tsunami"],
       ["Omnipower", "omnipower"],
-      ["Smoke Tendrils", "smoke_tendrils"],
+      ["Corruption Blast", "corruption_blast"],
       ["Dragon Breath", "dragon_breath"],
     ] as const) {
       const slot = magic.find((s) => s.name === name)!;
@@ -94,15 +120,14 @@ describe("simulateRevolution", () => {
       durationTicks: 120,
     });
     expect(s.ok).toBe(true);
-    // Wiki: "first available compatible ability" — Greater Sunshine leads the bar
-    // but is unaffordable at 0 adrenaline, so revo skips to the next ready slot
-    // (never waits / banks for the ultimate).
+    // PvME: Greater Sunshine leads but is unaffordable at 0 adren — revo skips
+    // Asphyxiate (threshold cost) to Greater Concentrated Blast (gain basic).
     expect(s.casts[0].abilityId).toBe("greater_concentrated_blast");
     expect(s.casts[0].tick).toBe(0);
     // Basics fill slots where nothing on the bar is ready.
     expect(s.casts.some((cast) => cast.abilityId === "magic_attack" && cast.auto)).toBe(true);
     // Cost abilities drain the pool whenever they are ready and affordable.
-    expect(s.casts.some((cast) => cast.abilityId === "wild_magic")).toBe(true);
+    expect(s.casts.some((cast) => cast.abilityId === "corruption_blast")).toBe(true);
     expect(s.casts.some((cast) => cast.abilityId === "asphyxiate")).toBe(true);
   });
 
@@ -273,10 +298,8 @@ describe("golden 60s revo smoke", () => {
 
   for (const { barId, style, basicId } of CASES) {
     it(`${barId}: 60s horizon structural smoke`, () => {
-      const bar = combatRevolutionBars.records.find((candidate) => candidate.id === barId)!;
-      const modelled = resolveBar(bar, ENGINE_SPECS)
-        .filter((slot) => slot.spec !== null)
-        .map((slot) => slot.spec!);
+      const bar = barById(barId)!;
+      const modelled = revoModelled(bar);
       const durationTicks = secondsToTicks(60);
       expect(durationTicks).toBe(100);
 
@@ -296,4 +319,66 @@ describe("golden 60s revo smoke", () => {
       expect(s.casts.some((c) => c.auto && c.abilityId === basicId)).toBe(true);
     });
   }
+
+  it("multi-target bar: 60s structural smoke when a supported multi bar exists", () => {
+    const multi = (combatRevolutionBars.records as RevolutionBarWithMeta[]).find(
+      (bar) => bar.target === "multi" && bar.supported,
+    );
+    if (!multi) return; // multi corpus not landed yet
+
+    const modelled = revoModelled(multi);
+    // Need a real revo window — skip if almost nothing is modelled yet.
+    if (modelled.length < 3) return;
+
+    const style = multi.style as keyof typeof BASIC_BY_STYLE;
+    const basicId = BASIC_BY_STYLE[style];
+    if (!basicId) return;
+
+    const durationTicks = secondsToTicks(60);
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values(), ...modelled],
+      bar: modelled,
+      style,
+      durationTicks,
+    });
+
+    expect(s.ok).toBe(true);
+    expect(s.casts.length).toBeGreaterThanOrEqual(25);
+    expect(s.horizonTicks).toBe(100);
+    expect(s.dps).toBeCloseTo(s.totalExpected / (100 * 0.6), 5);
+    expect(s.casts.some((c) => c.auto && c.abilityId === basicId)).toBe(true);
+  });
+
+  it("hybrid bar: sim uses revo window slice only (structural)", () => {
+    const hybrid = (combatRevolutionBars.records as RevolutionBarWithMeta[]).find(
+      (bar) => bar.mode === "hybrid" && bar.supported,
+    );
+    if (!hybrid) return;
+
+    const full = resolveBar(hybrid, ENGINE_SPECS);
+    expect(full.length).toBeGreaterThan(hybrid.revolutionSize);
+    const revoWindow = full.slice(0, hybrid.revolutionSize);
+    expect(revoWindow).toHaveLength(hybrid.revolutionSize);
+
+    const modelled = revoModelled(hybrid);
+    if (modelled.length < 3) return;
+
+    const style = hybrid.style as keyof typeof BASIC_BY_STYLE;
+    if (!BASIC_BY_STYLE[style]) return;
+
+    const durationTicks = secondsToTicks(60);
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values(), ...modelled],
+      bar: modelled,
+      style,
+      durationTicks,
+    });
+    // Structural only — hybrid windows often put Attack on the bar, so auto weave is not guaranteed.
+    expect(s.ok).toBe(true);
+    expect(s.casts.length).toBeGreaterThanOrEqual(25);
+    expect(s.horizonTicks).toBe(durationTicks);
+    expect(s.dps).toBeCloseTo(s.totalExpected / (durationTicks * TICK_SECONDS), 5);
+  });
 });

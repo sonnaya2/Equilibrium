@@ -112,16 +112,29 @@ export interface PrayerRecord extends CombatRecordBase {
   facts: string[];
 }
 
-/** A recommended Revolution++ bar (RuneScape Wiki, post-modernisation). */
+/** Target focus for a recommended bar (app ships single-target only). */
+export type RevolutionTarget = "single" | "multi";
+/** revo++ = all ability types auto; basics = PvME starter bar; hybrid = revo prefix + keybinds. */
+export type RevolutionMode = "revo++" | "basics" | "hybrid";
+
+/** A recommended Revolution bar (PvME single-target primary). */
 export interface RevolutionBarRecord extends CombatRecordBase {
   style: CombatStyle;
   setup: string;
-  /** How many slots Revolution manages on this bar (the wiki's own number). */
+  /** single-target vs multi-target; app catalogue is single only. */
+  target: RevolutionTarget;
+  /** Full Revo++ vs PvME basics-only vs hybrid revo-size-N. */
+  mode: RevolutionMode;
+  /** Short UI subtitle (e.g. "PvME ST · Ful arrow"). */
+  label?: string;
+  /** Setup notes from the source guide (config, auto-cast, conjure priority). */
+  notes?: string[];
+  /** How many slots Revolution manages on this bar. */
   revolutionSize: number;
-  /** Slot names as the wiki lists them; abilityId is null when no sourced record
+  /** Slot names as the source lists them; abilityId is null when no sourced record
    *  or engine spec exists — that slot is unmodelled, never invented. */
   slots: Array<{ name: string; abilityId: string | null }>;
-  /** The wiki's swap notes for locked greater variants. */
+  /** Swap notes for locked greater variants. */
   replacements: Array<{ from: string; to: string }>;
   supported: boolean;
   unsupportedReason?: string;

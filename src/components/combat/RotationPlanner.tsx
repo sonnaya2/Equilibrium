@@ -82,6 +82,7 @@ export function RotationPlanner() {
           abilities: ALL_ABILITIES,
           rotation: rotationOf(...queue),
           modifiers: stats.globalModifiers,
+          adrenaline: stats.adrenaline,
           autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),

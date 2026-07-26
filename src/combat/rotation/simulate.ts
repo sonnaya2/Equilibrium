@@ -73,6 +73,14 @@ import {
 } from "./state";
 import { GLOBAL_COOLDOWN_TICKS, secondsToTicks, TICK_SECONDS } from "./timeline";
 
+/** Invigorating / Impatient (and similar) — applied only to basic adren gains. */
+export interface AdrenalineRules {
+  /** Multiplier on basic-category adrenaline gains (Invigorating). Default 1. */
+  basicGainMultiplier?: number;
+  /** EV extra adrenaline on each basic gain cast (Impatient chance × 3). Default 0. */
+  impatientExpectedExtra?: number;
+}
+
 export interface SimulateInput {
   /** Caller-supplied base ability damage, as with the single-hit pipeline. */
   base: number;
@@ -92,6 +100,8 @@ export interface SimulateInput {
    *  adrenaline shortfalls before each queued cast (§5.6: basics auto-used
    *  when nothing else is queued). When false, a shortfall fails the run. */
   autoWeave?: boolean;
+  /** Perk-driven basic adrenaline rules (Invigorating, Impatient EV). */
+  adrenaline?: AdrenalineRules;
 }
 
 export interface CastRecord {
@@ -343,15 +353,21 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
 
     const cost = costOf(ability);
     // Meteor Strike: melee basics generate 1.5x listed adrenaline while buffed.
+    // Invigorating multiplies basic gains; Impatient adds EV extra on basic gains.
     if (ability.adrenaline?.gain) {
+      const isBasic = ability.category === "basic" || !!ability.autoAttack;
       const meteorBasic =
         ability.style === "melee" &&
         ability.category === "basic" &&
         state.meteorStrikeUntilTick > 0 &&
         readyTick < state.meteorStrikeUntilTick;
-      const gain = meteorBasic
+      let gain = meteorBasic
         ? ability.adrenaline.gain * METEOR_STRIKE_BASIC_ADREN_MULTIPLIER
         : ability.adrenaline.gain;
+      if (isBasic) {
+        gain *= input.adrenaline?.basicGainMultiplier ?? 1;
+        gain += input.adrenaline?.impatientExpectedExtra ?? 0;
+      }
       state = gainAdrenaline(state, gain);
     }
     if (cost) state = spendAdrenaline(state, cost);

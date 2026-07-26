@@ -13,7 +13,13 @@ import {
   combatSyncFacts,
   recordsByRegion,
 } from "./index";
-import type { CombatDataset } from "./records";
+import type { CombatDataset, RevolutionBarRecord } from "./records";
+import { resolveBar } from "./specs";
+import type { AbilitySpec } from "../pipeline/calculateAbility";
+import { MAGIC_ABILITIES } from "../styles/magic/abilities";
+import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
+import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 
 const datasets: Array<[string, CombatDataset<{ id: string; sources: { verifiedAt: string }[] }>]> = [
   ["abilities", combatAbilities],
@@ -22,6 +28,35 @@ const datasets: Array<[string, CombatDataset<{ id: string; sources: { verifiedAt
   ["perks", combatPerks],
   ["prayers", combatPrayers],
 ];
+
+/** Optional multi/hybrid fields may land on bars before the type is updated. */
+type BarExtras = {
+  target?: "single" | "multi";
+  mode?: "revo++" | "hybrid";
+};
+type RevolutionBarWithMeta = RevolutionBarRecord & BarExtras;
+
+const CORE_BAR_IDS = [
+  "melee-dual-wield",
+  "melee-two-handed",
+  "ranged",
+  "magic",
+  "necromancy",
+] as const;
+
+const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
+  [
+    ...MELEE_ABILITIES,
+    ...RANGED_ABILITIES,
+    ...MAGIC_ABILITIES,
+    ...NECROMANCY_ABILITIES,
+    volleyOfSouls(3),
+  ].map((spec) => [spec.id, spec]),
+);
+
+function bars(): RevolutionBarWithMeta[] {
+  return combatRevolutionBars.records as RevolutionBarWithMeta[];
+}
 
 describe("canonical combat datasets", () => {
   it.each(datasets)("%s: unique ids, provenance on every record", (_kind, dataset) => {
@@ -123,5 +158,96 @@ describe("combat data accessors", () => {
     expect(ruination?.unlock?.type).toBe("drop");
     // Overlay merged into the catalogue row, not duplicated.
     expect(combatPrayers.records.filter((record) => record.name === "Ruination")).toHaveLength(1);
+  });
+});
+
+describe("revolution bars multi / hybrid structural contract", () => {
+  it("keeps the core single-target Revo++ bar ids", () => {
+    const ids = new Set(bars().map((bar) => bar.id));
+    for (const id of CORE_BAR_IDS) {
+      expect(ids.has(id), `missing core bar ${id}`).toBe(true);
+    }
+  });
+
+  it("every abilityId is null or a combat ability / engine id (no invented refs)", () => {
+    const ENGINE_IDS = new Set(["attack", "ranged_attack", "magic_attack", "necromancy_basic", "volley_of_souls"]);
+    const recordIds = new Set(combatAbilities.records.map((record) => record.id));
+    for (const bar of bars()) {
+      for (const slot of bar.slots) {
+        if (slot.abilityId === null) continue;
+        expect(
+          recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId),
+          `${bar.id} slot ${slot.name} -> ${slot.abilityId}`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it("when target is present on any bar, every bar's target is single|multi", () => {
+    const withTarget = bars().filter((bar) => bar.target != null);
+    if (withTarget.length === 0) return; // field not landed yet
+    for (const bar of bars()) {
+      expect(["single", "multi"], `${bar.id} target`).toContain(bar.target);
+    }
+  });
+
+  it("when mode is present on any bar, every bar's mode is revo++|hybrid|basics", () => {
+    const withMode = bars().filter((bar) => bar.mode != null);
+    if (withMode.length === 0) return; // field not landed yet
+    for (const bar of bars()) {
+      expect(["revo++", "hybrid", "basics"], `${bar.id} mode`).toContain(bar.mode);
+    }
+  });
+
+  it("revo++ and basics bars have slots.length >= revolutionSize", () => {
+    for (const bar of bars()) {
+      if (bar.mode === "hybrid") continue;
+      expect(
+        bar.slots.length,
+        `${bar.id}: slots ${bar.slots.length} < revolutionSize ${bar.revolutionSize}`,
+      ).toBeGreaterThanOrEqual(bar.revolutionSize);
+    }
+  });
+
+  it("catalogue is single-target only", () => {
+    for (const bar of bars()) {
+      expect(bar.target, bar.id).toBe("single");
+    }
+  });
+
+  it("hybrid bars have slots.length > revolutionSize", () => {
+    const hybrids = bars().filter((bar) => bar.mode === "hybrid");
+    if (hybrids.length === 0) return;
+    for (const bar of hybrids) {
+      expect(
+        bar.slots.length,
+        `${bar.id}: hybrid must expose manual tail beyond revo window`,
+      ).toBeGreaterThan(bar.revolutionSize);
+    }
+  });
+
+  it("when multi-target bars exist, at least one is present and well-formed", () => {
+    const multi = bars().filter((bar) => bar.target === "multi");
+    if (multi.length === 0) return;
+    expect(multi.length).toBeGreaterThanOrEqual(1);
+    for (const bar of multi) {
+      expect(bar.revolutionSize).toBeGreaterThanOrEqual(1);
+      expect(bar.slots.length).toBeGreaterThan(0);
+      expect(bar.style).toBeTruthy();
+    }
+  });
+
+  it("hybrid revo window is resolveBar(...).slice(0, revolutionSize)", () => {
+    const hybrids = bars().filter((bar) => bar.mode === "hybrid");
+    if (hybrids.length === 0) return;
+    for (const bar of hybrids) {
+      const resolved = resolveBar(bar, ENGINE_SPECS);
+      expect(resolved).toHaveLength(bar.slots.length);
+      const revoWindow = resolved.slice(0, bar.revolutionSize);
+      expect(revoWindow).toHaveLength(bar.revolutionSize);
+      // Manual tail is the remainder — structural only, no damage pins.
+      expect(resolved.slice(bar.revolutionSize).length).toBe(bar.slots.length - bar.revolutionSize);
+      expect(revoWindow.every((slot, i) => slot.name === bar.slots[i].name)).toBe(true);
+    }
   });
 });

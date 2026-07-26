@@ -5,7 +5,8 @@ import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { combatAbilities, combatRevolutionBars } from "./index";
-import { engineIdForRecord, resolveBar, resolveBarSlot } from "./specs";
+import type { RevolutionBarRecord } from "./records";
+import { engineIdForRecord, resolveBar, resolveBarSlot, revoManagedSlots } from "./specs";
 
 const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
   [
@@ -84,14 +85,13 @@ describe("ENGINE_ID_BY_RECORD_ID melee", () => {
 });
 
 describe("melee revolution bars", () => {
-  it("resolves dual-wield Revo++ slots via engine or record", () => {
+  it("resolves dual-wield PvME ST slots via engine", () => {
     const bar = combatRevolutionBars.records.find((b) => b.id === "melee-dual-wield")!;
     const resolved = resolveBar(bar, ENGINE_SPECS);
     for (const slot of resolved) {
-      if (slot.name === "Hurricane") continue; // 2h-only bar
       expect(slot.modelledBy, slot.name).not.toBe("unmodelled");
     }
-    expect(resolved.find((s) => s.name === "Flurry")!.spec?.id).toBe("flurry");
+    expect(resolved.find((s) => s.name === "Greater Flurry")!.spec?.id).toBe("greater_flurry");
     expect(resolved.find((s) => s.name === "Greater Fury")!.spec?.id).toBe("greater_fury");
     expect(resolved.find((s) => s.name === "Chaos Roar")!.spec?.id).toBe("chaos_roar");
     expect(resolved.find((s) => s.name === "Meteor Strike")!.spec?.id).toBe("meteor_strike");
@@ -109,7 +109,7 @@ describe("melee revolution bars", () => {
     expect(hurricane.spec?.hits).toHaveLength(2);
   });
 
-  it("two-handed Revo++ bar carries melee:hurricane and resolves via engine", () => {
+  it("two-handed PvME ST bar carries Hurricane + Pulverise and resolves via engine", () => {
     const bar = combatRevolutionBars.records.find((b) => b.id === "melee-two-handed")!;
     const slot = bar.slots.find((s) => s.name === "Hurricane")!;
     expect(slot.abilityId).toBe("melee:hurricane");
@@ -117,6 +117,7 @@ describe("melee revolution bars", () => {
     const hurricane = resolved.find((s) => s.name === "Hurricane")!;
     expect(hurricane.modelledBy).toBe("engine");
     expect(hurricane.spec?.id).toBe("hurricane");
+    expect(resolved.find((s) => s.name === "Pulverise")!.modelledBy).toBe("engine");
     expect(resolved.every((s) => s.modelledBy !== "unmodelled")).toBe(true);
   });
 });
@@ -155,7 +156,7 @@ describe("ENGINE_ID_BY_RECORD_ID magic", () => {
     }
   });
 
-  it("resolves magic Revo++ bar slots via engine", () => {
+  it("resolves magic PvME ST bar slots via engine", () => {
     const magic = resolveBar(
       combatRevolutionBars.records.find((b) => b.id === "magic")!,
       ENGINE_SPECS,
@@ -163,9 +164,9 @@ describe("ENGINE_ID_BY_RECORD_ID magic", () => {
     for (const [name, id] of [
       ["Tsunami", "tsunami"],
       ["Omnipower", "omnipower"],
-      ["Smoke Tendrils", "smoke_tendrils"],
+      ["Corruption Blast", "corruption_blast"],
       ["Dragon Breath", "dragon_breath"],
-      ["Wild Magic", "wild_magic"],
+      ["Greater Chain", "greater_chain"],
       ["Asphyxiate", "asphyxiate"],
     ] as const) {
       const slot = magic.find((s) => s.name === name)!;
@@ -226,7 +227,7 @@ describe("ENGINE_ID_BY_RECORD_ID necromancy", () => {
 });
 
 describe("revolution bar resolve coverage matrix", () => {
-  it("reports engine | record | unmodelled counts per bar", () => {
+  it("reports engine | record | unmodelled counts for PvME ST bars", () => {
     const matrix: Record<string, { engine: number; record: number; unmodelled: number }> = {};
     for (const bar of combatRevolutionBars.records) {
       const counts = { engine: 0, record: 0, unmodelled: 0 };
@@ -235,16 +236,45 @@ describe("revolution bar resolve coverage matrix", () => {
       }
       matrix[bar.id] = counts;
     }
-    // Dual-wield melee: all 10 engine (buffs + damage; adaptive via setup).
+    // PvME ST dual-wield: 10 engine.
     expect(matrix["melee-dual-wield"]).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // Two-handed: Hurricane filled; all engine.
-    expect(matrix["melee-two-handed"]).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // Ranged: Sacrifice is shared record; rest engine.
-    expect(matrix.ranged).toEqual({ engine: 9, record: 1, unmodelled: 0 });
-    // Magic: all 10 engine.
+    // PvME ST 2h: 11 engine (incl. Hurricane + Pulverise).
+    expect(matrix["melee-two-handed"]).toEqual({ engine: 11, record: 0, unmodelled: 0 });
+    // PvME ST ranged: all engine (no Sacrifice on this bar).
+    expect(matrix.ranged).toEqual({ engine: 10, record: 0, unmodelled: 0 });
+    // PvME ST magic: all 10 engine.
     expect(matrix.magic).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // Necromancy: 7 engine + Sacrifice record + 3 conjure nulls.
+    // Necromancy ST: 7 engine + Sacrifice record + 3 conjure nulls.
     expect(matrix.necromancy).toEqual({ engine: 7, record: 1, unmodelled: 3 });
+  });
+});
+
+describe("revoManagedSlots hybrid revolutionSize", () => {
+  it("returns only the revolutionSize prefix; resolveBar keeps the full bar", () => {
+    const hybrid: RevolutionBarRecord = {
+      id: "test-hybrid",
+      name: "Test Hybrid",
+      style: "melee",
+      setup: "Dual-wield",
+      target: "single",
+      mode: "hybrid",
+      revolutionSize: 2,
+      slots: [
+        { name: "Berserk", abilityId: "melee:berserk" },
+        { name: "Assault", abilityId: "melee:assault" },
+        { name: "Manual Keybind", abilityId: "melee:flurry" },
+      ],
+      replacements: [],
+      supported: true,
+      sources: [],
+    };
+    const full = resolveBar(hybrid, ENGINE_SPECS);
+    const managed = revoManagedSlots(hybrid, ENGINE_SPECS);
+    expect(full).toHaveLength(3);
+    expect(managed).toHaveLength(2);
+    expect(managed.map((s) => s.name)).toEqual(["Berserk", "Assault"]);
+    expect(managed.every((s) => s.modelledBy === "engine")).toBe(true);
+    expect(full[2]!.name).toBe("Manual Keybind");
   });
 });
 

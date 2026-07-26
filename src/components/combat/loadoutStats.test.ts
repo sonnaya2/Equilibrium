@@ -215,6 +215,26 @@ describe("loadoutStats", () => {
     expect(stats.globalModifiers.some((m) => m.id === "perk:eruptive:4")).toBe(true);
   });
 
+  it("Invigorating and Impatient feed adrenaline rules (rank 0 = defaults)", () => {
+    const off = loadoutStats(base);
+    expect(off.adrenaline?.basicGainMultiplier).toBe(1);
+    expect(off.adrenaline?.impatientExpectedExtra).toBe(0);
+
+    const inv4 = loadoutStats({ ...base, perks: { ...base.perks, invigorating: 4 } });
+    expect(inv4.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
+
+    // R4 non-l20: 0.09*4 * 3 = 1.08
+    const imp4 = loadoutStats({ ...base, perks: { ...base.perks, impatient: 4 } });
+    expect(imp4.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.08, 10);
+
+    // R4 l20: 0.099*4 * 3 = 1.188
+    const imp4l20 = loadoutStats({
+      ...base,
+      perks: { ...base.perks, impatient: 4, impatientLevel20: true },
+    });
+    expect(imp4l20.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.188, 10);
+  });
+
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {
     const ability = { id: "melee:rend", category: "basic" } as Parameters<
       ReturnType<typeof loadoutStats>["castModifiersFor"]

@@ -71,6 +71,16 @@ function styleMatches(record: EquipmentRecord, style: Loadout["style"]): boolean
   return record.style === style;
 }
 
+/** True when any numeric bonus field is present and non-zero. Empty `{}` is the corpus default. */
+function hasSourcedBonuses(record: EquipmentRecord): boolean {
+  const b = record.bonuses;
+  if (!b) return false;
+  for (const v of Object.values(b)) {
+    if (typeof v === "number" && v !== 0) return true;
+  }
+  return false;
+}
+
 /** Paper doll + item picker. Item bonuses unsourced — placement is organisational. */
 export function GearPanel({
   loadout,
@@ -90,6 +100,7 @@ export function GearPanel({
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
   const slottedCount = equipmentIdList(slots).length;
+  const activeItem = activeSlot ? byId(slots[activeSlot]) : undefined;
 
   const wearables = useMemo(
     () => combatEquipment.records.filter((r) => r.slot != null),
@@ -156,8 +167,8 @@ export function GearPanel({
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Click a slot, then pick an item. Item bonuses empty until sourced — weapon tier still
-          drives damage.
+          Click a slot, then pick an item. Placement is organisational — damage/accuracy bonuses
+          are not sourced yet. Only weapon tier (when tagged) feeds base AD.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
@@ -170,6 +181,7 @@ export function GearPanel({
               const item = byId(id);
               const selected = activeSlot === slot;
               const empty = !item;
+              const noBonuses = item != null && !hasSourcedBonuses(item);
               return (
                 <button
                   key={slot}
@@ -188,11 +200,48 @@ export function GearPanel({
                     {SLOT_LABELS[slot]}
                   </span>
                   <span className="block truncate">{item?.name ?? "Empty"}</span>
+                  {item?.tier != null ? (
+                    <span className="block font-mono text-[10px] text-parch-100">T{item.tier}</span>
+                  ) : null}
+                  {noBonuses ? (
+                    <span className="block text-[10px] text-parch-300">no bonus numbers</span>
+                  ) : null}
                 </button>
               );
             }),
           )}
         </div>
+
+        {activeItem ? (
+          <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <span className="text-parch-50">{activeItem.name}</span>
+              {activeItem.tier != null ? (
+                <span className="font-mono text-parch-100">T{activeItem.tier}</span>
+              ) : null}
+              {activeSlot ? (
+                <span className="text-parch-300">{SLOT_LABELS[activeSlot]}</span>
+              ) : null}
+            </div>
+            {hasSourcedBonuses(activeItem) ? (
+              <p className="mt-0.5 text-parch-100">
+                {[
+                  activeItem.bonuses.damage != null ? `dmg ${activeItem.bonuses.damage}` : null,
+                  activeItem.bonuses.accuracy != null ? `acc ${activeItem.bonuses.accuracy}` : null,
+                  activeItem.bonuses.armour != null ? `arm ${activeItem.bonuses.armour}` : null,
+                  activeItem.bonuses.prayer != null ? `pray ${activeItem.bonuses.prayer}` : null,
+                  activeItem.bonuses.critChance != null
+                    ? `crit ${activeItem.bonuses.critChance}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            ) : (
+              <p className="mt-0.5 text-parch-300">no bonus numbers</p>
+            )}
+          </div>
+        ) : null}
 
         <div className="mt-3 flex flex-wrap gap-2 text-xs">
           {activeSlot ? (
@@ -231,7 +280,12 @@ export function GearPanel({
                 }`}
               >
                 <span className="text-parch-300">{SLOT_LABELS[slot]}</span>
-                <span className="truncate">{item?.name ?? "Empty"}</span>
+                <span className="min-w-0">
+                  <span className="block truncate">{item?.name ?? "Empty"}</span>
+                  {item && !hasSourcedBonuses(item) ? (
+                    <span className="block text-[10px] text-parch-300">no bonus numbers</span>
+                  ) : null}
+                </span>
               </button>
             );
           })}
@@ -308,6 +362,7 @@ export function GearPanel({
           ) : (
             pickerRows.map((record) => {
               const equipped = slots[record.slot!] === record.id;
+              const noBonuses = !hasSourcedBonuses(record);
               return (
                 <button
                   key={record.id}
@@ -319,7 +374,7 @@ export function GearPanel({
                       : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
                     <span>{record.name}</span>
                     {record.tier != null ? (
                       <span className="font-mono text-parch-100">T{record.tier}</span>
@@ -327,6 +382,9 @@ export function GearPanel({
                     <span className="text-[11px] text-parch-300">
                       {SLOT_LABELS[record.slot!]}
                     </span>
+                    {equipped && noBonuses ? (
+                      <span className="text-[11px] text-parch-300">no bonus numbers</span>
+                    ) : null}
                   </span>
                   <span className="flex items-center gap-1.5 text-parch-100">
                     {recordRegions(record).map((id) => (

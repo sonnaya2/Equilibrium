@@ -5,6 +5,9 @@ import {
   energisingAccuracyBonus,
   equilibriumPerkModifier,
   eruptivePerkModifier,
+  IMPATIENT_EXTRA_ADRENALINE,
+  impatientProcChance,
+  invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
@@ -13,6 +16,7 @@ import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import { equipmentById } from "@/combat/data";
+import type { AdrenalineRules } from "@/combat/rotation/simulate";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { Loadout } from "./useLoadout";
@@ -34,6 +38,8 @@ export interface CalcStats {
   critDamageBonus: number;
   globalModifiers: CombatModifier[];
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
+  /** Invigorating / Impatient rules for rotation + revolution sim. */
+  adrenaline?: AdrenalineRules;
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -131,6 +137,18 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (curse) globalModifiers.push(prayerDamageModifier(curse));
 
+  const adrenaline: AdrenalineRules = {
+    basicGainMultiplier:
+      loadout.perks.invigorating > 0
+        ? invigoratingAdrenalineMultiplier(loadout.perks.invigorating)
+        : 1,
+    impatientExpectedExtra:
+      loadout.perks.impatient > 0
+        ? impatientProcChance(loadout.perks.impatient, loadout.perks.impatientLevel20) *
+          IMPATIENT_EXTRA_ADRENALINE
+        : 0,
+  };
+
   return {
     base: loadoutBase(loadout),
     level,
@@ -146,5 +164,6 @@ export function loadoutStats(loadout: Loadout): CalcStats {
         : []),
       ...(loadout.perks.lunging > 0 ? [lungingPerkModifier(loadout.perks.lunging, ability.id)] : []),
     ],
+    adrenaline,
   };
 }

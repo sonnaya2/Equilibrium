@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { combatRevolutionBars, type RevolutionBarRecord } from "@/combat/data";
+import * as combatSpecs from "@/combat/data/specs";
 import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/rotation/simulate";
@@ -13,6 +14,7 @@ import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import type { CalcStats } from "./loadoutStats";
 import { NumberField } from "./NumberField";
+import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 
 const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
   [
@@ -24,8 +26,23 @@ const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
   ].map((spec) => [spec.id, spec]),
 );
 
-const SUPPORTED_BARS = combatRevolutionBars.records.filter((bar) => bar.supported);
-const UNSUPPORTED_BARS = combatRevolutionBars.records.filter((bar) => !bar.supported);
+type RevoBarView = RevolutionBarRecord;
+
+const STYLE_ORDER = ["melee", "ranged", "magic", "necromancy"] as const;
+const STYLE_LABEL: Record<(typeof STYLE_ORDER)[number], string> = {
+  melee: "Melee",
+  ranged: "Ranged",
+  magic: "Magic",
+  necromancy: "Necromancy",
+};
+
+/** Single-target only — multi-target bars are not shipped in the app. */
+const SUPPORTED_BARS = combatRevolutionBars.records.filter(
+  (bar) => bar.supported && (bar.target == null || bar.target === "single"),
+) as RevoBarView[];
+const UNSUPPORTED_BARS = combatRevolutionBars.records.filter(
+  (bar) => !bar.supported && (bar.target == null || bar.target === "single"),
+) as RevoBarView[];
 
 const DEFAULT_DURATION_SECONDS = 60;
 
@@ -47,27 +64,110 @@ function formatHorizon(ticks: number): string {
   return `${secLabel} · ${ticks} ticks`;
 }
 
-function BarGraphic({ slots }: { slots: ResolvedSlot[] }) {
+function styleLabel(style: string): string {
+  if (style in STYLE_LABEL) return STYLE_LABEL[style as keyof typeof STYLE_LABEL];
+  return style.charAt(0).toUpperCase() + style.slice(1);
+}
+
+/** Human-readable select option — not bare "melee" / "ranged". */
+function barOptionLabel(bar: RevoBarView): string {
+  if (bar.name) return bar.name;
+
+  const style = styleLabel(bar.style);
+  const modeSegment =
+    bar.mode === "basics"
+      ? "Basics"
+      : bar.mode === "hybrid"
+        ? `Hybrid (size ${bar.revolutionSize})`
+        : "Revo++";
+  const parts = [style];
+  if (bar.setup && bar.setup !== "Any") parts.push(bar.setup);
+  parts.push(modeSegment);
+  if (bar.label) parts.push(bar.label);
+  return parts.join(" · ");
+}
+
+/** First supported ST bar for a combat style — prefer revo++ over basics. */
+function pickBarForStyle(style: string): RevoBarView | undefined {
+  const forStyle = SUPPORTED_BARS.filter((b) => b.style === style);
+  return forStyle.find((b) => b.mode === "revo++") ?? forStyle[0];
+}
+
+function isHybridBar(bar: RevoBarView, slotCount: number): boolean {
+  return bar.mode === "hybrid" || slotCount > bar.revolutionSize;
+}
+
+/**
+ * Revo-managed ability specs for the sim only (not manual keybind tail).
+ * Prefers specs.revoManagedSlots when that export lands; otherwise first N slots.
+ */
+function revoManagedModelled(bar: RevoBarView): AbilitySpec[] {
+  const helper = (
+    combatSpecs as {
+      revoManagedSlots?: (
+        bar: RevolutionBarRecord,
+        engine: ReadonlyMap<string, AbilitySpec>,
+      ) => AbilitySpec[] | ResolvedSlot[];
+    }
+  ).revoManagedSlots;
+
+  if (typeof helper === "function") {
+    const out = helper(bar, ENGINE_SPECS);
+    if (out.length === 0) return [];
+    const first = out[0] as AbilitySpec | ResolvedSlot;
+    if (first && typeof first === "object" && "spec" in first) {
+      return (out as ResolvedSlot[]).filter((s) => s.spec !== null).map((s) => s.spec!);
+    }
+    return out as AbilitySpec[];
+  }
+
+  return resolveBar(bar, ENGINE_SPECS)
+    .slice(0, bar.revolutionSize)
+    .filter((slot) => slot.spec !== null)
+    .map((slot) => slot.spec!);
+}
+
+function BarGraphic({
+  slots,
+  revoSize,
+}: {
+  slots: ResolvedSlot[];
+  revoSize: number;
+}) {
   return (
     <div className="mt-3 flex flex-wrap gap-1" role="list" aria-label="Revolution bar">
-      {slots.map((slot, index) => (
-        <div
-          key={`${slot.name}-${index}`}
-          role="listitem"
-          title={slot.modelledBy === "unmodelled" ? "No sourced band — skipped in the sim" : slot.name}
-          className={`w-24 border px-1.5 py-1 ${
-            slot.modelledBy === "unmodelled"
-              ? "border-dashed border-stone-750 text-parch-300/60"
-              : "border-stone-750 bg-stone-850 text-parch-50"
-          }`}
-        >
-          <div className="font-mono text-[11px] text-parch-300">{index + 1}</div>
-          <div className="text-[11px] leading-tight">{slot.name}</div>
-          {slot.modelledBy === "unmodelled" ? (
-            <div className="text-[11px] text-parch-300/60">unmodelled</div>
-          ) : null}
-        </div>
-      ))}
+      {slots.map((slot, index) => {
+        const isKeybind = index >= revoSize;
+        const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
+        return (
+          <div
+            key={`${slot.name}-${index}`}
+            role="listitem"
+            title={
+              isKeybind
+                ? "Manual keybind — not managed by Revolution"
+                : unmodelled
+                  ? "No sourced band — skipped in the sim"
+                  : slot.name
+            }
+            className={`w-24 border px-1.5 py-1 ${
+              isKeybind
+                ? "border-dashed border-stone-750/40 text-parch-300/45"
+                : unmodelled
+                  ? "border-dashed border-stone-750 text-parch-300/60"
+                  : "border-stone-750 bg-stone-850 text-parch-50"
+            }`}
+          >
+            <div className="font-mono text-[11px] text-parch-300">{index + 1}</div>
+            <div className="text-[11px] leading-tight">{slot.name}</div>
+            {isKeybind ? (
+              <div className="text-[11px] text-parch-300/45">keybind</div>
+            ) : unmodelled ? (
+              <div className="text-[11px] text-parch-300/60">unmodelled</div>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -75,16 +175,29 @@ function BarGraphic({ slots }: { slots: ResolvedSlot[] }) {
 /** Revolution mode: wiki bars over a continuous horizon (default 60s), GCD basics when
  *  nothing on the bar is ready/affordable. */
 export function RevolutionPanel({ stats }: { stats: CalcStats }) {
-  const [barId, setBarId] = useState(SUPPORTED_BARS[0]?.id ?? "");
+  const [loadout] = useLoadout();
+  const [barId, setBarId] = useState(
+    () => pickBarForStyle(DEFAULT_LOADOUT.style)?.id ?? SUPPORTED_BARS[0]?.id ?? "",
+  );
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
 
-  const bar: RevolutionBarRecord | undefined =
-    SUPPORTED_BARS.find((candidate) => candidate.id === barId) ?? SUPPORTED_BARS[0];
+  const bar: RevoBarView | undefined =
+    SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
+    pickBarForStyle(loadout.style) ??
+    SUPPORTED_BARS[0];
+  const styleMismatch = Boolean(bar && bar.style !== loadout.style);
   const slots = useMemo(() => (bar ? resolveBar(bar, ENGINE_SPECS) : []), [bar]);
-  const modelled = slots.filter((slot) => slot.spec !== null).map((slot) => slot.spec!);
-  const unmodelled = slots.filter((slot) => slot.modelledBy === "unmodelled");
+  const revoSize = bar?.revolutionSize ?? slots.length;
+  const managedSlots = useMemo(
+    () => (bar ? slots.slice(0, bar.revolutionSize) : []),
+    [bar, slots],
+  );
+  const modelled = useMemo(() => (bar ? revoManagedModelled(bar) : []), [bar]);
+  const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
+  const keybindCount = Math.max(0, slots.length - revoSize);
+  const hybrid = bar ? isHybridBar(bar, slots.length) : false;
   const nameById = useMemo(() => {
     const map = new Map(slots.filter((slot) => slot.spec).map((slot) => [slot.spec!.id, slot.name]));
     for (const spec of ENGINE_SPECS.values()) {
@@ -94,6 +207,25 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   }, [slots]);
 
   const plannedTicks = secondsToTicks(Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS));
+
+  // Setup style owns the default bar; manual cross-style picks stay until Setup changes.
+  useEffect(() => {
+    const current = SUPPORTED_BARS.find((candidate) => candidate.id === barId);
+    if (current?.style === loadout.style) return;
+    const next = pickBarForStyle(loadout.style);
+    if (!next || next.id === barId) return;
+    setBarId(next.id);
+    setResult(null);
+    setShowAllCasts(false);
+    // barId intentionally omitted: only react to Setup style changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Wave F1 style auto-switch
+  }, [loadout.style]);
+
+  const selectBar = (id: string) => {
+    setBarId(id);
+    setResult(null);
+    setShowAllCasts(false);
+  };
 
   const run = () => {
     if (!bar) return;
@@ -111,6 +243,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         durationTicks,
         // Global loadout mods + per-cast perk scopes (Ultimatums, Lunging).
         modifiers: (ability) => stats.castModifiersFor(ability),
+        adrenaline: stats.adrenaline,
       }),
     );
   };
@@ -137,39 +270,75 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   return (
     <div>
-      <p className="mb-3 text-xs text-parch-300">
+      <p className="mb-2 text-xs text-parch-300">
         Continuous revo over the duration: each GCD fires the first bar ability that is off
         cooldown and affordable; otherwise the style basic auto-weaves. Expected values only.
         Unaffordable high-priority slots (e.g. Berserk) are skipped — revo never banks adrenaline
         for a later ultimate.
+      </p>
+      <p className="mb-3 text-xs text-parch-300">
+        Single-target bars from{" "}
+        <span className="text-parch-50">PvME Revolution Bars</span>. Revo++ config: Auto-retaliate
+        on · Revolution on · auto-trigger Basic + Threshold + Enhanced + Ultimate · size 14 · Auto
+        Attack off.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">
           Bar
           <select
             value={bar?.id ?? ""}
-            onChange={(event) => setBarId(event.target.value)}
+            onChange={(event) => selectBar(event.target.value)}
             className="border border-stone-750 bg-transparent px-2 py-1 text-parch-50"
           >
-            {SUPPORTED_BARS.map((candidate) => (
-              <option key={candidate.id} value={candidate.id}>
-                {candidate.style === "melee" ? `Melee (${candidate.setup.toLowerCase()})` : candidate.style}
-              </option>
-            ))}
-            {UNSUPPORTED_BARS.map((candidate) => (
-              <option key={candidate.id} value={candidate.id} disabled>
-                {candidate.style} — unsupported yet
-              </option>
-            ))}
+            {STYLE_ORDER.map((style) => {
+              const supported = SUPPORTED_BARS.filter((b) => b.style === style);
+              const unsupported = UNSUPPORTED_BARS.filter((b) => b.style === style);
+              if (supported.length === 0 && unsupported.length === 0) return null;
+              return (
+                <optgroup key={style} label={STYLE_LABEL[style]}>
+                  {supported.map((candidate) => (
+                    <option key={candidate.id} value={candidate.id}>
+                      {barOptionLabel(candidate)}
+                    </option>
+                  ))}
+                  {unsupported.map((candidate) => (
+                    <option key={candidate.id} value={candidate.id} disabled>
+                      {barOptionLabel(candidate)} — unsupported
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </label>
         <span className="text-parch-300">
-          {modelled.length} of {slots.length} slots modelled
+          {modelled.length} of {managedSlots.length} revo slots modelled
           {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
+          {keybindCount > 0 ? ` · ${keybindCount} keybind` : ""}
         </span>
       </div>
 
-      <BarGraphic slots={slots} />
+      {styleMismatch && bar ? (
+        <p className="mt-2 text-xs text-chaos-300">
+          Setup is {loadout.style}; this bar is {bar.style} — AD/crit from Setup may not match.
+        </p>
+      ) : null}
+
+      {hybrid ? (
+        <p className="mt-2 text-xs text-parch-300">
+          Revo manages first {revoSize} slots; remaining are manual keybinds (wiki).
+        </p>
+      ) : null}
+
+      <BarGraphic slots={slots} revoSize={revoSize} />
+
+      {bar?.notes && bar.notes.length > 0 ? (
+        <ul className="mt-2 list-inside list-disc text-xs text-parch-300">
+          {bar.notes.map((note, i) => (
+            <li key={`${i}-${note.slice(0, 24)}`}>{note}</li>
+          ))}
+        </ul>
+      ) : null}
 
       <div className="mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
         <div>

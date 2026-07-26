@@ -38,6 +38,12 @@ export interface LoadoutPerks {
   biting: number;
   /** Item level 20 gear: Biting uses +2.2%/rank instead of +2%. */
   bitingLevel20: boolean;
+  /** Invigorating: basic adren gain × (1 + 0.05×rank). Rank 0 = off. */
+  invigorating: number;
+  /** Impatient: EV extra adren on basics (chance×3). Rank 0 = off. */
+  impatient: number;
+  /** Item level 20 gear: Impatient uses 9.9%/rank instead of 9%. */
+  impatientLevel20: boolean;
   ultimatums: number;
   lunging: number;
   energising: number;
@@ -104,6 +110,9 @@ export const DEFAULT_LOADOUT: Loadout = {
     eruptive: 0,
     biting: 0,
     bitingLevel20: false,
+    invigorating: 0,
+    impatient: 0,
+    impatientLevel20: false,
     ultimatums: 0,
     lunging: 0,
     energising: 0,
@@ -294,6 +303,9 @@ export function normalizeLoadout(value: unknown): Loadout {
       eruptive: clampRank(rawPerks.eruptive, 4),
       biting: clampRank(rawPerks.biting, 4),
       bitingLevel20: rawPerks.bitingLevel20 === true,
+      invigorating: clampRank(rawPerks.invigorating, 4),
+      impatient: clampRank(rawPerks.impatient, 4),
+      impatientLevel20: rawPerks.impatientLevel20 === true,
       ultimatums: clampRank(rawPerks.ultimatums, 4),
       lunging: clampRank(rawPerks.lunging, 4),
       energising: clampRank(rawPerks.energising, 4),

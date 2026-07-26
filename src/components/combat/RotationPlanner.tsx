@@ -36,6 +36,7 @@ function abilityName(id: string): string {
 export function RotationPlanner() {
   const [loadout] = useLoadout();
   const [useBuild, setUseBuild] = useState(true);
+  const [weave, setWeave] = useState(true);
   const [base, setBase] = useState(1000);
   const [level, setLevel] = useState(99);
   const [accuracy, setAccuracy] = useState(100);
@@ -69,6 +70,7 @@ export function RotationPlanner() {
           abilities: ALL_ABILITIES,
           rotation: rotationOf(...queue),
           modifiers: stats.globalModifiers,
+          autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),
       );
@@ -82,6 +84,7 @@ export function RotationPlanner() {
         crit: { chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100 },
         abilities: ALL_ABILITIES,
         rotation: rotationOf(...queue),
+        autoWeave: weave,
         ammo: ammo === "none" ? undefined : ammo,
       }),
     );
@@ -106,10 +109,16 @@ export function RotationPlanner() {
           Queue casts, run the tick sim. Volley of Souls runs in Quick and Analysis; the sim has
           no soul tracking yet.
         </p>
-        <label className="mt-3 flex items-center gap-2 text-xs text-parch-300">
-          <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
-          Use Build loadout
-        </label>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+          <label className="flex items-center gap-2 text-xs text-parch-300">
+            <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
+            Use Build loadout
+          </label>
+          <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">
+            <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
+            Auto-weave basics
+          </label>
+        </div>
         {useBuild ? (
           <dl className="mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
             {(
@@ -277,7 +286,10 @@ export function RotationPlanner() {
                       {result.casts.map((cast, index) => (
                         <tr key={`${cast.abilityId}-${index}`} className="border-b border-stone-750/70">
                           <td className="py-2 pr-4 font-mono text-xs text-parch-300">{cast.tick}</td>
-                          <td className="py-2 pr-4 text-parch-50">{abilityName(cast.abilityId)}</td>
+                          <td className="py-2 pr-4 text-parch-50">
+                            {abilityName(cast.abilityId)}
+                            {cast.auto ? <span className="ml-1.5 text-xs text-parch-300">auto</span> : null}
+                          </td>
                           <td className="py-2 pr-4 font-mono text-xs text-parch-50">{formatNumber(cast.result.expected)}</td>
                           <td className="py-2 font-mono text-xs text-parch-300">{cast.adrenalineAfter}%</td>
                         </tr>

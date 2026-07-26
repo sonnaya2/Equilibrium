@@ -1,0 +1,9 @@
+{
+  "version":1,
+  "snapshotDate":"2026-07-25",
+  "assets":[
+    {"id":"skilling-sanas-fyrtorch","label":"Sana's fyrtorch","category":"rs3/upgrades/skilling-offhands","path":"assets/rs3/upgrades/skilling-offhands/sanas-fyrtorch","fileTitle":"Sana's fyrtorch.png","search":"Sana's fyrtorch inventory icon","canonicalPage":"https://runescape.wiki/w/Sana%27s_fyrtorch"},
+    {"id":"skilling-taggas-corehammer","label":"Tagga's corehammer","category":"rs3/upgrades/skilling-offhands","path":"assets/rs3/upgrades/skilling-offhands/taggas-corehammer","fileTitle":"Tagga's corehammer.png","search":"Tagga's corehammer inventory icon","canonicalPage":"https://runescape.wiki/w/Tagga%27s_corehammer"},
+    {"id":"skilling-orthen-furnace-core","label":"Orthen furnace core","category":"rs3/upgrades/skilling-offhands","path":"assets/rs3/upgrades/skilling-offhands/orthen-furnace-core","fileTitle":"Orthen furnace core.png","search":"Orthen furnace core inventory icon","canonicalPage":"https://runescape.wiki/w/Orthen_furnace_core"}
+  ]
+}

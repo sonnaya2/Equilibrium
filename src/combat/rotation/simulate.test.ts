@@ -195,3 +195,71 @@ describe("simulate — magic", () => {
     expect(s.error).toContain("on cooldown");
   });
 });
+
+describe("simulate auto-weave", () => {
+  it("weaves basics through an adrenaline shortfall instead of failing", () => {
+    const s = simulate({ ...baseInput, autoWeave: true, rotation: rotationOf("overpower") });
+    expect(s.ok).toBe(true);
+    expect(s.casts).toHaveLength(8);
+    expect(s.casts.slice(0, 7).every((c) => c.abilityId === "attack" && c.auto)).toBe(true);
+    expect(s.casts[7].abilityId).toBe("overpower");
+    expect(s.casts[7].tick).toBe(21);
+    expect(s.casts[7].adrenalineAfter).toBe(63 - 60);
+    expect(s.casts[7].auto).toBeUndefined();
+  });
+
+  it("manual mode still fails the same shortfall honestly", () => {
+    const s = simulate({ ...baseInput, rotation: rotationOf("overpower") });
+    expect(s.ok).toBe(false);
+    expect(s.error).toContain("overpower needs 60% adrenaline");
+  });
+
+  it("weaves through cooldown gaps and builds Bloodlust from the woven basics", () => {
+    const s = simulate({ ...baseInput, autoWeave: true, rotation: rotationOf("assault", "assault") });
+    expect(s.ok).toBe(true);
+    // Second assault's cooldown ends at 19, mid-GCD after the tick-18 basic — it
+    // fires on the next grid slot, exactly as in game.
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "attack@0", "attack@3", "attack@6",
+      "assault@9",
+      "attack@12", "attack@15", "attack@18",
+      "assault@21",
+    ]);
+    // First assault at 3 stacks uses the base band; the second, at 6, is empowered.
+    expect(s.casts[3].result.expected).toBeCloseTo(4 * 1400);
+    expect(s.casts[7].result.expected).toBeCloseTo(4 * 1800);
+  });
+
+  it("weaves the upcoming style's own basic", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: RANGED_ABILITIES,
+      autoWeave: true,
+      rotation: rotationOf("imbue_shadows"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.slice(0, 5).every((c) => c.abilityId === "ranged_attack" && c.auto)).toBe(true);
+    expect(s.casts.at(-1)!.abilityId).toBe("imbue_shadows");
+    expect(s.casts.at(-1)!.tick).toBe(15);
+    expect(s.casts.at(-1)!.adrenalineAfter).toBe(45 - 40);
+  });
+
+  it("stops with an honest error when no weave can ever afford the cast", () => {
+    const impossible = {
+      id: "impossible_ult",
+      name: "Impossible ult",
+      style: "melee" as const,
+      category: "ultimate" as const,
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+      adrenaline: { cost: 101 },
+    };
+    const s = simulate({
+      ...baseInput,
+      abilities: [...MELEE_ABILITIES, impossible],
+      autoWeave: true,
+      rotation: rotationOf("impossible_ult"),
+    });
+    expect(s.ok).toBe(false);
+    expect(s.error).toContain("unaffordable");
+  });
+});

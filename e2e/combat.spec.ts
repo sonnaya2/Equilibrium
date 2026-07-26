@@ -33,11 +33,23 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 });
 
-test("rotation reports adrenaline starvation honestly", async ({ page }) => {
+test("rotation reports adrenaline starvation honestly in manual mode", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
   await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText(/Rotation fails: overpower needs 60% adrenaline/)).toBeVisible();
+});
+
+test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => {
+  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
+
+  await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.getByText("DPS")).toBeVisible();
+  await expect(page.getByText("24 ticks · 14.4s")).toBeVisible();
+  await expect(page.getByText("auto").first()).toBeVisible();
 });
 
 test("build tab filters equipment by region", async ({ page }) => {

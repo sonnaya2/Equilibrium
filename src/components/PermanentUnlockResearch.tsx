@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
-import { confidenceLabel } from "@/components/researchStatus";
+
 
 type Row = Record<string, unknown>;
 type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models" | "consumable_unlocks";
@@ -217,10 +217,28 @@ export function PermanentUnlockResearch() {
             return (
               <article
                 key={mapKey(row, index, "row")}
-                className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)_140px] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
               >
                 <div className="min-w-0">
-                  <h3 className="m-0 text-[14px] font-medium text-parch-50">{title(row)}</h3>
+                  <h3 className="m-0 text-[14px] font-medium text-parch-50">
+                    {title(row)}
+                    {sourceLinks.length ? (
+                      <span className="ml-1.5 font-normal">
+                        {sourceLinks.map((url, i) => (
+                          <a
+                            key={url}
+                            href={url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-gem-300 hover:underline"
+                          >
+                            {i > 0 ? " · " : "· "}
+                            {sourceLabel(url)}
+                          </a>
+                        ))}
+                      </span>
+                    ) : null}
+                  </h3>
                   {category ? <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{category}</p> : null}
                   <p className="m-0 mt-0.5 text-[11px] text-parch-400">{region(row)}</p>
                 </div>
@@ -228,16 +246,6 @@ export function PermanentUnlockResearch() {
                   {rowDetails.map((item, i) => (
                     <p key={i} className="m-0">{item}</p>
                   ))}
-                </div>
-                <div className="text-[11px] lg:text-right">
-                  <div className="text-parch-300">{confidenceLabel(row.confidence)}</div>
-                  <div className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 lg:justify-end">
-                    {sourceLinks.map((url, i) => (
-                      <a key={url} href={url} target="_blank" rel="noreferrer" className="text-gem-300 hover:underline">
-                        {i === 0 ? sourceLabel(url) : `Source ${i + 1}`}
-                      </a>
-                    ))}
-                  </div>
                 </div>
               </article>
             );

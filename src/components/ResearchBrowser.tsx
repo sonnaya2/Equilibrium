@@ -14,7 +14,7 @@ import { isRegionUnlocked } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import type { RegionId } from "@/league";
 import { GameIcon } from "@/components/GameIcon";
-import { confidenceLabel, freshnessLabel } from "@/components/researchStatus";
+
 import { regionCrestPath } from "@/lib/gameArt";
 
 type Mode = "region" | "skill";
@@ -134,7 +134,7 @@ function MethodTable({
 
   return (
     <div className="overflow-x-auto">
-      <table className="data-table min-w-[1120px]">
+      <table className="data-table min-w-[900px]">
         <thead>
           <tr>
             <th>Method</th>
@@ -142,8 +142,6 @@ function MethodTable({
             <th>Rate</th>
             <th>Where</th>
             <th>Req</th>
-            <th>Status</th>
-            <th>Source</th>
           </tr>
         </thead>
         <tbody>
@@ -157,7 +155,14 @@ function MethodTable({
                 aria-selected={onFocus ? focused : undefined}
               >
                 <td>
-                  <div className="font-medium">{cleanText(method.method)}</div>
+                  <div className="font-medium">
+                    {cleanText(method.method)}
+                    {method.source ? (
+                      <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
+                        · <SourceLink source={method.source} />
+                      </span>
+                    ) : null}
+                  </div>
                   <div className="mt-0.5 text-[12px] text-parch-100">
                     {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
                   </div>
@@ -177,11 +182,6 @@ function MethodTable({
                   {method.resourceSource ? <div className="mt-0.5">Mats: {cleanText(method.resourceSource)}</div> : null}
                   {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
                 </td>
-                <td className="secondary leading-5">
-                  <div className="text-parch-50">{freshnessLabel(method.freshness)}</div>
-                  <div className="mt-0.5 text-[12px] text-parch-100">{confidenceLabel(method.confidence)}</div>
-                </td>
-                <td className="text-[12px]"><SourceLink source={method.source} /></td>
               </tr>
             );
           })}
@@ -257,14 +257,12 @@ function RegionDetail({
           <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="data-table min-w-[820px]">
+          <table className="data-table min-w-[640px]">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Kind</th>
                 <th>Detail</th>
-                <th>Conf</th>
-                <th>Source</th>
               </tr>
             </thead>
             <tbody>
@@ -277,11 +275,16 @@ function RegionDetail({
                     onClick={() => onFocus({ kind: "content", index })}
                     aria-selected={focused}
                   >
-                    <td>{cleanText(row.name)}</td>
+                    <td>
+                      {cleanText(row.name)}
+                      {row.source ? (
+                        <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
+                          · <SourceLink source={row.source} />
+                        </span>
+                      ) : null}
+                    </td>
                     <td className="secondary">{row.kind}</td>
-                    <td className="max-w-xl secondary leading-5">{row.detail ? cleanText(row.detail) : "-"}</td>
-                    <td className="secondary text-[12px]">{confidenceLabel(row.confidence)}</td>
-                    <td className="text-[12px]"><SourceLink source={row.source} /></td>
+                    <td className="max-w-xl secondary leading-5">{row.detail ? cleanText(row.detail) : "—"}</td>
                   </tr>
                 );
               })}
@@ -305,22 +308,25 @@ function RegionDetail({
                 key={`upgrade-${index}-${upgrade.name}`}
                 onClick={() => onFocus({ kind: "upgrade", index })}
                 aria-pressed={focused}
-                className={`grid w-full gap-0.5 border-b border-stone-750/70 px-3 py-2 text-left last:border-b-0 md:grid-cols-[minmax(160px,0.3fr)_minmax(0,1fr)_110px_90px] md:gap-4 ${
+                className={`grid w-full gap-0.5 border-b border-stone-750/70 px-3 py-2 text-left last:border-b-0 md:grid-cols-[minmax(160px,0.3fr)_minmax(0,1fr)] md:gap-4 ${
                   focused ? "bg-stone-raised" : index % 2 === 1 ? "bg-stone-zebra" : ""
                 }`}
               >
                 <div>
-                  <div className="text-[14px] font-medium text-parch-50">{cleanText(upgrade.name)}</div>
+                  <div className="text-[14px] font-medium text-parch-50">
+                    {cleanText(upgrade.name)}
+                    {upgrade.source ? (
+                      <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
+                        · <SourceLink source={upgrade.source} />
+                      </span>
+                    ) : null}
+                  </div>
                   <div className="mt-0.5 text-[11px] text-parch-100">{upgrade.category}</div>
                   {regionAccess ? <div className="mt-0.5 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
                 </div>
                 <div className="text-[14px] leading-5 text-parch-100">
                   {upgrade.detail ? cleanText(upgrade.detail) : "—"}
                   {upgrade.requirements.length ? <div className="mt-0.5 text-parch-50">{upgrade.requirements.join(" · ")}</div> : null}
-                </div>
-                <div className="text-[11px] text-parch-100">{confidenceLabel(upgrade.confidence)}</div>
-                <div className="text-[12px] md:text-right" onClick={(e) => e.stopPropagation()}>
-                  <SourceLink source={upgrade.source} />
                 </div>
               </button>
             );
@@ -434,7 +440,6 @@ function contentFacts(row: ResearchContentRow): [string, string][] {
     fact("Name", row.name),
     fact("Kind", row.kind),
     fact("Detail", row.detail || null),
-    fact("Conf", confidenceLabel(row.confidence)),
   );
 }
 
@@ -444,7 +449,6 @@ function upgradeFacts(row: ResearchUpgrade): [string, string][] {
     fact("Name", row.name),
     fact("Category", row.category),
     fact("Detail", row.detail || null),
-    fact("Conf", confidenceLabel(row.confidence)),
     fact("Access", access || null),
     fact("Region", row.regionId),
     fact("Access type", row.regionRequirementType),
@@ -470,8 +474,6 @@ function methodFacts(row: ResearchTrainingMethod): [string, string][] {
     fact("Unlock", row.requiredUnlock || null),
     fact("Req", row.requirements.length ? row.requirements.join(" · ") : null),
     fact("Mats", row.resourceSource || null),
-    fact("Fresh", freshnessLabel(row.freshness)),
-    fact("Conf", confidenceLabel(row.confidence)),
     fact("Note", row.note || null),
     fact("Warn", row.warning || null),
   );
@@ -856,36 +858,53 @@ function BrowseSourcesInspector({
   notes: string[];
   onClearFocus?: () => void;
 }) {
+  const primary = sources[0] ?? null;
   return (
     <div className="text-[14px]">
       <div className="flex items-baseline justify-between gap-2">
-        <p className="font-display text-[11px] uppercase tracking-[0.12em] text-gold-400">Inspector</p>
+        <p className="font-display text-[11px] uppercase tracking-[0.12em] text-gold-400">Detail</p>
         {onClearFocus ? (
           <button
             type="button"
             onClick={onClearFocus}
             className="text-[11px] text-gem-300 underline-offset-2 hover:underline"
           >
-            Clear focus
+            Clear
           </button>
         ) : null}
       </div>
       <div className="mt-1.5 flex items-start gap-1.5">
         {crestId ? <GameIcon src={regionCrestPath(crestId)} size={22} className="shrink-0" /> : null}
         <div className="min-w-0">
-          <p className="text-[14px] font-medium leading-4 text-parch-50">{cleanText(title)}</p>
+          <p className="text-[14px] font-medium leading-4 text-parch-50">
+            {cleanText(title)}
+            {primary ? (
+              <span className="ml-1.5 font-normal">
+                · <SourceLink source={primary} />
+              </span>
+            ) : null}
+          </p>
           <p className="mt-0.5 text-[11px] text-parch-100">{subtitle}</p>
+          {sources.length > 1 ? (
+            <p className="mt-0.5 flex flex-wrap gap-x-2 text-[11px]">
+              {sources.slice(1).map((s) => (
+                <SourceLink key={`${s.source}-${s.url}`} source={s} />
+              ))}
+            </p>
+          ) : null}
         </div>
       </div>
 
-      <dl className="mt-2.5 space-y-1 border-t border-stone-750 pt-2">
-        {facts.map(([k, v]) => (
-          <div key={k} className="grid grid-cols-[minmax(0,0.38fr)_minmax(0,0.62fr)] gap-x-1.5">
-            <dt className="text-[11px] leading-4 text-parch-100">{k}</dt>
-            <dd className="break-words text-[13px] leading-4 text-parch-50">{v}</dd>
-          </div>
-        ))}
-      </dl>
+      {facts.length ? (
+        <dl className="mt-2.5 space-y-1 border-t border-stone-750 pt-2">
+          {facts.map(([k, v]) => (
+            <div key={k} className="grid grid-cols-[minmax(0,0.38fr)_minmax(0,0.62fr)] gap-x-1.5">
+              <dt className="text-[11px] leading-4 text-parch-100">{k}</dt>
+              <dd className="break-words text-[13px] leading-4 text-parch-50">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
 
       {rules.length ? (
         <div className="mt-2.5 border-t border-stone-750 pt-2">
@@ -908,44 +927,6 @@ function BrowseSourcesInspector({
           </ul>
         </div>
       ) : null}
-
-      <div className="mt-2.5 border-t border-stone-750 pt-2">
-        <p className="text-[10px] uppercase tracking-[0.08em] text-parch-100">
-          Sources · {sources.length}
-        </p>
-        {sources.length === 0 ? (
-          <p className="mt-1 text-[12px] text-parch-100">No sources.</p>
-        ) : (
-          <ul className="mt-1.5 space-y-1.5">
-            {sources.map((s) => (
-              <li
-                key={`${s.source}-${s.url}-${s.verifiedAt}-${s.title ?? ""}`}
-                className="border border-stone-750 bg-stone-850 px-2 py-1.5"
-              >
-                <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-gem-300">
-                  {SOURCE_LABEL[s.source] ?? s.source}
-                </p>
-                <p className="mt-0.5 text-[13px] leading-4 text-parch-50">
-                  {s.title || SOURCE_LABEL[s.source] || s.source}
-                </p>
-                <p className="mt-0.5 text-[11px] leading-3 text-parch-100">
-                  {s.verifiedAt}
-                  {s.publishedAt ? ` · ${s.publishedAt}` : ""}
-                  {s.revision ? ` · rev ${s.revision}` : ""}
-                </p>
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-1 block break-all text-[12px] leading-3 text-gem-300 underline-offset-2 hover:underline"
-                >
-                  {s.url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
     </div>
   );
 }

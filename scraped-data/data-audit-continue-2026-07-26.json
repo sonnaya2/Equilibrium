@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-26T16:08:14.213Z",
+  "generatedAt": "2026-07-26T16:17:05.794Z",
   "summary": {
     "hardIssues": 0,
-    "totalUpgrades": 1020,
-    "multiHost": 43,
+    "totalUpgrades": 1026,
+    "multiHost": 45,
     "emptyReqMulti": 3,
     "singleReqPollution": 1,
     "multiReqOutside": 0,
@@ -126,7 +126,6 @@
       "anachronia"
     ],
     "extremeInv": [
-      "asgarnia",
       "kandarin"
     ],
     "portalsGone": true,
@@ -307,9 +306,9 @@
         "morytania"
       ],
       "req": [
+        "desert",
         "kandarin",
-        "morytania",
-        "desert"
+        "morytania"
       ]
     },
     {
@@ -339,19 +338,6 @@
       ]
     },
     {
-      "name": "Pickaxe of Earth and Song",
-      "hosts": [
-        "kandarin",
-        "fremennik",
-        "tirannwn"
-      ],
-      "req": [
-        "fremennik",
-        "tirannwn",
-        "kandarin"
-      ]
-    },
-    {
       "name": "POH gilded altar (Chapel offering)",
       "hosts": [
         "fremennik",
@@ -365,7 +351,46 @@
       ]
     },
     {
+      "name": "Marble blocks (POH Construction)",
+      "hosts": [
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Magic stones (POH Construction)",
+      "hosts": [
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
       "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "hosts": [
+        "forinthry",
+        "tirannwn",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Orthen furnace core full skilling stack",
       "hosts": [
         "forinthry",
         "tirannwn",
@@ -444,14 +469,14 @@
       ]
     },
     {
-      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "name": "Inferno adze",
       "hosts": [
         "asgarnia",
-        "kandarin"
+        "forinthry"
       ],
       "req": [
         "asgarnia",
-        "kandarin"
+        "forinthry"
       ]
     },
     {
@@ -545,6 +570,17 @@
       "req": [
         "kandarin",
         "forinthry"
+      ]
+    },
+    {
+      "name": "Pickaxe of Earth and Song",
+      "hosts": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn"
       ]
     },
     {
@@ -642,18 +678,6 @@
         "morytania"
       ],
       "req": []
-    },
-    {
-      "name": "Orthen furnace core full skilling stack",
-      "hosts": [
-        "tirannwn",
-        "anachronia"
-      ],
-      "req": [
-        "anachronia",
-        "tirannwn",
-        "forinthry"
-      ]
     }
   ],
   "regionCounts": [
@@ -661,7 +685,7 @@
       "id": "misthalin",
       "areas": 9,
       "content": 16,
-      "upgrades": 186
+      "upgrades": 187
     },
     {
       "id": "havenhythe",
@@ -679,7 +703,7 @@
       "id": "asgarnia",
       "areas": 14,
       "content": 16,
-      "upgrades": 160
+      "upgrades": 157
     },
     {
       "id": "kandarin",
@@ -691,13 +715,13 @@
       "id": "fremennik",
       "areas": 9,
       "content": 3,
-      "upgrades": 59
+      "upgrades": 61
     },
     {
       "id": "forinthry",
       "areas": 13,
       "content": 8,
-      "upgrades": 120
+      "upgrades": 124
     },
     {
       "id": "desert",
@@ -715,7 +739,7 @@
       "id": "tirannwn",
       "areas": 5,
       "content": 4,
-      "upgrades": 87
+      "upgrades": 89
     },
     {
       "id": "anachronia",

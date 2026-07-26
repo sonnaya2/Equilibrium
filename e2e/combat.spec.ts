@@ -56,9 +56,10 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
   await expect(page.getByText("auto").first()).toBeVisible();
 });
 
-test("build tab filters equipment by region", async ({ page }) => {
-  await page.getByRole("button", { name: "Build", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Loadout" })).toBeVisible();
+test("setup gear filters equipment by region", async ({ page }) => {
+  await page.getByRole("button", { name: "Setup", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Setup" })).toBeVisible();
+  await page.getByRole("button", { name: "Gear", exact: true }).click();
 
   await page.getByRole("combobox", { name: "Region" }).selectOption("misthalin");
   await expect(page.getByRole("button", { name: /Omni guard/ })).toBeVisible();
@@ -67,7 +68,7 @@ test("build tab filters equipment by region", async ({ page }) => {
 
 test("analysis tab compares two stat lines", async ({ page }) => {
   await page.getByRole("button", { name: "Analysis", exact: true }).click();
-  await expect(page.getByText("A · Build loadout")).toBeVisible();
+  await expect(page.getByText("A · Setup loadout")).toBeVisible();
   await expect(page.getByText("B · Comparison")).toBeVisible();
   await expect(page.getByText("B − A")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Damage Potential" })).toBeVisible();
@@ -80,10 +81,10 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
   await expect(page.getByText("Damage Potential")).toBeVisible();
 });
 
-test("rotation defaults to the shared build loadout", async ({ page }) => {
+test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
-  const toggle = page.getByRole("checkbox", { name: "Use Build loadout" });
+  const toggle = page.getByRole("checkbox", { name: "Use Setup loadout" });
   await expect(toggle).toBeChecked();
 
   await page.getByRole("button", { name: /^Attack \+9%$/ }).click();
@@ -93,10 +94,20 @@ test("rotation defaults to the shared build loadout", async ({ page }) => {
   await expect(page.getByText("6 ticks · 3.6s")).toBeVisible();
 });
 
-test("build tab exposes target and perk sections", async ({ page }) => {
-  await page.getByRole("button", { name: "Build", exact: true }).click();
+test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
+  await page.getByRole("button", { name: "Setup", exact: true }).click();
+  await page.getByRole("button", { name: "Gear", exact: true }).click();
+  await expect(page.getByText("Main-hand")).toBeVisible();
+  await expect(page.getByText("Empty").first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Perks", exact: true }).click();
   await expect(page.getByText("Perks & sets")).toBeVisible();
-  await expect(page.getByText("Equilibrium rank (+10% +1%/rank AD)")).toBeVisible();
+  await expect(page.getByText(/Equilibrium rank \(\+6% \+2%\/rank/)).toBeVisible();
+
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await expect(page.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();
+
+  await page.getByRole("button", { name: "Target", exact: true }).click();
   await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
   await expect(page.getByText("Affinity")).toBeVisible();
 });
@@ -104,7 +115,8 @@ test("build tab exposes target and perk sections", async ({ page }) => {
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
 
-  await expect(page.getByText("8 of 10 slots modelled · 2 skipped")).toBeVisible();
+  // Default melee dual-wield bar is fully engine-mapped post-audit.
+  await expect(page.getByText(/10 of 10 slots modelled/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 

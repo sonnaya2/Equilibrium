@@ -20,12 +20,14 @@ describe("resolveBar", () => {
     expect(rend.modelledBy).toBe("engine");
     expect(rend.spec?.id).toBe("rend");
     const flurry = slots.find((slot) => slot.name === "Flurry")!;
-    expect(flurry.modelledBy).toBe("record");
+    expect(flurry.modelledBy).toBe("engine");
+    expect(flurry.spec?.id).toBe("flurry");
     expect(flurry.spec?.hits).toHaveLength(8);
     expect(flurry.spec?.hits[0].band).toEqual({ minPct: 60, maxPct: 70 });
     const meteor = slots.find((slot) => slot.name === "Meteor Strike")!;
-    expect(meteor.modelledBy).toBe("unmodelled");
-    expect(meteor.spec).toBeNull();
+    expect(meteor.modelledBy).toBe("engine");
+    expect(meteor.spec?.id).toBe("meteor_strike");
+    expect(meteor.spec?.hits[0].band).toEqual({ minPct: 220, maxPct: 250 });
   });
 
   it("resolves Adaptive Strike by weapon setup and Sacrifice to the bar's style", () => {
@@ -40,10 +42,17 @@ describe("resolveBar", () => {
     expect(sacrifice.spec?.style).toBe("ranged");
   });
 
-  it("never invents a spec for slots without sourced bands", () => {
+  it("resolves magic Revo++ damage slots via engine specs", () => {
     const magic = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "magic")!, ENGINE_SPECS);
-    for (const name of ["Tsunami", "Omnipower", "Smoke Tendrils", "Dragon Breath"]) {
-      expect(magic.find((slot) => slot.name === name)!.modelledBy).toBe("unmodelled");
+    for (const [name, id] of [
+      ["Tsunami", "tsunami"],
+      ["Omnipower", "omnipower"],
+      ["Smoke Tendrils", "smoke_tendrils"],
+      ["Dragon Breath", "dragon_breath"],
+    ] as const) {
+      const slot = magic.find((s) => s.name === name)!;
+      expect(slot.modelledBy, name).toBe("engine");
+      expect(slot.spec?.id).toBe(id);
     }
   });
 });
@@ -59,7 +68,9 @@ describe("specFromRecord", () => {
   });
 
   it("returns null for bandless records instead of fabricating damage", () => {
-    expect(specFromRecord(abilityById("ranged:deadshot")!)).toBeNull();
+    // Buff-only ultimates carry no damagePercent — adapter must not invent hits.
+    expect(specFromRecord(abilityById("ranged:deaths-swiftness")!)).toBeNull();
+    expect(specFromRecord(abilityById("necromancy:living-death")!)).toBeNull();
   });
 });
 
@@ -77,13 +88,13 @@ describe("simulateRevolution", () => {
     expect(s.ok).toBe(true);
     // Greater Sunshine leads the bar but is unaffordable at 0 adrenaline, so the
     // first ready slot further down fires instead — revolution skips, never waits.
-    expect(s.casts[0].abilityId).toBe("magic:greater-concentrated-blast");
+    expect(s.casts[0].abilityId).toBe("greater_concentrated_blast");
     expect(s.casts[0].tick).toBe(0);
     // Basics fill slots where nothing on the bar is ready.
     expect(s.casts.some((cast) => cast.abilityId === "magic_attack" && cast.auto)).toBe(true);
     // Cost abilities drain the pool whenever they are ready and affordable.
-    expect(s.casts.some((cast) => cast.abilityId === "magic:wild-magic")).toBe(true);
-    expect(s.casts.some((cast) => cast.abilityId === "magic:asphyxiate")).toBe(true);
+    expect(s.casts.some((cast) => cast.abilityId === "wild_magic")).toBe(true);
+    expect(s.casts.some((cast) => cast.abilityId === "asphyxiate")).toBe(true);
   });
 
   it("pools basics until a lone ultimate is affordable, then fires it", () => {
@@ -106,16 +117,26 @@ describe("simulateRevolution", () => {
   it("honours priority order — the same abilities in a different order cast differently", () => {
     const bar = combatRevolutionBars.records.find((candidate) => candidate.id === "magic")!;
     const modelled = resolveBar(bar, ENGINE_SPECS).filter((slot) => slot.spec !== null).map((slot) => slot.spec!);
+    const forward = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values(), ...modelled],
+      bar: modelled,
+      style: "magic",
+      durationTicks: 24,
+    });
     const reversed = [...modelled].reverse();
-    const s = simulateRevolution({
+    const reverse = simulateRevolution({
       ...baseInput,
       abilities: [...ENGINE_SPECS.values(), ...reversed],
       bar: reversed,
       style: "magic",
       durationTicks: 24,
     });
-    const sonicWave = s.casts.find((cast) => cast.abilityId === "magic:sonic-wave")!;
-    expect(sonicWave.tick).toBe(0);
+    expect(forward.ok && reverse.ok).toBe(true);
+    // Same kit, different priority order → different first non-auto cast id or tick stream.
+    const fwdIds = forward.casts.filter((c) => !c.auto).map((c) => c.abilityId);
+    const revIds = reverse.casts.filter((c) => !c.auto).map((c) => c.abilityId);
+    expect(fwdIds[0]).not.toBe(revIds[0]);
   });
 
   it("lands Combust burn hits on their sourced ticks past the horizon", () => {

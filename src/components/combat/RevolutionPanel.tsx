@@ -10,11 +10,18 @@ import { secondsToTicks, TICK_SECONDS } from "@/combat/rotation/timeline";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
+import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import type { CalcStats } from "./loadoutStats";
 import { NumberField } from "./NumberField";
 
 const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
-  [...MELEE_ABILITIES, ...RANGED_ABILITIES, ...MAGIC_ABILITIES].map((spec) => [spec.id, spec]),
+  [
+    ...MELEE_ABILITIES,
+    ...RANGED_ABILITIES,
+    ...MAGIC_ABILITIES,
+    ...NECROMANCY_ABILITIES,
+    volleyOfSouls(3),
+  ].map((spec) => [spec.id, spec]),
 );
 
 const SUPPORTED_BARS = combatRevolutionBars.records.filter((bar) => bar.supported);

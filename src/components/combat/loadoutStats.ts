@@ -1,68 +1,140 @@
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
 import {
+  bitingCritChanceBonus,
   energisingAccuracyBonus,
   equilibriumPerkModifier,
+  eruptivePerkModifier,
   lungingPerkModifier,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import { tectonicSet, tumekensSunshineSet } from "@/combat/shared/equipment";
+import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@/combat/shared/prayers";
+import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
+import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
+import { equipmentById } from "@/combat/data";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { Loadout } from "./useLoadout";
 
-/** Pure derivation of engine inputs from a Build loadout — the single place tabs
- *  resolve "what does this loadout mean numerically". UI-only; no engine changes. */
+/** Pure derivation of engine inputs from a Setup loadout — single place tabs
+ *  resolve "what does this loadout mean numerically". */
 
 export interface CalcStats {
   base: number;
+  /**
+   * Level feeding crit damage (and base AD when computed). Strength for melee;
+   * style level for Ranged / Magic / Necromancy.
+   */
   level: number;
-  /** Damage Potential as a fraction, from the target model when configured. */
+  /** Level feeding playerAccuracy when the target model is active. */
+  attackLevel: number;
   dp: number;
   critChance: number;
   critDamageBonus: number;
-  /** Modifiers safe to share across every cast of a run (Equilibrium). */
   globalModifiers: CombatModifier[];
-  /** Modifiers for one specific cast (global + category/ability-scoped perks). */
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+const clampLevel = (value: number) => Math.min(Math.max(1, value), 145);
 
-/** Base ability damage: manual entry, or computed from level + weapon tier when the
- *  base field is not a finite positive number. */
+/** Equipped twohand or mainhand tier when tagged on the record. */
+export function equippedWeaponTier(loadout: Loadout): number | null {
+  const slots = loadout.equipmentSlots ?? {};
+  for (const slot of ["twohand", "mainhand"] as const) {
+    const id = slots[slot];
+    if (typeof id !== "string") continue;
+    const record = equipmentById(id);
+    if (record?.tier != null && Number.isFinite(record.tier)) return record.tier;
+  }
+  // Legacy flat list: first weapon-tier record.
+  for (const id of loadout.equipmentIds ?? []) {
+    const record = equipmentById(id);
+    if (record?.tier != null && Number.isFinite(record.tier) && record.slot &&
+        (record.slot === "mainhand" || record.slot === "twohand" || record.slot === "offhand")) {
+      return record.tier;
+    }
+  }
+  return null;
+}
+
+export function loadoutWeaponTier(loadout: Loadout): number {
+  return equippedWeaponTier(loadout) ?? loadout.weaponTier;
+}
+
+export function loadoutAttackLevel(loadout: Loadout): number {
+  return clampLevel(loadout.style === "melee" ? loadout.attackLevel : loadout.level);
+}
+
+export function loadoutDamageLevel(loadout: Loadout): number {
+  return clampLevel(loadout.style === "melee" ? loadout.strengthLevel : loadout.level);
+}
+
 export function loadoutBase(loadout: Loadout): number {
   if (Number.isFinite(loadout.base) && loadout.base > 0) return loadout.base;
-  return baseAbilityDamage(loadout.level, {
+  return baseAbilityDamage(loadoutDamageLevel(loadout), {
     kind: "twohand",
-    weapon: { tier: loadout.weaponTier },
+    weapon: { tier: loadoutWeaponTier(loadout) },
     style: loadout.style,
   });
 }
 
 export function loadoutStats(loadout: Loadout): CalcStats {
-  const level = Math.min(Math.max(1, loadout.level), 145);
+  const curse =
+    loadout.buffs?.styleCurse && loadout.buffs.styleCurse !== "none"
+      ? styleCurseById(loadout.buffs.styleCurse)
+      : undefined;
+  const overloadTier =
+    loadout.buffs?.overload && loadout.buffs.overload !== "none"
+      ? (loadout.buffs.overload as OverloadTier)
+      : null;
+
+  let attackLevel = loadoutAttackLevel(loadout);
+  if (overloadTier) attackLevel = overloadBoostedLevel(attackLevel, overloadTier);
+  if (curse) attackLevel = prayerBoostedStyleLevel(attackLevel, curse);
+
+  const level = loadoutDamageLevel(loadout);
   const energising = loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
+  const weaponTier = loadoutWeaponTier(loadout);
 
   const dp = loadout.target
-    ? targetDamagePotential(playerAccuracy(level, loadout.weaponTier) + energising, {
+    ? targetDamagePotential(playerAccuracy(attackLevel, weaponTier) + energising, {
         defenceLevel: loadout.target.defenceLevel,
         affinity: loadout.target.affinity,
       })
     : clamp01(loadout.accuracy / 100);
 
-  const critChance = clamp01(
-    loadout.critChance / 100 +
-      tectonicSet(loadout.perks.tectonicPieces, loadout.perks.eliteTectonic).critChanceBonus +
-      tumekensSunshineSet(loadout.perks.tumekensPieces, loadout.perks.insideSunshine).critChanceBonus,
-  );
+  // Equilibrium prevents critical strikes (wiki). Biting/set bonuses ignored while active.
+  const biting =
+    loadout.perks.biting > 0
+      ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
+      : 0;
+  const critChance =
+    loadout.perks.equilibrium > 0
+      ? 0
+      : clamp01(
+          loadout.critChance / 100 +
+            biting +
+            tectonicSet(loadout.perks.tectonicPieces, loadout.perks.eliteTectonic).critChanceBonus +
+            tumekensSunshineSet(loadout.perks.tumekensPieces, loadout.perks.insideSunshine)
+              .critChanceBonus,
+        );
 
-  const globalModifiers: CombatModifier[] =
-    loadout.perks.equilibrium > 0 ? [equilibriumPerkModifier(loadout.perks.equilibrium)] : [];
+  const globalModifiers: CombatModifier[] = [];
+  if (loadout.perks.equilibrium > 0) {
+    globalModifiers.push(equilibriumPerkModifier(loadout.perks.equilibrium));
+  }
+  if (loadout.perks.eruptive > 0) {
+    globalModifiers.push(eruptivePerkModifier(loadout.perks.eruptive));
+  }
+  if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
+  if (curse) globalModifiers.push(prayerDamageModifier(curse));
 
   return {
     base: loadoutBase(loadout),
     level,
+    attackLevel,
     dp,
     critChance,
     critDamageBonus: 0,

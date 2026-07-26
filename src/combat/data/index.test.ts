@@ -111,8 +111,8 @@ describe("combat data accessors", () => {
         expect(recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId)).toBe(true);
       }
     }
-    // The supported bars are mostly modelled; necromancy is honestly unsupported.
-    expect(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")?.supported).toBe(false);
+    // Conjures stay null (honest unmodelled); damage/buff slots map to records/engine.
+    expect(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")?.supported).toBe(true);
   });
 
   it("prayer catalogue covers all three books with the codex overlay merged", () => {

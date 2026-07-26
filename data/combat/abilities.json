@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "trackedSince": "2024-03-04",
   "records": [
     {
@@ -17,7 +17,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Sonic_Wave",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -29,7 +29,8 @@
         90,
         110
       ],
-      "displayDescription": "Applies Flow; Flow reduces the adrenaline cost of the next Magic ability by 10%"
+      "displayDescription": "Applies Flow; Flow reduces the adrenaline cost of the next Magic ability by 10%",
+      "averageDamagePercent": 100
     },
     {
       "id": "magic:greater-sonic-wave",
@@ -48,7 +49,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Greater_Sonic_Wave",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -78,7 +79,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Concentrated_Blast",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -91,7 +92,8 @@
         30,
         40
       ],
-      "displayDescription": "Critical-strike chance applies to the next ability rather than only the next hit"
+      "displayDescription": "Critical-strike chance applies to the next ability rather than only the next hit",
+      "cooldownTicks": 9
     },
     {
       "id": "magic:greater-concentrated-blast",
@@ -110,7 +112,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Greater_Concentrated_Blast",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -124,7 +126,8 @@
         40,
         50
       ],
-      "displayDescription": "Upgrade of Concentrated Blast; Each hit adds 7% critical-strike chance to the next Magic ability; Stacks to 21% after all three hits"
+      "displayDescription": "Upgrade of Concentrated Blast; Each hit adds 7% critical-strike chance to the next Magic ability; Stacks to 21% after all three hits",
+      "averageDamagePercent": 146.475
     },
     {
       "id": "magic:wild-magic",
@@ -141,7 +144,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Wild_Magic",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -154,7 +157,8 @@
         125,
         155
       ],
-      "displayDescription": "Each hit has +10% critical-strike chance; Each hit has +20% critical-strike damage; Post-launch patch 2026-03-30"
+      "displayDescription": "Each hit has +10% critical-strike chance; Each hit has +20% critical-strike damage; Post-launch patch 2026-03-30",
+      "averageDamagePercent": 319.2
     },
     {
       "id": "magic:asphyxiate",
@@ -171,7 +175,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Asphyxiate",
-          "verifiedAt": "2026-07-24"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -184,7 +188,41 @@
         120,
         140
       ],
-      "displayDescription": "Stuns and binds the target for 3.6 seconds; Completing the channel applies Channelled Might for 3.6 seconds; Channelled Might gives Magic attacks +15% critical-strike damage; Post-launch patch 2026-03-30"
+      "displayDescription": "Stuns and binds the target for 3.6 seconds; Completing the channel applies Channelled Might for 3.6 seconds; Channelled Might gives Magic attacks +15% critical-strike damage; Post-launch patch 2026-03-30",
+      "averageDamagePercent": 520
+    },
+    {
+      "id": "magic:asphyxiate-resplendence",
+      "name": "Asphyxiate (Tumeken's Resplendence)",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 59,
+      "unlock": {
+        "type": "equipment",
+        "requirement": "4+ pieces of Tumeken's resplendence equipment",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Asphyxiate",
+          "title": "Asphyxiate",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "cooldownTicks": 34,
+      "hits": 8,
+      "damagePercent": [
+        72,
+        84
+      ],
+      "averageDamagePercent": 624,
+      "displayDescription": "8 hits of 72-84% over 4.8s (8 ticks) when wearing 4+ Tumeken's Resplendence; Channelled Might [3.6/9]s at +[15/35]% Magic crit damage with 5-piece set",
+      "mechanicalImplementation": "ENGINE_ID asphyxiate_resplendence; one hit per tick 0..7"
     },
     {
       "id": "magic:runic-charge",
@@ -193,17 +231,50 @@
       "category": "utility",
       "unlock": {
         "type": "level",
-        "requirement": "undefined",
+        "requirement": "26",
         "regions": []
       },
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Anima_Charged",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Runic_Charge",
+          "title": "Runic Charge",
+          "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Anima Charged makes Greater Sonic Wave reduce the next Magic ability's adrenaline cost by 45% rather than 20%; Anima Charged causes Concentrated Blast and Greater Concentrated Blast to grant an additional 10% critical-strike chance; Runic Charge is not triggered automatically by Revolution"
+      "displayDescription": "Off-GCD; applies Anima Charged 15s; empowers next Sonic/Greater Sonic, Dragon Breath, or Conc/GConc cast",
+      "level": 26,
+      "cooldownTicks": 50
+    },
+    {
+      "id": "ranged:attack",
+      "name": "Ranged",
+      "style": "ranged",
+      "category": "basic",
+      "level": 1,
+      "unlock": {
+        "type": "level",
+        "requirement": "1",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ranged_(ability)",
+          "title": "Ranged (ability)",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "Auto basic attack; generates 9% adrenaline. Dark bow / Gloomfire Darkfang variant is two hits of 45-55% (not a separate AbilitySpec)."
     },
     {
       "id": "ranged:snap-shot",
@@ -219,8 +290,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Snap_Shot",
+          "title": "Snap Shot",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -249,8 +321,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Snipe",
+          "title": "Snipe",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -279,8 +352,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Piercing_Shot",
+          "title": "Piercing Shot",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -309,8 +383,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Deadshot",
+          "title": "Deadshot",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -318,7 +393,46 @@
         "percent": 60
       },
       "cooldownTicks": 50,
-      "displayDescription": "No longer a damage-over-time ultimate; it now deals multiple direct hits"
+      "displayDescription": "Four direct hits; no longer a damage-over-time ultimate",
+      "damagePercent": [
+        105,
+        125
+      ],
+      "hits": 4,
+      "averageDamagePercent": 460
+    },
+    {
+      "id": "ranged:deadshot-igneous",
+      "name": "Deadshot (Igneous)",
+      "style": "ranged",
+      "category": "ultimate",
+      "level": 21,
+      "unlock": {
+        "type": "equipment",
+        "requirement": "Igneous Kal-Xil or Igneous Kal-Zuk",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deadshot",
+          "title": "Deadshot",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "cooldownTicks": 50,
+      "hits": 8,
+      "damagePercent": [
+        55,
+        75
+      ],
+      "averageDamagePercent": 520,
+      "displayDescription": "Eight hits of 55-75% with Igneous Kal-Xil or Igneous Kal-Zuk",
+      "mechanicalImplementation": "ENGINE_ID deadshot_igneous; same CD/adren as base Deadshot"
     },
     {
       "id": "ranged:bombardment",
@@ -334,15 +448,16 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Bombardment",
+          "title": "Bombardment",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "cost",
         "percent": 25
       },
-      "cooldownTicks": 0,
+      "cooldownTicks": 3,
       "damagePercent": [
         220,
         260
@@ -363,8 +478,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Galeshot",
+          "title": "Galeshot",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -373,7 +489,11 @@
       },
       "cooldownTicks": 34,
       "averageDamagePercent": 100,
-      "displayDescription": "Applies Searing Winds for 6 seconds; Searing Winds adds 20% ability damage to each hit from Ranged abilities; Each Rapid Fire hit extends Searing Winds by 0.6 seconds"
+      "displayDescription": "Applies Searing Winds for 6 seconds (+20% ability damage per ranged hit); Rapid Fire extends by 0.6s per hit",
+      "damagePercent": [
+        90,
+        110
+      ]
     },
     {
       "id": "ranged:rapid-fire",
@@ -389,8 +509,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Rapid_Fire",
+          "title": "Rapid Fire",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -403,7 +524,8 @@
         75,
         85
       ],
-      "displayDescription": "Binds target for 6 seconds; Each hit extends Searing Winds by 0.6 seconds"
+      "displayDescription": "Eight channelled hits; binds target for 6 seconds; each hit extends Searing Winds by 0.6 seconds",
+      "averageDamagePercent": 640
     },
     {
       "id": "ranged:ricochet",
@@ -419,15 +541,22 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Ricochet",
+          "title": "Ricochet",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "gain",
         "percent": 9
       },
-      "displayDescription": "Standard Ricochet now includes the old multi-hit Greater Ricochet behavior by default"
+      "displayDescription": "75-85% primary plus up to two 15-20% returns or secondaries within 5 tiles",
+      "damagePercent": [
+        75,
+        85
+      ],
+      "averageDamagePercent": 115,
+      "cooldownTicks": 17
     },
     {
       "id": "ranged:greater-ricochet",
@@ -444,15 +573,22 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Update:Patch_Notes:_Part_1_-_Combat_Style_Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Greater_Ricochet",
+          "title": "Greater Ricochet",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "gain",
         "percent": 9
       },
-      "displayDescription": "Upgrade of Ricochet; Adds four hits beyond current Ricochet, each dealing 5% average damage"
+      "displayDescription": "Ricochet plus four extra 4-6% returns (or up to six secondaries)",
+      "damagePercent": [
+        75,
+        85
+      ],
+      "averageDamagePercent": 135,
+      "cooldownTicks": 17
     },
     {
       "id": "ranged:corruption-shot",
@@ -468,8 +604,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Corruption_Shot",
+          "title": "Corruption Shot",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -478,7 +615,12 @@
       },
       "cooldownTicks": 25,
       "hits": 5,
-      "displayDescription": "No longer spreads from target to target; subsequent DoT hits decay by 20% of initial damage per hit"
+      "displayDescription": "Five DoT hits; each loses 20% of the initial damage; no longer spreads between targets",
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 300
     },
     {
       "id": "ranged:shadow-tendrils",
@@ -494,8 +636,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Shadow_Tendrils",
+          "title": "Shadow Tendrils",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -507,7 +650,8 @@
         200,
         240
       ],
-      "displayDescription": "Extends Shadow Imbued by 3.6 seconds"
+      "displayDescription": "Guaranteed critical strike; self-damage 100-135%; extends Shadow Imbued by 3.6 seconds",
+      "averageDamagePercent": 220
     },
     {
       "id": "ranged:deaths-swiftness",
@@ -525,8 +669,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Death%27s_Swiftness",
+          "title": "Death's Swiftness",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -534,7 +679,7 @@
         "percent": 100
       },
       "cooldownTicks": 100,
-      "displayDescription": "No longer creates a stationary ground area or damage-over-time field; the modernized version follows the player"
+      "displayDescription": "Self buff: ranged attacks deal 1.5x damage for 30 seconds"
     },
     {
       "id": "ranged:greater-deaths-swiftness",
@@ -550,8 +695,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Greater_Death%27s_Swiftness",
+          "title": "Greater Death's Swiftness",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -559,7 +705,7 @@
         "percent": 100
       },
       "cooldownTicks": 100,
-      "displayDescription": "Upgrade of Death's Swiftness"
+      "displayDescription": "Self buff: ranged attacks deal 1.5x damage for 37.8 seconds"
     },
     {
       "id": "ranged:imbue-shadows",
@@ -575,8 +721,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Enhanced_abilities",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Imbue:_Shadows",
+          "title": "Imbue: Shadows",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -584,7 +731,7 @@
         "percent": 40
       },
       "cooldownTicks": 100,
-      "displayDescription": "Applies Shadow Imbued; each hit from Ranged abilities against the target generates 5% adrenaline"
+      "displayDescription": "Applies Shadow Imbued for 30 seconds; each ranged hit against the target generates 5% adrenaline"
     },
     {
       "id": "melee:attack",
@@ -600,9 +747,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Attack_(ability)",
+          "title": "Attack (ability)",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -613,7 +760,9 @@
         110,
         130
       ],
-      "displayDescription": "+1 Bloodlust"
+      "displayDescription": "110-130% hit; generates 1 Bloodlust and 9% adrenaline",
+      "hits": 1,
+      "averageDamagePercent": 120
     },
     {
       "id": "melee:adaptive-strike",
@@ -629,16 +778,18 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Adaptive_Strike",
+          "title": "Adaptive Strike",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "gain",
         "percent": 12
       },
-      "displayDescription": "Two-handed: 120-140% cone hit; Dual wield: 2 hits of 60-75%"
+      "displayDescription": "Two-handed: 120-140% cone hit; Dual wield: 2 hits of 60-75%; +12% adrenaline; +1 Bloodlust",
+      "cooldownTicks": 9,
+      "mechanicalImplementation": "Prefer engine specs adaptive_strike_2h / adaptive_strike_dw for multi-band hits."
     },
     {
       "id": "melee:rend",
@@ -654,9 +805,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Rend",
+          "title": "Rend",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -667,13 +818,16 @@
         135,
         165
       ],
-      "displayDescription": "+2 Bloodlust"
+      "displayDescription": "135-165% hit; generates 2 Bloodlust and 9% adrenaline",
+      "cooldownTicks": 17,
+      "hits": 1,
+      "averageDamagePercent": 150
     },
     {
       "id": "melee:dismember",
       "name": "Dismember",
       "style": "melee",
-      "category": "basic",
+      "category": "enhanced",
       "level": 50,
       "unlock": {
         "type": "level",
@@ -683,9 +837,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Dismember",
+          "title": "Dismember",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -697,7 +851,9 @@
         25,
         35
       ],
-      "displayDescription": "Heals 4%; enables Slaughter as the next bleed-chain cast; Damage: 8 bleed hits at 25-35% each"
+      "displayDescription": "8 bleed hits at 25-35% every 1.2s; heals 4%; enables Slaughter as next bleed-chain cast",
+      "cooldownTicks": 40,
+      "averageDamagePercent": 240
     },
     {
       "id": "melee:slaughter",
@@ -713,9 +869,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Slaughter",
+          "title": "Slaughter",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -727,7 +883,8 @@
         80,
         100
       ],
-      "displayDescription": "Heals 6%; enables Massacre; Damage: 6 bleed hits at 80-100% each"
+      "displayDescription": "6 bleed hits at 80-100% every 1.8s; heals 6%; enables Massacre",
+      "averageDamagePercent": 540
     },
     {
       "id": "melee:massacre",
@@ -743,9 +900,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Massacre",
+          "title": "Massacre",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -756,7 +913,10 @@
         110,
         130
       ],
-      "displayDescription": "Heals 12%; Damage: 110-130% initial hit plus 6 bleed hits at 100% each"
+      "displayDescription": "110-130% initial hit plus 6 bleed hits at 100% every 2.4s; heals 12%",
+      "hits": 7,
+      "averageDamagePercent": 720,
+      "mechanicalImplementation": "Engine models initial 110-130 plus six 100% bleed ticks; prefer engine spec massacre."
     },
     {
       "id": "melee:assault",
@@ -772,9 +932,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Assault",
+          "title": "Assault",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -787,7 +947,8 @@
         130,
         150
       ],
-      "displayDescription": "channel can be mobile; Damage: 4 channelled hits at 130-150% each; at 4 Bloodlust, 170-190% each"
+      "displayDescription": "4 channelled hits at 130-150% over 4.2s; at 4 Bloodlust 170-190% each; mobile channel",
+      "averageDamagePercent": 560
     },
     {
       "id": "melee:overpower",
@@ -803,9 +964,9 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Overpower",
+          "title": "Overpower",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -816,7 +977,10 @@
         520,
         570
       ],
-      "displayDescription": "Igneous variant: 2 hits of 280-340%"
+      "displayDescription": "520-570% single hit; Igneous variant: 2 hits of 280-340%",
+      "cooldownTicks": 50,
+      "hits": 1,
+      "averageDamagePercent": 545
     },
     {
       "id": "melee:punish",
@@ -832,16 +996,23 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Punish",
+          "title": "Punish",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "gain",
         "percent": 9
       },
-      "displayDescription": "Deals 2.5x damage to targets below 50% life points"
+      "displayDescription": "110-130% hit; 2.5x when target is below 50% life points; +1 Bloodlust; +9% adrenaline",
+      "cooldownTicks": 40,
+      "hits": 1,
+      "damagePercent": [
+        110,
+        130
+      ],
+      "averageDamagePercent": 120
     },
     {
       "id": "melee:berserk",
@@ -857,16 +1028,17 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Berserk",
+          "title": "Berserk",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "cost",
         "percent": 100
       },
-      "displayDescription": "Reduces Overpower cooldown; Lasts 19.8s; 1.75x damage; Takes 1.25x incoming damage; Bloodlust: +4 maximum stacks and +4 stacks on activation; basics generate double Bloodlust"
+      "displayDescription": "19.8s: 1.75x melee damage, 1.25x incoming; Bloodlust cap +4 and +4 stacks on cast; basics generate double Bloodlust; Overpower CD 9s",
+      "cooldownTicks": 100
     },
     {
       "id": "melee:meteor-strike",
@@ -882,16 +1054,23 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Meteor_Strike",
+          "title": "Meteor Strike",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "cost",
         "percent": 60
       },
-      "displayDescription": "Area attack that also grants an adrenaline-generation buff"
+      "displayDescription": "220-250% AoE melee hit; for 30s melee basics generate 1.5x adrenaline and +4.5% adrenaline every 0.6s while a melee weapon is equipped",
+      "cooldownTicks": 100,
+      "hits": 1,
+      "damagePercent": [
+        220,
+        250
+      ],
+      "averageDamagePercent": 235
     },
     {
       "id": "melee:chaos-roar",
@@ -907,16 +1086,23 @@
       "sources": [
         {
           "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Combat_Style_Modernisation",
-          "title": "Combat Style Modernisation",
-          "verifiedAt": "2026-07-24"
+          "url": "https://runescape.wiki/w/Chaos_Roar",
+          "title": "Chaos Roar",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
         "kind": "gain",
         "percent": 9
       },
-      "displayDescription": "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust"
+      "displayDescription": "100-120% hit; empowers the next melee ability within 7.2s to 1.75x base damage; grants 1 Bloodlust",
+      "cooldownTicks": 100,
+      "hits": 1,
+      "damagePercent": [
+        100,
+        120
+      ],
+      "averageDamagePercent": 110
     },
     {
       "id": "melee:flurry",
@@ -933,7 +1119,8 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Flurry",
-          "verifiedAt": "2026-07-25"
+          "title": "Flurry",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -947,7 +1134,7 @@
         70
       ],
       "averageDamagePercent": 520,
-      "displayDescription": "Eight hits over 4.8 seconds, one every 0.6 seconds; Empowered at 4+ Bloodlust: +1% damage per 1% of the target's missing life points, cap +65%"
+      "displayDescription": "Eight hits over 4.8s at 60-70%; empowered at 4+ Bloodlust: +1% damage per 1% missing LP, cap +65%"
     },
     {
       "id": "melee:greater-fury",
@@ -966,7 +1153,8 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Greater_Fury",
-          "verifiedAt": "2026-07-25"
+          "title": "Greater Fury",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -979,7 +1167,8 @@
         120,
         140
       ],
-      "displayDescription": "Upgrade of Fury; The next non-bleed melee attack within 15 seconds is a guaranteed critical strike (first hit of channelled abilities only)"
+      "displayDescription": "120-140% hit; next non-bleed melee attack within 15s is a guaranteed critical strike (first hit of channelled only); +1 Bloodlust",
+      "averageDamagePercent": 130
     },
     {
       "id": "magic:greater-sunshine",
@@ -996,7 +1185,8 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Greater_Sunshine",
-          "verifiedAt": "2026-07-25"
+          "title": "Greater Sunshine",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -1004,12 +1194,14 @@
         "percent": 100
       },
       "cooldownTicks": 100,
-      "hits": 1,
+      "hits": 21,
       "damagePercent": [
-        315,
-        315
+        10,
+        20
       ],
-      "displayDescription": "Upgrade of Sunshine; Applies a damage-over-time to the primary target inside the beam: 10-20% ability damage every 1.8 seconds for 39 seconds; The DoT is not influenced by magic level or equipment stats; Damage buff begins 1 tick after cast and lasts 38.4 seconds"
+      "displayDescription": "Upgrade of Sunshine; beam DoT 10-20% every 1.8s for 21 hits (avg 315% total, not a front-loaded hit); Magic attacks deal 1.5x inside the area",
+      "averageDamagePercent": 315,
+      "mechanicalImplementation": "Engine models 21 DoT hits only; zone buff via greater_sunshine state"
     },
     {
       "id": "magic:combust",
@@ -1026,7 +1218,7 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Combust",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ],
       "adrenaline": {
@@ -1039,7 +1231,8 @@
         27,
         33
       ],
-      "displayDescription": "Burn: ten hits over 18 seconds, one every 1.8 seconds; the percentage is rolled on the first hit and repeated; Burns cannot critically strike"
+      "displayDescription": "Burn: ten hits over 18 seconds, one every 1.8 seconds; the percentage is rolled on the first hit and repeated; Burns cannot critically strike",
+      "averageDamagePercent": 300
     },
     {
       "id": "shared:sacrifice",
@@ -1072,6 +1265,1182 @@
         70
       ],
       "displayDescription": "Constitution ability, usable with any combat style"
+    },
+    {
+      "id": "magic:magic-attack",
+      "name": "Magic",
+      "style": "magic",
+      "category": "basic",
+      "level": 1,
+      "unlock": {
+        "type": "level",
+        "requirement": "1",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Magic_(ability)",
+          "title": "Magic (ability)",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "Auto basic attack; generates 9% adrenaline"
+    },
+    {
+      "id": "magic:dragon-breath",
+      "name": "Dragon Breath",
+      "style": "magic",
+      "category": "basic",
+      "level": 19,
+      "unlock": {
+        "type": "level",
+        "requirement": "19",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dragon_Breath",
+          "title": "Dragon Breath",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 12,
+      "damagePercent": [
+        110,
+        130
+      ],
+      "averageDamagePercent": 120,
+      "displayDescription": "Cone hit; 1.25x damage vs Combusted enemies"
+    },
+    {
+      "id": "magic:dragon-breath-empowered",
+      "name": "Dragon Breath (Runic-Charged)",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 19,
+      "unlock": {
+        "type": "ability",
+        "requirement": "Anima Charged from Runic Charge",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Runic_Charge",
+          "title": "Runic Charge",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "damagePercent": [
+        260,
+        310
+      ],
+      "averageDamagePercent": 285,
+      "displayDescription": "Dragon Breath empowered by Anima Charged: 260-310% Magic damage",
+      "mechanicalImplementation": "ENGINE_ID dragon_breath_empowered; requiresAnima"
+    },
+    {
+      "id": "magic:impact",
+      "name": "Impact",
+      "style": "magic",
+      "category": "basic",
+      "level": 31,
+      "unlock": {
+        "type": "level",
+        "requirement": "31",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Impact",
+          "title": "Impact",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 25,
+      "damagePercent": [
+        65,
+        75
+      ],
+      "averageDamagePercent": 70,
+      "displayDescription": "Stuns and binds the target for 1.8 seconds; second charge from level 54"
+    },
+    {
+      "id": "magic:chain",
+      "name": "Chain",
+      "style": "magic",
+      "category": "basic",
+      "level": 51,
+      "unlock": {
+        "type": "level",
+        "requirement": "51",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Chain",
+          "title": "Chain",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 17,
+      "damagePercent": [
+        70,
+        90
+      ],
+      "averageDamagePercent": 80,
+      "displayDescription": "Hits primary plus up to 2 nearby targets; next single-target Magic ability also hits chained targets at 30%"
+    },
+    {
+      "id": "magic:greater-chain",
+      "name": "Greater Chain",
+      "style": "magic",
+      "category": "basic",
+      "level": 51,
+      "unlock": {
+        "type": "codex",
+        "requirement": "Greater Chain ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Chain",
+          "title": "Greater Chain",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 17,
+      "damagePercent": [
+        80,
+        100
+      ],
+      "averageDamagePercent": 90,
+      "displayDescription": "Upgrade of Chain; up to 6 additional targets; follow-up deals 50%"
+    },
+    {
+      "id": "magic:corruption-blast",
+      "name": "Corruption Blast",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 70,
+      "unlock": {
+        "type": "level",
+        "requirement": "70",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Corruption_Blast",
+          "title": "Corruption Blast",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 20
+      },
+      "cooldownTicks": 25,
+      "hits": 5,
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 300,
+      "displayDescription": "Five decaying DoT hits every 1.2 seconds; each hit loses 20% of the initial hit; spreads within 2 tiles"
+    },
+    {
+      "id": "magic:smoke-tendrils",
+      "name": "Smoke Tendrils",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 75,
+      "unlock": {
+        "type": "level",
+        "requirement": "75",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Smoke_Tendrils",
+          "title": "Smoke Tendrils",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "cooldownTicks": 75,
+      "hits": 4,
+      "damagePercent": [
+        55,
+        110
+      ],
+      "averageDamagePercent": 472.5,
+      "displayDescription": "Four escalating guaranteed-crit hits; adrenaline cell is 0%; self-damage 35-40% per hit not modelled as target damage",
+      "mechanicalImplementation": "Per-hit bands 55-65 / 65-80 / 75-95 / 85-110 every 2 ticks; damagePercent envelope is min first to max last"
+    },
+    {
+      "id": "magic:magma-tempest",
+      "name": "Magma Tempest",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 85,
+      "unlock": {
+        "type": "level",
+        "requirement": "85",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Magma_Tempest",
+          "title": "Magma Tempest",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 20
+      },
+      "cooldownTicks": 35,
+      "hits": 8,
+      "damagePercent": [
+        35,
+        45
+      ],
+      "averageDamagePercent": 320,
+      "displayDescription": "Eight 5x5 area hits every 1.2 seconds; cannot critically strike"
+    },
+    {
+      "id": "magic:omnipower",
+      "name": "Omnipower",
+      "style": "magic",
+      "category": "ultimate",
+      "level": 12,
+      "unlock": {
+        "type": "level",
+        "requirement": "12",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Omnipower",
+          "title": "Omnipower",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "cooldownTicks": 50,
+      "damagePercent": [
+        420,
+        500
+      ],
+      "averageDamagePercent": 460,
+      "displayDescription": "Single hit 420-500%; Igneous Kal-Mej/Kal-Zuk variant is four hits of 120-150%"
+    },
+    {
+      "id": "magic:omnipower-igneous",
+      "name": "Omnipower (Igneous)",
+      "style": "magic",
+      "category": "ultimate",
+      "level": 12,
+      "unlock": {
+        "type": "equipment",
+        "requirement": "Igneous Kal-Mej or Igneous Kal-Zuk",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Omnipower",
+          "title": "Omnipower",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "cooldownTicks": 50,
+      "hits": 4,
+      "damagePercent": [
+        120,
+        150
+      ],
+      "averageDamagePercent": 540,
+      "displayDescription": "Four hits of 120-150%; first hitsplat then three simultaneous on the next tick",
+      "mechanicalImplementation": "ENGINE_ID omnipower_igneous; tickOffsets 0 then three at 1"
+    },
+    {
+      "id": "magic:sunshine",
+      "name": "Sunshine",
+      "style": "magic",
+      "category": "ultimate",
+      "level": 76,
+      "unlock": {
+        "type": "level",
+        "requirement": "76",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Sunshine",
+          "title": "Sunshine",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "cooldownTicks": 100,
+      "hits": 16,
+      "damagePercent": [
+        10,
+        20
+      ],
+      "averageDamagePercent": 240,
+      "displayDescription": "Beam DoT 10-20% every 1.8s for 16 hits (avg 240%); Magic attacks deal 1.5x inside the 7x7 area for 30s"
+    },
+    {
+      "id": "magic:tsunami",
+      "name": "Tsunami",
+      "style": "magic",
+      "category": "ultimate",
+      "level": 90,
+      "unlock": {
+        "type": "level",
+        "requirement": "90",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Tsunami",
+          "title": "Tsunami",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "cooldownTicks": 100,
+      "damagePercent": [
+        225,
+        275
+      ],
+      "averageDamagePercent": 250,
+      "displayDescription": "Cone wall; critical strikes generate +8% adrenaline for 30 seconds after cast"
+    },
+    {
+      "id": "magic:instability",
+      "name": "Instability",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 95,
+      "unlock": {
+        "type": "drop",
+        "requirement": "Fractured Staff of Armadyl special attack",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Instability",
+          "title": "Instability",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 50
+      },
+      "cooldownTicks": 100,
+      "damagePercent": [
+        120,
+        140
+      ],
+      "averageDamagePercent": 130,
+      "displayDescription": "FSOA special cast 120-140%; 30s buff fires Lightning Surge 70-90% on Magic critical strikes"
+    },
+    {
+      "id": "magic:claws-of-guthix",
+      "name": "Claws of Guthix",
+      "style": "magic",
+      "category": "enhanced",
+      "level": 60,
+      "unlock": {
+        "type": "activity",
+        "requirement": "Guthix staff special (Mage Arena unlock)",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Claws_of_Guthix",
+          "title": "Claws of Guthix",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "damagePercent": [
+        200,
+        240
+      ],
+      "averageDamagePercent": 220,
+      "displayDescription": "Guthix staff special; lowers Defence 5% and raises affinity for 60s"
+    },
+    {
+      "id": "melee:fury",
+      "name": "Fury",
+      "style": "melee",
+      "category": "basic",
+      "level": 21,
+      "unlock": {
+        "type": "level",
+        "requirement": "21",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Fury",
+          "title": "Fury",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 25,
+      "hits": 1,
+      "damagePercent": [
+        110,
+        130
+      ],
+      "averageDamagePercent": 120,
+      "displayDescription": "110-130% hit; next melee attack within 15s gains +25% critical strike chance; grants 1 Bloodlust"
+    },
+    {
+      "id": "melee:backhand",
+      "name": "Backhand",
+      "style": "melee",
+      "category": "basic",
+      "level": 31,
+      "unlock": {
+        "type": "level",
+        "requirement": "31",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Backhand",
+          "title": "Backhand",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 25,
+      "hits": 1,
+      "damagePercent": [
+        95,
+        105
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "95-105% hit; stuns and binds for 1.8s; +1 Bloodlust; 2 charges from Attack 54"
+    },
+    {
+      "id": "melee:barge",
+      "name": "Barge",
+      "style": "melee",
+      "category": "basic",
+      "level": 65,
+      "unlock": {
+        "type": "level",
+        "requirement": "65",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Barge",
+          "title": "Barge",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 34,
+      "hits": 1,
+      "damagePercent": [
+        75,
+        95
+      ],
+      "averageDamagePercent": 85,
+      "displayDescription": "75-95% hit after gap-closing up to 10 tiles; binds 6.6s; clears bound; +1 Bloodlust"
+    },
+    {
+      "id": "melee:greater-barge",
+      "name": "Greater Barge",
+      "style": "melee",
+      "category": "basic",
+      "level": 65,
+      "unlock": {
+        "type": "codex",
+        "requirement": "Greater Barge ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Barge",
+          "title": "Greater Barge",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 34,
+      "hits": 1,
+      "damagePercent": [
+        75,
+        95
+      ],
+      "averageDamagePercent": 85,
+      "displayDescription": "75-95% base hit plus idle-scaling add-on; after 4.8s idle next channelled melee within 6s is dealt as DoT; +1 Bloodlust",
+      "mechanicalImplementation": "Engine models base 75-95 only; idle add-on and channelled-as-DoT are documented in MELEE_EFFECTS.greater_barge."
+    },
+    {
+      "id": "melee:hurricane",
+      "name": "Hurricane",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 37,
+      "unlock": {
+        "type": "level",
+        "requirement": "37",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Hurricane",
+          "title": "Hurricane",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "cooldownTicks": 34,
+      "hits": 2,
+      "damagePercent": [
+        135,
+        185
+      ],
+      "averageDamagePercent": 320,
+      "displayDescription": "Two-handed: 135-165% then 155-185% to primary and up to 9 adjacent; at 4 Bloodlust adds third hit 75-95%; cooldown -3s per enemy hit",
+      "mechanicalImplementation": "Engine models two primary hits (135-165 and 155-185) plus optional third 75-95 at 4 Bloodlust. Prefer engine spec hurricane."
+    },
+    {
+      "id": "melee:greater-flurry",
+      "name": "Greater Flurry",
+      "style": "melee",
+      "category": "enhanced",
+      "level": 45,
+      "unlock": {
+        "type": "codex",
+        "requirement": "Telos / Greater Flurry ability codex",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Greater_Flurry",
+          "title": "Greater Flurry",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "cooldownTicks": 34,
+      "hits": 8,
+      "damagePercent": [
+        60,
+        70
+      ],
+      "averageDamagePercent": 520,
+      "displayDescription": "Eight hits over 4.8s at 60-70%; each hit extends Berserk by 0.6s; Bloodlust empower same as Flurry (+1% per 1% missing LP, cap +65%)"
+    },
+    {
+      "id": "melee:pulverise",
+      "name": "Pulverise",
+      "style": "melee",
+      "category": "ultimate",
+      "level": 71,
+      "unlock": {
+        "type": "level",
+        "requirement": "71",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Pulverise",
+          "title": "Pulverise",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "cooldownTicks": 100,
+      "hits": 1,
+      "damagePercent": [
+        300,
+        340
+      ],
+      "averageDamagePercent": 320,
+      "displayDescription": "Two-handed: 300-340% hit; applies Pulverised for 30s (target deals 25% less damage); on killing blow generates 50% adrenaline"
+    },
+    {
+      "id": "ranged:binding-shot",
+      "name": "Binding Shot",
+      "style": "ranged",
+      "category": "basic",
+      "level": 31,
+      "unlock": {
+        "type": "level",
+        "requirement": "31",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Binding_Shot",
+          "title": "Binding Shot",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 25,
+      "damagePercent": [
+        65,
+        75
+      ],
+      "averageDamagePercent": 70,
+      "displayDescription": "Stuns 1.2s and binds 9.6s; damage below a basic"
+    },
+    {
+      "id": "necromancy:necromancy",
+      "name": "Necromancy",
+      "style": "necromancy",
+      "category": "basic",
+      "level": 1,
+      "unlock": {
+        "type": "level",
+        "requirement": "1",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Necromancy_(ability)",
+          "title": "Necromancy (ability)",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 3,
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "Basic attack; counts as a basic for Impatient and Fury of the Small"
+    },
+    {
+      "id": "necromancy:touch-of-death",
+      "name": "Touch of Death",
+      "style": "necromancy",
+      "category": "basic",
+      "level": 13,
+      "unlock": {
+        "type": "level",
+        "requirement": "13",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Touch_of_Death",
+          "title": "Touch of Death",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 24,
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "Generates 4 Necrosis stacks"
+    },
+    {
+      "id": "necromancy:soul-sap",
+      "name": "Soul Sap",
+      "style": "necromancy",
+      "category": "basic",
+      "level": 54,
+      "unlock": {
+        "type": "level",
+        "requirement": "54",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Soul_Sap",
+          "title": "Soul Sap",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "gain",
+        "percent": 9
+      },
+      "cooldownTicks": 9,
+      "damagePercent": [
+        90,
+        110
+      ],
+      "averageDamagePercent": 100,
+      "displayDescription": "Generates 1 Residual Soul per target hit"
+    },
+    {
+      "id": "necromancy:finger-of-death",
+      "name": "Finger of Death",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 8,
+      "unlock": {
+        "type": "level",
+        "requirement": "8",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Finger_of_Death",
+          "title": "Finger of Death",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "damagePercent": [
+        270,
+        330
+      ],
+      "averageDamagePercent": 300,
+      "displayDescription": "Adrenaline cost reduced 10% per Necrosis stack (up to 6); Living Death multiplies damage by 1.5"
+    },
+    {
+      "id": "necromancy:death-skulls",
+      "name": "Death Skulls",
+      "style": "necromancy",
+      "category": "ultimate",
+      "level": 28,
+      "unlock": {
+        "type": "level",
+        "requirement": "28",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Death_Skulls",
+          "title": "Death Skulls",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 60
+      },
+      "cooldownTicks": 100,
+      "hits": 3,
+      "damagePercent": [
+        225,
+        275
+      ],
+      "averageDamagePercent": 750,
+      "displayDescription": "Single-target model: three 225-275% hits; bounces up to 4 times multi-target (6 with igneous)"
+    },
+    {
+      "id": "necromancy:soul-strike",
+      "name": "Soul Strike",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 54,
+      "unlock": {
+        "type": "level",
+        "requirement": "54",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Soul_Strike",
+          "title": "Soul Strike",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "damagePercent": [
+        135,
+        165
+      ],
+      "averageDamagePercent": 150,
+      "displayDescription": "Spends 1 Residual Soul; stuns and binds; splash 90-110% unmodelled in engine adapter"
+    },
+    {
+      "id": "necromancy:spectral-scythe",
+      "name": "Spectral Scythe",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 62,
+      "unlock": {
+        "type": "level",
+        "requirement": "62",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Spectral_Scythe",
+          "title": "Spectral Scythe",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 10
+      },
+      "cooldownTicks": 25,
+      "damagePercent": [
+        72,
+        88
+      ],
+      "averageDamagePercent": 80,
+      "displayDescription": "Cast 1 of 3; 25% Residual Soul chance; recasts scale to 180-220% then 225-275%"
+    },
+    {
+      "id": "necromancy:bloat",
+      "name": "Bloat",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 48,
+      "unlock": {
+        "type": "level",
+        "requirement": "48",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Bloat",
+          "title": "Bloat",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 20
+      },
+      "damagePercent": [
+        135,
+        165
+      ],
+      "averageDamagePercent": 525,
+      "displayDescription": "Initial hit plus 10 DoT hits at 25% of initial damage every 1.8 seconds"
+    },
+    {
+      "id": "necromancy:living-death",
+      "name": "Living Death",
+      "style": "necromancy",
+      "category": "ultimate",
+      "level": 76,
+      "unlock": {
+        "type": "level",
+        "requirement": "76",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Living_Death",
+          "title": "Living Death",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 100
+      },
+      "cooldownTicks": 150,
+      "displayDescription": "30s form: basic +2 Necrosis; Touch of Death +6% adren; Finger 1.5x; Death Skulls CD 10.2s"
+    },
+    {
+      "id": "necromancy:volley-of-souls",
+      "name": "Volley of Souls",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 66,
+      "unlock": {
+        "type": "level",
+        "requirement": "66",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Volley_of_Souls",
+          "title": "Volley of Souls",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "damagePercent": [
+        135,
+        165
+      ],
+      "averageDamagePercent": 150,
+      "displayDescription": "One 135-165% hit per Residual Soul spent (min 2, max 5 with lantern)"
+    },
+    {
+      "id": "necromancy:blood-siphon",
+      "name": "Blood Siphon",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 36,
+      "unlock": {
+        "type": "level",
+        "requirement": "36",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Blood_Siphon",
+          "title": "Blood Siphon",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "cooldownTicks": 75,
+      "damagePercent": [
+        117,
+        143
+      ],
+      "averageDamagePercent": 130,
+      "displayDescription": "Solo: finishing hit 117-143%. Channel 4x22-28% on non-primaries with heal conversion unmodelled in adapter"
+    },
+    {
+      "id": "necromancy:command-skeleton-warrior",
+      "name": "Command Skeleton Warrior",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 20,
+      "unlock": {
+        "type": "level",
+        "requirement": "20",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Command_Skeleton_Warrior",
+          "title": "Command Skeleton Warrior",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "cooldownTicks": 25,
+      "hits": 10,
+      "damagePercent": [
+        22,
+        28
+      ],
+      "averageDamagePercent": 250,
+      "displayDescription": "Ten spirit hits of 22-28%; cannot crit; rage scale not in adapter"
+    },
+    {
+      "id": "necromancy:command-putrid-zombie",
+      "name": "Command Putrid Zombie",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 60,
+      "unlock": {
+        "type": "level",
+        "requirement": "60",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Command_Putrid_Zombie",
+          "title": "Command Putrid Zombie",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "damagePercent": [
+        360,
+        440
+      ],
+      "averageDamagePercent": 400,
+      "displayDescription": "Zombie explosion: 360-440% spirit damage within 2 tiles; cannot crit"
+    },
+    {
+      "id": "necromancy:command-phantom-guardian",
+      "name": "Command Phantom Guardian",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 80,
+      "unlock": {
+        "type": "level",
+        "requirement": "80",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Command_Phantom_Guardian",
+          "title": "Command Phantom Guardian",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 0
+      },
+      "cooldownTicks": 15,
+      "damagePercent": [
+        45,
+        55
+      ],
+      "averageDamagePercent": 50,
+      "displayDescription": "Base 45-55% spirit damage; +20% of hit per Valour stack (max 25 → 270-330%)"
+    },
+    {
+      "id": "necromancy:death-grasp",
+      "name": "Death Grasp",
+      "style": "necromancy",
+      "category": "enhanced",
+      "level": 70,
+      "unlock": {
+        "type": "level",
+        "requirement": "70",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Death_Grasp",
+          "title": "Death Grasp",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "adrenaline": {
+        "kind": "cost",
+        "percent": 25
+      },
+      "cooldownTicks": 50,
+      "damagePercent": [
+        405,
+        495
+      ],
+      "averageDamagePercent": 450,
+      "displayDescription": "Death guard special: +40% ability damage per Necrosis stack consumed (12 stacks → 885-975%)"
     }
   ]
 }

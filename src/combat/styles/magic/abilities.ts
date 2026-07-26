@@ -8,16 +8,111 @@ import {
 } from "../../data/sources";
 
 /**
- * Post-modernisation magic records, seeded from docs/combat-changelog.md
- * (§5.6/§5.8, §6, §8). The corpus itself flags magic ability-by-ability data as
- * needing a dedicated pass — records carry only what the changelog pins down;
- * average-only numbers stay effect notes instead of fabricated bands.
+ * Post-modernisation magic abilities. Damage bands and timing are wiki-verified
+ * (individual ability pages + Magic abilities table, 2026-07-26). Multi-hit
+ * tickOffsets only when the wiki states an interval; unknown multi-hit timing
+ * carries hits without invented offsets. Ability-level crit modifiers the pipeline
+ * cannot yet express (Wild Magic +10% chance / +20% damage) stay as MAGIC_EFFECTS.
+ *
+ * Removed by Combat Style Modernisation (do not re-add): Wrack, Wrack and Ruin,
+ * Deep Impact, Metamorphosis, Shock, Horror, Detonate. Runic Charge replaces Wrack.
+ * Anticipation / Intercept are Defence, not Magic.
  */
+
+const VERIFIED = "2026-07-26";
+
+function wikiAbility(title: string, path?: string): SourceReference {
+  return {
+    source: "runescape-wiki",
+    url: `https://runescape.wiki/w/${(path ?? title).replace(/ /g, "_")}`,
+    title,
+    verifiedAt: VERIFIED,
+  };
+}
+
 export interface MagicAbilitySpec extends AbilitySpec {
   style: "magic";
-  /** Cast only under Anima Charged (Runic Charge); the unempowered band is unsourced. */
+  /** Cast only under Anima Charged (Runic Charge); the unempowered band is separate. */
   requiresAnima?: boolean;
+  /** Smoke Tendrils: every hit is a guaranteed critical strike. */
+  guaranteedCrit?: boolean;
   source: SourceReference;
+}
+
+/** 3-tick channel: one hit per tick over 1.8s (wiki: "Attack 3 times over 1.8s (3 ticks)"). */
+function concHits(minPct: number, maxPct: number) {
+  return [0, 1, 2].map((tickOffset) => ({ band: { minPct, maxPct }, tickOffset }));
+}
+
+/** Asphyxiate: 4 hits, one every 1.2s (2 ticks) over 4.2s. */
+function asphyxiateHits() {
+  return [0, 2, 4, 6].map((tickOffset) => ({
+    band: { minPct: 120, maxPct: 140 },
+    tickOffset,
+  }));
+}
+
+/**
+ * Tumeken's Resplendence 4+: 8 hits of 72-84% over 4.8s (8 ticks).
+ * Wiki states channel length + hit count (not a separate "every Xs" cell); one hit
+ * per tick fits 8 hits in 8 ticks.
+ */
+function asphyxiateResplendenceHits() {
+  return Array.from({ length: 8 }, (_, i) => ({
+    band: { minPct: 72, maxPct: 84 },
+    tickOffset: i,
+  }));
+}
+
+/**
+ * Corruption Blast: first hit 90-110%; each subsequent hit loses 20% of the
+ * *initial* hit (wiki example: 1080 -> 864 -> 648 -> 432 -> 216). Modelled as
+ * independent bands at 100/80/60/40/20% of the initial range.
+ */
+function corruptionBlastHits() {
+  const scales = [1, 0.8, 0.6, 0.4, 0.2];
+  return scales.map((scale, i) => ({
+    band: { minPct: 90 * scale, maxPct: 110 * scale },
+    critEligible: false,
+    tickOffset: (i + 1) * 2,
+  }));
+}
+
+/**
+ * Smoke Tendrils escalating hits (wiki Usage): 55-65, 65-80, 75-95, 85-110
+ * every 1.2s (2 ticks). Guaranteed crit; self-damage is not modelled.
+ */
+function smokeTendrilHits() {
+  const bands = [
+    { minPct: 55, maxPct: 65 },
+    { minPct: 65, maxPct: 80 },
+    { minPct: 75, maxPct: 95 },
+    { minPct: 85, maxPct: 110 },
+  ];
+  return bands.map((band, i) => ({ band, tickOffset: i * 2 }));
+}
+
+/** Magma Tempest: 8 hits of 35-45% every 1.2s (2 ticks); cannot critically strike. */
+function magmaTempestHits() {
+  return Array.from({ length: 8 }, (_, i) => ({
+    band: { minPct: 35, maxPct: 45 },
+    critEligible: false,
+    tickOffset: (i + 1) * 2,
+  }));
+}
+
+/**
+ * Sunshine beam DoT on the cast-time primary target while inside the AoE.
+ * Base: 16 hits of 10-20% (wiki average damage 240% = 16 * 15%).
+ * Greater: 21 hits of 10-20% (wiki average damage 315% = 21 * 15%).
+ * There is no separate initial 315% hit — that figure is the DoT total.
+ */
+function sunshineDotHits(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    band: { minPct: 10, maxPct: 20 },
+    critEligible: false,
+    tickOffset: (i + 1) * 3,
+  }));
 }
 
 export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
@@ -32,15 +127,34 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: MODERNISATION_WIKI,
   },
   {
-    id: "runic_charge",
-    name: "Runic Charge",
+    id: "sonic_wave",
+    name: "Sonic Wave",
     style: "magic",
-    category: "utility",
-    hits: [],
-    buff: "runic_charge",
-    offGcd: true,
-    cooldownSeconds: 30,
-    source: RUNIC_CHARGE_WIKI,
+    category: "basic",
+    hits: [{ band: { minPct: 90, maxPct: 110 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    source: wikiAbility("Sonic Wave"),
+  },
+  {
+    id: "greater_sonic_wave",
+    name: "Greater Sonic Wave",
+    style: "magic",
+    category: "basic",
+    hits: [{ band: { minPct: 115, maxPct: 135 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    source: wikiAbility("Greater Sonic Wave"),
+  },
+  {
+    id: "dragon_breath",
+    name: "Dragon Breath",
+    style: "magic",
+    category: "basic",
+    hits: [{ band: { minPct: 110, maxPct: 130 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 7.2,
+    source: wikiAbility("Dragon Breath"),
   },
   {
     id: "dragon_breath_empowered",
@@ -52,33 +166,17 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: RUNIC_CHARGE_WIKI,
   },
   {
-    // Greater Sunshine (wiki, June 2026): 315% initial hit, then a DoT of 10–20%
-    // every 1.8s over 39s against the primary target inside the beam — 21 hits,
-    // one every 3 ticks. The beam's damage buff is zone/target territory, not a cast effect.
-    id: "greater_sunshine",
-    name: "Greater Sunshine",
+    id: "impact",
+    name: "Impact",
     style: "magic",
-    category: "ultimate",
-    appliesBuff: "greater_sunshine",
-    hits: [
-      { band: { minPct: 315, maxPct: 315 } },
-      ...Array.from({ length: 21 }, (_, i) => ({
-        band: { minPct: 10, maxPct: 20 },
-        critEligible: false,
-        tickOffset: (i + 1) * 3,
-      })),
-    ],
-    adrenaline: { cost: 100 },
-    cooldownSeconds: 60,
-    source: {
-      source: "runescape-wiki",
-      url: "https://runescape.wiki/w/Greater_Sunshine",
-      title: "Greater Sunshine",
-      verifiedAt: "2026-07-25",
-    },
+    category: "basic",
+    hits: [{ band: { minPct: 65, maxPct: 75 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    source: wikiAbility("Impact"),
   },
   {
-    // Combust per burn.ts constants: 10 crit-ineligible burn hits every 3 ticks.
+    // Combust: 10 crit-ineligible burn hits every 3 ticks (1.8s).
     id: "combust",
     name: "Combust",
     style: "magic",
@@ -90,81 +188,292 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     })),
     adrenaline: { gain: 9 },
     cooldownSeconds: 18,
-    source: {
-      source: "runescape-wiki",
-      url: "https://runescape.wiki/w/Combust",
-      title: "Combust",
-      verifiedAt: "2026-07-25",
-    },
+    source: wikiAbility("Combust"),
   },
-];
-
-/** Sourced numbers whose full hit bands are not yet pinned — notes, not calculable abilities. */
-export const MAGIC_EFFECTS = [
   {
-    id: "sonic_wave",
-    name: "Sonic Wave",
-    notes:
-      "Next ability −10% adrenaline cost (Greater −20%); Runic-Charged: −35% (Greater −45%). Band not yet sourced.",
-    source: MODERNISATION_WIKI,
+    id: "chain",
+    name: "Chain",
+    style: "magic",
+    category: "basic",
+    hits: [{ band: { minPct: 70, maxPct: 90 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 10.2,
+    source: wikiAbility("Chain"),
+  },
+  {
+    id: "greater_chain",
+    name: "Greater Chain",
+    style: "magic",
+    category: "basic",
+    hits: [{ band: { minPct: 80, maxPct: 100 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 10.2,
+    source: wikiAbility("Greater Chain"),
   },
   {
     id: "concentrated_blast",
     name: "Concentrated Blast",
-    notes:
-      "Per-hit crit-chance grant 5% (Greater 7%); Runic-Charged 15%/17% per the current Critical strike page — the CSM table's +20% is unresolved (changelog §10).",
-    source: MODERNISATION_WIKI,
+    style: "magic",
+    category: "basic",
+    hits: concHits(30, 40),
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 5.4,
+    source: wikiAbility("Concentrated Blast"),
   },
   {
-    id: "dragon_breath",
-    name: "Dragon Breath",
-    notes:
-      "+25% against combusted targets. Base band not yet sourced; the Runic-Charged band (260–310%) is modelled as dragon_breath_empowered.",
-    source: MODERNISATION_WIKI,
+    id: "greater_concentrated_blast",
+    name: "Greater Concentrated Blast",
+    style: "magic",
+    category: "basic",
+    hits: concHits(40, 50),
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 5.4,
+    source: wikiAbility("Greater Concentrated Blast"),
   },
   {
+    // 2 hits; wiki does not give a per-hit tick split.
     id: "wild_magic",
     name: "Wild Magic",
+    style: "magic",
+    category: "enhanced",
+    hits: [
+      { band: { minPct: 125, maxPct: 155 } },
+      { band: { minPct: 125, maxPct: 155 } },
+    ],
     adrenaline: { cost: 25 },
     cooldownSeconds: 5.4,
-    notes:
-      "2 hits at 140% AVG; since 30 Mar each hit gains +20% critical strike damage and +10% critical strike chance. Band range not yet sourced.",
-    source: BLOOMING_BURROW_WIKI_2026_03_30,
+    source: wikiAbility("Wild Magic"),
   },
   {
     id: "asphyxiate",
     name: "Asphyxiate",
+    style: "magic",
+    category: "enhanced",
+    hits: asphyxiateHits(),
     adrenaline: { cost: 25 },
-    notes:
-      "Live range recorded as 120–140% per hit (post said 130%); full channel grants Channelled Might. Hit count not yet sourced.",
-    source: BLOOMING_BURROW_WIKI_2026_03_30,
+    cooldownSeconds: 20.4,
+    source: wikiAbility("Asphyxiate"),
   },
   {
-    id: "smoke_tendrils",
-    name: "Smoke Tendrils",
-    notes: "0% adrenaline, guaranteed crits, escalating hits. Bands not yet sourced.",
-    source: MODERNISATION_WIKI,
-  },
-  {
-    id: "tsunami",
-    name: "Tsunami",
-    notes: "Keeps crit-adrenaline (8% per crit since Mar 2024). Band not yet sourced.",
-    source: MODERNISATION_WIKI,
+    id: "asphyxiate_resplendence",
+    name: "Asphyxiate (Tumeken's Resplendence)",
+    style: "magic",
+    category: "enhanced",
+    hits: asphyxiateResplendenceHits(),
+    adrenaline: { cost: 25 },
+    cooldownSeconds: 20.4,
+    source: wikiAbility("Asphyxiate"),
   },
   {
     id: "corruption_blast",
     name: "Corruption Blast",
-    category: "enhanced" as const,
+    style: "magic",
+    category: "enhanced",
+    hits: corruptionBlastHits(),
     adrenaline: { cost: 20 },
-    notes: "100% initial hit plus decaying hits. Decay profile not yet sourced.",
-    source: MODERNISATION_WIKI,
+    cooldownSeconds: 15,
+    source: wikiAbility("Corruption Blast"),
+  },
+  {
+    id: "smoke_tendrils",
+    name: "Smoke Tendrils",
+    style: "magic",
+    category: "enhanced",
+    hits: smokeTendrilHits(),
+    guaranteedCrit: true,
+    // Wiki adrenaline cell is 0% (neither gain nor spend).
+    cooldownSeconds: 45,
+    source: wikiAbility("Smoke Tendrils"),
   },
   {
     id: "magma_tempest",
     name: "Magma Tempest",
+    style: "magic",
+    category: "enhanced",
+    hits: magmaTempestHits(),
     adrenaline: { cost: 20 },
-    notes: "40% per hit. Hit count not yet sourced.",
-    source: MODERNISATION_WIKI,
+    cooldownSeconds: 21,
+    source: wikiAbility("Magma Tempest"),
+  },
+  {
+    id: "omnipower",
+    name: "Omnipower",
+    style: "magic",
+    category: "ultimate",
+    hits: [{ band: { minPct: 420, maxPct: 500 } }],
+    adrenaline: { cost: 60 },
+    cooldownSeconds: 30,
+    source: wikiAbility("Omnipower"),
+  },
+  {
+    // Igneous Kal-Mej / Kal-Zuk: 4 hits of 120-150%. Timing: first hit then three
+    // on the next tick (wiki) — modelled as tick 0 + three at tick 1.
+    id: "omnipower_igneous",
+    name: "Omnipower (Igneous)",
+    style: "magic",
+    category: "ultimate",
+    hits: [
+      { band: { minPct: 120, maxPct: 150 }, tickOffset: 0 },
+      { band: { minPct: 120, maxPct: 150 }, tickOffset: 1 },
+      { band: { minPct: 120, maxPct: 150 }, tickOffset: 1 },
+      { band: { minPct: 120, maxPct: 150 }, tickOffset: 1 },
+    ],
+    adrenaline: { cost: 60 },
+    cooldownSeconds: 30,
+    source: wikiAbility("Omnipower"),
+  },
+  {
+    // Base Sunshine DoT only (16 x 10-20%). Zone 1.5x buff is state (effects.ts
+    // currently wires Greater only). 50-tick / 30s beam.
+    id: "sunshine",
+    name: "Sunshine",
+    style: "magic",
+    category: "ultimate",
+    appliesBuff: "sunshine",
+    hits: sunshineDotHits(16),
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
+    source: wikiAbility("Sunshine"),
+  },
+  {
+    // Greater Sunshine: DoT 21 x 10-20% (avg 315% total — not a front-loaded hit).
+    // Zone buff via appliesBuff; duration 64 active ticks after 1-tick delay.
+    id: "greater_sunshine",
+    name: "Greater Sunshine",
+    style: "magic",
+    category: "ultimate",
+    appliesBuff: "greater_sunshine",
+    hits: sunshineDotHits(21),
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
+    source: wikiAbility("Greater Sunshine"),
+  },
+  {
+    id: "tsunami",
+    name: "Tsunami",
+    style: "magic",
+    category: "ultimate",
+    hits: [{ band: { minPct: 225, maxPct: 275 } }],
+    adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
+    source: wikiAbility("Tsunami"),
+  },
+  {
+    id: "runic_charge",
+    name: "Runic Charge",
+    style: "magic",
+    category: "utility",
+    hits: [],
+    buff: "runic_charge",
+    offGcd: true,
+    cooldownSeconds: 30,
+    source: RUNIC_CHARGE_WIKI,
+  },
+  {
+    // FSOA special: cast hit only. Lightning Surge (70-90% on crit, +1 tick) is state.
+    id: "instability",
+    name: "Instability",
+    style: "magic",
+    category: "enhanced",
+    hits: [{ band: { minPct: 120, maxPct: 140 } }],
+    adrenaline: { cost: 50 },
+    cooldownSeconds: 60,
+    appliesBuff: "instability",
+    source: wikiAbility("Instability"),
+  },
+  {
+    // Guthix staff special / common EoF. Affinity + Defence drain are MAGIC_EFFECTS.
+    id: "claws_of_guthix",
+    name: "Claws of Guthix",
+    style: "magic",
+    category: "enhanced",
+    hits: [{ band: { minPct: 200, maxPct: 240 } }],
+    adrenaline: { cost: 25 },
+    source: wikiAbility("Claws of Guthix"),
+  },
+];
+
+/** Sourced mechanics without a full calculable AbilitySpec, or residual notes. */
+export const MAGIC_EFFECTS = [
+  {
+    id: "sonic_wave_flow",
+    name: "Sonic Wave / Flow",
+    notes:
+      "Flow: next Magic ability -10% adrenaline (Greater Flow -20%). Runic-Charged: -35% / Greater -45%. Does not reduce Defence/Constitution/spec costs.",
+    source: wikiAbility("Sonic Wave"),
+  },
+  {
+    id: "concentrated_blast_crit_grant",
+    name: "Concentrated Blast crit grant",
+    notes:
+      "Per-hit crit-chance grant 5% (Greater 7%) to the next Magic attack, stacking to 15%/21%. Also applies to later hits of the channel itself. Runic-Charged adds +10% per attack (runicCharge.ts).",
+    source: wikiAbility("Concentrated Blast"),
+  },
+  {
+    id: "dragon_breath_combust",
+    name: "Dragon Breath vs Combust",
+    notes: "Deals 1.25x damage to Combusted enemies. Cone: primary + up to 4 in attack direction.",
+    source: wikiAbility("Dragon Breath"),
+  },
+  {
+    id: "wild_magic_crit",
+    name: "Wild Magic crit layers",
+    notes:
+      "Each hit has +10% Critical Strike Chance and +20% Critical Strike Damage (30 Mar 2026). Not yet folded into AbilitySpec crit input.",
+    source: wikiAbility("Wild Magic"),
+  },
+  {
+    id: "asphyxiate_channelled_might",
+    name: "Asphyxiate Channelled Might",
+    notes:
+      "Full channel grants Channelled Might 3.6s at +15% Magic crit damage. Resplendence 4+ uses asphyxiate_resplendence (8x72-84%). 5-piece set: longer/stronger Might (effects.ts).",
+    source: BLOOMING_BURROW_WIKI_2026_03_30,
+  },
+  {
+    id: "smoke_tendrils_self",
+    name: "Smoke Tendrils self-damage",
+    notes: "4 self hits of 35-40% ability damage; unaffected by damage modifiers and crit. Not modelled as target damage.",
+    source: wikiAbility("Smoke Tendrils"),
+  },
+  {
+    id: "tsunami_crit_adrenaline",
+    name: "Tsunami crit adrenaline",
+    notes: "After cast, critical strikes generate an additional 8% Adrenaline for 30s (50 ticks).",
+    source: wikiAbility("Tsunami"),
+  },
+  {
+    id: "chain_spread",
+    name: "Chain / Greater Chain follow-up",
+    notes:
+      "Next single-target Magic ability within 6s also hits chained targets at 30% (Chain) / 50% (Greater) of that ability's damage range. Caroming extends targets.",
+    source: wikiAbility("Greater Chain"),
+  },
+  {
+    id: "sunshine_zone",
+    name: "Sunshine zone buff",
+    notes:
+      "Magic attacks deal 1.5x while inside the 7x7 beam. Greater: 64-tick buff after 1-tick delay (effects.ts). Base Sunshine beam 50 ticks; Planted Feet extends base only.",
+    source: wikiAbility("Sunshine"),
+  },
+  {
+    id: "corruption_blast_spread",
+    name: "Corruption Blast spread",
+    notes: "DoT spreads to enemies within 2 tiles (PvM 5x5 around debuffed target). Not a burn.",
+    source: wikiAbility("Corruption Blast"),
+  },
+  {
+    id: "instability_lightning_surge",
+    name: "Instability Lightning Surge",
+    notes:
+      "While Instability buff (30s / 50 ticks): Magic crits on primary target fire Lightning Surge 70-90% ability damage 1 tick later. Surge crits do not chain. Magic weapons only. PvP: no crit effect and no cooldown.",
+    source: wikiAbility("Instability"),
+  },
+  {
+    id: "claws_of_guthix_debuff",
+    name: "Claws of Guthix debuff",
+    notes:
+      "Also lowers target Defence by 5% and raises affinity values by 2 for 60s (wiki: base hit chance +5 for 1m). Damage band is the calculable cast only.",
+    source: wikiAbility("Claws of Guthix"),
   },
   {
     id: "rune_consumption",

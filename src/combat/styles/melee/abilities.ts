@@ -1,25 +1,40 @@
 import type { SourceReference } from "../../types";
-import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { MODERNISATION_PATCH_1, MODERNISATION_PATCH_2, MODERNISATION_WIKI } from "../../data/sources";
+import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
 
 /**
- * Post-modernisation melee kit, seeded from data/combat/modernisation-2026.json
- * (snapshot 2026-07-24, wiki-confirmed). Bleed tails are crit-ineligible by default.
- * Fields absent from the corpus (e.g. adrenaline gain on Rend) stay absent — never
- * back-filled with legacy assumptions.
+ * Post-modernisation melee kit. Bands and adrenaline are wiki-verified (Melee
+ * abilities list + individual pages, verifiedAt 2026-07-26). Bleed tails are
+ * crit-ineligible by default. Variable / target-stage effects stay in MELEE_EFFECTS.
  */
 export interface MeleeAbilitySpec extends AbilitySpec {
   style: "melee";
   bloodlustGain?: number;
-  /** Higher band once a Bloodlust threshold is met (Assault at 4). */
+  /** Higher per-hit band once a Bloodlust threshold is met (Assault at 4). */
   bloodlustScale?: { threshold: number; band: { minPct: number; maxPct: number } };
+  /** Extra hit(s) appended when Bloodlust threshold is met (Hurricane at 4). */
+  bloodlustExtraHits?: { threshold: number; hits: AbilityHit[] };
+  /** Channelled cast: Chaos Roar empowers first hit only (wiki). */
+  channelled?: boolean;
   /** Bleed-chain enabler: Dismember -> Slaughter -> Massacre. */
   enables?: string;
   source: SourceReference;
 }
 
+const wikiAbility = (title: string, path: string, verifiedAt = "2026-07-26"): SourceReference => ({
+  source: "runescape-wiki",
+  url: `https://runescape.wiki/w/${path}`,
+  title,
+  verifiedAt,
+});
+
+export const CHAOS_ROAR_DAMAGE_MULTIPLIER = 1.75;
+export const CHAOS_ROAR_DURATION_SECONDS = 7.2;
+export const GREATER_FURY_CRIT_WINDOW_SECONDS = 15;
+export const METEOR_STRIKE_ADREN_BUFF_SECONDS = 30;
+
 export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
+    // Wiki Attack (ability): 110-130, +9% adren, +1 Bloodlust, auto-triggered.
     id: "attack",
     name: "Attack",
     style: "melee",
@@ -28,16 +43,19 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 110, maxPct: 130 } }],
     adrenaline: { gain: 9 },
     bloodlustGain: 1,
-    source: MODERNISATION_PATCH_1,
+    source: wikiAbility("Attack (ability)", "Attack_(ability)"),
   },
   {
+    // Wiki Adaptive Strike: +12% adrenaline, 5.4s CD, 2h 120-140 / DW 2x 60-75.
     id: "adaptive_strike_2h",
     name: "Adaptive Strike (two-handed)",
     style: "melee",
     category: "basic",
     hits: [{ band: { minPct: 120, maxPct: 140 } }],
+    adrenaline: { gain: 12 },
+    cooldownSeconds: 5.4,
     bloodlustGain: 1,
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
   },
   {
     id: "adaptive_strike_dw",
@@ -45,8 +63,10 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "basic",
     hits: [{ band: { minPct: 60, maxPct: 75 } }, { band: { minPct: 60, maxPct: 75 } }],
+    adrenaline: { gain: 12 },
+    cooldownSeconds: 5.4,
     bloodlustGain: 1,
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
   },
   {
     id: "rend",
@@ -54,21 +74,113 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "basic",
     hits: [{ band: { minPct: 135, maxPct: 165 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 10.2,
     bloodlustGain: 2,
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Rend", "Rend"),
   },
   {
+    // Wiki Fury: 110-130, +25% next crit chance, +1 Bloodlust, +9% adren, 15s CD.
+    id: "fury",
+    name: "Fury",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 110, maxPct: 130 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    bloodlustGain: 1,
+    appliesBuff: "fury",
+    source: wikiAbility("Fury", "Fury"),
+  },
+  {
+    // Wiki Greater Fury: 120-140, next non-bleed melee guaranteed crit 15s, +1 BL, +9% adren.
+    id: "greater_fury",
+    name: "Greater Fury",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 120, maxPct: 140 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    bloodlustGain: 1,
+    appliesBuff: "greater_fury",
+    source: wikiAbility("Greater Fury", "Greater_Fury"),
+  },
+  {
+    // Wiki Backhand: 95-105, stun/bind 1.8s, +1 BL, +9% adren, 15s CD; 2 charges at 54 Attack.
+    id: "backhand",
+    name: "Backhand",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 95, maxPct: 105 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 15,
+    bloodlustGain: 1,
+    source: wikiAbility("Backhand", "Backhand"),
+  },
+  {
+    // Wiki Punish: 110-130 base; 2.5x when target LP < 50% (target-stage); +1 BL, +9%, 24s CD.
+    id: "punish",
+    name: "Punish",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 110, maxPct: 130 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 24,
+    bloodlustGain: 1,
+    source: wikiAbility("Punish", "Punish"),
+  },
+  {
+    // Wiki Barge: 75-95, gap-close 10 tiles, bind 6.6s, +1 BL, +9%, 20.4s CD.
+    id: "barge",
+    name: "Barge",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 75, maxPct: 95 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 20.4,
+    bloodlustGain: 1,
+    source: wikiAbility("Barge", "Barge"),
+  },
+  {
+    // Wiki Greater Barge: same base 75-95; idle add-on and channelled-as-DoT in MELEE_EFFECTS.
+    id: "greater_barge",
+    name: "Greater Barge",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 75, maxPct: 95 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 20.4,
+    bloodlustGain: 1,
+    appliesBuff: "greater_barge",
+    source: wikiAbility("Greater Barge", "Greater_Barge"),
+  },
+  {
+    // Wiki Chaos Roar: 100-120 hit, +9% adren, +1 BL, next melee 1.75x for 7.2s, 60s CD.
+    id: "chaos_roar",
+    name: "Chaos Roar",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct: 100, maxPct: 120 } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 60,
+    bloodlustGain: 1,
+    appliesBuff: "chaos_roar",
+    source: wikiAbility("Chaos Roar", "Chaos_Roar"),
+  },
+  {
+    // Wiki Dismember: enhanced bleed book, 0% adren, 8x 25-35 every 1.2s, 24s CD.
     id: "dismember",
     name: "Dismember",
     style: "melee",
-    category: "basic",
+    category: "enhanced",
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 25, maxPct: 35 },
       critEligible: false,
       tickOffset: (i + 1) * 2,
     })),
+    cooldownSeconds: 24,
     enables: "slaughter",
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Dismember", "Dismember"),
   },
   {
     id: "slaughter",
@@ -82,7 +194,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     })),
     adrenaline: { cost: 25 },
     enables: "massacre",
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Slaughter", "Slaughter"),
   },
   {
     id: "massacre",
@@ -98,18 +210,73 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
       })),
     ],
     adrenaline: { cost: 25 },
-    source: MODERNISATION_WIKI,
+    source: wikiAbility("Massacre", "Massacre"),
   },
   {
+    // Wiki Assault: 4x 130-150 over 4.2s; at 4 Bloodlust 170-190 each; 25% cost; 6s CD.
     id: "assault",
     name: "Assault",
     style: "melee",
     category: "enhanced",
-    hits: Array.from({ length: 4 }, () => ({ band: { minPct: 130, maxPct: 150 } })),
+    channelled: true,
+    hits: Array.from({ length: 4 }, (_, i) => ({
+      band: { minPct: 130, maxPct: 150 },
+      tickOffset: 1 + i * 2,
+    })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 6,
     bloodlustScale: { threshold: 4, band: { minPct: 170, maxPct: 190 } },
-    source: MODERNISATION_PATCH_1,
+    source: wikiAbility("Assault", "Assault"),
+  },
+  {
+    // Wiki Flurry: DW enhanced, 8x 60-70 every 0.6s, 25% cost, 20.4s CD.
+    id: "flurry",
+    name: "Flurry",
+    style: "melee",
+    category: "enhanced",
+    channelled: true,
+    hits: Array.from({ length: 8 }, (_, i) => ({
+      band: { minPct: 60, maxPct: 70 },
+      tickOffset: i + 1,
+    })),
+    adrenaline: { cost: 25 },
+    cooldownSeconds: 20.4,
+    source: wikiAbility("Flurry", "Flurry"),
+  },
+  {
+    // Wiki Greater Flurry: same channel as Flurry; each hit extends Berserk 0.6s.
+    id: "greater_flurry",
+    name: "Greater Flurry",
+    style: "melee",
+    category: "enhanced",
+    channelled: true,
+    hits: Array.from({ length: 8 }, (_, i) => ({
+      band: { minPct: 60, maxPct: 70 },
+      tickOffset: i + 1,
+    })),
+    adrenaline: { cost: 25 },
+    cooldownSeconds: 20.4,
+    appliesBuff: "greater_flurry",
+    source: wikiAbility("Greater Flurry", "Greater_Flurry"),
+  },
+  {
+    // Wiki Hurricane: 2h enhanced; hit1 135-165, hit2 155-185 AoE; 25% cost; 20.4s CD.
+    // At 4 Bloodlust: third hit 75-95.
+    id: "hurricane",
+    name: "Hurricane",
+    style: "melee",
+    category: "enhanced",
+    hits: [
+      { band: { minPct: 135, maxPct: 165 } },
+      { band: { minPct: 155, maxPct: 185 } },
+    ],
+    adrenaline: { cost: 25 },
+    cooldownSeconds: 20.4,
+    bloodlustExtraHits: {
+      threshold: 4,
+      hits: [{ band: { minPct: 75, maxPct: 95 } }],
+    },
+    source: wikiAbility("Hurricane", "Hurricane"),
   },
   {
     id: "overpower",
@@ -118,7 +285,8 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     category: "ultimate",
     hits: [{ band: { minPct: 520, maxPct: 570 } }],
     adrenaline: { cost: 60 },
-    source: MODERNISATION_WIKI,
+    cooldownSeconds: 30,
+    source: wikiAbility("Overpower", "Overpower"),
   },
   {
     id: "overpower_igneous",
@@ -127,21 +295,48 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     category: "ultimate",
     hits: [{ band: { minPct: 280, maxPct: 340 } }, { band: { minPct: 280, maxPct: 340 } }],
     adrenaline: { cost: 60 },
-    source: MODERNISATION_WIKI,
+    cooldownSeconds: 30,
+    source: wikiAbility("Overpower", "Overpower"),
   },
   {
+    // Wiki Pulverise: 2h ultimate, 300-340, 60% cost, 60s CD; Pulverised 30s; on-kill +50% adren.
+    id: "pulverise",
+    name: "Pulverise",
+    style: "melee",
+    category: "ultimate",
+    hits: [{ band: { minPct: 300, maxPct: 340 } }],
+    adrenaline: { cost: 60 },
+    cooldownSeconds: 60,
+    appliesBuff: "pulverise",
+    source: wikiAbility("Pulverise", "Pulverise"),
+  },
+  {
+    // Wiki Berserk: no damage; -100% adren; 60s CD; 19.8s buff (see MELEE_EFFECTS).
     id: "berserk",
     name: "Berserk",
     style: "melee",
     category: "ultimate",
     hits: [],
     adrenaline: { cost: 100 },
+    cooldownSeconds: 60,
     buff: "berserk",
-    source: MODERNISATION_PATCH_2,
+    source: wikiAbility("Berserk", "Berserk"),
+  },
+  {
+    // Wiki Meteor Strike: 220-250 AoE, 60% cost, 60s CD; adren-gen buff 30s.
+    id: "meteor_strike",
+    name: "Meteor Strike",
+    style: "melee",
+    category: "ultimate",
+    hits: [{ band: { minPct: 220, maxPct: 250 } }],
+    adrenaline: { cost: 60 },
+    cooldownSeconds: 60,
+    appliesBuff: "meteor_strike",
+    source: wikiAbility("Meteor Strike", "Meteor_Strike"),
   },
 ];
 
-/** Self/buff records whose effect is state, not a damage band. */
+/** Self/buff records whose effect is state, not a damage band alone. */
 export const MELEE_EFFECTS = [
   {
     id: "berserk",
@@ -150,24 +345,85 @@ export const MELEE_EFFECTS = [
     adrenaline: { cost: 100 },
     durationSeconds: 19.8,
     notes:
-      "1.75x damage, 1.25x incoming. Bloodlust cap 4 -> 8, +4 stacks on activation, basics generate double. Reduces Overpower cooldown.",
-    source: MODERNISATION_PATCH_2,
+      "1.75x damage, 1.25x incoming. Bloodlust cap 4 -> 8, +4 stacks on activation, basics generate double. Reduces Overpower cooldown to 9s.",
+    source: wikiAbility("Berserk", "Berserk"),
   },
   {
     id: "chaos_roar",
     name: "Chaos Roar",
-    // Beta Update 3 (§4.4): "Punish and Chaos Roar become basics."
     category: "basic" as const,
-    notes: "Empowers the next melee ability to 1.75x base damage and grants 1 Bloodlust.",
-    source: MODERNISATION_WIKI,
+    durationSeconds: CHAOS_ROAR_DURATION_SECONDS,
+    notes:
+      "Next melee ability within 7.2s deals 1.75x base damage (PvP 1.25x). Channelled: first hit only; multi-hit non-channel (e.g. Hurricane): all hits. Also boosts bleeds.",
+    source: wikiAbility("Chaos Roar", "Chaos_Roar"),
+  },
+  {
+    id: "greater_fury",
+    name: "Greater Fury",
+    category: "basic" as const,
+    durationSeconds: GREATER_FURY_CRIT_WINDOW_SECONDS,
+    notes:
+      "Next non-bleed melee attack within 15s is a guaranteed critical strike (first hit of channelled abilities only). Bleeds do not consume the buff.",
+    source: wikiAbility("Greater Fury", "Greater_Fury"),
+  },
+  {
+    id: "fury",
+    name: "Fury",
+    category: "basic" as const,
+    durationSeconds: GREATER_FURY_CRIT_WINDOW_SECONDS,
+    notes: "Next melee attack within 15s gains +25% critical strike chance.",
+    source: wikiAbility("Fury", "Fury"),
   },
   {
     id: "meteor_strike",
     name: "Meteor Strike",
     category: "ultimate" as const,
-    adrenaline: { cost: 60 },
-    notes: "Area attack granting an adrenaline-generation buff. Damage band not yet in the corpus.",
-    source: MODERNISATION_WIKI,
+    durationSeconds: METEOR_STRIKE_ADREN_BUFF_SECONDS,
+    notes:
+      "After cast: melee basics generate 1.5x adrenaline; passively +4.5% adrenaline every 0.6s for 30s while a melee weapon is equipped. Passive adren tick not yet simulated.",
+    source: wikiAbility("Meteor Strike", "Meteor_Strike"),
+  },
+  {
+    id: "flurry_bloodlust",
+    name: "Flurry (Bloodlust empower)",
+    category: "enhanced" as const,
+    notes:
+      "At 4+ Bloodlust consumes 4 stacks: +1% damage per 1% missing LP on the target, cap +65%. Target-stage; not a fixed band.",
+    source: wikiAbility("Flurry", "Flurry"),
+  },
+  {
+    id: "greater_flurry",
+    name: "Greater Flurry",
+    category: "enhanced" as const,
+    notes:
+      "Same 8x 60-70 channel as Flurry; each attack extends Berserk by 0.6s. Bloodlust empower identical to Flurry (missing-LP scale, cap +65%).",
+    source: wikiAbility("Greater Flurry", "Greater_Flurry"),
+  },
+  {
+    id: "greater_barge",
+    name: "Greater Barge",
+    category: "basic" as const,
+    durationSeconds: 6,
+    notes:
+      "Base hit 75-95% plus 5-7% ability damage per 0.6s idle since last attack (cap 6s). After 4.8s idle, next channelled melee within 6s is dealt as DoT (still modified like the channel). Idle add-on not a fixed band.",
+    source: wikiAbility("Greater Barge", "Greater_Barge"),
+  },
+  {
+    id: "pulverise",
+    name: "Pulverise",
+    category: "ultimate" as const,
+    durationSeconds: 30,
+    notes:
+      "Applies Pulverised for 30s: target deals 25% less damage. On killing blow generates 50% adrenaline. Two-handed only.",
+    source: wikiAbility("Pulverise", "Pulverise"),
+  },
+  {
+    id: "punish",
+    name: "Punish",
+    category: "basic" as const,
+    notes:
+      "Base 110-130%; multiplies by 2.5 when target LP is below 50% (target-stage). Generates 1 Bloodlust.",
+    source: wikiAbility("Punish", "Punish"),
   },
 ];
 

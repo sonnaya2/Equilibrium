@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "trackedSince": "2024-03-04",
   "records": [
     {
@@ -101,7 +101,7 @@
         },
         {
           "name": "Hurricane",
-          "abilityId": null
+          "abilityId": "melee:hurricane"
         },
         {
           "name": "Adaptive Strike",
@@ -219,7 +219,7 @@
         },
         {
           "name": "Tsunami",
-          "abilityId": null
+          "abilityId": "magic:tsunami"
         },
         {
           "name": "Greater Concentrated Blast",
@@ -235,11 +235,11 @@
         },
         {
           "name": "Omnipower",
-          "abilityId": null
+          "abilityId": "magic:omnipower"
         },
         {
           "name": "Smoke Tendrils",
-          "abilityId": null
+          "abilityId": "magic:smoke-tendrils"
         },
         {
           "name": "Sonic Wave",
@@ -251,7 +251,7 @@
         },
         {
           "name": "Dragon Breath",
-          "abilityId": null
+          "abilityId": "magic:dragon-breath"
         }
       ],
       "replacements": [
@@ -290,7 +290,7 @@
         },
         {
           "name": "Death Skulls",
-          "abilityId": null
+          "abilityId": "necromancy:death-skulls"
         },
         {
           "name": "Conjure Vengeful Ghost",
@@ -298,11 +298,11 @@
         },
         {
           "name": "Living Death",
-          "abilityId": null
+          "abilityId": "necromancy:living-death"
         },
         {
           "name": "Soul Sap",
-          "abilityId": null
+          "abilityId": "necromancy:soul-sap"
         },
         {
           "name": "Conjure Skeleton Warrior",
@@ -310,7 +310,7 @@
         },
         {
           "name": "Touch of Death",
-          "abilityId": null
+          "abilityId": "necromancy:touch-of-death"
         },
         {
           "name": "Sacrifice",
@@ -318,20 +318,19 @@
         },
         {
           "name": "Volley of Souls",
-          "abilityId": "volley_of_souls"
+          "abilityId": "necromancy:volley-of-souls"
         },
         {
           "name": "Finger of Death",
-          "abilityId": null
+          "abilityId": "necromancy:finger-of-death"
         },
         {
           "name": "Bloat",
-          "abilityId": null
+          "abilityId": "necromancy:bloat"
         }
       ],
       "replacements": [],
-      "supported": false,
-      "unsupportedReason": "Necromancy ability bands beyond Volley of Souls are not yet sourced in the corpus.",
+      "supported": true,
       "sources": [
         {
           "source": "runescape-wiki",

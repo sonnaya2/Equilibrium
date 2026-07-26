@@ -1,40 +1,49 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { WorkbenchPanel, WorkbenchTabs } from "@/components/WorkbenchTabs";
 import { AnalysisTab } from "./AnalysisTab";
-import { BuildTab } from "./BuildTab";
 import { QuickCalculator } from "./QuickCalculator";
 import { RotationPlanner } from "./RotationPlanner";
+import { SetupTab } from "./SetupTab";
 
-const TABS = ["Quick", "Build", "Rotation", "Analysis", "Reference"] as const;
-type Tab = (typeof TABS)[number];
+const COMBAT_TABS = [
+  { id: "Quick", label: "Quick" },
+  { id: "Setup", label: "Setup" },
+  { id: "Rotation", label: "Rotation" },
+  { id: "Analysis", label: "Analysis" },
+  { id: "Reference", label: "Reference" },
+] as const;
+
+type Tab = (typeof COMBAT_TABS)[number]["id"];
 
 export function CombatTabs({ reference }: { reference: ReactNode }) {
   const [tab, setTab] = useState<Tab>("Quick");
 
   return (
-    <div>
-      <div className="flex gap-1 border-b border-stone-750 pb-3">
-        {TABS.map((label) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => setTab(label)}
-            className={`border-b-2 px-3 py-1.5 text-sm ${
-              tab === label
-                ? "border-gem-400 font-medium text-gem-300"
-                : "border-transparent text-parch-300 hover:text-parch-50"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      {tab === "Quick" ? <QuickCalculator /> : null}
-      {tab === "Build" ? <BuildTab /> : null}
-      {tab === "Rotation" ? <RotationPlanner /> : null}
-      {tab === "Analysis" ? <AnalysisTab /> : null}
-      {tab === "Reference" ? reference : null}
+    <div className="flex min-h-0 flex-col">
+      <WorkbenchTabs
+        aria-label="Combat sections"
+        tabs={COMBAT_TABS}
+        active={tab}
+        onChange={setTab}
+      />
+
+      <WorkbenchPanel id="Quick" active={tab}>
+        <QuickCalculator />
+      </WorkbenchPanel>
+      <WorkbenchPanel id="Setup" active={tab}>
+        <SetupTab />
+      </WorkbenchPanel>
+      <WorkbenchPanel id="Rotation" active={tab}>
+        <RotationPlanner />
+      </WorkbenchPanel>
+      <WorkbenchPanel id="Analysis" active={tab}>
+        <AnalysisTab />
+      </WorkbenchPanel>
+      <WorkbenchPanel id="Reference" active={tab}>
+        {reference}
+      </WorkbenchPanel>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "trackedSince": "2024-03-04",
   "records": [
     {
@@ -10,7 +10,11 @@
         "advanced armour damage perk",
         "Representative recipe: 7 Noxious + 1 Direct + 1 Blade",
         "virtually guaranteed in the current PvME recipe",
-        "Noxious supply is the dominant gate; secondary combinations add Tirannwn, Asgarnia, clue, Ports/Kandarin, Kandarin or Morytania pressure depending on the chosen companion perk."
+        "Noxious supply is the dominant gate; secondary combinations add Tirannwn, Asgarnia, clue, Ports/Kandarin, Kandarin or Morytania pressure depending on the chosen companion perk.",
+        "weapon and armour gizmo combat perk",
+        "+2% critical strike chance per rank (R1 +2% through R4 +8%)",
+        "+2.2% per rank on item level 20 gear (R4 +8.8%)",
+        "Does not affect damage-over-time abilities"
       ],
       "unlock": {
         "type": "level",
@@ -18,6 +22,12 @@
         "regions": []
       },
       "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Biting",
+          "title": "Biting",
+          "verifiedAt": "2026-07-26"
+        },
         {
           "source": "pvme",
           "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -32,7 +42,11 @@
       "facts": [
         "advanced armour damage perk",
         "Representative recipe: 4 Vintage + 3 Explosive",
-        "Links high-level Archaeology Vintage supply to Fremennik hand-cannon/Explosive supply; Undead Slayer adds Morytania pressure."
+        "Links high-level Archaeology Vintage supply to Fremennik hand-cannon/Explosive supply; Undead Slayer adds Morytania pressure.",
+        "weapon and armour gizmo combat perk",
+        "Periodically zaps target for 50% ability damage per rank in PvM (10% per rank PvP)",
+        "60 second cooldown",
+        "R1 50% through R4 200% AD in PvM"
       ],
       "unlock": {
         "type": "level",
@@ -40,6 +54,12 @@
         "regions": []
       },
       "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Crackling",
+          "title": "Crackling",
+          "verifiedAt": "2026-07-26"
+        },
         {
           "source": "pvme",
           "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -54,7 +74,10 @@
       "facts": [
         "advanced armour adrenaline perk",
         "Representative recipe: 4 Zamorak + 3 Zaros",
-        "Asgarnia is unusually efficient because Nex/GWD1 can cover Zaros, Zamorak and Saradomin component families; companion perks can then add clue, Kandarin, Asgarnia or Morytania dependencies."
+        "Asgarnia is unusually efficient because Nex/GWD1 can cover Zaros, Zamorak and Saradomin component families; companion perks can then add clue, Kandarin, Asgarnia or Morytania dependencies.",
+        "weapon and armour gizmo adrenaline perk",
+        "9% chance per rank for basic abilities to generate +3 adrenaline (9 to 12)",
+        "Level 20 gear: 9.9% chance per rank"
       ],
       "unlock": {
         "type": "level",
@@ -62,6 +85,12 @@
         "regions": []
       },
       "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Impatient",
+          "title": "Impatient",
+          "verifiedAt": "2026-07-26"
+        },
         {
           "source": "pvme",
           "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -98,7 +127,9 @@
       "facts": [
         "armour adrenaline/basic-attack support perk",
         "Representative recipe: 7 Culinary + 1 Organic + 1 Enhancing",
-        "Base Invigorating is broadly craftable, but advanced combinations can become Player-Owned Ports/Oceanic bottlenecks with additional Tirannwn, clue, Kandarin or Morytania pressure."
+        "Base Invigorating is broadly craftable, but advanced combinations can become Player-Owned Ports/Oceanic bottlenecks with additional Tirannwn, clue, Kandarin or Morytania pressure.",
+        "weapon and armour gizmo adrenaline perk",
+        "Basic-attack adrenaline times (1 + 0.05 * rank) multiplicatively after Impatient/Fury of the Small"
       ],
       "unlock": {
         "type": "level",
@@ -106,6 +137,12 @@
         "regions": []
       },
       "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Invigorating",
+          "title": "Invigorating",
+          "verifiedAt": "2026-07-26"
+        },
         {
           "source": "pvme",
           "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
@@ -164,7 +201,11 @@
       "facts": [
         "armour ultimate-adrenaline perk",
         "Representative recipe: 9 Explosive",
-        "Explosive gives Fremennik/Keldagrim pressure, while Dragon Slayer combinations can add Asgarnia Dragonfire plus Desert/Forinthry Shifting supply."
+        "Explosive gives Fremennik/Keldagrim pressure, while Dragon Slayer combinations can add Asgarnia Dragonfire plus Desert/Forinthry Shifting supply.",
+        "weapon and armour gizmo combat perk",
+        "Ultimate abilities gain +3% + 1% base damage per rank (R1 +4% through R4 +7%)",
+        "No effect on non-damaging ultimates (Berserk, Deaths Swiftness, Living Death)",
+        "armour ultimate-adrenaline perk (legacy recipe note; effect is now damage)"
       ],
       "unlock": {
         "type": "level",
@@ -173,9 +214,373 @@
       },
       "sources": [
         {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ultimatums",
+          "title": "Ultimatums",
+          "verifiedAt": "2026-07-26"
+        },
+        {
           "source": "pvme",
           "url": "https://pvme.io/pvme-guides/invention-and-perks/perks/",
           "verifiedAt": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "id": "perk:equilibrium",
+      "name": "Equilibrium",
+      "maxRank": 4,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "Ability damage +6% + 2% per rank (R1 +8%, R2 +10%, R3 +12%, R4 +14%)",
+        "Prevents critical strikes while equipped",
+        "Prevents critical strikes for 30s after unequip (Equilibrium cooldown)",
+        "Boosts AD-derived damage (DoTs, poison, conjures, Aftershock, Crackling, god books)",
+        "Reworked 9 March 2026; former Equilibrium min/max effect is now Eruptive"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Equilibrium",
+          "title": "Equilibrium (perk)",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:eruptive",
+      "name": "Eruptive",
+      "maxRank": 4,
+      "facts": [
+        "weapon gizmo combat perk (formerly Equilibrium)",
+        "Ability damage +0.5% per rank (R1 +0.5% through R4 +2%)",
+        "Multiplicative on AD stat: damage times (1 + 0.005 * rank)",
+        "Affects DoTs, poison, conjures, Aftershock, Crackling, god books"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Eruptive",
+          "title": "Eruptive (perk)",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:precise",
+      "name": "Precise",
+      "maxRank": 6,
+      "facts": [
+        "weapon gizmo combat perk",
+        "Increases minimum damage by 1.5% of maximum damage per rank",
+        "newMin = min + rank * 0.015 * max; max rank 6",
+        "Does not affect most DoTs (except Bloat) or conjured spirits"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Precise",
+          "title": "Precise",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:aftershock",
+      "name": "Aftershock",
+      "maxRank": 4,
+      "facts": [
+        "weapon gizmo combat perk",
+        "After dealing 50000 damage, AoE explosion up to 40% ability damage per rank",
+        "Minimum 6 seconds between procs",
+        "100% hit chance; 3x3 around target",
+        "Unequipping non-Aftershock weapon resets stored damage"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Aftershock",
+          "title": "Aftershock",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:ruthless",
+      "name": "Ruthless",
+      "maxRank": 3,
+      "facts": [
+        "ancient weapon gizmo combat perk",
+        "On kill: +0.5% damage per rank for 20 seconds, stacks up to 5 times",
+        "R1 0.5%/stack through R3 1.5%/stack (max 7.5% at 5 stacks)",
+        "Does not affect bleeds; does not work from PvP kills"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ruthless",
+          "title": "Ruthless",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:lunging",
+      "name": "Lunging",
+      "maxRank": 4,
+      "facts": [
+        "weapon gizmo combat perk",
+        "Combust and Dismember damage +10% + 3% per rank (R1 +13% through R4 +22%)",
+        "Multiplies upper and lower damage bounds by 1.1 + 0.03 * rank",
+        "No longer affects Fragmentation Shot (post 2 Mar 2026)"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Lunging",
+          "title": "Lunging",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:energising",
+      "name": "Energising",
+      "maxRank": 4,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "Accuracy bonus +50 + 25 per rank (R1 +75 through R4 +150)",
+        "Reworked 2 Mar 2026 from Slice/Piercing Shot/Wrack adrenaline tradeoff"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Energising",
+          "title": "Energising",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:undead-slayer",
+      "name": "Undead Slayer",
+      "maxRank": 1,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "+7% damage to undead",
+        "Affects bleeds (Dismember, Combust, etc.)",
+        "Stacks with salve amulet"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Undead_Slayer",
+          "title": "Undead Slayer",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:demon-slayer",
+      "name": "Demon Slayer",
+      "maxRank": 1,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "+7% damage to demons",
+        "Affects bleeds (Dismember, Combust, etc.)"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Demon_Slayer_(perk)",
+          "title": "Demon Slayer (perk)",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:dragon-slayer",
+      "name": "Dragon Slayer",
+      "maxRank": 1,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "+7% damage to dragons",
+        "Affects bleeds (Dismember, Combust, etc.)"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dragon_Slayer_(perk)",
+          "title": "Dragon Slayer (perk)",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:genocidal",
+      "name": "Genocidal",
+      "maxRank": 1,
+      "facts": [
+        "weapon and armour gizmo combat perk",
+        "Up to +4.9% damage to current Slayer target proportional to task progress",
+        "Linear 0.1% steps; average about 2.5% over a task",
+        "Does not affect bleeds/burns; Slayer Wildcards off-task do not count"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Genocidal",
+          "title": "Genocidal",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:relentless",
+      "name": "Relentless",
+      "maxRank": 5,
+      "facts": [
+        "ancient weapon/armour gizmo combat perk",
+        "1% chance per rank to prevent adrenaline consumption (level 20: 1.1% per rank)",
+        "30 second internal cooldown after proc",
+        "Max rank 5"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Relentless",
+          "title": "Relentless",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:planted-feet",
+      "name": "Planted Feet",
+      "maxRank": 1,
+      "facts": [
+        "weapon gizmo combat perk",
+        "Sunshine and Deaths Swiftness duration +25%; lose periodic target damage",
+        "Largely obsolete once Greater Sunshine / Greater Deaths Swiftness unlocked"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Planted_Feet",
+          "title": "Planted Feet",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:caroming",
+      "name": "Caroming",
+      "maxRank": 4,
+      "facts": [
+        "weapon gizmo combat perk",
+        "Ricochet / Greater Ricochet: +4% damage per rank per hit",
+        "Chain / Greater Chain secondary targets: +5% + 5% per rank",
+        "Max standard rank 3; ancient max 4"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Caroming",
+          "title": "Caroming",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "perk:flanking",
+      "name": "Flanking",
+      "maxRank": 4,
+      "facts": [
+        "weapon gizmo combat perk",
+        "Soul Strike, Backhand, Impact, Binding Shot: no stun; +40% damage per rank if target not facing player",
+        "Max standard rank 3; ancient max 4"
+      ],
+      "unlock": {
+        "type": "level",
+        "requirement": "Invention",
+        "regions": []
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Flanking",
+          "title": "Flanking",
+          "verifiedAt": "2026-07-26"
         }
       ]
     }

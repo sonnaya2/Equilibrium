@@ -1,11 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { EquipmentSlot } from "@/combat/data/records";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
-/** Shared combat loadout: Build writes, Rotation and Analysis read. Persisted to
+/** Shared combat loadout: Setup writes, Rotation and Analysis read. Persisted to
  *  localStorage under eq:loadout:v1; older stored shapes normalize forward. */
+
+export const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
+  "mainhand",
+  "offhand",
+  "twohand",
+  "helmet",
+  "body",
+  "legs",
+  "gloves",
+  "boots",
+  "cape",
+  "amulet",
+  "ring",
+  "pocket",
+  "ammo",
+  "aura",
+] as const;
+
+const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
+
 export interface LoadoutTarget {
   defenceLevel: number;
   affinity: AffinityKind;
@@ -13,6 +34,10 @@ export interface LoadoutTarget {
 
 export interface LoadoutPerks {
   equilibrium: number;
+  eruptive: number;
+  biting: number;
+  /** Item level 20 gear: Biting uses +2.2%/rank instead of +2%. */
+  bitingLevel20: boolean;
   ultimatums: number;
   lunging: number;
   energising: number;
@@ -22,27 +47,53 @@ export interface LoadoutPerks {
   insideSunshine: boolean;
 }
 
+export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
+export type StyleCurseChoice =
+  | "none"
+  | "turmoil"
+  | "anguish"
+  | "torment"
+  | "sorrow"
+  | "malevolence"
+  | "desolation"
+  | "affliction"
+  | "ruination";
+
+export interface LoadoutBuffs {
+  vulnerability: boolean;
+  styleCurse: StyleCurseChoice;
+  overload: OverloadChoice;
+}
+
 export interface Loadout {
   style: CombatStyle;
+  /**
+   * Non-melee style level. For melee, alias of strengthLevel (damage/crit).
+   * Prefer attackLevel / strengthLevel for melee.
+   */
   level: number;
-  /** Weapon tier feeding baseAbilityDamage and playerAccuracy. */
+  /** Melee Attack — accuracy only. Mirrors level when not melee. */
+  attackLevel: number;
+  /** Melee Strength — ability damage + crit damage-from-level. */
+  strengthLevel: number;
   weaponTier: number;
-  /** Manual base override; NaN means "compute from level + weapon tier". */
+  /** Manual base override; NaN means compute from level + weapon tier. */
   base: number;
-  /** 0-100 percentages, as the UI presents them. */
   accuracy: number;
   critChance: number;
-  /** When set, Damage Potential comes from the target model instead of accuracy%. */
   target: LoadoutTarget | null;
   perks: LoadoutPerks;
-  /** Selected data/combat equipment record ids (organisational — stat bonuses are
-   *  unsourced per item and stay empty until the corpus lands them). */
+  buffs: LoadoutBuffs;
+  equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
+  /** Derived: slotted ids + unlock pins. */
   equipmentIds: string[];
 }
 
 export const DEFAULT_LOADOUT: Loadout = {
   style: "melee",
   level: 99,
+  attackLevel: 99,
+  strengthLevel: 99,
   weaponTier: 90,
   base: 1000,
   accuracy: 100,
@@ -50,6 +101,9 @@ export const DEFAULT_LOADOUT: Loadout = {
   target: null,
   perks: {
     equilibrium: 0,
+    eruptive: 0,
+    biting: 0,
+    bitingLevel20: false,
     ultimatums: 0,
     lunging: 0,
     energising: 0,
@@ -58,25 +112,172 @@ export const DEFAULT_LOADOUT: Loadout = {
     tumekensPieces: 0,
     insideSunshine: false,
   },
+  buffs: {
+    vulnerability: false,
+    styleCurse: "none",
+    overload: "none",
+  },
+  equipmentSlots: {},
   equipmentIds: [],
 };
 
 const KEY = "eq:loadout:v1";
 const STYLES = ["melee", "ranged", "magic", "necromancy"];
 const AFFINITIES = ["weak", "same", "strong", "weakness"];
+const STYLE_CURSES: StyleCurseChoice[] = [
+  "none",
+  "turmoil",
+  "anguish",
+  "torment",
+  "sorrow",
+  "malevolence",
+  "desolation",
+  "affliction",
+  "ruination",
+];
+const OVERLOADS: OverloadChoice[] = ["none", "overload", "supreme", "elder"];
 
 const clampRank = (value: unknown, max: number) =>
   Number.isFinite(value) ? Math.min(Math.max(0, Math.floor(Number(value))), max) : 0;
 const num = (value: unknown, fallback: number) => (Number.isFinite(value) ? Number(value) : fallback);
 
-function normalize(value: unknown): Loadout {
-  if (typeof value !== "object" || value === null) return DEFAULT_LOADOUT;
-  const raw = value as Partial<Loadout>;
-  const rawPerks = (raw.perks ?? {}) as Partial<LoadoutPerks>;
-  const rawTarget = raw.target as Partial<LoadoutTarget> | null | undefined;
+/** Non-empty string ids currently in slots (order follows EQUIPMENT_SLOTS). */
+export function equipmentIdList(slots: Partial<Record<EquipmentSlot, string | null>> | undefined): string[] {
+  if (!slots) return [];
+  return EQUIPMENT_SLOTS.map((slot) => slots[slot]).filter(
+    (id): id is string => typeof id === "string" && id.length > 0,
+  );
+}
+
+/** Unlock pins: equipmentIds entries not occupying a doll slot. */
+export function unlockOnlyIds(loadout: Loadout): string[] {
+  const slotted = new Set(equipmentIdList(loadout.equipmentSlots));
+  return (loadout.equipmentIds ?? []).filter((id) => !slotted.has(id));
+}
+
+function mergeEquipmentIds(
+  slots: Partial<Record<EquipmentSlot, string | null>>,
+  unlocks: string[],
+): string[] {
+  const out = equipmentIdList(slots);
+  const seen = new Set(out);
+  for (const id of unlocks) {
+    if (!seen.has(id)) {
+      out.push(id);
+      seen.add(id);
+    }
+  }
+  return out;
+}
+
+/** Equip or clear one slot. Two-hand clears MH/OH; MH/OH clears two-hand. */
+export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: string | null): Loadout {
+  const slots: Partial<Record<EquipmentSlot, string | null>> = {
+    ...(loadout.equipmentSlots ?? {}),
+  };
+  if (itemId == null || itemId === "") {
+    delete slots[slot];
+  } else {
+    slots[slot] = itemId;
+    if (slot === "twohand") {
+      delete slots.mainhand;
+      delete slots.offhand;
+    }
+    if (slot === "mainhand" || slot === "offhand") {
+      delete slots.twohand;
+    }
+  }
+  const unlocks = unlockOnlyIds(loadout);
   return {
-    style: STYLES.includes(raw.style as string) ? (raw.style as CombatStyle) : DEFAULT_LOADOUT.style,
-    level: num(raw.level, DEFAULT_LOADOUT.level),
+    ...loadout,
+    equipmentSlots: slots,
+    equipmentIds: mergeEquipmentIds(slots, unlocks),
+  };
+}
+
+export function toggleUnlockPin(loadout: Loadout, itemId: string): Loadout {
+  const unlocks = new Set(unlockOnlyIds(loadout));
+  if (unlocks.has(itemId)) unlocks.delete(itemId);
+  else unlocks.add(itemId);
+  return {
+    ...loadout,
+    equipmentSlots: loadout.equipmentSlots ?? {},
+    equipmentIds: mergeEquipmentIds(loadout.equipmentSlots ?? {}, [...unlocks]),
+  };
+}
+
+export function clearEquipment(loadout: Loadout): Loadout {
+  return { ...loadout, equipmentSlots: {}, equipmentIds: [] };
+}
+
+export function withStyleLevel(loadout: Loadout, level: number): Loadout {
+  return { ...loadout, level, attackLevel: level, strengthLevel: level };
+}
+
+export function withAttackLevel(loadout: Loadout, attackLevel: number): Loadout {
+  return { ...loadout, attackLevel };
+}
+
+export function withStrengthLevel(loadout: Loadout, strengthLevel: number): Loadout {
+  return { ...loadout, strengthLevel, level: strengthLevel };
+}
+
+function normalizeEquipmentSlots(raw: unknown): Partial<Record<EquipmentSlot, string | null>> {
+  if (typeof raw !== "object" || raw === null) return {};
+  const out: Partial<Record<EquipmentSlot, string | null>> = {};
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!SLOT_SET.has(key)) continue;
+    if (value == null || value === "") continue;
+    if (typeof value === "string") out[key as EquipmentSlot] = value;
+  }
+  return out;
+}
+
+/** Forward-migrate stored loadouts. Exported for tests. */
+export function normalizeLoadout(value: unknown): Loadout {
+  if (typeof value !== "object" || value === null) return DEFAULT_LOADOUT;
+  const raw = value as Partial<Loadout> & {
+    level?: unknown;
+    attackLevel?: unknown;
+    strengthLevel?: unknown;
+    equipmentSlots?: unknown;
+    buffs?: unknown;
+  };
+  const rawPerks = (raw.perks ?? {}) as Partial<LoadoutPerks>;
+  const rawBuffs = (raw.buffs ?? {}) as Partial<LoadoutBuffs>;
+  const rawTarget = raw.target as Partial<LoadoutTarget> | null | undefined;
+  const style = STYLES.includes(raw.style as string) ? (raw.style as CombatStyle) : DEFAULT_LOADOUT.style;
+
+  const hasAttack = Number.isFinite(raw.attackLevel);
+  const hasStrength = Number.isFinite(raw.strengthLevel);
+  const hasLevel = Number.isFinite(raw.level);
+  const legacyLevel = num(raw.level, DEFAULT_LOADOUT.level);
+  let attackLevel = hasAttack ? num(raw.attackLevel, legacyLevel) : legacyLevel;
+  let strengthLevel = hasStrength ? num(raw.strengthLevel, legacyLevel) : legacyLevel;
+  let level = hasLevel ? legacyLevel : strengthLevel;
+
+  if (style === "melee") {
+    level = strengthLevel;
+  } else {
+    if (!hasLevel && (hasAttack || hasStrength)) {
+      level = hasStrength ? strengthLevel : attackLevel;
+    }
+    attackLevel = level;
+    strengthLevel = level;
+  }
+
+  const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
+  const legacyIds = Array.isArray(raw.equipmentIds)
+    ? raw.equipmentIds.filter((id): id is string => typeof id === "string")
+    : [];
+  const slotted = new Set(equipmentIdList(equipmentSlots));
+  const unlocks = legacyIds.filter((id) => !slotted.has(id));
+
+  return {
+    style,
+    level,
+    attackLevel,
+    strengthLevel,
     weaponTier: num(raw.weaponTier, DEFAULT_LOADOUT.weaponTier),
     base: num(raw.base, DEFAULT_LOADOUT.base),
     accuracy: num(raw.accuracy, DEFAULT_LOADOUT.accuracy),
@@ -89,7 +290,10 @@ function normalize(value: unknown): Loadout {
           }
         : null,
     perks: {
-      equilibrium: clampRank(rawPerks.equilibrium, 5),
+      equilibrium: clampRank(rawPerks.equilibrium, 4),
+      eruptive: clampRank(rawPerks.eruptive, 4),
+      biting: clampRank(rawPerks.biting, 4),
+      bitingLevel20: rawPerks.bitingLevel20 === true,
       ultimatums: clampRank(rawPerks.ultimatums, 4),
       lunging: clampRank(rawPerks.lunging, 4),
       energising: clampRank(rawPerks.energising, 4),
@@ -98,9 +302,17 @@ function normalize(value: unknown): Loadout {
       tumekensPieces: clampRank(rawPerks.tumekensPieces, 5),
       insideSunshine: rawPerks.insideSunshine === true,
     },
-    equipmentIds: Array.isArray(raw.equipmentIds)
-      ? raw.equipmentIds.filter((id): id is string => typeof id === "string")
-      : [],
+    buffs: {
+      vulnerability: rawBuffs.vulnerability === true,
+      styleCurse: STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
+        ? (rawBuffs.styleCurse as StyleCurseChoice)
+        : "none",
+      overload: OVERLOADS.includes(rawBuffs.overload as OverloadChoice)
+        ? (rawBuffs.overload as OverloadChoice)
+        : "none",
+    },
+    equipmentSlots,
+    equipmentIds: mergeEquipmentIds(equipmentSlots, unlocks),
   };
 }
 
@@ -110,18 +322,28 @@ export function useLoadout() {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(KEY);
-      if (stored) setLoadout(normalize(JSON.parse(stored)));
+      if (stored) setLoadout(normalizeLoadout(JSON.parse(stored)));
     } catch {
       // Corrupt storage falls back to defaults.
     }
   }, []);
 
   const update = (next: Loadout) => {
-    setLoadout(next);
+    const withLevels =
+      next.style === "melee"
+        ? { ...next, level: next.strengthLevel }
+        : { ...next, attackLevel: next.level, strengthLevel: next.level };
+    const unlocks = unlockOnlyIds(withLevels);
+    const normalized: Loadout = {
+      ...withLevels,
+      equipmentSlots: withLevels.equipmentSlots ?? {},
+      equipmentIds: mergeEquipmentIds(withLevels.equipmentSlots ?? {}, unlocks),
+    };
+    setLoadout(normalized);
     try {
-      window.localStorage.setItem(KEY, JSON.stringify(next));
+      window.localStorage.setItem(KEY, JSON.stringify(normalized));
     } catch {
-      // Storage full/blocked — the session state still works.
+      // Storage full/blocked — session state still works.
     }
   };
 

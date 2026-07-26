@@ -9,6 +9,7 @@ import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
+import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { loadState, saveState } from "@/lib/storage";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -16,14 +17,23 @@ import { useLoadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
+// Volley is factory-built (soul count); 3 = base Residual Soul cap.
+const NECRO_PALETTE: AbilitySpec[] = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
+
 // One combined registry: swapping styles mid-rotation is legal in-game, and the
 // sim handles style resources per cast.
-const ALL_ABILITIES: AbilitySpec[] = [...MELEE_ABILITIES, ...RANGED_ABILITIES, ...MAGIC_ABILITIES];
+const ALL_ABILITIES: AbilitySpec[] = [
+  ...MELEE_ABILITIES,
+  ...RANGED_ABILITIES,
+  ...MAGIC_ABILITIES,
+  ...NECRO_PALETTE,
+];
 
 const PALETTE_FILTERS: { id: CombatStyle; label: string }[] = [
   { id: "melee", label: "Melee" },
   { id: "ranged", label: "Ranged" },
   { id: "magic", label: "Magic" },
+  { id: "necromancy", label: "Necromancy" },
 ];
 
 function formatNumber(value: number): string {
@@ -97,6 +107,7 @@ export function RotationPlanner() {
   const manualStats: CalcStats = {
     base: Math.max(0, base),
     level: Math.min(Math.max(1, level), 145),
+    attackLevel: Math.min(Math.max(1, level), 145),
     dp: Math.min(Math.max(0, accuracy), 100) / 100,
     critChance: Math.min(Math.max(0, critChance), 100) / 100,
     critDamageBonus: 0,
@@ -124,7 +135,7 @@ export function RotationPlanner() {
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
-            Use Build loadout
+            Use Setup loadout
           </label>
           {mode === "manual" ? (
             <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">

@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
-import { hitChance, playerAccuracy } from "@/combat/target/genericTarget";
-import { loadoutBase, loadoutStats } from "./loadoutStats";
+import { runPipeline } from "@/combat/pipeline/modifierPipeline";
+import { equilibriumDamageBonus } from "@/combat/shared/perks";
+import { overloadBoostedLevel } from "@/combat/shared/potions";
+import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers";
+import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/target/genericTarget";
+import {
+  equippedWeaponTier,
+  loadoutAttackLevel,
+  loadoutBase,
+  loadoutDamageLevel,
+  loadoutStats,
+  loadoutWeaponTier,
+} from "./loadoutStats";
 import { DEFAULT_LOADOUT, type Loadout } from "./useLoadout";
 
 const base: Loadout = { ...DEFAULT_LOADOUT };
@@ -11,6 +22,53 @@ describe("loadoutStats", () => {
     expect(loadoutBase(base)).toBe(1000);
     const computed = loadoutBase({ ...base, base: NaN, level: 99, weaponTier: 90, style: "melee" });
     expect(computed).toBe(baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }));
+  });
+
+  it("melee Attack feeds accuracy; Strength feeds base AD / crit damage level", () => {
+    const melee: Loadout = {
+      ...base,
+      style: "melee",
+      attackLevel: 80,
+      strengthLevel: 110,
+      level: 110,
+      base: NaN,
+      weaponTier: 90,
+      target: { defenceLevel: 80, affinity: "same" },
+    };
+    expect(loadoutAttackLevel(melee)).toBe(80);
+    expect(loadoutDamageLevel(melee)).toBe(110);
+    expect(loadoutBase(melee)).toBe(
+      baseAbilityDamage(110, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+    );
+    const stats = loadoutStats(melee);
+    expect(stats.level).toBe(110);
+    expect(stats.attackLevel).toBe(80);
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(playerAccuracy(80, 90), { defenceLevel: 80, affinity: "same" }),
+      10,
+    );
+  });
+
+  it("non-melee styles use a single style level for both accuracy and damage", () => {
+    const magic: Loadout = {
+      ...base,
+      style: "magic",
+      level: 105,
+      attackLevel: 1,
+      strengthLevel: 1,
+      base: NaN,
+      weaponTier: 90,
+      target: { defenceLevel: 80, affinity: "same" },
+    };
+    expect(loadoutAttackLevel(magic)).toBe(105);
+    expect(loadoutDamageLevel(magic)).toBe(105);
+    const stats = loadoutStats(magic);
+    expect(stats.level).toBe(105);
+    expect(stats.attackLevel).toBe(105);
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(playerAccuracy(105, 90), { defenceLevel: 80, affinity: "same" }),
+      10,
+    );
   });
 
   it("passes accuracy% through as Damage Potential when no target is set", () => {
@@ -44,6 +102,117 @@ describe("loadoutStats", () => {
     expect(stats.critChance).toBe(1);
     const plain = loadoutStats(base);
     expect(plain.critChance).toBeCloseTo(0.1, 10);
+  });
+
+  it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {
+    const r4 = loadoutStats({ ...base, critChance: 10, perks: { ...base.perks, biting: 4 } });
+    expect(r4.critChance).toBeCloseTo(0.18, 10);
+    const r4l20 = loadoutStats({
+      ...base,
+      critChance: 10,
+      perks: { ...base.perks, biting: 4, bitingLevel20: true },
+    });
+    expect(r4l20.critChance).toBeCloseTo(0.188, 10);
+  });
+
+  it("Equilibrium rank >0 forces critChance 0 and damage mult 1.08–1.14 by rank", () => {
+    for (const rank of [1, 2, 3, 4] as const) {
+      const stats = loadoutStats({
+        ...base,
+        critChance: 25,
+        perks: {
+          ...base.perks,
+          equilibrium: rank,
+          biting: 4,
+          tectonicPieces: 5,
+          eliteTectonic: true,
+        },
+      });
+      expect(stats.critChance).toBe(0);
+      const mod = stats.globalModifiers.find((m) => m.id === `perk:equilibrium:${rank}`);
+      expect(mod).toBeDefined();
+      // R1 +8% … R4 +14% → mult 1.08–1.14 (wiki Equilibrium perk).
+      const mult = 1 + equilibriumDamageBonus(rank);
+      expect(mult).toBeCloseTo(1.06 + 0.02 * rank, 10);
+      expect(runPipeline({ damage: 1000 }, [mod!], { style: "melee" }).damage).toBe(
+        Math.floor(1000 * mult),
+      );
+    }
+  });
+
+  it("Vulnerability + style curse damage + overload accuracy boost apply when buffs present", () => {
+    const turmoil = styleCurseById("turmoil")!;
+    const loadout: Loadout = {
+      ...base,
+      style: "melee",
+      attackLevel: 99,
+      strengthLevel: 99,
+      weaponTier: 90,
+      target: { defenceLevel: 80, affinity: "same" },
+      buffs: {
+        vulnerability: true,
+        styleCurse: "turmoil",
+        overload: "elder",
+      },
+    };
+    const stats = loadoutStats(loadout);
+    const boostedAttack = prayerBoostedStyleLevel(overloadBoostedLevel(99, "elder"), turmoil);
+    expect(stats.attackLevel).toBe(boostedAttack);
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(playerAccuracy(boostedAttack, 90), {
+        defenceLevel: 80,
+        affinity: "same",
+      }),
+      10,
+    );
+    expect(stats.globalModifiers.some((m) => m.id === "vulnerability")).toBe(true);
+    expect(stats.globalModifiers.some((m) => m.id === "prayer:turmoil")).toBe(true);
+    // Overload is accuracy-only (not a damage global).
+    expect(stats.globalModifiers.some((m) => m.id.includes("overload"))).toBe(false);
+    expect(runPipeline({ damage: 1000 }, stats.globalModifiers, { style: "melee" }).damage).toBe(
+      Math.floor(Math.floor(1000 * 1.1) * 1.1),
+    );
+  });
+
+  it("buffs off leave accuracy unboosted and omit vuln/curse modifiers", () => {
+    const stats = loadoutStats({
+      ...base,
+      target: { defenceLevel: 80, affinity: "same" },
+      buffs: { vulnerability: false, styleCurse: "none", overload: "none" },
+    });
+    expect(stats.attackLevel).toBe(99);
+    expect(stats.globalModifiers.some((m) => m.id === "vulnerability")).toBe(false);
+    expect(stats.globalModifiers.some((m) => m.id.startsWith("prayer:"))).toBe(false);
+  });
+
+  it("equippedWeaponTier prefers twohand then mainhand when record.tier is set", () => {
+    // Corpus: item:omni-guard has tier 95 (slot may be absent — slotted path still reads tier).
+    const twohand: Loadout = {
+      ...base,
+      equipmentSlots: { twohand: "item:omni-guard", mainhand: "item:roar-of-awakening" },
+      weaponTier: 90,
+    };
+    expect(equippedWeaponTier(twohand)).toBe(95);
+    expect(loadoutWeaponTier(twohand)).toBe(95);
+
+    const mainhand: Loadout = {
+      ...base,
+      equipmentSlots: { mainhand: "item:soulbound-lantern" },
+      weaponTier: 90,
+    };
+    expect(equippedWeaponTier(mainhand)).toBe(95);
+
+    const none: Loadout = { ...base, equipmentSlots: { pocket: "item:scripture-of-amascut" }, weaponTier: 90 };
+    // Pocket with tier must not win — only twohand/mainhand (or legacy weapon slots).
+    expect(equippedWeaponTier(none)).toBeNull();
+    expect(loadoutWeaponTier(none)).toBe(90);
+
+    expect(equippedWeaponTier({ ...base, equipmentSlots: { mainhand: "missing:id" } })).toBeNull();
+  });
+
+  it("Eruptive adds a global base-stage damage modifier", () => {
+    const stats = loadoutStats({ ...base, perks: { ...base.perks, eruptive: 4 } });
+    expect(stats.globalModifiers.some((m) => m.id === "perk:eruptive:4")).toBe(true);
   });
 
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {

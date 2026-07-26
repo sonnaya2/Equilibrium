@@ -84,7 +84,7 @@ export function AnalysisTab() {
       <div>
         <h2 className="text-sm font-medium text-parch-50">Analysis</h2>
         <p className="mt-1 text-xs text-parch-300">
-          A is the shared loadout from the Build tab. B is a scratch line — edit it to judge a
+          A is the shared loadout from the Setup tab. B is a scratch line — edit it to judge a
           change before committing to it.
         </p>
         <div className="mt-3 border-t border-stone-750">
@@ -114,7 +114,7 @@ export function AnalysisTab() {
       <div>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <h3 className="text-xs font-medium text-parch-50">A · Build loadout</h3>
+            <h3 className="text-xs font-medium text-parch-50">A · Setup loadout</h3>
             <dl className="mt-2 border-t border-stone-750 text-xs">
               {(
                 [

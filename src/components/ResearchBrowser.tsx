@@ -52,31 +52,6 @@ function availabilityLabel(value: string): string {
   return value.replaceAll("_", " ");
 }
 
-function regionName(value: string): string {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
-function upgradeRegionAccess(upgrade: ResearchUpgrade): string {
-  if (upgrade.comboLabel) return upgrade.comboLabel;
-
-  const required = upgrade.requiredRegions ?? [];
-  if (required.length > 1) {
-    return `Combo: ${required.map(regionName).join(" + ")}`;
-  }
-
-  const hints = upgrade.regionHints ?? [];
-  if (hints.length > 1) {
-    if (upgrade.regionRequirementType === "all_required") {
-      return `Combo: ${hints.map(regionName).join(" + ")}`;
-    }
-    return `Chain: ${hints.map(regionName).join(" / ")}`;
-  }
-
-  return "";
-}
-
 function methodAccess(method: ResearchTrainingMethod): string {
   const hints = method.regionHints.filter(Boolean);
   if (!hints.length) return "—";

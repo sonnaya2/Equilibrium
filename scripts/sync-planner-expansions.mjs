@@ -59,12 +59,25 @@ function mergeById(target, addition, sourceName) {
   else target[index] = { ...addition, ...target[index] };
 }
 
+function patchById(target, patch, sourceName, section) {
+  if (typeof patch?.id !== "string" || !patch.id) {
+    throw new Error(`Planner enrichment ${section} patch is missing id in ${sourceName}`);
+  }
+  const row = target.find((entry) => entry.id === patch.id);
+  if (!row) throw new Error(`Planner enrichment ${section} patch target not found in ${sourceName}: ${patch.id}`);
+  Object.assign(row, patch.set ?? {});
+}
+
 const enrichmentFiles = readdirSync(join(ROOT, "scraped-data"))
   .filter((name) => /^planner-enrichment-.*\.json$/.test(name))
   .sort();
 
 for (const file of enrichmentFiles) {
   const enrichment = JSON.parse(readFileSync(join(ROOT, "scraped-data", file), "utf8"));
+
+  for (const patch of enrichment.combat_training_spot_patches ?? []) {
+    patchById(data.combat_training_spots, patch, file, "combat_training_spots");
+  }
 
   for (const patch of enrichment.archaeology_relic_patches ?? []) {
     const row = data.archaeology_combat_relics.find((entry) => entry.relic === patch.relic);

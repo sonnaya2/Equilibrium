@@ -33,6 +33,11 @@ jobs:
         with:
           node-version: 24
 
+      - name: Refresh branch before harvest
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: git pull --rebase origin "$TARGET_BRANCH"
+
       - name: Normalize region names
         run: node scripts/normalize-region-names.mjs
 

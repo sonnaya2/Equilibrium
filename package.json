@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs",
+    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs",
     "audit:combat": "node scripts/audit-combat-data.mjs",
     "audit:data": "node scripts/audit-main-data.mjs",
     "audit:progression": "node scripts/audit-progression-unlocks.mjs",

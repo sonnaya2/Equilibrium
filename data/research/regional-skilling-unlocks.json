@@ -13,6 +13,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "regional skilling infrastructure",
       "detail": "Prifddinas is far more than one training method. Treat it as a bundle of tool, shop, production, and high-level skilling unlocks when valuing Tirannwn. · Equilibrium explicitly advertises Prifddinas as Tirannwn content and says region quest completion is intended to provide immediate access. Keep any individual item skill requirements. · Unlocks: Ithell harmonium harps and harmonic dust, Trahaearn Seren stones and corrupted ore, Meilyr combination-potion infrastructure, Waterfall Fishing and crystal fishing rod shop, district skilling services and Voice of Seren rotations · Region status: confirmed_official_region_example",
       "requirements": [],
@@ -32,6 +34,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "skilling tool progression",
       "detail": "Lady Ithell upgrades several dragon-tier tools with harmonic dust. Crystal pickaxes, hatchets, mattocks, fishing rods, tinderboxes and hammers also feed augmentable skilling progression. · Tirannwn supplies the crystal side of several late-game tool chains. Do not imply the other components of those chains are Tirannwn-only. · Unlocks: Crystal pickaxe, Crystal hatchet, Crystal mattock, Crystal tool-seed utility, Attuned crystal teleport seed, Harmonium harps as a low-attention harmonic-dust source",
       "requirements": [
@@ -54,6 +58,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Fishing activity and permanent tool unlock",
       "detail": "The crystal fishing rod is 5% more likely to catch fish and can be augmented. This makes Waterfall Fishing a permanent tool unlock as well as a training activity. · Keep the rod unlock even if Equilibrium XP multipliers make another fishing method faster. · Unlocks: Crystal urchin points, Ability to make the crystal fishing rod for 3,000 crystal urchin points",
       "requirements": [
@@ -76,6 +82,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Herblore recipe and shop infrastructure",
       "detail": "Some combination-potion recipes are purchased directly once requirements are met; others first need recipe discovery from Daemonheim or another source. Do not hard-code Forinthry as a requirement for every Meilyr recipe. · Tirannwn is the shop and production hub. Recipe-specific discovery dependencies remain separate. · Unlocks: Combination-potion recipes, Recipe Shop purchase step, Access to Meilyr Herblore services · Region status: confirmed_base_game_geography",
       "requirements": [],
@@ -95,6 +103,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "combination-potion flask infrastructure",
       "detail": "Crystal sandstone is the local Prifddinas supply for crystal flasks. The 2026 DailyScape overhaul removed the old daily mining cap, so old daily-cap advice must not be used. · This is a major no-trading production unlock because it controls self-supplied combination-potion containers. · Unlocks: Crystal glass, Crystal flasks, Six-dose combination-potion containers",
       "requirements": [
@@ -117,6 +127,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "high-level skilling reward infrastructure",
       "detail": "The Maw is a high-level Prifddinas reward source and can also help with otherwise awkward unlocks such as Meilyr potion recipes. · The activity lives in Tirannwn, but its 115 Dungeoneering requirement means Forinthry can still be a practical cross-region dependency in Equilibrium. · Unlocks: Motherlode Maw daily reward, Edimmu resource dungeon, Meilyr crystal sandstone access, Useful enhancers and high-level skilling rewards",
       "requirements": [
@@ -139,6 +151,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "AFK Mining and Smithing supply loop",
       "detail": "Seren stones are a durable Prifddinas skilling unlock even when they are not the absolute fastest Mining route. They matter for low-input training and self-supplied Smithing experience. · Keep this as a utility and AFK route, separate from pure XP/hour rankings. · Unlocks: Corrupted ore, High-attention-free Mining route, Corrupted-ore Smithing experience",
       "requirements": [
@@ -160,6 +174,8 @@
       "regionHints": [
         "asgarnia"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Smithing outfit and workshop upgrades",
       "detail": "Blacksmith outfit pieces cost respect at the Reward Shop. Luminite injectors overload the workshop and add progress per smithing swing for players in the workshop. · This is a real Asgarnia skilling unlock bundle, not just the burial-smithing training method. · Unlocks: Blacksmith's outfit, up to 6% Smithing XP, Luminite injector, Ceremonial sword reward upgrades, Cannon upgrade progression",
       "requirements": [],
@@ -179,6 +195,8 @@
       "regionHints": [
         "kandarin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Fishing activity and shop hub",
       "detail": "Fishing Frenzy is already tracked as the high-XP route. The hub also adds lower-input food gathering, swarm fishing, a rotating merchant, and the rare Tavia's fishing rod acquisition path. · Merchant stock and currency practicality should be launch-checked, but hub access itself is a major Kandarin unlock. · Unlocks: Fishing Frenzy at 94+, Sailfish at 97+, Swarm fishing, Travelling Merchant access, Deep Sea Fishing boosts and events",
       "requirements": [
@@ -200,6 +218,8 @@
       "regionHints": [
         "kandarin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Farming reward shop and elite outfit",
       "detail": "The master farmer outfit is an important permanent Farming progression target. Its animal-farming benefits include increased beans when selling animals. · No-trading increases the value of bean-shop and self-sufficient farm unlocks. · Unlocks: Master farmer outfit blueprint, Animal, crop and tree farmer outfit progression, Player-Owned Farm reward-shop upgrades",
       "requirements": [
@@ -223,6 +243,8 @@
       "regionHints": [
         "desert"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Thieving activity and XP outfit",
       "detail": "Do not import old black-ibis drop-rate tables into League planning. The permanent outfit unlock is what matters here. · Treat this as Desert skilling progression even if a faster raw-XP Thieving method is available elsewhere. · Unlocks: Black ibis outfit, Up to 5% Thieving XP with the full set",
       "requirements": [],
@@ -242,6 +264,8 @@
       "regionHints": [
         "desert"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Herblore flask infrastructure",
       "detail": "Red sandstone at Oo'glog and Sophanem feeds potion-flask production. The 2026 DailyScape overhaul removed the old daily cap, and July 2026 reduced rock hitpoints. · This is the Desert half of high-end six-dose flask infrastructure; crystal flasks for combination potions are a separate Tirannwn unlock. · Unlocks: Robust glass, Potion flasks",
       "requirements": [],
@@ -261,6 +285,8 @@
       "regionHints": [
         "morytania"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Construction and Woodcutting outfit progression",
       "detail": "Temple Trekking is worth surfacing as permanent skilling progression, not just a minigame, because it owns two useful XP outfits. · Resolve normal quest access through the Equilibrium auto-quest overlay before treating the trek itself as manually gated. · Unlocks: Constructor's outfit, up to 6% Construction XP, Lumberjack outfit, 5% Woodcutting XP",
       "requirements": [],
@@ -280,6 +306,8 @@
       "regionHints": [
         "fremennik"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Mining outfit and pickaxe progression",
       "detail": "Keldagrim's Lava Flow Mine is the normal-game source for the golden mining suit and the Imcando-pickaxe branch of late-game Mining tool progression. · Keldagrim is treated as Fremennik-region geography. Resolve quest auto-completion separately. · Unlocks: Golden mining suit, 6% Mining XP with the full set, Gilded dragon pickaxe step, Imcando pickaxe fragments from lava geysers",
       "requirements": [],
@@ -299,6 +327,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Woodcutting tool progression",
       "detail": "After tier 3 Grove is built, Imcando-hatchet fragments can appear in bird nests from Woodcutting. This makes Fort progression a permanent Woodcutting tool gate. · The repo currently maps Fort Forinthry to Misthalin using Catalyst precedent. Keep that mapping provisional until Equilibrium confirms it. · Unlocks: Imcando hatchet fragment nests from Woodcutting, One guaranteed first fragment from Oak, Bad-luck mitigation on fragment nests · Region status: historical_fort_working_taxonomy",
       "requirements": [
@@ -320,6 +350,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "low-input Fishing unlock",
       "detail": "The spot does not move, making ghostly soles a useful low-input City of Um route and a practical place to level augmented fishing gear. · City of Um is currently a historical Misthalin working mapping, not an Equilibrium-specific locality confirmation. · Unlocks: Stationary ghostly sole fishing spot, 130 base Fishing XP per catch · Region status: historical_city_of_um_working_taxonomy",
       "requirements": [
@@ -341,6 +373,8 @@
       "regionHints": [
         "forinthry"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Dungeoneering reward shop and utility unlocks",
       "detail": "Equilibrium explicitly places Daemonheim in Forinthry, so Dungeoneering reward-store items are a real regional dependency in a no-trading planner. · Do not assume reward-token costs are altered unless Equilibrium publishes a multiplier or passive. · Unlocks: Bonecrusher, Charming imp, Herbicide, Gem bag and upgraded gem bag, Smithing autoheater upgrades, Scroll and utility rewards used by skilling chains · Region status: confirmed_official",
       "requirements": [],
@@ -360,6 +394,8 @@
       "regionHints": [
         "asgarnia"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Herblore reward shop and outfit progression",
       "detail": "For self-sufficient Herblore, the factory set is more important than a plain XP outfit because three pieces change potion output. A common optimized setup mixes factory pieces with botanist pieces rather than wearing one full set for every potion. · Taverley is Asgarnia in the current region model. Do not assume Treasure Hunter acquisition for the botanist set. · Unlocks: Botanist's outfit, up to 6% Herblore XP, Modified botanist's mask, Factory outfit, Three-piece factory effect: 10% chance to create a 4-dose potion instead of a 3-dose potion, Five-piece factory effect for unfinished-potion Herblore XP",
       "requirements": [],
@@ -379,6 +415,8 @@
       "regionHints": [
         "kandarin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Cooking activity and XP outfit",
       "detail": "The gameplay acquisition route is hard Gnome Restaurant deliveries. This is a persistent Kandarin Cooking unlock even when a different region provides the fastest raw Cooking method. · Do not use Treasure Hunter as the acquisition path. · Unlocks: Sous chef's outfit from hard deliveries, Up to 6% Cooking XP with the full outfit",
       "requirements": [],
@@ -398,6 +436,8 @@
       "regionHints": [
         "morytania"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Prayer activity and XP outfit",
       "detail": "The first age outfit is a permanent gameplay reward from the Ectofuntus route. Its XP boost does not apply while worshipping at the Ectofuntus itself, so the value is for Prayer training elsewhere. · Resolve normal Ghosts Ahoy access through the Equilibrium quest auto-completion overlay. · Unlocks: First age outfit purchased for ecto-tokens, Up to 6% Prayer XP with the full outfit, Modified first age tiara after the base set",
       "requirements": [],
@@ -417,6 +457,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Archaeology shop, outfits, storage, precision and tool progression",
       "detail": "This is one of the strongest starting-region skilling infrastructure unlocks. Archaeology qualifications convert chronotes into permanent tool, storage, outfit and quality-of-life upgrades rather than only consumables. · The Archaeology Guild is in the starting Misthalin/Varrock bucket. Qualification and level requirements still apply unless a League rule overrides them. · Unlocks: Archaeologist's outfit, up to 6% Archaeology XP, Master archaeologist's outfit at Guildmaster qualification, Master outfit: +7% excavation success, +7% screening success and +7% mattock base precision, Faster artefact restoration and soil screening, Longer Archaeology consumable durations, Unlimited dig-site and collector teleports from the master outfit, Material storage upgrades, Mattock precision upgrades, Auto-screener blueprint, Energised meteorite shard for the Mattock of Time and Space",
       "requirements": [],
@@ -436,6 +478,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Necromancy skilling outfit and ritual support",
       "detail": "The outfit gained a permanent non-MTX acquisition route in July 2025. League data should use Austin's gameplay shop, not the old Grim Harvest source. · City of Um remains a historical Misthalin working mapping until Equilibrium publishes its own locality rule. · Unlocks: Ritualist's outfit purchased for ectoplasm, Up to 6% Necromancy XP with the full outfit, Modified ritualist's mask with a chance to save ritual focus objects · Region status: historical_city_of_um_working_taxonomy",
       "requirements": [
@@ -458,6 +502,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Runecrafting outfit and reward shop",
       "detail": "Misthalin provides a direct self-sufficient route to the master runecrafter set through Runespan. The outfit is not a hard Misthalin exclusive because Great Orb Project tokens and thaler are alternate acquisition currencies. · Surface Misthalin as an acquisition route without turning it into a mandatory region dependency. · Unlocks: Master runecrafter robes for Runespan points, 5% Runecrafting XP with the full set, Runespan utility rewards and unstable essence · Region status: misthalin_accessible_not_region_exclusive",
       "requirements": [],
@@ -477,6 +523,8 @@
       "regionHints": [
         "desert"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Farming permanent unlock shop and XP outfit",
       "detail": "Garden of Kharid is a major Desert skilling shop because its favour purchases permanent Farming and incense upgrades rather than only consumables. The regular farmer outfit also supplies the XP bonus inherited by higher-tier Farming outfit setups once owned. · Keep these unlocks separate from Kandarin Player-Owned Farm and master-farmer blueprint progression. The two regions provide different parts of Farming progression. · Unlocks: Farmer's outfit pieces, up to 6% Farming XP, Bountiful Harvest, Speedy Growth, Quick-cense, Everlasting Incense, Buckets All the Way Down, Supreme growth potions and patch bombs",
       "requirements": [],
@@ -496,6 +544,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "augmentable Fishing tool",
       "detail": "A major permanent Fishing tool unlock even when Fishing Frenzy or another activity is better raw XP. · Effects: 5% more likely to catch fish at compatible fishing spots, Can be augmented for Invention perks",
       "requirements": [
@@ -518,6 +568,8 @@
       "regionHints": [
         "kandarin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "rare hero Fishing tool",
       "detail": "Record as a rare ceiling item, not baseline Kandarin power. A player cannot plan around obtaining it quickly. · Rarity: hero_item_very_rare · Effects: 10% increased fishing success rate when compatible, Can trigger all three Deep Sea Fishing boosts, Can be augmented",
       "requirements": [
@@ -539,6 +591,8 @@
       "regionHints": [
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Thieving skilling outfit",
       "detail": "Prifddinas/Tirannwn is the useful regional value. Resolve the quest through Equilibrium auto-completion before treating it as a manual requirement. · Effects: 25% chance to avoid being stunned and damaged while pickpocketing, 25% chance to avoid snake bites in Pyramid Plunder, Can inherit black ibis experience benefits once those are owned",
       "requirements": [
@@ -560,6 +614,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Woodcutting and Firemaking skilling off-hand",
       "detail": "Use the canonical item name. The existing loose major-upgrade row used a non-item placeholder name for this reward. · Region status: historical_senntisten_working_taxonomy",
       "requirements": [],
@@ -579,6 +635,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Mining skilling off-hand",
       "detail": "Use the canonical item name. The critical-strike bonuses remain useful outside core ores; only the arrow-tip effect is core-ore specific. · Effects: +10% Mining critical strike chance, +35% Mining critical strike damage, Chance for deathspore arrow tips from core ores · Region status: historical_senntisten_working_taxonomy",
       "requirements": [],
@@ -598,6 +656,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Divination skilling off-hand",
       "detail": "City of Um/Gate is currently mapped to Misthalin by historical League precedent pending Equilibrium confirmation. · Effects: Gather memories from wisps up to 7 tiles away, Supports ranged, low-movement Divination gathering · Region status: historical_city_of_um_working_taxonomy",
       "requirements": [],
@@ -617,6 +677,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Runecrafting skilling off-hand",
       "detail": "Use the post-29-September-2025 effect, not the original release tooltip. Do not assume it is always the best XP/hour route; altar sequence and Soul altar use matter. · Effects: Attunes to eligible Runecrafting altars, At 1-49 energy, attuned-altar crafting gains 200% additional Runecrafting XP, Every 5 energy gives a 50% rune multiplier at the attuned altar, Every 7 energy allows choosing an altar, Every 10 energy grants an attuned-altar teleport, Every 25 energy guarantees 1-4 magical thread, At 50 energy, attuned-altar crafting gains 2,400% additional Runecrafting XP and resets energy · Region status: historical_city_of_um_working_taxonomy",
       "requirements": [
@@ -638,6 +700,8 @@
       "regionHints": [
         "anachronia"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Smithing and Firemaking skilling off-hand",
       "detail": "Track the unlock, but do not label it BIS for pure XP. Its situational effects can lose to augmented off-hands and other setups.",
       "requirements": [
@@ -660,6 +724,8 @@
       "regionHints": [
         "fremennik"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "augmentable Mining tool progression",
       "detail": "Do not use historical enchanted-Imcando bonus-XP data. The enchanted variant was removed in 2019.",
       "requirements": [
@@ -684,6 +750,8 @@
         "fremennik",
         "tirannwn"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "cross-region augmentable Mining tool",
       "detail": "Treat Fremennik plus Tirannwn as the normal self-sufficient chain unless Equilibrium adds alternate tool sources. · Region pressure: Imcando pickaxe progression comes from the Keldagrim/Lava Flow Mine chain., Crystal pickaxe progression comes from Prifddinas crystal-tool infrastructure.",
       "requirements": [
@@ -708,6 +776,8 @@
       "regionHints": [
         "misthalin"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "augmentable Woodcutting tool progression",
       "detail": "Use the Fort's current working Misthalin taxonomy until Equilibrium publishes a different boundary. · Region status: historical_fort_working_taxonomy",
       "requirements": [
@@ -731,6 +801,8 @@
         "forinthry",
         "anachronia"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Hunter skilling off-hand cross-region chain",
       "detail": "Do not label this Anachronia-only. The Daemonheim journal gate is a real Forinthry dependency in the normal acquisition path. · Region pressure: Forinthry owns Daemonheim and the Warped Depths journal gate., Pieces then come from Anachronia activities including Big Game Hunter, Rex Matriarchs, vile blooms and the Agility Course.",
       "requirements": [
@@ -755,6 +827,8 @@
         "forinthry",
         "anachronia"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Archaeology skilling off-hand cross-region chain",
       "detail": "Surface both Forinthry and Anachronia in planner dependencies. · Effects: +5% excavation success rate, +5% mattock base precision, 10% chance for an additional material while excavating, 5% chance for Chronal Focus at 100% sprite focus · Region pressure: Brush pieces come from the Warped Depths of the Daemonheim Dig Site., The damaged brush is shown to Sharrigan outside Anachronia Base Camp to learn restoration.",
       "requirements": [],
@@ -777,6 +851,8 @@
         "tirannwn",
         "morytania"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "Crafting and Construction skilling off-hand cross-region chain",
       "detail": "Do not hard-require every listed region. Crystal sandstone has an alternate Ports source and quest auto-completion can change the mould route, but region choices strongly affect self-sufficient acquisition. · Effects: Stores gems like the upgraded gem bag, Always applies the Ithell Voice of Seren harp benefit while playing harps, 5% chance to duplicate glassblown items and urns, including potion and crystal flasks, Scroll of proficiency chance multiplied by 1.25, Crafting/Construction buff can stack to 5% after proficiency procs",
       "requirements": [
@@ -806,6 +882,8 @@
         "asgarnia",
         "fremennik"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "tier-90 augmentable Woodcutting tool cross-region chain",
       "detail": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks. · Region pressure: Crystal-hatchet progression is tied to Prifddinas crystal tools and a dragon hatchet base., Dragon hatchets have a direct Dagannoth Kings source in the Fremennik region., Imcando-hatchet fragments come from the tier-3 Woodcutter's Grove, currently mapped to Misthalin by historical League precedent., The Shard of the Lumberjack is purchased from Wilfred north of Falador in Asgarnia., Normal-game quest and dragon-forge requirements can add further access pressure and must be resolved through the Equilibrium quest overlay.",
       "requirements": [
@@ -834,6 +912,8 @@
         "asgarnia",
         "fremennik"
       ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
       "category": "tier-100 augmentable Woodcutting tool follow-on chain",
       "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known. · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement. · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier",
       "requirements": [

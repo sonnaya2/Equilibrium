@@ -23,8 +23,25 @@ function write(path, value) {
 function mergeAddition(target, addition) {
   if (typeof addition?.id !== "string" || !addition.id) throw new Error("Progression enrichment addition is missing id");
   const index = target.findIndex((row) => row.id === addition.id);
-  if (index < 0) target.push(addition);
-  else target[index] = { ...addition, ...target[index] };
+  if (index < 0) {
+    target.push(addition);
+    return;
+  }
+  const existing = target[index];
+  const merged = { ...addition, ...existing };
+  // Overlays are additive, and they are applied in filename order. On a scalar
+  // the first overlay to describe a row wins, which is fine. On a list it was
+  // not: a new overlay that happened to sort earlier and carried a shorter
+  // version of a list silently dropped what a later overlay knew. That is how
+  // rum-deal:holy-wrench lost "Rum Deal for the Holy wrench" and started
+  // failing its audit — the record was right, the merge threw half of it away.
+  for (const [key, value] of Object.entries(addition)) {
+    if (!Array.isArray(value) || !Array.isArray(existing[key])) continue;
+    const seen = new Map();
+    for (const entry of [...existing[key], ...value]) seen.set(JSON.stringify(entry), entry);
+    merged[key] = [...seen.values()];
+  }
+  target[index] = merged;
 }
 
 function applyEnrichment(progressionUnlocks, enrichment, sourceName) {

@@ -30,12 +30,12 @@
   },
   "activity_additions": [
     {
-      "id": "asgarnia:equipment-dissolver",
+      "id": "invention:equipment-dissolver",
       "name": "Equipment dissolver (permanent Invention blueprint)",
       "category": "Invention production infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench discovery/manufacture (Invention Guild / multi-city workbenches)",
       "requirements": [
@@ -60,7 +60,7 @@
         "https://runescape.wiki/w/Augmentation"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for blueprint discovery geography. Pair with equipment siphon and gizmo shells for the full perk-recovery ladder.",
+      "league_treatment": "Pair with equipment siphon and gizmo shells for the full perk-recovery ladder. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -71,12 +71,12 @@
       ]
     },
     {
-      "id": "asgarnia:equipment-siphon",
+      "id": "invention:equipment-siphon",
       "name": "Equipment siphon (item XP → Invention XP loop)",
       "category": "Invention production infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench discovery/manufacture after equipment dissolver",
       "requirements": [
@@ -104,7 +104,7 @@
         "https://runescape.wiki/w/Crystal_tool_siphon"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Score siphon sustain with charge pack + augmentor + divine charge craft — not as a standalone training method row.",
+      "league_treatment": "Score siphon sustain with charge pack + augmentor + divine charge craft — not as a standalone training method row. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:equipment-dissolver",
@@ -117,12 +117,12 @@
       ]
     },
     {
-      "id": "asgarnia:mechanised-siphon",
+      "id": "invention:mechanised-siphon",
       "name": "Mechanised siphon (auto equipment/crystal tool siphon)",
       "category": "Invention production infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench manufacture; worn in pocket slot or carried",
       "requirements": [
@@ -149,7 +149,7 @@
         "https://runescape.wiki/w/Crystal_tool_siphon"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Prefer over manual siphon when scoring late Invention AFK tool training.",
+      "league_treatment": "Prefer over manual siphon when scoring late Invention AFK tool training. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:equipment-siphon",
@@ -164,9 +164,16 @@
       "name": "Invention Guild generators (simple / large / jumbo)",
       "category": "Invention Guild machine infrastructure residual",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["misthalin"],
+      "region_hints": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
       "location": "Invention Guild basement generator hotspot (cannot be removed; powers all machine hotspots)",
       "requirements": [
         "60 Invention: Simple generator (100 power allotment; 125 with Fort Forinthry tier-3 Workshop)",
@@ -211,12 +218,12 @@
       ]
     },
     {
-      "id": "asgarnia:junk-chance-reduction",
+      "id": "invention:junk-chance-reduction",
       "name": "Junk chance reduction research (ranks 1–9)",
       "category": "Invention permanent research infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Invention research interface (account-permanent ranks; Guild/workbench taxonomy)",
       "requirements": [
@@ -242,7 +249,7 @@
         "https://runescape.wiki/w/Research"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Score as permanent material-economy power when ranking Invention self-sufficiency.",
+      "league_treatment": "Score as permanent material-economy power when ranking Invention self-sufficiency. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -253,13 +260,15 @@
       ]
     },
     {
-      "id": "asgarnia:invention-skilling-tools",
+      "id": "invention:invention-skilling-tools",
       "name": "Invention skilling tools (hammer-tron / pyro-matic / fishing rod-o-matic)",
       "category": "Invention production infrastructure",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["tirannwn"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "tirannwn"
+      ],
       "location": "Inventor's workbench discovery/manufacture at 22 Invention",
       "requirements": [
         "22 Invention to discover Fishing rod-o-matic, Hammer-tron, and Pyro-matic blueprints",
@@ -287,7 +296,7 @@
         "https://runescape.wiki/w/Charge_pack"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Prefer these as default no-trade tool-perk chassis until crystal/Imcando paths are scored.",
+      "league_treatment": "Prefer these as default no-trade tool-perk chassis until crystal/Imcando paths are scored. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-gizmo-shells",
@@ -300,13 +309,24 @@
       ]
     },
     {
-      "id": "asgarnia:ancient-components-discovery",
+      "id": "invention:ancient-components-discovery",
       "name": "Ancient components discovery (Classic / Historic / Vintage / Timeworn)",
       "category": "Ancient Invention component economy residual",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["misthalin", "desert", "kandarin", "fremennik", "morytania", "anachronia", "tirannwn", "forinthry"],
+      "region_hint": "global",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "misthalin",
+        "desert",
+        "kandarin",
+        "fremennik",
+        "morytania",
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
       "location": "Inventor's workbench discovery; components from disassembling restored Archaeology artefacts",
       "requirements": [
         "85 Invention to discover Classic and Historic components",
@@ -334,7 +354,7 @@
         "https://runescape.wiki/w/Timeworn_components"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for discovery. Score Archaeology dig access as optional multi-region pressure for self-supply volume.",
+      "league_treatment": "Score Archaeology dig access as optional multi-region pressure for self-supply volume. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:ancient-invention-blueprints",
@@ -347,12 +367,12 @@
       ]
     },
     {
-      "id": "asgarnia:ancient-tools-enhanced",
+      "id": "invention:ancient-tools-enhanced",
       "name": "Ancient enhanced tools (enhanced hammer-tron / pyro-matic / rod-o-matic)",
       "category": "Ancient Invention production residual",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench after 'Ancient tools' blueprint (Howl / GE tradeable path)",
       "requirements": [
@@ -379,7 +399,7 @@
         "https://runescape.wiki/w/%27Ancient_tools%27_blueprint"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for self-sufficient blueprint unlock. Prefer extreme invention residual when under level for 93 discovery.",
+      "league_treatment": "Prefer extreme invention residual when under level for 93 discovery. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:ancient-invention-blueprints",
@@ -391,12 +411,12 @@
       ]
     },
     {
-      "id": "asgarnia:xp-capacitor-5000",
+      "id": "invention:xp-capacitor-5000",
       "name": "XP Capacitor 5000 (Ancient Invention item-XP bank)",
       "category": "Ancient Invention production residual",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench after 'XP Capacitor' blueprint",
       "requirements": [
@@ -423,7 +443,7 @@
         "https://runescape.wiki/w/Equipment_level"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. In no-trade modes treat charged state as self-use logistics only.",
+      "league_treatment": "In no-trade modes treat charged state as self-use logistics only. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:ancient-invention-blueprints",
@@ -435,12 +455,12 @@
       ]
     },
     {
-      "id": "asgarnia:gizmo-dissolver",
+      "id": "invention:gizmo-dissolver",
       "name": "Gizmo dissolver (permanent perk-reset blueprint)",
       "category": "Invention gizmo economy permanent",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench discovery/manufacture",
       "requirements": [
@@ -466,7 +486,7 @@
         "https://runescape.wiki/w/Gizmo"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Prefer separator later for expensive perk sets; dissolver is the cheap early reset.",
+      "league_treatment": "Prefer separator later for expensive perk sets; dissolver is the cheap early reset. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-gizmo-shells",
@@ -478,12 +498,12 @@
       ]
     },
     {
-      "id": "asgarnia:equipment-separator",
+      "id": "invention:equipment-separator",
       "name": "Equipment separator (recover gizmos intact)",
       "category": "Invention gizmo economy permanent",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench discovery/manufacture",
       "requirements": [
@@ -509,7 +529,7 @@
         "https://runescape.wiki/w/Gizmo"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Pair with extreme invention when boosting to 115 discovery.",
+      "league_treatment": "Pair with extreme invention when boosting to 115 discovery. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:gizmo-dissolver",
@@ -521,13 +541,19 @@
       ]
     },
     {
-      "id": "asgarnia:empty-divine-charge",
+      "id": "invention:empty-divine-charge",
       "name": "Empty divine charge + Divine-o-matic manufacture residual",
       "category": "Invention production infrastructure residual",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "kandarin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["kandarin", "fremennik", "desert"],
+      "region_hint": "global",
+      "region_hints": [
+        "kandarin"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "kandarin",
+        "fremennik",
+        "desert"
+      ],
       "location": "Inventor's workbench — shared blueprint 'Divine-o-matic vacuum and empty Divine charge' at 101 Invention",
       "requirements": [
         "101 Invention to discover the shared Divine-o-matic vacuum + empty divine charge blueprint (boostable)",
@@ -554,7 +580,7 @@
         "https://runescape.wiki/w/Divine_charge"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for manufacture. Keep Kandarin as optional use-site pressure via existing thin id.",
+      "league_treatment": "Keep Kandarin as optional use-site pressure via existing thin id. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "kandarin:divine-o-matic-vacuum",
@@ -570,19 +596,20 @@
   "equipment_additions": [],
   "skipped_present": [
     {
-      "id": "asgarnia:divine-charge-crafting",
-      "reason": "Already first-class weave loop; empty-charge residual links without re-emit"
+      "id": "invention:divine-charge-crafting",
+      "reason": "Already first-class weave loop; empty-charge residual links without re-emit",
+      "required_regions": []
     },
     {
-      "id": "asgarnia:augmentor",
+      "id": "invention:augmentor",
       "reason": "Already first-class"
     },
     {
-      "id": "asgarnia:junk-refiner",
+      "id": "invention:junk-refiner",
       "reason": "Already first-class refined-component path"
     },
     {
-      "id": "asgarnia:charge-pack-infrastructure",
+      "id": "invention:charge-pack-infrastructure",
       "reason": "Already first-class capacity/drain research; not thin enough to re-emit"
     },
     {
@@ -610,24 +637,32 @@
       "reason": "Named machine already first-class — skip"
     },
     {
-      "id": "asgarnia:ancient-invention-blueprints",
-      "reason": "Umbrella present; named residuals (tools/components/XP capacitor) added instead"
+      "id": "kandarin:ancient-invention-blueprints",
+      "reason": "Umbrella present; named residuals (tools/components/XP capacitor) added instead",
+      "required_regions": [
+        "kandarin"
+      ]
     },
     {
-      "id": "asgarnia:ancient-gizmo-shells",
-      "reason": "Already first-class"
+      "id": "invention:ancient-gizmo-shells",
+      "reason": "Already first-class",
+      "required_regions": []
     },
     {
-      "id": "asgarnia:invention-gizmo-shells",
+      "id": "invention:invention-gizmo-shells",
       "reason": "Already first-class; economy residual is dissolver/separator/tools"
     },
     {
-      "id": "asgarnia:extreme-invention-boost-path",
-      "reason": "Already first-class with supply combo"
+      "id": "kandarin:extreme-invention-boost-path",
+      "reason": "Already first-class with supply combo",
+      "required_regions": [
+        "kandarin"
+      ]
     },
     {
-      "id": "asgarnia:invention-skilling-perk-ladder",
-      "reason": "Perk equipment-state ladder already first-class; junk-chance research is the account research residual"
+      "id": "invention:invention-skilling-perk-ladder",
+      "reason": "Perk equipment-state ladder already first-class; junk-chance research is the account research residual",
+      "required_regions": []
     },
     {
       "id": "kandarin:divine-o-matic-vacuum",

@@ -119,7 +119,7 @@
         "https://runescape.wiki/w/Equilibrium_League/Areas/Asgarnia"
       ],
       "confidence": "confirmed_wiki_plus_official_region_example",
-      "league_treatment": "Taverley / Rogues' Den is hard Asgarnia. Prefer permanent outfits over XP lamps for ironman-style League planning."
+      "league_treatment": "Taverley / Rogues' Den is Prefer permanent outfits over XP lamps for ironman-style League planning. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:rogues-den",
@@ -168,7 +168,7 @@
         "https://runescape.wiki/w/Equilibrium_League/Areas/Asgarnia"
       ],
       "confidence": "confirmed_wiki_plus_official_region_example",
-      "league_treatment": "Hard Asgarnia. Boost rules still apply unless League overrides skill gates."
+      "league_treatment": "Boost rules still apply unless League overrides skill gates. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:mining-guild-resource-dungeon",
@@ -295,7 +295,7 @@
         "https://runescape.wiki/w/Hard_Falador_achievements"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Achievement diary unlocks may follow League quest/diary overrides."
+      "league_treatment": "Achievement diary unlocks may follow League quest/diary overrides. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:invention-guild",

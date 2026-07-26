@@ -172,7 +172,6 @@
       "region_hints": [
         "tirannwn",
         "misthalin",
-        "asgarnia",
         "fremennik"
       ],
       "requirements": [
@@ -195,7 +194,12 @@
         "https://runescape.wiki/w/Imcando_hatchet"
       ],
       "confidence": "confirmed_wiki_cross_region_chain",
-      "league_treatment": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks."
+      "league_treatment": "Do not assign the finished hatchet to one region. Its normal self-sufficient chain deliberately touches multiple region picks.",
+      "required_regions": [
+        "tirannwn",
+        "misthalin",
+        "fremennik"
+      ]
     },
     {
       "id": "cross-region:hatchet-of-bloom-and-blight",
@@ -204,7 +208,6 @@
       "region_hints": [
         "tirannwn",
         "misthalin",
-        "asgarnia",
         "fremennik"
       ],
       "requirements": [
@@ -225,7 +228,12 @@
         "https://runescape.wiki/w/Update:110_Woodcutting_%26_Fletching_%28%26_Firemaking%29_-_New_Skilling_Update"
       ],
       "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
-      "league_treatment": "Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement."
+      "league_treatment": "Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement.",
+      "required_regions": [
+        "tirannwn",
+        "misthalin",
+        "fremennik"
+      ]
     }
   ]
 }

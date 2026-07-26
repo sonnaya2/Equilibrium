@@ -878,13 +878,10 @@
       "category": "Archaeology monolith relic power",
       "region_hint": "kandarin",
       "region_hints": [
-        "kandarin",
-        "asgarnia",
-        "misthalin"
+        "kandarin"
       ],
       "required_regions": [
-        "kandarin",
-        "asgarnia"
+        "kandarin"
       ],
       "optional_pressure_regions": [
         "misthalin"

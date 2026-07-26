@@ -146,8 +146,15 @@ describe("combat data accessors", () => {
         expect(recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId)).toBe(true);
       }
     }
-    // Necro conjure slots map to records (engine specs via ENGINE_ID_BY_RECORD_ID).
-    expect(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")?.supported).toBe(true);
+    // Necro bar stays in the catalogue even when most slots are unsourced (abilityId null).
+    const necro = combatRevolutionBars.records.find((bar) => bar.id === "necromancy");
+    expect(necro).toBeTruthy();
+    // Supported only once necro bands beyond Volley are in the ability corpus.
+    if (necro?.supported) {
+      expect(necro.slots.every((s) => s.abilityId != null)).toBe(true);
+    } else {
+      expect(necro?.unsupportedReason).toBeTruthy();
+    }
   });
 
   it("prayer catalogue covers all three books with the codex overlay merged", () => {
@@ -158,6 +165,284 @@ describe("combat data accessors", () => {
     expect(ruination?.unlock?.type).toBe("drop");
     // Overlay merged into the catalogue row, not duplicated.
     expect(combatPrayers.records.filter((record) => record.name === "Ruination")).toHaveLength(1);
+  });
+});
+
+/** Golden BiS region tags — planner home from wiki League geography. */
+function regionsOf(id: string): string[] {
+  return combatEquipment.records.find((r) => r.id === id)?.unlock?.regions ?? [];
+}
+
+describe("equipment BiS region tags", () => {
+  const DRYGORE_IDS = [
+    "item:drygore-mace",
+    "item:drygore-rapier",
+    "item:drygore-longsword",
+    "item:off-hand-drygore-mace",
+    "item:off-hand-drygore-rapier",
+    "item:off-hand-drygore-longsword",
+  ] as const;
+
+  it.each(DRYGORE_IDS)("%s includes desert", (id) => {
+    expect(regionsOf(id), id).toContain("desert");
+  });
+
+  it.each([
+    "item:noxious-scythe",
+    "item:noxious-longbow",
+    "item:noxious-staff",
+  ] as const)("%s includes morytania", (id) => {
+    expect(regionsOf(id), id).toContain("morytania");
+  });
+
+  it.each(["item:seren-godbow", "item:zaros-godsword"] as const)("%s includes desert", (id) => {
+    expect(regionsOf(id), id).toContain("desert");
+  });
+
+  it("item:torva-full-helm includes asgarnia", () => {
+    expect(regionsOf("item:torva-full-helm")).toContain("asgarnia");
+  });
+
+  it("item:bandos-chestplate includes asgarnia", () => {
+    expect(regionsOf("item:bandos-chestplate")).toContain("asgarnia");
+  });
+
+  it("item:cinderbane-gloves includes tirannwn", () => {
+    expect(regionsOf("item:cinderbane-gloves")).toContain("tirannwn");
+  });
+
+  it("item:essence-of-finality includes asgarnia", () => {
+    expect(regionsOf("item:essence-of-finality")).toContain("asgarnia");
+  });
+
+  it("item:eldritch-crossbow includes forinthry", () => {
+    expect(regionsOf("item:eldritch-crossbow")).toContain("forinthry");
+  });
+
+  it("item:chaotic-rapier includes forinthry", () => {
+    expect(regionsOf("item:chaotic-rapier")).toContain("forinthry");
+  });
+
+  it("item:ascension-crossbow includes kandarin", () => {
+    expect(regionsOf("item:ascension-crossbow")).toContain("kandarin");
+  });
+
+  it("item:blightbound-crossbow includes tirannwn", () => {
+    expect(regionsOf("item:blightbound-crossbow")).toContain("tirannwn");
+  });
+
+  it("item:seismic-wand includes asgarnia", () => {
+    expect(regionsOf("item:seismic-wand")).toContain("asgarnia");
+  });
+
+  // Misthalin jewellery / necro BiS
+  it.each([
+    "item:luck-of-the-dwarves",
+    "item:reaper-necklace",
+    "item:amulet-of-souls",
+    "item:ring-of-death",
+    "item:deathguard-t90",
+    "item:skull-lantern-t90",
+    "item:jaws-of-the-abyss",
+    "item:max-cape",
+  ] as const)("%s includes misthalin", (id) => {
+    expect(regionsOf(id), id).toContain("misthalin");
+  });
+
+  // Illuminated god books — Citharede Abbey (Desert). User ruling: all illuminated books = Desert hard.
+  it.each(
+    combatEquipment.records
+      .filter((r) => r.id.startsWith("item:illuminated-book-"))
+      .map((r) => r.id),
+  )("%s is desert-only (illuminated books)", (id) => {
+    const regions = regionsOf(id);
+    expect(regions, id).toContain("desert");
+    expect(regions, id).not.toContain("misthalin");
+    expect(regions, id).not.toContain("fremennik");
+  });
+
+  // Hand cannon — Fremennik (not Forinthry / Daemonheim wilderness framing)
+  it("item:hand-cannon is fremennik (not forinthry)", () => {
+    const regions = regionsOf("item:hand-cannon");
+    expect(regions).toContain("fremennik");
+    expect(regions).not.toContain("forinthry");
+  });
+
+  // Havenhythe Apex hide (2026 BGH ranged tank)
+  it("item:apex-hide-body includes havenhythe", () => {
+    if (!equipmentIds.has("item:apex-hide-body")) return;
+    expect(regionsOf("item:apex-hide-body")).toContain("havenhythe");
+  });
+
+  // Masterwork ranged t100 armour (user MW multi-region)
+  it("item:masterwork-ranged-body multi-region MW ruling", () => {
+    if (!equipmentIds.has("item:masterwork-ranged-body")) return;
+    const regions = regionsOf("item:masterwork-ranged-body");
+    expect(regions).toEqual(expect.arrayContaining(["anachronia", "forinthry", "kandarin"]));
+  });
+
+  // Masterwork magic t100 — hard-owns Asgarnia + Desert among multi-region stamp
+  it("item:masterwork-magic-hat contains asgarnia and desert", () => {
+    if (!equipmentIds.has("item:masterwork-magic-hat")) return;
+    const regions = regionsOf("item:masterwork-magic-hat");
+    expect(regions).toEqual(expect.arrayContaining(["asgarnia", "desert"]));
+  });
+
+  // Stalker arrows — Forinthry (stalker dungeon / hexhunter ammo)
+  it("item:stalker-arrows includes forinthry", () => {
+    if (!equipmentIds.has("item:stalker-arrows")) return;
+    expect(regionsOf("item:stalker-arrows")).toContain("forinthry");
+  });
+
+  // Off-hand dragon claw — Misthalin (tormented demons / dclaw pair)
+  it("item:off-hand-dragon-claw includes misthalin", () => {
+    if (!equipmentIds.has("item:off-hand-dragon-claw")) return;
+    expect(regionsOf("item:off-hand-dragon-claw")).toContain("misthalin");
+  });
+
+  // Asgarnia
+  it("item:seasingers-hood includes asgarnia", () => {
+    expect(regionsOf("item:seasingers-hood")).toContain("asgarnia");
+  });
+
+  // Forinthry
+  it.each([
+    "item:ruinous-rapier",
+    "item:lava-whip",
+  ] as const)("%s includes forinthry", (id) => {
+    expect(regionsOf(id), id).toContain("forinthry");
+  });
+
+  // Dragon Rider amulet — One of a Kind / Varrock Museum (Misthalin), not Forinthry
+  it("item:dragon-rider-amulet includes misthalin", () => {
+    expect(regionsOf("item:dragon-rider-amulet")).toContain("misthalin");
+  });
+
+  // Kandarin
+  it("item:spear-of-annihilation includes kandarin", () => {
+    expect(regionsOf("item:spear-of-annihilation")).toContain("kandarin");
+  });
+
+  // Pass3 mid-tier densify + necro sets — only assert ids present in equipment.json
+  const equipmentIds = new Set(combatEquipment.records.map((r) => r.id));
+  const PASS3_REGION_PINS: Array<[string, string]> = [
+    ["item:fire-cape", "karamja"],
+    ["item:berserker-ring", "fremennik"],
+    ["item:dragon-defender", "asgarnia"],
+    ["item:abyssal-whip", "morytania"],
+    ["item:dark-bow", "tirannwn"],
+    ["item:hand-cannon", "fremennik"],
+  ];
+  const pass3Cases: Array<[string, string]> = [
+    ...PASS3_REGION_PINS.filter(([id]) => equipmentIds.has(id)),
+    // deathwarden pieces if injected → misthalin
+    ...combatEquipment.records
+      .filter((r) => r.id.startsWith("item:deathwarden"))
+      .map((r): [string, string] => [r.id, "misthalin"]),
+    // any deathdealer piece → misthalin
+    ...combatEquipment.records
+      .filter((r) => r.id.startsWith("item:deathdealer"))
+      .map((r): [string, string] => [r.id, "misthalin"]),
+  ];
+  it.each(pass3Cases)("%s includes %s (pass3)", (id, region) => {
+    expect(regionsOf(id), id).toContain(region);
+  });
+
+  // Desert armour / gloves
+  it.each([
+    "item:achto-teralith-cuirass",
+    "item:teralith-cuirass",
+    "item:goliath-gloves",
+  ] as const)("%s includes desert", (id) => {
+    expect(regionsOf(id), id).toContain("desert");
+  });
+
+  // Pass5+6 golden BiS region pins — only assert ids present in equipment.json
+  const PASS5_6_REGION_PINS: Array<[string, string]> = [
+    ["item:razorback-gauntlets", "desert"],
+    ["item:illuminated-book-of-law", "desert"],
+    ["item:hand-cannon", "fremennik"],
+    ["item:staff-of-light", "fremennik"],
+    ["item:gemstone-helm", "karamja"],
+    ["item:strykebow", "forinthry"],
+    ["item:deathguard-t90", "misthalin"],
+    ["item:deathdealer-hood-t90", "misthalin"],
+  ];
+  const pass5_6Cases = PASS5_6_REGION_PINS.filter(([id]) => equipmentIds.has(id));
+  it.each(pass5_6Cases)("%s includes %s (pass5+6)", (id, region) => {
+    expect(regionsOf(id), id).toContain(region);
+  });
+
+  // Bare deathdealer t70 removed — craft base into t90, not loadout residual
+  it("has no bare deathdealer t70 residual (pass5+6)", () => {
+    const bareT70 = combatEquipment.records.filter(
+      (r) =>
+        r.id.startsWith("item:deathdealer") &&
+        (r.id.includes("-t70") || r.id.endsWith("-70") || /deathdealer-(hood|robe|gloves|boots|leggings)?$/.test(r.id)),
+    );
+    // Only t90 (or other retained tiers) should remain — no bare / t70 deathdealer rows
+    expect(
+      bareT70.map((r) => r.id),
+      "bare or t70 deathdealer should be removed",
+    ).toEqual([]);
+  });
+
+  // Pass6+7 golden BiS region pins — only assert ids present in equipment.json
+  // dracolich/elite-dracolich = Forinthry (Zemouregal & Vorkath); deathguard-t90 Misthalin ladder only;
+  // fire cape Karamja; occultist's ring Anachronia; RoV Forinthry; razorback/illuminated Desert; hand-cannon Fremennik.
+  const PASS6_7_REGION_PINS: Array<[string, string]> = [
+    ["item:dracolich-helm", "forinthry"],
+    ["item:dracolich-body", "forinthry"], // hauberk
+    ["item:dracolich-legs", "forinthry"],
+    ["item:dracolich-gloves", "forinthry"],
+    ["item:dracolich-boots", "forinthry"],
+    ["item:elite-dracolich-helm", "forinthry"],
+    ["item:elite-dracolich-body", "forinthry"], // elite hauberk
+    ["item:elite-dracolich-legs", "forinthry"],
+    ["item:elite-dracolich-gloves", "forinthry"],
+    ["item:elite-dracolich-boots", "forinthry"],
+    ["item:deathguard-t90", "misthalin"],
+    ["item:fire-cape", "karamja"],
+    ["item:occultists-ring", "anachronia"],
+    ["item:ring-of-vigour", "forinthry"],
+    ["item:razorback-gauntlets", "desert"],
+    ["item:illuminated-book-of-law", "desert"],
+    ["item:illuminated-book-of-war", "desert"],
+    ["item:illuminated-book-of-chaos", "desert"],
+    ["item:illuminated-book-of-wisdom", "desert"],
+    ["item:illuminated-book-of-balance", "desert"],
+    ["item:hand-cannon", "fremennik"],
+  ];
+  const pass6_7Cases = PASS6_7_REGION_PINS.filter(([id]) => equipmentIds.has(id));
+  it.each(pass6_7Cases)("%s includes %s (pass6+7)", (id, region) => {
+    expect(regionsOf(id), id).toContain(region);
+  });
+
+  // Death guard residual is t90-only (pass6 hygiene stripped base/t80)
+  it("deathguard ladder is misthalin t90 only — no base/t70/t80 residual (pass6+7)", () => {
+    const deathguard = combatEquipment.records.filter((r) => r.id.includes("deathguard"));
+    expect(
+      deathguard.map((r) => r.id).sort(),
+      "only deathguard-t90 should remain",
+    ).toEqual(equipmentIds.has("item:deathguard-t90") ? ["item:deathguard-t90"] : []);
+    for (const r of deathguard) {
+      expect(regionsOf(r.id), r.id).toContain("misthalin");
+      expect(regionsOf(r.id), r.id).not.toContain("forinthry");
+    }
+    expect(equipmentIds.has("item:deathguard")).toBe(false);
+    expect(equipmentIds.has("item:deathguard-t70")).toBe(false);
+    expect(equipmentIds.has("item:deathguard-t80")).toBe(false);
+  });
+
+  // Dracolich family hard-owns Forinthry (never re-stamp Misthalin)
+  it.each(
+    combatEquipment.records
+      .filter((r) => r.id.includes("dracolich"))
+      .map((r) => r.id),
+  )("%s is forinthry-only (pass6+7 dracolich)", (id) => {
+    const regions = regionsOf(id);
+    expect(regions, id).toContain("forinthry");
+    expect(regions, id).not.toContain("misthalin");
   });
 });
 

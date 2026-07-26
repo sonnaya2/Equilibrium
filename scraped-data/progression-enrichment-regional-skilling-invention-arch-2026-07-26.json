@@ -69,7 +69,7 @@
         "https://runescape.wiki/w/Machines"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia."
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:plank-maker-machine",
@@ -93,7 +93,7 @@
         "https://runescape.wiki/w/Machines"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Log supply may pull other regions."
+      "league_treatment": "Log supply may pull other regions. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:partial-potion-producer",
@@ -116,7 +116,7 @@
         "https://runescape.wiki/w/Machines"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia."
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "asgarnia:automatic-hide-tanner",
@@ -139,10 +139,10 @@
         "https://runescape.wiki/w/Machines"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia."
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
-      "id": "asgarnia:invention-gizmo-shells",
+      "id": "invention:invention-gizmo-shells",
       "name": "Gizmo shells (weapon / armour / tool + ancient)",
       "category": "Invention device permanent unlocks",
       "region_hint": "asgarnia",
@@ -158,7 +158,7 @@
         "Ancient weapon / armour / tool gizmo shells (9 slots) after Ancient gizmos blueprint",
         "Ancient shells enable higher perk ranks and ancient-only perks (Fortune, Relentless, Ruthless)"
       ],
-      "notes": "Shell discovery/manufacture is workbench Invention progression; natural hub is Invention Guild (Asgarnia). Ancient shells depend on Ancient Invention blueprints (asgarnia:ancient-invention-blueprints). Combat perk recipes stay in planner-expansions-invention-* — not duplicated here.",
+      "notes": "Shell discovery/manufacture is workbench Invention progression; craft is global at any inventor's workbench (Guild building remains Asgarnia place). Ancient shells depend on Ancient Invention blueprints (asgarnia:ancient-invention-blueprints). Combat perk recipes stay in planner-expansions-invention-* — not duplicated here.",
       "source_urls": [
         "https://runescape.wiki/w/Gizmo",
         "https://runescape.wiki/w/Weapon_gizmo_shell",
@@ -167,10 +167,10 @@
         "https://runescape.wiki/w/Ancient_Invention"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Asgarnia owns primary workbench/guild discovery geography. Ancient path pressures Stormguard / Asgarnia Armadylean Archaeology for no-trade blueprints."
+      "league_treatment": "Ancient path pressures Stormguard / Asgarnia Armadylean Archaeology for no-trade blueprints. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
-      "id": "asgarnia:charge-pack-infrastructure",
+      "id": "invention:charge-pack-infrastructure",
       "name": "Charge pack + maximum charge + charge drain reduction",
       "category": "Invention charge infrastructure",
       "region_hint": "asgarnia",
@@ -194,15 +194,15 @@
         "https://runescape.wiki/w/Charge_drain_reduction"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Tutorial/charge-pack research is Asgarnia Invention Guild geography. Energy supply is multi-region Divination."
+      "league_treatment": "Charge-pack research is global Invention progression. Energy supply is multi-region Divination."
     },
     {
-      "id": "asgarnia:ancient-invention-blueprints",
+      "id": "kandarin:ancient-invention-blueprints",
       "name": "Ancient Invention blueprints (Howl's workshop)",
       "category": "Ancient Invention permanent unlock path",
       "region_hint": "asgarnia",
       "region_hints": [
-        "asgarnia"
+        "kandarin"
       ],
       "requirements": [
         "95 Archaeology for Howl's Floating Workshop / drafting bench path (self-sufficient)",
@@ -217,7 +217,7 @@
         "Theoretical blueprints path for Experimental Aether Reactor and Subtle Blade after Back to the Drawing Board research",
         "Ancient component discovery (Classic/Historic 85, Vintage 94, Timeworn 103 Invention) for restored-artefact disassembly"
       ],
-      "notes": "Stormguard Citadel is Armadylean dig-site geography under Asgarnia in current Equilibrium mapping. Lowse at Armadyl's Tower is the Armadylean collector for related collections (Inspire Genius). Do not invent fragment counts beyond wiki fragment costs (200 for targeted untradeable blueprint; 150 random).",
+      "notes": "Stormguard Citadel is Armadylean dig-site geography under Kandarin in current Equilibrium mapping. Lowse at Armadyl's Tower is the Armadylean collector for related collections (Inspire Genius). Do not invent fragment counts beyond wiki fragment costs (200 for targeted untradeable blueprint; 150 random).",
       "source_urls": [
         "https://runescape.wiki/w/Ancient_Invention",
         "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
@@ -225,7 +225,10 @@
         "https://runescape.wiki/w/%27Ancient_gizmos%27_blueprint"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Asgarnia hard-gates Stormguard / Howl self-sufficient blueprint unlock. GE tradeable blueprints are not a League no-trade path."
+      "league_treatment": "Asgarnia hard-gates Stormguard / Howl self-sufficient blueprint unlock. GE tradeable blueprints are not a League no-trade path.",
+      "required_regions": [
+        "kandarin"
+      ]
     },
     {
       "id": "misthalin:guildmaster-qualification",
@@ -311,8 +314,7 @@
       "category": "Archaeology Invention device permanent unlock",
       "region_hint": "misthalin",
       "region_hints": [
-        "misthalin",
-        "asgarnia"
+        "misthalin"
       ],
       "requirements": [
         "Associate Archaeology qualification",
@@ -333,7 +335,7 @@
         "https://runescape.wiki/w/Auto-screener_v1.080_(blueprint)"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin owns blueprint purchase. Invention manufacture pressures Asgarnia workbench/guild. Charge pack is shared Invention infrastructure."
+      "league_treatment": "Misthalin owns blueprint purchase. Charge pack is shared Invention infrastructure. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only."
     },
     {
       "id": "misthalin:archaeology-research",
@@ -576,10 +578,10 @@
       "league_treatment": "Early ladder is Misthalin. Flag optional region_hints for special mattock bases rather than hard-requiring every region."
     },
     {
-      "id": "asgarnia:ancient-gizmo-shells",
+      "id": "invention:ancient-gizmo-shells",
       "name": "Ancient weapon / armour / tool gizmo shells",
       "category": "Ancient Invention equipment shells",
-      "region_hint": "asgarnia",
+      "region_hint": "global",
       "requirements": [
         "Ancient gizmos blueprint unlocked (85 Invention)",
         "Classic / Historic (and higher) ancient components discovered for full shell recipes",
@@ -598,7 +600,8 @@
         "https://runescape.wiki/w/Ancient_Invention"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Asgarnia manufacture hub; ancient components from multi-region restored artefacts."
+      "league_treatment": "Ancient gizmo shells craft at Invention workbench (global); ancient components from multi-region restored artefacts.",
+      "required_regions": []
     }
   ],
   "notes_on_existing_relics": {

@@ -3148,7 +3148,7 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "detail": "Distinct from elite sirenic: bow Rapid Fire crit infusion vs crossbow bolt-proc set. Prefer Vorkath scale path for single-region League planning. · Hard Misthalin for Vorkath scale path. Path B adds Asgarnia/Forinthry/Kandarin soft pressure only. · Effects: Primary difference vs base: Dracolich infusion crit chance 40% instead of 20%, Vorkath's scale path keeps the upgrade fully on the Vorkath farm; ancient-scale path shares elite-sirenic material geography · Unlocks: Elite Dracolich coif / hauberk / chaps / vambraces / boots (T92 ranged power), Elite Dracolich Remnant: stronger Rapid Fire adrenaline + 40% Dracolich infusion crit (vs 20% base) · Region pressure: Misthalin hard for base Dracolich + Vorkath's scale self-supply (preferred ironman path)., Asgarnia optional: Nex Pernix for praesulic essence (ranged) if using Path B., Forinthry / Kandarin optional: chaotic spikes + algarum thread shops / ancient-scale residual if Path B; Temple of Aminishi remains Asgarnia Arc packaging for primary Seiryu scales.",
+      "detail": "Distinct from elite sirenic: bow Rapid Fire crit infusion vs crossbow bolt-proc set. Prefer Vorkath scale path for single-region League planning. · Hard Misthalin for Vorkath scale path. Path B adds Asgarnia/Forinthry/Kandarin soft pressure only. · Effects: Primary difference vs base: Dracolich infusion crit chance 40% instead of 20%, Vorkath's scale path keeps the upgrade fully on the Vorkath farm; ancient-scale path shares elite-sirenic material geography · Unlocks: Elite Dracolich coif / hauberk / chaps / vambraces / boots (T92 ranged power), Elite Dracolich Remnant: stronger Rapid Fire adrenaline + 40% Dracolich infusion crit (vs 20% base) · Region pressure: Misthalin hard for base Dracolich + Vorkath's scale self-supply (preferred ironman path)., Asgarnia optional: Nex Pernix for praesulic essence (ranged) if using Path B., Forinthry / Kandarin optional: chaotic spikes + algarum thread shops / ancient-scale residual if Path B; Temple of Aminishi remains Arc-external for primary Seiryu scales.",
       "requirements": [
         "92 Defence to wear; 92 Crafting to create",
         "Base Dracolich pieces (Vorkath chain — Misthalin)",
@@ -3165,24 +3165,23 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
     },
     {
-      "id": "karamja:gemstone-armour",
+      "id": "anachronia:gemstone-armour",
       "name": "Gemstone armour (T80 hybrid Enchanted touch)",
       "recordType": "equipment",
       "category": "mid-high hybrid armour residual / gemstone dragons",
       "regionHints": [
-        "karamja"
+        "anachronia"
       ],
       "requiredRegions": [
-        "karamja"
+        "anachronia"
       ],
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "detail": "Not endgame BiS vs T90/T92 power. Still a region-defining hybrid residual for Karamja planners and Enchanted-touch niche stacks. Do not re-emit skilling cavern access id. · Hard Karamja. Pair with Karamja gloves diary path for permanent ladder access. · Effects: Enchanted touch set bonus: proc enchanted bolt effects (dragonstone/onyx/hydrix) on melee/ranged/magic/necromancy attacks at 40%/70%/100% of base chance for 3/4/5 pieces, Disabled while any enchanted bolts (including bakriminel variants) are equipped on a crossbow, Niche hybrid power when multi-style bolt effects matter without carrying enchanted bolts · Unlocks: Gemstone helm (onyx dragons), hauberk (hydrix dragons), greaves (onyx dragons), gauntlets + boots (dragonstone dragons) · Region pressure: Karamja hard-owns Shilo gemstone cavern and Karamja gloves 3 access. Skilling already has karamja:gemstone-cavern for Mining/access — this row is the combat armour loot residual.",
+      "detail": "Not endgame BiS vs T90/T92 power. Region-defining hybrid residual for Anachronia planners and Enchanted-touch niche stacks. Former karamja:gemstone-armour id was wrong geography. · Hard Anachronia. Gemstone dragons on Anachronia, not Karamja. · Effects: Enchanted touch set bonus: proc enchanted bolt effects (dragonstone/onyx/hydrix) on melee/ranged/magic/necromancy attacks at 40%/70%/100% of base chance for 3/4/5 pieces, Disabled while any enchanted bolts (including bakriminel variants) are equipped on a crossbow, Niche hybrid power when multi-style bolt effects matter without carrying enchanted bolts · Unlocks: Gemstone helm (onyx dragons), hauberk (hydrix dragons), greaves (onyx dragons), gauntlets + boots (dragonstone dragons) · Region pressure: Hard Anachronia — gemstone dragons live on Anachronia (NOT Karamja/Shilo). Combat armour loot residual only.",
       "requirements": [
         "80 Defence to wear (all-class hybrid)",
-        "Karamja gloves 3+ for gemstone cavern ladder access (Shilo Village mine / Kelhar)",
-        "Dragonstone / onyx / hydrix dragons for armour piece drops (Slayer 95/98/101 or gem payment entry)",
+        "Anachronia gemstone dragons for armour piece drops (dragonstone / onyx / hydrix)",
         "Uncut dragonstone / uncut onyx / incomplete hydrix to charge Enchanted touch bolt effects"
       ],
       "confidence": "confirmed_wiki",
@@ -4331,7 +4330,7 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "detail": "Edge T82 residual. Not Waiko shop gear. Arc is packaged as Asgarnia. · Follow wiki League badge (Asgarnia) under current Asgarnia Arc packaging. · Effects: Halberd-range T82 spear; Corp spear classification retained, Midgame AoE/halberd bridge before DRL / MW spear / Tumeken's Light · Unlocks: Masuta's warspear (T82 2h spear/halberd range 2, stab) · Region pressure: Asgarnia per current wiki League badge on Masuta drops. Revisit if Equilibrium maps ED1 under Asgarnia Arc packaging.",
+      "detail": "Edge T82 residual. Not Waiko shop gear. If Arc becomes elective later, retag only the region field. · Follow wiki League badge (Asgarnia) until official Equilibrium ED1 rule lands. · Effects: Halberd-range T82 spear; Corp spear classification retained, Midgame AoE/halberd bridge before DRL / MW spear / Tumeken's Light · Unlocks: Masuta's warspear (T82 2h spear/halberd range 2, stab) · Region pressure: Asgarnia per current wiki League badge on Masuta drops. Revisit if Equilibrium maps ED1 to Arc/external.",
       "requirements": [
         "82 Attack to wield",
         "Masuta the Ascended in Temple of Aminishi (Elite Dungeon 1)",
@@ -4565,11 +4564,11 @@
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): fremennik + forinthry",
       "isRegionCombo": true,
-      "detail": "Cross-region residual. Prefer anachronia style boots when that region is unlocked; this ladder is the non-Anachronia T90 bridge. · Region combo Fremennik + Forinthry. Revisit if Equilibrium reassigns ED2/ED3 or rune dragons. · Region combo (all required): fremennik + forinthry · Effects: T90 power boots with prayer + style damage; degrade and revert to tradeable base when charge hits 0, Masterwork-boot-adjacent mid-end option when Anachronia enhanced style boots are unavailable, Still outclassed for pure DPS by enhanced laceration / fleeting / blast diffusion once Anachronia + Raksha are unlocked · Unlocks: Emberkeen boots (melee T90 from Steadfast + 2 steadfast scales), Hailfire boots (magic T90 from Ragefire + 2 ragefire glands), Flarefrost boots (ranged T90 from Glaiven + 2 glaiven wing-tips) · Region pressure: Fremennik + Forinthry both required for normal ironman self-supply (base glacor boots + ED/rune-dragon glands)., Temple of Aminishi steadfast-scale alternate is Asgarnia Arc packaging.",
+      "detail": "Cross-region residual. Prefer anachronia style boots when that region is unlocked; this ladder is the non-Anachronia T90 bridge. · Region combo Fremennik + Forinthry. Revisit if Equilibrium reassigns ED2/ED3 or rune dragons. · Region combo (all required): fremennik + forinthry · Effects: T90 power boots with prayer + style damage; degrade and revert to tradeable base when charge hits 0, Masterwork-boot-adjacent mid-end option when Anachronia enhanced style boots are unavailable, Still outclassed for pure DPS by enhanced laceration / fleeting / blast diffusion once Anachronia + Raksha are unlocked · Unlocks: Emberkeen boots (melee T90 from Steadfast + 2 steadfast scales), Hailfire boots (magic T90 from Ragefire + 2 ragefire glands), Flarefrost boots (ranged T90 from Glaiven + 2 glaiven wing-tips) · Region pressure: Fremennik + Forinthry both required for normal ironman self-supply (base glacor boots + ED/rune-dragon glands)., Temple of Aminishi steadfast-scale route stays unresolved Arc external — do not invent an elective for it.",
       "requirements": [
         "90 Defence to wear upgraded boots",
         "Fremennik: base Steadfast / Ragefire / Glaiven from glacors",
-        "Forinthry-side upgrade glands (primary self-supply): steadfast scales (rune dragons; Temple of Aminishi is Asgarnia Arc packaging alternate), ragefire glands (rune dragons / Shadow Reef ED3), glaiven wing-tips (Dragonkin Laboratory ED2 / rune dragons)",
+        "Forinthry-side upgrade glands (primary self-supply): steadfast scales (rune dragons; Temple of Aminishi is Arc-external alternate), ragefire glands (rune dragons / Shadow Reef ED3), glaiven wing-tips (Dragonkin Laboratory ED2 / rune dragons)",
         "Combine two matching glands/scales/wing-tips with the matching base boots"
       ],
       "confidence": "confirmed_current_wiki_cross_pressure",
@@ -5055,7 +5054,7 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "detail": "Support residual for the T90 glacor boot row. Not a worn BiS item itself. · Hard Forinthry support row. Pair with fremennik:glacor-tank-boots + cross-region:t90-glacor-upgraded-boots. · Effects: Primary non-ED1 gland source that makes cross-region:t90-glacor-upgraded-boots completable inside Equilibrium electives, ED2/ED3 alternate routes remain Forinthry-adjacent for wing-tips / glands · Unlocks: Planner-visible self-supply path for emberkeen / hailfire / flarefrost without ED1 Aminishi (Asgarnia Arc) · Region pressure: Forinthry hard for rune-dragon / ED gland self-supply when ED1 Aminishi is unavailable.",
+      "detail": "Support residual for the T90 glacor boot row. Not a worn BiS item itself. · Hard Forinthry support row. Pair with fremennik:glacor-tank-boots + cross-region:t90-glacor-upgraded-boots. · Effects: Primary non-Arc gland source that makes cross-region:t90-glacor-upgraded-boots completable inside Equilibrium electives, ED2/ED3 alternate routes remain Forinthry-adjacent for wing-tips / glands · Unlocks: Planner-visible self-supply path for emberkeen / hailfire / flarefrost without Arc Aminishi · Region pressure: Forinthry hard for rune-dragon / ED gland self-supply when Arc is unavailable.",
       "requirements": [
         "Access to rune dragons (Forinthry / Wilderness-edge dragon geography under current taxonomy)",
         "Collect steadfast scales, ragefire glands, and glaiven wing-tips as tertiary upgrades for glacor boots"

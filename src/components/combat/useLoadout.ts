@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
@@ -22,7 +23,6 @@ export const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
   "ring",
   "pocket",
   "ammo",
-  "aura",
 ] as const;
 
 const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
@@ -233,6 +233,39 @@ export function clearEquipment(loadout: Loadout): Loadout {
   return { ...loadout, equipmentSlots: {}, equipmentIds: [] };
 }
 
+/** Catalogue id still equippable: present and not unlock.type === "removed". */
+export function isKnownEquipmentId(id: string): boolean {
+  const rec = equipmentById(id);
+  return rec != null && rec.unlock?.type !== "removed";
+}
+
+/**
+ * Drop slotted ids / unlock pins that no longer exist in the combat equipment
+ * catalogue (removed after a corpus trim) or are unlock.type "removed"
+ * (retired live, e.g. 2026 combat auras). Inject `known` in tests; default
+ * uses isKnownEquipmentId. Orphans leave empty doll cells while still counting
+ * as equipped — prune on load/update so counts and localStorage stay honest.
+ */
+export function pruneUnknownEquipment(
+  loadout: Loadout,
+  known: (id: string) => boolean = isKnownEquipmentId,
+): Loadout {
+  const slots: Partial<Record<EquipmentSlot, string | null>> = {};
+  for (const slot of EQUIPMENT_SLOTS) {
+    const id = loadout.equipmentSlots?.[slot];
+    if (typeof id === "string" && id.length > 0 && known(id)) {
+      slots[slot] = id;
+    }
+  }
+  // Only original unlock pins — never convert a pruned slot orphan into a pin.
+  const unlocks = unlockOnlyIds(loadout).filter((id) => known(id));
+  return {
+    ...loadout,
+    equipmentSlots: slots,
+    equipmentIds: mergeEquipmentIds(slots, unlocks),
+  };
+}
+
 export function withStyleLevel(loadout: Loadout, level: number): Loadout {
   return { ...loadout, level, attackLevel: level, strengthLevel: level };
 }
@@ -353,7 +386,15 @@ export function useLoadout() {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(KEY);
-      if (stored) setLoadout(normalizeLoadout(JSON.parse(stored)));
+      if (!stored) return;
+      const cleaned = pruneUnknownEquipment(normalizeLoadout(JSON.parse(stored)));
+      setLoadout(cleaned);
+      // Persist prune so retired/orphan ids do not reappear every boot.
+      try {
+        window.localStorage.setItem(KEY, JSON.stringify(cleaned));
+      } catch {
+        // Storage full/blocked — in-memory prune still applies.
+      }
     } catch {
       // Corrupt storage falls back to defaults.
     }
@@ -365,11 +406,11 @@ export function useLoadout() {
         ? { ...next, level: next.strengthLevel }
         : { ...next, attackLevel: next.level, strengthLevel: next.level };
     const unlocks = unlockOnlyIds(withLevels);
-    const normalized: Loadout = {
+    const normalized = pruneUnknownEquipment({
       ...withLevels,
       equipmentSlots: withLevels.equipmentSlots ?? {},
       equipmentIds: mergeEquipmentIds(withLevels.equipmentSlots ?? {}, unlocks),
-    };
+    });
     setLoadout(normalized);
     try {
       window.localStorage.setItem(KEY, JSON.stringify(normalized));

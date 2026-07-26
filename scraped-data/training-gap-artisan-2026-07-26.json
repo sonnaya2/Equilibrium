@@ -191,6 +191,7 @@
       "method_region": "multi_region",
       "location": "Estate agents (e.g. Ithell/Prifddinas restock loop highly efficient); contracts buildable at assigned houses",
       "level_range": "40+ unlock; 60+ teak efficient; 70+ mahogany",
+      "xp_rate": "270,000–550,000 XP/h (teak to mahogany; outfit tier dependent)",
       "row_type": "training_method",
       "importance": "Best ironman AFK Construction: ~10k base XP/contract + furniture XP, lower plank burn than flatpacks. Teak contracts ~250k+ XP/h at 60+; mahogany can exceed ~625k XP/h with full plank-box upgrades.",
       "ironman_notes": [

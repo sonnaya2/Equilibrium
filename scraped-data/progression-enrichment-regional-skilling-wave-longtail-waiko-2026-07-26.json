@@ -35,9 +35,16 @@
       "name": "Waiko uncharted supplies permanent upgrades (cap + cost)",
       "category": "Arc uncharted-isles voyage economy permanent unlocks",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Impressing the Locals completed (Arc access)",
         "Waiko Reward Shop / Boni (rewards) on Waiko market",
@@ -76,9 +83,16 @@
       "name": "Waiko contracts-per-day permanent upgrades",
       "category": "Arc skilling contract throughput permanent unlocks",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Impressing the Locals / Arc access",
         "Sojobo (The Tengu) contracts on Waiko available",
@@ -101,7 +115,7 @@
         "https://runescape.wiki/w/Uncharted_Isles"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Pair with commodity sell upgrades for full chime economy.",
+      "league_treatment": "Pair with commodity sell upgrades for full chime economy. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:the-arc-waiko-shop",
@@ -114,9 +128,16 @@
       "name": "Waiko commodity sell permanent upgrades",
       "category": "Arc chime economy permanent merchant upgrades",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Impressing the Locals / Arc access",
         "Commodity sell price increase tiers 1–2: 8,000 chimes + 8 taijitu each (+10% then +20% of base sell price → 110% / 120%)",
@@ -152,8 +173,12 @@
       "name": "Waiko grill (permanent Arc Cooking station)",
       "category": "permanent Cooking production scenery",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Impressing the Locals / Arc access",
@@ -177,7 +202,7 @@
         "https://runescape.wiki/w/Arc_gumbo"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Pair with commodity sell upgrades for chime efficiency.",
+      "league_treatment": "Pair with commodity sell upgrades for chime efficiency. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:the-arc-waiko-shop",
@@ -191,8 +216,12 @@
       "name": "Whale's Maw campfire + deposit box permanent unlocks",
       "category": "Arc island skilling convenience permanent unlocks",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Impressing the Locals / Arc access; Whale's Maw travel",
@@ -215,7 +244,7 @@
         "https://runescape.wiki/w/Whale%27s_Maw"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:waiko-grill",
@@ -228,8 +257,12 @@
       "name": "Arc journal (permanent Arc travel tracker)",
       "category": "permanent Arc logistics and collection journal",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Impressing the Locals completed",
@@ -266,8 +299,12 @@
       "name": "Arc journal teletabs feature unlock",
       "category": "permanent Arc teleport storage unlock",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Arc journal owned (asgarnia:arc-journal)",
@@ -304,9 +341,17 @@
       "name": "Flag Fall + claimed Uncharted Isle permanence",
       "category": "permanent Uncharted Isles personal island unlock",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert", "kandarin"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert",
+        "kandarin"
+      ],
       "requirements": [
         "Impressing the Locals / Arc access",
         "Flag Fall miniquest: collect 5 driftwood and return to Boni for free claim-island flags thereafter",
@@ -330,7 +375,7 @@
         "https://runescape.wiki/w/Boni_(rewards)"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia. Kandarin DSF maps are optional claim quality pressure only.",
+      "league_treatment": "Kandarin DSF maps are optional claim quality pressure only. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:arc-skilling-access",
@@ -344,9 +389,16 @@
       "name": "Ports Reward Shop (Boni Waiko) permanent scrolls + trade-goods access",
       "category": "Arc Ports chime/taijitu permanent shop infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Impressing the Locals / Arc access; Boni Ports shop on Waiko market",
         "Memory-crushing + energy-gathering scrimshaw scrolls: 5,000 chimes + 5 taijitu each (80 Divination to unlock stock)",
@@ -388,8 +440,12 @@
       "name": "Sojobo Arc contracts hub (Waiko)",
       "category": "Arc skilling contract infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Impressing the Locals / Arc access",
@@ -412,7 +468,7 @@
         "https://runescape.wiki/w/Contract_contact"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:waiko-contracts-per-day",
@@ -428,9 +484,18 @@
       "name": "Crystal tool siphon blueprint (Waiko permanent)",
       "category": "Invention permanent blueprint unlock",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert", "tirannwn"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["desert", "tirannwn"],
+      "region_hints": [
+        "asgarnia",
+        "desert",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert",
+        "tirannwn"
+      ],
       "requirements": [
         "Impressing the Locals / Arc access; Boni Waiko Reward Shop",
         "5,000 chimes + 5 taijitu for the crystal tool siphon blueprint",
@@ -468,9 +533,18 @@
       "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
       "category": "permanent drop-cleaner upgrade unlock",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "forinthry", "desert"],
-      "required_regions": ["asgarnia", "forinthry"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "asgarnia",
+        "forinthry",
+        "desert"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Bonecrusher owned from Daemonheim Rewards (forinthry:bonecrusher; post-11-May-2026 remaster costs apply)",
         "Impressing the Locals / Arc access",

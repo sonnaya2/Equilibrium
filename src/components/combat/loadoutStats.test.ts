@@ -255,35 +255,6 @@ describe("loadoutStats", () => {
     }
   });
 
-  it("historical Berserker aura slot adds +10% melee damage and does not block crits", () => {
-    const withAura = loadoutStats({
-      ...base,
-      style: "melee",
-      critChance: 20,
-      equipmentSlots: { aura: "item:berserker-aura" },
-    });
-    const mod = withAura.globalModifiers.find((m) => m.id === "aura:berserker:damage");
-    expect(mod).toBeDefined();
-    expect(withAura.critChance).toBeCloseTo(0.2, 10);
-    expect(runPipeline({ damage: 1000 }, withAura.globalModifiers, { style: "melee" }).damage).toBe(
-      1100,
-    );
-    // Style gate: magic loadout with Berserker equipped does not apply the mult.
-    expect(runPipeline({ damage: 1000 }, withAura.globalModifiers, { style: "magic" }).damage).toBe(
-      1000,
-    );
-
-    const equilibriumAura = loadoutStats({
-      ...base,
-      critChance: 25,
-      equipmentSlots: { aura: "item:equilibrium-aura" },
-    });
-    expect(equilibriumAura.critChance).toBe(0);
-    expect(
-      runPipeline({ damage: 1000 }, equilibriumAura.globalModifiers, { style: "melee" }).damage,
-    ).toBe(1120);
-  });
-
   it("Vulnerability + style curse damage + overload accuracy boost apply when buffs present", () => {
     const turmoil = styleCurseById("turmoil")!;
     const loadout: Loadout = {

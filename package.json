@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/sync-training-gaps.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs",
+    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/apply-invention-global-regions.mjs && node scripts/sync-training-gaps.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs && node scripts/stamp-equipment-regions.mjs && node scripts/fix-aura-regions-2026.mjs && node scripts/humanize-region-detail.mjs",
+    "stamp:equipment-regions": "node scripts/stamp-equipment-regions.mjs",
     "sync:training-gaps": "node scripts/sync-training-gaps.mjs",
     "sync:catalyst-snapshot": "node scripts/refresh-catalyst-snapshot.mjs",
     "audit:combat": "node scripts/audit-combat-data.mjs",
@@ -37,7 +38,6 @@
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
-    "@tanstack/react-virtual": "^3.14.8",
     "next": "^16.2.11",
     "react": "19.2.8",
     "react-dom": "19.2.8",

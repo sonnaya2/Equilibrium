@@ -40,9 +40,25 @@
       "id": "cross-region:fairy-ring-network",
       "name": "Fairy ring network (Zanaris hub)",
       "category": "permanent multi-region travel infrastructure",
-      "region_hints": ["misthalin", "morytania", "kandarin"],
-      "required_regions": ["misthalin", "morytania"],
-      "optional_pressure_regions": ["kandarin", "karamja", "fremennik", "desert", "tirannwn", "havenhythe", "forinthry", "asgarnia"],
+      "region_hints": [
+        "misthalin",
+        "morytania",
+        "kandarin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "karamja",
+        "fremennik",
+        "desert",
+        "tirannwn",
+        "havenhythe",
+        "forinthry",
+        "asgarnia"
+      ],
       "requirements": [
         "Priest in Peril + Nature Spirit (Morytania quest gate into fairy-tale chain)",
         "Lost City (Misthalin / Zanaris access via Dramen tree)",
@@ -84,9 +100,28 @@
       "name": "Resource dungeon unlock map (Dungeoneering permanent access)",
       "category": "permanent Dungeoneering gather infrastructure package",
       "region_hint": "forinthry",
-      "region_hints": ["forinthry", "asgarnia", "misthalin", "karamja", "kandarin", "morytania", "desert", "tirannwn"],
-      "required_regions": ["forinthry"],
-      "optional_pressure_regions": ["asgarnia", "misthalin", "karamja", "kandarin", "morytania", "desert", "tirannwn"],
+      "region_hints": [
+        "forinthry",
+        "asgarnia",
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "morytania",
+        "desert",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "morytania",
+        "desert",
+        "tirannwn"
+      ],
       "requirements": [
         "Dungeoneering level gates per dungeon (boosts cannot bypass entry level)",
         "Quest gates where listed: Waterfall Quest (Baxtorian), A Clockwork Syringe (Braindeath 'Rum'-geon), One of a Kind (Dragontooth), Plague's End (Gorajo + Edimmu)",
@@ -125,9 +160,18 @@
       "name": "Magical thread (Abyss RC + Wilderness diary rates)",
       "category": "permanent Runecrafting pouch-economy supply package",
       "region_hint": "forinthry",
-      "region_hints": ["forinthry", "kandarin", "misthalin"],
-      "required_regions": ["forinthry"],
-      "optional_pressure_regions": ["kandarin", "misthalin"],
+      "region_hints": [
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "misthalin"
+      ],
       "requirements": [
         "Abyss entrance access (forinthry:abyss-entrance — Mage of Zamorak Wilderness)",
         "Wilderness Area Tasks for thread-rate tiers via Wilderness sword worn or backpack (easy 5% / medium 10% / hard 15% / elite 33.3% cumulative chance boost)",
@@ -167,9 +211,16 @@
       "name": "Ava's device chain (attractor / accumulator / alerter)",
       "category": "permanent Ranged ammo-recovery and cape-rack utility chain",
       "region_hint": "misthalin",
-      "region_hints": ["misthalin", "desert"],
-      "required_regions": ["misthalin"],
-      "optional_pressure_regions": ["desert"],
+      "region_hints": [
+        "misthalin",
+        "desert"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
       "requirements": [
         "Animal Magnetism completed — Ava in Draynor Manor (Misthalin)",
         "Ava's attractor: minimum 30 Ranged (quest reward path)",
@@ -202,8 +253,12 @@
       "id": "cross-region:bonecrusher-necklace",
       "name": "Bonecrusher + demon horn necklace Prayer stack",
       "category": "cross-region Prayer AFK restore package",
-      "region_hints": ["forinthry"],
-      "required_regions": ["forinthry"],
+      "region_hints": [
+        "forinthry"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
       "requirements": [
         "Bonecrusher owned (Daemonheim Rewards — forinthry:bonecrusher; post-11-May-2026 remaster costs apply)",
         "Optional: multi-region:toolbelt-bonecrusher-attach (500 Slayer points) so crusher runs from toolbelt",
@@ -238,9 +293,18 @@
       "name": "Attuned ectoplasmator",
       "category": "permanent Prayer ash/ghost drop cleaner",
       "region_hint": "morytania",
-      "region_hints": ["morytania", "misthalin", "forinthry"],
-      "required_regions": ["morytania"],
-      "optional_pressure_regions": ["misthalin", "forinthry"],
+      "region_hints": [
+        "morytania",
+        "misthalin",
+        "forinthry"
+      ],
+      "required_regions": [
+        "morytania"
+      ],
+      "optional_pressure_regions": [
+        "misthalin",
+        "forinthry"
+      ],
       "requirements": [
         "Base ectoplasmator drop from ghosts/ghasts/shades/Barrows brothers/revenants/etc. (many sources; Morytania density highest for shades/ghasts/Barrows)",
         "100 ghostly essence used on ectoplasmator to create attuned version (starts with 1,000 charges)",
@@ -274,12 +338,12 @@
       ]
     },
     {
-      "id": "asgarnia:spring-cleaner",
+      "id": "invention:spring-cleaner",
       "name": "Spring cleaner (Invention drop cleaner)",
       "category": "permanent Invention-manufactured drop cleaner",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "requirements": [
         "Invention unlocked and Discovery blueprint for spring cleaner",
         "Craft at Invention: simple parts + tensile parts + flexible parts + precise components (one cleaner per account ownership rule)",
@@ -300,7 +364,7 @@
         "https://runescape.wiki/w/Invention"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention Guild discovery path.",
+      "league_treatment": "Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "single",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -314,9 +378,16 @@
       "name": "Inferno adze",
       "category": "All Fired Up dual hatchet-pickaxe equipment",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["misthalin"],
+      "region_hints": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
       "requirements": [
         "All Fired Up quest completed",
         "Light all 14 beacons simultaneously then claim from King Roald (92 Firemaking required to wield / activate incineration; boosts can claim but not wield effect)",
@@ -355,8 +426,12 @@
       "name": "TokKul-Zo",
       "category": "Karamja TzHaar teleport ring and skilling travel tool",
       "region_hint": "karamja",
-      "region_hints": ["karamja"],
-      "required_regions": ["karamja"],
+      "region_hints": [
+        "karamja"
+      ],
+      "required_regions": [
+        "karamja"
+      ],
       "requirements": [
         "The Elder Kiln completed (quest reward ring)",
         "Reclaim uncharged from TzHaar-Mej-Jeh or TzHaar-Mej-Ak at TzHaar City Plaza if lost",
@@ -391,8 +466,12 @@
       "name": "Crystal pickaxe",
       "category": "augmentable crystal Mining tool",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
       "requirements": [
         "Plague's End / Prifddinas access",
         "Dragon pickaxe (or Imcando / gilded dragon — Ithell downgrades then crystals) + 4,000 harmonic dust to Lady Ithell",
@@ -425,8 +504,12 @@
       "name": "Crystal hatchet",
       "category": "augmentable crystal Woodcutting tool",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
       "requirements": [
         "Plague's End / Prifddinas access",
         "Dragon hatchet (backpack or toolbelt) + 4,000 harmonic dust to Lady Ithell",
@@ -461,8 +544,12 @@
       "name": "Crystal mattock",
       "category": "augmentable crystal Archaeology tool",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
       "requirements": [
         "Plague's End / Prifddinas access",
         "Dragon mattock (or Imcando mattock / augmented dragon mattock preserving perks) + 4,000 harmonic dust to Lady Ithell",
@@ -494,8 +581,12 @@
       "name": "Seed bag (Croesus Front)",
       "category": "permanent Farming seed storage tool",
       "region_hint": "misthalin",
-      "region_hints": ["misthalin"],
-      "required_regions": ["misthalin"],
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
       "requirements": [
         "Croesus Front access (Senntisten / Elder God Wars — Misthalin taxonomy with project croesus boundary)",
         "85 Crafting (assistable) to craft from Croesus spore sack + timber fungus + fungal spore + fungal algae + calcified fungus + Croesus flakes",
@@ -527,9 +618,18 @@
       "name": "Modified farmer's hat",
       "category": "Farming outfit head add-on permanent",
       "region_hint": "desert",
-      "region_hints": ["desert", "morytania", "asgarnia"],
-      "required_regions": ["desert"],
-      "optional_pressure_regions": ["morytania", "asgarnia"],
+      "region_hints": [
+        "desert",
+        "morytania",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "desert"
+      ],
+      "optional_pressure_regions": [
+        "morytania",
+        "asgarnia"
+      ],
       "requirements": [
         "Farmer's hat piece owned (desert:farmers-outfit — Garden of Kharid Crux Eqal favour path)",
         "Farmer's hat add-on applied to create modified hat"
@@ -562,9 +662,16 @@
       "name": "Modified botanist's mask",
       "category": "Herblore outfit head add-on permanent",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "kandarin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["kandarin"],
+      "region_hints": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "kandarin"
+      ],
       "requirements": [
         "Botanist's mask owned (asgarnia:botanists-outfit — Flash Powder Factory Brian points; not Thaler)",
         "Botanist's mask add-on (1,000 Brian points) applied to create modified mask"
@@ -630,6 +737,19 @@
     "equipment_additions": 12,
     "total_rows": 15,
     "drop_suggestions": 6,
-    "audit_ranks_covered": [1, 3, 6, 7, 8, 9, 10, 14, 20, 31, 32, 33]
+    "audit_ranks_covered": [
+      1,
+      3,
+      6,
+      7,
+      8,
+      9,
+      10,
+      14,
+      20,
+      31,
+      32,
+      33
+    ]
   }
 }

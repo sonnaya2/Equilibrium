@@ -106,7 +106,8 @@ for (const record of datasets.abilities.records) {
 }
 for (const record of datasets.equipment.records) {
   if (record.slot != null) check(EQUIPMENT_SLOTS.has(record.slot), `equipment:${record.id} bad slot "${record.slot}"`);
-  if (record.tier != null) check(record.tier >= 1 && record.tier <= 99, `equipment:${record.id} implausible tier ${record.tier}`);
+  // Post-2026 combat modernisation allows t100 gear (e.g. Masterwork staff).
+  if (record.tier != null) check(record.tier >= 1 && record.tier <= 120, `equipment:${record.id} implausible tier ${record.tier}`);
 }
 for (const record of datasets.effects.records) {
   check(EFFECT_KINDS.has(record.kind), `effects:${record.id} bad kind "${record.kind}"`);

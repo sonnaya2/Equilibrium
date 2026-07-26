@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const eqPath = path.join(root, "data/combat/equipment.json");
 const reportPath = path.join(root, "scraped-data/equipment-sync-report-2026-07-26.json");
+const regionIndexPath = path.join(root, "data/research/equipment-region-index.json");
 
 const JUNK =
   /armoursmith|flakes|abilities|achievement|category:|cloth|repair|components?$|energy$|codex$|artefact$|nilas|core of leng|genesis|progress|shard of|update:|template:|file:|defence abilities|liberation of mazcab|croesus$/i;
@@ -21,13 +22,54 @@ function wikiUrl(title) {
   return `https://runescape.wiki/w/${t}`;
 }
 
+function kebab(name) {
+  return String(name || "")
+    .split(" / ")[0]
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/** Apply stamped regions from equipment-region-index (produced by stamp-equipment-regions). */
+function regionsFromIndex(index, id, name) {
+  if (!index) return [];
+  const byId = index.byId || index;
+  const hit = byId[id] || byId[kebab(name)] || (index.byName && index.byName[kebab(name)]);
+  const regions = hit?.regions || hit;
+  return Array.isArray(regions) ? regions.filter(Boolean) : [];
+}
+
+function applyUnlockRegions(rec, regions) {
+  if (!regions.length) return false;
+  const cur = rec.unlock?.regions ?? [];
+  const next = [...new Set([...cur, ...regions])].sort();
+  if (next.length === cur.length && next.every((r, i) => r === [...cur].sort()[i])) return false;
+  rec.unlock = {
+    type: rec.unlock?.type || "drop",
+    requirement: rec.unlock?.requirement || "regional acquisition",
+    regions: next,
+  };
+  return true;
+}
+
 const eq = JSON.parse(fs.readFileSync(eqPath, "utf8"));
 const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+let regionIndex = null;
+if (fs.existsSync(regionIndexPath)) {
+  try {
+    regionIndex = JSON.parse(fs.readFileSync(regionIndexPath, "utf8"));
+  } catch {
+    regionIndex = null;
+  }
+}
 const byId = new Map(eq.records.map((r) => [r.id, r]));
 
 let added = 0;
 let updated = 0;
 let skipped = 0;
+let regionsApplied = 0;
 
 for (const c of report.candidates ?? []) {
   if (!c.slot || c.tier == null || c.tier < 70) {
@@ -51,6 +93,10 @@ for (const c of report.candidates ?? []) {
     }
     if (!existing.style && c.style) {
       existing.style = c.style;
+      ch = true;
+    }
+    if (applyUnlockRegions(existing, regionsFromIndex(regionIndex, c.id, c.name))) {
+      regionsApplied++;
       ch = true;
     }
     if (ch) updated++;
@@ -77,6 +123,7 @@ for (const c of report.candidates ?? []) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
   }
+  if (applyUnlockRegions(rec, regionsFromIndex(regionIndex, c.id, c.name))) regionsApplied++;
   eq.records.push(rec);
   byId.set(c.id, rec);
   added++;
@@ -122,7 +169,15 @@ const byStyle = {};
 for (const r of wear) byStyle[r.style || "none"] = (byStyle[r.style || "none"] || 0) + 1;
 console.log(
   JSON.stringify(
-    { total: eq.records.length, wearables: wear.length, added, updated, skipped, byStyle },
+    {
+      total: eq.records.length,
+      wearables: wear.length,
+      added,
+      updated,
+      skipped,
+      regionsApplied,
+      byStyle,
+    },
     null,
     2,
   ),

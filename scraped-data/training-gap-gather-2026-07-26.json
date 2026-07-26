@@ -7,6 +7,7 @@
       "method": "Orichalcite rocks (level 60, post-runite core ore)",
       "gap": "core_ore_above_runite",
       "level_range": "60+",
+      "xp_rate": "70,000 XP/h",
       "ore": "orichalcite",
       "region_options": [
         {
@@ -38,6 +39,7 @@
       "method": "Drakolith rocks (level 60 pair with orichalcite)",
       "gap": "core_ore_above_runite",
       "level_range": "60+",
+      "xp_rate": "70,000 XP/h",
       "ore": "drakolith",
       "region_options": [
         {
@@ -100,6 +102,7 @@
       "method": "Necrite rocks (level 70)",
       "gap": "core_ore_above_runite",
       "level_range": "70+",
+      "xp_rate": "90,000 XP/h",
       "ore": "necrite",
       "region_options": [
         {
@@ -137,6 +140,7 @@
       "method": "Phasmatite rocks (level 70 pair with necrite)",
       "gap": "core_ore_above_runite",
       "level_range": "70+",
+      "xp_rate": "90,000 XP/h",
       "ore": "phasmatite",
       "region_options": [
         {
@@ -174,6 +178,7 @@
       "method": "Banite rocks (level 80)",
       "gap": "core_ore_above_runite",
       "level_range": "80+",
+      "xp_rate": "105,000 XP/h",
       "ore": "banite",
       "region_options": [
         {
@@ -206,6 +211,7 @@
       "method": "Light animica rocks (level 90)",
       "gap": "core_ore_above_runite",
       "level_range": "90+",
+      "xp_rate": "100,000–160,000 XP/h at 90–99",
       "ore": "light_animica",
       "region_options": [
         {
@@ -238,6 +244,7 @@
       "method": "Dark animica rocks (level 90 pair with light animica)",
       "gap": "core_ore_above_runite",
       "level_range": "90+",
+      "xp_rate": "100,000–160,000 XP/h at 90–99",
       "ore": "dark_animica",
       "region_options": [
         {

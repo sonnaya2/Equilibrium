@@ -253,8 +253,7 @@
       "category": "Divination elite outfit activity stub",
       "region_hint": "kandarin",
       "region_hints": [
-        "kandarin",
-        "asgarnia"
+        "kandarin"
       ],
       "required_regions": [
         "kandarin"
@@ -560,12 +559,10 @@
       "category": "permanent Passage of the Abyss enchantment",
       "region_hint": "forinthry",
       "region_hints": [
-        "forinthry",
-        "asgarnia"
+        "forinthry"
       ],
       "required_regions": [
-        "forinthry",
-        "asgarnia"
+        "forinthry"
       ],
       "optional_pressure_regions": [],
       "location": "Combine on dark onyx core (Invention craft); imbue onto Passage of the Abyss",

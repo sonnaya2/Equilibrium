@@ -3,6 +3,7 @@ import {
   DEFAULT_LOADOUT,
   equipInSlot,
   normalizeLoadout,
+  pruneUnknownEquipment,
   unlockOnlyIds,
   withAttackLevel,
   withStrengthLevel,
@@ -120,6 +121,54 @@ describe("normalizeLoadout", () => {
     });
     expect(next.equipmentIds).toEqual(["item:a", "item:b", "item:unlock-only"]);
     expect(unlockOnlyIds(next)).toEqual(["item:unlock-only"]);
+  });
+});
+
+describe("pruneUnknownEquipment", () => {
+  const known = (id: string) => id === "item:keep" || id === "item:pin";
+
+  it("drops slotted ids and unlock pins missing from the catalogue", () => {
+    const raw = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: {
+        mainhand: "item:keep",
+        helmet: "item:gone",
+        ring: "item:also-gone",
+      },
+      equipmentIds: ["item:keep", "item:gone", "item:also-gone", "item:pin", "item:dead-pin"],
+    };
+    const next = pruneUnknownEquipment(raw, known);
+    expect(next.equipmentSlots).toEqual({ mainhand: "item:keep" });
+    expect(next.equipmentIds).toEqual(["item:keep", "item:pin"]);
+    expect(unlockOnlyIds(next)).toEqual(["item:pin"]);
+  });
+
+  it("does not promote a pruned slot orphan into an unlock pin", () => {
+    const raw = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: { body: "item:ghost" },
+      equipmentIds: ["item:ghost"],
+    };
+    const next = pruneUnknownEquipment(raw, () => false);
+    expect(next.equipmentSlots).toEqual({});
+    expect(next.equipmentIds).toEqual([]);
+  });
+
+  it("default known drops catalogue-absent ids (retired auras deleted from JSON)", () => {
+    const raw = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: {
+        // Post-2026 combat auras were stripped from equipment.json entirely.
+        aura: "item:berserker-aura",
+        helmet: "item:sirenic-mask",
+      },
+      equipmentIds: ["item:berserker-aura", "item:sirenic-mask", "item:not-in-catalogue"],
+    };
+    const next = pruneUnknownEquipment(raw);
+    expect(next.equipmentSlots.aura).toBeUndefined();
+    expect(next.equipmentSlots.helmet).toBe("item:sirenic-mask");
+    expect(next.equipmentIds).toEqual(["item:sirenic-mask"]);
+    expect(unlockOnlyIds(next)).toEqual([]);
   });
 });
 

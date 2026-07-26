@@ -42,9 +42,22 @@
       "id": "cross-region:gote-dark-facet-ritual-shard-sustain",
       "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
       "category": "cross-region Seren prayer and porter sustain stack",
-      "region_hints": ["tirannwn", "forinthry", "asgarnia"],
-      "required_regions": ["tirannwn", "forinthry"],
-      "optional_pressure_regions": ["asgarnia", "desert", "morytania", "kandarin", "misthalin"],
+      "region_hints": [
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "desert",
+        "morytania",
+        "kandarin",
+        "misthalin"
+      ],
       "requirements": [
         "Grace of the elves: 107 Invention alchemical onyx → 91 Crafting alchemical onyx necklace → 87 Magic Lvl-6 Enchant",
         "Dark Facet of Grace: imbue enchantment on GOTE (permanent account upgrade for the player who imbues)",
@@ -78,7 +91,7 @@
         "https://runescape.wiki/w/The_Light_Within"
       ],
       "confidence": "confirmed_wiki_cross_region_stack",
-      "league_treatment": "Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Asgarnia Invention is manufacture pressure, not a third hard gate if League relocates Invention workbenches.",
+      "league_treatment": "Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Invention manufacture is global (not a hard Asgarnia gate).",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "cross-region:grace-of-the-elves-porter-chain",
@@ -91,9 +104,20 @@
       "id": "cross-region:curly-roots-fm-ceiling-stack",
       "name": "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)",
       "category": "cross-region Firemaking and Woodcutting method stack",
-      "region_hints": ["karamja", "asgarnia", "tirannwn", "anachronia"],
-      "required_regions": ["karamja", "asgarnia"],
-      "optional_pressure_regions": ["tirannwn", "anachronia"],
+      "region_hints": [
+        "karamja",
+        "asgarnia",
+        "tirannwn",
+        "anachronia"
+      ],
+      "required_regions": [
+        "karamja",
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "anachronia"
+      ],
       "requirements": [
         "83+ Woodcutting and 83+ Firemaking for curly roots in the Jadinko Lair (south-eastern Karamja)",
         "Ring of fire (All Fired Up beacon rewards — 6 beacons lit)",
@@ -142,9 +166,20 @@
       "id": "cross-region:bait-and-switch-always-adze-dual-paths",
       "name": "Bait and Switch + Always Adze dual monolith skilling paths",
       "category": "cross-region dual gatherer-relic path package",
-      "region_hints": ["anachronia", "kandarin", "karamja", "asgarnia"],
-      "required_regions": ["anachronia", "kandarin"],
-      "optional_pressure_regions": ["karamja", "asgarnia"],
+      "region_hints": [
+        "anachronia",
+        "kandarin",
+        "karamja",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "karamja",
+        "asgarnia"
+      ],
       "requirements": [
         "Bait and Switch: 99 Archaeology (boostable path for death mask), Orthen Dig Site death mask, catspeak amulet / cramulet to speak with Bob the cat → Evil Bob's Catspaw → harness at mysterious monolith (2,000 chronotes + 100 monolith energy)",
         "Always Adze: 83 Archaeology (boostable), inactive Seed of the Charyou Tree from Thalmund's Forge / Into the Forge (Warforge), activate seed while wearing flame gloves (79 Firemaking), harness at monolith (2,000 chronotes + 100 monolith energy)",
@@ -188,9 +223,18 @@
       "id": "cross-region:fury-shark-bait-and-switch-stack",
       "name": "Fury shark outfit + Bait and Switch Fishing stack",
       "category": "cross-region Fishing elite outfit and auto-cook stack",
-      "region_hints": ["kandarin", "anachronia"],
-      "required_regions": ["kandarin", "anachronia"],
-      "optional_pressure_regions": ["asgarnia", "tirannwn"],
+      "region_hints": [
+        "kandarin",
+        "anachronia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "anachronia"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "tirannwn"
+      ],
       "requirements": [
         "Fury shark outfit: 80 Fishing + 20 Invention; 54,000 shark fragments total across shark + tiger + burnt tiers then combine into fury (Kandarin Deep Sea Fishing is the practical high-volume fragment farm)",
         "Bait and Switch harnessed (Anachronia Orthen death-mask path)",
@@ -232,9 +276,23 @@
       "id": "cross-region:imcando-tools-family",
       "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
       "category": "cross-region Imcando gather-tool family package",
-      "region_hints": ["fremennik", "misthalin", "asgarnia", "tirannwn", "karamja"],
-      "required_regions": ["fremennik", "misthalin", "asgarnia"],
-      "optional_pressure_regions": ["tirannwn", "karamja", "anachronia"],
+      "region_hints": [
+        "fremennik",
+        "misthalin",
+        "asgarnia",
+        "tirannwn",
+        "karamja"
+      ],
+      "required_regions": [
+        "fremennik",
+        "misthalin",
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "karamja",
+        "anachronia"
+      ],
       "requirements": [
         "Imcando pickaxe: Birthright of the Dwarves / Lava Flow Mine gilding path; four Imcando pickaxe fragments; Keldagrim / Fremennik geography (fremennik:imcando-pickaxe, fremennik:lava-geyser-imcando-path)",
         "Imcando hatchet: Woodcutter's Grove tier-3 fragment nests at Fort Forinthry (misthalin working taxonomy) after Birthright-class Imcando progression (misthalin:imcando-hatchet)",
@@ -280,9 +338,20 @@
       "id": "cross-region:masterwork-orthen-plate-pressure",
       "name": "Masterwork plate → Orthen furnace core pressure stack",
       "category": "cross-region Smithing production dependency stack",
-      "region_hints": ["asgarnia", "anachronia", "tirannwn", "forinthry"],
-      "required_regions": ["asgarnia", "anachronia"],
-      "optional_pressure_regions": ["tirannwn", "forinthry"],
+      "region_hints": [
+        "asgarnia",
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "anachronia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "forinthry"
+      ],
       "requirements": [
         "Artisans' Workshop masterwork melee plate / glorious-bar infrastructure (Asgarnia): concentrated → enriched → immaculate → 1,001 folds → glorious bars → masterwork plates → curved masterwork melee plates",
         "Orthen furnace core craft: 99 Smithing, 102 Archaeology; 4 restored dragon burners (Orthen Observation outpost, Anachronia); 2 curved masterwork melee plates; listed consumable ingredients",
@@ -321,8 +390,10 @@
       "id": "cross-region:elder-divination-outfit-path",
       "name": "Elder divination outfit path (Cache base + Invention elite)",
       "category": "cross-region Divination elite outfit acquisition stack",
-      "region_hints": ["kandarin", "asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "region_hints": [
+        "kandarin"
+      ],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "requirements": [
         "Base diviner's outfit pieces via Guthixian Cache (Kandarin Memorial to Guthix / Hall of Memories geography is the efficient ironman route)",
@@ -350,7 +421,7 @@
         "https://runescape.wiki/w/Invention_Guild"
       ],
       "confidence": "confirmed_wiki_cross_region_stack",
-      "league_treatment": "Require Kandarin for Cache/diviners route and Asgarnia for Invention elite craft. Do not score elder outfit as Kandarin-only.",
+      "league_treatment": "Do not score elder outfit as Kandarin-only. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "kandarin:elder-divination-elite-outfit",
@@ -364,9 +435,22 @@
       "id": "cross-region:auto-burn-woodcutting-paths",
       "name": "Auto-burn Woodcutting paths (Superheat Form vs Always Adze vs partial outfit/adze)",
       "category": "cross-region Woodcutting and Firemaking auto-burn path package",
-      "region_hints": ["tirannwn", "kandarin", "asgarnia", "anachronia", "karamja"],
-      "required_regions": ["tirannwn", "kandarin"],
-      "optional_pressure_regions": ["asgarnia", "anachronia", "karamja"],
+      "region_hints": [
+        "tirannwn",
+        "kandarin",
+        "asgarnia",
+        "anachronia",
+        "karamja"
+      ],
+      "required_regions": [
+        "tirannwn",
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "anachronia",
+        "karamja"
+      ],
       "requirements": [
         "Path A — Superheat Form: The Light Within, 91 Prayer, Ancient Curses; drains 100 prayer/min base (50 with GOTE; 0 with Dark Facet GOTE); Orthen furnace core can zero drain for smithing-side use",
         "Path B — Always Adze: Seed of the Charyou Tree harnessed (83 Archaeology path); 100% auto-burn while WC with no prayer drain",
@@ -411,9 +495,17 @@
       "name": "Seren skilling prayers package (The Light Within)",
       "category": "Tirannwn Seren skilling prayer unlock package",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
-      "optional_pressure_regions": ["forinthry", "asgarnia", "anachronia"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "forinthry",
+        "asgarnia",
+        "anachronia"
+      ],
       "requirements": [
         "The Light Within completed (Prifddinas / Tirannwn quest chain after Plague's End)",
         "Ancient Curses prayer book unlocked (The Temple at Senntisten path in normal game)",
@@ -456,9 +548,18 @@
       "id": "cross-region:fired-up-inferno-adze-chain",
       "name": "All Fired Up → Inferno adze reward chain",
       "category": "cross-region Firemaking minigame full reward chain",
-      "region_hints": ["asgarnia", "misthalin", "forinthry"],
-      "required_regions": ["asgarnia", "misthalin"],
-      "optional_pressure_regions": ["forinthry"],
+      "region_hints": [
+        "asgarnia",
+        "misthalin",
+        "forinthry"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
       "requirements": [
         "All Fired Up quest completed",
         "Beacon line skills for full 14-beacon light: 64 Agility (b), 42 Construction, 60 Crafting, 31 Prayer, 56 Smithing, 70 Smithing or 59 Construction, 60 Strength (b), 92 Firemaking (b for light; unboosted 92 to wield adze effect)",
@@ -504,9 +605,26 @@
       "id": "multi-region:elite-skilling-outfits-core-set",
       "name": "Elite skilling outfits core set (ironman fragment paths)",
       "category": "multi-region elite skilling outfit portfolio package",
-      "region_hints": ["desert", "tirannwn", "fremennik", "asgarnia", "kandarin"],
-      "required_regions": ["desert", "tirannwn", "fremennik", "asgarnia", "kandarin"],
-      "optional_pressure_regions": ["misthalin", "morytania", "forinthry", "anachronia"],
+      "region_hints": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "asgarnia",
+        "kandarin"
+      ],
+      "required_regions": [
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "asgarnia",
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "misthalin",
+        "morytania",
+        "forinthry",
+        "anachronia"
+      ],
       "requirements": [
         "Invention 20+ and skill-specific fragment collection while training (typically 70+ in the skill; 80+ to craft many pieces); 54,000 fragments per finished elite set across three base outfits",
         "Desert: farmer's outfit (Garden of Kharid favour) as base XP layer inherited by master farmer elite path",
@@ -563,9 +681,17 @@
       "id": "cross-region:crystal-rod-waterfall-fury-stack",
       "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
       "category": "cross-region late Fishing tool and method stack",
-      "region_hints": ["tirannwn", "kandarin"],
-      "required_regions": ["tirannwn", "kandarin"],
-      "optional_pressure_regions": ["asgarnia"],
+      "region_hints": [
+        "tirannwn",
+        "kandarin"
+      ],
+      "required_regions": [
+        "tirannwn",
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
       "requirements": [
         "Prifddinas Waterfall Fishing access: Plague's End; climb + grapple (90 Agility / Strength / Ranged, boostable) or waterfall teleports / Max Guild portal / GOTE portal",
         "Crystal fishing rod unlock: 3,000 crystal urchin points from Prifddinas Waterfall Fishing Shop (indirectly 93+ Fishing for points); craft from crystal tool seed + 150 harmonic dust (80 Smithing singing bowl) or NPC enchant",

@@ -39,20 +39,73 @@
         "name": "Fire cape",
         "category": "combat cape",
         "source": "TzHaar Fight Cave",
-        "confidence": "inferred_region"
+        "examples": ["Fire cape"],
+        "notes": "One-time Fight Kiln entry payment path and classic mid-game hybrid cape. Hard Karamja Fight Cave.",
+        "source_url": "https://runescape.wiki/w/Fire_cape",
+        "confidence": "confirmed_wiki"
       },
       {
         "name": "TokHaar-Kal capes",
         "category": "combat cape",
-        "source": "Fight Kiln",
-        "confidence": "inferred_region"
+        "source": "Fight Kiln / Har-Aken",
+        "examples": [
+          "TokHaar-Kal-Ket",
+          "TokHaar-Kal-Xil",
+          "TokHaar-Kal-Mej",
+          "TokHaar-Kal-Mor"
+        ],
+        "notes": "Style cape self-source from Fight Kiln final boss. Required base for Igneous Kal upgrades (igneous stone from Misthalin TzKal-Zuk).",
+        "source_url": "https://runescape.wiki/w/Fight_Kiln",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Fight Cauldron obsidian armour",
+        "category": "TzekHaar combat support armour",
+        "source": "Fight Cauldron (obsidian shards) / The Brink of Extinction",
+        "examples": [
+          "Obsidian warrior / ranger / mage helm",
+          "Obsidian platebody",
+          "Obsidian platelegs",
+          "Obsidian gloves",
+          "Obsidian boots",
+          "Obsidian kiteshield"
+        ],
+        "notes": "Up to 55% damage reduction from obsidian monsters in Fight Kiln and TzKal-Zuk; helms give 10% accuracy on TzekHaar waves (not Zuk himself). Continuing Karamja value after TokHaar-Kal.",
+        "source_url": "https://runescape.wiki/w/Obsidian_equipment",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "TokKul-Zo",
+        "category": "combat support ring / travel",
+        "source": "The Elder Kiln",
+        "examples": ["TokKul-Zo"],
+        "notes": "10% damage vs TzHaar/TokHaar/TzekHaar waves (not Zuk himself). Teleports to Fight Cave, Fight Kiln, Fight Cauldron.",
+        "source_url": "https://runescape.wiki/w/TokKul-Zo",
+        "confidence": "confirmed_wiki"
       },
       {
         "name": "Abomination progression",
         "category": "combat uniques",
-        "source": "Abomination",
+        "source": "Abomination (Brimhaven Dungeon / Hero's Welcome residual)",
+        "examples": ["Abomination cape"],
         "source_url": "https://runescape.wiki/w/Abomination",
-        "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        "notes": "T75 melee cape unique. Wiki league badge Karamja (+ Fremennik quest pressure on Hero's Welcome path).",
+        "confidence": "confirmed_wiki"
+      },
+      {
+        "name": "Classic TzHaar obsidian weapons",
+        "category": "mid-game weapon residual",
+        "source": "TzHaar City shops / drops",
+        "examples": [
+          "TzHaar-Ket-Om",
+          "TzHaar-Ket-Em",
+          "Toktz-xil-ak",
+          "Toktz-mej-tal",
+          "Toktz-xil-ul"
+        ],
+        "notes": "T60 residual icons only. Berserker necklace +5% on obsidian melee; Ek-ZekKil (T95) is Misthalin Zuk drop, not Karamja-hard.",
+        "source_url": "https://runescape.wiki/w/Obsidian_equipment",
+        "confidence": "confirmed_wiki"
       }
     ],
     "asgarnia": [
@@ -387,6 +440,21 @@
       }
     ],
     "anachronia": [
+      {
+        "name": "Gemstone armour",
+        "category": "T80 hybrid armour residual",
+        "source": "Anachronia gemstone dragons",
+        "examples": [
+          "Gemstone helm",
+          "Gemstone hauberk",
+          "Gemstone greaves",
+          "Gemstone gauntlets",
+          "Gemstone boots"
+        ],
+        "notes": "Enchanted touch hybrid set residual. Hard Anachronia (gemstone dragons) — NOT Karamja/Shilo. Not endgame BiS vs T90 power.",
+        "source_url": "https://runescape.wiki/w/Gemstone_armour",
+        "confidence": "confirmed_wiki"
+      },
       {
         "name": "Dragon mattock",
         "category": "Archaeology tool progression",

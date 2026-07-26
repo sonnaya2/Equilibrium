@@ -31,13 +31,17 @@
   ],
   "equipment_additions": [
     {
-      "id": "asgarnia:urn-enhancer",
+      "id": "invention:urn-enhancer",
       "name": "Urn enhancer (permanent Invention device)",
       "category": "permanent Invention skilling device",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["misthalin"],
+      "region_hint": "global",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
       "requirements": [
         "24 Invention to discover",
         "Nomad's Elegy completed (blueprint reward)",
@@ -60,7 +64,7 @@
         "https://runescape.wiki/w/Urns"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention manufacture. Score Misthalin only when ranking the quest unlock path.",
+      "league_treatment": "Score Misthalin only when ranking the quest unlock path. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -75,9 +79,15 @@
       "name": "Enchanted notepaper blueprint (ironman note craft)",
       "category": "permanent Invention blueprint and craft path",
       "region_hint": "forinthry",
-      "region_hints": ["forinthry", "asgarnia"],
-      "required_regions": ["forinthry"],
-      "optional_pressure_regions": ["asgarnia"],
+      "region_hints": [
+        "forinthry"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
       "requirements": [
         "200,000 Dungeoneering tokens at Daemonheim Rewards (Marmaros)",
         "97 Invention to research/discover the blueprint",
@@ -108,13 +118,15 @@
       ]
     },
     {
-      "id": "asgarnia:potion-reservoir",
+      "id": "invention:potion-reservoir",
       "name": "Potion reservoir (Invention auto-dose device)",
       "category": "permanent Invention device discovery",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["tirannwn"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "tirannwn"
+      ],
       "requirements": [
         "112 Invention to discover and craft",
         "Invention workbench: potion flask + simple/clear parts",
@@ -136,7 +148,7 @@
         "https://runescape.wiki/w/Devices"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention device path.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -148,13 +160,16 @@
       ]
     },
     {
-      "id": "asgarnia:auto-sanctifier",
+      "id": "invention:auto-sanctifier",
       "name": "Auto-sanctifier (Dwarven tech Prayer device)",
       "category": "Invention Prayer XP device (Dwarven technology tree)",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["forinthry", "morytania"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "forinthry",
+        "morytania"
+      ],
       "requirements": [
         "70 Invention",
         "55 Dwarven currency on the Dwarven technology tree",
@@ -177,7 +192,7 @@
         "https://runescape.wiki/w/Ash_sanctifier"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention tech tree.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -192,9 +207,15 @@
       "name": "Supreme overload potion recipe (Meilyr)",
       "category": "permanent Herblore combination recipe",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
-      "optional_pressure_regions": ["forinthry"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
       "requirements": [
         "Plague's End / Prifddinas Meilyr Recipe Shop access",
         "900,000 coins to unlock supreme overload recipe at Lady Meilyr / Harmony pillar farmers",
@@ -230,9 +251,17 @@
       "name": "Elder overload potion recipe (Meilyr)",
       "category": "permanent Herblore combination recipe",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn", "misthalin"],
-      "required_regions": ["tirannwn"],
-      "optional_pressure_regions": ["misthalin", "anachronia"],
+      "region_hints": [
+        "tirannwn",
+        "misthalin"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "misthalin",
+        "anachronia"
+      ],
       "requirements": [
         "Meilyr Recipe Shop: 1,200,000 coins for elder overload recipe",
         "106 Herblore to mix (supreme overload (6) + clean fellstalk + primal extract)",
@@ -269,9 +298,15 @@
       "name": "Elder overload salve recipe (Meilyr)",
       "category": "permanent Herblore combination recipe",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn"],
-      "required_regions": ["tirannwn"],
-      "optional_pressure_regions": ["misthalin"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
       "requirements": [
         "Meilyr Recipe Shop: 1,500,000 coins for elder overload salve recipe",
         "107 Herblore to mix",
@@ -307,9 +342,18 @@
       "name": "Decorated and exquisite urn craft infrastructure",
       "category": "permanent multi-skill urn production package",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin", "kandarin"],
+      "region_hints": [
+        "asgarnia",
+        "misthalin",
+        "kandarin"
+      ],
       "required_regions": [],
-      "optional_pressure_regions": ["asgarnia", "misthalin", "kandarin", "tirannwn"],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "misthalin",
+        "kandarin",
+        "tirannwn"
+      ],
       "requirements": [
         "Crafting levels for decorated urns (skill-dependent; e.g. decorated cooking 81 Crafting) — assist system can cover form/fire/rune steps",
         "Two soft clay per standard urn; soft porcelain + gem for exquisite tiers (103+ Crafting)",
@@ -350,9 +394,9 @@
       "id": "cross-region:skilling-accumulators-package",
       "name": "Invention skilling accumulators (mining / fishing / woodcutting)",
       "category": "Invention device discovery package",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "requirements": [
         "Invention Tutorial + charged charge pack",
@@ -378,7 +422,7 @@
         "https://runescape.wiki/w/Devices"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention tech trees and manufacture.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -393,9 +437,19 @@
       "name": "Staff of limitless family (elemental impetus craft)",
       "category": "permanent infinite-rune staff craft ladder",
       "region_hint": "misthalin",
-      "region_hints": ["misthalin", "asgarnia", "kandarin"],
+      "region_hints": [
+        "misthalin",
+        "asgarnia",
+        "kandarin"
+      ],
       "required_regions": [],
-      "optional_pressure_regions": ["misthalin", "asgarnia", "kandarin", "desert", "fremennik"],
+      "optional_pressure_regions": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "desert",
+        "fremennik"
+      ],
       "requirements": [
         "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
         "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
@@ -429,13 +483,17 @@
       ]
     },
     {
-      "id": "asgarnia:herb-protector",
+      "id": "invention:herb-protector",
       "name": "Herb protector (Invention farming device)",
       "category": "Invention Farming device discovery",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["kandarin", "desert", "karamja"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "kandarin",
+        "desert",
+        "karamja"
+      ],
       "requirements": [
         "Invention discovery and workbench craft (plant cure + organic parts + healthy components)",
         "Use on herb or vine herb patch before or after planting"
@@ -456,7 +514,7 @@
         "https://runescape.wiki/w/Pharm_Ecology"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention craft.",
+      "league_treatment": "· Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",

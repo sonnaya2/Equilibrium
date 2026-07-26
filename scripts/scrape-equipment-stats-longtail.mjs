@@ -161,26 +161,25 @@ function extractInfoboxBonuses(wikitext) {
   return wikitext.slice(start, end);
 }
 
+/**
+ * Line-based param parse (same shape as _scrape_melee_stats).
+ * Do NOT strip the outer {{Infobox Bonuses}} with a nested-{{ }} pass first —
+ * once inner templates are gone that pass eats the whole box and yields {}.
+ */
 function parseInfoboxParams(box) {
-  let flat = box;
-  for (let n = 0; n < 24; n++) {
-    const next = flat.replace(/\{\{[^{}]*\}\}/g, " ");
-    if (next === flat) break;
-    flat = next;
-  }
-  flat = flat.replace(/^\{\{\s*Infobox\s+Bonuses/i, "").replace(/\}\}$/, "");
   const params = {};
-  for (const part of flat.split("|")) {
-    const eq = part.indexOf("=");
-    if (eq < 0) continue;
-    const key = part.slice(0, eq).trim().toLowerCase();
-    let val = part
-      .slice(eq + 1)
+  const body = String(box ?? "").replace(/^\{\{\s*Infobox\s+Bonuses[^\n|]*\n?/i, "");
+  const re = /^\|\s*([a-zA-Z0-9_]+)\s*=\s*(.*?)\s*$/gm;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const key = m[1].toLowerCase();
+    let val = m[2].trim();
+    val = val
+      .replace(/\{\{[^{}]*\}\}/g, " ")
       .replace(/\[\[(?:[^|\]]*\|)?([^\]]+)\]\]/g, "$1")
       .replace(/'''?/g, "")
       .replace(/\s+/g, " ")
       .trim();
-    if (!key) continue;
     if (!(key in params)) params[key] = val;
   }
   return params;

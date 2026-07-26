@@ -18,13 +18,18 @@
   },
   "activity_additions": [
     {
-      "id": "asgarnia:divine-charge-crafting",
+      "id": "invention:divine-charge-crafting",
       "name": "Divine charge crafting loop (energy → charge pack / machines / GOTE fuel)",
       "category": "Invention production infrastructure",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["kandarin", "fremennik", "desert", "asgarnia"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "kandarin",
+        "fremennik",
+        "desert",
+        "asgarnia"
+      ],
       "location": "Inventor's workbench discovery (Invention Guild / multi-city workbenches); weave is remote — no workbench required after discovery",
       "requirements": [
         "4 Invention to discover the Divine charge blueprint at an inventor's workbench",
@@ -56,7 +61,7 @@
         "https://runescape.wiki/w/Grace_of_the_elves"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for discovery hub taxonomy. Energy colonies remain multi-region optional pressure. Pair with charge-pack research ranks and GOTE porter chain — do not score GOTE sustain without this craft loop.",
+      "league_treatment": "Energy colonies remain multi-region optional pressure. Pair with charge-pack research ranks and GOTE porter chain — do not score GOTE sustain without this craft loop. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:charge-pack-infrastructure",
@@ -129,12 +134,12 @@
       ]
     },
     {
-      "id": "asgarnia:augmentor",
+      "id": "invention:augmentor",
       "name": "Augmentor (permanent Invention manufacture unlock)",
       "category": "Invention production infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench manufacture after blueprint discovery (Invention tutorial / Guild hub taxonomy)",
       "requirements": [
@@ -160,7 +165,7 @@
         "https://runescape.wiki/w/Invention_tutorial"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention unlock geography. Do not invent component shopping lists beyond wiki material families.",
+      "league_treatment": "Do not invent component shopping lists beyond wiki material families. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -171,12 +176,12 @@
       ]
     },
     {
-      "id": "asgarnia:junk-refiner",
+      "id": "invention:junk-refiner",
       "name": "Junk refiner (junk → refined components)",
       "category": "Invention production infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "location": "Inventor's workbench discovery/manufacture; refine is inventory device (usable remotely, including AFK side-activities)",
       "requirements": [
@@ -202,7 +207,7 @@
         "https://runescape.wiki/w/Junk"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for blueprint discovery. Junk generation is account-wide disassembly throughput.",
+      "league_treatment": "Junk generation is account-wide disassembly throughput. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -215,7 +220,7 @@
   "equipment_additions": [],
   "skipped_present": [
     {
-      "id": "asgarnia:charge-pack-infrastructure",
+      "id": "invention:charge-pack-infrastructure",
       "reason": "Already first-class; documents pack capacity/drain research, not the divine-charge craft loop"
     },
     {
@@ -228,7 +233,14 @@
     },
     {
       "id": "cross-region:grace-of-the-elves-porter-chain",
-      "reason": "Already first-class GOTE manufacture/porter supply; depends on divine-charge fuel documented here"
+      "reason": "Already first-class GOTE manufacture/porter supply; depends on divine-charge fuel documented here",
+      "required_regions": [
+        "tirannwn",
+        "desert",
+        "morytania",
+        "kandarin",
+        "misthalin"
+      ]
     },
     {
       "id": "forinthry:herbicide-deployable-herb-burner",

@@ -267,9 +267,27 @@ function mergeShards() {
     icons: map,
   };
   fs.writeFileSync(dest, `${JSON.stringify(out, null, 2)}\n`);
+
+  // Lean client artifact: ok slugs only (no metadata) for gameArt EQUIPMENT_OK.
+  const slugsDest = path.join(root, "data/combat/equipment-icon-slugs.json");
+  const slugs = Object.entries(map)
+    .filter(([, e]) => e.ok)
+    .map(([id]) => slugFromId(id))
+    .sort();
+  fs.writeFileSync(slugsDest, `${JSON.stringify(slugs, null, 2)}\n`);
+
   console.log(
     JSON.stringify(
-      { merged: true, files: files.length, count: out.count, ok: out.ok, failed: out.failed, dest },
+      {
+        merged: true,
+        files: files.length,
+        count: out.count,
+        ok: out.ok,
+        failed: out.failed,
+        dest,
+        slugsDest,
+        slugCount: slugs.length,
+      },
       null,
       2,
     ),

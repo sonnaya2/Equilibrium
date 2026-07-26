@@ -99,6 +99,19 @@ export function compact(value) {
   return "";
 }
 
+function xpRateText(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return text(value);
+  const low = value.summary_without_bought_energy ?? value.without_bought_energy;
+  const high = value.summary_with_bought_energy ?? value.with_bought_energy;
+  if (typeof low === "number" && typeof high === "number") {
+    return `${low.toLocaleString("en-US")}–${high.toLocaleString("en-US")} XP/h`;
+  }
+  if (typeof value.level_99 === "number") {
+    return `${value.level_99.toLocaleString("en-US")} XP/h at 99`;
+  }
+  return compact(value);
+}
+
 export function slug(value) {
   return String(value || "")
     .toLowerCase()
@@ -552,7 +565,7 @@ export function toCatalogMethod(raw, verifiedAt) {
 
   const regionHints = collectRegionHints(raw);
   const xpRate =
-    text(raw.xp_rate) ||
+    xpRateText(raw.xp_rate) ||
     text(raw.base_xp_per_hour) ||
     text(raw.example_base_xp_per_hour) ||
     "not normalized yet";

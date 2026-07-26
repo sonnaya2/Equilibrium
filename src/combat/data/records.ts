@@ -9,10 +9,19 @@ import type { CombatStyle, SourceReference } from "../types";
  * carry sourced facts (numbers, unlocks, provenance), never executable math.
  */
 
-export type UnlockType = "level" | "quest" | "codex" | "activity" | "shop" | "drop";
+export type UnlockType =
+  | "level"
+  | "quest"
+  | "codex"
+  | "activity"
+  | "shop"
+  | "drop"
+  /** Retired from live game (e.g. 2026 Aura Overhaul combat auras). */
+  | "removed";
 
 /** Where and how a record is obtained. `regions` names the League regions whose
- *  unlock makes it available; an empty list means base-game availability. */
+ *  unlock makes it available. Empty `regions` means unverified/unknown availability
+ *  for equipment loadout display until stamped — not affirmed base-game. */
 export interface UnlockInfo {
   type: UnlockType;
   requirement?: string;
@@ -65,14 +74,15 @@ export type EquipmentSlot =
   | "amulet"
   | "ring"
   | "pocket"
-  | "ammo"
-  | "aura";
+  | "ammo";
 
 export interface EquipmentBonuses {
   damage?: number;
   accuracy?: number;
   armour?: number;
   prayer?: number;
+  /** Tank LP bonus when the wiki Infobox Bonuses sources it. */
+  life?: number;
   critChance?: number;
 }
 

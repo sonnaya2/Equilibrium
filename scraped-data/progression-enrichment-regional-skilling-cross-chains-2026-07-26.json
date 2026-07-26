@@ -61,17 +61,11 @@
       "category": "cross-region tier-100 augmentable Mining tool follow-on",
       "region_hints": [
         "fremennik",
-        "tirannwn",
-        "asgarnia",
-        "morytania",
-        "misthalin",
-        "forinthry",
-        "kandarin"
+        "tirannwn"
       ],
       "required_regions": [
         "fremennik",
-        "tirannwn",
-        "asgarnia"
+        "tirannwn"
       ],
       "optional_pressure_regions": [
         "morytania",
@@ -117,14 +111,12 @@
       "region_hints": [
         "tirannwn",
         "misthalin",
-        "asgarnia",
-        "fremennik",
-        "kandarin"
+        "fremennik"
       ],
       "required_regions": [
         "tirannwn",
         "misthalin",
-        "asgarnia"
+        "fremennik"
       ],
       "optional_pressure_regions": [
         "fremennik",
@@ -167,14 +159,12 @@
       "region_hints": [
         "tirannwn",
         "misthalin",
-        "asgarnia",
-        "fremennik",
-        "kandarin"
+        "fremennik"
       ],
       "required_regions": [
         "tirannwn",
         "misthalin",
-        "asgarnia"
+        "fremennik"
       ],
       "optional_pressure_regions": [
         "fremennik",
@@ -361,14 +351,19 @@
       "name": "Grace of the elves / signs of the porter supply chain",
       "category": "cross-region gathering necklace and porter charge supply",
       "region_hints": [
-        "asgarnia",
         "tirannwn",
         "desert",
         "morytania",
         "kandarin",
         "misthalin"
       ],
-      "required_regions": [],
+      "required_regions": [
+        "tirannwn",
+        "desert",
+        "morytania",
+        "kandarin",
+        "misthalin"
+      ],
       "optional_pressure_regions": [
         "asgarnia",
         "tirannwn",
@@ -407,7 +402,7 @@
         "https://runescape.wiki/w/Dark_Facet_of_Grace"
       ],
       "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-      "league_treatment": "Do not hard-require every energy region. Track Asgarnia Invention manufacture and the energy tiers the player can actually reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding."
+      "league_treatment": "Do not hard-require every energy region. Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding."
     },
     {
       "id": "cross-region:invention-machines-guild",

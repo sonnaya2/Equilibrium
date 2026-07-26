@@ -673,16 +673,15 @@
       ]
     },
     {
-      "id": "asgarnia:extreme-invention-boost-path",
+      "id": "kandarin:extreme-invention-boost-path",
       "name": "Extreme invention potion boost path",
       "category": "Invention Herblore boost infrastructure",
       "region_hint": "asgarnia",
       "region_hints": [
-        "asgarnia",
-        "anachronia"
+        "kandarin"
       ],
       "required_regions": [
-        "asgarnia"
+        "kandarin"
       ],
       "optional_pressure_regions": [
         "anachronia",
@@ -713,7 +712,7 @@
         "https://runescape.wiki/w/Invention"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention skill home. Webbing supply is optional_pressure until Anachronia/POF fungus path is unlocked.",
+      "league_treatment": "Webbing supply is optional_pressure until Anachronia/POF fungus path is unlocked. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -729,13 +728,10 @@
       "category": "cross-region Invention boost supply stack",
       "region_hint": "asgarnia",
       "region_hints": [
-        "asgarnia",
-        "anachronia",
         "kandarin"
       ],
       "required_regions": [
-        "asgarnia",
-        "anachronia"
+        "kandarin"
       ],
       "optional_pressure_regions": [
         "kandarin"
@@ -760,7 +756,7 @@
         "https://runescape.wiki/w/Invention_Guild"
       ],
       "confidence": "confirmed_wiki_cross_region_stack",
-      "league_treatment": "Hard Asgarnia + Anachronia for full self-supply. Kandarin POF can substitute webbing in some plans.",
+      "league_treatment": "Hard Kandarin for Manor Farm mycelial webbing (Invention craft is global). Kandarin POF can substitute webbing in some plans.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:extreme-invention-boost-path",

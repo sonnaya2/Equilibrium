@@ -13,7 +13,10 @@
       "name": "Barbarian Training (Otto multi-skill package)",
       "category": "permanent multi-skill unlock package",
       "region_hint": "kandarin",
-      "region_hints": ["kandarin", "karamja"],
+      "region_hints": [
+        "kandarin",
+        "karamja"
+      ],
       "requirements": [
         "Otto Godblessed at Otto's Grotto north of Baxtorian Falls",
         "35 Firemaking and 11 Crafting for bow firemaking",
@@ -42,7 +45,10 @@
       "name": "Always Adze (Seed of the Charyou Tree)",
       "category": "Archaeology monolith relic power",
       "region_hint": "kandarin",
-      "region_hints": ["kandarin", "asgarnia"],
+      "region_hints": [
+        "kandarin",
+        "asgarnia"
+      ],
       "requirements": [
         "83 Archaeology (boostable) for Warforge Into the Forge path",
         "Inactive Seed of the Charyou Tree from Imcando anvil in Thalmund's Forge (Warforge Dig Site)",
@@ -272,7 +278,10 @@
       "name": "Thieves' Guild master thief tools",
       "category": "Thieving permanent tools",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "misthalin"],
+      "region_hints": [
+        "asgarnia",
+        "misthalin"
+      ],
       "requirements": [
         "Thieves' Guild access under Lumbridge (Buyers and Cellars chain)",
         "Guild reputation / heist progression for master tools"
@@ -297,7 +306,10 @@
       "name": "Player-owned port (first-class hub)",
       "category": "Ports voyage economy and Eastern lands gate",
       "region_hint": "desert",
-      "region_hints": ["desert", "asgarnia"],
+      "region_hints": [
+        "desert",
+        "asgarnia"
+      ],
       "requirements": [
         "Ports access via Menaphos / Port district portal",
         "Captain and crew progression for voyage success"
@@ -320,7 +332,10 @@
       "name": "The Arc Waiko reward shop (chime economy)",
       "category": "Eastern lands skilling shop infrastructure",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "desert"],
+      "region_hints": [
+        "asgarnia",
+        "desert"
+      ],
       "requirements": [
         "Player-owned port progression for Arc voyages",
         "Impressing the Locals / Arc island access",
@@ -344,8 +359,16 @@
       "name": "Signs of the porter (Divination supply system)",
       "category": "Divination bank-transport supply chain",
       "region_hint": "kandarin",
-      "region_hints": ["kandarin", "tirannwn", "asgarnia", "misthalin"],
-      "required_regions": ["kandarin", "tirannwn"],
+      "region_hints": [
+        "kandarin",
+        "tirannwn",
+        "asgarnia",
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "tirannwn"
+      ],
       "requirements": [
         "Divination levels for sign of the porter tiers",
         "Divine energy of appropriate tier to craft signs",
@@ -415,8 +438,14 @@
       "name": "Dark Facet of Grace (GOTE enchantment)",
       "category": "Grace of the Elves permanent upgrade",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn", "forinthry", "asgarnia"],
-      "required_regions": ["tirannwn", "forinthry"],
+      "region_hints": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "required_regions": [
+        "tirannwn",
+        "forinthry"
+      ],
       "requirements": [
         "Grace of the elves already crafted",
         "Dark Facet of Grace enchantment (Invention craft: dark onyx core + Seren components + onyx + crystal tool seed)",
@@ -441,7 +470,11 @@
       "name": "Gemstone golem outfit",
       "category": "Mining XP outfit",
       "region_hint": "forinthry",
-      "region_hints": ["forinthry", "desert", "asgarnia"],
+      "region_hints": [
+        "forinthry",
+        "desert",
+        "asgarnia"
+      ],
       "requirements": [
         "Gemstone golem fragment path (Daemonheim / gemstone golem encounters)",
         "Outfit piece assembly for full set XP bonus"

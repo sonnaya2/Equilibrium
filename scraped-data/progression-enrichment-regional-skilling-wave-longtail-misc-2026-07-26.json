@@ -87,16 +87,12 @@
       ]
     },
     {
-      "id": "asgarnia:alchemical-onyx",
+      "id": "invention:alchemical-onyx",
       "name": "Alchemical onyx (GOTE / LOTD craft residual)",
       "category": "permanent Invention craft blueprint residual",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [
         "tirannwn",
         "desert"
@@ -126,7 +122,7 @@
         "https://runescape.wiki/w/Luck_of_the_Dwarves"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention Guild manufacture. Enchant Magic level is global skill gate.",
+      "league_treatment": "manufacture. Enchant Magic level is global skill gate. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "tirannwn:grace-of-the-elves",
@@ -401,16 +397,12 @@
       ]
     },
     {
-      "id": "asgarnia:alchemical-hydrix",
+      "id": "invention:alchemical-hydrix",
       "name": "Alchemical hydrix (Brooch of the Gods craft residual)",
       "category": "permanent Invention craft blueprint residual",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "requirements": [
         "117 Invention (boostable from 100 with extreme invention) to manufacture at inventor's workbench",
@@ -434,7 +426,7 @@
         "https://runescape.wiki/w/Brooch_of_the_Gods"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention manufacture. Enchant Magic is global.",
+      "league_treatment": "Enchant Magic is global. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:brooch-of-the-gods",
@@ -444,16 +436,12 @@
       ]
     },
     {
-      "id": "asgarnia:passage-of-the-abyss",
+      "id": "invention:passage-of-the-abyss",
       "name": "Passage of the abyss (compacted jewellery pocket)",
       "category": "permanent Invention teleport pocket residual",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [
         "forinthry",
         "misthalin"
@@ -483,7 +471,7 @@
         "https://runescape.wiki/w/Dark_Facet_of_Passage"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for craft. Jewellery charge sinks remain multi-region material pressure.",
+      "league_treatment": "Jewellery charge sinks remain multi-region material pressure. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:alchemical-onyx",
@@ -546,16 +534,12 @@
       ]
     },
     {
-      "id": "asgarnia:invention-skilling-perk-ladder",
+      "id": "invention:invention-skilling-perk-ladder",
       "name": "Invention skilling gizmo perk ladder (Wise / Honed / Furnace / Imp Souled / Refined / Prosper)",
       "category": "permanent Invention equipment-state skilling perk ladder",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [
         "tirannwn",
         "forinthry"
@@ -591,7 +575,7 @@
         "https://runescape.wiki/w/Invention_Guild"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention Guild. Component sources may add optional multi-region pressure only.",
+      "league_treatment": "Component sources may add optional multi-region pressure only. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",

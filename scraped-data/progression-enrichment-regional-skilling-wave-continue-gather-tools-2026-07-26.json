@@ -51,13 +51,16 @@
   ],
   "equipment_additions": [
     {
-      "id": "asgarnia:fishing-rod-o-matic",
+      "id": "invention:fishing-rod-o-matic",
       "name": "Fishing rod-o-matic",
       "category": "permanent Invention Fishing tool",
-      "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["tirannwn", "kandarin"],
+      "region_hint": "global",
+      "region_hints": [],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "kandarin"
+      ],
       "requirements": [
         "22 Invention research: Fishing rod-o-matic blueprint (Inventor's workbench / Invention Guild)",
         "80 Crafting to manufacture",
@@ -82,7 +85,7 @@
         "https://runescape.wiki/w/Charge_pack"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention manufacture. Fishing sites remain multi-region destination pressure.",
+      "league_treatment": "Fishing sites remain multi-region destination pressure. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -94,12 +97,12 @@
       ]
     },
     {
-      "id": "asgarnia:enhanced-fishing-rod-o-matic",
+      "id": "invention:enhanced-fishing-rod-o-matic",
       "name": "Enhanced fishing rod-o-matic",
       "category": "permanent Ancient Invention Fishing tool upgrade",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia"],
-      "required_regions": ["asgarnia"],
+      "region_hints": [],
+      "required_regions": [],
       "optional_pressure_regions": [],
       "requirements": [
         "93 Invention + Ancient Invention path; ancient enhanced tools / fishing rod-o-matic enhancement discovery",
@@ -123,7 +126,7 @@
         "https://runescape.wiki/w/Fishing_rod-o-matic"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Ancient Invention tools. Stormguard dig-site geography stays on ancient-invention-blueprints.",
+      "league_treatment": "Stormguard dig-site geography stays on ancient-invention-blueprints. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:fishing-rod-o-matic",
@@ -134,13 +137,17 @@
       ]
     },
     {
-      "id": "asgarnia:hammer-tron",
+      "id": "invention:hammer-tron",
       "name": "Hammer-tron",
       "category": "permanent Invention Smithing tool",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "tirannwn"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["tirannwn"],
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "tirannwn"
+      ],
       "requirements": [
         "22 Invention research: Hammer-tron blueprint",
         "80 Crafting manufacture",
@@ -164,7 +171,7 @@
         "https://runescape.wiki/w/Crystal_hammer"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention. Tirannwn is crystal-hammer support only.",
+      "league_treatment": "Tirannwn is crystal-hammer support only. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -175,13 +182,19 @@
       ]
     },
     {
-      "id": "asgarnia:pyro-matic",
+      "id": "invention:pyro-matic",
       "name": "Pyro-matic",
       "category": "permanent Invention Firemaking tool",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "karamja", "tirannwn"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["karamja", "tirannwn"],
+      "region_hints": [
+        "karamja",
+        "tirannwn"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "karamja",
+        "tirannwn"
+      ],
       "requirements": [
         "22 Invention research: Pyro-matic blueprint",
         "80 Crafting manufacture",
@@ -206,7 +219,7 @@
         "https://runescape.wiki/w/Crystal_tinderbox"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for Invention. Method sites remain optional multi-region pressure.",
+      "league_treatment": "Method sites remain optional multi-region pressure. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -220,13 +233,23 @@
       ]
     },
     {
-      "id": "asgarnia:augmentable-gather-tools-research",
+      "id": "invention:augmentable-gather-tools-research",
       "name": "Augmentable gather tools research (pickaxe / hatchet / mattock)",
       "category": "permanent Invention gather-tool augmentation package",
       "region_hint": "asgarnia",
-      "region_hints": ["asgarnia", "tirannwn", "fremennik", "anachronia"],
-      "required_regions": ["asgarnia"],
-      "optional_pressure_regions": ["tirannwn", "fremennik", "anachronia", "misthalin", "kandarin"],
+      "region_hints": [
+        "tirannwn",
+        "fremennik",
+        "anachronia"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "fremennik",
+        "anachronia",
+        "misthalin",
+        "kandarin"
+      ],
       "requirements": [
         "22 Invention research discoveries: Augmented pickaxe, Augmented hatchet, and Augmented mattock blueprints (boostable)",
         "Augmentor blueprint/manufacture + charge pack",
@@ -254,7 +277,7 @@
         "https://runescape.wiki/w/Invention_training"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia for the three research discoveries. Host tools still need their regional supply chains.",
+      "league_treatment": "Host tools still need their regional supply chains. · Invention skill unlock and workbench manufacture are global (not Asgarnia-locked). Guild machine-room scenery stays Asgarnia place geography only.",
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:invention-guild",
@@ -274,9 +297,18 @@
       "name": "Dragon pickaxe (Chaos Dwarf Battlefield / Chaos Giants)",
       "category": "Mining tool base and crystal/Imcando pickaxe feedstock",
       "region_hint": "fremennik",
-      "region_hints": ["fremennik", "tirannwn", "asgarnia"],
-      "required_regions": ["fremennik"],
-      "optional_pressure_regions": ["tirannwn", "asgarnia"],
+      "region_hints": [
+        "fremennik",
+        "tirannwn",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "fremennik"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "asgarnia"
+      ],
       "requirements": [
         "Forgiveness of a Chaos Dwarf completed for Chaos Dwarf Battlefield chaos-aligned drops (Black Guard soldiers do not drop)",
         "Birthright of the Dwarves for Chaos Giant path (1/1,000; 1/970 with tier-3 luck+)",
@@ -319,9 +351,20 @@
       "name": "Dragon mattock (Big Game Hunter / ancient casket)",
       "category": "Archaeology tool base and crystal/Imcando mattock feedstock",
       "region_hint": "anachronia",
-      "region_hints": ["anachronia", "tirannwn", "kandarin", "misthalin"],
-      "required_regions": ["anachronia"],
-      "optional_pressure_regions": ["tirannwn", "kandarin", "misthalin"],
+      "region_hints": [
+        "anachronia",
+        "tirannwn",
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "kandarin",
+        "misthalin"
+      ],
       "requirements": [
         "Anachronia access + Big Game Hunter dinosaur skinning (1/101 per dinosaur; multi-dino encounters can multi-roll)",
         "Alternate: ancient casket 1/100 (Misthalin League badge on casket table — support path, not primary claim)",
@@ -367,9 +410,17 @@
       "name": "Skillchompa supply hub (wild + PoF ladder)",
       "category": "permanent skilling consumable supply hub",
       "region_hint": "kandarin",
-      "region_hints": ["kandarin", "tirannwn"],
-      "required_regions": ["kandarin"],
-      "optional_pressure_regions": ["tirannwn", "desert"],
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "desert"
+      ],
       "requirements": [
         "Hunter levels for wild skillchompa traps: cobalt 27, viridian 46, azure 68, crimson 89 (crystal 97 needs Tirannwn)",
         "Box traps; Agility multi-catch scaling",
@@ -410,9 +461,18 @@
       "name": "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)",
       "category": "cross-region Mining tool chain residual checklist",
       "region_hint": "fremennik",
-      "region_hints": ["fremennik", "tirannwn", "asgarnia"],
-      "required_regions": ["fremennik", "tirannwn"],
-      "optional_pressure_regions": ["asgarnia"],
+      "region_hints": [
+        "fremennik",
+        "tirannwn",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
       "requirements": [
         "Dragon pickaxe self-source (fremennik:dragon-pickaxe)",
         "Optional Imcando path: gilded dragon pickaxe + four Lava Flow Mine fragments + Thurgo (fremennik:imcando-pickaxe)",
@@ -440,7 +500,7 @@
         "https://runescape.wiki/w/Pickaxe_of_Life_and_Death"
       ],
       "confidence": "confirmed_wiki_cross_region_stack",
-      "league_treatment": "Hard Fremennik + Tirannwn for the core self-sufficient chain. Asgarnia is forge/Invention support.",
+      "league_treatment": "Hard Fremennik + Tirannwn for the core self-sufficient chain. Invention manufacture is global; forge geography stays regional support only.",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "fremennik:dragon-pickaxe",
@@ -459,8 +519,18 @@
       "name": "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
       "category": "cross-region Woodcutting tool chain residual checklist",
       "region_hint": "fremennik",
-      "region_hints": ["fremennik", "tirannwn", "misthalin", "asgarnia"],
-      "required_regions": ["fremennik", "tirannwn", "misthalin", "asgarnia"],
+      "region_hints": [
+        "fremennik",
+        "tirannwn",
+        "misthalin",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "fremennik",
+        "tirannwn",
+        "misthalin",
+        "asgarnia"
+      ],
       "optional_pressure_regions": [],
       "requirements": [
         "Dragon hatchet self-source (fremennik:dagannoth-kings-dragon-hatchet — Waterbirth DK 1/128 each king)",
@@ -509,9 +579,22 @@
       "name": "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
       "category": "cross-region Archaeology tool chain residual checklist",
       "region_hint": "misthalin",
-      "region_hints": ["misthalin", "anachronia", "tirannwn", "kandarin", "asgarnia"],
-      "required_regions": ["misthalin", "anachronia", "tirannwn", "kandarin"],
-      "optional_pressure_regions": ["asgarnia"],
+      "region_hints": [
+        "misthalin",
+        "anachronia",
+        "tirannwn",
+        "kandarin",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "misthalin",
+        "anachronia",
+        "tirannwn",
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
       "requirements": [
         "Smithable bronze→elder rune mattocks + campus Matty Ock early shop (misthalin:mattock-tier-ladder)",
         "Dragon mattock self-source (anachronia:dragon-mattock)",
@@ -563,9 +646,24 @@
       "name": "GOTE gather + porter sustain checklist",
       "category": "Grace of the Elves gather residual checklist",
       "region_hint": "tirannwn",
-      "region_hints": ["tirannwn", "asgarnia", "forinthry", "desert", "kandarin", "morytania", "misthalin"],
-      "required_regions": ["tirannwn", "asgarnia"],
-      "optional_pressure_regions": ["forinthry", "desert", "kandarin", "morytania", "misthalin"],
+      "region_hints": [
+        "tirannwn",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "morytania",
+        "misthalin"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "forinthry",
+        "desert",
+        "kandarin",
+        "morytania",
+        "misthalin"
+      ],
       "requirements": [
         "Alchemical onyx manufacture (asgarnia:alchemical-onyx) → alchemical onyx necklace → Grace of the elves (tirannwn:grace-of-the-elves)",
         "Signs of the porter energy ladder to charge GOTE (cross-region:grace-of-the-elves-porter-chain / cross-region:signs-of-the-porter-supply)",

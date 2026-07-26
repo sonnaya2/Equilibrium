@@ -88,7 +88,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Morytania_achievements",
           "title": "Hard Morytania Barrows rewards",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -112,7 +112,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Enhanced_Excalibur",
           "title": "Seers' Village combat achievement rewards",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -136,7 +136,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Fremennik_achievements",
           "title": "Elite Fremennik combat rewards",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -160,7 +160,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Tirannwn_achievements",
           "title": "Tirannwn combat achievement rewards",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -184,7 +184,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Keris",
           "title": "Hard Desert Keris upgrade",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -208,7 +208,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Template:Anachronia_base_camp/Slayer_Lodge_tiers",
           "title": "Slayer Lodge progression",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -232,7 +232,7 @@
           "source": "jagex",
           "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
           "title": "Totem of Vitality",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -256,7 +256,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Spirit_cape",
           "title": "Spirit cape passive",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -280,7 +280,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Pay-to-play_melee_training",
           "title": "Berserker's Fury relic chain",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -304,7 +304,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Heightened_Senses",
           "title": "Heightened Senses relic chain",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -314,7 +314,7 @@
       "kind": "passive",
       "facts": [
         "combat Archaeology relic cross-region chain",
-        "Keep both regions visible unless Equilibrium auto-completion explicitly bypasses the Armadyl turn-in or supplies the relic directly. · Effects: 5% damage reduction below 50% life points, 10% damage reduction below 25% life points · Unlocks: Ring of Solomon, Death Ward"
+        "Keep both regions visible unless Equilibrium auto-completion explicitly bypasses the Armadyl turn-in or supplies the relic directly. · Region combo (all required): kandarin + asgarnia · Effects: 5% damage reduction below 50% life points, 10% damage reduction below 25% life points · Unlocks: Ring of Solomon, Death Ward"
       ],
       "unlock": {
         "type": "activity",
@@ -329,7 +329,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Archaeology_training",
           "title": "Death Ward relic chain",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -353,7 +353,154 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Sunspear_(melee)",
           "title": "Vyre combat and Sunspear progression",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:fury-of-the-small-relic-chain",
+      "name": "Fury of the Small relic chain",
+      "kind": "passive",
+      "facts": [
+        "combat Archaeology relic cross-region chain",
+        "Missing combat Archaeology residual after Berserker's Fury / Heightened Senses / Death Ward. Consumes both restored artefacts. Region combo (all required): kandarin + misthalin. · Display Kandarin + Misthalin as all_required. Do not hide the Warforge dig dependency behind the monolith name. · Region combo (all required): kandarin + misthalin · Effects: All adrenaline-generating basic abilities generate +1% adrenaline (9% → 10%), Also applies to Necromancy basic attack (2026 combat modernisation note) · Unlocks: Goblin Warpaints, Fury of the Small · Region pressure: Kandarin hard-owns Warforge Dig Site artefacts and cave-painting tunnels., Misthalin hard-owns mysterious monolith harness / Archaeology campus reclaim."
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "Fury of the Small relic chain",
+        "regions": [
+          "kandarin",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Fury_of_the_Small",
+          "title": "Fury of the Small relic chain",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:conservation-of-energy-relic-chain",
+      "name": "Conservation of Energy relic chain",
+      "kind": "passive",
+      "facts": [
+        "combat Archaeology and Invention relic cross-region chain",
+        "High-end adrenaline combat relic residual complementary to dungeoneering:ring-of-vigour-passive (do not re-emit RoV). Region combo (all required): kandarin + asgarnia + misthalin. · All three regions required for self-sufficient unlock. Stacks with existing RoV combat unlock. · Region combo (all required): kandarin + asgarnia + misthalin · Effects: After using an ultimate ability, regain 10% adrenaline, Stacks with Ring of Vigour for up to 20% adrenaline retained/refunded after ultimates · Unlocks: Experimental Aether Reactor, Conservation of Energy · Region pressure: Kandarin hard-owns Stormguard / Howl's workshop dig and blueprint decipher steps., Asgarnia hard-owns Invention Guild inventor's workbench manufacture of the Experimental Aether Reactor., Misthalin hard-owns mysterious monolith harness."
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "Conservation of Energy relic chain",
+        "regions": [
+          "kandarin",
+          "asgarnia",
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Conservation_of_Energy",
+          "title": "Conservation of Energy relic chain",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:wars-retreat-combat-hub-residual",
+      "name": "War's Retreat combat hub residual",
+      "kind": "passive",
+      "facts": [
+        "PvM hub combat infrastructure",
+        "Combat-facing hub residual. Prefer misthalin:wars-blessing / misthalin:wars-grimoire for skilling prayer-switch detail already first-class. Do not invent Marks-of-War/hour rates. Adrenaline urn fill interaction is note-only (urn itself skipped as present/out of scope). · Hard Misthalin for Draynor / Death's office entry framing. · Unlocks: Boss portals (first free; second portal after 100 boss kills), Reaper portal auto-attuned to current Soul Reaper assignment, Altar of War (200 boss kills) and ability-cooldown refresh upgrade, Adrenaline crystals (1,000 boss kills) for pre-fight adrenaline and optional adrenaline-potion debuff clear, War's Grimoire spellbook swap (750 boss kills) and Blessing 3 prayer-book swap (Combat Mastery path), Campfire upgrades and Marks of War shop (War's Wares) · Region pressure: Misthalin hard-owns Draynor entry geography and current planner War's Retreat taxonomy (matches skilling wars-grimoire / wars-blessing ids without re-emitting them)."
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "War's Retreat combat hub residual",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/War%27s_Retreat",
+          "title": "War's Retreat combat hub residual",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:wars-blessing-combat-mastery-residual",
+      "name": "War's Blessing combat mastery residual",
+      "kind": "passive",
+      "facts": [
+        "Combat Mastery permanent combat utilities",
+        "Combat residual companion to skilling misthalin:wars-blessing (prayer-switch focus). Surfaces killcount skips, rotation control, adrenaline crystal full-fill, and Reaper's choice as combat utilities. Do not invent achievement point totals. · Hard Misthalin for War's Retreat mastery. Distinct id from skilling wars-blessing so combat catalog merge does not collapse prayer-switch densify. · Unlocks: Blessing 1: free daily boss-portal attunement, +5% Marks of War, Barrows crypt portal QoL, +5% Reaper's choice chance, Blessing 2: GWD killcount skip (except Nex), Heart of Gielinor killcount −50%, Sign of Life cooldown −50%, higher Marks of War and free attunements, Blessing 3: Araxxor / Rise of the Six rotation control; War's Grimoire prayer-book swap; +25% Marks of War and +500 hourly Marks cap, Blessing 4: Vorago rotation control; adrenaline crystals fill to 100% per action; guaranteed Reaper's choice; +50% Marks of War and +1,000 hourly cap; one-time costless ancient gizmo shells · Region pressure: Misthalin owns War's Retreat Combat Mastery hand-in geography under current taxonomy."
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "War's Blessing combat mastery residual",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/War%27s_Blessing",
+          "title": "War's Blessing combat mastery residual",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:kerapac-hard-mode-fsoa-farm-residual",
+      "name": "Kerapac hard mode FSoA farm residual",
+      "kind": "passive",
+      "facts": [
+        "Magic best-in-slot staff farming activity",
+        "Activity-facing residual for planners that separate boss farms from finished equipment rows. · Unlocks: Practical self-sufficient route to Fractured Staff of Armadyl pieces, Parallel rolls on GConc, wrist wraps, and Scripture of Jas"
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "Kerapac hard mode FSoA farm residual",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kerapac,_the_bound",
+          "title": "Kerapac hard mode FSoA farm residual",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "passive:rasial-necromancy-bis-farm-residual",
+      "name": "Rasial Necromancy BiS farm residual",
+      "kind": "passive",
+      "facts": [
+        "Necromancy best-in-slot farming activity",
+        "Activity residual for the full Necromancy t95 package under Misthalin. · Unlocks: Omni guard, Soulbound lantern, and First Necromancer robes as a single farm target"
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "Rasial Necromancy BiS farm residual",
+        "regions": [
+          "misthalin"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+          "title": "Rasial Necromancy BiS farm residual",
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -377,55 +524,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Ring_of_vigour",
           "title": "Ring of Vigour and passive conversion",
-          "verifiedAt": "2026-07-25"
-        }
-      ]
-    },
-    {
-      "id": "passive:bonecrusher",
-      "name": "Bonecrusher",
-      "kind": "passive",
-      "facts": [
-        "post-remaster combat drop-cleaner and Prayer sustain infrastructure",
-        "Use the 11 May 2026 remaster cost and requirement, not the older 34,000-token version. · Effects: Automatically converts configured bone drops into normal burying Prayer XP, Combines with Dungeoneering prayer necklaces for Prayer sustain"
-      ],
-      "unlock": {
-        "type": "activity",
-        "requirement": "Bonecrusher",
-        "regions": [
-          "forinthry"
-        ]
-      },
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
-          "title": "Bonecrusher",
-          "verifiedAt": "2026-07-25"
-        }
-      ]
-    },
-    {
-      "id": "passive:charming-imp",
-      "name": "Charming imp",
-      "kind": "passive",
-      "facts": [
-        "post-remaster charm collection infrastructure",
-        "This is especially relevant to the listed Waterbirth Dagannoth charm-farming method. · Effects: Automatically collects charms and spirit gems; selected charm types can instead be converted into Summoning XP"
-      ],
-      "unlock": {
-        "type": "activity",
-        "requirement": "Charming imp",
-        "regions": [
-          "forinthry"
-        ]
-      },
-      "sources": [
-        {
-          "source": "jagex",
-          "url": "https://secure.runescape.com/m=news/patch-notes-dungeoneering-remastered",
-          "title": "Charming imp",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -449,7 +548,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Player-owned_farm",
           "title": "NopeNopeNope spider combat perk",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -473,7 +572,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
           "title": "King of Beasts bomb-conservation perk",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -497,7 +596,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
           "title": "No Fear Meteor Strike perk",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -521,7 +620,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
           "title": "Armoured Hide Barricade perk",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -545,7 +644,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Guthix_staff",
           "title": "Guthix staff and Claws of Guthix access",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -569,7 +668,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Dreadnip",
           "title": "Dreadnips",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     },
@@ -593,7 +692,7 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Obsidian_equipment",
           "title": "Fight Cauldron obsidian armour progression",
-          "verifiedAt": "2026-07-25"
+          "verifiedAt": "2026-07-26"
         }
       ]
     }

@@ -1,765 +1,1354 @@
 {
   "fetchedAt": "2026-07-26",
-  "targets": 86,
-  "filled": 63,
-  "empty": 23,
+  "targets": 72,
+  "filled": 57,
+  "empty": 15,
   "purpose": "Longtail Infobox Bonuses for equipment.json wearables with slot set and no non-zero bonuses. Candidates only — parent merges; do not edit equipment.json from this file.",
   "mapping": {
     "accuracy": "Infobox Bonuses accuracy → bonuses.accuracy",
     "armour": "Infobox Bonuses armour → bonuses.armour",
     "prayer": "Infobox Bonuses prayer → bonuses.prayer (omit 0)",
-    "damage": "Infobox strength|melee|ranged|magic|necromancy style bonus → bonuses.damage; else non-zero weapon damage (spell weapons with damage 0 omit damage)"
+    "damage": "Infobox strength|melee|ranged|magic|necromancy style bonus → bonuses.damage; else non-zero weapon damage"
   },
   "byStatus": {
-    "ok": 59,
-    "redirect": 4,
-    "empty": 21,
-    "error": 2
+    "ok": 55,
+    "redirect": 2,
+    "empty": 14,
+    "error": 1
+  },
+  "byReason": {
+    "aura-no-static-infobox": 7,
+    "missing-page": 1,
+    "infobox-zero": 1,
+    "effect-only": 6
   },
   "records": [
     {
-      "id": "item:ahrims-book-of-magic",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "ahrims",
-      "wikiTitle": "Ahrim's book of magic",
+      "id": "item:abomination-cape",
+      "bonuses": {
+        "armour": 50.8,
+        "damage": 28.1
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ahrim%27s_book_of_magic", "title": "Ahrim's book of magic", "verifiedAt": "2026-07-26" }]
+      "tier": 80,
+      "wikiTitle": "Abomination cape",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Abomination_cape",
+          "title": "Abomination cape",
+          "revision": "37006344",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:ahrims-staff",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "ahrims",
-      "wikiTitle": "Ahrim's staff",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ahrim%27s_staff", "title": "Ahrim's staff", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:ahrims-wand",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "ahrims",
-      "wikiTitle": "Ahrim's wand",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ahrim%27s_wand", "title": "Ahrim's wand", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:akrisaes-war-mace",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486, "prayer": 2 },
-      "tier": 70,
-      "setId": "barrows",
-      "wikiTitle": "Akrisae's war mace",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Akrisae%27s_war_mace", "title": "Akrisae's war mace", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:amulet-of-the-forsaken-to-berserkers-fury",
-      "bonuses": { "prayer": 3, "damage": 40.2 },
-      "wikiTitle": "Amulet of the forsaken",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Amulet_of_the_forsaken", "title": "Amulet of the forsaken", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:ancient-lantern",
-      "bonuses": { "accuracy": 1924, "armour": 192.4 },
+      "id": "item:ancient-rebounder",
+      "bonuses": {
+        "accuracy": 1924,
+        "armour": 192.4
+      },
+      "status": "redirect",
       "tier": 80,
       "wikiTitle": "Ancient lantern",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ancient_lantern", "title": "Ancient lantern", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_lantern",
+          "title": "Ancient lantern",
+          "revision": "37054414",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:armadyl-godsword",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694, "prayer": 4 },
-      "tier": 75,
-      "setId": "godsword",
-      "wikiTitle": "Armadyl godsword",
+      "id": "item:archers-ring",
+      "bonuses": {
+        "damage": 22.5
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Armadyl_godsword", "title": "Armadyl godsword", "verifiedAt": "2026-07-26" }]
+      "tier": 1,
+      "wikiTitle": "Archers' ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Archers'_ring",
+          "title": "Archers' ring",
+          "revision": "37006898",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:bandos-godsword",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694, "prayer": 4 },
-      "tier": 75,
-      "setId": "godsword",
-      "wikiTitle": "Bandos godsword",
+      "id": "item:bandos-warshield",
+      "bonuses": {
+        "armour": 297.2,
+        "prayer": 1
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bandos_godsword", "title": "Bandos godsword", "verifiedAt": "2026-07-26" }]
+      "tier": 70,
+      "setId": "bandos",
+      "wikiTitle": "Bandos warshield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Bandos_warshield",
+          "title": "Bandos warshield",
+          "revision": "37007705",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:berserker-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 80,
       "wikiTitle": "Berserker aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Berserker_aura", "title": "Berserker aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Berserker_aura",
+          "title": "Berserker aura",
+          "revision": "36987760",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:blisterwood-orb",
-      "bonuses": { "accuracy": 1486 },
+      "id": "item:berserker-ring",
+      "bonuses": {
+        "armour": 5.1,
+        "damage": 16.8
+      },
+      "status": "ok",
+      "tier": 1,
+      "wikiTitle": "Berserker ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Berserker_ring",
+          "title": "Berserker ring",
+          "revision": "37007937",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:blessed-spirit-shield",
+      "bonuses": {
+        "armour": 297.2,
+        "prayer": 3
+      },
+      "status": "ok",
       "tier": 70,
-      "wikiTitle": "Blisterwood orb",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Blisterwood_orb", "title": "Blisterwood orb", "verifiedAt": "2026-07-26" }]
+      "wikiTitle": "Blessed spirit shield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Blessed_spirit_shield",
+          "title": "Blessed spirit shield",
+          "revision": "37011471",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:blisterwood-staff",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "wikiTitle": "Blisterwood staff",
+      "id": "item:chaotic-kiteshield",
+      "bonuses": {
+        "armour": 384.8
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Blisterwood_staff", "title": "Blisterwood staff", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:blisterwood-wand",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "wikiTitle": "Blisterwood wand",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Blisterwood_wand", "title": "Blisterwood wand", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:body-helmet",
-      "bonuses": { "armour": 40.4 },
-      "tier": 10,
-      "wikiTitle": "Body helmet",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Body_helmet", "title": "Body helmet", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:corrupted-defender",
-      "bonuses": { "damage": 168, "accuracy": 1486, "armour": 148.6 },
-      "tier": 70,
-      "setId": "corrupted-defender",
-      "wikiTitle": "Corrupted defender",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Corrupted_defender", "title": "Corrupted defender", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:crystal-dagger",
-      "bonuses": { "damage": 672, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Crystal dagger",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_dagger", "title": "Crystal dagger", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:crystal-halberd",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Crystal halberd",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_halberd", "title": "Crystal halberd", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:crystal-orb",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Crystal orb",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_orb", "title": "Crystal orb", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:crystal-staff",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Crystal staff",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_staff", "title": "Crystal staff", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:crystal-wand",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Crystal wand",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Crystal_wand", "title": "Crystal wand", "verifiedAt": "2026-07-26" }]
+      "tier": 80,
+      "wikiTitle": "Chaotic kiteshield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Chaotic_kiteshield",
+          "title": "Chaotic kiteshield",
+          "revision": "37049297",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:dark-magic-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 80,
       "wikiTitle": "Dark magic aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dark_magic_aura", "title": "Dark magic aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dark_magic_aura",
+          "title": "Dark magic aura",
+          "revision": "37023275",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:demon-horn-necklace",
-      "bonuses": { "prayer": 5 },
-      "wikiTitle": "Demon horn necklace",
+      "id": "item:deathwarden-boots-t90",
+      "bonuses": {
+        "armour": 122.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Demon_horn_necklace", "title": "Demon horn necklace", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:dharoks-greataxe",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "barrows",
-      "wikiTitle": "Dharok's greataxe",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dharok%27s_greataxe", "title": "Dharok's greataxe", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:dominion-staff",
-      "bonuses": { "accuracy": 2458 },
       "tier": 90,
-      "wikiTitle": "Dominion staff",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dominion_staff", "title": "Dominion staff", "verifiedAt": "2026-07-26" }]
+      "setId": "deathwarden-90",
+      "wikiTitle": "Deathwarden boots (tier 90)",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathwarden_boots_(tier_90)",
+          "title": "Deathwarden boots (tier 90)",
+          "revision": "37010304",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:dragon-defender",
-      "bonuses": { "damage": 144, "accuracy": 1132, "armour": 113.2 },
+      "id": "item:deathwarden-gloves-t90",
+      "bonuses": {
+        "armour": 122.9
+      },
+      "status": "ok",
+      "tier": 90,
+      "setId": "deathwarden-90",
+      "wikiTitle": "Deathwarden gloves (tier 90)",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathwarden_gloves_(tier_90)",
+          "title": "Deathwarden gloves (tier 90)",
+          "revision": "37010305",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:deathwarden-hood-t90",
+      "bonuses": {
+        "armour": 491.6
+      },
+      "status": "ok",
+      "tier": 90,
+      "setId": "deathwarden-90",
+      "wikiTitle": "Deathwarden hood (tier 90)",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathwarden_hood_(tier_90)",
+          "title": "Deathwarden hood (tier 90)",
+          "revision": "36988946",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:deathwarden-robe-bottom-t90",
+      "bonuses": {
+        "armour": 540.7
+      },
+      "status": "ok",
+      "tier": 90,
+      "setId": "deathwarden-90",
+      "wikiTitle": "Deathwarden robe bottom (tier 90)",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathwarden_robe_bottom_(tier_90)",
+          "title": "Deathwarden robe bottom (tier 90)",
+          "revision": "37010306",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:deathwarden-robe-top-t90",
+      "bonuses": {
+        "armour": 565.3
+      },
+      "status": "ok",
+      "tier": 90,
+      "setId": "deathwarden-90",
+      "wikiTitle": "Deathwarden robe top (tier 90)",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Deathwarden_robe_top_(tier_90)",
+          "title": "Deathwarden robe top (tier 90)",
+          "revision": "37010298",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:dragon-claws",
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 576
+      },
+      "status": "redirect",
       "tier": 60,
-      "wikiTitle": "Dragon defender",
+      "wikiTitle": "Dragon claw",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dragon_claw",
+          "title": "Dragon claw",
+          "revision": "36983814",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:dragonfire-shield",
+      "bonuses": {
+        "armour": 170
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Dragon_defender", "title": "Dragon defender", "verifiedAt": "2026-07-26" }]
+      "tier": 50,
+      "wikiTitle": "Dragonfire shield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Dragonfire_shield",
+          "title": "Dragonfire shield",
+          "revision": "37077906",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:elite-seasingers-hood",
-      "bonuses": { "armour": 435.6, "prayer": 2 },
-      "tier": 85,
-      "setId": "elite-seasinger",
-      "wikiTitle": "Superior seasinger's hood",
-      "status": "redirect",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_seasinger%27s_hood", "title": "Superior seasinger's hood", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:elite-seasingers-robe-bottom",
-      "bonuses": { "armour": 479.1, "prayer": 2 },
-      "tier": 85,
-      "setId": "elite-seasinger",
-      "wikiTitle": "Superior seasinger's robe bottom",
-      "status": "redirect",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_seasinger%27s_robe_bottom", "title": "Superior seasinger's robe bottom", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:elite-seasingers-robe-top",
-      "bonuses": { "armour": 500.9, "prayer": 3 },
-      "tier": 85,
-      "setId": "elite-seasinger",
-      "wikiTitle": "Superior seasinger's robe top",
-      "status": "redirect",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_seasinger%27s_robe_top", "title": "Superior seasinger's robe top", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:elysian-spirit-shield",
-      "bonuses": { "armour": 338.8, "prayer": 3 },
-      "tier": 75,
-      "wikiTitle": "Elysian spirit shield",
+      "id": "item:elite-death-lotus-dart",
+      "bonuses": {
+        "accuracy": 2343,
+        "damage": 844.8
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Elysian_spirit_shield", "title": "Elysian spirit shield", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:enchanted-bakriminel-bolts",
-      "bonuses": {},
-      "tier": 90,
-      "wikiTitle": "Bakriminel bolts",
-      "status": "empty",
-      "reason": "ambiguous-ammo-bag",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Bakriminel_bolts", "title": "Bakriminel bolts", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:enhanced-excalibur",
-      "bonuses": { "damage": 345.6, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "excalibur",
-      "wikiTitle": "Enhanced Excalibur",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Enhanced_Excalibur", "title": "Enhanced Excalibur", "verifiedAt": "2026-07-26" }]
+      "tier": 88,
+      "setId": "death-lotus",
+      "wikiTitle": "Elite Death Lotus dart",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elite_Death_Lotus_dart",
+          "title": "Elite Death Lotus dart",
+          "revision": "37089612",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:equilibrium-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 80,
       "wikiTitle": "Equilibrium aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Equilibrium_aura", "title": "Equilibrium aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Equilibrium_aura",
+          "title": "Equilibrium aura",
+          "revision": "36961144",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:eternal-magic-orb-meagre",
-      "bonuses": { "accuracy": 2178 },
-      "tier": 99,
-      "wikiTitle": "Eternal magic orb (meagre)",
+      "id": "item:farseer-kiteshield",
+      "bonuses": {
+        "armour": 384.8
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Eternal_magic_orb_(meagre)", "title": "Eternal magic orb (meagre)", "verifiedAt": "2026-07-26" }]
+      "tier": 80,
+      "wikiTitle": "Farseer kiteshield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Farseer_kiteshield",
+          "title": "Farseer kiteshield",
+          "revision": "37049290",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:eternal-magic-staff-meagre",
-      "bonuses": { "accuracy": 2178 },
-      "tier": 99,
-      "wikiTitle": "Eternal magic staff (meagre)",
+      "id": "item:fire-cape",
+      "bonuses": {
+        "armour": 25.5,
+        "prayer": 2,
+        "damage": 26.2
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Eternal_magic_staff_(meagre)", "title": "Eternal magic staff (meagre)", "verifiedAt": "2026-07-26" }]
+      "tier": 55,
+      "wikiTitle": "Fire cape",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Fire_cape",
+          "title": "Fire cape",
+          "revision": "37112620",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:eternal-magic-wand-meagre",
-      "bonuses": { "accuracy": 2178 },
-      "tier": 99,
-      "wikiTitle": "Eternal magic wand (meagre)",
+      "id": "item:gemstone-boots",
+      "bonuses": {
+        "armour": 64.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Eternal_magic_wand_(meagre)", "title": "Eternal magic wand (meagre)", "verifiedAt": "2026-07-26" }]
+      "tier": 80,
+      "setId": "gemstone",
+      "wikiTitle": "Gemstone boots",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gemstone_boots",
+          "title": "Gemstone boots",
+          "revision": "36744429",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:glacier-boots",
-      "bonuses": { "armour": 108.9 },
-      "tier": 85,
-      "wikiTitle": "Glaiven boots",
-      "status": "redirect",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Glaiven_boots", "title": "Glaiven boots", "verifiedAt": "2026-07-26" }]
+      "id": "item:gemstone-gauntlets",
+      "bonuses": {
+        "armour": 64.9
+      },
+      "status": "ok",
+      "tier": 80,
+      "setId": "gemstone",
+      "wikiTitle": "Gemstone gauntlets",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gemstone_gauntlets",
+          "title": "Gemstone gauntlets",
+          "revision": "36744428",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:godsword",
+      "id": "item:gemstone-greaves",
+      "bonuses": {
+        "armour": 285.7
+      },
+      "status": "ok",
+      "tier": 80,
+      "setId": "gemstone",
+      "wikiTitle": "Gemstone greaves",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gemstone_greaves",
+          "title": "Gemstone greaves",
+          "revision": "36744427",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:gemstone-hauberk",
+      "bonuses": {
+        "armour": 298.7
+      },
+      "status": "ok",
+      "tier": 80,
+      "setId": "gemstone",
+      "wikiTitle": "Gemstone hauberk",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gemstone_hauberk",
+          "title": "Gemstone hauberk",
+          "revision": "36976706",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:gemstone-helm",
+      "bonuses": {
+        "armour": 259.8
+      },
+      "status": "ok",
+      "tier": 80,
+      "setId": "gemstone",
+      "wikiTitle": "Gemstone helm",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Gemstone_helm",
+          "title": "Gemstone helm",
+          "revision": "36744425",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:guthix-staff",
+      "bonuses": {
+        "accuracy": 1132
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "Guthix staff",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Guthix_staff",
+          "title": "Guthix staff",
+          "revision": "36751163",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:hexhunter-arrows",
       "bonuses": {},
-      "tier": 75,
-      "setId": "godsword",
-      "wikiTitle": "Godsword",
-      "status": "empty",
-      "reason": "set-aggregate",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Godsword", "title": "Godsword", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:guthans-warspear",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "barrows",
-      "wikiTitle": "Guthan's warspear",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Guthan%27s_warspear", "title": "Guthan's warspear", "verifiedAt": "2026-07-26" }]
+      "status": "error",
+      "tier": 80,
+      "reason": "missing-page",
+      "wikiTitle": "Hexhunter arrows"
     },
     {
       "id": "item:holy-wrench",
       "bonuses": {},
+      "status": "empty",
       "wikiTitle": "Holy wrench",
-      "status": "empty",
-      "reason": "infobox-zero",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Holy_wrench", "title": "Holy wrench", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Holy_wrench",
+          "title": "Holy wrench",
+          "revision": "37015476",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "infobox-zero"
     },
     {
-      "id": "item:igneous-capes",
-      "bonuses": {},
-      "setId": "igneous",
-      "wikiTitle": "Igneous Kal-Ket",
-      "status": "empty",
-      "reason": "set-aggregate",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Igneous_Kal-Ket", "title": "Igneous Kal-Ket", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:jessikas-sword",
-      "bonuses": { "damage": 471.6, "accuracy": 1694 },
-      "tier": 75,
-      "wikiTitle": "Jessika's sword",
+      "id": "item:kalphite-rebounder",
+      "bonuses": {
+        "accuracy": 2458,
+        "armour": 245.8
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Jessika%27s_sword", "title": "Jessika's sword", "verifiedAt": "2026-07-26" }]
+      "tier": 90,
+      "wikiTitle": "Kalphite rebounder",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Kalphite_rebounder",
+          "title": "Kalphite rebounder",
+          "revision": "36751086",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:korasis-sword",
-      "bonuses": { "damage": 918.8, "accuracy": 1694 },
-      "tier": 75,
-      "wikiTitle": "Korasi's sword",
+      "id": "item:leviathan-ring",
+      "bonuses": {
+        "armour": 41.4,
+        "damage": 18.7
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Korasi%27s_sword", "title": "Korasi's sword", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:linzas-hammer",
-      "bonuses": { "damage": 768, "accuracy": 1924 },
-      "tier": 80,
-      "setId": "linza",
-      "wikiTitle": "Linza's hammer",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Linza%27s_hammer", "title": "Linza's hammer", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "wikiTitle": "Leviathan ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Leviathan_ring",
+          "title": "Leviathan ring",
+          "revision": "37089606",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:mahjarrat-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 90,
       "wikiTitle": "Mahjarrat aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Mahjarrat_aura", "title": "Mahjarrat aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Mahjarrat_aura",
+          "title": "Mahjarrat aura",
+          "revision": "36951809",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
       "id": "item:maniacal-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 80,
       "wikiTitle": "Maniacal aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Maniacal_aura", "title": "Maniacal aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Maniacal_aura",
+          "title": "Maniacal aura",
+          "revision": "36952662",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:memory-dowser",
-      "bonuses": {},
-      "wikiTitle": "Memory dowser",
-      "status": "empty",
-      "reason": "skilling-offhand",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Memory_dowser", "title": "Memory dowser", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:off-hand-crystal-dagger",
-      "bonuses": { "damage": 336, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "crystal",
-      "wikiTitle": "Off-hand crystal dagger",
+      "id": "item:obsidian-boots",
+      "bonuses": {
+        "armour": 36.6
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_crystal_dagger", "title": "Off-hand crystal dagger", "verifiedAt": "2026-07-26" }]
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian boots",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_boots",
+          "title": "Obsidian boots",
+          "revision": "37018442",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:off-hand-khopesh-of-the-kharidian",
-      "bonuses": { "damage": 393.6, "accuracy": 2023 },
-      "tier": 82,
-      "wikiTitle": "Off-hand khopesh of the Kharidian",
+      "id": "item:obsidian-gloves",
+      "bonuses": {
+        "armour": 36.6
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_khopesh_of_the_Kharidian", "title": "Off-hand khopesh of the Kharidian", "verifiedAt": "2026-07-26" }]
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian gloves",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_gloves",
+          "title": "Obsidian gloves",
+          "revision": "37018444",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:off-hand-ruinous-rapier",
-      "bonuses": { "damage": 551.2, "accuracy": 3100 },
-      "tier": 90,
-      "setId": "ruinous",
-      "wikiTitle": "Off-hand ruinous rapier",
+      "id": "item:obsidian-kiteshield",
+      "bonuses": {
+        "armour": 146.4
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Off-hand_ruinous_rapier", "title": "Off-hand ruinous rapier", "verifiedAt": "2026-07-26" }]
+      "tier": 45,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian kiteshield",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_kiteshield",
+          "title": "Obsidian kiteshield",
+          "revision": "37018452",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:obsidian-mage-helm",
+      "bonuses": {
+        "armour": 226.4
+      },
+      "status": "ok",
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian mage helm",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_mage_helm",
+          "title": "Obsidian mage helm",
+          "revision": "37036069",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:obsidian-platebody",
+      "bonuses": {
+        "armour": 168.3
+      },
+      "status": "ok",
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian platebody",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_platebody",
+          "title": "Obsidian platebody",
+          "revision": "37018457",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:obsidian-platelegs",
+      "bonuses": {
+        "armour": 161
+      },
+      "status": "ok",
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian platelegs",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_platelegs",
+          "title": "Obsidian platelegs",
+          "revision": "37018458",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:obsidian-ranger-helm",
+      "bonuses": {
+        "armour": 226.4
+      },
+      "status": "ok",
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian ranger helm",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_ranger_helm",
+          "title": "Obsidian ranger helm",
+          "revision": "37036067",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:obsidian-warrior-helm",
+      "bonuses": {
+        "armour": 226.4
+      },
+      "status": "ok",
+      "tier": 60,
+      "setId": "obsidian",
+      "wikiTitle": "Obsidian warrior helm",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Obsidian_warrior_helm",
+          "title": "Obsidian warrior helm",
+          "revision": "37036066",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:occultists-ring",
+      "bonuses": {
+        "prayer": 5,
+        "damage": 34.5
+      },
+      "status": "ok",
+      "tier": 85,
+      "wikiTitle": "Occultist's ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Occultist's_ring",
+          "title": "Occultist's ring",
+          "revision": "37042469",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:off-hand-elite-death-lotus-dart",
+      "bonuses": {
+        "accuracy": 2343,
+        "damage": 422.4
+      },
+      "status": "ok",
+      "tier": 88,
+      "setId": "death-lotus",
+      "wikiTitle": "Off-hand Elite Death Lotus dart",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Off-hand_Elite_Death_Lotus_dart",
+          "title": "Off-hand Elite Death Lotus dart",
+          "revision": "37089613",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:reckless-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 80,
       "wikiTitle": "Reckless aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Reckless_aura", "title": "Reckless aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Reckless_aura",
+          "title": "Reckless aura",
+          "revision": "36960443",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:ruinous-maul",
-      "bonuses": { "damage": 2011.5, "accuracy": 3100 },
-      "tier": 90,
-      "setId": "ruinous",
-      "wikiTitle": "Ruinous maul",
+      "id": "item:reefwalkers-cape",
+      "bonuses": {
+        "armour": 62.2,
+        "damage": 11.2
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ruinous_maul", "title": "Ruinous maul", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "wikiTitle": "Reefwalker's cape",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Reefwalker's_cape",
+          "title": "Reefwalker's cape",
+          "revision": "37089581",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:ruinous-rapier",
-      "bonuses": { "damage": 1102.5, "accuracy": 3100 },
-      "tier": 90,
-      "setId": "ruinous",
-      "wikiTitle": "Ruinous rapier",
+      "id": "item:ring-of-vigour",
+      "bonuses": {
+        "damage": 16.8
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ruinous_rapier", "title": "Ruinous rapier", "verifiedAt": "2026-07-26" }]
+      "tier": 62,
+      "wikiTitle": "Ring of vigour",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ring_of_vigour",
+          "title": "Ring of vigour",
+          "revision": "37054163",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:ruinous-staff",
-      "bonuses": { "accuracy": 3100 },
-      "tier": 90,
-      "setId": "ruinous",
-      "wikiTitle": "Ruinous staff",
+      "id": "item:saradomins-hiss",
+      "bonuses": {
+        "prayer": 2,
+        "damage": 40.2
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Ruinous_staff", "title": "Ruinous staff", "verifiedAt": "2026-07-26" }]
+      "tier": 70,
+      "wikiTitle": "Saradomin's hiss",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Saradomin's_hiss",
+          "title": "Saradomin's hiss",
+          "revision": "37078694",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:runic-attuner",
-      "bonuses": {},
-      "wikiTitle": "Runic attuner",
-      "status": "empty",
-      "reason": "skilling-offhand",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Runic_attuner", "title": "Runic attuner", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:saradomin-godsword",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694, "prayer": 4 },
-      "tier": 75,
-      "setId": "godsword",
-      "wikiTitle": "Saradomin godsword",
+      "id": "item:saradomins-murmur",
+      "bonuses": {
+        "prayer": 2,
+        "damage": 40.2
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Saradomin_godsword", "title": "Saradomin godsword", "verifiedAt": "2026-07-26" }]
+      "tier": 70,
+      "wikiTitle": "Saradomin's murmur",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Saradomin's_murmur",
+          "title": "Saradomin's murmur",
+          "revision": "37078696",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:saradomin-sword",
-      "bonuses": { "damage": 1378.1, "accuracy": 1694, "prayer": 2 },
-      "tier": 75,
-      "wikiTitle": "Saradomin sword",
+      "id": "item:saradomins-whisper",
+      "bonuses": {
+        "prayer": 2,
+        "damage": 40.2
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Saradomin_sword", "title": "Saradomin sword", "verifiedAt": "2026-07-26" }]
+      "tier": 70,
+      "wikiTitle": "Saradomin's whisper",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Saradomin's_whisper",
+          "title": "Saradomin's whisper",
+          "revision": "37078697",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:scrimshaw-of-cruelty",
       "bonuses": {},
+      "status": "empty",
       "tier": 85,
       "wikiTitle": "Scrimshaw of cruelty",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scrimshaw_of_cruelty", "title": "Scrimshaw of cruelty", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scrimshaw_of_cruelty",
+          "title": "Scrimshaw of cruelty",
+          "revision": "37089853",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
       "id": "item:scrimshaw-of-the-elements",
       "bonuses": {},
+      "status": "empty",
       "tier": 85,
       "wikiTitle": "Scrimshaw of the elements",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scrimshaw_of_the_elements", "title": "Scrimshaw of the elements", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scrimshaw_of_the_elements",
+          "title": "Scrimshaw of the elements",
+          "revision": "37089854",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
       "id": "item:scrimshaw-of-vampyrism",
       "bonuses": {},
+      "status": "empty",
       "tier": 85,
       "setId": "scrimshaw",
       "wikiTitle": "Scrimshaw of vampyrism",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scrimshaw_of_vampyrism", "title": "Scrimshaw of vampyrism", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Scrimshaw_of_vampyrism",
+          "title": "Scrimshaw of vampyrism",
+          "revision": "37089855",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
-      "id": "item:scripture-of-amascut",
-      "bonuses": { "prayer": 5, "damage": 10.9 },
-      "tier": 70,
-      "wikiTitle": "Scripture of Amascut",
+      "id": "item:seers-ring",
+      "bonuses": {
+        "damage": 22.5
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Amascut", "title": "Scripture of Amascut", "verifiedAt": "2026-07-26" }]
+      "tier": 1,
+      "wikiTitle": "Seers' ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Seers'_ring",
+          "title": "Seers' ring",
+          "revision": "37020454",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:scripture-of-bik",
-      "bonuses": { "prayer": 6 },
-      "wikiTitle": "Scripture of Bik",
+      "id": "item:spirit-cape",
+      "bonuses": {
+        "armour": 16,
+        "damage": 18.7
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Bik", "title": "Scripture of Bik", "verifiedAt": "2026-07-26" }]
+      "tier": 50,
+      "wikiTitle": "Spirit cape",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Spirit_cape",
+          "title": "Spirit cape",
+          "revision": "36961622",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:scripture-of-ful",
-      "bonuses": { "prayer": 5, "damage": 10.9 },
-      "tier": 70,
-      "setId": "scripture",
-      "wikiTitle": "Scripture of Ful",
+      "id": "item:superior-death-lotus-tabi",
+      "bonuses": {
+        "armour": 108.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Ful", "title": "Scripture of Ful", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:scripture-of-jas",
-      "bonuses": { "prayer": 5, "damage": 10.9 },
-      "tier": 70,
-      "wikiTitle": "Scripture of Jas",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Jas", "title": "Scripture of Jas", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:scripture-of-wen",
-      "bonuses": { "prayer": 5, "damage": 10.9 },
-      "tier": 70,
-      "setId": "scripture",
-      "wikiTitle": "Scripture of Wen",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Scripture_of_Wen", "title": "Scripture of Wen", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:second-age-sword",
-      "bonuses": { "damage": 768, "accuracy": 1924 },
-      "tier": 80,
-      "wikiTitle": "Second-Age sword",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Second-Age_sword", "title": "Second-Age sword", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:slayer-helmet-i",
-      "bonuses": {},
-      "tier": 70,
-      "wikiTitle": "Slayer helmet (i)",
-      "status": "error",
-      "reason": "missing-page",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Slayer_helmet_(i)", "title": "Slayer helmet (i)", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:spectral-spirit-shield",
-      "bonuses": { "armour": 338.8, "prayer": 3 },
-      "tier": 75,
-      "wikiTitle": "Spectral spirit shield",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Spectral_spirit_shield", "title": "Spectral spirit shield", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:split-dragontooth-necklace",
-      "bonuses": { "prayer": 4 },
-      "wikiTitle": "Split dragontooth necklace",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Split_dragontooth_necklace", "title": "Split dragontooth necklace", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:staff-of-armadyl",
-      "bonuses": {},
-      "tier": 77,
-      "wikiTitle": "Staff of Armadyl",
-      "status": "empty",
-      "reason": "quest-artefact-not-equipable",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Staff_of_Armadyl", "title": "Staff of Armadyl", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:static-gloves",
-      "bonuses": { "armour": 108.9 },
       "tier": 85,
-      "wikiTitle": "Static gloves",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Static_gloves", "title": "Static gloves", "verifiedAt": "2026-07-26" }]
+      "setId": "death-lotus",
+      "wikiTitle": "Superior Death Lotus tabi",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_Death_Lotus_tabi",
+          "title": "Superior Death Lotus tabi",
+          "revision": "37090448",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:statiuss-warhammer",
-      "bonuses": { "damage": 1162.2, "accuracy": 1829 },
-      "tier": 78,
-      "setId": "statius",
-      "wikiTitle": "Statius's warhammer",
+      "id": "item:superior-death-lotus-tekoh",
+      "bonuses": {
+        "armour": 108.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Statius%27s_warhammer", "title": "Statius's warhammer", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "setId": "death-lotus",
+      "wikiTitle": "Superior Death Lotus tekoh",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_Death_Lotus_tekoh",
+          "title": "Superior Death Lotus tekoh",
+          "revision": "37090447",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:sunspear",
-      "bonuses": { "damage": 720, "accuracy": 1694 },
-      "tier": 75,
-      "setId": "sunspear",
-      "wikiTitle": "Sunspear",
+      "id": "item:superior-leviathan-ring",
+      "bonuses": {
+        "armour": 43.5,
+        "damage": 20.6
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Sunspear", "title": "Sunspear", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "wikiTitle": "Superior leviathan ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_leviathan_ring",
+          "title": "Superior leviathan ring",
+          "revision": "37089607",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:superior-reefwalkers-cape",
+      "bonuses": {
+        "armour": 65.3,
+        "damage": 16.1
+      },
+      "status": "ok",
+      "tier": 85,
+      "wikiTitle": "Superior reefwalker's cape",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_reefwalker's_cape",
+          "title": "Superior reefwalker's cape",
+          "revision": "37089582",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:superior-scrimshaw-of-cruelty",
       "bonuses": {},
+      "status": "empty",
       "tier": 90,
       "wikiTitle": "Superior scrimshaw of cruelty",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_scrimshaw_of_cruelty", "title": "Superior scrimshaw of cruelty", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_scrimshaw_of_cruelty",
+          "title": "Superior scrimshaw of cruelty",
+          "revision": "37089868",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
       "id": "item:superior-scrimshaw-of-the-elements",
       "bonuses": {},
+      "status": "empty",
       "tier": 90,
       "wikiTitle": "Superior scrimshaw of the elements",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_scrimshaw_of_the_elements", "title": "Superior scrimshaw of the elements", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_scrimshaw_of_the_elements",
+          "title": "Superior scrimshaw of the elements",
+          "revision": "37089869",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
       "id": "item:superior-scrimshaw-of-vampyrism",
       "bonuses": {},
+      "status": "empty",
       "tier": 90,
       "setId": "scrimshaw",
       "wikiTitle": "Superior scrimshaw of vampyrism",
-      "status": "empty",
-      "reason": "effect-only",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Superior_scrimshaw_of_vampyrism", "title": "Superior scrimshaw of vampyrism", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_scrimshaw_of_vampyrism",
+          "title": "Superior scrimshaw of vampyrism",
+          "revision": "37089870",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "effect-only"
     },
     {
-      "id": "item:tokkul-zo",
-      "bonuses": { "armour": 2.2, "damage": 3.7 },
-      "wikiTitle": "TokKul-Zo",
+      "id": "item:superior-seasinger-aonori",
+      "bonuses": {
+        "armour": 108.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/TokKul-Zo", "title": "TokKul-Zo", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "setId": "seasinger",
+      "wikiTitle": "Superior seasinger aonori",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_seasinger_aonori",
+          "title": "Superior seasinger aonori",
+          "revision": "37089575",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:torags-hammer",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486 },
-      "tier": 70,
-      "setId": "barrows",
-      "wikiTitle": "Torag's hammer",
+      "id": "item:superior-seasinger-asari",
+      "bonuses": {
+        "armour": 108.9
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Torag%27s_hammer", "title": "Torag's hammer", "verifiedAt": "2026-07-26" }]
+      "tier": 85,
+      "setId": "seasinger",
+      "wikiTitle": "Superior seasinger asari",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_seasinger_asari",
+          "title": "Superior seasinger asari",
+          "revision": "37089585",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:trimmed-masterwork-spear-of-annihilation",
-      "bonuses": {},
-      "tier": 92,
-      "setId": "trimmed-masterwork",
-      "wikiTitle": "Trimmed Masterwork Spear of Annihilation",
-      "status": "error",
-      "reason": "missing-page",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Trimmed_Masterwork_Spear_of_Annihilation", "title": "Trimmed Masterwork Spear of Annihilation", "verifiedAt": "2026-07-26" }]
+      "id": "item:superior-tetsu-kogake",
+      "bonuses": {
+        "armour": 108.9
+      },
+      "status": "ok",
+      "tier": 85,
+      "setId": "tetsu",
+      "wikiTitle": "Superior tetsu kogake",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_tetsu_kogake",
+          "title": "Superior tetsu kogake",
+          "revision": "37089600",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:superior-tetsu-kote",
+      "bonuses": {
+        "armour": 108.9
+      },
+      "status": "ok",
+      "tier": 85,
+      "setId": "tetsu",
+      "wikiTitle": "Superior tetsu kote",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Superior_tetsu_kote",
+          "title": "Superior tetsu kote",
+          "revision": "37089599",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:toktz-mej-tal",
+      "bonuses": {
+        "accuracy": 1132,
+        "prayer": 2
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "Toktz-mej-tal",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Toktz-mej-tal",
+          "title": "Toktz-mej-tal",
+          "revision": "37082371",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:toktz-xil-ak",
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 735
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "Toktz-xil-ak",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Toktz-xil-ak",
+          "title": "Toktz-xil-ak",
+          "revision": "37081952",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:toktz-xil-ul",
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 894
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "Toktz-xil-ul",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Toktz-xil-ul",
+          "title": "Toktz-xil-ul",
+          "revision": "36554971",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:tzhaar-ket-em",
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 576
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "TzHaar-Ket-Em",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzHaar-Ket-Em",
+          "title": "TzHaar-Ket-Em",
+          "revision": "36554977",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:tzhaar-ket-om",
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 1341
+      },
+      "status": "ok",
+      "tier": 60,
+      "wikiTitle": "TzHaar-Ket-Om",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzHaar-Ket-Om",
+          "title": "TzHaar-Ket-Om",
+          "revision": "37081953",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
       "id": "item:vampyrism-aura",
       "bonuses": {},
+      "status": "empty",
       "tier": 70,
       "wikiTitle": "Vampyrism aura",
-      "status": "empty",
-      "reason": "aura-no-static-infobox",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vampyrism_aura", "title": "Vampyrism aura", "verifiedAt": "2026-07-26" }]
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vampyrism_aura",
+          "title": "Vampyrism aura",
+          "revision": "37121912",
+          "verifiedAt": "2026-07-26"
+        }
+      ],
+      "reason": "aura-no-static-infobox"
     },
     {
-      "id": "item:vanquish-melee",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694 },
-      "tier": 75,
-      "setId": "vanquish",
-      "wikiTitle": "Vanquish (melee)",
+      "id": "item:ward-of-subjugation",
+      "bonuses": {
+        "armour": 297.2,
+        "prayer": 1
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vanquish_(melee)", "title": "Vanquish (melee)", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:veracs-flail",
-      "bonuses": { "damage": 1564.5, "accuracy": 1486, "prayer": 2 },
       "tier": 70,
-      "setId": "barrows",
-      "wikiTitle": "Verac's flail",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Verac%27s_flail", "title": "Verac's flail", "verifiedAt": "2026-07-26" }]
+      "setId": "subjugation",
+      "wikiTitle": "Ward of subjugation",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ward_of_subjugation",
+          "title": "Ward of subjugation",
+          "revision": "37022519",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     },
     {
-      "id": "item:vestas-longsword",
-      "bonuses": { "damage": 955.5, "accuracy": 1829 },
-      "tier": 78,
-      "setId": "vesta",
-      "wikiTitle": "Vesta's longsword",
+      "id": "item:warrior-ring",
+      "bonuses": {
+        "damage": 22.5
+      },
       "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vesta%27s_longsword", "title": "Vesta's longsword", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:vestas-spear",
-      "bonuses": { "damage": 1743.3, "accuracy": 1829 },
-      "tier": 78,
-      "setId": "vesta",
-      "wikiTitle": "Vesta's spear",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vesta%27s_spear", "title": "Vesta's spear", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:vestments-of-havoc-gloves",
-      "bonuses": {},
-      "tier": 95,
-      "setId": "vestments-of-havoc",
-      "wikiTitle": "Gloves of the Vestments of Havoc",
-      "status": "empty",
-      "reason": "no-gloves-piece-on-wiki",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Vestments_of_havoc_armour", "title": "Vestments of havoc armour", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:wand-of-treachery",
-      "bonuses": { "accuracy": 1486 },
-      "tier": 70,
-      "wikiTitle": "Wand of treachery",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Wand_of_treachery", "title": "Wand of treachery", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:zamorak-godsword",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694, "prayer": 4 },
-      "tier": 75,
-      "setId": "godsword",
-      "wikiTitle": "Zamorak godsword",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Zamorak_godsword", "title": "Zamorak godsword", "verifiedAt": "2026-07-26" }]
-    },
-    {
-      "id": "item:zamorakian-spear",
-      "bonuses": { "damage": 1676.3, "accuracy": 1694, "prayer": 2 },
-      "tier": 75,
-      "setId": "zamorakian",
-      "wikiTitle": "Zamorakian spear",
-      "status": "ok",
-      "sources": [{ "source": "runescape-wiki", "url": "https://runescape.wiki/w/Zamorakian_spear", "title": "Zamorakian spear", "verifiedAt": "2026-07-26" }]
+      "tier": 1,
+      "wikiTitle": "Warrior ring",
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Warrior_ring",
+          "title": "Warrior ring",
+          "revision": "37022573",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
     }
   ]
 }

@@ -22,11 +22,6 @@ import {
   sumEquipmentBonuses,
   sumNonWeaponAccuracy,
 } from "@/combat/shared/equipment";
-import {
-  auraBlocksCrits,
-  auraDamageModifiers,
-  equippedAura,
-} from "@/combat/shared/auras";
 import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
@@ -37,7 +32,7 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { Loadout } from "./useLoadout";
 
 /** Re-export for GearPanel / setup consumers. */
-export { equippedSetCounts, setEffectsSummary, equippedAura };
+export { equippedSetCounts, setEffectsSummary };
 
 /** Pure derivation of engine inputs from a Setup loadout — single place tabs
  *  resolve "what does this loadout mean numerically". */
@@ -198,9 +193,8 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       )
     : clamp01(loadout.accuracy / 100);
 
-  // Equilibrium perk/aura prevent critical strikes (wiki). Biting/set bonuses ignored while active.
+  // Equilibrium perk prevents critical strikes (wiki). Biting/set bonuses ignored while active.
   // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
-  // Historical aura slot (removed 2026) still resolves when equipmentSlots.aura is set.
   const setCounts = equippedSetCounts(loadout);
   const biting =
     loadout.perks.biting > 0
@@ -217,7 +211,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     },
   });
   const critChance =
-    loadout.perks.equilibrium > 0 || auraBlocksCrits(loadout)
+    loadout.perks.equilibrium > 0
       ? 0
       : clamp01(loadout.critChance / 100 + biting + setCrit);
 
@@ -234,8 +228,6 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       insideSunshine: loadout.perks.insideSunshine,
     }),
   );
-  // Historical combat auras: static damage % only when style matches (wiki-sourced).
-  globalModifiers.push(...auraDamageModifiers(loadout));
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (curse) globalModifiers.push(prayerDamageModifier(curse));
 

@@ -75,7 +75,9 @@
         "Tai Bwo Wannai",
         "Hardwood Grove",
         "Shilo Village",
-        "Herblore Habitat"
+        "Herblore Habitat",
+        "Karamja",
+        "TzHaar area"
       ],
       "hardRules": [],
       "warnings": [],
@@ -213,7 +215,8 @@
         "Rogues' Castle",
         "Demonic Ruins",
         "Frozen Waste Plateau",
-        "Pirates' Hideout"
+        "Pirates' Hideout",
+        "Wilderness Slayer"
       ],
       "hardRules": [
         "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region."
@@ -266,7 +269,8 @@
         "Araxyte Hive",
         "Darkmeyer",
         "Barrows",
-        "Everlight Dig Site"
+        "Everlight Dig Site",
+        "Araxxor"
       ],
       "hardRules": [],
       "warnings": [],

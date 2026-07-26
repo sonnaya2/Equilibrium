@@ -107,3 +107,18 @@ dev-server.log
 # Scratch output of the dev-only region authoring scripts
 scripts/.region-draft.json
 scripts/.region-areas.json
+
+# Local agent scratch (never ship)
+.playwright-mcp/
+tmp-*.json
+/audit-data-*.png
+/data-broken-check.png
+/data-fixed-layout.png
+/data-icons-audit.png
+scripts/_*.mjs
+scripts/_*.txt
+scraped-data/_tmp_*
+scraped-data/_run_*
+scraped-data/agent-*.json
+scraped-data/bulk-icon-harvest-*.json
+scraped-data/unresolved-harvest-*.json

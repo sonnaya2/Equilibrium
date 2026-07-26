@@ -139,21 +139,20 @@
       ]
     },
     {
-      "id": "karamja:gemstone-armour",
+      "id": "anachronia:gemstone-armour",
       "name": "Gemstone armour (T80 hybrid Enchanted touch)",
       "category": "mid-high hybrid armour residual / gemstone dragons",
-      "region_hint": "karamja",
+      "region_hint": "anachronia",
       "region_hints": [
-        "karamja"
+        "anachronia"
       ],
       "required_regions": [
-        "karamja"
+        "anachronia"
       ],
       "region_requirement_type": "acquisition_region",
       "requirements": [
         "80 Defence to wear (all-class hybrid)",
-        "Karamja gloves 3+ for gemstone cavern ladder access (Shilo Village mine / Kelhar)",
-        "Dragonstone / onyx / hydrix dragons for armour piece drops (Slayer 95/98/101 or gem payment entry)",
+        "Anachronia gemstone dragons for armour piece drops (dragonstone / onyx / hydrix)",
         "Uncut dragonstone / uncut onyx / incomplete hydrix to charge Enchanted touch bolt effects"
       ],
       "unlocks": [
@@ -165,16 +164,15 @@
         "Niche hybrid power when multi-style bolt effects matter without carrying enchanted bolts"
       ],
       "region_pressure": [
-        "Karamja hard-owns Shilo gemstone cavern and Karamja gloves 3 access. Skilling already has karamja:gemstone-cavern for Mining/access — this row is the combat armour loot residual."
+        "Hard Anachronia — gemstone dragons live on Anachronia (NOT Karamja/Shilo). Combat armour loot residual only."
       ],
-      "notes": "Not endgame BiS vs T90/T92 power. Still a region-defining hybrid residual for Karamja planners and Enchanted-touch niche stacks. Do not re-emit skilling cavern access id.",
+      "notes": "Not endgame BiS vs T90/T92 power. Region-defining hybrid residual for Anachronia planners and Enchanted-touch niche stacks. Former karamja:gemstone-armour id was wrong geography.",
       "source_urls": [
         "https://runescape.wiki/w/Gemstone_armour",
-        "https://runescape.wiki/w/Gemstone_cavern",
         "https://runescape.wiki/w/Dragonstone_dragon"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Karamja. Pair with Karamja gloves diary path for permanent ladder access."
+      "league_treatment": "Hard Anachronia. Gemstone dragons on Anachronia, not Karamja."
     },
     {
       "id": "misthalin:leng-artefact-t90-glove-ladder",
@@ -660,7 +658,7 @@
   "ids_emitted": [
     "misthalin:dracolich-armour",
     "misthalin:elite-dracolich-armour",
-    "karamja:gemstone-armour",
+    "anachronia:gemstone-armour",
     "misthalin:leng-artefact-t90-glove-ladder",
     "misthalin:enhanced-nightmare-gauntlets",
     "misthalin:enhanced-kerapac-wrist-wraps",

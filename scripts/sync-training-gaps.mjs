@@ -111,13 +111,14 @@ for (const skill of catalog.skills || []) {
 
 let added = 0;
 let updated = 0;
+const missingRate = (value) => !value || /^not (?:normalized|optimizer-grade)/i.test(value);
 
 for (const [key, method] of incoming) {
   if (byKey.has(key) || byId.has(method.id)) {
     const existing = byKey.get(key) || byId.get(method.id);
     const preferGap =
       !existing.location ||
-      existing.xpRate === "not normalized yet" ||
+      missingRate(existing.xpRate) ||
       (method.regionHints.length > (existing.regionHints?.length || 0)) ||
       (!(existing.note || "").includes("gap_file:") && (method.note || "").includes("gap_file:"));
 
@@ -129,7 +130,7 @@ for (const [key, method] of incoming) {
         levelRange: method.levelRange || existing.levelRange,
         intensity: method.intensity || existing.intensity,
         xpRate:
-          method.xpRate && method.xpRate !== "not normalized yet"
+          !missingRate(method.xpRate)
             ? method.xpRate
             : existing.xpRate || method.xpRate,
         requirements:

@@ -25,6 +25,13 @@ const PREVIEWS: Record<TasksDensityTeamId, ComponentType<TasksDensityPreviewProp
   aperture: dynamic(() => import("./r1/AperturePreview").then((m) => m.AperturePreview), {
     ssr: false,
   }),
+  herald: dynamic(
+    () => import("./r3/HeraldGalleryPreview").then((m) => m.HeraldGalleryPreview),
+    { ssr: false },
+  ),
+  tabrail: dynamic(() => import("./r3/TabRailPreview").then((m) => m.TabRailPreview), {
+    ssr: false,
+  }),
 };
 
 export function TasksDensityTeamMount({

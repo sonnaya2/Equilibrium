@@ -31,8 +31,9 @@ export const MAP_IMAGE = {
  *
  * Sized against the real map instead (assets/rs3/1920px-RuneScape_Worldmap.png,
  * land spanning roughly 1843x1406 of it, so 1.31:1). Our authored rings cover
- * u 0.085..0.921 and v 0.018..0.976, so matching that ratio at width 2 gives
- * 1.672 / (0.958 * h) = 1.31 -> h = 1.33.
+ * u 0.085..0.935 and v 0.010..0.976, so matching that ratio at width 2 gives
+ * 1.70 / (0.966 * h) = 1.31 -> h ≈ 1.34. Kept at 1.33 (within a few percent)
+ * so place anchors and framings do not need a world-scale re-author.
  *
  * Everything downstream is in uv and scales with this: border nodes, place
  * anchors, region framings, the flat board's viewBox. Nothing needed

@@ -106,7 +106,7 @@ composition champion (tournament 9.2):
 | Colors | Editorial (Echo ladder in `@theme`) |
 | Overview | Daylight courtyard / keyart aperture |
 | Map | Editorial Board Sky — 3D top, detail under board, no side inspector |
-| Tasks | Crystal facet filters, Data-density tables |
+| Tasks | Cipher Gallery Board (track + crest rail · card tiles · focus band) |
 | Build | Editorial Relic Court (monogram frames until Jagex icons land) |
 | Combat | Crystal desk + Editorial chrome |
 | Data | Lattice + Daylight browse rail + full sources inspector |

@@ -476,7 +476,7 @@ textarea:focus-visible {
     max-height: none;
   }
 
-  /* Twin desk — Tasks / Data sibling (rail | stage | inspector) */
+  /* Twin desk — Data sibling (rail | stage | inspector). Tasks is .tasks-gallery. */
   .twin-desk {
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
@@ -584,485 +584,616 @@ textarea:focus-visible {
   }
 
   /*
-    Tasks desk — Crest Compact (Quarry DNA, no right inspector).
-    2-bay: crest rail (~5.5rem) + stage. ~32px rows · inline expand under row.
-    Spike law: detail only when selectedId set. Scoped .tasks-desk only.
+    Tasks gallery — Cipher R3 Gallery Board.
+    Readable working size (data-readability floors): names 16px, ribbon 14px,
+    chrome ≥11px. Track is one usable toolbar, not a clipped micro-bar.
+    Focus band under selected row (Spike law). Scoped .tasks-gallery only.
     Does not touch .twin-desk (Data).
   */
-  .tasks-desk {
-    --tasks-row-h: 2rem;
-    --tasks-head-h: 1.4rem;
-    --tasks-gap: 0.35rem;
-    --tasks-pad-x: 0.4rem;
-    --tasks-rail-w: 5.5rem;
-    --tasks-check: 1.125rem;
+  .tasks-gallery {
+    --tg-void: var(--color-stone-950);
+    --tg-shell: var(--color-stone-900);
+    --tg-stage: var(--color-stone-800);
+    --tg-raised: var(--color-stone-raised);
+    --tg-inset: var(--color-stone-inset);
+    --tg-border: var(--color-stone-750);
+    --tg-carve: var(--color-stone-carve);
+    --tg-parch: var(--color-parch-50);
+    --tg-muted: var(--color-parch-100);
+    --tg-dim: var(--color-parch-300);
+    --tg-faint: var(--color-parch-400);
+    --tg-gem: var(--color-gem-300);
+    --tg-gem-deep: var(--color-gem-500);
+    --tg-gold: var(--color-gold-400);
+    --tg-min-card: 14rem;
+    --tg-gap: 0.4rem;
+    --tg-cols: 3;
+    --tg-col: 0;
+
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
     height: 100%;
-    background: var(--color-stone-950);
-    color: var(--color-parch-50);
-    border: 1px solid var(--color-stone-750);
-    box-shadow: inset 0 1px 0 var(--color-stone-carve);
-    font-size: 0.875rem;
-    line-height: 1.25;
+    color: var(--tg-parch);
+    background: var(--tg-void);
+    font-size: 1rem;
+    line-height: 1.35;
   }
-  .tasks-desk :focus-visible {
-    outline: 1px solid var(--color-gem-400);
+  .tasks-gallery :focus-visible {
+    outline: 1px solid var(--tg-gem);
     outline-offset: 2px;
   }
-  .tasks-desk button {
+  .tasks-gallery button {
     font: inherit;
     color: inherit;
     cursor: pointer;
   }
-  /* ── 2-bay grid: rail | stage ─────────────────────────── */
-  .tasks-desk__grid {
-    display: grid;
-    grid-template-columns: var(--tasks-rail-w) minmax(0, 1fr);
+  .tasks-gallery__shell {
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
     height: 100%;
+    border: 1px solid var(--tg-border);
+    background: var(--tg-shell);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 40%, transparent);
   }
-  .tasks-desk__rail {
+  /* Filter track — readable toolbar, natural height (no 2.35rem clip) */
+  .tasks-gallery__track {
     display: flex;
-    flex-direction: column;
-    gap: 0.08rem;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 0.15rem;
-    background: var(--color-stone-900);
-    border-right: 1px solid var(--color-stone-750);
-    scrollbar-width: thin;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem 0.45rem;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--tg-border);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--tg-raised) 22%, var(--color-stone-850)) 0%,
+        var(--color-stone-850) 100%
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 24%, transparent);
+    flex-shrink: 0;
+    min-height: 2.75rem;
+    overflow: hidden;
   }
-  .tasks-desk__rail-label {
+  .tasks-gallery__cluster {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.3rem 0.4rem;
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .tasks-gallery__cluster::-webkit-scrollbar {
+    display: none;
+  }
+  .tasks-gallery__title {
     margin: 0;
-    padding: 0.05rem 0.1rem;
-    font-size: 0.625rem;
-    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    font-family: var(--font-display), Cinzel, serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-parch-300);
-    text-align: center;
+    color: var(--tg-gold);
+    white-space: nowrap;
   }
-  .tasks-desk__leaf {
+  .tasks-gallery__count {
+    flex-shrink: 0;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--tg-dim);
+    white-space: nowrap;
+  }
+  .tasks-gallery__count .is-pts {
+    color: var(--tg-gem);
+  }
+  .tasks-gallery__search {
+    flex: 0 0 9rem;
+    width: 9rem;
+    min-width: 6.5rem;
+    margin: 0;
+    padding: 0.28rem 0.45rem;
+    border: 1px solid var(--tg-border);
+    border-radius: 2px;
+    background: var(--tg-inset);
+    color: var(--tg-parch);
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+  .tasks-gallery__search::placeholder {
+    color: var(--tg-faint);
+  }
+  .tasks-gallery__chip {
+    flex-shrink: 0;
+    border: 1px solid var(--tg-border);
+    background: var(--tg-shell);
+    padding: 0.28rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    border-radius: 2px;
+    color: var(--tg-muted);
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 22%, transparent);
+  }
+  .tasks-gallery__chip:hover {
+    color: var(--tg-parch);
+    border-color: var(--tg-carve);
+  }
+  .tasks-gallery__chip.is-on,
+  .tasks-gallery__chip[aria-pressed="true"] {
+    border-color: var(--tg-gem-deep);
+    color: var(--tg-gem);
+    background: color-mix(in srgb, var(--tg-raised) 70%, var(--tg-shell));
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tg-gem-deep) 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 24%, transparent);
+  }
+  .tasks-gallery__chip--tier {
+    text-transform: capitalize;
+  }
+  .tasks-gallery__tiers {
     display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.2rem;
+    flex-shrink: 0;
+  }
+  .tasks-gallery__note {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--tg-dim);
+    white-space: nowrap;
+  }
+  .tasks-gallery__note a {
+    color: var(--tg-gem);
+    text-decoration: none;
+  }
+  .tasks-gallery__note a:hover {
+    text-decoration: underline;
+  }
+  .tasks-gallery__rule {
+    flex: 0 0 1px;
+    align-self: stretch;
+    width: 1px;
+    margin: 0.15rem 0.12rem;
+    background: color-mix(in srgb, var(--tg-border) 80%, transparent);
+  }
+  .tasks-gallery__regions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.18rem;
+    flex: 1 1 auto;
+    min-width: 5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    padding-right: 0.1rem;
+    mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 calc(100% - 1rem),
+      transparent 100%
+    );
+  }
+  .tasks-gallery__crest-btn {
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.05rem;
-    width: 100%;
-    min-height: 2.95rem;
-    padding: 0.15rem 0.1rem;
-    border: 1px solid var(--color-stone-750);
+    gap: 0.08rem;
+    min-width: 2rem;
+    padding: 0.14rem 0.2rem 0.16rem;
+    border: 1px solid transparent;
     border-radius: 2px;
-    background: var(--color-stone-800);
-    color: var(--color-parch-100);
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+    background: transparent;
+    color: var(--tg-dim);
+    line-height: 1;
+    flex-shrink: 0;
   }
-  .tasks-desk__leaf:hover {
-    background: var(--color-stone-raised);
-    color: var(--color-parch-50);
+  .tasks-gallery__crest-btn:hover {
+    border-color: color-mix(in srgb, var(--tg-border) 70%, transparent);
+    background: color-mix(in srgb, var(--tg-raised) 40%, transparent);
   }
-  .tasks-desk__leaf.is-on {
-    color: var(--color-gem-300);
-    border-color: var(--color-gem-500);
-    background: color-mix(in srgb, var(--color-stone-raised) 70%, var(--color-stone-900));
-    box-shadow:
-      inset 0 0 0 1px var(--color-gem-500),
-      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
+  .tasks-gallery__crest-btn.is-on {
+    border-color: var(--tg-gem-deep);
+    background: color-mix(in srgb, var(--tg-raised) 65%, var(--tg-shell));
+    color: var(--tg-gem);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 20%, transparent);
   }
-  /* Locked elective: dashed edge + mute, still clickable / viewable */
-  .tasks-desk__leaf.is-locked {
-    opacity: 0.62;
-    color: var(--color-parch-300);
-    border-style: dashed;
+  .tasks-gallery__crest-btn.is-locked {
+    opacity: 0.55;
   }
-  .tasks-desk__leaf.is-locked:hover {
-    opacity: 0.8;
-    color: var(--color-parch-100);
+  .tasks-gallery__crest-btn.is-locked.is-on {
+    opacity: 1;
   }
-  .tasks-desk__leaf.is-locked.is-on {
-    opacity: 0.88;
-    color: var(--color-parch-100);
-    border-style: dashed;
-    border-color: var(--color-stone-carve);
-    background: color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-900));
-    box-shadow: inset 0 0 0 1px var(--color-stone-carve);
-  }
-  .tasks-desk__leaf.is-locked .tasks-desk__leaf-count {
-    color: var(--color-parch-400);
-  }
-  .tasks-desk__leaf.is-locked.is-on .tasks-desk__leaf-count {
-    color: var(--color-parch-300);
-  }
-  .tasks-desk__leaf-lock {
-    margin-right: 0.12rem;
-    font-size: 0.55rem;
-    font-weight: 600;
-    color: var(--color-parch-400);
-  }
-  .tasks-desk__leaf-glyph {
-    display: inline-flex;
+  .tasks-gallery__crest-glyph {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.875rem;
-    height: 1.875rem;
+    width: 1.4rem;
+    height: 1.4rem;
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     color: inherit;
   }
-  .tasks-desk__leaf-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .tasks-gallery__crest-n {
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-variant-numeric: tabular-nums;
-    color: var(--color-parch-300);
+    color: var(--tg-dim);
     line-height: 1;
   }
-  .tasks-desk__leaf.is-on .tasks-desk__leaf-count {
-    color: var(--color-gem-300);
+  .tasks-gallery__crest-btn.is-on .tasks-gallery__crest-n {
+    color: var(--tg-gem);
   }
-  .tasks-desk__main {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 0;
-    background: var(--color-stone-800);
-  }
-  /* One-line stage bar */
-  .tasks-desk__bar {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.3rem 0.4rem;
-    padding: 0.22rem 0.4rem;
-    border-bottom: 1px solid var(--color-stone-750);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-800)) 0%,
-        var(--color-stone-800) 100%
-      );
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
-    overflow-x: auto;
-    flex-shrink: 0;
-  }
-  .tasks-desk__title {
-    margin: 0;
-    flex-shrink: 0;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-parch-50);
-    white-space: nowrap;
-  }
-  .tasks-desk__count {
-    flex-shrink: 0;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.6875rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-parch-300);
-    white-space: nowrap;
-  }
-  .tasks-desk__count .is-pts { color: var(--color-gem-300); }
-  .tasks-desk__search {
-    flex: 1 1 6.5rem;
-    min-width: 5rem;
-    max-width: 12rem;
-    margin: 0;
-    padding: 0.15rem 0.35rem;
-    font-size: 0.75rem;
-    line-height: 1.2;
-    color: var(--color-parch-50);
-    background: var(--color-stone-inset);
-    border: 1px solid var(--color-stone-750);
-    border-radius: 2px;
-  }
-  .tasks-desk__search::placeholder { color: var(--color-parch-400); }
-  .tasks-desk__facets {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.15rem;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .tasks-desk__chip {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid var(--color-stone-750);
-    background: transparent;
-    padding: 0.12rem 0.35rem;
-    font-size: 0.6875rem;
-    line-height: 1.2;
-    color: var(--color-parch-100);
-    border-radius: 2px;
-    white-space: nowrap;
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
-  }
-  .tasks-desk__chip:hover:not([aria-pressed="true"]) {
-    color: var(--color-parch-50);
-    background: color-mix(in srgb, var(--color-stone-raised) 50%, transparent);
-  }
-  .tasks-desk__chip[aria-pressed="true"] {
-    border-color: var(--color-gem-500);
-    color: var(--color-gem-300);
-    background: color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-900));
-    box-shadow:
-      inset 0 0 0 1px var(--color-gem-500),
-      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
-  }
-  .tasks-desk__chip--tier { text-transform: capitalize; }
-  .tasks-desk__hint {
-    margin: 0;
-    padding: 0.1rem 0.4rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
-    font-size: 0.625rem;
-    color: var(--color-parch-300);
-    flex-shrink: 0;
-  }
-  .tasks-desk__hint a { color: var(--color-gem-300); text-decoration: none; }
-  .tasks-desk__hint a:hover { text-decoration: underline; }
-  /* check · name · tier · Comp% · pts — no region col (rail owns region) */
-  /* Name hugs meta; leftover flex space sits AFTER pts (not between Task and Tier). */
-  .tasks-desk__cols {
-    display: grid;
-    grid-template-columns:
-      var(--tasks-check)
-      minmax(8rem, max-content)
-      max-content
-      max-content
-      max-content
-      minmax(0, 1fr);
-    column-gap: 0.45rem;
-    align-items: center;
-    padding-inline: var(--tasks-pad-x);
-  }
-  .tasks-desk__cols--no-comp {
-    grid-template-columns:
-      var(--tasks-check)
-      minmax(8rem, max-content)
-      max-content
-      max-content
-      minmax(0, 1fr);
-  }
-  .tasks-desk__filler {
-    min-width: 0;
-  }
-  .tasks-desk__list {
+  .tasks-gallery__board {
     flex: 1 1 auto;
     min-height: 0;
     overflow: auto;
-    overscroll-behavior: contain;
-    background: var(--color-stone-800);
+    padding: 0.4rem;
+    background: color-mix(in srgb, var(--tg-stage) 55%, var(--tg-shell));
     scrollbar-width: thin;
   }
-  .tasks-desk__empty {
+  .tasks-gallery__empty {
     margin: 0;
-    padding: 0.5rem 0.45rem;
-    font-size: 0.8125rem;
-    color: var(--color-parch-100);
+    padding: 1.1rem 0.85rem;
+    color: var(--tg-muted);
+    font-size: 0.9375rem;
   }
-  .tasks-desk__thead {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    height: var(--tasks-head-h);
-    border-bottom: 1px solid var(--color-stone-750);
-    background: var(--color-stone-850);
-    font-size: 0.625rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-parch-100);
-    box-shadow: 0 1px 0 var(--color-stone-750);
+  .tasks-gallery__virt {
+    position: relative;
+    width: 100%;
   }
-  .tasks-desk__th-num { text-align: right; }
-  .tasks-desk__body { position: relative; width: 100%; }
-  .tasks-desk__item {
+  .tasks-gallery__row {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 55%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
     box-sizing: border-box;
-    background: var(--color-stone-800);
+    padding-bottom: var(--tg-gap);
   }
-  .tasks-desk__item.is-zebra {
-    background: color-mix(in srgb, var(--color-stone-zebra) 70%, transparent);
+  .tasks-gallery__tiles {
+    display: grid;
+    grid-template-columns: repeat(var(--tg-cols, 3), minmax(0, 1fr));
+    gap: var(--tg-gap);
+    align-items: start;
   }
-  .tasks-desk__item.is-on {
-    background: color-mix(in srgb, var(--color-stone-raised) 85%, transparent);
-    box-shadow: inset 2px 0 0 var(--color-gem-400);
+  /*
+    Tile face:
+    ┌─ mark (crest in gem outline) ── name ────────── pts ─┐
+    │  large crest · task title fills rest           Comp% │
+    └──────────────────────────────────────────────────────┘
+    No tier / region text on closed cards (filters own that).
+    Complete = gem carved outline on mark + tile edge, not a checkbox.
+  */
+  .tasks-gallery__tile {
+    display: flex;
+    flex-direction: column;
+    min-height: 7.25rem;
+    border: 1px solid var(--tg-border);
+    border-radius: 2px;
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--tg-raised) 28%, var(--tg-stage)) 0%,
+        var(--tg-stage) 48%,
+        color-mix(in srgb, var(--tg-shell) 35%, var(--tg-stage)) 100%
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 36%, transparent);
+    overflow: hidden;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
   }
-  .tasks-desk__item.is-done .tasks-desk__name { color: var(--color-gem-300); }
-  .tasks-desk__row {
-    min-height: var(--tasks-row-h);
-    cursor: pointer;
+  .tasks-gallery__tile.is-on {
+    border-color: var(--tg-gem-deep);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tg-gem) 32%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 18%, transparent);
   }
-  .tasks-desk__row:focus-visible {
-    outline: 1px solid var(--color-gem-400);
-    outline-offset: -1px;
+  .tasks-gallery__tile.is-done {
+    border-color: color-mix(in srgb, var(--tg-gem-deep) 70%, var(--tg-border));
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tg-gem) 22%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 28%, transparent);
   }
-  .tasks-desk__check {
-    width: var(--tasks-check);
-    height: var(--tasks-check);
-    margin: 0;
-    accent-color: var(--color-gem-500);
-    cursor: pointer;
+  .tasks-gallery__tile.is-done.is-on {
+    border-color: var(--tg-gem-deep);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tg-gem) 40%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 22%, transparent);
   }
-  /* Name cell: optional micro-crest (All-view locality) + 15px name */
-  .tasks-desk__name-cell {
+  .tasks-gallery__tile.is-done .tasks-gallery__name {
+    color: var(--tg-gem);
+  }
+  .tasks-gallery__face {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.55rem 0.6rem;
+    padding: 0.55rem 0.6rem;
+    min-height: 7.25rem;
+    box-sizing: border-box;
+  }
+  /* Gem outline mark — replaces native checkbox; crest sits inside carved ring */
+  .tasks-gallery__mark {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    min-width: 0;
-    max-width: min(42rem, 52vw);
+    justify-content: center;
+    width: 3.45rem;
+    height: 3.45rem;
+    padding: 0;
+    margin: 0;
+    border: 1.5px solid color-mix(in srgb, var(--tg-carve) 75%, var(--tg-border));
+    border-radius: 3px;
+    background:
+      radial-gradient(
+        circle at 50% 42%,
+        color-mix(in srgb, var(--tg-raised) 55%, var(--tg-shell)) 0%,
+        var(--tg-shell) 72%
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--tg-carve) 40%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--tg-void) 35%, transparent);
+    cursor: pointer;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
   }
-  .tasks-desk__row-crest {
-    flex-shrink: 0;
+  .tasks-gallery__mark:hover {
+    border-color: color-mix(in srgb, var(--tg-gem-deep) 55%, var(--tg-carve));
   }
-  .tasks-desk__name {
+  .tasks-gallery__mark.is-done {
+    border-color: var(--tg-gem-deep);
+    box-shadow:
+      inset 0 0 0 1.5px color-mix(in srgb, var(--tg-gem) 55%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 28%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--tg-gem-deep) 35%, transparent);
+  }
+  .tasks-gallery__mark:focus-visible {
+    outline: 1px solid var(--tg-gem);
+    outline-offset: 2px;
+  }
+  .tasks-gallery__crest {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  .tasks-gallery__crest.is-global {
+    color: var(--tg-dim);
+  }
+  .tasks-gallery__crest-g {
+    font-family: var(--font-display), Cinzel, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--tg-gold);
+  }
+  .tasks-gallery__copy {
     min-width: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .tasks-gallery__name {
+    margin: 0;
+    min-width: 0;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.28;
+    color: var(--tg-parch);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.9375rem;
-    line-height: 1.25;
-    color: var(--color-parch-50);
   }
-  .tasks-desk__tier {
-    font-size: 0.75rem;
-    text-align: right;
-    text-transform: capitalize;
-    color: var(--color-parch-100);
-  }
-  .tasks-desk__num {
+  .tasks-gallery__stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    align-self: start;
+    gap: 0.22rem;
+    padding-top: 0.05rem;
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    user-select: none;
+  }
+  .tasks-gallery__pts {
+    color: var(--tg-gem);
+    font-weight: 700;
+    font-size: 1.25rem;
     text-align: right;
-    color: var(--color-parch-50);
+    letter-spacing: -0.01em;
   }
-  .tasks-desk__num.is-done { color: var(--color-gem-300); }
-  .tasks-desk__num .is-mute,
-  .tasks-desk__num.is-mute { color: var(--color-parch-300); }
-  .tasks-desk__wiki {
-    color: var(--color-parch-50);
+  .tasks-gallery__pts .unit {
+    display: block;
+    font-weight: 400;
+    font-size: 0.6875rem;
+    color: var(--tg-dim);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 0.08rem;
+  }
+  .tasks-gallery__comp {
+    color: var(--tg-muted);
+    font-size: 0.875rem;
+    text-align: right;
+    min-width: 2.75rem;
+  }
+  .tasks-gallery__comp a {
+    color: inherit;
     text-decoration: underline;
-    text-decoration-color: var(--color-stone-750);
-    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--tg-border) 90%, transparent);
+    text-underline-offset: 2px;
   }
-  .tasks-desk__wiki:hover { color: var(--color-gem-300); }
-  /* Inline expand under selected row (not a side inspector) */
-  .tasks-desk__stage {
-    padding: 0.3rem 0.45rem 0.4rem 1.75rem;
-    border-top: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
-    background: color-mix(in srgb, var(--color-stone-raised) 80%, var(--color-stone-900));
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 12%, transparent);
+  .tasks-gallery__comp a:hover {
+    color: var(--tg-gem);
+    text-decoration-color: var(--tg-gem-deep);
   }
-  .tasks-desk__stage-head {
+  .tasks-gallery__band {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--tg-gem-deep) 50%, var(--tg-border));
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--tg-raised) 55%, var(--tg-shell));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tg-gem) 14%, transparent);
+    padding: 0.55rem 0.7rem 0.6rem;
+    scroll-margin-block: 0.45rem;
+  }
+  .tasks-gallery__band-mark {
+    position: absolute;
+    top: 0;
+    left: calc(var(--tg-col) * 100% / var(--tg-cols));
+    width: calc(100% / var(--tg-cols));
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 10%,
+      var(--tg-gem) 32%,
+      var(--tg-gem) 68%,
+      transparent 90%
+    );
+    pointer-events: none;
+  }
+  .tasks-gallery__band-head {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.3rem 0.45rem;
+    align-items: flex-start;
+    gap: 0.4rem 0.7rem;
   }
-  .tasks-desk__stage-copy { min-width: 0; flex: 1 1 auto; }
-  .tasks-desk__stage-meta {
+  .tasks-gallery__band-id {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 14rem;
+  }
+  .tasks-gallery__band-name {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
     line-height: 1.3;
-    color: var(--color-parch-100);
+    color: var(--tg-parch);
   }
-  .tasks-desk__stage-meta .is-pts {
-    color: var(--color-gem-300);
-    font-family: var(--font-mono), ui-monospace, monospace;
+  .tasks-gallery__band-name.is-done {
+    color: var(--tg-gem);
   }
-  .tasks-desk__stage-meta .is-done-mark {
-    color: var(--color-gem-300);
-  }
-  .tasks-desk__close {
-    margin-left: auto;
-    border: 1px solid var(--color-stone-750);
-    background: var(--color-stone-850);
-    color: var(--color-parch-100);
-    padding: 0.1rem 0.4rem;
-    font-size: 0.6875rem;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-  .tasks-desk__close:hover {
-    color: var(--color-parch-50);
-    border-color: var(--color-stone-carve);
-  }
-  .tasks-desk__stage-body {
-    margin: 0.25rem 0 0;
-    max-width: 72rem;
-    font-size: 0.8125rem;
-    line-height: 1.4;
-    color: var(--color-parch-100);
-  }
-  .tasks-desk__stage-req {
+  .tasks-gallery__band-meta {
     margin: 0.15rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--tg-dim);
+    text-transform: capitalize;
+  }
+  .tasks-gallery__band-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.75rem;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.875rem;
+    color: var(--tg-muted);
+  }
+  .tasks-gallery__band-facts .is-pts {
+    color: var(--tg-gem);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .tasks-gallery__band-facts .unit {
+    font-weight: 400;
     font-size: 0.75rem;
-    color: var(--color-parch-300);
+    color: var(--tg-dim);
+    margin-left: 0.12rem;
   }
-  .tasks-desk__stage-tags {
-    margin: 0.12rem 0 0;
-    font-size: 0.6875rem;
-    color: var(--color-parch-300);
+  .tasks-gallery__band-comp a {
+    color: var(--tg-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--tg-border);
+    text-underline-offset: 2px;
   }
-  .tasks-desk__stage-link {
+  .tasks-gallery__band-comp a:hover {
+    color: var(--tg-gem);
+  }
+  .tasks-gallery__close {
+    margin-left: auto;
+    border: 1px solid var(--tg-border);
+    background: var(--color-stone-850);
+    color: var(--tg-muted);
+    padding: 0.28rem 0.55rem;
+    font-size: 0.8125rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .tasks-gallery__close:hover {
+    border-color: var(--tg-gem-deep);
+    color: var(--tg-gem);
+  }
+  .tasks-gallery__band-body {
+    margin: 0.4rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--tg-muted);
+    max-width: 72rem;
+  }
+  .tasks-gallery__band-req {
+    margin: 0.3rem 0 0;
+    font-size: 0.875rem;
+    color: var(--tg-dim);
+    max-width: 72rem;
+  }
+  .tasks-gallery__band-req strong {
+    font-weight: 600;
+    color: var(--tg-muted);
+  }
+  .tasks-gallery__band-empty {
+    margin: 0.3rem 0 0;
+    font-size: 0.875rem;
+    color: var(--tg-dim);
+    font-style: italic;
+  }
+  .tasks-gallery__wiki {
     display: inline-block;
-    margin-top: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--color-gem-300);
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+    color: var(--tg-gem);
     text-decoration: none;
   }
-  .tasks-desk__stage-link:hover { text-decoration: underline; }
+  .tasks-gallery__wiki:hover {
+    text-decoration: underline;
+  }
   @media (max-width: 720px) {
-    .tasks-desk__grid {
-      grid-template-columns: 1fr;
+    .tasks-gallery {
+      --tg-min-card: 100%;
       height: auto;
+      min-height: 28rem;
     }
-    .tasks-desk__rail {
-      flex-direction: row;
+    .tasks-gallery__shell {
+      height: auto;
+      min-height: 28rem;
+    }
+    .tasks-gallery__track {
       flex-wrap: wrap;
-      max-height: none;
-      border-right: 0;
-      border-bottom: 1px solid var(--color-stone-750);
-    }
-    .tasks-desk__leaf {
-      width: auto;
-      min-width: 3.5rem;
-    }
-    .tasks-desk__bar {
-      flex-wrap: wrap;
-    }
-    .tasks-desk__facets {
-      flex-wrap: wrap;
-      margin-left: 0;
-    }
-    .tasks-desk__cols {
-      grid-template-columns:
-        var(--tasks-check) minmax(0, 1fr) max-content max-content max-content 0fr;
-      column-gap: 0.4rem;
-    }
-    .tasks-desk__cols--no-comp {
-      grid-template-columns:
-        var(--tasks-check) minmax(0, 1fr) max-content max-content 0fr;
-    }
-    .tasks-desk__name-cell {
-      max-width: none;
+      overflow: visible;
     }
   }
-
   @media (prefers-reduced-motion: reduce) {
-    .tasks-desk * {
-      transition: none !important;
+    .tasks-gallery__tile {
+      transition: none;
     }
   }
 

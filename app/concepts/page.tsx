@@ -63,6 +63,9 @@ export default function ConceptsLabPage() {
         <Link href="/concepts/hybrid" className="text-gem-300 hover:underline">
           Hybrid tournament →
         </Link>
+        <Link href="/concepts/map-remaster" className="text-gem-300 hover:underline">
+          Map remaster tournament →
+        </Link>
         <Link href="/concepts/build-showcase" className="text-gem-300 hover:underline">
           Build Showcase →
         </Link>

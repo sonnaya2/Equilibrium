@@ -33,9 +33,9 @@ test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", as
     await expect(myBuild).toHaveAttribute("aria-pressed", "true");
   }
 
-  // Region filter: Crest Compact uses crest rail (aside aria-label="Filter by region")
-  // with All + region leaf buttons. Soft — accept rail group or legacy select.
-  // Never pin region names.
+  // Region filter: Cipher Gallery uses nested crest rail
+  // (group aria-label="Filter by region") with All + region crest buttons.
+  // Soft — accept rail group or legacy select. Never pin region names.
   const regionRail = page.getByLabel(/^Filter by region$/i);
   if (await regionRail.isVisible().catch(() => false)) {
     await expect(regionRail).toBeVisible();
@@ -45,9 +45,9 @@ test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", as
     }
   }
 
-  // Comp% values that have a wiki task id open the Wiki row (hash id).
-  // Match aria-label (list rows) or Catalyst Tasks#N href (table cells).
-  // Virtualized lists only mount viewport rows — use .first() of what rendered.
+  // Comp% values that have a wiki task id open the Wiki deep-link (hash id).
+  // Match aria-label (tile ribbon / focus band) or Catalyst Tasks#N href.
+  // Virtualized gallery only mounts viewport tiles — use .first() of what rendered.
   // Never pin rates or task names.
   const wikiHref = /runescape\.wiki\/w\/Catalyst_League\/Tasks#\d+/;
   const compByLabel = page.getByRole("link", { name: /Wiki Comp%/i });

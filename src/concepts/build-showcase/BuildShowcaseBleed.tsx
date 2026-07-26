@@ -17,6 +17,15 @@ const load = (name: string, loader: () => Promise<{ default: ComponentType }>) =
   });
 
 const PREVIEWS: Record<BuildConceptId, ComponentType> = {
+  "court-rail": load("Court Rail", () =>
+    import("./CourtRail").then((m) => ({ default: m.CourtRail })),
+  ),
+  "twin-desk": load("Twin Desk", () =>
+    import("./TwinDeskBuild").then((m) => ({ default: m.TwinDeskBuild })),
+  ),
+  "menu-court": load("Menu Court", () =>
+    import("./MenuCourt").then((m) => ({ default: m.MenuCourt })),
+  ),
   "war-court": load("War Court", () =>
     import("./WarCourt").then((m) => ({ default: m.WarCourt })),
   ),

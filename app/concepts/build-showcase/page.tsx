@@ -4,13 +4,14 @@ import { PageHeading } from "@/components/Heading";
 import {
   BUILD_SHOWCASE_R1,
   BUILD_SHOWCASE_R2,
+  BUILD_SHOWCASE_R3,
   BUILD_SHOWCASE_RUBRIC,
 } from "@/concepts/build-showcase/teams";
 
 export const metadata: Metadata = {
   title: "Build Showcase tournament",
   description:
-    "R2 no-tabs Build surfaces with official League art — War Court, Dossier Board, Herald Stage.",
+    "R3 topology tournament for /build — Court Rail, Twin Desk, Menu Court. R1/R2 failed.",
   robots: { index: false, follow: false },
 };
 
@@ -19,11 +20,11 @@ export default function BuildShowcaseArenaPage() {
     <div className="mx-auto w-full max-w-[1600px] px-4 py-6">
       <PageHeading
         title="Build Showcase"
-        note="R2: no section tabs · official plates · wiki hex icons. Live useBuild. Concept lab — production /build ships after CEO crown."
+        note="Showcase craft = Genshin/HSR energy, Equilibrium tokens. R3 Menu Court hybrid lead — see R3-BRIEF."
       />
 
       <p className="mb-4 text-sm text-parch-100">
-        R2 active · 3 contestants
+        R3 · Menu Court hybrid lead
         {" · "}
         <Link href="/concepts" className="text-gem-300 hover:underline">
           Concepts hub
@@ -32,7 +33,31 @@ export default function BuildShowcaseArenaPage() {
         <Link href="/build" className="text-parch-300 hover:underline">
           Production Build
         </Link>
+        {" · "}
+        <Link
+          href="https://github.com/sonnaya2/Equilibrium/blob/master/src/concepts/build-showcase/R3-BRIEF.md"
+          className="text-parch-300 hover:underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          R3-BRIEF
+        </Link>
       </p>
+
+      <section className="panel mb-6">
+        <div className="panel-head">Fail ledger (Phase 0)</div>
+        <ul className="panel-body list-disc space-y-1 pl-5 text-sm text-parch-100">
+          <li>
+            R2 War Court / Dossier / Herald share one topology (regions + court + blessings +
+            share) — §4.5 clone fail.
+          </li>
+          <li>Herald share-first plaque is showcase, not workbench (hard fail pressure).</li>
+          <li>
+            Production menu: gold-as-chrome, parallel tokens, max-w 1100 — not Hybrid Relic Court.
+          </li>
+          <li>Self-scores ~8.7–9.0 ignored. CEO bar 9.0; none crowned.</li>
+        </ul>
+      </section>
 
       <section className="panel mb-6">
         <div className="panel-head">Rubric</div>
@@ -47,9 +72,26 @@ export default function BuildShowcaseArenaPage() {
       </section>
 
       <section className="panel mb-6">
-        <div className="panel-head">R2 · open full page</div>
+        <div className="panel-head">
+          R3 · topology tournament · Menu Court preferred base (optimizing hybrid)
+        </div>
+        <p className="border-b border-stone-750 px-4 py-2 text-sm text-parch-100">
+          Menu Court is the leading hybrid champion candidate: keep menu structure, merge Court
+          Rail relic stage, compact blessing chips. Agent swarm optimizing in lab — not yet
+          production crown. Full notes:{" "}
+          <code className="text-parch-50">src/concepts/build-showcase/R3-BRIEF.md</code>
+          {" · "}
+          <Link
+            href="https://github.com/sonnaya2/Equilibrium/blob/master/src/concepts/build-showcase/R3-BRIEF.md"
+            className="text-gem-300 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            R3-BRIEF on GitHub
+          </Link>
+        </p>
         <div className="grid gap-0 sm:grid-cols-3">
-          {BUILD_SHOWCASE_R2.map((c) => (
+          {BUILD_SHOWCASE_R3.map((c) => (
             <Link
               key={c.id}
               href={`/concepts/build-showcase/${c.id}`}
@@ -57,6 +99,7 @@ export default function BuildShowcaseArenaPage() {
             >
               <span className="font-display text-sm uppercase tracking-[0.12em] text-gold-400">
                 {c.codename}
+                {c.id === "menu-court" ? " · lead" : ""}
               </span>
               <span className="text-xs text-parch-300">{c.name}</span>
               <p className="text-sm leading-5 text-parch-100">{c.thesis}</p>
@@ -70,13 +113,28 @@ export default function BuildShowcaseArenaPage() {
       </section>
 
       <section className="panel mb-6">
+        <div className="panel-head">R2 · failed (comparison only)</div>
+        <div className="panel-body flex flex-wrap gap-2 text-sm">
+          {BUILD_SHOWCASE_R2.map((c) => (
+            <Link
+              key={c.id}
+              href={`/concepts/build-showcase/${c.id}`}
+              className="border border-stone-750 px-2 py-1 text-parch-300 hover:border-gem-500 hover:text-gem-300"
+            >
+              {c.name}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel mb-6">
         <div className="panel-head">R1 · monogram era (comparison)</div>
         <div className="panel-body flex flex-wrap gap-2 text-sm">
           {BUILD_SHOWCASE_R1.map((c) => (
             <Link
               key={c.id}
               href={`/concepts/build-showcase/${c.id}`}
-              className="border border-stone-750 px-2 py-1 text-parch-100 hover:border-gem-500 hover:text-gem-300"
+              className="border border-stone-750 px-2 py-1 text-parch-300 hover:border-gem-500 hover:text-gem-300"
             >
               {c.name}
             </Link>
@@ -85,9 +143,9 @@ export default function BuildShowcaseArenaPage() {
       </section>
 
       <p className="text-sm text-parch-300">
-        Art: wiki hex icons (D stone-inset) + Jagex countdown plates under{" "}
-        <code className="text-parch-100">public/game/relics/</code> and{" "}
-        <code className="text-parch-100">public/game/leagues/</code>.
+        Brief: <code className="text-parch-100">src/concepts/build-showcase/R3-BRIEF.md</code>
+        {" · "}
+        Art: wiki hex under <code className="text-parch-100">public/game/relics/</code>.
       </p>
     </div>
   );

@@ -47,6 +47,33 @@ export function wikiTaskUrl(base: string, wikiTaskId: number): string {
   return `${trimmed}#${wikiTaskId}`;
 }
 
+/** Ordered region ids that appear in task data (global first, then league order). */
+export function regionsInTaskData(records: readonly TaskRecord[]): TaskRegionId[] {
+  const seen = new Set<TaskRegionId>();
+  for (const r of records) {
+    if (r.regionId) seen.add(r.regionId);
+  }
+  const ordered: TaskRegionId[] = [];
+  if (seen.has("global")) ordered.push("global");
+  for (const id of TASK_LEAGUE_REGION_IDS) {
+    if (seen.has(id)) ordered.push(id);
+  }
+  return ordered;
+}
+
+/** Full (unfiltered) per-region + all counts for the crest rail badges. */
+export function fullRegionCounts(
+  records: readonly TaskRecord[],
+): Map<TaskRegionId | "all", number> {
+  const m = new Map<TaskRegionId | "all", number>();
+  m.set("all", records.length);
+  for (const r of records) {
+    if (!r.regionId) continue;
+    m.set(r.regionId, (m.get(r.regionId) ?? 0) + 1);
+  }
+  return m;
+}
+
 export function useTasksDesk(
   raw: unknown[],
   tiers: Record<string, number>,
@@ -80,20 +107,22 @@ export function useTasksDesk(
     setProgress(loadProgressForRecords(records));
   }, [records]);
 
-  useEffect(() => {
-    if (!buildOnly || region === "all" || region === "global") return;
-    if (!unlockedSet.has(region)) setRegion("all");
-  }, [buildOnly, region, unlockedSet]);
-
   const completed = useMemo(() => new Set(progress.completed), [progress.completed]);
 
-  const filterOpts = useMemo(
-    () => ({
-      allowedRegions: buildOnly ? unlockedSet : null,
-      includeGlobal: true as const,
-    }),
-    [buildOnly, unlockedSet],
-  );
+  /**
+   * My build scopes the multi-region ("all") list via allowedRegions.
+   * A specific region leaf (incl. locked electives) stays viewable — do not
+   * intersect that pick with the unlock set or the leaf would empty out.
+   */
+  const filterOpts = useMemo(() => {
+    if (!buildOnly) {
+      return { allowedRegions: null as ReadonlySet<string> | null, includeGlobal: true as const };
+    }
+    if (region !== "all") {
+      return { allowedRegions: null as ReadonlySet<string> | null, includeGlobal: true as const };
+    }
+    return { allowedRegions: unlockedSet, includeGlobal: true as const };
+  }, [buildOnly, unlockedSet, region]);
 
   const visible = useMemo(
     () => filterTasks(records, tier, debouncedQuery, region, filterOpts),
@@ -105,40 +134,11 @@ export function useTasksDesk(
     [records],
   );
 
-  const regionsInData = useMemo(() => {
-    const seen = new Set<TaskRegionId>();
-    for (const r of records) {
-      if (r.regionId) seen.add(r.regionId);
-    }
-    const ordered: TaskRegionId[] = [];
-    if (seen.has("global")) ordered.push("global");
-    for (const id of TASK_LEAGUE_REGION_IDS) {
-      if (seen.has(id)) ordered.push(id);
-    }
-    return ordered;
-  }, [records]);
+  /** Option A: always every region that has tasks — never hide electives. */
+  const regionRail = useMemo(() => regionsInTaskData(records), [records]);
 
-  const regionRail = useMemo(() => {
-    if (!buildOnly) return regionsInData;
-    return regionsInData.filter((id) => id === "global" || unlockedSet.has(id));
-  }, [regionsInData, buildOnly, unlockedSet]);
-
-  const regionCounts = useMemo(() => {
-    const m = new Map<TaskRegionId | "all", number>();
-    const pool = buildOnly
-      ? records.filter((r) => {
-          const rid = r.regionId;
-          if (rid === "global") return true;
-          return Boolean(rid && unlockedSet.has(rid));
-        })
-      : records;
-    m.set("all", pool.length);
-    for (const r of pool) {
-      if (!r.regionId) continue;
-      m.set(r.regionId, (m.get(r.regionId) ?? 0) + 1);
-    }
-    return m;
-  }, [records, buildOnly, unlockedSet]);
+  /** Full data counts so locked electives still show their true totals. */
+  const regionCounts = useMemo(() => fullRegionCounts(records), [records]);
 
   const crestRegionIds = useMemo(
     () => regionRail.filter((id) => isLeagueRegionId(id)),
@@ -150,6 +150,8 @@ export function useTasksDesk(
     [unlocked],
   );
 
+  const isUnlocked = (id: string) => id === "global" || unlockedSet.has(id);
+
   const doneVisible = useMemo(() => {
     let n = 0;
     for (const r of visible) if (completed.has(taskId(r))) n += 1;
@@ -159,6 +161,7 @@ export function useTasksDesk(
   const earnedVisible = pointsEarned(progress, visible, tiers);
   const totalVisible = pointsTotal(visible, tiers);
 
+  /** First-row fallback for previews that still use it — production ignores this. */
   const selected = useMemo(() => {
     if (!selectedId) return visible[0] ?? null;
     return visible.find((r) => taskId(r) === selectedId) ?? visible[0] ?? null;
@@ -201,6 +204,8 @@ export function useTasksDesk(
     regionCounts,
     crestRegionIds,
     unlockLabel,
+    unlockedSet,
+    isUnlocked,
     visible,
     completed,
     selected,

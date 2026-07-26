@@ -1,10 +1,13 @@
 /**
  * Build Showcase tournament.
- * R2 (active): no section tabs · official League art · wiki hex icons.
- * R1 kept for comparison (monogram-era).
+ * R3 (active): topology-divergent — Court Rail · Twin Desk · Menu Court.
+ * R2 failed as isomorphic skins. R1 monogram-era kept for comparison only.
  */
 
 export type BuildConceptId =
+  | "court-rail"
+  | "twin-desk"
+  | "menu-court"
   | "war-court"
   | "dossier-board"
   | "herald-stage"
@@ -20,35 +23,60 @@ export type BuildConcept = {
   codename: string;
   thesis: string;
   shareAngle: string;
-  round: 1 | 2;
+  round: 1 | 2 | 3;
 };
 
 export const BUILD_SHOWCASE_CONCEPTS: BuildConcept[] = [
   {
+    id: "court-rail",
+    name: "Court Rail",
+    codename: "A · Court Rail",
+    thesis:
+      "Tier rail left · relic court center · region hive right · blessing lattice belt always on. Spatial zones, not tabs or share plaque.",
+    shareAngle: "Desktop court screenshot with lattice belt",
+    round: 3,
+  },
+  {
+    id: "twin-desk",
+    name: "Twin Desk",
+    codename: "B · Twin Desk",
+    thesis:
+      "Hybrid Tasks/Data shell on Build: region rail · relic stage · inspector (effects + path + share). Categorization by bay.",
+    shareAngle: "Three-bay planner crop familiar from Tasks",
+    round: 3,
+  },
+  {
+    id: "menu-court",
+    name: "Menu Court",
+    codename: "C · Menu Court",
+    thesis:
+      "Hybrid lead: menu structure + court-rail relic stage; compact blessing chips. Craft: Genshin/HSR energy on Equilibrium tokens.",
+    shareAngle: "Client-menu-faithful court with full plan belts",
+    round: 3,
+  },
+  {
     id: "war-court",
     name: "War Court",
-    codename: "Open Relic Court",
+    codename: "Open Relic Court · R2 fail",
     thesis:
-      "Single viewport: region crests · relic portraits/hex · blessing lattice — no section tabs. Official plates as atmosphere.",
-    shareAngle: "Desktop war-table screenshot of the full plan",
+      "FAILED: single viewport three-column + lattice — topology clone of other R2 entries.",
+    shareAngle: "Historical only",
     round: 2,
   },
   {
     id: "dossier-board",
     name: "Dossier Board",
-    codename: "Art Folio",
-    thesis:
-      "Dense two-column editorial folio with wiki hex icons + splash detail; share strip sticky. All systems visible.",
-    shareAngle: "Wiki-dense plan sheet with real art",
+    codename: "Art Folio · R2 fail",
+    thesis: "FAILED: two-column folio; same bones as War Court under different chrome.",
+    shareAngle: "Historical only",
     round: 2,
   },
   {
     id: "herald-stage",
     name: "Herald Stage",
-    codename: "Share Stage",
-    thesis:
-      "Share-first plaque with official hex stamp + crest seal; full region grid + blessing path still operable without tabs.",
-    shareAngle: "Mobile/Discord share crop with tools around it",
+    codename: "Share Stage · R2 fail",
+    thesis: "FAILED: share-first plaque as primary surface — not a workbench.",
+    shareAngle: "Historical only",
     round: 2,
   },
   {
@@ -93,6 +121,7 @@ export const BUILD_SHOWCASE_CONCEPTS: BuildConcept[] = [
   },
 ];
 
+export const BUILD_SHOWCASE_R3 = BUILD_SHOWCASE_CONCEPTS.filter((c) => c.round === 3);
 export const BUILD_SHOWCASE_R2 = BUILD_SHOWCASE_CONCEPTS.filter((c) => c.round === 2);
 export const BUILD_SHOWCASE_R1 = BUILD_SHOWCASE_CONCEPTS.filter((c) => c.round === 1);
 

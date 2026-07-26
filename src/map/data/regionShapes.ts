@@ -21,16 +21,20 @@ import { MAP_WORLD } from "./regionAnchors";
 export const BORDER_NODES = {
   // Outer coastline, mainland, clockwise from the north-west. Coast nodes
   // belong to one region; the seam nodes below are shared.
-  c_nw: [0.196, 0.1],
-  c_n_frem_w: [0.226, 0.08],
-  c_n_frem: [0.262, 0.07],
-  c_n_frem_e: [0.3, 0.067],
-  c_n_fw: [0.359, 0.049],
-  c_n_wild_w: [0.431, 0.026],
-  c_n_wild: [0.501, 0.028],
-  c_n_wild_e: [0.567, 0.04],
-  c_ne_wild: [0.626, 0.07],
-  c_e_wild_n: [0.643, 0.13],
+  // Fremennik west pulled in (~0.01–0.02) so the isles are not absurdly wide.
+  c_nw: [0.205, 0.09],
+  c_n_frem_w: [0.232, 0.07],
+  c_n_frem: [0.265, 0.062],
+  c_n_frem_e: [0.302, 0.058],
+  // Shared Frem|Wild north: pushed north with Wilderness so both gain N-S span.
+  c_n_fw: [0.359, 0.032],
+  // Wilderness northern coast only — southern seams (t_w_*, t_wild_mory) stay put
+  // so Asgarnia/Misthalin/Morytania adjacency does not drift.
+  c_n_wild_w: [0.431, 0.012],
+  c_n_wild: [0.501, 0.01],
+  c_n_wild_e: [0.567, 0.022],
+  c_ne_wild: [0.63, 0.048],
+  c_e_wild_n: [0.648, 0.108],
   c_e_wild: [0.64, 0.223],
   c_e_mory_n: [0.72, 0.375],
   c_e_mory_ne: [0.738, 0.425],
@@ -58,8 +62,8 @@ export const BORDER_NODES = {
   c_w_tir_n: [0.1, 0.471],
   c_nw_tir: [0.102, 0.369],
   c_w_kand: [0.174, 0.309],
-  c_w_frem_s: [0.2, 0.273],
-  c_w_frem: [0.192, 0.193],
+  c_w_frem_s: [0.21, 0.27],
+  c_w_frem: [0.205, 0.188],
 
   // Interior triple points. Every one of these is shared by 2+ regions.
   t_fw_asg: [0.358, 0.297], // Fremennik | Wilderness | Asgarnia
@@ -89,43 +93,44 @@ export const BORDER_NODES = {
   s_md_1: [0.53, 0.658], // Misthalin | Desert
   s_kt_1: [0.214, 0.546], // Kandarin | Tirannwn, the elf wall
 
-  // Karamja — island, no shared nodes. Sits clear of Kandarin's south coast
-  // and west of the Desert's, which regionCurve.test.ts holds.
-  k_n: [0.308, 0.712],
-  k_ne: [0.35, 0.722],
-  k_e_n: [0.385, 0.748],
-  k_e: [0.402, 0.814],
-  k_se: [0.38, 0.881],
-  k_s_e: [0.344, 0.91],
-  k_s: [0.308, 0.918],
-  k_sw: [0.258, 0.892],
-  k_w_s: [0.229, 0.838],
-  k_w: [0.223, 0.783],
-  k_nw: [0.255, 0.734],
+  // Karamja — island, no shared nodes. Diamond-ish (N tip / E-W mid / S tip),
+  // clear of Kandarin's south coast and west of the Desert's (regionCurve.test).
+  k_n: [0.308, 0.705],
+  k_ne: [0.36, 0.735],
+  k_e_n: [0.39, 0.77],
+  k_e: [0.4, 0.825],
+  k_se: [0.368, 0.89],
+  k_s_e: [0.335, 0.925],
+  k_s: [0.302, 0.938],
+  k_sw: [0.255, 0.9],
+  k_w_s: [0.225, 0.85],
+  k_w: [0.215, 0.795],
+  k_nw: [0.25, 0.74],
 
-  // Anachronia — island.
-  a_nw: [0.676, 0.073],
-  a_n_w: [0.723, 0.032],
-  a_n: [0.783, 0.018],
-  a_ne: [0.854, 0.044],
-  a_e_n: [0.89, 0.123],
-  a_e: [0.899, 0.234],
-  a_se: [0.837, 0.322],
-  a_s: [0.742, 0.344],
-  a_s_w: [0.683, 0.289],
-  a_w: [0.649, 0.177],
+  // Anachronia — island. Scaled down ~10% vs the old oversize NE plate, still
+  // NE of Forinthry/Morytania with a clear channel off the east coast.
+  a_nw: [0.695, 0.068],
+  a_n_w: [0.735, 0.028],
+  a_n: [0.79, 0.016],
+  a_ne: [0.862, 0.04],
+  a_e_n: [0.895, 0.118],
+  a_e: [0.898, 0.22],
+  a_se: [0.84, 0.3],
+  a_s: [0.755, 0.315],
+  a_s_w: [0.7, 0.275],
+  a_w: [0.675, 0.17],
 
-  // Havenhythe — island.
-  h_n: [0.83, 0.371],
-  h_ne: [0.883, 0.388],
-  h_e_n: [0.913, 0.456],
-  h_e: [0.921, 0.58],
-  h_se: [0.889, 0.692],
-  h_s_e: [0.841, 0.745],
-  h_s: [0.799, 0.73],
-  h_w_s: [0.773, 0.637],
-  h_w: [0.777, 0.528],
-  h_nw: [0.799, 0.424],
+  // Havenhythe — island. Slightly more compact, nudged east toward atlas SE.
+  h_n: [0.842, 0.395],
+  h_ne: [0.898, 0.41],
+  h_e_n: [0.928, 0.465],
+  h_e: [0.935, 0.575],
+  h_se: [0.9, 0.685],
+  h_s_e: [0.85, 0.725],
+  h_s: [0.812, 0.71],
+  h_w_s: [0.785, 0.63],
+  h_w: [0.788, 0.53],
+  h_nw: [0.81, 0.44],
 } as const satisfies Record<string, readonly [number, number]>;
 
 export type BorderNode = keyof typeof BORDER_NODES;
@@ -221,16 +226,16 @@ export const REGION_SHAPES: readonly RegionShape[] = [
   {
     id: "havenhythe",
     ring: ["h_n", "h_ne", "h_e_n", "h_e", "h_se", "h_s_e", "h_s", "h_w_s", "h_w", "h_nw"],
-    markerUv: [0.847, 0.574],
+    markerUv: [0.86, 0.57],
     depth: 0.075,
-    framing: frame([0.847, 0.574], 0.48, 0.76, 1.12, 38, 0.2),
+    framing: frame([0.86, 0.57], 0.48, 0.76, 1.12, 38, 0.2),
   },
   {
     id: "karamja",
     ring: ["k_n", "k_ne", "k_e_n", "k_e", "k_se", "k_s_e", "k_s", "k_sw", "k_w_s", "k_w", "k_nw"],
-    markerUv: [0.313, 0.822],
+    markerUv: [0.308, 0.825],
     depth: 0.07,
-    framing: frame([0.313, 0.822], -0.3, 0.82, 1.1, 38, 0.14),
+    framing: frame([0.308, 0.825], -0.3, 0.82, 1.1, 38, 0.14),
   },
   {
     id: "asgarnia",
@@ -291,9 +296,9 @@ export const REGION_SHAPES: readonly RegionShape[] = [
       "c_w_frem_s",
       "c_w_frem",
     ],
-    markerUv: [0.277, 0.16],
+    markerUv: [0.282, 0.155],
     depth: 0.075,
-    framing: frame([0.277, 0.16], -0.28, 0.72, 1.2, 38, 0.12),
+    framing: frame([0.282, 0.155], -0.28, 0.72, 1.2, 38, 0.12),
   },
   {
     id: "forinthry",
@@ -314,10 +319,10 @@ export const REGION_SHAPES: readonly RegionShape[] = [
       "s_fw_2",
       "s_fw_1",
     ],
-    markerUv: [0.5, 0.179],
+    markerUv: [0.5, 0.168],
     depth: 0.065,
     // Lower and wider: the northern slabs need to stack in frame.
-    framing: frame([0.5, 0.179], 0, 0.66, 1.3, 40, 0.1),
+    framing: frame([0.5, 0.168], 0, 0.66, 1.3, 40, 0.1),
   },
   {
     id: "desert",
@@ -377,9 +382,9 @@ export const REGION_SHAPES: readonly RegionShape[] = [
   {
     id: "anachronia",
     ring: ["a_nw", "a_n_w", "a_n", "a_ne", "a_e_n", "a_e", "a_se", "a_s", "a_s_w", "a_w"],
-    markerUv: [0.774, 0.174],
+    markerUv: [0.785, 0.165],
     depth: 0.065,
-    framing: frame([0.774, 0.174], 0.4, 0.74, 1.15, 38, 0.18),
+    framing: frame([0.785, 0.165], 0.4, 0.74, 1.15, 38, 0.18),
   },
 ];
 

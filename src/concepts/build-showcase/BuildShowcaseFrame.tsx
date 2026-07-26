@@ -25,7 +25,7 @@ export function BuildShowcaseFrame({
             {concept.codename} · concept only · live useBuild
           </span>
           <nav className="ml-auto flex flex-wrap gap-1" aria-label="Build concepts">
-            {BUILD_SHOWCASE_CONCEPTS.map((c) => {
+            {BUILD_SHOWCASE_CONCEPTS.filter((c) => c.round === 3 || c.id === active).map((c) => {
               const on = c.id === active;
               return (
                 <Link
@@ -37,7 +37,7 @@ export function BuildShowcaseFrame({
                       : "border-stone-750 text-parch-100 hover:text-parch-50"
                   }`}
                 >
-                  {c.name}
+                  {c.round === 3 ? c.codename : c.name}
                 </Link>
               );
             })}

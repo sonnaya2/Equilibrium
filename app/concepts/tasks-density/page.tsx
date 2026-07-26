@@ -23,7 +23,10 @@ export default function TasksDensityArenaPage() {
       <p className="mb-4 text-sm text-parch-100">
         Pass bar <span className="font-mono text-gem-400">{TASKS_DENSITY_PASS.toFixed(1)}</span>
         {" · "}
-        <Link href="/concepts" className="text-gem-300 hover:underline">
+        <Link href="/concepts/tasks-density/gallery-war" className="text-gem-300 hover:underline">
+          Gallery War →
+        </Link>
+        <Link href="/concepts" className="text-parch-300 hover:underline">
           Concepts hub
         </Link>
         {" · "}
@@ -43,7 +46,7 @@ export default function TasksDensityArenaPage() {
       </section>
 
       <section className="panel mb-6">
-        <div className="panel-head">R1 teams</div>
+        <div className="panel-head">R3 — try these two first</div>
         <table className="data-table">
           <thead>
             <tr>
@@ -54,7 +57,38 @@ export default function TasksDensityArenaPage() {
             </tr>
           </thead>
           <tbody>
-            {TASKS_DENSITY_TEAMS.map((t) => (
+            {TASKS_DENSITY_TEAMS.filter((t) => t.round === 3).map((t) => (
+              <tr key={t.id}>
+                <td className="text-parch-50">{t.name}</td>
+                <td className="text-gem-300">{t.codename}</td>
+                <td className="text-parch-100">{t.thesis}</td>
+                <td>
+                  <Link
+                    href={`/concepts/tasks-density/${t.id}`}
+                    className="text-gem-300 hover:underline"
+                  >
+                    full page
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="panel mb-6">
+        <div className="panel-head">R1 teams (archive)</div>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Codename</th>
+              <th>Thesis</th>
+              <th>Open</th>
+            </tr>
+          </thead>
+          <tbody>
+            {TASKS_DENSITY_TEAMS.filter((t) => (t.round ?? 1) === 1).map((t) => (
               <tr key={t.id}>
                 <td className="text-parch-50">{t.name}</td>
                 <td className="text-gem-300">{t.codename}</td>

@@ -2343,20 +2343,29 @@
     },
     {
       "id": "item:trimmed-masterwork-spear-of-annihilation",
-      "name": "Trimmed Masterwork Spear of Annihilation",
+      "name": "Masterwork Spear of Annihilation",
       "style": "melee",
       "slot": "twohand",
       "tier": 92,
-      "bonuses": {},
+      "bonuses": {
+        "damage": 2056.2,
+        "accuracy": 2577
+      },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Trimmed_Masterwork_Spear_of_Annihilation",
           "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Masterwork_Spear_of_Annihilation",
+          "title": "Masterwork Spear of Annihilation",
+          "verifiedAt": "2026-07-26"
         }
       ],
       "setId": "trimmed-masterwork",
-      "displayDescription": "No wiki Infobox page found for trimmed spear variant"
+      "displayDescription": "Wiki: Trimmed Masterwork Spear redirects to Masterwork Spear of Annihilation (tier 92; crafted with masterwork melee trim)."
     },
     {
       "id": "item:spear-of-annihilation",
@@ -8349,7 +8358,7 @@
           "verifiedAt": "2026-07-26"
         }
       ],
-      "displayDescription": "Wiki page for (i) variant missing from scrape — fill when page resolves"
+      "displayDescription": "No RS3 wiki page for Slayer helmet (i) — OSRS-style id. Use Corrupted slayer helmet for high-tier static armour; base Slayer helmet is tier 10 armour 40.4 life 100."
     },
     {
       "id": "item:corrupted-slayer-helmet",

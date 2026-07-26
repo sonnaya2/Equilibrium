@@ -4,8 +4,10 @@ import {
   EMPTY_PROGRESS,
   isComplete,
   legacyTaskId,
+  mergeWikiTaskProgress,
   migrateProgressIds,
   normalizeProgress,
+  parseWikiTaskPage,
   pointsEarned,
   pointsTotal,
   taskId,
@@ -108,6 +110,37 @@ describe("toggle / complete helpers", () => {
 
     state = toggleComplete(state, id);
     expect(isComplete(state, id)).toBe(false);
+  });
+});
+
+describe("saved Wiki task page import", () => {
+  it("reads completed task ids from saved row markers", () => {
+    const html = `
+      <table class="qc-active qc-wikisync">
+        <tr data-taskid="462" class="highlight-on wikisync-completed"><td>Done</td></tr>
+        <tr class='wikisync-completed highlight-on' data-taskid='900'><td>Done</td></tr>
+        <tr data-taskid=901 class="highlight-on"><td>Not done</td></tr>
+        <tr data-taskid="462" class="wikisync-completed"><td>Duplicate</td></tr>
+      </table>
+    `;
+    expect(parseWikiTaskPage(html)).toEqual({
+      completedTaskIds: [462, 900],
+      taskRows: 4,
+    });
+  });
+
+  it("merges only ids present in the current task data", () => {
+    const result = mergeWikiTaskProgress(
+      { completed: ["wiki:462", "local-task"] },
+      CATALYST_RECORDS,
+      [462, 900, 9999, 900],
+    );
+    expect(result).toMatchObject({ matched: 2, added: 1 });
+    expect(result.progress.completed).toEqual([
+      "wiki:462",
+      "local-task",
+      "wiki:900",
+    ]);
   });
 });
 

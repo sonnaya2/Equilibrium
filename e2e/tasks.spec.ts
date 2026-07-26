@@ -33,6 +33,33 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
   expect(browserErrors).toEqual([]);
 });
 
+test("saved Wiki page imports completed task ids locally", async ({ page }) => {
+  await page.goto("/tasks");
+
+  const card = page.locator("[data-task-id]").first();
+  const canonicalId = await card.getAttribute("data-task-id");
+  const wikiTaskId = Number(canonicalId?.replace("wiki:", ""));
+  expect(Number.isSafeInteger(wikiTaskId)).toBe(true);
+
+  page.once("dialog", async (dialog) => {
+    expect(dialog.message()).toBe("Mark 1 Wiki task complete?");
+    await dialog.accept();
+  });
+  await page.getByLabel("Import saved Wiki page").setInputFiles({
+    name: "Catalyst League Tasks.html",
+    mimeType: "text/html",
+    buffer: Buffer.from(`
+      <table class="qc-active qc-wikisync">
+        <tr class="highlight-on wikisync-completed" data-taskid="${wikiTaskId}"></tr>
+        <tr class="highlight-on" data-taskid="999999"></tr>
+      </table>
+    `),
+  });
+
+  await expect(page.getByRole("status")).toContainText("1 task imported · 1 matched.");
+  await expect(card.getByRole("button", { name: /Mark incomplete:/ })).toBeVisible();
+});
+
 test("task filters compose and completion state persists in the page model", async ({ page }) => {
   await page.goto("/tasks");
 

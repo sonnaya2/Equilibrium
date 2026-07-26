@@ -13,7 +13,39 @@ export type TaskProgress = {
   completed: string[];
 };
 
+export type WikiTaskPageImport = {
+  completedTaskIds: number[];
+  taskRows: number;
+};
+
 export const EMPTY_PROGRESS: TaskProgress = { completed: [] };
+
+function htmlAttribute(tag: string, name: string): string | null {
+  const match = tag.match(
+    new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
+  );
+  return match ? (match[1] ?? match[2] ?? match[3] ?? null) : null;
+}
+
+/** Read WikiSync completion markers from a user-saved task page without executing its HTML. */
+export function parseWikiTaskPage(html: string): WikiTaskPageImport {
+  const completedTaskIds = new Set<number>();
+  let taskRows = 0;
+
+  for (const match of html.matchAll(/<tr\b[^>]*>/gi)) {
+    const tag = match[0];
+    const rawId = htmlAttribute(tag, "data-taskid");
+    if (!rawId || !/^\d+$/.test(rawId)) continue;
+    const taskId = Number(rawId);
+    if (!Number.isSafeInteger(taskId)) continue;
+    taskRows += 1;
+
+    const classes = htmlAttribute(tag, "class")?.split(/\s+/) ?? [];
+    if (classes.includes("wikisync-completed")) completedTaskIds.add(taskId);
+  }
+
+  return { completedTaskIds: [...completedTaskIds], taskRows };
+}
 
 /**
  * Prefer record.id, then wiki task id, else `${tier}:${name}` (lowercased).
@@ -168,6 +200,39 @@ export function toggleComplete(state: TaskProgress, id: string): TaskProgress {
   if (set.has(id)) set.delete(id);
   else set.add(id);
   return { completed: [...set] };
+}
+
+/** Merge known Wiki task ids into local progress; unknown ids are ignored. */
+export function mergeWikiTaskProgress(
+  state: TaskProgress,
+  records: readonly TaskRecord[],
+  wikiTaskIds: readonly number[],
+): { progress: TaskProgress; matched: number; added: number } {
+  const canonicalByWikiId = new Map(
+    records.flatMap((record) =>
+      typeof record.wikiTaskId === "number"
+        ? [[record.wikiTaskId, taskId(record)] as const]
+        : [],
+    ),
+  );
+  const completed = new Set(state.completed);
+  let matched = 0;
+  let added = 0;
+
+  for (const wikiTaskId of new Set(wikiTaskIds)) {
+    const canonical = canonicalByWikiId.get(wikiTaskId);
+    if (!canonical) continue;
+    matched += 1;
+    if (completed.has(canonical)) continue;
+    completed.add(canonical);
+    added += 1;
+  }
+
+  return {
+    progress: added > 0 ? { completed: [...completed] } : state,
+    matched,
+    added,
+  };
 }
 
 /** Count completed ids; when records given, only those present in the set. */

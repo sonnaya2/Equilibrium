@@ -1441,6 +1441,7 @@ textarea:focus-visible {
 
   .tasks-toggle,
   .tasks-wikisync__open,
+  .tasks-wikisync__import,
   .tasks-toolbar__clear,
   .tasks-pagination button {
     min-height: 2.75rem;
@@ -1570,6 +1571,7 @@ textarea:focus-visible {
 
   .tasks-toggle:hover,
   .tasks-wikisync__open:hover,
+  .tasks-wikisync__import:hover,
   .tasks-toolbar__clear:hover,
   .tasks-pagination button:hover:not(:disabled) {
     border-color: var(--color-stone-carve);

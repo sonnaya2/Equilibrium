@@ -24,6 +24,7 @@ import {
   EMPTY_PROGRESS,
   loadProgress,
   loadProgressFromBrowserDb,
+  mergeWikiTaskProgress,
   migrateProgressIds,
   saveProgress,
   STORAGE_KEY,
@@ -460,6 +461,16 @@ export function useTasksDesk(
     });
   };
 
+  const onImportWikiTasks = (wikiTaskIds: readonly number[]) => {
+    const result = mergeWikiTaskProgress(progress, records, wikiTaskIds);
+    if (result.added > 0) {
+      progressRevision.current += 1;
+      setProgress(result.progress);
+      saveProgress(result.progress);
+    }
+    return { matched: result.matched, added: result.added };
+  };
+
   const onPin = (id: string) => {
     setPinnedIds((previous) => {
       const next = previous.includes(id)
@@ -516,6 +527,7 @@ export function useTasksDesk(
     setSelectedId,
     listRef,
     onToggle,
+    onImportWikiTasks,
     onPin,
     taskId,
     taskPoints: (record: TaskRecord) => taskPoints(record, tiers),

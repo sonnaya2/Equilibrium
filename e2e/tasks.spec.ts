@@ -16,22 +16,18 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
     /runescape\.wiki\/w\/Catalyst_League\/Tasks/,
   );
 
-  const rsn = page.getByRole("textbox", { name: "RuneScape name" });
-  await expect(rsn).toBeVisible();
-  await page.evaluate(() => {
-    window.open = () => null;
-  });
-  await rsn.fill("JavaHomely");
-  await page.getByRole("button", { name: "Open WikiSync" }).click();
-  await expect(page.getByRole("status")).toContainText("WikiSync");
-  await page.reload();
-  await expect(page.getByRole("textbox", { name: "RuneScape name" })).toHaveValue("JavaHomely");
-
-  const importGuide = page.locator(".tasks-wikisync__guide");
-  await importGuide.getByText("How to import", { exact: true }).click();
-  await expect(importGuide).toContainText("Wait for completed rows to turn green.");
-  await expect(importGuide).toContainText("Ctrl+S");
-  await expect(importGuide).toContainText("Import saved page");
+  await expect(page.getByRole("textbox", { name: "RuneScape name" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Import Wiki progress" }).click();
+  const importWindow = page.getByRole("dialog", { name: "Import Wiki progress" });
+  await expect(importWindow).toBeVisible();
+  await expect(importWindow.getByRole("link", { name: "Wiki task page" })).toHaveAttribute(
+    "href",
+    /runescape\.wiki\/w\/Catalyst_League\/Tasks/,
+  );
+  await expect(importWindow).toContainText("Wait for your completed tasks to turn green.");
+  await expect(importWindow).toContainText("Ctrl+S");
+  await expect(importWindow.getByRole("button", { name: "Browse" })).toBeVisible();
+  await expect(importWindow.getByRole("button", { name: "Upload" })).toBeDisabled();
 
   await expect(page.getByRole("navigation", { name: "Primary" })).toContainText("Overview");
   await expect(page.locator("body > footer")).toContainText("RuneScape is a trademark of Jagex Ltd.");
@@ -47,11 +43,9 @@ test("saved Wiki page imports completed task ids locally", async ({ page }) => {
   const wikiTaskId = Number(canonicalId?.replace("wiki:", ""));
   expect(Number.isSafeInteger(wikiTaskId)).toBe(true);
 
-  page.once("dialog", async (dialog) => {
-    expect(dialog.message()).toBe("Mark 1 Wiki task complete?");
-    await dialog.accept();
-  });
-  await page.getByLabel("Import saved Wiki page").setInputFiles({
+  await page.getByRole("button", { name: "Import Wiki progress" }).click();
+  const importWindow = page.getByRole("dialog", { name: "Import Wiki progress" });
+  await importWindow.getByLabel("Choose saved Wiki page").setInputFiles({
     name: "Catalyst League Tasks.html",
     mimeType: "text/html",
     buffer: Buffer.from(`
@@ -62,7 +56,9 @@ test("saved Wiki page imports completed task ids locally", async ({ page }) => {
     `),
   });
 
-  await expect(page.getByRole("status")).toContainText("1 task imported · 1 matched.");
+  await expect(importWindow).toContainText("Catalyst League Tasks.html");
+  await importWindow.getByRole("button", { name: "Upload" }).click();
+  await expect(importWindow.getByRole("status")).toContainText("1 task imported · 1 matched.");
   await expect(card.getByRole("button", { name: /Mark incomplete:/ })).toBeVisible();
 });
 

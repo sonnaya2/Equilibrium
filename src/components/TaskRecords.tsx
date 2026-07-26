@@ -14,11 +14,9 @@ import {
   type TaskPageStats,
 } from "@/tasks/useTasksDesk";
 import { gameIconPath, worldMapIconPath } from "@/lib/gameArt";
-import { loadState, saveState } from "@/lib/storage";
 import { parseWikiTaskPage } from "@/tasks/progress";
 import type { TaskRecord, TaskRegionId, TaskTier } from "@/tasks";
 
-const RSN_STORAGE_KEY = "eq:tasks:rsn:v1";
 const MAX_WIKI_HTML_BYTES = 25 * 1024 * 1024;
 
 const TIER_LABEL: Record<TaskTier, string> = {
@@ -114,15 +112,13 @@ export function TaskRecords({
   const rangeStart = visible.length === 0 ? 0 : (page - 1) * TASK_PAGE_SIZE + 1;
   const rangeEnd = Math.min(page * TASK_PAGE_SIZE, visible.length);
   const [filtersOpen, setFiltersOpen] = useState(true);
-  const [rsn, setRsn] = useState("");
   const [wikiSyncNotice, setWikiSyncNotice] = useState("");
+  const [wikiHtmlFile, setWikiHtmlFile] = useState<File | null>(null);
+  const wikiImportDialog = useRef<HTMLDialogElement>(null);
   const wikiHtmlInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(max-width: 700px)").matches) setFiltersOpen(false);
-    setRsn(loadState(RSN_STORAGE_KEY, "", (raw) =>
-      typeof raw === "string" ? raw.slice(0, 12) : "",
-    ));
   }, []);
 
   useEffect(() => {
@@ -162,26 +158,7 @@ export function TaskRecords({
     );
   };
 
-  const openWikiSync = () => {
-    const playerName = rsn.trim().replace(/\s+/g, " ");
-    if (!playerName) {
-      setWikiSyncNotice("Enter your RuneScape name first.");
-      return;
-    }
-    setRsn(playerName);
-    saveState(RSN_STORAGE_KEY, playerName);
-    window.open(tasksWikiUrl, "_blank", "noopener,noreferrer");
-    setWikiSyncNotice("WikiSync opened. Paste your name, look it up, then save the page.");
-    if (navigator.clipboard) {
-      void navigator.clipboard.writeText(playerName).then(
-        () => setWikiSyncNotice("Name copied. Paste it into WikiSync, look it up, then save the page."),
-        () => undefined,
-      );
-    }
-  };
-
-  const importWikiHtml = async (file?: File) => {
-    if (!file) return;
+  const importWikiHtml = async (file: File) => {
     if (file.size > MAX_WIKI_HTML_BYTES) {
       setWikiSyncNotice("That HTML file is too large.");
       return;
@@ -208,11 +185,6 @@ export function TaskRecords({
         setWikiSyncNotice("No tasks in that file match this task list.");
         return;
       }
-      if (
-        !window.confirm(
-          `Mark ${matched.toLocaleString()} Wiki ${matched === 1 ? "task" : "tasks"} complete?`,
-        )
-      ) return;
 
       const imported = onImportWikiTasks(parsed.completedTaskIds);
       setWikiSyncNotice(
@@ -280,71 +252,17 @@ export function TaskRecords({
                   </label>
 
                   {dataset.wikiSyncSupported ? (
-                    <div className="tasks-wikisync">
-                      <label className="tasks-field tasks-field--rsn">
-                        <span>RuneScape name</span>
-                        <input
-                          type="text"
-                          value={rsn}
-                          maxLength={12}
-                          spellCheck={false}
-                          onChange={(event) => {
-                            setRsn(event.target.value);
-                            setWikiSyncNotice("");
-                          }}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter") openWikiSync();
-                          }}
-                          placeholder="Display name"
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        className="tasks-wikisync__open"
-                        title="Copy your name and open the official Wiki task list"
-                        onClick={openWikiSync}
-                      >
-                        Open WikiSync
-                      </button>
-                      <button
-                        type="button"
-                        className="tasks-wikisync__import"
-                        title="Import completed tasks from a saved Wiki task page"
-                        onClick={() => wikiHtmlInput.current?.click()}
-                      >
-                        Import saved page
-                      </button>
-                      <input
-                        ref={wikiHtmlInput}
-                        hidden
-                        type="file"
-                        accept=".html,.htm,text/html"
-                        aria-label="Import saved Wiki page"
-                        onChange={(event) => {
-                          const input = event.currentTarget;
-                          void importWikiHtml(input.files?.[0]).finally(() => {
-                            input.value = "";
-                          });
-                        }}
-                      />
-                      <details className="tasks-wikisync__guide">
-                        <summary>How to import</summary>
-                        <ol>
-                          <li>Enter your name, then choose Open WikiSync.</li>
-                          <li>
-                            Paste it into Display name and choose Look up. Wait for completed rows to
-                            turn green.
-                          </li>
-                          <li>Press Ctrl+S (⌘S on Mac) and save the page as an .html file.</li>
-                          <li>Come back here, choose Import saved page, and select the file.</li>
-                        </ol>
-                      </details>
-                      {wikiSyncNotice ? (
-                        <span className="tasks-wikisync__notice" role="status">
-                          {wikiSyncNotice}
-                        </span>
-                      ) : null}
-                    </div>
+                    <button
+                      type="button"
+                      className="tasks-import__open"
+                      onClick={() => {
+                        setWikiHtmlFile(null);
+                        setWikiSyncNotice("");
+                        wikiImportDialog.current?.showModal();
+                      }}
+                    >
+                      Import Wiki progress
+                    </button>
                   ) : null}
 
                   <label className="tasks-field">
@@ -550,6 +468,82 @@ export function TaskRecords({
           />
         </div>
       )}
+
+      {dataset.wikiSyncSupported ? (
+        <dialog
+          ref={wikiImportDialog}
+          className="tasks-import-dialog"
+          aria-labelledby="tasks-import-title"
+        >
+          <header className="tasks-import-dialog__header">
+            <h2 id="tasks-import-title">Import Wiki progress</h2>
+            <button
+              type="button"
+              className="tasks-import-dialog__close"
+              aria-label="Close import window"
+              onClick={() => wikiImportDialog.current?.close()}
+            >
+              ×
+            </button>
+          </header>
+          <div className="tasks-import-dialog__body">
+            <ol>
+              <li>
+                Open the{" "}
+                <a href={tasksWikiUrl} target="_blank" rel="noreferrer">
+                  Wiki task page
+                </a>
+                .
+              </li>
+              <li>Enter your RuneScape name in WikiSync and choose Look up.</li>
+              <li>Wait for your completed tasks to turn green.</li>
+              <li>Press Ctrl+S (⌘S on Mac) and save the page as an .html file.</li>
+              <li>Browse for that file below, then choose Upload.</li>
+            </ol>
+            <p>Your file stays in this browser.</p>
+            {wikiSyncNotice ? (
+              <p className="tasks-import-dialog__notice" role="status">
+                {wikiSyncNotice}
+              </p>
+            ) : null}
+          </div>
+          <footer className="tasks-import-dialog__actions">
+            <input
+              ref={wikiHtmlInput}
+              hidden
+              type="file"
+              accept=".html,.htm,text/html"
+              aria-label="Choose saved Wiki page"
+              onChange={(event) => {
+                const input = event.currentTarget;
+                setWikiHtmlFile(input.files?.[0] ?? null);
+                setWikiSyncNotice("");
+                input.value = "";
+              }}
+            />
+            <button
+              type="button"
+              className="tasks-import-dialog__browse"
+              onClick={() => wikiHtmlInput.current?.click()}
+            >
+              Browse
+            </button>
+            <span className="tasks-import-dialog__file">
+              {wikiHtmlFile?.name ?? "No file selected"}
+            </span>
+            <button
+              type="button"
+              className="tasks-import-dialog__upload"
+              disabled={!wikiHtmlFile}
+              onClick={() => {
+                if (wikiHtmlFile) void importWikiHtml(wikiHtmlFile);
+              }}
+            >
+              Upload
+            </button>
+          </footer>
+        </dialog>
+      ) : null}
     </div>
   );
 }

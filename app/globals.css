@@ -1409,18 +1409,6 @@ textarea:focus-visible {
     flex: 1 1 18rem;
   }
 
-  .tasks-wikisync {
-    display: flex;
-    flex: 0 1 auto;
-    flex-wrap: wrap;
-    align-items: end;
-    gap: 0.35rem;
-  }
-
-  .tasks-field--rsn {
-    min-width: 11rem;
-  }
-
   .tasks-field input,
   .tasks-field select,
   .tasks-results__sort select {
@@ -1440,8 +1428,7 @@ textarea:focus-visible {
   }
 
   .tasks-toggle,
-  .tasks-wikisync__open,
-  .tasks-wikisync__import,
+  .tasks-import__open,
   .tasks-toolbar__clear,
   .tasks-pagination button {
     min-height: 2.75rem;
@@ -1458,35 +1445,10 @@ textarea:focus-visible {
     gap: 0.4rem;
   }
 
-  .tasks-wikisync__open {
+  .tasks-import__open {
     border-color: var(--color-gem-500);
     background: var(--tasks-raised);
     color: var(--color-gem-300);
-  }
-
-  .tasks-wikisync__notice {
-    flex-basis: 100%;
-    color: var(--color-parch-300);
-    font-size: 0.75rem;
-  }
-
-  .tasks-wikisync__guide {
-    flex-basis: 100%;
-    color: var(--color-parch-300);
-    font-size: 0.75rem;
-  }
-
-  .tasks-wikisync__guide summary {
-    width: fit-content;
-    cursor: pointer;
-    color: var(--color-parch-100);
-  }
-
-  .tasks-wikisync__guide ol {
-    margin: 0.45rem 0 0;
-    padding-left: 1.25rem;
-    list-style: decimal;
-    line-height: 1.55;
   }
 
   .tasks-toggle__pip {
@@ -1589,12 +1551,122 @@ textarea:focus-visible {
   }
 
   .tasks-toggle:hover,
-  .tasks-wikisync__open:hover,
-  .tasks-wikisync__import:hover,
+  .tasks-import__open:hover,
   .tasks-toolbar__clear:hover,
   .tasks-pagination button:hover:not(:disabled) {
     border-color: var(--color-stone-carve);
     color: var(--color-parch-50);
+  }
+
+  .tasks-import-dialog {
+    position: fixed;
+    inset: 0;
+    width: min(36rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--tasks-line);
+    border-radius: var(--radius-md);
+    background: var(--tasks-surface);
+    color: var(--color-parch-100);
+    box-shadow: inset 0 0 0 1px var(--color-stone-carve);
+  }
+
+  .tasks-import-dialog::backdrop {
+    background: color-mix(in srgb, var(--color-stone-950) 84%, transparent);
+  }
+
+  .tasks-import-dialog__header,
+  .tasks-import-dialog__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .tasks-import-dialog__header {
+    justify-content: space-between;
+    border-bottom: 1px solid var(--tasks-line);
+  }
+
+  .tasks-import-dialog__header h2 {
+    color: var(--color-parch-50);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+  }
+
+  .tasks-import-dialog__close {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--tasks-line);
+    border-radius: var(--radius-sm);
+    color: var(--color-parch-300);
+  }
+
+  .tasks-import-dialog__body {
+    padding: 1rem 1.1rem;
+  }
+
+  .tasks-import-dialog__body ol {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding-left: 1.35rem;
+    list-style: decimal;
+    line-height: 1.45;
+  }
+
+  .tasks-import-dialog__body a {
+    color: var(--color-gem-300);
+    text-underline-offset: 3px;
+  }
+
+  .tasks-import-dialog__body p {
+    margin: 0.85rem 0 0;
+    color: var(--color-parch-300);
+    font-size: 0.8125rem;
+  }
+
+  .tasks-import-dialog__body .tasks-import-dialog__notice {
+    color: var(--color-parch-100);
+  }
+
+  .tasks-import-dialog__actions {
+    border-top: 1px solid var(--tasks-line);
+    background: var(--tasks-inset);
+  }
+
+  .tasks-import-dialog__browse,
+  .tasks-import-dialog__upload {
+    min-height: 2.5rem;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--tasks-line);
+    border-radius: var(--radius-sm);
+    color: var(--color-parch-100);
+  }
+
+  .tasks-import-dialog__upload {
+    margin-left: auto;
+    border-color: var(--color-gem-500);
+    background: var(--tasks-raised);
+    color: var(--color-gem-300);
+  }
+
+  .tasks-import-dialog__upload:disabled {
+    border-color: var(--tasks-line);
+    background: var(--tasks-inset);
+    color: var(--color-parch-500);
+    cursor: not-allowed;
+  }
+
+  .tasks-import-dialog__file {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--color-parch-300);
+    font-size: 0.8125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tasks-results {

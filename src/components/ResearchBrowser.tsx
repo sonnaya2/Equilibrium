@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type {
   ResearchCatalog,
   ResearchRegion,
   ResearchSkill,
   ResearchTrainingMethod,
-  ResearchUpgrade,
   SourceReference,
 } from "@/research/catalog";
 import { isRegionUnlocked } from "@/league";
@@ -18,13 +17,6 @@ import { regionCrestPath } from "@/lib/gameArt";
 import { clipProse } from "./ResearchSection";
 
 type Mode = "region" | "skill";
-
-/** Optional row focus inside the selected region/skill record. */
-type FocusRef =
-  | { kind: "content"; index: number }
-  | { kind: "upgrade"; index: number }
-  | { kind: "method"; id: string }
-  | null;
 
 const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   "runescape-wiki": "Wiki",
@@ -64,10 +56,12 @@ function methodAccess(method: ResearchTrainingMethod): string {
     .replaceAll("global_once_supplied", "global once supplied")
     .replaceAll("player_owned_house_global_with_resource_dependency", "PoH · mats by region")
     .replaceAll("materials_and_altar_dependent", "mats + altar")
-    .replaceAll("arc_unresolved", "The Arc (unconfirmed)")
-    .replaceAll("_inferred", " (inferred)")
-    .replaceAll("_likely_", " likely ")
-    .replaceAll("_", " ");
+    .replaceAll("arc_unresolved", "The Arc")
+    .replaceAll("_inferred", "")
+    .replaceAll("_likely_", " ")
+    .replaceAll("_", " ")
+    .replace(/ +/g, " ")
+    .trim();
 }
 
 function sourceKindLabel(kind: string | undefined): string {
@@ -92,19 +86,10 @@ function SourceLink({ source }: { source: SourceReference | null | undefined }) 
 }
 
 /** `Name · Wiki` — omits the dot entirely when SourceLink would be null. */
-function InlineSource({
-  source,
-  stopClick,
-}: {
-  source: SourceReference | null | undefined;
-  stopClick?: boolean;
-}) {
+function InlineSource({ source }: { source: SourceReference | null | undefined }) {
   if (!source?.url) return null;
   return (
-    <span
-      className="ml-1.5 font-normal"
-      onClick={stopClick ? (e) => e.stopPropagation() : undefined}
-    >
+    <span className="ml-1.5 font-normal">
       · <SourceLink source={source} />
     </span>
   );
@@ -123,22 +108,14 @@ function Diamond({ active }: { active: boolean }) {
   );
 }
 
-function MethodTable({
-  methods,
-  focusedId,
-  onFocus,
-}: {
-  methods: ResearchTrainingMethod[];
-  focusedId?: string | null;
-  onFocus?: (id: string) => void;
-}) {
+function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
   if (!methods.length) {
     return <p className="px-3 py-2 text-[13px] text-parch-100">No methods.</p>;
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="data-table min-w-[900px]">
+      <table className="data-table w-full min-w-0">
         <thead>
           <tr>
             <th>Method</th>
@@ -149,64 +126,58 @@ function MethodTable({
           </tr>
         </thead>
         <tbody>
-          {methods.map((method) => {
-            const focused = focusedId === method.id;
-            return (
-              <tr
-                key={method.id}
-                className={`align-top ${onFocus ? "cursor-pointer" : ""} ${focused ? "bg-stone-raised" : ""}`}
-                onClick={onFocus ? () => onFocus(method.id) : undefined}
-                aria-selected={onFocus ? focused : undefined}
-              >
-                <td>
-                  <div className="font-medium">
-                    {cleanText(method.method)}
-                    <InlineSource source={method.source} stopClick />
+          {methods.map((method) => (
+            <tr key={method.id} className="align-top">
+              <td>
+                <div className="font-medium">
+                  {clipProse(cleanText(method.method), 90)}
+                  <InlineSource source={method.source} />
+                </div>
+                <div className="mt-0.5 text-[12px] text-parch-100">
+                  {method.skill}
+                  {method.intensity ? ` · ${method.intensity}` : ""}
+                </div>
+              </td>
+              <td>{method.levelRange || "-"}</td>
+              <td className="max-w-[200px] font-mono text-[12px] leading-5">
+                {clipProse(method.xpRate || "—", 72)}
+              </td>
+              <td className="max-w-[200px] secondary leading-5">
+                {method.location ? (
+                  <div className="text-parch-50">{clipProse(cleanText(method.location), 80)}</div>
+                ) : null}
+                <div className={method.location ? "mt-0.5" : ""}>
+                  {clipProse(methodAccess(method), 90)}
+                </div>
+                {method.hardRegionRequirement ? (
+                  <div className="mt-0.5 text-parch-50">region lock</div>
+                ) : null}
+              </td>
+              <td className="max-w-[200px] secondary leading-5">
+                {method.requiredUnlock ? (
+                  <div>{clipProse(cleanText(method.requiredUnlock), 80)}</div>
+                ) : null}
+                {method.requirements.length ? (
+                  <div className="mt-0.5">{clipProse(method.requirements.join(" · "), 100)}</div>
+                ) : null}
+                {method.resourceSource ? (
+                  <div className="mt-0.5">
+                    Mats: {clipProse(cleanText(method.resourceSource), 72)}
                   </div>
-                  <div className="mt-0.5 text-[12px] text-parch-100">
-                    {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
-                  </div>
-                  {method.note ? (
-                    <div className="mt-0.5 max-w-lg text-[12px] text-parch-300" title={method.note}>
-                      {clipProse(method.note, 100)}
-                    </div>
-                  ) : null}
-                </td>
-                <td>{method.levelRange || "-"}</td>
-                <td className="max-w-[250px] font-mono leading-5">{method.xpRate || "—"}</td>
-                <td className="max-w-[230px] secondary leading-5">
-                  {method.location ? <div className="text-parch-50">{cleanText(method.location)}</div> : null}
-                  <div className={method.location ? "mt-0.5" : ""}>{methodAccess(method)}</div>
-                  {method.hardRegionRequirement ? <div className="mt-0.5 text-parch-50">region lock</div> : null}
-                </td>
-                <td className="max-w-[240px] secondary leading-5">
-                  {method.requiredUnlock ? <div>{cleanText(method.requiredUnlock)}</div> : null}
-                  {method.requirements.length ? <div className="mt-0.5">{method.requirements.join(" · ")}</div> : null}
-                  {method.resourceSource ? <div className="mt-0.5">Mats: {cleanText(method.resourceSource)}</div> : null}
-                  {!method.requiredUnlock && !method.requirements.length && !method.resourceSource ? "-" : null}
-                </td>
-              </tr>
-            );
-          })}
+                ) : null}
+                {!method.requiredUnlock && !method.requirements.length && !method.resourceSource
+                  ? "-"
+                  : null}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
 }
 
-function RegionDetail({
-  region,
-  focus,
-  onFocus,
-}: {
-  region: ResearchRegion;
-  focus: FocusRef;
-  onFocus: (next: FocusRef) => void;
-}) {
-  const focusedMethodId = focus?.kind === "method" ? focus.id : null;
-  const focusedContent = focus?.kind === "content" ? focus.index : null;
-  const focusedUpgrade = focus?.kind === "upgrade" ? focus.index : null;
-
+function RegionDetail({ region }: { region: ResearchRegion }) {
   return (
     <article className="space-y-3">
       <header>
@@ -215,7 +186,8 @@ function RegionDetail({
           <InlineSource source={region.source} />
         </h2>
         <div className="mt-0.5 text-[11px] text-parch-100">
-          {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} train · {region.upgrades.length} upgrades
+          {availabilityLabel(region.availability)} · {region.content.length} content ·{" "}
+          {region.training.length} train · {region.upgrades.length} upgrades
         </div>
       </header>
 
@@ -225,7 +197,7 @@ function RegionDetail({
           <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="data-table min-w-[480px]">
+          <table className="data-table w-full min-w-0">
             <thead>
               <tr>
                 <th>Name</th>
@@ -233,23 +205,15 @@ function RegionDetail({
               </tr>
             </thead>
             <tbody>
-              {region.content.map((row, index) => {
-                const focused = focusedContent === index;
-                return (
-                  <tr
-                    key={`${row.name}-${index}`}
-                    className={`align-top cursor-pointer ${focused ? "bg-stone-raised" : ""}`}
-                    onClick={() => onFocus({ kind: "content", index })}
-                    aria-selected={focused}
-                  >
-                    <td>
-                      {cleanText(row.name)}
-                      <InlineSource source={row.source} stopClick />
-                    </td>
-                    <td className="secondary">{row.kind}</td>
-                  </tr>
-                );
-              })}
+              {region.content.map((row, index) => (
+                <tr key={`${row.name}-${index}`} className="align-top">
+                  <td>
+                    {cleanText(row.name)}
+                    <InlineSource source={row.source} />
+                  </td>
+                  <td className="secondary">{row.kind}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -262,28 +226,22 @@ function RegionDetail({
         </div>
         <div>
           {region.upgrades.length ? (
-            region.upgrades.map((upgrade, index) => {
-              const focused = focusedUpgrade === index;
-              return (
-                <button
-                  type="button"
-                  key={`upgrade-${index}-${upgrade.name}`}
-                  onClick={() => onFocus({ kind: "upgrade", index })}
-                  aria-pressed={focused}
-                  className={`flex w-full flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-stone-750/70 px-3 py-1.5 text-left last:border-b-0 ${
-                    focused ? "bg-stone-raised" : index % 2 === 1 ? "bg-stone-zebra" : ""
-                  }`}
-                >
-                  <span className="text-[13px] font-medium text-parch-50">
-                    {cleanText(upgrade.name)}
-                    <InlineSource source={upgrade.source} stopClick />
-                  </span>
-                  {upgrade.category ? (
-                    <span className="text-[11px] text-parch-300">{upgrade.category}</span>
-                  ) : null}
-                </button>
-              );
-            })
+            region.upgrades.map((upgrade, index) => (
+              <div
+                key={`upgrade-${index}-${upgrade.name}`}
+                className={`flex w-full flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-stone-750/70 px-3 py-1.5 last:border-b-0 ${
+                  index % 2 === 1 ? "bg-stone-zebra" : ""
+                }`}
+              >
+                <span className="text-[13px] font-medium text-parch-50">
+                  {cleanText(upgrade.name)}
+                  <InlineSource source={upgrade.source} />
+                </span>
+                {upgrade.category ? (
+                  <span className="text-[11px] text-parch-300">{upgrade.category}</span>
+                ) : null}
+              </div>
+            ))
           ) : (
             <p className="px-3 py-2 text-[13px] text-parch-100">No upgrades.</p>
           )}
@@ -295,27 +253,13 @@ function RegionDetail({
           <span>Training</span>
           <span className="font-normal text-parch-100">{region.training.length}</span>
         </div>
-        <MethodTable
-          methods={region.training}
-          focusedId={focusedMethodId}
-          onFocus={(id) => onFocus({ kind: "method", id })}
-        />
+        <MethodTable methods={region.training} />
       </section>
     </article>
   );
 }
 
-function SkillDetail({
-  skill,
-  focus,
-  onFocus,
-}: {
-  skill: ResearchSkill;
-  focus: FocusRef;
-  onFocus: (next: FocusRef) => void;
-}) {
-  const focusedMethodId = focus?.kind === "method" ? focus.id : null;
-
+function SkillDetail({ skill }: { skill: ResearchSkill }) {
   return (
     <article className="space-y-3">
       <header>
@@ -323,7 +267,7 @@ function SkillDetail({
         <div className="mt-0.5 text-[11px] text-parch-100">
           {skill.methods.length} methods · {skill.regions.length} regions
           {skill.regions.length ? ` · ${cleanText(skill.regions.join(", "))}` : ""}
-          {" · base rates (no League mult)"}
+          {" · base game rates"}
         </div>
       </header>
       <section className="panel">
@@ -331,16 +275,13 @@ function SkillDetail({
           <span>Training</span>
           <span className="font-normal text-parch-100">{skill.methods.length}</span>
         </div>
-        <MethodTable
-          methods={skill.methods}
-          focusedId={focusedMethodId}
-          onFocus={(id) => onFocus({ kind: "method", id })}
-        />
+        <MethodTable methods={skill.methods} />
       </section>
     </article>
   );
 }
 
+/** Search haystack only — no audit essays (note/warning/detail). */
 function methodSearchText(method: ResearchTrainingMethod): string {
   return [
     method.method,
@@ -350,8 +291,6 @@ function methodSearchText(method: ResearchTrainingMethod): string {
     method.resourceSource,
     ...method.requirements,
     ...method.regionHints,
-    method.note,
-    method.warning,
   ].join(" ");
 }
 
@@ -362,7 +301,6 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
   const [mineOnly, setMineOnly] = useState(false);
   const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
   const [skillId, setSkillId] = useState(catalog.skills[0]?.id ?? "");
-  const [focus, setFocus] = useState<FocusRef>(null);
   const normalizedQuery = query.trim().toLowerCase();
 
   const unlockedIds = useMemo(() => {
@@ -385,16 +323,8 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
             ...region.aliases,
             ...region.skills,
             ...region.areas,
-            ...region.content.flatMap((row) => [row.name, row.kind, row.detail]),
-            ...region.upgrades.flatMap((row) => [
-              row.name,
-              row.category,
-              row.detail,
-              row.comboLabel ?? "",
-              ...row.requirements,
-              ...(row.regionHints ?? []),
-              ...(row.requiredRegions ?? []),
-            ]),
+            ...region.content.flatMap((row) => [row.name, row.kind]),
+            ...region.upgrades.flatMap((row) => [row.name, row.category ?? ""]),
             ...region.training.map(methodSearchText),
           ]
             .join(" ")
@@ -436,14 +366,10 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
   const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? filteredRegions[0] ?? catalog.regions[0];
   const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? filteredSkills[0] ?? catalog.skills[0];
 
-  // Clear row focus when the parent record or mode changes.
-  useEffect(() => {
-    setFocus(null);
-  }, [mode, regionId, skillId]);
-
   return (
-    <section className="data-screen">
-      <div className="flex flex-wrap items-center gap-2 py-1">
+    /* Nested .data-screen under the workbench shell breaks the flex height chain and freezes nav. */
+    <section className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 flex-wrap items-center gap-2 py-1">
         <div className="flex gap-1" role="group" aria-label="Browse data by">
           <button
             type="button"
@@ -543,9 +469,9 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
         </aside>
         <div className="comp-stage-col min-w-0 px-2.5 py-2">
           {mode === "region" && selectedRegion ? (
-            <RegionDetail region={selectedRegion} focus={focus} onFocus={setFocus} />
+            <RegionDetail region={selectedRegion} />
           ) : mode === "skill" && selectedSkill ? (
-            <SkillDetail skill={selectedSkill} focus={focus} onFocus={setFocus} />
+            <SkillDetail skill={selectedSkill} />
           ) : (
             <p className="py-6 text-[13px] text-parch-100">Select a record.</p>
           )}

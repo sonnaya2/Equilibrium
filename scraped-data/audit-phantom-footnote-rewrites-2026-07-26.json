@@ -1,0 +1,177 @@
+{
+  "snapshot_date": "2026-07-26",
+  "scope": "scraped-data/progression-enrichment*.json — Prefer-X / outbound id footnotes in notes, league_treatment, region_pressure, links_existing_ids (and adjacent product detail). Source enrichment only; not data/research.",
+  "prefer_map": {
+    "desert:pyramid-plunder-black-ibis": "desert:black-ibis-outfit | desert:pyramid-plunder",
+    "morytania:ectofuntus-first-age-outfit": "morytania:first-age-outfit-equipment",
+    "forinthry:daemonheim-skilling-rewards": "forinthry:daemonheim-rewards-shop-hub",
+    "kandarin:skillchompa-supply": "kandarin:skillchompas",
+    "anachronia:always-adze-relic": "kandarin:always-adze-relic",
+    "kandarin:elder-divination-outfit": "kandarin:elder-divination-elite-outfit",
+    "asgarnia:artisans-workshop-rewards": "asgarnia:artisans-workshop-full-rewards",
+    "cross-region:orthen-superheat-autoheater": "LEFT (exists; Prefer retained)"
+  },
+  "files_patched": 13,
+  "changes": [
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-asgarnia-2026-07-26.json",
+      "old": "Expands the thin asgarnia:artisans-workshop-rewards row.",
+      "new": "Full Artisans' Workshop reward shop clearance (asgarnia:artisans-workshop-full-rewards)."
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-desert-2026-07-26.json",
+      "old": "See desert:pyramid-plunder-black-ibis for 2026 drop-rate rules.",
+      "new": "See desert:pyramid-plunder for 2026 drop-rate rules."
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-morytania-2026-07-26.json",
+      "old": "First age outfit purchases live on morytania:ectofuntus-first-age-outfit (outfits file)",
+      "new": "First age outfit purchases live on morytania:first-age-outfit-equipment (outfits file)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-morytania-2026-07-26.json",
+      "old": "Equipment detail companion to morytania:ectofuntus-first-age-outfit.",
+      "new": "Equipment detail for first age outfit purchases (morytania:first-age-outfit-equipment)."
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-forinthry-2026-07-26.json",
+      "old": "not buried in forinthry:daemonheim-skilling-rewards",
+      "new": "not buried in forinthry:daemonheim-rewards-shop-hub"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-gaps-2026-07-26.json",
+      "old": "generic forinthry:daemonheim-skilling-rewards bundle",
+      "new": "generic forinthry:daemonheim-rewards-shop-hub bundle"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-kandarin-2026-07-26.json",
+      "old": "existing kandarin:skillchompa-supply and kandarin:skillchompas",
+      "new": "existing kandarin:skillchompas"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-invention-arch-2026-07-26.json",
+      "old": "already indexed as anachronia:always-adze-relic",
+      "new": "already indexed as kandarin:always-adze-relic"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-invention-arch-2026-07-26.json",
+      "old": "Already indexed as anachronia:always-adze-relic (Seed of the Charyou Tree…)",
+      "new": "Already indexed as kandarin:always-adze-relic (Seed of the Charyou Tree…)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
+      "old": "Do not re-emit anachronia:always-adze-relic.",
+      "new": "Do not re-emit kandarin:always-adze-relic."
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
+      "old": "links_existing_ids … anachronia:always-adze-relic",
+      "new": "links_existing_ids … kandarin:always-adze-relic"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
+      "old": "distinct from forinthry:daemonheim-skilling-rewards / DG token shops",
+      "new": "distinct from forinthry:daemonheim-rewards-shop-hub / DG token shops"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
+      "old": "links_existing_ids: forinthry:daemonheim-skilling-rewards (+ hub)",
+      "new": "links_existing_ids: forinthry:daemonheim-rewards-shop-hub only (phantom removed)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
+      "old": "links_existing_ids … forinthry:daemonheim-skilling-rewards (deathless row)",
+      "new": "links_existing_ids … forinthry:daemonheim-rewards-shop-hub"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "Prefer … anachronia:always-adze-relic / kandarin Always Adze tags",
+      "new": "Prefer … kandarin:always-adze-relic / kandarin Always Adze tags"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "links_existing_ids … anachronia:always-adze-relic (×3)",
+      "new": "links_existing_ids … kandarin:always-adze-relic (×3)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "(kandarin:diviners-outfit, kandarin:elder-divination-outfit)",
+      "new": "(kandarin:diviners-outfit, kandarin:elder-divination-elite-outfit)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "Existing kandarin:elder-divination-outfit row is thin on Invention geography",
+      "new": "Existing kandarin:elder-divination-elite-outfit row is thin on Invention geography"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "links_existing_ids … kandarin:elder-divination-outfit (path + skip list sibling)",
+      "new": "links_existing_ids … kandarin:elder-divination-elite-outfit"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json",
+      "old": "Prefer orthen-superheat-autoheater when ranking the full AFK prayer+heat stack",
+      "new": "LEFT UNCHANGED (cross-region:orthen-superheat-autoheater exists)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json",
+      "old": "Named equipment upgrade of thin kandarin:elder-divination-outfit activity",
+      "new": "Named equipment upgrade of thin kandarin:elder-divination-elite-outfit activity"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json",
+      "old": "links_existing_ids … kandarin:elder-divination-outfit",
+      "new": "links_existing_ids … kandarin:elder-divination-elite-outfit"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-desert-morytania-2026-07-26.json",
+      "old": "Complements desert:pyramid-plunder-black-ibis without re-emitting black ibis set effects",
+      "new": "Complements desert:black-ibis-outfit without re-emitting black ibis set effects"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-desert-morytania-2026-07-26.json",
+      "old": "links_existing_ids … desert:pyramid-plunder-black-ibis",
+      "new": "links_existing_ids … desert:black-ibis-outfit"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "see desert:pyramid-plunder-black-ibis for 2026 drop rules",
+      "new": "see desert:black-ibis-outfit for 2026 drop rules"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "Does NOT re-emit desert:pyramid-plunder-black-ibis",
+      "new": "Does NOT re-emit desert:black-ibis-outfit"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "Link desert:pyramid-plunder-black-ibis for outfit XP bonuses",
+      "new": "Link desert:black-ibis-outfit for outfit XP bonuses"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "links_existing_ids … desert:pyramid-plunder-black-ibis",
+      "new": "links_existing_ids … desert:black-ibis-outfit"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "Specialises crystal tier out of kandarin:skillchompa-supply",
+      "new": "Specialises crystal tier out of kandarin:skillchompas"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json",
+      "old": "links_existing_ids … kandarin:skillchompa-supply (×2)",
+      "new": "links_existing_ids … kandarin:skillchompas (×2)"
+    },
+    {
+      "file": "scraped-data/progression-enrichment-regional-skilling-wave5-combat-adjacent-2026-07-26.json",
+      "old": "links_existing_ids … forinthry:daemonheim-skilling-rewards",
+      "new": "links_existing_ids … forinthry:daemonheim-rewards-shop-hub"
+    }
+  ],
+  "intentionally_unpatched": {
+    "primary_id_definitions": "Legacy enrichment rows that still define phantom ids as their own id (e.g. progression-enrichment-regional-skilling-2026-07-25 asgarnia:artisans-workshop-rewards, desert:pyramid-plunder-black-ibis, forinthry:daemonheim-skilling-rewards; anachronia:always-adze-relic; morytania:ectofuntus-first-age-outfit; kandarin:skillchompa-supply; kandarin:elder-divination-outfit) — not outbound footnotes.",
+    "meta_lists": "purpose / policy / duplicate_guard / already_present_checked / skipped_existing_ids / drop_ids_note still name historical phantoms for supersession bookkeeping.",
+    "orthen_prefer": "cross-region:orthen-superheat-autoheater Prefer on masterwork-orthen-plate-pressure left intact (id exists in enrichment / restored from DROP_IDS)."
+  }
+}

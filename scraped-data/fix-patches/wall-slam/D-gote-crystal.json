@@ -1,0 +1,137 @@
+{
+  "id": "D-gote-crystal",
+  "title": "Wall-slam batch D — GOTE / crystal / juju / flask / dig-tools",
+  "date": "2026-07-26",
+  "generatedAt": "2026-07-26T12:00:00.000Z",
+  "applyReady": true,
+  "catalogJsonDirectEditThisPass": false,
+  "catalogReadOnly": "data/research/catalog.json",
+  "apply_with": "scripts/wall-slam-apply-high.mjs (decisions high/medium)",
+  "sourceReview": [
+    "scraped-data/wall-slam-input-2026-07-26.json",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "data/research/catalog.json (live host scan, read-only)"
+  ],
+  "policy": [
+    "Owned names only — write keepHosts / primary decisions; do not edit catalog.json in this pass.",
+    "Dark Facet is out of this own-list (user: wildy/forinthry only; not owned here).",
+    "UNOBTAINABLE tag text when flagged: 'UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).'",
+    "Crystal fishing rod (bare equipment) stays tirannwn child; this batch owns the Prif+fury stack name.",
+    "Fury shark outfit equipment rows stay Kandarin — dropping kandarin from the stack does not delete them."
+  ],
+  "owned": [
+    "Grace of the elves (GOTE)",
+    "Balarak's sash brush",
+    "Skeka's hypnowand",
+    "Crystal fishing rod + Prif waterfall + Fury shark stack",
+    "Perfect juju potion production path",
+    "Blessed flask production chain"
+  ],
+  "outOfScope": [
+    {
+      "name": "Dark Facet of Grace (GOTE enchantment)",
+      "note": "User: wildy/forinthry only; not in this own-list. Live still multi forinthry+tirannwn — separate batch."
+    },
+    {
+      "name": "Grace of the elves",
+      "note": "Thin tirannwn equipment residual (no GOTE suffix); not the planner GOTE dual-home row."
+    },
+    {
+      "name": "Crystal fishing rod",
+      "note": "Bare rod already tirannwn; stack ruling is the contested multi."
+    },
+    {
+      "name": "Grace of the elves / signs of the porter supply chain",
+      "note": "Prior mega-chain ban — not owned here."
+    },
+    {
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "note": "Prior mega-chain ban — not owned here."
+    }
+  ],
+  "decisions": [
+    {
+      "name": "Grace of the elves (GOTE)",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "tirannwn"],
+      "requiredRegions": ["forinthry", "tirannwn"],
+      "confidence": "high",
+      "reason": "User: GOTE = forinthry + tirannwn only. Do not chain Dark Facet / porter mega-upgrade into this row.",
+      "liveHosts": ["forinthry", "tirannwn"],
+      "liveReq": ["forinthry", "tirannwn"],
+      "status": "already_correct"
+    },
+    {
+      "name": "Balarak's sash brush",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "anachronia"],
+      "requiredRegions": ["forinthry", "anachronia"],
+      "confidence": "high",
+      "reason": "Daemonheim/Warped Depths pieces (forinthry) + Anachronia restore — multi-ok both required.",
+      "liveHosts": ["forinthry", "anachronia"],
+      "liveReq": ["forinthry", "anachronia"],
+      "status": "already_correct"
+    },
+    {
+      "name": "Skeka's hypnowand",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "anachronia"],
+      "requiredRegions": ["forinthry", "anachronia"],
+      "confidence": "high",
+      "reason": "Forinthry journal gate + Anachronia piece farm — multi-ok both required; not Anachronia-only.",
+      "liveHosts": ["forinthry", "anachronia"],
+      "liveReq": ["forinthry", "anachronia"],
+      "status": "already_correct"
+    },
+    {
+      "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
+      "action": "primary",
+      "home": "tirannwn",
+      "requiredRegions": ["tirannwn"],
+      "confidence": "high",
+      "reason": "User: crystal rod is tirannwn; stack may drop kandarin. Prif waterfall + rod are the stack spine; Fury shark outfit remains separate Kandarin equipment, not a second stack host.",
+      "hostsBefore": ["kandarin", "tirannwn"],
+      "liveHosts": ["kandarin", "tirannwn"],
+      "liveReq": ["tirannwn", "kandarin"],
+      "dropHosts": ["kandarin"],
+      "status": "needs_apply"
+    },
+    {
+      "name": "Perfect juju potion production path",
+      "action": "keepHosts",
+      "hosts": ["karamja", "tirannwn"],
+      "requiredRegions": ["karamja", "tirannwn"],
+      "confidence": "high",
+      "reason": "User: perfect juju karamja + tirannwn yes (Habitat juju bases + Prif harmony/crystal flask pressure).",
+      "liveHosts": ["karamja", "tirannwn"],
+      "liveReq": ["karamja", "tirannwn"],
+      "status": "already_correct"
+    },
+    {
+      "name": "Blessed flask production chain",
+      "action": "keepHosts",
+      "hosts": ["desert", "morytania", "tirannwn", "forinthry"],
+      "requiredRegions": ["desert", "morytania", "tirannwn", "forinthry"],
+      "unobtainable": true,
+      "unobtainableTag": "UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+      "confidence": "high",
+      "reason": "User: Blessed flask UNOBTAINABLE on desert + mory + tir + forinthry keep-set. Drop karamja host pollution; four-region pressure exceeds 3-elective cap.",
+      "hostsBefore": ["karamja", "forinthry", "desert", "morytania", "tirannwn"],
+      "liveHosts": ["karamja", "forinthry", "desert", "morytania", "tirannwn"],
+      "liveReq": ["desert", "morytania", "tirannwn", "forinthry"],
+      "dropHosts": ["karamja"],
+      "status": "needs_apply",
+      "applyNote": "wall-slam-apply-high keepHosts clamps hosts/req only — ensure UNOBTAINABLE tag remains on each kept host detail after apply."
+    }
+  ],
+  "summary": {
+    "owned": 6,
+    "high": 6,
+    "alreadyCorrect": 4,
+    "needsApply": 2,
+    "needsApplyNames": [
+      "Crystal fishing rod + Prif waterfall + Fury shark stack",
+      "Blessed flask production chain"
+    ]
+  }
+}

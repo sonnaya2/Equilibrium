@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three/webgpu";
+// Side-effect: Timer-backed THREE.Clock before R3F constructs its store.
+import "./patchThreeClock";
 import { Canvas, extend, useThree } from "@react-three/fiber";
 import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";

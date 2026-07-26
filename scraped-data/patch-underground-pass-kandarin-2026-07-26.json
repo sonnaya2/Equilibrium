@@ -1,0 +1,180 @@
+{
+  "id": "underground-pass-kandarin",
+  "createdAt": "2026-07-26",
+  "regionId": "kandarin",
+  "summary": "Classify Underground Pass as Kandarin (eastern / West Ardougne entrance approach). Add area + hardRule + placeAnchor on Kandarin. Retag quest-region-rules term off Tirannwn. Companion to patch-tirannwn-places (which explicitly excludes UP).",
+  "doNotEditDirectly": [
+    "data/research/catalog.json",
+    "data/league/regions.json",
+    "src/map/data/placeAnchors.ts",
+    "data/league/quest-region-rules.json"
+  ],
+  "userLock": {
+    "decision": "Underground Pass is probably Kandarin (eastern entrance approach). Not a Tirannwn area.",
+    "rationale": "Wiki dungeon entrance is West Ardougne (Kandarin). Quest Underground Pass starts in Ardougne and is already primary_region=kandarin in quests.json. Equilibrium League areas treat undergrounds with a Kandarin entrance as Kandarin. Tirannwn audit proposed UP as Tirannwn-side — override that for the eastern approach / map pin."
+  },
+  "evidence": {
+    "questAlreadyKandarin": {
+      "path": "data/league/quests.json",
+      "title": "Underground Pass",
+      "start_area": "Ardougne",
+      "primary_region": "kandarin",
+      "required_regions": ["kandarin"],
+      "mapping_reason": "Mapped from RuneScape Wiki start area: Ardougne",
+      "source_url": "https://runescape.wiki/w/Underground_Pass"
+    },
+    "catalogBaseline": {
+      "kandarin.areas": [
+        "Player-Owned Farm",
+        "Hall of Memories",
+        "Deep Sea Fishing Hub",
+        "Seers' Village",
+        "Catherby",
+        "Fishing Guild",
+        "Ardougne",
+        "Piscatoris Fishing Colony",
+        "Ourania Runecrafting Altar",
+        "Tree Gnome Stronghold",
+        "Warforge Dig Site",
+        "Memorial to Guthix",
+        "Barbarian Outpost"
+      ],
+      "kandarin.hardRules": [],
+      "tirannwn.areas": ["Prifddinas", "Lost Grove"],
+      "tirannwn.hardRules": [],
+      "note": "Neither catalog region currently lists Underground Pass as an area. Tirannwn hardRules empty (no live UP→Tirannwn hardRule to strip)."
+    },
+    "misclassifiedTerm": {
+      "path": "data/league/quest-region-rules.json",
+      "regionId": "tirannwn",
+      "term": "underground pass",
+      "problem": "Start-area term classifier routes any 'underground pass' locality to tirannwn even though the eastern entrance and the quest start are Kandarin."
+    },
+    "relatedPatches": {
+      "patch-tirannwn-places-2026-07-26.json": "Explicitly excludes Underground Pass from tirannwn areas/hardRules; defers to this Kandarin patch."
+    },
+    "wiki": [
+      "https://runescape.wiki/w/Underground_Pass_(dungeon)",
+      "https://runescape.wiki/w/Underground_Pass",
+      "https://runescape.wiki/w/West_Ardougne",
+      "https://runescape.wiki/w/Equilibrium_League/Areas/Kandarin"
+    ]
+  },
+  "uvChoice": {
+    "proposed": [0.228, 0.53],
+    "neighbours": {
+      "Tree Gnome Stronghold": [0.22, 0.45],
+      "Ourania Runecrafting Altar": [0.255, 0.55],
+      "Ardougne": [0.3, 0.58],
+      "Prifddinas (tirannwn)": [0.155, 0.52],
+      "s_kt_1 elf wall seam": [0.214, 0.546]
+    },
+    "note": "User suggested ~[0.21, 0.52]. Seam s_kt_1 is [0.214, 0.546]; at v≈0.52 the wall is near u≈0.212, so 0.21 sits on/west of the Tirannwn|Kandarin seam and would fail placeAnchors ring containment. [0.228, 0.53] is just east of the wall, west of Ardougne/Ourania, still inside the Kandarin ring. Re-verify with placeAnchors.test.ts after apply."
+  },
+  "ops": [
+    {
+      "op": "mergeAreas",
+      "regionId": "kandarin",
+      "areas": ["Underground Pass"],
+      "rationale": "Add Underground Pass as a Kandarin map area. Eastern entrance / West Ardougne approach is the League-relevant pin; do not invent a separate region token."
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "kandarin",
+      "rule": "Treat Underground Pass (eastern / West Ardougne entrance and approach) as Kandarin. Do not expose it as a separate selectable region and do not reassign the eastern entrance to Tirannwn."
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "tirannwn",
+      "rule": "Underground Pass eastern (West Ardougne) entrance resolves to Kandarin, not Tirannwn. Do not list Underground Pass as a Tirannwn area or quest start-area term.",
+      "rationale": "tirannwn.hardRules is currently empty, so nothing to remove. Audit candidate hardRulesCandidates once proposed 'Underground Pass (Tirannwn side)' under Tirannwn — this rule blocks that mis-home. patch-tirannwn-places already omits UP from its own hardRule."
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "kandarin",
+      "area": "Underground Pass",
+      "uv": [0.228, 0.53],
+      "geography": "West edge of Kandarin near West Ardougne / elf wall, west of Ardougne [0.3, 0.58] and Ourania [0.255, 0.55], east of the Kandarin|Tirannwn seam s_kt_1 [0.214, 0.546], south-east of Tree Gnome Stronghold [0.22, 0.45]."
+    },
+    {
+      "op": "questRetag",
+      "file": "data/league/quest-region-rules.json",
+      "path": "regions[id=tirannwn].terms",
+      "action": "removeTerm",
+      "term": "underground pass",
+      "reason": "Eastern entrance and quest start are Kandarin; term must not force tirannwn classification."
+    },
+    {
+      "op": "questRetag",
+      "file": "data/league/quest-region-rules.json",
+      "path": "regions[id=kandarin].terms",
+      "action": "addTerm",
+      "term": "underground pass",
+      "reason": "Match West Ardougne entrance locality and quest primary_region already stored as kandarin."
+    },
+    {
+      "op": "questRetag",
+      "file": "data/league/quests.json",
+      "path": "quests[title=Underground Pass]",
+      "action": "confirmNoChange",
+      "current": {
+        "primary_region": "kandarin",
+        "required_regions": ["kandarin"],
+        "start_area": "Ardougne"
+      },
+      "reason": "Already correctly Kandarin via Ardougne start-area mapping. Index lists under by_primary.kandarin and by_required.kandarin. No retag."
+    },
+    {
+      "op": "syncNote",
+      "target": "data/league/regions.json",
+      "path": "records[id=kandarin].areas + hardRules",
+      "note": "After catalog apply: mergeAreas adds Underground Pass to catalog areas (apply-region-patches mirrors areas onto league). Append the new Kandarin hardRule to records[id=kandarin].hardRules (applier currently only syncs areas, not hardRules — do hardRules by hand or extend applier). Also append the Tirannwn corrective hardRule to records[id=tirannwn].hardRules."
+    },
+    {
+      "op": "note",
+      "detail": "scraped-data/region-wiki-audit-tirannwn-2026-07-26.json still lists Underground Pass under navTemplateTirannwnPlaces and hardRulesCandidates as Tirannwn-side. That audit is research-only; production rule is this patch. Do not re-apply the audit hardRulesCandidates UP clause."
+    }
+  ],
+  "questRegionFiles": {
+    "retagToKandarin": [
+      {
+        "file": "data/league/quest-region-rules.json",
+        "change": "Move term 'underground pass' from tirannwn.terms → kandarin.terms"
+      }
+    ],
+    "alreadyKandarinNoChange": [
+      {
+        "file": "data/league/quests.json",
+        "title": "Underground Pass",
+        "primary_region": "kandarin"
+      }
+    ],
+    "noProductionMapToTirannwn": [
+      "data/league/quests.json (title row is kandarin)",
+      "data/research/catalog.json (no UP area today)",
+      "data/league/regions.json (no UP area today)"
+    ],
+    "auditOnlyStillMentionsTirannwn": [
+      "scraped-data/region-wiki-audit-tirannwn-2026-07-26.json (hardRulesCandidates + nav places — research only)"
+    ]
+  },
+  "proposedPlaceAnchorsCluster": {
+    "kandarinKeepNearby": [
+      { "region": "kandarin", "area": "Tree Gnome Stronghold", "uv": [0.22, 0.45] },
+      { "region": "kandarin", "area": "Ourania Runecrafting Altar", "uv": [0.255, 0.55] },
+      { "region": "kandarin", "area": "Ardougne", "uv": [0.3, 0.58] }
+    ],
+    "add": [
+      { "region": "kandarin", "area": "Underground Pass", "uv": [0.228, 0.53] }
+    ]
+  },
+  "applyChecklist": [
+    "Apply mergeAreas + addHardRule(kandarin) + addHardRule(tirannwn) to data/research/catalog.json (via scripts/apply-region-patches.mjs or hand).",
+    "upsertAnchor Underground Pass into src/map/data/placeAnchors.ts Kandarin block.",
+    "Mirror Underground Pass into data/league/regions.json kandarin.areas; append both hardRules to league records.",
+    "Edit data/league/quest-region-rules.json: remove 'underground pass' from tirannwn.terms; add to kandarin.terms.",
+    "Do not change data/league/quests.json Underground Pass row (already kandarin).",
+    "Do not add Underground Pass under tirannwn areas (see patch-tirannwn-places exclusions).",
+    "Run: npx vitest run src/map/data/placeAnchors.test.ts"
+  ]
+}

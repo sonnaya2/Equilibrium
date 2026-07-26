@@ -1,0 +1,727 @@
+{
+  "generatedAt": "2026-07-26T16:08:14.213Z",
+  "summary": {
+    "hardIssues": 0,
+    "totalUpgrades": 1020,
+    "multiHost": 43,
+    "emptyReqMulti": 3,
+    "singleReqPollution": 1,
+    "multiReqOutside": 0,
+    "skipListHits": 0,
+    "stormAsgarniaDig": 0,
+    "inventionAsgarniaOnlyReq": 3,
+    "unobtainableFamilies": 12,
+    "areaUpgradeCollisions": 0,
+    "areaContentCollisions": 0,
+    "intraDups": 0,
+    "anchorGaps": 0,
+    "orphanAnchors": 0,
+    "noSrcContent": 0,
+    "noSrcUpgrades": 0,
+    "nearDups": 0
+  },
+  "hardIssues": [],
+  "areasDesync": [],
+  "areaUpgradeCollisions": [],
+  "areaContentCollisions": [],
+  "intraDups": [],
+  "emptyReqMulti": [
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "req": []
+    },
+    {
+      "name": "Sirenic → elite sirenic armour",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "req": []
+    },
+    {
+      "name": "Black mask",
+      "hosts": [
+        "forinthry",
+        "morytania"
+      ],
+      "req": []
+    }
+  ],
+  "singleReqPollution": [
+    {
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "req": [
+        "tirannwn"
+      ]
+    }
+  ],
+  "multiReqOutside": [],
+  "skipListHits": [],
+  "storm": [
+    {
+      "host": "kandarin",
+      "name": "Stormguard Citadel Dig Site (Armadylean)",
+      "req": [
+        "kandarin"
+      ]
+    },
+    {
+      "host": "kandarin",
+      "name": "Ancient Invention blueprints (Howl's workshop)",
+      "req": [
+        "kandarin"
+      ]
+    },
+    {
+      "host": "kandarin",
+      "name": "Inspire Genius (Howl's Thinking Cap)",
+      "req": [
+        "kandarin"
+      ]
+    }
+  ],
+  "inventionAsgarniaOnlyReq": [
+    "Arc journal teletabs feature unlock",
+    "Scrimshaw of sacrifice (+ superior POP upgrade)",
+    "Essence of Finality amulet (neck BiS chain)"
+  ],
+  "unobtainable": [
+    "Hatchet of Bloom and Blight",
+    "Hatchet of Ember and Glade",
+    "Masterwork Spear of Annihilation",
+    "Masterwork staff",
+    "Hexcrest",
+    "Corrupted / full multi-style Slayer helmet (all components)",
+    "Blessed flask (extreme prayer 80-dose permanent shell)",
+    "Black mask",
+    "Focus sight",
+    "Ensouled spectral lens / corrupted gem path",
+    "Slayer helmet (craft unlock + base helm)",
+    "Artificer's measure"
+  ],
+  "anchorGaps": [],
+  "orphanAnchors": [],
+  "contentChecks": {
+    "asgarniaHasAminishi": true,
+    "tirHasLletya": true,
+    "upOnKandarin": true,
+    "mwRanged": [
+      "kandarin",
+      "forinthry",
+      "anachronia"
+    ],
+    "extremeInv": [
+      "asgarnia",
+      "kandarin"
+    ],
+    "portalsGone": true,
+    "sirenicReq": []
+  },
+  "nearDups": [],
+  "multiHostList": [
+    {
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "req": [
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "req": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ]
+    },
+    {
+      "name": "Masterwork staff",
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "tirannwn"
+      ],
+      "req": [
+        "asgarnia",
+        "desert",
+        "tirannwn",
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "hosts": [
+        "asgarnia",
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "req": [
+        "forinthry",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Masterwork Spear of Annihilation",
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "morytania"
+      ],
+      "req": [
+        "kandarin",
+        "forinthry",
+        "morytania",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Corrupted / full multi-style Slayer helmet (all components)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania"
+      ],
+      "req": [
+        "morytania",
+        "kandarin",
+        "desert",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Blessed flask (extreme prayer 80-dose permanent shell)",
+      "hosts": [
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "req": [
+        "desert",
+        "morytania",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "req": [
+        "fremennik",
+        "misthalin",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Conservation of Energy relic chain",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin"
+      ],
+      "req": [
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Pickaxe of Life and Death",
+      "hosts": [
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Mattock of Time and Space",
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "tirannwn"
+      ],
+      "req": [
+        "tirannwn",
+        "kandarin",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Slayer Introspection (Amascut's Enchanted Gem)",
+      "hosts": [
+        "kandarin",
+        "desert",
+        "morytania"
+      ],
+      "req": [
+        "kandarin",
+        "morytania",
+        "desert"
+      ]
+    },
+    {
+      "name": "Elite skilling outfits core set (ironman fragment paths)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "anachronia"
+      ],
+      "req": [
+        "kandarin",
+        "anachronia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Masterwork ranged armour (Anachronia + Wildy + Kandarin)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Pickaxe of Earth and Song",
+      "hosts": [
+        "kandarin",
+        "fremennik",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "POH gilded altar (Chapel offering)",
+      "hosts": [
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "req": [
+        "fremennik",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "hosts": [
+        "forinthry",
+        "tirannwn",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Expansive essence pouch (70 essence, non-degrading)",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "req": [
+        "misthalin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Edgeville skilling and Wilderness on-ramp hub",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "req": [
+        "misthalin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Fury of the Small relic chain",
+      "hosts": [
+        "misthalin",
+        "kandarin"
+      ],
+      "req": [
+        "kandarin",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Superior dragon claws (Wilderness hilt upgrade)",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "req": [
+        "misthalin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Perfect juju potion production path",
+      "hosts": [
+        "karamja",
+        "tirannwn"
+      ],
+      "req": [
+        "karamja",
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "req": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "req": [
+        "asgarnia",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "All Fired Up → Inferno adze reward chain",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "req": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Dark Facet of Passage (Passage of the Abyss infinite charges)",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "req": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Death Ward relic chain",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "req": [
+        "asgarnia",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Elite tectonic robe armour",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "req": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Trimmed / custom-fit trimmed masterwork melee armour",
+      "hosts": [
+        "asgarnia",
+        "morytania"
+      ],
+      "req": [
+        "asgarnia",
+        "morytania"
+      ]
+    },
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "req": []
+    },
+    {
+      "name": "Sirenic → elite sirenic armour",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "req": []
+    },
+    {
+      "name": "Masterwork bow",
+      "hosts": [
+        "kandarin",
+        "morytania"
+      ],
+      "req": [
+        "morytania",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Spear of Annihilation (base archaeology spear)",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "req": [
+        "kandarin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Reaver's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Stalker's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Channeller's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)",
+      "hosts": [
+        "fremennik",
+        "forinthry"
+      ],
+      "req": [
+        "fremennik",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Balarak's sash brush",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "req": [
+        "forinthry",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Skeka's hypnowand",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "req": [
+        "forinthry",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Grace of the elves (GOTE)",
+      "hosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "req": [
+        "forinthry",
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Masterwork 2h sword",
+      "hosts": [
+        "forinthry",
+        "desert"
+      ],
+      "req": [
+        "forinthry",
+        "desert"
+      ]
+    },
+    {
+      "name": "Black mask",
+      "hosts": [
+        "forinthry",
+        "morytania"
+      ],
+      "req": []
+    },
+    {
+      "name": "Orthen furnace core full skilling stack",
+      "hosts": [
+        "tirannwn",
+        "anachronia"
+      ],
+      "req": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ]
+    }
+  ],
+  "regionCounts": [
+    {
+      "id": "misthalin",
+      "areas": 9,
+      "content": 16,
+      "upgrades": 186
+    },
+    {
+      "id": "havenhythe",
+      "areas": 9,
+      "content": 12,
+      "upgrades": 35
+    },
+    {
+      "id": "karamja",
+      "areas": 7,
+      "content": 4,
+      "upgrades": 37
+    },
+    {
+      "id": "asgarnia",
+      "areas": 14,
+      "content": 16,
+      "upgrades": 160
+    },
+    {
+      "id": "kandarin",
+      "areas": 17,
+      "content": 5,
+      "upgrades": 103
+    },
+    {
+      "id": "fremennik",
+      "areas": 9,
+      "content": 3,
+      "upgrades": 59
+    },
+    {
+      "id": "forinthry",
+      "areas": 13,
+      "content": 8,
+      "upgrades": 120
+    },
+    {
+      "id": "desert",
+      "areas": 6,
+      "content": 8,
+      "upgrades": 93
+    },
+    {
+      "id": "morytania",
+      "areas": 7,
+      "content": 5,
+      "upgrades": 70
+    },
+    {
+      "id": "tirannwn",
+      "areas": 5,
+      "content": 4,
+      "upgrades": 87
+    },
+    {
+      "id": "anachronia",
+      "areas": 7,
+      "content": 5,
+      "upgrades": 70
+    }
+  ]
+}

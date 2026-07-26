@@ -1,0 +1,401 @@
+{
+  "id": "stormguard-kandarin",
+  "title": "Stormguard Citadel → Kandarin rehome",
+  "date": "2026-07-26",
+  "source": "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+  "rules": [
+    "Stormguard Citadel is Kandarin, not Asgarnia",
+    "Armadyl's Tower / Lowse / Death Ward turn-in stay Asgarnia",
+    "Invention Guild stays Asgarnia",
+    "Extreme invention potion path: Guild parts Asgarnia; Stormguard-gated bits Kandarin"
+  ],
+  "ops": [
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Ancient Invention blueprints (Howl's workshop)",
+      "reason": "Stormguard dig / Howl workshop ownership is Kandarin (wiki Equilibrium League badge). Asgarnia must not host dig-ownership copy."
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Inspire Genius (Howl's Thinking Cap)",
+      "reason": "Stormguard dig / Howl workshop ownership is Kandarin (wiki Equilibrium League badge). Asgarnia must not host dig-ownership copy."
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Divine Conversion (Cres Framework)",
+      "reason": "Stormguard dig / Howl workshop ownership is Kandarin (wiki Equilibrium League badge). Asgarnia must not host dig-ownership copy."
+    },
+    {
+      "op": "upsertUpgrade",
+      "regionId": "kandarin",
+      "upgrade": {
+        "name": "Ancient Invention blueprints (Howl's workshop)",
+        "category": "Ancient Invention permanent unlock path",
+        "detail": "Stormguard Citadel is Armadylean dig-site geography under Kandarin (wiki Equilibrium League tags all Stormguard hotspots Kandarin; Temple of Ikov entrance). Howl's Floating Workshop drafting bench + torn blueprint fragments are the self-sufficient no-trade path. Lowse at Armadyl's Tower (Asgarnia) is the Armadylean collector for related collections (Inspire Genius) — collector turn-in is separate from dig ownership. Do not invent fragment counts beyond wiki fragment costs (200 for targeted untradeable blueprint; 150 random). · Kandarin hard-gates Stormguard / Howl self-sufficient blueprint unlock. GE tradeable blueprints are not a League no-trade path. Invention Guild manufacture of shells/tools after unlock still pressures Asgarnia workbenches (support, not dig ownership). · Unlocks: Permanent discovery of ancient weapon / armour / tool gizmos (9-slot shells), Enhanced hammer-tron / pyro-matic / fishing rod-o-matic (level-80-class ancient tools), XP Capacitor 5000 blueprint, Theoretical blueprints path for Experimental Aether Reactor and Subtle Blade after Back to the Drawing Board research, Ancient component discovery (Classic/Historic 85, Vintage 94, Timeworn 103 Invention) for restored-artefact disassembly",
+        "requirements": [
+          "95 Archaeology for Howl's Floating Workshop / drafting bench path (self-sufficient)",
+          "Torn blueprint fragments (Howl's workshop) from Stormguard Citadel excavation (Kandarin)",
+          "85 Invention to use Ancient gizmos blueprint; 93 for Ancient tools; 106 for XP Capacitor",
+          "Tradeable GE blueprints exist for main-game buyers — no-trade League must self-craft at Stormguard"
+        ],
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Invention",
+          "title": "Ancient Invention blueprints (Howl's workshop)",
+          "verifiedAt": "2026-07-26"
+        },
+        "regionId": "kandarin",
+        "regionHints": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "requiredRegions": [
+          "kandarin"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "",
+        "isRegionCombo": false
+      }
+    },
+    {
+      "op": "upsertUpgrade",
+      "regionId": "kandarin",
+      "upgrade": {
+        "name": "Inspire Genius (Howl's Thinking Cap)",
+        "category": "Archaeology monolith relic power",
+        "detail": "Stormguard dig collections (Kandarin) + Lowse Armadylean collector turn-in at Armadyl's Tower (Asgarnia). Planner-relevant permanent XP multiplier for production skills. Related Inspire Awe / Effort / Love are separate experience relics not expanded here. · Hard Kandarin for Armadylean III artefacts at Stormguard; hard Asgarnia for Lowse turn-in (Armadyl's Tower / Lowse stay Asgarnia — not moved with the dig). · Unlocks: Inspire Genius relic power, +2% XP in artisan skills: Crafting, Construction, Cooking, Firemaking, Fletching, Herblore, Runecrafting, Smithing",
+        "requirements": [
+          "Kandarin: Armadylean III collection artefacts from Stormguard Citadel",
+          "Asgarnia: turn in to Lowse at Armadyl's Tower for Howl's Thinking Cap",
+          "118 Archaeology listed on relic; boosts can restore/excavate as early as ~110 with pulse cores",
+          "5,000 chronotes and 250 monolith energy to harness"
+        ],
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Inspire_Genius",
+          "title": "Inspire Genius (Howl's Thinking Cap)",
+          "verifiedAt": "2026-07-26"
+        },
+        "regionId": "kandarin",
+        "regionHints": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "Region combo (all required): kandarin + asgarnia",
+        "isRegionCombo": true
+      }
+    },
+    {
+      "op": "upsertUpgrade",
+      "regionId": "kandarin",
+      "upgrade": {
+        "name": "Divine Conversion (Cres Framework)",
+        "category": "Archaeology monolith relic power",
+        "detail": "Stormguard / Howl's workshop is the hard Archaeology geography (Kandarin — wiki League badge). Guthixian Cache personality-transfer step is also Kandarin taxonomy. High-value Divination QoL for energy/charge loops. · Kandarin hard-gates dig artefacts + Cache step. Asgarnia is optional Invention workbench pressure for golem framework manufacture (Invention Guild stays Asgarnia) — not dig ownership. · Region chain (support pressure): kandarin / asgarnia · Unlocks: Divine Conversion relic power, Convert entire backpack of Divination memories (including familiar inventory) at an energy rift in one action, Does not work in Daemonheim",
+        "requirements": [
+          "98 Archaeology (boostable) for golem heart/instruction artefacts at Stormguard (Kandarin)",
+          "86 Invention (boostable) to manufacture golem framework (Asgarnia Invention Guild support)",
+          "85 Divination (boostable) for large memory transfer in Guthixian Cache (Kandarin)",
+          "Howl's Floating Workshop mystery; Back to the Drawing Board research; The World Wakes",
+          "2,000 chronotes and 100 monolith energy to harness"
+        ],
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Divine_Conversion",
+          "title": "Divine Conversion (Cres Framework)",
+          "verifiedAt": "2026-07-26"
+        },
+        "regionId": "kandarin",
+        "regionHints": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "requiredRegions": [
+          "kandarin"
+        ],
+        "regionRequirementType": "support",
+        "comboLabel": "Region chain (support pressure): kandarin / asgarnia",
+        "isRegionCombo": false
+      }
+    },
+    {
+      "op": "upsertUpgrade",
+      "regionId": "kandarin",
+      "upgrade": {
+        "name": "Ancient Invention",
+        "category": "Invention upgrade",
+        "detail": "Unlocks: Ancient weapon gizmo, Ancient armour gizmo, Ancient tool gizmo, Ancient tools blueprints, XP Capacitor blueprint · Source: Stormguard Citadel Dig Site / Howl's Floating Workshop (Kandarin League region). Self-sufficient no-trade path is Kandarin Archaeology; shell manufacture after unlock still uses inventor's workbenches (Asgarnia Invention Guild support).",
+        "requirements": [
+          "95 Archaeology for Howl's Floating Workshop mystery (Stormguard, Kandarin)",
+          "Torn blueprint fragments (Howl's workshop) from Stormguard excavation"
+        ],
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ancient_Invention",
+          "title": "Ancient Invention",
+          "verifiedAt": "2026-07-26"
+        },
+        "regionId": "kandarin",
+        "regionHints": [
+          "kandarin"
+        ],
+        "requiredRegions": [
+          "kandarin"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "",
+        "isRegionCombo": false
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "kandarin",
+      "name": "Stormguard Citadel Dig Site (Armadylean)",
+      "set": {
+        "detail": "Official wiki League tags are Kandarin — do not dual-claim as Asgarnia dig-site hub (older invention-arch notes wrongly treated Armadyl dig geography as Asgarnia). Complements kandarin:ancient-invention-blueprints / kandarin Ancient Invention rows without re-emitting those ids. · Hard Kandarin for dig-site entry and hotspots. Guild/monolith remain starting Misthalin systems. Armadyl's Tower / Lowse collector turn-ins stay Asgarnia (Death Ward, Inspire Genius hand-in). · Unlocks: Armadylean excavation hotspots levels 70–118 (Ikovian memorial through Howl's workshop debris), Site materials: Stormguard steel, Wings of War, Armadylean yellow, aetherium alloy, quintessence and shared caches, Howl's Floating Workshop: drafting bench, torn blueprint fragments, Ancient Invention self-sufficient path, Armadylean collections via Lowse (including Armadylean I → Pharm Ecology path; Armadylean III → Inspire Genius), On-site bank chest / workbench / material storage; mysteries and special research (Back to the Drawing Board, Howling Man) · Region pressure: Kandarin owns Temple of Ikov entrance and all Stormguard hotspots (wiki Equilibrium Kandarin badge)., Ancient Invention manufacture after unlock still pressures Asgarnia Invention Guild workbench optionally., Misthalin campus owns chronote shop, collectors hand-in logistics, and monolith harness.",
+        "regionId": "kandarin",
+        "regionHints": [
+          "kandarin"
+        ],
+        "requiredRegions": [
+          "kandarin"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "",
+        "isRegionCombo": false
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Extreme invention potion boost path",
+      "set": {
+        "detail": "Not a permanent passive — residual high-value consumable path because ironman blueprint discovery depends on it. Skip re-emitting named machines and Ancient Invention blueprint rows. Machines named pack already complete. · Hard Asgarnia for Invention skill home / Guild discovery benches (Invention Guild stays Asgarnia). Stormguard-gated Ancient Invention permanent unlocks are Kandarin (kandarin:ancient-invention-blueprints) — this potion path does not rehome those dig bits. Webbing supply is optional_pressure until Anachronia/POF fungus path is unlocked. · Region combo (all required): asgarnia + anachronia + kandarin · Unlocks: Temporary Invention level boost scaling with Invention XP (up to +17 at 2,550,000+ XP / level 52+ equivalent band), 6-minute full boost window then hard reset to base Invention level, Critical ironman utility for discovering high-level blueprints and improving rare perk chances when under level, Planner link: boosts do not replace permanent blueprint unlocks (Ancient Invention dig path remains kandarin:ancient-invention-blueprints / Howl's workshop) · Region pressure: Asgarnia hard-owns Invention Guild discovery benches and the skill unlock geography., Anachronia / POF optional for mycelial webbing self-supply., Kandarin optional: Manor Farm / zygomite breeding adjacency for webbing (and separately owns Stormguard Ancient Invention dig, not this potion)."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "kandarin",
+      "name": "Extreme invention potion boost path",
+      "set": {
+        "detail": "Not a permanent passive — residual high-value consumable path because ironman blueprint discovery depends on it. Skip re-emitting named machines and Ancient Invention blueprint rows. Machines named pack already complete. · Hard Asgarnia for Invention skill home / Guild discovery benches (Invention Guild stays Asgarnia). Stormguard-gated Ancient Invention permanent unlocks are Kandarin (kandarin:ancient-invention-blueprints) — this potion path does not rehome those dig bits. Webbing supply is optional_pressure until Anachronia/POF fungus path is unlocked. · Region combo (all required): asgarnia + anachronia + kandarin · Unlocks: Temporary Invention level boost scaling with Invention XP (up to +17 at 2,550,000+ XP / level 52+ equivalent band), 6-minute full boost window then hard reset to base Invention level, Critical ironman utility for discovering high-level blueprints and improving rare perk chances when under level, Planner link: boosts do not replace permanent blueprint unlocks (Ancient Invention dig path remains kandarin:ancient-invention-blueprints / Howl's workshop) · Region pressure: Asgarnia hard-owns Invention Guild discovery benches and the skill unlock geography., Anachronia / POF optional for mycelial webbing self-supply., Kandarin optional: Manor Farm / zygomite breeding adjacency for webbing (and separately owns Stormguard Ancient Invention dig, not this potion)."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "anachronia",
+      "name": "Extreme invention potion boost path",
+      "set": {
+        "detail": "Not a permanent passive — residual high-value consumable path because ironman blueprint discovery depends on it. Skip re-emitting named machines and Ancient Invention blueprint rows. Machines named pack already complete. · Hard Asgarnia for Invention skill home / Guild discovery benches (Invention Guild stays Asgarnia). Stormguard-gated Ancient Invention permanent unlocks are Kandarin (kandarin:ancient-invention-blueprints) — this potion path does not rehome those dig bits. Webbing supply is optional_pressure until Anachronia/POF fungus path is unlocked. · Region combo (all required): asgarnia + anachronia + kandarin · Unlocks: Temporary Invention level boost scaling with Invention XP (up to +17 at 2,550,000+ XP / level 52+ equivalent band), 6-minute full boost window then hard reset to base Invention level, Critical ironman utility for discovering high-level blueprints and improving rare perk chances when under level, Planner link: boosts do not replace permanent blueprint unlocks (Ancient Invention dig path remains kandarin:ancient-invention-blueprints / Howl's workshop) · Region pressure: Asgarnia hard-owns Invention Guild discovery benches and the skill unlock geography., Anachronia / POF optional for mycelial webbing self-supply., Kandarin optional: Manor Farm / zygomite breeding adjacency for webbing (and separately owns Stormguard Ancient Invention dig, not this potion)."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Gizmo shells (weapon / armour / tool + ancient)",
+      "set": {
+        "detail": "Shell discovery/manufacture is workbench Invention progression; natural hub is Invention Guild (Asgarnia). Ancient shells depend on Ancient Invention blueprints (kandarin:ancient-invention-blueprints — Howl's workshop at Stormguard Citadel Dig Site). Combat perk recipes stay in planner-expansions-invention-* — not duplicated here. · Asgarnia owns primary workbench/guild discovery geography. Ancient no-trade path pressures Kandarin Stormguard Armadylean Archaeology for blueprints. · Unlocks: Empty weapon / armour / tool gizmo shells manufacturable at inventor's workbench, Fill shells with materials to create perks, then install into augmented gear, Ancient weapon / armour / tool gizmo shells (9 slots) after Ancient gizmos blueprint, Ancient shells enable higher perk ranks and ancient-only perks (Fortune, Relentless, Ruthless)",
+        "requirements": [
+          "Weapon gizmo blueprint at 3 Invention (tutorial)",
+          "Armour gizmo blueprint at 16 Invention",
+          "Tool gizmo blueprint at 22 Invention",
+          "Ancient gizmos blueprint at 85 Invention via Stormguard Howl blueprints (Kandarin) or GE tradeable blueprint (no-trade: Archaeology path)"
+        ],
+        "regionId": "asgarnia",
+        "regionHints": [
+          "asgarnia",
+          "kandarin"
+        ]
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Ancient weapon / armour / tool gizmo shells",
+      "set": {
+        "detail": "Companion equipment row to asgarnia:invention-gizmo-shells and kandarin:ancient-invention-blueprints (Howl's workshop / Stormguard). Perk recipes remain in invention planner expansions. · Asgarnia manufacture hub; ancient components from multi-region restored artefacts; blueprint unlock geography is Kandarin Stormguard. · Effects: Nine material slots per ancient shell vs five on standard shells, Enables perk ranks and combos unavailable on standard gizmos, Required chassis for Fortune (tool), Relentless, Ruthless and high-rank combat perk recipes",
+        "regionId": "asgarnia",
+        "regionHints": [
+          "asgarnia",
+          "kandarin"
+        ]
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "set": {
+        "detail": "Combo residual on asgarnia:extreme-invention-boost-path. Prefer this when scoring multi-region Invention power. · Hard Asgarnia + Anachronia for full self-supply of the temporary boost loop. Kandarin POF can substitute webbing in some plans. Permanent Ancient Invention dig unlocks are separate Kandarin Stormguard geography (not scored by this Guild boost combo). · Region combo (all required): asgarnia + anachronia · Unlocks: End-to-end ironman checklist: make super invention → add mycelial webbing → drink at Guild for blueprint/perk attempts, Separates temporary boost logistics from permanent machine power and Ancient Invention blueprint unlocks · Region pressure: Asgarnia + Anachronia hard for complete self-sufficient extreme invent loops., Kandarin optional if Manor Farm zygomites cover webbing without Anachronia."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "kandarin",
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "set": {
+        "detail": "Combo residual on asgarnia:extreme-invention-boost-path. Prefer this when scoring multi-region Invention power. · Hard Asgarnia + Anachronia for full self-supply of the temporary boost loop. Kandarin POF can substitute webbing in some plans. Permanent Ancient Invention dig unlocks are separate Kandarin Stormguard geography (not scored by this Guild boost combo). · Region combo (all required): asgarnia + anachronia · Unlocks: End-to-end ironman checklist: make super invention → add mycelial webbing → drink at Guild for blueprint/perk attempts, Separates temporary boost logistics from permanent machine power and Ancient Invention blueprint unlocks · Region pressure: Asgarnia + Anachronia hard for complete self-sufficient extreme invent loops., Kandarin optional if Manor Farm zygomites cover webbing without Anachronia."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "anachronia",
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "set": {
+        "detail": "Combo residual on asgarnia:extreme-invention-boost-path. Prefer this when scoring multi-region Invention power. · Hard Asgarnia + Anachronia for full self-supply of the temporary boost loop. Kandarin POF can substitute webbing in some plans. Permanent Ancient Invention dig unlocks are separate Kandarin Stormguard geography (not scored by this Guild boost combo). · Region combo (all required): asgarnia + anachronia · Unlocks: End-to-end ironman checklist: make super invention → add mycelial webbing → drink at Guild for blueprint/perk attempts, Separates temporary boost logistics from permanent machine power and Ancient Invention blueprint unlocks · Region pressure: Asgarnia + Anachronia hard for complete self-sufficient extreme invent loops., Kandarin optional if Manor Farm zygomites cover webbing without Anachronia."
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "misthalin",
+      "name": "Abyssal Link (The Subtle Blade)",
+      "set": {
+        "detail": "Late Ancient Invention + Archaeology hybrid. Distinct from Nexus Mod (Abyss pathing). Highest energy tier (250). · Hard Kandarin for Stormguard Howl workshop + prototype godsword artefacts. Hard Asgarnia for inventor's workbench manufacture (Invention Guild stays Asgarnia). Misthalin for World Wakes cave if not auto-completed. · Region combo (all required): kandarin + asgarnia · Unlocks: Abyssal Link relic power, Magic spellbook teleport spells cost no runes (still need non-rune costs e.g. banana for Ape Atoll), Awards no Magic XP for those teleports, Necromancy incantation teleports still need necrotic runes · Region pressure: Kandarin: Stormguard Howl workshop + prototype godsword artefacts., Asgarnia: Invention workbench / Ancient Invention component manufacture path (not dig ownership)., Misthalin optional: Guthix's Cave / World Wakes / monolith.",
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "Region combo (all required): kandarin + asgarnia",
+        "isRegionCombo": true
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Abyssal Link (The Subtle Blade)",
+      "set": {
+        "detail": "Late Ancient Invention + Archaeology hybrid. Distinct from Nexus Mod (Abyss pathing). Highest energy tier (250). · Hard Kandarin for Stormguard Howl workshop + prototype godsword artefacts. Hard Asgarnia for inventor's workbench manufacture (Invention Guild stays Asgarnia). Misthalin for World Wakes cave if not auto-completed. · Region combo (all required): kandarin + asgarnia · Unlocks: Abyssal Link relic power, Magic spellbook teleport spells cost no runes (still need non-rune costs e.g. banana for Ape Atoll), Awards no Magic XP for those teleports, Necromancy incantation teleports still need necrotic runes · Region pressure: Kandarin: Stormguard Howl workshop + prototype godsword artefacts., Asgarnia: Invention workbench / Ancient Invention component manufacture path (not dig ownership)., Misthalin optional: Guthix's Cave / World Wakes / monolith.",
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "Region combo (all required): kandarin + asgarnia",
+        "isRegionCombo": true
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "kandarin",
+      "name": "Abyssal Link (The Subtle Blade)",
+      "set": {
+        "detail": "Late Ancient Invention + Archaeology hybrid. Distinct from Nexus Mod (Abyss pathing). Highest energy tier (250). · Hard Kandarin for Stormguard Howl workshop + prototype godsword artefacts. Hard Asgarnia for inventor's workbench manufacture (Invention Guild stays Asgarnia). Misthalin for World Wakes cave if not auto-completed. · Region combo (all required): kandarin + asgarnia · Unlocks: Abyssal Link relic power, Magic spellbook teleport spells cost no runes (still need non-rune costs e.g. banana for Ape Atoll), Awards no Magic XP for those teleports, Necromancy incantation teleports still need necrotic runes · Region pressure: Kandarin: Stormguard Howl workshop + prototype godsword artefacts., Asgarnia: Invention workbench / Ancient Invention component manufacture path (not dig ownership)., Misthalin optional: Guthix's Cave / World Wakes / monolith.",
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "comboLabel": "Region combo (all required): kandarin + asgarnia",
+        "isRegionCombo": true
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "asgarnia",
+      "name": "Death Ward relic chain",
+      "set": {
+        "detail": "Keep both regions visible unless Equilibrium auto-completion explicitly bypasses the Armadyl turn-in or supplies the relic directly. Stormguard dig / Aviansie dreamcoat restore is Kandarin; Armadyl's Tower turn-in stays Asgarnia. · Effects: 5% damage reduction below 50% life points, 10% damage reduction below 25% life points · Unlocks: Ring of Solomon, Death Ward",
+        "requirements": [
+          "81 Archaeology",
+          "Kandarin: restore the Aviansie dreamcoat from Stormguard Citadel",
+          "Asgarnia: give the restored artefact to Armadyl at Armadyl's Tower"
+        ],
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "regionHints": [
+          "kandarin",
+          "asgarnia"
+        ]
+      }
+    },
+    {
+      "op": "editUpgrade",
+      "regionId": "kandarin",
+      "name": "Death Ward relic chain",
+      "set": {
+        "detail": "Keep both regions visible unless Equilibrium auto-completion explicitly bypasses the Armadyl turn-in or supplies the relic directly. Stormguard dig / Aviansie dreamcoat restore is Kandarin; Armadyl's Tower turn-in stays Asgarnia. · Effects: 5% damage reduction below 50% life points, 10% damage reduction below 25% life points · Unlocks: Ring of Solomon, Death Ward",
+        "requirements": [
+          "81 Archaeology",
+          "Kandarin: restore the Aviansie dreamcoat from Stormguard Citadel",
+          "Asgarnia: give the restored artefact to Armadyl at Armadyl's Tower"
+        ],
+        "requiredRegions": [
+          "kandarin",
+          "asgarnia"
+        ],
+        "regionRequirementType": "all_required",
+        "regionHints": [
+          "kandarin",
+          "asgarnia"
+        ]
+      }
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "kandarin",
+      "rule": "Stormguard Citadel Dig Site, Howl's Floating Workshop, and self-sufficient Ancient Invention blueprint fragments are Kandarin (wiki Equilibrium League tags). Do not dual-claim dig ownership on Asgarnia."
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "asgarnia",
+      "rule": "Invention Guild, Armadyl's Tower, and Lowse collector turn-ins stay Asgarnia. Stormguard dig / Howl workshop dig ownership is Kandarin — do not re-host dig rows here."
+    },
+    {
+      "op": "mergeAreas",
+      "regionId": "kandarin",
+      "areas": [
+        "Stormguard Citadel Dig Site",
+        "Temple of Ikov",
+        "Howl's Floating Workshop"
+      ]
+    },
+    {
+      "op": "mergeAreas",
+      "regionId": "asgarnia",
+      "areas": [
+        "Armadyl's Tower",
+        "Invention Guild",
+        "Ice Mountain"
+      ]
+    }
+  ],
+  "notes": [
+    "remove asgarnia host copy of Ancient Invention blueprints (Howl's workshop)",
+    "remove asgarnia host copy of Inspire Genius (Howl's Thinking Cap)",
+    "remove asgarnia host copy of Divine Conversion (Cres Framework)",
+    "upsert Ancient Invention blueprints on kandarin with requiredRegions=[kandarin]",
+    "upsert Inspire Genius on kandarin; requiredRegions=[kandarin, asgarnia] (Lowse turn-in stays Asgarnia)",
+    "fix Divine Conversion on kandarin: Stormguard is Kandarin, not Asgarnia dig ownership",
+    "ensure Ancient Invention on kandarin has requiredRegions=[kandarin]",
+    "edit Stormguard dig site detail: drop asgarnia:ancient-invention-blueprints id; keep Kandarin home",
+    "edit Extreme invention potion path on asgarnia/kandarin/anachronia: Guild=Asgarnia; Ancient Invention dig=Kandarin",
+    "edit Gizmo shells detail: Stormguard dig is Kandarin; manufacture stays Asgarnia",
+    "edit Ancient gizmo shells detail: blueprint dig id → kandarin",
+    "edit Extreme invention supply combo: clarify Ancient Invention dig is Kandarin, not this combo",
+    "edit Abyssal Link multi-host copies: Stormguard dig=Kandarin; workbench=Asgarnia",
+    "lock Death Ward: dig Kandarin + Armadyl Tower turn-in Asgarnia (do not remove Asgarnia copy)",
+    "addHardRule on kandarin + asgarnia documenting Stormguard vs Guild/Lowse split",
+    "mergeAreas: Stormguard/Ikov/Howl → Kandarin; Armadyl's Tower + Invention Guild → Asgarnia",
+    "Wiki check 2026-07-26: runescape.wiki/w/Stormguard_Citadel_Dig_Site excavation table League region = Kandarin for all hotspots.",
+    "Do NOT move Invention Guild machines, charge pack, spring cleaner, or named machine room off Asgarnia.",
+    "Do NOT move Death Ward Asgarnia host copy — Armadyl turn-in stays Asgarnia.",
+    "Pharm Ecology already hard-kandarin for Stormguard Armadylean I — left unchanged.",
+    "Catalog only via this patch; do not hand-edit catalog.json."
+  ]
+}

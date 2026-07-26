@@ -1,0 +1,685 @@
+{
+  "regionId": "misthalin",
+  "checkedAt": "2026-07-26",
+  "wikiSources": [
+    {
+      "url": "https://runescape.wiki/w/Misthalin",
+      "title": "Misthalin",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Misthalin",
+      "title": "Equilibrium League/Areas/Misthalin",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Fort_Forinthry",
+      "title": "Fort Forinthry",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/City_of_Um",
+      "title": "City of Um",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Varrock_Dig_Site",
+      "title": "Varrock Dig Site",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Wizards%27_Tower",
+      "title": "Wizards' Tower",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Elder_God_Wars_Dungeon",
+      "title": "Elder God Wars Dungeon",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+      "title": "Zamorak, Lord of Chaos",
+      "checkedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Zanaris",
+      "title": "Zanaris",
+      "checkedAt": "2026-07-26"
+    }
+  ],
+  "localSources": [
+    "data/research/catalog.json → regions[id=misthalin]",
+    "data/league/regions.json → records[id=misthalin]",
+    "src/map/data/placeAnchors.ts (region: misthalin)",
+    "src/map/data/regionAnchors.ts (id: misthalin)"
+  ],
+  "summary": "Catalog Misthalin geography is directionally correct and does not use the region name as an area (no Karamja-style self-area bug). Equilibrium League wiki now explicitly lists Fort Forinthry, City of Um, Zanaris, Dorgesh-Kaan and Archaeology Campus under Misthalin, so several content rows still labelled historical/pending are stale and should upgrade confidence. Real issues: three area=content name collisions (Fort Forinthry, City of Um, Varrock Dig Site); missing League-notable places Zanaris/Dorgesh-Kaan/Edgeville/Archaeology Campus; missing combat content for Zamorakian Undercity / Zamorak and Senntisten Asylum; a handful of upgrades with clear non-Misthalin geography (Mazchna, Death altar, Attuned ectoplasmator) wrongly regionId'd misthalin; data/league/regions.json still only lists the three starter towns.",
+  "snapshot": {
+    "catalogAreas": [
+      "Lumbridge",
+      "Varrock",
+      "Draynor Village",
+      "Fort Forinthry",
+      "Varrock Dig Site",
+      "City of Um",
+      "Wizards' Tower"
+    ],
+    "leagueRegionsJsonAreas": [
+      "Lumbridge",
+      "Varrock",
+      "Draynor Village"
+    ],
+    "placeAnchors": [
+      "Varrock",
+      "Lumbridge",
+      "Draynor Village",
+      "Fort Forinthry",
+      "Varrock Dig Site",
+      "City of Um",
+      "Wizards' Tower"
+    ],
+    "catalogContentCount": 16,
+    "catalogUpgradeCount": 144,
+    "equilibriumWikiNotableSettlements": [
+      "Lumbridge",
+      "Draynor Village",
+      "Varrock",
+      "Zanaris",
+      "Dorgesh-Kaan",
+      "Fort Forinthry",
+      "Archaeology Campus",
+      "City of Um"
+    ]
+  },
+  "crossChecks": {
+    "fortForinthry": {
+      "wikiGeography": "Player fort N/NE of Varrock at former Grieving Vale; northern gate opens into Wilderness; fort interior not Wilderness-dangerous. Wiki and Misthalin kingdom page treat it as a Misthalin duchy after New Foundations.",
+      "league": "Equilibrium League/Areas/Misthalin lists Fort Forinthry under notable settlements. Fort Forinthry page shows Misthalin League region badge ✓.",
+      "catalog": "Present as area and again as content with confidence historical_league_taxonomy_pending_equilibrium_confirmation — stale after League page.",
+      "verdict": "Keep as Misthalin area. Rename content row. Upgrade confidence to confirmed_equilibrium_wiki."
+    },
+    "cityOfUm": {
+      "wikiGeography": "Underworld city; surface portal just north of Draynor lodestone. Necromancy hub (ritual site, Well of Souls, Rasial citadel).",
+      "league": "Equilibrium League/Areas/Misthalin lists City of Um. City of Um page shows Misthalin League badge ✓.",
+      "catalog": "Present as area; content 'City of Um / Underworld' collides and still pending Equilibrium confirmation.",
+      "verdict": "Keep as Misthalin area. Rename content to Necromancy hub framing. Upgrade confidence."
+    },
+    "varrockDigSite": {
+      "wikiGeography": "Excavation area east of Varrock at the Archaeology Campus; tutorial/entry for Archaeology; adjacent to Senntisten Dig Site entrance.",
+      "league": "Equilibrium lists 'Archaeology Campus' as notable settlement, not the phrase 'Varrock Dig Site'. Dig Site page still has Misthalin League badge ✓.",
+      "catalog": "Area 'Varrock Dig Site' + content 'Varrock Dig Site / early Archaeology' (inferred_region).",
+      "verdict": "Prefer League name Archaeology Campus as the mapable hub area (or keep Dig Site and add Campus). Disambiguate content title. Confidence can rise to confirmed_wiki / confirmed_equilibrium_wiki."
+    },
+    "wizardsTower": {
+      "wikiGeography": "Saradominist magic/RC institute on island south of Draynor; Runespan + Runecrafting Guild portals on roof. Misthalin kingdom page lists it under notable features. League badge Misthalin ✓.",
+      "league": "Not on Equilibrium notable-settlements shortlist, but firmly Misthalin and useful planner hub.",
+      "catalog": "Area only (no content collision). Upgrade 'Wizards' Tower and Runecrafting Guild' correctly regionId misthalin.",
+      "verdict": "Keep as area. Optional content row for Runespan/Runecrafting Guild access if desired."
+    },
+    "egwdAndZamorak": {
+      "wikiGeography": "Elder God Wars Dungeon in Senntisten ruins under/at Archaeology Guild; League region Misthalin ✓. Zamorakian Undercity + Zamorak, Lord of Chaos also League-tagged Misthalin on wiki.",
+      "catalog": "Kerapac, Arch-Glacor, Croesus, TzKal-Zuk present. Missing Zamorakian Undercity / Zamorak content (and progression upgrade if not under another id).",
+      "verdict": "EGWD boss rows OK; add Undercity/Zamorak; bump EGWD confidences off historical-only wording."
+    }
+  },
+  "issues": [
+    {
+      "severity": "high",
+      "kind": "area_content_name_collision",
+      "finding": "Content name 'Fort Forinthry' exactly equals area 'Fort Forinthry'. Same place appears thrice once Fort upgrades (Workshop/Town Hall/etc.) are counted.",
+      "wikiEvidence": "Fort is a place/settlement (wiki location + Equilibrium notable settlement), not a content product name.",
+      "fix": "Rename content to something role-clear such as 'Fort Forinthry construction and Slayer hub' (keep area as 'Fort Forinthry'). Leave building-specific upgrades as-is."
+    },
+    {
+      "severity": "high",
+      "kind": "area_content_name_collision",
+      "finding": "Content 'City of Um / Underworld' collides with area 'City of Um'.",
+      "wikiEvidence": "City of Um is the place; Necromancy/rituals/Rasial path are activities located there.",
+      "fix": "Rename content to 'City of Um Necromancy hub (rituals / Well of Souls)' or similar. Area stays 'City of Um'."
+    },
+    {
+      "severity": "high",
+      "kind": "area_content_name_collision",
+      "finding": "Content 'Varrock Dig Site / early Archaeology' collides with area 'Varrock Dig Site'.",
+      "wikiEvidence": "Varrock Dig Site is geography; early Archaeology tutorial/campus use is activity.",
+      "fix": "Rename content to 'Early Archaeology tutorial (Varrock Dig Site / Archaeology Campus)'. Prefer adding area 'Archaeology Campus' per Equilibrium list."
+    },
+    {
+      "severity": "high",
+      "kind": "missing_major_place",
+      "finding": "Equilibrium League Misthalin notable settlements include Zanaris and Dorgesh-Kaan; neither is in catalog areas (or placeAnchors).",
+      "wikiEvidence": "https://runescape.wiki/w/Equilibrium_League/Areas/Misthalin lists both. Zanaris is entered via Lumbridge Swamp (Lost City) and hosts Cosmic altar + Chaeldar; Dorgesh-Kaan is the underground goblin city under Lumbridge.",
+      "fix": "Add areas 'Zanaris' and 'Dorgesh-Kaan'. Optionally add placeAnchors (Zanaris near south-west Misthalin / swamp side; Dorgesh under Lumbridge)."
+    },
+    {
+      "severity": "high",
+      "kind": "missing_content",
+      "finding": "Equilibrium combat list includes The Zamorakian Undercity; wiki tags Zamorak, Lord of Chaos as Misthalin. Neither appears in catalog content.",
+      "wikiEvidence": "Equilibrium League/Areas/Misthalin notable combat; https://runescape.wiki/w/Zamorak,_Lord_of_Chaos League region Misthalin ✓.",
+      "fix": "Add content rows: 'The Zamorakian Undercity' (elite dungeon) and 'Zamorak, Lord of Chaos' (boss). Add upgrade row for Vestments of Havoc / Bow of the Last Guardian / ability codices if not already present under another region."
+    },
+    {
+      "severity": "high",
+      "kind": "upgrade_wrong_region",
+      "finding": "Upgrade 'Mazchna / Achtryn (Canifis Slayer Masters)' is under misthalin upgrades.",
+      "wikiEvidence": "Canifis is Morytania, not Misthalin.",
+      "fix": "Move to regionId morytania (or remove from misthalin upgrades if duplicated)."
+    },
+    {
+      "severity": "high",
+      "kind": "upgrade_wrong_region",
+      "finding": "Upgrade 'Death altar (Temple of Light Runecrafting)' is under misthalin.",
+      "wikiEvidence": "Temple of Light / Death altar is Tirannwn content.",
+      "fix": "Move to regionId tirannwn."
+    },
+    {
+      "severity": "high",
+      "kind": "upgrade_wrong_region",
+      "finding": "Upgrade 'Attuned ectoplasmator' is under misthalin.",
+      "wikiEvidence": "Ectoplasmator / Ghosts Ahoy path is Port Phasmatys / Morytania.",
+      "fix": "Move to regionId morytania."
+    },
+    {
+      "severity": "medium",
+      "kind": "missing_major_place",
+      "finding": "Edgeville is a wiki Misthalin community and major travel/Wilderness on-ramp; not in catalog areas (only appears as upgrade hub text).",
+      "wikiEvidence": "Misthalin wiki Communities list: Edgeville, Barbarian Village, Lumford among others.",
+      "fix": "Add area 'Edgeville' (and optionally 'Barbarian Village' / Gunnarsgrunn). Anchor Edgeville north-west of Varrock toward Wilderness."
+    },
+    {
+      "severity": "medium",
+      "kind": "missing_or_renamed_place",
+      "finding": "Equilibrium lists 'Archaeology Campus'; catalog has 'Varrock Dig Site' only.",
+      "wikiEvidence": "Equilibrium notable settlements; Dig Site page: dig site is at Archaeology Campus.",
+      "fix": "Add 'Archaeology Campus' as area (planner hub for Guild + dig site). Keep 'Varrock Dig Site' as area only if map needs the dig field separately; otherwise fold dig site into Campus and keep dig-site wording on content/upgrades."
+    },
+    {
+      "severity": "medium",
+      "kind": "missing_content",
+      "finding": "Senntisten Asylum is on Equilibrium Misthalin combat list; absent from catalog content.",
+      "wikiEvidence": "Equilibrium League/Areas/Misthalin → Notable combat activities → Senntisten Asylum. Asylum surgeon's ring upgrade already exists under misthalin.",
+      "fix": "Add content 'Senntisten Asylum' (kind: dungeon / quest challenge). Pair with existing Asylum surgeon's ring upgrade."
+    },
+    {
+      "severity": "medium",
+      "kind": "stale_confidence",
+      "finding": "Fort Forinthry, City of Um, EGWD bosses, Rasial/Hermod/Gate/Sanctum, Zemouregal & Vorkath still use historical_catalyst / pending_equilibrium confidence strings.",
+      "wikiEvidence": "Equilibrium League/Areas/Misthalin now exists and lists these hubs/activities; individual pages carry Misthalin League badges.",
+      "fix": "Rewrite confidence to confirmed_equilibrium_wiki (or current_wiki_location_plus_confirmed_equilibrium_league_region). Update data/league/regions.json hardRules/warnings that still say Equilibrium has not published Fort/Um locality."
+    },
+    {
+      "severity": "medium",
+      "kind": "league_regions_json_lag",
+      "finding": "data/league/regions.json misthalin.areas is only Lumbridge, Varrock, Draynor Village while catalog has seven hubs.",
+      "wikiEvidence": "N/A — internal consistency; wiki supports the fuller catalog list plus Zanaris/Dorgesh/etc.",
+      "fix": "Sync league areas with proposedAreas (or a curated subset used by UI)."
+    },
+    {
+      "severity": "medium",
+      "kind": "upgrade_wrong_or_overbroad_region",
+      "finding": "Several cross-region / other-region packages sit under misthalin with regionId misthalin: 'Invention Guild named machine room' (Asgarnia), 'Hops patch network (Entrana + run geography)' (Asgarnia-led), plus global Slayer helmet / prefer-block / POH gilded altar / multi-region outfit stacks.",
+      "wikiEvidence": "Invention Guild is NE of Falador (Asgarnia). Entrana hops are Asgarnia. Global Slayer rewards are not Misthalin geography.",
+      "fix": "Rehome clear single-region rows (Invention Guild → asgarnia; Entrana hops → asgarnia or cross-region). For true multi-region packages, use a cross-region id / region_hints pattern rather than parking them all on starting Misthalin."
+    },
+    {
+      "severity": "medium",
+      "kind": "upgrade_near_duplicate",
+      "finding": "Near-duplicate Thieving tool rows: 'Thieves' Guild master thief tools', 'Master thief's lockpick + stethoscope (toolbelt)', 'Master thief's lockpick + master thief's stethoscope'. Also 'Infernal Source Dig Site' vs 'Infernal Source Dig Site (Zamorakian)'.",
+      "wikiEvidence": "Single Thieves' Guild under Lumbridge; single Infernal Source dig site north of Varrock.",
+      "fix": "Merge tool rows into one permanent-tools upgrade + one guild hub upgrade. Keep one Infernal Source dig-site upgrade with Zamorakian collection note in detail."
+    },
+    {
+      "severity": "low",
+      "kind": "optional_missing_place",
+      "finding": "Wiki communities also list Barbarian Village and Lumford; notable features include Paterdomus/Silvarea, Draynor Manor, Lumbridge Swamp — none required for planner density but useful if expanding beyond League shortlist.",
+      "wikiEvidence": "Misthalin wiki Communities + Notable areas and features.",
+      "fix": "Optional: Barbarian Village area only if map density needs it. Do not invent League-only stats."
+    },
+    {
+      "severity": "low",
+      "kind": "no_karamja_style_self_area",
+      "finding": "Catalog does not list 'Misthalin' as an area (unlike karamja listing 'Karamja' as an area).",
+      "wikiEvidence": "N/A — positive finding.",
+      "fix": "No fix. Keep avoiding region-name-as-area."
+    },
+    {
+      "severity": "low",
+      "kind": "anchor_coverage_gap",
+      "finding": "placeAnchors match current catalog areas exactly (good). After adding Zanaris / Edgeville / Dorgesh-Kaan / Archaeology Campus, anchors will need new UV points.",
+      "wikiEvidence": "placeAnchors.ts requires area string equality with catalog areas.",
+      "fix": "Add anchors only for areas that land in proposedAreas."
+    },
+    {
+      "severity": "low",
+      "kind": "content_hierarchy_note",
+      "finding": "Sanctum of Rebirth listed as dungeon plus Vermyx / Kezalam / Nakatra individually — same pattern as Asgarnia GWD bosses. Acceptable if UI can nest; not a false geography.",
+      "wikiEvidence": "Sanctum is entered from City of Um side of Underworld.",
+      "fix": "Optional UI nesting only; no rename required beyond parent hub collision above."
+    }
+  ],
+  "proposedAreas": [
+    "Lumbridge",
+    "Varrock",
+    "Draynor Village",
+    "Edgeville",
+    "Fort Forinthry",
+    "Archaeology Campus",
+    "Varrock Dig Site",
+    "Wizards' Tower",
+    "City of Um",
+    "Zanaris",
+    "Dorgesh-Kaan"
+  ],
+  "proposedAreasNotes": "Ordered roughly north→south / planner importance. 'Archaeology Campus' aligns with Equilibrium League wiki; keep 'Varrock Dig Site' if map pins need the dig field separate from the Guild campus. Drop Dig Site only if Campus is used as the single pin. Barbarian Village optional, not proposed as required.",
+  "proposedContentFixes": [
+    {
+      "action": "rename",
+      "from": "Fort Forinthry",
+      "to": {
+        "name": "Fort Forinthry construction and Slayer hub",
+        "kind": "Construction / Slayer hub",
+        "confidence": "confirmed_equilibrium_wiki",
+        "detail": "Player fort north-east of Varrock. Workshop, Town Hall, Guardhouse (Raptor), Grove, and related buildings. Equilibrium League lists Fort Forinthry under Misthalin."
+      },
+      "reason": "Disambiguate from area place name; refresh stale pending confidence."
+    },
+    {
+      "action": "rename",
+      "from": "City of Um / Underworld",
+      "to": {
+        "name": "City of Um Necromancy hub",
+        "kind": "Necromancy",
+        "confidence": "confirmed_equilibrium_wiki",
+        "detail": "Underworld city via Draynor portal: ritual site, Well of Souls talents, soul forge, Necromantic Rune Temple access. Equilibrium League lists City of Um under Misthalin."
+      },
+      "reason": "Disambiguate from area; confidence now League-confirmed."
+    },
+    {
+      "action": "rename",
+      "from": "Varrock Dig Site / early Archaeology",
+      "to": {
+        "name": "Early Archaeology (Archaeology Campus / Varrock Dig Site)",
+        "kind": "skilling",
+        "confidence": "confirmed_wiki",
+        "detail": "Archaeology tutorial and early hotspots at the campus east of Varrock; gateway toward Senntisten Dig Site and EGWD access."
+      },
+      "reason": "Disambiguate from area; raise confidence above inferred_region."
+    },
+    {
+      "action": "edit",
+      "from": "Sanctum of Rebirth",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Listed on Equilibrium Misthalin combat activities; City of Um entrance."
+    },
+    {
+      "action": "edit",
+      "from": "Kerapac, the bound",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki",
+        "kind": "Elder God Wars Dungeon"
+      },
+      "reason": "EGWD / Nodon Front is League-tagged Misthalin on wiki."
+    },
+    {
+      "action": "edit",
+      "from": "Arch-Glacor",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Equilibrium notable combat; Misthalin League region."
+    },
+    {
+      "action": "edit",
+      "from": "Croesus",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Equilibrium non-combat/skilling boss list + EGWD Misthalin."
+    },
+    {
+      "action": "edit",
+      "from": "TzKal-Zuk",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Equilibrium notable combat under Misthalin."
+    },
+    {
+      "action": "edit",
+      "from": "Rasial, the First Necromancer",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "City of Um / citadel; League Misthalin."
+    },
+    {
+      "action": "edit",
+      "from": "Hermod, the Spirit of War",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Equilibrium lists Hermod; Um citadel."
+    },
+    {
+      "action": "edit",
+      "from": "The Gate of Elidinis",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Equilibrium non-combat list under Misthalin."
+    },
+    {
+      "action": "edit",
+      "from": "Zemouregal & Vorkath",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Fort Forinthry storyline boss; Fort now League-confirmed Misthalin."
+    },
+    {
+      "action": "edit",
+      "from": "Vermyx, Brood Mother",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Sanctum of Rebirth boss under Misthalin League umbrella."
+    },
+    {
+      "action": "edit",
+      "from": "Kezalam, the Wanderer",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Sanctum of Rebirth boss."
+    },
+    {
+      "action": "edit",
+      "from": "Nakatra, Devourer Eternal",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Sanctum of Rebirth boss."
+    },
+    {
+      "action": "add",
+      "from": null,
+      "to": {
+        "name": "The Zamorakian Undercity",
+        "kind": "elite dungeon",
+        "detail": "Elite Dungeon 4 accessed from Senntisten / EGWD side; leads into Zamorak, Lord of Chaos.",
+        "confidence": "confirmed_equilibrium_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/The_Zamorakian_Undercity",
+          "title": "The Zamorakian Undercity",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "reason": "On Equilibrium Misthalin combat list; missing from catalog."
+    },
+    {
+      "action": "add",
+      "from": null,
+      "to": {
+        "name": "Zamorak, Lord of Chaos",
+        "kind": "boss",
+        "detail": "Final boss of The Zamorakian Undercity path; wiki League region Misthalin.",
+        "confidence": "confirmed_equilibrium_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+          "title": "Zamorak, Lord of Chaos",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "reason": "Major Misthalin combat unlock absent from content rows."
+    },
+    {
+      "action": "add",
+      "from": null,
+      "to": {
+        "name": "Senntisten Asylum",
+        "kind": "dungeon",
+        "detail": "Senntisten-side dungeon on Equilibrium Misthalin combat list; related permanent reward Asylum surgeon's ring.",
+        "confidence": "confirmed_equilibrium_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Senntisten_Asylum",
+          "title": "Senntisten Asylum",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "reason": "Listed on Equilibrium page; upgrade already exists without parent content."
+    },
+    {
+      "action": "add",
+      "from": null,
+      "to": {
+        "name": "Elder God Wars Dungeon (Senntisten)",
+        "kind": "boss dungeon",
+        "detail": "Optional parent hub for Kerapac / Arch-Glacor / Croesus / TzKal-Zuk fronts. Entrance via ancient door north of Archaeology Guild.",
+        "confidence": "confirmed_equilibrium_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Elder_God_Wars_Dungeon",
+          "title": "Elder God Wars Dungeon",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "reason": "Mirrors Asgarnia treating GWD as geography/hub while listing bosses; improves IA without inventing numbers."
+    }
+  ],
+  "proposedUpgradeFixes": [
+    {
+      "action": "edit",
+      "from": "Mazchna / Achtryn (Canifis Slayer Masters)",
+      "to": {
+        "regionId": "morytania"
+      },
+      "reason": "Canifis is Morytania geography."
+    },
+    {
+      "action": "edit",
+      "from": "Death altar (Temple of Light Runecrafting)",
+      "to": {
+        "regionId": "tirannwn"
+      },
+      "reason": "Temple of Light is Tirannwn."
+    },
+    {
+      "action": "edit",
+      "from": "Attuned ectoplasmator",
+      "to": {
+        "regionId": "morytania"
+      },
+      "reason": "Ectoplasmator / Ghosts Ahoy path is Morytania."
+    },
+    {
+      "action": "edit",
+      "from": "Invention Guild named machine room",
+      "to": {
+        "regionId": "asgarnia"
+      },
+      "reason": "Invention Guild is north-east of Falador (Asgarnia)."
+    },
+    {
+      "action": "edit",
+      "from": "Hops patch network (Entrana + run geography)",
+      "to": {
+        "regionId": "asgarnia",
+        "detailNote": "Keep cross-region checklist language; primary Entrana patch is Asgarnia."
+      },
+      "reason": "Entrana-led hops network should not own Misthalin regionId."
+    },
+    {
+      "action": "rename",
+      "from": "Master thief's lockpick + stethoscope (toolbelt)",
+      "to": {
+        "name": "Master thief's lockpick and stethoscope (toolbelt)",
+        "mergeWith": [
+          "Master thief's lockpick + master thief's stethoscope",
+          "Thieves' Guild master thief tools"
+        ]
+      },
+      "reason": "Near-duplicate permanent tool rows for the same Lumbridge Thieves' Guild unlocks."
+    },
+    {
+      "action": "remove",
+      "from": "Master thief's lockpick + master thief's stethoscope",
+      "to": {},
+      "reason": "Merge into single toolbelt/tools row after rename above."
+    },
+    {
+      "action": "rename",
+      "from": "Infernal Source Dig Site (Zamorakian)",
+      "to": {
+        "mergeInto": "Infernal Source Dig Site",
+        "detailAppend": "Includes Zamorakian collections / mysteries under the same dig site."
+      },
+      "reason": "One dig site; avoid dual upgrade cards for the same place."
+    },
+    {
+      "action": "edit",
+      "from": "Kerapac progression",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Boss is League-confirmed Misthalin; drops remain wiki-current."
+    },
+    {
+      "action": "edit",
+      "from": "Arch-Glacor progression",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Same as EGWD."
+    },
+    {
+      "action": "edit",
+      "from": "Croesus progression",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Same as EGWD."
+    },
+    {
+      "action": "edit",
+      "from": "TzKal-Zuk progression",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Same as EGWD; keep Igneous cape cross-region chain note."
+    },
+    {
+      "action": "edit",
+      "from": "First Necromancer's equipment",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Rasial / City of Um League-confirmed."
+    },
+    {
+      "action": "edit",
+      "from": "Gate of Elidinis uniques",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Gate listed on Equilibrium Misthalin page."
+    },
+    {
+      "action": "edit",
+      "from": "Sanctum of Rebirth uniques",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Sanctum listed on Equilibrium Misthalin page."
+    },
+    {
+      "action": "edit",
+      "from": "Zemouregal & Vorkath progression",
+      "to": {
+        "confidence": "confirmed_equilibrium_wiki"
+      },
+      "reason": "Fort Forinthry League-confirmed Misthalin."
+    },
+    {
+      "action": "add",
+      "from": null,
+      "to": {
+        "name": "Zamorak, Lord of Chaos progression",
+        "category": "Melee power armour / Ranged weapon / ability codices",
+        "regionId": "misthalin",
+        "detail": "Vestments of Havoc, Bow of the Last Guardian components, Greater Sunshine / Greater Death's Swiftness codex path, Chaos Roar. Do not invent drop rates.",
+        "confidence": "confirmed_equilibrium_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+          "title": "Zamorak, Lord of Chaos",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "reason": "Missing major Misthalin combat progression paired with new content rows."
+    },
+    {
+      "action": "edit",
+      "from": "many multi-region packages currently regionId=misthalin",
+      "to": {
+        "guidance": "Slayer helmet craft/prefer-block/broad arrows, POH gilded altar, Nature's sentinel, GOTE stacks, Imcando family, herb patch network, elite outfit portfolio, etc. should not default to misthalin solely because it is the starting region. Prefer cross-region packaging or the region that owns the gate step."
+      },
+      "reason": "144 upgrades on Misthalin is a parking-lot smell; not all are Misthalin geography."
+    }
+  ],
+  "anchorFixes": [
+    {
+      "action": "add",
+      "area": "Edgeville",
+      "note": "UV roughly north-west of Varrock toward Wilderness / Asgarnia shoulder (near existing fort–Varrock band, west of Fort Forinthry). Only after area is added to catalog."
+    },
+    {
+      "action": "add",
+      "area": "Archaeology Campus",
+      "note": "Near current Varrock Dig Site anchor [0.558, 0.4]; slight south of dig field toward Guild if Dig Site pin is retained separately."
+    },
+    {
+      "action": "add",
+      "area": "Zanaris",
+      "note": "Not on surface Gielinor board in the same way — either omit from 3D wartable, or place near Lumbridge Swamp / south of Lumbridge as the Lost City entrance proxy. Prefer entrance proxy so the pin stays inside the Misthalin ring."
+    },
+    {
+      "action": "add",
+      "area": "Dorgesh-Kaan",
+      "note": "Underground under Lumbridge; surface proxy near Lumbridge / Lumbridge Swamp caves entrance."
+    },
+    {
+      "action": "rename",
+      "area": "Varrock Dig Site",
+      "note": "No rename required if area kept. If catalog folds into Archaeology Campus only, remove this anchor and use Campus."
+    }
+  ],
+  "leagueRegionsJsonFixes": {
+    "areas": "Replace thin [Lumbridge, Varrock, Draynor Village] with proposedAreas (or catalog-synced list).",
+    "hardRules": "Update Fort Forinthry / City of Um / Zanaris rules from 'pending Equilibrium' to 'confirmed on Equilibrium League/Areas/Misthalin wiki (2026-07-26); still re-check if Jagex publishes a finer override'.",
+    "warnings": "Drop or soften the Catalyst-only warning now that Equilibrium wiki locality exists for Fort and Um."
+  },
+  "notIssues": [
+    "No 'Misthalin' self-area (unlike Karamja listing 'Karamja').",
+    "placeAnchors strings currently match catalog areas exactly — invariant holds.",
+    "regionAnchors display name 'Misthalin' is correct.",
+    "Wizards' Tower as Misthalin area is geographically correct even though not on Equilibrium's short settlement list.",
+    "Sanctum individual bosses + dungeon parent is acceptable hierarchy, not a wrong-region bug.",
+    "Igneous cape progression remaining under Misthalin with explicit Karamja chain note is intentional cross-region documentation, not a silent mislabel."
+  ],
+  "applyReady": true,
+  "applyOrder": [
+    "1. proposedAreas → catalog regions[misthalin].areas (+ league regions.json)",
+    "2. content renames/adds + confidence bumps",
+    "3. high-severity upgrade regionId moves (Mazchna, Death altar, ectoplasmator, Invention Guild, hops)",
+    "4. upgrade confidence bumps for EGWD/Um/Fort progressions",
+    "5. merge near-duplicate Thieves' Guild / Infernal Source rows",
+    "6. placeAnchors for new areas only after catalog areas land",
+    "7. Do not invent Equilibrium-only task points, XP rates, or auto-quest lists"
+  ]
+}

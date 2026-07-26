@@ -78,22 +78,17 @@ export default function CombatPage() {
   const meleeAbilities = combat.melee.important_abilities_after_initial_patches as unknown as Ability[];
 
   return (
-    <Page>
-      <header className="border-b border-stone-750 pb-4">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-semibold tracking-tight text-parch-50">Combat</h1>
-            <p className="mt-1 max-w-3xl text-sm leading-6 text-parch-300">
-              Current combat changes that matter to Equilibrium. Values here are post-March 2026 unless a row says otherwise.
-            </p>
-          </div>
-          <div className="flex gap-3 text-xs text-parch-300">
+    <Page className="!max-w-none !px-0 !py-0">
+      <div className="workbench-fill">
+        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
+          <span className="font-medium text-parch-50">Combat</span>
+          <span className="text-parch-300">Post-March 2026 kit · live math on Quick</span>
+          <span className="ml-auto flex gap-3">
             <SourceLink source={combatWiki} label="Wiki" />
             <SourceLink source={patchOne} label="Patch 1" />
             <SourceLink source={patchTwo} label="Patch 2" />
-          </div>
+          </span>
         </div>
-      </header>
 
       <CombatTabs
         reference={
@@ -114,10 +109,10 @@ export default function CombatPage() {
           ))}
         </dl>
         <p className="mt-2 text-xs text-parch-300">
-          Wiki revision poll: {(updateIndexData.records as Array<{ stale?: boolean }>).some((entry) => entry.stale)
-            ? "stale entities — run npm run sync:combat for the list"
-            : "no tracked entity revised since its record was verified"}
-          {" · tracking since "}
+          Wiki poll: {(updateIndexData.records as Array<{ stale?: boolean }>).some((entry) => entry.stale)
+            ? "stale rows — run npm run sync:combat"
+            : "no tracked page revised since last verify"}
+          {" · since "}
           {updateIndexData.trackedSince}
         </p>
       </section>
@@ -273,7 +268,7 @@ export default function CombatPage() {
         <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Catalyst baseline</h2>
-            <p className="mt-1 text-xs text-parch-300">Historical reference only. These multipliers and relics are not Equilibrium values.</p>
+            <p className="mt-1 text-xs text-parch-300">History only — not Equilibrium multipliers or relics.</p>
           </div>
           <SourceLink source={catalystWiki} label="Catalyst Wiki" />
         </div>
@@ -314,6 +309,7 @@ export default function CombatPage() {
           </>
         }
       />
+      </div>
     </Page>
   );
 }

@@ -1,0 +1,1802 @@
+{
+  "issue": "02a",
+  "id": "issue-02a-global-scan",
+  "title": "Issue 02a — global/skip multi-host upgrade scan (exact names + host counts)",
+  "scannedAt": "2026-07-26T14:38:56.827Z",
+  "catalogNotModified": true,
+  "source": "data/research/catalog.json",
+  "companionPatch": "scraped-data/fix-patches/issue-02-global-removes.json",
+  "sourceReview": [
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/foreign-upgrades-review-2026-07-26.json",
+    "scraped-data/data-audit-post-rulings-2026-07-26.json",
+    "data/research/regional-skilling-unlocks.json"
+  ],
+  "purpose": "Scan only — exact catalog names and host counts for issue-02 global removes. Do not edit catalog in this step.",
+  "policy": "Remove named skip/global upgrades from EVERY region host. No single-home keep. KEEP Grace of the elves (GOTE) and Dark Facet of Grace (GOTE enchantment). Do NOT remove Herb patches (N) per-region rows (only Herb patch network global).",
+  "summary": {
+    "removeUpgradeCount": 12,
+    "removeCopyCount": 69,
+    "keepUpgradeCount": 3,
+    "missingFromCatalog": [],
+    "hostCountByName": {
+      "Hoardstalker ring": 8,
+      "Learn broad arrow / bolt fletching (300 Slayer points)": 8,
+      "Learn quicker killing blows (400 Slayer points)": 8,
+      "Games necklace teleport package": 5,
+      "Ring of duelling": 4,
+      "Cremation ability unlock": 3,
+      "Ore box tier upgrades": 2,
+      "Herb patch network (global herb-run map)": 9,
+      "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain": 7,
+      "GOTE gather + porter sustain checklist": 7,
+      "Signs of the porter (Divination supply system)": 4,
+      "Fury shark outfit + Bait and Switch Fishing stack": 4
+    }
+  },
+  "doNotRemove": {
+    "graceOfTheElves": [
+      {
+        "action": "KEEP",
+        "name": "Grace of the elves (GOTE)",
+        "note": "KEEP — split base GOTE row; do not remove with mega-chains",
+        "hostCount": 2,
+        "hosts": [
+          "forinthry",
+          "tirannwn"
+        ],
+        "requiredRegionsByHost": {
+          "forinthry": [
+            "forinthry",
+            "tirannwn"
+          ],
+          "tirannwn": [
+            "forinthry",
+            "tirannwn"
+          ]
+        },
+        "perHost": [
+          {
+            "hostRegion": "forinthry",
+            "upgradeIndex": 20,
+            "regionId": "forinthry",
+            "requiredRegions": [
+              "forinthry",
+              "tirannwn"
+            ],
+            "category": "Archaeology / porter sustain",
+            "confidence": "user_ruling_2026-07-26",
+            "sourceTitle": "Grace of the elves",
+            "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+            "verifiedAt": "2026-07-26"
+          },
+          {
+            "hostRegion": "tirannwn",
+            "upgradeIndex": 9,
+            "regionId": "tirannwn",
+            "requiredRegions": [
+              "forinthry",
+              "tirannwn"
+            ],
+            "category": "Seren prayer drain and porter necklace",
+            "confidence": "confirmed_wiki",
+            "sourceTitle": "Grace of the elves",
+            "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+            "verifiedAt": "2026-07-26"
+          }
+        ]
+      },
+      {
+        "action": "KEEP",
+        "name": "Grace of the elves",
+        "note": "KEEP if present as tirannwn base row (exact name without (GOTE) suffix)",
+        "hostCount": 1,
+        "hosts": [
+          "tirannwn"
+        ],
+        "requiredRegionsByHost": {
+          "tirannwn": []
+        },
+        "perHost": [
+          {
+            "hostRegion": "tirannwn",
+            "upgradeIndex": 149,
+            "regionId": "tirannwn",
+            "requiredRegions": [],
+            "category": "Seren prayer drain and porter necklace",
+            "confidence": "confirmed_wiki",
+            "sourceTitle": "Grace of the elves",
+            "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+            "verifiedAt": "2026-07-26"
+          }
+        ]
+      }
+    ],
+    "darkFacetOfGrace": [
+      {
+        "action": "KEEP",
+        "name": "Dark Facet of Grace (GOTE enchantment)",
+        "note": "KEEP — split Dark Facet row; do not remove with mega-chains",
+        "hostCount": 3,
+        "hosts": [
+          "asgarnia",
+          "forinthry",
+          "tirannwn"
+        ],
+        "requiredRegionsByHost": {
+          "asgarnia": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "forinthry": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "tirannwn": [
+            "tirannwn",
+            "forinthry"
+          ]
+        },
+        "perHost": [
+          {
+            "hostRegion": "asgarnia",
+            "upgradeIndex": 118,
+            "regionId": "asgarnia",
+            "requiredRegions": [
+              "tirannwn",
+              "forinthry"
+            ],
+            "category": "Grace of the Elves permanent upgrade",
+            "confidence": "confirmed_wiki",
+            "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+            "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+            "verifiedAt": "2026-07-26"
+          },
+          {
+            "hostRegion": "forinthry",
+            "upgradeIndex": 41,
+            "regionId": "forinthry",
+            "requiredRegions": [
+              "tirannwn",
+              "forinthry"
+            ],
+            "category": "Grace of the Elves permanent upgrade",
+            "confidence": "confirmed_wiki",
+            "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+            "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+            "verifiedAt": "2026-07-26"
+          },
+          {
+            "hostRegion": "tirannwn",
+            "upgradeIndex": 36,
+            "regionId": "tirannwn",
+            "requiredRegions": [
+              "tirannwn",
+              "forinthry"
+            ],
+            "category": "Grace of the Elves permanent upgrade",
+            "confidence": "confirmed_wiki",
+            "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+            "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+            "verifiedAt": "2026-07-26"
+          }
+        ]
+      }
+    ],
+    "herbPatchesN": {
+      "pattern": "Herb patches (N)",
+      "note": "Per-region Farming patch totals from A2 — NOT the global network row",
+      "hostCount": 11,
+      "rows": [
+        {
+          "hostRegion": "misthalin",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 15,
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "misthalin"
+          ]
+        },
+        {
+          "hostRegion": "havenhythe",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 6,
+          "regionId": "havenhythe",
+          "requiredRegions": [
+            "havenhythe"
+          ]
+        },
+        {
+          "hostRegion": "karamja",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 12,
+          "regionId": "karamja",
+          "requiredRegions": [
+            "karamja"
+          ]
+        },
+        {
+          "hostRegion": "asgarnia",
+          "name": "Herb patches (2)",
+          "upgradeIndex": 8,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "asgarnia"
+          ]
+        },
+        {
+          "hostRegion": "kandarin",
+          "name": "Herb patches (4)",
+          "upgradeIndex": 25,
+          "regionId": "kandarin",
+          "requiredRegions": [
+            "kandarin"
+          ]
+        },
+        {
+          "hostRegion": "fremennik",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 5,
+          "regionId": "fremennik",
+          "requiredRegions": [
+            "fremennik"
+          ]
+        },
+        {
+          "hostRegion": "forinthry",
+          "name": "Herb patches (0)",
+          "upgradeIndex": 19,
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "forinthry"
+          ]
+        },
+        {
+          "hostRegion": "desert",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 16,
+          "regionId": "desert",
+          "requiredRegions": [
+            "desert"
+          ]
+        },
+        {
+          "hostRegion": "morytania",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 19,
+          "regionId": "morytania",
+          "requiredRegions": [
+            "morytania"
+          ]
+        },
+        {
+          "hostRegion": "tirannwn",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 11,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn"
+          ]
+        },
+        {
+          "hostRegion": "anachronia",
+          "name": "Herb patches (1)",
+          "upgradeIndex": 26,
+          "regionId": "anachronia",
+          "requiredRegions": [
+            "anachronia"
+          ]
+        }
+      ]
+    }
+  },
+  "removeCandidates": [
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Hoardstalker ring",
+      "rulingCode": "A4 not relevant",
+      "hostCount": 8,
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "karamja": [],
+        "asgarnia": [],
+        "kandarin": [],
+        "forinthry": [],
+        "desert": [],
+        "morytania": [],
+        "tirannwn": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 70,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "karamja",
+          "upgradeIndex": 31,
+          "regionId": "karamja",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 157,
+          "regionId": "asgarnia",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 86,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 91,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 107,
+          "regionId": "desert",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 59,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 67,
+          "regionId": "tirannwn",
+          "requiredRegions": [],
+          "category": "resource dungeon teleport ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Hoardstalker ring",
+          "sourceUrl": "https://runescape.wiki/w/Hoardstalker_ring",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "rulingCode": "A5 global",
+      "hostCount": 8,
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "karamja": [],
+        "kandarin": [],
+        "forinthry": [],
+        "desert": [],
+        "morytania": [],
+        "tirannwn": [],
+        "anachronia": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 216,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "karamja",
+          "upgradeIndex": 76,
+          "regionId": "karamja",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 178,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 149,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 139,
+          "regionId": "desert",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 134,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 96,
+          "regionId": "tirannwn",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "anachronia",
+          "upgradeIndex": 117,
+          "regionId": "anachronia",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "rulingCode": "A6 not relevant",
+      "hostCount": 8,
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "karamja": [],
+        "kandarin": [],
+        "forinthry": [],
+        "desert": [],
+        "morytania": [],
+        "tirannwn": [],
+        "anachronia": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 222,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "karamja",
+          "upgradeIndex": 81,
+          "regionId": "karamja",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 183,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 153,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 144,
+          "regionId": "desert",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 140,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 100,
+          "regionId": "tirannwn",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "anachronia",
+          "upgradeIndex": 121,
+          "regionId": "anachronia",
+          "requiredRegions": [],
+          "category": "permanent Slayer Rewards Learn unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Learn quicker killing blows (400 Slayer points)",
+          "sourceUrl": "https://runescape.wiki/w/Slayer_Rewards",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Games necklace teleport package",
+      "rulingCode": "A8 not relevant",
+      "hostCount": 5,
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "morytania"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "asgarnia": [],
+        "kandarin": [],
+        "forinthry": [],
+        "morytania": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 36,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "permanent multi-destination enchanted jewellery travel package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Games necklace teleport package",
+          "sourceUrl": "https://runescape.wiki/w/Games_necklace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 124,
+          "regionId": "asgarnia",
+          "requiredRegions": [],
+          "category": "permanent multi-destination enchanted jewellery travel package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Games necklace teleport package",
+          "sourceUrl": "https://runescape.wiki/w/Games_necklace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 57,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "permanent multi-destination enchanted jewellery travel package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Games necklace teleport package",
+          "sourceUrl": "https://runescape.wiki/w/Games_necklace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 45,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "permanent multi-destination enchanted jewellery travel package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Games necklace teleport package",
+          "sourceUrl": "https://runescape.wiki/w/Games_necklace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 36,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "permanent multi-destination enchanted jewellery travel package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Games necklace teleport package",
+          "sourceUrl": "https://runescape.wiki/w/Games_necklace",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Ring of duelling",
+      "rulingCode": "A11 not relevant",
+      "hostCount": 4,
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "desert"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "asgarnia": [],
+        "kandarin": [],
+        "desert": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 56,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "permanent multi-destination travel ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ring of duelling",
+          "sourceUrl": "https://runescape.wiki/w/Ring_of_duelling",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 149,
+          "regionId": "asgarnia",
+          "requiredRegions": [],
+          "category": "permanent multi-destination travel ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ring of duelling",
+          "sourceUrl": "https://runescape.wiki/w/Ring_of_duelling",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 72,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "permanent multi-destination travel ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ring of duelling",
+          "sourceUrl": "https://runescape.wiki/w/Ring_of_duelling",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 53,
+          "regionId": "desert",
+          "requiredRegions": [],
+          "category": "permanent multi-destination travel ring",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ring of duelling",
+          "sourceUrl": "https://runescape.wiki/w/Ring_of_duelling",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Cremation ability unlock",
+      "rulingCode": "A12 skip",
+      "hostCount": 3,
+      "hosts": [
+        "misthalin",
+        "forinthry",
+        "morytania"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "forinthry": [],
+        "morytania": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 206,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "Prayer permanent ability unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Cremation ability unlock",
+          "sourceUrl": "https://runescape.wiki/w/Cremation",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 143,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "Prayer permanent ability unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Cremation ability unlock",
+          "sourceUrl": "https://runescape.wiki/w/Cremation",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 93,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "Prayer permanent ability unlock",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Cremation ability unlock",
+          "sourceUrl": "https://runescape.wiki/w/Cremation",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Ore box tier upgrades",
+      "rulingCode": "A13 not region locked",
+      "hostCount": 2,
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "requiredRegionsByHost": {
+        "asgarnia": [],
+        "forinthry": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 77,
+          "regionId": "asgarnia",
+          "requiredRegions": [],
+          "category": "Mining inventory tool progression",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ore box tier upgrades",
+          "sourceUrl": "https://runescape.wiki/w/Ore_boxes",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 31,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "Mining inventory tool progression",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Ore box tier upgrades",
+          "sourceUrl": "https://runescape.wiki/w/Ore_boxes",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Herb patch network (global herb-run map)",
+      "rulingCode": "A2 replace with per-region Herb patches (N)",
+      "hostCount": 9,
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [],
+        "karamja": [],
+        "asgarnia": [],
+        "kandarin": [],
+        "fremennik": [],
+        "forinthry": [],
+        "desert": [],
+        "morytania": [],
+        "tirannwn": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 43,
+          "regionId": "misthalin",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "karamja",
+          "upgradeIndex": 22,
+          "regionId": "karamja",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 132,
+          "regionId": "asgarnia",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 61,
+          "regionId": "kandarin",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "fremennik",
+          "upgradeIndex": 22,
+          "regionId": "fremennik",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 50,
+          "regionId": "forinthry",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 44,
+          "regionId": "desert",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 41,
+          "regionId": "morytania",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 45,
+          "regionId": "tirannwn",
+          "requiredRegions": [],
+          "category": "Farming cross-region patch network package",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Herb patch network (global herb-run map)",
+          "sourceUrl": "https://runescape.wiki/w/Herb_patch",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "rulingCode": "B2 do not mega-chain",
+      "hostCount": 7,
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "asgarnia": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "kandarin": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "forinthry": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "desert": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "morytania": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "tirannwn": [
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 37,
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 126,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 58,
+          "regionId": "kandarin",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 47,
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 41,
+          "regionId": "desert",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 37,
+          "regionId": "morytania",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 39,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "cross-region Seren prayer and porter sustain stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "GOTE gather + porter sustain checklist",
+      "rulingCode": "B4 residual checklist",
+      "hostCount": 7,
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "asgarnia": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "kandarin": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "forinthry": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "desert": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "morytania": [
+          "tirannwn",
+          "asgarnia"
+        ],
+        "tirannwn": [
+          "tirannwn",
+          "asgarnia"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 38,
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 127,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 59,
+          "regionId": "kandarin",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 48,
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "desert",
+          "upgradeIndex": 42,
+          "regionId": "desert",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "morytania",
+          "upgradeIndex": 38,
+          "regionId": "morytania",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 40,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn",
+            "asgarnia"
+          ],
+          "category": "Grace of the Elves gather residual checklist",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "GOTE gather + porter sustain checklist",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Signs of the porter (Divination supply system)",
+      "rulingCode": "F5 no region need",
+      "hostCount": 4,
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "misthalin": [
+          "kandarin",
+          "tirannwn"
+        ],
+        "asgarnia": [
+          "kandarin",
+          "tirannwn"
+        ],
+        "kandarin": [
+          "kandarin",
+          "tirannwn"
+        ],
+        "tirannwn": [
+          "kandarin",
+          "tirannwn"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "misthalin",
+          "upgradeIndex": 61,
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "category": "Divination bank-transport supply chain",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Signs of the porter (Divination supply system)",
+          "sourceUrl": "https://runescape.wiki/w/Sign_of_the_porter",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 150,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "category": "Divination bank-transport supply chain",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Signs of the porter (Divination supply system)",
+          "sourceUrl": "https://runescape.wiki/w/Sign_of_the_porter",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 76,
+          "regionId": "kandarin",
+          "requiredRegions": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "category": "Divination bank-transport supply chain",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Signs of the porter (Divination supply system)",
+          "sourceUrl": "https://runescape.wiki/w/Sign_of_the_porter",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 62,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "category": "Divination bank-transport supply chain",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Signs of the porter (Divination supply system)",
+          "sourceUrl": "https://runescape.wiki/w/Sign_of_the_porter",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "REMOVE_ALL_HOSTS",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "rulingCode": "B10 ignore combo",
+      "hostCount": 4,
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "tirannwn",
+        "anachronia"
+      ],
+      "requiredRegionsByHost": {
+        "asgarnia": [
+          "kandarin",
+          "anachronia"
+        ],
+        "kandarin": [
+          "kandarin",
+          "anachronia"
+        ],
+        "tirannwn": [
+          "kandarin",
+          "anachronia"
+        ],
+        "anachronia": [
+          "kandarin",
+          "anachronia"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 123,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "kandarin",
+            "anachronia"
+          ],
+          "category": "cross-region Fishing elite outfit and auto-cook stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "Fury shark outfit + Bait and Switch Fishing stack",
+          "sourceUrl": "https://runescape.wiki/w/Fury_shark_outfit",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "kandarin",
+          "upgradeIndex": 56,
+          "regionId": "kandarin",
+          "requiredRegions": [
+            "kandarin",
+            "anachronia"
+          ],
+          "category": "cross-region Fishing elite outfit and auto-cook stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "Fury shark outfit + Bait and Switch Fishing stack",
+          "sourceUrl": "https://runescape.wiki/w/Fury_shark_outfit",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 38,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "kandarin",
+            "anachronia"
+          ],
+          "category": "cross-region Fishing elite outfit and auto-cook stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "Fury shark outfit + Bait and Switch Fishing stack",
+          "sourceUrl": "https://runescape.wiki/w/Fury_shark_outfit",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "anachronia",
+          "upgradeIndex": 81,
+          "regionId": "anachronia",
+          "requiredRegions": [
+            "kandarin",
+            "anachronia"
+          ],
+          "category": "cross-region Fishing elite outfit and auto-cook stack",
+          "confidence": "confirmed_wiki_cross_region_stack",
+          "sourceTitle": "Fury shark outfit + Bait and Switch Fishing stack",
+          "sourceUrl": "https://runescape.wiki/w/Fury_shark_outfit",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    }
+  ],
+  "keepCandidates": [
+    {
+      "action": "KEEP",
+      "name": "Grace of the elves (GOTE)",
+      "note": "KEEP — split base GOTE row; do not remove with mega-chains",
+      "hostCount": 2,
+      "hosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "forinthry": [
+          "forinthry",
+          "tirannwn"
+        ],
+        "tirannwn": [
+          "forinthry",
+          "tirannwn"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 20,
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "forinthry",
+            "tirannwn"
+          ],
+          "category": "Archaeology / porter sustain",
+          "confidence": "user_ruling_2026-07-26",
+          "sourceTitle": "Grace of the elves",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 9,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "forinthry",
+            "tirannwn"
+          ],
+          "category": "Seren prayer drain and porter necklace",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Grace of the elves",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "KEEP",
+      "name": "Grace of the elves",
+      "note": "KEEP if present as tirannwn base row (exact name without (GOTE) suffix)",
+      "hostCount": 1,
+      "hosts": [
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "tirannwn": []
+      },
+      "perHost": [
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 149,
+          "regionId": "tirannwn",
+          "requiredRegions": [],
+          "category": "Seren prayer drain and porter necklace",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Grace of the elves",
+          "sourceUrl": "https://runescape.wiki/w/Grace_of_the_elves",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "action": "KEEP",
+      "name": "Dark Facet of Grace (GOTE enchantment)",
+      "note": "KEEP — split Dark Facet row; do not remove with mega-chains",
+      "hostCount": 3,
+      "hosts": [
+        "asgarnia",
+        "forinthry",
+        "tirannwn"
+      ],
+      "requiredRegionsByHost": {
+        "asgarnia": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "forinthry": [
+          "tirannwn",
+          "forinthry"
+        ],
+        "tirannwn": [
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "perHost": [
+        {
+          "hostRegion": "asgarnia",
+          "upgradeIndex": 118,
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "Grace of the Elves permanent upgrade",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+          "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "forinthry",
+          "upgradeIndex": 41,
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "Grace of the Elves permanent upgrade",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+          "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "hostRegion": "tirannwn",
+          "upgradeIndex": 36,
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "category": "Grace of the Elves permanent upgrade",
+          "confidence": "confirmed_wiki",
+          "sourceTitle": "Dark Facet of Grace (GOTE enchantment)",
+          "sourceUrl": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    }
+  ],
+  "researchUnlockIds": {
+    "Hoardstalker ring": {
+      "id": "forinthry:hoardstalker-ring",
+      "regionHints": [
+        "forinthry",
+        "asgarnia",
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "morytania",
+        "desert",
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Learn broad arrow / bolt fletching (300 Slayer points)": {
+      "id": "multi-region:slayer-broad-fletching",
+      "regionHints": [
+        "desert",
+        "karamja",
+        "kandarin",
+        "tirannwn",
+        "anachronia",
+        "misthalin",
+        "morytania",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Learn quicker killing blows (400 Slayer points)": {
+      "id": "multi-region:slayer-quick-killing-blows",
+      "regionHints": [
+        "desert",
+        "karamja",
+        "kandarin",
+        "tirannwn",
+        "anachronia",
+        "morytania",
+        "misthalin",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Games necklace teleport package": {
+      "id": "cross-region:games-necklace-package",
+      "regionHints": [
+        "asgarnia",
+        "kandarin",
+        "misthalin",
+        "morytania",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Ring of duelling": {
+      "id": "cross-region:ring-of-duelling",
+      "regionHints": [
+        "desert",
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Cremation ability unlock": {
+      "id": "morytania:cremation-ability",
+      "regionHints": [
+        "morytania",
+        "forinthry",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Ore box tier upgrades": {
+      "id": "asgarnia:ore-box-tier-upgrades",
+      "regionHints": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "Herb patch network (global herb-run map)": {
+      "id": "cross-region:herb-patch-network",
+      "regionHints": [
+        "asgarnia",
+        "kandarin",
+        "morytania",
+        "desert",
+        "forinthry",
+        "fremennik",
+        "misthalin",
+        "karamja",
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support"
+    },
+    "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain": {
+      "id": "cross-region:gote-dark-facet-ritual-shard-sustain",
+      "regionHints": [
+        "tirannwn",
+        "forinthry",
+        "asgarnia",
+        "desert",
+        "morytania",
+        "kandarin",
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "regionRequirementType": "all_required"
+    },
+    "GOTE gather + porter sustain checklist": {
+      "id": "cross-region:gote-gather-porter-checklist",
+      "regionHints": [
+        "tirannwn",
+        "asgarnia",
+        "forinthry",
+        "desert",
+        "kandarin",
+        "morytania",
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "asgarnia"
+      ],
+      "regionRequirementType": "all_required"
+    },
+    "Signs of the porter (Divination supply system)": {
+      "id": "cross-region:signs-of-the-porter-supply",
+      "regionHints": [
+        "kandarin",
+        "tirannwn",
+        "asgarnia",
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "regionRequirementType": "all_required"
+    },
+    "Fury shark outfit + Bait and Switch Fishing stack": {
+      "id": "cross-region:fury-shark-bait-and-switch-stack",
+      "regionHints": [
+        "kandarin",
+        "anachronia",
+        "asgarnia",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "kandarin",
+        "anachronia"
+      ],
+      "regionRequirementType": "all_required"
+    },
+    "Grace of the elves": {
+      "id": "tirannwn:grace-of-the-elves",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "single"
+    },
+    "Dark Facet of Grace (GOTE enchantment)": {
+      "id": "cross-region:dark-facet-of-grace",
+      "regionHints": [
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "regionRequirementType": "all_required"
+    }
+  }
+}

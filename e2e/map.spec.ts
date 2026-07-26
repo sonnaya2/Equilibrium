@@ -22,14 +22,15 @@ test("region planner lists all 11 regions", async ({ page }) => {
   ]) {
     await expect(page.getByRole("button", { name: new RegExp(`^${name}`) })).toBeVisible();
   }
-  await expect(page.getByText("0/3")).toBeVisible();
+  // Nav mast + ledger both show N/3 after champion shell.
+  await expect(page.getByText("0/3").first()).toBeVisible();
 });
 
 test("elective picks cap at three and persist", async ({ page }) => {
   for (const name of ["Kharidian Desert", "Morytania", "Tirannwn"]) {
     await page.getByRole("button", { name: new RegExp(`^${name}`) }).click();
   }
-  await expect(page.getByText("3/3")).toBeVisible();
+  await expect(page.getByText("3/3").first()).toBeVisible();
 
   // Cap blocks pick, not focus — we use aria-disabled, not the native disabled
   // attribute (Playwright treats aria-disabled as not "enabled").
@@ -40,10 +41,10 @@ test("elective picks cap at three and persist", async ({ page }) => {
   await expect(fourth).toBeFocused();
 
   await page.reload();
-  await expect(page.getByText("3/3")).toBeVisible();
+  await expect(page.getByText("3/3").first()).toBeVisible();
 
   await page.getByRole("button", { name: "Clear picks" }).click();
-  await expect(page.getByText("0/3")).toBeVisible();
+  await expect(page.getByText("0/3").first()).toBeVisible();
 });
 
 test("region detail joins against verified data", async ({ page }) => {

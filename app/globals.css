@@ -1,37 +1,34 @@
 @import "tailwindcss";
 
 /*
-  Sampled from the in-game league panel and RuneScape: DragonWilds key art.
-  Tournament R2–R4 (color/readability): lifted parch ink + slight stage raise
-  so labels clear 4.5:1 without bleaching the room. Void stays league-dark.
-  Chrome accent gem green; gold = display only; path triad = data only.
-  Full rationale: equilibrium-ui skill + /concepts tournament ledger.
+  Hybrid composition champion (Team Composite 9.2) — production skin.
+  Colors: Editorial (Echo ladder). Route DNA varies by page (see AGENTS / equilibrium-ui).
+
+  Gem = interactive chrome only. Gold = display titles. Path triad = data only.
+  Sampled from 2026 keyart + Editorial tournament craft. No gen-AI.
 */
 @theme {
-  /* Body / secondary ink — quiet end of ramp lifted for caption contrast */
-  --color-parch-50: #f0e9d7;
-  --color-parch-100: #e0d4ba;
-  --color-parch-300: #c8b89c;
-  --color-parch-400: #b5a68c;
-  --color-parch-500: #a3967e;
+  --color-parch-50: #f1e9d6;
+  --color-parch-100: #e0d4b8;
+  --color-parch-300: #c4b59a;
+  --color-parch-400: #a8987c;
+  --color-parch-500: #8a7a60;
 
-  /* Surfaces: void dark · shell · rail/panel · stage · border · carve */
-  --color-stone-750: #463a29;
-  --color-stone-800: #231c14;
-  --color-stone-850: #1c1711;
-  --color-stone-900: #12100c;
-  --color-stone-950: #0d0a07;
-  --color-stone-carve: #5c4a34;
-  /* Table zebra + selected row fill (not a second chrome accent) */
-  --color-stone-zebra: #1a1510;
-  --color-stone-raised: #2a2218;
-  --color-stone-inset: #18140f;
+  --color-stone-750: #4a3d2c;
+  --color-stone-800: #1f1912;
+  --color-stone-850: #16120e;
+  --color-stone-900: #100e0b;
+  --color-stone-950: #0a0806;
+  --color-stone-carve: #6a563e;
+  --color-stone-zebra: #18140f;
+  --color-stone-raised: #2a231b;
+  --color-stone-inset: #12100c;
 
-  --color-gold-300: #f3c97b;
+  --color-gold-300: #f0d08a;
   --color-gold-400: #e0b264;
-  --color-gold-500: #a87c3c;
+  --color-gold-500: #b88a42;
 
-  --color-gem-200: #8ff0cd;
+  --color-gem-200: #9af5d4;
   --color-gem-300: #57e0ae;
   --color-gem-400: #2ecb8f;
   --color-gem-500: #1fa372;
@@ -59,6 +56,8 @@ html {
 body {
   background: var(--color-stone-950);
   color: var(--color-parch-50);
+  font-size: 0.9375rem;
+  line-height: 1.5;
   font-variant-numeric: tabular-nums;
 }
 
@@ -72,7 +71,7 @@ a,
 input,
 select,
 textarea {
-  transition-property: color, border-color, background-color;
+  transition-property: color, border-color, background-color, box-shadow;
   transition-duration: 90ms;
 }
 
@@ -97,12 +96,19 @@ textarea:focus-visible {
 }
 
 @layer components {
-  /* Carved stone: hairline border with a lit top edge. The one depth method. */
   .panel {
-    background: var(--color-stone-850);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-stone-raised) 18%, var(--color-stone-850)) 0%,
+        var(--color-stone-850) 45%,
+        color-mix(in srgb, var(--color-stone-900) 40%, var(--color-stone-850)) 100%
+      );
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
-    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+    box-shadow:
+      inset 0 1px 0 var(--color-stone-carve),
+      0 1px 3px color-mix(in srgb, var(--color-stone-950) 40%, transparent);
   }
   .panel-head {
     padding: 0.625rem 0.875rem;
@@ -115,14 +121,10 @@ textarea:focus-visible {
     padding: 0.875rem;
   }
 
-  /*
-    Dense data table — Wiki Dense law (tournament R2–R4):
-    15px body, 12px bright headers, zebra, sticky opaque thead.
-  */
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9375rem; /* 15px */
+    font-size: 0.9375rem;
     line-height: 1.4;
     background: var(--color-stone-800);
   }
@@ -133,7 +135,7 @@ textarea:focus-visible {
     padding: 0.5rem 0.625rem;
     border-bottom: 1px solid var(--color-stone-750);
     background: var(--color-stone-800);
-    font-size: 0.75rem; /* 12px */
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-align: left;
@@ -165,7 +167,6 @@ textarea:focus-visible {
     font-variant-numeric: tabular-nums;
   }
 
-  /* The key figure on a screen. */
   .stat-key {
     font-family: var(--font-mono);
     font-size: 1.75rem;
@@ -173,7 +174,6 @@ textarea:focus-visible {
     color: var(--color-gem-400);
   }
 
-  /* Small state tag (unverified, provisional). One border, no fill. */
   .tag {
     display: inline-block;
     padding: 0.125rem 0.375rem;
@@ -185,14 +185,984 @@ textarea:focus-visible {
     color: var(--color-parch-100);
   }
 
-  /* Input wells dig in darker than table stage */
   .field-inset {
     background: var(--color-stone-inset);
     border: 1px solid var(--color-stone-750);
     color: var(--color-parch-50);
   }
 
-  /* Lattice cell: the hexagon is the layout grid, not a logo. */
+  /* Daylight Overview — courtyard gate (keyart = aperture) */
+  .art-stage {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    min-height: 14rem;
+    background: var(--color-stone-900);
+  }
+  .art-stage img {
+    display: block;
+    width: 100%;
+    height: 14rem;
+    object-fit: cover;
+    object-position: 50% 38%;
+  }
+  .art-stage-veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-stone-950) 90%, transparent) 0%,
+        color-mix(in srgb, var(--color-stone-950) 40%, transparent) 38%,
+        transparent 68%
+      ),
+      linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--color-stone-950) 80%, transparent) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+  }
+  .art-stage-copy {
+    position: absolute;
+    left: 1.25rem;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    z-index: 1;
+  }
+
+  .courtyard {
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background:
+      radial-gradient(
+        ellipse 120% 55% at 50% 0%,
+        color-mix(in srgb, var(--color-stone-800) 55%, var(--color-stone-950)) 0%,
+        var(--color-stone-950) 72%
+      );
+  }
+  .courtyard-lintel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.65rem 1rem 0.55rem;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-gold-500) 12%, var(--color-stone-raised)) 0%,
+        var(--color-stone-900) 55%,
+        color-mix(in srgb, var(--color-stone-950) 40%, var(--color-stone-900)) 100%
+      );
+    border-bottom: 1px solid var(--color-stone-750);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-gold-400) 22%, transparent),
+      inset 0 -1px 0 rgb(10 8 6 / 50%);
+  }
+  .courtyard-lintel__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-gold-400);
+  }
+  .courtyard-lintel__meta {
+    margin: 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-parch-300);
+  }
+  .courtyard-gate {
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) minmax(7rem, 10rem);
+    min-height: 14rem;
+    border-bottom: 1px solid var(--color-stone-750);
+  }
+  @media (max-width: 720px) {
+    .courtyard-gate {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+  }
+  .courtyard-jamb {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 0.65rem;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-900)) 0%,
+        var(--color-stone-900) 40%,
+        color-mix(in srgb, var(--color-stone-950) 30%, var(--color-stone-900)) 100%
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent);
+  }
+  .courtyard-jamb--west {
+    border-right: 1px solid var(--color-stone-750);
+  }
+  .courtyard-jamb--east {
+    border-left: 1px solid var(--color-stone-750);
+  }
+  @media (max-width: 720px) {
+    .courtyard-jamb--west,
+    .courtyard-jamb--east {
+      border: 0;
+      border-bottom: 1px solid var(--color-stone-750);
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+  }
+  .courtyard-jamb__label {
+    margin: 0;
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-parch-400);
+  }
+  .courtyard-standing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.35rem;
+    text-align: center;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-gold-500) 8%, var(--color-stone-raised)) 0%,
+        var(--color-stone-850) 100%
+      );
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  }
+  .courtyard-standing.is-empty {
+    min-height: 3.75rem;
+    justify-content: center;
+    border-style: dashed;
+    background: color-mix(in srgb, var(--color-stone-inset) 70%, var(--color-stone-900));
+    color: var(--color-parch-400);
+    font-size: 0.6875rem;
+  }
+  .courtyard-standing__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--color-gold-400);
+  }
+  .courtyard-aperture {
+    position: relative;
+    min-height: 14rem;
+    overflow: hidden;
+    background: var(--color-stone-950);
+  }
+  .courtyard-aperture img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 14rem;
+    object-fit: cover;
+    object-position: 50% 38%;
+  }
+  .courtyard-aperture__caption {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.65rem;
+    margin: 0;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-parch-100);
+    text-shadow: 0 1px 2px rgb(10 8 6 / 80%);
+  }
+  .courtyard-milestone {
+    padding: 0.4rem 0.45rem;
+    border: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+  }
+  .courtyard-milestone__k {
+    margin: 0;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-parch-400);
+  }
+  .courtyard-milestone__v {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-parch-50);
+  }
+  .courtyard-milestone__v.is-quiet {
+    color: var(--color-parch-400);
+  }
+  .courtyard-desk {
+    display: grid;
+    gap: 0;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-stone-900);
+  }
+  @media (max-width: 720px) {
+    .courtyard-desk {
+      grid-template-columns: 1fr;
+    }
+  }
+  .courtyard-desk .panel {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .courtyard-desk .panel + .panel {
+    border-left: 1px solid var(--color-stone-750);
+  }
+  @media (max-width: 720px) {
+    .courtyard-desk .panel + .panel {
+      border-left: 0;
+      border-top: 1px solid var(--color-stone-750);
+    }
+  }
+  .courtyard-ledger {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.45rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+  .courtyard-ledger dt {
+    color: var(--color-parch-300);
+  }
+  .courtyard-ledger dd {
+    margin: 0;
+    color: var(--color-parch-50);
+  }
+
+  /* Map Board Sky — 3D primary, ledger+detail under (no side inspector) */
+  .board-sky {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .board-sky__board {
+    min-height: min(58vh, 560px);
+    overflow: hidden;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background: var(--color-stone-900);
+  }
+  .board-sky__under {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .board-sky__ledger {
+    max-height: none;
+  }
+
+  /* Twin desk — Tasks / Data sibling (rail | stage | inspector) */
+  .twin-desk {
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-stone-900);
+  }
+  .twin-desk__grid {
+    display: grid;
+    min-height: 28rem;
+    grid-template-columns: minmax(9rem, 11.5rem) minmax(0, 1fr) minmax(14rem, 17rem);
+  }
+  @media (max-width: 960px) {
+    .twin-desk__grid {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+  }
+  .twin-desk__rail {
+    border-right: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+    max-height: min(70vh, 40rem);
+    overflow-y: auto;
+  }
+  @media (max-width: 960px) {
+    .twin-desk__rail {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-stone-750);
+      max-height: 12rem;
+    }
+  }
+  .twin-desk__stage {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--color-stone-750);
+  }
+  @media (max-width: 960px) {
+    .twin-desk__stage {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-stone-750);
+    }
+  }
+  .twin-desk__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+  }
+  .twin-desk__title {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-parch-50);
+  }
+  .twin-desk__count {
+    font-size: 0.75rem;
+    color: var(--color-parch-100);
+  }
+  .twin-desk__table-wrap {
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
+  }
+  .twin-desk__inspector {
+    background: var(--color-stone-900);
+    padding: 0.75rem;
+    max-height: min(70vh, 40rem);
+    overflow-y: auto;
+  }
+  @media (max-width: 960px) {
+    .twin-desk__inspector {
+      max-height: none;
+    }
+  }
+  .twin-desk__rail-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
+    text-align: left;
+    font-size: 0.8125rem;
+    color: var(--color-parch-100);
+  }
+  .twin-desk__rail-item:hover {
+    background: color-mix(in srgb, var(--color-stone-raised) 60%, transparent);
+    color: var(--color-parch-50);
+  }
+  .twin-desk__rail-item.is-active {
+    background: var(--color-stone-raised);
+    color: var(--color-gem-300);
+  }
+  .twin-desk table.data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--color-stone-850);
+  }
+  .twin-desk tr.is-selected td {
+    background: color-mix(in srgb, var(--color-stone-raised) 70%, transparent);
+  }
+
+  /*
+    Tasks desk — R2 Composite density (production).
+    Scoped .tasks-desk only — do not reuse on Data twin-desk / research browse.
+    28px single-line rows · crest facets · Spike drawer (no permanent bay).
+  */
+  .tasks-desk {
+    --tasks-row-h: 1.75rem;
+    --tasks-head-h: 1.5rem;
+    --tasks-gap: 0.35rem;
+    --tasks-pad-x: 0.4rem;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    background: var(--color-stone-950);
+    color: var(--color-parch-50);
+    border: 1px solid var(--color-stone-750);
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+  .tasks-desk :focus-visible {
+    outline: 1px solid var(--color-gem-400);
+    outline-offset: 2px;
+  }
+  .tasks-desk button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .tasks-desk__facets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.35rem;
+    padding: 0.25rem 0.4rem;
+    background: var(--color-stone-900);
+    border-bottom: 1px solid var(--color-stone-750);
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  .tasks-desk__title {
+    margin: 0;
+    font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gold-400);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tasks-desk__count {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-parch-300);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tasks-desk__count .is-pts {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__search {
+    flex: 0 1 9rem;
+    min-width: 5.5rem;
+    max-width: 12rem;
+    margin: 0;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.8125rem;
+    color: var(--color-parch-50);
+    background: var(--color-stone-inset);
+    border: 1px solid var(--color-stone-750);
+    border-radius: 2px;
+  }
+  .tasks-desk__search::placeholder {
+    color: var(--color-parch-400);
+  }
+  .tasks-desk__chip {
+    border: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+    padding: 0.12rem 0.35rem;
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    color: var(--color-parch-100);
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tasks-desk__chip:hover:not([aria-pressed="true"]) {
+    color: var(--color-parch-50);
+    border-color: var(--color-stone-carve);
+  }
+  .tasks-desk__chip[aria-pressed="true"] {
+    border-color: var(--color-gem-500);
+    color: var(--color-gem-300);
+    background: var(--color-stone-raised);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
+  }
+  .tasks-desk__chip--tier {
+    text-transform: capitalize;
+  }
+  .tasks-desk__group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.15rem;
+    flex-shrink: 0;
+  }
+  .tasks-desk__crests {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.12rem;
+    margin-left: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    padding: 0.05rem 0;
+  }
+  .tasks-desk__crest {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.1rem 0.25rem;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 2px;
+    color: var(--color-parch-100);
+    white-space: nowrap;
+  }
+  .tasks-desk__crest:hover:not([aria-pressed="true"]) {
+    color: var(--color-parch-50);
+    background: color-mix(in srgb, var(--color-stone-raised) 55%, transparent);
+  }
+  .tasks-desk__crest[aria-pressed="true"] {
+    border-color: var(--color-gem-500);
+    color: var(--color-gem-300);
+    background: var(--color-stone-raised);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 22%, transparent);
+  }
+  .tasks-desk__crest-name {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+  .tasks-desk__crest-n {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__crest[aria-pressed="true"] .tasks-desk__crest-n {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__hint {
+    margin: 0;
+    padding: 0.15rem 0.45rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
+    font-size: 0.6875rem;
+    color: var(--color-parch-300);
+    flex-shrink: 0;
+  }
+  .tasks-desk__hint a {
+    color: var(--color-gem-300);
+    text-decoration: none;
+  }
+  .tasks-desk__hint a:hover {
+    text-decoration: underline;
+  }
+
+  .tasks-desk__cols {
+    display: grid;
+    grid-template-columns: 1.15rem minmax(0, 1fr) 3.75rem 3.25rem 2.5rem;
+    column-gap: var(--tasks-gap);
+    align-items: center;
+    padding-inline: var(--tasks-pad-x);
+  }
+  .tasks-desk__cols--no-comp {
+    grid-template-columns: 1.15rem minmax(0, 1fr) 3.75rem 2.5rem;
+  }
+
+  .tasks-desk__stage {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .tasks-desk__list {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    background: var(--color-stone-800);
+    scrollbar-width: thin;
+  }
+  .tasks-desk__empty {
+    margin: 0;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-parch-100);
+  }
+  .tasks-desk__thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: var(--tasks-head-h);
+    border-bottom: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-parch-100);
+    box-shadow: 0 1px 0 var(--color-stone-750);
+  }
+  .tasks-desk__th-num {
+    text-align: right;
+  }
+  .tasks-desk__body {
+    position: relative;
+    width: 100%;
+  }
+  .tasks-desk__row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--tasks-row-h);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 55%, transparent);
+    box-sizing: border-box;
+  }
+  .tasks-desk__row.is-zebra {
+    background: color-mix(in srgb, var(--color-stone-zebra) 70%, transparent);
+  }
+  .tasks-desk__row.is-on {
+    background: color-mix(in srgb, var(--color-stone-raised) 85%, transparent);
+    box-shadow: inset 2px 0 0 var(--color-gem-400);
+  }
+  .tasks-desk__row.is-done .tasks-desk__name {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__row-inner {
+    height: 100%;
+    cursor: pointer;
+  }
+  .tasks-desk__row-inner:focus-visible {
+    outline: 1px solid var(--color-gem-400);
+    outline-offset: -1px;
+  }
+  .tasks-desk__check {
+    width: 0.85rem;
+    height: 0.85rem;
+    margin: 0;
+    accent-color: var(--color-gem-500);
+    cursor: pointer;
+  }
+  .tasks-desk__name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    color: var(--color-parch-50);
+    cursor: pointer;
+  }
+  .tasks-desk__tier {
+    font-size: 0.75rem;
+    text-align: right;
+    text-transform: capitalize;
+    color: var(--color-parch-100);
+  }
+  .tasks-desk__num {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--color-parch-50);
+  }
+  .tasks-desk__num.is-done {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__num .is-mute,
+  .tasks-desk__num.is-mute {
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__wiki {
+    color: var(--color-parch-50);
+    text-decoration: underline;
+    text-decoration-color: var(--color-stone-750);
+    text-underline-offset: 3px;
+  }
+  .tasks-desk__wiki:hover {
+    color: var(--color-gem-300);
+  }
+
+  .tasks-desk__drawer {
+    flex: 0 0 auto;
+    border-top: 1px solid var(--color-stone-750);
+    background: var(--color-stone-900);
+    padding: 0.4rem 0.55rem 0.5rem;
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  }
+  .tasks-desk__drawer-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.45rem 0.75rem;
+  }
+  .tasks-desk__drawer-title-wrap {
+    min-width: 0;
+    flex: 1 1 12rem;
+  }
+  .tasks-desk__drawer-title {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    color: var(--color-parch-50);
+  }
+  .tasks-desk__drawer-title.is-done {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__drawer-meta {
+    margin: 0.15rem 0 0;
+    font-size: 0.6875rem;
+    color: var(--color-parch-100);
+    text-transform: capitalize;
+  }
+  .tasks-desk__drawer-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.85rem;
+    margin: 0;
+    font-size: 0.75rem;
+  }
+  .tasks-desk__drawer-facts dt {
+    display: inline;
+    margin: 0;
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__drawer-facts dt::after {
+    content: " ";
+  }
+  .tasks-desk__drawer-facts dd {
+    display: inline;
+    margin: 0 0.65rem 0 0;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-parch-50);
+  }
+  .tasks-desk__drawer-facts dd.is-pts {
+    color: var(--color-gem-400);
+  }
+  .tasks-desk__drawer-facts dd.is-plain {
+    font-family: inherit;
+  }
+  .tasks-desk__close {
+    margin-left: auto;
+    border: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+    color: var(--color-parch-100);
+    padding: 0.15rem 0.45rem;
+    font-size: 0.6875rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .tasks-desk__close:hover {
+    color: var(--color-parch-50);
+    border-color: var(--color-stone-carve);
+  }
+  .tasks-desk__drawer-body {
+    margin: 0.35rem 0 0;
+    max-width: 72rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-parch-100);
+  }
+  .tasks-desk__drawer-req {
+    margin: 0.2rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--color-parch-100);
+  }
+  .tasks-desk__drawer-tags {
+    margin: 0.2rem 0 0;
+    font-size: 0.6875rem;
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__drawer-link {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--color-gem-300);
+    text-decoration: none;
+  }
+  .tasks-desk__drawer-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (min-width: 1100px) {
+    .tasks-desk__facets {
+      flex-wrap: nowrap;
+      gap: 0.2rem 0.3rem;
+      padding: 0.2rem 0.35rem;
+    }
+    .tasks-desk__search {
+      flex: 0 1 8.5rem;
+      min-width: 5rem;
+      max-width: 10rem;
+    }
+    .tasks-desk__group {
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+    }
+    .tasks-desk__crests {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-left: auto;
+      overflow-x: auto;
+    }
+  }
+  @media (max-width: 720px) {
+    .tasks-desk__crests {
+      margin-left: 0;
+      flex: 1 1 100%;
+      width: 100%;
+    }
+    .tasks-desk__group {
+      flex-wrap: wrap;
+    }
+    .tasks-desk__cols {
+      grid-template-columns: 1.15rem minmax(0, 1fr) 3.25rem 3rem 2.35rem;
+    }
+    .tasks-desk__cols--no-comp {
+      grid-template-columns: 1.15rem minmax(0, 1fr) 3.25rem 2.35rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tasks-desk * {
+      transition: none !important;
+    }
+  }
+
+  /* Crystal facet chip (Tasks / Combat accents) */
+  .facet-chip {
+    border: 1px solid var(--color-stone-750);
+    background: var(--color-stone-850);
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    color: var(--color-parch-100);
+    border-radius: var(--radius-sm);
+  }
+  .facet-chip:hover:not([aria-pressed="true"]):not(.is-active) {
+    color: var(--color-parch-50);
+    border-color: var(--color-stone-carve);
+  }
+  .facet-chip[aria-pressed="true"],
+  .facet-chip.is-active {
+    border-color: var(--color-gem-500);
+    color: var(--color-gem-300);
+    background: var(--color-stone-raised);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent),
+      inset 1px 0 0 color-mix(in srgb, var(--color-gem-400) 16%, transparent);
+  }
+
+  .panel--facet {
+    border-color: color-mix(in srgb, var(--color-gem-500) 35%, var(--color-stone-750));
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 18%, transparent),
+      inset 1px 0 0 color-mix(in srgb, var(--color-gem-400) 12%, transparent);
+  }
+  .panel--facet .panel-head {
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 22%, transparent);
+  }
+
+  /* Relic Court (Build) */
+  .relic-court {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .relic-court__banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+  }
+  .relic-court__grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  }
+  .relic-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-850)) 0%,
+        var(--color-stone-850) 100%
+      );
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  }
+  .relic-card:hover {
+    border-color: var(--color-stone-carve);
+  }
+  .relic-card.is-selected {
+    border-color: var(--color-gem-500);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 55%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 25%, transparent);
+  }
+  .relic-card__top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .relic-mono {
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-stone-750);
+    background:
+      linear-gradient(145deg, var(--color-stone-raised), var(--color-stone-850));
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-gem-300);
+    box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  }
+  .relic-card.is-selected .relic-mono {
+    border-color: var(--color-gem-500);
+    color: var(--color-gem-200);
+  }
+  .relic-card__name {
+    margin: 0;
+    font-weight: 500;
+    color: var(--color-parch-50);
+  }
+  .relic-card__tier {
+    margin: 0.2rem 0 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-parch-300);
+  }
+  .relic-card__pick {
+    margin: 0.25rem 0 0;
+    font-size: 0.6875rem;
+    color: var(--color-gem-300);
+  }
+  .relic-card__blurb {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--color-parch-100);
+  }
+  .relic-tier-rail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .relic-tier-rail__label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-parch-400);
+    margin-right: 0.25rem;
+  }
+
   .cell {
     position: relative;
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
@@ -204,7 +1174,6 @@ textarea:focus-visible {
     text-align: center;
     transition: background 150ms ease-out;
   }
-  /* The game's own hexes are top-lit. Material, not brand chrome. */
   .cell::after {
     content: "";
     position: absolute;
@@ -230,13 +1199,11 @@ textarea:focus-visible {
     box-shadow: inset 0 0 0 2px var(--color-gem-400);
     pointer-events: none;
   }
-  /* Locked: timber slats and green crystal, from the in-game region barrier. */
   .cell-locked {
     background:
       repeating-linear-gradient(90deg, #191309 0 7px, #221a0e 7px 8px, #12100a 8px 15px),
       var(--color-stone-900);
   }
-  /* Unrevealed: the game blurs unrevealed relics and blessings. Reproduce it. */
   .cell-unrevealed {
     background: var(--color-stone-850);
   }
@@ -249,7 +1216,6 @@ textarea:focus-visible {
     pointer-events: none;
   }
 
-  /* Hover chip over a region marker on the 3D map. */
   .map-chip {
     display: flex;
     flex-direction: column;
@@ -258,17 +1224,15 @@ textarea:focus-visible {
     padding: 3px 8px;
     white-space: nowrap;
     user-select: none;
-    background: rgb(13 10 7 / 88%);
+    background: rgb(10 8 6 / 90%);
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
   }
-
   .map-chip-name {
     font-size: 11px;
     letter-spacing: 0.05em;
     color: var(--color-parch-50);
   }
-
   .map-chip-state {
     font-size: 10px;
     letter-spacing: 0.1em;
@@ -276,39 +1240,6 @@ textarea:focus-visible {
     color: var(--color-parch-300);
   }
 
-  /*
-    Vine frame: viewport-edge growth bound to the pick count. An instrument,
-    not decoration — it is a second read of picks spent. Motion is one
-    transition on state change; nothing idles. The reduced-motion rule above
-    already kills it, no second path here.
-  */
-  .vine-frame {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .vine-frame path {
-    stroke-dashoffset: var(--vine-grow, 1);
-    transition: stroke-dashoffset 180ms cubic-bezier(0.2, 0.7, 0.3, 1);
-  }
-  .vine-frame .leaf {
-    transform: scale(var(--leaf-on, 0));
-    transform-origin: center;
-    transition: transform 160ms cubic-bezier(0.2, 0.7, 0.3, 1);
-  }
-
-  /* Quest count sitting directly on a map slab — no chip background. */
-  .slab-chip {
-    font-family: var(--font-mono);
-    font-size: 20px;
-    line-height: 1;
-    color: var(--color-parch-50);
-    font-variant-numeric: tabular-nums;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  /* Inspector stat strip: the countable facts about one region. */
   .stat-strip {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

@@ -1,0 +1,97 @@
+{
+  "round": 3,
+  "passBar": 9.0,
+  "finalists": ["alpha", "echo", "delta"],
+  "benched": ["charlie", "bravo"],
+  "teams": [
+    {
+      "id": "alpha",
+      "codename": "Daylight",
+      "score": 8.9,
+      "axes": {
+        "publicCraft": 8.8,
+        "rsFidelity": 8.8,
+        "dataReadability": 8.9,
+        "antiSlop": 8.9,
+        "identity": 9.0,
+        "operability": 9.0
+      },
+      "status": "provisional_champion",
+      "r2Score": 8.5,
+      "delta": 0.4,
+      "clearedPassBar": false
+    },
+    {
+      "id": "echo",
+      "codename": "Editorial",
+      "score": 8.8,
+      "axes": {
+        "publicCraft": 9.0,
+        "rsFidelity": 8.6,
+        "dataReadability": 8.7,
+        "antiSlop": 8.8,
+        "identity": 8.8,
+        "operability": 8.8
+      },
+      "status": "finalist",
+      "r2Score": 8.4,
+      "delta": 0.4,
+      "clearedPassBar": false
+    },
+    {
+      "id": "delta",
+      "codename": "Crystal",
+      "score": 8.8,
+      "axes": {
+        "publicCraft": 8.5,
+        "rsFidelity": 8.8,
+        "dataReadability": 8.8,
+        "antiSlop": 8.7,
+        "identity": 9.2,
+        "operability": 8.7
+      },
+      "status": "finalist",
+      "r2Score": 8.3,
+      "delta": 0.5,
+      "clearedPassBar": false
+    }
+  ],
+  "winnerId": null,
+  "overallScore": 8.9,
+  "recommendedProductionSkin": "alpha",
+  "recommendedProductionSkinCodename": "Daylight",
+  "productionShipMode": "provisional_with_debt",
+  "residualDebt": [
+    "Map remains a carved crest grid — needs one more wartable/material stop before it reads as planning architecture rather than Build-at-larger-scale",
+    "Data / Tasks / Build still share Control Surface DNA (tree·table·inspector / segment tabs); courtyard signature does not yet infect every route",
+    "Combat structured-empty bay is honest craft but still fixture shell — bind real key figures before claiming calculator room is product-grade",
+    "Promote Daylight token ladder into production globals carefully: keep gem=interaction, gold=titles, path triad data-only; do not import arena class names wholesale",
+    "Harvest Echo art-stage hierarchy (plate → mast → desk) and Delta facet material notes as optional motifs — do not ship three skins"
+  ],
+  "mustFixByTeam": {
+    "alpha": [
+      "One more Map material stop past crest tiles (ledger strip, stone slab ground, or wartable mood without faking 3D)",
+      "Carry courtyard language into at least one secondary route so the product is not Overview masterpiece + five shell clones",
+      "When combat core binds, replace 'Awaiting calc bind' with live figures — keep structured vacancy only for unrevealed fields"
+    ],
+    "echo": [
+      "Under-plate Data still reads as Alpha DNA with gold heads — author one more editorial desk pattern if this skin is ever revived",
+      "Default open on Data is workbench-first; public site ship prefers Overview/plate first (Alpha already does)",
+      "Map double-click pick is clever and obscure — explicit inspector button is correct; do not rely on double-click alone"
+    ],
+    "delta": [
+      "Public craft still trails identity — gem mark wins the brand fight, loses the public-site fight by 0.1 overall",
+      "Map click conflates focus + toggle — separate focus from pick for clearer planning UX",
+      "Hold warm parch forever if any crystal tokens leak into production"
+    ]
+  },
+  "hardFailsFired": [],
+  "judgedPaths": [
+    "src/concepts/restoration/r1/AlphaPreview.tsx",
+    "src/concepts/restoration/r1/alpha.css",
+    "src/concepts/restoration/r1/EchoPreview.tsx",
+    "src/concepts/restoration/r1/echo.css",
+    "src/concepts/restoration/r1/DeltaPreview.tsx",
+    "src/concepts/restoration/r1/delta.css"
+  ]
+}

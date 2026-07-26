@@ -1,0 +1,168 @@
+{
+  "verifiedAt": "2026-07-26",
+  "method": "independent_wiki_recheck_catalog_readonly",
+  "sources": [
+    "https://runescape.wiki/w/Artificer%27s_measure",
+    "https://runescape.wiki/w/Ring_of_slaying",
+    "https://runescape.wiki/w/Crystal_fishing_rod",
+    "https://runescape.wiki/w/Expansive_pouch",
+    "https://runescape.wiki/w/Elder_divination_outfit",
+    "https://runescape.wiki/w/Divination_fragments",
+    "https://runescape.wiki/w/Extreme_invention",
+    "https://runescape.wiki/w/Mycelial_webbing",
+    "https://runescape.wiki/w/Zygomite_(player-owned_farm)",
+    "https://runescape.wiki/w/Mushroom_patch",
+    "https://runescape.wiki/w/Player-owned_farm"
+  ],
+  "catalogSnapshotNote": "Read-only check against data/research/catalog.json + scraped-data/wall-slam-input-2026-07-26.json hosts/req. No catalog writes.",
+  "items": [
+    {
+      "name": "Artificer's measure",
+      "catalogHosts": ["forinthry", "morytania", "tirannwn", "anachronia"],
+      "catalogRequiredRegions": ["anachronia", "forinthry", "tirannwn", "morytania"],
+      "recommendedHosts": ["anachronia"],
+      "requiredRegions": ["anachronia", "forinthry", "tirannwn", "morytania"],
+      "action": "primary",
+      "confidence": "high",
+      "evidence": "Wiki full process: four restored Orthen artefacts (dragon scalpel, protective goggles, orthenglass flask, pasaha) excavate at Orthen Dig Site / Crypt of Varanus on Anachronia — hard self-source. Upgraded gem bag is 20k DG tokens (Daemonheim / Forinthry). Glorious silvthril chain needs chain link mould from partial Legacy of Seergaze (Morytania). Blessed molten glass needs crystal-flecked sandstone (Prif mining / Tirannwn) with Player-Owned Ports as slower alternate — Tirannwn is strong self-source but not absolute. Answer to 'should 1 host Anachronia?': YES as primary host (Orthen craft spine), not as sole required region. Keep multi-region requiredRegions; clamp multi-host display to primary anachronia. League unobtainable flag (4-region pick) is still valid under ironman self-sufficiency.",
+      "wikiUrl": "https://runescape.wiki/w/Artificer%27s_measure",
+      "notes": {
+        "shouldHostAnachronia": true,
+        "primaryHostReason": "Orthen artefact components are the non-substitutable hard craft end",
+        "alternates": {
+          "tirannwn": "crystal-flecked sandstone has Ports alternate",
+          "morytania": "mould gate if Legacy of Seergaze not auto-completed in League",
+          "forinthry": "upgraded gem bag is hard DG reward"
+        }
+      }
+    },
+    {
+      "name": "Ring of slaying (craft unlock)",
+      "catalogHosts": ["misthalin", "fremennik", "desert", "morytania"],
+      "catalogRequiredRegions": ["desert", "morytania", "fremennik", "misthalin"],
+      "recommendedHosts": ["misthalin"],
+      "requiredRegions": [],
+      "action": "primary",
+      "confidence": "high",
+      "evidence": "Wiki: craft unlock is 300 Slayer points purchased from any Slayer Master (global points, not a region gate). Craft is 75 Crafting + enchanted gem + gold bar at any furnace; Assist/boosts OK if unlock owned. Alternate is buy finished rings at 75 points each without the unlock. Teleport destinations (Sumona/Desert, Slayer Tower/Morytania, Fremennik Slayer Dungeon, Tarn's Lair after Haunted Mine/Misthalin) are destination pressure only — they must not inflate requiredRegions for the craft-unlock row. Catalog all_required desert+morytania+fremennik+misthalin is wrong for craft. Host Misthalin is a reasonable display home (starting campus / many masters), not a hard gate.",
+      "wikiUrl": "https://runescape.wiki/w/Ring_of_slaying",
+      "notes": {
+        "regionReqForCraft": "none",
+        "teleportDestinationsOptionalPressure": ["desert", "morytania", "fremennik", "misthalin"],
+        "catalogBug": "requiredRegions currently lists teleport destinations as all_required"
+      }
+    },
+    {
+      "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
+      "catalogHosts": ["kandarin", "tirannwn"],
+      "catalogRequiredRegions": ["tirannwn", "kandarin"],
+      "recommendedHosts": ["tirannwn"],
+      "requiredRegions": ["tirannwn"],
+      "action": "primary",
+      "confidence": "high",
+      "evidence": "Wiki crystal fishing rod: unlock 3,000 crystal urchin points from Prifddinas Waterfall Fishing Shop; craft at Ithell singing bowl (crystal tool seed + 150 harmonic dust, 80 Smithing) or NPC enchant (Ilfeen/Eluned/Islwyn/Rhodri). All hard gates are Tirannwn/Prif (Plague's End for Prif access). Catch bonus stacks with fury shark outfit, but fury shark is a separate Kandarin Deep Sea fragment + Invention path — not required to own or use the rod. Catalog stack hard-requires kandarin; that over-gates the rod. Prefer: requiredRegions=[tirannwn] only; fury shark optional pressure or split/remove combo (matches prior B10 fury-combo remove ruling). Rod-only equipment residual should stay tirannwn-only.",
+      "wikiUrl": "https://runescape.wiki/w/Crystal_fishing_rod",
+      "notes": {
+        "furyShark": "optional_stack_only",
+        "catchBonusWiki": "+8% on rod-required spots (catalog sometimes says +5% — wiki examine/page say 8%)",
+        "relatedRuling": "KEEP Crystal fishing rod on [tirannwn] req=[tirannwn]; REMOVE fury shark combo"
+      }
+    },
+    {
+      "name": "Expansive essence pouch (70 essence, non-degrading)",
+      "catalogHosts": ["misthalin", "forinthry"],
+      "catalogRequiredRegions": ["misthalin", "forinthry"],
+      "recommendedHosts": ["misthalin"],
+      "requiredRegions": ["misthalin", "forinthry"],
+      "action": "keep",
+      "confidence": "high",
+      "evidence": "Wiki Expansive pouch process: hungry hood 20k Runespan points from Wizard Rinsit (Wizards' Tower — Misthalin); feed small→massive pouches; expansive pouch cord needs Ilme's thread + 100 magical thread (magical thread from Abyss altar trips — Forinthry/Wilderness pressure); exterior needs sign of runic protection + royal dragon leather + dinosaur leather + felt; combine at non-necrotic altar; unseal via large Runedoku; fill at Rune Essence mine. Hard ironman dual: Misthalin (Rinsit/Runespan shop + essence mine fill) + Forinthry (Abyss magical-thread loop). Anachronia is optional for self-sourced dinosaur leather (tradeable materials exist outside League; no-trade League makes Anachronia pressure, not catalog-hard today). Catalog misthalin+forinthry keep is correct.",
+      "wikiUrl": "https://runescape.wiki/w/Expansive_pouch",
+      "notes": {
+        "optionalPressure": ["anachronia", "kandarin", "morytania"],
+        "optionalReason": "dinosaur leather / altar geography convenience, not hard craft infrastructure"
+      }
+    },
+    {
+      "name": "Elder divination outfit path (Cache base + Invention elite)",
+      "catalogHosts": ["asgarnia", "kandarin"],
+      "catalogRequiredRegions": ["kandarin", "asgarnia"],
+      "recommendedHosts": ["asgarnia"],
+      "requiredRegions": ["asgarnia"],
+      "action": "primary",
+      "confidence": "medium",
+      "evidence": "Wiki elder path: train Divination (70+) to collect divination fragments anywhere (90–110 / 5 min, not Cache-locked); discover skilling-outfit blueprint (80 Div + 80 Craft + 80 Smith + Invention); craft energy/chronicle/memory pieces at inventor's workbench from 3,600 fragments each (20 Invention); combine three outfits into elder. Invention unlock + workbench discovery geography is Asgarnia (Invention Guild). Guthixian Cache / Memorial (Kandarin) is the efficient base diviner's outfit route for XP inheritance and modified head energy-save — useful but not a hard gate for the Invention fragment elder set. Catalog all_required kandarin+asgarnia overstates Cache. Related: plain 'Elder divination outfit' rows were user-ruled REMOVE as global/elite; this path row can stay if demoted to Asgarnia primary with Kandarin optional. Prefer no TH acquisition path.",
+      "wikiUrl": "https://runescape.wiki/w/Elder_divination_outfit",
+      "notes": {
+        "kandarinRole": "optional_diviners_cache_and_memorial",
+        "asgarniaRole": "hard_invention_blueprint_and_workbench",
+        "fragmentFarm": "global_while_training_divination",
+        "relatedRemove": "Elder divination outfit (equipment residual) remains remove/global per E-class ruling"
+      }
+    },
+    {
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore) / mycelial webbing mushroom-patch region",
+      "catalogHosts": ["asgarnia", "anachronia"],
+      "catalogRequiredRegions": ["asgarnia", "anachronia"],
+      "recommendedHosts": ["asgarnia", "kandarin"],
+      "requiredRegions": ["asgarnia", "kandarin"],
+      "action": "primary",
+      "confidence": "high",
+      "evidence": "Wiki extreme invention: mix super invention (3) + mycelial webbing at 95 Herblore (Assist cannot make). Mycelial webbing is POF zygomite produce (Zanarian 2, Arcspore/Daemoncap 3, Magical 4 per growth stage) — NOT a direct mushroom-patch harvest. Zygomites are raised in medium pens at Manor Farm (Kandarin POF hub; tutorial 17 Farming / 20 Construction north of East Ardougne). Unchecked gloomshroom zygomites come from harvesting bittercap/morchella/Arc mushrooms or Mort Myre fungus, or Zygomite Carestyling. Mushroom patches (for seed zygomites) are: west of Canifis (Morytania — primary free patch), Isafdar (Tirannwn, medium diary), City of Um (Misthalin, 80 Necromancy). Catalog hard-requires Anachronia for webbing self-supply; wiki does not — Anachronia Ranch is optional parallel POF geography, not the webbing source of truth. Correct ironman self-supply: Asgarnia (Invention Guild use-case / super-invention training home) + Kandarin (Manor Farm zygomites → webbing). Mushroom-patch region for acquiring zygomites is primarily Morytania (Canifis), not Anachronia.",
+      "wikiUrl": "https://runescape.wiki/w/Mycelial_webbing",
+      "notes": {
+        "webbingSource": "player_owned_farm_rare_zygomites",
+        "webbingProductionRegion": "kandarin",
+        "mushroomPatchRegionsForZygomiteAcquisition": ["morytania", "tirannwn", "misthalin"],
+        "primaryMushroomPatch": "morytania",
+        "anachroniaRequired": false,
+        "catalogBug": "requiredRegions includes anachronia; should be asgarnia+kandarin (Anachronia optional only)",
+        "extremeInventionBoostPathRow": "asgarnia:extreme-invention-boost-path already tags webbing as optional_pressure — supply combo should match"
+      }
+    }
+  ],
+  "summaryTable": [
+    {
+      "name": "Artificer's measure",
+      "recommendedHosts": ["anachronia"],
+      "requiredRegions": ["anachronia", "forinthry", "tirannwn", "morytania"],
+      "action": "primary",
+      "confidence": "high"
+    },
+    {
+      "name": "Ring of slaying (craft unlock)",
+      "recommendedHosts": ["misthalin"],
+      "requiredRegions": [],
+      "action": "primary",
+      "confidence": "high"
+    },
+    {
+      "name": "Crystal fishing rod stack",
+      "recommendedHosts": ["tirannwn"],
+      "requiredRegions": ["tirannwn"],
+      "action": "primary",
+      "confidence": "high"
+    },
+    {
+      "name": "Expansive essence pouch",
+      "recommendedHosts": ["misthalin"],
+      "requiredRegions": ["misthalin", "forinthry"],
+      "action": "keep",
+      "confidence": "high"
+    },
+    {
+      "name": "Elder divination path",
+      "recommendedHosts": ["asgarnia"],
+      "requiredRegions": ["asgarnia"],
+      "action": "primary",
+      "confidence": "medium"
+    },
+    {
+      "name": "Extreme invention / mycelial webbing",
+      "recommendedHosts": ["asgarnia", "kandarin"],
+      "requiredRegions": ["asgarnia", "kandarin"],
+      "action": "primary",
+      "confidence": "high"
+    }
+  ]
+}

@@ -3,7 +3,6 @@ import blessingsData from "#data/league/blessings.json";
 import questsData from "#data/league/quests.json";
 import relicsData from "#data/league/relics.json";
 import { Page } from "@/components/Page";
-import { PageHeading } from "@/components/Heading";
 import { BuildPlanner } from "@/components/BuildPlanner";
 import type { RegionId } from "@/league";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
@@ -11,8 +10,7 @@ import { getResearchCatalog } from "@/research/catalog";
 
 export const metadata: Metadata = {
   title: "Build",
-  description:
-    "Regions, Relics, and Blessings in one plan for RS3 Leagues II: Equilibrium.",
+  description: "Regions, Relics, and Blessings for RS3 Leagues II: Equilibrium.",
 };
 
 export default function BuildPage() {
@@ -60,17 +58,15 @@ export default function BuildPage() {
   }));
 
   return (
-    <Page>
-      <PageHeading
-        title="Build planner"
-        note="Regions, relics and blessings in one plan. The picks are the same ones you make on the map."
-      />
-      <BuildPlanner
-        regions={regions}
-        relicTiers={relicTiers}
-        blessingTiers={blessingTiers}
-        resetCount={blessingsData.resetCount}
-      />
+    <Page className="!max-w-none !px-0 !py-0">
+      <div className="workbench-fill">
+        <BuildPlanner
+          regions={regions}
+          relicTiers={relicTiers}
+          blessingTiers={blessingTiers}
+          resetCount={blessingsData.resetCount}
+        />
+      </div>
     </Page>
   );
 }

@@ -4,8 +4,13 @@
  * publishes its task list.
  */
 
+import type { RegionId } from "@/league";
+
 export const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;
 export type TaskTier = (typeof TASK_ORDER)[number];
+
+/** Equilibrium region id, or Catalyst "global" bucket (not a League unlock). */
+export type TaskRegionId = RegionId | "global";
 
 export interface TaskRecord {
   /** Stable id when the source provides one; else progress uses `${tier}:${name}`. */
@@ -14,7 +19,16 @@ export interface TaskRecord {
   tier: string;
   points?: number;
   description?: string;
+  /** Display/search string — often locality label or region name. */
   region?: string;
+  /** Equilibrium taxonomy after locality mapping; `global` for Catalyst global tasks. */
+  regionId?: TaskRegionId;
+  /** Raw Catalyst locality key (data-tbz-area-for-filtering). */
+  localityKey?: string;
+  /** Locality label from Wiki icon title/alt (e.g. "Asgarnia: Burthorpe"). */
+  localityLabel?: string;
+  /** Wiki row id / data-taskid — deep-link + completion module key. */
+  wikiTaskId?: number;
   skills?: string[];
   areas?: string[];
   requirements?: string;
@@ -45,25 +59,49 @@ export function isTaskTier(tier: string): tier is TaskTier {
   return (TASK_ORDER as readonly string[]).includes(tier);
 }
 
+export type FilterTasksOptions = {
+  /**
+   * When set, only tasks tagged with these region ids pass.
+   * Use the build's unlocked set (starting + Karamja + electives).
+   */
+  allowedRegions?: ReadonlySet<string> | null;
+  /** Keep Catalyst/global tasks when allowedRegions is set. Default true. */
+  includeGlobal?: boolean;
+};
+
 export function filterTasks(
   records: readonly TaskRecord[],
   tier: TaskTier | "all",
   query: string,
+  region: TaskRegionId | "all" = "all",
+  options: FilterTasksOptions = {},
 ): TaskRecord[] {
+  const { allowedRegions = null, includeGlobal = true } = options;
   const needle = query.trim().toLowerCase();
   return records.filter((record) => {
     if (tier !== "all" && record.tier !== tier) return false;
+
+    if (allowedRegions) {
+      const rid = record.regionId;
+      if (rid === "global") {
+        if (!includeGlobal) return false;
+      } else if (!rid || !allowedRegions.has(rid)) {
+        return false;
+      }
+    }
+
+    if (region !== "all" && record.regionId !== region) return false;
     if (!needle) return true;
-    return [
-      record.name,
-      record.description ?? "",
-      record.region ?? "",
-      record.requirements ?? "",
-      ...(record.skills ?? []),
-      ...(record.areas ?? []),
-    ]
-      .join(" ")
-      .toLowerCase()
-      .includes(needle);
+    // Avoid allocating a joined array for every keystroke on 1k+ rows.
+    if (record.name.toLowerCase().includes(needle)) return true;
+    if (record.description?.toLowerCase().includes(needle)) return true;
+    if (record.region?.toLowerCase().includes(needle)) return true;
+    if (record.regionId?.toLowerCase().includes(needle)) return true;
+    if (record.localityKey?.toLowerCase().includes(needle)) return true;
+    if (record.localityLabel?.toLowerCase().includes(needle)) return true;
+    if (record.requirements?.toLowerCase().includes(needle)) return true;
+    if (record.skills?.some((s) => s.toLowerCase().includes(needle))) return true;
+    if (record.areas?.some((a) => a.toLowerCase().includes(needle))) return true;
+    return false;
   });
 }

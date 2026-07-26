@@ -1,0 +1,1238 @@
+/*
+  Team Ridge · RELIC COURT — Hybrid composition R1 skin
+  Thesis: Editorial product spine; Build is the court of revealed relics.
+  Tokens only under .hybrid-skin--ridge — do not touch app/globals.css.
+
+  Contrast (meter note):
+  parch-50 #f2ead8 on stage #242018 ≈ 11.0:1 body
+  parch-100 #e0d4ba on stage ≈ 9.0:1 secondary
+  gem #3fd4a0 on void #0c0a08 ≈ 10.2:1 chrome
+*/
+
+.hybrid-skin--ridge {
+  /* ── Editorial ladder (--ridge-*) ─────────────────────────────── */
+  --ridge-void: #0c0a08;
+  --ridge-shell: #14110e;
+  --ridge-rail: #1a1612;
+  --ridge-stage: #242018;
+  --ridge-raised: #302a20;
+  --ridge-zebra: #1e1a14;
+  --ridge-inset: #100e0b;
+  --ridge-border: #524636;
+  --ridge-carve: #6b5840;
+  --ridge-sun: #8a7a60;
+
+  --ridge-parch-50: #f2ead8;
+  --ridge-parch-100: #e0d4ba;
+  --ridge-parch-300: #c4b49a;
+  --ridge-parch-400: #b0a088;
+  --ridge-parch-500: #9c8c74;
+
+  --ridge-gold: #e8bc6a;
+  --ridge-gold-deep: #b8893e;
+  --ridge-gem: #3fd4a0;
+  --ridge-gem-bright: #6ae8bc;
+  --ridge-gem-deep: #28a878;
+
+  /* Path triad — DATA semantics only (never chrome) */
+  --ridge-order: #4a7ec2;
+  --ridge-balance: #6fae45;
+  --ridge-chaos: #d4614d;
+
+  /* ── Bridge to shared --color-* ───────────────────────────────── */
+  --color-parch-50: var(--ridge-parch-50);
+  --color-parch-100: var(--ridge-parch-100);
+  --color-parch-300: var(--ridge-parch-300);
+  --color-parch-400: var(--ridge-parch-400);
+  --color-parch-500: var(--ridge-parch-500);
+
+  --color-stone-950: var(--ridge-void);
+  --color-stone-900: var(--ridge-shell);
+  --color-stone-850: var(--ridge-rail);
+  --color-stone-800: var(--ridge-stage);
+  --color-stone-raised: var(--ridge-raised);
+  --color-stone-zebra: var(--ridge-zebra);
+  --color-stone-inset: var(--ridge-inset);
+  --color-stone-750: var(--ridge-border);
+  --color-stone-carve: var(--ridge-carve);
+
+  --color-gold-300: #f0d08a;
+  --color-gold-400: var(--ridge-gold);
+  --color-gold-500: var(--ridge-gold-deep);
+
+  --color-gem-200: #9af5d4;
+  --color-gem-300: var(--ridge-gem-bright);
+  --color-gem-400: var(--ridge-gem);
+  --color-gem-500: var(--ridge-gem-deep);
+  --color-gem-600: #1a7a55;
+
+  --color-order-400: var(--ridge-order);
+  --color-balance-400: var(--ridge-balance);
+  --color-chaos-300: var(--ridge-chaos);
+  --color-chaos-400: #b5402f;
+  --color-ember-400: #e2622a;
+
+  color: var(--ridge-parch-50);
+  background: var(--ridge-void);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* ── Focus ──────────────────────────────────────────────────────── */
+
+.hybrid-skin--ridge :focus-visible {
+  outline: 2px solid var(--ridge-gem);
+  outline-offset: 2px;
+}
+
+.hybrid-skin--ridge button {
+  font: inherit;
+}
+
+/* ── Panels (editorial carve) ───────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-panel {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--ridge-raised) 28%, var(--ridge-rail)) 0%,
+      var(--ridge-rail) 48%,
+      color-mix(in srgb, var(--ridge-shell) 30%, var(--ridge-rail)) 100%
+    );
+  border: 1px solid var(--ridge-border);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 var(--ridge-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--ridge-void) 50%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ridge-void) 55%, transparent),
+    0 2px 4px color-mix(in srgb, var(--ridge-void) 35%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-panel--carved {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ridge-sun) 14%, var(--ridge-raised)) 0%,
+      color-mix(in srgb, var(--ridge-raised) 50%, var(--ridge-rail)) 14%,
+      var(--ridge-rail) 40%,
+      color-mix(in srgb, var(--ridge-shell) 25%, var(--ridge-rail)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 var(--ridge-sun),
+    inset 0 2px 0 color-mix(in srgb, var(--ridge-carve) 50%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--ridge-void) 48%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ridge-void) 70%, transparent),
+    0 2px 5px color-mix(in srgb, var(--ridge-void) 40%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-panel--slate {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ridge-stage) 75%, var(--ridge-rail)) 0%,
+      var(--ridge-stage) 100%
+    );
+  border: 1px solid var(--ridge-border);
+  box-shadow:
+    inset 0 2px 4px color-mix(in srgb, var(--ridge-void) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--ridge-carve) 35%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-panel__head {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--ridge-border);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ridge-parch-100);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ridge-raised) 35%, var(--ridge-shell)) 0%,
+      color-mix(in srgb, var(--ridge-shell) 70%, var(--ridge-rail)) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-panel__body {
+  padding: 0.875rem;
+}
+
+/* ── Art stage (Editorial mast) ─────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-art-stage {
+  position: relative;
+  height: 168px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--ridge-void);
+  border-bottom: 1px solid var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-art-stage__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.hybrid-skin--ridge .ridge-art-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(12 10 8 / 20%) 0%,
+    transparent 30%,
+    rgb(12 10 8 / 48%) 68%,
+    var(--ridge-void) 100%
+  );
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-art-stage__chrome {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem 0.65rem;
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-art-stage__chrome > * {
+  pointer-events: auto;
+}
+
+.hybrid-skin--ridge .ridge-brand {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ridge-gold);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 55%);
+}
+
+.hybrid-skin--ridge .ridge-kicker {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ridge-parch-100);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 50%);
+}
+
+.hybrid-skin--ridge .ridge-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.hybrid-skin--ridge .ridge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.6875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+  color: var(--ridge-parch-100);
+  background: color-mix(in srgb, var(--ridge-void) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ridge-border) 80%, transparent);
+  border-radius: 1px;
+  backdrop-filter: blur(2px);
+}
+
+.hybrid-skin--ridge .ridge-chip strong {
+  color: var(--ridge-gem);
+  font-weight: 600;
+}
+
+/* ── Primary nav ────────────────────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--ridge-shell);
+  border-bottom: 1px solid var(--ridge-border);
+  box-shadow:
+    inset 0 1px 0 var(--ridge-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--ridge-void) 40%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-nav__brand {
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
+  color: var(--ridge-gold);
+  text-transform: uppercase;
+}
+
+.hybrid-skin--ridge .ridge-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hybrid-skin--ridge .ridge-nav__btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.2rem 0.1rem;
+  font-size: 0.8125rem;
+  color: var(--ridge-parch-100);
+  cursor: pointer;
+}
+
+.hybrid-skin--ridge .ridge-nav__btn.is-active {
+  color: var(--ridge-gem-bright);
+  font-weight: 600;
+  border-bottom-color: var(--ridge-gem-deep);
+}
+
+.hybrid-skin--ridge .ridge-nav__meta {
+  margin-left: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  color: var(--ridge-parch-300);
+}
+
+/* ── Segment tabs ───────────────────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem 0.65rem 0;
+  background: var(--ridge-shell);
+  border-bottom: 1px solid var(--ridge-border);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-seg__btn {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  color: var(--ridge-parch-100);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  cursor: pointer;
+  border-radius: 2px 2px 0 0;
+}
+
+.hybrid-skin--ridge .ridge-seg__btn.is-active {
+  color: var(--ridge-gem-bright);
+  font-weight: 600;
+  background: var(--ridge-rail);
+  border-color: var(--ridge-gem-deep);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+/* ── Toolbar ────────────────────────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--ridge-border);
+  background: color-mix(in srgb, var(--ridge-shell) 70%, var(--ridge-rail));
+}
+
+.hybrid-skin--ridge .ridge-toolbar h2 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ridge-parch-50);
+}
+
+.hybrid-skin--ridge .ridge-counter {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: var(--ridge-gem);
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--ridge .ridge-btn {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  color: var(--ridge-parch-100);
+  background: var(--ridge-rail);
+  border: 1px solid var(--ridge-border);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+  cursor: pointer;
+  border-radius: 1px;
+}
+
+.hybrid-skin--ridge .ridge-btn:disabled,
+.hybrid-skin--ridge .ridge-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--ridge-parch-400);
+}
+
+.hybrid-skin--ridge .ridge-btn--gem {
+  color: var(--ridge-gem-bright);
+  border-color: var(--ridge-gem-deep);
+}
+
+/* ── Data table (wiki dense) ────────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4;
+  background: var(--ridge-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ridge-carve) 25%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ridge-parch-100);
+  background: color-mix(in srgb, var(--ridge-raised) 55%, var(--ridge-shell));
+  border-bottom: 1px solid var(--ridge-border);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-table td {
+  padding: 0.45rem 0.65rem;
+  color: var(--ridge-parch-50);
+  border-bottom: 1px solid color-mix(in srgb, var(--ridge-border) 45%, transparent);
+  vertical-align: middle;
+}
+
+.hybrid-skin--ridge .ridge-table tbody tr:nth-child(even) td {
+  background: var(--ridge-zebra);
+}
+
+.hybrid-skin--ridge .ridge-table tbody tr.is-selected td,
+.hybrid-skin--ridge .ridge-table tbody tr[aria-selected="true"] td {
+  background: var(--ridge-raised);
+  box-shadow: inset 2px 0 0 var(--ridge-gem);
+}
+
+.hybrid-skin--ridge .ridge-table tbody tr {
+  cursor: pointer;
+}
+
+.hybrid-skin--ridge .ridge-table .secondary {
+  color: var(--ridge-parch-100);
+}
+
+.hybrid-skin--ridge .ridge-table .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--ridge .ridge-tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ridge-parch-100);
+  border: 1px solid var(--ridge-border);
+  background: color-mix(in srgb, var(--ridge-inset) 70%, var(--ridge-rail));
+  border-radius: 1px;
+}
+
+.hybrid-skin--ridge .ridge-sources {
+  margin: 0.75rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  color: var(--ridge-parch-300);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ── Key figure ─────────────────────────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-stat-key {
+  margin: 0.15rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ridge-gem);
+  letter-spacing: -0.02em;
+}
+
+/* ── Daylight courtyard (Overview) ──────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-courtyard {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.hybrid-skin--ridge .ridge-lintel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-lintel-title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 0.9375rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ridge-gold);
+}
+
+.hybrid-skin--ridge .ridge-lintel-meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ridge-parch-300);
+}
+
+.hybrid-skin--ridge .ridge-gate {
+  display: grid;
+  grid-template-columns: minmax(120px, 160px) minmax(0, 1fr) minmax(120px, 160px);
+  gap: 0;
+  min-height: 220px;
+  border-bottom: 1px solid var(--ridge-border);
+}
+
+@media (max-width: 720px) {
+  .hybrid-skin--ridge .ridge-gate {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hybrid-skin--ridge .ridge-jamb {
+  padding: 0.75rem;
+  background: var(--ridge-rail);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-jamb--west {
+  border-right: 1px solid var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-jamb--east {
+  border-left: 1px solid var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-jamb-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ridge-parch-300);
+}
+
+.hybrid-skin--ridge .ridge-standing {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.45rem;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--ridge-border);
+  background: var(--ridge-stage);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+  border-radius: 1px;
+}
+
+.hybrid-skin--ridge .ridge-standing.is-empty {
+  color: var(--ridge-parch-400);
+  font-size: 0.75rem;
+  justify-content: center;
+  min-height: 2.25rem;
+  border-style: dashed;
+}
+
+.hybrid-skin--ridge .ridge-standing-name {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ridge-parch-50);
+}
+
+.hybrid-skin--ridge .ridge-aperture {
+  position: relative;
+  overflow: hidden;
+  background: var(--ridge-void);
+  min-height: 200px;
+}
+
+.hybrid-skin--ridge .ridge-aperture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  min-height: 200px;
+}
+
+.hybrid-skin--ridge .ridge-aperture-caption {
+  position: absolute;
+  left: 0.65rem;
+  bottom: 0.5rem;
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: var(--ridge-parch-100);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 70%);
+}
+
+.hybrid-skin--ridge .ridge-milestone {
+  padding: 0.4rem 0.45rem;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--ridge-border);
+  background: var(--ridge-stage);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-milestone-k {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--ridge-parch-300);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hybrid-skin--ridge .ridge-milestone-v {
+  margin: 0.15rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.125rem;
+  color: var(--ridge-gem);
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--ridge .ridge-milestone-v.is-quiet {
+  font-size: 0.8125rem;
+  color: var(--ridge-parch-300);
+  font-family: inherit;
+}
+
+.hybrid-skin--ridge .ridge-desk {
+  padding: 0.85rem;
+  flex: 1;
+}
+
+.hybrid-skin--ridge .ridge-desk-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.hybrid-skin--ridge .ridge-ledger {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 0.85rem;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.hybrid-skin--ridge .ridge-ledger dt {
+  color: var(--ridge-parch-300);
+}
+
+.hybrid-skin--ridge .ridge-ledger dd {
+  margin: 0;
+  color: var(--ridge-parch-50);
+}
+
+.hybrid-skin--ridge .ridge-ledger dd.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--ridge .ridge-note {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--ridge-parch-300);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ── Map gazetteer (Editorial, no inspector) ────────────────────── */
+
+.hybrid-skin--ridge .ridge-map-stage {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ridge-border);
+  background: var(--ridge-void);
+}
+
+.hybrid-skin--ridge .ridge-map-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 48% 55%;
+  display: block;
+  opacity: 0.88;
+}
+
+.hybrid-skin--ridge .ridge-map-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(12 10 8 / 15%) 0%,
+    transparent 40%,
+    var(--ridge-void) 100%
+  );
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-map-cue {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.55rem;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ridge-parch-100);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 65%);
+}
+
+.hybrid-skin--ridge .ridge-gaz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hybrid-skin--ridge .ridge-gaz-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.7rem 0.45rem;
+  cursor: pointer;
+  color: var(--ridge-parch-100);
+  text-align: center;
+  border-radius: 1px;
+}
+
+.hybrid-skin--ridge .ridge-gaz-tile.is-focus {
+  color: var(--ridge-gem-bright);
+  box-shadow:
+    inset 0 0 0 1px var(--ridge-gem-deep),
+    inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-gaz-tile.is-picked {
+  color: var(--ridge-gem-bright);
+}
+
+.hybrid-skin--ridge .ridge-gaz-tile.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Crystal facets (Tasks / Combat) ────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-facet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--ridge-parch-100);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--ridge-raised) 40%, var(--ridge-rail)) 0%,
+      var(--ridge-rail) 100%
+    );
+  border: 1px solid var(--ridge-border);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ridge-carve) 70%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--ridge-void) 30%, transparent);
+  cursor: pointer;
+  border-radius: 1px;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+
+.hybrid-skin--ridge .ridge-facet.is-active {
+  color: var(--ridge-gem-bright);
+  border-color: var(--ridge-gem-deep);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--ridge-gem-deep) 18%, var(--ridge-raised)) 0%,
+      var(--ridge-stage) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ridge-gem) 35%, transparent),
+    inset 0 1px 0 var(--ridge-carve);
+}
+
+/* ── RELIC COURT (Build masterpiece) ────────────────────────────── */
+
+.hybrid-skin--ridge .ridge-court {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.hybrid-skin--ridge .ridge-court-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.65rem 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-court-banner h3 {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 0.875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ridge-gold);
+}
+
+.hybrid-skin--ridge .ridge-court-banner p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ridge-parch-300);
+}
+
+/* Tier hex rail */
+.hybrid-skin--ridge .ridge-tier-rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  padding: 0.55rem 0.65rem;
+  background: var(--ridge-rail);
+  border: 1px solid var(--ridge-border);
+  box-shadow: inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-tier-rail__label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ridge-parch-300);
+  margin-right: 0.35rem;
+}
+
+.hybrid-skin--ridge .ridge-hex {
+  position: relative;
+  width: 52px;
+  height: 60px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--ridge-stage);
+  border: none;
+  color: var(--ridge-parch-100);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.6875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  transition: background 80ms ease-out;
+}
+
+.hybrid-skin--ridge .ridge-hex::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  background: linear-gradient(180deg, rgb(255 255 255 / 5.5%), transparent 42%);
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-hex--md {
+  width: 72px;
+  height: 82px;
+  font-size: 0.75rem;
+}
+
+.hybrid-skin--ridge .ridge-hex--lg {
+  width: 96px;
+  height: 110px;
+}
+
+.hybrid-skin--ridge .ridge-hex.is-open {
+  background: var(--ridge-raised);
+  color: var(--ridge-parch-50);
+}
+
+.hybrid-skin--ridge .ridge-hex.is-selected {
+  background: color-mix(in srgb, var(--ridge-gem-deep) 22%, var(--ridge-raised));
+  color: var(--ridge-gem-bright);
+  box-shadow: inset 0 0 0 2px var(--ridge-gem);
+}
+
+.hybrid-skin--ridge .ridge-hex.is-unrevealed {
+  background: var(--ridge-shell);
+  color: var(--ridge-parch-400);
+  cursor: default;
+}
+
+.hybrid-skin--ridge .ridge-hex.is-unrevealed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  background: rgb(12 10 8 / 45%);
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-hex__tier {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+
+.hybrid-skin--ridge .ridge-hex__sub {
+  font-size: 0.5625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+/* Court card grid — three T1 choices */
+.hybrid-skin--ridge .ridge-court-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.hybrid-skin--ridge .ridge-relic-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  width: 100%;
+  border-radius: 2px;
+  transition: box-shadow 80ms ease-out, background 80ms ease-out;
+}
+
+.hybrid-skin--ridge .ridge-relic-card.is-selected {
+  box-shadow:
+    inset 0 0 0 1px var(--ridge-gem-deep),
+    inset 0 1px 0 var(--ridge-sun),
+    0 0 0 1px color-mix(in srgb, var(--ridge-gem) 25%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ridge-gem-deep) 12%, var(--ridge-raised)) 0%,
+      var(--ridge-rail) 100%
+    );
+}
+
+.hybrid-skin--ridge .ridge-relic-card.is-picked:not(.is-selected) {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ridge-gem) 45%, var(--ridge-border)),
+    inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-relic-card__top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Placeholder frame — NEVER Catalyst art */
+.hybrid-skin--ridge .ridge-relic-frame {
+  position: relative;
+  width: 64px;
+  height: 72px;
+  flex-shrink: 0;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--ridge-sun) 22%, var(--ridge-raised)) 0%,
+      var(--ridge-stage) 45%,
+      var(--ridge-inset) 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px var(--ridge-border);
+}
+
+.hybrid-skin--ridge .ridge-relic-frame::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  clip-path: inherit;
+  border: 1px solid color-mix(in srgb, var(--ridge-carve) 55%, transparent);
+  pointer-events: none;
+}
+
+.hybrid-skin--ridge .ridge-relic-frame__mono {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ridge-gold);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--ridge-void) 60%, transparent);
+}
+
+.hybrid-skin--ridge .ridge-relic-card.is-selected .ridge-relic-frame {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--ridge-gem) 18%, var(--ridge-raised)) 0%,
+      var(--ridge-stage) 50%,
+      var(--ridge-inset) 100%
+    );
+  box-shadow: inset 0 0 0 1px var(--ridge-gem-deep);
+}
+
+.hybrid-skin--ridge .ridge-relic-card.is-selected .ridge-relic-frame__mono {
+  color: var(--ridge-gem-bright);
+}
+
+.hybrid-skin--ridge .ridge-relic-card__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.hybrid-skin--ridge .ridge-relic-card__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ridge-parch-50);
+  line-height: 1.25;
+}
+
+.hybrid-skin--ridge .ridge-relic-card__tier {
+  margin: 0.15rem 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ridge-parch-300);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.hybrid-skin--ridge .ridge-relic-card__pick {
+  margin: 0.2rem 0 0;
+  font-size: 0.6875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--ridge-gem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hybrid-skin--ridge .ridge-relic-card__blurb {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ridge-parch-100);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hybrid-skin--ridge .ridge-skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.hybrid-skin--ridge .ridge-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.12rem 0.35rem;
+  font-size: 0.6875rem;
+  color: var(--ridge-parch-100);
+  background: var(--ridge-inset);
+  border: 1px solid color-mix(in srgb, var(--ridge-border) 70%, transparent);
+  border-radius: 1px;
+}
+
+/* Relic detail folio */
+.hybrid-skin--ridge .ridge-folio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 280px);
+  gap: 0.75rem;
+}
+
+@media (max-width: 800px) {
+  .hybrid-skin--ridge .ridge-folio {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hybrid-skin--ridge .ridge-effects {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  font-size: 0.875rem;
+  color: var(--ridge-parch-50);
+}
+
+.hybrid-skin--ridge .ridge-effects li {
+  margin-bottom: 0.35rem;
+}
+
+.hybrid-skin--ridge .ridge-effects li::marker {
+  color: var(--ridge-gem);
+}
+
+/* Region crest board */
+.hybrid-skin--ridge .ridge-region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hybrid-skin--ridge .ridge-region-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  color: var(--ridge-parch-100);
+  text-align: left;
+  border-radius: 1px;
+}
+
+.hybrid-skin--ridge .ridge-region-card.is-picked {
+  color: var(--ridge-gem-bright);
+  box-shadow:
+    inset 0 0 0 1px var(--ridge-gem-deep),
+    inset 0 1px 0 var(--ridge-carve);
+}
+
+.hybrid-skin--ridge .ridge-region-card.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Blessing lattice — path colors as DATA only */
+.hybrid-skin--ridge .ridge-bless-lattice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.75rem;
+}
+
+.hybrid-skin--ridge .ridge-bless-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hybrid-skin--ridge .ridge-path-label {
+  width: 4.5rem;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.hybrid-skin--ridge .ridge-path-label--order {
+  color: var(--ridge-order);
+}
+
+.hybrid-skin--ridge .ridge-path-label--balance {
+  color: var(--ridge-balance);
+}
+
+.hybrid-skin--ridge .ridge-path-label--chaos {
+  color: var(--ridge-chaos);
+}
+
+.hybrid-skin--ridge .ridge-path-label--god {
+  color: var(--ridge-parch-300);
+}
+
+/* Lattice category rail (Data) */
+.hybrid-skin--ridge .ridge-lattice-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.65rem;
+  background: var(--ridge-rail);
+  border-right: 1px solid var(--ridge-border);
+  min-width: 108px;
+}
+
+.hybrid-skin--ridge .ridge-lattice-rail__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 100%;
+  min-height: 64px;
+  padding: 0.35rem;
+  cursor: pointer;
+  color: var(--ridge-parch-100);
+  background: transparent;
+  border: none;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background-color: var(--ridge-stage);
+  font-size: 0.6875rem;
+}
+
+.hybrid-skin--ridge .ridge-lattice-rail__btn.is-active {
+  color: var(--ridge-gem-bright);
+  background-color: color-mix(in srgb, var(--ridge-gem-deep) 20%, var(--ridge-raised));
+  box-shadow: inset 0 0 0 2px var(--ridge-gem);
+}
+
+/* Footer */
+.hybrid-skin--ridge .ridge-footer {
+  margin-top: auto;
+  padding: 0.55rem 0.85rem;
+  border-top: 1px solid var(--ridge-border);
+  font-size: 0.6875rem;
+  color: var(--ridge-parch-400);
+  background: var(--ridge-shell);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hybrid-skin--ridge .ridge-hex,
+  .hybrid-skin--ridge .ridge-relic-card,
+  .hybrid-skin--ridge .ridge-facet {
+    transition: none;
+  }
+}

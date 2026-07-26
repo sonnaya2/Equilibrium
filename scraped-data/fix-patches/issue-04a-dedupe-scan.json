@@ -1,0 +1,263 @@
+{
+  "generatedAt": "2026-07-26",
+  "source": "data/research/catalog.json",
+  "scope": "Upgrades where the same name appears twice or more inside ONE region (exact name match). Cross-region same-name is out of scope.",
+  "catalogNotModified": true,
+  "summary": {
+    "regionCount": 11,
+    "totalUpgrades": 1715,
+    "duplicateGroupCount": 14,
+    "totalExtraCopies": 14,
+    "allExactCopies": true,
+    "regionsWithDuplicates": [
+      "anachronia",
+      "desert",
+      "forinthry",
+      "havenhythe",
+      "kandarin",
+      "karamja",
+      "morytania"
+    ]
+  },
+  "duplicates": [
+    {
+      "regionId": "anachronia",
+      "region": "Anachronia",
+      "name": "Anachronia Agility codex pages (Double Surge / Double Escape)",
+      "count": 2,
+      "detailLengths": [
+        617,
+        617
+      ],
+      "exactCopies": true,
+      "indices": [
+        14,
+        20
+      ],
+      "category": "Agility course and island transit",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "anachronia",
+      "region": "Anachronia",
+      "name": "Anachronia base camp structures and passives",
+      "count": 2,
+      "detailLengths": [
+        892,
+        892
+      ],
+      "exactCopies": true,
+      "indices": [
+        15,
+        21
+      ],
+      "category": "regional passive resource and structure hub",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "anachronia",
+      "region": "Anachronia",
+      "name": "Dream of Iaia passive multi-skill stations",
+      "count": 2,
+      "detailLengths": [
+        726,
+        726
+      ],
+      "exactCopies": true,
+      "indices": [
+        17,
+        22
+      ],
+      "category": "passive multi-skill XP stations",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "anachronia",
+      "region": "Anachronia",
+      "name": "Orthen dig-site collections and mysteries",
+      "count": 2,
+      "detailLengths": [
+        922,
+        922
+      ],
+      "exactCopies": true,
+      "indices": [
+        18,
+        23
+      ],
+      "category": "Archaeology dig-site hub",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "anachronia",
+      "region": "Anachronia",
+      "name": "Time altar Runecrafting access",
+      "count": 2,
+      "detailLengths": [
+        726,
+        726
+      ],
+      "exactCopies": true,
+      "indices": [
+        19,
+        24
+      ],
+      "category": "Runecrafting altar infrastructure",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "desert",
+      "region": "Desert",
+      "name": "Kharid-et dig-site progression",
+      "count": 2,
+      "detailLengths": [
+        854,
+        854
+      ],
+      "exactCopies": true,
+      "indices": [
+        13,
+        14
+      ],
+      "category": "Archaeology dig site progression",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "forinthry",
+      "region": "Forinthry",
+      "name": "Wilderness Agility Course training",
+      "count": 2,
+      "detailLengths": [
+        758,
+        758
+      ],
+      "exactCopies": true,
+      "indices": [
+        17,
+        18
+      ],
+      "category": "Agility training activity",
+      "confidence": "confirmed_wiki_2026_current"
+    },
+    {
+      "regionId": "havenhythe",
+      "region": "Havenhythe",
+      "name": "Moonrise dig-site hub (collections & mysteries)",
+      "count": 2,
+      "detailLengths": [
+        713,
+        713
+      ],
+      "exactCopies": true,
+      "indices": [
+        4,
+        5
+      ],
+      "category": "Archaeology dig-site hub",
+      "confidence": "confirmed_wiki_2026_release"
+    },
+    {
+      "regionId": "kandarin",
+      "region": "Kandarin",
+      "name": "Fishing Guild membership and DSF access",
+      "count": 2,
+      "detailLengths": [
+        704,
+        704
+      ],
+      "exactCopies": true,
+      "indices": [
+        14,
+        20
+      ],
+      "category": "Fishing guild infrastructure and Deep Sea Fishing access",
+      "confidence": "confirmed_wiki_plus_official_region_example"
+    },
+    {
+      "regionId": "kandarin",
+      "region": "Kandarin",
+      "name": "Hall of Memories Divination bots and jars",
+      "count": 2,
+      "detailLengths": [
+        956,
+        956
+      ],
+      "exactCopies": true,
+      "indices": [
+        15,
+        21
+      ],
+      "category": "Divination training dungeon and permanent bot unlocks",
+      "confidence": "confirmed_wiki_plus_official_region_example_with_2026_current_rule"
+    },
+    {
+      "regionId": "kandarin",
+      "region": "Kandarin",
+      "name": "Memorial to Guthix engrams and echo slots",
+      "count": 2,
+      "detailLengths": [
+        1076,
+        1076
+      ],
+      "exactCopies": true,
+      "indices": [
+        16,
+        22
+      ],
+      "category": "Divination D&D and passive-buff infrastructure",
+      "confidence": "confirmed_wiki_plus_official_region_example"
+    },
+    {
+      "regionId": "kandarin",
+      "region": "Kandarin",
+      "name": "Piscatoris monkfish colony (Swan Song unlock)",
+      "count": 2,
+      "detailLengths": [
+        639,
+        639
+      ],
+      "exactCopies": true,
+      "indices": [
+        17,
+        23
+      ],
+      "category": "Fishing settlement and food infrastructure",
+      "confidence": "confirmed_wiki_plus_official_region_badge"
+    },
+    {
+      "regionId": "karamja",
+      "region": "Karamja",
+      "name": "Herblore Habitat jadinko hunting and vine farming",
+      "count": 2,
+      "detailLengths": [
+        980,
+        980
+      ],
+      "exactCopies": true,
+      "indices": [
+        6,
+        8
+      ],
+      "category": "regional skilling infrastructure",
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "regionId": "morytania",
+      "region": "Morytania",
+      "name": "Everlight dig-site infrastructure",
+      "count": 2,
+      "detailLengths": [
+        814,
+        814
+      ],
+      "exactCopies": true,
+      "indices": [
+        13,
+        14
+      ],
+      "category": "Archaeology dig site infrastructure",
+      "confidence": "confirmed_wiki_plus_official_region_example"
+    }
+  ],
+  "note": "All 14 groups are exact field-for-field copies (same detail length and full JSON). apply-region-patches.mjs op dedupeUpgradeName keeps the longest detail and drops the rest; for these, either copy is fine."
+}

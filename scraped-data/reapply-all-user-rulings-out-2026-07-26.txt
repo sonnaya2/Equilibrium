@@ -1,0 +1,567 @@
+RM 1├ù Gemstone golem outfit
+RM 1├ù Infinity ethereal outfit
+RM 1├ù Fletcher's outfit
+RM 1├ù Master constructor's outfit
+RM 1├ù Witchdoctor camo outfit
+RM 1├ù Nimble outfit (The Pit Agility XP set)
+RM 1├ù Silverhawk boots (Agility XP from feathers/down)
+RM 1├ù Thaler skilling rewards hub (Stanley Limelight Traders)
+RM 1├ù Portable skilling stations (ironman craft/deployment permanent note)
+RM 1├ù Skills necklace (guild teleports)
+RM 2├ù Igneous cape progression
+RM 1├ù Mattock tier ladder (bronze through elder rune + specials)
+RM 4├ù Full slayer helmet and point upgrades (reinforced through corrupted)
+RM 9├ù Area Tasks (achievement diaries) skilling overview
+Area Tasks ΓåÆ per-region available [self]
+KEEP Fairy ring network (Zanaris hub) ΓåÆ [misthalin] req=[Γêà]
+KEEP Staff of limitless family (elemental impetus craft) ΓåÆ [misthalin] req=[Γêà]
+RM 4├ù Decorated and exquisite urn craft infrastructure
+Urns: exquisiteΓåÆmorytania; regularΓåÆgeneral
+KEEP Elite skilling outfits core set (ironman fragment paths) ΓåÆ [kandarin,anachronia,forinthry] req=[kandarin,anachronia,forinthry]
+KEEP Grace of the elves (GOTE) ΓåÆ [forinthry,tirannwn] req=[forinthry,tirannwn]
+KEEP Dark Facet of Grace (GOTE enchantment) ΓåÆ [forinthry] req=[forinthry]
+KEEP Pickaxe of Life and Death ΓåÆ [fremennik,tirannwn,asgarnia] req=[fremennik,tirannwn,asgarnia]
+KEEP Pickaxe of Earth and Song ΓåÆ [fremennik,tirannwn,kandarin] req=[fremennik,tirannwn,kandarin]
+KEEP Imcando tools family (pickaxe, hatchet, related craft pressure) ΓåÆ [fremennik,misthalin,asgarnia] req=[fremennik,misthalin,asgarnia]
+KEEP Hatchet of Bloom and Blight ΓåÆ [tirannwn,misthalin,asgarnia,fremennik,desert,morytania] req=[tirannwn,misthalin,asgarnia,fremennik,desert,morytania]
+KEEP Hatchet of Ember and Glade ΓåÆ [forinthry,tirannwn,fremennik,asgarnia] req=[forinthry,tirannwn,fremennik,asgarnia]
+KEEP Mattock of Time and Space ΓåÆ [tirannwn,misthalin,kandarin,anachronia] req=[tirannwn,misthalin,kandarin,anachronia]
+KEEP Artificer's measure ΓåÆ [anachronia] req=[anachronia,forinthry,tirannwn,morytania]
+MISS Blessed flask production chain
+KEEP Always Adze (Seed of the Charyou Tree) ΓåÆ [kandarin] req=[kandarin]
+KEEP Auto-burn Woodcutting paths (Superheat Form vs Always Adze vs partial outfit/adze) ΓåÆ [kandarin] req=[kandarin]
+KEEP Bait and Switch + Always Adze dual monolith skilling paths ΓåÆ [anachronia] req=[anachronia]
+KEEP Seedicide collector upgrade ΓåÆ [kandarin] req=[kandarin]
+KEEP Toolbelt attach: Seedicide ΓåÆ [kandarin] req=[kandarin]
+KEEP Crystal fishing rod + Prif waterfall + Fury shark stack ΓåÆ [tirannwn] req=[tirannwn]
+KEEP Volcanic trapper outfit ΓåÆ [anachronia] req=[anachronia]
+KEEP Abyssal Link (The Subtle Blade) ΓåÆ [kandarin] req=[kandarin]
+KEEP Grasping rune pouch ΓåÆ [forinthry] req=[forinthry]
+KEEP Ring of slaying (craft unlock) ΓåÆ [misthalin] req=[Γêà]
+KEEP Slayer Introspection (Amascut's Enchanted Gem) ΓåÆ [kandarin,morytania,desert] req=[kandarin,morytania,desert]
+KEEP Slayer helmet (craft unlock + base helm) ΓåÆ [morytania] req=[morytania]
+KEEP Sirenic armour (T90 ranged power craft) ΓåÆ [forinthry,kandarin] req=[Γêà]
+KEEP Sirenic ΓåÆ elite sirenic armour ΓåÆ [forinthry,kandarin] req=[Γêà]
+KEEP All Fired Up ΓåÆ Inferno adze reward chain ΓåÆ [asgarnia,forinthry] req=[asgarnia,forinthry]
+KEEP Death Ward relic chain ΓåÆ [asgarnia,kandarin] req=[asgarnia,kandarin]
+KEEP Extreme invention supply combo (Guild + webbing + Herblore) ΓåÆ [asgarnia,kandarin] req=[asgarnia,kandarin]
+KEEP Elder divination outfit path (Cache base + Invention elite) ΓåÆ [asgarnia] req=[Γêà]
+KEEP Masterwork ranged armour (Anachronia + Wildy + Kandarin) ΓåÆ [anachronia,forinthry,kandarin] req=[anachronia,forinthry,kandarin]
+RM 2├ù Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)
+KEEP Orthen furnace core + Superheat Form + smithing autoheater stack ΓåÆ [anachronia,tirannwn,forinthry] req=[anachronia,tirannwn,forinthry]
+KEEP Orthen furnace core full skilling stack ΓåÆ [anachronia,tirannwn] req=[anachronia,tirannwn,forinthry]
+KEEP Masterwork plate ΓåÆ Orthen furnace core pressure stack ΓåÆ [forinthry,desert,anachronia,asgarnia] req=[forinthry,desert,anachronia]
+KEEP Perfect juju potion production path ΓåÆ [karamja,tirannwn] req=[karamja,tirannwn]
+KEEP Balarak's sash brush ΓåÆ [forinthry,anachronia] req=[forinthry,anachronia]
+KEEP Skeka's hypnowand ΓåÆ [forinthry,anachronia] req=[forinthry,anachronia]
+KEEP POH gilded altar (Chapel offering) ΓåÆ [fremennik,tirannwn,forinthry] req=[fremennik,tirannwn,forinthry]
+KEEP Edgeville skilling and Wilderness on-ramp hub ΓåÆ [misthalin,forinthry] req=[misthalin,forinthry]
+KEEP Wood box tier upgrades ΓåÆ [desert] req=[desert]
+KEEP Construction Contracts (estate agents) ΓåÆ [misthalin] req=[misthalin]
+Stormguard dig ΓåÆ kandarin
+{
+  "total": 1022,
+  "multiHostNames": 41,
+  "multi": [
+    {
+      "name": "Expansive essence pouch (70 essence, non-degrading)",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "misthalin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ]
+    },
+    {
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "sampleReq": [
+        "fremennik",
+        "misthalin",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Mattock of Time and Space",
+      "hosts": [
+        "misthalin",
+        "kandarin",
+        "tirannwn",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "tirannwn",
+        "misthalin",
+        "kandarin",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Edgeville skilling and Wilderness on-ramp hub",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "misthalin",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Slayer helmet component farms",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "desert",
+        "morytania"
+      ],
+      "sampleReq": [
+        "morytania",
+        "karamja",
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Fury of the Small relic chain",
+      "hosts": [
+        "misthalin",
+        "kandarin"
+      ],
+      "sampleReq": [
+        "kandarin",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Conservation of Energy relic chain",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin"
+      ],
+      "sampleReq": [
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Superior dragon claws (Wilderness hilt upgrade)",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "misthalin"
+      ]
+    },
+    {
+      "name": "Perfect juju potion production path",
+      "hosts": [
+        "karamja",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "karamja",
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "All Fired Up ΓåÆ Inferno adze reward chain",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "hosts": [
+        "asgarnia",
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Masterwork plate ΓåÆ Orthen furnace core pressure stack",
+      "hosts": [
+        "asgarnia",
+        "forinthry",
+        "desert",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "desert",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Pickaxe of Life and Death",
+      "hosts": [
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "fremennik",
+        "tirannwn",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Dark Facet of Passage (Passage of the Abyss infinite charges)",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "asgarnia"
+      ]
+    },
+    {
+      "name": "Death Ward relic chain",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Elite tectonic robe armour",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Trimmed / custom-fit trimmed masterwork melee armour",
+      "hosts": [
+        "asgarnia",
+        "morytania"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "morytania"
+      ]
+    },
+    {
+      "name": "Masterwork Spear of Annihilation",
+      "hosts": [
+        "asgarnia",
+        "morytania",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "morytania"
+      ]
+    },
+    {
+      "name": "Masterwork 2h sword",
+      "hosts": [
+        "asgarnia",
+        "forinthry",
+        "desert"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "desert",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Masterwork staff",
+      "hosts": [
+        "asgarnia",
+        "forinthry",
+        "desert",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "asgarnia",
+        "desert",
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Masterwork bow",
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "morytania"
+      ],
+      "sampleReq": [
+        "morytania",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Slayer Introspection (Amascut's Enchanted Gem)",
+      "hosts": [
+        "kandarin",
+        "desert",
+        "morytania"
+      ],
+      "sampleReq": [
+        "kandarin",
+        "morytania",
+        "desert"
+      ]
+    },
+    {
+      "name": "Elite skilling outfits core set (ironman fragment paths)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "kandarin",
+        "anachronia",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "sampleReq": []
+    },
+    {
+      "name": "Sirenic ΓåÆ elite sirenic armour",
+      "hosts": [
+        "kandarin",
+        "forinthry"
+      ],
+      "sampleReq": []
+    },
+    {
+      "name": "Masterwork ranged armour (Anachronia + Wildy + Kandarin)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Pickaxe of Earth and Song",
+      "hosts": [
+        "kandarin",
+        "fremennik",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "fremennik",
+        "tirannwn",
+        "kandarin"
+      ]
+    },
+    {
+      "name": "Reaver's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Stalker's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Channeller's ring",
+      "hosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    {
+      "name": "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)",
+      "hosts": [
+        "fremennik",
+        "forinthry"
+      ],
+      "sampleReq": [
+        "fremennik",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "POH gilded altar (Chapel offering)",
+      "hosts": [
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "fremennik",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Balarak's sash brush",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "hosts": [
+        "forinthry",
+        "tirannwn",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ]
+    },
+    {
+      "name": "Skeka's hypnowand",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "anachronia"
+      ]
+    },
+    {
+      "name": "Grace of the elves (GOTE)",
+      "hosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "sampleReq": [
+        "forinthry",
+        "tirannwn"
+      ]
+    },
+    {
+      "name": "Orthen furnace core full skilling stack",
+      "hosts": [
+        "tirannwn",
+        "anachronia"
+      ],
+      "sampleReq": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ]
+    }
+  ]
+}

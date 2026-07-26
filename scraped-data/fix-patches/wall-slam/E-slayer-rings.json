@@ -1,0 +1,159 @@
+{
+  "id": "E-slayer-rings",
+  "title": "Wall-slam E — Slayer Introspection, helm craft/components, Ring of slaying, Sirenic, Rex rings",
+  "date": "2026-07-26",
+  "generatedAt": "2026-07-26T20:30:00.000Z",
+  "catalogReadOnly": "data/research/catalog.json",
+  "catalogNotModified": true,
+  "purpose": "Human/user rulings for the Slayer + sirenic + Rex-matriarch ring wall set. Info-only — does not edit catalog.",
+  "sourceReview": [
+    "user wall-slam brief (2026-07-26): Slayer Introspection = kandarin+morytania+desert; Ring of slaying craft NO region req (primary misthalin); D2 full helm ladder unobtainable prefer pieces; Sirenic T90 forinthry+morytania / elite forinthry+tir",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json (D2 full helm remove; Introspection multi KEEP; Ring of slaying craft misthalin req=[])",
+    "scraped-data/fix-patches/wave2-walls.json (Sirenic T90/elite; Ring of slaying craft; helm craft/components/full ladder walls)",
+    "scraped-data/wall-slam-input-2026-07-26.json (live multi residual snapshot)",
+    "scripts/wall-slam-apply-high.mjs (merge schema: decisions[] action primary|keepHosts|remove|remove_all + confidence high|medium)"
+  ],
+  "policy": [
+    "Catalog is read-only in this pass — write decisions only.",
+    "Exact catalog upgrade names (must match u.name).",
+    "action primary: single home; requiredRegions defaults to [home] unless explicitly [] (Ring of slaying craft).",
+    "action keepHosts: intentional multi-host; requiredRegions = hard multi set.",
+    "action remove / remove_all: drop name from every host (D2 full ladder).",
+    "Do not invent Sirenic kandarin host — T90 is forinthry+morytania; elite is forinthry+tirannwn.",
+    "Rex rings (Stalker/Reaver/Channeller) share Anachronia heart + Fremennik base-ring dual; keep both hard."
+  ],
+  "summary": {
+    "itemCount": 10,
+    "primary": 2,
+    "keepHosts": 7,
+    "remove_all": 1,
+    "owned": [
+      "Slayer Introspection (Amascut's Enchanted Gem)",
+      "Slayer helmet (craft unlock + base helm)",
+      "Slayer helmet component farms",
+      "Ring of slaying (craft unlock)",
+      "Sirenic armour (T90 ranged power craft)",
+      "Sirenic → elite sirenic armour",
+      "Stalker's ring",
+      "Reaver's ring",
+      "Channeller's ring"
+    ]
+  },
+  "decisions": [
+    {
+      "name": "Slayer Introspection (Amascut's Enchanted Gem)",
+      "action": "keepHosts",
+      "hosts": ["kandarin", "morytania", "desert"],
+      "requiredRegions": ["kandarin", "morytania", "desert"],
+      "confidence": "high",
+      "hostsBefore": ["kandarin", "desert", "morytania"],
+      "reqBefore": ["kandarin", "morytania", "desert"],
+      "reason": "User: Slayer Introspection = kandarin+morytania+desert. Knowledge is Power / Amascut's Enchanted Gem multi dig-site hard gates (Stormguard/Warforge/Everlight style pressure); desert included per user multi set. Misthalin collector is not a host — do not expand hosts to misthalin.",
+      "rulingSource": "user_slayer_introspection_kandarin_morytania_desert"
+    },
+    {
+      "name": "Slayer helmet (craft unlock + base helm)",
+      "action": "primary",
+      "home": "morytania",
+      "requiredRegions": ["morytania"],
+      "confidence": "high",
+      "hostsBefore": ["misthalin", "morytania"],
+      "reqBefore": ["morytania", "misthalin"],
+      "reason": "Craft unlock + base helm homes on Morytania (black mask / practical helm assemble geography). Drop misthalin co-host. Point Learn is global; Smoking Kills desert points economy stays on its own desert row. D2: prefer pieces over full ladder — this is the base craft residual, not the unobtainable full upgrade mega-row.",
+      "rulingSource": "user_own_slayer_helm_craft_base_morytania_primary"
+    },
+    {
+      "name": "Slayer helmet component farms",
+      "action": "keepHosts",
+      "hosts": ["morytania", "karamja", "desert", "misthalin"],
+      "requiredRegions": ["morytania", "karamja", "desert", "misthalin"],
+      "confidence": "high",
+      "hostsBefore": ["misthalin", "karamja", "desert", "morytania"],
+      "reqBefore": ["morytania", "karamja", "desert", "misthalin"],
+      "reason": "D2: full helm ladder unobtainable — prefer component pieces. Keep multi farm hub: black mask Morytania, hexcrest Karamja, focus sight + spectral lens Desert, Misthalin ensoul/City of Um residual for necro lens path. All four are hard self-source pressure for full style coverage.",
+      "rulingSource": "user_d2_prefer_pieces_component_farms_multi"
+    },
+    {
+      "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+      "action": "remove_all",
+      "confidence": "high",
+      "hostsBefore": ["karamja", "desert", "morytania", "anachronia"],
+      "reason": "D2: full helm ladder unobtainable — replace with obtainable pieces (craft unlock + base; component farms). Do not re-host the reinforced→corrupted point ladder as a multi-region upgrade.",
+      "rulingSource": "user_d2_full_helm_ladder_remove"
+    },
+    {
+      "name": "Ring of slaying (craft unlock)",
+      "action": "primary",
+      "home": "misthalin",
+      "requiredRegions": [],
+      "confidence": "high",
+      "hostsBefore": ["misthalin", "fremennik", "desert", "morytania"],
+      "reqBefore": ["desert", "morytania", "fremennik", "misthalin"],
+      "reason": "User: Ring of slaying crafting has NO region req (could primary misthalin). Collapse off desert/morytania/fremennik hosts. Teleport destinations are logistics detail only — not requiredRegions. Empty requiredRegions is intentional (global points Learn).",
+      "rulingSource": "user_ring_of_slaying_craft_no_region_req_primary_misthalin"
+    },
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "morytania"],
+      "requiredRegions": ["forinthry", "morytania"],
+      "confidence": "high",
+      "hostsBefore": ["forinthry", "morytania"],
+      "hostsContested": ["kandarin", "forinthry", "morytania"],
+      "reqBefore": ["forinthry", "morytania"],
+      "reason": "User: Sirenic often T90 craft forinthry+morytania. Multi-ok those two only — do not re-add kandarin shop surface as hard host. Scales/thread are multi-source pressure inside forinthry+morytania framing; not a fake single-region lock.",
+      "rulingSource": "user_sirenic_t90_forinthry_morytania"
+    },
+    {
+      "name": "Sirenic → elite sirenic armour",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "tirannwn"],
+      "requiredRegions": ["forinthry", "tirannwn"],
+      "confidence": "high",
+      "hostsBefore": ["forinthry", "tirannwn"],
+      "hostsContested": ["kandarin", "forinthry", "tirannwn"],
+      "reqBefore": ["forinthry", "tirannwn"],
+      "reason": "User: elite forinthry+tir. Multi-ok forinthry+tirannwn only. Drop kandarin if it reappears. Not a clean single-region lock; do not invent all_required beyond this dual.",
+      "rulingSource": "user_elite_sirenic_forinthry_tirannwn"
+    },
+    {
+      "name": "Stalker's ring",
+      "action": "keepHosts",
+      "hosts": ["anachronia", "fremennik"],
+      "requiredRegions": ["anachronia", "fremennik"],
+      "confidence": "high",
+      "hostsBefore": ["fremennik", "anachronia"],
+      "reqBefore": ["anachronia", "fremennik"],
+      "reason": "Rex Matriarch heart (Anachronia) + archers' ring feedstock (Fremennik / DKs). True two-region self-source — both hard. Mirror Reaver/Channeller treatment.",
+      "rulingSource": "catalog_rex_ring_anachronia_fremennik"
+    },
+    {
+      "name": "Reaver's ring",
+      "action": "keepHosts",
+      "hosts": ["anachronia", "fremennik"],
+      "requiredRegions": ["anachronia", "fremennik"],
+      "confidence": "high",
+      "hostsBefore": ["fremennik", "anachronia"],
+      "reqBefore": ["anachronia", "fremennik"],
+      "reason": "Same dual as Stalker/Channeller: Anachronia heart + Fremennik warrior/hybrid base ring. Both required for self-source.",
+      "rulingSource": "catalog_rex_ring_anachronia_fremennik"
+    },
+    {
+      "name": "Channeller's ring",
+      "action": "keepHosts",
+      "hosts": ["anachronia", "fremennik"],
+      "requiredRegions": ["anachronia", "fremennik"],
+      "confidence": "high",
+      "hostsBefore": ["fremennik", "anachronia"],
+      "reqBefore": ["anachronia", "fremennik"],
+      "reason": "Same dual densify pattern: Anachronia heart + Fremennik seers' ring line. Do not invent ED-token acquisition paths.",
+      "rulingSource": "catalog_rex_ring_anachronia_fremennik"
+    }
+  ],
+  "notes": [
+    "Sibling residual 'Slayer helmet craft + full upgrade chain' (single-host morytania in live catalog) is outside this own set — leave unless a later pass collapses it into craft+base or removes as D2 mega-row duplicate.",
+    "Ring of slaying (equipment residual) is not owned here; craft unlock is the wall. Do not re-emit multi tele dest as requiredRegions on craft.",
+    "Elite sirenic armour (T92 ranged power) single-host asgarnia residual is a separate thin row — not the 'Sirenic → elite sirenic armour' dual; do not merge names.",
+    "Apply via scripts/wall-slam-apply-high.mjs decisions merge (confidence high|medium only) or a dedicated rulings apply — not by hand-editing catalog in this pass."
+  ]
+}

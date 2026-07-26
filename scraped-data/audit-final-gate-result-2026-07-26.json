@@ -1,0 +1,48 @@
+{
+  "pass": true,
+  "snapshot_date": "2026-07-26",
+  "gate": "Wave C final — live regional-skilling-unlocks vs audit-status-regional-unlocks-final",
+  "source": "data/research/regional-skilling-unlocks.json",
+  "status_ref": "scraped-data/audit-status-regional-unlocks-final-2026-07-26.json",
+  "total": 613,
+  "multiNoLabel": 0,
+  "nameDups": 0,
+  "critical_ok": {
+    "karamja:perfect-juju-potions": true,
+    "cross-region:orthen-superheat-autoheater": true,
+    "tirannwn:elven-grimoire": true,
+    "fremennik:god-books-horror-from-the-deep": true,
+    "cross-region:luck-of-the-dwarves": true,
+    "cross-region:tetracompass-and-tomes": true,
+    "asgarnia:divine-charge-crafting": true,
+    "misthalin:soil-box-material-storage": true,
+    "misthalin:archaeologists-tea": true,
+    "forinthry:scroll-of-quick-teleportation": true,
+    "cross-region:rune-pouch-ladder": true,
+    "cross-region:portable-skilling-stations": true,
+    "cross-region:thaler-skilling-rewards": true,
+    "kandarin:pof-farm-totems-tier2": true
+  },
+  "parity": {
+    "header_stats_total": 613,
+    "live_id_count": 613,
+    "status_total": 613,
+    "activities": 419,
+    "equipment": 194,
+    "regionCombos_isRegionCombo_true": 97,
+    "comboLabeled": 180,
+    "cross_region_prefix": 60,
+    "multi_region_prefix": 18
+  },
+  "rules": {
+    "multiNoLabel": "id prefix multi-region: OR cross-region: with comboLabel=='' ; OR isRegionCombo==true with empty comboLabel",
+    "nameDups": "exact string equality on records[].name"
+  },
+  "notes": [
+    "Live total 613 matches both file header stats.total and status regional_skilling_unlocks.",
+    "All 14 P0/P1 residual ids from status.p0_p1_residuals present as exact records[].id.",
+    "multiNoLabel=0: every cross-region:/multi-region: row and every isRegionCombo:true row carries a non-empty comboLabel (180 labeled rows; empty comboLabel only on single-region singles).",
+    "nameDups=0: 613 name fields; full pass found no exact-string collisions (near-dups like Morytania legs 1-4 vs Morytania legs 1 remain intentional distinct names).",
+    "Status quality_gates (combo, exact_name_dups) reconfirmed green for Wave C final gate."
+  ]
+}

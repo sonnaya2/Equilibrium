@@ -1,0 +1,301 @@
+{
+  "id": "wall-slam-A-tools",
+  "title": "Wall-slam A — gather-tool multi-host chains (pickaxe / hatchet / mattock / Imcando)",
+  "date": "2026-07-26",
+  "applyReady": true,
+  "catalogJsonDirectEditThisPass": false,
+  "catalogReadOnly": "data/research/catalog.json",
+  "scope": [
+    "Pickaxe of Life and Death",
+    "Pickaxe of Earth and Song",
+    "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)",
+    "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+    "Hatchet of Bloom and Blight",
+    "Hatchet of Ember and Glade",
+    "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+    "Mattock of Time and Space",
+    "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)"
+  ],
+  "outOfScope": [
+    "Always Adze (Seed of the Charyou Tree) — kandarin-only separate (not this pack)",
+    "Auto-burn Woodcutting paths / Bait and Switch dual-monolith stacks"
+  ],
+  "userLock": {
+    "Pickaxe of Life and Death": "fremennik + tirannwn + asgarnia (Ice Mountain / Sacred Forge)",
+    "Pickaxe of Earth and Song": "fremennik + tirannwn + kandarin (Ancient Cavern dragon forge)",
+    "Imcando tools family": "fremennik + misthalin + asgarnia",
+    "Hatchet of Bloom and Blight": "UNOBTAINABLE; Ember base + desert + morytania",
+    "Hatchet of Ember and Glade": "UNOBTAINABLE; forinthry (wildy) + tirannwn + fremennik + asgarnia",
+    "Mattock of Time and Space": "tirannwn + misthalin + kandarin + anachronia",
+    "Always Adze": "kandarin-only separate — do not merge into hatchet ladders"
+  },
+  "unobtainableTag": "UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+  "sourceReview": [
+    "scraped-data/wall-slam-input-2026-07-26.json",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/fix-patches/wave2-multi-req-clamp.json specialCases",
+    "scraped-data/fix-patches/issue-06-unobtainable.json",
+    "data/research/catalog.json (live hosts before this patch)",
+    "https://runescape.wiki/w/Pickaxe_of_Earth_and_Song",
+    "https://runescape.wiki/w/Hatchet_of_Ember_and_Glade"
+  ],
+  "policy": [
+    "Honor user prior rulings over wiki detail text and over wall-slam-input host drift.",
+    "keepHosts: clamp catalog hosts to listed set; set requiredRegions on every keep host.",
+    "UNOBTAINABLE rows keep multi-host visibility (planner must still see pressure) but tag detail.",
+    "Progression checklists are residual maps — requiredRegions = union of finished-tool end of each ladder.",
+    "Do not edit catalog.json from this file alone; apply via wall-slam / region-patch apply scripts.",
+    "Always Adze stays kandarin-only and is not rewritten here."
+  ],
+  "catalogBefore": {
+    "Pickaxe of Life and Death": {
+      "hosts": ["asgarnia", "fremennik", "tirannwn"],
+      "requiredRegions": ["fremennik", "tirannwn", "asgarnia"]
+    },
+    "Pickaxe of Earth and Song": {
+      "hosts": ["fremennik", "tirannwn"],
+      "requiredRegions": ["fremennik", "tirannwn"]
+    },
+    "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)": {
+      "hosts": ["fremennik", "tirannwn"],
+      "requiredRegions": ["fremennik", "tirannwn"]
+    },
+    "Imcando tools family (pickaxe, hatchet, related craft pressure)": {
+      "hosts": ["misthalin", "asgarnia", "fremennik"],
+      "requiredRegions": ["fremennik", "misthalin", "asgarnia"]
+    },
+    "Hatchet of Bloom and Blight": {
+      "hosts": ["misthalin", "asgarnia", "fremennik", "tirannwn"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik"]
+    },
+    "Hatchet of Ember and Glade": {
+      "hosts": ["misthalin", "asgarnia", "fremennik", "tirannwn"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik"]
+    },
+    "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)": {
+      "hosts": ["misthalin", "asgarnia", "fremennik", "tirannwn"],
+      "requiredRegions": ["fremennik", "tirannwn", "misthalin", "asgarnia"]
+    },
+    "Mattock of Time and Space": {
+      "hosts": ["misthalin", "tirannwn"],
+      "requiredRegions": ["tirannwn", "misthalin"]
+    },
+    "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)": {
+      "hosts": ["misthalin", "kandarin", "tirannwn", "anachronia"],
+      "requiredRegions": ["misthalin", "anachronia", "tirannwn", "kandarin"]
+    }
+  },
+  "ops": [
+    {
+      "op": "keepHosts",
+      "name": "Pickaxe of Life and Death",
+      "hosts": ["fremennik", "tirannwn", "asgarnia"],
+      "requiredRegions": ["fremennik", "tirannwn", "asgarnia"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "User lock: frem+tir+asgarnia (Ice Mountain / Sacred Forge upgrade of Earth and Song)."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Pickaxe of Earth and Song",
+      "hosts": ["fremennik", "tirannwn", "kandarin"],
+      "requiredRegions": ["fremennik", "tirannwn", "kandarin"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "User lock: frem+tir+kandarin (Imcando + crystal + Ancient Cavern dragon forge / Relight My Fire)."
+    },
+    {
+      "op": "edit",
+      "field": "requiredRegions",
+      "name": "Pickaxe of Earth and Song",
+      "requiredRegions": ["fremennik", "tirannwn", "kandarin"],
+      "confidence": "high",
+      "reason": "Catalog still had req=[frem,tir] only; user lock adds kandarin as hard craft-site gate."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)",
+      "hosts": ["fremennik", "tirannwn", "asgarnia", "kandarin"],
+      "requiredRegions": ["fremennik", "tirannwn", "asgarnia", "kandarin"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "Checklist spans EaS (frem+tir+kandarin) through Life and Death (frem+tir+asgarnia); union is the four-region map."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "hosts": ["fremennik", "misthalin", "asgarnia"],
+      "requiredRegions": ["fremennik", "misthalin", "asgarnia"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "User lock: frem+misthalin+asgarnia (pick LFM, hatchet Grove, shard/Thurgo); crystal legs stay on finished t90 rows."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Hatchet of Ember and Glade",
+      "hosts": ["forinthry", "tirannwn", "fremennik", "asgarnia"],
+      "requiredRegions": ["forinthry", "tirannwn", "fremennik", "asgarnia"],
+      "remove": ["misthalin"],
+      "unobtainable": true,
+      "detailSuffix": " · User: mark unobtainable — needs Forinthry + Tirannwn + Fremennik + Asgarnia under 3-elective cap. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+      "confidence": "high",
+      "reason": "User lock: wildy/forinthry+tir+frem+asg UNOBTAINABLE (drop Misthalin host; 4 > 3 electives)."
+    },
+    {
+      "op": "edit",
+      "field": "requiredRegions",
+      "name": "Hatchet of Ember and Glade",
+      "requiredRegions": ["forinthry", "tirannwn", "fremennik", "asgarnia"],
+      "confidence": "high",
+      "reason": "Replace stale misthalin-path req with forinthry wildy map from user ruling."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Hatchet of Bloom and Blight",
+      "hosts": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "remove": [],
+      "unobtainable": true,
+      "detailSuffix": " · User: also needs Desert + Morytania; unobtainable under 3-elective cap. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+      "confidence": "high",
+      "reason": "User lock: UNOBTAINABLE; add desert+mory on top of multi-region t100 Ramarno/moonstone chain (6 > 3 electives)."
+    },
+    {
+      "op": "edit",
+      "field": "requiredRegions",
+      "name": "Hatchet of Bloom and Blight",
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "confidence": "high",
+      "reason": "Catalog req stopped at four regions; user requires desert+mory material pressure too."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+      "hosts": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "remove": [],
+      "unobtainable": true,
+      "detailSuffix": " · Full ladder ends at Bloom and Blight (UNOBTAINABLE under 3-elective cap). Ember finished tool is forinthry+tir+frem+asg separately.",
+      "confidence": "medium",
+      "reason": "Checklist name ends at Bloom — mirror Bloom's six-region unobtainable map; Ember's forinthry swap stays on the finished-tool row."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Mattock of Time and Space",
+      "hosts": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "requiredRegions": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "User lock: tir+misthalin+kandarin+anachronia (crystal + Guild meteorite shard + Warforge Imcando + dragon mattock)."
+    },
+    {
+      "op": "edit",
+      "field": "requiredRegions",
+      "name": "Mattock of Time and Space",
+      "requiredRegions": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "confidence": "high",
+      "reason": "Catalog still had req=[tir,misthalin] only; user lock hard-requires kandarin + anachronia."
+    },
+    {
+      "op": "keepHosts",
+      "name": "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
+      "hosts": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "requiredRegions": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "remove": [],
+      "unobtainable": false,
+      "confidence": "high",
+      "reason": "Already four-region; reaffirm MoTaS/Tony ladder map matches Mattock of Time and Space user lock."
+    }
+  ],
+  "decisions": [
+    {
+      "name": "Pickaxe of Life and Death",
+      "action": "keepHosts",
+      "hosts": ["fremennik", "tirannwn", "asgarnia"],
+      "requiredRegions": ["fremennik", "tirannwn", "asgarnia"],
+      "confidence": "high",
+      "reason": "User lock: frem+tir+asgarnia (Ice Mountain Asgarnia Sacred Forge)."
+    },
+    {
+      "name": "Pickaxe of Earth and Song",
+      "action": "keepHosts",
+      "hosts": ["fremennik", "tirannwn", "kandarin"],
+      "requiredRegions": ["fremennik", "tirannwn", "kandarin"],
+      "confidence": "high",
+      "reason": "User lock: frem+tir+kandarin; catalog was missing kandarin host/req."
+    },
+    {
+      "name": "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)",
+      "action": "keepHosts",
+      "hosts": ["fremennik", "tirannwn", "asgarnia", "kandarin"],
+      "requiredRegions": ["fremennik", "tirannwn", "asgarnia", "kandarin"],
+      "confidence": "high",
+      "reason": "Union of Earth and Song + Life and Death region locks for the residual ladder."
+    },
+    {
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "action": "keepHosts",
+      "hosts": ["fremennik", "misthalin", "asgarnia"],
+      "requiredRegions": ["fremennik", "misthalin", "asgarnia"],
+      "confidence": "high",
+      "reason": "User lock: frem+misthalin+asgarnia; already correct, reaffirm."
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "tirannwn", "fremennik", "asgarnia"],
+      "requiredRegions": ["forinthry", "tirannwn", "fremennik", "asgarnia"],
+      "unobtainable": true,
+      "confidence": "high",
+      "reason": "User lock: wildy+tir+frem+asg UNOBTAINABLE; swap misthalin host for forinthry."
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "action": "keepHosts",
+      "hosts": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "unobtainable": true,
+      "confidence": "high",
+      "reason": "User lock: UNOBTAINABLE + desert+mory material pressure on the t100 chain."
+    },
+    {
+      "name": "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+      "action": "keepHosts",
+      "hosts": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "requiredRegions": ["tirannwn", "misthalin", "asgarnia", "fremennik", "desert", "morytania"],
+      "unobtainable": true,
+      "confidence": "medium",
+      "reason": "End of checklist is Bloom — use Bloom's six-region UNOBTAINABLE map; Ember forinthry lives on finished-tool row."
+    },
+    {
+      "name": "Mattock of Time and Space",
+      "action": "keepHosts",
+      "hosts": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "requiredRegions": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "confidence": "high",
+      "reason": "User lock: tir+misthalin+kandarin+anachronia; catalog was missing kandarin+anachronia hosts."
+    },
+    {
+      "name": "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
+      "action": "keepHosts",
+      "hosts": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "requiredRegions": ["tirannwn", "misthalin", "kandarin", "anachronia"],
+      "confidence": "high",
+      "reason": "Matches MoTaS four-region lock; already hosted correctly, reaffirm."
+    }
+  ],
+  "walls": [],
+  "notes": [
+    "Ember vs Bloom host sets intentionally differ: user put forinthry on Ember and kept misthalin (+desert+mory) on Bloom. Do not force-merge into a single 7-region set without a new ruling.",
+    "Wiki places Ember Imcando fragments at Fort Grove (project Misthalin taxonomy) and forge at Ancient Cavern (Kandarin); user forinthry/wildy lock overrides Grove host on the finished Ember row.",
+    "Earth and Song wiki forge is Ancient Cavern dragonkin anvil (Kandarin) — agrees with user kandarin hard gate.",
+    "Life and Death materials (Mos Le'Harmless black stone, Um moonstone, Daemonheim primal ore) stay optional pressure in detail — not hard requiredRegions per user three-region lock.",
+    "Always Adze is kandarin-only and must not be folded into hatchet progression.",
+    "apply-high.mjs currently hard-removes the three progression checklists before merging agent patches — if that stays, checklist keepHosts ops are no-ops after remove; finished-tool rows still apply."
+  ]
+}

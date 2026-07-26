@@ -1,0 +1,707 @@
+{
+  "snapshot_date": "2026-07-26",
+  "audit_type": "wave-5 still-missing gap audit: post-wave4 regional-skilling-unlocks (harsh)",
+  "source_file": "data/research/regional-skilling-unlocks.json",
+  "compared_against": [
+    "data/research/regional-skilling-unlocks.json (stats.total=550; header snapshotDate 2026-07-26)",
+    "scraped-data/audit-regional-unlocks-wave2-still-missing-2026-07-26.json (wave-2 baseline @ 272 unlocks)",
+    "scraped-data/audit-regional-unlocks-missing-2026-07-26.json (wave-1 @ 54 unlocks)",
+    "scraped-data/audit-status-regional-unlocks-2026-07-26.json (stale @ 272)",
+    "NOTE: scraped-data/audit-regional-unlocks-wave4-still-missing-2026-07-26.json DOES NOT EXIST — wave-5 compares post-wave4 file directly to wave-2 still-missing + id/name fuzzy presence"
+  ],
+  "policy": {
+    "present_count": "Primary id namespace counts by region: prefix before ':' (prifddinas counted under tirannwn for thin-region critique when scoring geography, listed separately in by_prefix).",
+    "missing_rule": "HIGH-VALUE only: permanent tools, outfits, shops, relics, diaries, production infrastructure, region-defining hubs, or ironman-essential permanent unlocks that materially change no-trade skilling. Training methods / XP rates alone excluded. Combat-only unlocks excluded unless primarily skilling infrastructure.",
+    "first_class_rule": "Buried inside a hub blurb, pointer sentence, or 'see X' reference that has NO matching id does NOT count as present. Broken outbound references (detail cites id that is absent) are severity=critical.",
+    "multi_without_comboLabel_rule": "Harsh: any record whose id prefix is multi-region: OR cross-region: with comboLabel=='' counts, PLUS any record with isRegionCombo==true and empty comboLabel, PLUS any record with requiredRegions.length>=2 and empty comboLabel. Single-region rows with empty comboLabel are expected and excluded from this count.",
+    "name_dup_rule": "Exact name collisions plus near-exact semantic twins that will double-score region power if both are treated as unlocks (same item/activity under two ids).",
+    "harshness": "Wave-1 catastrophes and wave-2 top-30 are largely FIXED in quantity. Wave-5 attacks (1) broken references, (2) thin starting regions still underweight vs hubs, (3) schema hygiene (all_required abuse, multi prefix without comboLabel), (4) residual ironman permanents never filed as first-class rows."
+  },
+  "summary": {
+    "total_unlocks": 550,
+    "wave1_total": 54,
+    "wave2_total": 272,
+    "wave4_to_wave5_delta_vs_wave2": 278,
+    "header_stats": {
+      "total": 550,
+      "activities": 372,
+      "equipment": 178,
+      "regionCombos": 43,
+      "comboLabeled": 126
+    },
+    "multi_without_comboLabel": {
+      "count": 9,
+      "definition": "multi-region: or cross-region: prefix with empty comboLabel (isRegionCombo=true empty = 0; requiredRegions>=2 empty = 0)",
+      "ids": [
+        "multi-region:slayer-helmet-ring-fuse",
+        "multi-region:toolbelt-advanced-gold-accumulator-attach",
+        "multi-region:toolbelt-bonecrusher-attach",
+        "multi-region:toolbelt-charming-imp-attach",
+        "multi-region:toolbelt-herbicide-attach",
+        "cross-region:bonecrusher-necklace",
+        "cross-region:crystal-teleport-seed-network",
+        "cross-region:spirit-weaver-relic",
+        "cross-region:thieving-crystal-mask-light-form"
+      ],
+      "confidence": "high",
+      "critique": "multi-region: toolbelt attaches are deliberately dual-milestone (item + attach) but the multi-region: prefix without comboLabel lies to any consumer that filters on comboLabel. spirit-weaver uses all_required with a single requiredRegions entry and empty comboLabel — schema noise. crystal-teleport-seed-network is hard Tirannwn-only wearing a cross-region: prefix."
+    },
+    "name_dups": {
+      "exact_or_near_exact_groups": 12,
+      "groups": [
+        {
+          "names": [
+            "Calquat farming patch (Tai Bwo Wannai)",
+            "Calquat tree patch (Tai Bwo Wannai)"
+          ],
+          "ids": ["karamja:calquat-farming-patch", "karamja:calquat-patch"],
+          "severity": "severe",
+          "problem": "Literal double-file of the sole calquat patch. Delete one id."
+        },
+        {
+          "names": [
+            "Karamja gloves 1-4",
+            "Karamja gloves skilling perks"
+          ],
+          "ids": ["karamja:area-tasks-karamja-gloves", "karamja:karamja-gloves-skilling"],
+          "severity": "high",
+          "problem": "Diary ladder + effects restatement. Keep area-tasks as canonical; collapse skilling-perks into it or hard-link only."
+        },
+        {
+          "names": [
+            "Master thief's lockpick + stethoscope (toolbelt)",
+            "Master thief's lockpick + master thief's stethoscope",
+            "Thieves' Guild master thief tools"
+          ],
+          "ids": [
+            "asgarnia:toolbelt-master-thief-tools",
+            "misthalin:thieves-guild-master-tools",
+            "asgarnia:thieves-guild-master-tools"
+          ],
+          "severity": "severe",
+          "problem": "Triple bookkeeping across Asgarnia toolbelt + Asgarnia guild tools + Misthalin guild tools. Wiki Thieves' Guild is Misthalin; Asgarnia guild-tools row is geography pollution."
+        },
+        {
+          "names": ["Slayer Codex", "Slayer Codex and Sunken Pyramid soul system"],
+          "ids": ["desert:slayer-codex", "desert:slayer-codex-and-sunken-pyramid"],
+          "severity": "high",
+          "problem": "Thin codex row retained beside full soul-system package."
+        },
+        {
+          "names": ["Ardougne cloak (Ourania rune output)", "Ardougne cloak 1-4"],
+          "ids": ["kandarin:ardougne-cloak-ourania", "kandarin:area-tasks-ardougne-cloak"],
+          "severity": "high",
+          "problem": "Ourania-only slice duplicates diary ladder."
+        },
+        {
+          "names": ["Diviner's outfit", "Diviner's outfit (Guthixian Cache)"],
+          "ids": ["kandarin:diviners-outfit", "kandarin:diviners-outfit-guthixian-cache"],
+          "severity": "medium",
+          "problem": "Base outfit + cache path — acceptable only if one is activity and one is equipment; currently both read as outfit unlocks."
+        },
+        {
+          "names": [
+            "Seers' Village achievements and Seer's headband",
+            "Seers' headband (implied via area-tasks)",
+            "Seers' Village skilling hub"
+          ],
+          "ids": [
+            "kandarin:seers-village-achievements",
+            "kandarin:area-tasks-seers-headband",
+            "kandarin:seers-headband",
+            "kandarin:seers-village-skilling"
+          ],
+          "severity": "high",
+          "problem": "Four Seers rows for one diary/hub system."
+        },
+        {
+          "names": ["Master runecrafter robes", "Runespan master runecrafter robes (id)"],
+          "ids": [
+            "misthalin:master-runecrafter-robes",
+            "misthalin:runespan-master-runecrafter-robes"
+          ],
+          "severity": "high",
+          "problem": "Same robe set double-filed under generic + Runespan path ids."
+        },
+        {
+          "names": ["Ritualist's outfit / City of Um ritualist outfit"],
+          "ids": [
+            "misthalin:ritualists-outfit",
+            "misthalin:city-of-um-ritualist-outfit"
+          ],
+          "severity": "high",
+          "problem": "Same Necromancy ritual outfit family under two ids."
+        },
+        {
+          "names": [
+            "Shark / fury shark fishing outfits",
+            "Fury shark outfit"
+          ],
+          "ids": ["kandarin:shark-outfit-deep-sea", "kandarin:fury-shark-outfit"],
+          "severity": "medium",
+          "problem": "Elite Fishing outfit ladder double-named; acceptable if shark is base and fury is elite — verify planner does not sum both XP layers."
+        },
+        {
+          "names": [
+            "Herby Werby herb bag",
+            "Scroll of cleansing + herb bag + botanist/factory stack"
+          ],
+          "ids": [
+            "anachronia:herby-werby-herb-bag",
+            "cross-region:herblore-efficiency-stack"
+          ],
+          "severity": "low",
+          "problem": "Justified piece + stack pair IF piece effects are not fully restated on stack."
+        },
+        {
+          "names": [
+            "Orthen furnace core",
+            "Orthen furnace core full skilling stack",
+            "Masterwork plate → Orthen furnace core pressure"
+          ],
+          "ids": [
+            "anachronia:orthen-furnace-core",
+            "cross-region:orthen-furnace-core-stack",
+            "cross-region:masterwork-orthen-plate-pressure"
+          ],
+          "severity": "medium",
+          "problem": "Three Orthen-core narratives; wave-2 dual-stack warning only half-fixed (orthen-superheat-autoheater id still missing while two stacks remain)."
+        }
+      ],
+      "confidence": "high"
+    },
+    "verdict": "Quantity victory, quality still messy. 550 unlocks is 10× wave-1 and 2× wave-2 — wave-2's critical permanent gaps (Slayer helmet chain, toolbelt attaches, Max Guild, ritual shard, POP, Wilderness sword, Barbarian Training, spirit trees, MTA, crystal trees, totems, Drakan, Nature's Sentinel, master camo, Sticky Fingers, aquarium, gold accumulator, werewolf Agility, fish farm, signs of the porter, constructor/lumberjack, gemstone golem, Shilo mine, Falador shield, Chronicle Attraction, Dark Facet, Polypore, Waiko) are NOW first-class. Remaining failures are: (a) broken outbound id references on Havenhythe Summoning, (b) thin starting-region density vs Misthalin/Kandarin bloat, (c) schema abuse (all_required on singles, multi-region: without comboLabel), (d) deep ironman permanents never promoted beyond footnotes (perfect juju, elven grimoire, god-book base, luck rings, divine charges, tetracompass).",
+    "wave2_top30_resolution": {
+      "resolved_as_first_class": [
+        "multi-region:slayer-helmet-craft / component-farms / full upgrades / ring-fuse / shop-protections",
+        "multi-region:toolbelt-*-attach (+ seedicide attach with comboLabel)",
+        "kandarin:memorial-to-guthix-boons",
+        "tirannwn:max-guild",
+        "tirannwn:ancient-elven-ritual-shard",
+        "desert:player-owned-port + asgarnia:player-owned-ports-skilling-rewards",
+        "forinthry:area-tasks-wilderness-sword",
+        "kandarin:barbarian-training",
+        "kandarin:spirit-tree-network + prifddinas:prif-spirit-tree-network",
+        "desert:mage-training-arena",
+        "tirannwn:crystal-tree-farming",
+        "anachronia:totems",
+        "morytania:drakans-medallion",
+        "cross-region:natures-sentinel-outfit",
+        "cross-region:master-camouflage-outfit",
+        "morytania:sticky-fingers-relic",
+        "asgarnia:thieves-guild-master-tools / toolbelt-master-thief-tools / misthalin:thieves-guild-master-tools",
+        "cross-region:poh-aquarium-prawnbroker",
+        "forinthry:gold-accumulator + advanced-gold-accumulator",
+        "morytania:werewolf-agility",
+        "havenhythe:wendlewick-fish-farm",
+        "cross-region:signs-of-the-porter-supply",
+        "morytania:constructors-outfit + lumberjack-outfit + misthalin:master-constructors-outfit",
+        "cross-region:gemstone-golem-outfit",
+        "karamja:shilo-gem-mine",
+        "asgarnia:area-tasks-falador-shield",
+        "tirannwn:chronicle-attraction",
+        "cross-region:dark-facet-of-grace + gote-dark-facet-ritual-shard-sustain",
+        "morytania:polypore-dungeon",
+        "asgarnia:the-arc-waiko-shop"
+      ],
+      "partial_or_messy": [
+        "Daemonheim still ~15 named scrolls + shop hub (generic daemonheim-skilling-rewards id gone but detail still references it)",
+        "Orthen stacks still dual (furnace-core-stack + masterwork-plate-pressure; orthen-superheat-autoheater id never materialised)",
+        "Thieves' Guild master tools triple-filed",
+        "Morytania legs 1–4 still four equipment rows while other diaries collapsed to 1–4 single rows"
+      ],
+      "confidence": "high"
+    }
+  },
+  "by_prefix": {
+    "misthalin": 83,
+    "kandarin": 62,
+    "asgarnia": 57,
+    "forinthry": 46,
+    "morytania": 44,
+    "desert": 42,
+    "cross-region": 42,
+    "fremennik": 36,
+    "anachronia": 30,
+    "karamja": 26,
+    "prifddinas": 25,
+    "tirannwn": 24,
+    "multi-region": 17,
+    "havenhythe": 16
+  },
+  "thin_regions": {
+    "havenhythe": {
+      "primary_id_count": 16,
+      "wave2_regionHints_count": 11,
+      "present_ids": [
+        "havenhythe:amberfell-hub",
+        "havenhythe:big-game-hunter",
+        "havenhythe:birdhouses",
+        "havenhythe:canoe-network",
+        "havenhythe:creeping-ivy",
+        "havenhythe:eternal-magic-nursery",
+        "havenhythe:highweald-mining",
+        "havenhythe:marigold-farm-patches",
+        "havenhythe:moonrise-dig-site",
+        "havenhythe:ring-of-kayazu",
+        "havenhythe:shaman-outfit",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:spirit-moths",
+        "havenhythe:tear-of-inanna-hungry-like-the-wolf",
+        "havenhythe:volatile-chinchompas",
+        "havenhythe:wendlewick-fish-farm"
+      ],
+      "critique": "Starting region still thinnest primary namespace (16 vs Misthalin 83). Wave-1/2 catastrophic emptiness is FIXED (BGH, Moonrise, birdhouses, fish farm, shrine hub). NEW critical failure: shrine hub detail claims havenhythe:empowered-summoning-obelisks and havenhythe:jackalope-familiar as canonical rows — BOTH IDS ABSENT from regional-skilling-unlocks.json. That is worse than a missing unlock: the file gaslights the planner.",
+      "broken_references": [
+        "havenhythe:empowered-summoning-obelisks",
+        "havenhythe:jackalope-familiar"
+      ],
+      "confidence": "high"
+    },
+    "karamja": {
+      "primary_id_count": 26,
+      "wave2_regionHints_count": 14,
+      "critique": "Automatic_early region improved from 0 → 26. Habitat / juju / witchdoctor / gloves / Jadinko / Brimhaven / nature altar / Shilo / pirates' hook / TokKul-Zo present. Still thin relative to elective hubs, and calquat is double-filed. Perfect juju production remains a pointer, not a production unlock. Nature's Sentinel is multi-region (not Karamja-primary) — correct for craft path, weak for curly-roots region scoring.",
+      "confidence": "high"
+    },
+    "tirannwn_plus_prif_note": {
+      "tirannwn_primary": 24,
+      "prifddinas_primary": 25,
+      "combined": 49,
+      "critique": "Do not treat Tirannwn as thin — Prif is split into prifddinas: namespace. Combined ~49 is mid-pack. Max Guild / crystal trees / ritual shard / Chronicle Attraction now first-class."
+    }
+  },
+  "top_25_still_missing": [
+    {
+      "rank": 1,
+      "name": "Havenhythe empowered Summoning obelisks (Spirit Plane Connection)",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:empowered-summoning-obelisks",
+      "wiki_url": "https://runescape.wiki/w/Shrine_of_Inanna",
+      "why_still_missing": "CRITICAL BROKEN REFERENCE. havenhythe:shrine-of-inanna-summoning-hub explicitly defers Spirit Plane Connection math to this id — which does not exist in regional-skilling-unlocks.json. Starting-region Summoning production permanent is planner-invisible except as a hub pointer that lies.",
+      "severity": "critical",
+      "confidence": "high",
+      "fuzzy_check": "id grep havenhythe:empowered → 0 hits; name/id only appears inside other details"
+    },
+    {
+      "rank": 2,
+      "name": "Jackalope familiar (Archaeology soil)",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:jackalope-familiar",
+      "wiki_url": "https://runescape.wiki/w/Jackalope",
+      "why_still_missing": "Same broken-reference class as rank 1 — shrine hub names havenhythe:jackalope-familiar as an equipment row that is not in the file. Archaeology soil familiar is a permanent skilling unlock for a starting region.",
+      "severity": "critical",
+      "confidence": "high",
+      "fuzzy_check": "id grep jackalope → detail-only; no id row"
+    },
+    {
+      "rank": 3,
+      "name": "Perfect juju potion production path (first-class)",
+      "region": "karamja",
+      "suggested_id": "karamja:perfect-juju-potions",
+      "wiki_url": "https://runescape.wiki/w/Perfect_juju_potion",
+      "why_still_missing": "karamja:juju-potions-pointer + juju-farming-potion-path exist; perfect juju (harmony moss + crystal blossom + crystal flasks + juju base) is the ironman skilling-efficiency end state and is not a first-class production unlock. Only harmony-pillar detail mentions perfect juju consumers.",
+      "severity": "critical",
+      "confidence": "high",
+      "fuzzy_check": "id perfect-juju → 0; pointer ids only"
+    },
+    {
+      "rank": 4,
+      "name": "Elven grimoire (Prif prayer-book swap)",
+      "region": "tirannwn",
+      "suggested_id": "tirannwn:elven-grimoire",
+      "wiki_url": "https://runescape.wiki/w/Elven_grimoire",
+      "why_still_missing": "Permanent prayer-book swap QoL for Seren prayers / Ancient Curses switching inside Prif. Named only as side pressure on Ancient Curses / Fort chapel notes — no first-class equipment/activity row.",
+      "severity": "high",
+      "confidence": "high",
+      "fuzzy_check": "id/name elven grimoire → detail footnotes only"
+    },
+    {
+      "rank": 5,
+      "name": "God books base unlock (Horror from the Deep + pages)",
+      "region": "fremennik",
+      "suggested_id": "fremennik:god-books-horror-from-the-deep",
+      "wiki_url": "https://runescape.wiki/w/God_book",
+      "why_still_missing": "desert:citharede-abbey-illuminated-books covers illumination only and correctly notes base books come from Horror from the Deep. The base damaged-book + page completion permanent is not first-class under Fremennik (lighthouse).",
+      "severity": "high",
+      "confidence": "high",
+      "fuzzy_check": "god-book / horror-from → desert illuminated only"
+    },
+    {
+      "rank": 6,
+      "name": "Luck of the Dwarves / ring of fortune (Archaeology rare-table QoL)",
+      "region": "multi-region",
+      "suggested_id": "cross-region:luck-of-the-dwarves",
+      "wiki_url": "https://runescape.wiki/w/Luck_of_the_Dwarves",
+      "why_still_missing": "Ironman Archaeology rare-drop and teleport QoL staple. Zero first-class skilling unlock row; not modeled as Keldagrim/dwarf-ring progression.",
+      "severity": "high",
+      "confidence": "medium",
+      "fuzzy_check": "luck / ring-of-fortune → 0 ids"
+    },
+    {
+      "rank": 7,
+      "name": "Tetracompass piece system + complete tomes",
+      "region": "multi-region",
+      "suggested_id": "cross-region:tetracompass-and-tomes",
+      "wiki_url": "https://runescape.wiki/w/Tetracompass",
+      "why_still_missing": "Archaeology material sink → complete tomes is a permanent account progression loop. Only incidental 'tetracompass piece' name-drops inside dig-site blurbs.",
+      "severity": "high",
+      "confidence": "high",
+      "fuzzy_check": "tetracompass / complete-tome → detail only"
+    },
+    {
+      "rank": 8,
+      "name": "Divine charge crafting system (Invention energy)",
+      "region": "asgarnia",
+      "suggested_id": "asgarnia:divine-charge-crafting",
+      "wiki_url": "https://runescape.wiki/w/Divine_charge",
+      "why_still_missing": "Powers all augmented tools/weapons and GOTE porters. Invention Guild + charge-pack infrastructure exist; the divine-charge craft loop itself is not a first-class unlock row.",
+      "severity": "high",
+      "confidence": "medium",
+      "fuzzy_check": "divine-charge → charge-pack / energy footnotes only"
+    },
+    {
+      "rank": 9,
+      "name": "Portable skilling stations (craft + deployment permanent)",
+      "region": "multi-region",
+      "suggested_id": "cross-region:portable-skilling-stations",
+      "wiki_url": "https://runescape.wiki/w/Portable_skilling_station",
+      "why_still_missing": "Ironman production infrastructure (fletcher/crafter/range/well/etc.). No regional-skilling first-class row; Invention/GE path not modeled for no-trade planning.",
+      "severity": "high",
+      "confidence": "medium",
+      "fuzzy_check": "portable → 0 unlock ids"
+    },
+    {
+      "rank": 10,
+      "name": "Orthen Superheat + autoheater full three-region stack (canonical id)",
+      "region": "multi-region",
+      "suggested_id": "cross-region:orthen-superheat-autoheater",
+      "wiki_url": "https://runescape.wiki/w/Orthen_furnace_core",
+      "why_still_missing": "wave-2 / region-combo audit demanded this stack id. File has orthen-furnace-core-stack (Anachronia+Tirannwn) and masterwork-orthen-plate-pressure (Asgarnia+Anachronia) and separate autoheater rows — never the three-region AFK smithing/firemaking combo under the promised id. Detail text still says 'Prefer orthen-superheat-autoheater'.",
+      "severity": "high",
+      "confidence": "high",
+      "fuzzy_check": "orthen-superheat-autoheater → detail references only; id absent"
+    },
+    {
+      "rank": 11,
+      "name": "Demon horn necklace (standalone equipment)",
+      "region": "forinthry",
+      "suggested_id": "forinthry:demon-horn-necklace",
+      "wiki_url": "https://runescape.wiki/w/Demon_horn_necklace",
+      "why_still_missing": "Only embedded inside cross-region:bonecrusher-necklace stack. Bonecrusher and toolbelt attach are first-class; the necklace purchase is not checklist-visible alone.",
+      "severity": "high",
+      "confidence": "high",
+      "fuzzy_check": "demon-horn → stack detail only"
+    },
+    {
+      "rank": 12,
+      "name": "Scroll of quick teleportation (Daemonheim permanent)",
+      "region": "forinthry",
+      "suggested_id": "forinthry:scroll-of-quick-teleportation",
+      "wiki_url": "https://runescape.wiki/w/Scroll_of_quick_teleportation",
+      "why_still_missing": "Named on daemonheim-rewards-shop-hub unlock list but no dedicated permanent row unlike life/cleansing/efficiency/etc. Inconsistent scroll granularity.",
+      "severity": "medium-high",
+      "confidence": "high",
+      "fuzzy_check": "quick-teleportation / quick teleportation → hub list only"
+    },
+    {
+      "rank": 13,
+      "name": "Papa Mambo shop (Habitat juju / vine herb interface)",
+      "region": "karamja",
+      "suggested_id": "karamja:papa-mambo-shop",
+      "wiki_url": "https://runescape.wiki/w/Papa_Mambo",
+      "why_still_missing": "Herblore Habitat + witchdoctor exist; Papa Mambo as the permanent shop/teleport/juju interface is not first-class. Wave-1 listed shop with witchdoctor — only outfit survived cleanly.",
+      "severity": "medium-high",
+      "confidence": "medium",
+      "fuzzy_check": "papa-mambo / Papa Mambo → 0 ids"
+    },
+    {
+      "rank": 14,
+      "name": "Karamja overgrown idols (Gara-Dul / Meeting your Idols)",
+      "region": "karamja",
+      "suggested_id": "karamja:overgrown-idols",
+      "wiki_url": "https://runescape.wiki/w/Overgrown_idols",
+      "why_still_missing": "anachronia:overgrown-idols exists and footnotes Karamja dual-site; Karamja idols themselves have no first-class row. Thin-region Woodcutting permanent miss.",
+      "severity": "medium-high",
+      "confidence": "high",
+      "fuzzy_check": "karamja:overgrown → 0; only anachronia row"
+    },
+    {
+      "rank": 15,
+      "name": "Archaeologist's tea / material manuals depth as consumable permanents",
+      "region": "misthalin",
+      "suggested_id": "misthalin:archaeologists-tea",
+      "wiki_url": "https://runescape.wiki/w/Archaeologist%27s_tea",
+      "why_still_missing": "material-manuals row exists; archaeologist's tea as the common excavation XP permanent consumable path is not first-class. Ironman Arch 1–99 checklist item.",
+      "severity": "medium-high",
+      "confidence": "medium",
+      "fuzzy_check": "archaeologist.*tea → 0"
+    },
+    {
+      "rank": 16,
+      "name": "Soil box / material storage upgrade ladder",
+      "region": "misthalin",
+      "suggested_id": "misthalin:soil-box-material-storage",
+      "wiki_url": "https://runescape.wiki/w/Soil_box",
+      "why_still_missing": "Ore box and wood box tier upgrades are first-class; Archaeology soil box / material storage capacity ladder is not. Asymmetric container modeling.",
+      "severity": "medium-high",
+      "confidence": "medium",
+      "fuzzy_check": "soil-box / material storage upgrade → 0 dedicated ids"
+    },
+    {
+      "rank": 17,
+      "name": "Grasping / sealed / expansive rune pouch craft ladder",
+      "region": "multi-region",
+      "suggested_id": "cross-region:rune-pouch-ladder",
+      "wiki_url": "https://runescape.wiki/w/Grasping_rune_pouch",
+      "why_still_missing": "forinthry:magical-thread-abyss-supply mentions sealed/large/grasping/expansive craft materials but the pouch unlocks themselves are not first-class equipment rows.",
+      "severity": "medium-high",
+      "confidence": "high",
+      "fuzzy_check": "grasping|expansive|sealed.*pouch as ids → 0"
+    },
+    {
+      "rank": 18,
+      "name": "Tirannwn quiver (equipment effects, not only area-tasks)",
+      "region": "tirannwn",
+      "suggested_id": "tirannwn:tirannwn-quiver",
+      "wiki_url": "https://runescape.wiki/w/Tirannwn_quiver",
+      "why_still_missing": "area-tasks-tirannwn-quiver exists as diary bundle; many other diaries got dedicated equipment rows (legs 1–4, desert amulet, wilderness sword). Quiver ammo-save / teleport effects deserve equipment granularity parity.",
+      "severity": "medium",
+      "confidence": "medium",
+      "fuzzy_check": "quiver → area-tasks only as first-class"
+    },
+    {
+      "rank": 19,
+      "name": "kandarin:skillchompa-supply hub (referenced, missing)",
+      "region": "kandarin",
+      "suggested_id": "kandarin:skillchompa-supply",
+      "wiki_url": "https://runescape.wiki/w/Skillchompa",
+      "why_still_missing": "cobalt-skillchompa-hunter-site and skillchompas equipment reference skillchompa-supply as existing — id absent (wave-2 triple-skillchompa warning partially 'fixed' by deleting the supply hub instead of merging cleanly).",
+      "severity": "medium",
+      "confidence": "high",
+      "fuzzy_check": "skillchompa-supply → detail reference only"
+    },
+    {
+      "rank": 20,
+      "name": "morytania:ectofuntus-first-age-outfit (activity reward path)",
+      "region": "morytania",
+      "suggested_id": "morytania:ectofuntus-first-age-outfit",
+      "wiki_url": "https://runescape.wiki/w/First_age_outfit",
+      "why_still_missing": "first-age-outfit-equipment exists; worship activity details still point at ectofuntus-first-age-outfit activity id that is not in the file. Wave-2 double-file warning inverted into a broken reference.",
+      "severity": "medium",
+      "confidence": "high",
+      "fuzzy_check": "ectofuntus-first-age-outfit → detail-only"
+    },
+    {
+      "rank": 21,
+      "name": "Cinder cores / pulse core permanent XP infrastructure",
+      "region": "multi-region",
+      "suggested_id": "cross-region:cinder-and-pulse-cores",
+      "wiki_url": "https://runescape.wiki/w/Cinder_core",
+      "why_still_missing": "Mentioned as boost requirements on high Archaeology relics; not modeled as a permanent/skilling-supply unlock. Ironman core economy is planner-invisible.",
+      "severity": "medium",
+      "confidence": "medium",
+      "fuzzy_check": "cinder / pulse core → requirement footnotes only"
+    },
+    {
+      "rank": 22,
+      "name": "Manor Farm tier-2 breeding perks / farm totems",
+      "region": "kandarin",
+      "suggested_id": "kandarin:pof-farm-totems-tier2",
+      "wiki_url": "https://runescape.wiki/w/Farm_totem",
+      "why_still_missing": "pof-breeding-log-tier1-perks explicitly notes tier-2 still needs dual pens + totems and does not grant them. Tier-2 permanent animal perks are not first-class.",
+      "severity": "medium",
+      "confidence": "high",
+      "fuzzy_check": "farm-totem / tier2 / tier-2 → notes only"
+    },
+    {
+      "rank": 23,
+      "name": "Anachronia base-camp building-by-building permanents beyond structure-rewards blob",
+      "region": "anachronia",
+      "suggested_id": "anachronia:base-camp-buildings",
+      "wiki_url": "https://runescape.wiki/w/Anachronia_base_camp",
+      "why_still_missing": "base-camp + base-camp-structure-rewards exist as hubs; Fort Forinthry got per-building first-class rows. Anachronia spa/town hall/storehouse-style per-building permanent effects remain underspecified for region scoring parity.",
+      "severity": "medium",
+      "confidence": "medium",
+      "fuzzy_check": "base-camp-structure-rewards is a blob, not per-building"
+    },
+    {
+      "rank": 24,
+      "name": "Apex Hide / Masterwork Ranged material path (Havenhythe BGH skilling half)",
+      "region": "havenhythe",
+      "suggested_id": "havenhythe:apex-hide-masterwork-ranged-path",
+      "wiki_url": "https://runescape.wiki/w/Apex_armour",
+      "why_still_missing": "Wave-1 called this THE Havenhythe skilling power spike. big-game-hunter activity exists; the permanent material → Masterwork Ranged production path is still combat-catalog territory, not a skilling unlock edge for region pickers.",
+      "severity": "medium",
+      "confidence": "medium",
+      "fuzzy_check": "apex / masterwork ranged → 0 skilling ids"
+    },
+    {
+      "rank": 25,
+      "name": "Thaler permanent reward sinks (skilling outfits / tools)",
+      "region": "multi-region",
+      "suggested_id": "cross-region:thaler-skilling-rewards",
+      "wiki_url": "https://runescape.wiki/w/Thaler",
+      "why_still_missing": "Multiple outfits note Thaler alternate paths (fletcher, factory, etc.) without a planner-visible Thaler sink checklist. Ironmen choosing minigame hubs cannot score Thaler geography.",
+      "severity": "medium",
+      "confidence": "medium",
+      "fuzzy_check": "thaler as id → 0"
+    }
+  ],
+  "quality_issues": [
+    {
+      "severity": "critical",
+      "title": "Broken outbound id references (file lies)",
+      "ids_referenced_but_absent": [
+        "havenhythe:empowered-summoning-obelisks",
+        "havenhythe:jackalope-familiar",
+        "kandarin:skillchompa-supply",
+        "cross-region:orthen-superheat-autoheater",
+        "morytania:ectofuntus-first-age-outfit",
+        "forinthry:daemonheim-skilling-rewards",
+        "asgarnia:artisans-workshop-rewards",
+        "desert:no-master-farmer-outfit",
+        "seedicide-not-daemonheim",
+        "kandarin:fishing-trawler-boundary",
+        "kandarin:warforge-dig-site-boundary",
+        "forinthry:crafteneering-boundary"
+      ],
+      "problem": "Detail text treats these as sibling unlock rows. Hygiene/boundary anti-rows may be intentional non-unlocks, but empowered-obelisks / jackalope / skillchompa-supply / orthen-superheat-autoheater / ectofuntus-first-age-outfit are product unlocks that simply never landed. Fix by adding the row or rewriting the detail to stop naming phantom ids.",
+      "confidence": "high"
+    },
+    {
+      "severity": "severe",
+      "title": "all_required abused on single-region rows (24 records)",
+      "count": 24,
+      "sample_ids": [
+        "anachronia:asuran-arsenal-heist",
+        "asgarnia:safecracking",
+        "desert:pyramid-plunder",
+        "desert:vault-of-hereditas-heist",
+        "desert:hets-oasis-farming",
+        "forinthry:inspire-love-relic",
+        "forinthry:nexus-mod-relic",
+        "forinthry:pouch-protector-relic",
+        "kandarin:big-chinchompa-private-hunting-grounds",
+        "tirannwn:harmony-pillars"
+      ],
+      "problem": "regionRequirementType=all_required with empty requiredRegions and empty comboLabel is schema pollution. These are singles. Any consumer that treats all_required as multi-region will mis-score.",
+      "confidence": "high"
+    },
+    {
+      "severity": "severe",
+      "title": "multi-region: / cross-region: prefix without comboLabel (9)",
+      "problem": "See summary.multi_without_comboLabel. Purpose statement requires multi-region unlocks to carry comboLabel. Toolbelt attaches and spirit-weaver violate that contract.",
+      "confidence": "high"
+    },
+    {
+      "severity": "severe",
+      "title": "Misthalin overweight vs starting-region thinness",
+      "problem": "misthalin 83 + kandarin 62 + asgarnia 57 vs havenhythe 16 + karamja 26. Fort/Archaeology/Um micro-splits inflate starting Misthalin while Havenhythe Summoning permanents are broken references. Region pickers will overvalue Misthalin row count.",
+      "confidence": "high"
+    },
+    {
+      "severity": "high",
+      "title": "Daemonheim scroll explosion retained",
+      "ids": [
+        "forinthry:scroll-of-cleansing",
+        "forinthry:scroll-of-efficiency",
+        "forinthry:scroll-of-gathering",
+        "forinthry:scroll-of-life",
+        "forinthry:scroll-of-proficiency",
+        "forinthry:scroll-of-dexterity",
+        "forinthry:scroll-of-restoration",
+        "forinthry:scroll-of-renewal",
+        "forinthry:daemonheim-rewards-shop-hub",
+        "forinthry:bonecrusher",
+        "forinthry:charming-imp",
+        "forinthry:herbicide",
+        "forinthry:gem-bag",
+        "forinthry:gem-bag-upgraded",
+        "forinthry:smithing-autoheater",
+        "forinthry:advanced-smithing-autoheater",
+        "forinthry:gold-accumulator",
+        "forinthry:advanced-gold-accumulator"
+      ],
+      "problem": "wave-2 severe warning only partially fixed (generic daemonheim-skilling-rewards id gone). Still ~18 first-class rows for one shop. Valuable, but region power double-counts Forinthry.",
+      "confidence": "high"
+    },
+    {
+      "severity": "high",
+      "title": "Lunar spell micro-split retained",
+      "ids": [
+        "fremennik:lunar-spellbook",
+        "fremennik:bake-pie",
+        "fremennik:telekinetic-grind",
+        "fremennik:npc-contact",
+        "fremennik:plank-make",
+        "fremennik:superglass-make",
+        "fremennik:lunar-farming-utility",
+        "fremennik:humidify",
+        "fremennik:string-jewellery",
+        "fremennik:make-leather",
+        "fremennik:livid-farm"
+      ],
+      "problem": "wave-2 medium warning unfixed. High-value spells deserve rows; humidify/string/make-leather could nest.",
+      "confidence": "high"
+    },
+    {
+      "severity": "high",
+      "title": "Diary modeling still inconsistent",
+      "problem": "Morytania legs 1–4 = four equipment rows. Desert amulet / Wilderness sword / Falador shield / Karamja gloves / Fremennik sea boots / Ardougne cloak / Seers headband / Varrock armour / Explorer's ring = mostly single 1–4 rows (good). Tirannwn quiver is area-tasks only. Pick ONE diary schema and apply it.",
+      "confidence": "high"
+    },
+    {
+      "severity": "high",
+      "title": "Confidence tag sprawl",
+      "problem": "Dozens of free-form confidence strings (confirmed_wiki, confirmed_wiki_plus_official_region_example, confirmed_wiki_cross_region_stack, confirmed_wiki_2026_current, confirmed_wiki_aura_removed_passives_remain, confirmed_wiki_availability_may_be_restricted, historical_fort_working_taxonomy, …). Not an enum. Consumers cannot sort trust without stringly parsing.",
+      "confidence": "high"
+    },
+    {
+      "severity": "medium",
+      "title": "prifddinas: vs tirannwn: split",
+      "problem": "Useful for city vs wilderness Tirannwn, but regionHints scoring must union both or Tirannwn looks thinner than it is (24+25).",
+      "confidence": "high"
+    },
+    {
+      "severity": "medium",
+      "title": "Motherlode Maw row is post-removal stale risk",
+      "ids": ["prifddinas:motherlode-maw"],
+      "problem": "Detail admits 2026 DailyScape removed daily arm-pull rewards and that the row is partially stale. Keeping a 'historical hub pointer' inside the unlock index inflates Tirannwn value for dead content.",
+      "confidence": "high"
+    },
+    {
+      "severity": "medium",
+      "title": "POP dual geography (Desert hub + Asgarnia Arc rewards)",
+      "ids": ["desert:player-owned-port", "asgarnia:player-owned-ports-skilling-rewards", "desert:scrimshaw-crafter"],
+      "problem": "scrimshaw-crafter is desert: id but detail says Hard Asgarnia for Port Sarim workshop. Id prefix lies about unlock geography.",
+      "confidence": "high"
+    },
+    {
+      "severity": "low",
+      "title": "Wave-4 still-missing audit file never written",
+      "problem": "Requested input scraped-data/audit-regional-unlocks-wave4-still-missing-2026-07-26.json is absent. Wave-5 had to reconstruct from wave-2 + current 550-record file. Process debt.",
+      "confidence": "high"
+    }
+  ],
+  "recommended_wave6_actions": [
+    "ADD havenhythe:empowered-summoning-obelisks + havenhythe:jackalope-familiar immediately (broken refs).",
+    "ADD karamja:perfect-juju-potions production unlock; demote juju-potions-pointer to non-unlock notes or delete.",
+    "ADD cross-region:orthen-superheat-autoheater OR rewrite all details that Prefer that id.",
+    "Fix multi-region: toolbelt attaches + ring-fuse: either set comboLabel support chains or re-prefix to forinthry:/multi-point:.",
+    "Normalize all_required → single on the 24 mis-tagged singles.",
+    "Delete karamja:calquat-patch OR calquat-farming-patch; collapse Thieves' Guild master tools to misthalin + optional toolbelt attach only.",
+    "Quarantine boundary/hygiene phantom id references (rewrite details).",
+    "Do not add more Fort/Lunar/Daemonheim micro-rows until Havenhythe/Karamja permanent depth matches starting-region importance.",
+    "Collapse confidence strings to a small enum: confirmed_wiki | confirmed_wiki_cross_region | historical_taxonomy | provisional."
+  ],
+  "confidence": {
+    "total_unlocks_and_prefix_counts": "high",
+    "multi_without_comboLabel": "high",
+    "name_dup_groups": "high",
+    "wave2_top30_resolved": "high",
+    "top_25_still_missing_presence_absence": "high_on_id_fuzzy; medium_on_wiki_effect_details_without_live_refetch",
+    "broken_reference_list": "high",
+    "overall_verdict": "high"
+  }
+}

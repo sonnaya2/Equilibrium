@@ -1,0 +1,241 @@
+{
+  "id": "patch-forinthry-places-2026-07-26",
+  "kind": "region-place-expansion",
+  "regionId": "forinthry",
+  "written_at": "2026-07-26",
+  "catalog_edit": false,
+  "apply_with": "scripts/apply-region-patches.mjs",
+  "summary": "Wave-2 Forinthry place expansion: 7 real Wilderness surface places after wave-1 (Daemonheim, Agility, Mage of Zamorak, Crater, Forinthry Dungeon, Mage Arena). Display name stays Wilderness; id stays forinthry. Fort Forinthry stays Misthalin. Mandrith already covered by content 'Wilderness Slayer (Mandrith)' — not re-added.",
+  "sources": [
+    {
+      "url": "https://runescape.wiki/w/Wilderness",
+      "title": "Wilderness",
+      "role": "notable locations table + region geography"
+    },
+    {
+      "url": "https://runescape.wiki/w/Lava_Maze",
+      "title": "Lava Maze"
+    },
+    {
+      "url": "https://runescape.wiki/w/Chaos_Temple_(Wilderness)",
+      "title": "Chaos Temple (Wilderness)"
+    },
+    {
+      "url": "https://runescape.wiki/w/Bandit_Camp_(Wilderness)",
+      "title": "Bandit Camp (Wilderness)"
+    },
+    {
+      "url": "https://runescape.wiki/w/Rogues%27_Castle",
+      "title": "Rogues' Castle"
+    },
+    {
+      "url": "https://runescape.wiki/w/Demonic_Ruins",
+      "title": "Demonic Ruins"
+    },
+    {
+      "url": "https://runescape.wiki/w/Frozen_Waste_Plateau",
+      "title": "Frozen Waste Plateau"
+    },
+    {
+      "url": "https://runescape.wiki/w/Pirates%27_Hideout",
+      "title": "Pirates' Hideout"
+    },
+    {
+      "url": "https://runescape.wiki/w/King_Black_Dragon",
+      "title": "King Black Dragon"
+    },
+    {
+      "url": "https://runescape.wiki/w/Mandrith",
+      "title": "Mandrith"
+    }
+  ],
+  "wiki_name_checks": {
+    "Lava Maze": { "wiki_title": "Lava Maze", "ok": true },
+    "Chaos Temple (Wilderness)": {
+      "wiki_title": "Chaos Temple (Wilderness)",
+      "ok": true,
+      "note": "Disambiguated from Chaos Temple (hut) at level 38; this is the level-13 gilded-altar Prayer site."
+    },
+    "Bandit Camp": {
+      "wiki_title": "Bandit Camp (Wilderness)",
+      "ok": true,
+      "area_label": "Bandit Camp",
+      "note": "Catalog short form matches other single-region camps; wiki disambiguator is (Wilderness)."
+    },
+    "Rogues' Castle": { "wiki_title": "Rogues' Castle", "ok": true },
+    "Demonic Ruins": { "wiki_title": "Demonic Ruins", "ok": true },
+    "Frozen Waste Plateau": { "wiki_title": "Frozen Waste Plateau", "ok": true },
+    "Pirates' Hideout": { "wiki_title": "Pirates' Hideout", "ok": true },
+    "King Black Dragon": { "wiki_title": "King Black Dragon", "ok": true },
+    "Fort Forinthry": {
+      "wiki_title": "Fort Forinthry",
+      "ok": true,
+      "action": "do_not_add_to_forinthry_areas — Misthalin working League taxonomy"
+    }
+  },
+  "uv_rationale": {
+    "frame": "map-uv, x east, y south; forinthry ring ~u 0.36–0.64, v 0.03–0.35",
+    "existing_wave1": {
+      "Wilderness Agility Course": [0.48, 0.12],
+      "Mage Arena": [0.49, 0.15],
+      "Wilderness Crater": [0.502, 0.172],
+      "Mage of Zamorak": [0.45, 0.2],
+      "Forinthry Dungeon": [0.53, 0.2],
+      "Daemonheim": [0.624, 0.292]
+    },
+    "new_relative": {
+      "Lava Maze": "south of Mage Arena / mid-deep west-central (KBD approach, phasmatite)",
+      "Chaos Temple (Wilderness)": "low-mid SE of Graveyard band — south of Crater, Prayer altar",
+      "Bandit Camp": "west-central mid levels — west of Crater / near Dark Warriors' Fortress north",
+      "Rogues' Castle": "far north, east of Mage Arena / Deserted Keep (Chaos Elemental west of castle)",
+      "Demonic Ruins": "NE deep (Annakarl) — east of Crater, south of north coast",
+      "Frozen Waste Plateau": "far NW ice (Ghorrock / Ice Plateau teleports) — west of Agility",
+      "Pirates' Hideout": "deep north / banite mine SE of hideout — between Agility and Frozen Waste"
+    },
+    "point_in_raw_ring": "all seven new UVs tested IN forinthry BORDER_NODES ring (raw, pre-smooth)"
+  },
+  "deferred": [
+    {
+      "name": "Deep Wilderness Castle Ruins",
+      "reason": "High-value ED2 surface place; not in the wave-2 candidate shortlist. Add in a later pass with UV near [0.515, 0.125]."
+    },
+    {
+      "name": "Red Dragon Isle / Graveyard of Shadows / Deserted Keep",
+      "reason": "Optional density extras from audit; skip to keep board readable."
+    },
+    {
+      "name": "Mandrith content row",
+      "reason": "Already present as content 'Wilderness Slayer (Mandrith)' after wave-1 rename; Crater remains the hub place pin."
+    }
+  ],
+  "ops": [
+    {
+      "op": "setAreas",
+      "regionId": "forinthry",
+      "areas": [
+        "Daemonheim",
+        "Wilderness Agility Course",
+        "Mage of Zamorak",
+        "Wilderness Crater",
+        "Forinthry Dungeon",
+        "Mage Arena",
+        "Lava Maze",
+        "Chaos Temple (Wilderness)",
+        "Bandit Camp",
+        "Rogues' Castle",
+        "Demonic Ruins",
+        "Frozen Waste Plateau",
+        "Pirates' Hideout"
+      ]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Lava Maze",
+      "uv": [0.48, 0.168]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Chaos Temple (Wilderness)",
+      "uv": [0.525, 0.235]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Bandit Camp",
+      "uv": [0.458, 0.188]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Rogues' Castle",
+      "uv": [0.528, 0.108]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Demonic Ruins",
+      "uv": [0.568, 0.132]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Frozen Waste Plateau",
+      "uv": [0.448, 0.098]
+    },
+    {
+      "op": "upsertAnchor",
+      "region": "forinthry",
+      "area": "Pirates' Hideout",
+      "uv": [0.462, 0.105]
+    },
+    {
+      "op": "addContent",
+      "regionId": "forinthry",
+      "content": {
+        "name": "King Black Dragon",
+        "kind": "boss",
+        "detail": "Classic multi-style dragon boss. Surface approach is the Lava Maze / artefact path in deep-mid Wilderness; the lair itself is not dangerous Wilderness, so teleports work inside. Lair access is the Forinthry geography dependency for ironman self-supply, not a claim that the arena tiles are Wilderness levels.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/King_Black_Dragon",
+          "title": "King Black Dragon",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "regionId": "forinthry",
+      "content": {
+        "name": "Chaos Temple Prayer altar",
+        "kind": "Prayer",
+        "detail": "Level-13 Wilderness Chaos Temple altar. Members get gilded-altar behaviour when offering bones or ashes — primary Wilderness Prayer train. Distinct from the small Chaos Temple hut near the Frozen Waste Plateau.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Chaos_Temple_(Wilderness)",
+          "title": "Chaos Temple (Wilderness)",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "regionId": "forinthry",
+      "content": {
+        "name": "Banite rocks (Pirates' Hideout mine)",
+        "kind": "Mining",
+        "detail": "Level-54 Pirates' Hideout mine — banite rock cluster for high-level Mining ladder in the deep north. Ironman ore path that is geographically Forinthry/Wilderness.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Wilderness_(Level_54)_Pirates%27_Hideout_mine",
+          "title": "Wilderness (Level 54) Pirates' Hideout mine",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "forinthry",
+      "rule": "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region."
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "forinthry",
+      "rule": "Fort Forinthry Construction/Slayer hub stays Misthalin working taxonomy until Equilibrium publishes otherwise — not unlocked by the Forinthry/Wilderness pick alone."
+    },
+    {
+      "op": "addHardRule",
+      "regionId": "forinthry",
+      "rule": "Abyss surface entrance (Mage of Zamorak) is Forinthry/Wilderness geography; rune-altar destinations remain their own regions."
+    },
+    {
+      "op": "note",
+      "text": "Display name on regionAnchors remains Wilderness; league/catalog id remains forinthry. Do not rename. Mandrith not re-added as content — wave-1 already has Wilderness Slayer (Mandrith); pin hub place is Wilderness Crater."
+    }
+  ]
+}

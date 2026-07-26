@@ -1,0 +1,595 @@
+{
+  "id": "issue-02-global-removes",
+  "title": "Issue 02 — remove skip/global multi-host upgrades entirely",
+  "date": "2026-07-26",
+  "generatedAt": "2026-07-26T14:37:56.787Z",
+  "applyReady": true,
+  "catalogReadOnly": "data/research/catalog.json",
+  "sourceReview": [
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/foreign-upgrades-review-2026-07-26.json"
+  ],
+  "policy": "Remove named skip/global upgrades from EVERY region host. No single-home keep. Do not touch Grace of the elves (GOTE), Dark Facet of Grace (GOTE enchantment), or Herb patches (N) rows.",
+  "doNotRemove": [
+    "Grace of the elves (GOTE)",
+    "Dark Facet of Grace (GOTE enchantment)",
+    "Herb patches (N) per-region rows"
+  ],
+  "notes": {
+    "upgradeCount": 12,
+    "removeCount": 69,
+    "opCount": 69,
+    "perUpgrade": [
+      {
+        "name": "Hoardstalker ring",
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "asgarnia",
+          "kandarin",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "removeCount": 8,
+        "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+      },
+      {
+        "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "kandarin",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn",
+          "anachronia"
+        ],
+        "removeCount": 8,
+        "reason": "A5 global Slayer Rewards Learn — not region-locked"
+      },
+      {
+        "name": "Learn quicker killing blows (400 Slayer points)",
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "kandarin",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn",
+          "anachronia"
+        ],
+        "removeCount": 8,
+        "reason": "A6 not relevant — global Slayer Rewards Learn"
+      },
+      {
+        "name": "Games necklace teleport package",
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "kandarin",
+          "forinthry",
+          "morytania"
+        ],
+        "removeCount": 5,
+        "reason": "A8 not relevant — craftable jewelry tele package"
+      },
+      {
+        "name": "Ring of duelling",
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "kandarin",
+          "desert"
+        ],
+        "removeCount": 4,
+        "reason": "A11 not relevant — craftable jewelry tele"
+      },
+      {
+        "name": "Cremation ability unlock",
+        "hosts": [
+          "misthalin",
+          "forinthry",
+          "morytania"
+        ],
+        "removeCount": 3,
+        "reason": "A12 skip — rare ability drop, not region planning value"
+      },
+      {
+        "name": "Ore box tier upgrades",
+        "hosts": [
+          "asgarnia",
+          "forinthry"
+        ],
+        "removeCount": 2,
+        "reason": "A13 not region locked — metal-bank capacity ladder is global"
+      },
+      {
+        "name": "Herb patch network (global herb-run map)",
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "asgarnia",
+          "kandarin",
+          "fremennik",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "removeCount": 9,
+        "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+      },
+      {
+        "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "kandarin",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "removeCount": 7,
+        "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+      },
+      {
+        "name": "GOTE gather + porter sustain checklist",
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "kandarin",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "removeCount": 7,
+        "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+      },
+      {
+        "name": "Signs of the porter (Divination supply system)",
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "kandarin",
+          "tirannwn"
+        ],
+        "removeCount": 4,
+        "reason": "F5 no region need — energy ladder is multi-region residual"
+      },
+      {
+        "name": "Fury shark outfit + Bait and Switch Fishing stack",
+        "hosts": [
+          "asgarnia",
+          "kandarin",
+          "tirannwn",
+          "anachronia"
+        ],
+        "removeCount": 4,
+        "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+      }
+    ],
+    "opSchema": "removeUpgrade { regionId, name, reason } — one op per host (apply-region-patches.mjs). No removeUpgradeByNameAllHosts in applier; expanded explicitly."
+  },
+  "ops": [
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "karamja",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "karamja",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "anachronia",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "karamja",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "anachronia",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Ring of duelling",
+      "reason": "A11 not relevant — craftable jewelry tele"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Ring of duelling",
+      "reason": "A11 not relevant — craftable jewelry tele"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Ring of duelling",
+      "reason": "A11 not relevant — craftable jewelry tele"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "Ring of duelling",
+      "reason": "A11 not relevant — craftable jewelry tele"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Cremation ability unlock",
+      "reason": "A12 skip — rare ability drop, not region planning value"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Cremation ability unlock",
+      "reason": "A12 skip — rare ability drop, not region planning value"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Cremation ability unlock",
+      "reason": "A12 skip — rare ability drop, not region planning value"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Ore box tier upgrades",
+      "reason": "A13 not region locked — metal-bank capacity ladder is global"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Ore box tier upgrades",
+      "reason": "A13 not region locked — metal-bank capacity ladder is global"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "karamja",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "fremennik",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "desert",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "morytania",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Signs of the porter (Divination supply system)",
+      "reason": "F5 no region need — energy ladder is multi-region residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Signs of the porter (Divination supply system)",
+      "reason": "F5 no region need — energy ladder is multi-region residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Signs of the porter (Divination supply system)",
+      "reason": "F5 no region need — energy ladder is multi-region residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Signs of the porter (Divination supply system)",
+      "reason": "F5 no region need — energy ladder is multi-region residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "tirannwn",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "anachronia",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+    }
+  ]
+}

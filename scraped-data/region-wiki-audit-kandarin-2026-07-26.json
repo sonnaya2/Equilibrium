@@ -1,0 +1,958 @@
+{
+  "auditId": "region-wiki-audit-kandarin-2026-07-26",
+  "regionId": "kandarin",
+  "regionName": "Kandarin",
+  "auditedAt": "2026-07-26",
+  "groundTruth": "runescape-wiki",
+  "sources": [
+    {
+      "title": "Kandarin",
+      "url": "https://runescape.wiki/w/Kandarin",
+      "role": "kingdom geography, settlements, notable locations, Fremennik fairy-ring trivia"
+    },
+    {
+      "title": "Equilibrium League/Areas/Kandarin",
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Kandarin",
+      "role": "League area shell: entire Kingdom of Kandarin + instances/underground with Kandarin entrance"
+    },
+    {
+      "title": "Player-owned farm / Manor Farm",
+      "url": "https://runescape.wiki/w/Player-owned_farm",
+      "role": "leagueRegion=Kandarin; Manor Farm north of East Ardougne"
+    },
+    {
+      "title": "Deep Sea Fishing hub",
+      "url": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+      "role": "leagueRegion=Kandarin; platform off Fishing Guild coast"
+    },
+    {
+      "title": "Warforge Dig Site",
+      "url": "https://runescape.wiki/w/Warforge_Dig_Site",
+      "role": "physical South Feldip Hills; excavation League badges Kandarin"
+    },
+    {
+      "title": "Barbarian Outpost",
+      "url": "https://runescape.wiki/w/Barbarian_Outpost",
+      "role": "explicit location=Kandarin; Fremennik border adjacency"
+    },
+    {
+      "title": "Memorial to Guthix / Hall of Memories",
+      "url": "https://runescape.wiki/w/Memorial_to_Guthix",
+      "role": "Piscatoris Hunter area surface; Hall under memorial"
+    },
+    {
+      "title": "Stormguard Citadel Dig Site / Temple of Ikov (dungeon)",
+      "url": "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+      "role": "entrance at Temple of Ikov near Hemenster/Ranging Guild — Kandarin, not Asgarnia"
+    },
+    {
+      "title": "Feldip Hills / Monastery of Ascension / The Lost Grove",
+      "url": "https://runescape.wiki/w/Feldip_Hills",
+      "role": "southern geographic border vs Tirannwn Lost Grove"
+    }
+  ],
+  "inputs": {
+    "catalogPath": "data/research/catalog.json",
+    "leagueRegionsPath": "data/league/regions.json",
+    "placeAnchorsPath": "src/map/data/placeAnchors.ts",
+    "didNotEditCatalog": true,
+    "counts": {
+      "catalogAreas": 13,
+      "leagueProductAreas": 3,
+      "placeAnchors": 13,
+      "content": 5,
+      "upgrades": 130
+    },
+    "catalogAreas": [
+      "Player-Owned Farm",
+      "Hall of Memories",
+      "Deep Sea Fishing Hub",
+      "Seers' Village",
+      "Catherby",
+      "Fishing Guild",
+      "Ardougne",
+      "Piscatoris Fishing Colony",
+      "Ourania Runecrafting Altar",
+      "Tree Gnome Stronghold",
+      "Warforge Dig Site",
+      "Memorial to Guthix",
+      "Barbarian Outpost"
+    ],
+    "leagueProductAreas": [
+      "Player-Owned Farm",
+      "Hall of Memories",
+      "Deep Sea Fishing Hub"
+    ],
+    "contentNames": [
+      "Legiones",
+      "Player-Owned Farm / Manor Farm",
+      "Hall of Memories",
+      "Deep Sea Fishing Hub",
+      "Advanced Gnome Stronghold course"
+    ]
+  },
+  "summary": {
+    "verdict": "places_are_kandarin_with_known_border_notes; product_areas_underspecified; content_thin; upgrades_bloated_with_foreign_hard_gates",
+    "placeVerdict": "All 13 catalog/placeAnchor areas resolve to Kandarin for League purposes. Warforge is geographic Feldip Hills but wiki Equilibrium League badges mark Warforge excavation as Kandarin. Barbarian Outpost is explicitly Kandarin on wiki despite Fremennik border adjacency.",
+    "fremennikBleed": "No catalog area is Fremennik. Risk is name-confusion (Barbarian Outpost / Otto / Ancient Cavern) and foreign upgrade rows (Deathless/Koschei, pickaxe chains) sitting under regionId kandarin.",
+    "asgarniaBleed": "No catalog area is Asgarnia. White Wolf Mountain is the eastern border; Catherby stays Kandarin. Stormguard entrance is Temple of Ikov (Hemenster/Kandarin) — do not refile Ancient Invention as Asgarnia. Foreign hard-Asgarnia upgrades (wicked hood, Entrana hops, botanist mask) are incorrectly parked under Kandarin.",
+    "tirannwnBleed": "The Lost Grove is Tirannwn (western sea / fairy BJS), not Kandarin Piscatoris (AKQ). Tirannwn-hard upgrades (Crwys, Ithell, Morvran, crystal seed/skillchompas) are incorrectly parked under Kandarin.",
+    "areaUpgradeCollisions": 6,
+    "foreignHardRequiredUpgrades": 22,
+    "leagueProductAreaGap": 10,
+    "contentVsUpgradeImbalance": "content=5 vs upgrades=130 — place-level content is thin; many place-shaped rows live only as upgrades"
+  },
+  "placeAudit": [
+    {
+      "area": "Player-Owned Farm",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Player-owned farm / Manor Farm",
+      "wikiUrl": "https://runescape.wiki/w/Player-owned_farm",
+      "wikiLocation": "Manor Farm north of East Ardougne (AKA Farming Guild / Ardougne farm)",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.268, 0.6],
+      "alsoAsContent": "Player-Owned Farm / Manor Farm",
+      "alsoAsUpgradeExact": true,
+      "notes": [
+        "Official Equilibrium skilling highlight for the region.",
+        "Anachronia Dinosaur Farm is a separate POF surface — do not collapse into this place."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Hall of Memories",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Hall of Memories",
+      "wikiUrl": "https://runescape.wiki/w/Hall_of_Memories",
+      "wikiLocation": "Dungeon under Memorial to Guthix (Piscatoris Hunter area)",
+      "leagueRegionBadge": "inferred_via_surface_piscatoris_kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.238, 0.432],
+      "alsoAsContent": "Hall of Memories",
+      "alsoAsUpgradeExact": true,
+      "notes": [
+        "Divination training location (70+). Access via memorial pool.",
+        "Place and upgrade both named identically — collision."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Deep Sea Fishing Hub",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Deep Sea Fishing hub",
+      "wikiUrl": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+      "wikiLocation": "Unquiet Ocean platform reached only through the Fishing Guild (north of East Ardougne)",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.258, 0.7],
+      "alsoAsContent": "Deep Sea Fishing Hub",
+      "alsoAsUpgradeExact": false,
+      "alsoAsUpgradeCaseInsensitive": "Deep Sea Fishing hub",
+      "notes": [
+        "Wiki title casing is 'hub' lowercase; catalog area uses 'Hub'.",
+        "Requires Fishing Guild entry (68 Fishing, boostable)."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Seers' Village",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Seers' Village",
+      "wikiUrl": "https://runescape.wiki/w/Seers%27_Village",
+      "wikiLocation": "Kandarin; west of Camelot; Elemental Workshop beneath",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.26, 0.38],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Missing from data/league/regions.json product areas list.",
+        "Core kingdom settlement; diary/headband upgrades attach here."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Catherby",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Catherby",
+      "wikiUrl": "https://runescape.wiki/w/Catherby",
+      "wikiLocation": "Kandarin; west of White Wolf Mountain (Asgarnia border)",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.3, 0.42],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Asgarnia bleed risk only if someone mis-maps White Wolf Mountain / Taverley side into Catherby.",
+        "Classic fishing + farming hub."
+      ],
+      "bleedRisk": {
+        "region": "asgarnia",
+        "severity": "low",
+        "detail": "Eastern approach crosses White Wolf Mountain into Asgarnia; the settlement itself is Kandarin."
+      }
+    },
+    {
+      "area": "Fishing Guild",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Fishing Guild",
+      "wikiUrl": "https://runescape.wiki/w/Fishing_Guild",
+      "wikiLocation": "Hemenster / north of East Ardougne",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.29, 0.52],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": true,
+      "notes": [
+        "Gate for Deep Sea Fishing hub access.",
+        "Exact area=upgrade name collision."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Ardougne",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Ardougne",
+      "wikiUrl": "https://runescape.wiki/w/Ardougne",
+      "wikiLocation": "Capital of Kandarin (East + West)",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.3, 0.58],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Capital; missing from product regions.json areas despite being the kingdom centre.",
+        "Manor Farm / POF sits just north of East Ardougne."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Piscatoris Fishing Colony",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Piscatoris Fishing Colony",
+      "wikiUrl": "https://runescape.wiki/w/Piscatoris_Fishing_Colony",
+      "wikiLocation": "North-western corner of Kandarin",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.25, 0.33],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": true,
+      "notes": [
+        "Exact area=upgrade name collision.",
+        "Adjacent Piscatoris Hunter area hosts Memorial to Guthix; fairy AKQ is Kandarin — not Lost Grove."
+      ],
+      "bleedRisk": {
+        "region": "tirannwn",
+        "severity": "medium",
+        "detail": "Planner notes sometimes attach Lost Grove / ancient elven ritual shard geography to Piscatoris because of proximity language; wiki places Lost Grove west of Tirannwn (fairy BJS), separate from Piscatoris (AKQ)."
+      }
+    },
+    {
+      "area": "Ourania Runecrafting Altar",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Ourania Altar / ZMI Altar",
+      "wikiUrl": "https://runescape.wiki/w/Ourania_Runecrafting_Altar",
+      "wikiLocation": "Ourania Cave west of Battlefield, south of West Ardougne",
+      "leagueRegionBadge": "Kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.255, 0.55],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Upgrade exists as 'Ourania Runecrafting Altar (ZMI)' — near-clone of place name."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Tree Gnome Stronghold",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Tree Gnome Stronghold",
+      "wikiUrl": "https://runescape.wiki/w/Tree_Gnome_Stronghold",
+      "wikiLocation": "Gnomish Empire settlement; wiki Category:Kandarin; spirit-tree / glider hub",
+      "leagueRegionBadge": "Kandarin_via_kingdom_and_category",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.22, 0.45],
+      "alsoAsContent": "Advanced Gnome Stronghold course (content, not place clone)",
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Infobox kingdom field is Gnomish Empire, but geography and Category:Kandarin place it inside the Kandarin elective.",
+        "Spirit tree / glider networks unlock here."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Warforge Dig Site",
+      "status": "confirmed_kandarin_league_feldip_geography",
+      "wikiCanonicalName": "Warforge Dig Site",
+      "wikiUrl": "https://runescape.wiki/w/Warforge_Dig_Site",
+      "wikiLocation": "South Feldip Hills (south of Yanille/Kandarin kingdom border on world map)",
+      "leagueRegionBadge": "Kandarin (per excavation hotspot League region column)",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.3, 0.66],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Physical map is Feldip Hills / Oo'glog approach — not Karamja.",
+        "Wiki Equilibrium League badges on Warforge hotspots are Kandarin — keep under Kandarin elective.",
+        "Monastery of Ascension (Legiones content) is also Feldip Hills under the same League mapping.",
+        "Upgrade names 'Warforge Dig Site (not Karamja)' and 'Warforge Dig Site (Feldip Hills Archaeology)' are near-clones of the place."
+      ],
+      "bleedRisk": {
+        "region": "karamja",
+        "severity": "low",
+        "detail": "Common mis-map of southern coast content to Karamja; catalog already carries boundary-check upgrades."
+      }
+    },
+    {
+      "area": "Memorial to Guthix",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Memorial to Guthix",
+      "wikiUrl": "https://runescape.wiki/w/Memorial_to_Guthix",
+      "wikiLocation": "Piscatoris Hunter area (south of Piscatoris Fishing Colony)",
+      "leagueRegionBadge": "inferred_kandarin",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.245, 0.4],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": true,
+      "notes": [
+        "Surface place for Hall of Memories entry + echo boon D&D.",
+        "Exact area=upgrade collision; also 'Memorial to Guthix echo boons' upgrade."
+      ],
+      "bleedRisk": null
+    },
+    {
+      "area": "Barbarian Outpost",
+      "status": "confirmed_kandarin",
+      "wikiCanonicalName": "Barbarian Outpost",
+      "wikiUrl": "https://runescape.wiki/w/Barbarian_Outpost",
+      "wikiLocation": "Northern Kandarin near Fremennik Province border; Barbarian Assault + Agility course",
+      "leagueRegionBadge": "Kandarin (infobox location=Kandarin)",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.27, 0.34],
+      "alsoAsContent": null,
+      "alsoAsUpgradeExact": false,
+      "notes": [
+        "Wiki explicitly sets location=Kandarin.",
+        "Locals address Fremennik-named players after Fremennik Trials — cultural bleed only, not region ownership.",
+        "Otto's Grotto / Ancient Cavern / Kuradal sit at Baxtorian Falls nearby — also Kandarin, not Fremennik."
+      ],
+      "bleedRisk": {
+        "region": "fremennik",
+        "severity": "high_name_confusion_low_wiki_ambiguity",
+        "detail": "Name + barbarian theme invites Fremennik refile. Wiki and kingdom map keep Outpost in Kandarin. Do not move Otto/Ancient Cavern/Kuradal into Fremennik."
+      }
+    }
+  ],
+  "missingFromLeagueProductAreas": {
+    "path": "data/league/regions.json",
+    "presentOnlyThreeOfficialHighlights": [
+      "Player-Owned Farm",
+      "Hall of Memories",
+      "Deep Sea Fishing Hub"
+    ],
+    "catalogAndAnchorsButMissingFromLeagueJson": [
+      "Seers' Village",
+      "Catherby",
+      "Fishing Guild",
+      "Ardougne",
+      "Piscatoris Fishing Colony",
+      "Ourania Runecrafting Altar",
+      "Tree Gnome Stronghold",
+      "Warforge Dig Site",
+      "Memorial to Guthix",
+      "Barbarian Outpost"
+    ],
+    "recommendation": "Promote the 10 catalog places into league product areas (or document that regions.json intentionally keeps only Jagex-highlighted hubs). placeAnchors already require exact catalog area strings."
+  },
+  "placeAnchorsParity": {
+    "path": "src/map/data/placeAnchors.ts",
+    "catalogMatch": "exact_13_of_13",
+    "anchorNotInCatalog": [],
+    "catalogNotInAnchors": [],
+    "note": "placeAnchors comment documents Piscatoris/Hall NW, Seers–Catherby band, Ardougne/POF south, Feldip Warforge, DSF southern pier — consistent with wiki layout."
+  },
+  "contentAudit": {
+    "count": 5,
+    "assessment": "thin",
+    "rows": [
+      {
+        "name": "Legiones",
+        "kind": "Monastery of Ascension",
+        "status": "confirmed_kandarin_league_feldip_geography",
+        "wikiUrl": "https://runescape.wiki/w/Legiones",
+        "notes": "Monastery of Ascension is Feldip Hills; League taxonomy via Warforge/Kandarin southern package. Missing place row for Monastery of Ascension itself."
+      },
+      {
+        "name": "Player-Owned Farm / Manor Farm",
+        "kind": "Farming",
+        "status": "confirmed_kandarin",
+        "wikiUrl": "https://runescape.wiki/w/Player-owned_farm",
+        "notes": "Duplicates place + upgrade naming surface."
+      },
+      {
+        "name": "Hall of Memories",
+        "kind": "Divination",
+        "status": "confirmed_kandarin",
+        "wikiUrl": "https://runescape.wiki/w/Hall_of_Memories",
+        "notes": "Exact place clone."
+      },
+      {
+        "name": "Deep Sea Fishing Hub",
+        "kind": "Fishing",
+        "status": "confirmed_kandarin",
+        "wikiUrl": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+        "notes": "Exact place clone."
+      },
+      {
+        "name": "Advanced Gnome Stronghold course",
+        "kind": "Agility",
+        "status": "confirmed_kandarin",
+        "wikiUrl": "https://runescape.wiki/w/Advanced_Gnome_Stronghold_Agility_Course",
+        "notes": "Good content row; Tree Gnome Stronghold place already covers settlement."
+      }
+    ],
+    "missingContentCandidates": [
+      {
+        "name": "Kuradal / Ancient Cavern",
+        "reason": "Slayer master + dungeon at Baxtorian Falls; upgrades exist but no content row"
+      },
+      {
+        "name": "Stormguard Citadel Dig Site",
+        "reason": "Ancient Invention / Armadylean Archaeology; entrance Temple of Ikov (Kandarin)"
+      },
+      {
+        "name": "Warforge Dig Site",
+        "reason": "Place exists; only upgrade-framed, not content"
+      },
+      {
+        "name": "Memorial to Guthix echoes",
+        "reason": "Place exists; Divination D&D is major regional power"
+      },
+      {
+        "name": "Elemental Workshop",
+        "reason": "Seers' Village undercroft; combat/skilling progression"
+      },
+      {
+        "name": "Ranging Guild",
+        "reason": "Hemenster/Seers band guild; upgrade-only today"
+      },
+      {
+        "name": "Yanille / Wizards' Guild",
+        "reason": "Southern Kandarin magic hub; not in areas list"
+      },
+      {
+        "name": "Fishing Trawler (Port Khazard)",
+        "reason": "Boundary-check upgrade only; Port Khazard not an area"
+      },
+      {
+        "name": "Barbarian Assault / Barbarian Training",
+        "reason": "Outpost + Otto package is signature Kandarin combat/skilling"
+      },
+      {
+        "name": "Seers' Village achievements",
+        "reason": "Diary/headband stack only appears as upgrades"
+      }
+    ]
+  },
+  "areaUpgradeCollisions": {
+    "description": "Upgrades whose display name equals (or case-insensitively equals) a catalog place name. These are the primary disambiguation targets.",
+    "exactNameClones": [
+      {
+        "place": "Player-Owned Farm",
+        "upgrade": "Player-Owned Farm",
+        "category": "Farming progression",
+        "wikiUrl": "https://runescape.wiki/w/Player-Owned_Farm",
+        "proposedUpgradeRename": "Manor Farm player-owned farm unlock",
+        "rationale": "Keep place as the map pin; upgrade names the unlock/system rather than the geography."
+      },
+      {
+        "place": "Fishing Guild",
+        "upgrade": "Fishing Guild",
+        "category": "Fishing guild infrastructure and Deep Sea Fishing access",
+        "wikiUrl": "https://runescape.wiki/w/Fishing_Guild",
+        "proposedUpgradeRename": "Fishing Guild membership and DSF access",
+        "rationale": "Place = building/location; upgrade = 68 Fishing gate + hub utilities."
+      },
+      {
+        "place": "Hall of Memories",
+        "upgrade": "Hall of Memories",
+        "category": "Divination training dungeon and permanent bot unlocks",
+        "wikiUrl": "https://runescape.wiki/w/Hall_of_Memories",
+        "proposedUpgradeRename": "Hall of Memories Divination bots and jars",
+        "rationale": "Place = dungeon entry; upgrade = permanent bot/jar progression."
+      },
+      {
+        "place": "Memorial to Guthix",
+        "upgrade": "Memorial to Guthix",
+        "category": "Divination D&D and passive-buff infrastructure",
+        "wikiUrl": "https://runescape.wiki/w/Memorial_to_Guthix",
+        "proposedUpgradeRename": "Memorial to Guthix engrams and echo slots",
+        "rationale": "Place = shrine pin; upgrade = engram/echo unlock ladder (echo boons already a separate row)."
+      },
+      {
+        "place": "Piscatoris Fishing Colony",
+        "upgrade": "Piscatoris Fishing Colony",
+        "category": "Fishing settlement and food infrastructure",
+        "wikiUrl": "https://runescape.wiki/w/Piscatoris_Fishing_Colony",
+        "proposedUpgradeRename": "Piscatoris monkfish colony (Swan Song unlock)",
+        "rationale": "Place = settlement; upgrade = Swan Song monkfish access package."
+      }
+    ],
+    "caseInsensitiveClones": [
+      {
+        "place": "Deep Sea Fishing Hub",
+        "upgrade": "Deep Sea Fishing hub",
+        "category": "Fishing activity and shop hub",
+        "wikiUrl": "https://runescape.wiki/w/Deep_Sea_Fishing",
+        "proposedUpgradeRename": "Deep Sea Fishing methods and hub shops",
+        "rationale": "Normalize casing away from place; sibling upgrade already named 'Deep Sea Fishing hub methods and boosts' — consider merging."
+      }
+    ],
+    "nearClonesPrefixPlace": [
+      {
+        "place": "Warforge Dig Site",
+        "upgrades": [
+          "Warforge Dig Site (not Karamja)",
+          "Warforge Dig Site (Feldip Hills Archaeology)"
+        ],
+        "proposedRenames": [
+          "Warforge region boundary (not Karamja)",
+          "Warforge Archaeology excavation package"
+        ]
+      },
+      {
+        "place": "Ourania Runecrafting Altar",
+        "upgrades": ["Ourania Runecrafting Altar (ZMI)"],
+        "proposedRenames": ["Ourania / ZMI rune output altar"]
+      },
+      {
+        "place": "Memorial to Guthix",
+        "upgrades": ["Memorial to Guthix echo boons"],
+        "proposedRenames": ["Guthix memorial echo boon set"]
+      },
+      {
+        "place": "Barbarian Outpost",
+        "upgrades": ["Barbarian Outpost Agility Course"],
+        "proposedRenames": ["Barbarian Outpost Agility Course rewards"]
+      },
+      {
+        "place": "Seers' Village",
+        "upgrades": [
+          "Seers' Village combat achievement rewards",
+          "Seers' Village achievements and Seer's headband",
+          "Seers' Village skilling hub"
+        ],
+        "proposedRenames": [
+          "Seers combat achievement rewards",
+          "Seer's headband 1-4 diary rewards",
+          "Seers skilling cluster (flax, maples, Elemental Workshop)"
+        ]
+      },
+      {
+        "place": "Ardougne",
+        "upgrades": [
+          "Ardougne cloak (Ourania rune output)",
+          "Ardougne farming patches and Manor Farm access geography",
+          "Ardougne cloak 1-4"
+        ],
+        "proposedRenames": [
+          "Ardougne cloak Ourania rune bonus",
+          "Ardougne herb/allotment and Manor Farm access",
+          "Ardougne cloak diary set (1-4)"
+        ]
+      },
+      {
+        "place": "Catherby",
+        "upgrades": ["Catherby fishing and farming hub"],
+        "proposedRenames": ["Catherby fishing spots and farming patches"]
+      },
+      {
+        "place": "Player-Owned Farm",
+        "upgrades": [
+          "Skillchompa Hunter and Player-Owned Farm supply",
+          "Player-owned farm breeding log tier-1 species perks"
+        ],
+        "proposedRenames": [
+          "Skillchompa supply (Hunter + Manor Farm)",
+          "Manor Farm breeding log tier-1 species perks"
+        ]
+      },
+      {
+        "place": "Tree Gnome Stronghold",
+        "upgrades": [
+          "Cobalt skillchompa Tree Gnome Stronghold catch site",
+          "Spirit tree network (Tree Gnome Stronghold)",
+          "Gnome Stronghold Agility Course (basic + advanced)"
+        ],
+        "proposedRenames": [
+          "Cobalt skillchompa catch site (Gnome Stronghold)",
+          "Spirit tree network unlock (Grand Tree hub)",
+          "Gnome Stronghold Agility (basic + advanced)"
+        ]
+      },
+      {
+        "place": "Deep Sea Fishing Hub",
+        "upgrades": ["Deep Sea Fishing hub methods and boosts"],
+        "proposedRenames": ["Deep Sea Fishing Frenzy / sailfish boost package"]
+      }
+    ],
+    "disambiguationPolicy": {
+      "places": "Map pins and area strings — short geographic names only.",
+      "content": "Activities/bosses/methods that live in the region — may include place names when the activity is the place.",
+      "upgrades": "Unlocks, rewards, outfits, permanent account state — never reuse bare place names; append unlock type (diary rewards, hub access, excavation package, etc.)."
+    }
+  },
+  "fremennikBleed": {
+    "placesMisfiledAsFremennik": [],
+    "placesAtRiskOfMisfile": [
+      {
+        "area": "Barbarian Outpost",
+        "risk": "high_name_confusion",
+        "wikiSays": "location=Kandarin; near Fremennik Province border",
+        "action": "Keep Kandarin. Document border adjacency in hardRules if product surfaces Fremennik confusion."
+      }
+    ],
+    "nearbyKandarinOftenConfusedWithFremennik": [
+      {
+        "name": "Otto's Grotto / Barbarian Training",
+        "wikiLocation": "Baxtorian Falls",
+        "correctRegion": "kandarin",
+        "wrongRegionIfMisfiled": "fremennik"
+      },
+      {
+        "name": "Ancient Cavern / Kuradal",
+        "wikiLocation": "Baxtorian Lake whirlpool",
+        "correctRegion": "kandarin",
+        "wrongRegionIfMisfiled": "fremennik"
+      }
+    ],
+    "inverseWikiTrivia": {
+      "detail": "Kandarin wiki trivia: fairy rings DKS (Snowy Hunter Area) and AJR (slayer cave SE of Rellekka) are labelled 'Kandarin' in the fairy directory but sit in Fremennik Province. Do not pull those into Kandarin areas.",
+      "url": "https://runescape.wiki/w/Kandarin"
+    },
+    "upgradesHardFremennikParkedUnderKandarin": [
+      {
+        "name": "Deathless (Koschei's Death Egg)",
+        "requiredRegions": ["fremennik"],
+        "action": "Move off kandarin regionId ownership; keep as cross-region or fremennik primary."
+      },
+      {
+        "name": "Pickaxe of Earth and Song",
+        "requiredRegions": ["fremennik", "tirannwn"],
+        "action": "Cross-region row — not Kandarin-owned."
+      },
+      {
+        "name": "Pickaxe of Life and Death",
+        "requiredRegions": ["fremennik", "tirannwn", "asgarnia"],
+        "action": "Cross-region row — not Kandarin-owned."
+      }
+    ]
+  },
+  "asgarniaBleed": {
+    "placesMisfiledAsAsgarnia": [],
+    "placesAtRiskOfMisfile": [
+      {
+        "area": "Catherby",
+        "risk": "low",
+        "detail": "East of town is White Wolf Mountain → Asgarnia; town is Kandarin."
+      }
+    ],
+    "falseAsgarniaClaimsInCatalogDetail": [
+      {
+        "name": "Divine Conversion (Cres Framework)",
+        "issue": "Detail text claims Stormguard / Howl's workshop hard geography is Asgarnia.",
+        "wikiCorrection": "Stormguard entrance is Temple of Ikov dungeon at Hemenster/Ranging Guild — Kandarin. Howl's Floating Workshop is inside Stormguard Citadel.",
+        "action": "Rewrite detail; treat Stormguard as Kandarin Archaeology, not Asgarnia."
+      }
+    ],
+    "upgradesHardAsgarniaParkedUnderKandarin": [
+      {
+        "name": "Hops patch network (Entrana + run geography)",
+        "requiredRegions": ["asgarnia"]
+      },
+      {
+        "name": "Modified botanist's mask",
+        "requiredRegions": ["asgarnia"]
+      },
+      {
+        "name": "Wicked hood (Runecrafting talisman storage + altar teleports)",
+        "requiredRegions": ["asgarnia"]
+      }
+    ],
+    "action": "Rehome hard-Asgarnia rows to asgarnia or cross-region; keep Kandarin only when Kandarin is a real hard gate or equal peer."
+  },
+  "tirannwnBleed": {
+    "placesMisfiledAsTirannwn": [],
+    "commonConfusion": {
+      "piscatorisVsLostGrove": {
+        "piscatoris": "NW Kandarin; fairy AKQ; Memorial/Hall; Hunter area",
+        "lostGrove": "Island west of Tirannwn; fairy BJS; Solak; currently tirannwn region area",
+        "action": "Never list Lost Grove under Kandarin areas. Ritual-shard / GOTE notes may mention Piscatoris adjacency only as travel language."
+      }
+    },
+    "upgradesHardTirannwnParkedUnderKandarin": [
+      {
+        "name": "Crwys Farming and Woodcutting hub",
+        "requiredRegions": ["tirannwn"]
+      },
+      {
+        "name": "Ithell crystal singing bowl (tools, armour, weapons)",
+        "requiredRegions": ["tirannwn"]
+      },
+      {
+        "name": "Attuned crystal teleport seed",
+        "requiredRegions": ["tirannwn"]
+      },
+      {
+        "name": "Crystal skillchompas (Isafdar catch + POF produce)",
+        "requiredRegions": ["tirannwn"],
+        "note": "POF produce path can stay Kandarin-adjacent pressure; wild catch is Tirannwn-hard."
+      },
+      {
+        "name": "Morvran (Prifddinas Slayer Master)",
+        "requiredRegions": ["tirannwn"]
+      },
+      {
+        "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+        "requiredRegions": ["tirannwn", "forinthry"]
+      }
+    ]
+  },
+  "otherForeignHardRequiredUpgrades": [
+    {
+      "name": "Anachronia Dinosaur Farm Farmers' Market (beans)",
+      "requiredRegions": ["anachronia"],
+      "home": "anachronia"
+    },
+    {
+      "name": "Laniakea (Anachronia highest standard Slayer Master)",
+      "requiredRegions": ["anachronia"],
+      "home": "anachronia"
+    },
+    {
+      "name": "Fairy ring network (Zanaris hub)",
+      "requiredRegions": ["misthalin", "morytania"],
+      "home": "cross-region"
+    },
+    {
+      "name": "Sumona (Pollnivneach Slayer Master)",
+      "requiredRegions": ["desert"],
+      "home": "desert"
+    },
+    {
+      "name": "Abyss Runecrafting stack",
+      "requiredRegions": ["forinthry"],
+      "home": "forinthry"
+    },
+    {
+      "name": "Magical thread (Abyss RC + Wilderness diary rates)",
+      "requiredRegions": ["forinthry"],
+      "home": "forinthry"
+    },
+    {
+      "name": "Resource dungeon unlock map (Dungeoneering permanent access)",
+      "requiredRegions": ["forinthry"],
+      "home": "forinthry / cross-region"
+    },
+    {
+      "name": "Duradel / Lapalok (Shilo Village Slayer Masters)",
+      "requiredRegions": ["karamja"],
+      "home": "karamja"
+    },
+    {
+      "name": "Chaeldar (Zanaris Slayer Master)",
+      "requiredRegions": ["misthalin"],
+      "home": "misthalin"
+    },
+    {
+      "name": "Mazchna / Achtryn (Canifis Slayer Masters)",
+      "requiredRegions": ["morytania"],
+      "home": "morytania"
+    }
+  ],
+  "feldipBoundaryNote": {
+    "wikiKingdom": "Kandarin borders Feldip Hills to the south; Feldip is described as south of Yanille and Kandarin.",
+    "leaguePractice": "Warforge Dig Site excavation hotspots and related Bandosian Archaeology carry Kandarin League region badges on the wiki.",
+    "ascension": "Monastery of Ascension (Legiones / Ascension crossbows) is Feldip Hills; treat as Kandarin League southern package alongside Warforge unless Equilibrium publishes a separate Feldip elective.",
+    "recommendation": "Keep Warforge + Ascension under Kandarin. Optional hardRule: 'Feldip Hills Warforge and Monastery of Ascension resolve to Kandarin for Equilibrium League badges; do not invent a Feldip region token.'"
+  },
+  "stormguardBoundaryNote": {
+    "entrance": "Temple of Ikov dungeon — Hemenster, south of Ranging Guild, north of East Ardougne",
+    "leagueRegion": "Kandarin",
+    "notAsgarnia": true,
+    "relatedUpgrades": ["Ancient Invention", "Stormguard Citadel Dig Site (Armadylean)", "Divine Conversion (Cres Framework)"],
+    "action": "Correct any detail strings that say Stormguard is Asgarnia."
+  },
+  "proposedHardRules": [
+    "Treat Barbarian Outpost, Otto's Grotto, the Ancient Cavern and Kuradal as Kandarin. Do not refile them under Fremennik because of barbarian naming.",
+    "Treat Warforge Dig Site and Monastery of Ascension (Feldip Hills geography) as Kandarin League content per wiki League badges. Do not map them to Karamja.",
+    "Treat Stormguard Citadel Dig Site / Howl's Floating Workshop / Ancient Invention as Kandarin via the Temple of Ikov entrance. Do not map them to Asgarnia.",
+    "Do not list The Lost Grove under Kandarin; it is Tirannwn. Piscatoris / Memorial to Guthix / Hall of Memories remain Kandarin."
+  ],
+  "proposedWarnings": [
+    "data/league/regions.json currently lists only three Kandarin areas (POF, Hall of Memories, DSF hub) while catalog/placeAnchors carry thirteen — product surface is under-described.",
+    "Kandarin upgrades bag includes 22 rows whose requiredRegions omit Kandarin entirely (Fremennik/Asgarnia/Tirannwn/Anachronia/Desert/Forinthry/Karamja/Misthalin/Morytania masters and tools). These inflate nUpgrades=130 and should be rehomed or tagged cross-region.",
+    "Fairy ring directory labels DKS/AJR as Kandarin while those destinations are Fremennik Province — inverse bleed; do not import them as Kandarin places."
+  ],
+  "renamePlan": {
+    "priority": "exact clones first, then case-insensitive, then near-clones",
+    "doNotRenamePlaces": true,
+    "exactClones": [
+      {
+        "from": "Player-Owned Farm",
+        "to": "Manor Farm player-owned farm unlock",
+        "kind": "upgrade"
+      },
+      {
+        "from": "Fishing Guild",
+        "to": "Fishing Guild membership and DSF access",
+        "kind": "upgrade"
+      },
+      {
+        "from": "Hall of Memories",
+        "to": "Hall of Memories Divination bots and jars",
+        "kind": "upgrade"
+      },
+      {
+        "from": "Memorial to Guthix",
+        "to": "Memorial to Guthix engrams and echo slots",
+        "kind": "upgrade"
+      },
+      {
+        "from": "Piscatoris Fishing Colony",
+        "to": "Piscatoris monkfish colony (Swan Song unlock)",
+        "kind": "upgrade"
+      },
+      {
+        "from": "Deep Sea Fishing hub",
+        "to": "Deep Sea Fishing methods and hub shops",
+        "kind": "upgrade"
+      }
+    ],
+    "nearClones": [
+      {
+        "from": "Warforge Dig Site (not Karamja)",
+        "to": "Warforge region boundary (not Karamja)"
+      },
+      {
+        "from": "Warforge Dig Site (Feldip Hills Archaeology)",
+        "to": "Warforge Archaeology excavation package"
+      },
+      {
+        "from": "Ourania Runecrafting Altar (ZMI)",
+        "to": "Ourania / ZMI rune output altar"
+      },
+      {
+        "from": "Memorial to Guthix echo boons",
+        "to": "Guthix memorial echo boon set"
+      },
+      {
+        "from": "Barbarian Outpost Agility Course",
+        "to": "Barbarian Outpost Agility Course rewards"
+      },
+      {
+        "from": "Seers' Village combat achievement rewards",
+        "to": "Seers combat achievement rewards"
+      },
+      {
+        "from": "Seers' Village achievements and Seer's headband",
+        "to": "Seer's headband 1-4 diary rewards"
+      },
+      {
+        "from": "Seers' Village skilling hub",
+        "to": "Seers skilling cluster (flax, maples, Elemental Workshop)"
+      },
+      {
+        "from": "Ardougne cloak (Ourania rune output)",
+        "to": "Ardougne cloak Ourania rune bonus"
+      },
+      {
+        "from": "Ardougne farming patches and Manor Farm access geography",
+        "to": "Ardougne herb/allotment and Manor Farm access"
+      },
+      {
+        "from": "Ardougne cloak 1-4",
+        "to": "Ardougne cloak diary set (1-4)"
+      },
+      {
+        "from": "Catherby fishing and farming hub",
+        "to": "Catherby fishing spots and farming patches"
+      },
+      {
+        "from": "Skillchompa Hunter and Player-Owned Farm supply",
+        "to": "Skillchompa supply (Hunter + Manor Farm)"
+      },
+      {
+        "from": "Player-owned farm breeding log tier-1 species perks",
+        "to": "Manor Farm breeding log tier-1 species perks"
+      },
+      {
+        "from": "Cobalt skillchompa Tree Gnome Stronghold catch site",
+        "to": "Cobalt skillchompa catch site (Gnome Stronghold)"
+      },
+      {
+        "from": "Spirit tree network (Tree Gnome Stronghold)",
+        "to": "Spirit tree network unlock (Grand Tree hub)"
+      },
+      {
+        "from": "Gnome Stronghold Agility Course (basic + advanced)",
+        "to": "Gnome Stronghold Agility (basic + advanced)"
+      },
+      {
+        "from": "Deep Sea Fishing hub methods and boosts",
+        "to": "Deep Sea Fishing Frenzy / sailfish boost package"
+      }
+    ]
+  },
+  "metrics": {
+    "placesTotal": 13,
+    "placesConfirmedKandarin": 12,
+    "placesConfirmedKandarinLeagueWithFeldipGeography": 1,
+    "placesMisfiled": 0,
+    "exactAreaUpgradeClones": 5,
+    "caseInsensitiveAreaUpgradeClones": 1,
+    "nearCloneUpgradeGroups": 10,
+    "foreignHardRequiredUpgradeCount": 22,
+    "hardKandarinRequiredUpgradeCount": 29,
+    "noRequiredRegionsUpgradeCount": 79,
+    "contentCount": 5,
+    "upgradeCount": 130,
+    "leagueProductAreasMissing": 10
+  },
+  "recommendedNextActions": [
+    "Do not edit catalog.json from this audit alone — apply renames/rehomes in a dedicated data pass.",
+    "Sync data/league/regions.json Kandarin areas with catalog (or document intentional truncation).",
+    "Rename the six exact/case-insensitive place-clone upgrades first.",
+    "Rehome or retag the 22 foreign-hard upgrades out of regionId=kandarin ownership.",
+    "Add hardRules for Barbarian Outpost/Otto, Warforge/Ascension Feldip, Stormguard/Ikov, and Lost Grove exclusion.",
+    "Expand content beyond five rows for Kuradal, Stormguard, Warforge, Memorial echoes, Elemental Workshop, Ranging Guild, Barbarian Assault/Training.",
+    "Fix Divine Conversion detail claiming Stormguard is Asgarnia."
+  ]
+}

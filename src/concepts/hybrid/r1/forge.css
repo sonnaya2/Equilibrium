@@ -1,0 +1,755 @@
+/*
+  Team Forge · CALC CRYSTAL — Hybrid composition R1 skin
+  Thesis: Editorial fort room + crystal facet combat desk.
+  Honest vacancy wells for unbound DPL/adren — never invent math.
+  Tokens only under .hybrid-skin--forge — do not touch app/globals.css.
+
+  Contrast (arm's-length):
+  parch-50 #f1e9d6 on stage #1f1912 ≈ 11.2:1 body
+  parch-100 #e0d4b8 on stage ≈ 9.1:1 headers
+  gem-400 #2ecb8f on void #0a0806 ≈ 9.5:1 chrome
+*/
+
+.hybrid-skin--forge {
+  /* Parch — Editorial scan ink */
+  --color-parch-50: #f1e9d6;
+  --color-parch-100: #e0d4b8;
+  --color-parch-300: #c4b59a;
+  --color-parch-400: #a8987c;
+  --color-parch-500: #8a7a60;
+
+  /* Stone — Editorial fort (warm), still dark enough for gem pop */
+  --color-stone-950: #0a0806;
+  --color-stone-900: #100e0b;
+  --color-stone-850: #16120e;
+  --color-stone-800: #1f1912;
+  --color-stone-raised: #2a231b;
+  --color-stone-zebra: #18140f;
+  --color-stone-inset: #12100c;
+  --color-stone-750: #4a3d2c;
+  --color-stone-carve: #6a563e;
+  --color-stone-mortar: #3a3228;
+  --color-stone-sun: #8a7a5c;
+
+  /* Gold — engraved display only */
+  --color-gold-300: #f0d08a;
+  --color-gold-400: #e0b264;
+  --color-gold-500: #b88a42;
+
+  /* Gem — sole interactive chrome */
+  --color-gem-200: #9af5d4;
+  --color-gem-300: #57e0ae;
+  --color-gem-400: #2ecb8f;
+  --color-gem-500: #1fa372;
+  --color-gem-600: #167a55;
+
+  /* Path triad — data semantics only */
+  --color-chaos-300: #d4614d;
+  --color-chaos-400: #b5402f;
+  --color-order-400: #4a7ec2;
+  --color-balance-400: #6fae45;
+  --color-ember-400: #e2622a;
+
+  /* Forge crystal extras (combat facet material) */
+  --forge-core: #0a1f1a;
+  --forge-facet: #57e0ae;
+  --forge-glow: #2ecb8f;
+  --forge-vacancy: #1a1612;
+  --forge-face-hi: color-mix(in srgb, var(--color-stone-raised) 65%, var(--forge-core));
+  --forge-face-lo: color-mix(in srgb, var(--color-stone-850) 88%, var(--forge-core));
+  --forge-day-void: #12110e;
+  --forge-day-stage: #343028;
+
+  color: var(--color-parch-50);
+  background: var(--color-stone-950);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* ── Editorial panels ─────────────────────────────────────── */
+
+.hybrid-skin--forge .panel {
+  background: var(--color-stone-850);
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+}
+
+.hybrid-skin--forge .panel--carved {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-sun) 14%, var(--color-stone-raised)) 0%,
+      color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-850)) 14%,
+      var(--color-stone-850) 40%,
+      color-mix(in srgb, var(--color-stone-900) 30%, var(--color-stone-850)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-sun),
+    inset 0 2px 0 color-mix(in srgb, var(--color-stone-carve) 50%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 50%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 70%, transparent);
+}
+
+/* Crystal facet panel — combat signature material */
+.hybrid-skin--forge .panel--facet {
+  background:
+    linear-gradient(
+      152deg,
+      var(--forge-face-hi) 0%,
+      var(--color-stone-850) 40%,
+      var(--forge-face-lo) 100%
+    );
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 1px 0 0 color-mix(in srgb, var(--forge-facet) 22%, transparent),
+    inset -1px -1px 0 color-mix(in srgb, var(--color-stone-950) 55%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 65%, transparent);
+}
+
+.hybrid-skin--forge .panel--facet .panel-head {
+  background: color-mix(in srgb, var(--color-stone-900) 55%, var(--forge-core));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 28%, transparent);
+}
+
+.hybrid-skin--forge .panel-head {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-parch-100);
+}
+
+.hybrid-skin--forge .panel-body {
+  padding: 0.75rem;
+}
+
+/* Daylight courtyard surfaces (Overview only via class) */
+.hybrid-skin--forge .panel--daylight {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 28%, var(--forge-day-stage)) 0%,
+      color-mix(in srgb, var(--color-stone-850) 40%, var(--forge-day-stage)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, var(--color-stone-sun));
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-sun),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 50%, transparent);
+}
+
+/* ── Wiki Dense tables ────────────────────────────────────── */
+
+.hybrid-skin--forge .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4;
+  background: var(--color-stone-800);
+}
+
+.hybrid-skin--forge .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: var(--color-stone-800);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 12%, transparent);
+}
+
+.hybrid-skin--forge .data-table td {
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  color: var(--color-parch-50);
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--forge .data-table td.secondary,
+.hybrid-skin--forge .data-table .cell-secondary {
+  color: var(--color-parch-100);
+}
+
+.hybrid-skin--forge .data-table tbody tr:nth-child(odd) td {
+  background: var(--color-stone-zebra);
+}
+
+.hybrid-skin--forge .data-table tbody tr:hover td {
+  background: var(--color-stone-raised);
+}
+
+.hybrid-skin--forge .data-table tbody tr.is-selected td {
+  background: var(--color-stone-raised);
+  box-shadow: inset 0 0 0 1px var(--color-gem-500);
+}
+
+.hybrid-skin--forge .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.hybrid-skin--forge .data-table tbody tr.is-done td {
+  opacity: 0.72;
+}
+
+/* ── Shell chrome ─────────────────────────────────────────── */
+
+.hybrid-skin--forge .forge-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+  height: 100%;
+  background: var(--color-stone-950);
+  color: var(--color-parch-50);
+}
+
+.hybrid-skin--forge .forge-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--color-stone-900);
+  border-bottom: 1px solid var(--color-stone-750);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+}
+
+.hybrid-skin--forge .forge-brand {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-400);
+  margin-right: 0.75rem;
+}
+
+.hybrid-skin--forge .forge-nav-link {
+  padding: 0.35rem 0.55rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.hybrid-skin--forge .forge-nav-link[aria-current="page"] {
+  color: var(--color-gem-400);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--forge-glow);
+}
+
+.hybrid-skin--forge .forge-facet-line {
+  height: 1px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--forge-core) 12%,
+    var(--forge-glow) 50%,
+    var(--forge-core) 88%,
+    transparent 100%
+  );
+  opacity: 0.55;
+}
+
+.hybrid-skin--forge .forge-gem-mark {
+  width: 14px;
+  height: 16px;
+  flex-shrink: 0;
+  background: var(--color-gem-500);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  box-shadow: 0 0 0 1px var(--color-gem-400);
+}
+
+/* ── Segment / tabs ───────────────────────────────────────── */
+
+.hybrid-skin--forge .forge-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+.hybrid-skin--forge .forge-seg button {
+  padding: 0.5rem 0.85rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.hybrid-skin--forge .forge-seg button[aria-selected="true"] {
+  color: var(--color-gem-300);
+  font-weight: 600;
+  border-bottom-color: var(--color-gem-400);
+  background: color-mix(in srgb, var(--color-stone-850) 80%, var(--forge-core));
+}
+
+/* ── Key figures + vacancy wells ──────────────────────────── */
+
+.hybrid-skin--forge .stat-key {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gem-400);
+}
+
+.hybrid-skin--forge .stat-key--sm {
+  font-size: 1.125rem;
+}
+
+.hybrid-skin--forge .stat-key--vacant {
+  color: var(--color-parch-400);
+  letter-spacing: 0.08em;
+}
+
+.hybrid-skin--forge .vacancy-well {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 3.5rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px dashed color-mix(in srgb, var(--color-stone-750) 80%, var(--forge-facet));
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      var(--forge-vacancy),
+      var(--forge-vacancy) 4px,
+      color-mix(in srgb, var(--color-stone-inset) 90%, var(--forge-core)) 4px,
+      color-mix(in srgb, var(--color-stone-inset) 90%, var(--forge-core)) 8px
+    );
+}
+
+.hybrid-skin--forge .vacancy-well .vacancy-k {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+.hybrid-skin--forge .vacancy-well .vacancy-v {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-parch-400);
+  letter-spacing: 0.12em;
+}
+
+.hybrid-skin--forge .vacancy-well .vacancy-cap {
+  font-size: 0.6875rem;
+  color: var(--color-parch-400);
+  line-height: 1.3;
+}
+
+/* Bound (when a fixture numeric exists) */
+.hybrid-skin--forge .bound-well {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 3.5rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: var(--color-stone-800);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 18%, transparent);
+}
+
+.hybrid-skin--forge .bound-well .bound-k {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+/* ── Combat facet bar ─────────────────────────────────────── */
+
+.hybrid-skin--forge .forge-bar-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  min-height: 5rem;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-stone-raised) 42%, var(--forge-core)) 0%,
+      var(--color-stone-850) 55%,
+      var(--color-stone-800) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 20%, transparent),
+    inset 1px 0 0 color-mix(in srgb, var(--forge-facet) 12%, transparent);
+  cursor: pointer;
+  color: var(--color-parch-100);
+  text-align: left;
+}
+
+.hybrid-skin--forge .forge-bar-slot.is-on {
+  color: var(--color-gem-300);
+  border-color: var(--color-gem-500);
+  box-shadow:
+    inset 0 0 0 1px var(--color-gem-500),
+    inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 35%, transparent),
+    inset 1px 0 0 color-mix(in srgb, var(--forge-facet) 22%, transparent);
+}
+
+.hybrid-skin--forge .forge-bar-slot .slot-idx {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-400);
+}
+
+.hybrid-skin--forge .forge-bar-slot.is-on .slot-idx {
+  color: var(--color-gem-400);
+}
+
+.hybrid-skin--forge .forge-style-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--color-parch-100);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.hybrid-skin--forge .forge-style-chip[aria-selected="true"] {
+  color: var(--color-gem-300);
+  border-color: var(--color-gem-500);
+  background: color-mix(in srgb, var(--color-stone-850) 70%, var(--forge-core));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 25%, transparent);
+}
+
+/* ── Fields / tags ────────────────────────────────────────── */
+
+.hybrid-skin--forge .field-inset {
+  background: var(--color-stone-inset);
+  border: 1px solid var(--color-stone-750);
+  color: var(--color-parch-50);
+  border-radius: 2px;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.8125rem;
+}
+
+.hybrid-skin--forge .tag {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+}
+
+.hybrid-skin--forge .tag-fixture {
+  border-color: var(--color-gem-600);
+  color: var(--color-gem-300);
+}
+
+.hybrid-skin--forge .tag-provisional {
+  border-color: var(--color-ember-400);
+  color: color-mix(in srgb, var(--color-ember-400) 80%, var(--color-parch-100));
+}
+
+.hybrid-skin--forge .tag-vacant {
+  border-style: dashed;
+  color: var(--color-parch-400);
+}
+
+/* ── Overview Daylight band ───────────────────────────────── */
+
+.hybrid-skin--forge .forge-keyart {
+  position: relative;
+  height: 132px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: var(--forge-day-void);
+}
+
+.hybrid-skin--forge .forge-keyart img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 48% 28%;
+}
+
+.hybrid-skin--forge .forge-keyart::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 18%,
+    color-mix(in srgb, var(--color-stone-950) 40%, transparent) 62%,
+    var(--color-stone-950) 100%
+  );
+  pointer-events: none;
+}
+
+.hybrid-skin--forge .forge-keyart-caption {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.45rem;
+  z-index: 1;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 55%);
+}
+
+.hybrid-skin--forge .daylight-milestone {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--forge-day-stage) 35%, var(--color-stone-850));
+  box-shadow: inset 0 1px 0 var(--color-stone-sun);
+}
+
+.hybrid-skin--forge .daylight-milestone-k {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+.hybrid-skin--forge .daylight-milestone-v {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.125rem;
+  color: var(--color-gem-400);
+}
+
+.hybrid-skin--forge .daylight-milestone-v.is-quiet {
+  color: var(--color-parch-400);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+
+.hybrid-skin--forge .daylight-ledger {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.hybrid-skin--forge .daylight-ledger dt {
+  color: var(--color-parch-300);
+}
+
+.hybrid-skin--forge .daylight-ledger dd {
+  margin: 0;
+  color: var(--color-parch-50);
+}
+
+/* ── Map Editorial board (no inspector) ───────────────────── */
+
+.hybrid-skin--forge .forge-map-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.hybrid-skin--forge .forge-map-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: var(--color-stone-850);
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  text-align: center;
+}
+
+.hybrid-skin--forge .forge-map-cell.is-focus {
+  color: var(--color-gem-300);
+  box-shadow:
+    inset 0 0 0 1px var(--color-gem-500),
+    inset 0 1px 0 var(--color-stone-carve);
+}
+
+.hybrid-skin--forge .forge-map-cell.is-picked {
+  color: var(--color-gem-300);
+  box-shadow:
+    inset 0 0 0 1px var(--color-gem-600),
+    inset 0 1px 0 var(--color-stone-carve);
+}
+
+.hybrid-skin--forge .forge-map-slab {
+  position: relative;
+  height: 88px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
+}
+
+.hybrid-skin--forge .forge-map-slab img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  opacity: 0.55;
+}
+
+.hybrid-skin--forge .forge-map-slab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    color-mix(in srgb, var(--color-stone-950) 70%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+.hybrid-skin--forge .forge-map-slab-label {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.4rem;
+  z-index: 1;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+}
+
+/* ── Data tree leaf ───────────────────────────────────────── */
+
+.hybrid-skin--forge .forge-tree-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.hybrid-skin--forge .forge-tree-btn.is-on {
+  background: var(--color-stone-800);
+  color: var(--color-gem-300);
+  border-left-color: var(--color-gem-400);
+}
+
+/* ── Build pick card ──────────────────────────────────────── */
+
+.hybrid-skin--forge .forge-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: var(--color-stone-850);
+  box-shadow: inset 0 1px 0 var(--color-stone-carve);
+  color: var(--color-parch-100);
+  cursor: pointer;
+  text-align: center;
+}
+
+.hybrid-skin--forge .forge-pick.is-picked {
+  color: var(--color-gem-300);
+  box-shadow:
+    inset 0 0 0 1px var(--color-gem-500),
+    inset 0 1px 0 var(--color-stone-carve);
+}
+
+.hybrid-skin--forge .forge-pick.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Facet chips (Tasks / Data lattice) ───────────────────── */
+
+.hybrid-skin--forge .forge-facet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  background: var(--color-stone-850);
+  color: var(--color-parch-100);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+}
+
+.hybrid-skin--forge .forge-facet-chip.is-on {
+  color: var(--color-gem-300);
+  border-color: var(--color-gem-500);
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--color-stone-raised) 55%, var(--forge-core)) 0%,
+      var(--color-stone-850) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 35%, transparent),
+    inset 1px 0 0 color-mix(in srgb, var(--forge-facet) 20%, transparent);
+}
+
+.hybrid-skin--forge .forge-facet-chip .pip {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--color-gem-400);
+  min-width: 1.25rem;
+  text-align: right;
+}
+
+/* ── Inspector editorial head ─────────────────────────────── */
+
+.hybrid-skin--forge .forge-cut-head {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  background: color-mix(in srgb, var(--color-stone-900) 50%, var(--forge-core));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--forge-facet) 20%, transparent);
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .hybrid-skin--forge * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

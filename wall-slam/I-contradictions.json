@@ -1,0 +1,1006 @@
+{
+  "id": "I-contradictions",
+  "title": "Wall-slam contradictions — where agents may disagree",
+  "date": "2026-07-26",
+  "catalogReadOnly": true,
+  "catalogPath": "data/research/catalog.json",
+  "sources": [
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/wall-slam-input-2026-07-26.json",
+    "scraped-data/fix-patches/wave2-walls.json",
+    "scraped-data/info-patches/wave2-empty-req-classify.json",
+    "scraped-data/patch-foreign-single-home-2026-07-26.json",
+    "scripts/wall-slam-apply-high.mjs"
+  ],
+  "policy": [
+    "Catalog is read-only for this file — observations only, no surgery.",
+    "Each item is a place two competent agents can pick opposite homes/actions.",
+    "recommend picks one option when prior user ruling or repo policy already settles it.",
+    "askUser:true only when ruling is absent, contradictory, or still a named wall."
+  ],
+  "items": [
+    {
+      "id": "artificers-measure-1-vs-4",
+      "name": "Artificer's measure",
+      "kind": "host_count",
+      "whyAgentsDisagree": "User ruling pins a single host (anachronia) with a 4-region required set + UNOBTAINABLE. Catalog and research rows still mirror the 4 pressure regions as hosts. Primary-home agents collapse to 1 host; multi-display agents keep 4 hosts so every pressure region lights up.",
+      "catalogObserved": {
+        "hosts": [
+          "forinthry",
+          "morytania",
+          "tirannwn",
+          "anachronia"
+        ],
+        "requiredRegions": [
+          "anachronia",
+          "forinthry",
+          "tirannwn",
+          "morytania"
+        ],
+        "unobtainableTag": false
+      },
+      "userRuling": "KEEP Artificer's measure on [anachronia] req=[anachronia,forinthry,tirannwn,morytania] UNOBTAINABLE",
+      "relatedNames": [
+        "Artificer's measure component region map"
+      ],
+      "options": {
+        "A": "Single host anachronia; requiredRegions = [anachronia,forinthry,tirannwn,morytania]; mark UNOBTAINABLE under 3-elective cap. Component map stays anachronia-only pointer.",
+        "B": "Multi-ok hosts = all four pressure regions with the same requiredRegions (planner lights every region in the chain)."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Explicit applied ruling already chose single host + multi req + UNOBTAINABLE. Component map was separately single-homed to anachronia."
+    },
+    {
+      "id": "poh-portal-towns",
+      "name": "Player-owned house portal towns and Construction utilities",
+      "kind": "geography_vs_upgrade",
+      "whyAgentsDisagree": "Portal towns are real multi-region geography, but the house instance is not region-owned and all_required on seven regions is planner poison. User KEEP left the multi package; single-home purge explicitly skipped POH portals. Agents split: keep mega multi-ok, primary Rimmington (Asgarnia) with destinations as detail, per-town rows, or remove as pure convenience.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "asgarnia",
+          "kandarin",
+          "fremennik",
+          "desert",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "asgarnia",
+          "kandarin",
+          "karamja",
+          "fremennik",
+          "desert",
+          "tirannwn",
+          "misthalin"
+        ]
+      },
+      "userRuling": "KEEP Player-owned house portal towns and Construction utilities on [misthalin,karamja,asgarnia,kandarin,fremennik,desert,tirannwn] req=[asgarnia,kandarin,karamja,fremennik,desert,tirannwn,misthalin]",
+      "options": {
+        "A": "Keep multi hosts on all portal towns but drop all_required — treat destinations as support pressure / optional detail (not seven hard picks).",
+        "B": "Primary-only asgarnia (Rimmington Construction default); list other portal towns only in detail.",
+        "C": "Global remove as non-upgrade travel convenience; Construction depth lives on other rows."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "POH portals: multi hosts with pressure-only (not all_required), primary Asgarnia/Rimmington only, or remove the package entirely?"
+    },
+    {
+      "id": "poh-gilded-altar-drift",
+      "name": "POH gilded altar (Chapel offering)",
+      "kind": "ruling_vs_catalog_drift",
+      "whyAgentsDisagree": "User MULTI_KEEP intended fremennik+tirannwn+forinthry+misthalin (burner/powder sources). Catalog has drifted to asgarnia with empty requiredRegions. Restore agents fight primary-Asgarnia (house default) vs multi powder-source keep.",
+      "catalogObserved": {
+        "hosts": [
+          "asgarnia"
+        ],
+        "requiredRegions": []
+      },
+      "userRuling": "KEEP POH gilded altar (Chapel offering) on [fremennik,tirannwn,forinthry,misthalin] req=[fremennik,tirannwn,forinthry]",
+      "options": {
+        "A": "Restore multi hosts [fremennik,tirannwn,forinthry,misthalin] with requiredRegions matching ruling (powder/burner sources).",
+        "B": "Primary asgarnia (or misthalin) only; source materials as detail only."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP already listed multi hosts; current asgarnia-only empty-req is drift, not a new policy choice."
+    },
+    {
+      "id": "checklist-vs-piece-rows",
+      "name": "Tool progression checklists vs individual tools",
+      "kind": "row_shape",
+      "whyAgentsDisagree": "Three residual checklist rows restate chains already covered by piece equipment (Imcando, Earth and Song / Life and Death, Ember and Glade / Bloom and Blight, MoTaS). Density agents delete checklists; completeness agents keep them as planner maps. wall-slam-apply-high.mjs already codes remove-checklist.",
+      "names": [
+        "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+        "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
+        "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)"
+      ],
+      "catalogObserved": {
+        "hatchetChecklistHosts": [
+          "misthalin",
+          "asgarnia",
+          "fremennik",
+          "tirannwn"
+        ],
+        "mattockChecklistHosts": [
+          "misthalin",
+          "kandarin",
+          "tirannwn",
+          "anachronia"
+        ],
+        "pickaxeChecklistHosts": [
+          "fremennik",
+          "tirannwn"
+        ],
+        "pieceRowsAlsoPresent": true
+      },
+      "userRuling": null,
+      "options": {
+        "A": "Remove all three checklist rows; keep individual tool / family rows only (link chains in detail).",
+        "B": "Keep checklists as multi-host residual maps; never re-emit piece effects on the checklist rows."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Repo style prefers first-class pieces over duplicate chain umbrellas; apply-high already treats checklists as removable noise when pieces exist."
+    },
+    {
+      "id": "sirenic-t90",
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "kind": "multi_source_wall",
+      "whyAgentsDisagree": "Intentionally multi-source (scales / ancient scales / thread; not a clean single-region lock). Host set includes kandarin while requiredRegions is forinthry+morytania — host/req drift invites primary-forinthry, multi-ok forinthry+morytania, or material-pressure multi including kandarin.",
+      "catalogObserved": {
+        "hosts": [
+          "kandarin",
+          "forinthry",
+          "morytania"
+        ],
+        "requiredRegions": [
+          "forinthry",
+          "morytania"
+        ]
+      },
+      "userRuling": "user_ruling_sirenic_wall — do not fake single primary without human call",
+      "options": {
+        "A": "Multi-ok forinthry+morytania only (scale/thread pressure); drop kandarin host or demote to detail.",
+        "B": "Multi-ok including kandarin (shop/surface pressure) with requiredRegions expanded or left pressure-only.",
+        "C": "Primary single host (choose forinthry or morytania) + support detail only."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Sirenic T90: multi-ok forinthry+morytania only, add kandarin, or primary-only (which home) with others as detail?"
+    },
+    {
+      "id": "sirenic-elite",
+      "name": "Sirenic → elite sirenic armour",
+      "kind": "multi_source_wall",
+      "whyAgentsDisagree": "Elite upgrade is not a clean region lock (scale farms + optional ED/lab; Tirannwn/Forinthry). Same wall family as base sirenic; agents may multi-ok forinthry+tirannwn, include kandarin, mark unobtainable under 3-pick, or demote to notes under base sirenic.",
+      "catalogObserved": {
+        "hosts": [
+          "kandarin",
+          "forinthry",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "forinthry",
+          "tirannwn"
+        ]
+      },
+      "userRuling": "user_ruling_sirenic_wall",
+      "options": {
+        "A": "Multi-ok forinthry+tirannwn (drop kandarin host); pressure-only, not hard all_required under 3-pick.",
+        "B": "Demote to support-pressure notes under base Sirenic only; no separate elite row multi-host.",
+        "C": "UNOBTAINABLE multi under 3-elective framing."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Elite sirenic: multi-ok forinthry+tirannwn, demote under base sirenic, or UNOBTAINABLE package?"
+    },
+    {
+      "id": "rings-rasial-occultist-vs-densify",
+      "name": "Rings of Rasial / Occultist vs densify triad",
+      "kind": "combat_ring_taxonomy",
+      "whyAgentsDisagree": "Necromancy boss package (Rasial, First Necromancer gear) is Misthalin-single. Occultist's ring is Anachronia-only (heart densify) while Reaver's / Stalker's / Channeller's are dual anachronia+fremennik. Agents may (1) move Occultist onto Misthalin with Rasial BiS, (2) force Occultist onto the same dual densify pattern as the triad, (3) invent missing Ring of death / Champion's ring hosts, or (4) leave taxonomy split.",
+      "names": [
+        "Occultist's ring",
+        "Reaver's ring",
+        "Stalker's ring",
+        "Channeller's ring",
+        "Rasial, the First Necromancer",
+        "First Necromancer's equipment (Rasial)",
+        "Rasial Necromancy BiS farm residual"
+      ],
+      "catalogObserved": {
+        "occultist": {
+          "hosts": [
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia"
+          ]
+        },
+        "reaverStalkerChanneller": {
+          "hosts": [
+            "fremennik",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "fremennik"
+          ]
+        },
+        "rasialPackage": {
+          "hosts": [
+            "misthalin"
+          ],
+          "requiredRegions": [
+            "misthalin"
+          ]
+        },
+        "ringOfDeath": "MISSING",
+        "championsRing": "MISSING"
+      },
+      "userRuling": null,
+      "options": {
+        "A": "Keep split: Rasial boss/gear Misthalin-only; Occultist anachronia heart densify; Reaver/Stalker/Channeller multi-ok anachronia+fremennik. Do not invent Ring of death until a sourced residual exists.",
+        "B": "Unify all densify-style combat rings as multi-ok anachronia+fremennik (pull Occultist into the dual) and park any Rasial-drop rings under Misthalin separately."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Catalog already encodes the split; no user ruling demands collapsing Occultist into Rasial geography. Adding missing rings is a data-fill task, not a host fight."
+    },
+    {
+      "id": "dark-facet-gote-hosts",
+      "name": "Dark Facet of Grace (GOTE enchantment)",
+      "kind": "ruling_vs_catalog_drift",
+      "whyAgentsDisagree": "User KEEP Dark Facet forinthry-only; log also says B2 GOTE forinthry+tirannwn and Dark Facet forinthry. Catalog still dual-hosts Dark Facet on forinthry+tirannwn with dual req — GOTE-base agents copy the dual onto the enchantment.",
+      "catalogObserved": {
+        "hosts": [
+          "forinthry",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "userRuling": "KEEP Dark Facet of Grace (GOTE enchantment) on [forinthry] req=[forinthry]; B2 GOTE forinthry+tirannwn; Dark Facet forinthry",
+      "options": {
+        "A": "Single host forinthry; requiredRegions=[forinthry]. GOTE base stays dual forinthry+tirannwn.",
+        "B": "Multi-ok forinthry+tirannwn for Dark Facet as well (same hosts as GOTE)."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied B2 split is explicit: GOTE dual, Dark Facet forinthry-only."
+    },
+    {
+      "id": "gote-mega-chains-reappear",
+      "name": "GOTE / porter mega-chains",
+      "kind": "remove_vs_multi_keep",
+      "whyAgentsDisagree": "User banned mega-chains (do not chain GOTE+porters+shard). Catalog still has both mega-row names multi-host. Agents who only read wall-slam-input may MULTI_KEEP them; agents who honor REMOVE log delete them.",
+      "names": [
+        "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+        "Grace of the elves / signs of the porter supply chain",
+        "Signs of the porter (Divination supply system)"
+      ],
+      "catalogObserved": {
+        "goteDarkFacetShard": {
+          "hosts": [
+            "forinthry",
+            "tirannwn"
+          ]
+        },
+        "gotePorterSupply": {
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ]
+        },
+        "signsOfThePorter": {
+          "hosts": [
+            "kandarin",
+            "tirannwn"
+          ]
+        },
+        "goteBaseStillPresent": true
+      },
+      "userRuling": "REMOVE GOTE+Dark Facet+shard mega; REMOVE GOTE/porter supply mega; REMOVE Signs of the porter (no region need); KEEP Grace of the elves on [forinthry,tirannwn]; KEEP Dark Facet on [forinthry]",
+      "options": {
+        "A": "Remove all three mega/porter rows; keep split GOTE + Dark Facet only.",
+        "B": "Keep a reduced multi-ok sustain package on forinthry+tirannwn only."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied REMOVE rulings are unambiguous; reappearance is apply lag, not a new design choice."
+    },
+    {
+      "id": "blessed-flask-hosts",
+      "name": "Blessed flask production chain",
+      "kind": "unobtainable_host_pollution",
+      "whyAgentsDisagree": "User KEEP four-region UNOBTAINABLE set. Catalog still hosts karamja with empty-pressure pollution while UNOBTAINABLE tag is true. Agents disagree whether Karamja is a real alternate route host or foreign clone.",
+      "catalogObserved": {
+        "hosts": [
+          "karamja",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "unobtainableTag": true
+      },
+      "userRuling": "KEEP Blessed flask production chain on [desert,morytania,tirannwn,forinthry] req=[desert,morytania,tirannwn,forinthry] UNOBTAINABLE",
+      "options": {
+        "A": "Drop karamja host; keep four-host UNOBTAINABLE multi exactly as ruling.",
+        "B": "Rewrite as partial obtainable routes (split location rows) and clear UNOBTAINABLE."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Ruling already chose four-host UNOBTAINABLE; karamja is host/req drift."
+    },
+    {
+      "id": "hatchet-t90-t100-unobtainable",
+      "name": "Hatchet of Ember and Glade / Bloom and Blight",
+      "kind": "unobtainable_multi",
+      "whyAgentsDisagree": "User marked both UNOBTAINABLE multi-region chains. Catalog multi-hosts without UNOBTAINABLE tag; host sets also drifted (Bloom lost desert/morytania; Ember lost forinthry gained misthalin). Agents may single-home finished hatchet, multi-ok full material map, or unobtainable package.",
+      "names": [
+        "Hatchet of Ember and Glade",
+        "Hatchet of Bloom and Blight"
+      ],
+      "catalogObserved": {
+        "ember": {
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "fremennik",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "unobtainableTag": false
+        },
+        "bloom": {
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "fremennik",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "unobtainableTag": false
+        }
+      },
+      "userRuling": "KEEP Ember on [forinthry,tirannwn,fremennik,asgarnia] UNOBTAINABLE; KEEP Bloom on [tirannwn,misthalin,asgarnia,fremennik,desert,morytania] UNOBTAINABLE",
+      "options": {
+        "A": "Realign hosts+requiredRegions to applied rulings and restore UNOBTAINABLE tags (multi pressure, over 3-pick).",
+        "B": "Collapse each finished hatchet to a single primary host (tirannwn) with material pressure detail only."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied UNOBTAINABLE multi KEEP already answered single-vs-multi; only host-set fidelity remains."
+    },
+    {
+      "id": "ring-of-slaying",
+      "name": "Ring of slaying (craft unlock)",
+      "kind": "ruling_vs_catalog_drift",
+      "whyAgentsDisagree": "User KEEP misthalin with empty requiredRegions. Catalog multi-hosts four regions with all four in requiredRegions. Global-remove agents may also delete as low-value residual.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "fremennik",
+          "desert",
+          "morytania"
+        ],
+        "requiredRegions": [
+          "desert",
+          "morytania",
+          "fremennik",
+          "misthalin"
+        ]
+      },
+      "userRuling": "KEEP Ring of slaying (craft unlock) on [misthalin] req=[]",
+      "options": {
+        "A": "Single host misthalin; requiredRegions=[].",
+        "B": "Multi-ok listed craft/master hosts with full requiredRegions.",
+        "C": "Global remove as low-value residual."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied ruling is exact; multi-host is drift."
+    },
+    {
+      "id": "slayer-helmet-stack",
+      "name": "Slayer helmet row family",
+      "kind": "split_vs_umbrella",
+      "whyAgentsDisagree": "D2 said replace full point-upgrade package with obtainable pieces; craft unlock / components / full chain still coexist with different host sets. Agents merge into one umbrella, primary morytania only, or keep split craft vs farms vs points.",
+      "names": [
+        "Slayer helmet craft + full upgrade chain",
+        "Slayer helmet (craft unlock + base helm)",
+        "Slayer helmet component farms",
+        "Full slayer helmet and point upgrades (reinforced through corrupted)",
+        "Spiny helmet, face mask, earmuffs, nose peg (shop pack)"
+      ],
+      "catalogObserved": {
+        "fullChain": {
+          "hosts": [
+            "morytania"
+          ]
+        },
+        "baseCraft": {
+          "hosts": [
+            "misthalin",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "morytania",
+            "misthalin"
+          ]
+        },
+        "componentFarms": {
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "desert",
+            "morytania"
+          ]
+        },
+        "pointUpgrades": {
+          "hosts": [
+            "karamja",
+            "desert",
+            "morytania",
+            "anachronia"
+          ]
+        },
+        "shopPack": {
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ]
+        }
+      },
+      "userRuling": "REMOVE Full slayer helmet package (D2 replace with obtainable pieces); REMOVE spiny/face/earmuffs/nose peg shop pack (D1 not region locked); D2 component pieces on morytania/desert",
+      "options": {
+        "A": "Remove shop pack + point-upgrade mega; keep base craft primary morytania; keep component farms as multi material hosts (or per-piece rows).",
+        "B": "One multi-ok umbrella 'full upgrade chain' on all farm hosts with all_required."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "D1/D2 already ban shop pack and point mega; base craft + component farms match remaining intent. Base craft misthalin dual can still be tightened to morytania-primary without a new wall."
+    },
+    {
+      "id": "area-tasks-diaries",
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "kind": "intentional_multi",
+      "whyAgentsDisagree": "True per-region ownership, but all_required on nine diary regions looks like a 9-pick hard gate. Single-home agents try misthalin overview; multi agents keep every diary region as host.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "karamja",
+          "asgarnia",
+          "kandarin",
+          "fremennik",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "misthalin",
+          "karamja",
+          "asgarnia",
+          "kandarin",
+          "fremennik",
+          "forinthry",
+          "desert",
+          "morytania",
+          "tirannwn"
+        ]
+      },
+      "userRuling": "KEEP Area Tasks on all diary regions with matching req list",
+      "options": {
+        "A": "Keep multi hosts on every diary region but treat as per-region ownership (not all_required hard combo) — requiredRegions empty or single-self.",
+        "B": "Single overview home (misthalin) with child region detail only."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "User KEEP multi hosts; the real bug is all_required semantics, not host count. Prefer multi hosts without forcing nine picks."
+    },
+    {
+      "id": "crystal-rod-fury-stack",
+      "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
+      "kind": "combo_vs_piece",
+      "whyAgentsDisagree": "User B10 ignored Fury shark outfit combo; crystal rod is Tirannwn. Catalog still dual-hosts with kandarin. apply-high collapses stack to tirannwn-only.",
+      "catalogObserved": {
+        "hosts": [
+          "kandarin",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "tirannwn",
+          "kandarin"
+        ]
+      },
+      "userRuling": "KEEP Crystal fishing rod on [tirannwn]; REMOVE Fury shark outfit + Bait and Switch Fishing stack combo",
+      "options": {
+        "A": "Drop combo stack or collapse to tirannwn-only crystal rod (+ waterfall detail); no kandarin fury dual.",
+        "B": "Keep dual tirannwn+kandarin as intentional Fishing XP stack."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "B10 ban on fury combo + crystal rod single-home already settle this."
+    },
+    {
+      "id": "volcanic-trapper",
+      "name": "Volcanic trapper outfit",
+      "kind": "primary_vs_fragment_multi",
+      "whyAgentsDisagree": "User KEEP anachronia primary; catalog still multi-hosts six fragment paths. Elite-outfit portfolio agents may fold this into the core set multi-row.",
+      "catalogObserved": {
+        "hosts": [
+          "karamja",
+          "kandarin",
+          "fremennik",
+          "desert",
+          "tirannwn",
+          "anachronia"
+        ],
+        "requiredRegions": [
+          "anachronia",
+          "desert",
+          "kandarin",
+          "fremennik",
+          "karamja",
+          "tirannwn"
+        ]
+      },
+      "userRuling": "KEEP Volcanic trapper outfit on [anachronia] req=[anachronia]",
+      "options": {
+        "A": "Single host anachronia; fragment paths detail only.",
+        "B": "Multi-ok fragment hosts (or fold into Elite skilling outfits core set)."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP is anachronia-only."
+    },
+    {
+      "id": "igneous-cape",
+      "name": "Igneous cape progression",
+      "kind": "remove_vs_keep",
+      "whyAgentsDisagree": "User F13 skip (unlocked for all). Catalog still dual misthalin+karamja. Agents may re-home to karamja TzHaar instead of removing.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "karamja"
+        ],
+        "requiredRegions": [
+          "karamja",
+          "misthalin"
+        ]
+      },
+      "userRuling": "REMOVE Igneous cape progression (unlocked for all — skip)",
+      "options": {
+        "A": "Remove all hosts.",
+        "B": "Single-home karamja (TzHaar geography) as optional residual."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied REMOVE / skip."
+    },
+    {
+      "id": "aquarium-prawn-brewery-curly-scroll",
+      "name": "Prior REMOVE rows still multi-host",
+      "kind": "remove_reappearance",
+      "whyAgentsDisagree": "Several names were user-REMOVE / skip but remain multi-host. Auto agents re-MULTI_KEEP from detail pressure; ruling agents delete.",
+      "names": [
+        "Player-owned house Aquarium and Prawnbroker",
+        "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+        "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)",
+        "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+        "Prifddinas spirit tree + Glouron three-tree unlock"
+      ],
+      "catalogObserved": {
+        "stillMultiHost": true
+      },
+      "userRuling": "C3/C4 drop aquarium; F8 skip dual-brewery; F2 no curly ceiling stack; F4 not relevant herblore stack; F14 spirit tree not relevant",
+      "options": {
+        "A": "Remove-all for every listed name (honor applied REMOVE/skip).",
+        "B": "Re-open as multi-ok reduced host sets despite prior skip."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Reappearance after REMOVE is apply lag; do not invent new multi-ok without a fresh user override."
+    },
+    {
+      "id": "grasping-rune-pouch",
+      "name": "Grasping rune pouch",
+      "kind": "primary_vs_dual",
+      "whyAgentsDisagree": "Primary-forinthry intent (Daemonheim/grasping path) but morytania reappears via expansive/grasping craft pressure. Ladder rows may already cover Morytania.",
+      "catalogObserved": {
+        "hosts": [
+          "forinthry",
+          "morytania"
+        ],
+        "requiredRegions": [
+          "morytania",
+          "forinthry"
+        ]
+      },
+      "userRuling": "KEEP Grasping rune pouch on [forinthry] req=[forinthry]",
+      "options": {
+        "A": "Single host forinthry; Morytania only under rune-pouch ladder residual if needed.",
+        "B": "Multi-ok forinthry+morytania with dual requiredRegions."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP forinthry-only; dual is drift."
+    },
+    {
+      "id": "masterwork-spear-anachronia-host",
+      "name": "Masterwork Spear of Annihilation",
+      "kind": "host_req_mismatch",
+      "whyAgentsDisagree": "Hosts include anachronia but requiredRegions are only asgarnia+morytania (detail says Anachronia hint only). Multi agents promote Anachronia into req; clamp agents drop the host.",
+      "catalogObserved": {
+        "hosts": [
+          "asgarnia",
+          "morytania",
+          "anachronia"
+        ],
+        "requiredRegions": [
+          "asgarnia",
+          "morytania"
+        ]
+      },
+      "userRuling": null,
+      "options": {
+        "A": "Drop anachronia host; keep multi-ok asgarnia+morytania (trim/custom-fit material lock).",
+        "B": "Add anachronia to requiredRegions if Archaeology spear path is hard for self-source."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Detail already frames Anachronia as hint-only; host without req is foreign pollution."
+    },
+    {
+      "id": "elite-outfits-portfolio",
+      "name": "Elite skilling outfits core set (ironman fragment paths)",
+      "kind": "portfolio_vs_pieces",
+      "whyAgentsDisagree": "User KEEP multi portfolio with req core [kandarin,forinthry,anachronia] while also listing broader hosts. Individual outfit REMOVEs (E global/skip) fight the portfolio row. Agents may expand hosts to all fragment regions, shrink to three hard reqs, or delete portfolio and rely on piece rows.",
+      "catalogObserved": {
+        "hosts": [
+          "asgarnia",
+          "kandarin",
+          "fremennik",
+          "desert",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "desert",
+          "tirannwn",
+          "fremennik",
+          "asgarnia",
+          "kandarin"
+        ],
+        "missingVsRulingHosts": [
+          "forinthry",
+          "anachronia"
+        ]
+      },
+      "userRuling": "KEEP Elite skilling outfits core set on [kandarin,forinthry,anachronia,desert,tirannwn,fremennik,asgarnia] req=[kandarin,forinthry,anachronia]; REMOVE several individual elite outfits as global/skip",
+      "options": {
+        "A": "Keep portfolio multi hosts per ruling; requiredRegions = [kandarin,forinthry,anachronia] only (not all fragment hosts); restore missing forinthry+anachronia hosts.",
+        "B": "Delete portfolio; only keep named individual outfit rows that survived E-pass."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP wants the portfolio with a tight three-region hard req, not a five-region all_required clone of fragment hosts."
+    },
+    {
+      "id": "edgeville-hub",
+      "name": "Edgeville skilling and Wilderness on-ramp hub",
+      "kind": "boundary_wall",
+      "whyAgentsDisagree": "Town is Misthalin; Wilderness north of ditch is Forinthry; furnace notes pull Asgarnia. Catalog currently single-homed misthalin empty-req, but wave2-walls still lists it as a human wall.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin"
+        ],
+        "requiredRegions": []
+      },
+      "userRuling": "wall (user_ruling_edgeville_wall) — not auto-settled",
+      "options": {
+        "A": "Single-home misthalin; Wilderness as detail pressure only (current catalog shape).",
+        "B": "Multi-ok misthalin+forinthry with requiredRegions both, or split town hub vs Wilderness on-ramp rows."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Edgeville: keep Misthalin-only hub (Wilderness detail), multi-ok misthalin+forinthry, or split two rows?"
+    },
+    {
+      "id": "prayer-book-switch-network",
+      "name": "Prayer-book switch network (Zaros / Fort / Elven / War)",
+      "kind": "meta_package",
+      "whyAgentsDisagree": "Meta spans War's Grimoire / Curses / Elven grimoire / Fort. Catalog collapsed to misthalin empty-req; walls still ask multi vs per-site vs remove.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin"
+        ],
+        "requiredRegions": []
+      },
+      "userRuling": null,
+      "options": {
+        "A": "Remove meta package; rely on per-site rows (Elven grimoire tirannwn, curses morytania, etc.).",
+        "B": "Multi-ok comparison package on real switch-site hosts with pressure-only reqs."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Prayer-book switch network: delete meta in favour of per-site rows, or keep multi-ok comparison package (which hosts)?"
+    },
+    {
+      "id": "time-altar-triple",
+      "name": "Time altar name family",
+      "kind": "dedupe_wall",
+      "whyAgentsDisagree": "Three titles (Time altar / Runecrafting access / 110 RC) all anachronia-only now, but walls still debate Abyss Forinthry dual vs merge. Agents may re-dual with forinthry for throughput.",
+      "names": [
+        "Time altar",
+        "Time altar Runecrafting access",
+        "Time altar / 110 Runecrafting"
+      ],
+      "catalogObserved": {
+        "allSingleHost": "anachronia",
+        "requiredRegions": []
+      },
+      "userRuling": null,
+      "options": {
+        "A": "Merge to one canonical Anachronia Time altar; Abyss throughput detail only (no forinthry host).",
+        "B": "Multi-ok anachronia+forinthry for efficient RC path."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Geography is Anachronia; Abyss is optional route infrastructure already covered by Forinthry Abyss rows. Triple title needs merge, not a new dual host."
+    },
+    {
+      "id": "wood-box-tiers",
+      "name": "Wood box tier upgrades",
+      "kind": "stale_ruling_conflict",
+      "whyAgentsDisagree": "Applied log KEPT wood box on [desert]; catalog is misthalin empty-req; walls mention kandarin tree density. Three different homes without a reconciling note.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin"
+        ],
+        "requiredRegions": []
+      },
+      "userRuling": "KEEP Wood box tier upgrades on [desert] req=[desert]",
+      "options": {
+        "A": "Honor applied ruling: single-home desert.",
+        "B": "Single-home misthalin (Woodcutters' Grove / fort storage) and treat desert ruling as obsolete.",
+        "C": "Global remove as non-region-locked inventory tier (like ore box A13)."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Wood box tiers: desert (applied KEEP), misthalin Grove, or global remove like ore boxes?"
+    },
+    {
+      "id": "brooch-holy-wrench-pop",
+      "name": "Detail/home still contested singles",
+      "kind": "detail_vs_home_wall",
+      "whyAgentsDisagree": "Catalog single-homed these, but wave2-walls still flag detail arguing the other side. Agents re-multi or flip primary.",
+      "names": [
+        "Brooch of the Gods",
+        "Holy wrench",
+        "Player-owned port (first-class hub)",
+        "Family Crest cooking and smelting gauntlets",
+        "Smelting gauntlets",
+        "Skillchompas",
+        "Red sandstone and potion flasks",
+        "Ferocious ring",
+        "Deadliest Catch skilling deposit boxes"
+      ],
+      "catalogObserved": {
+        "brooch": "asgarnia empty-req",
+        "holyWrench": "morytania empty-req",
+        "pop": "desert empty-req",
+        "familyCrest": "misthalin empty-req",
+        "smeltingGauntlets": "misthalin empty-req",
+        "skillchompas": "kandarin empty-req",
+        "redSandstone": "desert empty-req",
+        "ferociousRing": "kandarin empty-req",
+        "deadliestCatch": "karamja empty-req"
+      },
+      "userRuling": "Still walls in wave2-walls.json — interim primary guesses not confirmed",
+      "options": {
+        "A": "Accept current single homes as final (detail-only on the other side).",
+        "B": "Re-open each as multi-ok or flip primary per wall question."
+      },
+      "recommend": null,
+      "askUser": true,
+      "question": "Confirm batch of interim singles (Brooch Asgarnia, Holy wrench Morytania, POP Desert, Family Crest Misthalin, Skillchompas Kandarin, Red sandstone Desert, Ferocious ring Kandarin, Deadliest Catch Karamja) — keep all, or list flips/multi-ok overrides?"
+    },
+    {
+      "id": "orthen-stack-siblings",
+      "name": "Orthen furnace stack siblings",
+      "kind": "duplicate_stacks",
+      "whyAgentsDisagree": "Two nearly identical Orthen stacks (full skilling vs Superheat+autoheater) plus Masterwork plate pressure stack. Agents may merge to one, keep both, or disagree on forinthry host presence.",
+      "names": [
+        "Orthen furnace core + Superheat Form + smithing autoheater stack",
+        "Orthen furnace core full skilling stack",
+        "Masterwork plate → Orthen furnace core pressure stack"
+      ],
+      "catalogObserved": {
+        "superheatStack": {
+          "hosts": [
+            "forinthry",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "tirannwn",
+            "forinthry"
+          ]
+        },
+        "fullStack": {
+          "hosts": [
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "tirannwn"
+          ]
+        },
+        "platePressure": {
+          "hosts": [
+            "asgarnia",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "anachronia"
+          ]
+        }
+      },
+      "userRuling": "KEEP both Orthen stacks on [anachronia,tirannwn,forinthry]; KEEP plate pressure on [forinthry,desert,anachronia] (catalog drifted)",
+      "options": {
+        "A": "One canonical Orthen multi stack (anachronia+tirannwn+forinthry) + separate plate-pressure residual; delete sibling duplicate name.",
+        "B": "Keep both Orthen names if detail roles stay distinct (AFK smithing vs obtain+pressure)."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "User kept the combo multi; catalog sibling with missing forinthry is noise. Prefer one stack + plate residual after realigning plate hosts to ruling if still desired."
+    },
+    {
+      "id": "seedicide-toolbelt",
+      "name": "Toolbelt attach: Seedicide",
+      "kind": "duplicate_attach",
+      "whyAgentsDisagree": "Seedicide collector primary is kandarin; toolbelt attach still multi asgarnia+kandarin+anachronia. Agents delete attach as duplicate or keep multi farm paths.",
+      "catalogObserved": {
+        "collector": {
+          "hosts": [
+            "kandarin"
+          ]
+        },
+        "toolbeltAttach": {
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ]
+        }
+      },
+      "userRuling": "KEEP Seedicide collector + Toolbelt attach: Seedicide on [kandarin]",
+      "options": {
+        "A": "Single-home both on kandarin; drop foreign attach hosts.",
+        "B": "Remove toolbelt attach row as pure duplicate of collector upgrade."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP both names on kandarin; multi attach is drift. Deleting attach entirely is optional cleanup, not required by ruling."
+    },
+    {
+      "id": "mattock-otas-hosts",
+      "name": "Mattock of Time and Space",
+      "kind": "multi_chain_trim",
+      "whyAgentsDisagree": "User KEEP four-region chain; catalog only misthalin+tirannwn. Agents either restore full multi or accept trimmed dual as enough.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "tirannwn"
+        ],
+        "requiredRegions": [
+          "tirannwn",
+          "misthalin"
+        ]
+      },
+      "userRuling": "KEEP Mattock of Time and Space on [tirannwn,misthalin,kandarin,anachronia] req same",
+      "options": {
+        "A": "Restore four-host multi per ruling.",
+        "B": "Keep dual misthalin+tirannwn (Guild shard + crystal) with kandarin/anachronia detail only."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied multi KEEP is the policy; catalog under-hosts relative to ruling."
+    },
+    {
+      "id": "imcando-family",
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "kind": "family_vs_pieces",
+      "whyAgentsDisagree": "Intentional multi misthalin+asgarnia+fremennik (user KEEP). Some agents still try primary-only or expand Tirannwn into the family row because finished t90 needs crystal legs.",
+      "catalogObserved": {
+        "hosts": [
+          "misthalin",
+          "asgarnia",
+          "fremennik"
+        ],
+        "requiredRegions": [
+          "fremennik",
+          "misthalin",
+          "asgarnia"
+        ]
+      },
+      "userRuling": "KEEP Imcando tools family on [fremennik,misthalin,asgarnia]",
+      "options": {
+        "A": "Keep multi-ok three hosts as family package; Tirannwn stays on finished t90 tool rows only.",
+        "B": "Delete family umbrella; only individual Imcando piece rows."
+      },
+      "recommend": "A",
+      "askUser": false,
+      "rationale": "Applied KEEP multi family; patch-foreign skipped Imcando as multi-ok."
+    }
+  ],
+  "summary": {
+    "totalItems": 30,
+    "recommendA": 23,
+    "recommendB": 0,
+    "recommendNull": 7,
+    "askUser": 7,
+    "askUserIds": [
+      "poh-portal-towns",
+      "sirenic-t90",
+      "sirenic-elite",
+      "edgeville-hub",
+      "prayer-book-switch-network",
+      "wood-box-tiers",
+      "brooch-holy-wrench-pop"
+    ],
+    "headlineConflicts": [
+      "Artificer's measure: ruling 1 host vs catalog 4 hosts",
+      "POH portals: multi geography vs all_required / primary / remove",
+      "Checklist rows vs individual tools",
+      "Sirenic T90 + elite: named walls",
+      "Rings of Rasial taxonomy (Occultist vs densify triad vs Misthalin Rasial package)",
+      "GOTE mega-chains and other REMOVE rows still multi-host"
+    ]
+  },
+  "notes": [
+    "Do not edit data/research/catalog.json from this file.",
+    "Prefer applied user rulings over wall-slam-input detail when they conflict.",
+    "askUser batch on interim singles can be answered as one batch or per-name overrides."
+  ]
+}

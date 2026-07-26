@@ -1,0 +1,113 @@
+{
+  "round": 2,
+  "passBar": 9.0,
+  "teams": [
+    {
+      "id": "alpha",
+      "codename": "Daylight",
+      "score": 8.5,
+      "axes": {
+        "publicCraft": 8.2,
+        "rsFidelity": 8.4,
+        "dataReadability": 8.7,
+        "antiSlop": 8.5,
+        "identity": 8.6,
+        "operability": 8.7
+      },
+      "status": "contender",
+      "r1Score": 7.8,
+      "delta": 0.7
+    },
+    {
+      "id": "echo",
+      "codename": "Editorial",
+      "score": 8.4,
+      "axes": {
+        "publicCraft": 8.5,
+        "rsFidelity": 8.4,
+        "dataReadability": 8.4,
+        "antiSlop": 8.4,
+        "identity": 8.4,
+        "operability": 8.0
+      },
+      "status": "contender",
+      "r1Score": 2.6,
+      "delta": 5.8
+    },
+    {
+      "id": "delta",
+      "codename": "Crystal",
+      "score": 8.3,
+      "axes": {
+        "publicCraft": 7.9,
+        "rsFidelity": 8.3,
+        "dataReadability": 8.3,
+        "antiSlop": 8.2,
+        "identity": 8.7,
+        "operability": 8.4
+      },
+      "status": "contender",
+      "r1Score": 2.4,
+      "delta": 5.9
+    },
+    {
+      "id": "charlie",
+      "codename": "Cinematic",
+      "score": 8.2,
+      "axes": {
+        "publicCraft": 7.9,
+        "rsFidelity": 8.2,
+        "dataReadability": 8.4,
+        "antiSlop": 8.3,
+        "identity": 8.1,
+        "operability": 8.5
+      },
+      "status": "eliminated",
+      "r1Score": 2.5,
+      "delta": 5.7
+    },
+    {
+      "id": "bravo",
+      "codename": "Stone UI",
+      "score": 8.0,
+      "axes": {
+        "publicCraft": 7.7,
+        "rsFidelity": 8.0,
+        "dataReadability": 8.5,
+        "antiSlop": 8.4,
+        "identity": 7.8,
+        "operability": 7.5
+      },
+      "status": "eliminated",
+      "r1Score": 2.8,
+      "delta": 5.2
+    }
+  ],
+  "winnerId": null,
+  "mustFixByTeam": {
+    "alpha": [
+      "Break out of Control-Surface clone DNA — a public site needs one signature surface that is not tree·table·inspector in every room",
+      "Bind Combat shell to real key figures or keep empties but add density that does not read as three '—' cards and a shrug panel",
+      "Kill or quiet the blue daylight-horizon strip — sky hairline flirts with brand-rainbow accent law; atmosphere must stay stone/keyart, not a second logo color",
+      "Ship reduced-motion handling for keyart/horizon chrome",
+      "Prove stage contrast with a real meter note (parch-50 on stone-800) in the skin file — a CSS comment is not proof",
+      "Map board is honest crest grid; push one more material stop so it does not feel like Build with bigger tiles"
+    ],
+    "echo": [
+      "Map MUST cover all 11 regions with crests — four MAP_LEAVES is a half-product and caps operability",
+      "Thicken Tasks and Combat under the plate: band filters, done state, style chips — magazine craft dies when secondary routes are thin ledgers",
+      "Art stage is best-in-field; do not let it become the only craft. Workbench panels need carve depth matching the plate's authority",
+      "Keep status chips as data forever — never promote them into CTAs",
+      "Shared pick state already hits the plate — mirror pick names on Overview without manifesto copy"
+    ],
+    "delta": [
+      "Public craft still trails identity — crystal gem-mark + facet line are logo moves; the DATA surface must feel as authored as the brand chrome",
+      "Combat adren/dmg as '—' is honest; replace with denser fixture structure (style icons, segment-specific layouts) without inventing DPL numbers",
+      "Map slabs are focus-only — either wire pick toggle with 4th-pick aria-disabled or stop implying the board is a planning surface",
+      "Moss stone-750 on cool void is readable but edges can dissolve — lift border stop or stage zebra one notch for arm's-length table scan",
+      "Warm parch law held — do not re-mint the ink under any 'crystal atmosphere' excuse"
+    ]
+  },
+  "r3Contenders": ["alpha", "echo", "delta"],
+  "eliminatedThisRound": ["charlie", "bravo"]
+}

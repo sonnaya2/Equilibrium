@@ -1,211 +1,391 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  asTaskRecords,
-  filterTasks,
-  isTaskTier,
-  TASK_ORDER,
-  taskPoints,
-  type TaskTier,
-} from "@/tasks";
-import {
-  completedCount,
-  EMPTY_PROGRESS,
-  isComplete,
-  loadProgress,
-  pointsEarned,
-  pointsTotal,
-  saveProgress,
-  taskId,
-  toggleComplete,
-  type TaskProgress,
-} from "@/tasks/progress";
+/**
+ * Tasks — R2 Composite density (CEO 9.0).
+ * One facet row (search · My build · tiers · crest filter) + 28px wiki table.
+ * Spike selection law: detail drawer mounts only on explicit click (no auto-open).
+ * My build defaults on. No permanent third bay; no region column.
+ */
 
-function formatCompletionRate(rate: number, qualifier?: "<"): string {
-  const value = Number.isInteger(rate) ? rate.toFixed(0) : rate.toFixed(1);
-  return `${qualifier ?? ""}${value}%`;
-}
+import Link from "next/link";
+import { useMemo } from "react";
+import { RegionCrest, RegionCrestPreload } from "@/components/RegionCrest";
+import { isTaskTier } from "@/tasks";
+import { CATALYST_TASKS_URL } from "@/tasks/regionMap";
+import {
+  formatCompRate,
+  useTasksDesk,
+  wikiTaskUrl,
+} from "@/concepts/tasks-density/useTasksDesk";
+
+const ROW_PX = 28;
 
 export function TaskRecords({
   records: raw,
   tiers,
   tierConfidence,
+  tasksWikiUrl = CATALYST_TASKS_URL,
+  completionLive = false,
 }: {
   records: unknown[];
   tiers: Record<string, number>;
   tierConfidence: Record<string, string>;
+  tasksWikiUrl?: string;
+  completionLive?: boolean;
 }) {
-  const records = useMemo(() => asTaskRecords(raw), [raw]);
-  const [tier, setTier] = useState<TaskTier | "all">("all");
-  const [query, setQuery] = useState("");
-  const [progress, setProgress] = useState<TaskProgress>(EMPTY_PROGRESS);
+  const desk = useTasksDesk(raw, tiers, {
+    rowEstimatePx: ROW_PX,
+  });
 
-  useEffect(() => {
-    setProgress(loadProgress());
-  }, []);
+  const {
+    records,
+    build,
+    buildOnly,
+    setBuildOnly,
+    tier,
+    setTier,
+    region,
+    setRegion,
+    query,
+    setQuery,
+    tiersInUse,
+    regionRail,
+    regionCounts,
+    crestRegionIds,
+    unlockLabel,
+    visible,
+    completed,
+    selectedId,
+    setSelectedId,
+    doneVisible,
+    earnedVisible,
+    totalVisible,
+    listRef,
+    virtualizer,
+    onToggle,
+    taskId,
+    taskPoints,
+    isLeagueRegionId,
+    regionDisplayName,
+  } = desk;
 
-  const visible = useMemo(() => filterTasks(records, tier, query), [records, tier, query]);
-  const tiersInUse = TASK_ORDER.filter((t) => records.some((r) => r.tier === t));
-  const showComp = records.some((r) => typeof r.catalystCompletionRate === "number");
+  const showComp = useMemo(
+    () => records.some((r) => typeof r.catalystCompletionRate === "number"),
+    [records],
+  );
 
-  const doneVisible = completedCount(progress, visible);
-  const earnedVisible = pointsEarned(progress, visible, tiers);
-  const totalVisible = pointsTotal(visible, tiers);
+  /** Spike law: no auto-select of first visible row. */
+  const active = useMemo(() => {
+    if (selectedId === null) return null;
+    return visible.find((r) => taskId(r) === selectedId) ?? null;
+  }, [selectedId, visible, taskId]);
 
-  const onToggle = (id: string) => {
-    setProgress((prev) => {
-      const next = toggleComplete(prev, id);
-      saveProgress(next);
-      return next;
-    });
-  };
+  const drawerOpen = active !== null;
 
   if (records.length === 0) return null;
 
+  const virtualItems = virtualizer.getVirtualItems();
+  const colsClass = showComp
+    ? "tasks-desk__cols"
+    : "tasks-desk__cols tasks-desk__cols--no-comp";
+
+  const activeDone = active ? completed.has(taskId(active)) : false;
+  const activePts = active ? taskPoints(active) : null;
+  const activeRate =
+    active && typeof active.catalystCompletionRate === "number"
+      ? active.catalystCompletionRate
+      : null;
+  const activeWiki =
+    active && typeof active.wikiTaskId === "number"
+      ? wikiTaskUrl(tasksWikiUrl, active.wikiTaskId)
+      : null;
+
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-2 border-b border-stone-750 pb-3">
-        <div role="group" aria-label="Filter by tier" className="flex gap-1">
+    <div className="tasks-desk">
+      {crestRegionIds.length > 0 ? <RegionCrestPreload regionIds={crestRegionIds} /> : null}
+
+      <div className="tasks-desk__facets">
+        <h3 className="tasks-desk__title">Task board</h3>
+        <span className="tasks-desk__count">
+          {visible.length}/{records.length}
+          {totalVisible > 0 ? (
+            <>
+              {" · "}
+              <span className="is-pts">
+                {earnedVisible}/{totalVisible} pts
+              </span>
+              {doneVisible > 0 ? ` · ${doneVisible} done` : null}
+            </>
+          ) : null}
+          {showComp ? ` · Comp% ${completionLive ? "live" : "snap"}` : null}
+        </span>
+
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Filter tasks"
+          aria-label="Filter tasks"
+          className="tasks-desk__search"
+        />
+
+        <button
+          type="button"
+          className="tasks-desk__chip"
+          aria-pressed={buildOnly}
+          title={
+            buildOnly
+              ? `Unlocked: ${unlockLabel}. Global tasks stay included.`
+              : "Show every region, not only your Build picks"
+          }
+          onClick={() => setBuildOnly((v) => !v)}
+        >
+          My build
+        </button>
+
+        <div role="group" aria-label="Filter by tier" className="tasks-desk__group">
           {(["all", ...tiersInUse] as const).map((option) => (
             <button
               key={option}
               type="button"
-              onClick={() => setTier(option)}
+              className="tasks-desk__chip tasks-desk__chip--tier"
               aria-pressed={tier === option}
-              className={`rounded-sm border px-2.5 py-1 text-xs capitalize transition-colors duration-150 ${
-                tier === option
-                  ? "border-gem-500 bg-stone-800 text-gem-300"
-                  : "border-stone-750 text-parch-100 hover:text-parch-50"
-              }`}
+              onClick={() => setTier(option)}
             >
               {option === "all" ? "All" : option}
             </button>
           ))}
         </div>
-        <input
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Filter tasks"
-          aria-label="Filter tasks"
-          className="field-inset min-w-40 flex-1 px-2 py-1.5 text-sm text-parch-50 placeholder:text-parch-400"
-        />
-        <span className="text-sm text-parch-100">
-          {visible.length} of {records.length}
-          {totalVisible > 0 ? (
-            <>
-              {" · "}
-              <span className="text-gem-300">
-                {earnedVisible}/{totalVisible} pts
-              </span>
-              {doneVisible > 0 ? (
-                <span className="text-parch-300">
-                  {" "}
-                  ({doneVisible} done)
-                </span>
-              ) : null}
-            </>
-          ) : null}
-        </span>
+
+        <div role="group" aria-label="Filter by region" className="tasks-desk__crests">
+          <button
+            type="button"
+            className="tasks-desk__crest"
+            aria-pressed={region === "all"}
+            aria-label={buildOnly ? "All unlocked" : "All regions"}
+            title={buildOnly ? "All unlocked" : "All regions"}
+            onClick={() => setRegion("all")}
+          >
+            <span className="tasks-desk__crest-name">All</span>
+            <span className="tasks-desk__crest-n">{regionCounts.get("all") ?? 0}</span>
+          </button>
+          {regionRail.map((id) => (
+            <button
+              key={id}
+              type="button"
+              className="tasks-desk__crest"
+              aria-pressed={region === id}
+              title={`${regionDisplayName(id)} · ${regionCounts.get(id) ?? 0}`}
+              onClick={() => setRegion(id)}
+            >
+              {isLeagueRegionId(id) ? (
+                <RegionCrest regionId={id} size={14} />
+              ) : (
+                <span className="tasks-desk__crest-name">{regionDisplayName(id)}</span>
+              )}
+              <span className="tasks-desk__crest-n">{regionCounts.get(id) ?? 0}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {visible.length === 0 ? (
-        <p className="border-b border-stone-750/70 py-3 text-sm text-parch-100">No tasks match.</p>
-      ) : (
-        <>
-          {showComp ? (
-            <div
-              className="hidden gap-2 border-b border-stone-750/70 py-2 text-xs uppercase tracking-wide text-parch-100 sm:grid sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-6"
-              aria-hidden
-            >
-              <div className="w-5" />
+      {buildOnly && build.elective.length === 0 ? (
+        <p className="tasks-desk__hint">
+          My build · starters only — pick electives on{" "}
+          <Link href="/build">Build</Link>
+        </p>
+      ) : null}
+
+      <div className="tasks-desk__stage">
+        {visible.length === 0 ? (
+          <p className="tasks-desk__empty">No tasks match.</p>
+        ) : (
+          <div ref={listRef} className="tasks-desk__list" role="list" aria-label="Tasks">
+            <div className={`tasks-desk__thead ${colsClass}`} aria-hidden>
+              <div />
               <div>Task</div>
-              <div className="flex gap-5 sm:justify-end">
-                <div className="min-w-14 text-right">Comp%</div>
-                <div className="min-w-14 text-right">Pts</div>
-              </div>
+              <div className="tasks-desk__th-num">Tier</div>
+              {showComp ? <div className="tasks-desk__th-num">Comp%</div> : null}
+              <div className="tasks-desk__th-num">Pts</div>
             </div>
-          ) : null}
-          {visible.map((record, index) => {
-            const id = taskId(record);
-            const domId = `task-${index}-${id.replace(/[^a-zA-Z0-9_-]+/g, "-")}`;
-            const done = isComplete(progress, id);
-            const points = taskPoints(record, tiers);
-            const provisional = tierConfidence[record.tier]?.startsWith("provisional");
-            const rate =
-              typeof record.catalystCompletionRate === "number"
-                ? record.catalystCompletionRate
-                : null;
 
-            return (
-              <div
-                key={`${id}-${index}`}
-                className={`grid gap-2 border-b border-stone-750/70 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-6 ${
-                  done ? "opacity-90" : ""
-                }`}
-              >
-                <div className="pt-0.5">
-                  <input
-                    type="checkbox"
-                    id={domId}
-                    checked={done}
-                    onChange={() => onToggle(id)}
-                    className="h-3.5 w-3.5 accent-[var(--color-gem-500)]"
-                    aria-label={done ? `Mark incomplete: ${record.name}` : `Mark complete: ${record.name}`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor={domId} className="cursor-pointer">
-                    <div className={`text-sm ${done ? "text-gem-300" : "text-parch-50"}`}>
-                      {record.name}
-                      {isTaskTier(record.tier) ? (
-                        <span className="ml-2 text-xs capitalize text-parch-100">{record.tier}</span>
-                      ) : null}
-                    </div>
-                  </label>
-                  {record.description ? (
-                    <p className="mt-1 text-sm leading-5 text-parch-100">{record.description}</p>
-                  ) : null}
-                  {record.requirements ? (
-                    <p className="mt-1 text-xs leading-5 text-parch-100">Requires: {record.requirements}</p>
-                  ) : null}
-                  {record.region || record.skills?.length || record.areas?.length ? (
-                    <div className="mt-1 text-xs text-parch-100">
-                      {[record.region, ...(record.skills ?? []), ...(record.areas ?? [])]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </div>
-                  ) : null}
-                </div>
+            <div className="tasks-desk__body" style={{ height: virtualizer.getTotalSize() }}>
+              {virtualItems.map((item) => {
+                const record = visible[item.index]!;
+                const id = taskId(record);
+                const done = completed.has(id);
+                const on = selectedId === id;
+                const points = taskPoints(record);
+                const provisional = tierConfidence[record.tier]?.startsWith("provisional");
+                const rate =
+                  typeof record.catalystCompletionRate === "number"
+                    ? record.catalystCompletionRate
+                    : null;
+                const wikiHref =
+                  typeof record.wikiTaskId === "number"
+                    ? wikiTaskUrl(tasksWikiUrl, record.wikiTaskId)
+                    : null;
+                const domId = `task-${id.replace(/[^a-zA-Z0-9_-]+/g, "-")}`;
 
-                <div className="flex items-start gap-5 sm:justify-end">
-                  {showComp ? (
-                    <div className="min-w-14 sm:text-right">
-                      {rate !== null ? (
-                        <div className="font-mono text-sm text-parch-50">
-                          {formatCompletionRate(rate, record.catalystCompletionRateQualifier)}
+                return (
+                  <div
+                    key={item.key}
+                    data-index={item.index}
+                    ref={virtualizer.measureElement}
+                    role="listitem"
+                    className={`tasks-desk__row${item.index % 2 === 1 ? " is-zebra" : ""}${on ? " is-on" : ""}${done ? " is-done" : ""}`}
+                    style={{ transform: `translateY(${item.start}px)` }}
+                  >
+                    <div
+                      className={`tasks-desk__row-inner ${colsClass}`}
+                      tabIndex={0}
+                      aria-selected={on}
+                      onClick={() => setSelectedId((cur) => (cur === id ? null : id))}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedId((cur) => (cur === id ? null : id));
+                        }
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        id={domId}
+                        checked={done}
+                        onChange={() => onToggle(id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="tasks-desk__check"
+                        aria-label={
+                          done
+                            ? `Mark incomplete: ${record.name}`
+                            : `Mark complete: ${record.name}`
+                        }
+                      />
+                      <label
+                        htmlFor={domId}
+                        className="tasks-desk__name"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {record.name}
+                      </label>
+                      <div className="tasks-desk__tier">
+                        {isTaskTier(record.tier) ? record.tier : "—"}
+                      </div>
+                      {showComp ? (
+                        <div className="tasks-desk__num">
+                          {rate !== null ? (
+                            wikiHref ? (
+                              <a
+                                href={wikiHref}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="tasks-desk__wiki"
+                                aria-label={`Wiki Comp% for ${record.name}`}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {formatCompRate(rate, record.catalystCompletionRateQualifier)}
+                              </a>
+                            ) : (
+                              formatCompRate(rate, record.catalystCompletionRateQualifier)
+                            )
+                          ) : (
+                            <span className="is-mute">—</span>
+                          )}
                         </div>
-                      ) : (
-                        <div className="font-mono text-sm text-parch-300">—</div>
-                      )}
-                      <div className="mt-0.5 text-[11px] leading-4 text-parch-100 sm:hidden">Comp%</div>
+                      ) : null}
+                      <div className={`tasks-desk__num${done ? " is-done" : ""}`}>
+                        {points !== null ? (
+                          <>
+                            {points}
+                            {provisional ? "*" : ""}
+                          </>
+                        ) : (
+                          <span className="is-mute">—</span>
+                        )}
+                      </div>
                     </div>
-                  ) : null}
-                  {points !== null ? (
-                    <div className="min-w-14 sm:text-right">
-                      <span className={`font-mono text-sm ${done ? "text-gem-300" : "text-parch-50"}`}>
-                        {points}
-                      </span>
-                      <span className="ml-1 text-xs text-parch-100">pts{provisional ? "*" : ""}</span>
-                    </div>
-                  ) : null}
-                </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {drawerOpen && active ? (
+        <aside
+          className="tasks-desk__drawer"
+          aria-label="Selected task"
+          aria-live="polite"
+        >
+          <div className="tasks-desk__drawer-head">
+            {active.regionId && isLeagueRegionId(active.regionId) ? (
+              <RegionCrest regionId={active.regionId} size={24} />
+            ) : null}
+            <div className="tasks-desk__drawer-title-wrap">
+              <p className={`tasks-desk__drawer-title${activeDone ? " is-done" : ""}`}>
+                {active.name}
+              </p>
+              <p className="tasks-desk__drawer-meta">
+                {active.tier}
+                {active.regionId ? ` · ${regionDisplayName(active.regionId)}` : ""}
+                {activeDone ? " · done" : ""}
+              </p>
+            </div>
+            <dl className="tasks-desk__drawer-facts">
+              <div>
+                <dt>Pts</dt>
+                <dd className="is-pts">{activePts !== null ? activePts : "—"}</dd>
               </div>
-            );
-          })}
-        </>
-      )}
+              {showComp ? (
+                <div>
+                  <dt>Comp%</dt>
+                  <dd>
+                    {activeRate !== null
+                      ? formatCompRate(activeRate, active.catalystCompletionRateQualifier)
+                      : "—"}
+                  </dd>
+                </div>
+              ) : null}
+              {active.localityLabel ? (
+                <div>
+                  <dt>Locality</dt>
+                  <dd className="is-plain">{active.localityLabel}</dd>
+                </div>
+              ) : null}
+            </dl>
+            <button
+              type="button"
+              className="tasks-desk__close"
+              onClick={() => setSelectedId(null)}
+            >
+              Close
+            </button>
+          </div>
+          {active.description ? (
+            <p className="tasks-desk__drawer-body">{active.description}</p>
+          ) : null}
+          {active.requirements ? (
+            <p className="tasks-desk__drawer-req">Requires: {active.requirements}</p>
+          ) : null}
+          {active.skills?.length || active.areas?.length ? (
+            <p className="tasks-desk__drawer-tags">
+              {[...(active.skills ?? []), ...(active.areas ?? [])].join(" · ")}
+            </p>
+          ) : null}
+          {activeWiki ? (
+            <a
+              href={activeWiki}
+              target="_blank"
+              rel="noreferrer"
+              className="tasks-desk__drawer-link"
+              aria-label={`Wiki Comp% for ${active.name}`}
+            >
+              Open on Wiki
+            </a>
+          ) : null}
+        </aside>
+      ) : null}
     </div>
   );
 }

@@ -1,0 +1,206 @@
+{
+  "id": "patch-asgarnia-content-2026-07-26",
+  "regionId": "asgarnia",
+  "catalogRef": "data/research/catalog.json#regions[id=asgarnia].content",
+  "doNotEdit": ["data/research/catalog.json"],
+  "generatedAt": "2026-07-26",
+  "basedOn": [
+    "scraped-data/region-wiki-audit-asgarnia-2026-07-26.json#proposedContentFixes",
+    "https://runescape.wiki/w/Equilibrium_League/Areas/Asgarnia#Notable_combat_activities"
+  ],
+  "summary": {
+    "add": 5,
+    "remove": 4,
+    "edit": 0,
+    "keptRealContent": [
+      "General Graardor",
+      "Kree'arra",
+      "Commander Zilyana",
+      "K'ril Tsutsaroth",
+      "Nex",
+      "Nex: Angel of Death",
+      "Giant Mole",
+      "Queen Black Dragon",
+      "Vorago",
+      "Artisans' Workshop burial smithing",
+      "Safecracking route"
+    ],
+    "note": "Invention Guild is upgrades-only (not content[]) — leave as-is. Stormguard is not on content[]; Stormguard-related upgrades remain on Asgarnia for a separate rehome pass (see notes.stormguard)."
+  },
+  "notes": {
+    "stormguard": {
+      "action": "note_only_do_not_move",
+      "detail": "Stormguard Citadel Dig Site is Kandarin per wiki Equilibrium League region tags. Catalog Asgarnia currently hard-claims Stormguard/Howl workshop on upgrades (Ancient Invention blueprints, Divine Conversion, Inspire Genius, related gizmo pressure). Armadyl's Tower south of Falador is correctly Asgarnia. Content[] has no Stormguard row. Do not rehome in this content patch — other agent owns Stormguard ownership.",
+      "upgradeNamesSeenOnAsgarnia": [
+        "Ancient Invention blueprints (Howl's workshop)",
+        "Divine Conversion (Cres Framework)",
+        "Inspire Genius (Howl's Thinking Cap)",
+        "Gizmo shells (weapon / armour / tool + ancient)",
+        "Abyssal Link (The Subtle Blade)"
+      ],
+      "evidence": [
+        "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+        "https://runescape.wiki/w/Armadyl%27s_Tower"
+      ]
+    },
+    "dedupePolicy": "Prefer remove pure kind:upgrade content clones when upgrades[] already owns God Wars Dungeon 1 equipment / Nex equipment. Keep activity/boss/skilling content rows even when a richer upgrade exists (Artisans burial smithing, Safecracking route)."
+  },
+  "ops": [
+    {
+      "op": "addContent",
+      "reason": "Equilibrium League Asgarnia notable combat activities — ED1 via Arc/Aminishi (Port Sarim access after Impressing the Locals).",
+      "content": {
+        "name": "Temple of Aminishi",
+        "kind": "Elite Dungeon / The Arc",
+        "detail": "ED1 on Aminishi (Sanctum Guardian, Masuta the Ascended, Seiryu). Equilibrium lists under Asgarnia combat via Arc mapping; access from Port Sarim / Quartermaster Gully after Impressing the Locals. Dungeoneering XP/tokens plus rare drops (Masuta's warspear, ancient scales, etc.).",
+        "confidence": "confirmed_official_region_example_content_wiki_current",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Temple_of_Aminishi",
+          "title": "Temple of Aminishi",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "reason": "Equilibrium League Asgarnia notable combat activities — Void Knights boat from Port Sarim.",
+      "content": {
+        "name": "Pest Control",
+        "kind": "Void Knights' Outpost",
+        "detail": "Safe co-op minigame at the Void Knights' Outpost. Free boat from the Port Sarim pier (Squire). Commendations buy Void Knight equipment; Conquest shares the outpost logistics. Combat level landers: 35 / 70 / 100.",
+        "confidence": "confirmed_official_region_example_content_wiki_current",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Pest_Control",
+          "title": "Pest Control",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "reason": "Equilibrium League Asgarnia notable combat activities — Burthorpe defenders / tokens hub.",
+      "content": {
+        "name": "Warriors' Guild",
+        "kind": "Burthorpe",
+        "detail": "West Burthorpe guild (Attack+Strength 130 combined, or 99 in either). Activity tokens buy cyclops enclosure time for defenders through dragon. Combat bracelet teleports to the door; games necklace lands at Troll Invasion just north.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Warriors%27_Guild",
+          "title": "Warriors' Guild",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "reason": "Equilibrium League Asgarnia notable combat activities — monthly Burthorpe D&D.",
+      "content": {
+        "name": "Troll Invasion",
+        "kind": "Burthorpe D&D",
+        "detail": "Monthly safe D&D at the gatehouse north of the Warriors' Guild (Captain Jute). Combat waves or repair/skilling mode; first completion each month yields a reward book. Games necklace teleport; counts toward troll Slayer kills in fight mode.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Troll_Invasion",
+          "title": "Troll Invasion",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "addContent",
+      "reason": "Equilibrium League Asgarnia notable combat activities — classic midgame dungeon under Taverley.",
+      "content": {
+        "name": "Taverley Dungeon",
+        "kind": "dungeon",
+        "detail": "Large members dungeon south of Taverley: chaos druids, Black Knights' Base, blue dragons + scales, hellhounds, black demons/dragons, fire/water obelisks. Dusty key (or Agility shortcuts 70/80) for deep routes; hellhound and blue dragon resource dungeons branch off.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Taverley_Dungeon",
+          "title": "Taverley Dungeon",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "op": "removeContent",
+      "match": { "name": "Bandos equipment" },
+      "reason": "Pure kind:upgrade clone of upgrades[] God Wars Dungeon 1 equipment — drop content row, keep upgrade."
+    },
+    {
+      "op": "removeContent",
+      "match": { "name": "Armadyl equipment" },
+      "reason": "Pure kind:upgrade clone of upgrades[] God Wars Dungeon 1 equipment — drop content row, keep upgrade."
+    },
+    {
+      "op": "removeContent",
+      "match": { "name": "Subjugation equipment" },
+      "reason": "Pure kind:upgrade clone of upgrades[] God Wars Dungeon 1 equipment — drop content row, keep upgrade."
+    },
+    {
+      "op": "removeContent",
+      "match": { "name": "Nex tier-80 armour sets" },
+      "reason": "Pure kind:upgrade clone of upgrades[] Nex equipment — drop content row, keep upgrade."
+    }
+  ],
+  "expectedContentAfterApply": [
+    "General Graardor",
+    "Kree'arra",
+    "Commander Zilyana",
+    "K'ril Tsutsaroth",
+    "Nex",
+    "Giant Mole",
+    "Queen Black Dragon",
+    "Vorago",
+    "Nex: Angel of Death",
+    "Artisans' Workshop burial smithing",
+    "Safecracking route",
+    "Temple of Aminishi",
+    "Pest Control",
+    "Warriors' Guild",
+    "Troll Invasion",
+    "Taverley Dungeon"
+  ],
+  "sources": [
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Asgarnia",
+      "title": "Equilibrium League/Areas/Asgarnia",
+      "verifiedAt": "2026-07-26"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Temple_of_Aminishi",
+      "title": "Temple of Aminishi",
+      "verifiedAt": "2026-07-26"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Pest_Control",
+      "title": "Pest Control",
+      "verifiedAt": "2026-07-26"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Warriors%27_Guild",
+      "title": "Warriors' Guild",
+      "verifiedAt": "2026-07-26"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Troll_Invasion",
+      "title": "Troll Invasion",
+      "verifiedAt": "2026-07-26"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Taverley_Dungeon",
+      "title": "Taverley Dungeon",
+      "verifiedAt": "2026-07-26"
+    }
+  ]
+}

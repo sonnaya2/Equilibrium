@@ -11,7 +11,8 @@ description: >
 # Equilibrium visual system
 
 **Product:** companion webapp for RuneScape 3 Leagues II: Equilibrium.
-**Class:** game-world surface + tool workbench. Free fan tool — nothing is sold.
+**Class:** premium public game companion site + planner (not a developer console). Free fan tool — nothing is sold.
+**Production skin (provisional R3):** Team Alpha · Daylight tokens — sunlit fort stone, crystal gem chrome, keyart stage on Overview.
 
 This skill is the **binding product law** for UI in `Rs3Equilibrium`. Global skills
 (`no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`,
@@ -54,15 +55,18 @@ Defined in `app/globals.css` `@theme`. Inline hex in components is a defect.
 3D mirrors numbers in `src/map/palette.ts` only (TSL/lights need numbers, not CSS vars).
 
 ```
-parch   50 #efe7d5 · 100 #d3c8b0 · 300 #a99f88 · 400 #948a73 · 500 #8b7f68
-stone   750 line #332a1e · 800 raised #231d15 · 850 panel #1b1610
-        900 deep #14100b · 950 void #0d0a07 · carve #463a29
-gold    300 #f3c97b · 400 #e0b264 · 500 #a87c3c     (display ink only)
-gem     200 #8ff0cd · 300 #57e0ae · 400 #2ecb8f · 500 #1fa372 · 600 #157a55
+parch   50 #f5efe0 · 100 #e9dfc6 · 300 #d4c6a6 · 400 #bfb08e · 500 #a69474
+stone   750 line #5e5748 · 800 stage #343028 · 850 panel #28251f
+        900 shell #1c1a16 · 950 void #12110e · carve #7d745f
+        zebra #2e2b24 · raised #423d33 · inset #181612
+gold    300 #f5d48e · 400 #e8c06e · 500 #b88a42     (display ink only)
+gem     200 #9af5d4 · 300 #62e8b8 · 400 #38d49a · 500 #24a878 · 600 #18805a
 path    chaos-300 #d4614d · chaos-400 #b5402f · order-400 #4a7ec2 · balance-400 #6fae45
 ember   400 #e2622a                                 (unlock sweep only)
 radius  sm 2px · md 4px
 ```
+Restoration Companion (Alpha Daylight provisional). Sampled from 2026 keyart + stone UI.
+
 
 **Tailwind class names** match token suffixes: `bg-stone-950`, `text-parch-50`,
 `text-gem-400`, `border-stone-750`, `font-display`, `text-gold-400`, `rounded-sm`.

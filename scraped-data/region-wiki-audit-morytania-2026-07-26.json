@@ -1,0 +1,745 @@
+{
+  "auditId": "region-wiki-audit-morytania-2026-07-26",
+  "regionId": "morytania",
+  "regionName": "Morytania",
+  "auditedAt": "2026-07-26",
+  "groundTruth": "live RuneScape Wiki",
+  "policy": {
+    "doNotEdit": ["data/research/catalog.json"],
+    "writeTarget": "scraped-data/region-wiki-audit-morytania-2026-07-26.json",
+    "scope": "areas + placeAnchors + regions.json vs wiki place/content model",
+    "placeFirstRule": "areas[] must be map locations (settlements, dungeons, dig sites). Bosses and activities live under content[], nested under a host place — never as area names."
+  },
+  "sources": [
+    {
+      "url": "https://runescape.wiki/w/Morytania",
+      "title": "Morytania",
+      "role": "region place list + geography"
+    },
+    {
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Morytania",
+      "title": "Equilibrium League/Areas/Morytania",
+      "role": "League-facing settlements vs combat vs non-combat split"
+    },
+    {
+      "url": "https://runescape.wiki/w/Araxxor",
+      "title": "Araxxor",
+      "role": "boss entity; location = Araxyte Hive"
+    },
+    {
+      "url": "https://runescape.wiki/w/Araxyte_Hive",
+      "title": "Araxyte Hive",
+      "role": "canonical place for Araxxor/Araxxi"
+    },
+    {
+      "url": "https://runescape.wiki/w/Everlight_Dig_Site",
+      "title": "Everlight Dig Site",
+      "role": "place (Archaeology dig site)"
+    },
+    {
+      "url": "https://runescape.wiki/w/Slayer_Tower",
+      "title": "Slayer Tower",
+      "role": "place"
+    },
+    {
+      "url": "https://runescape.wiki/w/Barrows",
+      "title": "Barrows",
+      "role": "place (empty town + mounds); hosts brothers + RotS"
+    },
+    {
+      "url": "https://runescape.wiki/w/Port_Phasmatys",
+      "title": "Port Phasmatys",
+      "role": "place (settlement)"
+    },
+    {
+      "url": "https://runescape.wiki/w/Canifis",
+      "title": "Canifis",
+      "role": "place (settlement)"
+    },
+    {
+      "url": "https://runescape.wiki/w/Darkmeyer",
+      "title": "Darkmeyer",
+      "role": "place (settlement / capital)"
+    }
+  ],
+  "repoSnapshot": {
+    "catalog": {
+      "path": "data/research/catalog.json",
+      "recordPath": "regions[id=morytania]",
+      "areas": [
+        "Araxxor",
+        "Everlight Dig Site",
+        "Slayer Tower",
+        "Port Phasmatys",
+        "Canifis",
+        "Darkmeyer",
+        "Barrows"
+      ],
+      "content": [
+        {
+          "name": "Araxxor / Araxxi",
+          "kind": "boss",
+          "detail": "Noxious weapon components",
+          "confidence": "confirmed_official_region_example"
+        },
+        {
+          "name": "Everlight Dig Site",
+          "kind": "Archaeology",
+          "detail": "",
+          "confidence": "confirmed_official"
+        },
+        {
+          "name": "Slayer Tower",
+          "kind": "Slayer",
+          "detail": "",
+          "confidence": "inferred_region"
+        },
+        {
+          "name": "Barrows",
+          "kind": "bossing",
+          "detail": "",
+          "confidence": "inferred_region"
+        },
+        {
+          "name": "Barrows: Rise of the Six",
+          "kind": "Barrows",
+          "detail": "",
+          "confidence": "historical_catalyst_region_mapping_current_wiki_content"
+        }
+      ],
+      "nUpgrades": 93,
+      "hardRules": [],
+      "warnings": [],
+      "verified": false
+    },
+    "regionsJson": {
+      "path": "data/league/regions.json",
+      "areas": [
+        "Araxxor",
+        "Everlight Dig Site"
+      ],
+      "note": "Product regions.json is thinner than research catalog — only two area labels, both problematic or incomplete vs place-first model (Araxxor is not a place; five catalog places missing)."
+    },
+    "placeAnchors": {
+      "path": "src/map/data/placeAnchors.ts",
+      "entries": [
+        { "area": "Slayer Tower", "uv": [0.65, 0.42] },
+        { "area": "Canifis", "uv": [0.64, 0.48] },
+        { "area": "Everlight Dig Site", "uv": [0.7, 0.5] },
+        { "area": "Port Phasmatys", "uv": [0.72, 0.52] },
+        { "area": "Araxxor", "uv": [0.658, 0.558] },
+        { "area": "Darkmeyer", "uv": [0.69, 0.55] },
+        { "area": "Barrows", "uv": [0.68, 0.58] }
+      ],
+      "invariant": "Every PLACE_ANCHORS.area must equal a catalog areas[] string exactly (placeAnchors.test.ts)."
+    }
+  },
+  "leagueWikiSplit": {
+    "source": "https://runescape.wiki/w/Equilibrium_League/Areas/Morytania",
+    "notableSettlementsAndAreas": [
+      "Canifis",
+      "Slayer Tower",
+      "Burgh de Rott",
+      "Meiyerditch",
+      "Darkmeyer",
+      "Port Phasmatys",
+      "Mort'ton",
+      "The Everlight"
+    ],
+    "notableCombatActivities": [
+      "Araxxor",
+      "Barrows",
+      "Barrows: Rise of the Six",
+      "Vyrelords",
+      "Ghouls / Ravenous ghouls",
+      "Temple Trekking / Burgh de Rott Ramble",
+      "Shades of Mort'ton (minigame)"
+    ],
+    "notableNonCombatActivities": [
+      "Everlight Dig Site",
+      "Blisterwood Tree",
+      "Vyre cremation",
+      "Viridian skillchompas",
+      "Werewolf Agility Course / Skullball",
+      "Blood altar",
+      "Ectofuntus"
+    ],
+    "reading": "Wiki League page already separates places (settlements/areas) from combat activities. Araxxor is combat, not a settlement. Catalog areas[] mixed both lists."
+  },
+  "areaAudits": [
+    {
+      "catalogName": "Araxxor",
+      "entityClass": "boss",
+      "isPlace": false,
+      "severity": "critical",
+      "wikiType": "Monster / boss (level 2500 Araxyte)",
+      "wikiLocation": {
+        "placeName": "Araxyte Hive",
+        "wikiUrl": "https://runescape.wiki/w/Araxyte_Hive",
+        "geography": "Dungeon south-east of Port Phasmatys / north of Darkmeyer; cave beneath the Haunted Woods. Araxxor lives here; mate Araxxi ends the fight."
+      },
+      "wikiUrls": [
+        "https://runescape.wiki/w/Araxxor",
+        "https://runescape.wiki/w/Araxyte_Hive",
+        "https://runescape.wiki/w/Araxxi"
+      ],
+      "leagueWikiBucket": "Notable combat activities",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": true,
+        "regions.json.areas": true,
+        "placeAnchors": true
+      },
+      "findings": [
+        "FLAG: catalog/regions/placeAnchors treat the boss name as a map area. placeAnchors comment and uv pin a boss label on the board.",
+        "Wiki: Araxxor is a creature; the place is Araxyte Hive (infobox location + Morytania areas list).",
+        "Equilibrium League/Areas/Morytania lists Araxxor under combat activities, not under settlements and areas.",
+        "Content row 'Araxxor / Araxxi' is correctly kind=boss — keep as content, not as area."
+      ],
+      "recommendation": {
+        "areasAction": "rename Araxxor → Araxyte Hive (or drop and rely on Port Phasmatys proximity if hive is too fine-grained)",
+        "contentAction": "keep 'Araxxor / Araxxi' under host place Araxyte Hive",
+        "placeAnchorsAction": "rename area string to match new place; keep uv near current pin (hive SE of Phasmatys)",
+        "regionsJsonAction": "replace Araxxor with Araxyte Hive (or Port Phasmatys if product wants coarser labels only)"
+      }
+    },
+    {
+      "catalogName": "Everlight Dig Site",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "content_dup",
+      "wikiType": "Location / Archaeology dig site",
+      "wikiLocation": {
+        "placeName": "Everlight Dig Site",
+        "wikiUrl": "https://runescape.wiki/w/Everlight_Dig_Site",
+        "geography": "Former icyene settlement east of Meiyerditch / SE Morytania coast; rose from the sea in Sixth Age. Level 42 Archaeology unlock."
+      },
+      "wikiUrls": [
+        "https://runescape.wiki/w/Everlight_Dig_Site",
+        "https://runescape.wiki/w/Morytania"
+      ],
+      "leagueWikiBucket": "Notable non-combat activities (dig site); settlements list uses 'The Everlight' wording",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": true,
+        "regions.json.areas": true,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place — keep in areas[].",
+        "CONTENT DUP: identical name also in content[] as kind=Archaeology with empty detail. Place label and content row are the same string.",
+        "Upgrade also named 'Everlight Dig Site' — third surface of the same entity.",
+        "League settlements list says 'The Everlight'; non-combat list says 'Everlight Dig Site'. Prefer dig-site title for skilling clarity (matches wiki page title)."
+      ],
+      "recommendation": {
+        "areasAction": "keep 'Everlight Dig Site'",
+        "contentAction": "remove bare place-name content row OR replace with disambiguated activities (e.g. Saradominist collections, Kantharos / Cup of Nectar mystery, Heightened Senses / Inspire Effort relic paths) tagged hostPlace=Everlight Dig Site",
+        "placeAnchorsAction": "keep; uv SE coast is directionally correct",
+        "regionsJsonAction": "keep"
+      }
+    },
+    {
+      "catalogName": "Slayer Tower",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "content_dup",
+      "wikiType": "Location (Viggora's Folly / Morytania Slayer Tower)",
+      "wikiLocation": {
+        "placeName": "Slayer Tower",
+        "wikiUrl": "https://runescape.wiki/w/Slayer_Tower",
+        "geography": "North Morytania, north-west of Canifis. Multi-floor Slayer dungeon; Markus contracts; excavation caches on site."
+      },
+      "wikiUrls": ["https://runescape.wiki/w/Slayer_Tower"],
+      "leagueWikiBucket": "Notable settlements and areas",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": true,
+        "regions.json.areas": false,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place — keep in areas[].",
+        "CONTENT DUP: content[] has 'Slayer Tower' kind=Slayer with empty detail — pure place mirror.",
+        "Missing from regions.json areas despite being a core League settlement."
+      ],
+      "recommendation": {
+        "areasAction": "keep",
+        "contentAction": "remove place-mirror content row; add disambiguated content if needed (Slayer contracts/Markus, floor monster ladder, resource dungeon / abyssal demons, Archaeology caches)",
+        "placeAnchorsAction": "keep (NW of Canifis — correct relative layout)",
+        "regionsJsonAction": "add if product regions list should track all map places"
+      }
+    },
+    {
+      "catalogName": "Port Phasmatys",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "ok_missing_content",
+      "wikiType": "Settlement (ghost port)",
+      "wikiLocation": {
+        "placeName": "Port Phasmatys",
+        "wikiUrl": "https://runescape.wiki/w/Port_Phasmatys",
+        "geography": "North-eastern Morytania coast. Bank + furnace, brewery, ectofuntus north of town, ghost toll until Ghosts Ahoy. Araxyte Hive just south of the port."
+      },
+      "wikiUrls": [
+        "https://runescape.wiki/w/Port_Phasmatys",
+        "https://runescape.wiki/w/Ectofuntus"
+      ],
+      "leagueWikiBucket": "Notable settlements and areas",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": false,
+        "regions.json.areas": false,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place — keep.",
+        "No content[] row named after the port (good — avoids place/content name collision).",
+        "Planner value sits in upgrades (Ectofuntus, ectophial, first age Prayer outfit, farming patches, phasmatite) rather than content[].",
+        "Ectofuntus is adjacent temple, not a separate catalog area — fine as content under Port Phasmatys."
+      ],
+      "recommendation": {
+        "areasAction": "keep",
+        "contentAction": "optional add disambiguated content: Ectofuntus Prayer, ectophial, Ghosts Ahoy access, Port Phasmatys South mine (phasmatite) — hostPlace=Port Phasmatys",
+        "placeAnchorsAction": "keep",
+        "regionsJsonAction": "consider add"
+      }
+    },
+    {
+      "catalogName": "Canifis",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "ok_missing_content",
+      "wikiType": "Settlement (werewolf village)",
+      "wikiLocation": {
+        "placeName": "Canifis",
+        "wikiUrl": "https://runescape.wiki/w/Canifis",
+        "geography": "West-central Morytania gateway hub. Lodestone, bank, inn, shops; Slayer Tower NW; Haunted Woods east; Mort Myre south."
+      },
+      "wikiUrls": ["https://runescape.wiki/w/Canifis"],
+      "leagueWikiBucket": "Notable settlements and areas",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": false,
+        "regions.json.areas": false,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place — keep.",
+        "No place/content name collision.",
+        "Value in upgrades (Mazchna/Achtryn, farming hub, fairy ring CKS, trapdoor to Mort'ton, werewolf agility)."
+      ],
+      "recommendation": {
+        "areasAction": "keep",
+        "contentAction": "optional: Mazchna/Achtryn Slayer masters, werewolf hub services — hostPlace=Canifis",
+        "placeAnchorsAction": "keep",
+        "regionsJsonAction": "consider add"
+      }
+    },
+    {
+      "catalogName": "Darkmeyer",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "ok_missing_content",
+      "wikiType": "Settlement (vampyre capital of Sanguinesti)",
+      "wikiLocation": {
+        "placeName": "Darkmeyer",
+        "wikiUrl": "https://runescape.wiki/w/Darkmeyer",
+        "geography": "Sanguinesti Region capital; Castle Drakan on west end. Branches of Darkmeyer quest setting; blisterwood / vyre combat geography."
+      },
+      "wikiUrls": [
+        "https://runescape.wiki/w/Darkmeyer",
+        "https://runescape.wiki/w/The_Branches_of_Darkmeyer"
+      ],
+      "leagueWikiBucket": "Notable settlements and areas",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": false,
+        "regions.json.areas": false,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place — keep.",
+        "No place/content name collision.",
+        "Combat/skilling value (vyres, Sunspear, blisterwood, Ring of Vitur, Drakan's medallion) is upgrades-only today."
+      ],
+      "recommendation": {
+        "areasAction": "keep",
+        "contentAction": "optional: Vyre combat / Sunspear training, Darkmeyer Thieving — hostPlace=Darkmeyer (Meiyerditch may share vyre density; keep labels honest)",
+        "placeAnchorsAction": "keep",
+        "regionsJsonAction": "consider add"
+      }
+    },
+    {
+      "catalogName": "Barrows",
+      "entityClass": "place",
+      "isPlace": true,
+      "severity": "content_dup",
+      "wikiType": "Location (empty town + burial mounds); also common name for the brothers encounter",
+      "wikiLocation": {
+        "placeName": "Barrows",
+        "wikiUrl": "https://runescape.wiki/w/Barrows",
+        "geography": "Southern Morytania empty town next to the Barrows Brothers' graves. Well leads to Rise of the Six. Mounds south of settlement (Strange Old Man)."
+      },
+      "wikiUrls": [
+        "https://runescape.wiki/w/Barrows",
+        "https://runescape.wiki/w/The_Barrows_Brothers",
+        "https://runescape.wiki/w/Barrows:_Rise_of_the_Six"
+      ],
+      "leagueWikiBucket": "Wiki League lists 'Barrows' and 'Barrows: Rise of the Six' under combat activities; place page still exists as a map location",
+      "presentIn": {
+        "catalog.areas": true,
+        "catalog.content": true,
+        "regions.json.areas": false,
+        "placeAnchors": true
+      },
+      "findings": [
+        "Valid place on the map — keep as area (board needs a pin; wiki location page is real).",
+        "CONTENT DUP: content 'Barrows' kind=bossing with empty detail mirrors the place name.",
+        "Nested content: 'Barrows: Rise of the Six' is correctly an encounter hosted at the Barrows well — disambiguate under host place, do not promote RotS to its own area.",
+        "League combat list naming Barrows as activity is compatible with place-first: area=Barrows, content=[brothers, RotS]."
+      ],
+      "recommendation": {
+        "areasAction": "keep 'Barrows'",
+        "contentAction": "replace bare 'Barrows' content with disambiguated rows: 'The Barrows Brothers' (bossing) + keep 'Barrows: Rise of the Six'; both hostPlace=Barrows",
+        "placeAnchorsAction": "keep",
+        "regionsJsonAction": "consider add"
+      }
+    }
+  ],
+  "contentDuplicationReport": {
+    "summary": "Three of five content rows reuse an areas[] string (or a boss wrongly elevated to area). Everlight Dig Site, Slayer Tower, and Barrows collide place↔content. Araxxor is boss content that was also wrongly added to areas[]. Rise of the Six is the only content row that is not a bare place name — but it lacks an explicit hostPlace link.",
+    "dups": [
+      {
+        "area": "Everlight Dig Site",
+        "contentName": "Everlight Dig Site",
+        "kind": "Archaeology",
+        "dupType": "exact_name_place_and_content",
+        "action": "drop content mirror or expand into named activities under hostPlace"
+      },
+      {
+        "area": "Slayer Tower",
+        "contentName": "Slayer Tower",
+        "kind": "Slayer",
+        "dupType": "exact_name_place_and_content",
+        "action": "drop content mirror or expand into named activities under hostPlace"
+      },
+      {
+        "area": "Barrows",
+        "contentName": "Barrows",
+        "kind": "bossing",
+        "dupType": "exact_name_place_and_content",
+        "action": "rename content to The Barrows Brothers; keep place as Barrows"
+      },
+      {
+        "area": "Barrows",
+        "contentName": "Barrows: Rise of the Six",
+        "kind": "Barrows",
+        "dupType": "nested_activity_under_place",
+        "action": "keep as content; set hostPlace=Barrows; do not add as area"
+      },
+      {
+        "area": "Araxxor (invalid area)",
+        "contentName": "Araxxor / Araxxi",
+        "kind": "boss",
+        "dupType": "boss_used_as_area",
+        "action": "area → Araxyte Hive; content stays boss under that host"
+      }
+    ]
+  },
+  "proposedPlaceFirstModel": {
+    "principle": "areas[] = wiki locations you can pin. content[] = bosses, minigames, dig activities, hubs services — each with hostPlace matching an areas[] string.",
+    "proposedAreas": [
+      {
+        "name": "Canifis",
+        "role": "northern gateway settlement / lodestone hub",
+        "wikiUrl": "https://runescape.wiki/w/Canifis",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.64, 0.48]
+      },
+      {
+        "name": "Slayer Tower",
+        "role": "Slayer dungeon NW of Canifis",
+        "wikiUrl": "https://runescape.wiki/w/Slayer_Tower",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.65, 0.42]
+      },
+      {
+        "name": "Port Phasmatys",
+        "role": "NE ghost port; ectofuntus + bank/furnace",
+        "wikiUrl": "https://runescape.wiki/w/Port_Phasmatys",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.72, 0.52]
+      },
+      {
+        "name": "Araxyte Hive",
+        "role": "boss dungeon (replaces invalid area Araxxor)",
+        "wikiUrl": "https://runescape.wiki/w/Araxyte_Hive",
+        "keepFromCatalog": false,
+        "replaces": "Araxxor",
+        "anchorUvHint": [0.658, 0.558],
+        "note": "Reuse current Araxxor uv — already SE of Phasmatys / near Darkmeyer band."
+      },
+      {
+        "name": "Darkmeyer",
+        "role": "vampyre capital / Sanguinesti",
+        "wikiUrl": "https://runescape.wiki/w/Darkmeyer",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.69, 0.55]
+      },
+      {
+        "name": "Barrows",
+        "role": "southern mounds + empty town; hosts brothers and RotS",
+        "wikiUrl": "https://runescape.wiki/w/Barrows",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.68, 0.58]
+      },
+      {
+        "name": "Everlight Dig Site",
+        "role": "SE coast Archaeology dig site",
+        "wikiUrl": "https://runescape.wiki/w/Everlight_Dig_Site",
+        "keepFromCatalog": true,
+        "anchorUvHint": [0.7, 0.5]
+      }
+    ],
+    "optionalAreasNotInCatalog": [
+      {
+        "name": "Burgh de Rott",
+        "why": "League notable settlement; Temple Trekking / games necklace / Drakan medallion logistics",
+        "wikiUrl": "https://runescape.wiki/w/Burgh_de_Rott"
+      },
+      {
+        "name": "Meiyerditch",
+        "why": "League notable settlement; Myreque / daeyalt / vyrewatch ghetto geography",
+        "wikiUrl": "https://runescape.wiki/w/Meiyerditch"
+      },
+      {
+        "name": "Mort'ton",
+        "why": "League notable settlement; Shades of Mort'ton minigame",
+        "wikiUrl": "https://runescape.wiki/w/Mort%27ton"
+      },
+      {
+        "name": "Mort Myre Swamp",
+        "why": "Large transit biome; Nature Grotto / fungi / temple trek path",
+        "wikiUrl": "https://runescape.wiki/w/Mort_Myre_Swamp"
+      },
+      {
+        "name": "Abandoned Mine",
+        "why": "Salve amulet shard source (Haunted Mine)",
+        "wikiUrl": "https://runescape.wiki/w/Abandoned_Mine"
+      }
+    ],
+    "disambiguatedContent": [
+      {
+        "name": "Araxxor / Araxxi",
+        "kind": "boss",
+        "hostPlace": "Araxyte Hive",
+        "detail": "Noxious weapon components via Araxxi corpse",
+        "wikiUrl": "https://runescape.wiki/w/Araxxor"
+      },
+      {
+        "name": "The Barrows Brothers",
+        "kind": "bossing",
+        "hostPlace": "Barrows",
+        "detail": "Classic barrows chest encounter (six + optional Akrisae/Linza)",
+        "wikiUrl": "https://runescape.wiki/w/The_Barrows_Brothers",
+        "replacesContentName": "Barrows"
+      },
+      {
+        "name": "Barrows: Rise of the Six",
+        "kind": "bossing",
+        "hostPlace": "Barrows",
+        "detail": "Group encounter via town well; Malevolent energy / defenders path",
+        "wikiUrl": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six"
+      },
+      {
+        "name": "Slayer Tower contracts and ladder",
+        "kind": "Slayer",
+        "hostPlace": "Slayer Tower",
+        "detail": "Markus contracts; crawling hands through abyssal demons",
+        "wikiUrl": "https://runescape.wiki/w/Slayer_Tower",
+        "replacesContentName": "Slayer Tower"
+      },
+      {
+        "name": "Everlight Archaeology",
+        "kind": "Archaeology",
+        "hostPlace": "Everlight Dig Site",
+        "detail": "Icyene dig site from 42 Archaeology; collections, mysteries, materials",
+        "wikiUrl": "https://runescape.wiki/w/Everlight_Dig_Site",
+        "replacesContentName": "Everlight Dig Site"
+      },
+      {
+        "name": "Ectofuntus",
+        "kind": "Prayer",
+        "hostPlace": "Port Phasmatys",
+        "detail": "Prayer worship + first age outfit route north of the port",
+        "wikiUrl": "https://runescape.wiki/w/Ectofuntus",
+        "optional": true
+      },
+      {
+        "name": "Vyre combat and cremation",
+        "kind": "combat/skilling",
+        "hostPlace": "Darkmeyer",
+        "detail": "Blisterwood/Sunspear path; Prayer/FM cremation",
+        "wikiUrl": "https://runescape.wiki/w/Vyrewatch",
+        "optional": true
+      }
+    ],
+    "proposedAreasArrayLiteral": [
+      "Canifis",
+      "Slayer Tower",
+      "Port Phasmatys",
+      "Araxyte Hive",
+      "Darkmeyer",
+      "Barrows",
+      "Everlight Dig Site"
+    ],
+    "proposedContentArrayLiteral": [
+      {
+        "name": "Araxxor / Araxxi",
+        "kind": "boss",
+        "hostPlace": "Araxyte Hive"
+      },
+      {
+        "name": "Everlight Archaeology",
+        "kind": "Archaeology",
+        "hostPlace": "Everlight Dig Site"
+      },
+      {
+        "name": "Slayer Tower contracts and ladder",
+        "kind": "Slayer",
+        "hostPlace": "Slayer Tower"
+      },
+      {
+        "name": "The Barrows Brothers",
+        "kind": "bossing",
+        "hostPlace": "Barrows"
+      },
+      {
+        "name": "Barrows: Rise of the Six",
+        "kind": "bossing",
+        "hostPlace": "Barrows"
+      }
+    ]
+  },
+  "crossFileDrift": {
+    "catalogVsRegionsJson": {
+      "catalogAreasCount": 7,
+      "regionsJsonAreasCount": 2,
+      "onlyInCatalog": [
+        "Slayer Tower",
+        "Port Phasmatys",
+        "Canifis",
+        "Darkmeyer",
+        "Barrows"
+      ],
+      "shared": ["Araxxor", "Everlight Dig Site"],
+      "sharedProblems": ["Araxxor is not a place in both files"]
+    },
+    "catalogVsPlaceAnchors": {
+      "match": "1:1 name parity today (all 7 catalog areas anchored)",
+      "risk": "Renaming Araxxor → Araxyte Hive requires simultaneous placeAnchors + catalog areas update or placeAnchors.test.ts fails"
+    },
+    "questRegionRules": {
+      "path": "data/league/quest-region-rules.json",
+      "termsInclude": [
+        "morytania",
+        "canifis",
+        "mort myre",
+        "mort'ton",
+        "meiyerditch",
+        "darkmeyer",
+        "port phasmatys",
+        "burgh de rott",
+        "slayer tower",
+        "everlight",
+        "haunted mine",
+        "ectofuntus"
+      ],
+      "note": "Quest locality terms already use place names (including Araxyte-adjacent ectofuntus / everlight) and never the bare boss name Araxxor — aligns with place-first fix."
+    }
+  },
+  "severityFindings": [
+    {
+      "id": "araxxor-not-a-place",
+      "severity": "critical",
+      "title": "Araxxor is a boss, not a place",
+      "evidence": [
+        "Wiki Araxxor page: monster/boss in Araxyte Hive",
+        "Wiki Morytania Areas: lists Araxyte Hive as the place; Araxxor is who you fight there",
+        "League Morytania page: Araxxor under combat activities, not settlements",
+        "catalog.areas, regions.json.areas, placeAnchors all use 'Araxxor' as an area string"
+      ],
+      "fix": "areas: Araxxor → Araxyte Hive; keep boss content under hostPlace Araxyte Hive; rename placeAnchors entry"
+    },
+    {
+      "id": "content-place-name-collision",
+      "severity": "high",
+      "title": "Content rows duplicate place names (Everlight Dig Site, Slayer Tower, Barrows)",
+      "evidence": [
+        "content[].name equals areas[] for three places with empty or thin detail",
+        "Violates place-first separation expected by map anchors and planner UX"
+      ],
+      "fix": "Disambiguate content names; attach hostPlace; never use bare place as content name when it is already an area"
+    },
+    {
+      "id": "regions-json-thin-and-wrong",
+      "severity": "high",
+      "title": "data/league/regions.json Morytania areas are incomplete and include the boss-as-place error",
+      "evidence": [
+        "Only Araxxor + Everlight Dig Site",
+        "Missing Canifis, Slayer Tower, Port Phasmatys, Darkmeyer, Barrows present in catalog and anchors"
+      ],
+      "fix": "Sync regions.json areas to place-first list after catalog fix"
+    },
+    {
+      "id": "league-settlement-gaps",
+      "severity": "medium",
+      "title": "Catalog omits League-listed settlements Burgh de Rott, Meiyerditch, Mort'ton",
+      "evidence": [
+        "Equilibrium League/Areas/Morytania notable settlements list",
+        "Planner upgrades already reference Burgh de Rott / Temple Trekking without area pins"
+      ],
+      "fix": "Optional later expansion; not required to fix Araxxor / content dups"
+    },
+    {
+      "id": "barrows-activity-vs-place",
+      "severity": "low",
+      "title": "Barrows is both a map location and a combat activity name",
+      "evidence": [
+        "Wiki location page Barrows exists",
+        "League combat list also says Barrows"
+      ],
+      "fix": "Keep area=Barrows; rename content to The Barrows Brothers + RotS so activity labels are explicit"
+    }
+  ],
+  "recommendedApplyOrder": [
+    "1. Do not edit catalog.json from this audit (handoff only).",
+    "2. When applying: rename areas Araxxor → Araxyte Hive in catalog + regions.json + placeAnchors (same commit).",
+    "3. Rewrite content[] to proposed disambiguated list with hostPlace fields (schema may need optional hostPlace if not already present).",
+    "4. Expand regions.json areas to full place-first set if product surface should match catalog map pins.",
+    "5. Run placeAnchors tests + any catalog consumers.",
+    "6. Optional: add Burgh de Rott / Meiyerditch / Mort'ton as later place expansion with new anchors."
+  ],
+  "doNotChangeInThisPass": [
+    "data/research/catalog.json (explicit ban for this audit write)",
+    "upgrade rows (93) — only area/content naming is in scope",
+    "anchor uv coordinates beyond rename of Araxxor → Araxyte Hive"
+  ],
+  "summary": {
+    "areasAudited": 7,
+    "validPlaces": 6,
+    "invalidAreas": ["Araxxor"],
+    "contentPlaceNameCollisions": ["Everlight Dig Site", "Slayer Tower", "Barrows"],
+    "proposedAreaRename": { "from": "Araxxor", "to": "Araxyte Hive" },
+    "proposedAreas": [
+      "Canifis",
+      "Slayer Tower",
+      "Port Phasmatys",
+      "Araxyte Hive",
+      "Darkmeyer",
+      "Barrows",
+      "Everlight Dig Site"
+    ],
+    "wikiConfirmsRegion": "Morytania elective League region; places and Araxxor boss are Morytania-tagged on wiki"
+  }
+}

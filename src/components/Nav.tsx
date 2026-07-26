@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ELECTIVE_CAP } from "@/league";
+import { useBuild } from "@/league/useBuild";
 
 const LINKS = [
   ["/", "Overview"],
@@ -12,27 +14,30 @@ const LINKS = [
   ["/data", "Data"],
 ] as const;
 
+const RELIC_MONO: Record<string, string> = {
+  Survivalist: "SV",
+  "Endless Harvest": "EH",
+  "Golden Touch": "GT",
+};
+
+/**
+ * Composite mast — gold brand, gem active tabs, live pick / T1 mono meta.
+ * Frozen: accessible name EQUILIBRIUM; six primary links.
+ */
 export function Nav() {
   const pathname = usePathname();
+  const { build, loaded } = useBuild();
+  const picks = loaded ? build.elective.length : null;
+  const t1 = loaded ? build.relics["1"] ?? null : null;
+  const mono = t1 ? RELIC_MONO[t1] ?? null : null;
+
   return (
-    <header className="border-b border-stone-750">
-      <nav className="mx-auto flex w-full max-w-[1600px] items-center gap-6 px-4 py-3">
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-gold-400"
-        >
-          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-            <path
-              d="M8 1 14 4.5v7L8 15 2 11.5v-7z"
-              fill="none"
-              stroke="var(--color-gem-400)"
-              strokeWidth="1.5"
-            />
-            <path d="M8 5 10.5 6.5v3L8 11 5.5 9.5v-3z" fill="var(--color-gem-500)" />
-          </svg>
-          EQUILIBRIUM
-        </Link>
-        <ul className="flex flex-wrap gap-4 text-sm">
+    <header className="comp-mast">
+      <Link href="/" className="comp-brand">
+        EQUILIBRIUM
+      </Link>
+      <nav aria-label="Primary">
+        <ul className="comp-nav">
           {LINKS.map(([href, label]) => {
             const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
             return (
@@ -40,11 +45,7 @@ export function Nav() {
                 <Link
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`transition-colors duration-150 ${
-                    active
-                      ? "font-medium text-gem-400"
-                      : "text-parch-100 hover:text-parch-50"
-                  }`}
+                  className={`comp-nav__btn${active ? " is-active" : ""}`}
                 >
                   {label}
                 </Link>
@@ -53,6 +54,18 @@ export function Nav() {
           })}
         </ul>
       </nav>
+      <p className="comp-nav__meta" aria-live="polite">
+        picks{" "}
+        <strong>
+          {picks === null ? `…/${ELECTIVE_CAP}` : `${picks}/${ELECTIVE_CAP}`}
+        </strong>
+        {mono ? (
+          <>
+            {" "}
+            · T1 <strong>{mono}</strong>
+          </>
+        ) : null}
+      </p>
     </header>
   );
 }

@@ -1,0 +1,550 @@
+{
+  "auditId": "region-wiki-audit-tirannwn-2026-07-26",
+  "auditedAt": "2026-07-26",
+  "regionId": "tirannwn",
+  "regionName": "Tirannwn",
+  "scope": "Wiki geography vs catalog areas / content / upgrades / placeAnchors for Tirannwn. Does not edit catalog.json.",
+  "sourcesScraped": [
+    {
+      "url": "https://runescape.wiki/w/Tirannwn",
+      "title": "Tirannwn",
+      "role": "canonical region geography, places of interest, nav template"
+    },
+    {
+      "url": "https://runescape.wiki/w/Prifddinas",
+      "title": "Prifddinas",
+      "role": "city capital / high-level hub; not the League region id"
+    },
+    {
+      "url": "https://runescape.wiki/w/The_Lost_Grove",
+      "title": "The Lost Grove",
+      "role": "Solak / high Slayer island; Equilibrium promo pairs with Tirannwn"
+    },
+    {
+      "url": "https://runescape.wiki/w/Lletya",
+      "title": "Lletya",
+      "role": "pre-Prif elven settlement in Isafdar / Tirannwn"
+    },
+    {
+      "url": "https://runescape.wiki/w/Isafdar",
+      "title": "Isafdar",
+      "role": "main Tirannwn forest subregion"
+    },
+    {
+      "url": "https://runescape.wiki/w/Poison_Waste",
+      "title": "Poison Waste",
+      "role": "southern Tirannwn marsh; Lost Grove standstone approach"
+    },
+    {
+      "url": "https://runescape.wiki/w/Tyras_Camp",
+      "title": "Tyras Camp",
+      "role": "human camp in SW Isafdar; Port Tyras charter entry"
+    },
+    {
+      "url": "https://runescape.wiki/w/Update:Countdown_to_LEAGUES_II:_EQUILIBRIUM!",
+      "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+      "role": "official Equilibrium region blurbs (Jagex news, 2026-07-23)"
+    },
+    {
+      "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+      "title": "Countdown to LEAGUES II: EQUILIBRIUM! (Jagex)",
+      "role": "same official region list; catalog source URL"
+    }
+  ],
+  "localFilesCompared": [
+    "data/research/catalog.json (regions[id=tirannwn])",
+    "data/league/regions.json (tirannwn record)",
+    "src/map/data/placeAnchors.ts (tirannwn anchors)",
+    "data/league/quest-region-rules.json (tirannwn terms)"
+  ],
+  "localState": {
+    "catalog": {
+      "id": "tirannwn",
+      "name": "Tirannwn",
+      "availability": "elective",
+      "aliases": [],
+      "areas": ["Prifddinas", "Lost Grove"],
+      "hardRules": [],
+      "warnings": [],
+      "verified": false,
+      "contentNamedPrifddinas": {
+        "name": "Prifddinas",
+        "kind": "high-level hub",
+        "detail": "Jagex says region quest completion is designed to provide immediate access.",
+        "confidence": "confirmed_official"
+      },
+      "contentNamedTheLostGrove": {
+        "name": "The Lost Grove",
+        "kind": "Slayer/combat"
+      },
+      "contentNamedSolak": {
+        "name": "Solak",
+        "kind": "The Lost Grove"
+      },
+      "upgradeNamedPrifddinas": {
+        "name": "Prifddinas",
+        "category": "major high-level hub",
+        "detail": "Jagex says Equilibrium region auto-completion is designed to provide immediate access to Prifddinas.",
+        "confidence": "confirmed_official"
+      },
+      "nameCollisions": [
+        {
+          "name": "Prifddinas",
+          "roles": ["areas[] place name", "content[] high-level hub", "upgrades[] major high-level hub"],
+          "severity": "high",
+          "note": "Same bare string used for a map area, a content card, and an upgrade card. Breaks role clarity and any UI that keys on display name alone."
+        },
+        {
+          "name": "Lost Grove vs The Lost Grove",
+          "roles": ["areas[] = Lost Grove", "content[] = The Lost Grove", "wiki title = The Lost Grove"],
+          "severity": "low",
+          "note": "Cosmetic article mismatch; placeAnchors uses Lost Grove to match areas[]."
+        }
+      ]
+    },
+    "leagueRegionsJson": {
+      "areas": ["Prifddinas", "Lost Grove"],
+      "hardRules": [],
+      "warnings": [],
+      "matchesCatalogAreas": true
+    },
+    "placeAnchors": [
+      { "region": "tirannwn", "area": "Prifddinas", "uv": [0.155, 0.52] },
+      { "region": "tirannwn", "area": "Lost Grove", "uv": [0.137, 0.7] }
+    ],
+    "questRegionTerms": [
+      "tirannwn",
+      "prifddinas",
+      "lletya",
+      "isafdar",
+      "arandar",
+      "tyras",
+      "poison waste",
+      "underground pass"
+    ],
+    "questRegionTermsNote": "Quest mapping already knows a wider Tirannwn gazetteer than areas[]. That is correct for start-area classification; areas[] is a thinner League/map place list."
+  },
+  "wikiGeography": {
+    "regionSummary": "Tirannwn is the geographical elven region west of Kandarin on the western edge of Gielinor. Isolated forest realm; access after starting Regicide (base game). Capital is Prifddinas after Plague's End. Welsh-themed naming throughout.",
+    "pronunciationNote": "Wiki: TIR-an-un.",
+    "canonicalSubregions": [
+      {
+        "name": "Prifddinas",
+        "relation": "northern subregion / capital city",
+        "wikiUrl": "https://runescape.wiki/w/Prifddinas",
+        "notes": "City of crystal; eight clan districts + Tower of Voices. Access after Plague's End. High-level skilling hub, Morvran, Max Guild, crystal tools, Seren content. Capital of Tirannwn — not the League region id."
+      },
+      {
+        "name": "Isafdar",
+        "relation": "southern forested subregion; largest part of Tirannwn",
+        "wikiUrl": "https://runescape.wiki/w/Isafdar",
+        "notes": "Trap-dense forest (leaf/stick/tripwire), grenwall/pawya hunting, Tirannwn lodestone, Lletya adjacent, Tyras/Elf camps. Access after starting Regicide."
+      },
+      {
+        "name": "Arandar",
+        "relation": "eastern mountain pass subregion bordering Kandarin",
+        "wikiUrl": "https://runescape.wiki/w/Arandar",
+        "notes": "Overground pass into Tirannwn; eastern Prifddinas entrance route."
+      }
+    ],
+    "placesOfInterestFromTirannwnPage": [
+      {
+        "name": "Arandar",
+        "wikiUrl": "https://runescape.wiki/w/Arandar",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "Tirannwn",
+        "plannerRelevance": "access geography / quest path; low standalone upgrade surface"
+      },
+      {
+        "name": "Isafdar",
+        "wikiUrl": "https://runescape.wiki/w/Isafdar",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "Tirannwn",
+        "plannerRelevance": "high for Hunter (grenwall/pawya/crystal skillchompas), traps, mushroom patch, mid-league travel"
+      },
+      {
+        "name": "Prifddinas",
+        "wikiUrl": "https://runescape.wiki/w/Prifddinas",
+        "inCatalogAreas": true,
+        "wikiParentRegion": "Tirannwn",
+        "plannerRelevance": "primary high-level hub for almost all Tirannwn skilling/combat value"
+      },
+      {
+        "name": "Tyras Camp",
+        "wikiUrl": "https://runescape.wiki/w/Tyras_Camp",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "Tirannwn (SW Isafdar)",
+        "plannerRelevance": "halberd shop; charter-adjacent entry; quest/diary geography"
+      },
+      {
+        "name": "Elf Camp",
+        "wikiUrl": "https://runescape.wiki/w/Elf_Camp",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "Tirannwn / Isafdar",
+        "plannerRelevance": "quest/historical Iorwerth site; minor post-Plague's End"
+      },
+      {
+        "name": "Lletya",
+        "wikiUrl": "https://runescape.wiki/w/Lletya",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "Tirannwn",
+        "plannerRelevance": "banked elven village; crystal teleport seed destination; elf pickpocket / fruit tree / pre-Prif hub; crystal seed component source in ironman docs"
+      },
+      {
+        "name": "Poison Waste Slayer Dungeon",
+        "wikiUrl": "https://runescape.wiki/w/Poison_Waste_Slayer_Dungeon",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "accessed via Poison Waste / Castle Wars approaches",
+        "plannerRelevance": "warped tortoises/terrorbirds; Path of Glouphrie gate"
+      },
+      {
+        "name": "Arposandra",
+        "wikiUrl": "https://runescape.wiki/w/Arposandra",
+        "inCatalogAreas": false,
+        "wikiParentRegion": "underground gnomish city associated with Poison Waste lore",
+        "plannerRelevance": "quest lore; not a League promo highlight"
+      }
+    ],
+    "navTemplateTirannwnPlaces": [
+      "Prifddinas",
+      "Lletya",
+      "Arposandra",
+      "Elf Camp",
+      "Tyras Camp",
+      "Port Tyras",
+      "Underground Pass",
+      "Poison Waste Slayer Dungeon",
+      "Arandar",
+      "Isafdar",
+      "Poison Waste"
+    ],
+    "additionalRelatedPlaces": [
+      {
+        "name": "Poison Waste",
+        "wikiUrl": "https://runescape.wiki/w/Poison_Waste",
+        "wikiLocationField": "Tirannwn",
+        "inCatalogAreas": false,
+        "notes": "Marsh south of Isafdar. Fairy ring DLR, incandescent wisps approach, coal-tar/sulphur, Plague's End Lady Hefin path. Standstone south of Poison Waste reaches The Lost Grove."
+      },
+      {
+        "name": "Port Tyras",
+        "wikiUrl": "https://runescape.wiki/w/Port_Tyras",
+        "wikiParentRegion": "Tirannwn",
+        "inCatalogAreas": false,
+        "notes": "Charter ship landing for Regicide-partial access."
+      },
+      {
+        "name": "Temple of Light / Death altar",
+        "wikiUrl": "https://runescape.wiki/w/Temple_of_Light",
+        "wikiParentRegion": "Tirannwn / elven lands (quest chain)",
+        "inCatalogAreas": false,
+        "notes": "Catalog already has upgrade Death altar (Temple of Light Runecrafting); place is not an areas[] pin."
+      },
+      {
+        "name": "The Lost Grove",
+        "wikiUrl": "https://runescape.wiki/w/The_Lost_Grove",
+        "wikiLocationField": "island west of Tirannwn / Western Sea",
+        "inCatalogAreas": true,
+        "areaLabelInApp": "Lost Grove",
+        "notes": "Not listed on Tirannwn places-of-interest list as a mainland subregion. Island with Solak, Lost Grove creatures (cinderbanes), Wisps of the Grove. Wiki page is in category Needs League region. Equilibrium official blurb explicitly pairs Lost Grove access with the Tirannwn region pick."
+      },
+      {
+        "name": "Underground Pass",
+        "wikiUrl": "https://runescape.wiki/w/Underground_Pass_(dungeon)",
+        "inCatalogAreas": false,
+        "notes": "Classic entry dungeon from Kandarin side; quest + geography edge of Tirannwn."
+      }
+    ],
+    "prifddinasRole": {
+      "isRegion": false,
+      "isCity": true,
+      "isCapitalOf": "Tirannwn",
+      "wikiAliases": [
+        "Crystal City",
+        "The Elf City",
+        "Lost City of the Elves",
+        "Dylandra (Gnomish)"
+      ],
+      "clanDistricts": [
+        "Crwys (Farming/Woodcutting)",
+        "Cadarn (Magic/Ranged + Max Guild)",
+        "Trahaearn (Mining/Smithing)",
+        "Iorwerth (Melee/Slayer + Morvran)",
+        "Ithell (Crafting/Construction + crystal singing)",
+        "Amlodd (Summoning/Divination)",
+        "Hefin (Agility/Prayer)",
+        "Meilyr (Dungeoneering/Herblore)"
+      ],
+      "entryRequirementBaseGame": "Plague's End (+ first foot entry before teleports)",
+      "equilibriumNote": "Official news: Choose Tirannwn and you'll be able to head straight to Prifddinas (region auto-completed quests)."
+    },
+    "lostGroveRole": {
+      "isMainlandTirannwnSubregion": false,
+      "isIslandWestOfTirannwn": true,
+      "release": "2017-09-25",
+      "keyContent": [
+        "Solak, Guardian of the Grove",
+        "Vinecrawlers / Bulbous crawlers / Moss golems (104–108 Slayer)",
+        "Cinderbane gloves",
+        "Ancient elven ritual shard (Solak)",
+        "Blightbound crossbows / grimoire chain",
+        "Wisps of the Grove D&D"
+      ],
+      "access": [
+        "Standstone south of Poison Waste",
+        "Fairy ring BJS (after 5 bittercap mushrooms)",
+        "Northern Lost Grove Teleport",
+        "Solak boss portal / grouping"
+      ],
+      "leagueRegionEvidence": {
+        "equilibriumOfficial": "Tirannwn - The elven lands are full of potential benefits, from the City of Prifddinas to access to the Lost Grove.",
+        "wikiLeagueCategory": "Needs League region (page not yet tagged to Equilibrium area)",
+        "historicalMisfileRisk": "Some internal research notes noted fairy-ring/Kandarin-adjacent approach confusion; Equilibrium promo text is authoritative for League region assignment to Tirannwn."
+      }
+    }
+  },
+  "leagueIntent": {
+    "officialRegionBlurb": "Tirannwn - The elven lands are full of potential benefits, from the City of Prifddinas to access to the Lost Grove.",
+    "officialAccessExample": "Choose Tirannwn and you'll be able to head straight to Prifddinas.",
+    "promotionalCollapse": {
+      "doesJagexNameOnlyPrifAndLostGroveAsExamples": true,
+      "doesThatMeanOtherTirannwnPlacesAreExcludedFromTheRegion": false,
+      "interpretation": "Equilibrium marketing collapses Tirannwn to its two marquee destinations (Prifddinas city + Lost Grove island). That is a highlight list, not a claim that Isafdar/Lletya/Tyras/Poison Waste leave the region. Auto-completed quests for the region are expected to open the full elven-lands package, with Prif called out as the immediate payoff."
+    },
+    "catalystContext": {
+      "note": "Catalyst League was not region-locked; Plague's End and the elf quest chain were among global auto-completions. Equilibrium introduces elective region unlocking; Tirannwn is one of eight elective regions (plus starting Misthalin/Havenhythe and automatic-early Karamja)."
+    },
+    "appAreasListVsWikiGazetteer": {
+      "currentAreas": ["Prifddinas", "Lost Grove"],
+      "matchesOfficialPromoExamples": true,
+      "omitsMajorWikiPlaces": true,
+      "assessment": "Intentional thin League highlight set, not a full RS3 gazetteer. Acceptable if documented; confusing if players expect Lletya/Isafdar pins because quest-region-rules and skilling upgrades already reference them."
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "title": "Prifddinas is a city/sub-area, not the region",
+      "detail": "Wiki: Prifddinas is the capital city of Tirannwn. Catalog correctly uses region id tirannwn. Map/UI must never treat Prifddinas as a selectable League region."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "title": "Bare name Prifddinas collides across areas, content, and upgrades",
+      "detail": "areas[] has Prifddinas; content[0].name is Prifddinas (kind high-level hub); upgrades[0].name is Prifddinas (category major high-level hub). Role-specific titles are required for content/upgrade rows."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "title": "League promo intentionally highlights only Prif + Lost Grove",
+      "detail": "Jagex Equilibrium news only names those two for Tirannwn. Catalog areas[] match that promo. This is League-aware collapse, not a wiki error."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "title": "Wiki geography is much larger than areas[]",
+      "detail": "Tirannwn page subregions: Prifddinas, Isafdar, Arandar. Places of interest also include Lletya, Tyras Camp, Elf Camp, Poison Waste Slayer Dungeon, Arposandra. None of Isafdar/Lletya/Tyras/Arandar/Poison Waste appear in areas[] or placeAnchors."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "title": "Lost Grove is an island west of Tirannwn, not a city district",
+      "detail": "Wiki places it in the Western Sea / west of Tirannwn. Equilibrium still assigns 'access to the Lost Grove' under the Tirannwn region pick. Catalog placing Lost Grove as a Tirannwn area is League-correct."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "title": "Lost Grove article vs area label",
+      "detail": "Wiki and content use The Lost Grove; areas[] and placeAnchors use Lost Grove. Prefer one display form; keep areas[] stable for anchors."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "title": "Empty hardRules/warnings on Tirannwn",
+      "detail": "Unlike Misthalin/Asgarnia, tirannwn has no hardRules documenting that Lletya/Isafdar/Temple of Light resolve under Tirannwn. Optional documentation gap only."
+    },
+    {
+      "id": "F8",
+      "severity": "info",
+      "title": "Deep catalog upgrades already encode Prif district surface",
+      "detail": "Upgrades list Ithell/Hefin/Meilyr/Morvran/Voice of Seren/etc. under tirannwn without needing every district as a map area. Districts can stay content/upgrade depth; areas[] can stay coarse."
+    },
+    {
+      "id": "F9",
+      "severity": "info",
+      "title": "quest-region-rules already maps broader Tirannwn terms",
+      "detail": "lletya, isafdar, arandar, tyras, poison waste, underground pass are classified to tirannwn for quest start areas even when not map areas."
+    }
+  ],
+  "proposals": {
+    "areas": {
+      "keep": [
+        {
+          "name": "Prifddinas",
+          "rationale": "Official Equilibrium highlight; capital city; densest planner value; placeAnchor exists."
+        },
+        {
+          "name": "Lost Grove",
+          "rationale": "Official Equilibrium highlight; Solak / cinderbane / ritual shard surface; placeAnchor exists. Keep bare Lost Grove if anchors must match exactly, or rename both areas[] and anchors to The Lost Grove together."
+        }
+      ],
+      "optionalAdd": [
+        {
+          "name": "Lletya",
+          "priority": "recommended-if-map-space",
+          "rationale": "Clear named settlement, bank, crystal teleport seed hub, pre-Prif and ongoing utility, already in quest-region terms and ironman component notes. Distinct from Prifddinas on the map (SE Tirannwn).",
+          "wikiUrl": "https://runescape.wiki/w/Lletya",
+          "leagueSupport": "Implied by full Tirannwn region access + elf quest auto-completes; not named in promo blurb."
+        },
+        {
+          "name": "Isafdar",
+          "priority": "optional-coarse-forest",
+          "rationale": "Wiki's primary southern subregion; Hunter and travel surface. Can stand in for forest content without listing every camp.",
+          "wikiUrl": "https://runescape.wiki/w/Isafdar",
+          "leagueSupport": "Geographic core of Tirannwn; not named in promo."
+        },
+        {
+          "name": "Tyras Camp",
+          "priority": "optional-low",
+          "rationale": "Named human camp + Port Tyras charter entry. Lower planner weight than Lletya/Prif.",
+          "wikiUrl": "https://runescape.wiki/w/Tyras_Camp"
+        },
+        {
+          "name": "Poison Waste",
+          "priority": "optional-low",
+          "rationale": "Wiki location Tirannwn; approaches Lost Grove and incandescent wisps; diary/quiver teleports. Risk of clutter vs Lost Grove pin.",
+          "wikiUrl": "https://runescape.wiki/w/Poison_Waste"
+        },
+        {
+          "name": "Arandar",
+          "priority": "skip-unless-access-docs",
+          "rationale": "Pass geography more than content hub."
+        },
+        {
+          "name": "Port Tyras",
+          "priority": "skip-or-merge-with-Tyras-Camp",
+          "rationale": "Entry pier next to Tyras Camp; one pin is enough."
+        },
+        {
+          "name": "Elf Camp",
+          "priority": "skip",
+          "rationale": "Minor post-quest relevance."
+        },
+        {
+          "name": "Arposandra",
+          "priority": "skip",
+          "rationale": "Underground lore/quest; not League marquee."
+        },
+        {
+          "name": "Temple of Light",
+          "priority": "skip-as-area-keep-as-upgrade",
+          "rationale": "Already covered by Death altar upgrade; dungeon not a settlement pin."
+        }
+      ],
+      "doNotAddAsAreas": [
+        "Individual Prif clan districts (Cadarn, Ithell, …) — too dense; stay as upgrades/content under Prifddinas area",
+        "Solak as a separate area — belongs under Lost Grove content"
+      ]
+    },
+    "contentRenames": [
+      {
+        "currentName": "Prifddinas",
+        "proposedName": "Prifddinas high-level hub",
+        "kind": "high-level hub",
+        "rationale": "Disambiguate from areas[] Prifddinas and from city-access upgrade."
+      },
+      {
+        "currentName": "The Lost Grove",
+        "proposedName": "The Lost Grove (Solak and high Slayer)",
+        "optional": true,
+        "rationale": "Optional clarity; current name is already distinct from area Lost Grove."
+      },
+      {
+        "currentName": "Crystal equipment and Prifddinas skilling content",
+        "proposedName": "Crystal equipment and Prifddinas skilling",
+        "optional": true,
+        "rationale": "Fine as-is; no area collision."
+      },
+      {
+        "currentName": "Solak",
+        "proposedName": "Solak (Lost Grove boss)",
+        "optional": true,
+        "rationale": "Kind currently misuses The Lost Grove as kind string; better as boss kind with location in detail."
+      }
+    ],
+    "upgradeRenames": [
+      {
+        "currentName": "Prifddinas",
+        "proposedName": "Prifddinas city access",
+        "alternateProposedName": "Plague's End / Prifddinas city unlock",
+        "category": "major high-level hub",
+        "rationale": "Matches Jagex auto-complete story (immediate access on region pick) without reusing the bare city/area name. Catalog already has separate upgrade Plague's End Prifddinas unlock package — reconcile or merge to avoid double cards."
+      }
+    ],
+    "hardRulesCandidates": [
+      "Treat Lletya, Isafdar, Arandar, Tyras Camp, Port Tyras, Poison Waste, Temple of Light / Death altar, and Underground Pass (Tirannwn side) as Tirannwn. Do not expose them as separate selectable regions.",
+      "Treat The Lost Grove / Solak as Tirannwn League content per Equilibrium region blurb, even though the island sits west of the mainland elven forest.",
+      "Prifddinas is the capital city inside Tirannwn, not a region pick."
+    ],
+    "warningsCandidates": [
+      "Equilibrium marketing only names Prifddinas and the Lost Grove for Tirannwn; full elven-lands geography still includes Isafdar/Lletya and related sites under the same region pick.",
+      "Do not map Lost Grove to Kandarin because of Piscatoris/Castle Wars approach routes; League region is Tirannwn."
+    ],
+    "placeAnchors": {
+      "ifAreasUnchanged": "Keep only Prifddinas + Lost Grove anchors.",
+      "ifLletyaAdded": {
+        "area": "Lletya",
+        "uvHint": "southeast of Prif / east Isafdar on the board — hand-place inside tirannwn ring; verify with placeAnchors.test.ts"
+      },
+      "ifIsafdarAdded": {
+        "area": "Isafdar",
+        "uvHint": "south of Prifddinas, north of Lost Grove pin — forest band"
+      },
+      "constraint": "Every placeAnchors.area must equal an areas[] string exactly."
+    }
+  },
+  "recommendedActionPlan": [
+    {
+      "step": 1,
+      "action": "Rename content Prifddinas → Prifddinas high-level hub",
+      "touches": ["data/research/catalog.json content[] only — not in this audit write"],
+      "priority": "high"
+    },
+    {
+      "step": 2,
+      "action": "Rename upgrade Prifddinas → Prifddinas city access (or merge with Plague's End Prifddinas unlock package)",
+      "priority": "high"
+    },
+    {
+      "step": 3,
+      "action": "Keep areas[] = Prifddinas + Lost Grove as League promo-aligned baseline",
+      "priority": "high"
+    },
+    {
+      "step": 4,
+      "action": "Optionally add Lletya (and maybe Isafdar) to areas[] + placeAnchors if map density goals match other regions",
+      "priority": "medium"
+    },
+    {
+      "step": 5,
+      "action": "Add hardRules/warnings documenting Tirannwn sub-place resolution and Lost Grove League assignment",
+      "priority": "medium"
+    },
+    {
+      "step": 6,
+      "action": "Do not invent district-level areas for the eight clans; keep district surface in upgrades",
+      "priority": "high"
+    }
+  ],
+  "verdict": {
+    "regionIdCorrect": true,
+    "prifddinasIsNotTheRegion": true,
+    "areasMatchOfficialPromoHighlights": true,
+    "areasAreCompleteWikiGazetteer": false,
+    "leagueCollapseToPrifAndLostGroveIsIntentional": true,
+    "nameCollisionOnBarePrifddinasMustFix": true,
+    "lostGroveUnderTirannwnIsLeagueCorrect": true,
+    "summary": "Tirannwn is the region; Prifddinas is its capital city (dense hub), not a region pick. Catalog areas correctly mirror Equilibrium's two marquee examples (Prifddinas + Lost Grove) while wiki geography also includes Isafdar, Arandar, Lletya, Tyras/Port Tyras, Poison Waste, and more. Prefer keeping Prifddinas and Lost Grove as areas; rename content/upgrade bare Prifddinas strings to role-specific titles; optionally add Lletya (and possibly Isafdar) if the map should show more of the elven lands; document Lost Grove as Tirannwn League content despite being an island west of the mainland."
+  }
+}

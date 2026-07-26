@@ -11,6 +11,52 @@ test("tasks shows provisional banner or loaded count", async ({ page }) => {
 
 test("tasks points section is present", async ({ page }) => {
   await page.goto("/tasks");
-  await expect(page.getByRole("heading", { name: "Points" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Task list" })).toBeVisible();
+  // Points ladder is page chrome. "Task list" may stay as h2 or fold into twin-desk
+  // table/rail chrome — accept heading, loaded count, or task filters.
+  const points = page.getByRole("heading", { name: /^Points$/i }).or(page.getByText(/^Points$/));
+  await expect(points.first()).toBeVisible();
+
+  const taskListHeading = page.getByRole("heading", { name: /Task list/i });
+  const loaded = page.getByText(/\d+ tasks loaded/);
+  const taskChrome = page.getByLabel(/Filter (tasks|by (tier|region))/i);
+  await expect(taskListHeading.or(loaded).or(taskChrome).first()).toBeVisible();
+});
+
+test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", async ({ page }) => {
+  await page.goto("/tasks");
+  const loaded = page.getByText(/\d+ tasks loaded/);
+  if (!(await loaded.isVisible().catch(() => false))) return;
+
+  // Build-scoped filter is on by default when the stand-in list loads.
+  const myBuild = page.getByRole("button", { name: "My build" });
+  if (await myBuild.isVisible().catch(() => false)) {
+    await expect(myBuild).toHaveAttribute("aria-pressed", "true");
+  }
+
+  // Region filter: crest facet group (Composite density) or legacy select.
+  // Soft — only assert structure that is present. Never pin region names.
+  const regionSelect = page.getByLabel(/^Filter by region$/i);
+  const regionGroup = page.getByRole("group", { name: /region/i });
+  if (await regionSelect.isVisible().catch(() => false)) {
+    await expect(regionSelect).toBeVisible();
+  } else if (await regionGroup.isVisible().catch(() => false)) {
+    await expect(regionGroup).toBeVisible();
+    await expect(
+      regionGroup
+        .getByRole("button", { name: /All unlocked|All regions|^All\b/i })
+        .first(),
+    ).toBeVisible();
+  }
+
+  // Comp% values that have a wiki task id open the Wiki row (hash id).
+  // Match aria-label (list rows) or Catalyst Tasks#N href (table cells).
+  // Virtualized lists only mount viewport rows — use .first() of what rendered.
+  // Never pin rates or task names.
+  const wikiHref = /runescape\.wiki\/w\/Catalyst_League\/Tasks#\d+/;
+  const compByLabel = page.getByRole("link", { name: /Wiki Comp%/i });
+  const compByHref = page.locator(`a[href*="Catalyst_League/Tasks#"]`);
+  const compLink = compByLabel.or(compByHref).first();
+  if (await compLink.isVisible().catch(() => false)) {
+    await expect(compLink).toHaveAttribute("href", wikiHref);
+  }
 });

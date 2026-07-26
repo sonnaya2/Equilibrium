@@ -1,0 +1,950 @@
+{
+  "auditId": "region-wiki-audit-anachronia-2026-07-26",
+  "regionId": "anachronia",
+  "regionName": "Anachronia",
+  "auditedAt": "2026-07-26",
+  "groundTruth": "live RuneScape Wiki",
+  "policy": {
+    "doNotEdit": ["data/research/catalog.json"],
+    "writeTarget": "scraped-data/region-wiki-audit-anachronia-2026-07-26.json",
+    "disambiguationRule": "Area rows keep the wiki place name. Upgrade/content rows that currently clone a place name get role titles so planners can tell geography from reward/activity packages.",
+    "sourcesChecked": [
+      "https://runescape.wiki/w/Anachronia",
+      "https://runescape.wiki/w/Orthen_Dig_Site",
+      "https://runescape.wiki/w/Anachronia_base_camp",
+      "https://runescape.wiki/w/Ranch_Out_of_Time",
+      "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+      "https://runescape.wiki/w/Dream_of_Iaia",
+      "https://runescape.wiki/w/Time_altar",
+      "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "https://runescape.wiki/w/Slayer_Lodge",
+      "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+      "https://runescape.wiki/w/Big_Game_Hunter",
+      "https://runescape.wiki/w/Herby_Werby",
+      "https://runescape.wiki/w/Raksha,_the_Shadow_Colossus",
+      "https://runescape.wiki/w/Rex_Matriarchs"
+    ]
+  },
+  "localSources": {
+    "catalog": {
+      "path": "data/research/catalog.json",
+      "recordPath": "regions[id=anachronia]",
+      "touched": false
+    },
+    "leagueRegions": {
+      "path": "data/league/regions.json",
+      "recordPath": "records[id=anachronia]"
+    },
+    "placeAnchors": {
+      "path": "src/map/data/placeAnchors.ts",
+      "region": "anachronia"
+    }
+  },
+  "wikiRegionSummary": {
+    "canonicalTitle": "Anachronia",
+    "aliases": ["Fossil Island", "The Land Out of Time"],
+    "released": "2019-07-08",
+    "leagueRegion": "Anachronia",
+    "notableFeaturesWikiOrder": [
+      "Anachronia base camp",
+      "Big Game Hunter / Anachronia Big Game Hunter",
+      "Herby Werby",
+      "Anachronia Agility Course",
+      "Slayer (dinosaurs, vile blooms, Laniakea)",
+      "Orthen Dig Site",
+      "Anachronia Dinosaur Farm (Ranch Out of Time)",
+      "'Accidental' Fletching and Firemaking",
+      "Raksha, the Shadow Colossus",
+      "Rex Matriarchs",
+      "overgrown idols",
+      "Time altar"
+    ],
+    "notes": [
+      "Wiki disambiguation page Big Game Hunter points to Anachronia Big Game Hunter and Havenhythe Big Game Hunter — Anachronia BGH must not link to the bare Big_Game_Hunter page.",
+      "Ranch Out of Time is a redirect / also-known-as for the article Anachronia Dinosaur Farm.",
+      "Slayer Lodge is a player-built base-camp structure, not a separate overworld settlement, but has its own wiki location article.",
+      "Dream of Iaia is a dream instance entered from the Effigy Incubator laboratory (near Anachronia lodestone), not a pure surface landmark on the island plate."
+    ]
+  },
+  "areasAudit": [
+    {
+      "catalogName": "Orthen Dig Site",
+      "role": "area",
+      "wikiCanonicalTitle": "Orthen Dig Site",
+      "wikiUrl": "https://runescape.wiki/w/Orthen_Dig_Site",
+      "wikiMatch": "exact",
+      "status": "ok",
+      "kind": "place",
+      "summary": "Sixth Archaeology dig site on Anachronia; 90 Archaeology + associate qualification. Main hub facilities sit in base camp; four permanent excavation sites (Crypt of Varanus 90, Observation outpost 101, Moksha ritual site 106, Xolo City 113+).",
+      "aliases": [],
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.78, 0.14],
+      "issues": [
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrade list also contains exact name 'Orthen Dig Site' (category Archaeology dig-site hub) plus near-clone 'Orthen Dig Site full mastery (monolith + recipes)'."
+        }
+      ],
+      "proposedAreaName": "Orthen Dig Site",
+      "proposedDisambiguation": {
+        "areaKeeps": "Orthen Dig Site",
+        "upgradeRoleTitles": [
+          "Orthen Dig Site hub unlock (Archaeology)",
+          "Orthen Dig Site full mastery (monolith power + recipes)"
+        ]
+      }
+    },
+    {
+      "catalogName": "Anachronia base camp",
+      "role": "area",
+      "wikiCanonicalTitle": "Anachronia base camp",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_base_camp",
+      "wikiMatch": "exact",
+      "status": "ok",
+      "kind": "place",
+      "summary": "Player-managed island hub after the Anachronia base camp tutorial. Structures include Town Hall, Storehouse, Sleeping Quarters, Spa, Hunter Lodge, Slayer Lodge, Player Lodge, bank chest, lodestone, remote totem access.",
+      "aliases": ["Base camp", "base camp"],
+      "capitalizationNote": "Wiki uses lowercase 'base camp' after Anachronia; catalog matches.",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.72, 0.2],
+      "issues": [
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrades include exact 'Anachronia base camp' and near-clone 'Anachronia base camp structure tier rewards'."
+        },
+        {
+          "severity": "low",
+          "code": "anchor_comment_vs_uv",
+          "detail": "placeAnchors comment says 'base camp west' relative to other Anachronia anchors; UV cluster is fine for the region plate but does not model full island geography."
+        }
+      ],
+      "proposedAreaName": "Anachronia base camp",
+      "proposedDisambiguation": {
+        "areaKeeps": "Anachronia base camp",
+        "upgradeRoleTitles": [
+          "Base camp management hub (workers + resources)",
+          "Base camp structure tier rewards package"
+        ]
+      }
+    },
+    {
+      "catalogName": "Ranch Out of Time",
+      "role": "area",
+      "wikiCanonicalTitle": "Anachronia Dinosaur Farm",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+      "wikiRedirectFrom": "https://runescape.wiki/w/Ranch_Out_of_Time",
+      "wikiMatch": "alias_of_canonical",
+      "status": "ok_with_note",
+      "kind": "place",
+      "summary": "Player-owned farm expansion on an island off the west coast of Anachronia. Wiki article title is Anachronia Dinosaur Farm; also known as Ranch Out of Time (ROoT). Update and music track still use Ranch Out of Time branding.",
+      "aliases": ["Ranch Out of Time", "ROoT", "Anachronia Dinosaur Farm"],
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.76, 0.28],
+      "issues": [
+        {
+          "severity": "low",
+          "code": "prefer_canonical_or_document_alias",
+          "detail": "Area display name Ranch Out of Time is community/official branding and a wiki redirect target. Prefer keeping it as the planner display name with wikiCanonicalTitle Anachronia Dinosaur Farm, or switch area label to Anachronia Dinosaur Farm and list Ranch Out of Time as alias."
+        },
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrade 'Ranch Out of Time (Anachronia Dinosaur Farm)' clones the place name; content row 'Herby Werby / Ranch Out of Time' incorrectly merges Herby Werby with the ranch."
+        }
+      ],
+      "proposedAreaName": "Ranch Out of Time",
+      "proposedAreaAliases": ["Anachronia Dinosaur Farm", "ROoT"],
+      "proposedDisambiguation": {
+        "areaKeeps": "Ranch Out of Time",
+        "upgradeRoleTitles": [
+          "Dinosaur Farm pens and bean market (ROoT)",
+          "Ranch Out of Time combat perks (King of Beasts / No Fear / Armoured Hide)",
+          "Farmers' Market (Anachronia Dinosaur Farm beans)"
+        ]
+      }
+    },
+    {
+      "catalogName": "Dream of Iaia",
+      "role": "area",
+      "wikiCanonicalTitle": "Dream of Iaia",
+      "wikiUrl": "https://runescape.wiki/w/Dream_of_Iaia",
+      "wikiMatch": "exact",
+      "status": "ok_with_note",
+      "kind": "place_instance",
+      "summary": "Dream replica of Iaia after Extinction. Entered via hibernation pod in the Effigy Incubator laboratory (north of Anachronia lodestone / enriched pontifex shadow ring). Six passive skilling stations fed by base-camp resources.",
+      "aliases": [],
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.85, 0.16],
+      "issues": [
+        {
+          "severity": "medium",
+          "code": "not_surface_landmark",
+          "detail": "Not an overworld settlement east of the island. Map pin is a planner convenience for Anachronia-associated access; true entry is Effigy Incubator lab. Keep under Anachronia region for League resource/access pressure, but do not imply a surface path on the east coast."
+        },
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrade list contains exact name 'Dream of Iaia' (passive multi-skill XP stations)."
+        }
+      ],
+      "proposedAreaName": "Dream of Iaia",
+      "proposedDisambiguation": {
+        "areaKeeps": "Dream of Iaia",
+        "upgradeRoleTitles": [
+          "Dream of Iaia skilling stations (base-camp resource XP)",
+          "Necklace of Salamancy (Dream of Iaia rare)"
+        ]
+      }
+    },
+    {
+      "catalogName": "Time altar",
+      "role": "area",
+      "wikiCanonicalTitle": "Time altar",
+      "wikiUrl": "https://runescape.wiki/w/Time_altar",
+      "wikiMatch": "exact",
+      "status": "ok",
+      "kind": "place",
+      "summary": "Runecrafting altar for time runes in the Time Rune Temple. Surface ruins on the north-western coast of Anachronia. First entry needs 100 Runecrafting (unboostable) and an enchanted key from Making History or Meeting History to anchor the ruins; key not consumed thereafter.",
+      "aliases": ["Time ruins", "Time Rune Temple"],
+      "capitalizationNote": "Wiki title is 'Time altar' (lowercase altar). Do not retitle to 'Time Altar' unless wiki changes.",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.8, 0.12],
+      "issues": [
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrades include exact 'Time altar' and near-clone 'Time altar / 110 Runecrafting' (the latter conflates altar access with 110 RC spell/resource progression)."
+        },
+        {
+          "severity": "low",
+          "code": "detail_accuracy_on_upgrade",
+          "detail": "Catalog upgrade detail says requirements '100 Runecrafting, Enchanted key' which matches first-entry anchoring. Time-rune craft is 100 RC; 110 RC is a separate progression band for other products (e.g. catalysed elemental diamond uses Time altar among others) — keep split clear."
+        }
+      ],
+      "proposedAreaName": "Time altar",
+      "proposedDisambiguation": {
+        "areaKeeps": "Time altar",
+        "upgradeRoleTitles": [
+          "Time altar access and time-rune craft",
+          "110 Runecrafting time-rune infrastructure (ring of imbuing pressure)"
+        ]
+      }
+    },
+    {
+      "catalogName": "Anachronia Agility Course",
+      "role": "area",
+      "wikiCanonicalTitle": "Anachronia Agility Course",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "wikiMatch": "exact",
+      "status": "ok",
+      "kind": "place_activity",
+      "summary": "Island-wide agility course / primary transit method. Seven sections; levels 30/50/70/85. Full lap needs 85 Agility. Rewards include codex pages for Double Surge / Double Escape.",
+      "aliases": [],
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.76, 0.18],
+      "issues": [
+        {
+          "severity": "high",
+          "code": "triple_role_clone",
+          "detail": "Same string is area + content + upgrade. Violates area-vs-role separation hardest of any Anachronia place."
+        }
+      ],
+      "proposedAreaName": "Anachronia Agility Course",
+      "proposedDisambiguation": {
+        "areaKeeps": "Anachronia Agility Course",
+        "contentRoleTitle": "Anachronia Agility Course (transit + Agility training)",
+        "upgradeRoleTitles": [
+          "Agility codex pages (Double Surge / Double Escape)",
+          "Anachronia codex lectern craft"
+        ]
+      }
+    },
+    {
+      "catalogName": "Slayer Lodge",
+      "role": "area",
+      "wikiCanonicalTitle": "Slayer Lodge",
+      "wikiUrl": "https://runescape.wiki/w/Slayer_Lodge",
+      "wikiMatch": "exact",
+      "status": "ok_with_note",
+      "kind": "place_structure",
+      "summary": "Player-built structure at Anachronia base camp (north-east of Town Hall). Laniakea can be found here. Tiers: +1% / +3% / +6% damage on Anachronia; tier 3 adds Slayer helmet stand (helmet bonuses without worn stats/teleports).",
+      "aliases": [],
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "placeAnchorUv": [0.82, 0.2],
+      "issues": [
+        {
+          "severity": "low",
+          "code": "structure_inside_base_camp",
+          "detail": "Geographically inside Anachronia base camp, not a separate town. Still correct as a named planner pin and wiki location. Optional parent note: child of base camp."
+        },
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrade 'Slayer Lodge progression' is the correct role form; keep area as Slayer Lodge and upgrade as the tier package."
+        }
+      ],
+      "proposedAreaName": "Slayer Lodge",
+      "proposedDisambiguation": {
+        "areaKeeps": "Slayer Lodge",
+        "upgradeRoleTitles": [
+          "Slayer Lodge tier progression (Anachronia damage + helmet stand)"
+        ]
+      }
+    }
+  ],
+  "contentAudit": [
+    {
+      "catalogName": "Anachronia Big Game Hunter",
+      "kind": "Hunter",
+      "wikiCanonicalTitle": "Anachronia Big Game Hunter",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+      "catalogSourceUrl": "https://runescape.wiki/w/Big_Game_Hunter",
+      "wikiMatch": "wrong_source_url",
+      "status": "fix_source",
+      "summary": "Hunter activity on Anachronia (from 75 Hunter / 55 Slayer). Nine dinosaur species, dragon mattock 1/101, terrasaur maul pieces from tier 3. Distinct from Havenhythe Big Game Hunter.",
+      "issues": [
+        {
+          "severity": "high",
+          "code": "source_points_to_disambiguation",
+          "detail": "catalog content source.url is Big_Game_Hunter which is a disambiguation page (Anachronia BGH vs Havenhythe BGH vs Fremennik achievement). Must use Anachronia_Big_Game_Hunter."
+        },
+        {
+          "severity": "medium",
+          "code": "name_cloned_as_upgrade",
+          "detail": "Upgrades also include exact 'Anachronia Big Game Hunter' plus 'Big Game Hunter permanent unlock package' and 'BGH poison frog and spear weakness system'."
+        }
+      ],
+      "proposedContentName": "Anachronia Big Game Hunter",
+      "proposedSourceUrl": "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+      "proposedDisambiguation": {
+        "contentKeeps": "Anachronia Big Game Hunter",
+        "upgradeRoleTitles": [
+          "BGH dinosaur encounter package",
+          "BGH permanent unlock package (quick traps / marks path)",
+          "BGH poison frog and spear weakness system"
+        ],
+        "doNotConfuseWith": ["Havenhythe Big Game Hunter"]
+      }
+    },
+    {
+      "catalogName": "Anachronia Agility Course",
+      "kind": "Agility",
+      "wikiCanonicalTitle": "Anachronia Agility Course",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "catalogSourceUrl": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "wikiMatch": "exact",
+      "status": "clone_of_area",
+      "summary": "Correct wiki page, but content duplicates the area row.",
+      "issues": [
+        {
+          "severity": "high",
+          "code": "content_duplicates_area",
+          "detail": "Prefer single area row for place; content should be role-titled if kept (training/transit activity package)."
+        }
+      ],
+      "proposedContentName": "Anachronia Agility Course (transit + Agility training)",
+      "proposedAction": "either drop content row and keep area, or rename content to role title"
+    },
+    {
+      "catalogName": "Raksha",
+      "kind": "boss",
+      "wikiCanonicalTitle": "Raksha, the Shadow Colossus",
+      "wikiUrl": "https://runescape.wiki/w/Raksha,_the_Shadow_Colossus",
+      "catalogSourceUrl": "https://runescape.wiki/w/Raksha",
+      "wikiMatch": "short_title_or_redirect",
+      "status": "ok_with_note",
+      "summary": "Boss on south-eastern Anachronia near Laniakea / Swamp Fortress. Ability codices (Greater Ricochet, Greater Chain, Divert) and boot upgrades are separate upgrade rows.",
+      "issues": [
+        {
+          "severity": "low",
+          "code": "prefer_full_boss_title",
+          "detail": "Display name Raksha is fine; wiki full title is Raksha, the Shadow Colossus. Prefer source URL to full title page."
+        }
+      ],
+      "proposedContentName": "Raksha, the Shadow Colossus"
+    },
+    {
+      "catalogName": "Rex Matriarchs",
+      "kind": "bossing",
+      "wikiCanonicalTitle": "Rex Matriarchs",
+      "wikiUrl": "https://runescape.wiki/w/Rex_Matriarchs",
+      "catalogSourceUrl": "https://runescape.wiki/w/Rex_Matriarchs",
+      "wikiMatch": "exact",
+      "status": "ok",
+      "summary": "Boss trio accessed from spirit-grove area on Anachronia. Kind label 'bossing' is inconsistent with Raksha's 'boss' — cosmetic taxonomy only.",
+      "issues": [
+        {
+          "severity": "low",
+          "code": "kind_inconsistency",
+          "detail": "Normalize kind to 'boss' for both boss content rows."
+        }
+      ],
+      "proposedContentName": "Rex Matriarchs"
+    },
+    {
+      "catalogName": "Herby Werby / Ranch Out of Time",
+      "kind": "skilling",
+      "wikiCanonicalTitle": null,
+      "wikiUrl": null,
+      "catalogSourceUrl": "https://runescape.wiki/w/Ranch_Out_of_Time",
+      "wikiMatch": "conflated",
+      "status": "split_required",
+      "summary": "Herby Werby and Ranch Out of Time are distinct wiki entities. Herby Werby is a weekly D&D (ancient zygomites / herb bag). Ranch Out of Time is the Dinosaur Farm place already listed as an area.",
+      "issues": [
+        {
+          "severity": "high",
+          "code": "two_places_one_content_row",
+          "detail": "Slash title merges unrelated activities. Source URL only covers the ranch redirect, not Herby Werby."
+        }
+      ],
+      "proposedSplit": [
+        {
+          "contentName": "Herby Werby",
+          "kind": "Distraction and Diversion",
+          "wikiUrl": "https://runescape.wiki/w/Herby_Werby",
+          "note": "Weekly D&D; herb bag and spirit-point rewards. Not the ranch."
+        },
+        {
+          "contentName": null,
+          "action": "drop ranch half — already covered by area Ranch Out of Time"
+        }
+      ]
+    }
+  ],
+  "nameCloneMatrix": {
+    "rule": "Area keeps place name; upgrade/content get role titles.",
+    "exactClones": [
+      {
+        "name": "Orthen Dig Site",
+        "roles": ["area", "upgrade"],
+        "proposed": {
+          "area": "Orthen Dig Site",
+          "upgrade": "Orthen Dig Site hub unlock (Archaeology)"
+        }
+      },
+      {
+        "name": "Anachronia base camp",
+        "roles": ["area", "upgrade"],
+        "proposed": {
+          "area": "Anachronia base camp",
+          "upgrade": "Base camp management hub (workers + resources)"
+        }
+      },
+      {
+        "name": "Dream of Iaia",
+        "roles": ["area", "upgrade"],
+        "proposed": {
+          "area": "Dream of Iaia",
+          "upgrade": "Dream of Iaia skilling stations (base-camp resource XP)"
+        }
+      },
+      {
+        "name": "Time altar",
+        "roles": ["area", "upgrade"],
+        "proposed": {
+          "area": "Time altar",
+          "upgrade": "Time altar access and time-rune craft"
+        }
+      },
+      {
+        "name": "Anachronia Agility Course",
+        "roles": ["area", "content", "upgrade"],
+        "proposed": {
+          "area": "Anachronia Agility Course",
+          "content": "Anachronia Agility Course (transit + Agility training)",
+          "upgrade": "Agility codex pages (Double Surge / Double Escape)"
+        }
+      },
+      {
+        "name": "Anachronia Big Game Hunter",
+        "roles": ["content", "upgrade"],
+        "proposed": {
+          "content": "Anachronia Big Game Hunter",
+          "upgrade": "BGH dinosaur encounter package"
+        }
+      }
+    ],
+    "nearClones": [
+      {
+        "area": "Ranch Out of Time",
+        "upgrade": "Ranch Out of Time (Anachronia Dinosaur Farm)",
+        "proposedUpgrade": "Dinosaur Farm pens and bean market (ROoT)"
+      },
+      {
+        "area": "Slayer Lodge",
+        "upgrade": "Slayer Lodge progression",
+        "proposedUpgrade": "Slayer Lodge tier progression (Anachronia damage + helmet stand)",
+        "note": "Already partially role-titled; keep."
+      },
+      {
+        "area": "Orthen Dig Site",
+        "upgrade": "Orthen Dig Site full mastery (monolith + recipes)",
+        "proposedUpgrade": "Orthen Dig Site full mastery (monolith power + recipes)",
+        "note": "Already role-qualified; OK."
+      },
+      {
+        "area": "Time altar",
+        "upgrade": "Time altar / 110 Runecrafting",
+        "proposedUpgrade": "110 Runecrafting time-rune infrastructure",
+        "note": "Slash title still embeds place name; prefer role-first title."
+      },
+      {
+        "area": "Anachronia base camp",
+        "upgrade": "Anachronia base camp structure tier rewards",
+        "proposedUpgrade": "Base camp structure tier rewards package"
+      },
+      {
+        "area": "Anachronia Agility Course",
+        "upgrade": "Anachronia Agility codex-page progression",
+        "proposedUpgrade": "Agility codex pages (Double Surge / Double Escape)",
+        "note": "Already role-qualified; OK after exact-clone rename of bare course upgrade."
+      }
+    ]
+  },
+  "leagueRegionsJsonAudit": {
+    "path": "data/league/regions.json",
+    "record": {
+      "id": "anachronia",
+      "name": "Anachronia",
+      "availability": "elective",
+      "areas": ["dinosaurs", "hunting", "farming"],
+      "verified": false
+    },
+    "status": "stale_stub",
+    "issues": [
+      {
+        "severity": "critical",
+        "code": "areas_are_themes_not_places",
+        "detail": "League regions.json areas are theme words (dinosaurs/hunting/farming), not wiki places. Catalog and placeAnchors already use real places. Sync areas from catalog area list before any map/planner ships off league JSON."
+      },
+      {
+        "severity": "medium",
+        "code": "missing_wiki_aliases",
+        "detail": "aliases [] should at least include Fossil Island and The Land Out of Time for search."
+      }
+    ],
+    "proposedAreas": [
+      "Orthen Dig Site",
+      "Anachronia base camp",
+      "Ranch Out of Time",
+      "Dream of Iaia",
+      "Time altar",
+      "Anachronia Agility Course",
+      "Slayer Lodge"
+    ],
+    "proposedAliases": ["Fossil Island", "The Land Out of Time"]
+  },
+  "placeAnchorsAudit": {
+    "path": "src/map/data/placeAnchors.ts",
+    "status": "aligned_with_catalog_areas",
+    "anchors": [
+      {
+        "area": "Anachronia base camp",
+        "uv": [0.72, 0.2],
+        "catalogAreaMatch": true,
+        "wikiOk": true
+      },
+      {
+        "area": "Orthen Dig Site",
+        "uv": [0.78, 0.14],
+        "catalogAreaMatch": true,
+        "wikiOk": true
+      },
+      {
+        "area": "Time altar",
+        "uv": [0.8, 0.12],
+        "catalogAreaMatch": true,
+        "wikiOk": true
+      },
+      {
+        "area": "Anachronia Agility Course",
+        "uv": [0.76, 0.18],
+        "catalogAreaMatch": true,
+        "wikiOk": true
+      },
+      {
+        "area": "Slayer Lodge",
+        "uv": [0.82, 0.2],
+        "catalogAreaMatch": true,
+        "wikiOk": true,
+        "note": "Structure pin inside base camp cluster — intentional."
+      },
+      {
+        "area": "Dream of Iaia",
+        "uv": [0.85, 0.16],
+        "catalogAreaMatch": true,
+        "wikiOk": true,
+        "note": "Instance access via Effigy Incubator; UV is planner abstraction."
+      },
+      {
+        "area": "Ranch Out of Time",
+        "uv": [0.76, 0.28],
+        "catalogAreaMatch": true,
+        "wikiOk": true,
+        "wikiCanonicalTitle": "Anachronia Dinosaur Farm"
+      }
+    ],
+    "missingFromAnchors": [],
+    "extraOnAnchors": [],
+    "issues": [
+      {
+        "severity": "low",
+        "code": "uv_not_geodetic",
+        "detail": "UV positions are region-plate planner pins, not surveyed map coordinates. Comment ('base camp west', 'Dream of Iaia east') is relative to the Anachronia pin cluster, not world map compass."
+      }
+    ]
+  },
+  "upgradesPlaceNamePressure": {
+    "note": "Only upgrades that collide with audited place names or BGH content are listed here. Full foreign multi-region upgrade dump is under foreignOrMultiRegionUpgrades.",
+    "rows": [
+      {
+        "name": "Orthen Dig Site",
+        "action": "rename_to_role_title",
+        "proposed": "Orthen Dig Site hub unlock (Archaeology)"
+      },
+      {
+        "name": "Orthen Dig Site full mastery (monolith + recipes)",
+        "action": "keep",
+        "proposed": "Orthen Dig Site full mastery (monolith power + recipes)"
+      },
+      {
+        "name": "Anachronia base camp",
+        "action": "rename_to_role_title",
+        "proposed": "Base camp management hub (workers + resources)"
+      },
+      {
+        "name": "Anachronia base camp structure tier rewards",
+        "action": "rename_to_role_title",
+        "proposed": "Base camp structure tier rewards package"
+      },
+      {
+        "name": "Dream of Iaia",
+        "action": "rename_to_role_title",
+        "proposed": "Dream of Iaia skilling stations (base-camp resource XP)"
+      },
+      {
+        "name": "Time altar",
+        "action": "rename_to_role_title",
+        "proposed": "Time altar access and time-rune craft"
+      },
+      {
+        "name": "Time altar / 110 Runecrafting",
+        "action": "rename_to_role_title",
+        "proposed": "110 Runecrafting time-rune infrastructure"
+      },
+      {
+        "name": "Anachronia Agility Course",
+        "action": "rename_to_role_title",
+        "proposed": "Agility course lap training (codex page source)"
+      },
+      {
+        "name": "Anachronia Agility codex-page progression",
+        "action": "keep_or_merge",
+        "proposed": "Agility codex pages (Double Surge / Double Escape)",
+        "note": "Merge with bare course upgrade if both remain."
+      },
+      {
+        "name": "Anachronia codex lectern (Double Surge/Escape)",
+        "action": "keep",
+        "proposed": "Anachronia codex lectern craft"
+      },
+      {
+        "name": "Slayer Lodge progression",
+        "action": "keep",
+        "proposed": "Slayer Lodge tier progression (Anachronia damage + helmet stand)"
+      },
+      {
+        "name": "Ranch Out of Time (Anachronia Dinosaur Farm)",
+        "action": "rename_to_role_title",
+        "proposed": "Dinosaur Farm pens and bean market (ROoT)"
+      },
+      {
+        "name": "Anachronia Big Game Hunter",
+        "action": "rename_to_role_title",
+        "proposed": "BGH dinosaur encounter package"
+      },
+      {
+        "name": "Big Game Hunter permanent unlock package",
+        "action": "keep",
+        "proposed": "BGH permanent unlock package"
+      },
+      {
+        "name": "BGH poison frog and spear weakness system",
+        "action": "keep",
+        "proposed": "BGH poison frog and spear weakness system"
+      },
+      {
+        "name": "Quick traps (BGH permanent trap speed)",
+        "action": "keep",
+        "proposed": "Quick traps (BGH permanent trap speed)"
+      }
+    ]
+  },
+  "foreignOrMultiRegionUpgrades": {
+    "severity": "high",
+    "detail": "These catalog upgrades currently sit under regions[id=anachronia] but are owned by other league regions or are multi-region portfolios. They dilute Anachronia place auditing and should be re-homed or marked regionHints-only without appearing as Anachronia primary upgrades.",
+    "rows": [
+      {
+        "name": "Sumona (Pollnivneach Slayer Master)",
+        "ownedRegion": "desert"
+      },
+      {
+        "name": "Daemonheim Dig Site (Dragonkin mini-site)",
+        "ownedRegion": "forinthry"
+      },
+      {
+        "name": "Kuradal (Ancient Cavern Slayer Master)",
+        "ownedRegion": "kandarin"
+      },
+      {
+        "name": "Duradel / Lapalok (Shilo Village Slayer Masters)",
+        "ownedRegion": "karamja"
+      },
+      {
+        "name": "Morvran (Prifddinas Slayer Master)",
+        "ownedRegion": "tirannwn"
+      },
+      {
+        "name": "Seren skilling prayers package (The Light Within)",
+        "ownedRegion": "tirannwn"
+      },
+      {
+        "name": "Witchdoctor camo outfit",
+        "ownedRegion": "karamja",
+        "note": "Anachronia jadinko catches can help weekly set but outfit claim is Habitat/Karamja."
+      },
+      {
+        "name": "Velucia museum Archaeology collections",
+        "ownedRegion": "misthalin"
+      },
+      {
+        "name": "Imcando mattock",
+        "ownedRegion": "multi",
+        "note": "Not Anachronia-owned craft; Anachronia is optional dragon-mattock pressure only."
+      },
+      {
+        "name": "Mattock tier ladder (bronze through elder rune + specials)",
+        "ownedRegion": "multi"
+      },
+      {
+        "name": "Elite skilling outfits core set (ironman fragment paths)",
+        "ownedRegion": "multi"
+      },
+      {
+        "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+        "ownedRegion": "multi",
+        "note": "Anachronia pressure via Slayer Lodge stand only."
+      },
+      {
+        "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+        "ownedRegion": "global_slayer"
+      },
+      {
+        "name": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
+        "ownedRegion": "multi"
+      },
+      {
+        "name": "Slayer prefer / block / extend (Assignment Rewards)",
+        "ownedRegion": "global_slayer"
+      },
+      {
+        "name": "Learn quicker killing blows (400 Slayer points)",
+        "ownedRegion": "global_slayer"
+      },
+      {
+        "name": "Toolbelt attach: Seedicide",
+        "ownedRegion": "global_slayer"
+      },
+      {
+        "name": "Crystal tools (dragon base + Prifddinas conversion)",
+        "ownedRegion": "tirannwn",
+        "note": "Anachronia optional dragon-base pressure."
+      },
+      {
+        "name": "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)",
+        "ownedRegion": "karamja+asgarnia"
+      },
+      {
+        "name": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+        "ownedRegion": "multi",
+        "note": "Herb bag is Anachronia; stack is multi-region."
+      },
+      {
+        "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+        "ownedRegion": "fremennik+misthalin+asgarnia"
+      },
+      {
+        "name": "Masterwork plate → Orthen furnace core pressure stack",
+        "ownedRegion": "asgarnia+anachronia",
+        "note": "Cross-region; keep only if labeled combo, not pure Anachronia place upgrade."
+      }
+    ]
+  },
+  "missingContentWorthListing": [
+    {
+      "name": "Herby Werby",
+      "wikiUrl": "https://runescape.wiki/w/Herby_Werby",
+      "reason": "Currently only half of a conflated content row; deserves standalone content after split."
+    },
+    {
+      "name": "Laniakea",
+      "wikiUrl": "https://runescape.wiki/w/Laniakea",
+      "reason": "Already an upgrade hub row; optional content kind slayer_master if content list should surface masters."
+    },
+    {
+      "name": "'Accidental' Fletching and Firemaking",
+      "wikiUrl": "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking",
+      "reason": "On Dinosaur Farm peninsula; upgrade exists, content list omits it."
+    },
+    {
+      "name": "Overgrown idols (Anachronia)",
+      "wikiUrl": "https://runescape.wiki/w/Overgrown_idol",
+      "reason": "Upgrade exists; optional content for Woodcutting theme."
+    }
+  ],
+  "proposedCanonicalAreaList": [
+    {
+      "name": "Orthen Dig Site",
+      "wikiUrl": "https://runescape.wiki/w/Orthen_Dig_Site",
+      "keepAsArea": true
+    },
+    {
+      "name": "Anachronia base camp",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_base_camp",
+      "keepAsArea": true
+    },
+    {
+      "name": "Ranch Out of Time",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+      "aliases": ["Anachronia Dinosaur Farm", "ROoT"],
+      "keepAsArea": true
+    },
+    {
+      "name": "Dream of Iaia",
+      "wikiUrl": "https://runescape.wiki/w/Dream_of_Iaia",
+      "keepAsArea": true,
+      "note": "Instance; Anachronia-associated"
+    },
+    {
+      "name": "Time altar",
+      "wikiUrl": "https://runescape.wiki/w/Time_altar",
+      "keepAsArea": true
+    },
+    {
+      "name": "Anachronia Agility Course",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "keepAsArea": true
+    },
+    {
+      "name": "Slayer Lodge",
+      "wikiUrl": "https://runescape.wiki/w/Slayer_Lodge",
+      "keepAsArea": true,
+      "note": "Base-camp structure pin"
+    }
+  ],
+  "proposedContentList": [
+    {
+      "name": "Anachronia Big Game Hunter",
+      "kind": "Hunter",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Big_Game_Hunter"
+    },
+    {
+      "name": "Anachronia Agility Course (transit + Agility training)",
+      "kind": "Agility",
+      "wikiUrl": "https://runescape.wiki/w/Anachronia_Agility_Course",
+      "optionalIfAreaCovers": true
+    },
+    {
+      "name": "Raksha, the Shadow Colossus",
+      "kind": "boss",
+      "wikiUrl": "https://runescape.wiki/w/Raksha,_the_Shadow_Colossus"
+    },
+    {
+      "name": "Rex Matriarchs",
+      "kind": "boss",
+      "wikiUrl": "https://runescape.wiki/w/Rex_Matriarchs"
+    },
+    {
+      "name": "Herby Werby",
+      "kind": "Distraction and Diversion",
+      "wikiUrl": "https://runescape.wiki/w/Herby_Werby"
+    }
+  ],
+  "fileDiffRecommendations": [
+    {
+      "file": "data/league/regions.json",
+      "action": "replace areas",
+      "from": ["dinosaurs", "hunting", "farming"],
+      "to": [
+        "Orthen Dig Site",
+        "Anachronia base camp",
+        "Ranch Out of Time",
+        "Dream of Iaia",
+        "Time altar",
+        "Anachronia Agility Course",
+        "Slayer Lodge"
+      ],
+      "also": "aliases: Fossil Island, The Land Out of Time"
+    },
+    {
+      "file": "src/map/data/placeAnchors.ts",
+      "action": "no rename required",
+      "note": "Already matches catalog area names. Optional: add alias comment for Ranch Out of Time → Anachronia Dinosaur Farm."
+    },
+    {
+      "file": "data/research/catalog.json",
+      "action": "do_not_edit_in_this_audit",
+      "futurePass": [
+        "Rename exact place-clone upgrades to role titles per nameCloneMatrix",
+        "Fix BGH content source URL to Anachronia_Big_Game_Hunter",
+        "Split Herby Werby / Ranch Out of Time content row",
+        "Re-home foreignOrMultiRegionUpgrades out of anachronia primary list"
+      ]
+    }
+  ],
+  "severitySummary": {
+    "critical": [
+      "data/league/regions.json Anachronia areas are theme stubs (dinosaurs/hunting/farming), not wiki places"
+    ],
+    "high": [
+      "Anachronia Agility Course is area + content + upgrade (triple clone)",
+      "Anachronia Big Game Hunter content source points at disambiguation Big_Game_Hunter",
+      "Herby Werby / Ranch Out of Time content conflates two distinct activities",
+      "Many non-Anachronia masters and global Slayer rows are filed under anachronia upgrades"
+    ],
+    "medium": [
+      "Exact place-name clones on Orthen Dig Site, base camp, Dream of Iaia, Time altar, BGH",
+      "Dream of Iaia is instance-not-surface but treated as eastern map pin",
+      "Time altar / 110 Runecrafting upgrade conflates altar place with 110 band"
+    ],
+    "low": [
+      "Ranch Out of Time vs Anachronia Dinosaur Farm display preference",
+      "Raksha short vs full boss title",
+      "Slayer Lodge is structure-inside-base-camp",
+      "placeAnchors UV are planner pins not geodetic"
+    ]
+  },
+  "verdict": {
+    "catalogAreasVsWiki": "pass_with_disambiguation_debt",
+    "catalogContentVsWiki": "fail_source_and_conflation",
+    "leagueRegionsJson": "fail_stale_theme_areas",
+    "placeAnchors": "pass_aligned_to_catalog",
+    "overall": "Catalog area names match live wiki (Ranch uses accepted AKA). Highest blockers are league regions.json stub areas, BGH disambiguation URL, triple Agility Course clone, Herby/Ranch content merge, and foreign upgrades sitting under Anachronia. Apply role-title disambiguation: areas keep place names; upgrades/content take role titles."
+  }
+}

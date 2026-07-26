@@ -9,9 +9,18 @@ export type TaskProgress = {
 
 export const EMPTY_PROGRESS: TaskProgress = { completed: [] };
 
-/** Prefer record.id when present; else stable `${tier}:${name}` (lowercased). */
+/**
+ * Prefer record.id, then wiki task id, else `${tier}:${name}` (lowercased).
+ * Catalyst stand-in sets id to `wiki:{taskId}` so progress survives renames.
+ */
 export function taskId(record: TaskRecord): string {
   if (typeof record.id === "string" && record.id.trim()) return record.id.trim();
+  if (typeof record.wikiTaskId === "number") return `wiki:${record.wikiTaskId}`;
+  return `${record.tier}:${record.name}`.toLowerCase();
+}
+
+/** Pre-wiki-id key used by older Catalyst stand-in progress. */
+export function legacyTaskId(record: TaskRecord): string {
   return `${record.tier}:${record.name}`.toLowerCase();
 }
 
@@ -28,8 +37,51 @@ export function normalizeProgress(raw: unknown): TaskProgress {
   };
 }
 
+/**
+ * Map legacy `tier:name` progress keys onto canonical ids (`wiki:N` / record.id).
+ * Returns the same object when nothing changes so callers can skip a save.
+ */
+export function migrateProgressIds(
+  progress: TaskProgress,
+  records: readonly TaskRecord[],
+): TaskProgress {
+  if (progress.completed.length === 0 || records.length === 0) return progress;
+
+  const legacyToCanonical = new Map<string, string>();
+  for (const record of records) {
+    const canonical = taskId(record);
+    const legacy = legacyTaskId(record);
+    if (legacy !== canonical) legacyToCanonical.set(legacy, canonical);
+  }
+  if (legacyToCanonical.size === 0) return progress;
+
+  let changed = false;
+  const next: string[] = [];
+  const seen = new Set<string>();
+  for (const id of progress.completed) {
+    const mapped = legacyToCanonical.get(id) ?? id;
+    if (mapped !== id) changed = true;
+    if (seen.has(mapped)) {
+      changed = true;
+      continue;
+    }
+    seen.add(mapped);
+    next.push(mapped);
+  }
+  if (!changed) return progress;
+  return { completed: next };
+}
+
 export function loadProgress(): TaskProgress {
   return loadState(STORAGE_KEY, EMPTY_PROGRESS, normalizeProgress);
+}
+
+/** Load progress and rewrite legacy keys against the current task list. */
+export function loadProgressForRecords(records: readonly TaskRecord[]): TaskProgress {
+  const loaded = loadProgress();
+  const migrated = migrateProgressIds(loaded, records);
+  if (migrated !== loaded) saveProgress(migrated);
+  return migrated;
 }
 
 export function saveProgress(state: TaskProgress): void {

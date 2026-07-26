@@ -1,0 +1,160 @@
+{
+  "round": 2,
+  "final": true,
+  "tournament": "hybrid-composition",
+  "passBar": 9.0,
+  "recipe": {
+    "colors": "Editorial",
+    "overview": "Daylight courtyard gate (Nova DNA)",
+    "map": "Editorial 3D-top Board Sky, no inspector (Orbit DNA)",
+    "tasks": "Crystal × Data twin desk (Prism DNA)",
+    "build": "Editorial + T1 monogram Relic Court (Ridge DNA)",
+    "combat": "Crystal main vacancy + ability density (Forge DNA)",
+    "data": "Lattice + Daylight browse + full multi-source inspector (Prism DNA)"
+  },
+  "axes": {
+    "recipeFidelity": 25,
+    "publicCraft": 20,
+    "dataReadability": 20,
+    "operability": 15,
+    "antiSlop": 10,
+    "signature": 10
+  },
+  "teams": [
+    {
+      "id": "composite",
+      "codename": "Steal Matrix",
+      "score": 9.2,
+      "rank": 1,
+      "round": 2,
+      "axes": {
+        "recipeFidelity": 9.4,
+        "publicCraft": 8.9,
+        "dataReadability": 9.3,
+        "operability": 9.2,
+        "antiSlop": 8.8,
+        "signature": 9.1
+      },
+      "status": "champion",
+      "passBarCleared": true
+    },
+    {
+      "id": "prism",
+      "codename": "Facet Desk",
+      "score": 8.9,
+      "rank": 2,
+      "round": 1,
+      "r2Submitted": false,
+      "axes": {
+        "recipeFidelity": 8.8,
+        "publicCraft": 8.5,
+        "dataReadability": 9.3,
+        "operability": 9.1,
+        "antiSlop": 8.6,
+        "signature": 9.4
+      },
+      "status": "contender-superseded",
+      "passBarCleared": false
+    },
+    {
+      "id": "orbit",
+      "codename": "Board Sky",
+      "score": 8.7,
+      "rank": 3,
+      "round": 1,
+      "r2Submitted": false,
+      "axes": {
+        "recipeFidelity": 8.3,
+        "publicCraft": 9.0,
+        "dataReadability": 8.6,
+        "operability": 8.5,
+        "antiSlop": 9.0,
+        "signature": 9.5
+      },
+      "status": "contender-superseded",
+      "passBarCleared": false
+    },
+    {
+      "id": "nova",
+      "codename": "Courtyard First",
+      "score": 8.6,
+      "rank": 4,
+      "round": 1,
+      "r2Submitted": false,
+      "axes": {
+        "recipeFidelity": 8.0,
+        "publicCraft": 9.1,
+        "dataReadability": 8.6,
+        "operability": 8.3,
+        "antiSlop": 9.0,
+        "signature": 9.2
+      },
+      "status": "contender-superseded",
+      "passBarCleared": false
+    },
+    {
+      "id": "forge",
+      "codename": "Calc Crystal",
+      "score": 8.3,
+      "rank": 5,
+      "round": 1,
+      "r2Submitted": false,
+      "axes": {
+        "recipeFidelity": 7.4,
+        "publicCraft": 8.4,
+        "dataReadability": 8.5,
+        "operability": 8.0,
+        "antiSlop": 9.4,
+        "signature": 9.4
+      },
+      "status": "contender-superseded",
+      "passBarCleared": false
+    },
+    {
+      "id": "ridge",
+      "codename": "Relic Court",
+      "score": 8.0,
+      "rank": 6,
+      "round": 1,
+      "r2Submitted": false,
+      "axes": {
+        "recipeFidelity": 7.2,
+        "publicCraft": 8.6,
+        "dataReadability": 7.8,
+        "operability": 7.8,
+        "antiSlop": 8.2,
+        "signature": 9.3
+      },
+      "status": "contender-superseded",
+      "passBarCleared": false
+    }
+  ],
+  "winnerId": "composite",
+  "recommendedProduction": "composite",
+  "productionShip": {
+    "colors": "Editorial echo ladder / product token contract",
+    "routePatterns": "composite",
+    "notes": [
+      "Overview: Nova courtyard gate (lintel/jamb/aperture/desk)",
+      "Map: Orbit Board Sky shell — no RegionInspector; plug MapLoader later",
+      "Tasks + Data: Prism twin desk + full SourceReference cards",
+      "Build: Ridge T1 monogram court (Survivalist / Endless Harvest / Golden Touch)",
+      "Combat: Forge vacancy wells + real ability icons; never invent DPL",
+      "Purge lab manifesto chrome before marketing polish"
+    ]
+  },
+  "r2Notes": {
+    "prism": "No R2 package — R1 8.9 stands; still best pure Data/Tasks specialist",
+    "orbit": "No R2 package — R1 8.7 stands; still best pure Map atmosphere",
+    "nova": "No R2 package — courtyard DNA absorbed into Composite Overview",
+    "forge": "No R2 package — vacancy DNA absorbed into Composite Combat",
+    "ridge": "No R2 package — monogram T1 DNA absorbed into Composite Build"
+  },
+  "mustFixBeforePolish": [
+    "Strip agent/lab manifesto copy from player-facing chrome (Map no-inspector sermons, Catalyst bans in banners, composite R2 mast/footer)",
+    "Plug real MapLoader / wartable into Board Sky shell without adding a third inspector column",
+    "Defence style icon (currently blank raised box); disambiguate Golden Touch GT vs God Tier GT monograms",
+    "Bind live combat core into vacancy wells — keep structured — until bound",
+    "Bind real catalog/task sources while preserving multi-source card contract"
+  ]
+}

@@ -1,0 +1,635 @@
+/*
+  Team Alpha · DAYLIGHT — Round 3 skin
+  Thesis: sunlit fort courtyard — keyart as architecture, not strip.
+  Tokens only under .restoration-skin--alpha — do not touch app/globals.css.
+
+  Contrast (measured, not claimed):
+  parch-50 #f5efe0 on stone-800 #343028
+    L_fg ≈ 0.864, L_bg ≈ 0.029 → WCAG contrast ≈ 13.4:1 (≥4.5:1 body, ≥7:1 AAA)
+  parch-100 #e9dfc6 on stone-800 #343028 → ≈ 11.6:1
+  parch-50 #f5efe0 on stone-850 #28251f → ≈ 15.1:1
+  gem-400 #38d49a on stone-850 #28251f → ≈ 8.2:1 (key figures / chrome)
+*/
+
+.restoration-skin--alpha {
+  /* Parch — midday scan ink */
+  --color-parch-50: #f5efe0;
+  --color-parch-100: #e9dfc6;
+  --color-parch-300: #d4c6a6;
+  --color-parch-400: #bfb08e;
+  --color-parch-500: #a69474;
+
+  /* Stone — sunlit fort courtyard (lifted, still RS-dark) */
+  --color-stone-950: #12110e;
+  --color-stone-900: #1c1a16;
+  --color-stone-850: #28251f;
+  --color-stone-800: #343028;
+  --color-stone-raised: #423d33;
+  --color-stone-zebra: #2e2b24;
+  --color-stone-inset: #181612;
+  --color-stone-750: #5e5748;
+  --color-stone-carve: #7d745f;
+  --color-stone-mortar: #4a453a;
+  --color-stone-sun: #8a816c;
+
+  /* Gold — engraved display only */
+  --color-gold-300: #f5d48e;
+  --color-gold-400: #e8c06e;
+  --color-gold-500: #b88a42;
+
+  /* Gem — keyart crystal mountain; interactive chrome only */
+  --color-gem-200: #9af5d4;
+  --color-gem-300: #62e8b8;
+  --color-gem-400: #38d49a;
+  --color-gem-500: #24a878;
+  --color-gem-600: #18805a;
+
+  /* Path triad + ember — data semantics only (order-blue is NOT chrome) */
+  --color-chaos-300: #d4614d;
+  --color-chaos-400: #b5402f;
+  --color-order-400: #4a7ec2;
+  --color-balance-400: #6fae45;
+  --color-ember-400: #e2622a;
+
+  color: var(--color-parch-50);
+  background: var(--color-stone-950);
+}
+
+/* ── Masonry panels ─────────────────────────────────────── */
+
+.restoration-skin--alpha .panel {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-stone-raised) 22%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 42%,
+      color-mix(in srgb, var(--color-stone-900) 35%, var(--color-stone-850)) 100%
+    );
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 45%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 55%, transparent),
+    0 2px 4px color-mix(in srgb, var(--color-stone-950) 40%, transparent);
+}
+
+/* Double-frame heritage: fort ashlar with sunlit top edge + deep mortar */
+.restoration-skin--alpha .panel--carved {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-sun) 18%, var(--color-stone-raised)) 0%,
+      color-mix(in srgb, var(--color-stone-raised) 45%, var(--color-stone-850)) 12%,
+      var(--color-stone-850) 36%,
+      color-mix(in srgb, var(--color-stone-900) 28%, var(--color-stone-850)) 100%
+    );
+  border: 1px solid var(--color-stone-750);
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-sun),
+    inset 0 2px 0 color-mix(in srgb, var(--color-stone-carve) 55%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 50%, transparent),
+    inset 1px 0 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent),
+    inset -1px 0 0 color-mix(in srgb, var(--color-stone-950) 40%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 72%, transparent),
+    0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent),
+    0 3px 6px color-mix(in srgb, var(--color-stone-950) 45%, transparent);
+}
+
+/* Courtyard slate — inset desk surface under the gate */
+.restoration-skin--alpha .panel--slate {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-800) 70%, var(--color-stone-850)) 0%,
+      var(--color-stone-800) 100%
+    );
+  border: 1px solid var(--color-stone-mortar);
+  box-shadow:
+    inset 0 2px 4px color-mix(in srgb, var(--color-stone-950) 55%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-sun) 12%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 60%, transparent);
+}
+
+.restoration-skin--alpha .panel-head {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-parch-100);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-900)) 0%,
+      color-mix(in srgb, var(--color-stone-900) 70%, var(--color-stone-850)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 30%, transparent);
+}
+
+.restoration-skin--alpha .panel-body {
+  padding: 0.875rem;
+}
+
+/* ── Wiki Dense table on daylight stage ─────────────────── */
+
+.restoration-skin--alpha .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4;
+  background: var(--color-stone-800);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 25%, transparent);
+}
+
+.restoration-skin--alpha .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 35%, var(--color-stone-800)) 0%,
+      var(--color-stone-800) 100%
+    );
+  font-size: 0.75rem; /* 12px */
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    0 1px 0 var(--color-stone-750);
+}
+
+.restoration-skin--alpha .data-table td {
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--color-stone-750);
+  color: var(--color-parch-50);
+  font-variant-numeric: tabular-nums;
+}
+
+.restoration-skin--alpha .data-table td.secondary,
+.restoration-skin--alpha .data-table .cell-secondary {
+  color: var(--color-parch-100);
+}
+
+.restoration-skin--alpha .data-table tbody tr:nth-child(odd) td {
+  background: var(--color-stone-zebra);
+}
+
+.restoration-skin--alpha .data-table tbody tr:hover td {
+  background: var(--color-stone-raised);
+}
+
+.restoration-skin--alpha .data-table tbody tr.is-selected td {
+  background: var(--color-stone-raised);
+  box-shadow: inset 0 0 0 1px var(--color-gem-500);
+}
+
+.restoration-skin--alpha .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.restoration-skin--alpha .stat-key {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gem-400);
+}
+
+/* Empty calc slot — structured vacancy, not an em-dash */
+.restoration-skin--alpha .stat-key--empty {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  color: var(--color-parch-400);
+}
+
+.restoration-skin--alpha .field-inset {
+  background: var(--color-stone-inset);
+  border: 1px solid var(--color-stone-750);
+  color: var(--color-parch-50);
+  box-shadow:
+    inset 0 2px 3px color-mix(in srgb, var(--color-stone-950) 60%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-950) 40%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-carve) 15%, transparent);
+}
+
+.restoration-skin--alpha .tag {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+  background: color-mix(in srgb, var(--color-stone-900) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
+}
+
+/* ── Courtyard gate (Overview signature) ────────────────── */
+/* Keyart is the open courtyard aperture — framed stone, not a pasted strip */
+
+.restoration-skin--alpha .daylight-courtyard {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  background:
+    radial-gradient(
+      ellipse 120% 60% at 50% 0%,
+      color-mix(in srgb, var(--color-stone-850) 55%, var(--color-stone-950)) 0%,
+      var(--color-stone-950) 70%
+    );
+}
+
+/* Engraved lintel above the aperture */
+.restoration-skin--alpha .daylight-lintel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.65rem 1rem 0.55rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-sun) 14%, var(--color-stone-raised)) 0%,
+      var(--color-stone-900) 55%,
+      color-mix(in srgb, var(--color-stone-950) 40%, var(--color-stone-900)) 100%
+    );
+  border-bottom: 1px solid var(--color-stone-mortar);
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-sun),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 50%, transparent),
+    0 2px 0 color-mix(in srgb, var(--color-stone-950) 35%, transparent);
+}
+
+.restoration-skin--alpha .daylight-lintel-title {
+  margin: 0;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold-400);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--color-stone-950) 55%, transparent);
+}
+
+.restoration-skin--alpha .daylight-lintel-meta {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+/* Three-bay gate: standing stones | aperture | milestone rail */
+.restoration-skin--alpha .daylight-gate {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 10.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem);
+  min-height: 200px;
+  border-bottom: 1px solid var(--color-stone-750);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 20%, transparent);
+}
+
+@media (max-width: 720px) {
+  .restoration-skin--alpha .daylight-gate {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+}
+
+/* Masonry jambs — pick posts + milestone engraving */
+.restoration-skin--alpha .daylight-jamb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.65rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-900)) 0%,
+      var(--color-stone-900) 40%,
+      color-mix(in srgb, var(--color-stone-950) 30%, var(--color-stone-900)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 40%, transparent);
+}
+
+.restoration-skin--alpha .daylight-jamb--west {
+  border-right: 1px solid var(--color-stone-750);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent),
+    inset -1px 0 0 color-mix(in srgb, var(--color-stone-950) 35%, transparent);
+}
+
+.restoration-skin--alpha .daylight-jamb--east {
+  border-left: 1px solid var(--color-stone-750);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 45%, transparent),
+    inset 1px 0 0 color-mix(in srgb, var(--color-stone-carve) 20%, transparent);
+}
+
+@media (max-width: 720px) {
+  .restoration-skin--alpha .daylight-jamb--west,
+  .restoration-skin--alpha .daylight-jamb--east {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-stone-750);
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.restoration-skin--alpha .daylight-jamb-label {
+  margin: 0;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-parch-400);
+}
+
+/* Standing-stone pick posts inside west jamb */
+.restoration-skin--alpha .daylight-standing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.4rem;
+  text-align: center;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-sun) 10%, var(--color-stone-raised)) 0%,
+      var(--color-stone-850) 55%,
+      color-mix(in srgb, var(--color-stone-900) 40%, var(--color-stone-850)) 100%
+    );
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px 2px 1px 1px;
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -2px 0 color-mix(in srgb, var(--color-stone-950) 45%, transparent),
+    0 2px 3px color-mix(in srgb, var(--color-stone-950) 40%, transparent);
+}
+
+.restoration-skin--alpha .daylight-standing.is-empty {
+  min-height: 4.25rem;
+  justify-content: center;
+  border-style: dashed;
+  background: color-mix(in srgb, var(--color-stone-inset) 70%, var(--color-stone-900));
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-stone-950) 50%, transparent);
+  color: var(--color-parch-400);
+  font-size: 0.6875rem;
+}
+
+.restoration-skin--alpha .daylight-standing-name {
+  margin: 0;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: var(--color-gold-400);
+  line-height: 1.2;
+}
+
+/* Milestone engravings in east jamb */
+.restoration-skin--alpha .daylight-milestone {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 0.55rem;
+  background: color-mix(in srgb, var(--color-stone-inset) 55%, var(--color-stone-900));
+  border: 1px solid var(--color-stone-mortar);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 2px color-mix(in srgb, var(--color-stone-950) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 25%, transparent);
+}
+
+.restoration-skin--alpha .daylight-milestone-k {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-parch-400);
+}
+
+.restoration-skin--alpha .daylight-milestone-v {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.125rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gem-400);
+}
+
+.restoration-skin--alpha .daylight-milestone-v.is-quiet {
+  font-family: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--color-parch-100);
+}
+
+/* Aperture — keyart lives inside the gate, not above the product */
+.restoration-skin--alpha .daylight-aperture {
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+  background: var(--color-stone-900);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-stone-950) 50%, transparent),
+    inset 0 3px 8px color-mix(in srgb, var(--color-stone-950) 55%, transparent);
+}
+
+.restoration-skin--alpha .daylight-aperture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+/* Soft courtyard falloff — stone, not blue sky brand */
+.restoration-skin--alpha .daylight-aperture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-950) 18%, transparent) 0%,
+      transparent 28%,
+      transparent 55%,
+      color-mix(in srgb, var(--color-stone-950) 55%, transparent) 82%,
+      var(--color-stone-950) 100%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-stone-950) 40%, transparent) 0%,
+      transparent 12%,
+      transparent 88%,
+      color-mix(in srgb, var(--color-stone-950) 40%, transparent) 100%
+    );
+  pointer-events: none;
+}
+
+.restoration-skin--alpha .daylight-aperture-caption {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.55rem;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-100);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);
+}
+
+/* Courtyard desk under the gate — plan ledger, not workbench DNA */
+.restoration-skin--alpha .daylight-desk {
+  padding: 0.875rem 1rem 1.1rem;
+}
+
+.restoration-skin--alpha .daylight-desk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .restoration-skin--alpha .daylight-desk-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.restoration-skin--alpha .daylight-ledger {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.55rem 1rem;
+  font-size: 0.875rem; /* 14px — arm's-length desk read */
+}
+
+.restoration-skin--alpha .daylight-ledger dt {
+  margin: 0;
+  color: var(--color-parch-300);
+  font-size: 0.8125rem;
+}
+
+.restoration-skin--alpha .daylight-ledger dd {
+  margin: 0;
+  color: var(--color-parch-50);
+}
+
+.restoration-skin--alpha .daylight-ledger dd.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.restoration-skin--alpha .daylight-note {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-parch-400);
+}
+
+/* ── Combat empty bay ───────────────────────────────────── */
+
+.restoration-skin--alpha .daylight-empty-bay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.restoration-skin--alpha .daylight-empty-slot {
+  padding: 0.7rem 0.75rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 20%, var(--color-stone-850)) 0%,
+      var(--color-stone-850) 100%
+    );
+  border: 1px solid var(--color-stone-750);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 40%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 55%, transparent);
+}
+
+.restoration-skin--alpha .daylight-empty-slot.is-live {
+  box-shadow:
+    inset 0 1px 0 var(--color-stone-carve),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-gem-600) 35%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 55%, transparent);
+}
+
+.restoration-skin--alpha .daylight-empty-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-parch-300);
+}
+
+.restoration-skin--alpha .daylight-empty-value {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+  color: var(--color-parch-400);
+}
+
+.restoration-skin--alpha .daylight-empty-value.is-bound {
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  color: var(--color-gem-400);
+}
+
+.restoration-skin--alpha .daylight-empty-copy {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--color-parch-100);
+  background: color-mix(in srgb, var(--color-stone-inset) 80%, var(--color-stone-900));
+  border: 1px solid var(--color-stone-mortar);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-stone-950) 45%, transparent);
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .restoration-skin--alpha .daylight-aperture img {
+    /* freeze object crop — no animated pan if added later */
+    object-position: 50% 30%;
+  }
+
+  .restoration-skin--alpha .daylight-aperture::after,
+  .restoration-skin--alpha .panel,
+  .restoration-skin--alpha .panel--carved {
+    transition: none;
+  }
+}
+
+/* Gem focus inside skin */
+.restoration-skin--alpha button:focus-visible,
+.restoration-skin--alpha a:focus-visible,
+.restoration-skin--alpha input:focus-visible {
+  outline: 1px solid var(--color-gem-400);
+  outline-offset: 2px;
+}

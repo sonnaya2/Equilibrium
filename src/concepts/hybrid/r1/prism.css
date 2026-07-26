@@ -1,0 +1,1319 @@
+/*
+  Team Prism · FACET DESK — Hybrid composition R1 skin
+  Thesis: Editorial room + Crystal facet chips + Daylight crest rails.
+  Data and Tasks are twin desks. Tokens only under .hybrid-skin--prism.
+  Do not touch app/globals.css.
+
+  Contrast (arm's-length):
+  parch-50 #f1e9d6 on stage #1f1912 ≈ 11.2:1 body
+  parch-100 #e0d4b8 on stage ≈ 9.1:1 secondary
+  gem #2ecb8f on void #0a0806 ≈ 9.5:1
+*/
+
+.hybrid-skin--prism {
+  /* Editorial ladder */
+  --prism-void: #0a0806;
+  --prism-shell: #100e0b;
+  --prism-rail: #16120e;
+  --prism-stage: #1f1912;
+  --prism-raised: #2a231b;
+  --prism-zebra: #18140f;
+  --prism-inset: #12100c;
+  --prism-border: #4a3d2c;
+  --prism-carve: #6a563e;
+  --prism-parch-50: #f1e9d6;
+  --prism-parch-100: #e0d4b8;
+  --prism-parch-300: #c4b59a;
+  --prism-parch-400: #a8987c;
+  --prism-gold: #e0b264;
+  --prism-gold-deep: #b88a42;
+  --prism-gem: #2ecb8f;
+  --prism-gem-bright: #57e0ae;
+  --prism-gem-deep: #1fa372;
+  /* Crystal facet extras */
+  --prism-facet: #4de8b8;
+  --prism-facet-core: #06352f;
+  --prism-moss: #4a6b5e;
+  --prism-sun: #8a816c;
+
+  /* Bridge to shared --color-* used by preview markup */
+  --color-parch-50: var(--prism-parch-50);
+  --color-parch-100: var(--prism-parch-100);
+  --color-parch-300: var(--prism-parch-300);
+  --color-parch-400: var(--prism-parch-400);
+  --color-parch-500: #8a7a60;
+
+  --color-stone-950: var(--prism-void);
+  --color-stone-900: var(--prism-shell);
+  --color-stone-850: var(--prism-rail);
+  --color-stone-800: var(--prism-stage);
+  --color-stone-raised: var(--prism-raised);
+  --color-stone-zebra: var(--prism-zebra);
+  --color-stone-inset: var(--prism-inset);
+  --color-stone-750: var(--prism-border);
+  --color-stone-carve: var(--prism-carve);
+
+  --color-gold-300: #f0d08a;
+  --color-gold-400: var(--prism-gold);
+  --color-gold-500: var(--prism-gold-deep);
+
+  --color-gem-200: #9af5d4;
+  --color-gem-300: var(--prism-gem-bright);
+  --color-gem-400: var(--prism-gem);
+  --color-gem-500: var(--prism-gem-deep);
+  --color-gem-600: #167a55;
+
+  --color-chaos-300: #d4614d;
+  --color-chaos-400: #b5402f;
+  --color-order-400: #4a7ec2;
+  --color-balance-400: #6fae45;
+  --color-ember-400: #e2622a;
+
+  color: var(--prism-parch-50);
+  background: var(--prism-void);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ── Shell / mast ───────────────────────────────────────── */
+
+.hybrid-skin--prism .prism-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+  height: 100%;
+  background: var(--prism-void);
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-mast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.85rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-raised) 35%, var(--prism-shell)) 0%,
+      var(--prism-shell) 100%
+    );
+  border-bottom: 1px solid var(--prism-border);
+  box-shadow:
+    inset 0 1px 0 var(--prism-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--prism-void) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-brand {
+  margin: 0;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--prism-gold);
+}
+
+.hybrid-skin--prism .prism-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hybrid-skin--prism .prism-nav button {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.2rem 0.15rem;
+  font-size: 0.8125rem;
+  color: var(--prism-parch-100);
+  cursor: pointer;
+}
+
+.hybrid-skin--prism .prism-nav button[aria-current="page"] {
+  color: var(--prism-gem);
+  font-weight: 600;
+  border-bottom-color: var(--prism-gem-deep);
+}
+
+.hybrid-skin--prism .prism-nav button:focus-visible {
+  outline: 1px solid var(--prism-gem);
+  outline-offset: 2px;
+}
+
+.hybrid-skin--prism .prism-mast-meta {
+  margin-left: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--prism-parch-300);
+}
+
+/* ── Lattice tabs ───────────────────────────────────────── */
+
+.hybrid-skin--prism .prism-lattice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.45rem 0.55rem 0;
+  background: var(--prism-shell);
+  border-bottom: 1px solid var(--prism-border);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-lattice [role="tab"] {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--prism-parch-100);
+  cursor: pointer;
+  border-radius: 1px 1px 0 0;
+}
+
+.hybrid-skin--prism .prism-lattice [role="tab"][aria-selected="true"] {
+  border-color: var(--prism-gem-deep);
+  background: var(--prism-rail);
+  color: var(--prism-gem-bright);
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .prism-lattice [role="tab"]:focus-visible {
+  outline: 1px solid var(--prism-gem);
+  outline-offset: 1px;
+}
+
+/* ── Daylight crest rail ────────────────────────────────── */
+
+.hybrid-skin--prism .prism-rail {
+  overflow-y: auto;
+  background: var(--prism-rail);
+  border-right: 1px solid var(--prism-border);
+  box-shadow:
+    inset -1px 0 0 color-mix(in srgb, var(--prism-void) 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 35%, transparent);
+}
+
+.hybrid-skin--prism .prism-rail-label {
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  border-bottom: 1px solid var(--prism-border);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-rail-leaf {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  border: none;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--prism-parch-100);
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hybrid-skin--prism .prism-rail-leaf.is-on {
+  background: var(--prism-stage);
+  color: var(--prism-gem-bright);
+  border-left-color: var(--prism-gem);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-rail-leaf:hover:not(.is-on) {
+  background: color-mix(in srgb, var(--prism-raised) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-rail-leaf:focus-visible {
+  outline: 1px solid var(--prism-gem);
+  outline-offset: -1px;
+}
+
+/* ── Crystal facet chips ────────────────────────────────── */
+
+.hybrid-skin--prism .prism-facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.hybrid-skin--prism .prism-facet {
+  position: relative;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--prism-border);
+  border-radius: 1px;
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--prism-raised) 70%, var(--prism-facet-core)) 0%,
+      var(--prism-rail) 45%,
+      color-mix(in srgb, var(--prism-shell) 80%, var(--prism-facet-core)) 100%
+    );
+  color: var(--prism-parch-100);
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 50%, transparent);
+}
+
+.hybrid-skin--prism .prism-facet.is-on {
+  border-color: var(--prism-gem-deep);
+  color: var(--prism-gem-bright);
+  box-shadow:
+    inset 0 1px 0 var(--prism-facet),
+    inset 0 0 0 1px color-mix(in srgb, var(--prism-gem) 25%, transparent);
+}
+
+.hybrid-skin--prism .prism-facet:focus-visible {
+  outline: 1px solid var(--prism-gem);
+  outline-offset: 2px;
+}
+
+/* ── Twin desk grid (Data + Tasks) ──────────────────────── */
+
+.hybrid-skin--prism .prism-desk {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 12rem) minmax(0, 1fr) minmax(16rem, 20rem);
+  min-height: 0;
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .hybrid-skin--prism .prism-desk {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hybrid-skin--prism .prism-stage {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  background: var(--prism-stage);
+}
+
+.hybrid-skin--prism .prism-stage-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--prism-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-raised) 28%, var(--prism-stage)) 0%,
+      var(--prism-stage) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 30%, transparent);
+}
+
+.hybrid-skin--prism .prism-stage-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-stage-count {
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--prism-parch-300);
+}
+
+/* ── Inspector (full fields + all sources) ──────────────── */
+
+.hybrid-skin--prism .prism-inspector {
+  overflow-y: auto;
+  background: var(--prism-rail);
+  border-left: 1px solid var(--prism-border);
+  box-shadow:
+    inset 1px 0 0 color-mix(in srgb, var(--prism-void) 30%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 35%, transparent);
+}
+
+.hybrid-skin--prism .prism-inspector-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.75rem 0.75rem 0.5rem;
+}
+
+.hybrid-skin--prism .prism-inspector-title {
+  margin: 0;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prism-gold);
+  line-height: 1.3;
+}
+
+.hybrid-skin--prism .prism-field-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0 0.75rem 0.65rem;
+  font-size: 0.8125rem;
+}
+
+.hybrid-skin--prism .prism-field-grid dt {
+  color: var(--prism-parch-300);
+}
+
+.hybrid-skin--prism .prism-field-grid dd {
+  margin: 0;
+  color: var(--prism-parch-50);
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+.hybrid-skin--prism .prism-sources {
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.85rem;
+  border-top: 1px solid var(--prism-border);
+}
+
+.hybrid-skin--prism .prism-sources-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-source-card {
+  margin: 0 0 0.45rem;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--prism-border);
+  border-radius: 1px;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--prism-raised) 40%, var(--prism-facet-core)) 0%,
+      var(--prism-shell) 55%,
+      var(--prism-rail) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-facet) 35%, transparent);
+  list-style: none;
+}
+
+.hybrid-skin--prism .prism-source-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--prism-parch-50);
+  font-weight: 500;
+}
+
+.hybrid-skin--prism .prism-source-url {
+  display: block;
+  margin: 0 0 0.3rem;
+  font-size: 0.6875rem;
+  color: var(--prism-gem);
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.hybrid-skin--prism .prism-source-url:hover {
+  color: var(--prism-gem-bright);
+  text-decoration: underline;
+}
+
+.hybrid-skin--prism .prism-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.625rem;
+  color: var(--prism-parch-300);
+}
+
+.hybrid-skin--prism .prism-source-type {
+  color: var(--prism-gem-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Wiki-dense table ───────────────────────────────────── */
+
+.hybrid-skin--prism .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  background: var(--prism-stage);
+}
+
+.hybrid-skin--prism .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--prism-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-raised) 40%, var(--prism-stage)) 0%,
+      var(--prism-stage) 100%
+    );
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--prism-parch-100);
+  box-shadow:
+    inset 0 1px 0 var(--prism-carve),
+    0 1px 0 var(--prism-border);
+}
+
+.hybrid-skin--prism .data-table td {
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--prism-border);
+  color: var(--prism-parch-50);
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--prism .data-table td.secondary {
+  color: var(--prism-parch-100);
+}
+
+.hybrid-skin--prism .data-table tbody tr:nth-child(odd) td {
+  background: var(--prism-zebra);
+}
+
+.hybrid-skin--prism .data-table tbody tr:hover td {
+  background: var(--prism-raised);
+}
+
+.hybrid-skin--prism .data-table tbody tr.is-selected td {
+  background: var(--prism-raised);
+  box-shadow: inset 0 0 0 1px var(--prism-gem-deep);
+}
+
+.hybrid-skin--prism .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+
+.hybrid-skin--prism .panel {
+  background: var(--prism-rail);
+  border: 1px solid var(--prism-border);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .panel--carved {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-sun) 12%, var(--prism-raised)) 0%,
+      color-mix(in srgb, var(--prism-raised) 40%, var(--prism-rail)) 14%,
+      var(--prism-rail) 40%,
+      color-mix(in srgb, var(--prism-shell) 30%, var(--prism-rail)) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 var(--prism-carve),
+    inset 0 -1px 0 color-mix(in srgb, var(--prism-void) 45%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--prism-void) 55%, transparent),
+    0 2px 4px color-mix(in srgb, var(--prism-void) 40%, transparent);
+}
+
+.hybrid-skin--prism .panel--facet {
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--prism-raised) 65%, var(--prism-facet-core)) 0%,
+      var(--prism-rail) 40%,
+      color-mix(in srgb, var(--prism-shell) 70%, var(--prism-facet-core)) 100%
+    );
+  border-color: var(--prism-moss);
+  box-shadow:
+    inset 0 1px 0 var(--prism-facet),
+    inset 2px 0 0 color-mix(in srgb, var(--prism-facet) 25%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--prism-void) 45%, transparent);
+}
+
+.hybrid-skin--prism .panel-head {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--prism-border);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--prism-parch-100);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-raised) 35%, var(--prism-shell)) 0%,
+      color-mix(in srgb, var(--prism-shell) 70%, var(--prism-rail)) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .panel-body {
+  padding: 0.75rem;
+}
+
+/* ── Daylight courtyard (Overview) ──────────────────────── */
+
+.hybrid-skin--prism .prism-courtyard {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  background:
+    radial-gradient(
+      ellipse 120% 55% at 50% 0%,
+      color-mix(in srgb, var(--prism-rail) 50%, var(--prism-void)) 0%,
+      var(--prism-void) 72%
+    );
+}
+
+.hybrid-skin--prism .prism-lintel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.65rem 1rem 0.55rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-sun) 10%, var(--prism-raised)) 0%,
+      var(--prism-shell) 55%,
+      color-mix(in srgb, var(--prism-void) 35%, var(--prism-shell)) 100%
+    );
+  border-bottom: 1px solid var(--prism-border);
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .prism-lintel-title {
+  margin: 0;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--prism-gold);
+}
+
+.hybrid-skin--prism .prism-lintel-meta {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prism-parch-300);
+}
+
+.hybrid-skin--prism .prism-gate {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 10.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem);
+  min-height: 210px;
+  border-bottom: 1px solid var(--prism-border);
+}
+
+@media (max-width: 720px) {
+  .hybrid-skin--prism .prism-gate {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+}
+
+.hybrid-skin--prism .prism-jamb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.65rem;
+  background: var(--prism-shell);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-jamb--west {
+  border-right: 1px solid var(--prism-border);
+}
+
+.hybrid-skin--prism .prism-jamb--east {
+  border-left: 1px solid var(--prism-border);
+}
+
+.hybrid-skin--prism .prism-jamb-label {
+  margin: 0;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-standing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.35rem;
+  text-align: center;
+  border: 1px solid var(--prism-border);
+  border-radius: 2px;
+  background: var(--prism-rail);
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .prism-standing.is-empty {
+  min-height: 4rem;
+  justify-content: center;
+  border-style: dashed;
+  color: var(--prism-parch-400);
+  font-size: 0.6875rem;
+  background: var(--prism-inset);
+}
+
+.hybrid-skin--prism .prism-standing-name {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-aperture {
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+  background: var(--prism-void);
+}
+
+.hybrid-skin--prism .prism-aperture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 55% 35%;
+  display: block;
+}
+
+.hybrid-skin--prism .prism-aperture-caption {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.4rem;
+  margin: 0;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prism-parch-100);
+  background: color-mix(in srgb, var(--prism-void) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--prism-border) 60%, transparent);
+}
+
+.hybrid-skin--prism .prism-milestone {
+  padding: 0.4rem 0.45rem;
+  border: 1px solid var(--prism-border);
+  background: var(--prism-rail);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-milestone-k {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-milestone-v {
+  margin: 0.15rem 0 0;
+  font-family: ui-monospace, monospace;
+  font-size: 1.125rem;
+  color: var(--prism-gem);
+  font-variant-numeric: tabular-nums;
+}
+
+.hybrid-skin--prism .prism-milestone-v.is-quiet {
+  font-size: 0.75rem;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-desk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0.85rem;
+}
+
+@media (max-width: 720px) {
+  .hybrid-skin--prism .prism-desk-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hybrid-skin--prism .prism-ledger {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 0.85rem;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.hybrid-skin--prism .prism-ledger dt {
+  color: var(--prism-parch-300);
+}
+
+.hybrid-skin--prism .prism-ledger dd {
+  margin: 0;
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--prism-parch-300);
+}
+
+/* ── Map wartable (no inspector · tall 3D-top board) ────── */
+
+.hybrid-skin--prism .prism-map {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  /* Board majority — Orbit-grade height without third-column inspector */
+  min-height: min(72vh, 720px);
+}
+
+.hybrid-skin--prism .prism-board {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: min(58vh, 560px);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 90% 55% at 50% 14%,
+      color-mix(in srgb, var(--prism-facet-core) 55%, #2a3540) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #1a2228 0%,
+      var(--prism-shell) 42%,
+      var(--prism-void) 100%
+    );
+}
+
+.hybrid-skin--prism .prism-board__label {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.75rem;
+  z-index: 3;
+  margin: 0;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--prism-border);
+  background: color-mix(in srgb, var(--prism-shell) 88%, transparent);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prism-parch-100);
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .prism-board__sky {
+  flex: 0 0 26%;
+  min-height: 72px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #2a3540 70%, var(--prism-facet-core)) 0%,
+      #1e2830 55%,
+      transparent 100%
+    );
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hybrid-skin--prism .prism-board__table {
+  position: relative;
+  flex: 1;
+  margin: 0 1rem 1rem;
+  border: 1px solid var(--prism-carve);
+  background: var(--prism-rail);
+  box-shadow:
+    inset 0 1px 0 var(--prism-facet),
+    0 8px 24px color-mix(in srgb, var(--prism-void) 70%, transparent),
+    0 0 0 1px var(--prism-border);
+  overflow: hidden;
+}
+
+.hybrid-skin--prism .prism-board__terrain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  opacity: 0.52;
+  filter: saturate(0.82) contrast(1.06);
+}
+
+.hybrid-skin--prism .prism-board__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 18%,
+      color-mix(in srgb, var(--prism-shell) 55%, transparent) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 60%,
+      transparent 30%,
+      color-mix(in srgb, var(--prism-void) 45%, transparent) 100%
+    );
+  pointer-events: none;
+}
+
+.hybrid-skin--prism .prism-board__markers {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.35rem;
+  padding: 0.75rem;
+  list-style: none;
+  margin: 0;
+}
+
+.hybrid-skin--prism .prism-board__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--prism-shell) 55%, transparent);
+  color: var(--prism-parch-100);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.hybrid-skin--prism .prism-board__marker.is-picked {
+  border-color: var(--prism-gem-deep);
+  background: color-mix(in srgb, var(--prism-shell) 78%, transparent);
+  color: var(--prism-gem-bright);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--prism-gem) 28%, transparent);
+}
+
+.hybrid-skin--prism .prism-board__marker.is-focus {
+  border-color: var(--prism-gem);
+  background: color-mix(in srgb, var(--prism-shell) 85%, transparent);
+  box-shadow:
+    inset 0 0 0 1px var(--prism-gem-deep),
+    inset 0 1px 0 var(--prism-facet);
+}
+
+.hybrid-skin--prism .prism-board__marker:focus-visible {
+  outline: 2px solid var(--prism-gem);
+  outline-offset: 1px;
+}
+
+.hybrid-skin--prism .prism-map-ledger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid var(--prism-border);
+  background: var(--prism-shell);
+  font-size: 0.8125rem;
+  color: var(--prism-parch-100);
+  flex-shrink: 0;
+}
+
+/* ── Relic court (T1 monograms — never upgrade gear) ────── */
+
+.hybrid-skin--prism .prism-court {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.hybrid-skin--prism .prism-tier-rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  padding: 0.55rem 0.65rem;
+  background: var(--prism-rail);
+  border: 1px solid var(--prism-border);
+  box-shadow: inset 0 1px 0 var(--prism-carve);
+}
+
+.hybrid-skin--prism .prism-tier-rail__label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+  margin-right: 0.25rem;
+}
+
+.hybrid-skin--prism .prism-tier-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.75rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--prism-border);
+  background: var(--prism-inset);
+  color: var(--prism-parch-400);
+  cursor: default;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 40%, transparent);
+}
+
+.hybrid-skin--prism .prism-tier-chip.is-open {
+  cursor: pointer;
+  color: var(--prism-parch-100);
+  background: var(--prism-stage);
+}
+
+.hybrid-skin--prism .prism-tier-chip.is-open:hover {
+  border-color: var(--prism-carve);
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-tier-chip.is-on {
+  color: var(--prism-gem-bright);
+  border-color: var(--prism-gem-deep);
+  box-shadow:
+    inset 0 0 0 1px var(--prism-gem-deep),
+    inset 0 1px 0 var(--prism-facet);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-gem-deep) 14%, var(--prism-raised)) 0%,
+      var(--prism-rail) 100%
+    );
+}
+
+.hybrid-skin--prism .prism-tier-chip.is-sealed {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hybrid-skin--prism .prism-tier-chip__n {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.hybrid-skin--prism .prism-tier-chip__sub {
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.hybrid-skin--prism .prism-court-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.hybrid-skin--prism .prism-relic-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  width: 100%;
+  border-radius: 2px;
+  transition: box-shadow 80ms ease-out, background 80ms ease-out;
+}
+
+.hybrid-skin--prism .prism-relic-card.is-selected {
+  box-shadow:
+    inset 0 0 0 1px var(--prism-gem-deep),
+    inset 0 1px 0 var(--prism-facet),
+    0 0 0 1px color-mix(in srgb, var(--prism-gem) 25%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--prism-gem-deep) 12%, var(--prism-raised)) 0%,
+      var(--prism-rail) 100%
+    );
+}
+
+.hybrid-skin--prism .prism-relic-card__top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Facet monogram — never Catalyst / upgrade gear art */
+.hybrid-skin--prism .prism-relic-frame {
+  position: relative;
+  width: 56px;
+  height: 64px;
+  flex-shrink: 0;
+  clip-path: polygon(50% 0, 100% 22%, 100% 78%, 50% 100%, 0 78%, 0 22%);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--prism-facet) 18%, var(--prism-raised)) 0%,
+      var(--prism-stage) 45%,
+      var(--prism-inset) 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px var(--prism-border);
+}
+
+.hybrid-skin--prism .prism-relic-frame::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  clip-path: inherit;
+  border: 1px solid color-mix(in srgb, var(--prism-facet) 40%, transparent);
+  pointer-events: none;
+}
+
+.hybrid-skin--prism .prism-relic-frame--sm {
+  width: 40px;
+  height: 46px;
+}
+
+.hybrid-skin--prism .prism-relic-frame__mono {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display), Cinzel, "Times New Roman", serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--prism-gold);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--prism-void) 60%, transparent);
+}
+
+.hybrid-skin--prism .prism-relic-card.is-selected .prism-relic-frame {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--prism-gem) 20%, var(--prism-raised)) 0%,
+      var(--prism-stage) 50%,
+      var(--prism-inset) 100%
+    );
+  box-shadow: inset 0 0 0 1px var(--prism-gem-deep);
+}
+
+.hybrid-skin--prism .prism-relic-card.is-selected .prism-relic-frame__mono {
+  color: var(--prism-gem-bright);
+}
+
+.hybrid-skin--prism .prism-relic-card__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.hybrid-skin--prism .prism-relic-card__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--prism-parch-50);
+  line-height: 1.25;
+}
+
+.hybrid-skin--prism .prism-relic-card__tier {
+  margin: 0.15rem 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--prism-parch-300);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.hybrid-skin--prism .prism-relic-card__pick {
+  margin: 0.2rem 0 0;
+  font-size: 0.6875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--prism-gem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hybrid-skin--prism .prism-relic-card__blurb {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--prism-parch-100);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hybrid-skin--prism .prism-skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.hybrid-skin--prism .prism-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--prism-border);
+  background: var(--prism-inset);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  color: var(--prism-parch-100);
+}
+
+.hybrid-skin--prism .prism-folio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.8fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 720px) {
+  .hybrid-skin--prism .prism-folio {
+    grid-template-columns: 1fr;
+  }
+
+  .hybrid-skin--prism .prism-map {
+    min-height: auto;
+  }
+
+  .hybrid-skin--prism .prism-board {
+    min-height: 320px;
+  }
+
+  .hybrid-skin--prism .prism-board__markers {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+  }
+}
+
+.hybrid-skin--prism .prism-effects {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--prism-parch-50);
+}
+
+.hybrid-skin--prism .prism-effects li::marker {
+  color: var(--prism-gem);
+}
+
+/* ── Combat crystal bay ─────────────────────────────────── */
+
+.hybrid-skin--prism .prism-empty-bay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  border: 1px solid var(--prism-moss);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--prism-raised) 50%, var(--prism-facet-core)) 0%,
+      var(--prism-shell) 100%
+    );
+  box-shadow: inset 0 1px 0 var(--prism-facet);
+}
+
+.hybrid-skin--prism .prism-empty-slot {
+  padding: 0.45rem 0.5rem;
+  border: 1px dashed var(--prism-border);
+  background: var(--prism-inset);
+}
+
+.hybrid-skin--prism .prism-empty-label {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-empty-value {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--prism-parch-400);
+}
+
+.hybrid-skin--prism .prism-empty-value.is-bound {
+  font-family: ui-monospace, monospace;
+  font-size: 1.125rem;
+  color: var(--prism-gem);
+}
+
+.hybrid-skin--prism .stat-key {
+  font-family: ui-monospace, monospace;
+  font-size: 1.375rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--prism-gem);
+}
+
+.hybrid-skin--prism .field-inset {
+  background: var(--prism-inset);
+  border: 1px solid var(--prism-border);
+  color: var(--prism-parch-50);
+  box-shadow: inset 0 2px 3px color-mix(in srgb, var(--prism-void) 55%, transparent);
+}
+
+.hybrid-skin--prism .tag {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--prism-border);
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prism-parch-100);
+  background: color-mix(in srgb, var(--prism-shell) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--prism-carve) 35%, transparent);
+}
+
+.hybrid-skin--prism .tag--provisional {
+  border-color: var(--prism-moss);
+  color: var(--prism-gem-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hybrid-skin--prism * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hybrid-skin--prism .prism-board__marker {
+    transition: none;
+  }
+}

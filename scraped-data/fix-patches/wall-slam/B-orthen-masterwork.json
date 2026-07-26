@@ -1,0 +1,180 @@
+{
+  "id": "B-orthen-masterwork",
+  "title": "Wall-slam B — Orthen furnace / masterwork / tectonic / Waiko bonecrusher",
+  "date": "2026-07-26",
+  "catalogReadOnly": "data/research/catalog.json",
+  "catalogJsonDirectEditThisPass": false,
+  "sourceReview": [
+    "scraped-data/wall-slam-input-2026-07-26.json",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/progression-enrichment-regional-skilling-wave-final-orthen-smithing-stack-2026-07-26.json",
+    "scraped-data/fix-patches/wave2-walls.json",
+    "data/research/regional-skilling-unlocks.json",
+    "data/research/regional-combat-unlocks.json",
+    "https://runescape.wiki/w/Orthen_furnace_core"
+  ],
+  "userRulings": [
+    "Orthen furnace needs Wildy (Forinthry) + Desert + Anachronia",
+    "Masterwork bar fold anywhere (Asgarnia Artisans not a hard gate for plate/glorious-bar fold)",
+    "POP / Waiko often Asgarnia Arc (not Desert hub for Boni sinks)"
+  ],
+  "policy": [
+    "Catalog is read-only this pass — decisions only for scripts/wall-slam-apply-high.mjs",
+    "action keepHosts | primary | remove | wall; apply merges confidence high|medium only",
+    "Orthen CRAFT pressure (plate→core) is Wildy+Desert+Anachronia; Asgarnia is optional plate-hub host only",
+    "Orthen USAGE stacks (Superheat / autoheater) keep Tirannwn and/or Forinthry as hard gates separate from craft",
+    "Base masterwork fold is region-free; T92 trim essence and custom-fit geography stay Asgarnia+Morytania"
+  ],
+  "decisions": [
+    {
+      "name": "Masterwork plate → Orthen furnace core pressure stack",
+      "action": "keepHosts",
+      "hosts": ["forinthry", "desert", "anachronia", "asgarnia"],
+      "requiredRegions": ["forinthry", "desert", "anachronia"],
+      "confidence": "high",
+      "reason": "User: Orthen furnace needs Wildy+Desert+Anachronia. Masterwork bar fold anywhere → Asgarnia stays as optional plate-hub host only, not in requiredRegions. Matches prior applied ruling KEEP on [forinthry,desert,anachronia,asgarnia] req=[forinthry,desert,anachronia]. Drop pure asgarnia+anachronia hard pair.",
+      "catalogBefore": {
+        "hosts": ["asgarnia", "anachronia"],
+        "requiredRegions": ["asgarnia", "anachronia"]
+      },
+      "notes": [
+        "Dragon burners = Anachronia Orthen Observation outpost",
+        "Draconic energy self-source pressure = Forinthry/Daemonheim ED infrastructure (Wildy)",
+        "Desert pressure = self-source consumable/material geography on the core craft (user hard gate)",
+        "Curved masterwork plates consume folded bars — fold is global Smithing, not Artisans-locked"
+      ]
+    },
+    {
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "action": "keepHosts",
+      "hosts": ["anachronia", "tirannwn", "forinthry"],
+      "requiredRegions": ["anachronia", "tirannwn", "forinthry"],
+      "confidence": "high",
+      "reason": "USAGE stack, not craft-materials row. All three hard: Anachronia furnace core + Tirannwn Superheat Form + Forinthry advanced smithing autoheater. Asgarnia plate pressure is optional only (not a host). Do not swap this set for Wildy+Desert+Anachronia — that ruling is the craft/plate-pressure row.",
+      "catalogBefore": {
+        "hosts": ["forinthry", "tirannwn", "anachronia"],
+        "requiredRegions": ["anachronia", "tirannwn", "forinthry"]
+      },
+      "notes": [
+        "Canonical cross-region:orthen-superheat-autoheater",
+        "Clamp foreign hosts (esp. asgarnia) if they reappear"
+      ]
+    },
+    {
+      "name": "Orthen furnace core full skilling stack",
+      "action": "keepHosts",
+      "hosts": ["anachronia", "tirannwn"],
+      "requiredRegions": ["anachronia", "tirannwn"],
+      "confidence": "high",
+      "reason": "Narrower Superheat-sustain package: Anachronia core + Tirannwn Superheat Form. Autoheater is optional partner already covered by the three-region superheat-autoheater stack — do not force Forinthry onto this dual. Keep multi-ok both hosts with matching requiredRegions.",
+      "catalogBefore": {
+        "hosts": ["tirannwn", "anachronia"],
+        "requiredRegions": ["anachronia", "tirannwn"]
+      },
+      "notes": [
+        "cross-region:orthen-furnace-core-stack; piece row anachronia:orthen-furnace-core stays single-home"
+      ]
+    },
+    {
+      "name": "Masterwork Spear of Annihilation",
+      "action": "keepHosts",
+      "hosts": ["asgarnia", "morytania"],
+      "requiredRegions": ["asgarnia", "morytania"],
+      "confidence": "high",
+      "reason": "Trim/essence lock mirrors trimmed masterwork: Asgarnia praesulic + Morytania malevolent. Anachronia is archaeology-hint only on the base spear path — drop as host so it does not pollute multi-host clamps. Masterwork bar fold anywhere does not remove the T92 essence pair.",
+      "catalogBefore": {
+        "hosts": ["asgarnia", "morytania", "anachronia"],
+        "requiredRegions": ["asgarnia", "morytania"]
+      },
+      "dropHosts": ["anachronia"]
+    },
+    {
+      "name": "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)",
+      "action": "primary",
+      "home": "havenhythe",
+      "requiredRegions": [],
+      "confidence": "medium",
+      "reason": "Support densify, not a hard BiS lock. Havenhythe is starting free value for apex-hide / masterwork ranged pressure; full recipe still partial vs Equilibrium. Empty requiredRegions so it does not force Anachronia elective. Drop anachronia host — BGH remains detail/hint only until recipe is locked.",
+      "catalogBefore": {
+        "hosts": ["havenhythe", "anachronia"],
+        "requiredRegions": ["havenhythe", "anachronia"]
+      },
+      "dropHosts": ["anachronia"],
+      "wallIfWrong": "If recipe later hard-requires Anachronia BGH materials, reopen as keepHosts [havenhythe, anachronia] with non-empty requiredRegions — do not invent all_required now."
+    },
+    {
+      "name": "Trimmed / custom-fit trimmed masterwork melee armour",
+      "action": "keepHosts",
+      "hosts": ["asgarnia", "morytania"],
+      "requiredRegions": ["asgarnia", "morytania"],
+      "confidence": "high",
+      "reason": "T92 trim self-source: Morytania malevolent essence + Asgarnia Torva/praesulic + Elof custom-fit. User 'masterwork bar fold anywhere' applies to base plates/glorious bars only — not this essence pair. Multi-ok both hosts with all_required both.",
+      "catalogBefore": {
+        "hosts": ["asgarnia", "morytania"],
+        "requiredRegions": ["asgarnia", "morytania"]
+      },
+      "notes": [
+        "Sibling single-home: Custom-fit trimmed masterwork (Elof / Master Crafter) stays asgarnia-only"
+      ]
+    },
+    {
+      "name": "Elite tectonic robe armour",
+      "action": "keepHosts",
+      "hosts": ["asgarnia", "forinthry"],
+      "requiredRegions": ["asgarnia", "forinthry"],
+      "confidence": "high",
+      "reason": "True no-trade multi: Asgarnia Vorago tectonic + Virtus/praesulic; Forinthry draconic energy + chaotic remnant / Daemonheim. Do not collapse to Asgarnia-only. Multi-ok both with all_required both.",
+      "catalogBefore": {
+        "hosts": ["asgarnia", "forinthry"],
+        "requiredRegions": ["asgarnia", "forinthry"]
+      }
+    },
+    {
+      "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
+      "action": "keepHosts",
+      "hosts": ["asgarnia", "forinthry"],
+      "requiredRegions": ["asgarnia", "forinthry"],
+      "confidence": "high",
+      "reason": "User: POP/Waiko often Asgarnia Arc — Boni taijitu sink is Asgarnia, not Desert. Forinthry still hard for base bonecrusher purchase (Daemonheim rewards). Dual keepHosts with both required. Do not re-emit forinthry:bonecrusher base as this row.",
+      "catalogBefore": {
+        "hosts": ["asgarnia", "forinthry"],
+        "requiredRegions": ["asgarnia", "forinthry"]
+      },
+      "notes": [
+        "Desert is support only for Arc geography debates — not a host on this upgrade",
+        "Pairs with multi-region:toolbelt-bonecrusher-attach when that row is filed"
+      ]
+    }
+  ],
+  "walls": [
+    {
+      "name": "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)",
+      "status": "partially_decided_primary_havenhythe",
+      "hosts": ["havenhythe", "anachronia"],
+      "question": "If 2026 masterwork ranged recipe is later confirmed to hard-require Anachronia BGH materials (not just optional hide pressure), reopen keepHosts dual with requiredRegions=[havenhythe,anachronia]. Current primary-havenhythe + empty req stands until that recipe lock.",
+      "confidence": "medium",
+      "decisionRef": "decisions[Masterwork ranged armour material pressure]"
+    },
+    {
+      "name": "Orthen furnace core craft consumable map (Desert hard gate)",
+      "status": "user_asserted_not_wiki_itemised_here",
+      "hosts": ["forinthry", "desert", "anachronia"],
+      "question": "User hard-gates Desert on Orthen furnace craft pressure. Wiki craft list is mostly tradeable consumables (extra fine sand, vital sparks, swamp tar, etc.) — confirm Desert remains a hard requiredRegion vs optional_pressure when ironman self-source map is normalised. Until contradicted, honour user Wildy+Desert+Anachronia on Masterwork plate → Orthen stack.",
+      "confidence": "high_on_user_ruling_medium_on_wiki_granularity"
+    }
+  ],
+  "outOfScopeSingleHome": [
+    {
+      "name": "Orthen furnace core",
+      "note": "Single-home anachronia piece row — not a multi-host wall; leave alone"
+    },
+    {
+      "name": "Custom-fit trimmed masterwork (Elof / Master Crafter)",
+      "note": "Already asgarnia-only; custom-fit NPC geography — not in multi-host input"
+    },
+    {
+      "name": "Masterwork melee plate / glorious-bar smithing chain",
+      "note": "Asgarnia practical hub; bar fold anywhere means do not invent multi-host hard gates on fold itself"
+    }
+  ]
+}

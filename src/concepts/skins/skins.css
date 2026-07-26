@@ -1,0 +1,97 @@
+.concept-skin {
+  min-height: calc(100vh - 8rem);
+  color: var(--color-parch-50);
+  background: var(--color-stone-950);
+}
+
+.concept-skin--production {
+  color-scheme: dark;
+}
+
+.concept-skin--parchment {
+  color-scheme: light;
+  --color-parch-50: #1c1610;
+  --color-parch-100: #2f271c;
+  --color-parch-300: #5a4e3c;
+  --color-parch-400: #6e6250;
+  --color-parch-500: #827666;
+  --color-stone-750: #c9b89a;
+  --color-stone-800: #e8dcc4;
+  --color-stone-850: #f0e6d2;
+  --color-stone-900: #f6efdf;
+  --color-stone-950: #faf6ec;
+  --color-stone-carve: #d4c4a8;
+  --color-stone-zebra: #f3ead8;
+  --color-stone-raised: #e5d8bc;
+  --color-stone-inset: #fffdf7;
+  --color-gold-300: #b8892e;
+  --color-gold-400: #9a7224;
+  --color-gold-500: #7a5a1c;
+  --color-gem-200: #1fa372;
+  --color-gem-300: #157a55;
+  --color-gem-400: #0f6b4a;
+  --color-gem-500: #0c5a3e;
+  --color-gem-600: #094830;
+}
+
+.concept-skin--parchment .panel {
+  background: var(--color-stone-850);
+  border-color: var(--color-stone-750);
+  box-shadow: inset 0 1px 0 #fff8ea, 0 1px 2px rgb(40 30 15 / 6%);
+}
+
+.concept-skin--parchment .data-table th {
+  background: var(--color-stone-800);
+}
+
+.concept-skin--dusk {
+  color-scheme: dark;
+  --color-parch-50: #f5efe2;
+  --color-parch-100: #e8dcc4;
+  --color-parch-300: #cfc0a4;
+  --color-parch-400: #b9a88c;
+  --color-parch-500: #a3947a;
+  --color-stone-750: #5c4c38;
+  --color-stone-800: #3a3024;
+  --color-stone-850: #32291e;
+  --color-stone-900: #2a2218;
+  --color-stone-950: #221c14;
+  --color-stone-carve: #7a684c;
+  --color-stone-zebra: #2e261c;
+  --color-stone-raised: #423628;
+  --color-stone-inset: #1c1711;
+  --color-gem-300: #6ae8bc;
+  --color-gem-400: #3fd4a0;
+  --color-gem-500: #2ecb8f;
+  --color-gold-400: #e8bc6a;
+}
+
+.concept-skin--dusk .data-table {
+  font-size: 1rem;
+}
+
+.concept-skin--editorial {
+  color-scheme: dark;
+  --color-parch-50: #f2ead8;
+  --color-parch-100: #e0d4ba;
+  --color-parch-300: #c4b49a;
+  --color-parch-400: #b0a088;
+  --color-parch-500: #9c8c74;
+  --color-stone-750: #524636;
+  --color-stone-800: #2c241a;
+  --color-stone-850: #241e16;
+  --color-stone-900: #1c1812;
+  --color-stone-950: #16130e;
+  --color-stone-carve: #6b5840;
+  --color-stone-zebra: #201a12;
+  --color-stone-raised: #352c20;
+  --color-stone-inset: #12100c;
+  --color-gem-400: #3fd4a0;
+  --color-gem-300: #6ae8bc;
+  --color-gold-400: #e8bc6a;
+}
+
+.concept-skin--editorial .concept-page {
+  padding-top: 1.75rem;
+  padding-bottom: 2.5rem;
+}

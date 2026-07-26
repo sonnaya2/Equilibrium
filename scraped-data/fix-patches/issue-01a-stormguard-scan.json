@@ -1,0 +1,223 @@
+{
+  "issue": "01a-stormguard-scan",
+  "source": "data/research/catalog.json",
+  "scope": [
+    "asgarnia",
+    "kandarin"
+  ],
+  "query": [
+    "Stormguard",
+    "Howl",
+    "Inspire Genius",
+    "Divine Conversion",
+    "Ancient Invention blueprints",
+    "Armadyl Tower",
+    "Death Ward",
+    "Invention Guild"
+  ],
+  "scannedAt": "2026-07-26",
+  "classificationGuide": {
+    "dig": "Stormguard Citadel / Howl workshop dig-site ownership or Stormguard artefact gate",
+    "guild": "Invention Guild building / machine room",
+    "tower": "Armadyl's Tower turn-in (Lowse / Armadyl)",
+    "other": "Related residual not dig/guild/tower primary (e.g. production item after blueprints)"
+  },
+  "areasOnly": {
+    "asgarnia": [
+      "Armadyl's Tower",
+      "Invention Guild"
+    ],
+    "kandarin": [
+      "Stormguard Citadel Dig Site",
+      "Howl's Floating Workshop"
+    ]
+  },
+  "missingAsUpgrade": [
+    {
+      "host": "asgarnia",
+      "name": "Armadyl's Tower",
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "classification": "tower",
+      "presentIn": "areas"
+    },
+    {
+      "host": "kandarin",
+      "name": "Howl's Floating Workshop",
+      "requiredRegions": [
+        "kandarin"
+      ],
+      "classification": "dig",
+      "presentIn": "areas"
+    }
+  ],
+  "findings": [
+    "areas already rehomed dig geography to kandarin (Stormguard Citadel Dig Site, Howl's Floating Workshop) and keep Armadyl's Tower + Invention Guild on asgarnia",
+    "asgarnia still hosts dig-ownership upgrade rows: Ancient Invention blueprints (Howl's workshop), Inspire Genius (Howl's Thinking Cap), Divine Conversion (Cres Framework) — details still claim Asgarnia owns Stormguard",
+    "kandarin has Stormguard Citadel Dig Site hub + thin Ancient Invention upgrade (correct dig ownership) but NOT full Inspire Genius row and NOT full Ancient Invention blueprints (Howl's workshop) name",
+    "Divine Conversion is dual-hosted on asgarnia and kandarin with identical asgarnia-owns-Stormguard detail text",
+    "Death Ward relic chain correctly dual-hosted with requiredRegions [kandarin, asgarnia] and detail splitting dig coat vs tower turn-in",
+    "Invention Guild + named machines remain asgarnia-only (expected stay)"
+  ],
+  "rows": [
+    {
+      "host": "asgarnia",
+      "name": "Death Ward relic chain",
+      "requiredRegions": [
+        "kandarin",
+        "asgarnia"
+      ],
+      "classification": "tower"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Alchemiser / mk. II (Invention Guild machine)",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Ancient Invention blueprints (Howl's workshop)",
+      "requiredRegions": [],
+      "classification": "dig"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Auto disassembler / mk. II (Invention Guild machine)",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Automatic / optimised hide tanner (Invention Guild)",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Divine Conversion (Cres Framework)",
+      "requiredRegions": [],
+      "classification": "dig"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Inspire Genius (Howl's Thinking Cap)",
+      "requiredRegions": [],
+      "classification": "dig"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Invention Guild generators (simple / large / jumbo)",
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Invention Guild",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Invention Guild named machine room",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Partial potion producer / DX (Invention Guild)",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Plank maker / high capacity plank maker (Invention Guild)",
+      "requiredRegions": [],
+      "classification": "guild"
+    },
+    {
+      "host": "asgarnia",
+      "name": "XP Capacitor 5000 (Ancient Invention item-XP bank)",
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "classification": "other"
+    },
+    {
+      "host": "asgarnia",
+      "name": "Invention machines (Invention Guild + Fort Workshop power)",
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "classification": "guild"
+    },
+    {
+      "host": "kandarin",
+      "name": "Ancient Invention",
+      "requiredRegions": [
+        "kandarin"
+      ],
+      "classification": "dig"
+    },
+    {
+      "host": "kandarin",
+      "name": "Death Ward relic chain",
+      "requiredRegions": [
+        "kandarin",
+        "asgarnia"
+      ],
+      "classification": "dig"
+    },
+    {
+      "host": "kandarin",
+      "name": "Divine Conversion (Cres Framework)",
+      "requiredRegions": [],
+      "classification": "dig"
+    },
+    {
+      "host": "kandarin",
+      "name": "Stormguard Citadel Dig Site (Armadylean)",
+      "requiredRegions": [
+        "kandarin"
+      ],
+      "classification": "dig"
+    }
+  ],
+  "summary": {
+    "totalRows": 18,
+    "byHost": {
+      "asgarnia": 14,
+      "kandarin": 4
+    },
+    "byClassification": {
+      "tower": 1,
+      "guild": 9,
+      "dig": 7,
+      "other": 1
+    },
+    "duplicateHosts": [
+      {
+        "name": "Death Ward relic chain",
+        "hosts": [
+          "asgarnia",
+          "kandarin"
+        ]
+      },
+      {
+        "name": "Divine Conversion (Cres Framework)",
+        "hosts": [
+          "asgarnia",
+          "kandarin"
+        ]
+      }
+    ],
+    "digStillOnAsgarnia": [
+      "Ancient Invention blueprints (Howl's workshop)",
+      "Divine Conversion (Cres Framework)",
+      "Inspire Genius (Howl's Thinking Cap)"
+    ]
+  }
+}

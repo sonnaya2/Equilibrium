@@ -1,0 +1,1523 @@
+{
+  "generatedAt": "2026-07-26T13:43:53.384Z",
+  "appliedClearSingle": {
+    "count": 55,
+    "removedForeignCopies": 114,
+    "ensuredOnHome": 55,
+    "missingOnHome": [],
+    "names": [
+      {
+        "name": "Large Summoning obelisk production network",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Allotment patch hub package",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Tetracompass pieces → ancient caskets → complete tomes",
+        "home": "misthalin"
+      },
+      {
+        "name": "Luck of the Dwarves (ring + Archaeology relic power)",
+        "home": "misthalin"
+      },
+      {
+        "name": "Amulet of glory",
+        "home": "misthalin"
+      },
+      {
+        "name": "Binding contract (Ancient Summoning) craft + bind loop",
+        "home": "misthalin"
+      },
+      {
+        "name": "Crystal tools (dragon base + Prifddinas conversion)",
+        "home": "tirannwn"
+      },
+      {
+        "name": "Ring of Fortune (relic power)",
+        "home": "misthalin"
+      },
+      {
+        "name": "Ring of Wealth (relic power)",
+        "home": "misthalin"
+      },
+      {
+        "name": "Artificer's measure component region map",
+        "home": "anachronia"
+      },
+      {
+        "name": "Combat bracelet",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Deathless (Koschei's Death Egg)",
+        "home": "fremennik"
+      },
+      {
+        "name": "Divine charge crafting loop (energy → charge pack / machines / GOTE fuel)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Elven grimoire (Prif prayer-book and spellbook swap)",
+        "home": "tirannwn"
+      },
+      {
+        "name": "God books base unlock (Horror from the Deep + pages)",
+        "home": "fremennik"
+      },
+      {
+        "name": "Rune pouch craft ladder (large → grasping + expansive essence path)",
+        "home": "forinthry"
+      },
+      {
+        "name": "Abyss Runecrafting stack",
+        "home": "forinthry"
+      },
+      {
+        "name": "Attuned ectoplasmator",
+        "home": "morytania"
+      },
+      {
+        "name": "Dragon hatchet (Dagannoth Kings pressure)",
+        "home": "fremennik"
+      },
+      {
+        "name": "Extreme invention potion boost path",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Hops patch network (Entrana + run geography)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Imcando mattock",
+        "home": "kandarin"
+      },
+      {
+        "name": "Magical thread (Abyss RC + Wilderness diary rates)",
+        "home": "forinthry"
+      },
+      {
+        "name": "Master farmer seed supply residual (Farmers' Market + pickpocket)",
+        "home": "kandarin"
+      },
+      {
+        "name": "Modified farmer's hat",
+        "home": "desert"
+      },
+      {
+        "name": "Perfect juju potion recipe hub",
+        "home": "karamja"
+      },
+      {
+        "name": "Anachronia base-camp spa pools",
+        "home": "anachronia"
+      },
+      {
+        "name": "Anachronia Dinosaur Farm Farmers' Market (beans)",
+        "home": "anachronia"
+      },
+      {
+        "name": "Anachronia overgrown idols (Woodcutting)",
+        "home": "anachronia"
+      },
+      {
+        "name": "Attuned crystal teleport seed",
+        "home": "tirannwn"
+      },
+      {
+        "name": "Ava's device chain (attractor / accumulator / alerter)",
+        "home": "misthalin"
+      },
+      {
+        "name": "Big Game Hunter permanent unlock package",
+        "home": "anachronia"
+      },
+      {
+        "name": "Edgeville Dungeon resource dungeons",
+        "home": "forinthry"
+      },
+      {
+        "name": "Endurance (Oo'glog Wellspring)",
+        "home": "kandarin"
+      },
+      {
+        "name": "Infernal Source Dig Site (Zamorakian)",
+        "home": "forinthry"
+      },
+      {
+        "name": "Inferno adze",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Invention Guild named machine room",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Invention machines (Invention Guild + Fort Workshop power)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Juju farming potion path (Herblore Habitat)",
+        "home": "karamja"
+      },
+      {
+        "name": "Keldagrim brewery (Laughing Miner Pub)",
+        "home": "fremennik"
+      },
+      {
+        "name": "Kuradal's Dungeon and ferocious ring hub",
+        "home": "kandarin"
+      },
+      {
+        "name": "Legends' Guild totem jewellery recharge",
+        "home": "kandarin"
+      },
+      {
+        "name": "Master thief's lockpick + stethoscope (toolbelt)",
+        "home": "misthalin"
+      },
+      {
+        "name": "Modified botanist's mask",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Oo'glog spa pools (As a First Resort)",
+        "home": "kandarin"
+      },
+      {
+        "name": "Pharm Ecology (Queen Mab's Moonstone)",
+        "home": "kandarin"
+      },
+      {
+        "name": "POF farm totems + tier-2 dual-pen animal perks",
+        "home": "kandarin"
+      },
+      {
+        "name": "Port Phasmatys brewery",
+        "home": "morytania"
+      },
+      {
+        "name": "Scrimshaw Crafter (Player-owned port workshop)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Scrimshaw of sacrifice (+ superior POP upgrade)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Scroll of quick teleportation (Daemonheim permanent)",
+        "home": "forinthry"
+      },
+      {
+        "name": "Skilling scrimshaw craft package (Player-owned port)",
+        "home": "asgarnia"
+      },
+      {
+        "name": "Smoking Kills (full Slayer points unlock)",
+        "home": "desert"
+      },
+      {
+        "name": "Spirit cape (permanent familiar special discount)",
+        "home": "forinthry"
+      },
+      {
+        "name": "Thieves' Guild master thief tools",
+        "home": "misthalin"
+      }
+    ]
+  },
+  "needYourAdvice": {
+    "count": 102,
+    "howToReply": "For each name (or whole bucket): primary:<regionId> | multi-ok | global | primary:<regionId> keep-req",
+    "buckets": {
+      "global-or-network": [
+        {
+          "name": "Area Tasks (achievement diaries) skilling overview",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Herb patch network (global herb-run map)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Slayer prefer / block / extend (Assignment Rewards)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Hoardstalker ring",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Learn quicker killing blows (400 Slayer points)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Prayer training infrastructure stack (altars + powders + books)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Games necklace teleport package",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "forinthry",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Construction Contracts (estate agents)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Mattock tier ladder (bronze through elder rune + specials)",
+          "hosts": [
+            "misthalin",
+            "kandarin",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Ring of duelling",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Cremation ability unlock",
+          "hosts": [
+            "misthalin",
+            "forinthry",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Ore box tier upgrades",
+          "hosts": [
+            "asgarnia",
+            "forinthry"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Wood box tier upgrades",
+          "hosts": [
+            "misthalin",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        }
+      ],
+      "tool-chain-multi-region": [
+        {
+          "name": "Elite skilling outfits core set (ironman fragment paths)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "desert",
+            "tirannwn",
+            "fremennik",
+            "asgarnia",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=desert+tirannwn+fremennik+asgarnia+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "ask": "requiredRegions=tirannwn+forinthry. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Pickaxe of Life and Death",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "forinthry",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "fremennik",
+            "tirannwn",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=fremennik+tirannwn+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Grace of the elves / signs of the porter supply chain",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "tirannwn",
+            "desert",
+            "morytania",
+            "kandarin",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=asgarnia+tirannwn+desert+morytania+kandarin+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "fremennik",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "fremennik",
+            "misthalin",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=fremennik+misthalin+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Auto-burn Woodcutting paths (Superheat Form vs Always Adze vs partial outfit/adze)",
+          "hosts": [
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=tirannwn+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Artificer's measure",
+          "hosts": [
+            "forinthry",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "forinthry",
+            "tirannwn",
+            "morytania"
+          ],
+          "ask": "requiredRegions=anachronia+forinthry+tirannwn+morytania. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Bait and Switch + Always Adze dual monolith skilling paths",
+          "hosts": [
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=anachronia+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Blessed flask production chain",
+          "hosts": [
+            "karamja",
+            "forinthry",
+            "desert",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Fury shark outfit + Bait and Switch Fishing stack",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "kandarin",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=kandarin+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Hatchet of Bloom and Blight",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "fremennik",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "ask": "requiredRegions=tirannwn+misthalin+asgarnia+fremennik. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Hatchet of Ember and Glade",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "fremennik",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "ask": "requiredRegions=tirannwn+misthalin+asgarnia+fremennik. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Masterwork plate → Orthen furnace core pressure stack",
+          "hosts": [
+            "asgarnia",
+            "forinthry",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=asgarnia+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Mattock of Time and Space",
+          "hosts": [
+            "misthalin",
+            "fremennik",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=tirannwn+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+          "hosts": [
+            "asgarnia",
+            "forinthry",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "tirannwn",
+            "forinthry"
+          ],
+          "ask": "requiredRegions=anachronia+tirannwn+forinthry. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Pickaxe of Earth and Song",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "fremennik",
+            "tirannwn"
+          ],
+          "ask": "requiredRegions=fremennik+tirannwn. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=tirannwn+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Dark Facet of Grace (GOTE enchantment)",
+          "hosts": [
+            "asgarnia",
+            "forinthry",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "forinthry"
+          ],
+          "ask": "requiredRegions=tirannwn+forinthry. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Seedicide collector upgrade",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Toolbelt attach: Seedicide",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=asgarnia+kandarin+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Always Adze (Seed of the Charyou Tree)",
+          "hosts": [
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Orthen furnace core full skilling stack",
+          "hosts": [
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "tirannwn"
+          ],
+          "ask": "requiredRegions=anachronia+tirannwn. multi-ok on all hosts, or primary-only (which)?"
+        }
+      ],
+      "poh-construction": [
+        {
+          "name": "POH gilded altar (Chapel offering)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Player-owned house portal towns and Construction utilities",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "desert",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "kandarin",
+            "karamja",
+            "fremennik",
+            "desert",
+            "tirannwn",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=asgarnia+kandarin+karamja+fremennik+desert+tirannwn+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Aquarium room + Prawn Perks",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Player-owned house Aquarium and Prawnbroker",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "fremennik"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "kandarin",
+            "fremennik"
+          ],
+          "ask": "requiredRegions=asgarnia+kandarin+fremennik. multi-ok on all hosts, or primary-only (which)?"
+        }
+      ],
+      "slayer-components": [
+        {
+          "name": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "misthalin",
+            "morytania",
+            "desert",
+            "karamja",
+            "kandarin",
+            "tirannwn",
+            "anachronia",
+            "forinthry"
+          ],
+          "ask": "requiredRegions=misthalin+morytania+desert+karamja+kandarin+tirannwn+anachronia+forinthry. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Slayer helmet craft + full upgrade chain",
+          "hosts": [
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+          "hosts": [
+            "karamja",
+            "desert",
+            "morytania",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "karamja",
+            "desert",
+            "morytania",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=karamja+desert+morytania+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Ring of slaying (craft unlock)",
+          "hosts": [
+            "misthalin",
+            "fremennik",
+            "desert",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "desert",
+            "morytania",
+            "fremennik",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=desert+morytania+fremennik+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Slayer helmet component farms",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "desert",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "morytania",
+            "karamja",
+            "desert",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=morytania+karamja+desert+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Slayer helmet (craft unlock + base helm)",
+          "hosts": [
+            "misthalin",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "morytania",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=morytania+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        }
+      ],
+      "empty-req-or-other": [
+        {
+          "name": "Velucia museum Archaeology collections",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "fremennik",
+            "desert",
+            "morytania",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Thaler skilling rewards hub (Stanley Limelight Traders)",
+          "hosts": [
+            "misthalin",
+            "karamja",
+            "asgarnia",
+            "kandarin",
+            "fremennik",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Portable skilling stations (ironman craft/deployment permanent note)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "desert",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Skills necklace (guild teleports)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Ectoplasmator (base)",
+          "hosts": [
+            "misthalin",
+            "forinthry",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Edgeville skilling and Wilderness on-ramp hub",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "forinthry"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Ungael ritual site pressure",
+          "hosts": [
+            "misthalin",
+            "havenhythe",
+            "fremennik"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Asylum surgeon's ring",
+          "hosts": [
+            "misthalin",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Auto-screener v1.080",
+          "hosts": [
+            "misthalin",
+            "asgarnia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Barbarian Training (Otto multi-skill package)",
+          "hosts": [
+            "karamja",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Brooch of the Gods",
+          "hosts": [
+            "asgarnia",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Dalia's Tree Nursery eternal magic plots",
+          "hosts": [
+            "havenhythe",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Deadliest Catch skilling deposit boxes",
+          "hosts": [
+            "karamja",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Entrana Law altar and island skilling access",
+          "hosts": [
+            "asgarnia",
+            "forinthry"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Family Crest cooking and smelting gauntlets",
+          "hosts": [
+            "misthalin",
+            "asgarnia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Ferocious ring",
+          "hosts": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Holy wrench",
+          "hosts": [
+            "fremennik",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Jadinko Lair curly roots",
+          "hosts": [
+            "karamja",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Mining Guild resource dungeon",
+          "hosts": [
+            "asgarnia",
+            "forinthry"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Player-owned port (first-class hub)",
+          "hosts": [
+            "asgarnia",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Red sandstone and potion flasks",
+          "hosts": [
+            "kandarin",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Scrimshaw of the elements",
+          "hosts": [
+            "asgarnia",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Skeka hypnowand Anachronia piece sources",
+          "hosts": [
+            "forinthry",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Skillchompa Hunter and Player-Owned Farm supply",
+          "hosts": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Skillchompas",
+          "hosts": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Smelting gauntlets",
+          "hosts": [
+            "misthalin",
+            "asgarnia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Sticky Fingers (Archaeology relic)",
+          "hosts": [
+            "misthalin",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "The Arc Waiko reward shop (chime economy)",
+          "hosts": [
+            "asgarnia",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Time altar",
+          "hosts": [
+            "forinthry",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        }
+      ],
+      "outfit-multi-source": [
+        {
+          "name": "Volcanic trapper outfit",
+          "hosts": [
+            "karamja",
+            "kandarin",
+            "fremennik",
+            "desert",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "anachronia",
+            "desert",
+            "kandarin",
+            "fremennik",
+            "karamja",
+            "tirannwn"
+          ],
+          "ask": "requiredRegions=anachronia+desert+kandarin+fremennik+karamja+tirannwn. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Gemstone golem outfit",
+          "hosts": [
+            "asgarnia",
+            "forinthry",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Master camouflage outfit",
+          "hosts": [
+            "fremennik",
+            "desert",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "desert",
+            "tirannwn",
+            "fremennik"
+          ],
+          "ask": "requiredRegions=desert+tirannwn+fremennik. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Nature's sentinel outfit",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "kandarin",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=asgarnia+kandarin+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Elder divination outfit",
+          "hosts": [
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Elder divination outfit path (Cache base + Invention elite)",
+          "hosts": [
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [
+            "kandarin",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=kandarin+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Fletcher's outfit",
+          "hosts": [
+            "misthalin",
+            "forinthry"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Infinity ethereal outfit",
+          "hosts": [
+            "misthalin",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Magic golem outfit",
+          "hosts": [
+            "asgarnia",
+            "fremennik"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "fremennik"
+          ],
+          "ask": "requiredRegions=asgarnia+fremennik. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Master constructor's outfit",
+          "hosts": [
+            "misthalin",
+            "morytania"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Master farmer outfit is not a Desert unlock",
+          "hosts": [
+            "kandarin",
+            "desert"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        },
+        {
+          "name": "Witchdoctor camo outfit",
+          "hosts": [
+            "karamja",
+            "anachronia"
+          ],
+          "requiredRegions": [],
+          "ask": "no requiredRegions. single home (which region), multi-ok, or global (remove from region lists)?"
+        }
+      ],
+      "explicit-multi-req": [
+        {
+          "name": "Slayer Introspection (Amascut's Enchanted Gem)",
+          "hosts": [
+            "misthalin",
+            "kandarin",
+            "forinthry",
+            "desert",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "misthalin",
+            "morytania",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=misthalin+morytania+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)",
+          "hosts": [
+            "karamja",
+            "asgarnia",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "karamja",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=karamja+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Perfect juju potion production path",
+          "hosts": [
+            "karamja",
+            "forinthry",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "karamja",
+            "tirannwn"
+          ],
+          "ask": "requiredRegions=karamja+tirannwn. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+          "hosts": [
+            "asgarnia",
+            "forinthry",
+            "tirannwn",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "forinthry",
+            "anachronia",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=forinthry+anachronia+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Signs of the porter (Divination supply system)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "ask": "requiredRegions=kandarin+tirannwn. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Abyssal Link (The Subtle Blade)",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [
+            "kandarin",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=kandarin+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "All Fired Up → Inferno adze reward chain",
+          "hosts": [
+            "misthalin",
+            "asgarnia",
+            "forinthry"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=asgarnia+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+          "hosts": [
+            "misthalin",
+            "fremennik",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "fremennik",
+            "morytania"
+          ],
+          "ask": "requiredRegions=fremennik+morytania. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+          "hosts": [
+            "asgarnia",
+            "kandarin",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "asgarnia",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=asgarnia+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Balarak's sash brush",
+          "hosts": [
+            "forinthry",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "forinthry",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=forinthry+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Death Ward relic chain",
+          "hosts": [
+            "asgarnia",
+            "kandarin"
+          ],
+          "requiredRegions": [
+            "kandarin",
+            "asgarnia"
+          ],
+          "ask": "requiredRegions=kandarin+asgarnia. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Grasping rune pouch",
+          "hosts": [
+            "forinthry",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "morytania",
+            "forinthry"
+          ],
+          "ask": "requiredRegions=morytania+forinthry. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Igneous cape progression",
+          "hosts": [
+            "misthalin",
+            "karamja"
+          ],
+          "requiredRegions": [
+            "karamja",
+            "misthalin"
+          ],
+          "ask": "requiredRegions=karamja+misthalin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Prifddinas spirit tree + Glouron three-tree unlock",
+          "hosts": [
+            "kandarin",
+            "tirannwn"
+          ],
+          "requiredRegions": [
+            "tirannwn",
+            "kandarin"
+          ],
+          "ask": "requiredRegions=tirannwn+kandarin. multi-ok on all hosts, or primary-only (which)?"
+        },
+        {
+          "name": "Skeka's hypnowand",
+          "hosts": [
+            "forinthry",
+            "anachronia"
+          ],
+          "requiredRegions": [
+            "forinthry",
+            "anachronia"
+          ],
+          "ask": "requiredRegions=forinthry+anachronia. multi-ok on all hosts, or primary-only (which)?"
+        }
+      ]
+    }
+  }
+}

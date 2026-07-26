@@ -1,0 +1,664 @@
+{
+  "auditId": "region-wiki-audit-fremennik-2026-07-26",
+  "regionId": "fremennik",
+  "auditedAt": "2026-07-26",
+  "scope": "Locality / areas / content audit for Fremennik (Fremennik Province). Live RuneScape Wiki + Equilibrium League wiki pages are ground truth. catalog.json is read-only for this pass.",
+  "policy": {
+    "groundTruth": "runescape.wiki live pages + Infobox leagueRegion + Equilibrium_League/Areas/Fremennik",
+    "doNotEdit": ["data/research/catalog.json"],
+    "writeTarget": "scraped-data/region-wiki-audit-fremennik-2026-07-26.json",
+    "leagueVsKingdomNote": "Wiki Infobox kingdom/location is lore geography. Equilibrium Infobox leagueRegion and Equilibrium League/Areas/* are the working League locality. When they diverge, keep the League mapping for planner region ownership and record the kingdom/lore note under localityNotes."
+  },
+  "localSnapshot": {
+    "catalog": {
+      "path": "data/research/catalog.json",
+      "id": "fremennik",
+      "name": "Fremennik",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Neitiznot",
+        "Lunar Isle",
+        "Jatizso",
+        "Rellekka",
+        "Waterbirth Island",
+        "Miscellania",
+        "Keldagrim",
+        "Livid Farm",
+        "Lava Flow Mine"
+      ],
+      "contentCount": 3,
+      "content": [
+        {
+          "name": "Lunar spellbook and Lunar utility",
+          "kind": "Magic",
+          "confidence": "inferred_region"
+        },
+        {
+          "name": "Dagannoth Kings",
+          "kind": "bossing",
+          "confidence": "inferred_region"
+        },
+        {
+          "name": "Waterbirth Island",
+          "kind": "combat/slayer",
+          "confidence": "inferred_region"
+        }
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "upgradesCount": 66,
+      "trainingMethodIdsCount": 24,
+      "verified": false
+    },
+    "leagueRegionsJson": {
+      "path": "data/league/regions.json",
+      "id": "fremennik",
+      "name": "Fremennik",
+      "areas": ["Neitiznot", "Lunar Isle", "Jatizso"],
+      "hardRules": [],
+      "warnings": [],
+      "areaCount": 3,
+      "note": "Severely thinner than catalog areas (9). Ship-facing league regions file is missing Rellekka, Waterbirth Island, Miscellania, Keldagrim, Livid Farm, Lava Flow Mine."
+    },
+    "regionAnchors": {
+      "path": "src/map/data/regionAnchors.ts",
+      "id": "fremennik",
+      "displayName": "Fremennik Province",
+      "uv": [0.295, 0.218],
+      "size": 0.95
+    },
+    "placeAnchors": {
+      "path": "src/map/data/placeAnchors.ts",
+      "region": "fremennik",
+      "areas": [
+        { "area": "Lunar Isle", "uv": [0.213, 0.118] },
+        { "area": "Livid Farm", "uv": [0.22, 0.14] },
+        { "area": "Neitiznot", "uv": [0.245, 0.1] },
+        { "area": "Jatizso", "uv": [0.273, 0.092] },
+        { "area": "Waterbirth Island", "uv": [0.24, 0.15] },
+        { "area": "Rellekka", "uv": [0.3, 0.18] },
+        { "area": "Miscellania", "uv": [0.32, 0.16] },
+        { "area": "Keldagrim", "uv": [0.33, 0.22] },
+        { "area": "Lava Flow Mine", "uv": [0.31, 0.25] }
+      ],
+      "matchesCatalogAreas": true,
+      "missingFromLeagueRegionsJson": [
+        "Rellekka",
+        "Waterbirth Island",
+        "Miscellania",
+        "Keldagrim",
+        "Livid Farm",
+        "Lava Flow Mine"
+      ]
+    },
+    "questRegionRules": {
+      "path": "data/league/quest-region-rules.json",
+      "id": "fremennik",
+      "label": "Fremennik Province",
+      "terms": [
+        "fremennik",
+        "rellekka",
+        "neitiznot",
+        "jatizso",
+        "lunar isle",
+        "waterbirth",
+        "miscellania",
+        "etceteria",
+        "keldagrim",
+        "mountain camp",
+        "lighthouse"
+      ]
+    },
+    "e2eDisplayName": {
+      "path": "e2e/map.spec.ts",
+      "expects": "Fremennik Province"
+    }
+  },
+  "wikiSources": [
+    {
+      "url": "https://runescape.wiki/w/Fremennik_Province",
+      "role": "base-game province geography and location list"
+    },
+    {
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Fremennik",
+      "role": "Equilibrium League area definition and notable content list"
+    },
+    {
+      "url": "https://runescape.wiki/w/Neitiznot",
+      "role": "leagueRegion + locality"
+    },
+    {
+      "url": "https://runescape.wiki/w/Jatizso",
+      "role": "leagueRegion + kingdom/sea"
+    },
+    {
+      "url": "https://runescape.wiki/w/Lunar_Isle",
+      "role": "leagueRegion + Moon Clan locality"
+    },
+    {
+      "url": "https://runescape.wiki/w/Rellekka",
+      "role": "capital / hub leagueRegion"
+    },
+    {
+      "url": "https://runescape.wiki/w/Waterbirth_Island",
+      "role": "leagueRegion + DK access"
+    },
+    {
+      "url": "https://runescape.wiki/w/Miscellania",
+      "role": "leagueRegion + kingdom management locality"
+    },
+    {
+      "url": "https://runescape.wiki/w/Keldagrim",
+      "role": "kingdom=Dwarven Realm vs leagueRegion=Fremennik"
+    },
+    {
+      "url": "https://runescape.wiki/w/Livid_Farm",
+      "role": "sub-location of Lunar Isle"
+    },
+    {
+      "url": "https://runescape.wiki/w/Lava_Flow_Mine",
+      "role": "leagueRegion + East Keldagrim"
+    }
+  ],
+  "equilibriumWikiOverview": {
+    "page": "https://runescape.wiki/w/Equilibrium_League/Areas/Fremennik",
+    "coverageStatement": "The Fremennik area covers the entire Fremennik province. Instances of areas in Fremennik province and underground areas with an entrance in Fremennik province will also be included.",
+    "notableSettlementsAndAreas": [
+      "Miscellania",
+      "Lunar Isle",
+      "Rellekka",
+      "Keldagrim",
+      "Jatizso",
+      "Neitiznot",
+      "Waterbirth Island"
+    ],
+    "notableCombatActivities": [
+      "Dagannoth Kings",
+      "Waterbirth Island Dungeon",
+      "Chaos battlefield",
+      "Chaos giants",
+      "Fremennik Slayer Dungeon"
+    ],
+    "notableNonCombatActivities": [
+      "Penguin Agility Course",
+      "Kingdom Management",
+      "Blast Furnace",
+      "Dwarf traders",
+      "Arctic Pine trees",
+      "Lava Flow Mine",
+      "Azure skillchompas"
+    ],
+    "notableShopsAndServices": [
+      "Baba Yaga's Magic Shop",
+      "Contraband Yak Produce"
+    ],
+    "navDisplayName": "Fremennik Province"
+  },
+  "areaAudit": [
+    {
+      "area": "Neitiznot",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Neitiznot",
+      "wikiKingdomOrLocation": "Lunar Sea / Fremennik Isles",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion + Equilibrium badge",
+      "verdict": "keep",
+      "confidence": "confirmed_wiki_league_region",
+      "notes": [
+        "Sister island to Jatizso; boat from Rellekka northern dock after The Fremennik Isles.",
+        "Catalog/placeAnchors/league regions.json all include it."
+      ]
+    },
+    {
+      "area": "Jatizso",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Jatizso",
+      "wikiKingdomOrLocation": "Lunar Sea",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion = Fremennik (API wikitext 2026-07-26)",
+      "verdict": "keep",
+      "confidence": "confirmed_wiki_league_region",
+      "notes": [
+        "Fremennik Isles sister of Neitiznot.",
+        "Kingdom field is Lunar Sea (maritime), not a competing League region."
+      ]
+    },
+    {
+      "area": "Lunar Isle",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": true,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Lunar_Isle",
+      "wikiKingdomOrLocation": "Lunar Sea; Moon Clan homeland; historically split from Fremennik",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion + Equilibrium badge; listed on Equilibrium_League/Areas/Fremennik settlements",
+      "verdict": "keep",
+      "confidence": "confirmed_wiki_league_region",
+      "localityNotes": {
+        "loreKingdom": "Moon Clan island in the Lunar Sea; wiki lore stresses bitter war with the Fremennik of Rellekka.",
+        "leagueOwnership": "Fremennik — do not invent a Moon Clan / Lunar region token.",
+        "plannerRuleProposal": "Treat Lunar Isle, Astral altar, Livid Farm, and Lunar spellbook unlock geography as Fremennik League locality even though lore is Moon Clan vs Fremennik."
+      },
+      "notes": [
+        "Locality debate is lore-only. Live wiki league badge is Fremennik.",
+        "Livid Farm is a sub-location on northern Lunar Isle (no separate leagueRegion field)."
+      ]
+    },
+    {
+      "area": "Rellekka",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Rellekka",
+      "wikiKingdomOrLocation": "Fremennik Province (capital)",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion = Fremennik; capital of Fremennik Province",
+      "verdict": "keep_and_promote_to_league_regions_json",
+      "confidence": "confirmed_wiki_league_region",
+      "severity": "high",
+      "notes": [
+        "Province capital and boat hub to Miscellania, Neitiznot, Jatizso, Waterbirth, Pirates' Cove / Lunar Isle, V's island.",
+        "Missing from data/league/regions.json areas while present in catalog + placeAnchors + Equilibrium notable settlements (spelled 'Relleka' on wiki page)."
+      ]
+    },
+    {
+      "area": "Waterbirth Island",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Waterbirth_Island",
+      "wikiKingdomOrLocation": "Northern Sea / Fremennik Province islands",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion + Equilibrium badge; Category:Fremennik Province",
+      "verdict": "keep_and_promote_to_league_regions_json",
+      "confidence": "confirmed_wiki_league_region",
+      "severity": "high",
+      "notes": [
+        "Primary access to Waterbirth Island Dungeon and Dagannoth Kings.",
+        "Also appears as catalog content row (kind combat/slayer) — area vs content double-booking is fine if content points at the dungeon/DK loop rather than the surface island alone.",
+        "Missing from data/league/regions.json."
+      ]
+    },
+    {
+      "area": "Miscellania",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Miscellania",
+      "wikiKingdomOrLocation": "Lunar Sea island kingdom (Managing Miscellania / Throne of Miscellania)",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion = Fremennik; listed on Equilibrium_League/Areas/Fremennik; Category:Fremennik Province",
+      "verdict": "keep_and_promote_to_league_regions_json",
+      "confidence": "confirmed_wiki_league_region",
+      "severity": "high",
+      "localityNotes": {
+        "loreKingdom": "Player becomes Prince/Princess Regent; subjects collect resources (Kingdom Management). Functionally its own 'kingdom' minigame.",
+        "baseGameProvince": "Listed under Fremennik Province islands on Fremennik_Province wiki (with Etceteria).",
+        "leagueOwnership": "Fremennik — Kingdom Management is a Fremennik League non-combat activity on Equilibrium_League/Areas/Fremennik.",
+        "plannerRuleProposal": "Map Managing Miscellania / Miscellania / Etceteria resource income to Fremennik. Do not invent a separate Miscellania League region."
+      },
+      "notes": [
+        "Etceteria is the paired island; quest-region-rules already includes etceteria term; catalog areas list only Miscellania.",
+        "Missing from data/league/regions.json."
+      ]
+    },
+    {
+      "area": "Keldagrim",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Keldagrim",
+      "wikiKingdomOrLocation": "Dwarven Realm (Infobox City kingdom)",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion = Fremennik (API wikitext 2026-07-26); listed on Equilibrium_League/Areas/Fremennik settlements",
+      "verdict": "keep_as_fremennik_league_locality",
+      "confidence": "confirmed_wiki_league_region",
+      "severity": "high",
+      "localityNotes": {
+        "loreKingdom": "Dwarven Realm capital under Trollweiss; Consortium-ruled dwarven city.",
+        "baseGameProvinceDebate": "Fremennik_Province wiki lists 'Entrance to Keldagrim' under dungeons, not as a Fremennik settlement. Keldagrim article text: within Fremennik Province borders but 'generally not accepted as a part of it' culturally (dwarves are not Fremenniks).",
+        "leagueOwnership": "Fremennik — live wiki leagueRegion and Equilibrium League/Areas/Fremennik both place Keldagrim under Fremennik. Underground areas with Fremennik-province entrances are included by the Equilibrium coverage statement.",
+        "plannerRuleProposal": "Use Fremennik as the working League region for Keldagrim, Blast Furnace, Lava Flow Mine, dwarf traders, and Red Axe / Birthright chain locality. Optional hardRule: do not invent a Dwarven Realm selectable region; do not reassign Keldagrim to Asgarnia/Misthalin because of mine-cart / GE trapdoor access."
+      },
+      "notes": [
+        "Primary first-time surface entrance is east of Rellekka (Fremennik Province).",
+        "Alternate access (GE trapdoor, Dwarven Mine carts, Dorgesh-Kaan train) is travel logistics, not a region reassignment.",
+        "Missing from data/league/regions.json."
+      ]
+    },
+    {
+      "area": "Livid Farm",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Livid_Farm",
+      "wikiKingdomOrLocation": "Northern Lunar Isle (location field)",
+      "wikiLeagueRegion": "inherits Fremennik via Lunar Isle (no Infobox leagueRegion on Livid Farm page)",
+      "leagueRegionSource": "Parent Lunar Isle leagueRegion = Fremennik; Lunar Isle features list includes Livid Farm",
+      "verdict": "keep_as_subarea_or_content_pointer",
+      "confidence": "confirmed_wiki_parent_locality",
+      "severity": "medium",
+      "notes": [
+        "Activity site for produce points / extra Lunar spells — strong planner value, not a separate settlement.",
+        "Acceptable as catalog area for map pins; if areas are trimmed to settlements only, keep Livid Farm as content under Lunar Isle instead.",
+        "Missing from data/league/regions.json."
+      ]
+    },
+    {
+      "area": "Lava Flow Mine",
+      "inCatalogAreas": true,
+      "inLeagueRegionsJson": false,
+      "inPlaceAnchors": true,
+      "wikiPage": "https://runescape.wiki/w/Lava_Flow_Mine",
+      "wikiKingdomOrLocation": "East Keldagrim",
+      "wikiLeagueRegion": "Fremennik",
+      "leagueRegionSource": "Infobox leagueRegion = Fremennik; listed on Equilibrium_League/Areas/Fremennik non-combat activities",
+      "verdict": "keep_as_subarea_or_content_pointer",
+      "confidence": "confirmed_wiki_league_region",
+      "severity": "medium",
+      "notes": [
+        "Golden mining suit / Imcando pickaxe fragment path — high skilling upgrade pressure for Fremennik.",
+        "Tied to Keldagrim + King of the Dwarves; inherits Fremennik League ownership with Keldagrim.",
+        "Missing from data/league/regions.json."
+      ]
+    }
+  ],
+  "contentAudit": {
+    "catalogContentCount": 3,
+    "assessment": "thin",
+    "problem": "Only three content rows; one is Waterbirth Island which is already an area. Equilibrium_League/Areas/Fremennik lists a much denser combat and skilling set. Confidence on all three is still inferred_region despite live wiki league badges now available.",
+    "existingRows": [
+      {
+        "name": "Lunar spellbook and Lunar utility",
+        "kind": "Magic",
+        "status": "keep_and_upgrade_confidence",
+        "proposedConfidence": "confirmed_wiki_league_region",
+        "evidence": [
+          "Lunar Isle leagueRegion Fremennik",
+          "Astral altar / Lunar Diplomacy geography on Lunar Isle"
+        ]
+      },
+      {
+        "name": "Dagannoth Kings",
+        "kind": "bossing",
+        "status": "keep_and_upgrade_confidence",
+        "proposedConfidence": "confirmed_wiki_league_region",
+        "evidence": [
+          "Waterbirth Island leagueRegion Fremennik",
+          "Explicitly listed under Equilibrium Fremennik notable combat activities"
+        ]
+      },
+      {
+        "name": "Waterbirth Island",
+        "kind": "combat/slayer",
+        "status": "keep_or_narrow_to_dungeon",
+        "proposedRename": "Waterbirth Island Dungeon / dagannoth combat",
+        "proposedConfidence": "confirmed_wiki_league_region",
+        "evidence": [
+          "Redundant with areas[] if left as surface-island name; better as dungeon/slayer content under the area"
+        ]
+      }
+    ],
+    "proposedContentAdditions": [
+      {
+        "name": "Fremennik Slayer Dungeon",
+        "kind": "Slayer",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Fremennik_Slayer_Dungeon",
+        "why": "Listed on Equilibrium_League/Areas/Fremennik combat activities; entrance east of Rellekka."
+      },
+      {
+        "name": "Managing Miscellania / Kingdom Management",
+        "kind": "skilling income",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Managing_Miscellania",
+        "why": "Explicit Equilibrium non-combat activity; high ironman resource income."
+      },
+      {
+        "name": "Livid Farm",
+        "kind": "Magic / multi-skill activity",
+        "confidence": "confirmed_wiki_parent_locality",
+        "sourceUrl": "https://runescape.wiki/w/Livid_Farm",
+        "why": "Lunar spell unlock path; currently only an area pin with no content row."
+      },
+      {
+        "name": "Blast Furnace",
+        "kind": "Smithing",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Blast_Furnace",
+        "why": "Keldagrim activity listed on Equilibrium Fremennik non-combat list."
+      },
+      {
+        "name": "Lava Flow Mine",
+        "kind": "Mining",
+        "confidence": "confirmed_wiki_league_region",
+        "sourceUrl": "https://runescape.wiki/w/Lava_Flow_Mine",
+        "why": "Golden mining suit + Imcando fragments; Equilibrium non-combat list."
+      },
+      {
+        "name": "Chaos battlefield / chaos giants",
+        "kind": "combat",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Chaos_battlefield",
+        "why": "Explicit Equilibrium combat activities under Fremennik (Keldagrim / Birthright locality)."
+      },
+      {
+        "name": "Penguin Agility Course",
+        "kind": "Agility",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Penguin_Agility_Course",
+        "why": "Equilibrium non-combat list; Iceberg north of Rellekka (Fremennik Province islands)."
+      },
+      {
+        "name": "Azure skillchompas / Rellekka Hunter area",
+        "kind": "Hunter",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Rellekka_Hunter_area",
+        "why": "Equilibrium non-combat list (azure skillchompas)."
+      },
+      {
+        "name": "Arctic Pine woodcutting (Fremennik Isles)",
+        "kind": "Woodcutting",
+        "confidence": "confirmed_wiki_equilibrium_list",
+        "sourceUrl": "https://runescape.wiki/w/Arctic_pine",
+        "why": "Equilibrium non-combat list."
+      }
+    ]
+  },
+  "displayNameAudit": {
+    "catalogName": "Fremennik",
+    "leagueRegionsJsonName": "Fremennik",
+    "regionAnchorsName": "Fremennik Province",
+    "questRegionRulesLabel": "Fremennik Province",
+    "e2eMapName": "Fremennik Province",
+    "equilibriumWikiNav": "Fremennik Province",
+    "wikiProvinceArticle": "Fremennik Province",
+    "verdict": "Display surface should stay 'Fremennik Province'; id stays 'fremennik'. Optional alias Fremennik Province on the region record.",
+    "proposedAliases": ["Fremennik Province", "Fremmy", "Fremmy Province"]
+  },
+  "crossFileConsistency": {
+    "catalogAreasVsPlaceAnchors": {
+      "status": "aligned",
+      "detail": "Same 9 area labels."
+    },
+    "catalogAreasVsLeagueRegionsJson": {
+      "status": "desync",
+      "catalogOnly": [
+        "Rellekka",
+        "Waterbirth Island",
+        "Miscellania",
+        "Keldagrim",
+        "Livid Farm",
+        "Lava Flow Mine"
+      ],
+      "shared": ["Neitiznot", "Lunar Isle", "Jatizso"],
+      "severity": "high"
+    },
+    "hardRulesWarnings": {
+      "status": "empty_both",
+      "detail": "Neither catalog nor league regions.json carries Keldagrim / Lunar / Miscellania locality hardRules despite the kingdom-vs-league debates."
+    },
+    "contentDensity": {
+      "status": "thin",
+      "contentCount": 3,
+      "severity": "high"
+    }
+  },
+  "localitySpecialCases": [
+    {
+      "topic": "Keldagrim kingdom vs League region",
+      "wikiKingdom": "Dwarven Realm",
+      "wikiLeagueRegion": "Fremennik",
+      "baseGameProvinceWording": "Geographically under/within Fremennik Province approach; culturally not Fremennik.",
+      "equilibriumPlacement": "Notable settlement of Fremennik League area; underground-with-Fremennik-entrance rule.",
+      "appShouldDo": "Keep Keldagrim under fremennik. Document Dwarven Realm as lore kingdom only. Do not create dwarven_realm region id.",
+      "proposedHardRule": "Treat Keldagrim, Lava Flow Mine, Blast Furnace and chaos battlefield content as Fremennik League locality. Alternate mine-cart / GE / train access is travel logistics, not Asgarnia/Misthalin ownership."
+    },
+    {
+      "topic": "Lunar Isle Moon Clan vs Fremennik",
+      "wikiLore": "Moon Clan at war with Fremennik; Lunar Sea island.",
+      "wikiLeagueRegion": "Fremennik",
+      "equilibriumPlacement": "Notable settlement of Fremennik League area.",
+      "appShouldDo": "Keep Lunar Isle + Livid Farm + Lunar spellbook under fremennik.",
+      "proposedHardRule": "Use Fremennik as the working League region for Lunar Isle, Livid Farm, Astral altar and Lunar spellbook unlock geography. Moon Clan lore is not a separate selectable region."
+    },
+    {
+      "topic": "Miscellania kingdom management",
+      "wikiLore": "Regent kingdom / Managing Miscellania resource minigame with Etceteria.",
+      "wikiLeagueRegion": "Fremennik",
+      "equilibriumPlacement": "Kingdom Management listed under Fremennik non-combat activities; Miscellania under settlements.",
+      "appShouldDo": "Keep Miscellania (and Etceteria pressure) under fremennik.",
+      "proposedHardRule": "Managing Miscellania resource income and Throne of Miscellania / Royal Trouble geography resolve to Fremennik. Do not invent a Miscellania League region."
+    }
+  ],
+  "proposedFixes": [
+    {
+      "priority": 1,
+      "target": "data/league/regions.json#fremennik.areas",
+      "action": "replace_areas",
+      "from": ["Neitiznot", "Lunar Isle", "Jatizso"],
+      "to": [
+        "Neitiznot",
+        "Lunar Isle",
+        "Jatizso",
+        "Rellekka",
+        "Waterbirth Island",
+        "Miscellania",
+        "Keldagrim",
+        "Livid Farm",
+        "Lava Flow Mine"
+      ],
+      "rationale": "Align ship-facing league regions file with catalog + placeAnchors + Equilibrium_League/Areas/Fremennik settlements (plus Livid Farm / Lava Flow Mine activity pins already in catalog)."
+    },
+    {
+      "priority": 1,
+      "target": "data/league/regions.json#fremennik.hardRules (+ catalog hardRules when next catalog rewrite is allowed)",
+      "action": "add_hard_rules",
+      "proposedRules": [
+        "Treat Keldagrim, Lava Flow Mine, Blast Furnace and chaos battlefield content as Fremennik League locality. Alternate mine-cart / GE / train access is travel logistics, not Asgarnia/Misthalin ownership.",
+        "Use Fremennik as the working League region for Lunar Isle, Livid Farm, Astral altar and Lunar spellbook unlock geography. Moon Clan lore is not a separate selectable region.",
+        "Managing Miscellania resource income and Throne of Miscellania / Royal Trouble geography resolve to Fremennik. Do not invent a Miscellania League region."
+      ],
+      "rationale": "Codify the three kingdom-vs-league special cases so planners stop reopening them."
+    },
+    {
+      "priority": 1,
+      "target": "data/league/regions.json#fremennik.warnings (+ catalog warnings when rewrite allowed)",
+      "action": "add_warnings",
+      "proposedWarnings": [
+        "Wiki Infobox kingdom for Keldagrim is Dwarven Realm; Equilibrium leagueRegion is Fremennik — prefer League mapping for region picks.",
+        "Content list is still thin versus Equilibrium_League/Areas/Fremennik; do not rank Fremennik as combat-light solely from the three catalog content rows."
+      ]
+    },
+    {
+      "priority": 2,
+      "target": "catalog content[] (future pass; do not edit this audit cycle)",
+      "action": "expand_content",
+      "addAtLeast": [
+        "Fremennik Slayer Dungeon",
+        "Managing Miscellania / Kingdom Management",
+        "Livid Farm",
+        "Blast Furnace",
+        "Lava Flow Mine (Mining / golden mining suit)",
+        "Chaos battlefield / chaos giants",
+        "Penguin Agility Course",
+        "Azure skillchompas / Rellekka Hunter area"
+      ],
+      "also": [
+        "Upgrade existing three content confidences from inferred_region to confirmed_wiki_league_region where league badges apply",
+        "Narrow Waterbirth Island content row toward Waterbirth Island Dungeon / Dagannoth combat so it is not a pure area duplicate"
+      ]
+    },
+    {
+      "priority": 2,
+      "target": "region display name / aliases",
+      "action": "add_aliases",
+      "proposed": {
+        "id": "fremennik",
+        "nameKeep": "Fremennik",
+        "aliases": ["Fremennik Province"],
+        "uiDisplay": "Fremennik Province (already used by regionAnchors + e2e)"
+      },
+      "rationale": "Id stays fremennik; user-facing Province form matches wiki + map chrome."
+    },
+    {
+      "priority": 3,
+      "target": "areas optional expansions",
+      "action": "consider_adding",
+      "candidates": [
+        {
+          "area": "Etceteria",
+          "why": "Paired with Miscellania; quest-region-rules term; province island list"
+        },
+        {
+          "area": "Fremennik Slayer Dungeon",
+          "why": "Equilibrium combat list; often treated as named hub"
+        },
+        {
+          "area": "Lighthouse",
+          "why": "Province mainland + quest-region-rules term"
+        },
+        {
+          "area": "Mountain Camp",
+          "why": "Province mainland + quest-region-rules term"
+        },
+        {
+          "area": "Ungael",
+          "why": "Province island list; Hero's Welcome / V content pressure"
+        },
+        {
+          "area": "Iceberg",
+          "why": "Penguin Agility Course / penguin quest series; Equilibrium non-combat list"
+        }
+      ],
+      "note": "Not required to fix desync; catalog's 9 areas already cover Equilibrium's named settlements plus two activity pins."
+    },
+    {
+      "priority": 3,
+      "target": "placeAnchors.ts",
+      "action": "no_change_required",
+      "rationale": "All 9 catalog areas already anchored under fremennik with a coherent north-isles → Rellekka → Keldagrim spine comment."
+    }
+  ],
+  "summary": {
+    "regionId": "fremennik",
+    "displayNamePreferred": "Fremennik Province",
+    "localityVerdict": "Catalog's 9 areas are correct for League locality. Keldagrim, Lunar Isle and Miscellania all stay Fremennik under live wiki leagueRegion / Equilibrium area page despite Dwarven Realm, Moon Clan and regent-kingdom lore.",
+    "primaryDefects": [
+      "data/league/regions.json only ships 3 areas (Neitiznot, Lunar Isle, Jatizso) — desynced from catalog/placeAnchors/wiki",
+      "content[] is thin (3) including a Waterbirth Island area duplicate",
+      "No hardRules for Keldagrim / Lunar / Miscellania kingdom-vs-league mapping"
+    ],
+    "doNotDo": [
+      "Do not move Keldagrim to Asgarnia/Misthalin because of cart/GE access",
+      "Do not invent moon_clan, dwarven_realm, or miscellania selectable regions",
+      "Do not edit catalog.json in this audit pass"
+    ],
+    "overallStatus": "areas_catalog_ok_league_json_thin_content_thin_locality_confirmed_fremennik"
+  }
+}

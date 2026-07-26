@@ -1,0 +1,1108 @@
+{
+  "snapshot_date": "2026-07-26",
+  "audit_type": "LONG-TAIL CONTINUE — post-longtail packs, harsh residual (wiki-backed permanent skilling only)",
+  "source_file": "data/research/regional-skilling-unlocks.json",
+  "baseline_audits": [
+    "scraped-data/audit-status-regional-unlocks-longtail-2026-07-26.json (claims 655; gates green)",
+    "scraped-data/audit-final-still-missing-2026-07-26.json (stale @ 604 — P0/P1 list now largely first-class)",
+    "scraped-data/audit-status-regional-unlocks-final-2026-07-26.json (stale @ 613)",
+    "scraped-data/audit-final-broken-refs-2026-07-26.json (stale @ 604; many phantoms still in prose)"
+  ],
+  "policy": {
+    "present_rule": "Exact id in records[].id is present. Buried name-drop / Prefer-X / unlock-list bullet without matching id = MISSING. Parent hub blurbs do not count as first-class for children.",
+    "missing_rule": "HIGH-VALUE permanent skilling only: tools, blueprints, shops, diaries, production infrastructure, account-state ladders, ironman QoL permanents. Training XP rates alone excluded. Combat BiS pure excluded. Every Waiko chime consumable SKU excluded. Every individual museum collection line excluded (system rows may still be thin).",
+    "harshness": "Quantity is no longer the story (655). Residual failure modes are: (1) phantom outbound cites still in product prose, (2) twin rows that double-score, (3) endgame Invention/Prayer/Fort pieces still footnotes inside umbrella rows, (4) thin dual-site geography (Karamja idols) still Anachronia-only.",
+    "exclude": [
+      "combat BiS pure (weapons/armour DPS without skilling infrastructure role)",
+      "TH cosmetics / animation overrides / island furniture cosmetics",
+      "every chime SKU / contract contact stack / XP lamp consumable"
+    ]
+  },
+
+  "live_stats": {
+    "total": 655,
+    "activities": 451,
+    "equipment": 204,
+    "regionCombos": 113,
+    "comboLabeled": 211,
+    "name_duplicates_exact": 0,
+    "multi_region_without_comboLabel": 0,
+    "invalid_region_tokens": 0,
+    "confidence": "high",
+    "delta_vs_prior_status": {
+      "audit_final_still_missing_total": 604,
+      "audit_final_pass_status_total": 613,
+      "longtail_status_total": 655,
+      "live_total": 655,
+      "longtail_net_add_from_613": 42,
+      "note": "Header stats.total matches records[].id count (655). Prior 604/613 audits are STALE for totals but still useful for near-dup themes."
+    },
+    "by_id_prefix": {
+      "_note": "Primary geography = id prefix before first ':'. prifddinas is Tirannwn city face, counted separately.",
+      "misthalin": 130,
+      "asgarnia": 84,
+      "kandarin": 70,
+      "cross-region": 72,
+      "forinthry": 55,
+      "morytania": 48,
+      "desert": 42,
+      "fremennik": 38,
+      "anachronia": 31,
+      "havenhythe": 30,
+      "karamja": 26,
+      "prifddinas": 25,
+      "tirannwn": 26,
+      "multi-region": 18,
+      "tirannwn_plus_prifddinas": 51
+    },
+    "longtail_pack_ingest": {
+      "waiko": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-waiko-2026-07-26.json",
+        "approx_rows_in_product": 12,
+        "ids_sample": [
+          "asgarnia:arc-journal",
+          "asgarnia:arc-journal-teletabs",
+          "asgarnia:bonecrusher-auto-pickup",
+          "asgarnia:crystal-tool-siphon-blueprint",
+          "asgarnia:flag-fall-claimed-island",
+          "asgarnia:ports-reward-shop-boni",
+          "asgarnia:sojobo-arc-contracts",
+          "asgarnia:waiko-commodity-economy",
+          "asgarnia:waiko-contracts-per-day",
+          "asgarnia:waiko-grill",
+          "asgarnia:waiko-uncharted-supplies-upgrades",
+          "asgarnia:whales-maw-campfire-deposit"
+        ],
+        "confidence": "high"
+      },
+      "museum": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json",
+        "approx_rows_in_product": 14,
+        "ids_sample": [
+          "misthalin:velucia-museum-chronote-tiers",
+          "misthalin:qualification-ladder-intern-professor",
+          "misthalin:research-team-size-ladder",
+          "misthalin:qualification-certificates-poh",
+          "misthalin:museum-donation-bin",
+          "misthalin:workbench-storage-ladder",
+          "misthalin:prodigal-spender-guild-permanents",
+          "misthalin:collectors-assemble-ladder",
+          "misthalin:chronote-currency-economy",
+          "cross-region:high-value-collector-permanents",
+          "misthalin:professor-relic-loadout-purchase",
+          "misthalin:hireable-researchers-recruitment",
+          "cross-region:culture-expert-titles",
+          "misthalin:it-belongs-in-a-museum-log"
+        ],
+        "confidence": "high"
+      },
+      "misc": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json",
+        "approx_rows_in_product": 13,
+        "theme": "scripture Bik + alchemical craft residuals + passage + crystal tool seed + modified hats + invention perk ladder + skillchompa phantom intent",
+        "confidence": "high"
+      },
+      "combat_adjacent": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-combat-adjacent-2026-07-26.json",
+        "approx_rows_in_product": 9,
+        "theme": "War's Blessing, Altar of Zaros, prayer switch network, UG milestones, salve, powder of penance, Wars Retreat skilling hub",
+        "confidence": "high"
+      },
+      "diary_hygiene": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-diary-hygiene-2026-07-26.json",
+        "status": "PARTIAL — morytania legs 1..4 micro-splits appear DROPPED from product (area-tasks-morytania-legs remains). fremennik-sea-boots equipment twin appears DROPPED. seers still dual (headband + village skilling).",
+        "confidence": "high"
+      },
+      "p01_harden": {
+        "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-p01-harden-2026-07-26.json",
+        "status": "skipped re-emit — P0/P1 already rich (detail 867–2380 chars per longtail status)",
+        "confidence": "high"
+      }
+    },
+    "p0_p1_resolution_vs_final_still_missing": {
+      "all_requested_now_first_class": [
+        "karamja:perfect-juju-potions",
+        "cross-region:orthen-superheat-autoheater",
+        "tirannwn:elven-grimoire",
+        "fremennik:god-books-horror-from-the-deep",
+        "cross-region:luck-of-the-dwarves",
+        "cross-region:tetracompass-and-tomes",
+        "asgarnia:divine-charge-crafting",
+        "misthalin:soil-box-material-storage",
+        "misthalin:archaeologists-tea",
+        "forinthry:scroll-of-quick-teleportation",
+        "cross-region:rune-pouch-ladder",
+        "cross-region:portable-skilling-stations",
+        "cross-region:thaler-skilling-rewards",
+        "kandarin:pof-farm-totems-tier2"
+      ],
+      "verdict": "Wave-5 / final-pass P0/P1 permanent list is CLOSED as first-class. Continuing long-tail is residual densify + hygiene, not another P0 panic.",
+      "confidence": "high"
+    },
+    "verdict_one_liner": "655 is a quantity victory; quality still has phantom cites, twin scoring risk, and endgame footnote densify left.",
+    "confidence": "high"
+  },
+
+  "top_30_still_missing": [
+    {
+      "rank": 1,
+      "suggested_id": "kandarin:skillchompa-supply",
+      "name": "Skillchompa supply hub (wild + POF ladder)",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "critical",
+      "confidence": "high",
+      "wiki": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Cobalt_skillchompa"
+      ],
+      "fuzzy": "kandarin:skillchompas + kandarin:cobalt-skillchompa-hunter-site + tirannwn:crystal-skillchompas cite companion hub that never landed",
+      "why": "Broken-ref class still live after longtail misc claimed to fix it. File still pretends a supply hub exists."
+    },
+    {
+      "rank": 2,
+      "suggested_id": "desert:pyramid-plunder-black-ibis",
+      "name": "Pyramid Plunder black ibis drop rules activity",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Black_ibis_outfit", "https://runescape.wiki/w/Pyramid_Plunder"],
+      "fuzzy": "desert:black-ibis-outfit + desert:pyramid-plunder + desert:sceptre-of-the-gods still Prefer/see this id",
+      "why": "Three outbound product cites into vacuum. Either emit thin rules row OR rewrite all three cites to black-ibis-outfit + pyramid-plunder."
+    },
+    {
+      "rank": 3,
+      "suggested_id": "morytania:ectofuntus-first-age-outfit",
+      "name": "Ectofuntus first age outfit purchase path",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/First_age_outfit", "https://runescape.wiki/w/Ectofuntus"],
+      "fuzzy": "morytania:ectofuntus-prayer-worship + morytania:first-age-outfit-equipment still point at ectofuntus-first-age-outfit",
+      "why": "Equipment row exists; acquisition activity id cited in prose does not. Phantom path breaks Prefer resolution."
+    },
+    {
+      "rank": 4,
+      "suggested_id": "kandarin:elder-divination-outfit",
+      "name": "Elder divination outfit (thin activity stub)",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Elder_divination_outfit"],
+      "fuzzy": "cross-region:elder-divination-outfit-path + kandarin:elder-divination-elite-outfit cite thin kandarin:elder-divination-outfit",
+      "why": "Elite equipment + cross-region path exist; bare activity stub never filed. Rename cites or emit stub."
+    },
+    {
+      "rank": 5,
+      "suggested_id": "karamja:overgrown-idols",
+      "name": "Karamja overgrown idols (Gara-Dul / Meeting your Idols)",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Overgrown_idol", "https://runescape.wiki/w/Meeting_your_Idols"],
+      "fuzzy": "only anachronia:overgrown-idols; footnotes admit dual-site Karamja idols",
+      "why": "Thin-region Woodcutting permanent still Anachronia-only while Max Guild portal / dual-site buff loops need Karamja geography scored."
+    },
+    {
+      "rank": 6,
+      "suggested_id": "asgarnia:equipment-siphon-blueprint",
+      "name": "Equipment siphon permanent blueprint",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Equipment_siphon"],
+      "fuzzy": "asgarnia:crystal-tool-siphon-blueprint requires prior equipment siphon discovery; no first-class equipment-siphon row",
+      "why": "Crystal tool siphon is first-class; the prerequisite siphon blueprint that powers all non-crystal tool Invention XP is still a footnote."
+    },
+    {
+      "rank": 7,
+      "suggested_id": "asgarnia:xp-capacitor-5000",
+      "name": "XP Capacitor 5000 blueprint",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/XP_Capacitor_5000"],
+      "fuzzy": "buried inside asgarnia:ancient-invention-blueprints unlock list only",
+      "why": "Ironman Invention XP bank permanent is planner-critical and not first-class despite Ancient Invention densify."
+    },
+    {
+      "rank": 8,
+      "suggested_id": "asgarnia:ancient-skilling-tools",
+      "name": "Enhanced hammer-tron / pyro-matic / fishing rod-o-matic",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": [
+        "https://runescape.wiki/w/Hammer-tron",
+        "https://runescape.wiki/w/Pyro-matic",
+        "https://runescape.wiki/w/Fishing_rod-o-matic"
+      ],
+      "fuzzy": "named only inside ancient-invention-blueprints + corrupted-ore smelting footnotes",
+      "why": "Level-80-class ancient tools are ironman skilling tool hosts for perks; still not first-class equipment."
+    },
+    {
+      "rank": 9,
+      "suggested_id": "asgarnia:invention-perk-fortune-efficient-scavenging",
+      "name": "Invention skilling perks residual (Fortune / Efficient / Enhanced Efficient / Scavenging / Enlightened)",
+      "status": "PARTIAL",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": [
+        "https://runescape.wiki/w/Fortune",
+        "https://runescape.wiki/w/Efficient",
+        "https://runescape.wiki/w/Scavenging",
+        "https://runescape.wiki/w/Enlightened"
+      ],
+      "fuzzy": "asgarnia:invention-skilling-perk-ladder covers Wise/Honed/Furnace/Imp Souled/Refined/Prosper ONLY",
+      "why": "Longtail closed a six-perk checklist and called the residual closed. Fortune (rare materials), Efficient (charge), Scavenging (components while training) remain first-class gaps inside the 'ladder' lie."
+    },
+    {
+      "rank": 10,
+      "suggested_id": "cross-region:cinder-and-pulse-cores",
+      "name": "Cinder cores / pulse cores XP infrastructure",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Pulse_core", "https://runescape.wiki/w/Cinder_core"],
+      "fuzzy": "pulse cores appear only as Archaeology boost footnotes (inspire genius / inspire awe requirements)",
+      "why": "Still the same wave-5 residual: ironman core economy planner-invisible despite high-level relic/boost dependency."
+    },
+    {
+      "rank": 11,
+      "suggested_id": "tirannwn:blessed-flask",
+      "name": "Blessed flask (harmonic dust Prayer flask shell)",
+      "status": "MISSING",
+      "severity": "high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Blessed_flask"],
+      "fuzzy": "prifddinas:harmonic-dust-economy + ithell-crystal-singing list 5,000 dust blessed flask shell as sink only",
+      "why": "Permanent Prayer flask capacity is a Tirannwn dust budget spike; dust economy row does not make the flask first-class."
+    },
+    {
+      "rank": 12,
+      "suggested_id": "forinthry:dark-facet-of-passage",
+      "name": "Dark Facet of Passage (Passage of the Abyss infinite charges)",
+      "status": "MISSING",
+      "severity": "medium-high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Dark_Facet_of_Passage"],
+      "fuzzy": "asgarnia:passage-of-the-abyss requirements footnote Dark Facet; forinthry:dark-onyx-core-sources is materials only",
+      "why": "GOTE has dark-facet-of-grace first-class; Passage facet still optional prose. Inconsistent facet granularity."
+    },
+    {
+      "rank": 13,
+      "suggested_id": "asgarnia:mechanised-siphon",
+      "name": "Mechanised siphon loadout permanent",
+      "status": "MISSING",
+      "severity": "medium-high",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Mechanised_siphon"],
+      "fuzzy": "crystal-tool-siphon-blueprint mentions compatible mechanised siphon auto-siphon loadout",
+      "why": "AFK Invention tool XP automation permanent never filed; only crystal siphon blueprint densified."
+    },
+    {
+      "rank": 14,
+      "suggested_id": "asgarnia:equipment-dissolver",
+      "name": "Equipment dissolver permanent blueprint",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Equipment_dissolver"],
+      "fuzzy": "asgarnia:augmentor notes dissolver reverse path; crystal-tool-siphon requires dissolver + siphon prior research",
+      "why": "Augmentor reverse + blueprint research chain incomplete without dissolver first-class."
+    },
+    {
+      "rank": 15,
+      "suggested_id": "misthalin:fort-town-hall",
+      "name": "Fort Forinthry Town Hall building tiers (not only rested XP)",
+      "status": "PARTIAL",
+      "severity": "medium-high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)"],
+      "fuzzy": "misthalin:fort-town-hall-rested-xp exists; full T1–T3 building unlock cascade is not first-class",
+      "why": "Fort pack densified chapel/workshop/kitchen/command/guardhouse/rangers/botanist/sawmill but Town Hall is reduced to rested-XP slice."
+    },
+    {
+      "rank": 16,
+      "suggested_id": "misthalin:fort-construction-materials-ladder",
+      "name": "Fort refined plank / timber frame / fort material production ladder",
+      "status": "PARTIAL",
+      "severity": "medium-high",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Workshop_(Fort_Forinthry)", "https://runescape.wiki/w/Refined_plank"],
+      "fuzzy": "fort-free-sawmill + fort-forinthry-workshop + plank-maker-machine split the chain without a planner materials ladder id",
+      "why": "Ironman Fort build budget is multi-row; no single permanent checklist for logs→planks→refined→frames→buildings."
+    },
+    {
+      "rank": 17,
+      "suggested_id": "misthalin:modified-fletchers-headband",
+      "name": "Modified fletcher's headband",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Modified_fletcher%27s_headband"],
+      "fuzzy": "misthalin:fletchers-outfit present; modified hat residual pattern applied to 9 other outfits only",
+      "why": "Longtail misc established modified-hat residual pattern then stopped mid-list. Fletching still buried."
+    },
+    {
+      "rank": 18,
+      "suggested_id": "morytania:modified-constructors-hardhat",
+      "name": "Modified constructor's hard hat",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Modified_constructor%27s_hard_hat"],
+      "fuzzy": "morytania:constructors-outfit + misthalin:master-constructors-outfit present; no modified head residual",
+      "why": "Same residual pattern gap as fletcher — Construction daily tele + plank save QoL not first-class."
+    },
+    {
+      "rank": 19,
+      "suggested_id": "morytania:modified-lumberjacks-hat",
+      "name": "Modified lumberjack's hat",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Modified_lumberjack%27s_hat"],
+      "fuzzy": "morytania:lumberjack-outfit + natures-sentinel inheritance path; modified hat missing",
+      "why": "WC teleports + nest QoL residual still buried after Nature's Sentinel densify."
+    },
+    {
+      "rank": 20,
+      "suggested_id": "asgarnia:modified-factory-mask",
+      "name": "Modified factory mask",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Modified_factory_mask"],
+      "fuzzy": "asgarnia:factory-outfit present; botanist modified done; factory modified not",
+      "why": "FPF Herblore twin outfit incomplete vs botanist residual densify."
+    },
+    {
+      "rank": 21,
+      "suggested_id": "fremennik:modified-golden-mining-helmet",
+      "name": "Modified golden mining helmet",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Modified_golden_mining_helmet"],
+      "fuzzy": "fremennik:golden-mining-suit + magic golem inheritance; modified head not first-class",
+      "why": "Mining residual pattern incomplete vs blacksmith/artisan densify."
+    },
+    {
+      "rank": 22,
+      "suggested_id": "kandarin:modified-fishing-hat",
+      "name": "Modified fishing hat / fury shark head residual",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Modified_shark_head", "https://runescape.wiki/w/Fury_shark_outfit"],
+      "fuzzy": "kandarin:shark-outfit-deep-sea + fury-shark-outfit exist; modified head residual not filed",
+      "why": "DSF outfit ladder densified; modified head QoL still outfit-prose only."
+    },
+    {
+      "rank": 23,
+      "suggested_id": "asgarnia:waiko-comp-cape-permanent-set",
+      "name": "Waiko / Arc permanent set checklist (Unlocking Waiko / Salty gate)",
+      "status": "PARTIAL",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Waiko_Reward_Shop", "https://runescape.wiki/w/Salty"],
+      "fuzzy": "12 longtail Waiko children + thin the-arc-waiko-shop; no meta completion checklist for tier-1 of all permanent upgrades",
+      "why": "Comp cape / Salty path needs one planner row that lists permanent Boni gates without exploding into every chime SKU."
+    },
+    {
+      "rank": 24,
+      "suggested_id": "asgarnia:ports-advancement-skilling-permanents",
+      "name": "Player-owned ports advancement permanent skilling rewards densify",
+      "status": "PARTIAL",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Player-owned_port", "https://runescape.wiki/w/Ports_Reward_Shop"],
+      "fuzzy": "desert:player-owned-port + asgarnia:player-owned-ports-skilling-rewards + ports-reward-shop-boni + scrimshaw package",
+      "why": "POP still three-to-four hub blurbs; high-value permanent Ports advancement (resource upgrades, crew, building tiers) not checklist-first-class."
+    },
+    {
+      "rank": 25,
+      "suggested_id": "misthalin:museum-collection-high-value-tiers",
+      "name": "Velucia museum track milestones beyond chronote-tier blob",
+      "status": "PARTIAL",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Velucia", "https://runescape.wiki/w/It_belongs_in_a_museum!"],
+      "fuzzy": "velucia-museum-chronote-tiers + it-belongs-in-a-museum-log + collectors-assemble + high-value-collector-permanents",
+      "why": "Policy correctly excludes every collection line; culture-track permanent milestones (Dragonkin IV / Bandosian III etc. as account progress, not every artefact) still one dense blob."
+    },
+    {
+      "rank": 26,
+      "suggested_id": "misthalin:scripture-of-bik-manuscript-economy",
+      "name": "Manuscript of Bik recharge economy residual",
+      "status": "MISSING",
+      "severity": "low-medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Manuscript_of_Bik", "https://runescape.wiki/w/Scripture_of_Bik"],
+      "fuzzy": "misthalin:scripture-of-bik lists manuscripts for recharge; no sustain path row",
+      "why": "Scripture permanent is first-class; manuscript sustain (shred vs drop) still footnote. Lower priority than Fortune/siphon."
+    },
+    {
+      "rank": 27,
+      "suggested_id": "forinthry:daemonheim-skilling-rewards",
+      "name": "Daemonheim skilling rewards legacy alias OR footnote rewrite",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Daemonheim_Rewards"],
+      "fuzzy": "forinthry:bonecrusher / dig-site / scroll-of-cleansing still say 'not buried in daemonheim-skilling-rewards'",
+      "why": "Hygiene: either alias id → daemonheim-rewards-shop-hub or rewrite three details. Not new content."
+    },
+    {
+      "rank": 28,
+      "suggested_id": "asgarnia:artisans-workshop-rewards",
+      "name": "Artisans workshop rewards legacy alias OR footnote rewrite",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Artisans%27_Workshop"],
+      "fuzzy": "asgarnia:artisans-workshop-full-rewards claims to expand artisans-workshop-rewards",
+      "why": "Same class as daemonheim legacy: prose cites deleted thin id. Rewrite only."
+    },
+    {
+      "rank": 29,
+      "suggested_id": "anachronia:always-adze-relic",
+      "name": "Always Adze relic (Anachronia id alias)",
+      "status": "MISSING_BUT_REFERENCED",
+      "severity": "low-medium",
+      "confidence": "high",
+      "wiki": ["https://runescape.wiki/w/Always_Adze"],
+      "fuzzy": "anachronia:flow-state-relic cites anachronia:always-adze-relic; live id is kandarin:always-adze-relic",
+      "why": "Wrong-namespace cite. Not missing content — broken geography pointer."
+    },
+    {
+      "rank": 30,
+      "suggested_id": "cross-region:dark-facet-of-luck",
+      "name": "Dark Facet of Luck (Luck of the Dwarves upgrade residual)",
+      "status": "MISSING",
+      "severity": "medium",
+      "confidence": "medium",
+      "wiki": ["https://runescape.wiki/w/Dark_Facet_of_Luck", "https://runescape.wiki/w/Luck_of_the_Dwarves"],
+      "fuzzy": "cross-region:luck-of-the-dwarves + ring-of-fortune-relic densified; dark facet luck upgrade not first-class (grace facet is)",
+      "why": "Facet family inconsistent: Grace facet first-class, Passage/Luck facets footnotes."
+    }
+  ],
+
+  "thin_themes": {
+    "museum": {
+      "status": "DENSE_BUT_BLOATED",
+      "confidence": "high",
+      "present_first_class": [
+        "misthalin:velucia-museum-collections",
+        "misthalin:velucia-museum-chronote-tiers",
+        "misthalin:chronote-currency-economy",
+        "misthalin:collectors-assemble-ladder",
+        "misthalin:prodigal-spender-guild-permanents",
+        "misthalin:qualification-ladder-intern-professor",
+        "misthalin:guildmaster-qualification",
+        "misthalin:research-team-size-ladder",
+        "misthalin:archaeology-research-team",
+        "misthalin:hireable-researchers-recruitment",
+        "misthalin:workbench-storage-ladder",
+        "misthalin:museum-donation-bin",
+        "misthalin:it-belongs-in-a-museum-log",
+        "misthalin:professor-relic-loadout-purchase",
+        "cross-region:high-value-collector-permanents",
+        "cross-region:culture-expert-titles",
+        "cross-region:tetracompass-and-tomes",
+        "misthalin:soil-box-material-storage",
+        "misthalin:archaeologists-tea"
+      ],
+      "residual_holes": [
+        {
+          "hole": "Every museum collection line still deferred — correct policy, but culture-track permanent milestones remain one blob (rank 25).",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "research-team-size-ladder vs archaeology-research-team near-dup risk (Guildmaster end rung restated).",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "chronote-currency-economy + velucia-museum-chronote-tiers + collectors-assemble triple-narrative chronote budget.",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "Do NOT emit every collection SKU — next pack is milestone densify + link hygiene only.",
+          "severity": "info",
+          "confidence": "high"
+        }
+      ]
+    },
+    "waiko": {
+      "status": "PERMANENTS_MOSTLY_CLOSED",
+      "confidence": "high",
+      "present_first_class": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:arc-skilling-access",
+        "asgarnia:waiko-uncharted-supplies-upgrades",
+        "asgarnia:waiko-contracts-per-day",
+        "asgarnia:waiko-commodity-economy",
+        "asgarnia:waiko-grill",
+        "asgarnia:whales-maw-campfire-deposit",
+        "asgarnia:arc-journal",
+        "asgarnia:arc-journal-teletabs",
+        "asgarnia:flag-fall-claimed-island",
+        "asgarnia:bonecrusher-auto-pickup",
+        "asgarnia:crystal-tool-siphon-blueprint",
+        "asgarnia:ports-reward-shop-boni",
+        "asgarnia:sojobo-arc-contracts",
+        "asgarnia:hunters-outfit"
+      ],
+      "residual_holes": [
+        {
+          "hole": "No meta Unlocking Waiko / Salty / comp-cape permanent checklist (rank 23).",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "POP advancement still hub-blurred (rank 24) — adjacent to Waiko via Boni dual shop confusion (ports-reward-shop-boni vs the-arc-waiko-shop).",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "Every chime consumable SKU correctly excluded — do not fill with teletab stacks / contacts / cosmetics.",
+          "severity": "info",
+          "confidence": "high"
+        },
+        {
+          "hole": "waiko-grill links_existing_ids cite cross-region:portable-skilling-stations-ironman-note (hygiene check — confirm live id is portable-skilling-stations).",
+          "severity": "low",
+          "confidence": "medium"
+        }
+      ]
+    },
+    "invention": {
+      "status": "CORE_CLOSED_ENDGAME_FOOTNOTES_OPEN",
+      "confidence": "high",
+      "present_first_class": [
+        "asgarnia:invention-guild",
+        "asgarnia:invention-guild-machines-named",
+        "asgarnia:invention-gizmo-shells",
+        "asgarnia:ancient-invention-blueprints",
+        "asgarnia:ancient-gizmo-shells",
+        "asgarnia:divine-charge-crafting",
+        "asgarnia:charge-pack-infrastructure",
+        "asgarnia:augmentor",
+        "asgarnia:auto-disassembler",
+        "asgarnia:alchemiser",
+        "asgarnia:junk-refiner",
+        "asgarnia:plank-maker-machine",
+        "asgarnia:partial-potion-producer",
+        "asgarnia:spring-cleaner",
+        "asgarnia:alchemical-onyx",
+        "asgarnia:alchemical-hydrix",
+        "asgarnia:passage-of-the-abyss",
+        "asgarnia:invention-skilling-perk-ladder",
+        "asgarnia:extreme-invention-boost-path",
+        "cross-region:invention-machines-guild",
+        "cross-region:extreme-invention-supply"
+      ],
+      "residual_holes": [
+        {
+          "hole": "Equipment siphon + dissolver + mechanised siphon not first-class (ranks 6, 13, 14).",
+          "severity": "high",
+          "confidence": "high"
+        },
+        {
+          "hole": "XP Capacitor 5000 + ancient tools still buried in ancient-invention-blueprints (ranks 7–8).",
+          "severity": "high",
+          "confidence": "high"
+        },
+        {
+          "hole": "Perk ladder incomplete: Fortune / Efficient / Scavenging / Enlightened missing (rank 9).",
+          "severity": "high",
+          "confidence": "high"
+        },
+        {
+          "hole": "Machine room triple-file risk: invention-guild-machines-named + named machines + cross-region:invention-machines-guild.",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "Cinder/pulse cores still invisible (rank 10).",
+          "severity": "medium-high",
+          "confidence": "medium"
+        }
+      ]
+    },
+    "prayer": {
+      "status": "SWITCH_NETWORK_CLOSED_FLASK_OPEN",
+      "confidence": "high",
+      "present_first_class": [
+        "misthalin:ancient-curses-senntisten",
+        "misthalin:altar-of-zaros",
+        "misthalin:wars-grimoire",
+        "misthalin:wars-blessing",
+        "misthalin:wars-retreat-skilling-hub",
+        "tirannwn:elven-grimoire",
+        "tirannwn:seren-skilling-prayers-package",
+        "tirannwn:ancient-elven-ritual-shard",
+        "cross-region:prayer-book-switch-network",
+        "multi-region:poh-gilded-altar",
+        "multi-region:prayer-training-infrastructure-stack",
+        "morytania:ectofuntus-prayer-worship",
+        "morytania:ectoplasmator",
+        "morytania:attuned-ectoplasmator",
+        "morytania:first-age-outfit-equipment",
+        "morytania:modified-first-age-tiara",
+        "morytania:holy-wrench",
+        "forinthry:demon-horn-necklace",
+        "forinthry:chaos-altar-prayer",
+        "desert:powder-of-burials",
+        "desert:powder-of-penance",
+        "cross-region:bonecrusher-necklace",
+        "misthalin:fort-chapel"
+      ],
+      "residual_holes": [
+        {
+          "hole": "Blessed flask still dust-economy footnote (rank 11).",
+          "severity": "high",
+          "confidence": "high"
+        },
+        {
+          "hole": "First-age acquisition path phantom id (rank 3).",
+          "severity": "high",
+          "confidence": "high"
+        },
+        {
+          "hole": "wars-grimoire + wars-blessing + wars-retreat triple narrative — acceptable densify IF planner does not sum thrice.",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "Combat scriptures (Jas/Wen/Ful/Amascut/Elidinis) correctly out of scope — do not densify as skilling.",
+          "severity": "info",
+          "confidence": "high"
+        }
+      ]
+    },
+    "scriptures": {
+      "status": "BIK_ONLY_FIRST_CLASS",
+      "confidence": "high",
+      "present_first_class": [
+        "misthalin:scripture-of-bik",
+        "fremennik:god-books-horror-from-the-deep",
+        "desert:citharede-abbey-illuminated-books"
+      ],
+      "residual_holes": [
+        {
+          "hole": "Only Bik is skilling-first-class; combat scriptures stay combat catalogs by policy.",
+          "severity": "info",
+          "confidence": "high"
+        },
+        {
+          "hole": "Manuscript of Bik sustain not first-class (rank 26).",
+          "severity": "low-medium",
+          "confidence": "medium"
+        },
+        {
+          "hole": "Erethdor / chaotic grimoire correctly excluded from skilling (combat pocket).",
+          "severity": "info",
+          "confidence": "high"
+        },
+        {
+          "hole": "God-book page supply still multi-region pressure only — acceptable.",
+          "severity": "low",
+          "confidence": "medium"
+        }
+      ]
+    },
+    "fort": {
+      "status": "BUILDINGS_PARTIAL_TOWN_HALL_THIN",
+      "confidence": "high",
+      "present_first_class": [
+        "misthalin:fort-botanists-workbench",
+        "misthalin:fort-chapel",
+        "misthalin:fort-command-centre",
+        "misthalin:fort-forinthry-workshop",
+        "misthalin:fort-free-sawmill",
+        "misthalin:fort-guardhouse-slayer",
+        "misthalin:fort-kitchen",
+        "misthalin:fort-rangers-workroom",
+        "misthalin:fort-town-hall-rested-xp",
+        "misthalin:woodcutters-grove",
+        "misthalin:woodcutters-grove-facilities"
+      ],
+      "residual_holes": [
+        {
+          "hole": "Town Hall full building tiers missing — only rested XP slice (rank 15).",
+          "severity": "medium-high",
+          "confidence": "high"
+        },
+        {
+          "hole": "Refined plank / timber frame materials ladder not first-class (rank 16).",
+          "severity": "medium-high",
+          "confidence": "high"
+        },
+        {
+          "hole": "woodcutters-grove + woodcutters-grove-facilities still dual (near-dup).",
+          "severity": "medium",
+          "confidence": "high"
+        },
+        {
+          "hole": "Fort power bonus for Invention machines is optional pressure only on machine rows — acceptable.",
+          "severity": "low",
+          "confidence": "high"
+        }
+      ]
+    }
+  },
+
+  "near_dup_risks": {
+    "from_latest_longtail_packs": [
+      {
+        "theme": "perfect_juju_dual",
+        "severity": "severe",
+        "ids": ["karamja:perfect-juju-potions", "karamja:perfect-juju-recipe-hub"],
+        "source_pack": "wave-final-karamja-herblore (not longtail) still live dual after longtail",
+        "keep": "karamja:perfect-juju-potions",
+        "drop_or_retype": "karamja:perfect-juju-recipe-hub → recipe table activity OR DROP",
+        "reason": "Two production rows for same perfect-juju system; production path detail admits companion but both score as unlocks.",
+        "confidence": "high"
+      },
+      {
+        "theme": "harmony_pillars_dual_namespace",
+        "severity": "severe",
+        "ids": ["prifddinas:meilyr-harmony-pillars", "tirannwn:harmony-pillars"],
+        "keep": "prifddinas:meilyr-harmony-pillars",
+        "drop": ["tirannwn:harmony-pillars"],
+        "reason": "Same Meilyr moss system dual-namespaced — still not collapsed after multiple hygiene passes.",
+        "confidence": "high"
+      },
+      {
+        "theme": "research_team_ladder_vs_end_rung",
+        "severity": "high",
+        "ids": ["misthalin:research-team-size-ladder", "misthalin:archaeology-research-team"],
+        "source_pack": "longtail-museum",
+        "keep": "misthalin:research-team-size-ladder",
+        "retype": "misthalin:archaeology-research-team → Guildmaster end-rung only, hard-link, no restated size effects",
+        "reason": "Museum pack notes archaeology-research-team is Guildmaster-only residual then still re-emits size-5 framing risk.",
+        "confidence": "high"
+      },
+      {
+        "theme": "chronote_triple_narrative",
+        "severity": "high",
+        "ids": [
+          "misthalin:chronote-currency-economy",
+          "misthalin:velucia-museum-chronote-tiers",
+          "misthalin:collectors-assemble-ladder"
+        ],
+        "source_pack": "longtail-museum",
+        "keep": [
+          "misthalin:velucia-museum-chronote-tiers",
+          "misthalin:collectors-assemble-ladder"
+        ],
+        "action": "Shrink chronote-currency-economy to pure currency/shop budget rules; ban restating Velucia 225% math",
+        "reason": "Three rows can triple-count chronote power if consumers sum category=Archaeology.",
+        "confidence": "high"
+      },
+      {
+        "theme": "wars_prayer_switch_triple",
+        "severity": "medium",
+        "ids": [
+          "misthalin:wars-grimoire",
+          "misthalin:wars-blessing",
+          "misthalin:wars-retreat-skilling-hub"
+        ],
+        "source_pack": "longtail-combat-adjacent",
+        "keep": "all three IF roles stay (scenery / Combat Mastery residual / hub amenities)",
+        "risk": "Planner that scores 'prayer switch' thrice",
+        "confidence": "high"
+      },
+      {
+        "theme": "underworld_grimoire_dual",
+        "severity": "medium",
+        "ids": [
+          "misthalin:underworld-grimoire",
+          "misthalin:underworld-grimoire-skilling-milestones"
+        ],
+        "source_pack": "longtail-combat-adjacent",
+        "keep": ["misthalin:underworld-grimoire", "milestones as densify only"],
+        "risk": "Milestone row restating full UG effects",
+        "confidence": "high"
+      },
+      {
+        "theme": "alchemical_craft_vs_finished_jewellery",
+        "severity": "low-acceptable",
+        "ids": [
+          "asgarnia:alchemical-onyx",
+          "asgarnia:alchemical-hydrix",
+          "tirannwn:grace-of-the-elves",
+          "cross-region:luck-of-the-dwarves",
+          "asgarnia:brooch-of-the-gods"
+        ],
+        "source_pack": "longtail-misc",
+        "verdict": "Acceptable craft residual + finished item pattern IF consumers do not sum both as worn power.",
+        "confidence": "high"
+      },
+      {
+        "theme": "modified_hat_vs_base_outfit",
+        "severity": "low-acceptable",
+        "ids_pattern": "*:modified-* + parent outfit",
+        "source_pack": "longtail-misc",
+        "verdict": "Acceptable residual pattern — keep as equipment add-on, never restate full set XP.",
+        "confidence": "high"
+      },
+      {
+        "theme": "waiko_hub_vs_children",
+        "severity": "medium",
+        "ids": [
+          "asgarnia:the-arc-waiko-shop",
+          "asgarnia:ports-reward-shop-boni",
+          "asgarnia:waiko-*"
+        ],
+        "source_pack": "longtail-waiko",
+        "risk": "Thin hub still lists permanents also first-class as children — double-score if both ranked",
+        "action": "Rewrite the-arc-waiko-shop to pointer-only hub after children exist",
+        "confidence": "high"
+      },
+      {
+        "theme": "invention_machines_triple",
+        "severity": "medium",
+        "ids": [
+          "asgarnia:invention-guild-machines-named",
+          "asgarnia:auto-disassembler",
+          "asgarnia:alchemiser",
+          "asgarnia:partial-potion-producer",
+          "cross-region:invention-machines-guild"
+        ],
+        "source_pack": "pre-longtail invention packs still live",
+        "risk": "Named list + individuals + power-math combo",
+        "confidence": "high"
+      },
+      {
+        "theme": "crystal_tool_seed_vs_tools",
+        "severity": "low-acceptable",
+        "ids": [
+          "tirannwn:crystal-tool-seed-acquisition",
+          "tirannwn:crystal-utility-tools",
+          "prifddinas:crystal-tool-workshop",
+          "tirannwn:crystal-pickaxe",
+          "tirannwn:crystal-hatchet",
+          "tirannwn:crystal-mattock"
+        ],
+        "source_pack": "longtail-misc",
+        "verdict": "Seed residual is justified only if it does not restate finished tool effects.",
+        "confidence": "high"
+      },
+      {
+        "theme": "woodcutters_grove_dual",
+        "severity": "medium",
+        "ids": ["misthalin:woodcutters-grove", "misthalin:woodcutters-grove-facilities"],
+        "keep": "misthalin:woodcutters-grove-facilities",
+        "merge": "misthalin:woodcutters-grove",
+        "reason": "Imcando pointer vs facility tiers — still dual after fort residual.",
+        "confidence": "high"
+      },
+      {
+        "theme": "seers_residual_dual",
+        "severity": "medium",
+        "ids": ["kandarin:seers-headband", "kandarin:seers-village-skilling"],
+        "note": "area-tasks-seers-headband appears DROPPED (final hygiene); seers-headband equipment + village hub remain",
+        "keep": ["kandarin:seers-headband", "kandarin:seers-village-skilling"],
+        "risk": "Acceptable diary equipment + hub IF effects not fully restated on hub",
+        "confidence": "high"
+      },
+      {
+        "theme": "master_arch_outfit_claim",
+        "severity": "medium",
+        "ids": [
+          "misthalin:master-archaeologists-outfit",
+          "misthalin:master-archaeologists-outfit-claim"
+        ],
+        "keep": "misthalin:master-archaeologists-outfit",
+        "retype": "claim → shop milestone only",
+        "confidence": "medium"
+      },
+      {
+        "theme": "diviners_outfit_path_dual",
+        "severity": "medium",
+        "ids": [
+          "kandarin:diviners-outfit",
+          "kandarin:diviners-outfit-guthixian-cache"
+        ],
+        "keep": "kandarin:diviners-outfit",
+        "retype": "guthixian-cache → activity acquisition path",
+        "confidence": "high"
+      },
+      {
+        "theme": "shark_fury_ladder",
+        "severity": "low-acceptable",
+        "ids": ["kandarin:shark-outfit-deep-sea", "kandarin:fury-shark-outfit"],
+        "note": "Base vs elite legitimate IF planner does not sum both XP layers",
+        "confidence": "medium"
+      },
+      {
+        "theme": "modified_ritualist_links_dead_twin",
+        "severity": "low",
+        "ids": ["misthalin:modified-ritualists-mask"],
+        "issue": "links_existing_ids still cites misthalin:city-of-um-ritualist-outfit which final pass DROPPED",
+        "action": "rewrite link to misthalin:ritualists-outfit only",
+        "confidence": "high"
+      }
+    ],
+    "hygiene_still_broken_outbound": [
+      "kandarin:skillchompa-supply (phantom)",
+      "desert:pyramid-plunder-black-ibis (phantom)",
+      "morytania:ectofuntus-first-age-outfit (phantom)",
+      "kandarin:elder-divination-outfit (phantom)",
+      "forinthry:daemonheim-skilling-rewards (legacy phantom)",
+      "asgarnia:artisans-workshop-rewards (legacy phantom)",
+      "anachronia:always-adze-relic (wrong namespace; live kandarin:always-adze-relic)",
+      "anachronia:herb-bag-current (foreign container dataset id)",
+      "misthalin:city-of-um-ritualist-outfit (dropped twin still linked)"
+    ]
+  },
+
+  "recommended_agent_pack_list": [
+    {
+      "pack": 1,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-hygiene-phantoms-2026-07-26.json",
+      "title": "Phantom Prefer / legacy cite rewrite (NO new content)",
+      "priority": "P0",
+      "work": [
+        "Emit OR rewrite: skillchompa-supply, pyramid-plunder-black-ibis, ectofuntus-first-age-outfit, elder-divination-outfit",
+        "Rewrite daemonheim-skilling-rewards → daemonheim-rewards-shop-hub",
+        "Rewrite artisans-workshop-rewards → burial-smithing / full-rewards",
+        "Fix anachronia:always-adze-relic → kandarin:always-adze-relic",
+        "Fix modified-ritualists-mask dead link to city-of-um-ritualist-outfit"
+      ],
+      "expected_rows": "0–4 new; mostly detail rewrites",
+      "confidence": "high"
+    },
+    {
+      "pack": 2,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-invention-endgame-2026-07-26.json",
+      "title": "Invention endgame residuals (siphon/dissolver/capacitor/ancient tools/perk residual)",
+      "priority": "P0",
+      "work": [
+        "asgarnia:equipment-siphon-blueprint",
+        "asgarnia:equipment-dissolver",
+        "asgarnia:mechanised-siphon",
+        "asgarnia:xp-capacitor-5000",
+        "asgarnia:ancient-skilling-tools (hammer-tron / pyro-matic / rod-o-matic)",
+        "Extend OR sibling perk residual: Fortune / Efficient / Enhanced Efficient / Scavenging / Enlightened"
+      ],
+      "expected_rows": "6–8",
+      "confidence": "high",
+      "wiki_anchors": [
+        "https://runescape.wiki/w/Equipment_siphon",
+        "https://runescape.wiki/w/XP_Capacitor_5000",
+        "https://runescape.wiki/w/Fortune"
+      ]
+    },
+    {
+      "pack": 3,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-near-dup-collapse-2026-07-26.json",
+      "title": "Near-dup DROP_IDS + pointer rewrites",
+      "priority": "P1",
+      "work": [
+        "DROP or retype perfect-juju-recipe-hub vs perfect-juju-potions",
+        "DROP tirannwn:harmony-pillars (keep prifddinas:meilyr-harmony-pillars)",
+        "Collapse woodcutters-grove dual",
+        "Harden research-team-size-ladder vs archaeology-research-team roles",
+        "Pointer-only rewrite the-arc-waiko-shop after children",
+        "Shrink chronote-currency-economy restatements"
+      ],
+      "expected_rows": "0–2; mostly DROP_IDS + detail surgery",
+      "confidence": "high"
+    },
+    {
+      "pack": 4,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-fort-materials-2026-07-26.json",
+      "title": "Fort Town Hall tiers + refined plank materials ladder",
+      "priority": "P1",
+      "work": [
+        "misthalin:fort-town-hall (full T1–T3, not only rested XP)",
+        "misthalin:fort-construction-materials-ladder (logs→planks→refined→frames)",
+        "Link workshop / free-sawmill / plank-maker without re-emitting"
+      ],
+      "expected_rows": "2–3",
+      "confidence": "high"
+    },
+    {
+      "pack": 5,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-prayer-flask-facet-2026-07-26.json",
+      "title": "Blessed flask + dark facet family residual",
+      "priority": "P1",
+      "work": [
+        "tirannwn:blessed-flask",
+        "forinthry:dark-facet-of-passage",
+        "cross-region:dark-facet-of-luck (optional if wiki confirms skilling value)",
+        "Do NOT emit combat scriptures"
+      ],
+      "expected_rows": "2–3",
+      "confidence": "high"
+    },
+    {
+      "pack": 6,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-modified-hats-2-2026-07-26.json",
+      "title": "Modified skill-outfit heads residual pass 2",
+      "priority": "P2",
+      "work": [
+        "modified fletcher / constructor / lumberjack / factory / golden mining / fishing-shark heads",
+        "Follow longtail-misc pattern; never restate full outfit XP"
+      ],
+      "expected_rows": "5–7",
+      "confidence": "high"
+    },
+    {
+      "pack": 7,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-karamja-dual-site-2026-07-26.json",
+      "title": "Karamja dual-site residuals (overgrown idols + thin-region densify)",
+      "priority": "P2",
+      "work": [
+        "karamja:overgrown-idols",
+        "optional: skillchompa-supply if pack 1 chooses emit over rewrite"
+      ],
+      "expected_rows": "1–3",
+      "confidence": "high"
+    },
+    {
+      "pack": 8,
+      "suggested_file": "progression-enrichment-regional-skilling-wave-longtail-cores-ports-meta-2026-07-26.json",
+      "title": "Cinder/pulse cores + Waiko/POP meta checklists",
+      "priority": "P2",
+      "work": [
+        "cross-region:cinder-and-pulse-cores",
+        "asgarnia:waiko-comp-cape-permanent-set (pointer meta, no chime SKUs)",
+        "asgarnia:ports-advancement-skilling-permanents densify (not every voyage reward)"
+      ],
+      "expected_rows": "3–5",
+      "confidence": "medium"
+    }
+  ],
+
+  "do_not_do": [
+    "Do not re-open every museum collection line as product rows",
+    "Do not emit every Waiko chime / taijitu consumable SKU",
+    "Do not densify combat BiS pure under regional-skilling",
+    "Do not re-emit TH cosmetics / animation overrides / island furniture",
+    "Do not re-file closed P0/P1 ids already rich (orthen-superheat, elven grimoire, LOTD, tetracompass, divine charge, soil box, tea, quick teleport, rune pouch ladder, portables, thaler, pof totems)",
+    "Do not invent XP/hour, drop rates, or GE prices"
+  ],
+
+  "harsh_verdict": {
+    "one_liner": "Longtail closed the P0 panic list and bought ~42 rows of Waiko/museum/misc/prayer densify — then left broken Prefer cites, twin juju/harmony/grove scoring, and Invention endgame still living as footnotes.",
+    "quantity": "655 first-class rows. Quantity is fine.",
+    "quality": "FAIL residual hygiene. Phantom cites are unforgivable after three broken-ref audits. Perfect-juju dual and harmony dual are unforgivable after DROP_IDS hygiene packs.",
+    "theme_scores": {
+      "museum": "B+ densify / C+ bloat control",
+      "waiko": "A- permanent set (meta checklist missing)",
+      "invention": "B core / D endgame residuals",
+      "prayer": "A- switch network / C flask+facet",
+      "scriptures": "B (Bik only by design)",
+      "fort": "B- buildings / C Town Hall + materials ladder"
+    },
+    "next_action": "Pack 1 hygiene phantoms + Pack 2 Invention endgame before any more museum/waiko children. Near-dup collapse (Pack 3) before adding more twins.",
+    "confidence": "high"
+  }
+}

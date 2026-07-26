@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Cinzel } from "next/font/google";
 import "./globals.css";
+import "./champion.css";
 import { Nav } from "@/components/Nav";
 import { ShareImport } from "@/components/ShareImport";
 
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={cinzel.variable}>
-      <body className="flex min-h-screen flex-col bg-stone-950 font-sans text-parch-50 antialiased">
+      <body className="eq-champion flex min-h-screen flex-col font-sans antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-sm focus:border focus:border-stone-750 focus:bg-stone-850 focus:px-3 focus:py-2 focus:text-sm focus:text-gem-400"
@@ -33,26 +34,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Nav />
         <ShareImport />
-        <main id="main" className="flex-1">
+        <main id="main" className="comp-stage flex-1">
           {children}
         </main>
-        <footer className="border-t border-stone-750">
-          <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-baseline justify-between gap-2 px-4 py-4 text-xs text-parch-300">
+        <footer className="comp-foot">
+          <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-baseline justify-between gap-2 px-4">
             <span>
               Fan tool. Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex
               Ltd.
             </span>
             <span className="flex flex-wrap items-center gap-3">
-              <Link
-                href="/concepts"
-                className="text-parch-300 transition-colors duration-150 hover:text-parch-50"
-              >
+              <Link href="/concepts" className="hover:text-parch-50">
                 Concepts lab
               </Link>
-              <Link
-                href="/sources"
-                className="text-parch-100 transition-colors duration-150 hover:text-parch-50"
-              >
+              <Link href="/concepts/hybrid" className="hover:text-parch-50">
+                Hybrid · Composite
+              </Link>
+              <Link href="/sources" className="text-parch-100 hover:text-parch-50">
                 Sources &amp; credits
               </Link>
             </span>

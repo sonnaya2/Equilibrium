@@ -1,0 +1,492 @@
+{
+  "audit_id": "region-wiki-audit-desert-2026-07-26",
+  "region_id": "desert",
+  "display_name": "Desert",
+  "wiki_region_name": "Kharidian Desert",
+  "audited_at": "2026-07-26",
+  "scope": {
+    "files": [
+      "data/research/catalog.json (id desert) — DO NOT EDIT; research snapshot only",
+      "data/league/regions.json",
+      "src/map/data/placeAnchors.ts"
+    ],
+    "rules": [
+      "Live RuneScape Wiki is ground truth for geography and League region badges.",
+      "League may intentionally subset major locations for UI areas lists — only flag clear errors or missing official Equilibrium examples.",
+      "Do not invent Equilibrium-only boundaries; wiki Equilibrium League/Areas/Desert currently states full Kharidian Desert coverage."
+    ]
+  },
+  "sources": [
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Kharidian_Desert",
+      "title": "Kharidian Desert",
+      "verifiedAt": "2026-07-26",
+      "role": "full geography / cities / landmarks"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Desert",
+      "title": "Equilibrium League/Areas/Desert",
+      "verifiedAt": "2026-07-26",
+      "role": "League region boundary (covers entire Kharidian Desert; detail sections still sparse)"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Al_Kharid",
+      "title": "Al Kharid",
+      "verifiedAt": "2026-07-26",
+      "role": "northern hub; Desert League badge on wiki"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Het%27s_Oasis",
+      "title": "Het's Oasis",
+      "verifiedAt": "2026-07-26",
+      "role": "official Equilibrium example; northern skilling hub"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Garden_of_Kharid",
+      "title": "Garden of Kharid",
+      "verifiedAt": "2026-07-26",
+      "role": "northern Farming/Thieving hub"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Kharid-et_Dig_Site",
+      "title": "Kharid-et Dig Site",
+      "verifiedAt": "2026-07-26",
+      "role": "Archaeology dig site east of Al Kharid; Desert League badge on excavation table"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Heart_of_Gielinor",
+      "title": "Heart of Gielinor",
+      "verifiedAt": "2026-07-26",
+      "role": "GWD2; west of Nardah; Desert League badge"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Dominion_Tower",
+      "title": "Dominion Tower",
+      "verifiedAt": "2026-07-26",
+      "role": "northern desert combat minigame; Desert League badge"
+    },
+    {
+      "source": "runescape-wiki",
+      "url": "https://runescape.wiki/w/Pollnivneach",
+      "title": "Pollnivneach",
+      "verifiedAt": "2026-07-26",
+      "role": "mid-desert city; Sumona / Smoking Kills / POH portal"
+    },
+    {
+      "source": "jagex",
+      "url": "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
+      "title": "Countdown to LEAGUES II: EQUILIBRIUM!",
+      "publishedAt": "2026-07-23",
+      "verifiedAt": "2026-07-25",
+      "role": "official Equilibrium region examples (Menaphos, Het's Oasis)"
+    },
+    {
+      "source": "repo",
+      "path": "scraped-data/equilibrium.json",
+      "role": "local scrape of official examples"
+    }
+  ],
+  "current_state": {
+    "catalog": {
+      "id": "desert",
+      "name": "Desert",
+      "availability": "elective",
+      "aliases": [],
+      "areas": [
+        "Menaphos",
+        "Het's Oasis",
+        "Kharid-et Dig Site",
+        "Sophanem",
+        "Garden of Kharid"
+      ],
+      "content_names": [
+        "Menaphos",
+        "Het's Oasis",
+        "Kalphite Queen",
+        "Kalphite King",
+        "Sophanem Slayer Dungeon / The Magister",
+        "Heart of Gielinor / God Wars Dungeon 2",
+        "Telos, the Warden",
+        "Amascut, the Devourer"
+      ],
+      "hardRules": [],
+      "warnings": [],
+      "verified": false
+    },
+    "league_regions_json": {
+      "id": "desert",
+      "name": "Desert",
+      "availability": "elective",
+      "aliases": [],
+      "areas": ["Menaphos", "Het's Oasis"],
+      "hardRules": [],
+      "warnings": [],
+      "note": "Matches Jagex official examples only; thinner than catalog."
+    },
+    "placeAnchors": [
+      { "area": "Garden of Kharid", "uv": [0.5, 0.72], "comment_band": "north-west shoulder" },
+      { "area": "Kharid-et Dig Site", "uv": [0.52, 0.75], "comment_band": "dig site north" },
+      { "area": "Het's Oasis", "uv": [0.545, 0.845], "comment_band": "oasis mid-south (WRONG — see findings)" },
+      { "area": "Sophanem", "uv": [0.58, 0.9], "comment_band": "Menaphite south" },
+      { "area": "Menaphos", "uv": [0.56, 0.928], "comment_band": "Menaphite south" }
+    ],
+    "cross_file_consistency": {
+      "catalog_areas_vs_placeAnchors": "MATCH — all five catalog areas have anchors; placeAnchors.ts requires exact catalog area names.",
+      "catalog_areas_vs_league_regions": "MISMATCH — regions.json only has Menaphos + Het's Oasis; catalog has three additional areas.",
+      "official_examples_coverage": "OK — both Menaphos and Het's Oasis present in all three surfaces."
+    }
+  },
+  "wiki_ground_truth": {
+    "league_boundary": {
+      "summary": "Wiki Equilibrium League/Areas/Desert: Desert covers the entire Kharidian Desert; instances and underground areas with entrances in the desert are included.",
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Desert",
+      "detail_pages_status": "Overview subsections (settlements, combat, non-combat, shops) and unlock tables are still stubby/empty on the wiki as of audit date — do not treat empty wiki sections as negative evidence."
+    },
+    "official_equilibrium_examples": {
+      "source": "Countdown to LEAGUES II: EQUILIBRIUM! (2026-07-23)",
+      "examples": ["Menaphos", "Het's Oasis"],
+      "quest_note": "Desert intended to provide near-immediate access to Menaphos."
+    },
+    "major_locations_kharidian_desert": {
+      "cities_and_settlements": [
+        { "name": "Al Kharid", "band": "northern", "wiki": "https://runescape.wiki/w/Al_Kharid", "league_badge_desert": true },
+        { "name": "Menaphos", "band": "southern", "wiki": "https://runescape.wiki/w/Menaphos", "league_badge_desert": true },
+        { "name": "Sophanem", "band": "southern", "wiki": "https://runescape.wiki/w/Sophanem" },
+        { "name": "Nardah", "band": "south-eastern", "wiki": "https://runescape.wiki/w/Nardah" },
+        { "name": "Pollnivneach", "band": "middle (River Elid)", "wiki": "https://runescape.wiki/w/Pollnivneach" },
+        { "name": "Bedabin Camp", "band": "middle-west", "wiki": "https://runescape.wiki/w/Bedabin_Camp" },
+        { "name": "Bandit Camp (Kharidian Desert)", "band": "middle", "wiki": "https://runescape.wiki/w/Bandit_Camp_(Kharidian_Desert)" },
+        { "name": "Uzer", "band": "middle-east ruins", "wiki": "https://runescape.wiki/w/Uzer" },
+        { "name": "Desert Mining Camp", "band": "middle", "wiki": "https://runescape.wiki/w/Desert_Mining_Camp" },
+        { "name": "Abbey of St. Elspeth Citharede", "band": "northern-east of Al Kharid", "wiki": "https://runescape.wiki/w/Abbey_of_St._Elspeth_Citharede" }
+      ],
+      "skilling_and_hubs": [
+        { "name": "Het's Oasis", "band": "northern (NE of Al Kharid; former Duel Arena)", "wiki": "https://runescape.wiki/w/Het%27s_Oasis" },
+        { "name": "Garden of Kharid", "band": "northern border (between Al Kharid mine and Mage Training Arena)", "wiki": "https://runescape.wiki/w/Garden_of_Kharid" },
+        { "name": "Kharid-et Dig Site", "band": "northern-east of Al Kharid", "wiki": "https://runescape.wiki/w/Kharid-et_Dig_Site", "league_badge_desert": true },
+        { "name": "Mage Training Arena", "band": "northern", "wiki": "https://runescape.wiki/w/Mage_Training_Arena" },
+        { "name": "Shantay Pass", "band": "northern edge of members desert", "wiki": "https://runescape.wiki/w/Shantay_Pass" },
+        { "name": "Agility Pyramid", "band": "southern (north of Nardah)", "wiki": "https://runescape.wiki/w/Agility_Pyramid" },
+        { "name": "Pyramid Plunder / Jalsavrah", "band": "Sophanem", "wiki": "https://runescape.wiki/w/Pyramid_Plunder" },
+        { "name": "Soul Altar", "band": "Menaphos area", "note": "Runecrafting; often listed under Menaphos geography" }
+      ],
+      "combat_landmarks": [
+        { "name": "Kalphite Lair / Kalphite Queen", "band": "west of Shantay Pass", "wiki": "https://runescape.wiki/w/Kalphite_Queen" },
+        { "name": "Exiled Kalphite Hive / Kalphite King", "band": "north of Menaphos", "wiki": "https://runescape.wiki/w/Kalphite_King" },
+        { "name": "Heart of Gielinor / GWD2 / Telos", "band": "west of Nardah", "wiki": "https://runescape.wiki/w/Heart_of_Gielinor", "league_badge_desert": true },
+        { "name": "Dominion Tower", "band": "northern desert, west of Uzer / north Elid", "wiki": "https://runescape.wiki/w/Dominion_Tower", "league_badge_desert": true },
+        { "name": "Sophanem Slayer Dungeon / The Magister", "band": "Sophanem", "wiki": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon" },
+        { "name": "Amascut, the Devourer", "band": "Menaphos Imperial district", "wiki": "https://runescape.wiki/w/Amascut,_the_Devourer" },
+        { "name": "Jaldraocht Pyramid (Ancient Magicks)", "band": "southern/middle desert", "wiki": "https://runescape.wiki/w/Jaldraocht" }
+      ]
+    },
+    "geography_notes": [
+      "Northern region (wiki): Al Kharid, Het's Oasis, Mage Training Arena; ends at Shantay Pass; no desert heat north of the pass.",
+      "Middle region: Kalphite Lair, Desert Mining Camp, Bedabin Camp, Uzer, Dominion Tower, Bandit Camp, Pollnivneach; desert heat applies outside safe settlements.",
+      "Southern region: Nardah, Menaphos, Sophanem, pyramids, Ullek ruins.",
+      "Het's Oasis is northern (NE of Al Kharid), not mid-south or near Menaphos.",
+      "Garden of Kharid is on the northern border of the Kharidian Desert.",
+      "Kharid-et Dig Site is east of present-day Al Kharid (northern band)."
+    ]
+  },
+  "findings": [
+    {
+      "id": "DES-01",
+      "severity": "error",
+      "category": "cross_file_sync",
+      "title": "data/league/regions.json areas lag catalog / placeAnchors",
+      "detail": "Ship file regions.json lists only official Jagex examples (Menaphos, Het's Oasis). Research catalog and map anchors also list Kharid-et Dig Site, Sophanem, and Garden of Kharid. Product map anchors require catalog area names; Research UI areas come from catalog; runtime league regions use the thinner list. Not a wiki falsehood, but a real three-way product inconsistency.",
+      "evidence": [
+        "data/league/regions.json desert.areas = [Menaphos, Het's Oasis]",
+        "data/research/catalog.json desert.areas = five names",
+        "src/map/data/placeAnchors.ts five desert anchors"
+      ],
+      "wiki_support": "All five catalog areas are genuine Kharidian Desert locations. Sophanem/Menaphos twin cities; Kharid-et and Garden of Kharid are northern desert landmarks.",
+      "proposed_fix": {
+        "target": "data/league/regions.json",
+        "action": "Expand desert.areas to match catalog (recommended order north→south): Garden of Kharid, Kharid-et Dig Site, Het's Oasis, Sophanem, Menaphos — or at minimum keep official examples first and append catalog extras.",
+        "do_not_edit": "data/research/catalog.json"
+      }
+    },
+    {
+      "id": "DES-02",
+      "severity": "error",
+      "category": "map_anchor_geography",
+      "title": "Het's Oasis placeAnchor UV and comment place it mid-south; wiki places it northern",
+      "detail": "placeAnchors comment says 'oasis mid-south' and UV y=0.845 sits between Kharid-et (0.75) and Sophanem (0.9). Wiki: Het's Oasis is north-east of Al Kharid (former Duel Arena), same northern band as Garden of Kharid and Kharid-et. On this map frame higher UV.y is south (cf. Varrock 0.42 vs Lumbridge 0.59). Het's Oasis should cluster with Garden/Kharid-et (~0.72–0.78), not approach Menaphite latitudes.",
+      "evidence": [
+        "src/map/data/placeAnchors.ts lines 94–100",
+        "https://runescape.wiki/w/Het%27s_Oasis — northern Kharidian Desert, NE of Al Kharid",
+        "https://runescape.wiki/w/Kharidian_Desert#Northern_region — Het's Oasis listed in northern region"
+      ],
+      "proposed_fix": {
+        "target": "src/map/data/placeAnchors.ts",
+        "action": "Move Het's Oasis UV north into the Al Kharid / Garden / Kharid-et cluster (suggested starting point [0.53, 0.76] or similar after ring-containment test); fix comment to 'northern oasis (former Duel Arena)'. Re-run placeAnchors tests.",
+        "suggested_uv_order_north_to_south": [
+          "Garden of Kharid",
+          "Het's Oasis",
+          "Kharid-et Dig Site",
+          "(gap: middle desert)",
+          "Sophanem",
+          "Menaphos"
+        ]
+      }
+    },
+    {
+      "id": "DES-03",
+      "severity": "recommended_addition",
+      "category": "areas_list",
+      "title": "Al Kharid absent from areas despite full-desert League coverage and wiki Desert badge",
+      "detail": "Wiki Al Kharid page carries Desert League Region Badge. Equilibrium League/Areas/Desert states the area covers the entire Kharidian Desert. Official Jagex example list only named Menaphos and Het's Oasis — intentional marketing subset, not a claim that Al Kharid is excluded. Local quest mapping already treats Al Kharid starts as desert (data/league/quests.json). Missing Al Kharid from areas under-represents the northern hub players actually use.",
+      "evidence": [
+        "https://runescape.wiki/w/Al_Kharid — Desert league badge",
+        "https://runescape.wiki/w/Equilibrium_League/Areas/Desert — entire Kharidian Desert",
+        "data/league/quest-region-rules.json desert terms include 'al kharid'",
+        "data/league/quests.json primary_region desert for Al Kharid start_area quests"
+      ],
+      "not_an_error_because": "Official published examples only listed Menaphos + Het's Oasis; planner may keep a short highlight list. Still the strongest missing settlement for full-desert fidelity.",
+      "proposed_fix": {
+        "target": "data/league/regions.json (and later catalog via normal research pipeline — do not hand-edit catalog here)",
+        "action": "Add 'Al Kharid' to areas (after sync policy is chosen). Optional placeAnchor near [0.51, 0.74] once present in catalog areas.",
+        "optional_hardRule": "Treat Al Kharid and the northern free desert as Desert, not Misthalin. Wiki League badge and full-desert boundary support this."
+      }
+    },
+    {
+      "id": "DES-04",
+      "severity": "ok_intentional_subset",
+      "category": "areas_list",
+      "title": "Major middle/southern settlements not in areas list (Pollnivneach, Nardah, etc.)",
+      "detail": "Wiki major cities also include Pollnivneach and Nardah; camps and ruins (Bandit Camp, Bedabin Camp, Uzer, Desert Mining Camp) are widely known landmarks. Catalog deliberately highlights Menaphos/Het's Oasis + Archaeology/Farming northern sites + Sophanem. That is a valid League UI subset as long as content/upgrades still capture combat and slayer geography.",
+      "wiki_major_not_in_catalog_areas": [
+        "Al Kharid",
+        "Pollnivneach",
+        "Nardah",
+        "Bandit Camp",
+        "Bedabin Camp",
+        "Uzer",
+        "Desert Mining Camp",
+        "Dominion Tower",
+        "Mage Training Arena",
+        "Shantay Pass",
+        "Heart of Gielinor"
+      ],
+      "proposed_fix": {
+        "action": "No required add for every landmark. Prefer content/upgrade rows for combat hubs; only promote to areas if the map/region detail UX needs another pin. Highest-value optional area promotions: Al Kharid (DES-03), Pollnivneach (Sumona / Smoking Kills / POH), Nardah (Desert amulet / Heart of Gielinor approach)."
+      }
+    },
+    {
+      "id": "DES-05",
+      "severity": "ok",
+      "category": "content",
+      "title": "Catalog combat content maps correctly to desert geography",
+      "detail": "Kalphite Queen/King, Sophanem Slayer Dungeon / The Magister, Heart of Gielinor / Telos, and Amascut (Menaphos) all sit in the Kharidian Desert on live wiki. Heart of Gielinor and Dominion Tower carry Desert League badges. Confidence labels (inferred_region / historical_catalyst_*) are honest pending finer Equilibrium locality tables.",
+      "items": [
+        { "name": "Menaphos", "verdict": "ok", "confidence": "confirmed_official" },
+        { "name": "Het's Oasis", "verdict": "ok", "confidence": "confirmed_official" },
+        { "name": "Kalphite Queen", "verdict": "ok", "confidence": "inferred_region — wiki Kalphite Lair in Kharidian Desert" },
+        { "name": "Kalphite King", "verdict": "ok", "confidence": "inferred_region — Exiled Kalphite Hive north of Menaphos" },
+        { "name": "Sophanem Slayer Dungeon / The Magister", "verdict": "ok", "confidence": "inferred_region — Sophanem" },
+        { "name": "Heart of Gielinor / God Wars Dungeon 2", "verdict": "ok", "confidence": "historical_catalyst… — wiki location Kharidian Desert west of Nardah; Desert League badge" },
+        { "name": "Telos, the Warden", "verdict": "ok", "confidence": "follows Heart of Gielinor" },
+        { "name": "Amascut, the Devourer", "verdict": "ok", "confidence": "Menaphos Imperial district; Catalyst Desert mapping" }
+      ],
+      "proposed_fix": null
+    },
+    {
+      "id": "DES-06",
+      "severity": "recommended_addition",
+      "category": "content",
+      "title": "Areas present without matching content rows: Kharid-et Dig Site, Garden of Kharid, Sophanem-as-city",
+      "detail": "Catalog areas include Kharid-et Dig Site and Garden of Kharid, but content[] only re-lists Menaphos and Het's Oasis as locations plus combat rows. Sophanem appears only via Slayer Dungeon composite. Upgrade rows already cover Pyramid Plunder, Dominion Tower, red sandstone, Garden of Kharid rewards elsewhere — still useful to have first-class content entries for dig site and Garden so region detail matches area pins.",
+      "proposed_fix": {
+        "target": "research catalog pipeline (not hand-edit catalog in this audit)",
+        "action": "Add content rows when next refreshing desert: Kharid-et Dig Site (Archaeology), Garden of Kharid (Farming/Thieving / Crux Eqal favour), optional Pollnivneach (Sumona / Smoking Kills), optional Dominion Tower if not only in upgrades."
+      }
+    },
+    {
+      "id": "DES-07",
+      "severity": "recommended_addition",
+      "category": "aliases_hardRules",
+      "title": "Empty aliases / hardRules / warnings under-document full-desert League boundary",
+      "detail": "Display name is correctly 'Desert' (Equilibrium product term). Wiki formal name is Kharidian Desert. quest-region-rules already knows al kharid / pollnivneach / nardah / dominion tower terms, but regions record carries no hardRule for planners.",
+      "proposed_fix": {
+        "target": "data/league/regions.json",
+        "aliases": ["Kharidian Desert", "Kharidian"],
+        "hardRules": [
+          "Desert covers the full Kharidian Desert geography (including Al Kharid, northern free desert, members desert south of Shantay Pass, and underground/instance content entered from desert). Do not reassign Al Kharid to Misthalin without an Equilibrium override.",
+          "Official published highlight examples are Menaphos and Het's Oasis; they do not exhaust the region."
+        ],
+        "warnings": [
+          "Equilibrium League/Areas/Desert wiki page still has sparse unlock/settlement tables — use location wiki pages + full-desert boundary until Jagex publishes finer locality lists.",
+          "Red sandstone also exists at Oo'glog (not Desert-only); Sophanem is the Desert source in the red-sandstone upgrade row."
+        ]
+      }
+    },
+    {
+      "id": "DES-08",
+      "severity": "note",
+      "category": "display_name",
+      "title": "Name 'Desert' vs wiki 'Kharidian Desert' is intentional product naming",
+      "detail": "Jagex Equilibrium materials and wiki League nav use Desert / Kharidian Desert interchangeably for the region. No rename required. Aliases (DES-07) cover search.",
+      "proposed_fix": null
+    },
+    {
+      "id": "DES-09",
+      "severity": "note",
+      "category": "upgrades_pointer",
+      "title": "Dominion Tower and Pyramid Plunder already tracked as upgrades, not areas — acceptable",
+      "detail": "Dominion Tower is correctly desert combat (wiki Desert badge) and appears in upgrades as a non-skilling pointer. Pyramid Plunder / black ibis is desert Thieving. No error; optional future area pins only if map density needs them.",
+      "proposed_fix": null
+    }
+  ],
+  "area_by_area_verdict": [
+    {
+      "area": "Menaphos",
+      "in_catalog": true,
+      "in_league_regions": true,
+      "in_placeAnchors": true,
+      "wiki_ok": true,
+      "notes": "Official Equilibrium example; southern twin city; Amascut content."
+    },
+    {
+      "area": "Het's Oasis",
+      "in_catalog": true,
+      "in_league_regions": true,
+      "in_placeAnchors": true,
+      "wiki_ok": true,
+      "notes": "Official Equilibrium example; northern skilling hub. Anchor UV wrong (DES-02)."
+    },
+    {
+      "area": "Kharid-et Dig Site",
+      "in_catalog": true,
+      "in_league_regions": false,
+      "in_placeAnchors": true,
+      "wiki_ok": true,
+      "notes": "East of Al Kharid; Desert League badge on dig hotspots. Sync into regions.json (DES-01)."
+    },
+    {
+      "area": "Sophanem",
+      "in_catalog": true,
+      "in_league_regions": false,
+      "in_placeAnchors": true,
+      "wiki_ok": true,
+      "notes": "Southern twin of Menaphos; Slayer Dungeon / Pyramid Plunder geography. Sync into regions.json (DES-01)."
+    },
+    {
+      "area": "Garden of Kharid",
+      "in_catalog": true,
+      "in_league_regions": false,
+      "in_placeAnchors": true,
+      "wiki_ok": true,
+      "notes": "Northern border Farming/Thieving hub. Sync into regions.json (DES-01)."
+    },
+    {
+      "area": "Al Kharid",
+      "in_catalog": false,
+      "in_league_regions": false,
+      "in_placeAnchors": false,
+      "wiki_ok": true,
+      "notes": "Major northern city; Desert League badge; recommended add (DES-03)."
+    }
+  ],
+  "proposed_fixes_summary": {
+    "must_fix": [
+      {
+        "id": "DES-01",
+        "file": "data/league/regions.json",
+        "change": "Sync desert.areas with catalog: Menaphos, Het's Oasis, Kharid-et Dig Site, Sophanem, Garden of Kharid (order optional; prefer north→south or official-first)."
+      },
+      {
+        "id": "DES-02",
+        "file": "src/map/data/placeAnchors.ts",
+        "change": "Relocate Het's Oasis UV into northern desert cluster; correct comment (not mid-south). Run placeAnchors tests / ring containment."
+      }
+    ],
+    "should_fix": [
+      {
+        "id": "DES-03",
+        "file": "data/league/regions.json (+ catalog via pipeline)",
+        "change": "Add Al Kharid to areas; optional map anchor."
+      },
+      {
+        "id": "DES-07",
+        "file": "data/league/regions.json",
+        "change": "aliases: Kharidian Desert, Kharidian; hardRules for full-desert boundary; warnings about stubby wiki League page and multi-region red sandstone."
+      },
+      {
+        "id": "DES-06",
+        "file": "catalog refresh pipeline",
+        "change": "Content rows for Kharid-et Dig Site and Garden of Kharid when desert research is next rewritten (do not hand-edit catalog.json in this pass)."
+      }
+    ],
+    "optional_enrichment": [
+      "Areas or content: Pollnivneach (Sumona), Nardah, Mage Training Arena, Shantay Pass",
+      "Map pins for Al Kharid / Pollnivneach only after areas exist in catalog",
+      "Promote Heart of Gielinor to areas only if region detail UX needs a combat hub pin (already strong in content + upgrades)"
+    ],
+    "do_not": [
+      "Edit data/research/catalog.json in this audit pass",
+      "Invent Equilibrium locality exclusions that contradict wiki full-desert coverage without Jagex text",
+      "Move Al Kharid to Misthalin",
+      "Treat missing Pollnivneach/Nardah as hard errors — intentional subset is allowed"
+    ]
+  },
+  "suggested_regions_json_patch": {
+    "id": "desert",
+    "name": "Desert",
+    "availability": "elective",
+    "aliases": ["Kharidian Desert", "Kharidian"],
+    "areas": [
+      "Menaphos",
+      "Het's Oasis",
+      "Kharid-et Dig Site",
+      "Sophanem",
+      "Garden of Kharid"
+    ],
+    "areas_with_recommended_alkharid": [
+      "Al Kharid",
+      "Garden of Kharid",
+      "Kharid-et Dig Site",
+      "Het's Oasis",
+      "Sophanem",
+      "Menaphos"
+    ],
+    "hardRules": [
+      "Desert covers the full Kharidian Desert (including Al Kharid, northern free desert, members desert south of Shantay Pass, and underground or instanced content entered from the desert). Do not reassign Al Kharid to Misthalin unless Equilibrium publishes an override.",
+      "Official highlight examples are Menaphos and Het's Oasis; they do not limit the region boundary."
+    ],
+    "warnings": [
+      "Wiki Equilibrium League/Areas/Desert still has sparse settlement/unlock tables — rely on location pages plus the full-desert boundary until Jagex publishes finer lists.",
+      "Red sandstone also exists at Oo'glog; Desert owns the Sophanem source for flask planning."
+    ]
+  },
+  "suggested_placeAnchors_patch": {
+    "comment": "Kharidian Desert — northern Al Kharid band (Garden, dig site, Het's Oasis), Menaphite south.",
+    "anchors": [
+      { "region": "desert", "area": "Garden of Kharid", "uv": [0.5, 0.72], "status": "keep_or_nudge" },
+      { "region": "desert", "area": "Kharid-et Dig Site", "uv": [0.52, 0.75], "status": "keep_or_nudge_slightly_east" },
+      { "region": "desert", "area": "Het's Oasis", "uv": [0.53, 0.76], "status": "REPLACE — was [0.545, 0.845]; northern cluster" },
+      { "region": "desert", "area": "Sophanem", "uv": [0.58, 0.9], "status": "keep" },
+      { "region": "desert", "area": "Menaphos", "uv": [0.56, 0.928], "status": "keep" }
+    ],
+    "note": "Final UV must pass placeAnchors.test.ts ring containment; values above are geography-first suggestions only."
+  },
+  "overall_verdict": {
+    "official_examples": "PASS — Menaphos and Het's Oasis present everywhere required",
+    "catalog_area_geography": "PASS — five listed areas are correct desert locations",
+    "league_regions_sync": "FAIL — regions.json incomplete vs catalog/anchors (DES-01)",
+    "map_anchor_accuracy": "FAIL — Het's Oasis UV/comment mid-south error (DES-02)",
+    "content_combat_mapping": "PASS — no false-region combat claims found",
+    "full_desert_representation": "PARTIAL — Al Kharid and mid-desert cities intentionally thin; Al Kharid is the main recommended fill (DES-03)",
+    "ship_blocker_count": 2,
+    "recommended_addition_count": 3
+  }
+}

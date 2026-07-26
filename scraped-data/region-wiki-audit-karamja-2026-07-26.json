@@ -1,0 +1,529 @@
+{
+  "regionId": "karamja",
+  "auditDate": "2026-07-26",
+  "groundTruth": "runescape-wiki",
+  "doNotEdit": [
+    "data/research/catalog.json"
+  ],
+  "localSnapshot": {
+    "catalogAreas": [
+      "Karamja",
+      "Brimhaven",
+      "Shilo Village",
+      "TzHaar area",
+      "Herblore Habitat",
+      "Hardwood Grove",
+      "Musa Point",
+      "Tai Bwo Wannai"
+    ],
+    "regionsJsonAreas": [
+      "Karamja",
+      "Brimhaven",
+      "Shilo Village",
+      "TzHaar area"
+    ],
+    "placeAnchorAreas": [
+      "Karamja",
+      "Musa Point",
+      "Brimhaven",
+      "Hardwood Grove",
+      "TzHaar area",
+      "Tai Bwo Wannai",
+      "Herblore Habitat",
+      "Shilo Village"
+    ],
+    "catalogContent": [
+      "Duradel",
+      "TzHaar Fight Cave",
+      "Fight Kiln",
+      "Abomination"
+    ],
+    "notes": [
+      "catalog.json is richer than data/league/regions.json for this region (catalog already has Habitat, Grove, Musa Point, Tai Bwo Wannai).",
+      "placeAnchors.ts already pins Habitat/Grove/Musa/TBW but also pins bare region-name area 'Karamja' and uses 'TzHaar area' rather than wiki city name."
+    ]
+  },
+  "wikiSources": [
+    {
+      "url": "https://runescape.wiki/w/Karamja",
+      "title": "Karamja",
+      "role": "island geography + settlement hierarchy",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Equilibrium_League/Areas/Karamja",
+      "title": "Equilibrium League/Areas/Karamja",
+      "role": "league boundary + notable settlements/activities (stubby but official wiki league page)",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/TzHaar_City",
+      "title": "TzHaar City",
+      "role": "canonical city name (Mor Ul Rek); Fight Cave/Kiln/Cauldron host",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/TzHaar_Fight_Cave",
+      "title": "TzHaar Fight Cave",
+      "role": "content check — Fire cape; league badge Karamja",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Fight_Kiln",
+      "title": "Fight Kiln",
+      "role": "content check — TokHaar-Kal capes; league badge Karamja",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Duradel",
+      "title": "Duradel",
+      "role": "content check — Shilo Village Slayer Master requirements",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Abomination",
+      "title": "Abomination",
+      "role": "content check — Tarshak's sanctum / Brimhaven Dungeon; dual league badge",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Herblore_Habitat",
+      "title": "Herblore Habitat",
+      "role": "area + upgrade legitimacy (south-east Karamja multi-skill hub)",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Hardwood_grove",
+      "title": "Hardwood grove",
+      "role": "area legitimacy (fenced teak/mahogany north-east of Tai Bwo Wannai)",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Crandor",
+      "title": "Crandor",
+      "role": "boundary check — separate island north of Karamja; dungeon link only",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Musa_Point",
+      "title": "Musa Point",
+      "role": "north-east F2P settlement (referenced from Karamja geography)",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Brimhaven",
+      "title": "Brimhaven",
+      "role": "west pirate town (referenced from Karamja geography)",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Shilo_Village_(location)",
+      "title": "Shilo Village (location)",
+      "role": "southern banked settlement; Duradel host",
+      "scrapedAt": "2026-07-26"
+    },
+    {
+      "url": "https://runescape.wiki/w/Tai_Bwo_Wannai",
+      "title": "Tai Bwo Wannai",
+      "role": "central jungle village; Cleanup + Hardwood Grove neighbour",
+      "scrapedAt": "2026-07-26"
+    }
+  ],
+  "summary": {
+    "leagueBoundary": "Wiki Equilibrium League/Areas/Karamja: the area covers the entire island of Karamja; instances of areas in Karamja and underground areas with an entrance in Karamja are included.",
+    "regionNameAsArea": "Confirmed defect. Catalog, regions.json, and placeAnchors all list bare 'Karamja' as a sub-area. That string is the region id/name, not a settlement. Wiki geography uses named places (Musa Point, Brimhaven, TzHaar City, Tai Bwo Wannai, Shilo Village, Herblore Habitat, Hardwood grove, Kharazi Jungle, Shipyard, etc.).",
+    "tzhaarNaming": "Wiki canonical settlement is 'TzHaar City' (TzHaar name Mor Ul Rek). Catalog/anchors use informal 'TzHaar area' — rename.",
+    "contentVerdict": {
+      "Duradel": "KEEP — correctly Karamja via Shilo Village. Content detail is thin vs upgrade row; promote wiki-complete requirements.",
+      "TzHaar Fight Cave": "KEEP — in TzHaar City; Fire cape; wiki league badge Karamja confirmed.",
+      "Fight Kiln": "KEEP — in TzHaar City; TokHaar-Kal style capes (or uncut onyx); requires The Elder Kiln + one-time fire cape; wiki league badge Karamja confirmed.",
+      "Abomination": "KEEP with dual-region note — Tarshak's sanctum inside Brimhaven Dungeon (Karamja). Wiki infobox league_region is Karamja&Fremennik because Hero's Welcome is Fremennik-started; post-quest re-fight is Karamja geography. Detail currently empty."
+    },
+    "upgradeAreaPattern": "Herblore Habitat and Hardwood Grove correctly appear as both map areas and regional upgrade rows. That dual role is intentional: areas place the hub on the board; upgrades carry ironman/skilling unlock detail. Do not delete either side.",
+    "crandor": "Do NOT add Crandor as a Karamja sub-area by default. Wiki: separate island north of Karamja; surface access via Dragon Slayer. Crandor and Karamja Dungeon under the volcano is Karamja-side underground (league text covers underground with a Karamja entrance). quest-region-rules terms include 'crandor' as a Karamja term for quest mapping — that is taxonomy, not a map area pin.",
+    "regionsJsonLag": "data/league/regions.json still only has the thin four-area list (including bare Karamja + TzHaar area). Catalog is ahead; regions.json should be brought into line when areas are applied."
+  },
+  "issues": [
+    {
+      "id": "karamja-area-is-region-name",
+      "severity": "high",
+      "where": [
+        "data/research/catalog.json regions[karamja].areas",
+        "data/league/regions.json records[karamja].areas",
+        "src/map/data/placeAnchors.ts area 'Karamja'"
+      ],
+      "problem": "Bare 'Karamja' is the region name used as a sub-area. It is not a wiki settlement and collides with region-level labelling on the map.",
+      "fix": "Drop 'Karamja' from areas and remove its place anchor. Keep real settlements only."
+    },
+    {
+      "id": "tzhaar-area-noncanonical-name",
+      "severity": "medium",
+      "where": [
+        "catalog areas",
+        "regions.json areas",
+        "placeAnchors area 'TzHaar area'"
+      ],
+      "problem": "Wiki and TzHaar City article use 'TzHaar City', not 'TzHaar area'.",
+      "fix": "Rename area string to 'TzHaar City' everywhere (catalog, regions.json, placeAnchors)."
+    },
+    {
+      "id": "regions-json-thin-vs-catalog",
+      "severity": "medium",
+      "where": ["data/league/regions.json"],
+      "problem": "regions.json lacks Musa Point, Tai Bwo Wannai, Herblore Habitat, Hardwood Grove that catalog and anchors already assume.",
+      "fix": "Sync regions.json areas to the cleaned proposedAreas list."
+    },
+    {
+      "id": "content-duradel-detail-thin",
+      "severity": "low",
+      "where": ["catalog content Duradel"],
+      "problem": "detail only '100 combat, 50 Slayer'. Wiki also requires Shilo Village quest; location is Shilo Village 1st floor north of Fernahei's Fishing Hut; after While Guthix Sleeps Lapalok replaces him.",
+      "fix": "Expand content detail or rely on upgrade row 'Duradel / Lapalok (Shilo Village Slayer Masters)' and drop redundant thin content (prefer one strong row)."
+    },
+    {
+      "id": "content-abomination-empty-detail-dual-region",
+      "severity": "medium",
+      "where": ["catalog content Abomination", "upgrade Abomination progression"],
+      "problem": "kind is vague 'Brimhaven area'; detail is empty; confidence historical only. Wiki places re-fight in Tarshak's sanctum (Brimhaven Dungeon) and tags league_region Karamja&Fremennik.",
+      "fix": "Rewrite content/upgrade detail; set kind to combat/boss; note dual league badge and Fremennik quest-start pressure without removing Karamja ownership of the re-fight site."
+    },
+    {
+      "id": "content-fight-cave-kiln-confidence",
+      "severity": "low",
+      "where": [
+        "content TzHaar Fight Cave",
+        "content Fight Kiln",
+        "upgrades Fire cape",
+        "upgrades TokHaar-Kal capes"
+      ],
+      "problem": "Still confidence 'inferred_region' while wiki minigame pages carry explicit Karamja league badges.",
+      "fix": "Promote confidence to confirmed_wiki (or confirmed_wiki_league_region)."
+    },
+    {
+      "id": "optional-missing-map-areas",
+      "severity": "low",
+      "where": ["areas list"],
+      "problem": "Planner-relevant named places not currently areas: Kharazi Jungle (Legends' Quest / holy water for blessed flask), Jadinko Lair (curly roots FM), Brimhaven Dungeon (Abomination / dragons), Nature altar / gleaming wisps (already upgrade-only).",
+      "fix": "Keep core settlements as proposedAreas. Optionally add Kharazi Jungle and Jadinko Lair as secondary map areas if pin density is desired; leave Nature altar as upgrade-only."
+    },
+    {
+      "id": "herblore-habitat-area-and-upgrade-ok",
+      "severity": "info",
+      "where": ["areas Herblore Habitat", "upgrade Herblore Habitat"],
+      "problem": "None — dual area+upgrade is correct. Upgrade detail already wiki-confirmed (2026-07-26).",
+      "fix": "Keep both. Do not collapse Habitat into upgrade-only or area-only."
+    }
+  ],
+  "proposedAreas": {
+    "replaceWith": [
+      {
+        "name": "Musa Point",
+        "wiki": "https://runescape.wiki/w/Musa_Point",
+        "why": "North-east settlement; glory teleport; F2P fishing/teaks; volcano approach; Equilibrium League notable settlement."
+      },
+      {
+        "name": "Brimhaven",
+        "wiki": "https://runescape.wiki/w/Brimhaven",
+        "why": "West pirate town; Agility Arena; dungeon entrance; POH portal; lodestone neighbour; Equilibrium League notable settlement."
+      },
+      {
+        "name": "TzHaar City",
+        "wiki": "https://runescape.wiki/w/TzHaar_City",
+        "why": "Canonical city under Karamja Volcano; Fight Cave, Fight Kiln, Fight Cauldron, Tokkul shops. Replaces 'TzHaar area'."
+      },
+      {
+        "name": "Tai Bwo Wannai",
+        "wiki": "https://runescape.wiki/w/Tai_Bwo_Wannai",
+        "why": "Central jungle village; Cleanup minigame; trading sticks economy; Hardwood Grove neighbour; Equilibrium non-combat notable via Cleanup."
+      },
+      {
+        "name": "Hardwood Grove",
+        "wiki": "https://runescape.wiki/w/Hardwood_grove",
+        "why": "Fenced teak/mahogany cluster NE of Tai Bwo Wannai; trading-stick gated; major WC infrastructure. Keep area + upgrade dual role."
+      },
+      {
+        "name": "Shilo Village",
+        "wiki": "https://runescape.wiki/w/Shilo_Village_(location)",
+        "why": "Southern banked settlement; Duradel/Lapalok; gem mine; cart system; Equilibrium League notable settlement."
+      },
+      {
+        "name": "Herblore Habitat",
+        "wiki": "https://runescape.wiki/w/Herblore_Habitat",
+        "why": "SE Karamja multi-skill hub (Farming/Hunter/Herblore juju path). Equilibrium League notable non-combat activity. Keep area + upgrade dual role."
+      }
+    ],
+    "remove": [
+      {
+        "name": "Karamja",
+        "reason": "Region name, not a sub-place."
+      },
+      {
+        "name": "TzHaar area",
+        "reason": "Non-canonical; renamed to TzHaar City."
+      }
+    ],
+    "optionalAdd": [
+      {
+        "name": "Kharazi Jungle",
+        "wiki": "https://runescape.wiki/w/Kharazi_Jungle",
+        "why": "Southernmost jungle; Legends' Quest; holy water pool for blessed flask chain. Useful if blessed-flask planning needs a pin.",
+        "recommend": false
+      },
+      {
+        "name": "Jadinko Lair",
+        "wiki": "https://runescape.wiki/w/Jadinko_Lair",
+        "why": "Curly roots FM site; tunnel link toward Habitat. Already strong upgrade rows.",
+        "recommend": false
+      },
+      {
+        "name": "Brimhaven Dungeon",
+        "wiki": "https://runescape.wiki/w/Brimhaven_Dungeon",
+        "why": "Hosts Tarshak's sanctum / Abomination re-fight and metal dragons. Could absorb Abomination geography if pin wanted separate from town.",
+        "recommend": false
+      },
+      {
+        "name": "Crandor",
+        "wiki": "https://runescape.wiki/w/Crandor",
+        "why": "Separate island; not Karamja surface. Underground link via Crandor and Karamja Dungeon only. Do not add unless Equilibrium publishes explicit inclusion.",
+        "recommend": false
+      }
+    ],
+    "proposedOrder": [
+      "Musa Point",
+      "Brimhaven",
+      "TzHaar City",
+      "Tai Bwo Wannai",
+      "Hardwood Grove",
+      "Shilo Village",
+      "Herblore Habitat"
+    ],
+    "syncTargets": [
+      "data/research/catalog.json regions[karamja].areas (apply pass — do not edit in this audit)",
+      "data/league/regions.json records[karamja].areas",
+      "src/map/data/placeAnchors.ts (area string must match catalog exactly)"
+    ]
+  },
+  "proposedContentFixes": [
+    {
+      "name": "Duradel",
+      "action": "enrich",
+      "proposed": {
+        "name": "Duradel",
+        "kind": "Slayer",
+        "detail": "Shilo Village Slayer Master (1st floor north of Fernahei's Fishing Hut). Requires 100 combat, 50 Slayer, and Shilo Village quest. After While Guthix Sleeps, Lapalok permanently replaces him at the same desk.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Duradel",
+          "title": "Duradel",
+          "verifiedAt": "2026-07-26"
+        }
+      },
+      "notes": "Upgrade row 'Duradel / Lapalok (Shilo Village Slayer Masters)' is already stronger for planner math; content row can stay as the short board-facing blurb."
+    },
+    {
+      "name": "TzHaar Fight Cave",
+      "action": "enrich",
+      "proposed": {
+        "name": "TzHaar Fight Cave",
+        "kind": "combat",
+        "detail": "TzHaar City wave minigame ending at TzTok-Jad. First completion awards the fire cape (t55 melee cape) and is the one-time Fight Kiln entry payment.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/TzHaar_Fight_Cave",
+          "title": "TzHaar Fight Cave",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "name": "Fight Kiln",
+      "action": "enrich",
+      "proposed": {
+        "name": "Fight Kiln",
+        "kind": "combat",
+        "detail": "TzHaar City TokHaar wave minigame (37 waves, Har-Aken). Requires The Elder Kiln and a one-time fire cape sacrifice. Completion awards a style TokHaar-Kal cape or uncut onyx; TokHaar-Kal is the base for igneous cape upgrades.",
+        "confidence": "confirmed_wiki",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Fight_Kiln",
+          "title": "Fight Kiln",
+          "verifiedAt": "2026-07-26"
+        }
+      }
+    },
+    {
+      "name": "Abomination",
+      "action": "rewrite",
+      "proposed": {
+        "name": "Abomination",
+        "kind": "combat",
+        "detail": "Mutated dragonkin boss in Tarshak's sanctum (Brimhaven Dungeon). Quest fight during Hero's Welcome; post-quest re-fight via banite ore rockfall. Uniques include abomination cape (t75 melee), elevated dragon full helm rate, dragon javelins. Wiki league_region tags Karamja&Fremennik (quest path Fremennik-linked; re-fight site is Karamja).",
+        "confidence": "confirmed_wiki_dual_league_badge",
+        "source": {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Abomination",
+          "title": "Abomination",
+          "verifiedAt": "2026-07-26"
+        },
+        "regionHints": ["karamja", "fremennik"]
+      },
+      "notes": "Do not silently treat as Karamja-only for League planning if Hero's Welcome locality matters under Equilibrium auto-quests."
+    }
+  ],
+  "proposedUpgradeFixes": [
+    {
+      "name": "Fire cape",
+      "action": "enrich",
+      "proposed": {
+        "detail": "Awarded for defeating TzTok-Jad in the TzHaar Fight Cave (TzHaar City). Tier 55 melee cape; one-time payment to open the Fight Kiln.",
+        "confidence": "confirmed_wiki",
+        "requirements": [
+          "Access to TzHaar City / Fight Cave",
+          "Complete all Fight Cave waves including TzTok-Jad"
+        ]
+      }
+    },
+    {
+      "name": "TokHaar-Kal capes",
+      "action": "enrich",
+      "proposed": {
+        "detail": "Fight Kiln completion reward: style TokHaar-Kal-Ket/Xil/Mej/Mor (or uncut onyx). Base capes for the igneous Kal upgrade chain after TzKal-Zuk stone.",
+        "confidence": "confirmed_wiki",
+        "requirements": [
+          "The Elder Kiln quest",
+          "One-time fire cape sacrifice at kiln entrance",
+          "Complete Fight Kiln including Har-Aken"
+        ]
+      }
+    },
+    {
+      "name": "Abomination progression",
+      "action": "rewrite",
+      "proposed": {
+        "name": "Abomination progression",
+        "category": "combat uniques",
+        "detail": "Post-quest re-fight of the Abomination in Tarshak's sanctum (Brimhaven Dungeon). Notable for abomination cape, dragon full helm (1/1000), draconic visage (1/2500), and always dragon javelins. Quest Hero's Welcome is Fremennik-linked on wiki league badges; the re-fight geography is Karamja.",
+        "requirements": [
+          "Hero's Welcome completed",
+          "Access to Brimhaven Dungeon / Tarshak's sanctum",
+          "Use refight option on banite ore rockfall"
+        ],
+        "confidence": "confirmed_wiki_dual_league_badge",
+        "regionHints": ["karamja", "fremennik"],
+        "regionRequirementType": "acquisition_region_with_quest_dual_badge"
+      }
+    },
+    {
+      "name": "Herblore Habitat",
+      "action": "keep",
+      "proposed": null,
+      "notes": "Already confirmed_wiki with full SE Karamja multi-skill detail. Dual area+upgrade is correct — do not demote to area-only or invent a third taxonomy."
+    },
+    {
+      "name": "Hardwood Grove teaks and mahoganies",
+      "action": "keep",
+      "proposed": null,
+      "notes": "Upgrade already present; keep paired with Hardwood Grove area name."
+    },
+    {
+      "name": "Igneous cape progression",
+      "action": "keep",
+      "proposed": null,
+      "notes": "Cross-region Karamja+Misthalin (Senntisten working map) row is already correct; not part of area cleanup."
+    },
+    {
+      "name": "Fight Cauldron obsidian armour progression",
+      "action": "keep",
+      "proposed": null,
+      "notes": "TzHaar City support for Zuk waves; confirmed. Optional future content pin under TzHaar City if content list expands."
+    }
+  ],
+  "anchorFixes": {
+    "invariant": "Every placeAnchors.area must equal a catalog area name for that region exactly (placeAnchors.ts header + placeAnchors.test.ts).",
+    "remove": [
+      {
+        "region": "karamja",
+        "area": "Karamja",
+        "currentUv": [0.3, 0.758],
+        "reason": "Region-name-as-area pin; delete when bare Karamja is dropped from areas."
+      }
+    ],
+    "rename": [
+      {
+        "region": "karamja",
+        "from": "TzHaar area",
+        "to": "TzHaar City",
+        "keepUv": [0.338, 0.812],
+        "reason": "Canonical wiki city name; volcano/TzHaar City sits inland SE of Musa Point / E of Brimhaven on existing hand layout."
+      }
+    ],
+    "keep": [
+      { "region": "karamja", "area": "Musa Point", "uv": [0.33, 0.74] },
+      { "region": "karamja", "area": "Brimhaven", "uv": [0.264, 0.775] },
+      { "region": "karamja", "area": "Hardwood Grove", "uv": [0.275, 0.8] },
+      { "region": "karamja", "area": "Tai Bwo Wannai", "uv": [0.29, 0.84] },
+      { "region": "karamja", "area": "Herblore Habitat", "uv": [0.32, 0.86] },
+      { "region": "karamja", "area": "Shilo Village", "uv": [0.305, 0.882] }
+    ],
+    "optionalNew": [
+      {
+        "region": "karamja",
+        "area": "Kharazi Jungle",
+        "suggestedUv": [0.3, 0.92],
+        "note": "Only if optional area is accepted; south tip of island, south of Shilo."
+      },
+      {
+        "region": "karamja",
+        "area": "Jadinko Lair",
+        "suggestedUv": [0.325, 0.85],
+        "note": "Only if optional area is accepted; near Habitat / SE jungle."
+      }
+    ],
+    "afterApplyChecklist": [
+      "npm test -- placeAnchors (or full vitest) so every karamja anchor resolves to a catalog area and lands inside the region ring",
+      "Map e2e: region detail still matches /sources? · verified <date>/; no button name regressions from area renames (areas are not the frozen e2e region buttons)"
+    ]
+  },
+  "applyReady": {
+    "areasRenameAndDropBareRegionName": true,
+    "regionsJsonSyncToProposedOrder": true,
+    "anchorRemoveKaramjaAndRenameTzHaarCity": true,
+    "contentDetailEnrichment": true,
+    "abominationDualRegionDetail": true,
+    "confidencePromotionsFightCaveKiln": true,
+    "optionalAreasKharaziJadinkoLair": false,
+    "crandorAsArea": false,
+    "catalogJsonDirectEditThisPass": false,
+    "notes": [
+      "Safe apply path: (1) set catalog areas to proposedOrder, (2) mirror into data/league/regions.json, (3) fix placeAnchors remove+rename, (4) enrich content/upgrade text, (5) run placeAnchors tests.",
+      "Do not invent Equilibrium auto-quest lists for Karamja — wiki Equilibrium League/Areas/Karamja quests/slayer sections are still empty stubs.",
+      "applyReady for optional areas is false until a product choice on pin density is made."
+    ]
+  },
+  "wikiGeographyReference": {
+    "northern": [
+      "Musa Point",
+      "Crandor and Karamja Dungeon (underground)",
+      "TzHaar City (under volcano)",
+      "Brimhaven",
+      "Northern Karamja Jungle / Brimhaven Dungeon"
+    ],
+    "southern": [
+      "Tai Bwo Wannai",
+      "Hardwood grove (NE of Tai Bwo Wannai)",
+      "Shipyard",
+      "Shilo Village",
+      "Kharazi Jungle",
+      "Herblore Habitat (SE)",
+      "Jadinko Lair (near Habitat)",
+      "Nature altar / gleaming wisps (southern jungle)"
+    ],
+    "equilibriumLeagueNotable": {
+      "settlements": ["Musa Point", "Brimhaven", "Shilo Village"],
+      "combat": ["Fight Cave", "Fight Kiln"],
+      "nonCombat": ["Herblore Habitat", "Agility arena", "Tai Bwo Wannai Cleanup"]
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "id": "wave2-rekill-skips",
+  "title": "Wave 2 rekill — strip remaining skip/global multi-host upgrades from every host",
+  "date": "2026-07-26",
+  "generatedAt": "2026-07-26T15:10:00.000Z",
+  "applyReady": true,
+  "catalogReadOnly": "data/research/catalog.json",
+  "sourceReview": [
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/fix-patches/issue-02-global-removes.json",
+    "scraped-data/wave2-clamp-report.json",
+    "scripts/wave2-clamp-dedupe.mjs",
+    "data/research/regional-skilling-unlocks.json"
+  ],
+  "policy": "Re-kill named skip/global upgrades from EVERY region host via removeUpgradeByNameAllHosts. Idempotent: 0 copies is success. No single-home keep. Do not touch Grace of the elves (GOTE) or Dark Facet of Grace (GOTE enchantment). Do not remove Herb patches (N) per-region rows (only Herb patch network global).",
+  "doNotRemove": [
+    "Grace of the elves (GOTE)",
+    "Dark Facet of Grace (GOTE enchantment)",
+    "Herb patches (N) per-region rows"
+  ],
+  "scanNote": "Catalog @ 2026-07-26T14:44Z already empty for these names (prior clamp/rulings). RSU still lists many — re-sync can reintroduce. Patch is rekill insurance + any residual copies. Short-name aliases included where user wording differs from full catalog title.",
+  "notes": {
+    "opSchema": "removeUpgradeByNameAllHosts { name, reason } — strips every copy of name from all catalog.regions[*].upgrades (apply-region-patches.mjs).",
+    "upgradeNameCount": 30,
+    "opCount": 30,
+    "keptExplicitly": [
+      "Grace of the elves (GOTE)",
+      "Dark Facet of Grace (GOTE enchantment)"
+    ]
+  },
+  "ops": [
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Hoardstalker ring",
+      "reason": "A4 not relevant — DG convenience tele; not a region-gated major unlock"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Learn broad arrow / bolt fletching (300 Spayer points)",
+      "reason": "A5 typo alias of broad-arrow Learn row — strip if present"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "reason": "A6 not relevant — global Slayer Rewards Learn"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Games necklace teleport package",
+      "reason": "A8 not relevant — craftable jewelry tele package"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Ring of duelling",
+      "reason": "A11 not relevant — craftable jewelry tele"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Cremation ability unlock",
+      "reason": "A12 skip — rare ability drop, not region planning value"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Ore box tier upgrades",
+      "reason": "A13 not region locked — metal-bank capacity ladder is global"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Herb patch network (global herb-run map)",
+      "reason": "A2 replace with per-region Herb patches (N) rows — do not remove those"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
+      "reason": "B2 do not mega-chain; keep split GOTE / Dark Facet rows only"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "GOTE gather + porter sustain checklist",
+      "reason": "B4 residual checklist — do not chain GOTE/porter supply; keep base GOTE / Dark Facet rows"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Signs of the porter (Divination supply system)",
+      "reason": "F5 no region need — energy ladder is multi-region residual"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Fury shark outfit + Bait and Switch Fishing stack",
+      "reason": "B10 ignore combo — keep separate Fury / Bait and Switch rows"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Grace of the elves / signs of the porter supply chain",
+      "reason": "B4 would not chain GOTE/porter supply — keep base GOTE / Dark Facet only"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Slayer prefer / block / extend (Assignment Rewards)",
+      "reason": "A3 not region locked — global Slayer Assignment Rewards"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Prefer / block slot ladder (quest-point scaled)",
+      "reason": "A3 companion — quest-point slot ladder is global, not region-gated"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Mattock tier ladder (bronze through elder rune + specials)",
+      "reason": "A10 only care about augmentable mattocks — drop full bronze→elder ladder"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Curly roots Firemaking ceiling stack",
+      "reason": "F2 skip — short-name alias"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)",
+      "reason": "F2 no — multi-region FM ceiling combo not a region unlock"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Scroll of cleansing + herb bag",
+      "reason": "F4 short-name alias of Herblore combo stack"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+      "reason": "F4 not relevant combo — keep specialised scroll/herb-bag rows if any"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Cooking dual-brewery network",
+      "reason": "F8 short-name alias"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+      "reason": "F8 skip — dual-brewery network is not a single-region major unlock"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Igneous cape progression",
+      "reason": "F13 unlocked for all — skip as region upgrade"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Prifddinas spirit tree + Glouron",
+      "reason": "F14 short-name alias"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Prifddinas spirit tree + Glouron three-tree unlock",
+      "reason": "F14 not relevant as multi-host residual"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Aquarium room",
+      "reason": "C3 short-name alias — POH Aquarium has no region lock"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Aquarium room + Prawn Perks",
+      "reason": "C3 no region locks — drop"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Player-owned house Aquarium",
+      "reason": "C4 short-name alias"
+    },
+    {
+      "op": "removeUpgradeByNameAllHosts",
+      "name": "Player-owned house Aquarium and Prawnbroker",
+      "reason": "C4 drop — POH Aquarium/Prawnbroker not region-gated planning value"
+    }
+  ]
+}

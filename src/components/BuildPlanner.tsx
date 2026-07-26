@@ -1,6 +1,15 @@
 "use client";
 
-import { useState } from "react";
+/**
+ * Build — modelled on official Leagues II: Equilibrium client menu
+ * (Jagex news screenshots: relicmenu.jpg / blessing.jpg).
+ * Tabs: Regions · Relics · Blessings · Share
+ * Relics: left choice column + locked tier grid.
+ * Blessings: Order/Chaos/Balance path cells.
+ * T1 relic portraits from official countdown news (CC fan use / credit Jagex).
+ */
+
+import { useMemo, useState } from "react";
 import {
   blessingResetsLeft,
   canSelectElective,
@@ -14,17 +23,7 @@ import {
 } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { buildHasContent, useBuild } from "@/league/useBuild";
-import { Hex, HexRow, hexClass } from "@/components/Hex";
-import { WorkbenchTabs } from "@/components/WorkbenchTabs";
-
-const BUILD_TABS = [
-  { id: "regions", label: "Regions" },
-  { id: "relics", label: "Relics" },
-  { id: "blessings", label: "Blessings" },
-  { id: "share", label: "Share" },
-] as const;
-
-type BuildTab = (typeof BUILD_TABS)[number]["id"];
+import "./build-game-menu.css";
 
 export type PlannerRegion = {
   id: string;
@@ -48,7 +47,6 @@ export type RelicChoice = {
 export type RelicTier = {
   tier: number;
   revealed: boolean;
-  /** Tier-level provenance from the data pass; rendered when consumers need it. */
   verified?: boolean;
   sourceUrl?: string;
   choices: RelicChoice[];
@@ -64,26 +62,50 @@ export type BlessingTier = {
   verified?: boolean;
 };
 
-const PATH_INK: Record<string, string> = {
-  Chaos: "text-chaos-300",
-  Balance: "text-balance-400",
-  Order: "text-order-400",
+const TABS = [
+  { id: "regions", label: "Regions" },
+  { id: "relics", label: "Relics" },
+  { id: "blessings", label: "Blessings" },
+  { id: "share", label: "Share" },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
+/** Official countdown portraits (Jagex CDN, mirrored under public/game/relics). */
+const RELIC_ART: Record<string, string> = {
+  Survivalist: "/game/relics/survivalist.jpg",
+  "Endless Harvest": "/game/relics/endless-harvest.jpg",
+  "Golden Touch": "/game/relics/golden-touch.jpg",
+};
+
+const RELIC_MONO: Record<string, string> = {
+  Survivalist: "SV",
+  "Endless Harvest": "EH",
+  "Golden Touch": "GT",
+};
+
+/** Passive XP line shown on client next to Tier 1 (from official menu). */
+const TIER_PASSIVE: Record<number, string> = {
+  1: "5 × XP",
+  2: "—",
+  3: "—",
+  4: "—",
+  5: "—",
+  6: "—",
+  7: "—",
 };
 
 function availabilityLabel(value: string): string {
-  if (value === "automatic_early") return "early unlock";
-  return value.replaceAll("_", " ");
+  if (value === "automatic_early") return "milestone";
+  if (value === "starting") return "start";
+  return "elective";
 }
 
-/** Blessing choice payloads ship empty until the reveals; render them once they exist. */
-function asBlessingChoices(value: unknown[]): { name: string; effects: string[] }[] {
-  return value.filter(
-    (c): c is { name: string; effects: string[] } =>
-      typeof c === "object" &&
-      c !== null &&
-      typeof (c as { name?: unknown }).name === "string" &&
-      Array.isArray((c as { effects?: unknown }).effects),
-  );
+function pathClass(path: string): string {
+  if (path === "Chaos") return "build-game__path-chaos";
+  if (path === "Balance") return "build-game__path-balance";
+  if (path === "Order") return "build-game__path-order";
+  return "";
 }
 
 export function BuildPlanner({
@@ -97,7 +119,6 @@ export function BuildPlanner({
   blessingTiers: BlessingTier[];
   resetCount: number;
 }) {
-  // All picks live in the shared unlock store — same state the map edits.
   const {
     build,
     loaded,
@@ -108,30 +129,51 @@ export function BuildPlanner({
     clearElectives,
     resetBuild,
   } = useBuild();
-  const picks = build.elective;
-  const [focusId, setFocusId] = useState<string>(regions[0]?.id ?? "");
 
-  const picked = (id: string) => (picks as string[]).includes(id);
-  const isOpen = (r: PlannerRegion) => r.availability !== "elective" || picked(r.id);
-  const focus = regions.find((r) => r.id === focusId) ?? regions[0];
-  const openCount = regions.filter(isOpen).length;
-  const pickCounter = loaded ? `${picks.length}/3` : "…/3";
-  const paths = blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"];
-  const hasFullBuild = buildHasContent(build);
-
-  const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0).length;
-  const anyBlessingRevealed = blessingTiers.some(
-    (t) => t.revealed && asBlessingChoices(t.choices).length > 0,
-  );
-  const alignments = godTierAlignments(build.blessingPicks);
-  const resetsLeft = blessingResetsLeft(build);
-
-  const [segment, setSegment] = useState<BuildTab>("regions");
+  const [tab, setTab] = useState<TabId>("relics");
+  const [focusRelicTier, setFocusRelicTier] = useState(1);
   const [copyFeedback, setCopyFeedback] = useState<"idle" | "ok" | "err">("idle");
+
+  const picks = build.elective;
+  const pickCounter = loaded ? `${picks.length}/3` : "…/3";
+  const hasFullBuild = buildHasContent(build);
+  const resetsLeft = blessingResetsLeft(build);
+  const alignments = godTierAlignments(build.blessingPicks);
+
+  const paths = useMemo(
+    () => blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"],
+    [blessingTiers],
+  );
+
+  const focusTier =
+    relicTiers.find((t) => t.tier === focusRelicTier) ?? relicTiers[0];
+  const seatedName = focusTier ? build.relics[String(focusTier.tier)] ?? null : null;
+  const seated =
+    focusTier?.choices.find((c) => c.name === seatedName) ?? null;
+
+  /** Locked grid slots: remaining choices on this tier + unrevealed higher tiers. */
+  const lockedSlots = useMemo(() => {
+    const slots: { key: string; label: string }[] = [];
+    for (const tier of relicTiers) {
+      if (tier.tier === focusRelicTier && tier.revealed) {
+        // Filler empty cells like the client right pane (blurred hexes)
+        for (let i = 0; i < 18; i++) {
+          slots.push({ key: `t${tier.tier}-pad-${i}`, label: "" });
+        }
+      } else if (!tier.revealed || tier.choices.length === 0) {
+        for (let i = 0; i < 3; i++) {
+          slots.push({ key: `t${tier.tier}-lock-${i}`, label: `T${tier.tier}` });
+        }
+      }
+    }
+    return slots.slice(0, 24);
+  }, [relicTiers, focusRelicTier]);
+
   const flashCopy = (next: "ok" | "err") => {
     setCopyFeedback(next);
     setTimeout(() => setCopyFeedback("idle"), 1500);
   };
+
   const copyShareLink = () => {
     if (!navigator.clipboard?.writeText) {
       flashCopy("err");
@@ -143,392 +185,416 @@ export function BuildPlanner({
       .catch(() => flashCopy("err"));
   };
 
+  const trackLit = Math.min(7, Object.keys(build.relics).length + (picks.length > 0 ? 1 : 0));
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="flex min-h-0 flex-col gap-4">
-        <WorkbenchTabs
-          aria-label="Build sections"
-          tabs={BUILD_TABS}
-          active={segment}
-          onChange={setSegment}
-        />
+    <div className="build-game">
+      <div className="build-game__frame">
+        <header className="build-game__titlebar">
+          <span className="build-game__logo" aria-hidden />
+          <h1 className="build-game__title">Leagues II: Equilibrium</h1>
+          <p className="build-game__title-meta" aria-live="polite">
+            Picks <strong>{pickCounter}</strong>
+            {seatedName ? (
+              <>
+                {" "}
+                · <strong>{RELIC_MONO[seatedName] ?? seatedName}</strong>
+              </>
+            ) : null}
+          </p>
+        </header>
 
-        {segment === "regions" ? (
-        <section aria-busy={!loaded}>
-          <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className={`num text-xs text-parch-300 ${loaded ? "" : "opacity-60"}`}>
-              {openCount} of {regions.length} open · {pickCounter} picks
-            </span>
-            <span className="h-px min-w-8 flex-1 bg-stone-750" />
+        <div className="build-game__tabs" role="tablist" aria-label="Build sections">
+          {TABS.map((t) => (
             <button
+              key={t.id}
               type="button"
-              onClick={clearElectives}
-              disabled={!loaded || picks.length === 0}
-              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40"
+              role="tab"
+              aria-selected={tab === t.id}
+              className={`build-game__tab${tab === t.id ? " is-on" : ""}`}
+              onClick={() => setTab(t.id)}
             >
-              Clear picks
+              {t.label}
             </button>
-          </div>
+          ))}
+        </div>
 
-          <div
-            className={`flex flex-col ${loaded ? "" : "pointer-events-none opacity-60"}`}
-          >
-            {[regions.slice(0, 6), regions.slice(6)].map((row, rowIndex) => (
-              <HexRow key={rowIndex} offset={rowIndex === 1} className={rowIndex ? "-mt-[42px]" : ""}>
-                {row.map((region) => {
-                  const open = isOpen(region);
+        <div className="build-game__track">
+          <span className="build-game__track-gem" aria-hidden />
+          <span>
+            {tab === "blessings"
+              ? `Blessing path · ${build.blessingPicks.length || 0} chosen`
+              : `League plan · ${Object.keys(build.relics).length} relics seated`}
+          </span>
+          <div className="build-game__track-bar" aria-hidden>
+            <div
+              className="build-game__track-fill"
+              style={{ width: `${Math.min(100, (trackLit / 7) * 100)}%` }}
+            />
+          </div>
+          <div className="build-game__track-pips" aria-hidden>
+            {Array.from({ length: 7 }, (_, i) => (
+              <span
+                key={i}
+                className={`build-game__track-pip${i < trackLit ? " is-lit" : ""}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="build-game__body">
+          {/* ── Regions ───────────────────────────────────── */}
+          {tab === "regions" ? (
+            <div className="build-game__regions" aria-busy={!loaded}>
+              <div className="build-game__tier-label">
+                <strong>Region unlocks</strong>
+                <span className="text-[12px] text-[color:var(--parch-dim)]">
+                  2 start + Karamja · 3 electives
+                </span>
+                <button
+                  type="button"
+                  className="build-game__btn ml-auto"
+                  disabled={!loaded || picks.length === 0}
+                  onClick={clearElectives}
+                >
+                  Clear picks
+                </button>
+              </div>
+              <div
+                className={`build-game__region-grid${
+                  loaded ? "" : " pointer-events-none opacity-60"
+                }`}
+              >
+                {regions.map((region) => {
                   const elective = region.availability === "elective";
                   const selectable =
                     elective && canSelectElective(build, region.id as RegionId);
-                  // Cap and pre-hydrate block toggle only — keep the button
-                  // focusable so the inspector still works (mirror RegionLedger).
                   const pickBlocked = elective && (!loaded || !selectable);
-                  const barred = !open && picks.length >= 3;
-                  const selected = focusId === region.id;
+                  const isOn = !elective || picks.includes(region.id as RegionId);
                   return (
                     <button
                       key={region.id}
                       type="button"
-                      aria-pressed={picked(region.id)}
+                      aria-pressed={isOn}
                       aria-disabled={pickBlocked || undefined}
+                      className={`build-game__region${isOn ? " is-on" : ""}${
+                        pickBlocked ? " is-blocked" : ""
+                      }`}
                       onClick={() => {
-                        setFocusId(region.id);
                         if (elective && loaded && selectable) {
                           toggleRegion(region.id as RegionId);
                         }
                       }}
-                      // Content sits above the bottom slope, which the next row overlaps.
-                      className={hexClass(
-                        "lg",
-                        barred ? "locked" : selected ? "selected" : "open",
-                        `gap-1 pb-2.5${pickBlocked ? " cursor-not-allowed" : ""}`,
-                      )}
                     >
-                      {barred ? (
-                        <span className="h-[17px] w-[15px] bg-gem-600 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
-                      ) : (
-                        <img
-                          src={`/game/regions/${region.id}.png`}
-                          alt=""
-                          width={42}
-                          height={48}
-                          className="h-12 w-auto object-contain"
-                        />
-                      )}
-                      <span className="flex min-h-[31px] items-end px-2 text-[12.5px] leading-tight text-parch-100">
-                        {region.name}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/game/regions/${region.id}.png`}
+                        alt=""
+                        width={32}
+                        height={36}
+                      />
+                      <span className="build-game__region-name">{region.name}</span>
+                      <span className="build-game__region-meta">
+                        {isOn
+                          ? elective
+                            ? "picked"
+                            : availabilityLabel(region.availability)
+                          : `${region.primaryQuests} quests`}
                       </span>
-                      <span
-                        className={`num text-[19px] leading-none ${barred ? "text-parch-300" : "text-gem-400"}`}
-                        title="Quests starting here (primary_region_counts)"
-                      >
-                        {region.primaryQuests}
-                      </span>
-                      <span className="text-xs leading-none text-parch-100">starting here</span>
                     </button>
                   );
                 })}
-              </HexRow>
-            ))}
-          </div>
-        </section>
-        ) : null}
+              </div>
+            </div>
+          ) : null}
 
-        {segment === "relics" ? (
-        <section>
-          <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className="num text-xs text-parch-300">
-              {revealedRelicTiers} of {relicTiers.length} tiers revealed
-            </span>
-            <span className="h-px min-w-8 flex-1 bg-stone-750" />
-            <span className="text-xs text-parch-100">
-              {Object.values(build.relics).join(" · ") || "none picked"}
-            </span>
-          </div>
-
-          <div className="flex items-start gap-1 overflow-x-auto pb-1 pt-5">
-            {relicTiers.map((tier) => {
-              if (!tier.revealed || tier.choices.length === 0) {
-                return (
-                  <Hex key={tier.tier} size="md" state="unrevealed">
-                    <span className="num text-xs text-parch-300">T{tier.tier}</span>
-                  </Hex>
-                );
-              }
-              return (
-                <div
-                  key={tier.tier}
-                  className="relative mr-3.5 flex gap-1 border-r border-stone-750 pr-5"
-                >
-                  <span className="absolute -top-5 left-0 whitespace-nowrap text-xs uppercase tracking-[0.09em] text-parch-100">
-                    Tier {tier.tier} · pick one
+          {/* ── Relics (official menu layout) ─────────────── */}
+          {tab === "relics" ? (
+            <div className="build-game__relics">
+              <div>
+                <div className="build-game__tier-label">
+                  <strong>Tier {focusTier?.tier ?? 1}</strong>
+                  <span className="build-game__passive">
+                    {TIER_PASSIVE[focusTier?.tier ?? 1] ?? "—"}
                   </span>
-                  {tier.choices.map((relic) => {
-                    const selected = build.relics[String(tier.tier)] === relic.name;
+                </div>
+                <div className="build-game__choice-col" role="listbox" aria-label="Relic choices">
+                  {(focusTier?.revealed ? focusTier.choices : []).map((relic) => {
+                    const on = build.relics[String(focusTier!.tier)] === relic.name;
+                    const art = RELIC_ART[relic.name];
+                    const mono = RELIC_MONO[relic.name] ?? "·";
                     return (
                       <button
                         key={relic.name}
                         type="button"
-                        title={relic.effects[0]}
-                        aria-pressed={selected}
-                        onClick={() => toggleRelic(tier.tier, relic.name)}
-                        className={hexClass("md", selected ? "selected" : "open")}
+                        role="option"
+                        aria-selected={on}
+                        aria-pressed={on}
+                        className={`build-game__choice${on ? " is-on" : ""}`}
+                        onClick={() => toggleRelic(focusTier!.tier, relic.name)}
                       >
-                        <span className="px-2 text-[12px] leading-tight text-parch-100">
-                          {relic.name}
+                        <span className="build-game__choice-icon" aria-hidden>
+                          {art ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={art} alt="" />
+                          ) : (
+                            <span className="mono-fallback">{mono}</span>
+                          )}
                         </span>
+                        <span className="build-game__choice-name">{relic.name}</span>
+                      </button>
+                    );
+                  })}
+                  {(!focusTier?.revealed || focusTier.choices.length === 0) && (
+                    <p className="text-xs text-[color:var(--parch-dim)] px-1">
+                      Tier sealed until Jagex reveals choices.
+                    </p>
+                  )}
+                </div>
+
+                {/* Tier rail under choices */}
+                <div
+                  className="mt-2 flex flex-wrap gap-1"
+                  role="tablist"
+                  aria-label="Relic tiers"
+                >
+                  {relicTiers.map((tier) => {
+                    const open = tier.revealed && tier.choices.length > 0;
+                    const on = focusRelicTier === tier.tier;
+                    return (
+                      <button
+                        key={tier.tier}
+                        type="button"
+                        role="tab"
+                        aria-selected={on}
+                        className={`build-game__btn${on ? " build-game__btn--gem" : ""}`}
+                        style={{ padding: "0.25rem 0.45rem", fontSize: "0.7rem" }}
+                        onClick={() => setFocusRelicTier(tier.tier)}
+                        title={open ? `Tier ${tier.tier}` : `Tier ${tier.tier} unrevealed`}
+                      >
+                        T{tier.tier}
+                        {!open ? " ·" : ""}
                       </button>
                     );
                   })}
                 </div>
-              );
-            })}
-          </div>
-          {relicTiers.map((tier) => {
-            const choice = tier.choices.find((c) => c.name === build.relics[String(tier.tier)]);
-            if (!choice) return null;
-            return (
-              <p key={tier.tier} className="mt-2 text-xs leading-5 text-parch-300">
-                <span className="text-parch-50">{choice.name}</span> — {choice.effects.join(" ")}
-                {choice.sourceUrl ? (
-                  <>
-                    {" "}
-                    <a
-                      href={choice.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline underline-offset-2"
+              </div>
+
+              <div className="flex min-h-0 flex-col">
+                <div className="build-game__slot-grid" aria-label="Locked relic slots">
+                  {lockedSlots.map((slot) => (
+                    <div
+                      key={slot.key}
+                      className="build-game__slot is-locked"
+                      title="Unrevealed"
                     >
-                      Source
-                    </a>
-                  </>
+                      <span className="build-game__slot-hex" aria-hidden />
+                      {slot.label ? <span>{slot.label}</span> : null}
+                    </div>
+                  ))}
+                </div>
+                {seated ? (
+                  <div className="build-game__detail">
+                    <h3>{seated.name}</h3>
+                    <ul>
+                      {seated.effects.map((fx) => (
+                        <li key={fx}>{fx}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : focusTier?.revealed ? (
+                  <div className="build-game__detail">
+                    <h3>Select a relic</h3>
+                    <p className="m-0 text-sm text-[color:var(--parch-dim)]">
+                      Pick one Tier {focusTier.tier} choice on the left. Higher tiers stay
+                      sealed until official reveal.
+                    </p>
+                  </div>
                 ) : null}
-              </p>
-            );
-          })}
-        </section>
-        ) : null}
-
-        {segment === "blessings" ? (
-        <section>
-          <div className="mb-3 flex flex-wrap items-baseline gap-3">
-            <span className="text-xs text-parch-300">
-              god tier at 4 and 8 · {resetsLeft} of {resetCount} resets left
-            </span>
-            <span className="h-px min-w-8 flex-1 bg-stone-750" />
-            <button
-              type="button"
-              onClick={resetBlessings}
-              disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
-              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Reset
-            </button>
-          </div>
-
-          <div className="overflow-x-auto pb-1">
-            <div className="flex gap-1 pl-[62px]">
-              {blessingTiers.map((tier) => (
-                <span
-                  key={tier.tier}
-                  className="num w-[52px] text-center text-xs text-parch-300"
-                >
-                  {tier.tier}
-                </span>
-              ))}
+              </div>
             </div>
-            <div className="flex flex-col">
-              {paths.map((path, pathIndex) => (
-                <div
-                  key={path}
-                  className={`flex items-center gap-1 ${pathIndex ? "-mt-[13px]" : ""}`}
-                >
-                  <span
-                    className={`w-[58px] shrink-0 text-xs uppercase tracking-[0.1em] ${
-                      PATH_INK[path] ?? "text-parch-100"
-                    }`}
-                  >
-                    {path}
+          ) : null}
+
+          {/* ── Blessings (official path grid) ────────────── */}
+          {tab === "blessings" ? (
+            <div className="build-game__bless">
+              <div className="build-game__bless-actions">
+                <div className="build-game__tier-label" style={{ marginBottom: 0 }}>
+                  <strong>Blessing paths</strong>
+                  <span className="text-[12px] text-[color:var(--parch-dim)]">
+                    Order · Chaos · Balance · God Tier at 4 &amp; 8
                   </span>
-                  {blessingTiers.map((tier) => {
+                </div>
+                <button
+                  type="button"
+                  className="build-game__btn ml-auto"
+                  disabled={resetsLeft === 0 || build.blessingPicks.length === 0}
+                  onClick={resetBlessings}
+                >
+                  Reset ({resetsLeft}/{resetCount})
+                </button>
+              </div>
+
+              <div className="build-game__bless-grid" role="grid" aria-label="Blessing lattice">
+                <span className="build-game__bless-corner" />
+                {blessingTiers.map((tier) => (
+                  <span key={tier.tier} className="build-game__bless-colhead">
+                    T{tier.tier}
+                    {tier.godTier ? "★" : ""}
+                  </span>
+                ))}
+                {paths.flatMap((path) => {
+                  const label = (
+                    <span
+                      key={`${path}-label`}
+                      className={`build-game__bless-path ${pathClass(path)}`}
+                    >
+                      {path}
+                    </span>
+                  );
+                  const cells = blessingTiers.map((tier) => {
                     if (tier.godTier) {
+                      const god = alignments[tier.tier];
+                      const lit = god === path;
                       return (
-                        <Hex key={tier.tier} size="sm" state="unrevealed">
-                          <span className="absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 bg-gem-400 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
-                        </Hex>
+                        <div
+                          key={`${path}-${tier.tier}`}
+                          className={`build-game__bless-cell is-god${lit ? " is-on" : " is-locked"}`}
+                          title={
+                            god
+                              ? `God Tier ${tier.tier}: ${god}`
+                              : `God Tier ${tier.tier} undecided`
+                          }
+                          aria-label={`Tier ${tier.tier} God ${path}${lit ? " active" : ""}`}
+                        >
+                          <span className="build-game__bless-dot" aria-hidden />
+                        </div>
                       );
                     }
                     const pickIndex = PATH_TIERS.indexOf(tier.tier);
                     const validPath = (BLESSING_PATHS as readonly string[]).includes(path);
                     if (pickIndex < 0 || !validPath) {
-                      return <Hex key={tier.tier} size="sm" state="unrevealed" />;
+                      return (
+                        <div
+                          key={`${path}-${tier.tier}`}
+                          className="build-game__bless-cell is-locked"
+                        />
+                      );
                     }
                     const locked = pickIndex > build.blessingPicks.length;
                     const selected = build.blessingPicks[pickIndex] === path;
                     return (
                       <button
-                        key={tier.tier}
+                        key={`${path}-${tier.tier}`}
                         type="button"
                         disabled={locked}
                         aria-pressed={selected}
                         aria-label={`Tier ${tier.tier} ${path}`}
+                        className={`build-game__bless-cell${
+                          locked ? " is-locked" : " is-open"
+                        }${selected ? " is-on" : ""}`}
                         onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
-                        className={hexClass(
-                          "sm",
-                          selected ? "selected" : locked ? "unrevealed" : "open",
-                        )}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-parch-300">
-              {blessingTiers
-                .filter((t) => t.godTier)
-                .map((t) =>
-                  alignments[t.tier] ? `Tier ${t.tier}: ${alignments[t.tier]} god` : `Tier ${t.tier}: god undecided`,
-                )
-                .join(" · ")}
-            </p>
-            {!anyBlessingRevealed ? (
-              <p className="mt-1 text-xs text-parch-100">
-                No blessing is revealed yet. The lattice is the shape of the choice, not a guess at
-                its contents.
-              </p>
-            ) : (
-              <div className="mt-3 grid gap-2">
-                {blessingTiers
-                  .filter((t) => t.revealed)
-                  .flatMap((tier) =>
-                    asBlessingChoices(tier.choices).map((choice) => (
-                      <div
-                        key={`${tier.tier}-${choice.name}`}
-                        className="text-xs leading-5 text-parch-100"
                       >
-                        <span className="text-parch-50">
-                          T{tier.tier} {choice.name}
-                        </span>{" "}
-                        — {choice.effects.join(" ")}
-                      </div>
-                    )),
-                  )}
+                        <span className="build-game__bless-dot" aria-hidden />
+                      </button>
+                    );
+                  });
+                  return [label, ...cells];
+                })}
               </div>
-            )}
-          </div>
-        </section>
-        ) : null}
+              <p className="m-0 text-xs text-[color:var(--parch-dim)]">
+                {blessingTiers.some((t) => t.revealed)
+                  ? blessingTiers
+                      .filter((t) => t.godTier)
+                      .map((t) =>
+                        alignments[t.tier]
+                          ? `T${t.tier} ${alignments[t.tier]} God`
+                          : `T${t.tier} God undecided`,
+                      )
+                      .join(" · ")
+                  : "Blessing choices empty until Jagex publishes tier details — path picks still plan ahead."}
+              </p>
+            </div>
+          ) : null}
 
-        {segment === "share" ? (
-          <section className="panel p-4">
-            <p className="text-sm text-parch-100">
-              Copy a link that restores this region, relic, and blessing plan on another device.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+          {/* ── Share ─────────────────────────────────────── */}
+          {tab === "share" ? (
+            <div className="flex flex-col gap-3 p-1">
+              <div className="build-game__tier-label">
+                <strong>Share plan</strong>
+              </div>
+              <p className="m-0 text-sm text-[color:var(--parch)]">
+                Copy a link that restores regions, relics, and blessing path on another device.
+              </p>
+              <div className="build-game__footer" style={{ borderTop: 0, marginTop: 0, paddingTop: 0 }}>
+                <button type="button" className="build-game__btn build-game__btn--gem" onClick={copyShareLink}>
+                  {copyFeedback === "ok"
+                    ? "Copied"
+                    : copyFeedback === "err"
+                      ? "Copy failed"
+                      : "Copy link"}
+                </button>
+                <button
+                  type="button"
+                  className="build-game__btn"
+                  disabled={!loaded || picks.length === 0}
+                  onClick={clearElectives}
+                >
+                  Clear picks
+                </button>
+                <button
+                  type="button"
+                  className="build-game__btn"
+                  disabled={!loaded || !hasFullBuild}
+                  onClick={resetBuild}
+                >
+                  Reset build
+                </button>
+              </div>
+              <p className="m-0 font-mono text-xs text-[color:var(--parch-dim)]">
+                {pickCounter}
+                {seatedName ? ` · ${seatedName}` : ""}
+                {build.blessingPicks.length
+                  ? ` · ${build.blessingPicks.join(" → ")}`
+                  : ""}
+              </p>
+            </div>
+          ) : null}
+
+          {/* Persistent actions on non-share tabs */}
+          {tab !== "share" ? (
+            <div className="build-game__footer">
               <button
                 type="button"
-                onClick={copyShareLink}
-                className="rounded-sm border border-gem-600 bg-stone-850 px-3 py-1.5 text-sm text-gem-300 hover:border-gem-400"
-              >
-                {copyFeedback === "ok"
-                  ? "Copied"
-                  : copyFeedback === "err"
-                    ? "Copy failed"
-                    : "Copy link"}
-              </button>
-              <button
-                type="button"
-                onClick={clearElectives}
+                className="build-game__btn"
                 disabled={!loaded || picks.length === 0}
-                title="Remove elective region picks only; relics and blessings stay"
-                className="rounded-sm border border-stone-750 px-3 py-1.5 text-sm text-parch-100 hover:border-stone-carve disabled:opacity-40"
+                onClick={clearElectives}
               >
                 Clear picks
               </button>
               <button
                 type="button"
-                onClick={resetBuild}
-                disabled={!loaded || !hasFullBuild}
-                title="Wipe regions, relics, and blessings"
-                className="rounded-sm border border-stone-750 px-3 py-1.5 text-sm text-parch-100 hover:border-stone-carve disabled:opacity-40"
+                className="build-game__btn build-game__btn--gem"
+                onClick={copyShareLink}
               >
-                Reset build
+                {copyFeedback === "ok" ? "Copied" : "Copy link"}
               </button>
             </div>
-            <p className="mt-2 text-xs text-parch-300">
-              Clear picks removes elective regions only. Reset build wipes regions, relics, and
-              blessings.
-            </p>
-            <p className="mt-3 font-mono text-xs text-parch-100">
-              Picks {pickCounter}
-              {Object.keys(build.relics).length
-                ? ` · relics ${Object.values(build.relics).join(", ")}`
-                : ""}
-              {build.blessingPicks.length ? ` · path ${build.blessingPicks.join(" → ")}` : ""}
-            </p>
-          </section>
-        ) : null}
+          ) : null}
+        </div>
       </div>
 
-      <aside className="flex flex-col gap-4 border-t border-stone-750 pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
-        {focus ? (
-          <>
-            <img
-              src={`/game/regions/${focus.id}.png`}
-              alt=""
-              width={52}
-              height={60}
-              className="h-[60px] w-auto object-contain"
-            />
-            <h3 className="font-display text-xl uppercase tracking-[0.1em] text-parch-50">
-              {focus.name}
-            </h3>
-            <div>
-              <div className="text-xs uppercase tracking-[0.13em] text-parch-300">
-                Quests starting here
-              </div>
-              <div className="stat-key mt-1">{focus.primaryQuests}</div>
-            </div>
-            <dl className="flex flex-col border-t border-stone-750">
-              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[13px] text-parch-100">Quests touching</dt>
-                <dd className="num text-[15px] text-parch-50">{focus.touchedQuests}</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[13px] text-parch-100">Training methods</dt>
-                <dd className="num text-[15px] text-parch-50">{focus.trainingCount}</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[13px] text-parch-100">Upgrades</dt>
-                <dd className="num text-[15px] text-parch-50">{focus.upgradeCount}</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-3 border-b border-stone-800 py-1.5">
-                <dt className="text-[13px] text-parch-100">Access</dt>
-                <dd className="text-[13px] text-parch-50">
-                  {availabilityLabel(focus.availability)}
-                </dd>
-              </div>
-            </dl>
-            {focus.skills.length ? (
-              <div className="flex flex-wrap gap-1.5">
-                {focus.skills.slice(0, 8).map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-sm border border-stone-750 bg-stone-850 px-1.5 py-0.5 text-xs text-parch-100"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            ) : null}
-            {focus.hardRules.map((rule) => (
-              <p key={rule} className="text-sm leading-relaxed text-parch-100">
-                {rule}
-              </p>
-            ))}
-          </>
-        ) : null}
-      </aside>
+      <p className="build-game__credit">
+        Layout modelled on the official Leagues II: Equilibrium client menu.{" "}
+        <a
+          href="https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Countdown blog
+        </a>
+        . T1 portraits from Jagex news art (fan tool, not affiliated).
+      </p>
     </div>
   );
 }

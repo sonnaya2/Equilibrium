@@ -1,0 +1,772 @@
+{
+  "id": "wave2-empty-req-classify",
+  "title": "Wave 2 — classify multi-host upgrades with empty requiredRegions",
+  "date": "2026-07-26",
+  "catalogReadOnly": "data/research/catalog.json",
+  "catalogNotModified": true,
+  "purpose": "Propose action for each multi-host upgrade that had empty requiredRegions (exclude Herb patches N). Info-only — does not edit catalog.",
+  "actions": {
+    "remove_all": "Drop the upgrade from every region host (global/skip/not region-planning-relevant).",
+    "primary:<regionId>": "Keep a single home region; set requiredRegions=[home]; remove foreign host copies.",
+    "multi-ok": "Intentional multi-host; keep listed hosts and set requiredRegions to the multi set (see reason).",
+    "wall": "Ambiguous — needs human ruling before apply."
+  },
+  "sources": [
+    "scraped-data/foreign-upgrades-remaining-2026-07-26.json buckets.uncertain-empty-req",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "scraped-data/foreign-upgrades-need-advice-2026-07-26.json empty-req-or-other",
+    "scraped-data/fix-patches/issue-02-global-removes.json",
+    "live multi-host empty-req scan during session (pre-collapse hosts)"
+  ],
+  "policy": [
+    "Exclude Herb patches (N) per-region rows — already local-home with requiredRegions=[self].",
+    "Prefer explicit user rulings from 2026-07-26 foreign-upgrade pass over detail-text heuristics.",
+    "hosts[] is the multi-host empty-req problem snapshot, not necessarily live host set after concurrent collapses.",
+    "Do not invent numbers or quest localities beyond existing detail + prior rulings."
+  ],
+  "summary": {
+    "itemCount": 64,
+    "remove_all": 21,
+    "primary": 34,
+    "multi-ok": 3,
+    "wall": 6,
+    "missingClassifications": []
+  },
+  "items": [
+    {
+      "name": "Always Adze (Seed of the Charyou Tree)",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "action": "primary:kandarin",
+      "reason": "User KEEP Always Adze on Kandarin — Warforge hard gate",
+      "rulingSource": "user_ruling_always_adze"
+    },
+    {
+      "name": "Aquarium room + Prawn Perks",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin"
+      ],
+      "action": "remove_all",
+      "reason": "C3/C4 no region locks — drop aquarium/prawn rows",
+      "rulingSource": "user_ruling_C3_C4"
+    },
+    {
+      "name": "Asylum surgeon's ring",
+      "hosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "action": "primary:morytania",
+      "reason": "User: Asylum Morytania — Broken Home / asylum reward home",
+      "rulingSource": "user_ruling_asylum"
+    },
+    {
+      "name": "Auto-screener v1.080",
+      "hosts": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "User: Auto-screener Asgarnia — Invention Guild machine",
+      "rulingSource": "user_ruling_auto_screener"
+    },
+    {
+      "name": "Barbarian Training (Otto multi-skill package)",
+      "hosts": [
+        "karamja",
+        "kandarin"
+      ],
+      "action": "primary:kandarin",
+      "reason": "Hard Kandarin at Otto; Karamja only spear-path support — collapse to Kandarin primary",
+      "rulingSource": "detail_hard_kandarin"
+    },
+    {
+      "name": "Brooch of the Gods",
+      "hosts": [
+        "asgarnia",
+        "tirannwn"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Hard Asgarnia Invention manufacture framing; Tirannwn hydrix support only",
+      "rulingSource": "detail_hard_asgarnia"
+    },
+    {
+      "name": "Construction Contracts (estate agents)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "primary:misthalin",
+      "reason": "Wiki/user: Construction Contracts stay Misthalin-only; multi-city travel is destination pressure not multi hard-req",
+      "rulingSource": "user_ruling_construction_contracts"
+    },
+    {
+      "name": "Cremation ability unlock",
+      "hosts": [
+        "misthalin",
+        "forinthry",
+        "morytania"
+      ],
+      "action": "remove_all",
+      "reason": "A12 skip — rare ability drop, not region planning value",
+      "rulingSource": "user_ruling_A12"
+    },
+    {
+      "name": "Dalia's Tree Nursery eternal magic plots",
+      "hosts": [
+        "havenhythe",
+        "kandarin"
+      ],
+      "action": "primary:havenhythe",
+      "reason": "Havenhythe owns nursery plots; Kandarin sapling supply is support pressure",
+      "rulingSource": "detail_havenhythe_plots"
+    },
+    {
+      "name": "Deadliest Catch skilling deposit boxes",
+      "hosts": [
+        "karamja",
+        "kandarin"
+      ],
+      "action": "multi-ok",
+      "reason": "Dual pressure by design: Kandarin quest unlock + Karamja local deposit boxes (Brimhaven/Ape Atoll)",
+      "rulingSource": "detail_dual_pressure"
+    },
+    {
+      "name": "Dragon hatchet (Dagannoth Kings pressure)",
+      "hosts": [
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "action": "primary:fremennik",
+      "reason": "User: Dragon hatchet Fremennik — Waterbirth DK farm is the standard ironman source",
+      "rulingSource": "user_ruling_dragon_hatchet"
+    },
+    {
+      "name": "Ectoplasmator (base)",
+      "hosts": [
+        "misthalin",
+        "forinthry",
+        "morytania"
+      ],
+      "action": "primary:morytania",
+      "reason": "User: Ectoplasmator Morytania — ghost/ectofuntus farm path",
+      "rulingSource": "user_ruling_ectoplasmator"
+    },
+    {
+      "name": "Edgeville skilling and Wilderness on-ramp hub",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "wall",
+      "reason": "User: Edgeville ambiguous — Misthalin town vs Forinthry Wilderness north of ditch; need human home split",
+      "rulingSource": "user_ruling_edgeville_wall"
+    },
+    {
+      "name": "Elder divination outfit",
+      "hosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "action": "remove_all",
+      "reason": "E global or skip — fragment/TH outfit path",
+      "rulingSource": "user_ruling_E"
+    },
+    {
+      "name": "Entrana Law altar and island skilling access",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Surface Entrana hard Asgarnia; Abyss law rift is Forinthry support only",
+      "rulingSource": "detail_hard_asgarnia"
+    },
+    {
+      "name": "Family Crest cooking and smelting gauntlets",
+      "hosts": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "action": "wall",
+      "reason": "User: Family Crest asgarnia/misthalin wall — quest Misthalin-start vs Asgarnia Boot/Artisans use",
+      "rulingSource": "user_ruling_family_crest_wall"
+    },
+    {
+      "name": "Ferocious ring",
+      "hosts": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "primary:kandarin",
+      "reason": "Kandarin acquisition + Kuradal effect; Tirannwn Morvran is upgrade support",
+      "rulingSource": "detail_hard_kandarin"
+    },
+    {
+      "name": "Fletcher's outfit",
+      "hosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "action": "remove_all",
+      "reason": "E skip/global — Stealing Creation / thaler path, not region-gated",
+      "rulingSource": "user_ruling_E"
+    },
+    {
+      "name": "Games necklace teleport package",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "morytania"
+      ],
+      "action": "remove_all",
+      "reason": "A8 not relevant — craftable jewellery tele package",
+      "rulingSource": "user_ruling_A8"
+    },
+    {
+      "name": "Gemstone golem outfit",
+      "hosts": [
+        "asgarnia",
+        "forinthry",
+        "desert"
+      ],
+      "action": "remove_all",
+      "reason": "E global or skip — TH/fragment skilling outfit not region-home",
+      "rulingSource": "user_ruling_E"
+    },
+    {
+      "name": "Hoardstalker ring",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "remove_all",
+      "reason": "A4 not relevant — DG convenience tele; not region-gated major unlock",
+      "rulingSource": "user_ruling_A4"
+    },
+    {
+      "name": "Holy wrench",
+      "hosts": [
+        "fremennik",
+        "morytania"
+      ],
+      "action": "primary:morytania",
+      "reason": "Hard Morytania for Rum Deal start; Braindeath Island reclaim is Fremennik support",
+      "rulingSource": "detail_hard_morytania"
+    },
+    {
+      "name": "Infinity ethereal outfit",
+      "hosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "action": "remove_all",
+      "reason": "E global or skip — Runespan ethereal set not region-home",
+      "rulingSource": "user_ruling_E"
+    },
+    {
+      "name": "Invention Guild named machine room",
+      "hosts": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "User: Invention Guild machine room Asgarnia",
+      "rulingSource": "user_ruling_invention_guild"
+    },
+    {
+      "name": "Jadinko Lair curly roots",
+      "hosts": [
+        "karamja",
+        "tirannwn"
+      ],
+      "action": "primary:karamja",
+      "reason": "Core free high-end FM site on automatic-early Karamja; Superheat Form Tirannwn is optional ceiling",
+      "rulingSource": "detail_hard_karamja"
+    },
+    {
+      "name": "Kuradal's Dungeon and ferocious ring hub",
+      "hosts": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "primary:kandarin",
+      "reason": "Hard Kandarin via Ancient Cavern / Kuradal; Morvran Tirannwn upgrade is support",
+      "rulingSource": "detail_hard_kandarin"
+    },
+    {
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "remove_all",
+      "reason": "A5 global Slayer Rewards Learn — not region-locked",
+      "rulingSource": "user_ruling_A5"
+    },
+    {
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "remove_all",
+      "reason": "A6 not relevant — global Slayer Rewards Learn",
+      "rulingSource": "user_ruling_A6"
+    },
+    {
+      "name": "Master constructor's outfit",
+      "hosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "action": "primary:misthalin",
+      "reason": "Estate Agents Shop framing prefers Misthalin starting home; Temple Trekking XP set is separate Morytania row",
+      "rulingSource": "heuristic_misthalin_estate"
+    },
+    {
+      "name": "Master farmer outfit is not a Desert unlock",
+      "hosts": [
+        "kandarin",
+        "desert"
+      ],
+      "action": "primary:kandarin",
+      "reason": "User KEEP Master farmer on Kandarin — not Desert",
+      "rulingSource": "user_ruling_master_farmer"
+    },
+    {
+      "name": "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)",
+      "hosts": [
+        "havenhythe",
+        "anachronia"
+      ],
+      "action": "multi-ok",
+      "reason": "Intentional dual material pressure havenhythe|anachronia — keep multi with req both",
+      "rulingSource": "detail_dual_material"
+    },
+    {
+      "name": "Mattock tier ladder (bronze through elder rune + specials)",
+      "hosts": [
+        "misthalin",
+        "kandarin",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "remove_all",
+      "reason": "A10 only care about augmentable mattocks — drop smithed tier ladder mega-row",
+      "rulingSource": "user_ruling_A10"
+    },
+    {
+      "name": "Mining Guild resource dungeon",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Dungeon geography Asgarnia-local; 45 DG is skill pressure not second hard region",
+      "rulingSource": "detail_hard_asgarnia"
+    },
+    {
+      "name": "Nimble outfit (The Pit Agility XP set)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "remove_all",
+      "reason": "User: Silverhawk/Thaler/Nimble likely global — Pit/thaler Agility set",
+      "rulingSource": "user_ruling_nimble_global"
+    },
+    {
+      "name": "Ore box tier upgrades",
+      "hosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "remove_all",
+      "reason": "A13 not region locked — metal-bank capacity ladder is global",
+      "rulingSource": "user_ruling_A13"
+    },
+    {
+      "name": "Player-owned port (first-class hub)",
+      "hosts": [
+        "asgarnia",
+        "desert"
+      ],
+      "action": "primary:desert",
+      "reason": "Detail: primary Desert/Menaphos; Asgarnia Arc shops support only",
+      "rulingSource": "detail_primary_desert"
+    },
+    {
+      "name": "POH gilded altar (Chapel offering)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "multi-ok",
+      "reason": "User KEEP multi on fremennik|tirannwn|forinthry|misthalin with req=[fremennik,tirannwn,forinthry] (+misthalin host ok); drop karamja/asgarnia/kandarin/desert/morytania fan-out",
+      "rulingSource": "user_ruling_poh_gilded"
+    },
+    {
+      "name": "Portable skilling stations (ironman craft/deployment permanent note)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "desert",
+        "tirannwn"
+      ],
+      "action": "remove_all",
+      "reason": "Portables global/TH-adjacent; ironman cannot use deployed TH portables — drop multi-host note",
+      "rulingSource": "user_ruling_portables_global"
+    },
+    {
+      "name": "Prayer training infrastructure stack (altars + powders + books)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "primary:misthalin",
+      "reason": "User: Prayer can Misthalin — meta training stack homes on starting region",
+      "rulingSource": "user_ruling_prayer_misthalin"
+    },
+    {
+      "name": "Prayer-book switch network (Zaros / Fort / Elven / War)",
+      "hosts": [
+        "misthalin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "wall",
+      "reason": "Meta densify across many book sites; either remove in favour of child ids or multi-ok with explicit switcher homes — needs human",
+      "rulingSource": "heuristic_meta_package"
+    },
+    {
+      "name": "Prefer / block slot ladder (quest-point scaled)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "remove_all",
+      "reason": "Same family as Slayer prefer/block — quest-point ladder is account-global, not a region unlock",
+      "rulingSource": "extend_A3"
+    },
+    {
+      "name": "Red sandstone and potion flasks",
+      "hosts": [
+        "kandarin",
+        "desert"
+      ],
+      "action": "primary:desert",
+      "reason": "Desert owns Sophanem pure half; Oo'glog Kandarin is alternate rock not second hard-req",
+      "rulingSource": "detail_desert_sandstone"
+    },
+    {
+      "name": "Ring of duelling",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "desert"
+      ],
+      "action": "remove_all",
+      "reason": "A11 not relevant — craftable jewellery tele",
+      "rulingSource": "user_ruling_A11"
+    },
+    {
+      "name": "Ring of slaying (equipment residual)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ],
+      "action": "primary:misthalin",
+      "reason": "User KEEP Ring of slaying craft on Misthalin — equipment residual follows craft home",
+      "rulingSource": "user_ruling_ring_of_slaying"
+    },
+    {
+      "name": "Scrimshaw of the elements",
+      "hosts": [
+        "asgarnia",
+        "desert"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Hard Asgarnia craft facility (Ports workshop); Desert POP hub support",
+      "rulingSource": "detail_hard_asgarnia"
+    },
+    {
+      "name": "Seedicide collector upgrade",
+      "hosts": [
+        "asgarnia",
+        "kandarin",
+        "anachronia"
+      ],
+      "action": "primary:kandarin",
+      "reason": "User: Seedicide Kandarin — bean/collector upgrade + toolbelt attach already Kandarin",
+      "rulingSource": "user_ruling_seedicide"
+    },
+    {
+      "name": "Silverhawk boots (Agility XP from feathers/down)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "morytania"
+      ],
+      "action": "remove_all",
+      "reason": "User: Silverhawk/Thaler/Nimble likely global — Agility XP from feathers not region-home",
+      "rulingSource": "user_ruling_silverhawk_global"
+    },
+    {
+      "name": "Sirenic → elite sirenic armour",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "tirannwn"
+      ],
+      "action": "wall",
+      "reason": "User: Sirenic wall or anachronia/forinthry — multi-source scale/thread; do not fake single primary without human call",
+      "rulingSource": "user_ruling_sirenic_wall"
+    },
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "morytania"
+      ],
+      "action": "wall",
+      "reason": "User: Sirenic wall or anachronia/forinthry — intentionally multi-source T90 craft; human chooses primary vs multi-ok req set",
+      "rulingSource": "user_ruling_sirenic_wall"
+    },
+    {
+      "name": "Skeka hypnowand Anachronia piece sources",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "action": "primary:anachronia",
+      "reason": "Piece-farm pointer for Anachronia; full Skeka multi forinthry|anachronia is separate row",
+      "rulingSource": "user_ruling_skeka_pieces"
+    },
+    {
+      "name": "Skillchompa Hunter and Player-Owned Farm supply",
+      "hosts": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "primary:kandarin",
+      "reason": "Cobalt/POF supply loop Kandarin; Tirannwn crystal tier support only",
+      "rulingSource": "detail_kandarin_supply"
+    },
+    {
+      "name": "Skillchompas",
+      "hosts": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "primary:kandarin",
+      "reason": "Practical mid-tier supply + Manor Farm loop is Kandarin; crystal-tier Tirannwn support",
+      "rulingSource": "detail_kandarin_supply"
+    },
+    {
+      "name": "Skills necklace (guild teleports)",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "tirannwn"
+      ],
+      "action": "remove_all",
+      "reason": "User: global or misthalin — treat like other craftable jewellery teles (games/duelling removed); no hard region gate",
+      "rulingSource": "user_ruling_skills_necklace"
+    },
+    {
+      "name": "Slayer helmet craft + full upgrade chain",
+      "hosts": [
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "remove_all",
+      "reason": "D2 replace with obtainable pieces — mega upgrade-chain row not region-locked; components live on morytania/desert",
+      "rulingSource": "user_ruling_D2"
+    },
+    {
+      "name": "Slayer prefer / block / extend (Assignment Rewards)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "remove_all",
+      "reason": "A3 not region locked — global Assignment Rewards account state",
+      "rulingSource": "user_ruling_A3"
+    },
+    {
+      "name": "Smelting gauntlets",
+      "hosts": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Highest-value Family Crest enchant for Asgarnia Artisans/metal-bank loops; quest start is Misthalin support",
+      "rulingSource": "detail_asgarnia_use"
+    },
+    {
+      "name": "Sticky Fingers (Archaeology relic)",
+      "hosts": [
+        "misthalin",
+        "anachronia"
+      ],
+      "action": "primary:misthalin",
+      "reason": "User: Sticky Fingers Misthalin archaeology — monolith relic, not Anachronia dig",
+      "rulingSource": "user_ruling_sticky_fingers"
+    },
+    {
+      "name": "Thaler skilling rewards hub (Stanley Limelight Traders)",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "morytania"
+      ],
+      "action": "remove_all",
+      "reason": "User: Silverhawk/Thaler/Nimble likely global — minigame hub not a region hard unlock",
+      "rulingSource": "user_ruling_thaler_global"
+    },
+    {
+      "name": "The Arc Waiko reward shop (chime economy)",
+      "hosts": [
+        "asgarnia",
+        "desert"
+      ],
+      "action": "primary:asgarnia",
+      "reason": "Asgarnia Arc packaging; Desert Ports portal is support pressure",
+      "rulingSource": "detail_asgarnia_arc"
+    },
+    {
+      "name": "Time altar",
+      "hosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "action": "wall",
+      "reason": "forinthry vs anachronia hosts with empty req — Orthen/Fort association unclear without human",
+      "rulingSource": "heuristic_ambiguous_hosts"
+    },
+    {
+      "name": "Ungael ritual site pressure",
+      "hosts": [
+        "misthalin",
+        "havenhythe",
+        "fremennik"
+      ],
+      "action": "primary:fremennik",
+      "reason": "User: Ungael Fremennik — ritual site geography",
+      "rulingSource": "user_ruling_ungael"
+    },
+    {
+      "name": "Velucia museum Archaeology collections",
+      "hosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "action": "primary:misthalin",
+      "reason": "User: Velucia museum Misthalin — Varrock museum hub",
+      "rulingSource": "user_ruling_velucia"
+    },
+    {
+      "name": "Witchdoctor camo outfit",
+      "hosts": [
+        "karamja",
+        "anachronia"
+      ],
+      "action": "primary:karamja",
+      "reason": "Herblore Habitat award path is Karamja; Anachronia jadinko counts support only",
+      "rulingSource": "detail_karamja_habitat"
+    },
+    {
+      "name": "Wood box tier upgrades",
+      "hosts": [
+        "misthalin",
+        "kandarin"
+      ],
+      "action": "primary:desert",
+      "reason": "User KEEP Wood box on desert — parallel to ore-box global-remove; home on Menaphos/desert storage path",
+      "rulingSource": "user_ruling_wood_box"
+    }
+  ]
+}

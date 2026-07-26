@@ -1,0 +1,683 @@
+{
+  "issue": "06a",
+  "scannedAt": "2026-07-26T14:39:17.007Z",
+  "source": "data/research/catalog.json",
+  "scope": "Scan only — catalog not edited. Exact-name match; excludes Artificer's measure component region map.",
+  "summary": [
+    {
+      "name": "Artificer's measure",
+      "hosts": [
+        "forinthry",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "requiredRegions": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false
+    },
+    {
+      "name": "Blessed flask production chain",
+      "hosts": [
+        "karamja",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegions": {
+        "karamja": [],
+        "forinthry": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "desert": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "morytania": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "tirannwn": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "requiredRegionsConsistent": false,
+      "detailHasUnobtainable": true,
+      "detailHasUnobtainableAllHosts": false
+    }
+  ],
+  "items": [
+    {
+      "name": "Artificer's measure",
+      "hosts": [
+        "forinthry",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "requiredRegions": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false,
+      "unobtainableByHost": {
+        "forinthry": false,
+        "morytania": false,
+        "tirannwn": false,
+        "anachronia": false
+      },
+      "perHost": [
+        {
+          "host": "forinthry",
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "anachronia",
+            "forinthry",
+            "tirannwn",
+            "morytania"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "category": "Crafting and Construction skilling off-hand cross-region chain"
+        },
+        {
+          "host": "morytania",
+          "regionId": "morytania",
+          "requiredRegions": [
+            "anachronia",
+            "forinthry",
+            "tirannwn",
+            "morytania"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "category": "Crafting and Construction skilling off-hand cross-region chain"
+        },
+        {
+          "host": "tirannwn",
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "anachronia",
+            "forinthry",
+            "tirannwn",
+            "morytania"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "category": "Crafting and Construction skilling off-hand cross-region chain"
+        },
+        {
+          "host": "anachronia",
+          "regionId": "anachronia",
+          "requiredRegions": [
+            "anachronia",
+            "forinthry",
+            "tirannwn",
+            "morytania"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
+          "category": "Crafting and Construction skilling off-hand cross-region chain"
+        }
+      ]
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false,
+      "unobtainableByHost": {
+        "misthalin": false,
+        "asgarnia": false,
+        "fremennik": false,
+        "tirannwn": false
+      },
+      "perHost": [
+        {
+          "host": "misthalin",
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain"
+        },
+        {
+          "host": "asgarnia",
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain"
+        },
+        {
+          "host": "fremennik",
+          "regionId": "fremennik",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain"
+        },
+        {
+          "host": "tirannwn",
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain_partial_component_mapping",
+          "category": "tier-100 augmentable Woodcutting tool follow-on chain"
+        }
+      ]
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "hosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsConsistent": true,
+      "detailHasUnobtainable": false,
+      "detailHasUnobtainableAllHosts": false,
+      "unobtainableByHost": {
+        "misthalin": false,
+        "asgarnia": false,
+        "fremennik": false,
+        "tirannwn": false
+      },
+      "perHost": [
+        {
+          "host": "misthalin",
+          "regionId": "misthalin",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain"
+        },
+        {
+          "host": "asgarnia",
+          "regionId": "asgarnia",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain"
+        },
+        {
+          "host": "fremennik",
+          "regionId": "fremennik",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain"
+        },
+        {
+          "host": "tirannwn",
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "tirannwn",
+            "misthalin",
+            "asgarnia",
+            "fremennik"
+          ],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_wiki_cross_region_chain",
+          "category": "tier-90 augmentable Woodcutting tool cross-region chain"
+        }
+      ]
+    },
+    {
+      "name": "Blessed flask production chain",
+      "hosts": [
+        "karamja",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "requiredRegions": {
+        "karamja": [],
+        "forinthry": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "desert": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "morytania": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "tirannwn": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "requiredRegionsConsistent": false,
+      "detailHasUnobtainable": true,
+      "detailHasUnobtainableAllHosts": false,
+      "unobtainableByHost": {
+        "karamja": false,
+        "forinthry": true,
+        "desert": true,
+        "morytania": true,
+        "tirannwn": true
+      },
+      "perHost": [
+        {
+          "host": "karamja",
+          "regionId": "karamja",
+          "requiredRegions": [],
+          "detailHasUnobtainable": false,
+          "unobtainableSnippet": null,
+          "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+          "category": "high-end Prayer sustain cross-region production"
+        },
+        {
+          "host": "forinthry",
+          "regionId": "forinthry",
+          "requiredRegions": [
+            "desert",
+            "morytania",
+            "tirannwn",
+            "forinthry"
+          ],
+          "detailHasUnobtainable": true,
+          "unobtainableSnippet": " + Morytania + Tirannwn + Wilderness. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+          "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+          "category": "high-end Prayer sustain cross-region production"
+        },
+        {
+          "host": "desert",
+          "regionId": "desert",
+          "requiredRegions": [
+            "desert",
+            "morytania",
+            "tirannwn",
+            "forinthry"
+          ],
+          "detailHasUnobtainable": true,
+          "unobtainableSnippet": " + Morytania + Tirannwn + Wilderness. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+          "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+          "category": "high-end Prayer sustain cross-region production"
+        },
+        {
+          "host": "morytania",
+          "regionId": "morytania",
+          "requiredRegions": [
+            "desert",
+            "morytania",
+            "tirannwn",
+            "forinthry"
+          ],
+          "detailHasUnobtainable": true,
+          "unobtainableSnippet": " + Morytania + Tirannwn + Wilderness. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+          "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+          "category": "high-end Prayer sustain cross-region production"
+        },
+        {
+          "host": "tirannwn",
+          "regionId": "tirannwn",
+          "requiredRegions": [
+            "desert",
+            "morytania",
+            "tirannwn",
+            "forinthry"
+          ],
+          "detailHasUnobtainable": true,
+          "unobtainableSnippet": " + Morytania + Tirannwn + Wilderness. · UNOBTAINABLE under Equilibrium 3-elective cap (region pressure exceeds picks).",
+          "confidence": "confirmed_current_wiki_cross_region_pressure_external_dependency",
+          "category": "high-end Prayer sustain cross-region production"
+        }
+      ]
+    }
+  ],
+  "researchSourceRows": {
+    "Artificer's measure": {
+      "id": "cross-region:artificers-measure",
+      "regionHints": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "requiredRegions": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "regionRequirementType": "all_required",
+      "detailHasUnobtainable": false
+    },
+    "Hatchet of Bloom and Blight": {
+      "id": "cross-region:hatchet-of-bloom-and-blight",
+      "regionHints": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "regionRequirementType": "all_required",
+      "detailHasUnobtainable": false
+    },
+    "Hatchet of Ember and Glade": {
+      "id": "cross-region:hatchet-of-ember-and-glade",
+      "regionHints": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegions": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "regionRequirementType": "all_required",
+      "detailHasUnobtainable": false
+    },
+    "Blessed flask production chain": {
+      "id": "cross-region:blessed-flask",
+      "regionHints": [
+        "desert",
+        "tirannwn",
+        "karamja",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "self_supply_pressure_with_alternates",
+      "detailHasUnobtainable": false
+    }
+  },
+  "userRulingsAppliedLog": {
+    "source": "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "lines": [
+      "KEEP Artificer's measure on [anachronia] req=[anachronia,forinthry,tirannwn,morytania] UNOBTAINABLE",
+      "KEEP Blessed flask production chain on [desert,morytania,tirannwn,forinthry] req=[desert,morytania,tirannwn,forinthry] UNOBTAINABLE",
+      "KEEP Hatchet of Bloom and Blight on [tirannwn,misthalin,asgarnia,fremennik,desert,morytania] req=[tirannwn,misthalin,asgarnia,fremennik,desert,morytania] UNOBTAINABLE",
+      "KEEP Hatchet of Ember and Glade on [forinthry,tirannwn,fremennik,asgarnia] req=[forinthry,tirannwn,fremennik,asgarnia] UNOBTAINABLE"
+    ]
+  },
+  "driftVsRulings": [
+    {
+      "name": "Artificer's measure",
+      "hostsActual": [
+        "forinthry",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "hostsExpected": [
+        "anachronia"
+      ],
+      "requiredRegionsActual": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "requiredRegionsExpected": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "detailHasUnobtainableActual": false,
+      "detailHasUnobtainableExpected": true,
+      "notes": "Hosts still multi-copy on all four pressure regions; UNOBTAINABLE tag missing from detail"
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "hostsActual": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "hostsExpected": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ],
+      "requiredRegionsActual": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsExpected": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ],
+      "detailHasUnobtainableActual": false,
+      "detailHasUnobtainableExpected": true,
+      "notes": "Missing desert+morytania hosts/req; UNOBTAINABLE tag missing"
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "hostsActual": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "hostsExpected": [
+        "forinthry",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ],
+      "requiredRegionsActual": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegionsExpected": [
+        "forinthry",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ],
+      "detailHasUnobtainableActual": false,
+      "detailHasUnobtainableExpected": true,
+      "notes": "Still on misthalin instead of forinthry; UNOBTAINABLE tag missing; req still wiki four-region (incl misthalin, excl forinthry)"
+    },
+    {
+      "name": "Blessed flask production chain",
+      "hostsActual": [
+        "karamja",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "hostsExpected": [
+        "desert",
+        "morytania",
+        "tirannwn",
+        "forinthry"
+      ],
+      "requiredRegionsActual": {
+        "karamja": [],
+        "forinthry": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "desert": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "morytania": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ],
+        "tirannwn": [
+          "desert",
+          "morytania",
+          "tirannwn",
+          "forinthry"
+        ]
+      },
+      "requiredRegionsExpected": [
+        "desert",
+        "morytania",
+        "tirannwn",
+        "forinthry"
+      ],
+      "detailHasUnobtainableActual": true,
+      "detailHasUnobtainableExpected": true,
+      "notes": "Extra karamja host; requiredRegions inconsistent across hosts (some [], some full set); UNOBTAINABLE present on all hosts"
+    }
+  ]
+}

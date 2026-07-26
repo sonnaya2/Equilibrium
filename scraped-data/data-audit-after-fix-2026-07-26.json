@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-07-26T14:40:51.800Z",
+  "metrics": {
+    "totalUpgrades": 1236,
+    "stormOnAsgarnia": 0,
+    "singleReqPollution": 0,
+    "intraRegionDups": 0,
+    "areaUpgradeCollisions": 0,
+    "herbNetwork": false,
+    "multiHost": 110,
+    "unobtainableFamilies": 4,
+    "placeAnchors": "pass"
+  },
+  "agents": 16,
+  "success": true
+}

@@ -1,0 +1,619 @@
+/**
+ * Build UI modelled on official Leagues II: Equilibrium client menu
+ * (relicmenu.jpg / blessing.jpg from Jagex countdown news).
+ * Fan recreation — not Jagex assets except credited relic portraits.
+ */
+
+.build-game {
+  --bg-frame: #1a1610;
+  --bg-panel: #14110d;
+  --bg-inset: #0e0c0a;
+  --bg-tab: #221c15;
+  --bg-tab-on: #2a2319;
+  --gold-rim: #8a7348;
+  --gold-bright: #c4a86a;
+  --gold-title: #e0c07a;
+  --gem: #2ecb8f;
+  --gem-dim: #1a8a62;
+  --parch: #e8dfc8;
+  --parch-dim: #a89878;
+  --slot: #1c1914;
+  --slot-glow: #1a3d32;
+
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 3.5rem);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 0.85rem 1rem;
+}
+
+/* Outer gold-rimmed modal */
+.build-game__frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--gold-rim);
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, #1f1a14 0%, var(--bg-frame) 12%, var(--bg-panel) 100%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 55%),
+    inset 0 1px 0 rgb(196 168 106 / 22%),
+    inset 0 0 0 1px rgb(10 8 6 / 40%),
+    0 12px 40px rgb(0 0 0 / 45%);
+  overflow: hidden;
+}
+
+.build-game__titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  background:
+    linear-gradient(180deg, #2a231b 0%, #1a1610 100%);
+  border-bottom: 1px solid var(--gold-rim);
+  box-shadow: inset 0 1px 0 rgb(196 168 106 / 18%);
+}
+
+.build-game__logo {
+  width: 1.65rem;
+  height: 1.65rem;
+  flex-shrink: 0;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background:
+    linear-gradient(145deg, var(--gem) 0%, var(--gem-dim) 55%, #0a4030 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
+}
+
+.build-game__title {
+  margin: 0;
+  font-family: var(--font-display), Cinzel, Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-title);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 70%);
+}
+
+.build-game__title-meta {
+  margin-left: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--parch-dim);
+}
+
+.build-game__title-meta strong {
+  color: var(--gem);
+  font-weight: 600;
+}
+
+/* Tabs like client: Tasks Regions Relics Blessings Ranks */
+.build-game__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 0 0.5rem;
+  background: var(--bg-inset);
+  border-bottom: 1px solid rgb(138 115 72 / 45%);
+}
+
+.build-game__tab {
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--parch-dim);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.build-game__tab:hover {
+  color: var(--parch);
+  background: rgb(42 35 27 / 40%);
+}
+
+.build-game__tab.is-on {
+  color: var(--gold-title);
+  font-weight: 600;
+  border-bottom-color: var(--gold-bright);
+  background: var(--bg-tab-on);
+}
+
+/* Progress track under tabs */
+.build-game__track {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.85rem;
+  background: rgb(10 8 6 / 45%);
+  border-bottom: 1px solid rgb(138 115 72 / 25%);
+  font-size: 0.75rem;
+  color: var(--parch-dim);
+}
+
+.build-game__track-gem {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: var(--gem);
+  box-shadow: 0 0 8px rgb(46 203 143 / 45%);
+}
+
+.build-game__track-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(60 50 35 / 80%);
+  position: relative;
+  overflow: hidden;
+}
+
+.build-game__track-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gem-dim), var(--gem));
+  border-radius: 2px;
+}
+
+.build-game__track-pips {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.build-game__track-pip {
+  width: 0.45rem;
+  height: 0.45rem;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  background: rgb(80 70 50 / 80%);
+}
+
+.build-game__track-pip.is-lit {
+  background: var(--gem);
+  box-shadow: 0 0 4px rgb(46 203 143 / 50%);
+}
+
+/* Body */
+.build-game__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.65rem 0.75rem 0.75rem;
+  background: var(--bg-panel);
+}
+
+/* ── Relics tab: left choices + right locked grid ─────────── */
+
+.build-game__relics {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(10.5rem, 13rem) minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.build-game__tier-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--parch);
+}
+
+.build-game__tier-label strong {
+  color: var(--gold-title);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.build-game__passive {
+  font-size: 0.75rem;
+  color: var(--gem);
+  font-family: ui-monospace, monospace;
+}
+
+.build-game__choice-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.build-game__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.4rem 0.5rem;
+  border: 1px solid rgb(138 115 72 / 35%);
+  border-radius: 2px;
+  background: var(--slot);
+  color: var(--parch-dim);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 90ms, box-shadow 90ms, color 90ms;
+}
+
+.build-game__choice:hover {
+  border-color: var(--gold-rim);
+  color: var(--parch);
+}
+
+.build-game__choice.is-on {
+  border-color: var(--gem);
+  color: var(--parch);
+  box-shadow:
+    0 0 0 1px rgb(46 203 143 / 35%),
+    inset 0 0 12px rgb(46 203 143 / 12%);
+}
+
+.build-game__choice-icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 2px;
+  border: 1px solid rgb(138 115 72 / 40%);
+  background: var(--bg-inset);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.build-game__choice-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.build-game__choice-icon .mono-fallback {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gem);
+  letter-spacing: 0.04em;
+}
+
+.build-game__choice-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: inherit;
+  line-height: 1.2;
+}
+
+.build-game__slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr));
+  gap: 0.4rem;
+  align-content: start;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid rgb(138 115 72 / 25%);
+  border-radius: 2px;
+  background: rgb(8 7 5 / 55%);
+}
+
+.build-game__slot {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  border: 1px solid rgb(60 50 35 / 80%);
+  background:
+    radial-gradient(circle at 50% 45%, var(--slot-glow) 0%, var(--slot) 55%, #0a0907 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  color: rgb(100 90 70 / 70%);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.build-game__slot.is-locked {
+  filter: blur(0.4px);
+  opacity: 0.72;
+}
+
+.build-game__slot.is-locked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(10 8 6 / 35%);
+}
+
+.build-game__slot-hex {
+  width: 1.6rem;
+  height: 1.6rem;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: rgb(30 55 48 / 80%);
+  border: 1px solid rgb(46 203 143 / 25%);
+}
+
+.build-game__detail {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgb(138 115 72 / 30%);
+  border-radius: 2px;
+  background: rgb(10 8 6 / 40%);
+  max-height: 28vh;
+  overflow-y: auto;
+}
+
+.build-game__detail h3 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display), Cinzel, Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-title);
+}
+
+.build-game__detail ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--parch);
+}
+
+.build-game__detail li + li {
+  margin-top: 0.25rem;
+}
+
+/* ── Blessings tab: path grid ─────────────────────────────── */
+
+.build-game__bless {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.build-game__bless-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.build-game__bless-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto repeat(8, minmax(2.75rem, 1fr));
+  gap: 0.35rem;
+  align-content: start;
+  overflow: auto;
+  padding: 0.5rem;
+  border: 1px solid rgb(138 115 72 / 25%);
+  background: rgb(8 7 5 / 50%);
+  border-radius: 2px;
+}
+
+.build-game__bless-corner,
+.build-game__bless-colhead {
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--parch-dim);
+  text-align: center;
+  padding: 0.2rem;
+}
+
+.build-game__bless-path {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  padding-right: 0.35rem;
+}
+
+.build-game__bless-cell {
+  aspect-ratio: 1;
+  min-height: 2.75rem;
+  border: 1px solid rgb(60 50 35 / 70%);
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 50% 45%, rgb(30 45 55 / 50%) 0%, var(--slot) 60%, #0a0907 100%);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.build-game__bless-cell.is-locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: blur(0.3px);
+}
+
+.build-game__bless-cell.is-open:hover {
+  border-color: var(--gold-rim);
+}
+
+.build-game__bless-cell.is-on {
+  border-color: var(--gem);
+  box-shadow: 0 0 0 1px rgb(46 203 143 / 40%), inset 0 0 14px rgb(46 203 143 / 15%);
+}
+
+.build-game__bless-cell.is-god {
+  background:
+    radial-gradient(circle at 50% 45%, rgb(80 60 30 / 40%) 0%, var(--slot) 60%, #0a0907 100%);
+}
+
+.build-game__bless-dot {
+  width: 1.15rem;
+  height: 1.15rem;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  background: rgb(40 50 55 / 70%);
+  border: 1px solid rgb(100 110 120 / 30%);
+}
+
+.build-game__bless-cell.is-on .build-game__bless-dot {
+  background: var(--gem);
+  border-color: rgb(154 245 212 / 50%);
+  box-shadow: 0 0 8px rgb(46 203 143 / 40%);
+}
+
+.build-game__path-chaos { color: #d4614d; }
+.build-game__path-balance { color: #6fae45; }
+.build-game__path-order { color: #4a7ec2; }
+
+/* ── Regions tab ──────────────────────────────────────────── */
+
+.build-game__regions {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.build-game__region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.4rem;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+  padding: 0.35rem;
+  border: 1px solid rgb(138 115 72 / 25%);
+  border-radius: 2px;
+  background: rgb(8 7 5 / 40%);
+}
+
+.build-game__region {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.55rem 0.35rem;
+  border: 1px solid rgb(138 115 72 / 30%);
+  border-radius: 2px;
+  background: var(--slot);
+  color: var(--parch-dim);
+  cursor: pointer;
+  text-align: center;
+}
+
+.build-game__region:hover {
+  border-color: var(--gold-rim);
+  color: var(--parch);
+}
+
+.build-game__region.is-on {
+  border-color: var(--gem);
+  color: var(--parch);
+  box-shadow: 0 0 0 1px rgb(46 203 143 / 30%);
+}
+
+.build-game__region.is-blocked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.build-game__region img {
+  width: 2rem;
+  height: 2.25rem;
+  object-fit: contain;
+}
+
+.build-game__region-name {
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.build-game__region-meta {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--parch-dim);
+}
+
+.build-game__region.is-on .build-game__region-meta {
+  color: var(--gem);
+}
+
+/* Footer actions */
+.build-game__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgb(138 115 72 / 25%);
+}
+
+.build-game__btn {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--gold-rim);
+  border-radius: 2px;
+  background: var(--bg-tab);
+  color: var(--parch);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.build-game__btn:hover:not(:disabled) {
+  border-color: var(--gold-bright);
+  color: var(--gold-title);
+}
+
+.build-game__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.build-game__btn--gem {
+  border-color: var(--gem-dim);
+  color: var(--gem);
+  background: rgb(20 50 40 / 40%);
+}
+
+.build-game__btn--gem:hover:not(:disabled) {
+  border-color: var(--gem);
+  box-shadow: 0 0 0 1px rgb(46 203 143 / 25%);
+}
+
+.build-game__credit {
+  margin: 0.35rem 0 0;
+  font-size: 0.65rem;
+  color: rgb(120 110 90 / 90%);
+}
+
+.build-game__credit a {
+  color: var(--gem);
+}
+
+@media (max-width: 720px) {
+  .build-game__relics {
+    grid-template-columns: 1fr;
+  }
+  .build-game__choice-col {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .build-game__choice {
+    flex: 1 1 5.5rem;
+  }
+  .build-game__bless-grid {
+    grid-template-columns: auto repeat(4, minmax(2.5rem, 1fr));
+  }
+}

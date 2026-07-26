@@ -1,0 +1,466 @@
+{
+  "id": "wave2-empty-req-homes",
+  "title": "Wave 2 — empty-req multi-host confident homes (primary keep) + global removes",
+  "date": "2026-07-26",
+  "generatedAt": "2026-07-26T20:00:00.000Z",
+  "applyReady": true,
+  "catalogJsonDirectEditThisPass": false,
+  "catalogReadOnly": "data/research/catalog.json",
+  "apply_with": "scripts/apply-region-patches.mjs",
+  "sourceReview": [
+    "scraped-data/foreign-upgrades-remaining-2026-07-26.json (uncertain-empty-req + multi samples)",
+    "scraped-data/foreign-upgrades-need-advice-2026-07-26.json (empty-req-or-other + outfit-multi-source)",
+    "scraped-data/foreign-upgrades-user-rulings-applied-2026-07-26.json",
+    "data/research/catalog.json (live host scan 2026-07-26)"
+  ],
+  "policy": [
+    "Confident homes only — not walls / uncertain fences.",
+    "primary keep: removeUpgrade every non-home host; ensureUpgradeOnHome with set.regionId=home and set.requiredRegions=[home].",
+    "Auto-screener live residual is on misthalin only — ensure asgarnia first via copyFromRegion=misthalin, then removeUpgrade misthalin.",
+    "Toolbelt attach: Seedicide is still multi-host with multi-req — collapse to kandarin home only.",
+    "Global/not-relevant: removeUpgrade every known host (or residual single host left after prior purges).",
+    "Elder divination outfit path (Cache base + Invention elite) is NOT touched — only bare Elder divination outfit.",
+    "Ring of slaying (equipment residual) is single-host empty on desert — not empty multi; skipped.",
+    "Ring of slaying (craft unlock) multi-req left alone (not empty multi residual).",
+    "Do not edit catalog.json in this pass — applyReady ops only."
+  ],
+  "skipped": [
+    {
+      "name": "Ring of slaying (equipment residual)",
+      "reason": "empty-req but single-host residual on desert — condition was empty multi only"
+    },
+    {
+      "name": "Ring of slaying (craft unlock)",
+      "reason": "multi requiredRegions craft unlock — not empty-req residual"
+    },
+    {
+      "name": "Elder divination outfit path (Cache base + Invention elite)",
+      "reason": "path variant kept; bare Elder divination outfit removed"
+    }
+  ],
+  "keeps": [
+    {
+      "name": "Velucia museum Archaeology collections",
+      "home": "misthalin",
+      "hostsBefore": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "liveHosts": ["misthalin"],
+      "reason": "Velucia museum hub is Misthalin (Varrock Dig Site / museum collections)"
+    },
+    {
+      "name": "Construction Contracts (estate agents)",
+      "home": "misthalin",
+      "hostsBefore": ["misthalin", "asgarnia", "kandarin", "tirannwn"],
+      "liveHosts": ["misthalin"],
+      "reason": "Estate-agent Construction Contracts primary geography Misthalin"
+    },
+    {
+      "name": "Prayer training infrastructure stack (altars + powders + books)",
+      "home": "misthalin",
+      "hostsBefore": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "liveHosts": ["misthalin"],
+      "reason": "Prayer infrastructure stack homes on Misthalin hub (user ruling)"
+    },
+    {
+      "name": "Dragon hatchet (Dagannoth Kings pressure)",
+      "home": "fremennik",
+      "hostsBefore": ["asgarnia", "fremennik", "tirannwn"],
+      "liveHosts": ["fremennik"],
+      "reason": "Dagannoth Kings dragon hatchet pressure is Fremennik"
+    },
+    {
+      "name": "Seedicide collector upgrade",
+      "home": "kandarin",
+      "hostsBefore": ["asgarnia", "kandarin", "anachronia"],
+      "liveHosts": ["kandarin"],
+      "reason": "Seedicide collector upgrade primary home Kandarin"
+    },
+    {
+      "name": "Invention Guild named machine room",
+      "home": "asgarnia",
+      "hostsBefore": ["misthalin", "asgarnia"],
+      "liveHosts": ["asgarnia"],
+      "reason": "Invention Guild is Asgarnia (Falador)"
+    },
+    {
+      "name": "Auto-screener v1.080",
+      "home": "asgarnia",
+      "hostsBefore": ["misthalin", "asgarnia"],
+      "liveHosts": ["misthalin"],
+      "reason": "Auto-screener Invention machine room Asgarnia — move residual off misthalin"
+    },
+    {
+      "name": "Sticky Fingers (Archaeology relic)",
+      "home": "misthalin",
+      "hostsBefore": ["misthalin", "anachronia"],
+      "liveHosts": ["misthalin"],
+      "reason": "Sticky Fingers Archaeology relic homes on Misthalin dig/museum stack"
+    },
+    {
+      "name": "Asylum surgeon's ring",
+      "home": "morytania",
+      "hostsBefore": ["misthalin", "morytania"],
+      "liveHosts": ["morytania"],
+      "reason": "Broken Home / Asylum surgeon ring is Morytania"
+    },
+    {
+      "name": "Ectoplasmator (base)",
+      "home": "morytania",
+      "hostsBefore": ["misthalin", "forinthry", "morytania"],
+      "liveHosts": ["morytania"],
+      "reason": "Ectoplasmator base from Morytania ghost/prayer stack"
+    },
+    {
+      "name": "Ungael ritual site pressure",
+      "home": "fremennik",
+      "hostsBefore": ["misthalin", "havenhythe", "fremennik"],
+      "liveHosts": ["fremennik"],
+      "reason": "Ungael ritual site is Fremennik"
+    },
+    {
+      "name": "Master farmer outfit is not a Desert unlock",
+      "home": "kandarin",
+      "hostsBefore": ["kandarin", "desert"],
+      "liveHosts": ["kandarin"],
+      "reason": "Master farmer outfit is not Desert — Kandarin Farmers' Market / Ardougne"
+    },
+    {
+      "name": "Always Adze (Seed of the Charyou Tree)",
+      "home": "kandarin",
+      "hostsBefore": ["asgarnia", "kandarin"],
+      "liveHosts": ["kandarin"],
+      "reason": "Always Adze toolbelt/relic pressure homes Kandarin with Seedicide stack"
+    },
+    {
+      "name": "Toolbelt attach: Seedicide",
+      "home": "kandarin",
+      "hostsBefore": ["asgarnia", "kandarin", "anachronia"],
+      "liveHosts": ["asgarnia", "kandarin", "anachronia"],
+      "reason": "Seedicide toolbelt attach primary keep Kandarin (Always Adze / Seedicide toolbelt pair)"
+    }
+  ],
+  "removes": [
+    {
+      "name": "Nimble outfit (The Pit Agility XP set)",
+      "hosts": ["kandarin"],
+      "reason": "global/not relevant — Thaler/minigame Agility outfit residual, not region-gated major unlock"
+    },
+    {
+      "name": "Silverhawk boots (Agility XP from feathers/down)",
+      "hosts": ["asgarnia"],
+      "reason": "global/not relevant — Thaler/minigame Agility XP boots residual"
+    },
+    {
+      "name": "Thaler skilling rewards hub (Stanley Limelight Traders)",
+      "hosts": ["asgarnia"],
+      "reason": "global/not relevant — multi-minigame Thaler hub, not a single-region permanent"
+    },
+    {
+      "name": "Portable skilling stations (ironman craft/deployment permanent note)",
+      "hosts": ["misthalin"],
+      "reason": "global/not relevant — portable craft/deployment is not region-locked planning value"
+    },
+    {
+      "name": "Skills necklace (guild teleports)",
+      "hosts": ["kandarin"],
+      "reason": "global/not relevant — craftable jewelry tele package residual"
+    },
+    {
+      "name": "Gemstone golem outfit",
+      "hosts": ["forinthry"],
+      "reason": "global/not relevant — multi-source Mining outfit residual (E global or skip)"
+    },
+    {
+      "name": "Nature's sentinel outfit",
+      "hosts": ["misthalin", "asgarnia", "kandarin"],
+      "reason": "global/not relevant — multi-source Woodcutting outfit (any case, remove entirely)"
+    },
+    {
+      "name": "Elder divination outfit",
+      "hosts": ["kandarin"],
+      "reason": "global/not relevant — bare outfit residual (not path); E global or skip"
+    },
+    {
+      "name": "Infinity ethereal outfit",
+      "hosts": ["misthalin"],
+      "reason": "global/not relevant — multi-source RC outfit residual"
+    },
+    {
+      "name": "Magic golem outfit",
+      "hosts": ["asgarnia", "fremennik"],
+      "reason": "global/not relevant — multi-source Mining outfit residual"
+    },
+    {
+      "name": "Fletcher's outfit",
+      "hosts": ["misthalin"],
+      "reason": "was multi empty-req (misthalin+forinthry) — global residual remove"
+    }
+  ],
+  "notes": {
+    "keepCount": 14,
+    "removeUpgradeNameCount": 11,
+    "policyNote": "Foreign multi-host copies for most keeps were already stripped by prior single-home/global passes; this wave pins empty requiredRegions, finishes Toolbelt Seedicide multi collapse, moves Auto-screener to asgarnia, and strips global residual singles.",
+    "liveCatalogGapsVsRemaining": "foreign-upgrades-remaining still lists multi hosts for Velucia/Construction/Prayer/etc.; live catalog is already home-only for those names — removeUpgrade on historical foreign hosts omitted to avoid MISS noise (already gone)."
+  },
+  "ops": [
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "misthalin",
+      "name": "Velucia museum Archaeology collections",
+      "set": {
+        "regionId": "misthalin",
+        "requiredRegions": ["misthalin"]
+      },
+      "reason": "wave2 empty-req primary keep — Velucia museum → misthalin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "misthalin",
+      "name": "Construction Contracts (estate agents)",
+      "set": {
+        "regionId": "misthalin",
+        "requiredRegions": ["misthalin"]
+      },
+      "reason": "wave2 empty-req primary keep — Construction Contracts → misthalin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "misthalin",
+      "name": "Prayer training infrastructure stack (altars + powders + books)",
+      "set": {
+        "regionId": "misthalin",
+        "requiredRegions": ["misthalin"]
+      },
+      "reason": "wave2 empty-req primary keep — Prayer training infrastructure → misthalin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "fremennik",
+      "name": "Dragon hatchet (Dagannoth Kings pressure)",
+      "set": {
+        "regionId": "fremennik",
+        "requiredRegions": ["fremennik"]
+      },
+      "reason": "wave2 empty-req primary keep — Dragon hatchet (DK) → fremennik"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "kandarin",
+      "name": "Seedicide collector upgrade",
+      "set": {
+        "regionId": "kandarin",
+        "requiredRegions": ["kandarin"]
+      },
+      "reason": "wave2 empty-req primary keep — Seedicide collector upgrade → kandarin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "asgarnia",
+      "name": "Invention Guild named machine room",
+      "set": {
+        "regionId": "asgarnia",
+        "requiredRegions": ["asgarnia"]
+      },
+      "reason": "wave2 empty-req primary keep — Invention Guild named machine room → asgarnia"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "asgarnia",
+      "name": "Auto-screener v1.080",
+      "copyFromRegion": "misthalin",
+      "set": {
+        "regionId": "asgarnia",
+        "requiredRegions": ["asgarnia"]
+      },
+      "reason": "wave2 empty-req primary keep — Auto-screener v1.080 → asgarnia (copy residual from misthalin)"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Auto-screener v1.080",
+      "reason": "wave2 empty-req primary keep — Auto-screener home is asgarnia, not misthalin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "misthalin",
+      "name": "Sticky Fingers (Archaeology relic)",
+      "set": {
+        "regionId": "misthalin",
+        "requiredRegions": ["misthalin"]
+      },
+      "reason": "wave2 empty-req primary keep — Sticky Fingers → misthalin"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "morytania",
+      "name": "Asylum surgeon's ring",
+      "set": {
+        "regionId": "morytania",
+        "requiredRegions": ["morytania"]
+      },
+      "reason": "wave2 empty-req primary keep — Asylum surgeon's ring → morytania"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "morytania",
+      "name": "Ectoplasmator (base)",
+      "set": {
+        "regionId": "morytania",
+        "requiredRegions": ["morytania"]
+      },
+      "reason": "wave2 empty-req primary keep — Ectoplasmator (base) → morytania"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "fremennik",
+      "name": "Ungael ritual site pressure",
+      "set": {
+        "regionId": "fremennik",
+        "requiredRegions": ["fremennik"]
+      },
+      "reason": "wave2 empty-req primary keep — Ungael ritual site pressure → fremennik"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "kandarin",
+      "name": "Master farmer outfit is not a Desert unlock",
+      "set": {
+        "regionId": "kandarin",
+        "requiredRegions": ["kandarin"]
+      },
+      "reason": "wave2 empty-req primary keep — Master farmer outfit residual → kandarin (if multi)"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "kandarin",
+      "name": "Always Adze (Seed of the Charyou Tree)",
+      "set": {
+        "regionId": "kandarin",
+        "requiredRegions": ["kandarin"]
+      },
+      "reason": "wave2 empty-req primary keep — Always Adze → kandarin"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Toolbelt attach: Seedicide",
+      "reason": "wave2 empty-req primary keep — Seedicide toolbelt home kandarin only"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "anachronia",
+      "name": "Toolbelt attach: Seedicide",
+      "reason": "wave2 empty-req primary keep — Seedicide toolbelt home kandarin only"
+    },
+    {
+      "op": "ensureUpgradeOnHome",
+      "regionId": "kandarin",
+      "name": "Toolbelt attach: Seedicide",
+      "set": {
+        "regionId": "kandarin",
+        "requiredRegions": ["kandarin"]
+      },
+      "reason": "wave2 empty-req primary keep — Toolbelt attach: Seedicide → kandarin"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Nimble outfit (The Pit Agility XP set)",
+      "reason": "wave2 empty-req global remove — Nimble outfit not region planning value"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Silverhawk boots (Agility XP from feathers/down)",
+      "reason": "wave2 empty-req global remove — Silverhawk boots not region planning value"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Thaler skilling rewards hub (Stanley Limelight Traders)",
+      "reason": "wave2 empty-req global remove — Thaler skilling hub not region-gated"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Portable skilling stations (ironman craft/deployment permanent note)",
+      "reason": "wave2 empty-req global remove — Portable skilling stations residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Skills necklace (guild teleports)",
+      "reason": "wave2 empty-req global remove — Skills necklace craftable jewelry residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "forinthry",
+      "name": "Gemstone golem outfit",
+      "reason": "wave2 empty-req global remove — Gemstone golem outfit residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Nature's sentinel outfit",
+      "reason": "wave2 empty-req global remove — Nature's sentinel (any case)"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Nature's sentinel outfit",
+      "reason": "wave2 empty-req global remove — Nature's sentinel (any case)"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Nature's sentinel outfit",
+      "reason": "wave2 empty-req global remove — Nature's sentinel (any case)"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "kandarin",
+      "name": "Elder divination outfit",
+      "reason": "wave2 empty-req global remove — Elder divination outfit bare (not path)"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Infinity ethereal outfit",
+      "reason": "wave2 empty-req global remove — Infinity ethereal outfit residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "asgarnia",
+      "name": "Magic golem outfit",
+      "reason": "wave2 empty-req global remove — Magic golem outfit residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "fremennik",
+      "name": "Magic golem outfit",
+      "reason": "wave2 empty-req global remove — Magic golem outfit residual"
+    },
+    {
+      "op": "removeUpgrade",
+      "regionId": "misthalin",
+      "name": "Fletcher's outfit",
+      "reason": "wave2 empty-req global remove — Fletcher's outfit was multi empty-req"
+    }
+  ]
+}

@@ -1,0 +1,906 @@
+{
+  "title": "H — aggressive multi-host tighten",
+  "source": "scraped-data/wall-slam-input-2026-07-26.json",
+  "catalog": "read-only; proposal only",
+  "policy": {
+    "hosts": "Smallest defensible display set. Prefer one primary owning region; non-owning material/source pressure goes in requiredRegions only.",
+    "exceptions": [
+      "user-forced multi: Grace of the elves (GOTE), Death Ward dual, Area Tasks, fairy rings",
+      "UNOBTAINABLE multi-host displays (Blessed flask, Hatchet Ember/Bloom) — keep multi hosts so the unobtainable map stays visible",
+      "true dual content gates where both sides are unlock geography, not mere mats (kept only when defensible)"
+    ],
+    "actions": {
+      "primary": "collapse hosts to one region; keep multi pressure in proposedReq",
+      "keep_multi": "exception — retain multi hosts",
+      "remove": "drop redundant portfolio/checklist row",
+      "tighten": "reduce host count but still multi (rare)"
+    }
+  },
+  "decisions": [
+    {
+      "name": "All Fired Up → Inferno adze reward chain",
+      "currentHosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Owning display is the Asgarnia Inferno adze equipment/claim stack. Wilderness beacon geography is Forinthry material/route pressure only — keep in req, not a second host."
+    },
+    {
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "currentHosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: each diary set is owned by its region. Multi-host is the product, not material pressure."
+    },
+    {
+      "name": "Artificer's measure",
+      "currentHosts": [
+        "forinthry",
+        "morytania",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "forinthry",
+        "tirannwn",
+        "morytania"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Matches user ruling: single Anachronia display + multi-req UNOBTAINABLE tag. Other hosts are component pressure, not separate product homes."
+    },
+    {
+      "name": "Balarak's sash brush",
+      "currentHosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "forinthry",
+        "anachronia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Finished tool is Orthen/Anachronia content; Forinthry is the journal/gate side of the same chain. Aggressive: one host, both still hard in req (user already forced both regions in pressure)."
+    },
+    {
+      "name": "Blessed flask production chain",
+      "currentHosts": [
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "desert",
+        "morytania",
+        "tirannwn",
+        "forinthry"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: UNOBTAINABLE multi-host display under 3-elective cap — keep the full map visible so planners see why it is unobtainable."
+    },
+    {
+      "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
+      "currentHosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "proposedHosts": [
+        "forinthry"
+      ],
+      "proposedReq": [
+        "forinthry",
+        "asgarnia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Base bonecrusher / cleaner identity is Forinthry (Daemonheim). Boni/Waiko sink is purchase pressure taxonomized under Asgarnia — req only, not a second host."
+    },
+    {
+      "name": "Channeller's ring",
+      "currentHosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "fremennik"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Anachronia owns the Rex heart (defining drop); Fremennik is base-ring feedstock pressure. Mirror reaver/stalker primary rule."
+    },
+    {
+      "name": "Conservation of Energy relic chain",
+      "currentHosts": [
+        "misthalin",
+        "asgarnia",
+        "kandarin"
+      ],
+      "proposedHosts": [
+        "misthalin"
+      ],
+      "proposedReq": [
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Relic powers surface at the Misthalin monolith path; Asgarnia/Kandarin dig artefacts are chain pressure, not separate product homes."
+    },
+    {
+      "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
+      "currentHosts": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "tirannwn"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Owning content is Prif crystal rod + waterfall. Kandarin fury-shark half is a separate stack (user already ignored that combo elsewhere); do not dual-host the crystal fishing package."
+    },
+    {
+      "name": "Death Ward relic chain",
+      "currentHosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "proposedHosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: user-forced dual — Stormguard dig (Kandarin) + Armadyl Tower turn-in (Asgarnia) are both content geography."
+    },
+    {
+      "name": "Edgeville skilling and Wilderness on-ramp hub",
+      "currentHosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "proposedHosts": [
+        "misthalin"
+      ],
+      "proposedReq": [
+        "misthalin",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Edgeville town is Misthalin-owned. Forinthry is Wilderness destination pressure north of the ditch, not a second hub host."
+    },
+    {
+      "name": "Elder divination outfit path (Cache base + Invention elite)",
+      "currentHosts": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "kandarin",
+        "asgarnia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Elite invention step is Asgarnia Guild geography; Cache/diviner base is Kandarin pressure. Prefer single display at Invention home (matches other elite-outfit collapses)."
+    },
+    {
+      "name": "Elite skilling outfits core set (ironman fragment paths)",
+      "currentHosts": [
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "kandarin",
+        "forinthry",
+        "anachronia",
+        "desert",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Portfolio, not seven products. Prefer individual outfit rows for effects; one Asgarnia display carries fragment-path pressure in req. Prior user multi-host was scoring convenience, not seven homes."
+    },
+    {
+      "name": "Elite tectonic robe armour",
+      "currentHosts": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Asgarnia owns Vorago tectonic + Virtus/praesulic craft identity. Draconic energy / chaotic remnant are Forinthry material pressure only."
+    },
+    {
+      "name": "Expansive essence pouch (70 essence, non-degrading)",
+      "currentHosts": [
+        "misthalin",
+        "forinthry"
+      ],
+      "proposedHosts": [
+        "forinthry"
+      ],
+      "proposedReq": [
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Non-degrading expansive pouch is Daemonheim/Dungeoneering-facing storage. Misthalin was residual craft/footnote pressure — drop as host and as hard req unless a separate craft gate is proven."
+    },
+    {
+      "name": "Extreme invention supply combo (Guild + webbing + Herblore)",
+      "currentHosts": [
+        "asgarnia",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "anachronia"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Owning path is Invention Guild (Asgarnia). Anachronia webbing/herb supply is material pressure (POF can substitute)."
+    },
+    {
+      "name": "Fairy ring network (Zanaris hub)",
+      "currentHosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "proposedReq": [
+        "misthalin",
+        "morytania"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: user-forced multi travel package — Zanaris hub (Misthalin taxonomy) + Morytania ring geography stay dual."
+    },
+    {
+      "name": "Fury of the Small relic chain",
+      "currentHosts": [
+        "misthalin",
+        "kandarin"
+      ],
+      "proposedHosts": [
+        "kandarin"
+      ],
+      "proposedReq": [
+        "kandarin",
+        "misthalin"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Warforge dig owns the artefact half (Kandarin); Misthalin is monolith/turn-in pressure. Prefer dig-site primary over dual host."
+    },
+    {
+      "name": "Grace of the elves (GOTE)",
+      "currentHosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: explicit user ruling GOTE = Forinthry + Tirannwn. Dark Facet stays Forinthry-only separately."
+    },
+    {
+      "name": "Hatchet of Bloom and Blight",
+      "currentHosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "tirannwn",
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "desert",
+        "morytania"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: UNOBTAINABLE multi-host t100 chain — keep full component map visible under elective cap."
+    },
+    {
+      "name": "Hatchet of Ember and Glade",
+      "currentHosts": [
+        "asgarnia",
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "asgarnia",
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "forinthry",
+        "tirannwn",
+        "fremennik",
+        "asgarnia"
+      ],
+      "action": "keep_multi",
+      "confidence": "high",
+      "reason": "Exception: UNOBTAINABLE multi-host self-sufficient chain — do not collapse finished hatchet to one region display."
+    },
+    {
+      "name": "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+      "currentHosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "proposedHosts": [],
+      "proposedReq": [],
+      "action": "remove",
+      "confidence": "high",
+      "reason": "Residual checklist over piece rows; piece equipment already carries region pressure. Drop to avoid multi-host noise."
+    },
+    {
+      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      "currentHosts": [
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "fremennik",
+        "misthalin",
+        "asgarnia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Package row for scoring one Imcando tool — Camdozaal/Asgarnia is the natural family home. Misthalin/Fremennik stay hard chain pressure in req (crystal legs remain on finished t90 piece rows)."
+    },
+    {
+      "name": "Masterwork plate → Orthen furnace core pressure stack",
+      "currentHosts": [
+        "asgarnia",
+        "forinthry",
+        "desert",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "asgarnia",
+        "forinthry",
+        "desert"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Orthen core is Anachronia content. Masterwork plate + ore/smith inputs are material pressure (Asgarnia Artisans, Forinthry/Desert ore routes) — req only."
+    },
+    {
+      "name": "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)",
+      "currentHosts": [
+        "havenhythe",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "havenhythe"
+      ],
+      "proposedReq": [
+        "havenhythe"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Support densify only. Havenhythe is free starting pressure; Anachronia BGH is elective — do not dual-host until recipe hard-locks it."
+    },
+    {
+      "name": "Masterwork Spear of Annihilation",
+      "currentHosts": [
+        "asgarnia",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "morytania"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Artisans/masterwork home is Asgarnia; Morytania is essence/material pressure (same pattern as trimmed masterwork)."
+    },
+    {
+      "name": "Mattock of Time and Space",
+      "currentHosts": [
+        "misthalin",
+        "kandarin",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "tirannwn",
+        "misthalin",
+        "kandarin",
+        "anachronia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Crystal mattock / Tirannwn side owns the finished tool identity. Guildmaster shard (Misthalin), hammer/shop (Kandarin), dragon-mattock (Anachronia) are chain pressure."
+    },
+    {
+      "name": "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
+      "currentHosts": [
+        "misthalin",
+        "kandarin",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [],
+      "proposedReq": [],
+      "action": "remove",
+      "confidence": "high",
+      "reason": "Residual checklist over piece rows; remove multi-host noise."
+    },
+    {
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "currentHosts": [
+        "forinthry",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Furnace core item is Anachronia. Superheat Form (Tirannwn) and autoheater (Forinthry) are stack pressure, not co-homes of the core."
+    },
+    {
+      "name": "Orthen furnace core full skilling stack",
+      "currentHosts": [
+        "forinthry",
+        "tirannwn",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Companion stack to anachronia:orthen-furnace-core. Display once on Anachronia; keep Tirannwn+Forinthry as sustained-AFK pressure in req."
+    },
+    {
+      "name": "Perfect juju potion production path",
+      "currentHosts": [
+        "karamja",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "karamja"
+      ],
+      "proposedReq": [
+        "karamja",
+        "tirannwn"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Juju production hub is Karamja. Crystal flasks/blossoms are Tirannwn material pressure."
+    },
+    {
+      "name": "Pickaxe of Earth and Song",
+      "currentHosts": [
+        "kandarin",
+        "fremennik",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "tirannwn"
+      ],
+      "proposedReq": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Finished crystal pick side is Tirannwn; Imcando/Fremennik is hard feedstock. Kandarin blast-fusion/forge is craft-site pressure only — drop from hard hosts/req (detail already warned not to hard-require Kandarin)."
+    },
+    {
+      "name": "Pickaxe of Life and Death",
+      "currentHosts": [
+        "asgarnia",
+        "fremennik",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "fremennik",
+        "tirannwn",
+        "asgarnia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "t100 continuation identity leans Camdozaal/Asgarnia progression; Fremennik+Tirannwn remain Earth-and-Song chain pressure in req."
+    },
+    {
+      "name": "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)",
+      "currentHosts": [
+        "fremennik",
+        "tirannwn"
+      ],
+      "proposedHosts": [],
+      "proposedReq": [],
+      "action": "remove",
+      "confidence": "high",
+      "reason": "Residual checklist over piece rows; remove multi-host noise."
+    },
+    {
+      "name": "Player-owned house portal towns and Construction utilities",
+      "currentHosts": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "desert",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "House instance is not region-owned; Rimmington (Asgarnia) is the preferred Construction loop. Portal exits are convenience geography, not seven hard hosts or multi-req locks."
+    },
+    {
+      "name": "POH gilded altar (Chapel offering)",
+      "currentHosts": [
+        "misthalin",
+        "fremennik",
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "misthalin"
+      ],
+      "proposedReq": [
+        "fremennik",
+        "tirannwn",
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "POH gilded is house-facing (default Misthalin display). Marble/limestone/burner materials and Fort comparison pressure stay in req without multi-hosting every supply region."
+    },
+    {
+      "name": "Reaver's ring",
+      "currentHosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "fremennik"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Anachronia owns the heart drop; Fremennik owns ring feedstock — pressure only."
+    },
+    {
+      "name": "Ring of slaying (craft unlock)",
+      "currentHosts": [
+        "misthalin",
+        "fremennik",
+        "desert",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "misthalin"
+      ],
+      "proposedReq": [],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Matches user ruling: craft unlock is global points QoL. Teleport destinations are not hard region hosts/req."
+    },
+    {
+      "name": "Sirenic → elite sirenic armour",
+      "currentHosts": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "proposedHosts": [
+        "forinthry"
+      ],
+      "proposedReq": [
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Scale-farm identity is Forinthry-leaning; detail already forbids hard multi-required electives. Tirannwn/lab materials stay hints, not second host or hard req."
+    },
+    {
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "currentHosts": [
+        "forinthry",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "forinthry"
+      ],
+      "proposedReq": [
+        "forinthry"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Intentionally multi-source scales — show as Forinthry support pressure, not fake dual-host lock. Morytania is optional scale geography, not co-home."
+    },
+    {
+      "name": "Skeka's hypnowand",
+      "currentHosts": [
+        "forinthry",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "forinthry",
+        "anachronia"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Pieces/content resolve on Anachronia; Daemonheim journal gate is real Forinthry pressure kept hard in req, not a second display host."
+    },
+    {
+      "name": "Slayer helmet (craft unlock + base helm)",
+      "currentHosts": [
+        "misthalin",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "morytania"
+      ],
+      "proposedReq": [
+        "morytania"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Black-mask farm owns the base helm path (Morytania). Point sink is global — Misthalin is not a second home."
+    },
+    {
+      "name": "Slayer helmet component farms",
+      "currentHosts": [
+        "misthalin",
+        "karamja",
+        "desert",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "morytania"
+      ],
+      "proposedReq": [
+        "morytania",
+        "karamja",
+        "desert"
+      ],
+      "action": "primary",
+      "confidence": "medium",
+      "reason": "Planner hub for style coverage: primary display on black-mask home; other component farms are regional pressure in req. Misthalin shop pieces are not region-locked hosts."
+    },
+    {
+      "name": "Slayer Introspection (Amascut's Enchanted Gem)",
+      "currentHosts": [
+        "kandarin",
+        "desert",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "kandarin",
+        "desert",
+        "morytania"
+      ],
+      "proposedReq": [
+        "kandarin",
+        "morytania",
+        "desert"
+      ],
+      "action": "keep_multi",
+      "confidence": "medium",
+      "reason": "True multi-region archaeology collection (Knowledge is Power route). Each listed region owns a piece of the collection path — not mere mats. Keep multi (user already forced three-host)."
+    },
+    {
+      "name": "Stalker's ring",
+      "currentHosts": [
+        "fremennik",
+        "anachronia"
+      ],
+      "proposedHosts": [
+        "anachronia"
+      ],
+      "proposedReq": [
+        "anachronia",
+        "fremennik"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Mirror reaver/channeller: Anachronia heart owns display; Fremennik ring feedstock is pressure."
+    },
+    {
+      "name": "Trimmed / custom-fit trimmed masterwork melee armour",
+      "currentHosts": [
+        "asgarnia",
+        "morytania"
+      ],
+      "proposedHosts": [
+        "asgarnia"
+      ],
+      "proposedReq": [
+        "asgarnia",
+        "morytania"
+      ],
+      "action": "primary",
+      "confidence": "high",
+      "reason": "Artisans custom-fit + Torva/praesulic home is Asgarnia. Malevolent essence is Morytania material pressure — hard in req, not dual host."
+    }
+  ],
+  "summary": {
+    "total": 46,
+    "primary": 35,
+    "keep_multi": 8,
+    "remove": 3,
+    "tighten": 0,
+    "keep_multi_names": [
+      "Area Tasks (achievement diaries) skilling overview",
+      "Blessed flask production chain",
+      "Death Ward relic chain",
+      "Fairy ring network (Zanaris hub)",
+      "Grace of the elves (GOTE)",
+      "Hatchet of Bloom and Blight",
+      "Hatchet of Ember and Glade",
+      "Slayer Introspection (Amascut's Enchanted Gem)"
+    ],
+    "remove_names": [
+      "Hatchet progression checklist (dragon → Imcando → crystal → Ember and Glade → Bloom and Blight)",
+      "Mattock progression checklist (dragon → crystal / Imcando → MoTaS → Tony)",
+      "Pickaxe progression checklist (dragon → Imcando → crystal → Earth and Song → Life and Death)"
+    ],
+    "host_slots_before": 140,
+    "host_slots_after": 67
+  }
+}

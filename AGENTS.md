@@ -25,9 +25,10 @@ repeat.
 | `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Fingerprint bans, density, surgery, detection — product-aware; load after `equilibrium-ui` |
 | `rs3-ponytail` | Lean-code intensity per domain |
 
-`equilibrium-ui` is binding for chrome, stack, and motifs here. Global anti-slop skills now multi-product
-route: EverSense Print/pink notes do not apply. Tailwind v4 `@theme` is correct. Claude
-`frontend-design` is craft only (no marketing hero). Context7 for library APIs (Next/Tailwind/R3F), not palette.
+`equilibrium-ui` is binding for chrome, stack, motifs, and Hybrid Composite 9.2 route DNA here.
+Global anti-slop skills now multi-product route: EverSense Print/pink notes do not apply. Tailwind
+v4 `@theme` is correct. Claude `frontend-design` is craft only (no marketing hero). Context7 for
+library APIs (Next/Tailwind/R3F), not palette.
 
 ## Gotchas
 
@@ -97,15 +98,23 @@ carries its own `SourceReference`.
 Load `equilibrium-ui` first, then `no-slop-ui` / `human-grade` for fingerprint law; run `bot-audit`
 before calling a screen shippable. The tool opens on the working surface. Nothing here is being sold.
 
-Visual identity is the game's own: warm umber ground sampled from RuneScape: DragonWilds, one chrome
-accent in Equilibrium gem green, gold reserved for engraved display type, and the Order/Chaos/Balance
-triad reserved as data semantics. `equilibrium-ui` carries the token contract and the sanctioned
-exceptions.
+Visual identity is a **premium public game companion site** (not a developer console). Hybrid
+composition champion (tournament 9.2):
 
-Three references, zero clones — steal the lesson, never the markup: **RuneScape Wiki** (density,
-dark-mode familiarity, tables), **rs-analysis.xyz** (serious calculator feel with many parameters
-exposed without becoming unusable), **RuneScape itself** (colour, iconography, League identity). Normalise facts into our own compact copy
-rather than reproducing theirs.
+| Layer | DNA |
+|---|---|
+| Colors | Editorial (Echo ladder in `@theme`) |
+| Overview | Daylight courtyard / keyart aperture |
+| Map | Editorial Board Sky — 3D top, detail under board, no side inspector |
+| Tasks | Crystal facet filters, Data-density tables |
+| Build | Editorial Relic Court (monogram frames until Jagex icons land) |
+| Combat | Crystal desk + Editorial chrome |
+| Data | Lattice + Daylight browse rail + full sources inspector |
+
+Gem = interactive chrome only; gold = display; path triad = data. `equilibrium-ui` is binding.
+
+Three references, zero clones: **2026 RS keyart / stone UI**, **RuneScape Wiki** density, **game
+crests/icons**. No third-party tool layout clones.
 
 **Art and design are separate rules, and only one of them is a ban.**
 
@@ -138,7 +147,7 @@ Equilibrium has no published list it may show Catalyst stand-in data, marked pro
 - all 11 regions as `<button>` whose accessible name *starts with* the display name — an icon inside
   one needs `alt=""` or the name breaks
 - literal `0/3` and `3/3` pick counters; 4th pick `aria-disabled="true"` (still focusable); `Clear picks` always present (disabled when empty)
-- `section[aria-live]` holding the region detail, matching `/sources? · verified <date>/`
+- `section[aria-live]` holding the region detail **under the board/ledger stack** (not a side inspector), matching `/sources? · verified <date>/`
 - the substring `no WebGPU` in the WebGPU-absent fallback
 
 ## Commands

@@ -1,0 +1,137 @@
+{
+  "round": 1,
+  "tournament": "hybrid-composition",
+  "passBar": 9.0,
+  "recipe": {
+    "colors": "Editorial",
+    "overview": "Daylight",
+    "map": "Editorial + 3D top, no inspector",
+    "tasks": "Crystal iterated toward Data",
+    "build": "Editorial + Jagex relic icons",
+    "combat": "Crystal main, Editorial accents",
+    "data": "Lattice + Editorial + Daylight browse + full source inspector"
+  },
+  "axes": {
+    "recipeFidelity": 25,
+    "publicCraft": 20,
+    "dataReadability": 20,
+    "operability": 15,
+    "antiSlop": 10,
+    "signature": 10
+  },
+  "teams": [
+    {
+      "id": "prism",
+      "codename": "Facet Desk",
+      "score": 8.9,
+      "rank": 1,
+      "axes": {
+        "recipeFidelity": 8.8,
+        "publicCraft": 8.5,
+        "dataReadability": 9.3,
+        "operability": 9.1,
+        "antiSlop": 8.6,
+        "signature": 9.4
+      },
+      "status": "contender"
+    },
+    {
+      "id": "orbit",
+      "codename": "Board Sky",
+      "score": 8.7,
+      "rank": 2,
+      "axes": {
+        "recipeFidelity": 8.3,
+        "publicCraft": 9.0,
+        "dataReadability": 8.6,
+        "operability": 8.5,
+        "antiSlop": 9.0,
+        "signature": 9.5
+      },
+      "status": "contender"
+    },
+    {
+      "id": "nova",
+      "codename": "Courtyard First",
+      "score": 8.6,
+      "rank": 3,
+      "axes": {
+        "recipeFidelity": 8.0,
+        "publicCraft": 9.1,
+        "dataReadability": 8.6,
+        "operability": 8.3,
+        "antiSlop": 9.0,
+        "signature": 9.2
+      },
+      "status": "contender"
+    },
+    {
+      "id": "forge",
+      "codename": "Calc Crystal",
+      "score": 8.3,
+      "rank": 4,
+      "axes": {
+        "recipeFidelity": 7.4,
+        "publicCraft": 8.4,
+        "dataReadability": 8.5,
+        "operability": 8.0,
+        "antiSlop": 9.4,
+        "signature": 9.4
+      },
+      "status": "contender"
+    },
+    {
+      "id": "ridge",
+      "codename": "Relic Court",
+      "score": 8.0,
+      "rank": 5,
+      "axes": {
+        "recipeFidelity": 7.2,
+        "publicCraft": 8.6,
+        "dataReadability": 7.8,
+        "operability": 7.8,
+        "antiSlop": 8.2,
+        "signature": 9.3
+      },
+      "status": "contender"
+    }
+  ],
+  "winnerId": null,
+  "mustFixByTeam": {
+    "prism": [
+      "Build Relics: stop dressing upgrade gear (hatchet/drygore/godswords) as relic presentation — wire real T1 names+effects from data/league/relics.json with monogram frames until Jagex Equilibrium icons exist",
+      "Map 3D-top is still a crest grid + caption strip — add Orbit-grade board height / slab perspective so Editorial 3D-top is not a spreadsheet with crests",
+      "Combat is competent vacancy, not Crystal-main masterpiece — densify ability scan (icons, facet bar) without inventing DPL",
+      "Strip lab-facing twin-desk sermons from player-visible copy where they read as manifesto",
+      "Prove Overview gate material depth matches Nova courtyard (lintel/jamb/aperture carve), not only desk DNA"
+    ],
+    "orbit": [
+      "Data SourceReference MUST include url (or path) per source — label/kind/verifiedAt/note without a locator is incomplete vs recipe FULL inspector",
+      "Build: T1 is revealed in data/league/relics.json — empty 'unrevealed' slots for all seven tiers are dishonest; seat Survivalist / Endless Harvest / Golden Touch with empty T2–T7",
+      "Tasks Crystal×Data: slim note panel is not Prism twin density — add full field dump or accept signature stays Map-only",
+      "Map ledger focus card is fine (not inspector) — do not grow it into a third column under pressure",
+      "Sources cards need linkable provenance, not note-only"
+    ],
+    "nova": [
+      "Data: single source object is better than Ridge/Forge mush but not FULL multi-source SourceReference — list every source with title/url/verifiedAt/type",
+      "Build relics: T1 is published — seven empty 'Unrevealed' cards fail Editorial+relic presentation; adopt Ridge court with real T1 copy",
+      "Map board mock is OK but 3D-top atmosphere trails Orbit Board Sky — taller board zone, less flat crest grid",
+      "Combat ability table is real names but thin Crystal chrome vs Forge facet bar + vacancy wells",
+      "Keep courtyard gate as signature — do not let Overview devolve into status strip in R2"
+    ],
+    "forge": [
+      "RECIPE SCREAM — Data inspector is NOT full SourceReference: source:'wiki-demo' + verified date is a caption, not a sources block. Ship multi-source cards with title, url/path, verifiedAt, sourceType, notes",
+      "Map missing Clear picks control (e2e contract string) — Add/Remove on focus is not enough",
+      "Overview is keyart band + ledger, not three-bay Daylight courtyard gate — borrow Nova gate architecture",
+      "Build relics empty while T1 is live data — same honesty fix as Nova/Orbit",
+      "Combat is the class of the field — do not dilute vacancy law when densifying other routes"
+    ],
+    "ridge": [
+      "RECIPE SCREAM — Data full source inspector FAILED: fixture.source is the string 'wiki'; lattice leaf is a noop; non-Browse tabs are empty shells. Multi-source list with title/url/verifiedAt/type is mandatory",
+      "Combat table prints adrenaline integers (50/100) while result bay claims unbound — either catalog-label those as ability costs with empty DPL wells (Forge style) or leave Adren as —",
+      "ArtStage keyart plate on EVERY route borders marketing chrome — keep court energy on Build, thin the global plate",
+      "Map gazetteer is flat crest grid; 3D-top cue is text only — raise board craft without adding inspector",
+      "Relic Court is R1's best Build — protect monogram law, never wire Catalyst PNGs, bind loadConceptBuildProps when ready"
+    ]
+  }
+}

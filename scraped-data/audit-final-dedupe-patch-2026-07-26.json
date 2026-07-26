@@ -1,0 +1,72 @@
+{
+  "snapshot_date": "2026-07-26",
+  "pass": "FINAL PASS Wave A2 — near-dup hygiene",
+  "source": {
+    "unlocks": "data/research/regional-skilling-unlocks.json",
+    "sync": "scripts/sync-regional-skilling-unlocks.mjs (DROP_IDS / NAME_CANONICAL — do not apply here; patch only)"
+  },
+  "drop_ids_add": [
+    "karamja:calquat-patch",
+    "asgarnia:thieves-guild-master-tools",
+    "kandarin:area-tasks-seers-headband",
+    "kandarin:seers-village-achievements",
+    "karamja:karamja-gloves-skilling",
+    "desert:slayer-codex",
+    "misthalin:runespan-master-runecrafter-robes",
+    "misthalin:city-of-um-ritualist-outfit",
+    "kandarin:ardougne-cloak-ourania"
+  ],
+  "name_canonical_add": [
+    ["calquat tree patch (tai bwo wannai)", "karamja:calquat-farming-patch"],
+    ["thieves' guild master thief tools", "misthalin:thieves-guild-master-tools"],
+    ["master thief's lockpick + master thief's stethoscope", "misthalin:thieves-guild-master-tools"],
+    ["seer's headband 1-4", "kandarin:seers-headband"],
+    ["seers' village achievements", "kandarin:seers-headband"],
+    ["seers' village achievements and seer's headband", "kandarin:seers-headband"],
+    ["karamja gloves 1-4", "karamja:area-tasks-karamja-gloves"],
+    ["karamja gloves skilling perks", "karamja:area-tasks-karamja-gloves"],
+    ["slayer codex", "desert:slayer-codex-and-sunken-pyramid"],
+    ["slayer codex and sunken pyramid soul system", "desert:slayer-codex-and-sunken-pyramid"],
+    ["master runecrafter robes", "misthalin:master-runecrafter-robes"],
+    ["runespan reward shop and master runecrafter robes", "misthalin:master-runecrafter-robes"],
+    ["ritualist's outfit", "misthalin:ritualists-outfit"],
+    ["austin's place and ritualist's outfit", "misthalin:ritualists-outfit"],
+    ["ardougne cloak (ourania rune output)", "kandarin:area-tasks-ardougne-cloak"],
+    ["ardougne cloak 1-4", "kandarin:area-tasks-ardougne-cloak"]
+  ],
+  "rationale": {
+    "karamja:calquat-patch": "Same sole Tai Bwo Wannai calquat tree patch as karamja:calquat-farming-patch. NAME_CANONICAL already prefers farming-patch; this id is a pure near-dup.",
+    "asgarnia:thieves-guild-master-tools": "Wrong geography. Dodgy Derek / Thieves' Guild master tools are Lumbridge Misthalin (row detail admits Misthalin hard). Severe dup of misthalin:thieves-guild-master-tools; keep hub + one tools/toolbelt row under Misthalin only.",
+    "kandarin:area-tasks-seers-headband": "Third restatement of the Seers diary headband ladder (effects already on seers-headband). Keep one diary ladder + hub only.",
+    "kandarin:seers-village-achievements": "Diary ladder restatement that re-lists Seer's headband 1–4 effects. Collapse to kandarin:seers-headband (reward ladder, same pattern as explorers-ring / varrock-armour). Hub stays separate.",
+    "karamja:karamja-gloves-skilling": "Thin pure restatement of karamja:area-tasks-karamja-gloves (Arena / Shilo skilling half). Keep the fuller area-tasks gloves ladder.",
+    "desert:slayer-codex": "Thin equipment/ownership slice of desert:slayer-codex-and-sunken-pyramid. Prefer full Codex + Sunken Pyramid soul package; detail already says prefer the activity row.",
+    "misthalin:runespan-master-runecrafter-robes": "Master runecrafter outfit double (activity package vs equipment split). Match first-age / black-ibis hygiene: keep equipment effect owner misthalin:master-runecrafter-robes; fold Runespan shop path into that row via name canonical.",
+    "misthalin:city-of-um-ritualist-outfit": "Ritualist outfit double (Austin's Place activity vs equipment split). Keep misthalin:ritualists-outfit as effect owner; fold Austin's non-MTX shop path into name canonical.",
+    "kandarin:ardougne-cloak-ourania": "Ourania-only +15% rune output slice already covered under kandarin:area-tasks-ardougne-cloak medium tier. Drop slice; keep full diary cloak ladder."
+  },
+  "keep_ids": [
+    "karamja:calquat-farming-patch",
+    "misthalin:thieves-guild",
+    "misthalin:thieves-guild-master-tools",
+    "kandarin:seers-headband",
+    "kandarin:seers-village-skilling",
+    "karamja:area-tasks-karamja-gloves",
+    "desert:slayer-codex-and-sunken-pyramid",
+    "misthalin:master-runecrafter-robes",
+    "misthalin:ritualists-outfit",
+    "kandarin:area-tasks-ardougne-cloak",
+    "kandarin:diviners-outfit",
+    "kandarin:diviners-outfit-guthixian-cache",
+    "kandarin:modified-diviners-headwear",
+    "kandarin:shark-outfit-deep-sea",
+    "kandarin:fury-shark-outfit"
+  ],
+  "notes_keep_no_drop": {
+    "diviner_outfit": "Keep activity (guthixian-cache acquisition) + equipment (diviners-outfit) + modified head add-on. Legitimate acquisition vs set vs head-upgrade triple — not a severe same-content double.",
+    "shark_vs_fury_shark": "Keep both. kandarin:shark-outfit-deep-sea is thin base/acquisition framing; kandarin:fury-shark-outfit is elite Invention-fragment set. Base/elite intentional; cross-region fury stacks remain separate.",
+    "thieves_guild_hub_plus_tools": "Keep misthalin:thieves-guild (hub infrastructure) + misthalin:thieves-guild-master-tools (one tools/toolbelt attach). Not two toolbelt attaches.",
+    "seers_hub": "kandarin:seers-village-skilling is settlement geography (flax/wheel/coal trucks/Elemental Workshop), not a diary restatement — keep with the single headband ladder."
+  },
+  "apply_hint": "Merge drop_ids_add into DROP_IDS and name_canonical_add into NAME_CANONICAL in scripts/sync-regional-skilling-unlocks.mjs, then re-run sync. Existing NAME_CANONICAL already maps calquat names → farming-patch and thieves guild → misthalin:thieves-guild; seers headband keys currently point at seers-headband (keep) while seers' village achievements must be repointed off the dropped achievements id."
+}

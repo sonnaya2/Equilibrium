@@ -12,7 +12,11 @@ export function Page({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-[1600px] px-4 py-5 ${className}`.trim()}>
+    <div
+      className={`mx-auto w-full max-w-[1600px] px-4 py-4 ${className}`
+        .replace(/\s+/g, " ")
+        .trim()}
+    >
       {children}
     </div>
   );

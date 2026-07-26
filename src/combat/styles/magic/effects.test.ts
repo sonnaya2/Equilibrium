@@ -1,11 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
   activateGreaterSunshine,
+  activateInstability,
+  activateSunshine,
   channelledMightCritBonus,
   CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS,
+  GREATER_SUNSHINE_BUFF_TICKS,
   grantChannelledMight,
+  INSTABILITY_DURATION_TICKS,
+  instabilityActive,
+  LIGHTNING_SURGE_BAND,
+  LIGHTNING_SURGE_TICK_DELAY,
+  lightningSurgeExpected,
   newChannelledMight,
+  newInstability,
   SUNSHINE_DAMAGE_MULTIPLIER,
+  SUNSHINE_DURATION_TICKS,
   sunshineActive,
   TUMEKENS_CHANNELLED_MIGHT,
 } from "./effects";
@@ -29,15 +39,52 @@ describe("channelled might", () => {
   });
 });
 
-describe("greater sunshine damage buff", () => {
-  it("grants +50% magic damage for 64 ticks starting 1 tick after cast", () => {
+describe("sunshine damage buff", () => {
+  it("base sunshine: +50% for ticks [cast+1, cast+50)", () => {
+    const state = activateSunshine(10);
+    expect(state.startsAtTick).toBe(11);
+    expect(state.expiresAtTick).toBe(10 + SUNSHINE_DURATION_TICKS);
+    expect(sunshineActive(state, 10)).toBe(false);
+    expect(sunshineActive(state, 11)).toBe(true);
+    expect(sunshineActive(state, 59)).toBe(true);
+    expect(sunshineActive(state, 60)).toBe(false);
+    expect(SUNSHINE_DAMAGE_MULTIPLIER).toBe(1.5);
+  });
+
+  it("greater sunshine: +50% for 64 ticks starting 1 tick after cast", () => {
     const state = activateGreaterSunshine(10);
     expect(state.startsAtTick).toBe(11);
-    expect(state.expiresAtTick).toBe(75);
+    expect(state.expiresAtTick).toBe(11 + GREATER_SUNSHINE_BUFF_TICKS);
     expect(sunshineActive(state, 10)).toBe(false);
     expect(sunshineActive(state, 11)).toBe(true);
     expect(sunshineActive(state, 74)).toBe(true);
     expect(sunshineActive(state, 75)).toBe(false);
-    expect(SUNSHINE_DAMAGE_MULTIPLIER).toBe(1.5);
+  });
+
+  it("activateSunshine(greater) matches activateGreaterSunshine", () => {
+    expect(activateSunshine(20, true)).toEqual(activateGreaterSunshine(20));
+  });
+});
+
+describe("instability lightning surge", () => {
+  it("buff lasts 50 ticks from cast", () => {
+    const state = activateInstability(10);
+    expect(state.expiresAtTick).toBe(10 + INSTABILITY_DURATION_TICKS);
+    expect(instabilityActive(state, 10)).toBe(true);
+    expect(instabilityActive(state, 59)).toBe(true);
+    expect(instabilityActive(state, 60)).toBe(false);
+    expect(instabilityActive(newInstability(), 0)).toBe(false);
+  });
+
+  it("surge EV is p * T; zero when p is 0", () => {
+    expect(lightningSurgeExpected(0, 800)).toBe(0);
+    expect(lightningSurgeExpected(0.5, 800)).toBe(400);
+    expect(lightningSurgeExpected(1, 800)).toBe(800);
+    expect(lightningSurgeExpected(1.5, 800)).toBe(800); // clamp
+  });
+
+  it("wiki bands and delay are locked", () => {
+    expect(LIGHTNING_SURGE_BAND).toEqual({ minPct: 70, maxPct: 90 });
+    expect(LIGHTNING_SURGE_TICK_DELAY).toBe(1);
   });
 });

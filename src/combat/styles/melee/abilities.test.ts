@@ -50,6 +50,35 @@ describe("melee ability data", () => {
     expect(byId("assault").channelled).toBe(true);
   });
 
+  it("channel and bleed multi-hits carry wiki tickOffsets", () => {
+    // Assault hit timings table: cast 0 → hits at 1, 3, 5, 7.
+    expect(byId("assault").hits.map((h) => h.tickOffset)).toEqual([1, 3, 5, 7]);
+
+    // Flurry / Greater Flurry: 8 hits over 4.8s (8 ticks), every 0.6s → 0..7.
+    expect(byId("flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(byId("greater_flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+
+    // Dismember: 8x every 1.2s (2 ticks); first hit delayed one interval.
+    expect(byId("dismember").hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
+    // Slaughter: 6x every 1.8s (3 ticks).
+    expect(byId("slaughter").hits.map((h) => h.tickOffset)).toEqual([3, 6, 9, 12, 15, 18]);
+    // Massacre: initial hit at cast + 6 bleed hits every 2.4s (4 ticks).
+    expect(byId("massacre").hits.map((h) => h.tickOffset)).toEqual([
+      undefined,
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+    ]);
+
+    // Overpower igneous: simultaneous twin hits — no invented inter-hit offsets.
+    expect(byId("overpower_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    // Hurricane: multi-hit non-channel; wiki has no inter-hit schedule.
+    expect(byId("hurricane").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+  });
+
   it("wiki-audited core bands match current ability pages", () => {
     expect(byId("attack").hits[0].band).toEqual({ minPct: 110, maxPct: 130 });
     expect(byId("adaptive_strike_2h").hits[0].band).toEqual({ minPct: 120, maxPct: 140 });

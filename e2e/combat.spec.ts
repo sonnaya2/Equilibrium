@@ -115,12 +115,31 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
   await page.getByRole("button", { name: "Rotation", exact: true }).click();
 
+  // Revolution is the default Rotation mode — no need to switch away from manual.
+  await expect(page.getByRole("button", { name: "Run revolution" })).toBeVisible();
+  await expect(page.getByText("Run revolution for a full duration cast log")).toBeVisible();
+  await expect(page.getByText(/Horizon 60s · 100 ticks/)).toBeVisible();
+
   // Default melee dual-wield bar is fully engine-mapped post-audit.
   await expect(page.getByText(/10 of 10 slots modelled/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
   await page.getByRole("button", { name: "Run revolution" }).click();
-  await expect(page.getByText("DPS")).toBeVisible();
-  await expect(page.getByText("Casts")).toBeVisible();
+  await expect(page.getByText("DPS (horizon)")).toBeVisible();
+  await expect(page.getByTestId("revo-horizon")).toHaveText(/60s · 100 ticks/);
+  await expect(page.getByTestId("revo-casts")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Cast timeline" })).toBeVisible();
+  // Basics are auto-woven into the horizon; at least one basic row or the timeline table.
+  const basics = page.locator("[data-basic='true']");
+  const timeline = page.getByTestId("revo-cast-timeline");
+  await expect(timeline).toBeVisible();
+  await expect(basics.or(timeline.locator("tbody tr")).first()).toBeVisible();
+});
+
+test("manual rotation still exposes necromancy abilities", async ({ page }) => {
+  await page.getByRole("button", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "manual", exact: true }).click();
+  await page.getByRole("button", { name: "Necromancy", exact: true }).click();
+  await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();
 });

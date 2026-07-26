@@ -229,7 +229,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     source: wikiAbility("Assault", "Assault"),
   },
   {
-    // Wiki Flurry: DW enhanced, 8x 60-70 every 0.6s, 25% cost, 20.4s CD.
+    // Wiki Flurry: "Attack 8 times over 4.8s (8 ticks)" every 0.6s — same as Rapid Fire (0..7).
     id: "flurry",
     name: "Flurry",
     style: "melee",
@@ -237,7 +237,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     channelled: true,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
-      tickOffset: i + 1,
+      tickOffset: i,
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
@@ -252,7 +252,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     channelled: true,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
-      tickOffset: i + 1,
+      tickOffset: i,
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
@@ -367,20 +367,12 @@ export const MELEE_EFFECTS = [
     source: wikiAbility("Greater Fury", "Greater_Fury"),
   },
   {
-    id: "fury",
-    name: "Fury",
-    category: "basic" as const,
-    durationSeconds: GREATER_FURY_CRIT_WINDOW_SECONDS,
-    notes: "Next melee attack within 15s gains +25% critical strike chance.",
-    source: wikiAbility("Fury", "Fury"),
-  },
-  {
     id: "meteor_strike",
     name: "Meteor Strike",
     category: "ultimate" as const,
     durationSeconds: METEOR_STRIKE_ADREN_BUFF_SECONDS,
     notes:
-      "After cast: melee basics generate 1.5x adrenaline; passively +4.5% adrenaline every 0.6s for 30s while a melee weapon is equipped. Passive adren tick not yet simulated.",
+      "SIM: melee basics generate 1.5x adren; +4.5% adren every tick for 30s (wired in rotation/simulate). Wiki: while a melee weapon is equipped.",
     source: wikiAbility("Meteor Strike", "Meteor_Strike"),
   },
   {
@@ -396,7 +388,7 @@ export const MELEE_EFFECTS = [
     name: "Greater Flurry",
     category: "enhanced" as const,
     notes:
-      "Same 8x 60-70 channel as Flurry; each attack extends Berserk by 0.6s. Bloodlust empower identical to Flurry (missing-LP scale, cap +65%).",
+      "SIM: each of 8 hits extends active Berserk by 0.6s (wired). Bloodlust empower (missing-LP scale, cap +65%) is target-stage — not a fixed band.",
     source: wikiAbility("Greater Flurry", "Greater_Flurry"),
   },
   {
@@ -405,7 +397,7 @@ export const MELEE_EFFECTS = [
     category: "basic" as const,
     durationSeconds: 6,
     notes:
-      "Base hit 75-95% plus 5-7% ability damage per 0.6s idle since last attack (cap 6s). After 4.8s idle, next channelled melee within 6s is dealt as DoT (still modified like the channel). Idle add-on not a fixed band.",
+      "UNVERIFIED in sim: idle damage scale and Endless Assault need an off-target idle clock. Wiki tooltip: +5-7% ability damage per idle tick (cap 10 ticks / 6s); analysis table matches +5 min/+7 max per tick (helpers in styles/melee/effects.ts). Wiki analysis claims idle is time off-target (move/Surge/Escape/Bladed Dive), not pure last-attack — conflict, do not invent. After 4.8s idle, next channelled melee within 6s is Endless Assault (DoT, normal hit timings). Base hit 75-95 only is modelled.",
     source: wikiAbility("Greater Barge", "Greater_Barge"),
   },
   {
@@ -414,8 +406,17 @@ export const MELEE_EFFECTS = [
     category: "ultimate" as const,
     durationSeconds: 30,
     notes:
-      "Applies Pulverised for 30s: target deals 25% less damage. On killing blow generates 50% adrenaline. Two-handed only.",
+      "NOT modelled in outgoing DPS sim: applies Pulverised 30s (target deals 25% less damage — defensive). On killing blow +50% adren (kill-gated; generic target has no kill). Two-handed only. Hit band 300-340 is modelled.",
     source: wikiAbility("Pulverise", "Pulverise"),
+  },
+  {
+    id: "fury",
+    name: "Fury",
+    category: "basic" as const,
+    durationSeconds: GREATER_FURY_CRIT_WINDOW_SECONDS,
+    notes:
+      "SIM: next crit-eligible melee gains +25% critical strike chance (wired; bleeds do not consume). Wiki: next Melee attack.",
+    source: wikiAbility("Fury", "Fury"),
   },
   {
     id: "punish",

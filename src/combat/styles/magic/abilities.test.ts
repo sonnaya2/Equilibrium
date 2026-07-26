@@ -39,12 +39,20 @@ describe("magic ability data", () => {
 
     const cb = byId("concentrated_blast");
     expect(cb.hits.every((h) => h.band.minPct === 30 && h.band.maxPct === 40)).toBe(true);
+    expect(cb.hits.map((h) => h.tickOffset)).toEqual([0, 1, 2]);
+
+    // Combust: 10 burn hits every 1.8s (3 ticks); first at +3.
+    expect(byId("combust").hits.map((h) => h.tickOffset)).toEqual([
+      3, 6, 9, 12, 15, 18, 21, 24, 27, 30,
+    ]);
 
     const wild = byId("wild_magic");
     expect(wild.hits).toHaveLength(2);
     expect(wild.hits[0].band).toEqual({ minPct: 125, maxPct: 155 });
     expect(wild.adrenaline?.cost).toBe(25);
     expect(wild.cooldownSeconds).toBe(5.4);
+    // Wiki does not state inter-hit timing — no invented offsets.
+    expect(wild.hits.every((h) => h.tickOffset === undefined)).toBe(true);
 
     const asph = byId("asphyxiate");
     expect(asph.hits).toHaveLength(4);
@@ -60,7 +68,8 @@ describe("magic ability data", () => {
     expect(byId("tsunami").hits[0].band).toEqual({ minPct: 225, maxPct: 275 });
     expect(byId("tsunami").adrenaline?.cost).toBe(100);
     expect(byId("omnipower").hits[0].band).toEqual({ minPct: 420, maxPct: 500 });
-    expect(byId("omnipower_igneous").hits).toHaveLength(4);
+    // Igneous: first hit then three on the next tick (wiki).
+    expect(byId("omnipower_igneous").hits.map((h) => h.tickOffset)).toEqual([0, 1, 1, 1]);
   });
 
   it("models multi-hit DoTs with wiki decay / escalation, not average-only stubs", () => {
@@ -70,6 +79,7 @@ describe("magic ability data", () => {
     expect(corr.hits[4].band).toEqual({ minPct: 18, maxPct: 22 });
     expect(corr.hits.every((h) => h.critEligible === false)).toBe(true);
     expect(corr.adrenaline?.cost).toBe(20);
+    expect(corr.hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10]);
 
     const smoke = byId("smoke_tendrils");
     expect(smoke.guaranteedCrit).toBe(true);
@@ -80,11 +90,15 @@ describe("magic ability data", () => {
       { minPct: 85, maxPct: 110 },
     ]);
     expect(smoke.adrenaline).toBeUndefined();
+    // Escalating hits every 1.2s (2 ticks).
+    expect(smoke.hits.map((h) => h.tickOffset)).toEqual([0, 2, 4, 6]);
 
     const magma = byId("magma_tempest");
     expect(magma.hits).toHaveLength(8);
     expect(magma.hits.every((h) => h.band.minPct === 35 && h.critEligible === false)).toBe(true);
     expect(magma.adrenaline?.cost).toBe(20);
+    // 8 hits every 1.2s (2 ticks); first at +2.
+    expect(magma.hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
   });
 
   it("treats Greater Sunshine 315% as DoT total, not a front-loaded hit", () => {
@@ -94,10 +108,15 @@ describe("magic ability data", () => {
     expect(gs.hits.some((h) => h.band.minPct === 315)).toBe(false);
     expect(gs.appliesBuff).toBe("greater_sunshine");
     expect(gs.adrenaline?.cost).toBe(100);
+    // Beam DoT: every 1.8s (3 ticks); first at +3.
+    expect(gs.hits[0].tickOffset).toBe(3);
+    expect(gs.hits[20].tickOffset).toBe(63);
 
     const sun = byId("sunshine");
     expect(sun.hits).toHaveLength(16);
     expect(sun.adrenaline?.cost).toBe(100);
+    expect(sun.hits[0].tickOffset).toBe(3);
+    expect(sun.hits[15].tickOffset).toBe(48);
   });
 
   it("keeps Runic-Charged Dragon Breath as a separate anima-gated band", () => {

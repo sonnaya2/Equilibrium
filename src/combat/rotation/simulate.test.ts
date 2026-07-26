@@ -2,8 +2,14 @@ import { describe, expect, it } from "vitest";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
+import {
+  DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
+  NECROMANCY_ABILITIES,
+  volleyOfSouls,
+} from "../styles/necromancy/abilities";
 import { rotationOf } from "./actions";
 import { simulate, type SimulateInput } from "./simulate";
+import { createCastContext } from "./simulate";
 
 const baseInput: Omit<SimulateInput, "rotation"> = {
   base: 1000,
@@ -111,6 +117,109 @@ describe("simulate — berserk", () => {
   });
 });
 
+describe("simulate — fury", () => {
+  it("grants +25% crit chance to the next crit-eligible melee cast only", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("fury", "attack", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    // Fury itself is unbuffed (110-130 mid).
+    expect(s.casts[0].result.expected).toBeCloseTo(1200);
+    expect(s.casts[0].result.hits[0].critChance).toBe(0);
+    // Next attack: 0.75*1200 + 0.25*1800 = 1350 at level 99 (+50% crit dmg).
+    expect(s.casts[1].result.hits[0].critChance).toBeCloseTo(0.25);
+    expect(s.casts[1].result.expected).toBeCloseTo(1350);
+    // Consumed after one attack.
+    expect(s.casts[2].result.hits[0].critChance).toBe(0);
+    expect(s.casts[2].result.expected).toBeCloseTo(1200);
+  });
+
+  it("does not consume the buff on a bleed-only cast", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("fury", "dismember", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[2].result.hits[0].critChance).toBeCloseTo(0.25);
+    expect(s.casts[2].result.expected).toBeCloseTo(1350);
+  });
+});
+
+describe("simulate — greater_flurry", () => {
+  it("extends an active Berserk window by 0.6s per hit (8 ticks)", () => {
+    // 12 attacks -> berserk (until tick 36+33=69) -> 3 attacks -> gflurry (+8) -> attacks through 69.
+    const rotation = rotationOf(
+      ...Array(12).fill("attack"),
+      "berserk",
+      ...Array(3).fill("attack"),
+      "greater_flurry",
+      ...Array(7).fill("attack"),
+    );
+    const s = simulate({ ...baseInput, rotation });
+    expect(s.ok).toBe(true);
+    const last = s.casts.at(-1)!;
+    expect(last.abilityId).toBe("attack");
+    expect(last.tick).toBe(69);
+    // Without the +8 tick extend, berserk would end at 69 (readyTick >= until).
+    // With extend, tick 69 still multiplies: floor(1100*1.75)+floor(1300*1.75) avg.
+    expect(last.result.expected).toBeCloseTo(2100);
+  });
+
+  it("does not invent a Berserk window when none is active", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf(...Array(3).fill("attack"), "greater_flurry", "rend"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(1500);
+  });
+});
+
+describe("simulate — meteor_strike", () => {
+  it("multiplies melee basic adrenaline by 1.5x inside the 30s window", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    const meteor = s.casts.find((c) => c.abilityId === "meteor_strike")!;
+    // 63 - 60 + 3 ticks * 4.5 passive across the GCD after cast.
+    expect(meteor.adrenalineAfter).toBeCloseTo(3 + 3 * 4.5);
+    const follow = s.casts.at(-1)!;
+    // Prior adren + 9*1.5 basic + 3 ticks * 4.5 passive on this GCD.
+    expect(follow.adrenalineAfter).toBeCloseTo(meteor.adrenalineAfter + 13.5 + 3 * 4.5);
+  });
+
+  it("does not 1.5x non-basic adrenaline costs or gains", () => {
+    // Assault is enhanced (no adren gain); cost stays 25 — not multiplied.
+    // GCD still accrues Meteor passive (+4.5 x 3) after the spend.
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", ...Array(3).fill("attack"), "assault"),
+    });
+    expect(s.ok).toBe(true);
+    const assault = s.casts.at(-1)!;
+    const beforeAssault = s.casts[s.casts.length - 2].adrenalineAfter;
+    expect(assault.adrenalineAfter).toBeCloseTo(beforeAssault - 25 + 3 * 4.5);
+  });
+});
+
+describe("simulate — greater_fury / chaos_roar (already wired)", () => {
+  it("greater fury guarantees crit on the next non-bleed melee", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("greater_fury", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    // Guaranteed crit at level 99: mid of floor(1100*1.5)..floor(1300*1.5) = 1800.
+    expect(s.casts[1].result.expected).toBeCloseTo(1800);
+  });
+});
+
 describe("simulate — ranged", () => {
   const rangedInput: Omit<SimulateInput, "rotation"> = {
     ...baseInput,
@@ -194,6 +303,71 @@ describe("simulate — magic", () => {
     expect(s.ok).toBe(false);
     expect(s.error).toContain("on cooldown");
   });
+
+  it("base sunshine multiplies magic damage after the 1-tick delay", () => {
+    // Fund 100 adren, cast sunshine@30, basic@33 (inside window), long tail outside.
+    const setup = [
+      ...Array(12).fill("magic_attack"),
+      "sunshine",
+      "magic_attack",
+      ...Array(17).fill("magic_attack"), // advance well past base 50-tick beam
+    ];
+    const s = simulate({ ...magicInput, rotation: rotationOf(...setup) });
+    expect(s.ok).toBe(true);
+    const sun = s.casts.find((c) => c.abilityId === "sunshine")!;
+    expect(sun.tick).toBe(36);
+    // First basic after sunshine is at 39; buff starts at 37 → active.
+    const inside = s.casts.filter((c) => c.abilityId === "magic_attack" && c.tick === 39)[0];
+    expect(inside.result.expected).toBeCloseTo(1500); // 1000 × 1.5
+    // Tick 36+50=86 is first inactive; cast at 87 (GCD grid) is outside.
+    const outside = s.casts.filter((c) => c.abilityId === "magic_attack" && c.tick >= 87)[0];
+    expect(outside).toBeDefined();
+    expect(outside.result.expected).toBeCloseTo(1000);
+  });
+
+  it("greater sunshine multiplies magic damage for the longer window", () => {
+    const setup = [
+      ...Array(12).fill("magic_attack"),
+      "greater_sunshine",
+      "magic_attack",
+    ];
+    const s = simulate({ ...magicInput, rotation: rotationOf(...setup) });
+    expect(s.ok).toBe(true);
+    const gs = s.casts.find((c) => c.abilityId === "greater_sunshine")!;
+    const next = s.casts.find((c) => c.abilityId === "magic_attack" && c.tick > gs.tick)!;
+    expect(next.result.expected).toBeCloseTo(1500);
+  });
+
+  it("instability adds Lightning Surge EV on magic crits (not on 0% crit)", () => {
+    const fund = [...Array(6).fill("magic_attack"), "instability", "magic_attack"];
+    const noCrit = simulate({
+      ...magicInput,
+      crit: { chance: 0 },
+      rotation: rotationOf(...fund),
+    });
+    expect(noCrit.ok).toBe(true);
+    const inst = noCrit.casts.find((c) => c.abilityId === "instability")!;
+    // 120-140% of 1000, no crit, no surge.
+    expect(inst.result.expected).toBeCloseTo(1300);
+    const follow = noCrit.casts.find((c) => c.abilityId === "magic_attack" && c.tick > inst.tick)!;
+    expect(follow.result.expected).toBeCloseTo(1000);
+
+    const allCrit = simulate({
+      ...magicInput,
+      crit: { chance: 1 },
+      rotation: rotationOf(...fund),
+    });
+    const instCrit = allCrit.casts.find((c) => c.abilityId === "instability")!;
+    // Cast hit always crits + full Lightning Surge EV (p=1).
+    expect(instCrit.result.expected).toBeGreaterThan(1300 * 1.4); // well above non-crit cast
+    const followCrit = allCrit.casts.find(
+      (c) => c.abilityId === "magic_attack" && c.tick > instCrit.tick,
+    )!;
+    // Follow-up basic also gets surge while buff is up.
+    expect(followCrit.result.expected).toBeGreaterThan(1000);
+    // Surge lands +1 tick after the source hit.
+    expect(allCrit.damageByTick[instCrit.tick + 1]).toBeGreaterThan(0);
+  });
 });
 
 describe("simulate auto-weave", () => {
@@ -261,5 +435,113 @@ describe("simulate auto-weave", () => {
     });
     expect(s.ok).toBe(false);
     expect(s.error).toContain("unaffordable");
+  });
+});
+
+describe("simulate — necromancy resources", () => {
+  const necroAbilities = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
+  const necroInput: Omit<SimulateInput, "rotation"> = {
+    ...baseInput,
+    abilities: necroAbilities,
+    context: { style: "necromancy" },
+  };
+
+  it("Soul Sap builds residual souls and Soul Strike spends one", () => {
+    const ctx = createCastContext(necroInput);
+    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!, 0, false);
+    expect(ctx.getState().necro.residualSouls).toBe(1);
+    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!, 3, false);
+    expect(ctx.getState().necro.residualSouls).toBe(2);
+    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_strike")!, 6, false);
+    expect(ctx.getState().necro.residualSouls).toBe(1);
+  });
+
+  it("fails Soul Strike without residual souls", () => {
+    const s = simulate({ ...necroInput, rotation: rotationOf("soul_strike") });
+    expect(s.ok).toBe(false);
+    expect(s.error).toContain("residual souls");
+  });
+
+  it("Touch of Death builds Necrosis; FoD discounts cost and spends stacks", () => {
+    const ctx = createCastContext(necroInput);
+    const tod = NECROMANCY_ABILITIES.find((a) => a.id === "touch_of_death")!;
+    const fod = NECROMANCY_ABILITIES.find((a) => a.id === "finger_of_death")!;
+    ctx.performCast(tod, 0, false);
+    ctx.performCast(tod, 3, false);
+    expect(ctx.getState().necro.necrosisStacks).toBe(8);
+    expect(ctx.costOf(fod)).toBe(0);
+    ctx.performCast(fod, 6, false);
+    expect(ctx.getState().necro.necrosisStacks).toBe(2);
+
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf("touch_of_death", "touch_of_death", "finger_of_death"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(3000); // 270–330 mid, no LD
+  });
+
+  it("Volley spends all souls and deals one hit per residual soul held", () => {
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf("soul_sap", "soul_sap", "soul_sap", "volley_of_souls"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(3 * 1500);
+    // Final state not on summary — re-check via context path.
+    const ctx = createCastContext(necroInput);
+    const sap = NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(sap, i * 3, false);
+    ctx.performCast(volleyOfSouls(3), 9, false);
+    expect(ctx.getState().necro.residualSouls).toBe(0);
+  });
+
+  it("Living Death resets ToD/DS CDs, buffs FoD, and shortens Death Skulls CD", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = NECROMANCY_ABILITIES.find((a) => a.id === "necromancy_basic")!;
+    const tod = NECROMANCY_ABILITIES.find((a) => a.id === "touch_of_death")!;
+    const ld = NECROMANCY_ABILITIES.find((a) => a.id === "living_death")!;
+    const fod = NECROMANCY_ABILITIES.find((a) => a.id === "finger_of_death")!;
+    const ds = NECROMANCY_ABILITIES.find((a) => a.id === "death_skulls")!;
+
+    for (let i = 0; i < 12; i++) ctx.performCast(basic, i * 3, false);
+    ctx.performCast(tod, 36, false);
+    expect(ctx.getState().cooldowns["touch_of_death"]).toBeGreaterThan(ctx.getState().tick);
+    expect(ctx.getState().necro.necrosisStacks).toBe(4);
+
+    ctx.performCast(ld, 39, false);
+    expect(ctx.getState().necro.livingDeathUntilTick).toBeGreaterThan(39);
+    expect(ctx.getState().cooldowns["touch_of_death"]).toBeUndefined();
+    expect(ctx.getState().cooldowns["death_skulls"]).toBeUndefined();
+
+    // Basic under LD → +2 Necrosis (prior ToD left 4 → 6).
+    ctx.performCast(basic, 42, false);
+    expect(ctx.getState().necro.necrosisStacks).toBe(6);
+
+    ctx.performCast(fod, 45, false);
+    expect(ctx.getState().necro.necrosisStacks).toBe(0);
+
+    // Rebuild adren for Death Skulls (60%).
+    for (let i = 0; i < 7; i++) ctx.performCast(basic, 48 + i * 3, false);
+    const dsTick = 48 + 7 * 3;
+    ctx.performCast(ds, dsTick, false);
+    expect(ctx.getState().cooldowns["death_skulls"]).toBe(dsTick + DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS);
+  });
+
+  it("Living Death multiplies Finger of Death damage in the full sim path", () => {
+    // 12 basics → 100 adren + free weave room; ToD for stacks; LD; basic; FoD.
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf(
+        ...Array(12).fill("necromancy_basic"),
+        "touch_of_death",
+        "living_death",
+        "necromancy_basic",
+        "finger_of_death",
+      ),
+    });
+    expect(s.ok).toBe(true);
+    const fodCast = s.casts.find((c) => c.abilityId === "finger_of_death")!;
+    expect(fodCast.result.expected).toBeCloseTo(4500); // 1.5× of 3000
   });
 });

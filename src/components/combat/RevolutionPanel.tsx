@@ -6,7 +6,7 @@ import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/rotation/simulate";
 import { simulateRevolution as runRevolution } from "@/combat/rotation/revolution";
-import { secondsToTicks, TICK_SECONDS, ticksToSeconds } from "@/combat/rotation/timeline";
+import { secondsToTicks, ticksToSeconds } from "@/combat/rotation/timeline";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
@@ -27,13 +27,24 @@ const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
 const SUPPORTED_BARS = combatRevolutionBars.records.filter((bar) => bar.supported);
 const UNSUPPORTED_BARS = combatRevolutionBars.records.filter((bar) => !bar.supported);
 
+const DEFAULT_DURATION_SECONDS = 60;
+
 function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+/** Compact wall-clock for cast rows (e.g. 3.6s). */
 function formatTime(ticks: number): string {
   const seconds = ticksToSeconds(ticks);
   return `${seconds.toFixed(1)}s`;
+}
+
+/** Horizon label: "60s · 100 ticks" (whole seconds when clean). */
+function formatHorizon(ticks: number): string {
+  if (ticks <= 0) return "—";
+  const seconds = ticksToSeconds(ticks);
+  const secLabel = Number.isInteger(seconds) ? `${seconds}s` : `${seconds.toFixed(1)}s`;
+  return `${secLabel} · ${ticks} ticks`;
 }
 
 function BarGraphic({ slots }: { slots: ResolvedSlot[] }) {
@@ -65,7 +76,7 @@ function BarGraphic({ slots }: { slots: ResolvedSlot[] }) {
  *  nothing on the bar is ready/affordable. */
 export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [barId, setBarId] = useState(SUPPORTED_BARS[0]?.id ?? "");
-  const [durationSeconds, setDurationSeconds] = useState(60);
+  const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
 
@@ -82,9 +93,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     return map;
   }, [slots]);
 
+  const plannedTicks = secondsToTicks(Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS));
+
   const run = () => {
     if (!bar) return;
-    const durationTicks = secondsToTicks(Math.max(6, durationSeconds));
+    const durationTicks = secondsToTicks(Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS));
+    setShowAllCasts(false);
     setResult(
       runRevolution({
         base: stats.base,
@@ -156,7 +170,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       <BarGraphic slots={slots} />
 
       <div className="mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
-        <NumberField label="Duration" value={durationSeconds} onChange={setDurationSeconds} suffix="s" />
+        <div>
+          <NumberField
+            label="Duration"
+            value={durationSeconds}
+            onChange={setDurationSeconds}
+            suffix="s"
+          />
+          <p className="mt-1 text-[11px] text-parch-300" data-testid="revo-horizon-plan">
+            Horizon {formatHorizon(plannedTicks)}
+          </p>
+        </div>
         <div>
           <button
             type="button"
@@ -172,19 +196,24 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         <p className="mt-3 text-xs text-chaos-300">{result.error}</p>
       ) : null}
 
+      {!result ? (
+        <p className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300" data-testid="revo-empty">
+          Run revolution for a full duration cast log
+        </p>
+      ) : null}
+
       {result?.ok ? (
         <div className="mt-4">
           <dl className="grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
             <div className="border-b border-stone-750/70 py-2">
               <dt className="text-xs text-parch-300">Horizon</dt>
-              <dd className="font-mono text-parch-50">
-                {horizonTicks > 0 ? formatTime(horizonTicks) : "—"}
-                <span className="text-parch-300"> · {horizonTicks || "—"}t</span>
+              <dd className="font-mono text-parch-50" data-testid="revo-horizon">
+                {formatHorizon(horizonTicks)}
               </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
               <dt className="text-xs text-parch-300">Casts</dt>
-              <dd className="font-mono text-parch-50">
+              <dd className="font-mono text-parch-50" data-testid="revo-casts">
                 {result.casts.length}
                 <span className="text-parch-300"> · {basicCount} basic</span>
               </dd>
@@ -216,7 +245,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           <p className="mt-1 text-xs text-parch-300">
             One row per GCD. Basics are auto-woven when the bar has nothing ready or affordable.
           </p>
-          <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750">
+          <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
             <table className="w-full min-w-[520px] border-collapse text-left text-xs">
               <thead className="sticky top-0 bg-stone-900 text-parch-300">
                 <tr className="border-b border-stone-750">
@@ -232,7 +261,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                 {castLog.map((cast, index) => (
                   <tr
                     key={`${cast.tick}-${cast.abilityId}-${index}`}
-                    className="border-b border-stone-750/70"
+                    className={
+                      cast.auto
+                        ? "border-b border-stone-750/70 bg-stone-zebra/80"
+                        : "border-b border-stone-750/70"
+                    }
+                    data-basic={cast.auto ? "true" : undefined}
                   >
                     <td className="py-1 pr-2 font-mono text-parch-300">{index + 1}</td>
                     <td className="py-1 pr-2 font-mono text-parch-50">{cast.tick}</td>
@@ -240,7 +274,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                     <td className="py-1 pr-2 text-parch-50">
                       {nameById.get(cast.abilityId) ?? cast.abilityId}
                       {cast.auto ? (
-                        <span className="ml-1.5 font-mono text-[11px] text-parch-300">basic</span>
+                        <span className="ml-1.5 inline-block border border-gem-600/50 bg-stone-850 px-1 py-px font-mono text-[10px] uppercase tracking-wide text-gem-300">
+                          basic
+                        </span>
                       ) : null}
                     </td>
                     <td className="py-1 pr-2 font-mono text-parch-300">{cast.adrenalineAfter}%</td>

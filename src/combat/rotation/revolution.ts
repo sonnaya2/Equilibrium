@@ -1,6 +1,7 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { MagicAbilitySpec } from "../styles/magic/abilities";
 import { animaCharged } from "../styles/magic/runicCharge";
+import { necroCanCast } from "../styles/necromancy/effects";
 import type { RotationSummary, SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
 
@@ -38,6 +39,7 @@ export function simulateRevolution(input: RevolutionInput): RotationSummary {
     const state = ctx.getState();
     const ready = input.bar.find((ability) => {
       if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, state.tick)) return false;
+      if (!necroCanCast(ability, state.necro)) return false;
       // Skip pure-buff ultimates that cost adren we don't have yet — revo never waits.
       return ctx.firstLegalTick(ability.id) <= state.tick && ctx.costOf(ability) <= state.adrenaline;
     });

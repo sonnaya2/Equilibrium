@@ -323,8 +323,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Omnipower"),
   },
   {
-    // Base Sunshine DoT only (16 x 10-20%). Zone 1.5x buff is state (effects.ts
-    // currently wires Greater only). 50-tick / 30s beam.
+    // Base Sunshine DoT (16 x 10-20%). Zone 1.5x buff via appliesBuff "sunshine"
+    // (effects.ts / simulate): 50-tick beam, buff starts cast+1.
     id: "sunshine",
     name: "Sunshine",
     style: "magic",
@@ -337,7 +337,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   },
   {
     // Greater Sunshine: DoT 21 x 10-20% (avg 315% total — not a front-loaded hit).
-    // Zone buff via appliesBuff; duration 64 active ticks after 1-tick delay.
+    // Zone buff via appliesBuff; 64 active ticks after 1-tick delay (effects.ts).
     id: "greater_sunshine",
     name: "Greater Sunshine",
     style: "magic",
@@ -370,7 +370,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: RUNIC_CHARGE_WIKI,
   },
   {
-    // FSOA special: cast hit only. Lightning Surge (70-90% on crit, +1 tick) is state.
+    // FSOA special: cast hit 120-140%. Lightning Surge (70-90% on crit, +1 tick)
+    // is state via appliesBuff "instability" (effects.ts / simulate).
     id: "instability",
     name: "Instability",
     style: "magic",
@@ -452,7 +453,7 @@ export const MAGIC_EFFECTS = [
     id: "sunshine_zone",
     name: "Sunshine zone buff",
     notes:
-      "Magic attacks deal 1.5x while inside the 7x7 beam. Greater: 64-tick buff after 1-tick delay (effects.ts). Base Sunshine beam 50 ticks; Planted Feet extends base only.",
+      "Magic attacks deal 1.5x while inside the 7x7 beam (sim: player stays inside). Wired in simulate via appliesBuff sunshine/greater_sunshine. Greater: 64-tick buff after 1-tick delay. Base: 50-tick beam, buff from cast+1. Planted Feet (base → 63 ticks) not modelled.",
     source: wikiAbility("Sunshine"),
   },
   {
@@ -465,7 +466,7 @@ export const MAGIC_EFFECTS = [
     id: "instability_lightning_surge",
     name: "Instability Lightning Surge",
     notes:
-      "While Instability buff (30s / 50 ticks): Magic crits on primary target fire Lightning Surge 70-90% ability damage 1 tick later. Surge crits do not chain. Magic weapons only. PvP: no crit effect and no cooldown.",
+      "While Instability buff (30s / 50 ticks): Magic crits on primary target fire Lightning Surge 70-90% ability damage 1 tick later. EV: p·T per crit-eligible hit (wiki formula). Surge crits do not chain. Magic weapons only. PvP: no crit effect and no cooldown — out of scope.",
     source: wikiAbility("Instability"),
   },
   {

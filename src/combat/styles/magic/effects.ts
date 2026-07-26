@@ -42,10 +42,22 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
   return tick < state.expiresAtTick ? state.critDamageBonus : 0;
 }
 
-/** Greater Sunshine (wiki, June 2026): +50% magic damage, buff begins 1 tick after
- *  cast and lasts 64 ticks (38.4s) inside the 65-tick ability duration. Base
- *  Sunshine (50 ticks) is not yet modelled — only the greater bar variant. */
+/**
+ * Sunshine / Greater Sunshine zone buff (wiki): Magic attacks deal 1.5x while
+ * the player is inside the 7x7 beam. Sim assumes the player stays inside
+ * (generic target; no position model).
+ *
+ * Base Sunshine: 50-tick (30s) beam; damage buff begins 1 tick (0.6s) after cast
+ * → active on [cast+1, cast+50).
+ * Greater Sunshine: 65-tick total duration; buff begins 1 tick after cast and
+ * lasts 64 ticks → active on [cast+1, cast+65).
+ *
+ * Planted Feet (base only, extends to 63 ticks) is not modelled here.
+ */
 export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
+/** Base Sunshine beam duration in ticks (wiki: 30s / 50 ticks). */
+export const SUNSHINE_DURATION_TICKS = 50;
+/** Greater Sunshine active buff ticks after the 1-tick delay (wiki: 64). */
 export const GREATER_SUNSHINE_BUFF_TICKS = 64;
 
 export interface SunshineState {
@@ -55,8 +67,17 @@ export interface SunshineState {
 
 export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTick: 0 });
 
+/** Activate the Sunshine zone buff. `greater` selects Greater Sunshine timings. */
+export function activateSunshine(tick: number, greater = false): SunshineState {
+  if (greater) {
+    return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
+  }
+  return { startsAtTick: tick + 1, expiresAtTick: tick + SUNSHINE_DURATION_TICKS };
+}
+
+/** Greater Sunshine only — thin wrapper kept for existing call sites. */
 export function activateGreaterSunshine(tick: number): SunshineState {
-  return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
+  return activateSunshine(tick, true);
 }
 
 export function sunshineActive(state: SunshineState, tick: number): boolean {
@@ -65,9 +86,64 @@ export function sunshineActive(state: SunshineState, tick: number): boolean {
 
 export const SUNSHINE_SOURCE: SourceReference = {
   source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Sunshine",
+  title: "Sunshine",
+  verifiedAt: "2026-07-26",
+};
+
+export const GREATER_SUNSHINE_SOURCE: SourceReference = {
+  source: "runescape-wiki",
   url: "https://runescape.wiki/w/Greater_Sunshine",
   title: "Greater Sunshine",
-  verifiedAt: "2026-07-25",
+  verifiedAt: "2026-07-26",
+};
+
+/**
+ * Instability (FSOA special, wiki): grants a 30s (50-tick) self-buff. While active,
+ * a Magic critical strike on the primary target fires Lightning Surge dealing
+ * 70–90% ability damage, landing 1 tick after the source hit. Lightning Surge
+ * crits do not chain further surges. Magic weapons only (sim: magic-style casts).
+ * PvP: no crit effect and no cooldown — out of scope for this PvM EV sim.
+ *
+ * Wiki EV for one source hit under Instability:
+ *   E = (1−p)·S_non-crit + p·(S_crit + T)
+ * so the surge contribution is p·T, where T is the expected Lightning Surge hit
+ * (crit-eligible for its own damage, no recursive proc).
+ */
+export const INSTABILITY_DURATION_TICKS = 50;
+export const LIGHTNING_SURGE_BAND = { minPct: 70, maxPct: 90 } as const;
+export const LIGHTNING_SURGE_TICK_DELAY = 1;
+
+export interface InstabilityState {
+  /** Tick the buff expires on; 0 = inactive. Active while tick < expiresAtTick. */
+  expiresAtTick: number;
+}
+
+export const newInstability = (): InstabilityState => ({ expiresAtTick: 0 });
+
+export function activateInstability(tick: number): InstabilityState {
+  return { expiresAtTick: tick + INSTABILITY_DURATION_TICKS };
+}
+
+export function instabilityActive(state: InstabilityState, tick: number): boolean {
+  return tick < state.expiresAtTick;
+}
+
+/**
+ * Expected Lightning Surge contribution for one source hit.
+ * `sourceCritChance` is that hit's crit probability; `surgeHitExpected` is the
+ * full expected of a 70–90% ability-damage hit (including its own crit layer).
+ */
+export function lightningSurgeExpected(sourceCritChance: number, surgeHitExpected: number): number {
+  if (sourceCritChance <= 0 || surgeHitExpected <= 0) return 0;
+  return Math.min(1, sourceCritChance) * surgeHitExpected;
+}
+
+export const INSTABILITY_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Instability",
+  title: "Instability",
+  verifiedAt: "2026-07-26",
 };
 
 export const CHANNELLED_MIGHT_SOURCE: SourceReference = BLOOMING_BURROW_WIKI_2026_03_30;

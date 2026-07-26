@@ -1,5 +1,10 @@
 import { gainBloodlust, newBloodlust, type BloodlustState } from "../styles/melee/bloodlust";
-import { newSunshine, type SunshineState } from "../styles/magic/effects";
+import {
+  newInstability,
+  newSunshine,
+  type InstabilityState,
+  type SunshineState,
+} from "../styles/magic/effects";
 import {
   newDeathspore,
   newSearingWinds,
@@ -10,7 +15,12 @@ import {
 } from "../styles/ranged/onHit";
 import { newDeathsSwiftness, type DeathsSwiftnessState } from "../styles/ranged/effects";
 import { newRunicCharge, type RunicChargeState } from "../styles/magic/runicCharge";
+import {
+  newNecroRotationState,
+  type NecroRotationState,
+} from "../styles/necromancy/effects";
 
+export type { NecroRotationState };
 export const ADRENALINE_CAP = 100;
 
 export interface RangedRotationState {
@@ -36,13 +46,30 @@ export interface RotationState {
   chaosRoarUntilTick: number;
   /** Greater Fury: next non-bleed melee hit is a guaranteed crit (consumed on use). */
   greaterFuryCrit: boolean;
-  /** Greater Sunshine's damage buff window (starts 1 tick after cast). */
+  /**
+   * Fury: next crit-eligible melee gains +25% crit chance (consumed on use).
+   * Wiki: next Melee attack; bleeds do not consume (parity with Greater Fury).
+   */
+  furyCritBonus: boolean;
+  /**
+   * Meteor Strike: melee basics generate 1.5x adren + 4.5% passive per tick
+   * until this tick (0 = inactive). Wiki duration 30s (50 ticks).
+   */
+  meteorStrikeUntilTick: number;
+  /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
   sunshine: SunshineState;
+  /** Instability (FSOA): Lightning Surge on Magic crit while active. */
+  instability: InstabilityState;
   ranged: RangedRotationState;
   magic: RunicChargeState;
+  /**
+   * Necromancy: residual souls, necrosis stacks, Living Death window.
+   * Mutate only via styles/necromancy/effects (applyNecroOnCast / patchNecro).
+   */
+  necro: NecroRotationState;
 }
 
-export function newRotationState(): RotationState {
+export function newRotationState(opts: { lantern?: boolean } = {}): RotationState {
   return {
     tick: 0,
     adrenaline: 0,
@@ -51,7 +78,10 @@ export function newRotationState(): RotationState {
     berserkUntilTick: 0,
     chaosRoarUntilTick: 0,
     greaterFuryCrit: false,
+    furyCritBonus: false,
+    meteorStrikeUntilTick: 0,
     sunshine: newSunshine(),
+    instability: newInstability(),
     ranged: {
       swiftness: newDeathsSwiftness(),
       searingWinds: newSearingWinds(),
@@ -59,6 +89,7 @@ export function newRotationState(): RotationState {
       deathspore: newDeathspore(),
     },
     magic: newRunicCharge(),
+    necro: newNecroRotationState({ lantern: opts.lantern }),
   };
 }
 
@@ -92,4 +123,19 @@ export function patchRanged(
   patch: Partial<RangedRotationState>,
 ): RotationState {
   return { ...state, ranged: { ...state.ranged, ...patch } };
+}
+
+/** Necro fields only — prefer applyNecroOnCast for cast transitions. */
+export function patchNecro(
+  state: RotationState,
+  patch: Partial<NecroRotationState>,
+): RotationState {
+  return { ...state, necro: { ...state.necro, ...patch } };
+}
+
+export function clearCooldowns(state: RotationState, ids: readonly string[]): RotationState {
+  if (ids.length === 0) return state;
+  const cooldowns = { ...state.cooldowns };
+  for (const id of ids) delete cooldowns[id];
+  return { ...state, cooldowns };
 }

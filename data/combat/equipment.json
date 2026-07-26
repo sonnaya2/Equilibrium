@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-25",
+  "lastSynced": "2026-07-26",
   "trackedSince": "2024-03-04",
   "records": [
     {
@@ -21,7 +21,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Magic weapons / tectonic armour materials"
+      "displayDescription": "Magic weapons / tectonic armour materials",
+      "slot": "mainhand"
     },
     {
       "id": "item:seismic-singularity",
@@ -42,7 +43,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Magic weapons / tectonic armour materials"
+      "displayDescription": "Magic weapons / tectonic armour materials",
+      "slot": "offhand"
     },
     {
       "id": "item:tectonic-energy",
@@ -84,7 +86,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Magic weapons / prayers"
+      "displayDescription": "Magic weapons / prayers",
+      "slot": "mainhand"
     },
     {
       "id": "item:imperium-core",
@@ -105,7 +108,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Magic weapons / prayers"
+      "displayDescription": "Magic weapons / prayers",
+      "slot": "offhand"
     },
     {
       "id": "item:praesul-codex",
@@ -167,7 +171,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material",
+      "slot": "mainhand"
     },
     {
       "id": "item:tumekens-light",
@@ -187,7 +192,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "high-end combat weapons / armour / endgame upgrade material"
+      "displayDescription": "high-end combat weapons / armour / endgame upgrade material",
+      "slot": "twohand"
     },
     {
       "id": "item:tumekens-resplendence-equipment",
@@ -353,7 +359,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Magic weapons / ability / scripture"
+      "displayDescription": "Magic weapons / ability / scripture",
+      "slot": "gloves"
     },
     {
       "id": "item:scripture-of-jas",
@@ -609,7 +616,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "combat capes / melee weapon / ability / scripture"
+      "displayDescription": "combat capes / melee weapon / ability / scripture",
+      "slot": "twohand"
     },
     {
       "id": "item:magma-tempest",
@@ -674,7 +682,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "tier-95 Necromancy weapons and power armour"
+      "displayDescription": "tier-95 Necromancy weapons and power armour",
+      "slot": "mainhand"
     },
     {
       "id": "item:soulbound-lantern",
@@ -696,7 +705,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "tier-95 Necromancy weapons and power armour"
+      "displayDescription": "tier-95 Necromancy weapons and power armour",
+      "slot": "offhand"
     },
     {
       "id": "item:robes-of-the-first-necromancer",
@@ -758,7 +768,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "prayer / skilling off-hands / scripture"
+      "displayDescription": "prayer / skilling off-hands / scripture",
+      "slot": "offhand"
     },
     {
       "id": "item:runic-attuner",
@@ -778,7 +789,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "prayer / skilling off-hands / scripture"
+      "displayDescription": "prayer / skilling off-hands / scripture",
+      "slot": "offhand"
     },
     {
       "id": "item:scripture-of-elidinis",
@@ -821,7 +833,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "tier-95 Magic / prayer / scripture"
+      "displayDescription": "tier-95 Magic / prayer / scripture",
+      "slot": "mainhand"
     },
     {
       "id": "item:ode-to-deceit",
@@ -843,7 +856,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "tier-95 Magic / prayer / scripture"
+      "displayDescription": "tier-95 Magic / prayer / scripture",
+      "slot": "offhand"
     },
     {
       "id": "item:divine-rage-prayer-codex",
@@ -1052,7 +1066,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Morytania supplies the normal gameplay acquisition. Resolve the quests through the Equilibrium quest overlay separately. · Effects: Increases Prayer restored by supported prayer-restoring potions while carried or worn, After Pieces of Hate, Dungeoneering prayer necklaces restore 10% more Prayer"
+      "displayDescription": "Morytania supplies the normal gameplay acquisition. Resolve the quests through the Equilibrium quest overlay separately. · Effects: Increases Prayer restored by supported prayer-restoring potions while carried or worn, After Pieces of Hate, Dungeoneering prayer necklaces restore 10% more Prayer",
+      "slot": "pocket"
     },
     {
       "id": "item:demon-horn-necklace",
@@ -1073,7 +1088,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "The 11 May 2026 Dungeoneering remaster reduced the Dungeoneering requirement from 90 to 75 while retaining the 35,000-token cost. · Effects: Restores 50 to 150 Prayer points when qualifying bones are buried or supported ashes/ghost remains are processed with the attuned ectoplasmator"
+      "displayDescription": "The 11 May 2026 Dungeoneering remaster reduced the Dungeoneering requirement from 90 to 75 while retaining the 35,000-token cost. · Effects: Restores 50 to 150 Prayer points when qualifying bones are buried or supported ashes/ghost remains are processed with the attuned ectoplasmator",
+      "slot": "amulet"
     },
     {
       "id": "item:split-dragontooth-necklace",
@@ -1094,7 +1110,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "The 11 May 2026 remaster reduced its Dungeoneering requirement to 41 and token cost to 15,500. · Effects: Restores Prayer from qualifying buried bones and works with Bonecrusher-processed bones"
+      "displayDescription": "The 11 May 2026 remaster reduced its Dungeoneering requirement to 41 and token cost to 15,500. · Effects: Restores Prayer from qualifying buried bones and works with Bonecrusher-processed bones",
+      "slot": "amulet"
     },
     {
       "id": "item:asylum-surgeons-ring",
@@ -1113,7 +1130,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Show both possible region mappings without claiming both are required. Official Equilibrium quest locality can resolve this later. · Region status: unresolved_misthalin_morytania_boundary"
+      "displayDescription": "Show both possible region mappings without claiming both are required. Official Equilibrium quest locality can resolve this later. · Region status: unresolved_misthalin_morytania_boundary",
+      "slot": "ring"
     },
     {
       "id": "item:tokkul-zo",
@@ -1134,7 +1152,8 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "This is a Karamja support unlock for the wave portions of the Zuk encounter and for the earlier TzHaar progression. Do not describe it as a 10% damage bonus against Zuk himself. · Effects: 10% increased damage against TzHaar, TokHaar, TzekHaar and Igneous TzekHaar, The damage effect works on TzekHaar waves but not TzKal-Zuk himself, Teleports around TzHaar City including Fight Cave, Fight Kiln and Fight Cauldron"
+      "displayDescription": "This is a Karamja support unlock for the wave portions of the Zuk encounter and for the earlier TzHaar progression. Do not describe it as a 10% damage bonus against Zuk himself. · Effects: 10% increased damage against TzHaar, TokHaar, TzekHaar and Igneous TzekHaar, The damage effect works on TzekHaar waves but not TzKal-Zuk himself, Teleports around TzHaar City including Fight Cave, Fight Kiln and Fight Cauldron",
+      "slot": "ring"
     },
     {
       "id": "item:corporeal-beast-holy-elixir-supply",

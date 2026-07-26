@@ -38,6 +38,8 @@ describe("ranged ability data", () => {
     expect(byId("rapid_fire").hits.every((h) => h.band.minPct === 75 && h.band.maxPct === 85)).toBe(
       true,
     );
+    // Rapid Fire: 8 channel hits every tick over 4.8s (8 ticks).
+    expect(byId("rapid_fire").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
 
     expect(byId("bombardment").hits[0]!.band).toEqual({ minPct: 220, maxPct: 260 });
     expect(byId("bombardment").adrenaline?.cost).toBe(25);
@@ -46,6 +48,11 @@ describe("ranged ability data", () => {
     expect(byId("deadshot").hits[0]!.band).toEqual({ minPct: 105, maxPct: 125 });
     expect(byId("deadshot_igneous").hits).toHaveLength(8);
     expect(byId("deadshot_igneous").hits[0]!.band).toEqual({ minPct: 55, maxPct: 75 });
+    // Deadshot / Snap Shot / Piercing Shot: wiki has no inter-hit tick schedule — leave unset.
+    expect(byId("deadshot").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    expect(byId("deadshot_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    expect(byId("snap_shot").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    expect(byId("piercing_shot").hits.every((h) => h.tickOffset === undefined)).toBe(true);
 
     expect(byId("binding_shot").hits[0]!.band).toEqual({ minPct: 65, maxPct: 75 });
   });
@@ -55,10 +62,12 @@ describe("ranged ability data", () => {
     expect(rico.hits).toHaveLength(3);
     expect(rico.hits[0]!.band).toEqual({ minPct: 75, maxPct: 85 });
     expect(rico.hits[1]!.band).toEqual({ minPct: 15, maxPct: 20 });
+    expect(rico.hits.map((h) => h.tickOffset)).toEqual([undefined, 1, 1]);
 
     const gr = byId("greater_ricochet");
     expect(gr.hits).toHaveLength(7);
     expect(gr.hits.slice(3).every((h) => h.band.minPct === 4 && h.band.maxPct === 6)).toBe(true);
+    expect(gr.hits.map((h) => h.tickOffset)).toEqual([undefined, 1, 1, 1, 1, 1, 1]);
   });
 
   it("corruption shot decays 20% of initial band across 5 crit-ineligible hits", () => {
@@ -68,6 +77,8 @@ describe("ranged ability data", () => {
     expect(corr.hits[1]!.band).toEqual({ minPct: 72, maxPct: 88 });
     expect(corr.hits[4]!.band).toEqual({ minPct: 18, maxPct: 22 });
     expect(corr.hits.every((h) => h.critEligible === false)).toBe(true);
+    // DoT: 5 hits every 2 ticks (0, 2, 4, 6, 8).
+    expect(corr.hits.map((h) => h.tickOffset)).toEqual([0, 2, 4, 6, 8]);
     // Total band midpoints: 100+80+60+40+20 = 300% AVG.
     const input = { base: 1000, level: 99, accuracy: 1, crit: { chance: 0 } };
     const result = calculateAbility(corr, input);

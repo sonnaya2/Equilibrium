@@ -1409,6 +1409,21 @@ textarea:focus-visible {
     flex: 1 1 18rem;
   }
 
+  .tasks-import {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .tasks-import__source {
+    color: var(--color-parch-400);
+    font-size: 0.72rem;
+    text-underline-offset: 3px;
+  }
+
+  .tasks-import__source:hover {
+    color: var(--color-gem-300);
+  }
+
   .tasks-field input,
   .tasks-field select,
   .tasks-results__sort select {

@@ -17,6 +17,9 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
   );
 
   await expect(page.getByRole("textbox", { name: "RuneScape name" })).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "RuneScape Wiki: “publicly available to anyone”" }),
+  ).toHaveAttribute("href", "https://runescape.wiki/w/RuneScape:WikiSync");
   await page.getByRole("button", { name: "Import Wiki progress" }).click();
   const importWindow = page.getByRole("dialog", { name: "Import Wiki progress" });
   await expect(importWindow).toBeVisible();

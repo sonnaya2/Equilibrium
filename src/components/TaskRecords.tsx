@@ -252,17 +252,27 @@ export function TaskRecords({
                   </label>
 
                   {dataset.wikiSyncSupported ? (
-                    <button
-                      type="button"
-                      className="tasks-import__open"
-                      onClick={() => {
-                        setWikiHtmlFile(null);
-                        setWikiSyncNotice("");
-                        wikiImportDialog.current?.showModal();
-                      }}
-                    >
-                      Import Wiki progress
-                    </button>
+                    <div className="tasks-import">
+                      <button
+                        type="button"
+                        className="tasks-import__open"
+                        onClick={() => {
+                          setWikiHtmlFile(null);
+                          setWikiSyncNotice("");
+                          wikiImportDialog.current?.showModal();
+                        }}
+                      >
+                        Import Wiki progress
+                      </button>
+                      <a
+                        className="tasks-import__source"
+                        href="https://runescape.wiki/w/RuneScape:WikiSync"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        RuneScape Wiki: “publicly available to anyone”
+                      </a>
+                    </div>
                   ) : null}
 
                   <label className="tasks-field">

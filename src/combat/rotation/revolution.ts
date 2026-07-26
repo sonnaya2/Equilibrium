@@ -24,20 +24,36 @@ export function simulateRevolution(input: RevolutionInput): RotationSummary {
   const ctx = createCastContext(input);
   const basic = ctx.basicByStyle.get(input.style);
 
+  // Guard against infinite loops if GCD never advances (should never happen).
+  let guard = 0;
+  const maxCasts = Math.max(input.durationTicks * 2, 64);
+
   while (ctx.getState().tick < input.durationTicks) {
+    if (++guard > maxCasts) {
+      return ctx.finish(
+        `revolution stalled at tick ${ctx.getState().tick}: cast guard exceeded`,
+        input.durationTicks,
+      );
+    }
     const state = ctx.getState();
     const ready = input.bar.find((ability) => {
       if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, state.tick)) return false;
+      // Skip pure-buff ultimates that cost adren we don't have yet — revo never waits.
       return ctx.firstLegalTick(ability.id) <= state.tick && ctx.costOf(ability) <= state.adrenaline;
     });
     if (ready) {
       ctx.performCast(ready, state.tick, false);
     } else if (basic) {
+      // Basics fill every empty GCD when the bar has nothing ready/affordable.
       ctx.performCast(basic, state.tick, true);
     } else {
-      return ctx.finish(`revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`);
+      return ctx.finish(
+        `revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`,
+        input.durationTicks,
+      );
     }
   }
 
-  return ctx.finish();
+  // DPS is over the requested horizon (e.g. 60s), not just the last GCD edge.
+  return ctx.finish(undefined, input.durationTicks);
 }

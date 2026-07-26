@@ -5,6 +5,7 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { simulateRevolution } from "./revolution";
+import { secondsToTicks, TICK_SECONDS } from "./timeline";
 
 const ENGINE_SPECS = new Map(
   [...MELEE_ABILITIES, ...RANGED_ABILITIES, ...MAGIC_ABILITIES].map((spec) => [spec.id, spec]),
@@ -151,6 +152,30 @@ describe("simulateRevolution", () => {
     expect(s.ok).toBe(true);
     const burnTicks = Object.keys(s.damageByTick).map(Number).filter((tick) => tick > 0);
     expect(Math.max(...burnTicks)).toBeGreaterThan(6);
+  });
+
+  it("fills a full 60s horizon with GCDs, basics, and horizon DPS", () => {
+    const bar = combatRevolutionBars.records.find((candidate) => candidate.id === "melee-dual-wield")!;
+    const modelled = resolveBar(bar, ENGINE_SPECS)
+      .filter((slot) => slot.spec !== null)
+      .map((slot) => slot.spec!);
+    const durationTicks = secondsToTicks(60);
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: modelled,
+      style: "melee",
+      durationTicks,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.horizonTicks).toBe(durationTicks);
+    // ~34 GCDs in 60s at 3 ticks each (0..99).
+    expect(s.casts.length).toBeGreaterThanOrEqual(30);
+    expect(s.casts.some((c) => c.auto && c.abilityId === "attack")).toBe(true);
+    // Last cast starts before the horizon ends.
+    expect(s.casts[s.casts.length - 1].tick).toBeLessThan(durationTicks);
+    // DPS is total / 60s, not total / last-GCD-edge.
+    expect(s.dps).toBeCloseTo(s.totalExpected / (durationTicks * TICK_SECONDS), 5);
   });
 });
 

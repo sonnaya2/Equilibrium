@@ -29,6 +29,13 @@ export interface RotationState {
   melee: BloodlustState;
   /** Tick Berserk's damage window closes; 0 = inactive. */
   berserkUntilTick: number;
+  /**
+   * Chaos Roar: next damaging melee ability is ×1.75 until this tick (0 = off).
+   * Wiki window 7.2s (12 ticks) after the roar cast.
+   */
+  chaosRoarUntilTick: number;
+  /** Greater Fury: next non-bleed melee hit is a guaranteed crit (consumed on use). */
+  greaterFuryCrit: boolean;
   /** Greater Sunshine's damage buff window (starts 1 tick after cast). */
   sunshine: SunshineState;
   ranged: RangedRotationState;
@@ -42,6 +49,8 @@ export function newRotationState(): RotationState {
     cooldowns: {},
     melee: newBloodlust(),
     berserkUntilTick: 0,
+    chaosRoarUntilTick: 0,
+    greaterFuryCrit: false,
     sunshine: newSunshine(),
     ranged: {
       swiftness: newDeathsSwiftness(),

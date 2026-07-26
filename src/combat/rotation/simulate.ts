@@ -60,7 +60,8 @@ export interface SimulateInput {
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];
   rotation: readonly RotationAction[];
-  modifiers?: CombatModifier[];
+  /** Static modifiers for every cast, or a per-ability builder (loadout perks). */
+  modifiers?: CombatModifier[] | ((ability: AbilitySpec) => CombatModifier[]);
   context?: CombatContext;
   cap?: HitCapRule;
   /** Ammo family; "splintering" is accepted but unwired — the Puncture
@@ -87,10 +88,15 @@ export interface RotationSummary {
   casts: CastRecord[];
   /** Elapsed ticks: last cast's global cooldown, or the DoT tail if it outlasts it. */
   ticks: number;
+  /**
+   * Horizon the run was asked to fill (revolution duration). When set, `dps` is
+   * totalExpected / (horizonTicks * tickSeconds) so a 60s revo reports 60s DPS.
+   */
+  horizonTicks?: number;
   totalMin: number;
   totalMax: number;
   totalExpected: number;
-  /** Expected damage per second over the elapsed rotation. */
+  /** Expected damage per second over the horizon (or elapsed ticks if no horizon). */
   dps: number;
   /** Expected damage summed per ability id — the contribution split. */
   perAbility: Record<string, number>;
@@ -121,7 +127,7 @@ export interface CastContext {
   /** Off-GCD utility casts (Runic Charge): state-machine update and a cast record
    *  without consuming or advancing the global cooldown. */
   performOffGcdCast(ability: AbilitySpec): void;
-  finish(error?: string): RotationSummary;
+  finish(error?: string, horizonTicks?: number): RotationSummary;
   byId: Map<string, AbilitySpec>;
   basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
 }
@@ -140,16 +146,18 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
   let state = newRotationState();
   let endTick = 0;
 
-  function finish(error?: string): RotationSummary {
+  function finish(error?: string, horizonTicks?: number): RotationSummary {
     const totalExpected = casts.reduce((n, c) => n + c.result.expected, 0);
     const totalMin = casts.reduce((n, c) => n + c.result.min, 0);
     const totalMax = casts.reduce((n, c) => n + c.result.max, 0);
-    const seconds = endTick * TICK_SECONDS;
+    const denomTicks = horizonTicks != null && horizonTicks > 0 ? horizonTicks : endTick;
+    const seconds = denomTicks * TICK_SECONDS;
     return {
       ok: error === undefined,
       error,
       casts,
       ticks: endTick,
+      horizonTicks,
       totalMin,
       totalMax,
       totalExpected,
@@ -181,7 +189,27 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
         ? { ...ability, hits: ability.hits.map((h) => ({ ...h, band: melee.bloodlustScale!.band })) }
         : ability;
 
-    const modifiers = [...(input.modifiers ?? [])];
+    const baseMods =
+      typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
+    const modifiers = [...baseMods];
+    // Chaos Roar: ×1.75 on the next damaging melee cast inside the window.
+    const chaosRoarActive =
+      ability.style === "melee" &&
+      working.hits.length > 0 &&
+      state.chaosRoarUntilTick > 0 &&
+      readyTick < state.chaosRoarUntilTick;
+    if (chaosRoarActive) {
+      modifiers.push(buffMultiplier("buff:chaos_roar", 1.75, MODERNISATION_WIKI));
+      state = { ...state, chaosRoarUntilTick: 0 };
+    }
+    // Greater Fury: next non-bleed melee is a guaranteed crit.
+    const furyCrit =
+      ability.style === "melee" &&
+      state.greaterFuryCrit &&
+      working.hits.some((h) => h.critEligible !== false);
+    if (furyCrit) {
+      state = { ...state, greaterFuryCrit: false };
+    }
     if (ability.style === "melee" && readyTick < state.berserkUntilTick) {
       modifiers.push(buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2));
     }
@@ -211,7 +239,13 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
             base: input.base,
             level: input.level,
             accuracy: input.accuracy,
-            crit: { ...input.crit, guaranteed: (ability as RangedAbilitySpec).guaranteedCrit ?? input.crit.guaranteed },
+            crit: {
+              ...input.crit,
+              guaranteed:
+                furyCrit ||
+                (ability as RangedAbilitySpec).guaranteedCrit ||
+                input.crit.guaranteed,
+            },
             modifiers,
             context: input.context,
             cap: input.cap,
@@ -252,6 +286,13 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     }
     if (ability.appliesBuff === "greater_sunshine") {
       state = { ...state, sunshine: activateGreaterSunshine(readyTick) };
+    }
+    if (ability.appliesBuff === "chaos_roar") {
+      // 7.2s empower window (12 ticks) for the next damaging melee.
+      state = { ...state, chaosRoarUntilTick: readyTick + secondsToTicks(7.2) };
+    }
+    if (ability.appliesBuff === "greater_fury") {
+      state = { ...state, greaterFuryCrit: true };
     }
 
     if (ability.style === "ranged") {

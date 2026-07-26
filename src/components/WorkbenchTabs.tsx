@@ -50,7 +50,7 @@ export function WorkbenchPanel({
     <div
       role="tabpanel"
       aria-labelledby={`tab-${id}`}
-      className="flex min-h-0 h-full flex-1 flex-col pt-2"
+      className="flex min-h-0 h-full flex-1 flex-col overflow-auto pt-1"
     >
       {children}
     </div>

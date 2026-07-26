@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Cinzel } from "next/font/google";
 import "./globals.css";
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   description: "Planner for RS3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={cinzel.variable}>
       <body className="eq-champion flex min-h-screen flex-col font-sans antialiased">

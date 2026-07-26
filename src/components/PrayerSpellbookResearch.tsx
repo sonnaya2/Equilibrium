@@ -2,23 +2,49 @@ import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchS
 import { getPrayerCatalogueBooks } from "@/research/prayers";
 import { getPrayerBooks } from "@/research/prayerBooks";
 import { getSpecialMagicSystems, getSpellbooks } from "@/research/spellbooks";
+import prayerSource from "../../data/reference/prayers.json";
 
 const books = getPrayerCatalogueBooks();
 const prayerBooks = getPrayerBooks();
 const spellbooks = getSpellbooks();
 const specialMagic = getSpecialMagicSystems();
 
+/** source_refs are keys into prayers.json `sources`, not bare URLs. */
+const REF_URLS = (prayerSource.sources ?? {}) as Record<string, string>;
+
+function resolveSourceRefs(refs: unknown): string[] {
+  if (!Array.isArray(refs)) return [];
+  const out: string[] = [];
+  for (const ref of refs) {
+    if (typeof ref !== "string") continue;
+    if (ref.startsWith("https://")) {
+      if (!out.includes(ref)) out.push(ref);
+      continue;
+    }
+    const url = REF_URLS[ref];
+    if (typeof url === "string" && url.startsWith("https://") && !out.includes(url)) {
+      out.push(url);
+    }
+  }
+  return out;
+}
+
 const prayerTabs: ResearchTab[] = books.map((book) => ({
   key: book.id,
   label: book.name,
   description: "",
-  rows: book.prayers.map((prayer) => ({
-    ...prayer,
-    category: book.name,
-    book_id: book.id,
-    // ResearchSection links() already reads source_urls; map prayer source_refs.
-    source_urls: "source_refs" in prayer ? prayer.source_refs : undefined,
-  })) as unknown as ResearchRow[],
+  rows: book.prayers.map((prayer) => {
+    const urls = resolveSourceRefs(
+      "source_refs" in prayer ? (prayer as { source_refs?: unknown }).source_refs : undefined,
+    );
+    return {
+      ...prayer,
+      category: book.name,
+      book_id: book.id,
+      requiredRegions: (prayer as { required_regions?: string[] }).required_regions,
+      source_urls: urls.length ? urls : undefined,
+    } as unknown as ResearchRow;
+  }),
 }));
 
 const TABS: ResearchTab[] = [

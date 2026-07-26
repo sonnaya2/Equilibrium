@@ -63,24 +63,131 @@ const REGION_LABELS: Record<string, string> = {
   unresolved_cross_boundary: "Cross-boundary unresolved",
 };
 
-function fieldLabel(value: string): string {
-  return value
+/** Nested keys that must never dump into titles or detail bodies. */
+const NOISE_KEYS = new Set([
+  "id",
+  "source_url",
+  "source_urls",
+  "sourceUrls",
+  "source_refs",
+  "sourceFile",
+  "source_type",
+  "secondary_source_url",
+  "secondary_source_urls",
+  "primary_source_url",
+  "region_evidence_url",
+  "confidence",
+  "recordType",
+  "region_status",
+  "type",
+]);
+
+/** Provenance `source` (URL / SourceReference) is noise; plain labels like boss names stay. */
+function isProvenanceSource(value: unknown): boolean {
+  if (isSourceRef(value)) return true;
+  return typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://"));
+}
+const FIELD_LABELS: Record<string, string> = {
+  methods: "Methods",
+  target_tags: "Tags",
+  planner_value: "Value",
+  effect: "Effect",
+  effect_summary: "Effect",
+  support_item_effect: "Support",
+  recommended_unlocks: "Unlocks",
+  supporting_regions: "Also needs",
+  alternate_region_routes: "Alt routes",
+  dependency_note: "Depends on",
+  self_source_routes: "Routes",
+  region_evidence: "Evidence",
+  region_note: "Region note",
+  training_rule: "Rule",
+  notes: "Notes",
+  requirements: "Reqs",
+  access_requirement: "Access",
+  uniques: "Uniques",
+  sources: "Sources",
+  alternate_sources: "Also from",
+  current_metrics: "Metrics",
+  archaeology_level: "Arch",
+  monolith_energy: "Energy",
+  acquisition: "How",
+  level: "Level",
+  skills: "Skills",
+  drop_rate_on_slayer_task: "On task",
+  drop_rate_off_slayer_task: "Off task",
+  drop_rate_per_player: "Per player",
+  region: "Region",
+  source: "From",
+};
+function fieldLabel(key: string): string {
+  if (FIELD_LABELS[key]) return FIELD_LABELS[key];
+  return key
     .replaceAll("kph", "kills per hour")
     .replaceAll("xp", "XP")
-    .replaceAll("_", " ");
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+/** Plain player-facing string — never a URL, never a SourceReference dump. */
+function humanString(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.startsWith("https://") || trimmed.startsWith("http://")) return "";
+  return trimmed;
+}
+
+function isSourceRef(value: unknown): boolean {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const row = value as Row;
+  return typeof row.url === "string" || (typeof row.source === "string" && "verifiedAt" in row);
+}
+
+function keepEntry(key: string, item: unknown, primary?: string): boolean {
+  if (NOISE_KEYS.has(key)) return false;
+  if (key === "name" || key === "item" || key === "route" || key === "method") return false;
+  if (key === "source") {
+    if (isProvenanceSource(item)) return false;
+    if (primary && primary === humanString(item)) return false;
+  }
+  return true;
 }
 
 function text(value: unknown): string {
   if (value == null || value === "") return "";
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
   if (Array.isArray(value)) return value.map(text).filter(Boolean).join(" · ");
   if (typeof value === "object") {
-    return Object.entries(value as Row)
-      .map(([key, item]) => `${fieldLabel(key)}: ${text(item)}`)
+    if (isSourceRef(value)) return "";
+    const row = value as Row;
+    const primary =
+      humanString(row.name) ||
+      humanString(row.item) ||
+      humanString(row.route) ||
+      humanString(row.source) ||
+      humanString(row.method);
+    const rest = Object.entries(row)
+      .filter(([key, item]) => keepEntry(key, item, primary))
+      .map(([key, item]) => {
+        const rendered = text(item);
+        return rendered ? `${fieldLabel(key)} ${rendered}` : "";
+      })
+      .filter(Boolean)
+      .join(", ");
+    if (primary) return rest ? `${primary} (${rest})` : primary;
+    return Object.entries(row)
+      .filter(([key, item]) => keepEntry(key, item))
+      .map(([key, item]) => {
+        const rendered = text(item);
+        return rendered ? `${fieldLabel(key)}: ${rendered}` : "";
+      })
+      .filter(Boolean)
       .join(" · ");
   }
   return String(value);
 }
-
 function regionName(value: unknown): string {
   const raw = String(value ?? "").toLowerCase();
   return REGION_LABELS[raw] ?? raw.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -100,12 +207,14 @@ function rowRegionLabel(row: Row): string {
     return `Chain: ${row.region_hints.map(regionName).join(" / ")}`;
   }
 
+  if (Array.isArray(row.acquisition_regions) && row.acquisition_regions.length) {
+    return `From ${row.acquisition_regions.map(regionName).join(" / ")}`;
+  }
+
   const direct = row.region || row.acquisition_region || row.region_hint;
   if (!direct) return "—";
   return regionName(direct);
 }
-
-
 
 function sourceName(url: string): string {
   if (url.includes("pvme.io")) return "PvME";
@@ -115,48 +224,110 @@ function sourceName(url: string): string {
   return "Source";
 }
 
+function pullUrl(value: unknown): string | null {
+  if (typeof value === "string" && value.startsWith("https://")) return value;
+  if (value && typeof value === "object" && "url" in value) {
+    const url = (value as { url?: unknown }).url;
+    if (typeof url === "string" && url.startsWith("https://")) return url;
+  }
+  return null;
+}
+
 function sourceLinks(row: Row): string[] {
-  const values = [
+  const raw: unknown[] = [
+    row.source,
     row.source_url,
+    row.primary_source_url,
     row.secondary_source_url,
     row.region_evidence_url,
     ...(Array.isArray(row.source_urls) ? row.source_urls : []),
+    ...(Array.isArray(row.sourceUrls) ? row.sourceUrls : []),
     ...(Array.isArray(row.secondary_source_urls) ? row.secondary_source_urls : []),
+    ...(Array.isArray(row.source_refs) ? row.source_refs : []),
   ];
-  return [...new Set(values.filter((value): value is string => typeof value === "string" && value.startsWith("https://")))];
+  const out: string[] = [];
+  for (const item of raw) {
+    const url = pullUrl(item);
+    if (url && !out.includes(url)) out.push(url);
+  }
+  return out;
 }
 
 function rowTitle(row: Row): string {
-  return text(row.name || row.method || row.unlock || row.relic || row.rune || row.component || row.source || row.location || "Entry");
+  // Prefer explicit names. Plain-string `source` is the drop-source boss label on unique-drop rows
+  // (never a SourceReference — those are objects and are filtered by humanString).
+  return (
+    humanString(row.name) ||
+    humanString(row.method) ||
+    humanString(row.unlock) ||
+    humanString(row.relic) ||
+    humanString(row.rune) ||
+    humanString(row.component) ||
+    humanString(row.location) ||
+    humanString(row.source) ||
+    "—"
+  );
 }
 
 function rowSubtitle(row: Row): string {
-  const value = text(row.location || row.category || row.level_range || row.effect_summary || row.support_item_effect || row.region_reason || row.source);
-  return value === rowTitle(row) ? "" : value;
+  const title = rowTitle(row);
+  // When location is the title, prefer level band under it.
+  if (humanString(row.location) === title) {
+    return humanString(row.level_range) || humanString(row.category) || "";
+  }
+  const value =
+    humanString(row.location) ||
+    humanString(row.category) ||
+    humanString(row.level_range) ||
+    humanString(row.effect_summary) ||
+    humanString(row.support_item_effect) ||
+    humanString(row.region_reason);
+  if (!value || value === title) return "";
+  return value;
 }
+const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
+  { key: "methods", label: "Methods" },
+  { key: "target_tags", label: "Tags" },
+  { key: "planner_value", label: "Value" },
+  { key: "effect", label: "Effect" },
+  { key: "effect_summary", label: "Effect" },
+  { key: "support_item_effect", label: "Support" },
+  { key: "recommended_unlocks", label: "Unlocks" },
+  { key: "supporting_regions", label: "Also needs" },
+  { key: "alternate_region_routes", label: "Alt routes" },
+  { key: "dependency_note", label: "Depends on" },
+  { key: "self_source_routes", label: "Routes" },
+  { key: "region_evidence", label: "Evidence" },
+  { key: "region_note", label: "Region note" },
+  { key: "training_rule", label: "Rule" },
+  { key: "notes", label: "Notes" },
+  { key: "requirements", label: "Reqs" },
+  { key: "access_requirement", label: "Access" },
+  { key: "uniques", label: "Uniques" },
+  { key: "sources", label: "Sources" },
+  { key: "alternate_sources", label: "Also from" },
+  { key: "current_metrics", label: "Metrics" },
+  { key: "archaeology_level", label: "Arch" },
+  { key: "monolith_energy", label: "Energy" },
+  { key: "acquisition", label: "How" },
+  { key: "level", label: "Level" },
+  { key: "effects", label: "Effects" },
+];
 
 function rowDetails(row: Row): string[] {
-  const details = [
-    row.methods,
-    row.target_tags ? { target_tags: row.target_tags } : null,
-    row.planner_value,
-    row.effect,
-    row.support_item_effect,
-    row.recommended_unlocks ? { recommended_unlocks: row.recommended_unlocks } : null,
-    row.supporting_regions ? { supporting_regions: row.supporting_regions } : null,
-    row.alternate_region_routes ? { alternate_region_routes: row.alternate_region_routes } : null,
-    row.dependency_note,
-    row.self_source_routes,
-    row.region_evidence,
-    row.training_rule,
-    row.notes,
-    row.requirements,
-    row.access_requirement,
-    row.uniques,
-    row.sources,
-    row.current_metrics,
-  ];
-  return details.map(text).filter(Boolean);
+  return DETAIL_FIELDS.map(({ key, label }) => {
+    // Skip subtitle-ish fields already shown under the title.
+    if (key === "support_item_effect" && humanString(row.support_item_effect) === rowSubtitle(row)) {
+      return "";
+    }
+    if (key === "effect_summary" && humanString(row.effect_summary) === rowSubtitle(row)) {
+      return "";
+    }
+    const rendered = text(row[key]);
+    if (!rendered) return "";
+    if (typeof row[key] === "string" && rendered.length > 80) return rendered;
+    return `${label}: ${rendered}`;
+  }).filter(Boolean);
 }
 
 function rowsFor(section: SectionKey): Row[] {

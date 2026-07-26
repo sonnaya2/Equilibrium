@@ -6,35 +6,56 @@ import {
   getStaleSlayerMethodCorrections,
 } from "@/research/slayerPlanner";
 
-const methods = getAllSlayerMethods();
-const stale = getStaleSlayerMethodCorrections();
-const inventionChains = getAllInventionComponentChains();
-const archRelics = getAllArchaeologyRelicAcquisitions();
+const methods = getAllSlayerMethods().map((row) => ({
+  ...row,
+  name: (row as { name?: string; monster?: string }).name || (row as { monster?: string }).monster,
+})) as unknown as ResearchRow[];
+
+const stale = getStaleSlayerMethodCorrections().map((row) => {
+  const loose = row as { name?: string; topic?: string; method?: string; monster?: string; id?: string };
+  return {
+    ...row,
+    name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Stale fix",
+  };
+}) as unknown as ResearchRow[];
+
+const inventionChains = getAllInventionComponentChains().map((row) => ({
+  ...row,
+  name: (row as { name?: string; component?: string }).name || (row as { component?: string }).component,
+})) as unknown as ResearchRow[];
+
+const archRelics = getAllArchaeologyRelicAcquisitions().map((row) => {
+  const loose = row as { name?: string; relic?: string; relic_power?: string; id?: string };
+  return {
+    ...row,
+    name: loose.name || loose.relic || loose.relic_power || loose.id || "Relic",
+  };
+}) as unknown as ResearchRow[];
 
 const TABS: ResearchTab[] = [
   {
     key: "methods",
     label: "Slayer routes",
     description: "",
-    rows: methods as unknown as ResearchRow[],
+    rows: methods,
   },
   {
     key: "stale",
     label: "Stale fixes",
     description: "",
-    rows: stale as unknown as ResearchRow[],
+    rows: stale,
   },
   {
     key: "invention-chains",
     label: "Invention chains",
     description: "",
-    rows: inventionChains as unknown as ResearchRow[],
+    rows: inventionChains,
   },
   {
     key: "arch-relics",
     label: "Archaeology relics",
     description: "",
-    rows: archRelics as unknown as ResearchRow[],
+    rows: archRelics,
   },
 ];
 

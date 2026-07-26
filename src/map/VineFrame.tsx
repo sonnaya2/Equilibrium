@@ -17,6 +17,7 @@
  * global prefers-reduced-motion rule in globals.css already stops it.
  */
 
+import type { CSSProperties } from "react";
 import { ELECTIVE_CAP } from "@/league";
 import { useBuild } from "@/league/useBuild";
 
@@ -84,7 +85,7 @@ export function VineFrame() {
         {
           "--vine-grow": String(1 - grown),
           "--leaf-on": String(grown),
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       {/* Each corner is the same drawing, mirrored into place. */}

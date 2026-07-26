@@ -12,7 +12,6 @@ import {
   getRelicLoadoutProgression,
   getRelicSystemProgression,
   getRepeatableCollectionRewards,
-  getUnobtainableMuseumCollections,
   type MuseumCollectionMatrixRow,
 } from "@/research/archaeologyPlanner";
 
@@ -27,15 +26,78 @@ const relicLoadoutRows = getRelicLoadoutProgression().map((row) => ({
   name: String(row.stage).replaceAll("-", " "),
 })) as unknown as ResearchRow[];
 
-const collectionRoutes = getCollectionRelicRoutes();
-const repeatables = getRepeatableCollectionRewards();
-const qualifications = getArchaeologyQualificationMilestones();
-const guildShop = getArchaeologyGuildShopProgression();
-const completionTools = getArchaeologyCollectionCompletionTools();
-const corrections = getArchaeologyDataCorrections();
-const additions2026 = getCurrentArchaeologyRelicAdditions();
+function withCollectionName<T extends Record<string, unknown>>(rows: T[]): ResearchRow[] {
+  return rows.map((row) => {
+    const collections = Array.isArray(row.collections)
+      ? (row.collections as unknown[]).filter((v): v is string => typeof v === "string")
+      : [];
+    const name =
+      (typeof row.name === "string" && row.name) ||
+      (typeof row.collection === "string" && row.collection) ||
+      collections[0] ||
+      (typeof row.relic_power === "string" && row.relic_power) ||
+      (typeof row.id === "string" && row.id) ||
+      "—";
+    return { ...row, name };
+  }) as unknown as ResearchRow[];
+}
+
+const collectionRoutes = withCollectionName(
+  getCollectionRelicRoutes() as unknown as Record<string, unknown>[],
+);
+const repeatables = withCollectionName(
+  getRepeatableCollectionRewards() as unknown as Record<string, unknown>[],
+);
+const qualifications = getArchaeologyQualificationMilestones().map((row) => ({
+  ...row,
+  name: row.qualification,
+})) as unknown as ResearchRow[];
+const guildShop = getArchaeologyGuildShopProgression().map((row) => {
+  const loose = row as { name?: string; qualification?: string; stage?: string; id?: string };
+  return {
+    ...row,
+    name: loose.name || loose.qualification || loose.stage || loose.id || "Shop tier",
+  };
+}) as unknown as ResearchRow[];
+const completionTools = getArchaeologyCollectionCompletionTools() as unknown as ResearchRow[];
+const corrections = getArchaeologyDataCorrections().map((row) => {
+  const loose = row as {
+    name?: string;
+    target_relic?: string;
+    target_id?: string;
+    id?: string;
+    correction?: string;
+    topic?: string;
+  };
+  return {
+    ...row,
+    name:
+      loose.name ||
+      loose.target_relic ||
+      loose.target_id ||
+      loose.id ||
+      loose.topic ||
+      loose.correction ||
+      "Correction",
+  };
+}) as unknown as ResearchRow[];
+const additions2026 = getCurrentArchaeologyRelicAdditions().map((row) => {
+  const loose = row as { name?: string; relic_power?: string; id?: string };
+  return {
+    ...row,
+    name: loose.name || loose.relic_power || loose.id || "Addition",
+  };
+}) as unknown as ResearchRow[];
 const museumMatrix = getMuseumCollectionMatrix();
-const unobtainableMuseum = getUnobtainableMuseumCollections();
+const productionRoutes = withCollectionName(
+  production.production_collection_routes as unknown as Record<string, unknown>[],
+);
+const specialRelicRoutes = withCollectionName(
+  specialRelics.collection_relic_routes as unknown as Record<string, unknown>[],
+);
+const pending2026 = withCollectionName(
+  specialRelics.current_2026_pending_exact_collection as unknown as Record<string, unknown>[],
+);
 
 const museumRows = museumMatrix.map((row) => {
   // Museum matrix rows are snake_case JSON; optional fields vary by collection kind.
@@ -86,6 +148,8 @@ const museumRows = museumMatrix.map((row) => {
       ...required,
     ].filter(Boolean),
     confidence: row.confidence || "confirmed_wiki",
+    // Pass full source_urls through — ResearchSection links() reads the array.
+    source_urls: Array.isArray(row.source_urls) ? row.source_urls : undefined,
     source: row.source_urls?.[0]
       ? { source: "runescape-wiki", url: row.source_urls[0], title: row.name }
       : null,
@@ -103,31 +167,31 @@ const TABS: ResearchTab[] = [
     key: "collections",
     label: "Collection relics",
     description: "",
-    rows: collectionRoutes as unknown as ResearchRow[],
+    rows: collectionRoutes,
   },
   {
     key: "repeatables",
     label: "Repeatable rewards",
     description: "",
-    rows: repeatables as unknown as ResearchRow[],
+    rows: repeatables,
   },
   {
     key: "production",
     label: "Production routes",
     description: "",
-    rows: production.production_collection_routes as unknown as ResearchRow[],
+    rows: productionRoutes,
   },
   {
     key: "qualifications",
     label: "Qualifications",
     description: "",
-    rows: qualifications as unknown as ResearchRow[],
+    rows: qualifications,
   },
   {
     key: "guild",
     label: "Guild shop",
     description: "",
-    rows: [...guildShop, ...completionTools] as unknown as ResearchRow[],
+    rows: [...guildShop, ...completionTools],
   },
   {
     key: "relic-system",
@@ -145,13 +209,13 @@ const TABS: ResearchTab[] = [
     key: "special-relics",
     label: "Special relics",
     description: "",
-    rows: specialRelics.collection_relic_routes as unknown as ResearchRow[],
+    rows: specialRelicRoutes,
   },
   {
     key: "corrections",
     label: "Corrections",
     description: "",
-    rows: [...corrections, ...additions2026, ...specialRelics.current_2026_pending_exact_collection] as unknown as ResearchRow[],
+    rows: [...corrections, ...additions2026, ...pending2026],
   },
 ];
 

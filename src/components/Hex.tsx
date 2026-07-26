@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 const SIZES = {
   lg: "h-[171px] w-[148px]",
   md: "h-[111px] w-[96px]",
@@ -33,7 +35,7 @@ export function Hex({
   size?: HexSize;
   state?: HexState;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   return <div className={hexClass(size, state, className)}>{children}</div>;
 }
@@ -46,7 +48,7 @@ export function HexRow({
 }: {
   offset?: boolean;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <div className={`flex gap-1 ${offset ? "ml-[76px]" : ""} ${className}`}>{children}</div>;
 }

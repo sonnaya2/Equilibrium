@@ -34,8 +34,17 @@ const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   derived: "Other",
 };
 
+/** Light wiki/display cleanup — not a full sanitizer. */
 function cleanText(value: string): string {
-  return value;
+  if (!value) return "";
+  return value
+    .replace(/\u00a0/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\[(?:edit|citation needed|source|note\s*\d*)\]/gi, "")
+    .replace(/[ \t\f\v]+/g, " ")
+    .replace(/ *\n */g, "\n")
+    .replace(/(?:\s*·\s*){2,}/g, " · ")
+    .trim();
 }
 
 function availabilityLabel(value: string): string {
@@ -69,9 +78,10 @@ function upgradeRegionAccess(upgrade: ResearchUpgrade): string {
 }
 
 function methodAccess(method: ResearchTrainingMethod): string {
-  if (!method.regionHints.length) return "—";
+  const hints = method.regionHints.filter(Boolean);
+  if (!hints.length) return "—";
 
-  return cleanText(method.regionHints.join(" · "))
+  return cleanText(hints.join(" · "))
     .replaceAll("_plus_", " + ")
     .replaceAll("multi_region_dependency", "multi-region")
     .replaceAll("multi_region", "multi-region")
@@ -90,19 +100,38 @@ function sourceKindLabel(kind: string | undefined): string {
   return SOURCE_LABEL[kind as SourceReference["source"]] ?? kind;
 }
 
-function SourceLink({ source }: { source: SourceReference | null }) {
-  if (!source?.url) return <span className="text-parch-100">-</span>;
+function SourceLink({ source }: { source: SourceReference | null | undefined }) {
+  if (!source?.url) return null;
 
   return (
     <a
       href={source.url}
       target="_blank"
       rel="noreferrer"
-      title={source.title}
+      title={source.title || source.url}
       className="whitespace-nowrap text-gem-300 underline-offset-2 hover:underline"
     >
       {sourceKindLabel(source.source)}
     </a>
+  );
+}
+
+/** `Name · Wiki` — omits the dot entirely when SourceLink would be null. */
+function InlineSource({
+  source,
+  stopClick,
+}: {
+  source: SourceReference | null | undefined;
+  stopClick?: boolean;
+}) {
+  if (!source?.url) return null;
+  return (
+    <span
+      className="ml-1.5 font-normal"
+      onClick={stopClick ? (e) => e.stopPropagation() : undefined}
+    >
+      · <SourceLink source={source} />
+    </span>
   );
 }
 
@@ -157,11 +186,7 @@ function MethodTable({
                 <td>
                   <div className="font-medium">
                     {cleanText(method.method)}
-                    {method.source ? (
-                      <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
-                        · <SourceLink source={method.source} />
-                      </span>
-                    ) : null}
+                    <InlineSource source={method.source} stopClick />
                   </div>
                   <div className="mt-0.5 text-[12px] text-parch-100">
                     {method.skill}{method.intensity ? ` · ${method.intensity}` : ""}
@@ -207,14 +232,12 @@ function RegionDetail({
   return (
     <article className="space-y-3">
       <header>
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-          <div>
-            <h2 className="text-xl font-semibold text-parch-50">{cleanText(region.name)}</h2>
-            <div className="mt-0.5 text-[11px] text-parch-100">
-              {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} train · {region.upgrades.length} upgrades
-            </div>
-          </div>
-          <div className="text-[12px]"><SourceLink source={region.source} /></div>
+        <h2 className="text-xl font-semibold text-parch-50">
+          {cleanText(region.name)}
+          <InlineSource source={region.source} />
+        </h2>
+        <div className="mt-0.5 text-[11px] text-parch-100">
+          {availabilityLabel(region.availability)} · {region.content.length} content · {region.training.length} train · {region.upgrades.length} upgrades
         </div>
       </header>
 
@@ -277,11 +300,7 @@ function RegionDetail({
                   >
                     <td>
                       {cleanText(row.name)}
-                      {row.source ? (
-                        <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
-                          · <SourceLink source={row.source} />
-                        </span>
-                      ) : null}
+                      <InlineSource source={row.source} stopClick />
                     </td>
                     <td className="secondary">{row.kind}</td>
                     <td className="max-w-xl secondary leading-5">{row.detail ? cleanText(row.detail) : "—"}</td>
@@ -315,11 +334,7 @@ function RegionDetail({
                 <div>
                   <div className="text-[14px] font-medium text-parch-50">
                     {cleanText(upgrade.name)}
-                    {upgrade.source ? (
-                      <span className="ml-1.5 font-normal" onClick={(e) => e.stopPropagation()}>
-                        · <SourceLink source={upgrade.source} />
-                      </span>
-                    ) : null}
+                    <InlineSource source={upgrade.source} stopClick />
                   </div>
                   <div className="mt-0.5 text-[11px] text-parch-100">{upgrade.category}</div>
                   {regionAccess ? <div className="mt-0.5 text-[11px] font-medium text-parch-50">{regionAccess}</div> : null}
@@ -763,7 +778,7 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
           <div
             role="listbox"
             aria-label={mode === "region" ? "Regions" : "Skills"}
-            className="max-h-[min(70vh,40rem)] overflow-y-auto"
+            className="min-h-0 flex-1"
           >
             {mode === "region"
               ? filteredRegions.map((region) => {
@@ -812,15 +827,16 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
             ) : null}
           </div>
         </aside>
-        <div className="comp-stage-col min-w-0 overflow-auto px-2.5 py-2">
+        <div className="comp-stage-col min-w-0 px-2.5 py-2">
           {mode === "region" && selectedRegion ? (
             <RegionDetail region={selectedRegion} focus={focus} onFocus={setFocus} />
-          ) : null}
-          {mode === "skill" && selectedSkill ? (
+          ) : mode === "skill" && selectedSkill ? (
             <SkillDetail skill={selectedSkill} focus={focus} onFocus={setFocus} />
-          ) : null}
+          ) : (
+            <p className="py-6 text-[13px] text-parch-100">Select a record.</p>
+          )}
         </div>
-        <aside className="comp-inspector overflow-y-auto">
+        <aside className="comp-inspector">
           {inspector ? (
             <BrowseSourcesInspector
               title={inspector.title}
@@ -832,7 +848,9 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
               notes={inspector.notes}
               onClearFocus={focus !== null ? () => setFocus(null) : undefined}
             />
-          ) : null}
+          ) : (
+            <p className="text-[13px] text-parch-100">No detail.</p>
+          )}
         </aside>
       </div>
     </section>
@@ -878,11 +896,7 @@ function BrowseSourcesInspector({
         <div className="min-w-0">
           <p className="text-[14px] font-medium leading-4 text-parch-50">
             {cleanText(title)}
-            {primary ? (
-              <span className="ml-1.5 font-normal">
-                · <SourceLink source={primary} />
-              </span>
-            ) : null}
+            <InlineSource source={primary} />
           </p>
           <p className="mt-0.5 text-[11px] text-parch-100">{subtitle}</p>
           {sources.length > 1 ? (

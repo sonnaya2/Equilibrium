@@ -1,12 +1,38 @@
 import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
 import chain from "../../data/research/masterwork-staff-chain.json";
 
+function urlsFrom(...values: unknown[]): string[] {
+  const out: string[] = [];
+  for (const value of values) {
+    if (typeof value === "string" && value.startsWith("https://") && !out.includes(value)) {
+      out.push(value);
+    }
+  }
+  return out;
+}
+
+type PressureRow = (typeof chain.region_pressure)[number] & {
+  region_source_url?: string;
+  secondary_source_url?: string;
+  source_url?: string;
+  component?: string;
+};
+
+const regionPressure = (chain.region_pressure as PressureRow[]).map((row) => {
+  const source_urls = urlsFrom(row.source_url, row.secondary_source_url, row.region_source_url);
+  return {
+    ...row,
+    name: row.component ?? "Component",
+    source_urls: source_urls.length ? source_urls : undefined,
+  };
+}) as unknown as ResearchRow[];
+
 const TABS: ResearchTab[] = [
   {
     key: "region-pressure",
     label: "Region needs",
     description: "",
-    rows: chain.region_pressure as unknown as ResearchRow[],
+    rows: regionPressure,
   },
   {
     key: "assembly",

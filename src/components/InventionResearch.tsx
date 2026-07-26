@@ -8,13 +8,21 @@ import {
   getNew2026ComponentRoutes,
   getPerkComponentSupplyRoutes,
   getPerkMaterialBottlenecks,
-  getRareComponentCoverageCount,
   getRareComponentRoutes,
   getRemainingRareComponentRoutes,
   getUtilityPerkRecipes,
 } from "@/research/inventionPlanner";
+import activePerkData from "../../data/research/planner-expansions-invention-active-perks.json";
 
-const activePerks = getActiveInventionPerks();
+const activeSourceUrls = (activePerkData.source_urls ?? []).filter(
+  (url): url is string => typeof url === "string" && url.startsWith("https://"),
+);
+
+const activePerks = getActiveInventionPerks().map((row) => ({
+  ...row,
+  source_urls: activeSourceUrls,
+})) as unknown as ResearchRow[];
+
 const armour = getCurrentArmourPerkRecipes();
 const utility = getUtilityPerkRecipes();
 const supply = getPerkComponentSupplyRoutes();
@@ -24,15 +32,19 @@ const remaining = getRemainingRareComponentRoutes();
 const routes2026 = getNew2026ComponentRoutes();
 const perkDeps2026 = getCurrent2026PerkDependencies();
 const account = getAccountComponentRoutes();
-const bottlenecks = getPerkMaterialBottlenecks();
-const rareCoverage = getRareComponentCoverageCount();
+
+/** Bottlenecks use `material` — ResearchSection titles name/component/perk only. */
+const bottlenecks = getPerkMaterialBottlenecks().map((row) => ({
+  ...row,
+  name: row.material,
+})) as unknown as ResearchRow[];
 
 const TABS: ResearchTab[] = [
   {
     key: "active",
     label: "Active perks",
     description: "",
-    rows: activePerks as unknown as ResearchRow[],
+    rows: activePerks,
   },
   {
     key: "armour",
@@ -68,7 +80,7 @@ const TABS: ResearchTab[] = [
     key: "bottlenecks",
     label: "Material bottlenecks",
     description: "",
-    rows: bottlenecks as unknown as ResearchRow[],
+    rows: bottlenecks,
   },
 ];
 

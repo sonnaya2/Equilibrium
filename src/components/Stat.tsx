@@ -1,10 +1,12 @@
+import type { ReactNode } from "react";
+
 export function Stat({
   label,
   value,
   hint,
 }: {
   label: string;
-  value: React.ReactNode;
+  value: ReactNode;
   hint?: string;
 }) {
   return (

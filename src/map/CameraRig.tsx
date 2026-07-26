@@ -105,24 +105,48 @@ export function CameraRig({
     };
   }, [aspect]);
 
-  // Selecting a place reuses that region's authored shot and only swaps the
-  // target and closes the distance — no second camera path, and the framing
-  // stays one someone chose. Memoised because the settle effect keys off it.
+/**
+   * Region shot keeps its authored angle but is clamped so the board stays in
+   * frame (Desert no longer slices Tirannwn off the left edge). Selecting a
+   * place reuses that shot and only swaps target + closes distance — no second
+   * camera path.
+   */
   const want = useMemo<Framing>(() => {
-    const base = focus ? (SHAPE_BY_ID.get(focus)?.framing ?? table) : table;
-    if (!focus || !place) return base;
-    const anchor = PLACES_BY_REGION.get(focus)?.find((p) => p.area === place);
-    if (!anchor) return base;
+    const shape = focus ? SHAPE_BY_ID.get(focus) : undefined;
+    let framing: Framing = shape?.framing ?? table;
+    if (focus && place) {
+      const anchor = PLACES_BY_REGION.get(focus)?.find((p) => p.area === place);
+      if (anchor) {
+        framing = {
+          ...framing,
+          target: [
+            (anchor.uv[0] - 0.5) * MAP_WORLD.width,
+            framing.target[1],
+            (anchor.uv[1] - 0.5) * MAP_WORLD.height,
+          ],
+          radius: framing.radius * 0.6,
+        };
+      }
+    }
+    if (!shape && !place) return framing;
+    const halfFov = (framing.fov * Math.PI) / 360;
+    const halfWidth = framing.radius * Math.tan(halfFov) * aspect;
+    const halfDepth =
+      (framing.radius * Math.tan(halfFov)) / Math.max(0.3, Math.sin(framing.elevation));
+    const boardHalfW = MAP_WORLD.width * 0.5;
+    const boardHalfD = MAP_WORLD.height * 0.5;
+    const limitX = Math.max(0, boardHalfW - halfWidth);
+    const limitZ = Math.max(0, boardHalfD - halfDepth);
+    const [x, y, z] = framing.target;
     return {
-      ...base,
+      ...framing,
       target: [
-        (anchor.uv[0] - 0.5) * MAP_WORLD.width,
-        base.target[1],
-        (anchor.uv[1] - 0.5) * MAP_WORLD.height,
+        Math.max(-limitX, Math.min(limitX, x)),
+        y,
+        Math.max(-limitZ, Math.min(limitZ, z)),
       ],
-      radius: base.radius * 0.6,
     };
-  }, [focus, place, table]);
+  }, [focus, place, table, aspect]);
 
   // Current solved framing. Seeded high and wide so the first frames are an
   // intro descent onto the table, exactly once.

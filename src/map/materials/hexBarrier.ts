@@ -8,8 +8,18 @@
  * the map rather than a texture printed on a slab.
  */
 import * as THREE from "three/webgpu";
-import { float, positionWorld, smoothstep, uniform, vec2, vec3 } from "three/tsl";
-import { GEM_400 } from "../palette";
+import {
+  float,
+  mix,
+  mx_fractal_noise_float,
+  mx_noise_float,
+  positionWorld,
+  smoothstep,
+  uniform,
+  vec2,
+  vec3,
+} from "three/tsl";
+import { GEM_400, GEM_500, GEM_600 } from "../palette";
 
 /** Cells across the 2-unit board. Coarse enough that a line survives at the
  *  table framing — at 24 the strokes fell under a pixel and averaged away. */
@@ -55,11 +65,33 @@ export function createBarrierMaterial(): BarrierMaterial {
   const db = float(0.5).sub(b.abs().dot(axis).max(b.abs().x));
   const line = float(1).sub(smoothstep(float(0.008), float(0.035), da.max(db)));
 
-  material.colorNode = linear(GEM_400);
+  // ---- vines ---------------------------------------------------------------
+  // A locked region should read as grown over, not merely gridded. The hex says
+  // "barred"; the vines say "nobody has been here". Both key off the same lock
+  // uniform, so the unlock is still one number animating.
+  //
+  // Tendrils are ridged noise: a fractal field pushed through abs(), which
+  // leaves thin dark valleys where it crosses zero, then domain-warped so the
+  // lines wander like growth instead of combing in one direction. Also read
+  // from world XZ, so a vine crosses a seam onto its locked neighbour.
+  const growth = positionWorld.xz;
+  const warp = mx_noise_float(growth.mul(2.4)).mul(0.55);
+  // The multiplier is what makes a tendril rather than a river: only fragments
+  // within ~1/11th of a zero crossing survive into the stem. At 3.2 this read as
+  // glowing lava channels across the whole cap.
+  const ridge = float(1).sub(mx_fractal_noise_float(growth.mul(4.2).add(warp), 2).abs().mul(11));
+  const stem = smoothstep(float(0.55), float(0.98), ridge);
+  // A second, finer pass for the runners coming off the main stems.
+  const runners = float(1).sub(mx_fractal_noise_float(growth.mul(9.5).sub(warp), 2).abs().mul(15));
+  const vine = stem.max(smoothstep(float(0.72), float(1), runners).mul(0.5));
+  // Leaves cluster where the two agree, so they sit on the stems, not floating.
+  const leaf = smoothstep(float(0.86), float(1), ridge).mul(smoothstep(float(0.3), float(0.9), runners));
+
+  material.colorNode = mix(mix(linear(GEM_600), linear(GEM_500), stem), linear(GEM_400), leaf);
   // Deliberately faint. A locked region is the state you are looking past, so
-  // the barrier has to read without becoming the brightest thing on the board —
-  // at full strength the eight locked slabs outshone the three open ones.
-  material.opacityNode = line.mul(0.26).mul(lock);
+  // the overgrowth has to read without becoming the brightest thing on the board
+  // — at full strength the eight locked slabs outshone the three open ones.
+  material.opacityNode = line.mul(0.18).add(vine.mul(0.15)).add(leaf.mul(0.1)).mul(lock);
 
   return {
     material,

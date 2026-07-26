@@ -12,6 +12,8 @@ const PERK_FIELDS = [
   ["ultimatums", "Ultimatums rank (R1 +4% ult, +1%/rank to +7%)", 4],
   ["lunging", "Lunging rank (R1 +13% Combust/Dismember, +3%/rank)", 4],
   ["energising", "Energising rank (R1 +75 accuracy, +25/rank)", 4],
+  ["crackling", "Crackling rank (PvM zap 50% AD × rank, 60s CD)", 4],
+  ["aftershock", "Aftershock rank (AoE after 50k dmg, 40% AD × rank, 6s min)", 4],
   ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 5],
   ["tumekensPieces", "Tumeken's pieces (+1.5%/piece crit)", 5],
 ] as const;
@@ -98,6 +100,19 @@ export function PerksPanel({
             }
           />
           Inside Sunshine (Tumeken set(3) active)
+        </label>
+        <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+          <input
+            type="checkbox"
+            checked={loadout.perks.plantedFeet}
+            onChange={(event) =>
+              setLoadout({
+                ...loadout,
+                perks: { ...loadout.perks, plantedFeet: event.target.checked },
+              })
+            }
+          />
+          Planted Feet (base Sunshine / Death&apos;s Swiftness ×1.25 duration)
         </label>
       </div>
     </div>

@@ -244,6 +244,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         // Global loadout mods + per-cast perk scopes (Ultimatums, Lunging).
         modifiers: (ability) => stats.castModifiersFor(ability),
         adrenaline: stats.adrenaline,
+        procs: stats.procs,
+        plantedFeet: stats.plantedFeet,
       }),
     );
   };

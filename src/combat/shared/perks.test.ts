@@ -10,6 +10,8 @@ import {
   equilibriumPerkModifier,
   eruptiveDamageBonus,
   eruptivePerkModifier,
+  expectedAftershockDamage,
+  expectedCracklingDamage,
   genocidalDamageBonus,
   lungingPerkModifier,
   preciseMinHitAddition,
@@ -79,6 +81,24 @@ describe("shared/perks", () => {
     // full task remaining -> 0; almost done remaining 1 of 100
     expect(genocidalDamageBonus(100, 100)).toBe(0);
     expect(genocidalDamageBonus(1, 100)).toBeCloseTo(0.049, 10);
+  });
+
+  it("Crackling EV is fraction × base × (H / 60)", () => {
+    // R4: 2.0 * 1000 * (60/60) = 2000
+    expect(expectedCracklingDamage(4, 1000, 60)).toBeCloseTo(2000, 10);
+    expect(expectedCracklingDamage(4, 1000, 30)).toBeCloseTo(1000, 10);
+    expect(expectedCracklingDamage(0, 1000, 60)).toBe(0);
+    expect(expectedCracklingDamage(4, 1000, 0)).toBe(0);
+  });
+
+  it("Aftershock EV is min(floor(dmg/50k), floor(H/6)) × 0.4 × rank × base", () => {
+    // 100k dmg, rank 1, base 1000, H>=12s → 2 procs * 0.4 * 1000 = 800
+    expect(expectedAftershockDamage(1, 1000, 100_000, 12)).toBeCloseTo(800, 10);
+    // horizon-limited: H=5s → floor(5/6)=0
+    expect(expectedAftershockDamage(1, 1000, 100_000, 5)).toBe(0);
+    // damage-limited: 49_999 → 0 procs
+    expect(expectedAftershockDamage(1, 1000, 49_999, 60)).toBe(0);
+    expect(expectedAftershockDamage(0, 1000, 100_000, 12)).toBe(0);
   });
 
   it("skillcape constants match Beta Update 4", () => {

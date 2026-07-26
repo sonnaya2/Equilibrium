@@ -62,6 +62,10 @@ import {
   processSpiritAutos,
   type SpiritAutoEvent,
 } from "../styles/necromancy/conjures";
+import {
+  expectedAftershockDamage,
+  expectedCracklingDamage,
+} from "../shared/perks";
 import type { CombatContext, CombatModifier, SourceReference } from "../types";
 import type { RotationAction } from "./actions";
 import {
@@ -85,6 +89,12 @@ export interface AdrenalineRules {
   impatientExpectedExtra?: number;
 }
 
+/** Crackling / Aftershock EV procs — ranks 0 = off, 1-4 wiki max. */
+export interface ProcRules {
+  cracklingRank?: number;
+  aftershockRank?: number;
+}
+
 export interface SimulateInput {
   /** Caller-supplied base ability damage, as with the single-hit pipeline. */
   base: number;
@@ -106,6 +116,13 @@ export interface SimulateInput {
   autoWeave?: boolean;
   /** Perk-driven basic adrenaline rules (Invigorating, Impatient EV). */
   adrenaline?: AdrenalineRules;
+  /**
+   * Planted Feet: base Sunshine / Death's Swiftness duration ×1.25 (→ 63 ticks).
+   * Does not apply to greater variants.
+   */
+  plantedFeet?: boolean;
+  /** Crackling / Aftershock EV over the sim horizon (applied in finish). */
+  procs?: ProcRules;
 }
 
 export interface CastRecord {
@@ -229,11 +246,40 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     );
     if (spiritEnd > spiritCursor) advanceSpirits(spiritEnd);
 
-    const totalExpected = casts.reduce((n, c) => n + c.result.expected, 0) + spiritExpected;
+    // Ability + spirit damage only — Aftershock thresholds on this, not on procs.
+    const abilityExpected = casts.reduce((n, c) => n + c.result.expected, 0) + spiritExpected;
     const totalMin = casts.reduce((n, c) => n + c.result.min, 0) + spiritMin;
     const totalMax = casts.reduce((n, c) => n + c.result.max, 0) + spiritMax;
     const denomTicks = horizonTicks != null && horizonTicks > 0 ? horizonTicks : endTick;
     const seconds = denomTicks * TICK_SECONDS;
+
+    let totalExpected = abilityExpected;
+    // Crackling: continuous EV ≈ fraction * base * (H / 60). Mid-horizon tick for chart.
+    const crackling = expectedCracklingDamage(
+      input.procs?.cracklingRank ?? 0,
+      input.base,
+      seconds,
+    );
+    if (crackling > 0) {
+      totalExpected += crackling;
+      perAbility.crackling = (perAbility.crackling ?? 0) + crackling;
+      const landTick = Math.max(0, Math.floor(denomTicks / 2));
+      damageByTick[landTick] = (damageByTick[landTick] ?? 0) + crackling;
+    }
+    // Aftershock: floor(abilityDmg/50k) capped by H/6s; hit = 0.4 * rank * base.
+    const aftershock = expectedAftershockDamage(
+      input.procs?.aftershockRank ?? 0,
+      input.base,
+      abilityExpected,
+      seconds,
+    );
+    if (aftershock > 0) {
+      totalExpected += aftershock;
+      perAbility.aftershock = (perAbility.aftershock ?? 0) + aftershock;
+      const landTick = Math.max(0, Math.floor(denomTicks / 2));
+      damageByTick[landTick] = (damageByTick[landTick] ?? 0) + aftershock;
+    }
+
     return {
       ok: error === undefined,
       error,
@@ -462,7 +508,9 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
         berserkUntilTick: readyTick + secondsToTicks(BERSERK_DURATION_SECONDS),
       };
     } else if (ability.buff === "deaths_swiftness") {
-      state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick) });
+      state = patchRanged(state, {
+        swiftness: activateDeathsSwiftness(readyTick, false, input.plantedFeet === true),
+      });
     } else if (ability.buff === "greater_deaths_swiftness") {
       state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick, true) });
     } else if (ability.buff === "shadow_imbued") {
@@ -472,9 +520,10 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       state = patchRanged(state, { searingWinds: activateSearingWinds(readyTick) });
     }
     if (ability.appliesBuff === "sunshine" || ability.appliesBuff === "greater_sunshine") {
+      const greater = ability.appliesBuff === "greater_sunshine";
       state = {
         ...state,
-        sunshine: activateSunshine(readyTick, ability.appliesBuff === "greater_sunshine"),
+        sunshine: activateSunshine(readyTick, greater, !greater && input.plantedFeet === true),
       };
     }
     if (ability.appliesBuff === "instability") {
@@ -555,8 +604,8 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
  * Deterministic rotation run: expected values only, casts advance to their first
  * legal tick, and an unpayable adrenaline cost fails the run instead of silently
  * skipping — a rotation the game cannot perform is invalid input, not zero damage.
- * ponytail: channelled hits still land on the cast tick — the corpus carries no
- * per-hit tick schedule for channels; bleed tails use their sourced intervals.
+ * Channelled hits use hit.tickOffset when present; bleed tails use their sourced
+ * intervals.
  */
 export function simulate(input: SimulateInput): RotationSummary {
   const ctx = createCastContext(input);

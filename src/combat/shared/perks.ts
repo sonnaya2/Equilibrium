@@ -260,12 +260,47 @@ export function cracklingDamageFraction(rank: number): number {
 export const CRACKLING_COOLDOWN_SECONDS = 60;
 
 /**
+ * Continuous EV approximation over a horizon: fraction * base * (H / 60s CD).
+ * Rank 0 / non-positive horizon => 0 (no throw).
+ */
+export function expectedCracklingDamage(rank: number, base: number, horizonSeconds: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > 4) return 0;
+  if (!Number.isFinite(base) || base <= 0 || !Number.isFinite(horizonSeconds) || horizonSeconds <= 0) {
+    return 0;
+  }
+  return cracklingDamageFraction(rank) * base * (horizonSeconds / CRACKLING_COOLDOWN_SECONDS);
+}
+
+/**
  * Aftershock: after 50_000 damage, AoE up to ~40% AD per rank (wiki table caps slightly lower).
  * Max rank 4; min 6s between procs. Full table is rotation-sim territory - constant only.
  */
 export const AFTERSHOCK_DAMAGE_THRESHOLD = 50_000;
 export const AFTERSHOCK_MAX_AD_FRACTION_PER_RANK = 0.4;
 export const AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS = 6;
+
+/**
+ * EV Aftershock over a horizon from ability damage only (not recursive on proc damage).
+ * procs = min(floor(abilityDamage / 50k), floor(H / 6s)); hit = 0.4 * rank * base.
+ * Rank 0 / non-positive inputs => 0.
+ */
+export function expectedAftershockDamage(
+  rank: number,
+  base: number,
+  abilityDamage: number,
+  horizonSeconds: number,
+): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > 4) return 0;
+  if (!Number.isFinite(base) || base <= 0) return 0;
+  if (!Number.isFinite(abilityDamage) || abilityDamage <= 0) return 0;
+  if (!Number.isFinite(horizonSeconds) || horizonSeconds <= 0) return 0;
+  const procs = Math.min(
+    Math.floor(abilityDamage / AFTERSHOCK_DAMAGE_THRESHOLD),
+    Math.floor(horizonSeconds / AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS),
+  );
+  if (procs <= 0) return 0;
+  return procs * AFTERSHOCK_MAX_AD_FRACTION_PER_RANK * rank * base;
+}
 
 // --- Adrenaline / utility (formula exports; no damage pipeline) ---
 

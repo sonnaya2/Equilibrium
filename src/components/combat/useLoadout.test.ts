@@ -60,6 +60,13 @@ describe("normalizeLoadout", () => {
     expect(next.perks.invigorating).toBe(0);
     expect(next.perks.impatient).toBe(0);
     expect(next.perks.impatientLevel20).toBe(false);
+    expect(next.perks.plantedFeet).toBe(false);
+  });
+
+  it("preserves plantedFeet when true; defaults false", () => {
+    expect(normalizeLoadout({ perks: { plantedFeet: true } }).perks.plantedFeet).toBe(true);
+    expect(normalizeLoadout({ perks: { plantedFeet: false } }).perks.plantedFeet).toBe(false);
+    expect(normalizeLoadout({ perks: {} }).perks.plantedFeet).toBe(false);
   });
 
   it("clamps Invigorating / Impatient ranks and preserves impatientLevel20", () => {
@@ -69,6 +76,18 @@ describe("normalizeLoadout", () => {
     expect(next.perks.invigorating).toBe(4);
     expect(next.perks.impatient).toBe(0);
     expect(next.perks.impatientLevel20).toBe(true);
+  });
+
+  it("clamps Crackling / Aftershock ranks 0-4", () => {
+    const next = normalizeLoadout({
+      perks: { crackling: 9, aftershock: -1 },
+    });
+    expect(next.perks.crackling).toBe(4);
+    expect(next.perks.aftershock).toBe(0);
+    expect(normalizeLoadout({ perks: { crackling: 3, aftershock: 2 } }).perks).toMatchObject({
+      crackling: 3,
+      aftershock: 2,
+    });
   });
 
   it("preserves valid buffs and drops invalid enum values", () => {

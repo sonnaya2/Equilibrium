@@ -6,6 +6,7 @@ import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers";
 import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/target/genericTarget";
 import {
+  equippedBonuses,
   equippedWeaponTier,
   loadoutAttackLevel,
   loadoutBase,
@@ -210,6 +211,24 @@ describe("loadoutStats", () => {
     expect(equippedWeaponTier({ ...base, equipmentSlots: { mainhand: "missing:id" } })).toBeNull();
   });
 
+  it("equippedBonuses sums wiki damage/accuracy from slotted pieces", () => {
+    // Omni guard: dmg 1415.5 acc 2765; Soulbound lantern: dmg 707.7 acc 2765 (wiki 2026-07-26).
+    const dual: Loadout = {
+      ...base,
+      equipmentSlots: { mainhand: "item:omni-guard", offhand: "item:soulbound-lantern" },
+    };
+    expect(equippedBonuses(dual)).toEqual({ damage: 1415.5 + 707.7, accuracy: 2765 + 2765 });
+
+    // Seismic wand has accuracy only (tooltip damage 0 — not stored).
+    const seismic: Loadout = {
+      ...base,
+      equipmentSlots: { mainhand: "item:seismic-wand" },
+    };
+    expect(equippedBonuses(seismic)).toEqual({ damage: 0, accuracy: 2458 });
+
+    expect(equippedBonuses({ ...base, equipmentSlots: {} })).toEqual({ damage: 0, accuracy: 0 });
+  });
+
   it("Eruptive adds a global base-stage damage modifier", () => {
     const stats = loadoutStats({ ...base, perks: { ...base.perks, eruptive: 4 } });
     expect(stats.globalModifiers.some((m) => m.id === "perk:eruptive:4")).toBe(true);
@@ -233,6 +252,26 @@ describe("loadoutStats", () => {
       perks: { ...base.perks, impatient: 4, impatientLevel20: true },
     });
     expect(imp4l20.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.188, 10);
+  });
+
+  it("Crackling / Aftershock ranks feed procs rules (rank 0 = off)", () => {
+    const off = loadoutStats(base);
+    expect(off.procs?.cracklingRank).toBe(0);
+    expect(off.procs?.aftershockRank).toBe(0);
+
+    const ranked = loadoutStats({
+      ...base,
+      perks: { ...base.perks, crackling: 4, aftershock: 2 },
+    });
+    expect(ranked.procs?.cracklingRank).toBe(4);
+    expect(ranked.procs?.aftershockRank).toBe(2);
+  });
+
+  it("Planted Feet surfaces on CalcStats for simulate", () => {
+    expect(loadoutStats(base).plantedFeet).toBe(false);
+    expect(loadoutStats({ ...base, perks: { ...base.perks, plantedFeet: true } }).plantedFeet).toBe(
+      true,
+    );
   });
 
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {

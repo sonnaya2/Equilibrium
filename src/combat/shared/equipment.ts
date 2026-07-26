@@ -2,15 +2,16 @@ import {
   AMASCUT_MASTERIES_WIKI_2025_09_29,
   MASTERWORK_WEAPONS_WIKI_2025_05_27,
 } from "../data/sources";
+import type { EquipmentBonuses } from "../data/records";
 import type { SourceReference } from "../types";
 
 /**
- * Equipment set effects with sourced current numbers. Item stat bonuses (post 9 Mar
- * 2026 rebalance) are still unsourced per item — bonuses in data/combat/equipment.json
- * stay empty until a source lands, so there is nothing to aggregate yet.
+ * Equipment set effects with sourced current numbers. Per-item combat stats live on
+ * EquipmentRecord.bonuses (wiki-sourced where filled). Weapon tier still drives base
+ * AD and playerAccuracy; do not add weapon Accuracy ratings into playerAccuracy or
+ * you double-count the tier curve.
  *
- * These feed the crit layer (CritLayers.chance / damageBonus), not the modifier
- * pipeline: crit chance and crit damage are their own layers by design.
+ * Set crit bonuses feed CritLayers.chance, not the modifier pipeline.
  */
 
 export interface SetEffect {
@@ -36,4 +37,19 @@ export const tectonicSet = (pieces: number, elite = false) =>
 export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): SetEffect {
   const effect = setCritChance("tumekens_resplendence", pieces, 0.015, AMASCUT_MASTERIES_WIKI_2025_09_29);
   return insideSunshine ? effect : { ...effect, critChanceBonus: 0 };
+}
+
+/** Sum numeric damage/accuracy from equipped piece bonus bags (display / future wiring). */
+export function sumEquipmentBonuses(pieces: Iterable<EquipmentBonuses | undefined>): {
+  damage: number;
+  accuracy: number;
+} {
+  let damage = 0;
+  let accuracy = 0;
+  for (const b of pieces) {
+    if (!b) continue;
+    if (b.damage != null && Number.isFinite(b.damage)) damage += b.damage;
+    if (b.accuracy != null && Number.isFinite(b.accuracy)) accuracy += b.accuracy;
+  }
+  return { damage, accuracy };
 }

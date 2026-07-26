@@ -27,6 +27,19 @@ describe("death's swiftness", () => {
     expect(deathsSwiftnessActive(state, 63)).toBe(false);
   });
 
+  it("Planted Feet extends base Death's Swiftness to 63 ticks (wiki)", () => {
+    const state = activateDeathsSwiftness(0, false, true);
+    expect(state.startsAtTick).toBe(1);
+    expect(state.expiresAtTick).toBe(63);
+    expect(deathsSwiftnessActive(state, 1)).toBe(true);
+    expect(deathsSwiftnessActive(state, 62)).toBe(true);
+    expect(deathsSwiftnessActive(state, 63)).toBe(false);
+  });
+
+  it("Planted Feet does not change Greater Death's Swiftness", () => {
+    expect(activateDeathsSwiftness(5, true, true)).toEqual(activateDeathsSwiftness(5, true, false));
+  });
+
   it("is inactive before activation", () => {
     expect(deathsSwiftnessActive(newDeathsSwiftness(), 0)).toBe(false);
   });

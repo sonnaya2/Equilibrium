@@ -1,5 +1,6 @@
 import { secondsToTicks } from "../../rotation/timeline";
 import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
+import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import type { SourceReference } from "../../types";
 
 /**
@@ -52,7 +53,9 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
  * Greater Sunshine: 65-tick total duration; buff begins 1 tick after cast and
  * lasts 64 ticks → active on [cast+1, cast+65).
  *
- * Planted Feet (base only, extends to 63 ticks) is not modelled here.
+ * Planted Feet (base only): duration × PLANTED_FEET_DURATION_MULT → 63 ticks
+ * (Math.round(50 × 1.25)); same [cast+1, cast+duration) shape. Greater: no change.
+ * Planted Feet also removes periodic DoT hits in-game — not modelled here.
  */
 export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
 /** Base Sunshine beam duration in ticks (wiki: 30s / 50 ticks). */
@@ -67,12 +70,20 @@ export interface SunshineState {
 
 export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTick: 0 });
 
-/** Activate the Sunshine zone buff. `greater` selects Greater Sunshine timings. */
-export function activateSunshine(tick: number, greater = false): SunshineState {
+/**
+ * Activate the Sunshine zone buff.
+ * `greater` selects Greater Sunshine timings.
+ * `plantedFeet` extends base Sunshine only (wiki: 63 ticks); ignored for greater.
+ */
+export function activateSunshine(tick: number, greater = false, plantedFeet = false): SunshineState {
   if (greater) {
     return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
   }
-  return { startsAtTick: tick + 1, expiresAtTick: tick + SUNSHINE_DURATION_TICKS };
+  const duration =
+    plantedFeet
+      ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
+      : SUNSHINE_DURATION_TICKS;
+  return { startsAtTick: tick + 1, expiresAtTick: tick + duration };
 }
 
 /** Greater Sunshine only — thin wrapper kept for existing call sites. */

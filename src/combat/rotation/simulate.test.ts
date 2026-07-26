@@ -85,6 +85,63 @@ describe("simulate", () => {
   });
 });
 
+describe("simulate — Crackling / Aftershock EV procs", () => {
+  it("Crackling rank 4, base 1000, 60s horizon → ~2000 EV", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      procs: { cracklingRank: 4 },
+    });
+    // 60s = 100 ticks @ 0.6s
+    const s = ctx.finish(undefined, 100);
+    expect(s.ok).toBe(true);
+    expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
+    expect(s.totalExpected).toBeCloseTo(2000, 5);
+    // Mid-horizon damageByTick entry
+    expect(s.damageByTick[50]).toBeCloseTo(2000, 5);
+  });
+
+  it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 400 = 800 when H allows", () => {
+    // attack expected = 1200 @ base 1000; need ≥100k → ≥84 attacks
+    const n = 84;
+    const s = simulate({
+      ...baseInput,
+      procs: { aftershockRank: 1 },
+      rotation: rotationOf(...Array(n).fill("attack")),
+    });
+    expect(s.ok).toBe(true);
+    const abilityExpected = n * 1200;
+    expect(abilityExpected).toBeGreaterThanOrEqual(100_000);
+    // elapsed horizon = n * 3 ticks * 0.6s ≥ 151s → room for many 6s gaps
+    expect(s.perAbility.aftershock).toBeCloseTo(800, 5);
+    expect(s.totalExpected).toBeCloseTo(abilityExpected + 800, 5);
+  });
+
+  it("Aftershock does not recurse on Crackling damage", () => {
+    // Ability damage alone below 50k, but crackling on a long horizon would not count.
+    const ctx = createCastContext({
+      ...baseInput,
+      procs: { cracklingRank: 4, aftershockRank: 4 },
+    });
+    // No casts: abilityExpected = 0 → aftershock 0; crackling alone over 60s
+    const s = ctx.finish(undefined, 100);
+    expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
+    expect(s.perAbility.aftershock).toBeUndefined();
+    expect(s.totalExpected).toBeCloseTo(2000, 5);
+  });
+
+  it("rank 0 procs add nothing", () => {
+    const plain = simulate({ ...baseInput, rotation: rotationOf("attack") });
+    const zero = simulate({
+      ...baseInput,
+      procs: { cracklingRank: 0, aftershockRank: 0 },
+      rotation: rotationOf("attack"),
+    });
+    expect(zero.totalExpected).toBeCloseTo(plain.totalExpected, 10);
+    expect(zero.perAbility.crackling).toBeUndefined();
+    expect(zero.perAbility.aftershock).toBeUndefined();
+  });
+});
+
 describe("simulate — Invigorating / Impatient adrenaline", () => {
   it("Invigorating multiplies basic adrenaline gains (R4: 9 → 9×1.2)", () => {
     const s = simulate({
@@ -314,6 +371,26 @@ describe("simulate — ranged", () => {
     expect(s.casts.map((c) => c.adrenalineAfter)).toEqual([0, 9]);
   });
 
+  it("Planted Feet extends base Death's Swiftness buff window to 63 ticks", () => {
+    // Fund 12 basics → DS@36; base expires 86, PF expires 99.
+    const setup = [
+      ...Array(12).fill("ranged_attack"),
+      "deaths_swiftness",
+      ...Array(22).fill("ranged_attack"),
+    ];
+    const plain = simulate({ ...rangedInput, rotation: rotationOf(...setup) });
+    const pf = simulate({
+      ...rangedInput,
+      plantedFeet: true,
+      rotation: rotationOf(...setup),
+    });
+    expect(plain.ok && pf.ok).toBe(true);
+    const plainAt87 = plain.casts.find((c) => c.abilityId === "ranged_attack" && c.tick === 87);
+    const pfAt87 = pf.casts.find((c) => c.abilityId === "ranged_attack" && c.tick === 87);
+    expect(plainAt87!.result.expected).toBeCloseTo(1000);
+    expect(pfAt87!.result.expected).toBeCloseTo(1500);
+  });
+
   it("shadow tendrils crits guaranteed even at 0% crit chance", () => {
     const s = simulate({ ...rangedInput, crit: { chance: 0 }, rotation: rotationOf("shadow_tendrils") });
     expect(s.casts[0].result.expected).toBeCloseTo(2200 * 1.5);
@@ -385,6 +462,55 @@ describe("simulate — magic", () => {
     const gs = s.casts.find((c) => c.abilityId === "greater_sunshine")!;
     const next = s.casts.find((c) => c.abilityId === "magic_attack" && c.tick > gs.tick)!;
     expect(next.result.expected).toBeCloseTo(1500);
+  });
+
+  it("Planted Feet extends base Sunshine buff window to 63 ticks", () => {
+    // Fund → sunshine@36 → pack casts so one lands at tick 98 (active under PF 63, dead under base 50).
+    // Base: expires cast+50 = 86; PF: expires cast+63 = 99. Active on [37, 99).
+    const setup = [
+      ...Array(12).fill("magic_attack"),
+      "sunshine",
+      ...Array(22).fill("magic_attack"), // GCDs: 39,42,...,102
+    ];
+    const plain = simulate({ ...magicInput, rotation: rotationOf(...setup) });
+    const pf = simulate({
+      ...magicInput,
+      plantedFeet: true,
+      rotation: rotationOf(...setup),
+    });
+    expect(plain.ok && pf.ok).toBe(true);
+    // Tick 87 is first base-outside on GCD grid (36+50=86 exclusive → 87 inactive).
+    const plainAt87 = plain.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 87);
+    const pfAt87 = pf.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 87);
+    expect(plainAt87).toBeDefined();
+    expect(pfAt87).toBeDefined();
+    expect(plainAt87!.result.expected).toBeCloseTo(1000);
+    expect(pfAt87!.result.expected).toBeCloseTo(1500);
+    // Tick 99 is exclusive end of PF window (36+63).
+    const pfAt99 = pf.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 99);
+    expect(pfAt99).toBeDefined();
+    expect(pfAt99!.result.expected).toBeCloseTo(1000);
+  });
+
+  it("Planted Feet does not extend Greater Sunshine", () => {
+    const setup = [
+      ...Array(12).fill("magic_attack"),
+      "greater_sunshine",
+      "magic_attack",
+    ];
+    const plain = simulate({ ...magicInput, rotation: rotationOf(...setup) });
+    const pf = simulate({
+      ...magicInput,
+      plantedFeet: true,
+      rotation: rotationOf(...setup),
+    });
+    const plainNext = plain.casts.find(
+      (c) => c.abilityId === "magic_attack" && c.tick > plain.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
+    )!;
+    const pfNext = pf.casts.find(
+      (c) => c.abilityId === "magic_attack" && c.tick > pf.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
+    )!;
+    expect(plainNext.result.expected).toBeCloseTo(pfNext.result.expected);
   });
 
   it("instability adds Lightning Surge EV on magic crits (not on 0% crit)", () => {

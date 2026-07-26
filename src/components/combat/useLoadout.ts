@@ -47,10 +47,16 @@ export interface LoadoutPerks {
   ultimatums: number;
   lunging: number;
   energising: number;
+  /** Crackling: PvM zap 50% AD × rank, 60s CD. Rank 0 = off, max 4. */
+  crackling: number;
+  /** Aftershock: AoE after 50k damage, 40% AD × rank, 6s min. Rank 0 = off, max 4. */
+  aftershock: number;
   tectonicPieces: number;
   eliteTectonic: boolean;
   tumekensPieces: number;
   insideSunshine: boolean;
+  /** Planted Feet: base Sunshine / Death's Swiftness ×1.25 duration (→ 63 ticks). */
+  plantedFeet: boolean;
 }
 
 export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
@@ -116,10 +122,13 @@ export const DEFAULT_LOADOUT: Loadout = {
     ultimatums: 0,
     lunging: 0,
     energising: 0,
+    crackling: 0,
+    aftershock: 0,
     tectonicPieces: 0,
     eliteTectonic: false,
     tumekensPieces: 0,
     insideSunshine: false,
+    plantedFeet: false,
   },
   buffs: {
     vulnerability: false,
@@ -309,10 +318,13 @@ export function normalizeLoadout(value: unknown): Loadout {
       ultimatums: clampRank(rawPerks.ultimatums, 4),
       lunging: clampRank(rawPerks.lunging, 4),
       energising: clampRank(rawPerks.energising, 4),
+      crackling: clampRank(rawPerks.crackling, 4),
+      aftershock: clampRank(rawPerks.aftershock, 4),
       tectonicPieces: clampRank(rawPerks.tectonicPieces, 5),
       eliteTectonic: rawPerks.eliteTectonic === true,
       tumekensPieces: clampRank(rawPerks.tumekensPieces, 5),
       insideSunshine: rawPerks.insideSunshine === true,
+      plantedFeet: rawPerks.plantedFeet === true,
     },
     buffs: {
       vulnerability: rawBuffs.vulnerability === true,

@@ -64,6 +64,21 @@ describe("sunshine damage buff", () => {
   it("activateSunshine(greater) matches activateGreaterSunshine", () => {
     expect(activateSunshine(20, true)).toEqual(activateGreaterSunshine(20));
   });
+
+  it("Planted Feet extends base Sunshine to 63 ticks (wiki)", () => {
+    const state = activateSunshine(0, false, true);
+    expect(state.startsAtTick).toBe(1);
+    expect(state.expiresAtTick).toBe(63);
+    expect(sunshineActive(state, 0)).toBe(false);
+    expect(sunshineActive(state, 1)).toBe(true);
+    expect(sunshineActive(state, 62)).toBe(true);
+    expect(sunshineActive(state, 63)).toBe(false);
+  });
+
+  it("Planted Feet does not change Greater Sunshine", () => {
+    expect(activateSunshine(10, true, true)).toEqual(activateSunshine(10, true, false));
+    expect(activateSunshine(10, true, true)).toEqual(activateGreaterSunshine(10));
+  });
 });
 
 describe("instability lightning surge", () => {

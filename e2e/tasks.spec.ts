@@ -33,11 +33,16 @@ test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", as
     await expect(myBuild).toHaveAttribute("aria-pressed", "true");
   }
 
-  // Region filter: Select + Stage uses <select aria-label="Filter by region">.
-  // Soft — only assert structure that is present. Never pin region names.
-  const regionSelect = page.getByLabel(/^Filter by region$/i);
-  if (await regionSelect.isVisible().catch(() => false)) {
-    await expect(regionSelect).toBeVisible();
+  // Region filter: Crest Compact uses crest rail (aside aria-label="Filter by region")
+  // with All + region leaf buttons. Soft — accept rail group or legacy select.
+  // Never pin region names.
+  const regionRail = page.getByLabel(/^Filter by region$/i);
+  if (await regionRail.isVisible().catch(() => false)) {
+    await expect(regionRail).toBeVisible();
+    const allLeaf = page.getByRole("button", { name: /All (unlocked|regions)/i });
+    if (await allLeaf.isVisible().catch(() => false)) {
+      await expect(allLeaf).toBeVisible();
+    }
   }
 
   // Comp% values that have a wiki task id open the Wiki row (hash id).

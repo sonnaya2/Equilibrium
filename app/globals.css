@@ -585,15 +585,17 @@ textarea:focus-visible {
   }
 
   /*
-    Tasks desk — Select + Stage (Aperture R1.1).
-    Full-width list · region select + crest badge · inline stage under row.
+    Tasks desk — Crest Compact (Quarry DNA, no right inspector).
+    2-bay: crest rail (~7.5rem) + stage. 28px rows · inline expand under row.
     Spike law: detail only when selectedId set. Scoped .tasks-desk only.
+    Does not touch .twin-desk (Data).
   */
   .tasks-desk {
     --tasks-row-h: 1.75rem;
     --tasks-head-h: 1.5rem;
     --tasks-gap: 0.35rem;
-    --tasks-pad-x: 0.45rem;
+    --tasks-pad-x: 0.4rem;
+    --tasks-rail-w: 7.5rem;
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -615,116 +617,193 @@ textarea:focus-visible {
     color: inherit;
     cursor: pointer;
   }
-  .tasks-desk__facets {
+  /* ── 2-bay grid: rail | stage ─────────────────────────── */
+  .tasks-desk__grid {
+    display: grid;
+    grid-template-columns: var(--tasks-rail-w) minmax(0, 1fr);
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
+  .tasks-desk__rail {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem 0.4rem;
-    padding: 0.28rem 0.45rem;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.3rem;
     background: var(--color-stone-900);
-    border-bottom: 1px solid var(--color-stone-750);
-    flex-shrink: 0;
+    border-right: 1px solid var(--color-stone-750);
+    scrollbar-width: thin;
+  }
+  .tasks-desk__rail-label {
+    margin: 0 0 0.15rem;
+    padding: 0.15rem 0.2rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-parch-300);
+    text-align: center;
+  }
+  .tasks-desk__leaf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    width: 100%;
+    min-height: 2.65rem;
+    padding: 0.3rem 0.2rem;
+    border: 1px solid var(--color-stone-750);
+    border-radius: 2px;
+    background: var(--color-stone-800);
+    color: var(--color-parch-100);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+  }
+  .tasks-desk__leaf:hover {
+    background: var(--color-stone-raised);
+    color: var(--color-parch-50);
+  }
+  .tasks-desk__leaf.is-on {
+    color: var(--color-gem-300);
+    border-color: var(--color-gem-500);
+    background: color-mix(in srgb, var(--color-stone-raised) 70%, var(--color-stone-900));
+    box-shadow:
+      inset 0 0 0 1px var(--color-gem-500),
+      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
+  }
+  .tasks-desk__leaf-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: inherit;
+  }
+  .tasks-desk__leaf-count {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-parch-300);
+    line-height: 1;
+  }
+  .tasks-desk__leaf.is-on .tasks-desk__leaf-count {
+    color: var(--color-gem-300);
+  }
+  .tasks-desk__main {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
+    min-height: 0;
+    background: var(--color-stone-800);
+  }
+  /* One-line stage bar */
+  .tasks-desk__bar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    padding: 0.3rem 0.45rem;
+    border-bottom: 1px solid var(--color-stone-750);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-800)) 0%,
+        var(--color-stone-800) 100%
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
+    overflow-x: auto;
+    flex-shrink: 0;
   }
   .tasks-desk__title {
     margin: 0;
-    font-family: var(--font-display), Cinzel, "Times New Roman", serif;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-gold-400);
-    white-space: nowrap;
     flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-parch-50);
+    white-space: nowrap;
   }
   .tasks-desk__count {
+    flex-shrink: 0;
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     font-variant-numeric: tabular-nums;
     color: var(--color-parch-300);
     white-space: nowrap;
-    flex-shrink: 0;
   }
   .tasks-desk__count .is-pts { color: var(--color-gem-300); }
   .tasks-desk__search {
-    flex: 0 1 9rem;
+    flex: 1 1 7rem;
     min-width: 5.5rem;
-    max-width: 12rem;
+    max-width: 14rem;
     margin: 0;
-    padding: 0.18rem 0.35rem;
-    font-size: 0.8125rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
     color: var(--color-parch-50);
     background: var(--color-stone-inset);
     border: 1px solid var(--color-stone-750);
     border-radius: 2px;
   }
   .tasks-desk__search::placeholder { color: var(--color-parch-400); }
+  .tasks-desk__facets {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.2rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
   .tasks-desk__chip {
+    display: inline-flex;
+    align-items: center;
     border: 1px solid var(--color-stone-750);
-    background: var(--color-stone-850);
-    padding: 0.14rem 0.4rem;
-    font-size: 0.75rem;
+    background: transparent;
+    padding: 0.18rem 0.4rem;
+    font-size: 0.6875rem;
     line-height: 1.2;
     color: var(--color-parch-100);
     border-radius: 2px;
     white-space: nowrap;
-    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
   }
   .tasks-desk__chip:hover:not([aria-pressed="true"]) {
     color: var(--color-parch-50);
-    border-color: var(--color-stone-carve);
+    background: color-mix(in srgb, var(--color-stone-raised) 50%, transparent);
   }
   .tasks-desk__chip[aria-pressed="true"] {
     border-color: var(--color-gem-500);
     color: var(--color-gem-300);
-    background: var(--color-stone-raised);
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
+    background: color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-900));
+    box-shadow:
+      inset 0 0 0 1px var(--color-gem-500),
+      inset 0 1px 0 color-mix(in srgb, var(--color-gem-300) 28%, transparent);
   }
   .tasks-desk__chip--tier { text-transform: capitalize; }
-  .tasks-desk__group {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.15rem;
-    flex-shrink: 0;
-    margin-left: auto;
-  }
-  .tasks-desk__region-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    flex: 0 0 auto;
-    min-width: 0;
-  }
-  .tasks-desk__select {
-    padding: 0.16rem 0.35rem;
-    border: 1px solid var(--color-stone-750);
-    border-radius: 2px;
-    background: var(--color-stone-inset);
-    color: var(--color-parch-100);
-    font-size: 0.8125rem;
-    max-width: 11.5rem;
-    cursor: pointer;
-  }
   .tasks-desk__hint {
     margin: 0;
     padding: 0.15rem 0.45rem;
     border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     color: var(--color-parch-300);
     flex-shrink: 0;
   }
   .tasks-desk__hint a { color: var(--color-gem-300); text-decoration: none; }
   .tasks-desk__hint a:hover { text-decoration: underline; }
+  /* check · name · tier · Comp% · pts — no region col (rail owns region) */
   .tasks-desk__cols {
     display: grid;
-    grid-template-columns: 1.15rem minmax(0, 1fr) 5.25rem 3.25rem 3.25rem 2.5rem;
+    grid-template-columns: 1.1rem minmax(0, 1fr) 3.5rem 3.25rem 2.5rem;
     column-gap: var(--tasks-gap);
     align-items: center;
     padding-inline: var(--tasks-pad-x);
   }
   .tasks-desk__cols--no-comp {
-    grid-template-columns: 1.15rem minmax(0, 1fr) 5.25rem 3.25rem 2.5rem;
+    grid-template-columns: 1.1rem minmax(0, 1fr) 3.5rem 2.5rem;
   }
   .tasks-desk__list {
     flex: 1 1 auto;
@@ -796,23 +875,15 @@ textarea:focus-visible {
     color: var(--color-parch-50);
     cursor: pointer;
   }
-  .tasks-desk__region {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.6875rem;
-    color: var(--color-parch-100);
-  }
   .tasks-desk__tier {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     text-align: right;
     text-transform: capitalize;
     color: var(--color-parch-100);
   }
   .tasks-desk__num {
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-variant-numeric: tabular-nums;
     text-align: right;
     color: var(--color-parch-50);
@@ -827,6 +898,7 @@ textarea:focus-visible {
     text-underline-offset: 3px;
   }
   .tasks-desk__wiki:hover { color: var(--color-gem-300); }
+  /* Inline expand under selected row (not a side inspector) */
   .tasks-desk__stage {
     padding: 0.4rem 0.55rem 0.5rem 1.75rem;
     border-top: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
@@ -876,14 +948,15 @@ textarea:focus-visible {
     font-size: 0.8125rem;
     line-height: 1.4;
     color: var(--color-parch-100);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
   .tasks-desk__stage-req {
     margin: 0.2rem 0 0;
     font-size: 0.75rem;
+    color: var(--color-parch-300);
+  }
+  .tasks-desk__stage-tags {
+    margin: 0.2rem 0 0;
+    font-size: 0.6875rem;
     color: var(--color-parch-300);
   }
   .tasks-desk__stage-link {
@@ -894,30 +967,35 @@ textarea:focus-visible {
     text-decoration: none;
   }
   .tasks-desk__stage-link:hover { text-decoration: underline; }
-  @media (min-width: 1100px) {
-    .tasks-desk__facets {
-      flex-wrap: nowrap;
-      gap: 0.2rem 0.3rem;
-      padding: 0.2rem 0.35rem;
-    }
-    .tasks-desk__search {
-      flex: 0 1 8.5rem;
-      min-width: 5rem;
-      max-width: 10rem;
-    }
-  }
   @media (max-width: 720px) {
-    .tasks-desk__group {
+    .tasks-desk__grid {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+    .tasks-desk__rail {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+      border-right: 0;
+      border-bottom: 1px solid var(--color-stone-750);
+    }
+    .tasks-desk__leaf {
+      width: auto;
+      min-width: 3.25rem;
+    }
+    .tasks-desk__bar {
+      flex-wrap: wrap;
+    }
+    .tasks-desk__facets {
       flex-wrap: wrap;
       margin-left: 0;
     }
     .tasks-desk__cols {
-      grid-template-columns: 1.15rem minmax(0, 1fr) 3rem 2.75rem 2.35rem;
+      grid-template-columns: 1.1rem minmax(0, 1fr) 3rem 2.75rem 2.35rem;
     }
     .tasks-desk__cols--no-comp {
-      grid-template-columns: 1.15rem minmax(0, 1fr) 3rem 2.35rem;
+      grid-template-columns: 1.1rem minmax(0, 1fr) 3rem 2.35rem;
     }
-    .tasks-desk__region { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {

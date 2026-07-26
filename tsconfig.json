@@ -40,9 +40,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "src/concepts/map-remaster",
-    "app/concepts/map-remaster"
+    "node_modules"
   ]
 }
 

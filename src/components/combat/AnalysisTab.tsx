@@ -7,6 +7,10 @@ import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
+import { abilityIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
+import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { useLoadout, type Loadout } from "./useLoadout";
@@ -80,47 +84,55 @@ export function AnalysisTab() {
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
 
   return (
-    <div className="grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
-      <div>
-        <h2 className="text-sm font-medium text-parch-50">Analysis</h2>
-        <p className="mt-1 text-xs text-parch-300">A = Setup · B = scratch compare</p>
-        <div className="mt-3 border-t border-stone-750">
+    <div className="analysis-layout py-3">
+      <aside className="combat-frame analysis-library">
+        <CombatFrameCorners />
+        <h2 className="combat-page-title text-sm font-medium text-parch-50">Analysis</h2>
+        <div className="analysis-ability-list mt-3">
           {ALL_ENTRIES.map(({ style, ability: candidate }) => (
             <button
               key={candidate.id}
               type="button"
               onClick={() => setAbilityId(candidate.id)}
-              className={`grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs ${
-                candidate.id === entry.ability.id
-                  ? "bg-stone-850 text-parch-50"
-                  : "text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
+              aria-pressed={candidate.id === entry.ability.id}
+              className="analysis-ability"
             >
-              <span>{candidate.name}</span>
-              <span className="font-mono capitalize">{style}</span>
+              <GameIcon src={abilityIconPath(candidate.id, style)} size={24} className="shrink-0" />
+              <span className="min-w-0 flex-1 truncate text-left">
+                {candidate.name}
+                <AbilityCategoryChip category={candidate.category} />
+              </span>
+              <span className="font-mono text-[10px] capitalize text-parch-300">{style}</span>
             </button>
           ))}
         </div>
         {entry.ability.id === "volley_of_souls" ? (
-          <div className="mt-3 border-t border-stone-750">
+          <div className="loadout-fields mt-3">
             <NumberField label="Residual Souls spent" value={souls} onChange={(value) => setSouls(Math.min(Math.max(1, Math.floor(value)), MAX_SOULS))} />
           </div>
         ) : null}
-      </div>
+      </aside>
 
-      <div>
-        <div className="grid gap-4 md:grid-cols-2">
+      <section className="combat-frame analysis-workbench">
+        <CombatFrameCorners />
+        <header className="analysis-cast-header">
+          <GameIcon src={abilityIconPath(ability.id, entry.style)} size={38} />
           <div>
-            <h3 className="text-xs font-medium text-parch-50">A · Setup loadout</h3>
-            <dl className="mt-2 border-t border-stone-750 text-xs">
-              {(
-                [
-                  ["Level", statsA.level],
-                  ["Base", statsA.base],
-                  ["Damage Potential", `${Math.round(statsA.dp * 1000) / 10}%`],
-                  ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
-                ] as const
-              ).map(([label, value]) => (
+            <h3 className="text-base font-medium text-parch-50">{ability.name}</h3>
+          </div>
+          <AbilityCategoryChip category={ability.category} />
+        </header>
+
+        <div className="analysis-lines">
+          <div className="analysis-line">
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">A · Loadout</h3>
+            <dl className="mt-2 text-xs">
+              {([
+                ["Level", statsA.level],
+                ["Base", statsA.base],
+                ["Damage Potential", `${Math.round(statsA.dp * 1000) / 10}%`],
+                ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
+              ] as const).map(([label, value]) => (
                 <div key={label} className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                   <dt className="text-parch-300">{label}</dt>
                   <dd className="text-right font-mono text-parch-50">{value}</dd>
@@ -128,18 +140,14 @@ export function AnalysisTab() {
               ))}
             </dl>
           </div>
-          <div>
+          <div className="analysis-line">
             <div className="flex items-baseline justify-between gap-2">
-              <h3 className="text-xs font-medium text-parch-50">B · Comparison</h3>
-              <button
-                type="button"
-                onClick={() => setLineB({ ...loadout })}
-                className="border border-stone-750 px-2 py-0.5 text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              >
+              <h3 className="combat-section-title text-xs font-medium text-parch-50">B · Comparison</h3>
+              <button type="button" onClick={() => setLineB({ ...loadout })} className="combat-button border border-stone-750 px-2 py-0.5 text-xs text-parch-300">
                 Reset to A
               </button>
             </div>
-            <div className="mt-2 border-t border-stone-750">
+            <div className="mt-2">
               <NumberField label="Level" value={lineB.level} onChange={(level) => setLineB({ ...lineB, level })} />
               <NumberField label="Base" value={lineB.base} onChange={(base) => setLineB({ ...lineB, base })} />
               <NumberField label="Accuracy" value={lineB.accuracy} onChange={(accuracy) => setLineB({ ...lineB, accuracy })} suffix="%" />
@@ -148,56 +156,32 @@ export function AnalysisTab() {
           </div>
         </div>
 
-        <h3 className="mt-4 text-xs font-medium text-parch-50">
-          {entry.ability.name} <span className="font-normal text-parch-300">· {entry.ability.category}</span>
-        </h3>
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full border-t border-stone-750 text-sm">
+        <div className="analysis-results overflow-x-auto">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-stone-750/70 text-left text-xs text-parch-300">
-                <th className="py-1.5 pr-3 font-normal">Line</th>
-                <th className="py-1.5 pr-3 text-right font-normal">Expected</th>
-                <th className="py-1.5 pr-3 text-right font-normal">Min – max</th>
-                <th className="py-1.5 pr-3 text-right font-normal">Crit min – max</th>
-                <th className="py-1.5 text-right font-normal">Damage Potential</th>
+              <tr className="text-left text-xs text-parch-300">
+                <th>Line</th><th className="text-right">Expected</th><th className="text-right">Min – max</th><th className="text-right">Crit min – max</th><th className="text-right">Damage Potential</th>
               </tr>
             </thead>
             <tbody className="font-mono">
-              {(
-                [
-                  ["A", resultA],
-                  ["B", resultB],
-                ] as const
-              ).map(([line, result]) => (
-                <tr key={line} className="border-b border-stone-750/70 text-parch-50">
-                  <td className="py-1.5 pr-3 font-sans text-parch-300">{line}</td>
-                  <td className="py-1.5 pr-3 text-right text-base">{formatNumber(result.expected)}</td>
-                  <td className="py-1.5 pr-3 text-right">
-                    {formatNumber(result.min)} – {formatNumber(result.max)}
-                  </td>
-                  <td className="py-1.5 pr-3 text-right">
-                    {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
-                    {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
-                  </td>
-                  <td className="py-1.5 text-right">
-                    {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
-                  </td>
+              {([ ["A", resultA], ["B", resultB] ] as const).map(([line, result]) => (
+                <tr key={line}>
+                  <td className="font-sans text-parch-300">{line}</td>
+                  <td className="text-right text-base text-parch-50">{formatNumber(result.expected)}</td>
+                  <td className="text-right text-parch-50">{formatNumber(result.min)} – {formatNumber(result.max)}</td>
+                  <td className="text-right text-parch-50">{formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} – {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}</td>
+                  <td className="text-right text-parch-50">{Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%</td>
                 </tr>
               ))}
-              <tr className="text-parch-50">
-                <td className="py-1.5 pr-3 font-sans text-parch-300">B − A</td>
-                <td className="py-1.5 pr-3 text-right">
-                  {delta >= 0 ? "+" : ""}
-                  {Math.round(delta * 10) / 10}%
-                </td>
-                <td colSpan={3} className="py-1.5 text-right font-sans text-xs text-parch-300">
-                  expected-value change
-                </td>
+              <tr className="analysis-delta">
+                <td className="font-sans text-parch-300">B − A</td>
+                <td className="text-right text-gem-300">{delta >= 0 ? "+" : ""}{Math.round(delta * 10) / 10}%</td>
+                <td colSpan={3} className="text-right font-sans text-xs text-parch-300">expected-value change</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

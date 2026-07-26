@@ -8,8 +8,8 @@ import { RotationPlanner } from "./RotationPlanner";
 import { SetupTab } from "./SetupTab";
 
 const COMBAT_TABS = [
-  { id: "Quick", label: "Quick" },
-  { id: "Setup", label: "Setup" },
+  { id: "Quick", label: "Abilities" },
+  { id: "Setup", label: "Loadout" },
   { id: "Rotation", label: "Rotation" },
   { id: "Analysis", label: "Analysis" },
   { id: "Reference", label: "Reference" },

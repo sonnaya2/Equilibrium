@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type {
   ResearchCatalog,
   ResearchRegion,
@@ -15,8 +15,7 @@ import { GameIcon } from "@/components/GameIcon";
 
 import { regionCrestPath } from "@/lib/gameArt";
 import { clipProse } from "./ResearchSection";
-
-type Mode = "region" | "skill";
+import { useDataRegion } from "./DataWorkbench";
 
 const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   "runescape-wiki": "Wiki",
@@ -95,19 +94,6 @@ function InlineSource({ source }: { source: SourceReference | null | undefined }
   );
 }
 
-function Diamond({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`inline-block h-2.5 w-2.5 shrink-0 rotate-45 border ${
-        active
-          ? "border-gem-400 bg-gem-500"
-          : "border-gem-500/50 bg-stone-800"
-      }`}
-      aria-hidden
-    />
-  );
-}
-
 function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
   if (!methods.length) {
     return <p className="px-3 py-2 text-[13px] text-parch-100">No methods.</p>;
@@ -179,25 +165,34 @@ function MethodTable({ methods }: { methods: ResearchTrainingMethod[] }) {
 
 function RegionDetail({ region }: { region: ResearchRegion }) {
   return (
-    <article className="space-y-3">
-      <header>
-        <h2 className="text-xl font-semibold text-parch-50">
-          {cleanText(region.name)}
-          <InlineSource source={region.source} />
-        </h2>
-        <div className="mt-0.5 text-[11px] text-parch-100">
-          {availabilityLabel(region.availability)} · {region.content.length} content ·{" "}
-          {region.training.length} train · {region.upgrades.length} upgrades
+    <article className="data-region-detail">
+      <header className="data-region-detail__header">
+        <GameIcon
+          src={regionCrestPath(region.id)}
+          size={58}
+          className="data-region-detail__crest"
+        />
+        <div>
+          <h2>
+            {cleanText(region.name)}
+            <InlineSource source={region.source} />
+          </h2>
+          <p>
+            {availabilityLabel(region.availability)} · {region.content.length} content ·{" "}
+            {region.training.length} train · {region.upgrades.length} upgrades
+          </p>
         </div>
       </header>
 
-      <section className="panel">
+      <div className="data-region-detail__grid">
+      <div className="data-region-detail__primary">
+      <section className="panel data-region-panel data-region-panel--content">
         <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Content</span>
-          <span className="font-normal text-parch-100">{region.content.length}</span>
+          <span className="font-normal text-parch-100">{region.content.length} entries</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="data-table w-full min-w-0">
+          <table className="data-table data-region-content-table w-full min-w-0">
             <thead>
               <tr>
                 <th>Name</th>
@@ -219,27 +214,39 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         </div>
       </section>
 
-      <section className="panel">
+      <section className="panel data-region-panel data-region-panel--training">
+        <div className="panel-head flex items-baseline justify-between gap-3">
+          <span>Training</span>
+          <span className="font-normal text-parch-100">{region.training.length}</span>
+        </div>
+        <MethodTable methods={region.training} />
+      </section>
+      </div>
+
+      <section className="panel data-region-panel data-region-panel--upgrades">
         <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Upgrades</span>
-          <span className="font-normal text-parch-100">{region.upgrades.length}</span>
+          <span className="font-normal text-parch-100">{region.upgrades.length} entries</span>
         </div>
-        <div>
+        <div className="data-upgrades-list">
           {region.upgrades.length ? (
             region.upgrades.map((upgrade, index) => (
               <div
                 key={`upgrade-${index}-${upgrade.name}`}
-                className={`flex w-full flex-wrap items-baseline gap-x-2 gap-y-0.5 border-b border-stone-750/70 px-3 py-1.5 last:border-b-0 ${
+                className={`data-upgrade-row ${
                   index % 2 === 1 ? "bg-stone-zebra" : ""
                 }`}
               >
-                <span className="text-[13px] font-medium text-parch-50">
-                  {cleanText(upgrade.name)}
-                  <InlineSource source={upgrade.source} />
+                <span className="data-upgrade-row__mark" aria-hidden />
+                <span className="min-w-0">
+                  <span className="data-upgrade-row__name">
+                    {cleanText(upgrade.name)}
+                    <InlineSource source={upgrade.source} />
+                  </span>
+                  {upgrade.category ? (
+                    <span className="data-upgrade-row__meta">{upgrade.category}</span>
+                  ) : null}
                 </span>
-                {upgrade.category ? (
-                  <span className="text-[11px] text-parch-300">{upgrade.category}</span>
-                ) : null}
               </div>
             ))
           ) : (
@@ -247,30 +254,23 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           )}
         </div>
       </section>
-
-      <section className="panel">
-        <div className="panel-head flex items-baseline justify-between gap-3">
-          <span>Training</span>
-          <span className="font-normal text-parch-100">{region.training.length}</span>
-        </div>
-        <MethodTable methods={region.training} />
-      </section>
+      </div>
     </article>
   );
 }
 
-function SkillDetail({ skill }: { skill: ResearchSkill }) {
+function SkillDetail({ skill, regionName }: { skill: ResearchSkill; regionName: string }) {
   return (
-    <article className="space-y-3">
-      <header>
-        <h2 className="text-xl font-semibold text-parch-50">{skill.name}</h2>
-        <div className="mt-0.5 text-[11px] text-parch-100">
-          {skill.methods.length} methods · {skill.regions.length} regions
-          {skill.regions.length ? ` · ${cleanText(skill.regions.join(", "))}` : ""}
-          {" · base game rates"}
+    <article className="data-region-detail">
+      <header className="data-region-detail__header data-region-detail__header--skill">
+        <div>
+        <h2>{skill.name}</h2>
+        <p>
+          {skill.methods.length} methods in {cleanText(regionName)} · base game rates
+        </p>
         </div>
       </header>
-      <section className="panel">
+      <section className="panel data-region-panel">
         <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Training</span>
           <span className="font-normal text-parch-100">{skill.methods.length}</span>
@@ -294,14 +294,17 @@ function methodSearchText(method: ResearchTrainingMethod): string {
   ].join(" ");
 }
 
-export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
+export function DataRegionRail({
+  catalog,
+  regionId,
+  onChange,
+}: {
+  catalog: ResearchCatalog;
+  regionId: string;
+  onChange: (regionId: string) => void;
+}) {
   const { build, loaded } = useBuild();
-  const [mode, setMode] = useState<Mode>("region");
-  const [query, setQuery] = useState("");
   const [mineOnly, setMineOnly] = useState(false);
-  const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
-  const [skillId, setSkillId] = useState(catalog.skills[0]?.id ?? "");
-  const normalizedQuery = query.trim().toLowerCase();
 
   const unlockedIds = useMemo(() => {
     if (!loaded || !mineOnly) return null;
@@ -312,170 +315,159 @@ export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
     );
   }, [build, catalog.regions, loaded, mineOnly]);
 
-  const regionSearchText = useMemo(
-    () =>
-      new Map(
-        catalog.regions.map((region) => [
-          region.id,
-          [
-            region.name,
-            region.id,
-            ...region.aliases,
-            ...region.skills,
-            ...region.areas,
-            ...region.content.flatMap((row) => [row.name, row.kind]),
-            ...region.upgrades.flatMap((row) => [row.name, row.category ?? ""]),
-            ...region.training.map(methodSearchText),
-          ]
-            .join(" ")
-            .toLowerCase(),
-        ]),
-      ),
-    [catalog.regions],
-  );
-
-  const skillSearchText = useMemo(
-    () =>
-      new Map(
-        catalog.skills.map((skill) => [
-          skill.id,
-          [skill.name, ...skill.regions, ...skill.methods.map(methodSearchText)]
-            .join(" ")
-            .toLowerCase(),
-        ]),
-      ),
-    [catalog.skills],
-  );
-
   const filteredRegions = useMemo(() => {
-    let rows = catalog.regions;
-    if (unlockedIds) rows = rows.filter((region) => unlockedIds.has(region.id as RegionId));
-    if (!normalizedQuery) return rows;
-    return rows.filter((region) => regionSearchText.get(region.id)?.includes(normalizedQuery));
-  }, [catalog.regions, regionSearchText, normalizedQuery, unlockedIds]);
+    if (!unlockedIds) return catalog.regions;
+    return catalog.regions.filter((region) => unlockedIds.has(region.id as RegionId));
+  }, [catalog.regions, unlockedIds]);
 
-  const filteredSkills = useMemo(() => {
-    let rows = catalog.skills;
-    if (unlockedIds) {
-      rows = rows.filter((skill) => skill.regions.some((id) => unlockedIds.has(id as RegionId)));
+  const toggleMineOnly = () => {
+    const next = !mineOnly;
+    setMineOnly(next);
+    if (next && loaded && !isRegionUnlocked(build, regionId as RegionId)) {
+      const first = catalog.regions.find((region) =>
+        isRegionUnlocked(build, region.id as RegionId),
+      );
+      if (first) onChange(first.id);
     }
-    if (!normalizedQuery) return rows;
-    return rows.filter((skill) => skillSearchText.get(skill.id)?.includes(normalizedQuery));
-  }, [catalog.skills, skillSearchText, normalizedQuery, unlockedIds]);
+  };
 
-  const selectedRegion = catalog.regions.find((region) => region.id === regionId) ?? filteredRegions[0] ?? catalog.regions[0];
-  const selectedSkill = catalog.skills.find((skill) => skill.id === skillId) ?? filteredSkills[0] ?? catalog.skills[0];
+  return (
+    <div className="data-selector-frame">
+      <div role="listbox" aria-label="Regions" className="data-selector-rail">
+        {filteredRegions.map((region) => {
+          const active = regionId === region.id;
+          return (
+            <button
+              key={region.id}
+              type="button"
+              role="option"
+              aria-selected={active}
+              aria-label={`${cleanText(region.name)}, ${region.training.length} training methods`}
+              onClick={() => onChange(region.id)}
+              className={`data-region-tile${active ? " is-on" : ""}`}
+            >
+              <GameIcon src={regionCrestPath(region.id)} size={34} />
+              <span className="data-region-tile__name">{cleanText(region.name)}</span>
+              <span className="data-region-tile__count">{region.training.length}</span>
+            </button>
+          );
+        })}
+        {filteredRegions.length === 0 ? <p className="data-selector-empty">Nothing matches.</p> : null}
+      </div>
+      <button
+        type="button"
+        onClick={toggleMineOnly}
+        aria-pressed={mineOnly}
+        disabled={!loaded}
+        title={loaded ? "Filter to your Map/Build unlocks" : "Loading picks…"}
+        className={`comp-facet data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
+      >
+        My regions
+      </button>
+    </div>
+  );
+}
+
+export function ResearchBrowser({ catalog }: { catalog: ResearchCatalog }) {
+  const selectedRegion = useDataRegion() ?? catalog.regions[0];
+  const [query, setQuery] = useState("");
+  const [skillId, setSkillId] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+
+  useEffect(() => setSkillId(""), [selectedRegion?.id]);
+
+  const regionSkills = useMemo(() => {
+    if (!selectedRegion) return [];
+    const names = new Set(selectedRegion.skills.map((name) => name.toLowerCase()));
+    return catalog.skills.filter(
+      (skill) => names.has(skill.name.toLowerCase()) || names.has(skill.id.toLowerCase()),
+    );
+  }, [catalog.skills, selectedRegion]);
+
+  const selectedSkill = regionSkills.find((skill) => skill.id === skillId) ?? null;
+
+  const filteredRegion = useMemo(() => {
+    if (!selectedRegion || !normalizedQuery) return selectedRegion;
+    const matches = (values: unknown[]) =>
+      values.filter(Boolean).join(" ").toLowerCase().includes(normalizedQuery);
+    return {
+      ...selectedRegion,
+      content: selectedRegion.content.filter((row) =>
+        matches([row.name, row.kind, row.detail, row.source?.title]),
+      ),
+      upgrades: selectedRegion.upgrades.filter((row) =>
+        matches([row.name, row.category, row.detail, ...row.requirements]),
+      ),
+      training: selectedRegion.training.filter((method) =>
+        methodSearchText(method).toLowerCase().includes(normalizedQuery),
+      ),
+    };
+  }, [normalizedQuery, selectedRegion]);
+
+  const selectedSkillInRegion = useMemo(() => {
+    if (!selectedRegion || !selectedSkill || !filteredRegion) return null;
+    return {
+      ...selectedSkill,
+      methods: filteredRegion.training.filter(
+        (method) => method.skill.toLowerCase() === selectedSkill.name.toLowerCase(),
+      ),
+    };
+  }, [filteredRegion, selectedRegion, selectedSkill]);
 
   return (
     /* Nested .data-screen under the workbench shell breaks the flex height chain and freezes nav. */
-    <section className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 flex-wrap items-center gap-2 py-1">
-        <div className="flex gap-1" role="group" aria-label="Browse data by">
-          <button
-            type="button"
-            onClick={() => setMode("region")}
-            aria-pressed={mode === "region"}
-            className={`comp-facet${mode === "region" ? " is-on" : ""}`}
-          >
-            Regions
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("skill")}
-            aria-pressed={mode === "skill"}
-            className={`comp-facet${mode === "skill" ? " is-on" : ""}`}
-          >
-            Skills
-          </button>
-        </div>
-        <button
-          type="button"
-          onClick={() => setMineOnly((on) => !on)}
-          aria-pressed={mineOnly}
-          disabled={!loaded}
-          title={loaded ? "Filter to your Map/Build unlocks" : "Loading picks…"}
-          className={`comp-facet disabled:cursor-not-allowed disabled:opacity-40${
-            mineOnly ? " is-on" : ""
-          }`}
+    <section className="data-browser flex min-h-0 flex-1 flex-col">
+      <div className="data-browser__toolbar">
+        <div
+          className="data-skill-filters"
+          role="listbox"
+          aria-label={`Skills in ${selectedRegion?.name ?? "selected region"}`}
         >
-          My regions
-        </button>
+          <button
+            type="button"
+            role="option"
+            aria-selected={!selectedSkill}
+            className={`data-skill-filter${!selectedSkill ? " is-on" : ""}`}
+            onClick={() => setSkillId("")}
+          >
+            All skills
+          </button>
+          {regionSkills.map((skill) => {
+            const active = selectedSkill?.id === skill.id;
+            const methodCount = selectedRegion?.training.filter(
+              (method) => method.skill.toLowerCase() === skill.name.toLowerCase(),
+            ).length ?? 0;
+            return (
+              <button
+                key={skill.id}
+                type="button"
+                role="option"
+                aria-selected={active}
+                className={`data-skill-filter${active ? " is-on" : ""}`}
+                onClick={() => setSkillId(skill.id)}
+              >
+                {skill.name} <span>{methodCount}</span>
+              </button>
+            );
+          })}
+        </div>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={mode === "region" ? "region, boss, item, skill" : "skill, method, location"}
-          aria-label="Search"
-          className="field-inset ml-auto min-w-[12rem] flex-1 px-2 py-1 text-sm text-parch-50 placeholder:text-parch-400 md:max-w-sm"
+          placeholder={`Search within ${selectedRegion?.name ?? "region"}`}
+          aria-label="Search selected region"
+          className="field-inset data-browser__search"
         />
       </div>
 
-      {/* Prism twin desk: crest rail | stage | full sources */}
-      <div className="research-browse-desk">
-        <aside className="comp-crest-rail border-0">
-          <p className="border-b border-stone-750 px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-parch-100">
-            {mode === "region" ? "Regions" : "Skills"}
-          </p>
-          <div
-            role="listbox"
-            aria-label={mode === "region" ? "Regions" : "Skills"}
-            className="min-h-0 flex-1"
-          >
-            {mode === "region"
-              ? filteredRegions.map((region) => {
-                  const active = selectedRegion?.id === region.id;
-                  return (
-                    <button
-                      key={region.id}
-                      type="button"
-                      role="option"
-                      aria-selected={active}
-                      onClick={() => setRegionId(region.id)}
-                      className={`comp-crest-leaf w-full${active ? " is-on" : ""}`}
-                    >
-                      <Diamond active={active} />
-                      <GameIcon src={regionCrestPath(region.id)} size={16} className="shrink-0" />
-                      <span className="min-w-0 flex-1 truncate text-[13px]">
-                        {cleanText(region.name)}
-                      </span>
-                      <span className="font-mono text-[11px] text-parch-300">
-                        {region.training.length}
-                      </span>
-                    </button>
-                  );
-                })
-              : filteredSkills.map((skill) => {
-                  const active = selectedSkill?.id === skill.id;
-                  return (
-                    <button
-                      key={skill.id}
-                      type="button"
-                      role="option"
-                      aria-selected={active}
-                      onClick={() => setSkillId(skill.id)}
-                      className={`comp-crest-leaf w-full${active ? " is-on" : ""}`}
-                    >
-                      <Diamond active={active} />
-                      <span className="min-w-0 flex-1 truncate text-[13px]">{skill.name}</span>
-                      <span className="font-mono text-[11px] text-parch-300">
-                        {skill.methods.length}
-                      </span>
-                    </button>
-                  );
-                })}
-            {(mode === "region" ? filteredRegions.length : filteredSkills.length) === 0 ? (
-              <p className="px-2.5 py-2 text-[12px] text-parch-100">Nothing matches.</p>
-            ) : null}
-          </div>
-        </aside>
-        <div className="comp-stage-col min-w-0 px-2.5 py-2">
-          {mode === "region" && selectedRegion ? (
-            <RegionDetail region={selectedRegion} />
-          ) : mode === "skill" && selectedSkill ? (
-            <SkillDetail skill={selectedSkill} />
+      <div className="data-browser__stage">
+          {selectedSkillInRegion && selectedRegion ? (
+            <SkillDetail skill={selectedSkillInRegion} regionName={selectedRegion.name} />
+          ) : filteredRegion ? (
+            <RegionDetail region={filteredRegion} />
           ) : (
             <p className="py-6 text-[13px] text-parch-100">Select a record.</p>
           )}
-        </div>
       </div>
     </section>
   );

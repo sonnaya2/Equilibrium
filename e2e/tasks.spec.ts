@@ -1,62 +1,100 @@
 import { expect, test } from "@playwright/test";
 
-test("tasks shows provisional banner or loaded count", async ({ page }) => {
+test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
+  const browserErrors: string[] = [];
+  page.on("pageerror", (error) => browserErrors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") browserErrors.push(message.text());
+  });
   await page.goto("/tasks");
-  // Equilibrium list is empty pre-launch — Catalyst stand-in shows Provisional.
-  // When real tasks ship, the count line is enough. Never pin task names.
-  const provisional = page.getByText(/Provisional/i);
-  const loaded = page.getByText(/\d+ tasks loaded/);
-  await expect(provisional.or(loaded).first()).toBeVisible();
+
+  await expect(page.getByRole("heading", { name: "Tasks", exact: true })).toBeVisible();
+  await expect(page.getByText(/Catalyst League baseline/i)).toBeVisible();
+  await expect(page.getByText(/[\d,]+ tasks · completion/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    /runescape\.wiki\/w\/Catalyst_League\/Tasks/,
+  );
+
+  const rsn = page.getByRole("textbox", { name: "RuneScape name" });
+  await expect(rsn).toBeVisible();
+  await page.evaluate(() => {
+    window.open = () => null;
+  });
+  await rsn.fill("JavaHomely");
+  await page.getByRole("button", { name: "Open WikiSync" }).click();
+  await expect(page.getByRole("status")).toContainText("WikiSync");
+  await page.reload();
+  await expect(page.getByRole("textbox", { name: "RuneScape name" })).toHaveValue("JavaHomely");
+
+  await expect(page.getByRole("navigation", { name: "Primary" })).toContainText("Overview");
+  await expect(page.locator("body > footer")).toContainText("RuneScape is a trademark of Jagex Ltd.");
+  await expect(page.locator("[data-nextjs-dialog]")).toHaveCount(0);
+  expect(browserErrors).toEqual([]);
 });
 
-test("tasks points section is present", async ({ page }) => {
+test("task filters compose and completion state persists in the page model", async ({ page }) => {
   await page.goto("/tasks");
-  // Points ladder is page chrome. "Task list" may stay as h2 or fold into twin-desk
-  // table/rail chrome — accept heading, loaded count, or task filters.
-  const points = page.getByRole("heading", { name: /^Points$/i }).or(page.getByText(/^Points$/));
-  await expect(points.first()).toBeVisible();
 
-  const taskListHeading = page.getByRole("heading", { name: /Task list/i });
-  const loaded = page.getByText(/\d+ tasks loaded/);
-  const taskChrome = page.getByLabel(/Filter (tasks|by (tier|region))/i);
-  await expect(taskListHeading.or(loaded).or(taskChrome).first()).toBeVisible();
+  const buildOnly = page.getByRole("button", { name: "My build only" });
+  await expect(buildOnly).toHaveAttribute("aria-pressed", "true");
+
+  const firstCard = page.locator("[data-task-id]").first();
+  const title = (await firstCard.locator(".task-card__title").innerText()).trim();
+  await page.getByRole("searchbox", { name: "Search" }).fill(title);
+  await page.getByRole("button", { name: "Master", exact: true }).click();
+  await expect(page.locator("[data-task-id]")).toHaveCount(1);
+
+  const complete = page.getByRole("button", { name: /Mark complete:/ }).first();
+  const completedId = await page.locator("[data-task-id]").first().getAttribute("data-task-id");
+  await complete.click();
+  await expect(page.getByRole("button", { name: /Mark incomplete:/ }).first()).toBeVisible();
+  await expect.poll(() => page.evaluate(async () => new Promise<string[]>((resolve, reject) => {
+    const open = indexedDB.open("equilibrium");
+    open.onerror = () => reject(open.error);
+    open.onsuccess = () => {
+      const read = open.result
+        .transaction("task-progress", "readonly")
+        .objectStore("task-progress")
+        .get("progress");
+      read.onerror = () => reject(read.error);
+      read.onsuccess = () => resolve(read.result?.completed ?? []);
+    };
+  }))).toContain(completedId);
+
+  await page.getByRole("button", { name: "Clear filters" }).click();
+  await expect(buildOnly).toHaveAttribute("aria-pressed", "false");
+  await page.getByRole("combobox", { name: "Skill filter" }).selectOption({ label: "Agility" });
+  await expect(page.getByText(/results/).first()).toBeVisible();
+  await expect(page.locator("[data-task-id]").first()).toBeVisible();
 });
 
-test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", async ({ page }) => {
+test("completion rates and pagination remain first-class", async ({ page }) => {
   await page.goto("/tasks");
-  const loaded = page.getByText(/\d+ tasks loaded/);
-  if (!(await loaded.isVisible().catch(() => false))) return;
 
-  // Build-scoped filter is on by default when the stand-in list loads.
-  const myBuild = page.getByRole("button", { name: "My build" });
-  if (await myBuild.isVisible().catch(() => false)) {
-    await expect(myBuild).toHaveAttribute("aria-pressed", "true");
-  }
+  await page.getByRole("button", { name: "My build only" }).click();
+  await page.getByLabel("Sort").selectOption("rarest");
+  await expect(page.getByText("<0.1% of players").first()).toBeVisible();
 
-  // Region filter: Cipher Gallery uses nested crest rail
-  // (group aria-label="Filter by region") with All + region crest buttons.
-  // Soft — accept rail group or legacy select. Never pin region names.
-  const regionRail = page.getByLabel(/^Filter by region$/i);
-  if (await regionRail.isVisible().catch(() => false)) {
-    await expect(regionRail).toBeVisible();
-    const allLeaf = page.getByRole("button", { name: /All (unlocked|regions)/i });
-    if (await allLeaf.isVisible().catch(() => false)) {
-      await expect(allLeaf).toBeVisible();
-    }
-  }
+  const pager = page.getByRole("navigation", { name: "Task pages" });
+  await expect(pager).toContainText(/Page 1 of \d+/);
+  await pager.getByRole("button", { name: "Next" }).click();
+  await expect(pager).toContainText(/Page 2 of \d+/);
+  await expect(page.locator("[data-task-id]").first()).toBeVisible();
+});
 
-  // Hover a task tile → top dock with Wiki Comp% deep-link (hash id).
-  // Virtualized gallery only mounts viewport tiles — hover first rendered complete control.
-  // Never pin rates or task names.
-  const tile = page.getByRole("button", { name: /Mark (complete|incomplete):/i }).first();
-  if (await tile.isVisible().catch(() => false)) {
-    await tile.hover();
-    const wikiHref = /runescape\.wiki\/w\/Catalyst_League\/Tasks#\d+/;
-    const compByLabel = page.getByRole("link", { name: /Wiki Comp%/i });
-    const compByHref = page.locator(`a[href*="Catalyst_League/Tasks#"]`);
-    const compLink = compByLabel.or(compByHref).first();
-    if (await compLink.isVisible().catch(() => false)) {
-      await expect(compLink).toHaveAttribute("href", wikiHref);
-    }
-  }
+test("pinning moves a task to the top and persists", async ({ page }) => {
+  await page.goto("/tasks");
+  await page.evaluate(() => localStorage.removeItem("eq:task-pins:v1"));
+  await page.reload();
+
+  const cards = page.locator("[data-task-id]");
+  const target = cards.nth(1);
+  const id = await target.getAttribute("data-task-id");
+  await target.getByRole("button", { name: /^Pin / }).click();
+
+  await expect(cards.first()).toHaveAttribute("data-task-id", id ?? "");
+  await expect(cards.first().getByRole("button", { name: /^Unpin / })).toBeVisible();
+  await page.reload();
+  await expect(cards.first()).toHaveAttribute("data-task-id", id ?? "");
 });

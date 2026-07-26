@@ -8,6 +8,7 @@ import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
 import { equipmentIconPath, regionCrestPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { setEffectsSummary } from "@/combat/shared/equipment";
 import {
   clearEquipment,
@@ -70,12 +71,14 @@ const SLOT_SHORT: Record<EquipmentSlot, string> = {
   aura: "Aura",
 };
 
-/** Paper-doll grid positions (CSS grid 3× rows). */
-const DOLL_LAYOUT: Array<Array<EquipmentSlot | null>> = [
+type DollCell = EquipmentSlot | "weapons" | null;
+
+/** Equipment grid positions. Weapons render as one linked block. */
+const DOLL_LAYOUT: DollCell[][] = [
   [null, "helmet", null],
   ["cape", "amulet", "ammo"],
-  ["mainhand", "body", "offhand"],
-  [null, "twohand", null],
+  [null, "body", null],
+  ["weapons"],
   ["gloves", "legs", "boots"],
   [null, "ring", null],
   [null, "pocket", null],
@@ -144,6 +147,49 @@ function emptyPickerCopy(activeSlot: EquipmentSlot | null): string {
   return "No wearables for this slot/filter.";
 }
 
+function EmptySlotMark() {
+  return (
+    <svg className="equipment-slot-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="m7 25 18-18M7 7l18 18M6 10l4-4 3 3M19 23l3 3 4-4M22 6l4 4-3 3M9 19l-3 3 4 4" />
+      <circle cx="16" cy="16" r="3" />
+    </svg>
+  );
+}
+
+function EquipmentSlotButton({
+  slot,
+  item,
+  selected,
+  disabled = false,
+  onClick,
+}: {
+  slot: EquipmentSlot;
+  item?: EquipmentRecord;
+  selected: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  const empty = item == null;
+  const noBonuses = item != null && !hasSourcedBonuses(item);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={disabled ? `${SLOT_LABELS[slot]} unavailable while Two-hand is equipped` : SLOT_LABELS[slot]}
+      className={`equipment-slot${selected ? " is-selected" : ""}${empty ? " is-empty" : " is-filled"}${disabled ? " is-disabled" : ""}`}
+    >
+      <span className="equipment-slot__label">{SLOT_LABELS[slot]}</span>
+      <span className="equipment-slot__well">
+        {item ? <GameIcon src={equipmentIconPath(item.id)} size={28} /> : <EmptySlotMark />}
+      </span>
+      <span className="equipment-slot__name">{item?.name ?? (disabled ? "Locked" : "Empty")}</span>
+      {item?.tier != null ? <span className="equipment-slot__tier">T{item.tier}</span> : null}
+      {noBonuses ? <span className="equipment-slot__note">stats not sourced</span> : null}
+    </button>
+  );
+}
+
 /** Paper doll + item picker. Item bonuses unsourced — placement is organisational. */
 export function GearPanel({
   loadout,
@@ -169,7 +215,6 @@ export function GearPanel({
   const activeItem = activeSlot ? byId(slots[activeSlot]) : undefined;
 
   const matchStyle = styleBrowse === "setup";
-  const styleFilterOn = styleBrowse !== "all";
   const browseStyle = effectiveBrowseStyle(styleBrowse, loadout.style);
 
   /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
@@ -247,63 +292,51 @@ export function GearPanel({
     setLoadout(equipInSlot(loadout, slot, null));
   };
 
-  const countLine = `${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"} · style filter ${styleFilterOn ? "on" : "off"}`;
+  const countLine = `${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"} · ${browseStyle ? STYLE_LABELS[browseStyle] : "all styles"}`;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
-      <div>
-        <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
-        <p className="mt-1 text-xs text-parch-300">Wearables need a slot · tier drives base AD</p>
+    <div className="gear-layout grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
+      <div className="combat-frame paper-doll">
+        <CombatFrameCorners />
+        <h2 className="combat-section-title text-sm font-medium text-parch-50">Loadout</h2>
 
-        <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
+        <div className="paper-doll-grid mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
           {DOLL_LAYOUT.flatMap((row, rowIdx) =>
             row.map((slot, colIdx) => {
               if (!slot) {
-                return <div key={`pad-${rowIdx}-${colIdx}`} className="min-h-[2.75rem]" />;
+                return <div key={`pad-${rowIdx}-${colIdx}`} className="equipment-slot-pad" />;
+              }
+              if (slot === "weapons") {
+                return (
+                  <div key="weapons" className="weapon-slot-block" role="group" aria-label="Weapon slots">
+                    {(["mainhand", "twohand", "offhand"] as const).map((weaponSlot) => {
+                      const item = byId(slots[weaponSlot]);
+                      const disabled = weaponSlot === "offhand" && Boolean(slots.twohand);
+                      return (
+                        <EquipmentSlotButton
+                          key={weaponSlot}
+                          slot={weaponSlot}
+                          item={item}
+                          selected={activeSlot === weaponSlot}
+                          disabled={disabled}
+                          onClick={() => setActiveSlot(activeSlot === weaponSlot ? null : weaponSlot)}
+                        />
+                      );
+                    })}
+                  </div>
+                );
               }
               const id = slots[slot] ?? null;
               const item = byId(id);
               const selected = activeSlot === slot;
-              const empty = !item;
-              const noBonuses = item != null && !hasSourcedBonuses(item);
               return (
-                <button
+                <EquipmentSlotButton
                   key={slot}
-                  type="button"
+                  slot={slot}
+                  item={item}
+                  selected={selected}
                   onClick={() => setActiveSlot(selected ? null : slot)}
-                  title={SLOT_LABELS[slot]}
-                  className={`min-h-[2.75rem] border px-1.5 py-1 text-left text-[11px] leading-tight ${
-                    selected
-                      ? "border-gem-400 bg-stone-850 text-parch-50"
-                      : empty
-                        ? "border-dashed border-stone-750 text-parch-300 hover:border-stone-carve hover:text-parch-100"
-                        : "border-stone-750 bg-stone-900 text-parch-50 hover:bg-stone-850"
-                  }`}
-                >
-                  <span className="flex items-start gap-1">
-                    {item ? (
-                      <GameIcon
-                        src={equipmentIconPath(item.id)}
-                        size={18}
-                        className="mt-0.5 shrink-0"
-                      />
-                    ) : null}
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[11px] uppercase tracking-wide text-parch-300">
-                        {SLOT_LABELS[slot]}
-                      </span>
-                      <span className="block truncate">{item?.name ?? "Empty"}</span>
-                      {item?.tier != null ? (
-                        <span className="block font-mono text-[11px] text-parch-100">
-                          T{item.tier}
-                        </span>
-                      ) : null}
-                      {noBonuses ? (
-                        <span className="block text-[11px] text-parch-300">no bonus numbers</span>
-                      ) : null}
-                    </span>
-                  </span>
-                </button>
+                />
               );
             }),
           )}
@@ -313,7 +346,7 @@ export function GearPanel({
           const sets = setEffectsSummary(loadout);
           if (sets.length === 0) return null;
           return (
-            <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">
+            <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
               <div className="text-[11px] uppercase tracking-wide text-parch-300">Set pieces equipped</div>
               <ul className="mt-1 space-y-0.5 text-parch-100">
                 {sets.map((s) => (
@@ -324,14 +357,14 @@ export function GearPanel({
                 ))}
               </ul>
               <p className="mt-1 text-[11px] text-parch-300">
-                Tectonic / Tumeken set crits apply from gear
+                Set crit is included.
               </p>
             </div>
           );
         })()}
 
         {activeItem ? (
-          <div className="mt-3 border border-stone-750 bg-stone-900 px-2 py-1.5 text-xs">
+          <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <GameIcon src={equipmentIconPath(activeItem.id)} size={24} className="shrink-0" />
               <span className="text-parch-50">{activeItem.name}</span>
@@ -357,7 +390,7 @@ export function GearPanel({
                   .join(" · ")}
               </p>
             ) : (
-              <p className="mt-0.5 text-parch-300">no bonus numbers</p>
+              <p className="mt-0.5 text-parch-300">stats not sourced</p>
             )}
           </div>
         ) : null}
@@ -367,7 +400,7 @@ export function GearPanel({
             <button
               type="button"
               onClick={() => clearSlot(activeSlot)}
-              className="border border-stone-750 px-2 py-1 text-parch-100 hover:text-parch-50"
+              className="combat-button border border-stone-750 px-2 py-1 text-parch-100 hover:text-parch-50"
             >
               Clear {SLOT_LABELS[activeSlot]}
             </button>
@@ -375,7 +408,7 @@ export function GearPanel({
           <button
             type="button"
             onClick={() => setLoadout(clearEquipment(loadout))}
-            className="border border-stone-750 px-2 py-1 text-parch-100 hover:text-parch-50"
+            className="combat-button border border-stone-750 px-2 py-1 text-parch-100 hover:text-parch-50"
           >
             Clear all gear
           </button>
@@ -389,10 +422,12 @@ export function GearPanel({
         <div className="mt-3 border-t border-stone-750 lg:hidden">
           {EQUIPMENT_SLOTS.map((slot) => {
             const item = byId(slots[slot]);
+            const disabled = slot === "offhand" && Boolean(slots.twohand);
             return (
               <button
                 key={slot}
                 type="button"
+                disabled={disabled}
                 onClick={() => setActiveSlot(slot)}
                 className={`grid w-full grid-cols-[7rem_1fr] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs ${
                   activeSlot === slot ? "bg-stone-850 text-parch-50" : "text-parch-100"
@@ -400,9 +435,9 @@ export function GearPanel({
               >
                 <span className="text-parch-300">{SLOT_LABELS[slot]}</span>
                 <span className="min-w-0">
-                  <span className="block truncate">{item?.name ?? "Empty"}</span>
+                  <span className="block truncate">{item?.name ?? (disabled ? "Locked" : "Empty")}</span>
                   {item && !hasSourcedBonuses(item) ? (
-                    <span className="block text-[11px] text-parch-300">no bonus numbers</span>
+                    <span className="block text-[11px] text-parch-300">stats not sourced</span>
                   ) : null}
                 </span>
               </button>
@@ -411,8 +446,9 @@ export function GearPanel({
         </div>
       </div>
 
-      <div>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="combat-frame wearables-browser">
+        <CombatFrameCorners />
+        <div className="gear-filterbar flex flex-wrap items-center gap-2 text-xs">
           <label className="flex items-center gap-1 text-parch-100">
             Region
             <select
@@ -465,7 +501,8 @@ export function GearPanel({
                   setSortKey(key);
                   setShowAllWearables(false);
                 }}
-                className={`border px-2 py-1 capitalize ${
+                aria-pressed={sortKey === key}
+            className={`combat-button border px-2 py-1 capitalize ${
                   sortKey === key
                     ? "border-stone-750 bg-stone-850 text-parch-50"
                     : "border-stone-750 text-parch-100 hover:text-parch-50"
@@ -476,7 +513,7 @@ export function GearPanel({
             ))}
           </div>
           {activeSlot ? (
-            <span className="text-gem-400">Filtering: {SLOT_LABELS[activeSlot]}</span>
+            <span className="text-gem-400">{SLOT_LABELS[activeSlot]} only</span>
           ) : (
             <span className="text-parch-300">All wearable slots</span>
           )}
@@ -493,9 +530,9 @@ export function GearPanel({
             aria-pressed={styleBrowse === "setup"}
             onClick={() => setStyleBrowseAndReset("setup")}
             className="facet-chip"
-            title={`Follow setup (${STYLE_LABELS[loadout.style]})`}
+            title={`Follow loadout (${STYLE_LABELS[loadout.style]})`}
           >
-            Setup
+            Loadout
           </button>
           <button
             type="button"
@@ -504,7 +541,7 @@ export function GearPanel({
             className="facet-chip"
             title="Browse all styles"
           >
-            Browse all styles
+            All styles
           </button>
           {COMBAT_STYLES.map((s) => (
             <button
@@ -513,7 +550,7 @@ export function GearPanel({
               aria-pressed={styleBrowse === s}
               onClick={() => setStyleBrowseAndReset(s)}
               className="facet-chip flex items-center gap-1"
-              title={`Browse ${STYLE_LABELS[s]} only (does not change Setup)`}
+              title={`Show ${STYLE_LABELS[s]} only`}
             >
               <GameIcon src={styleIconPath(s)} size={12} />
               {STYLE_LABELS[s]}
@@ -521,8 +558,8 @@ export function GearPanel({
           ))}
         </div>
 
-        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
+        <div className="wearables-heading mt-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">
             Wearables
           </h3>
           <span className="text-xs text-parch-300">
@@ -534,7 +571,7 @@ export function GearPanel({
                 : ""}
           </span>
         </div>
-        <div className="mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
+        <div className="wearables-list mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
             <p className="px-2 py-2 text-xs text-parch-300">
               {emptyPickerCopy(activeSlot)}
@@ -550,7 +587,7 @@ export function GearPanel({
                     key={record.id}
                     type="button"
                     onClick={() => equip(record)}
-                    className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
+                    className={`wearable-row grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
                       equipped
                         ? "bg-stone-850 text-parch-50"
                         : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
@@ -573,7 +610,7 @@ export function GearPanel({
                         <span className="text-[11px] capitalize text-parch-300">{styleTag}</span>
                       ) : null}
                       {noBonuses ? (
-                        <span className="text-[11px] text-parch-300">no bonus numbers</span>
+                        <span className="text-[11px] text-parch-300">stats not sourced</span>
                       ) : null}
                     </span>
                     <span className="flex items-center gap-1.5 text-parch-100">
@@ -602,7 +639,7 @@ export function GearPanel({
           )}
         </div>
 
-        <div className="mt-4 border-t border-stone-750 pt-2">
+        <div className="unlocks-panel mt-4 border-t border-stone-750 pt-2">
           <button
             type="button"
             aria-expanded={unlocksOpen}
@@ -613,11 +650,11 @@ export function GearPanel({
               Unlocks &amp; materials · {unlockRows.length}
             </h3>
             <span className="text-xs text-gem-400">
-              {unlocksOpen ? "Hide" : "Show"} · pin only
+              {unlocksOpen ? "Hide pins" : "Show pins"}
             </span>
           </button>
           <p className="mt-1 text-xs text-parch-300">
-            No slot — materials, codices, set aggregates (pin only)
+            Materials and codices can be pinned, not equipped.
           </p>
           {unlocksOpen ? (
             <div className="mt-1 max-h-48 overflow-y-auto border-t border-stone-750">

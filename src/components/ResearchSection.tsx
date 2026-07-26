@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { ResearchRegion } from "@/research/catalog";
+import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 export type ResearchRow = Record<string, unknown>;
 
@@ -633,6 +635,68 @@ function region(row: ResearchRow): string {
   return regionName(direct);
 }
 
+const REGION_SCOPE_KEYS = [
+  "region",
+  "regionId",
+  "region_hint",
+  "region_hints",
+  "regionHints",
+  "region_candidates",
+  "region_pressure",
+  "region_options",
+  "regions",
+  "optionalRegions",
+  "allRegions",
+  "required_region",
+  "required_regions",
+  "requiredRegions",
+  "required_regions_for_collection_loop",
+  "artifact_regions",
+  "collector_region",
+  "collector_regions",
+  "acquisition_region",
+  "acquisition_regions",
+  "working_region",
+  "geographic_region",
+  "supporting_regions",
+  "alternate_region_routes",
+  "comboLabel",
+] as const;
+
+function collectRegionScope(value: unknown, out: string[]): void {
+  if (typeof value === "string" && value.trim()) out.push(value);
+  else if (Array.isArray(value)) value.forEach((item) => collectRegionScope(item, out));
+  else if (value && typeof value === "object") {
+    Object.values(value as ResearchRow).forEach((item) => collectRegionScope(item, out));
+  }
+}
+
+function normalizeRegionScope(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+/** Strict regional rows plus records explicitly marked global. Unmapped rows stay out. */
+export function researchRowMatchesRegion(
+  row: ResearchRow,
+  selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases"> | null,
+): boolean {
+  if (!selectedRegion) return true;
+  const scope: string[] = [];
+  for (const key of REGION_SCOPE_KEYS) collectRegionScope(row[key], scope);
+  if (typeof row.id === "string" && row.id.includes(":")) scope.push(row.id.split(":", 1)[0]!);
+
+  const normalized = scope.map(normalizeRegionScope).filter(Boolean);
+  const concrete = normalized.filter(
+    (value) => !value.includes("global") && !value.includes("allregions") && !value.includes("anyregion"),
+  );
+  if (!concrete.length) return normalized.length > 0;
+
+  const aliases = [selectedRegion.id, selectedRegion.name, ...selectedRegion.aliases]
+    .map(normalizeRegionScope)
+    .filter(Boolean);
+  return concrete.some((value) => aliases.some((alias) => value.includes(alias)));
+}
+
 function sourceName(url: string): string {
   if (url.includes("runescape.wiki")) return "Wiki";
   if (url.includes("runescape.com")) return "Jagex";
@@ -796,6 +860,7 @@ export function ResearchSection({
   searchPlaceholder: string;
   searchLabel: string;
 }) {
+  const selectedRegion = useDataRegion();
   const [tabKey, setTabKey] = useState(tabs[0]?.key ?? "");
   const [query, setQuery] = useState("");
   const selected = tabs.find((tab) => tab.key === tabKey) ?? tabs[0];
@@ -804,9 +869,10 @@ export function ResearchSection({
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return selected.rows;
+    const regionalRows = selected.rows.filter((row) => researchRowMatchesRegion(row, selectedRegion));
+    if (!needle) return regionalRows;
     // Title + region + clipped details only — never stringify full audit bags.
-    return selected.rows.filter((row) => {
+    return regionalRows.filter((row) => {
       const hay = [
         researchRowTitle(row),
         region(row),
@@ -818,28 +884,28 @@ export function ResearchSection({
         .toLowerCase();
       return hay.includes(needle);
     });
-  }, [query, selected]);
+  }, [query, selected, selectedRegion]);
 
   return (
-    <section className="border-t border-stone-750 pt-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="min-w-0">
-          <h2 className="m-0 text-[13px] font-medium tracking-wide text-parch-100">{heading}</h2>
-          {lead ? <p className="m-0 mt-0.5 max-w-2xl text-[13px] leading-5 text-parch-300">{lead}</p> : null}
-        </div>
+    <section className="data-record-view">
+      <DataViewHeader
+        title={heading}
+        description={blurb || lead || selected.label}
+        count={rows.length}
+      >
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={searchPlaceholder}
           aria-label={searchLabel}
-          className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
+          className="field-inset data-view-search"
         />
-      </div>
+      </DataViewHeader>
 
       <div
         role="tablist"
         aria-label={`${heading} sections`}
-        className="comp-seg mt-2 flex-nowrap overflow-x-auto"
+        className="comp-seg data-record-tabs"
       >
         {tabs.map((tab) => {
           const active = tabKey === tab.key;
@@ -858,13 +924,13 @@ export function ResearchSection({
         })}
       </div>
 
-      <div className="py-2">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          {blurb ? <p className="m-0 text-[12px] leading-5 text-parch-300">{blurb}</p> : <span />}
-          <span className="font-mono text-[11px] text-parch-400">{rows.length}</span>
+      <div className="data-record-surface">
+        <div className="data-ledger-head" aria-hidden="true">
+          <span>Record</span>
+          <span>Region access</span>
+          <span>Details</span>
         </div>
-
-        <div className="mt-1.5 border-t border-stone-750">
+        <div>
           {rows.length ? (
             rows.map((row, index) => {
               const sourceLinks = links(row);
@@ -872,7 +938,7 @@ export function ResearchSection({
               return (
                 <article
                   key={String(row.id || `${title(row)}-${index}`)}
-                  className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                  className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
                 >
                   <div className="min-w-0">
                     <h3 className="m-0 text-[14px] font-medium text-parch-50">
@@ -897,9 +963,9 @@ export function ResearchSection({
                     {subtitle(row) ? (
                       <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{subtitle(row)}</p>
                     ) : null}
-                    <p className="m-0 mt-0.5 text-[11px] text-parch-400">{region(row)}</p>
                   </div>
-                  <div className="space-y-0.5 text-[13px] leading-5 text-parch-50">
+                  <p className="data-record-row__region">{region(row)}</p>
+                  <div className="data-record-row__details">
                     {rowDetails.length
                       ? rowDetails.map((item, itemIndex) => <p key={itemIndex} className="m-0">{item}</p>)
                       : null}
@@ -908,7 +974,7 @@ export function ResearchSection({
               );
             })
           ) : (
-            <p className="py-3 text-[13px] text-parch-300">No matches.</p>
+            <p className="data-empty">{query ? "No records match this search." : `No ${selected.label.toLowerCase()} records are mapped to ${selectedRegion?.name ?? "this region"}.`}</p>
           )}
         </div>
       </div>

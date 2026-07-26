@@ -2,11 +2,14 @@
 
 /**
  * Production Build board — regions, all relic tiers, blessing lattice.
- * Same surface as the Menu Court lab; live useBuild (shared with Map).
+ * Live useBuild state is shared with Map.
  */
 
+import Link from "next/link";
 import { useState } from "react";
-import { canSelectElective, type RegionId } from "@/league";
+import { equipmentById } from "@/combat/data";
+import type { EquipmentSlot } from "@/combat/data/records";
+import { canSelectElective, type BuildState, type RegionId } from "@/league";
 import {
   godTierAlignments,
   PATH_TIERS,
@@ -14,7 +17,9 @@ import {
 } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
-import { regionCrestPath } from "@/lib/gameArt";
+import { equipmentIconPath, regionCrestPath, styleIconPath } from "@/lib/gameArt";
+import { GameIcon } from "@/components/GameIcon";
+import { useLoadout } from "@/components/combat/useLoadout";
 import "./build-board.css";
 
 export type PlannerRegion = {
@@ -56,6 +61,38 @@ export type BlessingTier = {
 
 const SEATS = 3;
 
+const STYLE_LABEL = {
+  melee: "Melee",
+  ranged: "Ranged",
+  magic: "Magic",
+  necromancy: "Necromancy",
+} as const;
+
+const SLOT_LABEL: Record<EquipmentSlot, string> = {
+  mainhand: "Main-hand",
+  offhand: "Off-hand",
+  twohand: "Two-hand",
+  helmet: "Head",
+  body: "Body",
+  legs: "Legs",
+  gloves: "Hands",
+  boots: "Feet",
+  cape: "Cape",
+  amulet: "Neck",
+  ring: "Ring",
+  pocket: "Pocket",
+  ammo: "Ammo",
+  aura: "Aura",
+};
+
+const LOADOUT_DOLL: Array<EquipmentSlot | "style" | null> = [
+  "cape", "helmet", "ammo",
+  "mainhand", "amulet", "offhand",
+  "gloves", "style", "boots",
+  "twohand", "body", "pocket",
+  "ring", "legs", null,
+];
+
 const RELIC_ICON: Record<string, string> = {
   Survivalist: "/game/relics/survivalist.png",
   "Endless Harvest": "/game/relics/endless-harvest.png",
@@ -87,6 +124,103 @@ function relicIcon(name: string): string | undefined {
 
 function relicMono(name: string): string {
   return RELIC_MONO[name] ?? "·";
+}
+
+function CharacterLoadout({
+  build,
+  regions,
+  relicTierCount,
+}: {
+  build: BuildState;
+  regions: PlannerRegion[];
+  relicTierCount: number;
+}) {
+  const [loadout] = useLoadout();
+  const equippedCount = LOADOUT_DOLL.reduce(
+    (count, entry) => count + (entry && entry !== "style" && loadout.equipmentSlots[entry] ? 1 : 0),
+    0,
+  );
+  const pickedRelics = Object.values(build.relics).filter(Boolean);
+  const pickedRegions = build.elective
+    .map((id) => regions.find((region) => region.id === id))
+    .filter((region): region is PlannerRegion => Boolean(region));
+
+  return (
+    <aside className="mc__zone mc__loadout" aria-label="Final loadout">
+      <div className="mc__loadout-head">
+        <h2 className="mc__zone-title">Final loadout</h2>
+        <Link href="/combat">Edit in Combat</Link>
+      </div>
+
+      <div className="mc__loadout-style">
+        <GameIcon src={styleIconPath(loadout.style)} size={34} />
+        <div>
+          <strong>{STYLE_LABEL[loadout.style]}</strong>
+          <span>{equippedCount} / 13 gear slots</span>
+        </div>
+        <span className="mc__loadout-tier">T{loadout.weaponTier}</span>
+      </div>
+
+      <div className="mc__doll" aria-label={`${STYLE_LABEL[loadout.style]} equipment`}>
+        {LOADOUT_DOLL.map((entry, index) => {
+          if (entry === null) return <span key={`space-${index}`} aria-hidden />;
+          if (entry === "style") {
+            return (
+              <span key="style" className="mc__doll-core" aria-hidden>
+                <GameIcon src={styleIconPath(loadout.style)} size={30} />
+              </span>
+            );
+          }
+          const id = loadout.equipmentSlots[entry];
+          const item = equipmentById(id ?? "");
+          const label = SLOT_LABEL[entry];
+          return (
+            <div
+              key={entry}
+              className={`mc__doll-slot${item ? " is-filled" : ""}`}
+              aria-label={`${label}: ${item?.name ?? "Empty"}`}
+              title={item ? `${label}: ${item.name}` : `${label}: Empty`}
+            >
+              {item ? (
+                <GameIcon src={equipmentIconPath(item.id)} size={30} />
+              ) : (
+                <span className="mc__doll-empty" aria-hidden>—</span>
+              )}
+              <small>{label}</small>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mc__loadout-plan">
+        <h3>League plan</h3>
+        <div className="mc__loadout-regions" aria-label="Elective regions">
+          {Array.from({ length: 3 }, (_, index) => {
+            const region = pickedRegions[index];
+            return (
+              <span
+                key={region?.id ?? `empty-${index}`}
+                className={region ? "is-filled" : ""}
+                aria-label={region?.name ?? "Open region pick"}
+                title={region?.name ?? "Open region pick"}
+                style={region ? { backgroundImage: `url(${regionCrestPath(region.id)})` } : undefined}
+              />
+            );
+          })}
+        </div>
+        <dl>
+          <div>
+            <dt>Relics</dt>
+            <dd>{pickedRelics.length} / {relicTierCount}</dd>
+          </div>
+          <div>
+            <dt>Blessings</dt>
+            <dd>{build.blessingPicks.length} / {PATH_TIERS.length}</dd>
+          </div>
+        </dl>
+      </div>
+    </aside>
+  );
 }
 
 export function BuildPlanner({
@@ -137,25 +271,19 @@ export function BuildPlanner({
   return (
     <div className="mc">
       <div className="mc__frame">
+        {(["tl", "tr", "br", "bl"] as const).map((corner) => (
+          <span key={corner} className={`mc__corner is-${corner}`} aria-hidden />
+        ))}
         <header className="mc__seal">
           <h1 className="mc__title">Build</h1>
           <span className="mc__count" aria-live="polite">
             {pickCounter}
           </span>
-          {build.blessingPicks.length > 0 ? (
-            <span
-              className="mc__pips"
-              aria-label={`Path ${build.blessingPicks.join(" then ")}`}
-            >
-              {build.blessingPicks.map((p, i) => (
-                <span
-                  key={`${p}-${i}`}
-                  className={`mc__pip is-${p.toLowerCase()}`}
-                  title={p}
-                />
-              ))}
-            </span>
-          ) : null}
+          <span className="mc__pips" aria-hidden>
+            {Array.from({ length: 4 }, (_, i) => (
+              <span key={i} className={`mc__pip${i < picks.length ? " is-on" : ""}`} />
+            ))}
+          </span>
           <div className="mc__actions">
             <button
               type="button"
@@ -239,7 +367,9 @@ export function BuildPlanner({
           </div>
         </section>
 
-        <section className="mc__zone" aria-label="Relics">
+        <div className="mc__court">
+          <div className="mc__court-main">
+            <section className="mc__zone" aria-label="Relics">
           <h2 className="mc__zone-title">Relics · hover for effects</h2>
           <div className="mc__relics">
             {relicTiers.map((tier) => {
@@ -272,7 +402,7 @@ export function BuildPlanner({
                             title={open ? undefined : "Sealed until reveal"}
                             aria-hidden
                           >
-                            <span className="mc__seat-plus">+</span>
+                            <span className="mc__seat-plus" />
                           </span>
                         );
                       }
@@ -290,14 +420,14 @@ export function BuildPlanner({
                           className={`mc__seat${on ? " is-on" : ""}`}
                           onClick={() => toggleRelic(tier.tier, relic.name)}
                         >
-                          {icon ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={icon} alt="" width={32} height={32} />
-                          ) : (
-                            <span className="mc__seat-mono" aria-hidden>
-                              {mono}
-                            </span>
-                          )}
+                          <span className="mc__seat-emblem" aria-hidden>
+                            {icon ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={icon} alt="" width={32} height={32} />
+                            ) : (
+                              <span className="mc__seat-mono">{mono}</span>
+                            )}
+                          </span>
                           <span className="mc__seat-name">{shortName(relic.name)}</span>
                           <span className="mc__tip" role="tooltip">
                             <strong>{relic.name}</strong>
@@ -316,19 +446,20 @@ export function BuildPlanner({
               );
             })}
           </div>
-        </section>
+            </section>
 
-        <section className="mc__zone mc__zone--bless" aria-label="Blessings">
-          <h2 className="mc__zone-title">Blessings</h2>
-          <div className="mc__bless-board">
-            <div
-              className="mc__lattice"
-              role="grid"
-              aria-label="Blessing path lattice"
-              style={{
-                gridTemplateColumns: `7.25rem repeat(${blessingTiers.length}, 3.5rem)`,
-              }}
-            >
+            <section className="mc__zone mc__zone--bless" aria-label="Blessings">
+              <h2 className="mc__zone-title">Blessings</h2>
+              <div className="mc__bless-board">
+            <div className="mc__bless-scroll">
+              <div
+                className="mc__lattice"
+                role="grid"
+                aria-label="Blessing path lattice"
+                style={{
+                  gridTemplateColumns: `6.5rem repeat(${blessingTiers.length}, minmax(3.25rem, 1fr))`,
+                }}
+              >
               <span className="mc__lat-corner" aria-hidden />
               {blessingTiers.map((t) => (
                 <span
@@ -417,9 +548,18 @@ export function BuildPlanner({
                   })}
                 </div>
               ))}
+              </div>
             </div>
           </div>
-        </section>
+            </section>
+          </div>
+
+          <CharacterLoadout
+            build={build}
+            regions={regions}
+            relicTierCount={relicTiers.length}
+          />
+        </div>
       </div>
     </div>
   );

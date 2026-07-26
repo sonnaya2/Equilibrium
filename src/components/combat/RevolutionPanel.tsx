@@ -138,7 +138,7 @@ function BarGraphic({
   revoSize: number;
 }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-1" role="list" aria-label="Revolution bar">
+    <div className="ability-bar mt-3 flex gap-1" role="list" aria-label="Revolution bar">
       {slots.map((slot, index) => {
         const isKeybind = index >= revoSize;
         const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
@@ -148,12 +148,12 @@ function BarGraphic({
             role="listitem"
             title={
               isKeybind
-                ? "Manual keybind — not managed by Revolution"
+                ? "Manual keybind. Revolution does not manage this slot."
                 : unmodelled
-                  ? "No sourced band — skipped in the sim"
+                  ? "No damage band. Skipped in the sim."
                   : slot.name
             }
-            className={`w-24 border px-1.5 py-1 ${
+            className={`ability-bar-slot border px-1.5 py-1 ${
               isKeybind
                 ? "border-dashed border-stone-750/40 text-parch-300/45"
                 : unmodelled
@@ -161,8 +161,17 @@ function BarGraphic({
                   : "border-stone-750 bg-stone-850 text-parch-50"
             }`}
           >
-            <div className="font-mono text-[11px] text-parch-300">{index + 1}</div>
-            <div className="text-[11px] leading-tight">{slot.name}</div>
+            <div className="ability-bar-slot__number font-mono text-[11px] text-parch-300">{index + 1}</div>
+            {slot.spec ? (
+              <GameIcon
+                src={abilityIconPath(slot.spec.id, slot.spec.style)}
+                size={28}
+                className="ability-bar-slot__icon"
+              />
+            ) : (
+              <span className="ability-bar-slot__empty" aria-hidden="true" />
+            )}
+            <div className="ability-bar-slot__name text-[11px] leading-tight">{slot.name}</div>
             {isKeybind ? (
               <div className="text-[11px] text-parch-300/45">keybind</div>
             ) : unmodelled ? (
@@ -275,12 +284,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     : [];
 
   return (
-    <div>
-      <p className="mb-2 text-xs text-parch-300">
+    <div className="revolution-panel">
+      <p className="revo-intro mb-2 text-xs text-parch-300">
         First ready affordable bar ability each GCD ·{" "}
         <span className="text-parch-50">PvME Revolution Bars</span>
       </p>
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">
           Bar
           <select
@@ -318,27 +327,27 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       {styleMismatch && bar ? (
         <p className="mt-2 text-xs text-chaos-300">
-          Setup {loadout.style} · bar {bar.style} — AD/crit may not match
+          Loadout: {loadout.style}. Bar: {bar.style}. AD and crit may not match.
         </p>
       ) : null}
 
       {hybrid ? (
         <p className="mt-2 text-xs text-parch-300">
-          Revo manages first {revoSize} slots · rest are keybinds
+          Revolution uses the first {revoSize} slots. The rest are keybinds.
         </p>
       ) : null}
 
       <BarGraphic slots={slots} revoSize={revoSize} />
 
       {bar?.notes && bar.notes.length > 0 ? (
-        <ul className="mt-2 list-inside list-disc text-xs text-parch-300">
+        <ul className="revo-notes mt-2 list-inside list-disc text-xs text-parch-300">
           {bar.notes.map((note, i) => (
             <li key={`${i}-${note.slice(0, 24)}`}>{note}</li>
           ))}
         </ul>
       ) : null}
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
+      <div className="revo-run-controls mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
         <div>
           <NumberField
             label="Duration"
@@ -354,7 +363,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           <button
             type="button"
             onClick={run}
-            className="border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
+            className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
           >
             Run revolution
           </button>
@@ -373,7 +382,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       {result?.ok ? (
         <div className="mt-4">
-          <dl className="grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
+          <dl className="revo-stat-strip grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
             <div className="border-b border-stone-750/70 py-2">
               <dt className="text-xs text-parch-300">Horizon</dt>
               <dd className="font-mono text-parch-50" data-testid="revo-horizon">
@@ -410,11 +419,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             </div>
           </dl>
 
-          <h3 className="mt-4 text-xs font-medium text-parch-50">Cast timeline</h3>
-          <p className="mt-1 text-xs text-parch-300">
-            One row per GCD · basics auto-weave when bar is idle
-          </p>
-          <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
+          <section className="revo-section revo-timeline">
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">Cast timeline</h3>
+            <p className="mt-1 text-xs text-parch-300">
+              One row per GCD. Basics fill idle GCDs.
+            </p>
+            <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
             <table className="w-full min-w-[520px] border-collapse text-left text-xs">
               <thead className="sticky top-0 bg-stone-900 text-parch-300">
                 <tr className="border-b border-stone-750">
@@ -474,33 +484,44 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                 ))}
               </tbody>
             </table>
-          </div>
-          {result.casts.length > 40 ? (
-            <button
-              type="button"
-              onClick={() => setShowAllCasts((v) => !v)}
-              className="mt-2 text-xs text-parch-300 underline decoration-stone-750 underline-offset-2 hover:text-parch-50"
-            >
-              {showAllCasts ? "Show first 40 casts" : `Show all ${result.casts.length} casts`}
-            </button>
-          ) : null}
+            </div>
+            {result.casts.length > 40 ? (
+              <button
+                type="button"
+                onClick={() => setShowAllCasts((v) => !v)}
+                className="mt-2 text-xs text-parch-300 underline decoration-stone-750 underline-offset-2 hover:text-parch-50"
+              >
+                {showAllCasts ? "Show first 40 casts" : `Show all ${result.casts.length} casts`}
+              </button>
+            ) : null}
+          </section>
 
-          <h3 className="mt-4 text-xs font-medium text-parch-50">Damage by ability</h3>
-          <div className="mt-2 border-t border-stone-750">
+          <section className="revo-section revo-damage">
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">Damage by ability</h3>
+            <div className="revo-contributions mt-2 border-t border-stone-750">
             {contributions.map((row) => (
               <div
                 key={row.id}
-                className="grid grid-cols-[1fr_auto_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
               >
-                <span className="text-parch-50">
+                <span className="flex min-w-0 items-center gap-2 text-parch-50">
+                  {(() => {
+                    const spec = ENGINE_SPECS.get(row.id);
+                    return spec ? (
+                      <GameIcon src={abilityIconPath(spec.id, spec.style)} size={18} />
+                    ) : null;
+                  })()}
+                  <span className="truncate">
                   {row.name}
                   <span className="ml-1.5 font-mono text-parch-300">×{row.count}</span>
+                  </span>
                 </span>
                 <span className="font-mono text-parch-300">{formatNumber(row.expected)}</span>
                 <span className="font-mono text-parch-50">{Math.round(row.share * 1000) / 10}%</span>
               </div>
             ))}
-          </div>
+            </div>
+          </section>
         </div>
       ) : null}
     </div>

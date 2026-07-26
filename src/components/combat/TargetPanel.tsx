@@ -13,12 +13,12 @@ export function TargetPanel({
   setLoadout: (next: Loadout) => void;
 }) {
   return (
-    <div>
-      <h2 className="text-sm font-medium text-parch-50">Target</h2>
+    <div className="loadout-panel">
+      <h2 className="combat-section-title text-sm font-medium text-parch-50">Target</h2>
       <p className="mt-1 text-xs text-parch-300">
-        NPC model drives hit chance and Damage Potential
+        Uses Defence and affinity for Damage Potential.
       </p>
-      <div className="mt-3 border-t border-stone-750">
+      <div className="loadout-fields mt-3">
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
           <input
             type="checkbox"

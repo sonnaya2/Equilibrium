@@ -1,8 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { DataWorkbench } from "@/components/DataWorkbench";
-import { ResearchBrowser } from "@/components/ResearchBrowser";
+import { DataRegionRail, ResearchBrowser } from "@/components/ResearchBrowser";
 import type { ResearchCatalog } from "@/research/catalog";
 import type { ReactNode } from "react";
 
@@ -126,8 +127,15 @@ export function DataWorkbenchHost({
   catalog: ResearchCatalog;
   notes: ReactNode;
 }) {
+  const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
+  const region = catalog.regions.find((item) => item.id === regionId) ?? catalog.regions[0] ?? null;
+
   return (
     <DataWorkbench
+      region={region}
+      regionRail={
+        <DataRegionRail catalog={catalog} regionId={region?.id ?? ""} onChange={setRegionId} />
+      }
       browse={<ResearchBrowser catalog={catalog} />}
       quests={<QuestBrowser />}
       progression={<ProgressionResearch />}

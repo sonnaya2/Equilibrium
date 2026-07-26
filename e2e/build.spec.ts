@@ -30,3 +30,22 @@ test("share hash with empty storage does not crash build", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Clear picks" })).toBeVisible();
   await expect(page.getByText(/0\/3|…\/3/).first()).toBeVisible();
 });
+
+test("final loadout mirrors Combat Setup gear", async ({ page }) => {
+  await page.evaluate(() => {
+    window.localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "magic",
+        weaponTier: 90,
+        equipmentSlots: { mainhand: "item:seismic-wand" },
+      }),
+    );
+  });
+  await page.reload();
+
+  const loadout = page.getByRole("complementary", { name: "Final loadout" });
+  await expect(loadout).toBeVisible();
+  await expect(loadout.getByText("Magic", { exact: true })).toBeVisible();
+  await expect(loadout.getByLabel("Main-hand: Seismic wand")).toBeVisible();
+});

@@ -5,6 +5,7 @@ import type { CombatStyle } from "@/combat/types";
 import { styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { BuffsPanel } from "./BuffsPanel";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { GearPanel } from "./GearPanel";
 import { loadoutStats, loadoutWeaponTier } from "./loadoutStats";
 import { PerksPanel } from "./PerksPanel";
@@ -68,21 +69,16 @@ export function SetupTab() {
   };
 
   return (
-    <div className="py-3">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-medium text-parch-50">Setup</h2>
-          <p className="mt-1 text-xs text-parch-300">
-            Shared loadout · tier drives AD until bonuses sourced
-          </p>
-        </div>
+    <div className="combat-setup py-3">
+      <div className="combat-page-header flex flex-wrap items-start justify-end gap-3">
         <div className="flex flex-wrap gap-1" role="group" aria-label="Combat style">
           {STYLES.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => setStyle(s)}
-              className={`flex items-center gap-1.5 border px-3 py-1.5 text-xs ${
+              aria-pressed={loadout.style === s}
+              className={`combat-button setup-style-button flex items-center gap-1.5 border px-3 py-1.5 text-xs ${
                 loadout.style === s
                   ? "border-gem-400 bg-stone-850 text-parch-50"
                   : "border-stone-750 text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
@@ -95,15 +91,17 @@ export function SetupTab() {
         </div>
       </div>
 
-      <div className="mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
+      <div className="setup-layout mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
         {/* Sub-tabs — vertical on lg */}
-        <nav className="flex flex-row flex-wrap gap-1 lg:flex-col" aria-label="Setup sections">
+        <nav className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col" aria-label="Loadout sections">
+          <CombatFrameCorners />
           {SUB_TABS.map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setSubTab(tab)}
-              className={`border px-2.5 py-1.5 text-left text-xs ${
+              aria-pressed={subTab === tab}
+              className={`combat-button setup-nav-button border px-2.5 py-1.5 text-left text-xs ${
                 subTab === tab
                   ? "border-gem-400 bg-stone-850 font-medium text-gem-300"
                   : "border-stone-750 text-parch-100 hover:text-parch-50"
@@ -115,7 +113,8 @@ export function SetupTab() {
         </nav>
 
         {/* Active panel */}
-        <div className="min-w-0">
+        <div className={`setup-stage min-w-0${subTab === "Gear" ? "" : " combat-frame loadout-editor"}`}>
+          {subTab === "Gear" ? null : <CombatFrameCorners />}
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
@@ -124,8 +123,9 @@ export function SetupTab() {
         </div>
 
         {/* Live summary rail */}
-        <aside className="border border-stone-750 bg-stone-900/40 p-3">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">Summary</h3>
+        <aside className="combat-frame setup-summary p-3">
+          <CombatFrameCorners />
+          <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">Summary</h3>
           <dl className="mt-2 space-y-2 text-xs">
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
               <dt className="text-parch-300">Style</dt>

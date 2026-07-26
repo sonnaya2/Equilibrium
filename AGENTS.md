@@ -19,13 +19,17 @@ repeat.
 | Skill | Covers |
 |---|---|
 | `combat-math` | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier pipeline, rounding |
-| `league-data` | Regions, the 7 relic tiers, the 8 blessing tiers and God Tier derivation, tasks, the provisional rule |
+| `skills/league-data/SKILL.md` | Regions, relics, blessings, task presentation/data boundaries, Catalyst test-data law, provisional rules |
 | `data-sync` | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format |
-| `equilibrium-ui` | Binding UI law: tokens, components, routes, map fence, e2e contracts, sanctioned exceptions |
-| `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Fingerprint bans, density, surgery, detection — product-aware; load after `equilibrium-ui` |
+| `skills/equilibrium-ui/SKILL.md` | Authoritative UI law: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA |
+| `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Optional audit companions; use as detectors, never as authority over a supplied visual reference |
 | `rs3-ponytail` | Lean-code intensity per domain |
 
-`equilibrium-ui` is binding for chrome, stack, motifs, and Hybrid Composite 9.2 route DNA here.
+`skills/equilibrium-ui/SKILL.md` and `skills/league-data/SKILL.md` are authoritative. Their protected
+`.agents/skills/` auto-discovery copies are legacy and must not govern work.
+Supplied references and explicit user requirements override historical tournament treatments;
+remove obsolete rules instead of stacking exceptions around them. `rs3-ponytail` limits code and
+dependency weight, not visual quality or rendered iteration.
 Global anti-slop skills now multi-product route: EverSense Print/pink notes do not apply. Tailwind
 v4 `@theme` is correct. Claude `frontend-design` is craft only (no marketing hero). Context7 for
 library APIs (Next/Tailwind/R3F), not palette.
@@ -95,8 +99,8 @@ carries its own `SourceReference`.
 
 ## Design
 
-Load `equilibrium-ui` first, then `no-slop-ui` / `human-grade` for fingerprint law; run `bot-audit`
-before calling a screen shippable. The tool opens on the working surface. Nothing here is being sold.
+Read `skills/equilibrium-ui/SKILL.md` before UI work. Use anti-slop skills as a final fingerprint
+audit, not as a layout generator or a reason to flatten hierarchy and depth.
 
 Visual identity is a **premium public game companion site** (not a developer console). Hybrid
 composition champion (tournament 9.2):
@@ -106,12 +110,13 @@ composition champion (tournament 9.2):
 | Colors | Editorial (Echo ladder in `@theme`) |
 | Overview | Daylight courtyard / keyart aperture |
 | Map | Editorial Board Sky — 3D top, detail under board, no side inspector |
-| Tasks | Cipher Gallery Board (track + crest rail · card tiles · focus band) |
+| Tasks | Reference-led League browser: summary cards · planner filters · spacious task cards · progress rail |
 | Build | Editorial Relic Court (monogram frames until Jagex icons land) |
 | Combat | Crystal desk + Editorial chrome |
 | Data | Lattice + Daylight browse rail + full sources inspector |
 
-Gem = interactive chrome only; gold = display; path triad = data. `equilibrium-ui` is binding.
+Gem = interactive chrome only; gold = display; path triad = data. Route references may expand
+surface depth and spacing without inheriting obsolete concept-lab compositions.
 
 Three references, zero clones: **2026 RS keyart / stone UI**, **RuneScape Wiki** density, **game
 crests/icons**. No third-party tool layout clones.
@@ -135,8 +140,15 @@ EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 ```
 
 `Build` holds Regions, Relics and Blessings (no Gear tab). `Combat` holds Quick, Setup, Analysis,
-Rotation. Tasks gets a purpose-built interface rather than a generic checklist grid; while
-Equilibrium has no published list it may show Catalyst stand-in data, marked provisional.
+Rotation. Tasks uses a wide, polished card browser—not a dense table, twin desk, or generic checklist.
+While Equilibrium has no published list it may show Catalyst stand-in data, unmistakably marked as
+temporary test data. Do not fabricate categories, milestones, rewards, or unlock rules.
+
+For `/tasks`, target a 1500-1650px desktop frame, five readable cards where space permits, a
+300-340px progress rail, real gutters, strong 28-34px page hierarchy, custom-styled accessible
+controls, and the shared Editorial stone surfaces with restrained gold. Gem belongs to active and
+progression state, not a route-wide tint. Render against the supplied
+reference, record the five largest mismatches, fix them, and render again before calling it done.
 
 ### Frozen UI contract
 

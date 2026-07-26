@@ -7,10 +7,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("quick calculator runs the real pipeline", async ({ page }) => {
-  await expect(page.getByRole("heading", { name: "Quick" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Abilities" })).toBeVisible();
   await expect(page.getByText("Damage Potential")).toBeVisible();
 
-  await page.getByRole("button", { name: /Rend/ }).click();
+  await page.getByRole("option", { name: /Rend/ }).click();
   await expect(page.getByRole("heading", { name: "Rend" })).toBeVisible();
   await expect(page.getByText("+2 stacks")).toBeVisible();
 });
@@ -19,7 +19,7 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
 
-  const attack = page.getByRole("button", { name: /^Attack \+9%$/ });
+  const attack = page.getByRole("button", { name: /^Attack.*\+9%$/ });
   await attack.click();
   await attack.click();
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
@@ -39,7 +39,7 @@ test("rotation reports adrenaline starvation honestly in manual mode", async ({ 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
-  await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
+  await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText(/Rotation fails: overpower needs 60% adrenaline/)).toBeVisible();
 });
@@ -49,7 +49,7 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
 
-  await page.getByRole("button", { name: /^Overpower 60%$/ }).click();
+  await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText("DPS")).toBeVisible();
   await expect(page.getByText("24 ticks · 14.4s")).toBeVisible();
@@ -57,18 +57,30 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
 });
 
 test("setup gear filters equipment by region", async ({ page }) => {
-  await page.getByRole("tab", { name: "Setup", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Setup" })).toBeVisible();
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Loadout" })).toBeVisible();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
 
+  await page.getByRole("checkbox", { name: "Match style" }).uncheck();
   await page.getByRole("combobox", { name: "Region" }).selectOption("misthalin");
   await expect(page.getByRole("button", { name: /Omni guard/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Seismic wand/ })).toBeHidden();
 });
 
+test("two-handed weapons lock the linked off-hand slot", async ({ page }) => {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  const weapons = page.getByRole("group", { name: "Weapon slots" });
+
+  await weapons.getByRole("button", { name: /^Two-hand/ }).click();
+  await page.getByRole("button", { name: /Masterwork 2h sword/ }).click();
+
+  await expect(weapons.getByRole("button", { name: /^Off-hand/ })).toBeDisabled();
+  await expect(weapons.getByText("Locked")).toBeVisible();
+});
+
 test("analysis tab compares two stat lines", async ({ page }) => {
   await page.getByRole("tab", { name: "Analysis", exact: true }).click();
-  await expect(page.getByText("A · Setup loadout")).toBeVisible();
+  await expect(page.getByText("A · Loadout")).toBeVisible();
   await expect(page.getByText("B · Comparison")).toBeVisible();
   await expect(page.getByText("B − A")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Damage Potential" })).toBeVisible();
@@ -76,6 +88,7 @@ test("analysis tab compares two stat lines", async ({ page }) => {
 
 test("quick tab offers necromancy's sourced volley", async ({ page }) => {
   await page.getByRole("button", { name: "Necromancy" }).click();
+  await page.getByRole("option", { name: /Volley of Souls/ }).click();
   await expect(page.getByRole("heading", { name: "Volley of Souls" })).toBeVisible();
   await expect(page.getByText("Residual Souls")).toBeVisible();
   await expect(page.getByText("Damage Potential")).toBeVisible();
@@ -84,18 +97,18 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
 test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
-  const toggle = page.getByRole("checkbox", { name: "Use Setup loadout" });
+  const toggle = page.getByRole("checkbox", { name: "Use Loadout" });
   await expect(toggle).toBeChecked();
 
-  await page.getByRole("button", { name: /^Attack \+9%$/ }).click();
-  await page.getByRole("button", { name: /^Attack \+9%$/ }).click();
+  await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
+  await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText("DPS")).toBeVisible();
   await expect(page.getByText("6 ticks · 3.6s")).toBeVisible();
 });
 
 test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
-  await page.getByRole("tab", { name: "Setup", exact: true }).click();
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
   // Scoped to the doll: every item row in the picker also names its slot, so
   // an unscoped "Main-hand" matches seven elements and fails strict mode.
@@ -112,7 +125,7 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
   await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
-  await expect(page.getByText("Affinity")).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Affinity" })).toBeVisible();
 });
 
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {

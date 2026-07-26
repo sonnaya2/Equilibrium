@@ -8,6 +8,20 @@ import type { RegionId } from "@/league";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { getResearchCatalog } from "@/research/catalog";
 
+const BUILD_REGION_ORDER = [
+  "misthalin",
+  "karamja",
+  "kandarin",
+  "forinthry",
+  "desert",
+  "havenhythe",
+  "asgarnia",
+  "fremennik",
+  "morytania",
+  "tirannwn",
+  "anachronia",
+] as const;
+
 export const metadata: Metadata = {
   title: "Build",
 };
@@ -29,7 +43,10 @@ export default function BuildPage() {
     hardRules: region.hardRules,
     primaryQuests: primaryQuests[region.id] ?? 0,
     touchedQuests: touchedQuests[region.id] ?? 0,
-  }));
+  })).sort(
+    (a, b) => BUILD_REGION_ORDER.indexOf(a.id as (typeof BUILD_REGION_ORDER)[number])
+      - BUILD_REGION_ORDER.indexOf(b.id as (typeof BUILD_REGION_ORDER)[number]),
+  );
 
   // Full tier records pass through — later reveals populate choices and the
   // planner renders them without code changes.

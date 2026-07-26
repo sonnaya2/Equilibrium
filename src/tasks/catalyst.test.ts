@@ -105,6 +105,13 @@ describe("applyCompletionRates", () => {
     const same = applyCompletionRates(base, null);
     expect(same[0].catalystCompletionRate).toBe(61.5);
   });
+
+  it("keeps the <0.1 qualifier when the live module rounds the rate to zero", () => {
+    const base = parseCatalystTasksHtml(HTML);
+    const live = applyCompletionRates(base, { t900: 0 });
+    expect(live[1].catalystCompletionRate).toBe(0);
+    expect(live[1].catalystCompletionRateQualifier).toBe("<");
+  });
 });
 
 describe("catalystRecordsPassIntegrity", () => {

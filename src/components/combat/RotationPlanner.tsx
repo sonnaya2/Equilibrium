@@ -14,6 +14,7 @@ import { abilityIconPath } from "@/lib/gameArt";
 import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { useLoadout } from "./useLoadout";
@@ -136,14 +137,14 @@ export function RotationPlanner() {
   const inputCls = "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
 
   return (
-    <div className="grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
-      <div>
-        <h2 className="text-sm font-medium text-parch-50">Rotation</h2>
-        <p className="mt-1 text-xs text-parch-300">Revo = wiki bars · manual = cast-by-cast</p>
+    <div className="rotation-layout grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
+      <div className="combat-frame rotation-settings">
+        <CombatFrameCorners />
+        <h2 className="combat-page-title text-sm font-medium text-parch-50">Rotation</h2>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input type="checkbox" checked={useBuild} onChange={(e) => setUseBuild(e.target.checked)} />
-            Use Setup loadout
+            Use Loadout
           </label>
           {mode === "manual" ? (
             <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">
@@ -153,7 +154,7 @@ export function RotationPlanner() {
           ) : null}
         </div>
         {useBuild ? (
-          <dl className="mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
+          <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
             {(
               [
                 ["Level", buildStats.level],
@@ -208,7 +209,8 @@ export function RotationPlanner() {
               key={candidate}
               type="button"
               onClick={() => setMode(candidate)}
-              className={`border px-3 py-1.5 text-xs capitalize ${
+              aria-pressed={mode === candidate}
+              className={`combat-button border px-3 py-1.5 text-xs capitalize ${
                 mode === candidate
                   ? "border-stone-750 bg-stone-850 text-parch-50"
                   : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
@@ -227,7 +229,8 @@ export function RotationPlanner() {
                   key={filter.id}
                   type="button"
                   onClick={() => setPaletteStyle(filter.id)}
-                  className={`border px-3 py-1.5 text-xs ${
+                  aria-pressed={paletteStyle === filter.id}
+                  className={`combat-button border px-3 py-1.5 text-xs ${
                     paletteStyle === filter.id
                       ? "border-stone-750 bg-stone-850 text-parch-50"
                       : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
@@ -262,11 +265,13 @@ export function RotationPlanner() {
       </div>
 
       {mode === "revolution" ? (
-        <div>
+        <div className="combat-frame rotation-workbench">
+          <CombatFrameCorners />
           <RevolutionPanel stats={activeStats} />
         </div>
       ) : (
-      <div>
+      <div className="combat-frame rotation-workbench rotation-manual">
+        <CombatFrameCorners />
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-sm font-medium text-parch-50">Queue · {queue.length} casts</h2>
           <div className="flex gap-2">
@@ -274,7 +279,7 @@ export function RotationPlanner() {
               type="button"
               onClick={() => updateQueue([])}
               disabled={queue.length === 0}
-              className="border border-stone-750 px-3 py-1.5 text-xs text-parch-300 hover:bg-white/[0.02] disabled:cursor-not-allowed disabled:opacity-40"
+              className="combat-button border border-stone-750 px-3 py-1.5 text-xs text-parch-300 hover:bg-white/[0.02] disabled:cursor-not-allowed disabled:opacity-40"
             >
               Clear
             </button>
@@ -282,7 +287,7 @@ export function RotationPlanner() {
               type="button"
               onClick={run}
               disabled={queue.length === 0}
-              className="border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
+              className="combat-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Run
             </button>

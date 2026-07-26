@@ -5,6 +5,7 @@ import changesData from "#data/reference/changes-2026.json";
 import sourcesData from "#data/research/sources.json";
 import { combatSyncFacts } from "@/combat/data";
 import { Page } from "@/components/Page";
+import { CombatFrameCorners } from "@/components/combat/CombatFrameCorners";
 import { CombatTabs } from "@/components/combat/CombatTabs";
 
 type SourceRecord = {
@@ -80,9 +81,9 @@ export default function CombatPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
       <div className="workbench-fill">
-        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
-          <span className="font-medium text-parch-50">Combat</span>
-          <span className="text-parch-300">Live math on Quick · post-March 2026 kit</span>
+        <div className="combat-route-meta mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
+          <span className="combat-route-title font-medium text-parch-50">Combat</span>
+          <span className="text-parch-300">Post-March 2026 rules</span>
           <span className="ml-auto flex gap-3">
             <SourceLink source={combatWiki} label="Wiki" />
             <SourceLink source={patchOne} label="Patch 1" />
@@ -93,9 +94,14 @@ export default function CombatPage() {
       <CombatTabs
         reference={
           <>
+      <div className="combat-reference">
+      <header className="combat-frame reference-header">
+        <CombatFrameCorners />
+        <h2 className="combat-page-title">Reference</h2>
+      </header>
       <section className="border-b border-stone-750 py-3">
         <div className="mb-1.5 flex items-baseline justify-between gap-4">
-          <h2 className="text-sm font-medium text-parch-50">Data sync</h2>
+          <h2 className="text-sm font-medium text-parch-50">Source status</h2>
           <span className="text-xs text-parch-300">
             {updateIndexData.records.length} tracked entities · polled {updateIndexData.lastSynced}
           </span>
@@ -110,7 +116,7 @@ export default function CombatPage() {
         </dl>
         <p className="mt-2 text-xs text-parch-300">
           Wiki poll: {(updateIndexData.records as Array<{ stale?: boolean }>).some((entry) => entry.stale)
-            ? "stale rows — run npm run sync:combat"
+            ? "stale rows. Run npm run sync:combat"
             : "no tracked page revised since last verify"}
           {" · since "}
           {updateIndexData.trackedSince}
@@ -268,7 +274,7 @@ export default function CombatPage() {
         <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-4">
           <div>
             <h2 className="text-sm font-medium text-parch-50">Catalyst baseline</h2>
-            <p className="mt-0.5 text-xs text-parch-300">History only — not Equilibrium multipliers</p>
+            <p className="mt-0.5 text-xs text-parch-300">Catalyst history. Not used in Equilibrium math.</p>
           </div>
           <SourceLink source={catalystWiki} label="Catalyst Wiki" />
         </div>
@@ -299,13 +305,14 @@ export default function CombatPage() {
       </section>
 
       <section className="py-3">
-        <h2 className="text-sm font-medium text-parch-50">Do not carry forward</h2>
+        <h2 className="text-sm font-medium text-parch-50">Outdated Catalyst rules</h2>
         <div className="mt-1.5 border-t border-stone-750">
           {catalyst.equilibrium_comparison_notes.map((note) => (
             <p key={note} className="border-b border-stone-750/70 py-2 text-sm leading-5 text-parch-300">{note}</p>
           ))}
         </div>
       </section>
+      </div>
           </>
         }
       />

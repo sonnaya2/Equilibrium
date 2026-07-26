@@ -38,22 +38,68 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <footer className="comp-foot">
+          <p className="comp-foot__jagex">
+            Created using intellectual property belonging to Jagex Limited under the terms of Jagex&apos;s{" "}
+            <a
+              href="https://legal.jagex.com/docs/policies/fan-content-policy"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Fan Content Policy
+            </a>
+            . This content is not endorsed by or affiliated with Jagex.
+          </p>
           <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
             <span>
-              Fan tool · not Jagex. RuneScape is a trademark of Jagex Ltd.
+              RuneScape is a trademark of Jagex Ltd.
             </span>
             <span className="text-stone-750" aria-hidden>
               ·
             </span>
-            <Link href="/concepts" className="hover:text-parch-50">
-              Concepts
-            </Link>
-            <Link href="/concepts/hybrid" className="hover:text-parch-50">
-              Hybrid
-            </Link>
             <Link href="/sources" className="hover:text-parch-50">
               Sources
             </Link>
+            <span className="text-stone-750" aria-hidden>
+              ·
+            </span>
+            <details className="comp-foot__licenses">
+              <summary>Licenses</summary>
+              <div className="comp-foot__license-copy">
+                <p>
+                  <strong>Wiki text and data:</strong>{" "}
+                  <a
+                    href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    CC BY-NC-SA 3.0
+                  </a>
+                  . Source links credit RuneScape Wiki contributors; wording and structure are adapted here.
+                </p>
+                <p>
+                  <strong>RuneScape assets and names:</strong> Jagex property used under the{" "}
+                  <a
+                    href="https://legal.jagex.com/docs/policies/fan-content-policy"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Fan Content Policy
+                  </a>
+                  . Individual Wiki files may carry separate terms.
+                </p>
+                <p>
+                  <strong>Site code:</strong>{" "}
+                  <a
+                    href="https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    MIT License
+                  </a>
+                  . <Link href="/sources#licenses">Full attribution</Link>.
+                </p>
+              </div>
+            </details>
           </div>
         </footer>
       </body>

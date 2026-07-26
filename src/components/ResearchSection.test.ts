@@ -3,9 +3,16 @@ import {
   clipProse,
   researchRowDetails,
   researchRowLinks,
+  researchRowMatchesRegion,
   researchRowTitle,
   type ResearchRow,
 } from "./ResearchSection";
+
+const misthalin = {
+  id: "misthalin",
+  name: "Misthalin",
+  aliases: [],
+};
 
 const wikiSource = {
   source: "runescape-wiki",
@@ -58,6 +65,15 @@ describe("researchRowLinks", () => {
         "https://runescape.com/news",
       ]),
     );
+  });
+});
+
+describe("researchRowMatchesRegion", () => {
+  it("keeps selected and global rows while rejecting other and unmapped rows", () => {
+    expect(researchRowMatchesRegion({ requiredRegions: ["misthalin"] }, misthalin)).toBe(true);
+    expect(researchRowMatchesRegion({ region_hint: "global_once_unlocked" }, misthalin)).toBe(true);
+    expect(researchRowMatchesRegion({ requiredRegions: ["desert"] }, misthalin)).toBe(false);
+    expect(researchRowMatchesRegion({ name: "Unknown" }, misthalin)).toBe(false);
   });
 });
 

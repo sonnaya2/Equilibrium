@@ -10,7 +10,7 @@ const CREDITS = [
   {
     name: "RuneScape Wiki",
     url: "https://runescape.wiki",
-    note: "Mechanics under CC BY-NC-SA 3.0. Facts rewritten for this tool.",
+    note: "Wiki-authored text and data are adapted under CC BY-NC-SA 3.0. Source links credit contributors and identify the material changed for this tool; individual files may use separate terms.",
   },
   {
     name: "RS Analysis",
@@ -24,8 +24,13 @@ const CREDITS = [
   },
   {
     name: "Jagex",
-    url: "https://www.runescape.com",
-    note: "Fan tool. Not affiliated with Jagex.",
+    url: "https://legal.jagex.com/docs/policies/fan-content-policy",
+    note: "RuneScape assets, names, and other game IP remain Jagex property and are used under Jagex's Fan Content Policy. This project is not endorsed by or affiliated with Jagex.",
+  },
+  {
+    name: "Equilibrium source code",
+    url: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
+    note: "Original application code is available under the MIT License. External data and game assets keep their own terms above.",
   },
 ];
 
@@ -34,9 +39,9 @@ export default function SourcesPage() {
     <Page>
       <PageHeading
         title="Sources"
-        note="Where combat and data numbers come from."
+        note="Where the data comes from and the terms that cover it."
       />
-      <dl className="mt-1">
+      <dl id="licenses" className="mt-1 scroll-mt-20">
         {CREDITS.map((c) => (
           <div key={c.name} className="border-b border-stone-800 py-3 last:border-b-0">
             <dt className="text-sm">

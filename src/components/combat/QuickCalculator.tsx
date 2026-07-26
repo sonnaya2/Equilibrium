@@ -16,6 +16,7 @@ import {
 import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -109,11 +110,8 @@ export function QuickCalculator() {
 
   return (
     <div className="combat-quick">
-      <div
-        className="flex flex-wrap items-center gap-2 border-b border-stone-750 px-2 py-1.5"
-        style={{ background: "var(--echo-shell, var(--color-stone-900))" }}
-      >
-        <h2 className="m-0 text-[15px] font-medium text-parch-50">Quick</h2>
+      <div className="combat-quick-toolbar flex flex-wrap items-center gap-2">
+        <h2 className="combat-page-title m-0 text-[15px] font-medium text-parch-50">Abilities</h2>
         <div role="group" aria-label="Combat style" className="ml-auto flex flex-wrap gap-1">
           {AVAILABLE_STYLES.map((s) => {
             const active = style === s;
@@ -137,8 +135,9 @@ export function QuickCalculator() {
       </div>
 
       <div className="combat-quick-grid">
-        <section className="flex min-h-0 flex-col border-r border-stone-750">
-          <div className="grid grid-cols-2 gap-x-2 border-b border-stone-750 px-2 sm:grid-cols-4">
+        <section className="combat-frame combat-quick-main flex min-h-0 flex-col">
+          <CombatFrameCorners />
+          <div className="combat-field-strip grid grid-cols-2 gap-x-2 sm:grid-cols-4">
             <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
             <NumberField label="Base ability damage" value={base} onChange={setBase} />
             <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
@@ -206,7 +205,8 @@ export function QuickCalculator() {
         </section>
 
       {ability && result ? (
-        <div className="panel panel--facet min-w-0">
+        <div className="combat-frame combat-detail panel panel--facet min-w-0">
+          <CombatFrameCorners />
           <div className="panel-head flex flex-wrap items-center justify-between gap-2">
             <h3 className="m-0 flex min-w-0 items-center gap-2 text-inherit font-medium">
               <GameIcon
@@ -282,7 +282,8 @@ export function QuickCalculator() {
           </div>
         </div>
       ) : ability && ability.hits.length === 0 ? (
-        <div className="panel panel--facet min-w-0">
+        <div className="combat-frame combat-detail panel panel--facet min-w-0">
+          <CombatFrameCorners />
           <div className="panel-head">
             <h3 className="m-0 flex items-center gap-2 text-inherit font-medium">
               <GameIcon
@@ -296,11 +297,12 @@ export function QuickCalculator() {
           </div>
           <div className="panel-body">
             <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
-            <p className="mt-2 text-sm text-parch-300">No damage hits — summon/buff only</p>
+            <p className="mt-2 text-sm text-parch-300">No damage hits. Summon or buff only.</p>
           </div>
         </div>
       ) : (
-        <div className="panel panel--facet min-w-0 p-3 text-sm text-parch-300">
+        <div className="combat-frame combat-detail panel panel--facet min-w-0 p-3 text-sm text-parch-300">
+          <CombatFrameCorners />
           Select an ability.
         </div>
       )}

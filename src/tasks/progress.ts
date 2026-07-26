@@ -2,6 +2,12 @@ import { loadState, saveState } from "@/lib/storage";
 import { taskPoints, type TaskRecord } from "./index";
 
 export const STORAGE_KEY = "eq:tasks:v1";
+export const TASK_DB_NAME = "equilibrium";
+export const TASK_DB_STORE = "task-progress";
+
+const TASK_DB_KEY = "progress";
+const TASK_DB_VERSION = 1;
+let taskDbPromise: Promise<IDBDatabase | null> | null = null;
 
 export type TaskProgress = {
   completed: string[];
@@ -76,16 +82,81 @@ export function loadProgress(): TaskProgress {
   return loadState(STORAGE_KEY, EMPTY_PROGRESS, normalizeProgress);
 }
 
-/** Load progress and rewrite legacy keys against the current task list. */
-export function loadProgressForRecords(records: readonly TaskRecord[]): TaskProgress {
-  const loaded = loadProgress();
-  const migrated = migrateProgressIds(loaded, records);
-  if (migrated !== loaded) saveProgress(migrated);
-  return migrated;
+function openTaskDb(): Promise<IDBDatabase | null> {
+  if (typeof window === "undefined" || !("indexedDB" in window)) {
+    return Promise.resolve(null);
+  }
+  if (taskDbPromise) return taskDbPromise;
+
+  taskDbPromise = new Promise((resolve) => {
+    try {
+      const request = window.indexedDB.open(TASK_DB_NAME, TASK_DB_VERSION);
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains(TASK_DB_STORE)) {
+          request.result.createObjectStore(TASK_DB_STORE);
+        }
+      };
+      request.onsuccess = () => {
+        request.result.onversionchange = () => request.result.close();
+        resolve(request.result);
+      };
+      request.onerror = () => resolve(null);
+      request.onblocked = () => resolve(null);
+    } catch {
+      resolve(null);
+    }
+  });
+  return taskDbPromise;
+}
+
+async function readProgressFromDb(): Promise<TaskProgress | null> {
+  try {
+    const db = await openTaskDb();
+    if (!db) return null;
+    const raw = await new Promise<unknown>((resolve, reject) => {
+      const request = db
+        .transaction(TASK_DB_STORE, "readonly")
+        .objectStore(TASK_DB_STORE)
+        .get(TASK_DB_KEY);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    return raw === undefined ? null : normalizeProgress(raw);
+  } catch {
+    return null;
+  }
+}
+
+async function writeProgressToDb(state: TaskProgress): Promise<void> {
+  try {
+    const db = await openTaskDb();
+    if (!db) return;
+    await new Promise<void>((resolve, reject) => {
+      const transaction = db.transaction(TASK_DB_STORE, "readwrite");
+      transaction.objectStore(TASK_DB_STORE).put(normalizeProgress(state), TASK_DB_KEY);
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error);
+    });
+  } catch {
+    // localStorage remains the fallback when IndexedDB is unavailable.
+  }
+}
+
+/** IndexedDB-first load, migrating the existing localStorage progress on first use. */
+export async function loadProgressFromBrowserDb(
+  records: readonly TaskRecord[],
+): Promise<TaskProgress> {
+  const stored = await readProgressFromDb();
+  const progress = migrateProgressIds(stored ?? loadProgress(), records);
+  if (stored === null || progress !== stored) await writeProgressToDb(progress);
+  return progress;
 }
 
 export function saveProgress(state: TaskProgress): void {
-  saveState(STORAGE_KEY, normalizeProgress(state));
+  const normalized = normalizeProgress(state);
+  saveState(STORAGE_KEY, normalized);
+  void writeProgressToDb(normalized);
 }
 
 export function isComplete(state: TaskProgress, id: string): boolean {

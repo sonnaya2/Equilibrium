@@ -14,22 +14,14 @@ const LINKS = [
   ["/data", "Data"],
 ] as const;
 
-const RELIC_MONO: Record<string, string> = {
-  Survivalist: "SV",
-  "Endless Harvest": "EH",
-  "Golden Touch": "GT",
-};
-
 /**
- * Mast instrument — gold brand, gem active tabs, live pick / T1 mono.
+ * Mast instrument — gold brand, gem active tab, live region picks.
  * Frozen: accessible name EQUILIBRIUM; six primary links.
  */
 export function Nav() {
   const pathname = usePathname();
   const { build, loaded } = useBuild();
   const picks = loaded ? build.elective.length : null;
-  const t1 = loaded ? build.relics["1"] ?? null : null;
-  const mono = t1 ? RELIC_MONO[t1] ?? null : null;
 
   return (
     <header className="comp-mast">
@@ -59,12 +51,6 @@ export function Nav() {
         <strong>
           {picks === null ? `…/${ELECTIVE_CAP}` : `${picks}/${ELECTIVE_CAP}`}
         </strong>
-        {mono ? (
-          <>
-            {" "}
-            · T1 <strong>{mono}</strong>
-          </>
-        ) : null}
       </p>
     </header>
   );

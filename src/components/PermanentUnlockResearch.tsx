@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
-import { clipProse } from "./ResearchSection";
+import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
+import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 
 type Row = Record<string, unknown>;
@@ -323,11 +324,12 @@ function rowsFor(section: SectionKey): Row[] {
 }
 
 export function PermanentUnlockResearch() {
+  const selectedRegion = useDataRegion();
   const [section, setSection] = useState<SectionKey>("quest_unlocks");
   const [query, setQuery] = useState("");
 
   const rows = useMemo(() => {
-    const source = rowsFor(section);
+    const source = rowsFor(section).filter((row) => researchRowMatchesRegion(row, selectedRegion));
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
     return source.filter((row) => {
@@ -336,21 +338,26 @@ export function PermanentUnlockResearch() {
         .toLowerCase();
       return hay.includes(needle);
     });
-  }, [query, section]);
+  }, [query, section, selectedRegion]);
+  const sectionLabel = SECTIONS.find((item) => item.key === section)?.label ?? "Unlocks";
 
   return (
-    <section className="border-t border-stone-750 pt-3">
-      <div className="flex flex-wrap items-center justify-end gap-2">
+    <section className="data-record-view">
+      <DataViewHeader
+        title="Unlocks"
+        description={sectionLabel}
+        count={rows.length}
+      >
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search"
           aria-label="Search unlocks"
-          className="w-full border border-stone-750 bg-stone-900 px-2.5 py-1.5 text-[13px] text-parch-50 placeholder:text-parch-400 focus:border-gem-400 sm:w-56"
+          className="field-inset data-view-search"
         />
-      </div>
+      </DataViewHeader>
 
-      <div role="tablist" aria-label="Unlock sections" className="comp-seg mt-2 flex-nowrap overflow-x-auto">
+      <div role="tablist" aria-label="Unlock sections" className="comp-seg data-record-tabs">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -368,12 +375,13 @@ export function PermanentUnlockResearch() {
         })}
       </div>
 
-      <div className="py-2">
-        <div className="flex justify-end">
-          <span className="font-mono text-[11px] text-parch-400">{rows.length} shown</span>
+      <div className="data-record-surface">
+        <div className="data-ledger-head" aria-hidden="true">
+          <span>Record</span>
+          <span>Region access</span>
+          <span>Details</span>
         </div>
-
-        <div className="mt-1.5 border-t border-stone-750">
+        <div>
           {rows.length ? rows.map((row, index) => {
             const sourceLinks = links(row);
             const rowDetails = details(row);
@@ -381,7 +389,7 @@ export function PermanentUnlockResearch() {
             return (
               <article
                 key={mapKey(row, index, "row")}
-                className={`grid gap-1.5 border-b border-stone-750/70 py-2 lg:grid-cols-[minmax(170px,0.28fr)_minmax(0,1fr)] lg:gap-4 ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
               >
                 <div className="min-w-0">
                   <h3 className="m-0 text-[14px] font-medium text-parch-50">
@@ -404,16 +412,16 @@ export function PermanentUnlockResearch() {
                     ) : null}
                   </h3>
                   {category ? <p className="m-0 mt-0.5 text-[11px] leading-4 text-parch-300">{category}</p> : null}
-                  <p className="m-0 mt-0.5 text-[11px] text-parch-400">{region(row)}</p>
                 </div>
-                <div className="space-y-0.5 text-[13px] leading-5 text-parch-50">
+                <p className="data-record-row__region">{region(row)}</p>
+                <div className="data-record-row__details">
                   {rowDetails.map((item, i) => (
                     <p key={i} className="m-0">{item}</p>
                   ))}
                 </div>
               </article>
             );
-          }) : <p className="py-3 text-[13px] text-parch-300">No matches.</p>}
+          }) : <p className="data-empty">{query ? "No unlocks match this search." : `No ${sectionLabel.toLowerCase()} are mapped to ${selectedRegion?.name ?? "this region"}.`}</p>}
         </div>
       </div>
     </section>

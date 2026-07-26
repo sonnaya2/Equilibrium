@@ -215,7 +215,11 @@ export function applyCompletionRates(
     if (typeof raw !== "number" || !Number.isFinite(raw)) return record;
     const rate = raw;
     // Wiki HTML shows "<0.1%" for tiny positive rates; module stores the number.
-    const qualifier = rate > 0 && rate < 0.1 ? ("<" as const) : undefined;
+    const qualifier =
+      (rate > 0 && rate < 0.1) ||
+      (rate === 0 && record.catalystCompletionRateQualifier === "<")
+        ? ("<" as const)
+        : undefined;
     if (record.catalystCompletionRate === rate) {
       const had = record.catalystCompletionRateQualifier === "<";
       if (Boolean(qualifier) === had) return record;

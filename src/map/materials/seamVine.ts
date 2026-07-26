@@ -1,10 +1,9 @@
 /**
- * ORPHAN (post tube-vines ship) — not imported by production or remaster lab.
+ * ORPHAN (post tube-vines ship) — not imported by production.
  *
  * Production path: `SeamVines.tsx` → `createDaylitSeamMaterials` +
- * `createDaylitLeafMaterial` (dual TubeGeometry + leaf instances). Remaster forks
- * its own `daylitVine` / `remasterVine` under `concepts/map-remaster/scene/materials/`
- * — do not re-wire this ribbon material into either path without a deliberate fork.
+ * `createDaylitLeafMaterial` (dual TubeGeometry + leaf instances). Do not re-wire
+ * this ribbon material into the map without a deliberate fork.
  *
  * Kept as historical reference for the flat-ribbon MeshBasic TSL graph
  * (aAlong / aSide / aGrowth). Safe to delete once no one wants the ribbon recipe.

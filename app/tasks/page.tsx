@@ -73,6 +73,7 @@ export default async function TasksPage() {
             testingOnly: useCatalystStandIn && testFallback?.testingOnly === true,
             provisional: useCatalystStandIn,
             sourceUrl,
+            wikiSyncSupported: useCatalystStandIn,
             verifiedAt: tasksData.source.verifiedAt,
             note: useCatalystStandIn ? testFallback?.note : tasksData.note,
           }}

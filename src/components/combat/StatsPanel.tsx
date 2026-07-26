@@ -19,9 +19,9 @@ export function StatsPanel({
   setLoadout: (next: Loadout) => void;
 }) {
   return (
-    <div>
-      <h2 className="text-sm font-medium text-parch-50">Stats</h2>
-      <div className="mt-3 border-t border-stone-750">
+    <div className="loadout-panel">
+      <h2 className="combat-section-title text-sm font-medium text-parch-50">Stats</h2>
+      <div className="loadout-fields mt-3">
         {loadout.style === "melee" ? (
           <>
             <NumberField
@@ -65,7 +65,7 @@ export function StatsPanel({
                 }),
               })
             }
-            className="border border-stone-750 px-2 py-1 text-xs text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
+            className="combat-button border border-stone-750 px-2 py-1 text-xs text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
           >
             Compute from level + tier
           </button>

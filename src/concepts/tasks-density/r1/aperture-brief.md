@@ -90,3 +90,9 @@ Export: `AperturePreview` · props: `TasksDensityPreviewProps` · CSS import `./
 | **Weighted** | | **~8.9** | |
 
 Pass bar 9.0 — **borderline pass / honest high-8**. Strength is horizontal reclaim + head-still detail. Risk: default `selected` falls through to first visible row (shared desk behavior), so one stage is almost always open — compact stage keeps the cost low; CEO may still ding permanent detail height vs pure collapsed list.
+
+
+## R1.1 surgery (product pick)
+
+User chose Select + Stage. Fixes: Spike collapse (no auto stage); crest badge beside region select; 28px rows; denser facets; promoted to production `/tasks`.
+

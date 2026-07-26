@@ -33,19 +33,11 @@ test("tasks region filter and Comp% wiki links when Catalyst stand-in loads", as
     await expect(myBuild).toHaveAttribute("aria-pressed", "true");
   }
 
-  // Region filter: crest facet group (Composite density) or legacy select.
+  // Region filter: Select + Stage uses <select aria-label="Filter by region">.
   // Soft — only assert structure that is present. Never pin region names.
   const regionSelect = page.getByLabel(/^Filter by region$/i);
-  const regionGroup = page.getByRole("group", { name: /region/i });
   if (await regionSelect.isVisible().catch(() => false)) {
     await expect(regionSelect).toBeVisible();
-  } else if (await regionGroup.isVisible().catch(() => false)) {
-    await expect(regionGroup).toBeVisible();
-    await expect(
-      regionGroup
-        .getByRole("button", { name: /All unlocked|All regions|^All\b/i })
-        .first(),
-    ).toBeVisible();
   }
 
   // Comp% values that have a wiki task id open the Wiki row (hash id).

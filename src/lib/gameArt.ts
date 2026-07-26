@@ -37,3 +37,28 @@ export function equipmentIconPath(equipmentId: string): string {
   const slug = equipmentId.replace(/^item:/, "");
   return `/game/combat/equipment/${slug}.png`;
 }
+
+/**
+ * Local ability icons (synced from the wiki, never hotlinked).
+ * Path: public/game/combat/abilities/<style>/<id-with-underscores-as-hyphens>.png
+ * Built by scripts/sync-ability-icons.mjs → data/combat/ability-icons.json.
+ */
+export function abilityIconPath(
+  abilityId: string,
+  style: keyof typeof STYLE_ICON | string,
+): string {
+  const slug = abilityId.replace(/_/g, "-").toLowerCase();
+  const folder = style in STYLE_ICON ? style : "melee";
+  return `/game/combat/abilities/${folder}/${slug}.png`;
+}
+
+/**
+ * Player-facing ability category chip.
+ * Post-CSM engine uses `enhanced`; UI still labels it threshold (player term).
+ */
+export function abilityCategoryLabel(
+  category: "basic" | "enhanced" | "ultimate" | "utility" | string,
+): string {
+  if (category === "enhanced") return "threshold";
+  return category;
+}

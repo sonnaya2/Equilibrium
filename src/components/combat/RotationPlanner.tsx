@@ -10,7 +10,10 @@ import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
+import { abilityIconPath } from "@/lib/gameArt";
 import { loadState, saveState } from "@/lib/storage";
+import { GameIcon } from "../GameIcon";
+import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { useLoadout } from "./useLoadout";
@@ -40,8 +43,12 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+function abilityById(id: string): AbilitySpec | undefined {
+  return ALL_ABILITIES.find((a) => a.id === id);
+}
+
 function abilityName(id: string): string {
-  return ALL_ABILITIES.find((a) => a.id === id)?.name ?? id;
+  return abilityById(id)?.name ?? id;
 }
 
 export function RotationPlanner() {
@@ -242,7 +249,11 @@ export function RotationPlanner() {
                   onClick={() => updateQueue([...queue, a.id])}
                   className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
                 >
-                  <span>{a.name}</span>
+                  <span className="inline-flex min-w-0 items-center gap-1.5">
+                    <GameIcon src={abilityIconPath(a.id, a.style)} size={16} className="shrink-0" />
+                    <span className="min-w-0 truncate">{a.name}</span>
+                    <AbilityCategoryChip category={a.category} />
+                  </span>
                   <span className="font-mono">
                     {a.adrenaline?.gain ? `+${a.adrenaline.gain}%` : a.adrenaline?.cost ? `${a.adrenaline.cost}%` : ""}
                   </span>
@@ -294,7 +305,24 @@ export function RotationPlanner() {
                 className="grid w-full grid-cols-[2rem_1fr] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
               >
                 <span className="font-mono text-parch-300">{index + 1}</span>
-                <span>{abilityName(id)}</span>
+                <span className="inline-flex min-w-0 items-center gap-1.5">
+                  {(() => {
+                    const a = abilityById(id);
+                    return a ? (
+                      <>
+                        <GameIcon
+                          src={abilityIconPath(a.id, a.style)}
+                          size={16}
+                          className="shrink-0"
+                        />
+                        <span className="min-w-0 truncate">{a.name}</span>
+                        <AbilityCategoryChip category={a.category} />
+                      </>
+                    ) : (
+                      <span>{abilityName(id)}</span>
+                    );
+                  })()}
+                </span>
               </button>
             ))}
           </div>

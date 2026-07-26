@@ -12,6 +12,9 @@ import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
+import { abilityIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
+import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import type { CalcStats } from "./loadoutStats";
 import { NumberField } from "./NumberField";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
@@ -446,12 +449,30 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                     <td className="py-1 pr-2 font-mono text-parch-50">{cast.tick}</td>
                     <td className="py-1 pr-2 font-mono text-parch-300">{formatTime(cast.tick)}</td>
                     <td className="py-1 pr-2 text-parch-50">
-                      {nameById.get(cast.abilityId) ?? cast.abilityId}
-                      {cast.auto ? (
-                        <span className="ml-1.5 inline-block border border-gem-600/50 bg-stone-850 px-1 py-px font-mono text-[10px] uppercase tracking-wide text-gem-300">
-                          basic
-                        </span>
-                      ) : null}
+                      <span className="inline-flex min-w-0 items-center gap-1.5">
+                        {(() => {
+                          const spec = ENGINE_SPECS.get(cast.abilityId);
+                          return (
+                            <>
+                              {spec ? (
+                                <GameIcon
+                                  src={abilityIconPath(spec.id, spec.style)}
+                                  size={16}
+                                  className="shrink-0"
+                                />
+                              ) : null}
+                              <span className="min-w-0 truncate">
+                                {nameById.get(cast.abilityId) ?? cast.abilityId}
+                              </span>
+                              {spec ? (
+                                <AbilityCategoryChip category={spec.category} />
+                              ) : cast.auto ? (
+                                <AbilityCategoryChip category="basic" />
+                              ) : null}
+                            </>
+                          );
+                        })()}
+                      </span>
                     </td>
                     <td className="py-1 pr-2 font-mono text-parch-300">{cast.adrenalineAfter}%</td>
                     <td className="py-1 font-mono text-parch-50">

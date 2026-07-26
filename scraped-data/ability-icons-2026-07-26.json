@@ -1,0 +1,869 @@
+{
+  "generatedAt": "2026-07-26",
+  "count": 86,
+  "ok": 86,
+  "failed": 0,
+  "note": "Local ability icons under /game/combat/abilities/<style>/. Wiki/Jagex attribution. Never hotlink at runtime.",
+  "icons": {
+    "attack": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/attack.png",
+      "style": "melee",
+      "pageTitle": "Attack (ability)",
+      "fileTitle": "File:Attack_(ability).gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Attack_%28ability%29.gif/64px-Attack_%28ability%29.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "adaptive_strike_2h": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/adaptive-strike-2h.png",
+      "style": "melee",
+      "pageTitle": "Adaptive Strike",
+      "fileTitle": "File:Adaptive_Strike_(dual_wield).gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Adaptive_Strike_%28dual_wield%29.gif/64px-Adaptive_Strike_%28dual_wield%29.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "adaptive_strike_dw": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/adaptive-strike-dw.png",
+      "style": "melee",
+      "pageTitle": "Adaptive Strike",
+      "fileTitle": "File:Adaptive_Strike_(dual_wield).gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Adaptive_Strike_%28dual_wield%29.gif/64px-Adaptive_Strike_%28dual_wield%29.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "rend": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/rend.png",
+      "style": "melee",
+      "pageTitle": "Rend",
+      "fileTitle": "File:Rend.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Rend.gif/64px-Rend.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "fury": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/fury.png",
+      "style": "melee",
+      "pageTitle": "Fury",
+      "fileTitle": "File:Fury.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Fury.gif/64px-Fury.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_fury": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/greater-fury.png",
+      "style": "melee",
+      "pageTitle": "Greater Fury",
+      "fileTitle": "File:Greater_Fury.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Fury.gif/64px-Greater_Fury.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "backhand": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/backhand.png",
+      "style": "melee",
+      "pageTitle": "Backhand",
+      "fileTitle": "File:Backhand.png",
+      "sourceUrl": "https://runescape.wiki/images/Backhand.png",
+      "category": "basic",
+      "cached": true
+    },
+    "punish": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/punish.png",
+      "style": "melee",
+      "pageTitle": "Punish",
+      "fileTitle": "File:Punish.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Punish.gif/64px-Punish.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "barge": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/barge.png",
+      "style": "melee",
+      "pageTitle": "Barge",
+      "fileTitle": "File:Barge.png",
+      "sourceUrl": "https://runescape.wiki/images/Barge.png",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_barge": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/greater-barge.png",
+      "style": "melee",
+      "pageTitle": "Greater Barge",
+      "fileTitle": "File:Greater_Barge.png",
+      "sourceUrl": "https://runescape.wiki/images/Greater_Barge.png",
+      "category": "basic",
+      "cached": true
+    },
+    "chaos_roar": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/chaos-roar.png",
+      "style": "melee",
+      "pageTitle": "Chaos Roar",
+      "fileTitle": "File:Chaos_Roar.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Chaos_Roar.gif/64px-Chaos_Roar.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "dismember": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/dismember.png",
+      "style": "melee",
+      "pageTitle": "Dismember",
+      "fileTitle": "File:Dismember.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Dismember.gif/64px-Dismember.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "slaughter": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/slaughter.png",
+      "style": "melee",
+      "pageTitle": "Slaughter",
+      "fileTitle": "File:Slaughter.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Slaughter.gif/64px-Slaughter.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "massacre": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/massacre.png",
+      "style": "melee",
+      "pageTitle": "Massacre",
+      "fileTitle": "File:Massacre.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Massacre.gif/64px-Massacre.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "assault": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/assault.png",
+      "style": "melee",
+      "pageTitle": "Assault",
+      "fileTitle": "File:Assault.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Assault.gif/64px-Assault.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "flurry": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/flurry.png",
+      "style": "melee",
+      "pageTitle": "Flurry",
+      "fileTitle": "File:Flurry.png",
+      "sourceUrl": "https://runescape.wiki/images/Flurry.png",
+      "category": "enhanced",
+      "cached": true
+    },
+    "greater_flurry": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/greater-flurry.png",
+      "style": "melee",
+      "pageTitle": "Greater Flurry",
+      "fileTitle": "File:Greater_Flurry.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Flurry.gif/64px-Greater_Flurry.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "hurricane": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/hurricane.png",
+      "style": "melee",
+      "pageTitle": "Hurricane",
+      "fileTitle": "File:Hurricane.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Hurricane.gif/64px-Hurricane.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "overpower": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/overpower.png",
+      "style": "melee",
+      "pageTitle": "Overpower",
+      "fileTitle": "File:Overpower.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Overpower.gif/64px-Overpower.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "overpower_igneous": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/overpower-igneous.png",
+      "style": "melee",
+      "pageTitle": "Overpower",
+      "fileTitle": "File:Overpower.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Overpower.gif/64px-Overpower.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "pulverise": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/pulverise.png",
+      "style": "melee",
+      "pageTitle": "Pulverise",
+      "fileTitle": "File:Pulverise.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Pulverise.gif/64px-Pulverise.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "berserk": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/berserk.png",
+      "style": "melee",
+      "pageTitle": "Berserk",
+      "fileTitle": "File:Berserk.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Berserk.gif/64px-Berserk.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "meteor_strike": {
+      "ok": true,
+      "path": "/game/combat/abilities/melee/meteor-strike.png",
+      "style": "melee",
+      "pageTitle": "Meteor Strike",
+      "fileTitle": "File:Meteor_Strike.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Meteor_Strike.png/64px-Meteor_Strike.png",
+      "category": "ultimate",
+      "cached": true
+    },
+    "ranged_attack": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/ranged-attack.png",
+      "style": "ranged",
+      "pageTitle": "Piercing Shot",
+      "fileTitle": "File:Piercing_Shot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Piercing_Shot.gif/64px-Piercing_Shot.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "piercing_shot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/piercing-shot.png",
+      "style": "ranged",
+      "pageTitle": "Piercing Shot",
+      "fileTitle": "File:Piercing_Shot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Piercing_Shot.gif/64px-Piercing_Shot.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "binding_shot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/binding-shot.png",
+      "style": "ranged",
+      "pageTitle": "Binding Shot",
+      "fileTitle": "File:Binding_Shot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Binding_Shot.gif/64px-Binding_Shot.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "galeshot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/galeshot.png",
+      "style": "ranged",
+      "pageTitle": "Galeshot",
+      "fileTitle": "File:Galeshot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Galeshot.gif/64px-Galeshot.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "ricochet": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/ricochet.png",
+      "style": "ranged",
+      "pageTitle": "Ricochet",
+      "fileTitle": "File:Ricochet.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Ricochet.gif/64px-Ricochet.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_ricochet": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/greater-ricochet.png",
+      "style": "ranged",
+      "pageTitle": "Greater Ricochet",
+      "fileTitle": "File:Greater_Ricochet.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Ricochet.gif/64px-Greater_Ricochet.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "snap_shot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/snap-shot.png",
+      "style": "ranged",
+      "pageTitle": "Snap Shot",
+      "fileTitle": "File:Snap_Shot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Snap_Shot.gif/64px-Snap_Shot.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "snipe": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/snipe.png",
+      "style": "ranged",
+      "pageTitle": "Snipe",
+      "fileTitle": "File:Snipe.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Snipe.gif/64px-Snipe.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "bombardment": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/bombardment.png",
+      "style": "ranged",
+      "pageTitle": "Bombardment",
+      "fileTitle": "File:Bombardment.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Bombardment.gif/64px-Bombardment.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "rapid_fire": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/rapid-fire.png",
+      "style": "ranged",
+      "pageTitle": "Rapid Fire",
+      "fileTitle": "File:Rapid_Fire.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Rapid_Fire.gif/64px-Rapid_Fire.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "corruption_shot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/corruption-shot.png",
+      "style": "ranged",
+      "pageTitle": "Corruption Shot",
+      "fileTitle": "File:Corruption_Shot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Corruption_Shot.gif/64px-Corruption_Shot.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "shadow_tendrils": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/shadow-tendrils.png",
+      "style": "ranged",
+      "pageTitle": "Shadow Tendrils",
+      "fileTitle": "File:Shadow_Tendrils.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Shadow_Tendrils.gif/64px-Shadow_Tendrils.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "imbue_shadows": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/imbue-shadows.png",
+      "style": "ranged",
+      "pageTitle": "Imbue: Shadows",
+      "fileTitle": "File:Imbue-_Shadows.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Imbue-_Shadows.gif/64px-Imbue-_Shadows.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "deadshot": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/deadshot.png",
+      "style": "ranged",
+      "pageTitle": "Deadshot",
+      "fileTitle": "File:Deadshot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Deadshot.gif/64px-Deadshot.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "deadshot_igneous": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/deadshot-igneous.png",
+      "style": "ranged",
+      "pageTitle": "Deadshot",
+      "fileTitle": "File:Deadshot.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Deadshot.gif/64px-Deadshot.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "deaths_swiftness": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/deaths-swiftness.png",
+      "style": "ranged",
+      "pageTitle": "Death's Swiftness",
+      "fileTitle": "File:Death's_Swiftness.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Death%27s_Swiftness.gif/64px-Death%27s_Swiftness.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "greater_deaths_swiftness": {
+      "ok": true,
+      "path": "/game/combat/abilities/ranged/greater-deaths-swiftness.png",
+      "style": "ranged",
+      "pageTitle": "Greater Death's Swiftness",
+      "fileTitle": "File:Death's_Swiftness.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Death%27s_Swiftness.gif/64px-Death%27s_Swiftness.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "magic_attack": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/magic-attack.png",
+      "style": "magic",
+      "pageTitle": "Wrack",
+      "fileTitle": "File:Wrack.png",
+      "sourceUrl": "https://runescape.wiki/images/Wrack.png",
+      "category": "basic",
+      "cached": true
+    },
+    "sonic_wave": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/sonic-wave.png",
+      "style": "magic",
+      "pageTitle": "Sonic Wave",
+      "fileTitle": "File:Sonic_Wave.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Sonic_Wave.gif/64px-Sonic_Wave.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_sonic_wave": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/greater-sonic-wave.png",
+      "style": "magic",
+      "pageTitle": "Greater Sonic Wave",
+      "fileTitle": "File:Greater_Sonic_Wave.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Sonic_Wave.gif/64px-Greater_Sonic_Wave.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "dragon_breath": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/dragon-breath.png",
+      "style": "magic",
+      "pageTitle": "Dragon Breath",
+      "fileTitle": "File:Dragon_Breath.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Dragon_Breath.gif/64px-Dragon_Breath.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "dragon_breath_empowered": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/dragon-breath-empowered.png",
+      "style": "magic",
+      "pageTitle": "Dragon Breath",
+      "fileTitle": "File:Dragon_Breath.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Dragon_Breath.gif/64px-Dragon_Breath.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "impact": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/impact.png",
+      "style": "magic",
+      "pageTitle": "Impact",
+      "fileTitle": "File:Impact.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Impact.gif/64px-Impact.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "combust": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/combust.png",
+      "style": "magic",
+      "pageTitle": "Combust",
+      "fileTitle": "File:Combust.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Combust.gif/64px-Combust.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "chain": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/chain.png",
+      "style": "magic",
+      "pageTitle": "Chain",
+      "fileTitle": "File:Chain.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Chain.gif/64px-Chain.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_chain": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/greater-chain.png",
+      "style": "magic",
+      "pageTitle": "Greater Chain",
+      "fileTitle": "File:Chain.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Chain.gif/64px-Chain.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "concentrated_blast": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/concentrated-blast.png",
+      "style": "magic",
+      "pageTitle": "Concentrated Blast",
+      "fileTitle": "File:Concentrated_Blast.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Concentrated_Blast.gif/64px-Concentrated_Blast.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "greater_concentrated_blast": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/greater-concentrated-blast.png",
+      "style": "magic",
+      "pageTitle": "Greater Concentrated Blast",
+      "fileTitle": "File:Greater_Concentrated_Blast.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Concentrated_Blast.gif/64px-Greater_Concentrated_Blast.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "wild_magic": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/wild-magic.png",
+      "style": "magic",
+      "pageTitle": "Wild Magic",
+      "fileTitle": "File:Wild_Magic.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Wild_Magic.gif/64px-Wild_Magic.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "asphyxiate": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/asphyxiate.png",
+      "style": "magic",
+      "pageTitle": "Asphyxiate",
+      "fileTitle": "File:Asphyxiate.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Asphyxiate.gif/64px-Asphyxiate.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "asphyxiate_resplendence": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/asphyxiate-resplendence.png",
+      "style": "magic",
+      "pageTitle": "Asphyxiate",
+      "fileTitle": "File:Asphyxiate.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Asphyxiate.gif/64px-Asphyxiate.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "corruption_blast": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/corruption-blast.png",
+      "style": "magic",
+      "pageTitle": "Corruption Blast",
+      "fileTitle": "File:Corruption_Blast.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Corruption_Blast.gif/64px-Corruption_Blast.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "smoke_tendrils": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/smoke-tendrils.png",
+      "style": "magic",
+      "pageTitle": "Smoke Tendrils",
+      "fileTitle": "File:Smoke_Tendrils.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Smoke_Tendrils.gif/64px-Smoke_Tendrils.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "magma_tempest": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/magma-tempest.png",
+      "style": "magic",
+      "pageTitle": "Magma Tempest",
+      "fileTitle": "File:Magma_Tempest.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Magma_Tempest.gif/64px-Magma_Tempest.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "omnipower": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/omnipower.png",
+      "style": "magic",
+      "pageTitle": "Omnipower",
+      "fileTitle": "File:Omnipower.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Omnipower.gif/64px-Omnipower.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "omnipower_igneous": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/omnipower-igneous.png",
+      "style": "magic",
+      "pageTitle": "Omnipower",
+      "fileTitle": "File:Omnipower.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Omnipower.gif/64px-Omnipower.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "sunshine": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/sunshine.png",
+      "style": "magic",
+      "pageTitle": "Sunshine",
+      "fileTitle": "File:Sunshine.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Sunshine.gif/64px-Sunshine.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "greater_sunshine": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/greater-sunshine.png",
+      "style": "magic",
+      "pageTitle": "Greater Sunshine",
+      "fileTitle": "File:Greater_Sunshine.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Greater_Sunshine.gif/64px-Greater_Sunshine.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "tsunami": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/tsunami.png",
+      "style": "magic",
+      "pageTitle": "Tsunami",
+      "fileTitle": "File:Tsunami.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Tsunami.gif/64px-Tsunami.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "runic_charge": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/runic-charge.png",
+      "style": "magic",
+      "pageTitle": "Runic Charge",
+      "fileTitle": "File:Runic_Charge.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Runic_Charge.gif/64px-Runic_Charge.gif",
+      "category": "utility",
+      "cached": true
+    },
+    "instability": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/instability.png",
+      "style": "magic",
+      "pageTitle": "Instability",
+      "fileTitle": "File:Instability.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Instability.gif/64px-Instability.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "claws_of_guthix": {
+      "ok": true,
+      "path": "/game/combat/abilities/magic/claws-of-guthix.png",
+      "style": "magic",
+      "pageTitle": "Claws of Guthix",
+      "fileTitle": "File:Claws_of_Guthix.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Claws_of_Guthix.gif/64px-Claws_of_Guthix.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "necromancy_basic": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/necromancy-basic.png",
+      "style": "necromancy",
+      "pageTitle": "Necromancy (ability)",
+      "fileTitle": "File:Necromancy_(ability).gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Necromancy_%28ability%29.gif/64px-Necromancy_%28ability%29.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "soul_sap": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/soul-sap.png",
+      "style": "necromancy",
+      "pageTitle": "Soul Sap",
+      "fileTitle": "File:Soul_Sap.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Soul_Sap.gif/64px-Soul_Sap.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "touch_of_death": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/touch-of-death.png",
+      "style": "necromancy",
+      "pageTitle": "Touch of Death",
+      "fileTitle": "File:Touch_of_Death.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Touch_of_Death.gif/64px-Touch_of_Death.gif",
+      "category": "basic",
+      "cached": true
+    },
+    "finger_of_death": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/finger-of-death.png",
+      "style": "necromancy",
+      "pageTitle": "Finger of Death",
+      "fileTitle": "File:Finger_of_Death.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Finger_of_Death.gif/64px-Finger_of_Death.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "death_skulls": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/death-skulls.png",
+      "style": "necromancy",
+      "pageTitle": "Death Skulls",
+      "fileTitle": "File:Death_Skulls.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Death_Skulls.gif/64px-Death_Skulls.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "soul_strike": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/soul-strike.png",
+      "style": "necromancy",
+      "pageTitle": "Soul Strike",
+      "fileTitle": "File:Soul_Strike.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Soul_Strike.gif/64px-Soul_Strike.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "spectral_scythe": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/spectral-scythe.png",
+      "style": "necromancy",
+      "pageTitle": "Spectral Scythe",
+      "fileTitle": "File:Spectral_Scythe.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Spectral_Scythe.gif/64px-Spectral_Scythe.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "spectral_scythe_2": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/spectral-scythe-2.png",
+      "style": "necromancy",
+      "pageTitle": "Spectral Scythe",
+      "fileTitle": "File:Spectral_Scythe.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Spectral_Scythe.gif/64px-Spectral_Scythe.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "spectral_scythe_3": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/spectral-scythe-3.png",
+      "style": "necromancy",
+      "pageTitle": "Spectral Scythe",
+      "fileTitle": "File:Spectral_Scythe.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Spectral_Scythe.gif/64px-Spectral_Scythe.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "bloat": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/bloat.png",
+      "style": "necromancy",
+      "pageTitle": "Bloat",
+      "fileTitle": "File:Bloat.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Bloat.gif/64px-Bloat.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "living_death": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/living-death.png",
+      "style": "necromancy",
+      "pageTitle": "Living Death",
+      "fileTitle": "File:Living_Death.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Living_Death.gif/64px-Living_Death.gif",
+      "category": "ultimate",
+      "cached": true
+    },
+    "blood_siphon": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/blood-siphon.png",
+      "style": "necromancy",
+      "pageTitle": "Blood Siphon",
+      "fileTitle": "File:Blood_Siphon.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Blood_Siphon.gif/64px-Blood_Siphon.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "command_skeleton_warrior": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/command-skeleton-warrior.png",
+      "style": "necromancy",
+      "pageTitle": "Command Skeleton Warrior",
+      "fileTitle": "File:Command_Skeleton_Warrior.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Command_Skeleton_Warrior.gif/64px-Command_Skeleton_Warrior.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "command_putrid_zombie": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/command-putrid-zombie.png",
+      "style": "necromancy",
+      "pageTitle": "Command Putrid Zombie",
+      "fileTitle": "File:Command_Putrid_Zombie.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Command_Putrid_Zombie.gif/64px-Command_Putrid_Zombie.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "command_phantom_guardian": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/command-phantom-guardian.png",
+      "style": "necromancy",
+      "pageTitle": "Command Phantom Guardian",
+      "fileTitle": "File:Command_Phantom_Guardian.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Command_Phantom_Guardian.gif/64px-Command_Phantom_Guardian.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "death_grasp": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/death-grasp.png",
+      "style": "necromancy",
+      "pageTitle": "Death Grasp",
+      "fileTitle": "File:Death_Grasp.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Death_Grasp.gif/64px-Death_Grasp.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "conjure_skeleton_warrior": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/conjure-skeleton-warrior.png",
+      "style": "necromancy",
+      "pageTitle": "Conjure Skeleton Warrior",
+      "fileTitle": "File:Conjure_Skeleton_Warrior.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Conjure_Skeleton_Warrior.gif/64px-Conjure_Skeleton_Warrior.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "conjure_vengeful_ghost": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/conjure-vengeful-ghost.png",
+      "style": "necromancy",
+      "pageTitle": "Conjure Vengeful Ghost",
+      "fileTitle": "File:Conjure_Vengeful_Ghost.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Conjure_Vengeful_Ghost.gif/64px-Conjure_Vengeful_Ghost.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "conjure_putrid_zombie": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/conjure-putrid-zombie.png",
+      "style": "necromancy",
+      "pageTitle": "Conjure Putrid Zombie",
+      "fileTitle": "File:Conjure_Putrid_Zombie.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Conjure_Putrid_Zombie.gif/64px-Conjure_Putrid_Zombie.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "conjure_phantom_guardian": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/conjure-phantom-guardian.png",
+      "style": "necromancy",
+      "pageTitle": "Conjure Phantom Guardian",
+      "fileTitle": "File:Conjure_Phantom_Guardian.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Conjure_Phantom_Guardian.gif/64px-Conjure_Phantom_Guardian.gif",
+      "category": "enhanced",
+      "cached": true
+    },
+    "conjure_undead_army": {
+      "ok": true,
+      "path": "/game/combat/abilities/necromancy/conjure-undead-army.png",
+      "style": "necromancy",
+      "pageTitle": "Conjure Undead Army",
+      "fileTitle": "File:Conjure_Undead_Army.gif",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Conjure_Undead_Army.gif/64px-Conjure_Undead_Army.gif",
+      "category": "enhanced",
+      "cached": true
+    }
+  }
+}

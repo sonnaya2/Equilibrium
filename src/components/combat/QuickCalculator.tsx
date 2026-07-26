@@ -13,8 +13,9 @@ import {
   VOLLEY_MIN_SOULS,
   volleyOfSouls,
 } from "@/combat/styles/necromancy/abilities";
-import { styleIconPath } from "@/lib/gameArt";
+import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { NumberField } from "./NumberField";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -65,8 +66,8 @@ function hitBandLabel(a: AbilitySpec): string {
 }
 
 function abilityMeta(ability: AbilitySpec): string {
+  // Category is shown as a chip next to the name — meta is the rest only.
   return [
-    ability.category,
     ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
     ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
     ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
@@ -185,7 +186,17 @@ export function QuickCalculator() {
                       }}
                       style={{ cursor: "pointer" }}
                     >
-                      <td className="font-medium">{a.name}</td>
+                      <td className="font-medium">
+                        <span className="inline-flex min-w-0 items-center gap-1.5">
+                          <GameIcon
+                            src={abilityIconPath(a.id, a.style)}
+                            size={18}
+                            className="shrink-0"
+                          />
+                          <span className="min-w-0 truncate">{a.name}</span>
+                          <AbilityCategoryChip category={a.category} />
+                        </span>
+                      </td>
                       <td className="mono secondary">{hitBandLabel(a)}</td>
                     </tr>
                   );
@@ -197,8 +208,16 @@ export function QuickCalculator() {
 
       {ability && result ? (
         <div className="panel panel--facet min-w-0">
-          <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
-            <h3 className="m-0 text-inherit font-medium">{ability.name}</h3>
+          <div className="panel-head flex flex-wrap items-center justify-between gap-2">
+            <h3 className="m-0 flex min-w-0 items-center gap-2 text-inherit font-medium">
+              <GameIcon
+                src={abilityIconPath(ability.id, ability.style)}
+                size={22}
+                className="shrink-0"
+              />
+              <span className="min-w-0 truncate">{ability.name}</span>
+              <AbilityCategoryChip category={ability.category} />
+            </h3>
             <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
               {hitBandLabel(ability)}
             </span>
@@ -266,7 +285,15 @@ export function QuickCalculator() {
       ) : ability && ability.hits.length === 0 ? (
         <div className="panel panel--facet min-w-0">
           <div className="panel-head">
-            <h3 className="m-0 text-inherit font-medium">{ability.name}</h3>
+            <h3 className="m-0 flex items-center gap-2 text-inherit font-medium">
+              <GameIcon
+                src={abilityIconPath(ability.id, ability.style)}
+                size={22}
+                className="shrink-0"
+              />
+              <span>{ability.name}</span>
+              <AbilityCategoryChip category={ability.category} />
+            </h3>
           </div>
           <div className="panel-body">
             <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>

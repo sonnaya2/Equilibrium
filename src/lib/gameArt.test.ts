@@ -2,6 +2,8 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  abilityCategoryLabel,
+  abilityIconPath,
   equipmentIconPath,
   gameIconPath,
   regionCrestPath,
@@ -19,6 +21,12 @@ describe("gameArt", () => {
       "/game/combat/equipment/seismic-wand.png",
     );
     expect(equipmentIconPath("seismic-wand")).toBe("/game/combat/equipment/seismic-wand.png");
+    expect(abilityIconPath("greater_barge", "melee")).toBe(
+      "/game/combat/abilities/melee/greater-barge.png",
+    );
+    expect(abilityCategoryLabel("enhanced")).toBe("threshold");
+    expect(abilityCategoryLabel("basic")).toBe("basic");
+    expect(abilityCategoryLabel("ultimate")).toBe("ultimate");
   });
 
   it("every style icon is published to public/game", () => {

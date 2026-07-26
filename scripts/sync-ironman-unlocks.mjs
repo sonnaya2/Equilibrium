@@ -86,7 +86,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Slayer_Rewards",
   },
   {
-    id: "karamja:natures-sentinel-outfit",
+    id: "cross-region:natures-sentinel-outfit",
     name: "Nature's Sentinel outfit",
     recordType: "equipment",
     regionHints: ["karamja"],
@@ -100,10 +100,10 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Nature%27s_sentinel_outfit",
   },
   {
-    id: "asgarnia:master-thief-tools",
+    id: "misthalin:thieves-guild-master-tools",
     name: "Master thief's lockpick + master thief's stethoscope",
     recordType: "equipment",
-    regionHints: ["asgarnia"],
+    regionHints: ["misthalin"],
     category: "Thieving permanent tools",
     detail:
       "Thieves' Guild permanent tools required for efficient Keldagrim chests (94+) and safecracking/heists QoL. Complements Trahaearn exoskeleton for ironman Thieving.",
@@ -114,7 +114,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Master_thief%27s_lockpick",
   },
   {
-    id: "global:sticky-fingers-relic",
+    id: "morytania:sticky-fingers-relic",
     name: "Sticky Fingers (Archaeology relic)",
     recordType: "activity",
     regionHints: ["anachronia", "misthalin"],
@@ -128,7 +128,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Sticky_Fingers",
   },
   {
-    id: "multi-region:master-camouflage-outfit",
+    id: "cross-region:master-camouflage-outfit",
     name: "Master camouflage outfit",
     recordType: "equipment",
     regionHints: ["desert", "asgarnia", "kandarin", "morytania"],
@@ -142,8 +142,8 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Master_camouflage_outfit",
   },
   {
-    id: "global:aquarium-prawn-perks",
-    name: "Aquarium room + Prawn Perks",
+    id: "cross-region:poh-aquarium-prawnbroker",
+    name: "Player-owned house Aquarium and Prawnbroker",
     recordType: "activity",
     regionHints: ["misthalin", "asgarnia", "kandarin"],
     category: "Fishing POH permanent infrastructure",
@@ -156,7 +156,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Aquarium",
   },
   {
-    id: "global:botanists-amulet",
+    id: "asgarnia:botanists-amulet",
     name: "Botanist's amulet",
     recordType: "equipment",
     regionHints: ["asgarnia", "kandarin"],
@@ -184,7 +184,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Passing_bracelet",
   },
   {
-    id: "global:ore-box-tier-upgrades",
+    id: "asgarnia:ore-box-tier-upgrades",
     name: "Ore box tier upgrades",
     recordType: "equipment",
     regionHints: ["asgarnia", "fremennik", "forinthry"],
@@ -198,7 +198,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Ore_box",
   },
   {
-    id: "global:wood-box-tier-upgrades",
+    id: "misthalin:wood-box-tier-upgrades",
     name: "Wood box tier upgrades",
     recordType: "equipment",
     regionHints: ["asgarnia", "kandarin", "misthalin"],
@@ -230,13 +230,13 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Ferocious_ring",
   },
   {
-    id: "multi-region:cremation-ability",
+    id: "morytania:cremation-ability",
     name: "Cremation ability unlock",
     recordType: "activity",
     regionHints: ["morytania", "forinthry"],
     category: "Prayer permanent ability unlock",
     detail:
-      "Ironman Prayer alternate offering path (250% Prayer + Firemaking). Rare ghost drop permanent ability — distinct from Sunspear vyre cremation and Shades of Mort'ton methods already indexed.",
+      "Ironman Prayer alternate offering path (2.5x bury Prayer XP + 2x bury Firemaking XP). Rare ghost drop permanent ability — distinct from Sunspear vyre cremation and Shades of Mort'ton methods already indexed.",
     requirements: ["Cremation ability drop from ghosts / wiki acquisition"],
     confidence: "confirmed_wiki",
     skill: "Prayer",
@@ -244,7 +244,7 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Cremation",
   },
   {
-    id: "kandarin:fishing-outfit-fish-flingers",
+    id: "kandarin:fishing-outfit",
     name: "Fishing outfit (Fish Flingers)",
     recordType: "equipment",
     regionHints: ["kandarin"],

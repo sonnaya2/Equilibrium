@@ -1,0 +1,189 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "High-value ironman permanent unlocks still missing after enrichment packs: Fish Flingers fishing outfit, Thieves' Guild master tools, botanist's amulet, passing bracelet, ore/wood box tier chains, Memorial boons checklist, and Cremation ability (distinct from shades/vyre methods). Wiki-backed effects only — no invented XP/h.",
+  "policy": {
+    "region_rule": "region_hint is practical self-sufficient acquisition or use geography. Never use global/multi-region as a region token.",
+    "no_trade_rule": "Ironman / League self-sufficient paths only.",
+    "rate_rule": "Unlock state and effects only — no invented rates.",
+    "duplicate_guard": "Do not re-emit: multi-region:slayer-helmet-*, multi-region:toolbelt-*-attach, cross-region:natures-sentinel-outfit, cross-region:master-camouflage-outfit, cross-region:poh-aquarium-prawnbroker, morytania:sticky-fingers-relic, kandarin:shark-outfit-deep-sea, kandarin:fury-shark-outfit, asgarnia:botanists-outfit, asgarnia:factory-outfit."
+  },
+  "activity_additions": [
+    {
+      "id": "kandarin:memorial-to-guthix-boons",
+      "name": "Memorial to Guthix echo boons",
+      "category": "Divination permanent passive unlocks",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Memorial to Guthix D&D site (Piscatoris / Eagles' Peak area)",
+        "Divination energy and memory strands to charge engrams for fountain buffs"
+      ],
+      "unlocks": [
+        "Permanent Memorial fountain buffs selectable after engram hand-ins",
+        "Prestige / concurrent buff slots as wiki progression allows",
+        "Account-state Divination passives used as ironman 1–99 backbone"
+      ],
+      "notes": "kandarin:memorial-to-guthix is the site hub. This row is the permanent boon checklist planners need — not the geography hub alone. Do not invent energy rates or prestige XP.",
+      "source_urls": [
+        "https://runescape.wiki/w/Memorial_to_Guthix",
+        "https://runescape.wiki/w/Divination#Boons"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for the memorial site and fountain selection. Engram farms may pressure other regions only as support."
+    },
+    {
+      "id": "morytania:cremation-ability",
+      "name": "Cremation ability unlock",
+      "category": "Prayer permanent ability unlock",
+      "region_hint": "morytania",
+      "region_hints": ["morytania", "forinthry", "misthalin"],
+      "requirements": [
+        "Rare drop of the Cremation ability from ghosts / ghost-like monsters (wiki drop tables)"
+      ],
+      "unlocks": [
+        "Burn bones on player-made fires or portable braziers",
+        "2.5× bury Prayer XP and 2× bury Firemaking XP on successful cremation"
+      ],
+      "notes": "Distinct from morytania:shades-of-mortton-cremation and morytania:vyre-cremation-sunspear. This is the permanent account ability from ghost drops. Do not invent drop rates. Morytania is primary ghost density pressure; Forinthry revenants and Misthalin ankou are support.",
+      "source_urls": [
+        "https://runescape.wiki/w/Cremation"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Morytania ghost density. Forinthry/Misthalin are optional farm pressure only.",
+      "region_requirement_type": "support"
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "kandarin:fishing-outfit",
+      "name": "Fishing outfit (Fish Flingers)",
+      "category": "Fishing XP outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Fish Flingers D&D access at Isla Anglerine",
+        "140 Fish Flingers tokens per piece (560 full four-piece set) from the Fisherman"
+      ],
+      "effects": [
+        "1% Fishing XP per worn piece (4% for four pieces)",
+        "+1% set bonus when full set worn (5% total)",
+        "Does not boost Fish Flingers itself",
+        "Fury shark / shark outfits inherit this XP layer after fishing outfit worn at least once"
+      ],
+      "notes": "Base angler-class Fishing XP set. Distinct from kandarin:shark-outfit-deep-sea / kandarin:fury-shark-outfit elite catch/QoL path. Storeable in POH armour case or tackle box.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fishing_outfit",
+        "https://runescape.wiki/w/Fish_Flingers",
+        "https://runescape.wiki/w/Isla_Anglerine"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin Fish Flingers path. Pair with fury shark for late Fishing stacks."
+    },
+    {
+      "id": "misthalin:thieves-guild-master-tools",
+      "name": "Master thief's lockpick + master thief's stethoscope",
+      "category": "Thieving permanent tools",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Thieves' Guild access (Buyers and Cellars series)",
+        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
+      ],
+      "effects": [
+        "Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick)",
+        "Master thief's stethoscope: permanent safecracking QoL toolbelt path"
+      ],
+      "notes": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Complements Trahaearn exoskeleton and master camouflage.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "https://runescape.wiki/w/Master_thief%27s_stethoscope",
+        "https://runescape.wiki/w/Dodgy_Derek%27s_Dirty_Deals"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin Thieves' Guild. Not Asgarnia."
+    },
+    {
+      "id": "asgarnia:botanists-amulet",
+      "name": "Botanist's amulet",
+      "category": "Herblore production amulet",
+      "region_hint": "asgarnia",
+      "requirements": [
+        "Jade amulet + Lvl-2 Enchant (or craft silver + jade + wool then enchant)",
+        "Charges consumed when the 4-dose effect triggers (5 charges per new amulet)"
+      ],
+      "effects": [
+        "Approximately 5% chance to brew a 4-dose potion instead of 3-dose while worn",
+        "Stacks with factory outfit 4-dose chance and related Herblore production bonuses"
+      ],
+      "notes": "Ironman Herblore ideal-setup amulet. Craft is global once materials exist; Asgarnia is the practical association via Flash Powder Factory / botanist+factory outfit stack planning. Do not invent mix rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Botanist%27s_amulet"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Pair with asgarnia:factory-outfit and asgarnia:botanists-outfit. Materials multi-region; Asgarnia is production-stack geography."
+    },
+    {
+      "id": "misthalin:passing-bracelet",
+      "name": "Passing bracelet",
+      "category": "Underworld teleport jewelry",
+      "region_hint": "misthalin",
+      "requirements": [
+        "Necromancy! completed",
+        "Moonstone bracelet + Lvl-5 Enchant"
+      ],
+      "effects": [
+        "Unlimited teleports to City of Um: Hanging Gardens, Haunt on the Hill, Reflection Pool",
+        "Haunt on the Hill for necrotic rune dark portal; Reflection Pool for ghostly sole fishing"
+      ],
+      "notes": "Ironman Fishing ghostly sole AFK bank loop and RC/necrotic rune QoL. City of Um is Misthalin working taxonomy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Passing_bracelet",
+        "https://runescape.wiki/w/City_of_Um"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin City of Um destinations. Moonstone materials may pressure Necromancy/Anachronia supply."
+    },
+    {
+      "id": "asgarnia:ore-box-tier-upgrades",
+      "name": "Ore box tier upgrades",
+      "category": "Mining inventory tool progression",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "forinthry"],
+      "requirements": [
+        "Smithing level for each ore box tier (bronze through primal)",
+        "Anvil access; upgrade by adding two bars of the next metal to the current box"
+      ],
+      "effects": [
+        "Stores ores and stone spirits by tier; empties to bank / metal bank / deposit box",
+        "Capacity scales with Mining milestones and Everything Is Oresome achievements"
+      ],
+      "notes": "Core ironman Mining logistics chain. Asgarnia Artisans / Mining Guild is the practical smithing loop; Forinthry is support for primal/Daemonheim ore tiers. No invented XP.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ore_boxes",
+        "https://runescape.wiki/w/Ore_box"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia primary smith/Mining Guild loop. Forinthry support for late primal tier materials.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "misthalin:wood-box-tier-upgrades",
+      "name": "Wood box tier upgrades",
+      "category": "Woodcutting inventory tool progression",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "kandarin"],
+      "requirements": [
+        "Fletching level for each wood box tier (wood through eternal magic)",
+        "Prior-tier wood box plus logs of the upgrade tier"
+      ],
+      "effects": [
+        "Stores logs by tier; empties at bank / deposit box / log pile",
+        "Grove upgrades enable wood spirit / nest / geode storage in wood boxes"
+      ],
+      "notes": "Parallel inventory chain to ore boxes. Misthalin Woodcutters' Grove is the fort association for spirit storage; Kandarin is general WC tree pressure. No invented XP.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wood_box"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin Grove association for advanced storage. Kandarin support for tree density.",
+      "region_requirement_type": "support"
+    }
+  ]
+}

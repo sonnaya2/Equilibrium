@@ -7,16 +7,23 @@
     "progression-enrichment-regional-skilling-asgarnia-2026-07-26.json",
     "progression-enrichment-regional-skilling-cross-chains-2026-07-26.json",
     "progression-enrichment-regional-skilling-desert-2026-07-26.json",
+    "progression-enrichment-regional-skilling-diaries-2026-07-26.json",
     "progression-enrichment-regional-skilling-forinthry-2026-07-26.json",
     "progression-enrichment-regional-skilling-fremennik-2026-07-26.json",
     "progression-enrichment-regional-skilling-gaps-2026-07-26.json",
+    "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json",
+    "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json",
+    "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json",
     "progression-enrichment-regional-skilling-ironman-unlocks-2026-07-26.json",
     "progression-enrichment-regional-skilling-kandarin-2026-07-26.json",
     "progression-enrichment-regional-skilling-karamja-2026-07-26.json",
     "progression-enrichment-regional-skilling-misthalin-2026-07-26.json",
     "progression-enrichment-regional-skilling-morytania-2026-07-26.json",
     "progression-enrichment-regional-skilling-outfits-2026-07-25.json",
+    "progression-enrichment-regional-skilling-outfits-2026-07-26.json",
+    "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json",
     "progression-enrichment-regional-skilling-tirannwn-2026-07-26.json",
+    "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json",
     "audit-ironman-unlocks-vs-app-2026-07-26.json"
   ],
   "records": [
@@ -1516,6 +1523,105 @@
       "sourceFile": "progression-enrichment-regional-skilling-desert-2026-07-26.json"
     },
     {
+      "id": "global:area-tasks-overview",
+      "name": "Area Tasks (achievement diaries) skilling overview",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "karamja",
+        "desert",
+        "morytania",
+        "forinthry",
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary acquisition frame",
+      "detail": "This file is the diary-first skilling catalog. Prefer equipment rows below for stacking; regional skilling files may still carry activity context (e.g. Ourania, Abyss, Miscellania). · Achievement and quest gates follow Equilibrium auto-quest overlays. Region ownership of reward items follows diary geography, not task-start locality for every single task. · Unlocks: One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire), Task Master emote after completing all Area Tasks achievements, Daemonheim Area Tasks benefits are passive (aura items removed)",
+      "requirements": [
+        "Members for all Area Tasks sets except some free Lumbridge achievements",
+        "Prior reward tier claimed before the next (e.g. armour 2 before armour 3)",
+        "Skill, quest, and activity gates per easy/medium/hard/elite subcategory"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Area_Tasks_achievements",
+        "title": "Area Tasks (achievement diaries) skilling overview",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:area-tasks-daemonheim-passives",
+      "name": "Daemonheim Area Tasks passive rewards",
+      "recordType": "activity",
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary passive Dungeoneering unlocks",
+      "detail": "Not a wearable diary item post-Aura Overhaul. Track as Forinthry Dungeoneering permanent unlocks. Resource-dungeon extensions are the main skilling geography side-effect outside floors. · Hard Forinthry (Daemonheim). Do not list a Daemonheim aura equipment piece for live Equilibrium planning. · Unlocks: Easy: secondary ring of kinship role at 25% effectiveness; daily boss choice; one consequence-free death per day in a dungeon (not hard mode), Medium: secondary role 50%; potion bind slot; Smuggler 40 law + cosmic runes each dungeon; Daemonheim Peninsula Island extension (yew trees + deposit box); in-dungeon ammo return and auto-bury when the old aura-worn effects apply as passives, Hard: secondary role 75%; +2 bind pool slots; 5% recharge cost reduction; +10% Sinkholes rewards; Dwarven Mine resource dungeon extension (phasmatite), Elite: secondary role 100%; hard mode party-leader start; 10% Smuggler discount; Brimhaven resource dungeon extension (mithril dragons); Gatestone 2 access; bone-to-prayer restore operate effect (1 hour, 3 hour cooldown) as documented historically",
+      "requirements": [
+        "Easy through elite Daemonheim achievements claimed in order",
+        "Aura items themselves removed in Aura Overhaul (13 April 2026); unlocks remain"
+      ],
+      "confidence": "confirmed_wiki_aura_removed_passives_remain",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Daemonheim_aura",
+        "title": "Daemonheim Area Tasks passive rewards",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "anachronia:no-area-tasks-diary",
+      "name": "Anachronia has no Area Tasks diary reward",
+      "recordType": "activity",
+      "regionHints": [
+        "anachronia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "absence note",
+      "detail": "Wiki Area Tasks areas list does not include Anachronia. Skilling rewards on Anachronia (Herby Werby, Orthen, base camp, totems) are not diary equipment. Do not invent a diary item. · No diary gate for Anachronia region planning.",
+      "requirements": [],
+      "confidence": "confirmed_wiki_absence",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Area_Tasks_achievements",
+        "title": "Anachronia has no Area Tasks diary reward",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "havenhythe:no-area-tasks-diary",
+      "name": "Havenhythe has no Area Tasks diary reward",
+      "recordType": "activity",
+      "regionHints": [
+        "havenhythe"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "absence note",
+      "detail": "Wiki Area Tasks areas list does not include Havenhythe / Moonrise. Ritual ring and dig-site unlocks are separate Archaeology/Necromancy systems. · No diary gate for Havenhythe region planning.",
+      "requirements": [],
+      "confidence": "confirmed_wiki_absence",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Area_Tasks_achievements",
+        "title": "Havenhythe has no Area Tasks diary reward",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
       "id": "forinthry:abyss-entrance",
       "name": "Abyss entrance (Mage of Zamorak)",
       "recordType": "activity",
@@ -2278,6 +2384,819 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-gaps-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:cooks-guild",
+      "name": "Cooks' Guild (Cooking Guild)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Cooking guild infrastructure",
+      "detail": "Equilibrium / wiki League badge places the Cooks' Guild in Misthalin (Varrock), not Asgarnia or Kandarin. First guild ever released. Bank is members-only and diary-gated. Pair with misthalin:cooking-gauntlets and misthalin:fort-kitchen for full Cooking infrastructure stack — do not re-emit those ids. · Hard Misthalin Cooking hub. Diary bank access may follow League diary overrides. · Unlocks: Three-storey production hub: ranges, sink, dairy churn, flour mill hopper/bin, pie and cake utensils, Romily Weaklax pie stall and pie-bake orders, Head Chef Cooking cape at 99 Cooking (members), Members bank + range room after hard Varrock achievements (Varrock armour 3 makes dairy churn bank-adjacent), Skills necklace teleport to the guild entrance",
+      "requirements": [
+        "32 Cooking",
+        "Chef's hat, sous chef's toque, Cooking cape, max cape, or hard Varrock achievements for entry without headgear"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_example",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Cooks%27_Guild",
+        "title": "Cooks' Guild (Cooking Guild)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:wizards-tower-runecrafting-guild",
+      "name": "Wizards' Tower and Runecrafting Guild",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Runecrafting guild and portal infrastructure",
+      "detail": "Geography is Misthalin. Complements existing misthalin:runespan-portal and misthalin:runespan-master-runecrafter-robes / ethereal outfit rows — this id owns the guild building, omni-talisman path, pouch repair, and tower roof portals as permanent RC infrastructure, not the Runespan XP method itself. · Hard Misthalin RC hub. Altar geography for individual runes remains regional (e.g. asgarnia:runecrafting-altars, morytania blood, desert soul). · Unlocks: Runecrafting Guild inside Runespan via blue roof portal, Low- and mid-level Runespan portals on the same roof (training infrastructure; ethereal outfits already modeled under misthalin:runespan-*), Wizard Elriss token shop (Great Orb Project rewards), omni-talisman creation after showing all talismans/tiaras, free omni replacements, Wizard Korvak pouch sale/repair and omni-talisman bind to tiara / Runecrafting staff, Rune Goldberg Machine (vis wax D&D), altar location map, bank deposit box, Larriar Runecrafting cape at 99 Runecrafting, Archmage Sedridor free Rune Essence mine teleport; altar wizards free teleports to tower roof, Wicked hood / traveller's necklace / fairy ring DIS / skills necklace access patterns",
+      "requirements": [
+        "50 Runecrafting to enter the Runecrafting Guild (boostable)",
+        "Access to Wizards' Tower roof (no combat gate)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Runecrafting_Guild",
+        "title": "Wizards' Tower and Runecrafting Guild",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "tirannwn:max-guild",
+      "name": "Max Guild (Prifddinas skill portals)",
+      "recordType": "activity",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "endgame skilling teleport hub",
+      "detail": "Combat boss portal is out of skilling scope — record skill portals only. Portal use still requires the destination skill/quest; Max Guild is a Tirannwn routing hub, not a free unlock of every destination region. Prefer existing activity rows for LRC, DSF, Invention Guild, Ranch Out of Time when ranking those methods. · Hard Tirannwn. Individual portal destinations may still require their home regions when those regions are locked. · Unlocks: Two garden skill portals (second portal at 15 skills at 99): free first tune; retune fee starts 100k coins and falls 10k per five 99s to a 50k floor, Skilling destinations include: active crystal tree, Jadinko Lair, Lava Flow Mine, Living Rock Caverns, brilliant/radiant/luminous/incandescent wisp colonies, Runespan upper floor, Tree Gnome Stronghold, Zanaris fairy ring, Puro-Puro, Prifddinas Waterfall, Invention Guild, Menaphos VIP skilling area, Deep Sea Fishing hub, overgrown idols, Anachronia Dinosaur Farm (5,000 beans market unlock), Elen Anterth cape shop (all skillcapes + max cape) and max-cape teleport garden/tower toggle, Rhodri Dail potion/flask decanting and crystal enchant inside the tower, Crystal acorn gift on first tower entry for crystal tree growth",
+      "requirements": [
+        "Plague's End for Prifddinas access",
+        "Garden: any level 99 or wearable Quest Cape",
+        "Tower interior: max cape",
+        "Destination-specific skill/quest gates for each portal tune"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Max_Guild",
+        "title": "Max Guild (Prifddinas skill portals)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:invention-guild-machines-named",
+      "name": "Invention Guild named machine room",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention offline machine inventory",
+      "detail": "Named list expansion for planner checklists. Does not replace cross-region:invention-machines-guild (power math, Fort bonus, workbench vs hotspot distinction). Full five tier-2 machines need 260 power; jumbo+Fort maxes at 200 — layout trade-offs are mandatory. BoB inventory inaccessible inside the guild. · Hard Asgarnia for machine hotspots. Misthalin optional for Fort Workshop +40 power only. · Unlocks: Auto disassembler (60 Inv, 30 power) / Auto disassembler mk. II (81 Inv, 40 power) — offline disassemble for components, Alchemiser (72 Inv, 20 power; max 2) / Alchemiser mk. II (108 Inv, 55 power) — offline High Alchemy (mk. II nature only), Partial potion producer (90 Inv, 20 power) / Partial potion producer DX (114 Inv, 50 power) — clean herbs to unfinished potions + vials of water, Automatic hide tanner (93 Inv, 25 power) / Optimised hide tanner (111 Inv, 50 power) — free hide tanning including dinosaur hide, Plank maker (99 Inv, 30 power) / High capacity plank maker (117 Inv, 65 power) — logs to planks without coins, Hourly machine tick while logged out while machine charge and inputs remain; divine charges → 3,000 machine charge each",
+      "requirements": [
+        "60 Invention for machine tutorial and first hotspots (boostable to build)",
+        "Six machine hotspots + one generator hotspot; machines only buildable in this room",
+        "Generator tiers: Simple 60 Inv (100 power), Large 80 (125), Jumbo 102 (160); Fort Forinthry tier-3 Workshop +40 power to 200"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Machines",
+        "title": "Invention Guild named machine room",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:poh-portal-towns",
+      "name": "Player-owned house portal towns and Construction utilities",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia",
+        "kandarin",
+        "karamja",
+        "fremennik",
+        "desert",
+        "tirannwn",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Construction teleport and housing infrastructure",
+      "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub (misthalin:fort-forinthry-workshop). Do not claim every portal destination region is required to own a house. · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock. · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
+      "requirements": [
+        "Construction tutorial / house owned",
+        "Portal location Con levels: Rimmington/Taverley 1, Pollnivneach 20, Rellekka 30, Brimhaven 40, Yanille 50, Menaphos 50 + Jack of Spades, Otot 60 + 1,750 Mazcab reputation, Prifddinas 75 + Plague's End",
+        "Post-13 Jul 2026 POH rework: houses accessible from any portal the player qualifies for; estate agent sets default exit only"
+      ],
+      "confidence": "confirmed_wiki_with_2026_current_rule",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/House_portal",
+        "title": "Player-owned house portal towns and Construction utilities",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:player-owned-ports-skilling-rewards",
+      "name": "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "ports trade-goods and skilling-scroll infrastructure",
+      "detail": "Combat-facing Tetsu / Death Lotus / Seasinger gear is ports content but stays combat catalogs — this row is scrimshaws, soups, and trade-goods production. Equilibrium maps The Arc under Asgarnia; Port Sarim portal is Asgarnia-local entry. Pair with asgarnia:arc-skilling-access for island activities. Ports table at Fort Command Centre is Misthalin convenience, not a second home region claim. · Asgarnia owns Port Sarim hub and Equilibrium Arc mapping. Adventurer skill gates remain global skill requirements. · Unlocks: Skilling scrimshaw scrolls (pocket slot): log-splitting, rock-crushing, tree-shaking, gem-finding, whopper-baiting, casket-salvaging, memory-crushing, energy-gathering (plus combat scrimshaws out of skilling priority), Eastern soups: rocktail soup (93 Cooking) and sailfish soup (99 Cooking) from spices + fish in the port Workshop, Trade goods supply loop: ancient bones, plate, spices, lacquer, chi, pearls, koi scales from standard and adventurer special voyages, Captain's Log port teleport; office tiers unlock extra ship slots; warehouse tiers boost voyage rewards",
+      "requirements": [
+        "Members; 90 unboostable in at least one ports skill to progress voyages (Agility, Construction, Cooking, Divination, Dungeoneering, Fishing, Herblore, Hunter, Prayer, Runecrafting, Slayer, Thieving)",
+        "Workshop upgrade after unlocking The Hook region for scroll crafting",
+        "Scroll pieces via focused scroll voyages; trade goods soft-cap 250 stored"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_example",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Player-owned_port",
+        "title": "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:poh-aquarium-prawnbroker",
+      "name": "Player-owned house Aquarium and Prawnbroker",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia",
+        "kandarin",
+        "fremennik"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Fishing permanent perk infrastructure",
+      "detail": "Aquarium is POH-global, not a Fort Forinthry building — Fort Kitchen is separate (misthalin:fort-kitchen). region_hint asgarnia follows default Rimmington/Taverley housing utility; landmark bonuses apply at multi-region fishing spots. Not missing from Fort — intentionally modeled as POH. · House-owned unlock; any region with a house portal can host the build. Landmark fishing sites remain regional. · Unlocks: Aquarium room via bathysphere; weekly seaweed/kelp/oyster/mermaid purse/treasure chest decorations (5× weekly output post-Dailyscape overhaul), Landmark decorations: +2% base Fishing XP and higher golden-egg chance at matching spots (Catherby, LRC, Otto's Grotto, Piscatoris, Fishing Guild, Shilo) once stored in bathysphere, Prawnbroker prawn perks (15 for completionist; 18 perk points for trimmed): denser prawn balls, baitless fishing, featherless fly fishing with species choice, barbarian baitless, great white shark fishing, sushi Cooking recipes, pennies/pounds duration, Sayln the Shark pet, Prestige plugs for silver/gold barehand fishing animations after filling all 14 fish",
+      "requirements": [
+        "63 Construction for bathysphere + oyster hunter diving suit + driftwood prawnbroker (boostable build; settings toggle needs unboosted 63)",
+        "Higher diving suits at 72 / 80 Construction; boutique prawnbroker at 81 Construction",
+        "Golden fish eggs and prawn balls from fishing / Motherlode Maw mystery egg path for perk points"
+      ],
+      "confidence": "confirmed_wiki_with_2026_current_rule",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Aquarium",
+        "title": "Player-owned house Aquarium and Prawnbroker",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:manor-farm-farming-guild",
+      "name": "Manor Farm (Farming Guild) and reputation rewards",
+      "recordType": "activity",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Farming guild and player-owned farm hub",
+      "detail": "RS3 Farming Guild is Manor Farm — there is no separate OSRS-style multi-tier Farming Guild dungeon. Expands beyond the thin farmers-market outfit row into reputation infrastructure and guild patches. Do not re-emit kandarin:farmers-market-master-farmer. · Hard Kandarin Farming hub. Anachronia Ranch is a separate farm region via mystical tree. · Unlocks: Player-Owned Farm animal pens, buyers, Seasonaliser, Farmers' Market (master farmer outfit already under kandarin:farmers-market-master-farmer), Patch cluster: 2 allotments + flower + herb + compost; bloodwood tree patch; money tree patch; spirit tree patch, Farming Guild requests (easy / medium / hard) for reputation, Brassica primers, and request NPC rewards, Reputation ranks: Apprentice 4k (more unchecked animals); Practiced 10k (hard requests, double limpwurt yield); Competent 25k (remote farm device, +10% shiny bean sell); Expert 75k (less disease, small buyers 2×); Master 225k (permanent bloodwood, medium buyers 2×); Senior Master 1.1m (+5% shiny birth, large buyers 2×); Grandmaster 2.5m (+10% all animal bean sell + title), Mystical tree upstairs to Anachronia Dinosaur Farm; skills necklace / Ardougne cloak / Manor farm Teleport access",
+      "requirements": [
+        "Access to Kandarin Manor Farm geography",
+        "Farming reputation ranks for guild rewards (cap 2,500,000)",
+        "114 Farming for fourth spirit tree patch (reputation no longer required as of 6 May 2025)",
+        "119 Farming for money tree patch"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Manor_Farm",
+        "title": "Manor Farm (Farming Guild) and reputation rewards",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:pikkupstix-summoning-obelisk",
+      "name": "Pikkupstix Summoning shop and large obelisk (Taverley)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Summoning production premium infrastructure",
+      "detail": "Premium surface Summoning site for Asgarnia planning. Complements havenhythe:shrine-of-inanna-summoning-hub / empowered-summoning-obelisks (Havenhythe Spirit Plane Connection) and prifddinas:amlodd-district without duplicating those rows. Small obelisks elsewhere remain convenience only. No dedicated Summoning Guild exists in RS3. · Asgarnia owns the Taverley large-obelisk production home. Havenhythe remains the endgame empowered-obelisk region. · Unlocks: Large Summoning obelisk for pouch creation and summoning-point renew, Pikkupstix Summoning supplies shop colocated with the obelisk, Early–mid Summoning production home adjacent to Burthorpe bank / Rogues' Den",
+      "requirements": [
+        "Summoning unlocked (Wolf Whistle in the normal game)",
+        "Charm and tertiary materials for pouch infusion"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Pikkupstix",
+        "title": "Pikkupstix Summoning shop and large obelisk (Taverley)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "anachronia:base-camp-structure-rewards",
+      "name": "Anachronia base camp structure tier rewards",
+      "recordType": "activity",
+      "regionHints": [
+        "anachronia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "regional structure reward detail",
+      "detail": "Detail expansion under existing anachronia:base-camp hub id. Prefer this row for structure reward math; keep the hub row for economy overview. Fort Command Centre worker bonuses are Misthalin/Forinthry pressure on max workers, not Anachronia-local buildings. · Hard Anachronia. Fort worker bonuses optional Misthalin pressure. · Unlocks: Town Hall T1–T3: unlocks all same-tier buildings; compacted resource deposits 100/200/400; visitor stores (general → armour/weapon → gem/rune), Storehouse T1–T3: resource caps 25k / 80k / 150k per type (from 5k pre-storehouse), Sleeping Quarters T1–T3: +5 / +15 / +30 workers (900 / 1,800 / 3,600 resources per hour at full assignment, 60 per worker per hour), Spa T1–T3 (40/70/90 Agility): +5% / +7% / +10% Agility XP on Anachronia; Oo'glog-style salt/thermal/mud pools; T3 longer/stronger pool effects (needs essential oils), Hunter Lodge T1–T3 (40/70/90 Hunter): +10% BGH Woodcutting resources; +2.4s BGH catch timer; remove one frog type at BGH start (reinforced dinosaur pelt at T3), Slayer Lodge T1–T3 (40/70/90 Slayer): +1% / +3% / +6% damage on Anachronia; T3 helmet stand (combat row lives elsewhere), Player Lodge T1–T3 (40/70/90 Construction): +10% building resource finds; T2 restore HP/prayer/summoning + Anachronia tablet house-tele convert; T3 skillcape rack (support row elsewhere), Bank chest upgrade, lodestone, remote totem access point",
+      "requirements": [
+        "Base camp tutorial with Giles",
+        "Town Hall gates higher building tiers; skill gates on Spa / Hunter Lodge / Slayer Lodge / Player Lodge are unboostable",
+        "Worker count: 10 base + Sleeping Quarters (+5/+15/+30) + Fort Command Centre T2/T3 (+5/+5) → max 70"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Anachronia_base_camp",
+        "title": "Anachronia base camp structure tier rewards",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:auto-disassembler",
+      "name": "Auto disassembler / mk. II (Invention Guild machine)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention Guild machine infrastructure",
+      "detail": "Machines only build in the Invention Guild basement — not portable. Complements the system blob cross-region:invention-machines-guild with a named permanent unlock. Power allotment competes with other machines; jumbo generator is 160 power (200 with Fort Forinthry tier-3 Workshop). · Hard Asgarnia machine room. Fort power bonus is Misthalin optional pressure, not machine placement. · Unlocks: Offline hourly auto-disassemble of input items into Invention components, Mk. I: 35 items/hour, 30 power, 180 machine charge/hour, capacity 7,500, Mk. II: 60 items/hour, 40 power, 230 machine charge/hour, capacity 13,000, Primary AFK component farm for gizmo shells, devices, and divine-charge loops",
+      "requirements": [
+        "Invention unlocked and machine tutorial available at 60 Invention",
+        "Simple generator built in the Guild (60 Invention)",
+        "60 Invention for Auto disassembler; 81 Invention for mk. II upgrade"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Auto_disassembler",
+        "title": "Auto disassembler / mk. II (Invention Guild machine)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:alchemiser",
+      "name": "Alchemiser / mk. II (Invention Guild machine)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention Guild machine infrastructure",
+      "detail": "AFK alch infrastructure for ironman cash and item disposal. Does not replace portable alchemy methods; it is Guild-gated permanent scenery. · Hard Asgarnia. · Unlocks: Offline High Alchemy processing on machine ticks, Mk. I: 8 items/hour; mk. II: 25 items/hour and drops fire-rune cost, Cap of two alchemisers built at once (unique among machine families)",
+      "requirements": [
+        "72 Invention for Alchemiser; 108 Invention for mk. II",
+        "Generator with free power allotment (20 power mk. I / 55 power mk. II)",
+        "Nature runes per item; fire runes only on mk. I (5 fire per item)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Alchemiser",
+        "title": "Alchemiser / mk. II (Invention Guild machine)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:plank-maker-machine",
+      "name": "Plank maker / high capacity plank maker (Invention Guild)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention Guild machine infrastructure",
+      "detail": "Distinct from Rimmington NPC plank maker and Lunar Plank Make (fremennik:plank-make). Machine path costs divine/machine charge instead of coins per plank. · Hard Asgarnia. Log supply may pull other regions. · Unlocks: Offline logs → planks without sawmill coin fees, Mk. I: 13 planks/hour, 2,500 capacity; high capacity: 40 planks/hour, 7,500 capacity, Construction material AFK path complementary to Lunar Plank Make and Rimmington plank maker NPC",
+      "requirements": [
+        "99 Invention for Plank maker; 117 Invention for High capacity plank maker",
+        "30 power (mk. I) or 65 power (high capacity); generator charge from divine charges"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Plank_maker_(machine)",
+        "title": "Plank maker / high capacity plank maker (Invention Guild)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:partial-potion-producer",
+      "name": "Partial potion producer / DX (Invention Guild)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention Guild machine infrastructure",
+      "detail": "Pairs with scroll of cleansing / herb bag stacks for ironman Herblore prep. Machine room still Asgarnia-only. · Hard Asgarnia. · Unlocks: Offline unfinished-potion production from cleaned herbs, Mk. I: 13/hour; DX: 40/hour, Herblore material prep while offline",
+      "requirements": [
+        "90 Invention for Partial potion producer; 114 Invention for DX",
+        "Clean herbs + vials of water as inputs; 20 / 50 power allotment"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Partial_potion_producer",
+        "title": "Partial potion producer / DX (Invention Guild)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:automatic-hide-tanner",
+      "name": "Automatic / optimised hide tanner (Invention Guild)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention Guild machine infrastructure",
+      "detail": "Free tanning is the planner-relevant permanent effect versus paying NPC tanners. · Hard Asgarnia. · Unlocks: Offline free hide tanning (no coin tan cost), Mk. I: 45 hides/hour; optimised: 140 hides/hour, Crafting/construction hide supply AFK path",
+      "requirements": [
+        "93 Invention for Automatic hide tanner; 111 Invention for Optimised hide tanner",
+        "25 / 50 power allotment"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Automatic_hide_tanner",
+        "title": "Automatic / optimised hide tanner (Invention Guild)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:invention-gizmo-shells",
+      "name": "Gizmo shells (weapon / armour / tool + ancient)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention device permanent unlocks",
+      "detail": "Shell discovery/manufacture is workbench Invention progression; natural hub is Invention Guild (Asgarnia). Ancient shells depend on Ancient Invention blueprints (asgarnia:ancient-invention-blueprints). Combat perk recipes stay in planner-expansions-invention-* — not duplicated here. · Asgarnia owns primary workbench/guild discovery geography. Ancient path pressures Stormguard / Asgarnia Armadylean Archaeology for no-trade blueprints. · Unlocks: Empty weapon / armour / tool gizmo shells manufacturable at inventor's workbench, Fill shells with materials to create perks, then install into augmented gear, Ancient weapon / armour / tool gizmo shells (9 slots) after Ancient gizmos blueprint, Ancient shells enable higher perk ranks and ancient-only perks (Fortune, Relentless, Ruthless)",
+      "requirements": [
+        "Weapon gizmo blueprint at 3 Invention (tutorial)",
+        "Armour gizmo blueprint at 16 Invention",
+        "Tool gizmo blueprint at 22 Invention",
+        "Ancient gizmos blueprint at 85 Invention via Stormguard Howl blueprints or GE tradeable blueprint (no-trade: Archaeology path)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Gizmo",
+        "title": "Gizmo shells (weapon / armour / tool + ancient)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:charge-pack-infrastructure",
+      "name": "Charge pack + maximum charge + charge drain reduction",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Invention charge infrastructure",
+      "detail": "Permanent account infrastructure, not a consumable. Divine energy → divine charge is the refill loop (Divination multi-region). Machine generators share the same divine-charge currency as the pack. · Tutorial/charge-pack research is Asgarnia Invention Guild geography. Energy supply is multi-region Divination. · Unlocks: Universal charge pool for augmented equipment and skilling tools, Divine charge adds 3,000 charge to the pack (and 3,000 machine charge to the Guild generator), Max pack capacity ladder: 200k base → 250k / 300k / 350k / 400k / 500k at rank 5, Charge drain reduction up to 20% at rank 9 (105 Invention research), Without charge: perks inactive, most augmented gear falls to tier-1 stats, no item XP",
+      "requirements": [
+        "Charge pack built in Invention tutorial and added to tool belt",
+        "Maximum charge improvement research ranks at Invention 22 / 40 / 64 / 87 / 95",
+        "Charge drain reduction research ranks at Invention 34 through 105 (nine ranks)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Charge_pack",
+        "title": "Charge pack + maximum charge + charge drain reduction",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:ancient-invention-blueprints",
+      "name": "Ancient Invention blueprints (Howl's workshop)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Ancient Invention permanent unlock path",
+      "detail": "Stormguard Citadel is Armadylean dig-site geography under Asgarnia in current Equilibrium mapping. Lowse at Armadyl's Tower is the Armadylean collector for related collections (Inspire Genius). Do not invent fragment counts beyond wiki fragment costs (200 for targeted untradeable blueprint; 150 random). · Asgarnia hard-gates Stormguard / Howl self-sufficient blueprint unlock. GE tradeable blueprints are not a League no-trade path. · Unlocks: Permanent discovery of ancient weapon / armour / tool gizmos (9-slot shells), Enhanced hammer-tron / pyro-matic / fishing rod-o-matic (level-80-class ancient tools), XP Capacitor 5000 blueprint, Theoretical blueprints path for Experimental Aether Reactor and Subtle Blade after Back to the Drawing Board research, Ancient component discovery (Classic/Historic 85, Vintage 94, Timeworn 103 Invention) for restored-artefact disassembly",
+      "requirements": [
+        "95 Archaeology for Howl's Floating Workshop / drafting bench path (self-sufficient)",
+        "Torn blueprint fragments (Howl's workshop) from Stormguard Citadel excavation",
+        "85 Invention to use Ancient gizmos blueprint; 93 for Ancient tools; 106 for XP Capacitor",
+        "Tradeable GE blueprints exist for main-game buyers — no-trade League must self-craft"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ancient_Invention",
+        "title": "Ancient Invention blueprints (Howl's workshop)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:guildmaster-qualification",
+      "name": "Archaeology Guildmaster qualification permanent rewards",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology Guild permanent unlock",
+      "detail": "Acting Guildmaster Reiniger awards ceremony/claimables; Guildmaster Tony is the missing prior guildmaster (Tony's mattock is a separate end-game tool). Expands misthalin:archaeology-guild-shop without re-emitting that id. Fixate daily energy requires wearing full master outfit (99 Arch + Guildmaster shop). · Starting Misthalin Guild infrastructure. Collection/mystery counts still require multi-region dig sites. · Unlocks: Research team size 5 and access to research professors, Fourth relic loadout tab (after tutorial 2 + Professor purchase 3), Guildmaster Archaeology Guild Shop tab: master archaeologist's outfit, energised meteorite shard, final +2 mattock precision, Claim pack from Acting Guildmaster Reiniger: 5 material manuals, 5 hi-spec monocles, 5 tarpaulin sheets, 5 archaeologist's tea",
+      "requirements": [
+        "Qualification - Professor already complete",
+        "99 Archaeology",
+        "Discoverer IX / Restorer IX (1,000 excavate and restore each)",
+        "Collectors Assemble VII (25 unique collections)",
+        "Mystery Solver VI (20 mysteries)",
+        "Researcher IV (168 research hours)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Qualification_-_Guildmaster",
+        "title": "Archaeology Guildmaster qualification permanent rewards",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:material-manuals",
+      "name": "Material manuals (Guild shop Archaeology boost)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology consumable shop infrastructure",
+      "detail": "Consumable but permanent shop unlock / self-supply loop. Pair with hi-spec monocle (+20% base mattock precision temporary) and tarpaulin sheet (soil boost) sold at the same Guild shop. · Misthalin Guild shop geography. Chronotes come from all dig sites. · Unlocks: Read for +10% material find chance while excavating, 20 minutes base duration; 30 minutes in full master archaeologist's outfit, Stackable up to 1 hour of uptime",
+      "requirements": [
+        "Qualification - Intern for shop access",
+        "2,000 chronotes per manual (or Reiniger qualification claim packs / pickpocket / ancient casket)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Material_manual",
+        "title": "Material manuals (Guild shop Archaeology boost)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:screening-station",
+      "name": "Screening station (Archaeology Campus)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology campus infrastructure",
+      "detail": "Baseline campus soil processing. Auto-screener and Sift Soil are alternatives — auto-screener is the permanent device upgrade path. · Starting Misthalin campus infrastructure. · Unlocks: Screen up to 100 soil at a time for materials (+ rare 1/1,000 damaged artefacts), 1.8s per soil (1.2s with full master outfit), Wet vs dry meshes are visual-only; XP per soil scales with Archaeology level bands",
+      "requirements": [
+        "Archaeology tutorial / soil box access",
+        "Soil gathered from excavation or caches"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Screening_station",
+        "title": "Screening station (Archaeology Campus)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:auto-screener",
+      "name": "Auto-screener v1.080",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin",
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology Invention device permanent unlock",
+      "detail": "Does not yield screening XP or damaged artefacts; only materials available at the current hotspot/cache. Blueprint is Misthalin Guild; manufacture is Invention workbench (Asgarnia natural hub). · Misthalin owns blueprint purchase. Invention manufacture pressures Asgarnia workbench/guild. Charge pack is shared Invention infrastructure. · Unlocks: While excavating, auto-converts gathered soil into hotspot-matching materials, Drains charge pack (~3.33 charge per soil / ~900 soil per divine charge), Toggle on/off free; materials can bank via porters / Imp Souled, No soil-box bank trips and no screening-station time",
+      "requirements": [
+        "Associate Archaeology qualification",
+        "70 Archaeology minimum for blueprint shop access",
+        "50,000 chronotes for Auto-screener v1.080 blueprint at Archaeology Guild Shop",
+        "67 Invention to discover and manufacture at an inventor's workbench"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Auto-screener_v1.080",
+        "title": "Auto-screener v1.080",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:archaeology-research",
+      "name": "Archaeology research system",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology research infrastructure",
+      "detail": "Campus-managed system with dig-site-specific research destinations. Prefer special research first for permanent unlocks and better XP efficiency. · Management hub is Misthalin campus. Destination dig sites still need their regions. Fort Command Centre is optional same-region fort pressure. · Unlocks: General research: timed offline dig-site expeditions for Arch XP, materials, rare damaged artefacts, Special research: one-time higher-value studies (culture and dig-site gated), including Back to the Drawing Board for Ancient Invention theoretical blueprints, Fort Forinthry Command Centre: −3% chronote cost (T2) and +3% research speed (T3) as optional Misthalin fort pressure",
+      "requirements": [
+        "Assistant qualification for research tutorial unlock",
+        "Chronotes to fund general and special research expeditions",
+        "Guildmaster for research team size 5 and professor researchers"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Research",
+        "title": "Archaeology research system",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:archaeology-collectors",
+      "name": "Archaeology collectors and collection system",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology collection infrastructure",
+      "detail": "Collectors live on campus and at culture hubs; artefact geography is dig-site regional. Relic powers unlocked via collections should keep their dig-site region_hints on their own rows. · Campus collectors are Misthalin. Collection completion often multi-region. · Unlocks: Chronote payouts for artefact turn-ins vs museum bin (collectors pay full; bin pays 40%), Collection completion rewards including many monolith relic unlock items, Museum / Velucia training collections and culture experts as permanent progression tracks",
+      "requirements": [
+        "Restored artefacts matching each collection",
+        "Dig-site access for artefact sources (multi-region)",
+        "Collectors Assemble progression for Guildmaster (25 unique collections)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Collectors",
+        "title": "Archaeology collectors and collection system",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:mattock-precision-upgrades",
+      "name": "Mattock precision upgrades (Guild shop permanent)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology tool permanent upgrade",
+      "detail": "Account-wide permanent upgrades, not per-tool. Distinct from mattock tier ladder and Mattock of Time and Space craft. · Misthalin Guild shop purchases. Qualification gates still apply. · Unlocks: Permanent +2 base mattock precision per qualification shop purchase, Applies to every mattock used (reflected on tooltips), Stacks with Flow State (+20% base precision) and hi-spec monocle (+20% base for duration)",
+      "requirements": [
+        "Assistant: 8,000 chronotes for first +2 precision",
+        "Associate: 30,000 chronotes for next +2 (cumulative +4)",
+        "Professor: 75,000 chronotes for next +2 (cumulative +6)",
+        "Guildmaster: 150,000 chronotes for final +2 (cumulative +8 base precision)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Mattocks",
+        "title": "Mattock precision upgrades (Guild shop permanent)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "anachronia:flow-state-relic",
+      "name": "Flow State (Soma)",
+      "recordType": "activity",
+      "regionHints": [
+        "anachronia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology monolith relic power",
+      "detail": "Orthen / Anachronia Soma craft is the regional unlock path. Precision-focused excavation trade-off versus material/soil methods. Always Adze is a separate relic (already indexed as anachronia:always-adze-relic). · Hard Anachronia for Soma. Monolith harness is global Archaeology. · Unlocks: Flow State relic power at the mysterious monolith, +20% mattock base precision while active, No soil received while active (including with tarpaulin sheet)",
+      "requirements": [
+        "102 Archaeology (boostable) to craft Soma from Orthen orthenglass flask path",
+        "Dragon metal, clean arbuck, guarana, sweet honeycomb, Anachronia waterfall pool fill",
+        "4,000 chronotes and 200 monolith energy to harness"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Flow_State",
+        "title": "Flow State (Soma)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:divine-conversion-relic",
+      "name": "Divine Conversion (Cres Framework)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology monolith relic power",
+      "detail": "Stormguard / Howl's workshop is the hard Archaeology geography (Asgarnia). Guthixian Cache sits under Kandarin in current taxonomy for the personality-transfer step. High-value Divination QoL for energy/charge loops. · Asgarnia owns Stormguard relic craft. Kandarin optional for Cache step; do not hard-require both unless valuing the full path. · Unlocks: Divine Conversion relic power, Convert entire backpack of Divination memories (including familiar inventory) at an energy rift in one action, Does not work in Daemonheim",
+      "requirements": [
+        "98 Archaeology (boostable) for golem heart/instruction artefacts at Stormguard",
+        "86 Invention (boostable) to manufacture golem framework",
+        "85 Divination (boostable) for large memory transfer in Guthixian Cache",
+        "Howl's Floating Workshop mystery; Back to the Drawing Board research; The World Wakes",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Divine_Conversion",
+        "title": "Divine Conversion (Cres Framework)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "morytania:sticky-fingers-relic",
+      "name": "Sticky Fingers (Andvaranaut)",
+      "recordType": "activity",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology monolith relic power",
+      "detail": "Everlight Dig Site is Morytania. Reldo hand-in is Misthalin campus but the artefact gate is Everlight. Pairs with Tirannwn Crystal Mask / Light Form stacks as optional partners — not required for this unlock row. · Hard Morytania for Dominarian device. Reldo is starting-region NPC. · Unlocks: Sticky Fingers relic power, +50% auto-pickpocket rate (3-tick → 2-tick) with −33% pickpocket XP (net XP roughly flat; more loot), Reduced success-penalty per attempt (0.17% vs 0.25%) after 2026 Thieving rebalance",
+      "requirements": [
+        "84 Archaeology (boostable) to excavate Dominarian device at Everlight Oikos fishing hut remnants",
+        "Restore Dominarian device and hand to Reldo for Andvaranaut",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Sticky_Fingers",
+        "title": "Sticky Fingers (Andvaranaut)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:inspire-genius-relic",
+      "name": "Inspire Genius (Howl's Thinking Cap)",
+      "recordType": "activity",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology monolith relic power",
+      "detail": "Stormguard / Lowse Armadylean collector path. Planner-relevant permanent XP multiplier for production skills. Related Inspire Awe / Effort / Love are separate experience relics not expanded here. · Hard Asgarnia via Stormguard collections and Lowse at Armadyl's Tower. · Unlocks: Inspire Genius relic power, +2% XP in artisan skills: Crafting, Construction, Cooking, Firemaking, Fletching, Herblore, Runecrafting, Smithing",
+      "requirements": [
+        "Armadylean III collection for Lowse (Howl's Thinking Cap)",
+        "118 Archaeology listed on relic; boosts can restore/excavate as early as ~110 with pulse cores",
+        "5,000 chronotes and 250 monolith energy to harness"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Inspire_Genius",
+        "title": "Inspire Genius (Howl's Thinking Cap)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:guildmaster-tonys-mattock",
+      "name": "Guildmaster Tony's mattock",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "end-game Archaeology mattock",
+      "detail": "Named after Guildmaster Tony (predecessor to Acting Guildmaster Reiniger). Rare display-case unlock, not the Qualification Guildmaster shop chain. Prefer MoTaS as the craftable no-trade end-game path; Tony's is best-in-slot when obtained. · Misthalin Guild building. Shadowy key acquisition may involve multi-region content — verify if treating as guaranteed. · Unlocks: Precision 85 / focus 9 — strongest base mattock stats (above Mattock of Time and Space 80/7), Augmentable for tool gizmos",
+      "requirements": [
+        "99 Archaeology to use",
+        "Shadowy key to open the display case in the main Archaeology Guild building",
+        "Augmentor path for augmented Tony's mattock (22 Invention + augmented mattock research)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Guildmaster_Tony%27s_mattock",
+        "title": "Guildmaster Tony's mattock",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:memorial-to-guthix-boons",
+      "name": "Memorial to Guthix echo boons",
+      "recordType": "activity",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Divination permanent passive unlocks",
+      "detail": "kandarin:memorial-to-guthix is the site hub. This row is the permanent boon checklist planners need — not the geography hub alone. Do not invent energy rates or prestige XP. · Hard Kandarin for the memorial site and fountain selection. Engram farms may pressure other regions only as support. · Unlocks: Permanent Memorial fountain buffs selectable after engram hand-ins, Prestige / concurrent buff slots as wiki progression allows, Account-state Divination passives used as ironman 1–99 backbone",
+      "requirements": [
+        "Memorial to Guthix D&D site (Piscatoris / Eagles' Peak area)",
+        "Divination energy and memory strands to charge engrams for fountain buffs"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Memorial_to_Guthix",
+        "title": "Memorial to Guthix echo boons",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "morytania:cremation-ability",
+      "name": "Cremation ability unlock",
+      "recordType": "activity",
+      "regionHints": [
+        "morytania",
+        "forinthry",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support",
+      "category": "Prayer permanent ability unlock",
+      "detail": "Distinct from morytania:shades-of-mortton-cremation and morytania:vyre-cremation-sunspear. This is the permanent account ability from ghost drops. Do not invent drop rates. Morytania is primary ghost density pressure; Forinthry revenants and Misthalin ankou are support. · Primary Morytania ghost density. Forinthry/Misthalin are optional farm pressure only. · Unlocks: Burn bones on player-made fires or portable braziers, 2.5× bury Prayer XP and 2× bury Firemaking XP on successful cremation",
+      "requirements": [
+        "Rare drop of the Cremation ability from ghosts / ghost-like monsters (wiki drop tables)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Cremation",
+        "title": "Cremation ability unlock",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
     },
     {
       "id": "kandarin:diviners-outfit-guthixian-cache",
@@ -3872,6 +4791,90 @@
       "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-25.json"
     },
     {
+      "id": "multi-region:slayer-helmet-component-farms",
+      "name": "Slayer helmet component farms",
+      "recordType": "activity",
+      "regionHints": [
+        "multi-region",
+        "morytania",
+        "karamja",
+        "desert",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "multi-region Slayer equipment acquisition",
+      "detail": "Planner activity hub for the full style-coverage helmet. Individual equipment rows below carry region_hint and effects. Spiny/face/earmuffs/nose peg are Slayer Master shop items (any master with stock) — not region-locked drops. Black mask also has a rare Shadow Reef sea-horror path (not the practical ironman farm). · Surface Morytania (horrors), Karamja (jungle strykewyrms), Desert (desert strykewyrms + profane scabarites), and Misthalin/City of Um (ensoul ritual) when ranking full-style helmet completion. Shop protection pieces are multi-master and not a hard single-region gate. · Unlocks: Black mask farm geography (melee helm component), Hexcrest farm geography (Magic helm component), Focus sight farm geography (Ranged helm component), Spectral lens farm + ensoul ritual path (Necromancy helm component), Shop-bought protective pieces: spiny helmet, face mask, earmuffs, nose peg",
+      "requirements": [
+        "Smoking Kills for helmet craft unlock path",
+        "58 Slayer + Cabin Fever for Mos Le'Harmless cave/unspeakable horrors (black mask)",
+        "73 Slayer for jungle strykewyrms (hexcrest)",
+        "77 Slayer for desert strykewyrms (focus sight)",
+        "Profane Scabarites / Scabarites access for spectral lens (Necromancy style component)",
+        "80 Necromancy for ensoul spectral lens ritual (City of Um / ritual site)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_helmet",
+        "title": "Slayer helmet component farms",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:kuradal-dungeon-ferocious-ring-hub",
+      "name": "Kuradal's Dungeon and ferocious ring hub",
+      "recordType": "activity",
+      "regionHints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer dungeon infrastructure and ring farm",
+      "detail": "Skilling-adjacent permanent combat QoL and teleport sink, not a general BiS ring outside the dungeon. Ferocious ring fuse into full slayer helmet is a separate 500-point Learn unlock (see multi-region:slayer-helmet-ring-fuse). · Hard Kandarin via Ancient Cavern / Kuradal. Morvran dungeon upgrade and Morvran teleport are Tirannwn pressure, not a second hard Kandarin claim. · Unlocks: Kuradal's Dungeon high-density task rooms, Ferocious ring drops from dungeon monsters on task, 4% damage while wearing a ferocious ring inside the dungeon, Optional 100-point unlock for ferocious ring bonuses in Morvran's Dungeon (Tirannwn pressure)",
+      "requirements": [
+        "Kuradal permission to enter (combat 110 and 75 Slayer typical gate for her assignments)",
+        "Assignment from Kuradal, Morvran, or Laniakea to attack dungeon monsters",
+        "Ancient Cavern access for Kuradal"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Kuradal%27s_Dungeon",
+        "title": "Kuradal's Dungeon and ferocious ring hub",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "desert:slayer-codex-and-sunken-pyramid",
+      "name": "Slayer Codex and Sunken Pyramid soul system",
+      "recordType": "activity",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer permanent utility and reputation",
+      "detail": "Region-important Desert endgame Slayer utility. Corrupted slayer helmet can open the Codex while worn. Fourth Sunken Pyramid room is a separate 3,000-point Buy unlock. Not a combat BiS item. · Hard Desert / Menaphos for Faiza, Codex claim, reputation, and pyramid access. Soul farm geography is multi-region by monster. · Unlocks: Slayer Codex soul log, +1% Slayer XP in slayer helmet (or stand) per 20 unique souls, to +5% at 100 souls, 250 base Menaphos reputation per first soul of a type, Sunken Pyramid teleport after 50 souls, Personal Slayer dungeon (Sunken Pyramid) soul placement",
+      "requirements": [
+        "99 Slayer to claim Codex from Faiza (Order of the Slayer Masters / Menaphos)",
+        "Ushabti captures placed in chest of souls or personal Slayer dungeon",
+        "50 unique souls for Sunken Pyramid teleport via Codex",
+        "Up to 117 Slayer (boostable) and 115 Dungeoneering (not boostable) for full Codex completion set"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_Codex",
+        "title": "Slayer Codex and Sunken Pyramid soul system",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
       "id": "prifddinas:voice-of-seren",
       "name": "Voice of Seren district rotations",
       "recordType": "activity",
@@ -4162,6 +5165,103 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-tirannwn-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:fairy-ring-network",
+      "name": "Fairy ring network (Zanaris hub)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin",
+        "morytania",
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "misthalin",
+        "morytania"
+      ],
+      "regionRequirementType": "all_required",
+      "category": "permanent multi-region travel infrastructure",
+      "detail": "Spirit trees already first-class (kandarin:spirit-tree-network). Fairy rings were only footnotes on birdhouses / soul altar / Max Guild — this is the matching travel package. Zanaris is Misthalin taxonomy; do not invent a zanaris region token. Pair with ectophial / Drakan / TokKul-Zo / wilderness sword as alternate network on-ramps. · Hard Misthalin + Morytania for quest unlock + Zanaris hub. Kandarin and other regions score as destination value / optional on-ramps, not unlock gates. · Unlocks: Teleport network between surface fairy rings via three-letter codes through the Zanaris master ring (code AIP), Ironman backbone for Farming patch runs, dig sites, Habitat, Phasmatys, Piscatoris, Menaphos CKQ, Havenhythe BKS, and TzHaar BLP, Travel log favourites after first visit; invalid/locked codes dump near Zanaris hub, Some rings require rebuild with 5 bittercap mushrooms (e.g. Ancient Cavern BJQ, Lost Grove BJS, Kharazi CJS) · Region pressure: Misthalin: Zanaris hub + Lost City + Wizards' Tower DIS / Edgeville DKR entry points., Morytania: Nature Spirit / Priest in Peril quest gates; ALQ/CKS/BKR rings for swamp/Canifis logistics., Kandarin optional value: dense ring count (ALS, CIQ, DJP, BLR, AJR, etc.) but not required to unlock the network itself., Later destinations (Prif DJS, Menaphos CKQ, Havenhythe BKS, Fort BJP) are destination pressure only.",
+      "requirements": [
+        "Priest in Peril + Nature Spirit (Morytania quest gate into fairy-tale chain)",
+        "Lost City (Misthalin / Zanaris access via Dramen tree)",
+        "A Fairy Tale I - Growing Pains completed",
+        "Started A Fairy Tale II - Cure a Queen and permission from the Fairy Godfather to use the network",
+        "Dramen staff or lunar staff to enter rings until A Fairy Tale III - Battle at Ork's Rift removes the staff requirement",
+        "Optional: portable fairy ring (Invention) or POH fairy ring furniture (code AKP) for remote entry"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Fairy_ring",
+        "title": "Fairy ring network (Zanaris hub)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:resource-dungeon-unlocks",
+      "name": "Resource dungeon unlock map (Dungeoneering permanent access)",
+      "recordType": "activity",
+      "regionHints": [
+        "forinthry",
+        "asgarnia",
+        "misthalin",
+        "karamja",
+        "kandarin",
+        "morytania",
+        "desert",
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
+      "regionRequirementType": "support",
+      "category": "permanent Dungeoneering gather infrastructure package",
+      "detail": "Do not re-emit asgarnia:mining-guild-resource-dungeon or prifddinas:edimmu-resource-dungeon. Wave4 pending edgeville / karamja volcano / peninsula rows remain site detail; this is the account-state unlock ladder ironmen checklist. · Hard Forinthry for DG progression framing. Destination dungeons still need their surface regions unlocked to enter. · Unlocks: Permanent surface resource-dungeon access package for ironman gather planning (ores, trees, herbs, monster camps), Key skilling rooms: Dwarven Mine phasmatite (15), Mining Guild luminite/drakolith (45), Al Kharid necrite/gem rocks (75), Asgarnian Ice frost dragons (85), Varrock Sewers magic trees (65), Brimhaven metal dragons (80), Kal'gerion rare gems (90), Slayer Tower dark beasts/abyssals (100), Edimmu crystal sandstone (115), Hoardstalker ring / DG cape teleports to many resource dungeons after unlock, Very Resourceful achievement checklist of named dungeons · Region pressure: Forinthry owns Daemonheim level progression + peninsula island (30) and is the account-state home for DG tokens/rewards that fund related tools., Asgarnia: Mining Guild RD, Taverley hellhound/blue dragon RDs, Asgarnian Ice frost dragons., Misthalin: Edgeville chaos-druid / hill-giant RDs, Varrock Sewers., Karamja: volcano lesser-demon RD + Brimhaven metal-dragon RD., Tirannwn: Gorajo + Edimmu (Plague's End)., Individual first-class rows already exist for Mining Guild and Edimmu — this package is the remaining map checklist.",
+      "requirements": [
+        "Dungeoneering level gates per dungeon (boosts cannot bypass entry level)",
+        "Quest gates where listed: Waterfall Quest (Baxtorian), A Clockwork Syringe (Braindeath 'Rum'-geon), One of a Kind (Dragontooth), Plague's End (Gorajo + Edimmu)",
+        "First-time entry grants fixed DG XP on most dungeons (total ~282,600 members XP if fully cleared historically; free-to-play subset lower)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Resource_dungeon",
+        "title": "Resource dungeon unlock map (Dungeoneering permanent access)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:magical-thread-abyss-supply",
+      "name": "Magical thread (Abyss RC + Wilderness diary rates)",
+      "recordType": "activity",
+      "regionHints": [
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
+      "regionRequirementType": "support",
+      "category": "permanent Runecrafting pouch-economy supply package",
+      "detail": "Does not re-emit forinthry:abyss-entrance or forinthry:area-tasks-wilderness-sword. Complements pending forinthry:abyss-runecrafting-stack by making the thread→pouch craft ladder checklist-visible. Protean essence never yields thread. · Hard Forinthry for Abyss + Wilderness diary rate package. Ourania is Kandarin support. · Unlocks: Magical thread material for sealed small rune pouch (30 thread, 55 RC), sealed large rune pouch (100 thread, 90 RC), grasping upgrade (+15 thread + Croesus flakes), and expansive pouch cord (100 thread), Ironman RC inventory economy without GE thread — Abyss + sword 4 is the primary farm, Free pouch repair remains Dark Mage in Abyss inner ring (forinthry:abyss-entrance side effect) · Region pressure: Forinthry: Abyss entrance + Wilderness sword diary tiers own the rate ladder (post-2025 demonic skull no longer boosts thread)., Kandarin optional: Ourania altar synapse path and Ourania RC loop., Misthalin optional: Wizards' Tower / essence logistics only.",
+      "requirements": [
+        "Abyss entrance access (forinthry:abyss-entrance — Mage of Zamorak Wilderness)",
+        "Wilderness Area Tasks for thread-rate tiers via Wilderness sword worn or backpack (easy 5% / medium 10% / hard 15% / elite 33.3% cumulative chance boost)",
+        "Runecrafting through Abyss rifts (odds scale with essence used per craft; soul runes scale with charges)",
+        "Optional alternate sources: runic attuner every 25th attunement (1–4 thread); abyssal runic synapse at Ourania altar (guaranteed 1 thread + 250 runes)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Magical_thread",
+        "title": "Magical thread (Abyss RC + Wilderness diary rates)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
     },
     {
       "id": "tirannwn:crystal-fishing-rod",
@@ -5197,6 +6297,285 @@
       "sourceFile": "progression-enrichment-regional-skilling-desert-2026-07-26.json"
     },
     {
+      "id": "misthalin:area-tasks-varrock-armour",
+      "name": "Varrock armour 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Mining and Smithing utility",
+      "detail": "Primary Misthalin Mining/Smithing diary stack. Extra bars go to metal bank with chat log confirmation. Do not invent ore XP/hour. · Starting-region diary reward. Keep skill gates; New Varrock doubling is a second achievement set if available in League. · Effects: Tier 1 worn: 4% chance double copper/tin/iron/coal; 4% extra bronze/iron/steel bar to metal bank; 4% double Smithing progress on bronze/iron/steel; 1% bonus Mining XP (not part of golden mining suit set); increased skull sceptre part chance, Tier 2 worn: 3% chance double mithril/adamantite/luminite; 3% extra mithril/adamant bars; 3% double progress on mithril/adamant, Tier 3 worn: 2% chance double runite/orichalcite/drakolith/necrite/phasmatite; 2% extra rune/orikalkum/necronium bars; 2% double progress on those metals, Tier 4 worn: 1% chance double banite/light animica/dark animica; 1% extra bane/elder rune bars; 1% double progress on bane/elder rune; 5 free bolt enchantments/day (ruby and below, runes still required), Always tier 1+: Edgeville furnace access; Naff battlestaff stock 16/32/64/80 by tier; Varrock Teleport destination toggles, Always tier 3+: Cooks' Guild entry without chef hat/Cooking cape and bank access, Operate tier 4: unlimited Chaos Tunnels teleport; always log storage boxes near beacons; halved house move/redecorate cost, New Varrock easy: mining/smithing/smelting chance effects no longer require wearing armour (1% Mining XP still worn-only), New Varrock medium/hard/elite: doubles double-ore / double-bar / double-progress chances respectively on all armour tiers",
+      "requirements": [
+        "Easy through elite Varrock achievements claimed in order",
+        "Optional New Varrock achievements double several chance effects and relax wear requirements"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Varrock_armour",
+        "title": "Varrock armour 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:area-tasks-explorers-ring",
+      "name": "Explorer's ring 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary skilling utility ring",
+      "detail": "Ring is skilling/travel QoL, not combat. Low alch and run-restore charges are shared across upgrades same day. Cabbage-port is major early farm/bank adjacency for Asgarnia patches from a Misthalin diary. · Misthalin Lumbridge Area Tasks. No elite ring tier exists. · Effects: Tier 1 operate: 1x daily restore 50% run energy, Tier 2 worn: 10% chance extra air/earth/fire/water rune per essence at matching altar (not Ourania), with extra XP; operate: 2 run restores/day; 30 runeless Low Level Alchemy/day (Magic 21), Tier 3 operate: 3 run restores/day; unlimited cabbage-port to Falador farm cabbage patch, Tier 4 operate: 27 runeless Superheat Item/day (Magic 43); 15 runeless High Level Alchemy/day (Magic 55), Always tier 4: 50% chance free Bones to Bananas runes up to 10/day; daily hamper from Lumbridge cook",
+      "requirements": [
+        "Beginner through hard Lumbridge achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Explorer%27s_ring",
+        "title": "Explorer's ring 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:area-tasks-falador-shield",
+      "name": "Falador shield 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Farming and Artisans utility",
+      "detail": "Hard skilling hooks are Falador farm XP (shield 2 worn), Crafting Guild bank chest (3), and Artisans respect (4 worn). Combat mole notes kept minimal. · Hard Asgarnia diary. Pair Artisans respect with asgarnia Artisans Workshop rows. · Effects: Operate prayer restore once/day: 25% / 50% / 100% prayer points by tiers 1-3; tier 4 twice/day soft reset full restore, Tier 2 worn: +10% Farming XP from herb, flower, and allotment patches at the Falador farm, Always tier 3: Crafting Guild bank deposit box upgraded to bank chest; Wyson gives white lily seed per mole skin; trade up to 50 white lily seeds/day for 100 Farming XP each, Tier 4 worn: +5% Artisans' Workshop respect gain; mole-shield damage reduction vs Giant mole (not dragonfire), Always tier 4: +20 prayer points when restoring at Falador Castle altar; can convert that altar to Zarosian with ancient hymnal; always mole nose drop for better nest trades",
+      "requirements": [
+        "Easy through elite Falador achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Falador_shield",
+        "title": "Falador shield 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:area-tasks-ardougne-cloak",
+      "name": "Ardougne cloak 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Thieving RC Farming utility",
+      "detail": "Full cloak skilling bundle beyond the Ourania-only pointer elsewhere. Ourania bonus is permanent once medium diary claimed. · Hard Kandarin. Ourania and Manor Farm are the high-value skilling gates. · Effects: Always tier 1: better Ardougne stall steal chance; some Tower of Life Creature Creation drops noted; unlimited Kandarin monastery teleport; cat trade 200 death runes; 25% extra chompy spawn while hunting, Always tier 2: Ourania Altar roughly +15% rune yield (no extra XP; does not need cloak worn); +10 pickpocket success threshold in Ardougne; more Creature Creation noted; Wizard Cromperty 700 pure essence/week; daily Manor Farm teleport; 50% extra chompy spawn, Always tier 3: +10 pickpocket threshold and stall success worldwide; ~80% Creature Creation noted; Cromperty 1050 essence/week; Ardougne Castle/Chaos Druid Tower chests bank to north bank; Watchtower teleport toggle to Yanille; 75% extra chompy, Always tier 4: unlimited Manor Farm teleport; daily full Summoning restore (globe); Bert 420 buckets of sand/week; 100% extra chompy; Fishing Trawler junk replaced with useful items, Tier 4 worn note: 5% chance double rune crossbow limbs smithing in Yanille (wiki flags currently bugged), Operate: unlimited monastery teleport (1+); Manor Farm daily then unlimited (2/4); daily Summoning restore (4)",
+      "requirements": [
+        "Easy through elite Ardougne achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ardougne_cloak",
+        "title": "Ardougne cloak 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:area-tasks-seers-headband",
+      "name": "Seer's headband 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Woodcutting Crafting coal utility",
+      "detail": "Flax, coal trucks, maple XP, and spinning wheel are the pure skilling core. Bolt/Excalibur notes are minor combat-adjacent. · Hard Kandarin Seers diary. · Effects: Carried light source dim/medium/bright by tiers 1-3, Tier 1 worn: 2 normal logs per normal tree (no extra XP); always +28 coal truck capacity (252); weekly 210 noted flax from Geoffrey, Tier 2 worn: +10 maple WC XP per maple log; double normal logs with XP for both; 33% faster Seers spinning wheel; coal trucks 280; weekly flax 420, Always tier 3: Enhanced Excalibur path from Lady of the Lake; Thormac mystic staff enchant 27k; Seers altar +20 prayer; coal trucks 308; weekly flax 840; Camelot teleport toggle to Seers centre, Always tier 4: Enhanced Excalibur heal duration doubled; +2% enchanted bolt special chance; weekly flax 1400; first 200 coal on trucks each day auto-bank",
+      "requirements": [
+        "Easy through elite Seers' Village achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Seer%27s_headband",
+        "title": "Seer's headband 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "fremennik:area-tasks-sea-boots",
+      "name": "Fremennik sea boots 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "fremennik"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Miscellania and travel utility",
+      "detail": "Miscellania approval rate and lyre logistics dominate skilling value. Combat DKS damage bonus is out of scope beyond noted bones. · Hard Fremennik. Lunar/Prif grimoire swap needs Tirannwn access separately. · Effects: Always tier 1: Peer the Seer acts as bank deposit; lyre recharge gives +20 charges per fish in person; operate remote Fossegrimen recharge at reduced charges, Tier 2 worn: Misc/Etceteria broken pier shortcut; operate free lyre teleport once/day without charge; always increased Managing Miscellania approval gain rate, Always tier 3: Skulgrimen 1:1 suqah hide to teeth; lyre destinations Waterbirth and Rellekka market; Cadarn grimoire Lunar swap in Prifddinas after access, Tier 4 worn: noted Dagannoth bones; Jatizso mine banite section + Hallvar ore noting; always further improved Misc approval; lyre to Jatizso/Neitiznot/Misc/Etceteria; daily suqah teeth/hides for pure essence (up to 28 each at 9 essence); NPC Contact can swap to normal spellbook via Oneiromancer; unlimited Rellekka market teleport operate",
+      "requirements": [
+        "Easy through elite Fremennik achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Fremennik_sea_boots",
+        "title": "Fremennik sea boots 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "karamja:area-tasks-karamja-gloves",
+      "name": "Karamja gloves 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "karamja"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Agility Mining supply utility",
+      "detail": "Expands the thinner karamja-gloves-skilling pointer: pineapple/apple supply, boat fares, Shilo mining teleport, Arena XP/tickets. Fight Cave resurrection is combat QoL only. · Hard Karamja. Gemstone cavern routes Habitat/Nature altar logistics. · Effects: Always tier 1: boat fares Port Sarim-Musa and Ardougne-Brimhaven reduced to 15 coins; weekly 140 pineapples from Dell Monti, Tier 2 worn and always: +10% Agility XP from Brimhaven Agility Arena obstacles and ticket lamp trades, Tier 3 worn: ladder access to Shilo underground mine and gemstone cavern; operate teleport to Shilo underground mine; always free Brimhaven Dungeon entry; gemstone dragons as Slayer assignment option, Tier 4 worn: 25% chance double Agility Arena tickets; always +140 cooking apples weekly from Dell Monti; one-time 150k tokkul; Lapalok +5 Slayer points every 10th task (80 total); northern Shilo shortcut (Agility 74)",
+      "requirements": [
+        "Easy through elite Karamja achievements claimed in order",
+        "Claim from Pirate Jackie the Fruit / diary NPCs per tier"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Karamja_gloves",
+        "title": "Karamja gloves 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "desert:area-tasks-desert-amulet",
+      "name": "Desert amulet 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Crafting Farming glass utility",
+      "detail": "Full 1-4 ladder supersedes desert-amulet-4 stub. Glass conversion, cactus patches, red sandstone, and potato cactus claims are the ironman skilling core. · Hard Desert. Elite gates late glass/red-sandstone QoL. · Effects: Tier 1 worn: successful Kharidian cactus cut gives 2 water units; always Mage Training Arena prices -2%; daily bag of lost items from rug merchants; sparkly dung kalphites double loot, Operate tier 2+: unlimited Nardah teleport; convert soda ash to molten glass in desert (50/100/150 per day at tiers 2/3/4), Always tier 2: respawning teak near Uzer; MTA -5%; chance noted desert goat horns; weekly 140 potato cactus from Weird Old Man; Sceptre of the gods charge cap 20, Always tier 3: MTA -10%; weekly 210 potato cactus; Al Kharid/Menaphos/Het's Oasis cactus patches disease-free and double cactus spines/potato cacti harvest; double charges when recharging pharaoh/sceptre of the gods; SotG cap 60, Tier 4 worn: 20% chance 4-dose super antifire instead of 3-dose while in desert including Al Kharid (stacks with factory outfit), Always tier 4: double phoenix feathers per pluck; Clay golem enhances ancient staff; Sophanem red sandstone mine; Aligra Nite buys granite at 20% GE; weekly 280 potato cactus; pyramid tops 10k to Simon Templeton; operate unlimited Uzer teleport",
+      "requirements": [
+        "Easy through elite Desert achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Desert_amulet",
+        "title": "Desert amulet 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "morytania:area-tasks-morytania-legs",
+      "name": "Morytania legs 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Prayer RC Farming utility",
+      "detail": "Single consolidated ladder for legs 1-4 skilling effects (regional files split 1-3 and elite 4). Isafdar double mushrooms still require owning elite Morytania legs. · Hard Morytania. Resolve quest/achievement access through Equilibrium overlays. · Effects: Tier 1 worn: double fungi from Bloom; 50% ghast ignore; always +5% Temple Trekking rewards, Tier 2 worn: 10% second blood rune per essence at blood altar; Port Phasmatys regular cannonballs 7 ticks to 4; operate slime-pit teleport 5/day, Always tier 2: Robin 13 bones to bonemeal + 13 free slime daily (noted bones ok); Razmire weekly free planks (10 teak/20 oak/30 plank); Mort'ton pyre log chests; Canifis mushroom patch disease-free; 4-dose olive oil from Razmire, Tier 3 worn: +50% Prayer XP burning shades; better shade keys; 50% blood altar teleports do not break; operate slime teleports 10/day, Always tier 3: Robin 26 bones + 26 slime; ghostspeak-passive; bank Barrows loot from chest; +10% Temple Trekking; crystal outcrop shortcut; Big Book o' Piracy cap 20, Tier 4 worn: +50% Firemaking and Prayer XP cremating vyre corpses (including Sunspear); +10% Slayer XP on Slayer Tower tasks; 20% chance 4-dose prayer renewal in Morytania; operate unlimited slime-pit teleports, Always tier 4: Robin 39 bones + 39 slime; double mushroom yield at Canifis, Isafdar, and City of Um (XP not doubled); Big Book o' Piracy cap 60",
+      "requirements": [
+        "Easy through elite Morytania achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Morytania_legs",
+        "title": "Morytania legs 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:area-tasks-wilderness-sword",
+      "name": "Wilderness sword 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Runecrafting Prayer Agility utility",
+      "detail": "Skilling core is Abyss thread, Chaos Altar Prayer, Agility lap XP, disease-free wildy herb patch, and herb-patch teleport. Revenant gear chance is combat-adjacent only. · Hard Forinthry. Abyss entrance is Forinthry geography; inside Abyss is not Wilderness for combat rules. · Effects: Worn or backpack Abyss Runecrafting magical thread chance: 5% / 10% / 15% / 33.3% cumulative by tiers 1-4, Always Chaos Altar bone/ash Prayer XP multiplier: +100% / +150% / +200% / +250% by tiers 1-4, Operate free teleports: Wilderness herb patch + Edgeville (1+); Forinthry Dungeon (2+); Wilderness Agility Course (4+), Tier 2 worn/carried: +5% XP per Wilderness Agility Course lap; always improved Rogue pickpocket rates in Wilderness, Tier 3: Mage of Zamorak chance to inner Abyss (sword worn or backpack); Harrison un-note near Chaos Temple; Air Obelisk shortcut; Wilderness herb patch never diseased; choose Ancient Obelisk arrival; Wilderness Crater lodestone always quick teleport, Tier 4: searing ashes always noted when sword worn/carried; teleports bypass level-20 wildy teleport restriction to level 30 in PVP mode",
+      "requirements": [
+        "Easy through elite Wilderness achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Wilderness_sword",
+        "title": "Wilderness sword 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "tirannwn:area-tasks-tirannwn-quiver",
+      "name": "Tirannwn quiver 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Farming Hunter Divination utility",
+      "detail": "Skilling focus: mushroom patch, harmony moss, grenwalls, chronicle fragments, Coeden logs, crystal blossoms, cleansing crystals. Pure damage-vs-elf notes omitted. · Hard Tirannwn. Cross-link Morytania elite for Isafdar/Tirannwn mushroom double yield. · Effects: Worn tier 1: ammo storage up to 20k; no leaf trap falls; 5% noted tortoise shells from warped tortoises; acts as crystal chime; Poison Waste crystal end teleport, Operate teleports scaling: Lletya + Eluned/Islwyn (1); + Poison Waste dungeon + Tyras Camp (2); + Elf Camp + Tirannwn mushroom patch (3); + Harmony pillars (4); Death Altar 5/day at tier 3, Always tier 1: sell limestone to Meredith; Lletya shop 15 swamp tar/day, Always tier 2: Tirannwn mushroom patch between Tyras and Poison Waste (not disease-protected by Morytania medium; double harvest if Morytania elite owned); Lletya 30 swamp tar/day; grenwalls no bait; chance crystal bow charges saved, Tier 3 worn: 10% more harmony moss per harvest; auto-use cleansing crystals after first; no stick trap fails, Always tier 3: Lord Amlodd +10% shard swaps; Eilwynn takes chronicle fragments at 75% Guthix shrine XP; Lunet sells 16 battlestaves, Always tier 4: weekly 98 free logs from Coeden (yew/magic/elder mix); double crystal tree blossoms from player-grown crystal trees; dense forest fast travel when worn; charge saves on Most Wanted cards and attuned crystal bow/ward",
+      "requirements": [
+        "Easy through elite Tirannwn achievements claimed in order"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Tirannwn_quiver",
+        "title": "Tirannwn quiver 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:area-tasks-underworld-grimoire",
+      "name": "Underworld Grimoire 1-4",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "achievement diary Necromancy RC ritual utility",
+      "detail": "Diary-catalog twin of misthalin:underworld-grimoire with full numeric tier ladder. Core ironman Necromancy skilling pocket. · City of Um under Misthalin working taxonomy until Equilibrium splits Underworld locality. · Effects: Worn: toggleable auto-deposit of tiered bones into focus storage (priority over bonecrusher); bank ashes when picked up from tier 1, Worn impure essence extra-rune chance: 2.5% / 5% / 7.5% / 10% by tiers 1-4, Worn ritual disturbance dispel XP: 3% / 6% / 9% / 12% total by tier (scaled from Um site base), Worn extra necroplasm from rituals: 5% / 10% / 15% from tiers 2-4 (additive with Multiply glyphs), Worn City of Um 10% chance 4-dose necromancy / super / extreme potions by tiers 1-3; elite removes City-of-Um-only potion restriction, Operate: smithy teleports (10/day then unlimited); ritual site teleports (shared Um/Ungael) scaling to unlimited at tier 3; daily Lupe teleport at tier 4, Always: weekly Lupe bones/ink/candles scaling by tier; Soul Supplies daily slime stock at tier 3; Um mushroom patch disease-free at tier 3; elite free daily Death reclaim and banked weekly supplies · Region status: historical_city_of_um_working_taxonomy",
+      "requirements": [
+        "Easy through elite Underworld achievements claimed in order",
+        "Prior grimoire tier claimed before the next"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Underworld_Grimoire",
+        "title": "Underworld Grimoire 1-4",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
+    },
+    {
       "id": "forinthry:bonecrusher",
       "name": "Bonecrusher",
       "recordType": "equipment",
@@ -5913,6 +7292,208 @@
       "sourceFile": "progression-enrichment-regional-skilling-gaps-2026-07-26.json"
     },
     {
+      "id": "misthalin:mattock-tier-ladder",
+      "name": "Mattock tier ladder (bronze through elder rune + specials)",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin",
+        "anachronia",
+        "tirannwn",
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology tool progression",
+      "detail": "Campus Matty Ock shop is Misthalin starting infrastructure for early mattocks. Special mattocks pressure Anachronia (dragon), Tirannwn (crystal), Warforge (Imcando pieces; Warforge boundary often Kandarin/Forinthry depending on mapping). Do not re-emit MoTaS id. · Early ladder is Misthalin. Flag optional region_hints for special mattock bases rather than hard-requiring every region. · Effects: Precision scales excavation artefact speed; focus scales material find rate, Dragon / crystal / Imcando / MoTaS / Tony's are augmentable, Imcando (80) matches elder rune (90) precision/focus while remaining augmentable — preferred mid-late tool",
+      "requirements": [
+        "Archaeology level matching mattock tier (1–90 smithable; 60 dragon; 70 crystal; 80 Imcando; 99 MoTaS / Tony)",
+        "Smithing for bronze–elder rune mattocks; Matty Ock's Mattock Shop sells early tiers at campus",
+        "Dragon mattock: Anachronia BGH / ancient casket",
+        "Crystal: dragon mattock + 4,000 harmonic dust (Tirannwn)",
+        "Imcando: dragon mattock + imcando metal pieces (Warforge / Thalmund path)",
+        "Mattock of Time and Space: crystal + Imcando + energised meteorite shard (already indexed as cross-region:mattock-of-time-and-space)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Mattocks",
+        "title": "Mattock tier ladder (bronze through elder rune + specials)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:ancient-gizmo-shells",
+      "name": "Ancient weapon / armour / tool gizmo shells",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Ancient Invention equipment shells",
+      "detail": "Companion equipment row to asgarnia:invention-gizmo-shells and asgarnia:ancient-invention-blueprints. Perk recipes remain in invention planner expansions. · Asgarnia manufacture hub; ancient components from multi-region restored artefacts. · Effects: Nine material slots per ancient shell vs five on standard shells, Enables perk ranks and combos unavailable on standard gizmos, Required chassis for Fortune (tool), Relentless, Ruthless and high-rank combat perk recipes",
+      "requirements": [
+        "Ancient gizmos blueprint unlocked (85 Invention)",
+        "Classic / Historic (and higher) ancient components discovered for full shell recipes",
+        "Inventor's workbench access"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ancient_weapon_gizmo_shell",
+        "title": "Ancient weapon / armour / tool gizmo shells",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:fishing-outfit",
+      "name": "Fishing outfit (Fish Flingers)",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Fishing XP outfit",
+      "detail": "Base angler-class Fishing XP set. Distinct from kandarin:shark-outfit-deep-sea / kandarin:fury-shark-outfit elite catch/QoL path. Storeable in POH armour case or tackle box. · Hard Kandarin Fish Flingers path. Pair with fury shark for late Fishing stacks. · Effects: 1% Fishing XP per worn piece (4% for four pieces), +1% set bonus when full set worn (5% total), Does not boost Fish Flingers itself, Fury shark / shark outfits inherit this XP layer after fishing outfit worn at least once",
+      "requirements": [
+        "Fish Flingers D&D access at Isla Anglerine",
+        "140 Fish Flingers tokens per piece (560 full four-piece set) from the Fisherman"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Fishing_outfit",
+        "title": "Fishing outfit (Fish Flingers)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:thieves-guild-master-tools",
+      "name": "Master thief's lockpick + master thief's stethoscope",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Thieving permanent tools",
+      "detail": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Complements Trahaearn exoskeleton and master camouflage. · Hard Misthalin Thieves' Guild. Not Asgarnia. · Effects: Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick), Master thief's stethoscope: permanent safecracking QoL toolbelt path",
+      "requirements": [
+        "Thieves' Guild access (Buyers and Cellars series)",
+        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "title": "Master thief's lockpick + master thief's stethoscope",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:botanists-amulet",
+      "name": "Botanist's amulet",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Herblore production amulet",
+      "detail": "Ironman Herblore ideal-setup amulet. Craft is global once materials exist; Asgarnia is the practical association via Flash Powder Factory / botanist+factory outfit stack planning. Do not invent mix rates. · Pair with asgarnia:factory-outfit and asgarnia:botanists-outfit. Materials multi-region; Asgarnia is production-stack geography. · Effects: Approximately 5% chance to brew a 4-dose potion instead of 3-dose while worn, Stacks with factory outfit 4-dose chance and related Herblore production bonuses",
+      "requirements": [
+        "Jade amulet + Lvl-2 Enchant (or craft silver + jade + wool then enchant)",
+        "Charges consumed when the 4-dose effect triggers (5 charges per new amulet)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Botanist%27s_amulet",
+        "title": "Botanist's amulet",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:passing-bracelet",
+      "name": "Passing bracelet",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Underworld teleport jewelry",
+      "detail": "Ironman Fishing ghostly sole AFK bank loop and RC/necrotic rune QoL. City of Um is Misthalin working taxonomy. · Hard Misthalin City of Um destinations. Moonstone materials may pressure Necromancy/Anachronia supply. · Effects: Unlimited teleports to City of Um: Hanging Gardens, Haunt on the Hill, Reflection Pool, Haunt on the Hill for necrotic rune dark portal; Reflection Pool for ghostly sole fishing",
+      "requirements": [
+        "Necromancy! completed",
+        "Moonstone bracelet + Lvl-5 Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Passing_bracelet",
+        "title": "Passing bracelet",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:ore-box-tier-upgrades",
+      "name": "Ore box tier upgrades",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support",
+      "category": "Mining inventory tool progression",
+      "detail": "Core ironman Mining logistics chain. Asgarnia Artisans / Mining Guild is the practical smithing loop; Forinthry is support for primal/Daemonheim ore tiers. No invented XP. · Asgarnia primary smith/Mining Guild loop. Forinthry support for late primal tier materials. · Effects: Stores ores and stone spirits by tier; empties to bank / metal bank / deposit box, Capacity scales with Mining milestones and Everything Is Oresome achievements",
+      "requirements": [
+        "Smithing level for each ore box tier (bronze through primal)",
+        "Anvil access; upgrade by adding two bars of the next metal to the current box"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ore_boxes",
+        "title": "Ore box tier upgrades",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:wood-box-tier-upgrades",
+      "name": "Wood box tier upgrades",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin",
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "support",
+      "category": "Woodcutting inventory tool progression",
+      "detail": "Parallel inventory chain to ore boxes. Misthalin Woodcutters' Grove is the fort association for spirit storage; Kandarin is general WC tree pressure. No invented XP. · Misthalin Grove association for advanced storage. Kandarin support for tree density. · Effects: Stores logs by tier; empties at bank / deposit box / log pile, Grove upgrades enable wood spirit / nest / geode storage in wood boxes",
+      "requirements": [
+        "Fletching level for each wood box tier (wood through eternal magic)",
+        "Prior-tier wood box plus logs of the upgrade tier"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Wood_box",
+        "title": "Wood box tier upgrades",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
+    },
+    {
       "id": "asgarnia:ring-of-fire",
       "name": "Ring of fire",
       "recordType": "equipment",
@@ -6600,6 +8181,861 @@
       "sourceFile": "progression-enrichment-regional-skilling-morytania-2026-07-26.json"
     },
     {
+      "id": "kandarin:diviners-outfit",
+      "name": "Diviner's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Divination XP outfit",
+      "detail": "Named equipment split from kandarin:diviners-outfit-guthixian-cache activity. Primary ironman route is Cache (not TH). Memorial to Guthix / Hall of Memories geography pressures Kandarin for efficient cache play. · Surface Kandarin Cache as the gameplay acquisition path. Prefer this equipment row for set-effect planning. · Effects: 1% Divination XP per worn piece, +1% set bonus when all five pieces worn (6% total), Modified diviner's headwear path via headwear add-on for extra QoL, Free Diango / holiday-outfit reclaim if lost",
+      "requirements": [
+        "Guthixian Cache completion with Divination XP awarded",
+        "Missing piece roll chance scales with cache score (wiki: 0.5% per point; e.g. 50% at 100 points)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Diviner%27s_outfit",
+        "title": "Diviner's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:fury-shark-outfit",
+      "name": "Fury shark outfit (elite Fishing)",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Fishing elite skilling outfit",
+      "detail": "Equipment split from thin kandarin:shark-outfit-deep-sea activity. Fragments are global Invention from Fishing; Kandarin Deep Sea hub remains the practical high-volume fishing association. Do not invent fragment rates. · Gameplay path is Invention fragments, not TH. Pair with Living Rock Caverns tolerance needs and crystal rod (Tirannwn) as optional stacks. · Effects: Full fury set: +7% catch chance while Fishing (stacks with crystal fishing rod), +10% chance to catch an extra fish (no XP on the extra fish; works at Prif waterfall without extra Invention XP), 50–60% chance to save bait per catch, Removes living rock creature aggression, Inherits Fishing outfit 5% XP (1% per piece) after those pieces worn at least once — even if the base fishing outfit is destroyed, Toggle consume-all vs catch-all on the head (consume grants fish XP without inventory fish; double XP if extra-fish proc also consumes)",
+      "requirements": [
+        "80 Fishing and 20 Invention to craft outfit pieces at an Inventor's workbench after discovering shark outfit blueprints",
+        "54,000 shark fragments total to assemble shark + tiger + burnt tiers into fury (3,600 fragments per base piece × 15 pieces across three tiers)",
+        "Combine shark, tiger shark, and burnt shark outfits into fury"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Fury_shark_outfit",
+        "title": "Fury shark outfit (elite Fishing)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:natures-sentinel-outfit",
+      "name": "Nature's sentinel outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "cross-region",
+        "asgarnia",
+        "kandarin",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Woodcutting elite skilling outfit",
+      "detail": "No prior equipment row. Fragment craft is global; region_hints mark major tree-teleport and training geography, not a hard exclusive region. Complements morytania:lumberjack-outfit for the inherited XP layer. · Do not hard-gate the finished outfit to one region. Prefer Invention fragment path; skip TH. · Effects: Full set: 7% increased Woodcutting success chance, 7% increased bird's nest and crystal geode chance (stacks with strung rabbit foot, Woodcutting cape, tree-shaking scrimshaw), Optional auto-burn (Firemaking XP) or auto-fletch-and-consume (Fletching XP) on cut logs — 25% chance, additive with Inferno adze; level gates still apply, Inherits lumberjack outfit XP (1% per sentinel piece) after lumberjack worn once — even while lumberjack is banked (wiki notes a bugged 1% baseline on some worlds), 20 daily teleports to Woodcutting locations via helm (elder, magic, yew, ivy, acadia, overgrown idols, Havenhythe creeping ivy / eternal magic destinations added 2026), Contact active Evil Tree via helm (miniature evil tree daily spawn removed in March 2026 DailyScape overhaul)",
+      "requirements": [
+        "70 Woodcutting to collect sentinel fragments; 80 Woodcutting and 20 Invention to craft oaken/willow/maple pieces",
+        "54,000 sentinel fragments total for the three base outfits then combine into Nature's sentinel"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Nature%27s_sentinel_outfit",
+        "title": "Nature's sentinel outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:magic-golem-outfit",
+      "name": "Magic golem outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "cross-region",
+        "asgarnia",
+        "fremennik"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Mining elite skilling outfit",
+      "detail": "Not previously an equipment id. Asgarnia LRC tolerance is a key use-case; Fremennik golden mining suit is the XP inheritance source. Fragment acquisition is global Mining Invention. · Cross-region pressure (LRC + golden suit + Invention). Prefer fragment craft over TH. · Effects: Full set: +5% Mining critical-hit chance, +1 rockertunity multiplier, Removes living rock creature aggression (pairs with Asgarnia LRC), Daily teleport to active Shooting Star crashed star (from magic golem head), Inherits owned Varrock armour double-ore behaviour after that armour worn once, Inherits highest golden mining suit XP (up to 6%) after full suit worn once and stored in bank/armour case — not while destroyed at Diango without re-equip",
+      "requirements": [
+        "70 Mining for gemstone golem fragments; 80 Mining and 20 Invention to craft sapphire/emerald/ruby golem pieces",
+        "54,000 gemstone golem fragments total then combine three outfits into magic golem"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Magic_golem_outfit",
+        "title": "Magic golem outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "desert:farmers-outfit",
+      "name": "Farmer's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Farming XP outfit",
+      "detail": "Equipment split from desert:garden-of-kharid-rewards activity unlocks list. Distinct from kandarin:master-farmer-outfit (POF beans + fragments). · Hard Desert favour shop path for ironman-style acquisition. Keep separate from Kandarin master farmer. · Effects: 1% Farming XP per worn piece, +1% set bonus when all five pieces worn (6% total), Modified farmer's hat path (seed-save chance and teleports) when add-on applied, XP bonus is the base layer inherited by master farmer elite set once farmer outfit worn",
+      "requirements": [
+        "Sydekix's Shop of Balance (Garden of Kharid): 10,000 Crux Eqal favour per piece (50,000 full set)",
+        "Alternate historical: Cabbage Facepunch Bonanza renown (not League default)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Farmer%27s_outfit",
+        "title": "Farmer's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "morytania:lumberjack-outfit",
+      "name": "Lumberjack outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Woodcutting XP outfit",
+      "detail": "Equipment split from morytania:temple-trekking-skilling-outfits activity. Nature's sentinel inherits this XP layer after lumberjack worn once. · Hard Morytania Temple Trekking. Resolve In Aid of the Myreque via quest auto-completion overlay. · Effects: 1% Woodcutting XP per piece for four pieces (4% before set), +1% set bonus when full set worn (5% total), Applies to ivy, Evil Tree, overgrown idols, clan woodcutting plots, Tai Bwo Wannai spars/fences as documented on wiki, Free Diango reclaim if piece dropped and not picked up during trek",
+      "requirements": [
+        "Temple Trekking / Burgh de Rott Ramble broken-bridge undead lumberjack events",
+        "44 Woodcutting to wear",
+        "Pieces drop in fixed order (boots → hat → legs → top); 1/10 per undead lumberjack kill for next missing piece (wiki Mod Timbo rates)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Lumberjack_outfit",
+        "title": "Lumberjack outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "morytania:constructors-outfit",
+      "name": "Constructor's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Construction XP outfit",
+      "detail": "Equipment split from morytania:temple-trekking-skilling-outfits. Distinct from Tower of Life builder costume and from master constructor elite set. · Hard Morytania. Elite Morytania Thoroughly A-Ghast (all companions 99) unlocks full set as a side effect but is not required if total levels/rewards are claimed earlier. · Effects: 1% Construction XP per worn piece, +1% set bonus when all five pieces worn (6% total), Stacks with sculpting chisel (up to 7% combined with full outfit), Applies to long/curved bone turn-ins at Barlak",
+      "requirements": [
+        "Temple Trekking noticeboard companion level rewards",
+        "In Aid of the Myreque for trek access; Darkness of Hallowvale for garb-tier total levels",
+        "44 Construction to wear",
+        "Gloves: Pazuzu level 85; Boots: Zachory Bragg level 25; Hat total NPC level 200; Trousers total 300; Garb total 400"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Constructor%27s_outfit",
+        "title": "Constructor's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:sous-chefs-outfit",
+      "name": "Sous chef's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Cooking XP outfit",
+      "detail": "Equipment split from kandarin:gnome-restaurant-sous-chef activity. Pair with misthalin:cooking-gauntlets for mitts substitution. · Hard Kandarin gameplay path. Never TH. · Effects: 1% Cooking XP per worn piece, +1% set bonus when all five pieces worn (6% total), Cooking gauntlets substitute for sous chef mitts set contribution when both owned (wear gauntlets), Sous chef toque grants Cooks' Guild entry, Stacks with bonfire Cooking boost, Modified toque path via toque add-on",
+      "requirements": [
+        "Hard Gnome Restaurant deliveries (Grand Tree)",
+        "Random piece rewards from hard deliveries until set complete"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Sous_chef%27s_outfit",
+        "title": "Sous chef's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:master-farmer-outfit",
+      "name": "Master farmer outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Farming elite skilling outfit",
+      "detail": "Equipment split from kandarin:farmers-market-master-farmer activity. Desert farmer's outfit is the separate base XP set — not a Desert master farmer source (see desert:no-master-farmer-outfit). · Hard Kandarin POF beans + Invention fragments. · Effects: Inherits farmer's outfit XP if that set owned and worn once, Animals age 7% faster while player is at Manor Farm, 10% more beans from Farmers' Market sales, 10% higher chance of positive breeding/checking traits, 10% chance to save harvest life on hops/herbs/nightshade/allotments (crop tier), Herbs auto-cleaned on harvest with Herblore cleaning XP, Auto-water hop/herb/flower/allotment plantings, Protection payment discount (reduce by 2, min 1), Rapid Growth up to twice per patch per day, 10% chance bonus produce on fruit trees and bushes, Conditional teleports (Manor Farm with Ardougne cloak 2+, Habitat with juju bag/witchdoctor, Morytania allotment with modified farmer hat, grand seed pod teleports if owned)",
+      "requirements": [
+        "1,000 beans blueprint from Granny Potterington at Farmers' Market (Manor Farm)",
+        "80 Farming and 20 Invention; 54,000 master farmer fragments to craft animal + crop + tree tiers then combine"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_farmer_outfit",
+        "title": "Master farmer outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:master-runecrafter-robes",
+      "name": "Master runecrafter robes",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Runecrafting XP outfit",
+      "detail": "Equipment split from misthalin:runespan-master-runecrafter-robes activity. Wizards' Tower / Runespan is Misthalin-accessible, not region-exclusive (thaler / GOP alternate currencies). · Surface Misthalin Runespan as primary self-sufficient route without forcing a mandatory region dependency. · Effects: 1% Runecrafting XP per piece for four pieces (4% before set), +1% set bonus when full set worn (5% total), Wiki also documents up to 700 additional Runecrafting XP per action across RC activities with full set, Infinity ethereal elite outfit inherits the highest master-runecrafter XP previously achieved",
+      "requirements": [
+        "50 Runecrafting to obtain",
+        "Runespan: 4,000 points per piece (16,000 full set) from Wizard Rinsit",
+        "Or Great Orb Project: 15,000 Runecrafting guild tokens per piece (60,000 full set) from Wizard Elriss",
+        "Or 500 thaler per piece (2,000 full set) from Stanley Limelight"
+      ],
+      "confidence": "confirmed_wiki_access_route_not_exclusive",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_runecrafter_robes",
+        "title": "Master runecrafter robes",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:master-camouflage-outfit",
+      "name": "Master camouflage outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "cross-region",
+        "desert",
+        "tirannwn",
+        "fremennik"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Thieving elite skilling outfit",
+      "detail": "Complements desert:black-ibis-outfit. Auto-pickpocket removed November 2022. Fragment grind pressures Desert Shifting Tombs heavily; teleports pull Tirannwn/Fremennik/Misthalin hubs. · Cross-region elite. Prefer Invention fragments + black ibis desert grind; skip TH. · Effects: Unlimited teleports to thieving hubs (Prif clan districts, Pyramid Plunder, Keldagrim Consortium, Lletya, Thieves' Guild, Pollnivneach) when full set worn, 7% chance to double pickpocket loot (no extra XP), 7% chance to avoid stun on failed pickpocket, 7% better chance to avoid Pyramid Plunder snake bites; acts as lockpick in Pyramid Plunder, Acts as Trahaearn exoskeleton after Plague's End (gloves-of-silence style effect with full set + 75 Hunter/Thieving rules per wiki), Inherits black ibis XP if owned and worn once, As of 16 Feb 2026 early-game rebalance: no longer boosts Sceptre of the Gods or black ibis piece rates",
+      "requirements": [
+        "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
+        "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
+        "Black ibis outfit worn once to inherit Thieving XP (up to 5%)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_camouflage_outfit",
+        "title": "Master camouflage outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:ritualists-outfit",
+      "name": "Ritualist's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Necromancy XP outfit",
+      "detail": "Equipment split from misthalin:city-of-um-ritualist-outfit activity. Permanent non-MTX shop path from July 2025 — not Grim Harvest TH. · City of Um remains historical Misthalin working mapping until Equilibrium publishes locality rules. · Effects: 1% Necromancy XP per worn piece (combat and rituals), +1% set bonus when all five pieces worn (6% total), Modified ritualist's mask: 5% chance to save ritual focus objects; operate to spawn a deathshead moth once per day · Region status: historical_city_of_um_working_taxonomy",
+      "requirements": [
+        "68 Necromancy",
+        "Bring Austin a ghost impling jar to unlock Austin's Place permanent shop in City of Um",
+        "1,500 ectoplasm per piece (7,500 full base set); mask add-on 2,500 ectoplasm after 70 deathshead moths caught"
+      ],
+      "confidence": "confirmed_2025_gameplay_source_working_league_taxonomy",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ritualist%27s_outfit",
+        "title": "Ritualist's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:agile-legs",
+      "name": "Agile legs",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "weight-reducing Agility reward",
+      "detail": "Companion to existing kandarin:agile-top (Barbarian Outpost advanced). Legs are Gnome Stronghold advanced course; top is Barbarian advanced — both Kandarin. · Hard Kandarin. Completes Agile from Head to Toe with agile top. · Effects: −10 kg weight when worn, Hybrid legs armour (tier 36) — primarily a weight/Agility QoL piece, not a combat BiS, Free reclaim from gnome trainers if lost (no re-grind)",
+      "requirements": [
+        "250 perfect (no-fail) laps of Advanced Gnome Stronghold Agility Course",
+        "85 Agility to train the advanced course efficiently (boostable; 80 with summer pie)",
+        "Claim from a gnome trainer after the chatbox perfect-lap milestone"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Agile_legs",
+        "title": "Agile legs",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:archaeologists-outfit",
+      "name": "Archaeologist's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Archaeology XP outfit",
+      "detail": "Equipment split from misthalin:archaeology-guild-shop activity unlocks. Master archaeologist benefits stay on the guild shop / master outfit documentation rather than duplicating here. · Starting-region Misthalin Guild shop. Qualification gates still apply. · Effects: 1% Archaeology XP per piece through four pieces, 6% Archaeology XP when all five pieces worn (+1% set bonus), Free Diango reclaim if lost, Master archaeologist's outfit at Guildmaster qualification is a separate elite upgrade path (success/precision/teleports) — keep on guild shop activity row",
+      "requirements": [
+        "Qualification - Associate (70 Archaeology) for Archaeology Guild Shop outfit section",
+        "10,000 chronotes per piece (50,000 full set)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Archaeologist%27s_outfit",
+        "title": "Archaeologist's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:artisans-outfit",
+      "name": "Artisan's outfit",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Crafting XP outfit",
+      "detail": "Not previously catalogued. Stealing Creation / Gamers' Grotto access is Misthalin-adjacent; thaler is multi-minigame currency. Do not confuse with Artisans' Workshop blacksmith outfit (Smithing). · Gameplay SC or thaler path. Distinct from asgarnia:blacksmiths-outfit. · Effects: 1% Crafting XP per worn piece, +1% set bonus when all five pieces worn (6% total), Modified artisan's bandana: up to 3 daily teleports outside Crafting Guild; 5% chance to save one leather when crafting leather items",
+      "requirements": [
+        "Stealing Creation reward shop: 100 points per random missing piece (500 full set)",
+        "Or 360 thaler per piece from Stanley Limelight Traders (added 16 March 2026 DailyScape overhaul)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Artisan%27s_outfit",
+        "title": "Artisan's outfit",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
+    },
+    {
+      "id": "morytania:black-mask",
+      "name": "Black mask",
+      "recordType": "equipment",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer helmet melee component",
+      "detail": "Primary ironman farm: cave horrors / unspeakable horrors (Mos Le'Harmless). Wiki marks cave horror drops as Morytania league region. Rare uncharged drop from Shadow Reef sea horrors is not the practical farm. Remove charges before helmet craft. · Morytania owns the practical black-mask farm. Cabin Fever remains a quest gate. · Effects: On task: +7.5% melee damage and +12.5% melee accuracy (Slayer Spirit), Required component of the base slayer helmet · Region status: confirmed_wiki_league_region",
+      "requirements": [
+        "58 Slayer",
+        "Cabin Fever for Mos Le'Harmless Caves access",
+        "10 Defence, 20 Strength, combat 40 to wear",
+        "Uncharged mask required before assembling a slayer helmet"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Black_mask",
+        "title": "Black mask",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "karamja:hexcrest",
+      "name": "Hexcrest",
+      "recordType": "equipment",
+      "regionHints": [
+        "karamja"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer helmet Magic component",
+      "detail": "Jungle strykewyrms south of Shilo Village. Pair with desert:focus-sight for full-style coverage. · Hard Karamja farm geography for Magic-style helm component. · Effects: On task: +7.5% Magic damage and +12.5% Magic accuracy, Required with focus sight to upgrade slayer helmet to full slayer helmet",
+      "requirements": [
+        "73 Slayer to fight jungle strykewyrms",
+        "20 Magic and 20 Defence to wear",
+        "On-task drop rate better than off-task"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Hexcrest",
+        "title": "Hexcrest",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "desert:focus-sight",
+      "name": "Focus sight",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer helmet Ranged component",
+      "detail": "Desert strykewyrms. Completes Magic+Ranged pair with karamja:hexcrest for full slayer helmet. · Hard Desert farm geography for Ranged-style helm component. · Effects: On task: +7.5% Ranged damage and +12.5% Ranged accuracy, Required with hexcrest to upgrade slayer helmet to full slayer helmet · Region status: confirmed_wiki_league_region",
+      "requirements": [
+        "77 Slayer to fight desert strykewyrms",
+        "20 Ranged and 20 Defence to wear",
+        "On-task drop rate better than off-task"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Focus_sight",
+        "title": "Focus sight",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "desert:spectral-lens",
+      "name": "Spectral lens",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer helmet Necromancy component",
+      "detail": "Necromancy-style counterpart to hexcrest/focus sight. Ensouled form attaches to full+ helmets so all four styles share one worn helm. Ritual is 80 Necromancy at a tier-2 ritual site (City of Um / Misthalin pressure for ensoul step, not for the drop). · Desert owns the drop. Misthalin/City of Um owns the practical ensoul ritual site for ironman. · Effects: On task: +7.5% Necromancy damage and +12.5% Necromancy accuracy, Transforms via ensoul spectral lens ritual into ensouled spectral lens for attachment to full slayer helmet or better · Region status: confirmed_wiki_league_region",
+      "requirements": [
+        "Profane Scabarite / Elite Profane Scabarite kills (Desert)",
+        "20 Necromancy, 20 Defence, Necromancy! quest to wear",
+        "On-task (Profane Scabarites or Scabarites) improves drop rate"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Spectral_lens",
+        "title": "Spectral lens",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:slayer-helmet-shop-protections",
+      "name": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "misthalin",
+        "morytania",
+        "desert",
+        "karamja",
+        "kandarin",
+        "tirannwn",
+        "anachronia",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Slayer helmet protective components",
+      "detail": "Do not treat as a single-region gate. Any accessible Slayer Master stock works. Masked earmuffs must be split before craft. · Multi-master shop pack. Region pressure is whichever masters the league unlocks, not a fixed region. · Effects: Spiny helmet: wall-beast protection (Lumbridge Swamp Caves), Face mask: Smoke Dungeon dust and dust devil drain protection, Earmuffs: banshee scream protection, Nose peg: aberrant spectre drain protection, All four effects merge into the crafted slayer helmet",
+      "requirements": [
+        "Coins at any Slayer Master equipment/rewards shop stocking the pieces",
+        "Combined with uncharged black mask at 55 Crafting after Learn how to craft Slayer helmets"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Spiny_helmet",
+        "title": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:slayer-helmet-craft",
+      "name": "Slayer helmet (craft unlock + base helm)",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "morytania",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer equipment unlock",
+      "detail": "Ironman guide top permanent. Point sink is global; black mask farm is Morytania-pressure; shop pieces multi-master. Base tier is melee-only damage/accuracy boost until full upgrade. · Track as multi-region permanent. Component farms still apply regional pressure (especially Morytania black mask). · Effects: Combines all protective piece effects into one head slot, On-task melee: +7.5% damage and +12.5% accuracy from black mask (base tier), Can be disassembled into components and reassembled, Eligible for Slayer Lodge helmet stand (Anachronia tier 3) for passive task bonuses without wearing stats/teleports",
+      "requirements": [
+        "Smoking Kills completed",
+        "400 Slayer points: Learn how to craft Slayer helmets",
+        "55 Crafting (boostable; Assist System cannot craft)",
+        "35 Slayer (Smoking Kills gate)",
+        "Uncharged black mask + spiny helmet + face mask + earmuffs + nose peg"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_helmet",
+        "title": "Slayer helmet (craft unlock + base helm)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:full-slayer-helmet-and-upgrades",
+      "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "karamja",
+        "desert",
+        "morytania",
+        "anachronia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent multi-style Slayer helmet ladder",
+      "detail": "Single planner ladder for full → reinforced → strong → mighty → corrupted. Corrupted gem is a Desert / Sophanem-style pressure on the final step — verify current gem sources in-league. Anachronia Slayer Lodge stand accepts placed helmets for passive bonuses without worn stats/teleports/ring effects. · Multi-region: Karamja hexcrest + Desert focus sight (and spectral lens) feed full; point upgrades are global; stand is Anachronia. · Effects: Full: on-task +7.5% damage / +12.5% accuracy for Melee, Magic, and Ranged (Necromancy with ensouled lens), Reinforced: +8% damage / +13% accuracy, Strong: +8.5% / +13.5%, Mighty: +9% / +14%, Corrupted: +9.5% / +14.5% (highest helm tier), Higher tiers improve Defence armour tier and unlock more ferocious-ring fuse capacity",
+      "requirements": [
+        "Base slayer helmet owned",
+        "Hexcrest + focus sight for full slayer helmet (all combat styles at base 7.5%/12.5%)",
+        "Optional ensouled spectral lens for Necromancy on full+",
+        "First upgrades: reinforced 100 pts, strong 400, mighty 600, corrupted 1,000 (+ corrupted gem)",
+        "Re-upgrade costs are 10% of first-upgrade cost after initial purchase",
+        "Defence gates: full 20, reinforced 30, strong 50, mighty/corrupted 70"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Full_slayer_helmet",
+        "title": "Full slayer helmet and point upgrades (reinforced through corrupted)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:slayer-helmet-ring-fuse",
+      "name": "Fuse rings to full Slayer helmet",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer helmet utility unlock",
+      "detail": "Completes the permanent helmet utility package with multi-region:ring-of-slaying-craft and kandarin:ferocious-ring. 500-point sink is the same tier as each toolbelt attach. · Point unlock is global. Ferocious ring supply pressures Kandarin (Kuradal's Dungeon). · Effects: Fuse up to five fully charged rings of slaying (40 teleports) into the helmet, Fuse up to six fully charged ferocious rings (30 teleports); capacity scales with helm tier, Helmet gains ring teleports while worn, Fused ferocious damage boost applies only when the helmet is worn (not on Slayer Lodge stand), Helmet does not inherit ferocious ring-of-life property",
+      "requirements": [
+        "500 Slayer points: Learn how to fuse rings to full Slayer helmets",
+        "60 Crafting",
+        "Smoking Kills",
+        "Any full slayer helmet variant (full / reinforced / strong / mighty / corrupted)",
+        "Fully charged rings of slaying and/or ferocious rings to fuse"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_helmet",
+        "title": "Fuse rings to full Slayer helmet",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:ring-of-slaying-craft",
+      "name": "Ring of slaying (craft unlock)",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "desert",
+        "morytania",
+        "fremennik",
+        "misthalin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer teleport jewellery unlock",
+      "detail": "Core midgame teleport QoL. Enchanted gem stock is daily-limited from Slayer Masters (including Turael/Spria separate stock). Compacted ring exists via teleportation compactor (Invention). · Craft unlock is global points. Teleport destinations pressure Desert, Morytania, Fremennik, and Morytania/Misthalin for Tarn's Lair quest gate. · Effects: 8 teleports per crafted ring: Sumona (Pollnivneach), Slayer Tower, Fremennik Slayer Dungeon, Tarn's Lair (Haunted Mine), Contact Slayer Masters / check task and points without spending charges (enchanted-gem functions), Social Slayer invite via use-on-player, Fusable into full slayer helmet after multi-region:slayer-helmet-ring-fuse",
+      "requirements": [
+        "300 Slayer points: Learn how to craft rings of slaying",
+        "75 Crafting at a furnace (boostable / Assist allowed if unlock owned)",
+        "Enchanted gem + gold bar per ring",
+        "Alternate: buy finished rings for 75 points each without craft unlock"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ring_of_slaying",
+        "title": "Ring of slaying (craft unlock)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:ferocious-ring",
+      "name": "Ferocious ring",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "Kuradal dungeon ring and teleport",
+      "detail": "Not global BiS jewellery. Skilling-adjacent only as permanent dungeon QoL and helmet fuse feedstock. Pair with kandarin:kuradal-dungeon-ferocious-ring-hub. · Kandarin acquisition and Kuradal effect. Tirannwn for Morvran dungeon upgrade and Morvran teleport. · Effects: While worn in Kuradal's Dungeon: +4% damage (including bleeds/DoT), While worn in dungeon: ring-of-life style teleport to Kuradal under 10% LP (destroys ring), Charges: teleport to Kuradal (and Morvran after 100-point upgrade), Fused into full slayer helmet for teleports and worn damage boost inside the dungeon",
+      "requirements": [
+        "Kuradal dungeon access and on-task kills for drops",
+        "Optional 100 Slayer points: ferocious ring upgrade for Morvran's Dungeon",
+        "Optional fuse path via multi-region:slayer-helmet-ring-fuse"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ferocious_ring",
+        "title": "Ferocious ring",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:toolbelt-bonecrusher-attach",
+      "name": "Toolbelt attach: Bonecrusher",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "detail": "Item purchase is Forinthry (Daemonheim). Attach unlock is global Slayer points. Do not collapse into forinthry:bonecrusher — planners need both milestones. · Hard Forinthry for the item; attach is multi-region points. Prayer stacks still pair with Desert powders and other bone sources. · Effects: Bonecrusher functions from the tool belt (no inventory slot), Configured bone drops still convert to bury Prayer XP, Settings interface can disable the effect",
+      "requirements": [
+        "Bonecrusher owned (Daemonheim Rewards — forinthry:bonecrusher)",
+        "500 Slayer points: Learn how to attach the bonecrusher to your tool belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Bonecrusher",
+        "title": "Toolbelt attach: Bonecrusher",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:toolbelt-herbicide-attach",
+      "name": "Toolbelt attach: Herbicide",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "detail": "Separate permanent from the token purchase. Pairs with Herblore training and drop-heavy Slayer. · Forinthry item + global attach points. · Effects: Herbicide functions from the tool belt, Configured grimy herbs destroyed for double clean XP",
+      "requirements": [
+        "Herbicide owned (Daemonheim Rewards — forinthry:herbicide)",
+        "500 Slayer points: Learn how to attach herbicide to your tool belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Herbicide",
+        "title": "Toolbelt attach: Herbicide",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:toolbelt-charming-imp-attach",
+      "name": "Toolbelt attach: Charming imp",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "detail": "Critical Summoning supply AFK permanent. Item is Forinthry; attach is points. · Forinthry item + global attach points. · Effects: Charming imp functions from the tool belt, Auto-collects charms/spirit gems or converts configured charm types to Summoning XP",
+      "requirements": [
+        "Charming imp owned (Daemonheim Rewards — forinthry:charming-imp)",
+        "500 Slayer points: Learn how to attach the charming imp on your tool belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Charming_imp",
+        "title": "Toolbelt attach: Charming imp",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:toolbelt-seedicide-attach",
+      "name": "Toolbelt attach: Seedicide",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "asgarnia",
+        "kandarin",
+        "anachronia"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "detail": "Attach is the missing permanent; acquisition remains multi-route (Asgarnia renown, Kandarin/Anachronia beans, Thaler). Optional 25,000-bean collector upgrade is separate. · Do not assign Seedicide item to Forinthry. Attach unlock is global points after any acquisition route. · Effects: Seedicide functions from the tool belt, Configured seed drops convert to double plant XP when Farming level can plant them",
+      "requirements": [
+        "Seedicide owned (NOT Daemonheim — seedicide-not-daemonheim / drop-cleaner:seedicide routes)",
+        "500 Slayer points: Learn how to attach seedicide to your tool belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Seedicide",
+        "title": "Toolbelt attach: Seedicide",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "multi-region:toolbelt-advanced-gold-accumulator-attach",
+      "name": "Toolbelt attach: Advanced gold accumulator",
+      "recordType": "equipment",
+      "regionHints": [
+        "multi-region",
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer Rewards toolbelt unlock",
+      "detail": "Learn text says gold accumulator but wiki/shop targets the advanced permanent. Regular gold accumulator is a charged consumable and is not the 500-point attach target. · Forinthry item + global attach points. · Effects: Advanced gold accumulator functions from the tool belt, Auto-collects monster coin drops to money pouch (90% kept / 10% destroyed on advanced)",
+      "requirements": [
+        "Advanced gold accumulator owned (Daemonheim Rewards — forinthry:advanced-gold-accumulator)",
+        "500 Slayer points: Attach the gold accumulator on your tool belt (advanced version)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Advanced_gold_accumulator",
+        "title": "Toolbelt attach: Advanced gold accumulator",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:gold-accumulator",
+      "name": "Gold accumulator",
+      "recordType": "equipment",
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "charged coin drop cleaner (Daemonheim Rewards)",
+      "detail": "Missing named Forinthry row after forinthry file pass (hub listed utilities but not this). Degrades; not the toolbelt permanent. Prefer advanced for long-run ironman once tokens allow. · Hard Forinthry via Daemonheim Rewards. · Effects: Auto-collects monster coin drops into money pouch, Base capacity 1,000,000 coins before dust, Does not permanently tax coin drops (unlike advanced) · Region status: confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "20,000 Dungeoneering tokens first purchase (price steps +20,000 to max 60,000 per purchase)",
+        "Optional overcharge at 60k price tier: 250,000 tokens per +5,000,000 coins capacity (stackable)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Gold_accumulator",
+        "title": "Gold accumulator",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "forinthry:advanced-gold-accumulator",
+      "name": "Advanced gold accumulator",
+      "recordType": "equipment",
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent coin drop cleaner (Daemonheim Rewards)",
+      "detail": "Also tracked as dungeoneering:advanced-gold-accumulator-current in drop-cleaners enrichment. Named Forinthry regional-skilling id so Daemonheim permanent list is complete beside bonecrusher/herbicide/charming imp. · Hard Forinthry. Pair with multi-region toolbelt attach as a second milestone. · Effects: Permanent coin auto-collect to money pouch, Destroys 10% of collected coin drops, Toolbelt-eligible after multi-region:toolbelt-advanced-gold-accumulator-attach · Region status: confirmed_official",
+      "requirements": [
+        "60 Dungeoneering",
+        "1,500,000 Dungeoneering tokens"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Advanced_gold_accumulator",
+        "title": "Advanced gold accumulator",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
+      "id": "desert:slayer-codex",
+      "name": "Slayer Codex",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "",
+      "category": "permanent Slayer utility book",
+      "detail": "Equipment/pocket form of desert:slayer-codex-and-sunken-pyramid. Prefer activity row for system detail; this id for ownership tracking. · Hard Desert / Menaphos claim. · Effects: Records captured ushabti souls, Up to +5% Slayer XP while using slayer helmet / stand (1% per 20 souls to 100), Teleport to Sunken Pyramid after 50 unique souls, Menaphos reputation on first soul of each type",
+      "requirements": [
+        "99 Slayer",
+        "Claim from Faiza in Menaphos Order of the Slayer Masters"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Slayer_Codex",
+        "title": "Slayer Codex",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
+    },
+    {
       "id": "tirannwn:grace-of-the-elves",
       "name": "Grace of the elves",
       "recordType": "equipment",
@@ -6622,6 +9058,342 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-tirannwn-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:avas-device-chain",
+      "name": "Ava's device chain (attractor / accumulator / alerter)",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin",
+        "desert"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "support",
+      "category": "permanent Ranged ammo-recovery and cape-rack utility chain",
+      "detail": "Not Asgarnia — Ava/Animal Magnetism are Misthalin. Top RS3 tier is alerter (not OSRS alethiometer). Combat BiS cape comparison is secondary; ironman skilling value is permanent ammo recovery + cape-rack staple. · Hard Misthalin for Animal Magnetism and Ava. Tag Desert only when planning alerter / Do No Evil. · Effects: Ammo/projectile recovery for arrows, bolts (most types), darts, javelins, throwing axes/knives, blisterwood stakes, Toktz-xil-ul, After owning any device and 50 Ranged, ammo-attraction effect becomes permanent account-wide even if the cape is destroyed (24 June 2019), Occasional steel ammo / iron ore / toy mouse attractions into backpack, Alerter adds elite clue crate detection (bwuk proximity dig) and stronger Ranged cape stats; POH cape rack storage, Toggle can limit attraction to ammo only · Region pressure: Misthalin hard: Animal Magnetism + Ava reclaim always at Draynor Manor., Desert support for alerter tier via Do No Evil; base attractor/accumulator do not need Desert.",
+      "requirements": [
+        "Animal Magnetism completed — Ava in Draynor Manor (Misthalin)",
+        "Ava's attractor: minimum 30 Ranged (quest reward path)",
+        "Ava's accumulator: minimum 50 Ranged (upgrade from Ava)",
+        "Ava's alerter: partial Do No Evil — upgrade accumulator with metal crate during quest (Desert quest pressure); reclaim 999 coins + 75 steel arrows from Ava"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ava%27s_devices",
+        "title": "Ava's device chain (attractor / accumulator / alerter)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "cross-region:bonecrusher-necklace",
+      "name": "Bonecrusher + demon horn necklace Prayer stack",
+      "recordType": "equipment",
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
+      "regionRequirementType": "single",
+      "category": "cross-region Prayer AFK restore package",
+      "detail": "Bonecrusher alone and toolbelt attach already first-class; this row is the missing necklace stack milestone. Holy wrench (Pieces of Hate) can add +10% restore when worn/inventoried — combat-quest pressure, not a hard region gate here. · Hard Forinthry for both DG reward pieces. · Effects: Configured bone drops auto-crush for bury Prayer XP (bonecrusher) while worn necklace restores prayer points per bury/crush, Demon horn restore bands: 50 pp (normal/bat/burnt bones), 100 pp (big/baby dragon/jogre/wyvern), 150 pp (dragon/dinosaur/dagannoth/ourg/airut/frost/hardened/reinforced dragon bones), RS3 has no single fused 'bonecrusher necklace' craft (wiki Bonecrusher necklace redirects to demon horn) — the planner package is the dual-item stack ironmen equip, Pairs with attuned ectoplasmator for ash/ghost restore on the same necklace bands · Region pressure: Forinthry owns both Daemonheim Rewards purchases (bonecrusher + demon horn necklace).",
+      "requirements": [
+        "Bonecrusher owned (Daemonheim Rewards — forinthry:bonecrusher; post-11-May-2026 remaster costs apply)",
+        "Optional: multi-region:toolbelt-bonecrusher-attach (500 Slayer points) so crusher runs from toolbelt",
+        "Demon horn necklace: 90 Prayer, 75 Dungeoneering, 35,000 Dungeoneering tokens from Marmaros (Daemonheim Rewards)",
+        "Lower DG necklaces (twisted bird skull / split dragontooth) work with the same crusher stack at lower restore rates"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Bonecrusher",
+        "title": "Bonecrusher + demon horn necklace Prayer stack",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "morytania:attuned-ectoplasmator",
+      "name": "Attuned ectoplasmator",
+      "recordType": "equipment",
+      "regionHints": [
+        "morytania",
+        "misthalin",
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "morytania"
+      ],
+      "regionRequirementType": "support",
+      "category": "permanent Prayer ash/ghost drop cleaner",
+      "detail": "Ghosts Ahoy / ectophial are separate travel. First-age outfit Prayer XP does not stack with ectoplasmator. Planner should pair with cross-region:bonecrusher-necklace for full bone+ash AFK prayer restore. · Hard Morytania for efficient ghost/ash sources and thematic Prayer hub. Base drop can appear elsewhere as pressure. · Effects: Auto-scatters demonic ashes and absorbs ghosts for Prayer XP while carried/worn (pocket), Unlike base ectoplasmator, triggers DG prayer necklaces (bird skull / dragontooth / demon horn) for prayer-point restore on ashes and ghosts, Consumes ashes before prayer urns can collect them — do not combine with urn meta, Powder of burials rows explicitly exclude ectoplasmator behaviour — this is the ash-side permanent ironmen were missing · Region pressure: Morytania primary: shades, ghasts, tortured souls, Barrows, Slayer Tower spectres for ectoplasmator + ghostly essence., Misthalin: Diango reclaim path for base ectoplasmator., Forinthry optional: revenant ghost farms and demon horn necklace pairing.",
+      "requirements": [
+        "Base ectoplasmator drop from ghosts/ghasts/shades/Barrows brothers/revenants/etc. (many sources; Morytania density highest for shades/ghasts/Barrows)",
+        "100 ghostly essence used on ectoplasmator to create attuned version (starts with 1,000 charges)",
+        "Recharge: more ghostly essence (10 charges each; max ~5009 charges); fully degraded reverts to rechargeable degraded form",
+        "If discarded, charges are lost — rebuild from a standard ectoplasmator; Diango can reclaim base only when attuned is not charged"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Attuned_ectoplasmator",
+        "title": "Attuned ectoplasmator",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:spring-cleaner",
+      "name": "Spring cleaner (Invention drop cleaner)",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia"
+      ],
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "regionRequirementType": "single",
+      "category": "permanent Invention-manufactured drop cleaner",
+      "detail": "Reclaim shell from Diango if lost. Does not invent XP/hour for research mode. Fort Workshop power is optional later; base craft is Guild-centric. · Hard Asgarnia for Invention Guild discovery path. · Effects: Auto-process monster drops (not implings/thieving/chests/PvP/LootShare): Research (bonus XP), Dismantle (bank materials), High Alch salvage (2000+), Disassembly salvage (3000+, free springs), Pocket slot usable from spring cleaner 2000; 9001 allows noted items, Sibling cleaner family with bonecrusher / herbicide / seedicide / charming imp / gold accumulator — spring cleaner was the missing Invention permanent · Region pressure: Asgarnia: Invention Guild discovery/craft home (asgarnia:invention-guild).",
+      "requirements": [
+        "Invention unlocked and Discovery blueprint for spring cleaner",
+        "Craft at Invention: simple parts + tensile parts + flexible parts + precise components (one cleaner per account ownership rule)",
+        "Charge with springs / tight springs (max 250,000 charges); charges not lost on death",
+        "Upgrade path via springs used or Quick Upgrade: 2000 (200) → 3000 (400 more) → 5000 (1,200) → 9000 (2,200) → 9001 (6,000) cumulative 10,000 springs"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Spring_cleaner",
+        "title": "Spring cleaner (Invention drop cleaner)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:inferno-adze",
+      "name": "Inferno adze",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "regionRequirementType": "support",
+      "category": "All Fired Up dual hatchet-pickaxe equipment",
+      "detail": "Equipment checklist row missing while ring/gloves/beacon activity exist. Do not re-emit cross-region:fired-up-inferno-adze-chain stack (pending wave4-cross-stacks) — link it after sync. Nature's Sentinel and Superheat Form are separate auto-burn paths. · Hard Asgarnia under project Fired Up taxonomy. King Roald is Misthalin support for claim UI only. · Effects: Woodcutting as dragon hatchet with ~1/3 chance to incinerate cut logs for full WC + FM XP (no ashes), Mining as rune pickaxe +3 (no special mine effect), Incineration works on curly roots; Flame gloves + ring of fire boost the FM XP side, Always Adze relic is the 100% auto-burn alternative that does not require carrying the adze · Region pressure: Asgarnia taxonomy matches existing all-fired-up-beacons / ring-of-fire / flame-gloves rows (beacon line Asgarnia-heavy)., Misthalin: King Roald claim/reclaim geography only.",
+      "requirements": [
+        "All Fired Up quest completed",
+        "Light all 14 beacons simultaneously then claim from King Roald (92 Firemaking required to wield / activate incineration; boosts can claim but not wield effect)",
+        "Supporting skill floors for full beacon line include Agility, Construction, Crafting, Prayer, Smithing, Strength (see All Fired Up minigame)",
+        "Land of the Goblins + partial Troll Stronghold among beacon quest helpers",
+        "Cannot toolbelt; reclaim free from King Roald if lost"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Inferno_adze",
+        "title": "Inferno adze",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "karamja:tokkul-zo",
+      "name": "TokKul-Zo",
+      "recordType": "equipment",
+      "regionHints": [
+        "karamja"
+      ],
+      "requiredRegions": [
+        "karamja"
+      ],
+      "regionRequirementType": "single",
+      "category": "Karamja TzHaar teleport ring and skilling travel tool",
+      "detail": "Only a banking footnote on hardwood-grove previously. Karamja gloves are diary travel; TokKul-Zo is the city hub ring. Combat damage ring notes stay secondary to skilling travel. · Hard Karamja. · Effects: Teleports (need ≥1 charge; teleports do not spend charges): Main Plaza, Fight Pit, Fight Cave, Fight Kiln, Fight Cauldron, Primary ironman Karamja banking + fairy ring BLP on-ramp (Fight Cave tele just south of BLP), Hardwood Grove / TzHaar furnace / gemstone cavern loops without lodestone spam, Combat side: +10% damage vs TzHaar/TokHaar/TzekHaar/Igneous TzekHaar while charged (charges drain on hits) — skilling value is the tele network · Region pressure: Hard Karamja: Elder Kiln, plaza reclaim, Tokkul economy.",
+      "requirements": [
+        "The Elder Kiln completed (quest reward ring)",
+        "Reclaim uncharged from TzHaar-Mej-Jeh or TzHaar-Mej-Ak at TzHaar City Plaza if lost",
+        "Recharge: 50,000 Tokkul full (4,000 combat charges) or 12.5 Tokkul per missing charge",
+        "Fight Cauldron teleport unlocks after The Brink of Extinction"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/TokKul-Zo",
+        "title": "TokKul-Zo",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "tirannwn:crystal-pickaxe",
+      "name": "Crystal pickaxe",
+      "recordType": "equipment",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn"
+      ],
+      "regionRequirementType": "single",
+      "category": "augmentable crystal Mining tool",
+      "detail": "Workshop + dragon-base bundle exist; hammer/rod/tinderbox already have equipment rows — pick was missing at equipment granularity. Dragon base self-source remains cross-region pressure via cross-region:crystal-tools-dragon-base. · Hard Tirannwn for conversion. Dragon pickaxe source is optional pressure. · Effects: Level 70 Mining pick with necronium +4-class success; toolbeltable; augmentable, Required piece for pickaxe of earth and song (with Imcando pick + blast fusion hammer), Reversible to dragon pick (harmonic dust not refunded) · Region pressure: Tirannwn: Lady Ithell conversion + harmonic dust.",
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon pickaxe (or Imcando / gilded dragon — Ithell downgrades then crystals) + 4,000 harmonic dust to Lady Ithell",
+        "70 Mining to use (Plague's End already forces 75 Mining)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_pickaxe",
+        "title": "Crystal pickaxe",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "tirannwn:crystal-hatchet",
+      "name": "Crystal hatchet",
+      "recordType": "equipment",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn"
+      ],
+      "regionRequirementType": "single",
+      "category": "augmentable crystal Woodcutting tool",
+      "detail": "Matches crystal-hammer equipment granularity. Nature's Sentinel / Inferno adze / Always Adze are separate WC method layers. · Hard Tirannwn for conversion. · Effects: Tier ~73 cutting power; ~15% faster than dragon hatchet; toolbeltable; augmentable, Doubled chance of Shattered Heart / golden rocks while chopping, Required piece for hatchet of ember and glade (with Imcando hatchet + shard of the Lumberjack), Clobber special attack retained from dragon hatchet line · Region pressure: Tirannwn: Lady Ithell conversion + harmonic dust.",
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon hatchet (backpack or toolbelt) + 4,000 harmonic dust to Lady Ithell",
+        "70 Woodcutting / 70 Attack to wield; can still chop without Plague's End if obtained another way"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_hatchet",
+        "title": "Crystal hatchet",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "tirannwn:crystal-mattock",
+      "name": "Crystal mattock",
+      "recordType": "equipment",
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn"
+      ],
+      "regionRequirementType": "single",
+      "category": "augmentable crystal Archaeology tool",
+      "detail": "Closes the pick/hatchet/mattock equipment gap vs hammer/rod/tinderbox. Dragon mattock base remains multi-source pressure. · Hard Tirannwn for conversion. · Effects: Augmentable Archaeology mattock; toolbeltable, Required piece for Mattock of Time and Space (with Imcando mattock + energised meteorite shard at mysterious monolith), Can upgrade augmented dragon → crystal while keeping equipment XP and perks · Region pressure: Tirannwn: Lady Ithell conversion + harmonic dust.",
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon mattock (or Imcando mattock / augmented dragon mattock preserving perks) + 4,000 harmonic dust to Lady Ithell",
+        "70 Archaeology to use; precision/focus equal bane mattock (80 Arch tier stats at 70 req)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Crystal_mattock",
+        "title": "Crystal mattock",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:seed-bag",
+      "name": "Seed bag (Croesus Front)",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "category": "permanent Farming seed storage tool",
+      "detail": "multi-region:seedicide mentions optional collector upgrade (25k beans) but not the seed bag itself. Companion inventory permanent for seed-heavy ironmen. Not the Extinction quest seed bag variant. · Hard Misthalin via Croesus Front access. · Effects: Holds up to 40 different seed types to normal stack limits, Fill/Empty/Open interface; fill from inventory (not bank); does not auto-scoop ground seeds or seedicide collector output, Action-bar hold-to-fill works during Master Farmer pickpocket without interrupt · Region pressure: Misthalin: Croesus Front materials and craft.",
+      "requirements": [
+        "Croesus Front access (Senntisten / Elder God Wars — Misthalin taxonomy with project croesus boundary)",
+        "85 Crafting (assistable) to craft from Croesus spore sack + timber fungus + fungal spore + fungal algae + calcified fungus + Croesus flakes",
+        "Only one shared seed inventory across bags — destroy filled bag requires a new craft to recover stored seeds"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Seed_bag",
+        "title": "Seed bag (Croesus Front)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "desert:modified-farmers-hat",
+      "name": "Modified farmer's hat",
+      "recordType": "equipment",
+      "regionHints": [
+        "desert",
+        "morytania",
+        "asgarnia"
+      ],
+      "requiredRegions": [
+        "desert"
+      ],
+      "regionRequirementType": "support",
+      "category": "Farming outfit head add-on permanent",
+      "detail": "Was buried inside desert:farmers-outfit effects only. First-class residual like modified botanist. Modified diviner already pending wave4-diaries-outfits. · Hard Desert for outfit + add-on. Teleport destinations are support value. · Effects: +1% Farming XP (same as base hat piece), 2% chance to save seeds when sowing (including starbloom + battlestaff save when applicable), Daily teleports to Morytania allotment patch (or Taverley if Morytania inaccessible) — three teleports/day, Historical daily bird's nest claim removed in Dailyscape Overhaul (16 March 2026) — teleports + seed-save remain · Region pressure: Desert: farmer outfit acquisition., Morytania: preferred teleport destination value., Asgarnia: Taverley fallback teleport.",
+      "requirements": [
+        "Farmer's hat piece owned (desert:farmers-outfit — Garden of Kharid Crux Eqal favour path)",
+        "Farmer's hat add-on applied to create modified hat"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Modified_farmer%27s_hat",
+        "title": "Modified farmer's hat",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
+    },
+    {
+      "id": "asgarnia:modified-botanists-mask",
+      "name": "Modified botanist's mask",
+      "recordType": "equipment",
+      "regionHints": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "asgarnia"
+      ],
+      "regionRequirementType": "support",
+      "category": "Herblore outfit head add-on permanent",
+      "detail": "Was buried in botanists-outfit detail only. Ironman Herblore stack piece should be checklist-visible beside scroll of cleansing. · Hard Asgarnia for FPF outfit path. · Effects: Retains botanist head-piece Herblore XP share of the set, 5% chance to duplicate finished potions and bank the extra, Daily teleports to Catherby herb patch · Region pressure: Asgarnia: FPF Brian-point grind., Kandarin: Catherby herb-patch teleport destination value.",
+      "requirements": [
+        "Botanist's mask owned (asgarnia:botanists-outfit — Flash Powder Factory Brian points; not Thaler)",
+        "Botanist's mask add-on (1,000 Brian points) applied to create modified mask"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Modified_botanist%27s_mask",
+        "title": "Modified botanist's mask",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
     },
     {
       "id": "multi-region:slayer-helmet-craft-chain",
@@ -6648,321 +9420,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Slayer_helmet",
         "title": "Slayer helmet craft + full upgrade chain",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "forinthry:toolbelt-attach-unlocks",
-      "name": "Toolbelt attach unlocks (drop cleaners)",
-      "recordType": "activity",
-      "regionHints": [
-        "forinthry"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Slayer permanent toolbelt unlocks",
-      "detail": "Ironman Slayer notable rewards: 500 points each to permanently attach bonecrusher, seedicide, herbicide, charming imp, and gold accumulator to the toolbelt. Items may exist as rows; this is the permanent attach unlock planner checklist.",
-      "requirements": [
-        "500 Slayer points per attach unlock",
-        "Owned cleaner item"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Slayer_Rewards",
-        "title": "Toolbelt attach unlocks (drop cleaners)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "karamja:natures-sentinel-outfit",
-      "name": "Nature's Sentinel outfit",
-      "recordType": "equipment",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Woodcutting / Firemaking XP outfit",
-      "detail": "Ironman Firemaking curly-roots rates quote full Nature's Sentinel with Ring of Fire. Jadinko Lair / Karamja outfit chain for permanent Woodcutting and Firemaking XP.",
-      "requirements": [
-        "Jadinko Lair / Nature's sentinel acquisition path"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Nature%27s_sentinel_outfit",
-        "title": "Nature's Sentinel outfit",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:master-thief-tools",
-      "name": "Master thief's lockpick + master thief's stethoscope",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Thieving permanent tools",
-      "detail": "Thieves' Guild permanent tools required for efficient Keldagrim chests (94+) and safecracking/heists QoL. Complements Trahaearn exoskeleton for ironman Thieving.",
-      "requirements": [
-        "Thieves' Guild progression"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
-        "title": "Master thief's lockpick + master thief's stethoscope",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "global:sticky-fingers-relic",
-      "name": "Sticky Fingers (Archaeology relic)",
-      "recordType": "activity",
-      "regionHints": [
-        "anachronia",
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Archaeology monolith relic power",
-      "detail": "Ironman Thieving helpful unlock: pickpocket rate multiplier; also boosts master-farmer seed rates in Farming. First-class relic permanent unlock for no-trade planners (sibling pattern to Bait and Switch / Always Adze).",
-      "requirements": [
-        "Archaeology relic unlock path for Sticky Fingers"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Sticky_Fingers",
-        "title": "Sticky Fingers (Archaeology relic)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "multi-region:master-camouflage-outfit",
-      "name": "Master camouflage outfit",
-      "recordType": "equipment",
-      "regionHints": [
-        "desert",
-        "asgarnia",
-        "kandarin",
-        "morytania"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Thieving XP outfit",
-      "detail": "Ironman Thieving: +5% pickpocket success and extra loot utility; stacks with Trahaearn exoskeleton discussion. Combined camouflage set from lower-tier Thieving outfits.",
-      "requirements": [
-        "Full set of base camouflage outfits to combine"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Master_camouflage_outfit",
-        "title": "Master camouflage outfit",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "global:aquarium-prawn-perks",
-      "name": "Aquarium room + Prawn Perks",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "asgarnia",
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Fishing POH permanent infrastructure",
-      "detail": "Ironman Fishing Equipment: golden fish eggs unlock baitless fishing and local XP boosts via Prawnbroker perks. Construction 63 POH Aquarium is a permanent fishing QoL unlock, not just Construction XP.",
-      "requirements": [
-        "63 Construction for Aquarium room",
-        "Golden fish eggs for Prawn Perks"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Aquarium",
-        "title": "Aquarium room + Prawn Perks",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "global:botanists-amulet",
-      "name": "Botanist's amulet",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia",
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Herblore production amulet",
-      "detail": "Ironman Herblore ideal setup: 5% chance of 4-dose potions (5 charges). Stacks with factory/botanist outfits. Crafted/charged utility for no-trade potion production.",
-      "requirements": [
-        "Botanist's amulet craft + charge materials"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Botanist%27s_amulet",
-        "title": "Botanist's amulet",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:passing-bracelet",
-      "name": "Passing bracelet",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Underworld teleport jewelry",
-      "detail": "Ironman Fishing ghostly sole AFK bank loop and RC helpful unlocks. City of Um / Underworld teleport jewelry — permanent QoL for bone and fishing routes (Misthalin working taxonomy).",
-      "requirements": [
-        "City of Um / Underworld progression"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Passing_bracelet",
-        "title": "Passing bracelet",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "global:ore-box-tier-upgrades",
-      "name": "Ore box tier upgrades",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia",
-        "fremennik",
-        "forinthry"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Mining inventory tool progression",
-      "detail": "Ironman Mining guide: upgrade pickaxe and ore box every 10 levels. Ore box stores ore by tier and is a core self-sufficient Mining logistics unlock chain.",
-      "requirements": [
-        "Smithing level for each ore box tier"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Ore_box",
-        "title": "Ore box tier upgrades",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "global:wood-box-tier-upgrades",
-      "name": "Wood box tier upgrades",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia",
-        "kandarin",
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Woodcutting inventory tool progression",
-      "detail": "Ironman Woodcutting Tips: wood box stores hundreds of logs. Tool-chain permanent upgrade path parallel to ore box for no-trade inventory pressure.",
-      "requirements": [
-        "Fletching / Construction materials per tier as wiki"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Wood_box",
-        "title": "Wood box tier upgrades",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "kandarin:ferocious-ring-helmet-fuse",
-      "name": "Ferocious ring fuse to full slayer helmet",
-      "recordType": "equipment",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Slayer helmet permanent upgrade",
-      "detail": "Ironman Slayer notable rewards: 500 points to fuse a ferocious ring into the full Slayer helmet. Kuradal's dungeon 4% damage while wearing any ring becomes helmet-passive. Complements multi-region:slayer-helmet-craft-chain.",
-      "requirements": [
-        "Full Slayer helmet owned",
-        "Ferocious ring",
-        "500 Slayer points"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Ferocious_ring",
-        "title": "Ferocious ring fuse to full slayer helmet",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "multi-region:cremation-ability",
-      "name": "Cremation ability unlock",
-      "recordType": "activity",
-      "regionHints": [
-        "morytania",
-        "forinthry"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Prayer permanent ability unlock",
-      "detail": "Ironman Prayer alternate offering path (250% Prayer + Firemaking). Rare ghost drop permanent ability — distinct from Sunspear vyre cremation and Shades of Mort'ton methods already indexed.",
-      "requirements": [
-        "Cremation ability drop from ghosts / wiki acquisition"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Cremation",
-        "title": "Cremation ability unlock",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"
-    },
-    {
-      "id": "kandarin:fishing-outfit-fish-flingers",
-      "name": "Fishing outfit (Fish Flingers)",
-      "recordType": "equipment",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "",
-      "category": "Fishing XP outfit",
-      "detail": "Ironman Fishing Equipment: up to 5% Fishing XP via Fish Flingers. Separate from fury/shark Deep Sea Fishing outfit rows when those cover higher tiers only.",
-      "requirements": [
-        "Fish Flingers participation"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Fishing_outfit",
-        "title": "Fishing outfit (Fish Flingers)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "audit-ironman-unlocks-vs-app-2026-07-26.json"

@@ -5,7 +5,7 @@
  * the same crests, lock states and quest counts as the 3D table. It is the
  * loading skeleton, the no-WebGPU state, and the sub-760px board — a real
  * planner surface, not an apology. It stays three-free so it can render
- * anywhere; pick interaction runs through the shared build store.
+ * anywhere. Board clicks frame only — picks stay on the ledger.
  *
  * The whole board is aria-hidden on purpose: nothing in it may carry a
  * region's accessible name, or it double-matches the DOM ledger's buttons
@@ -13,12 +13,7 @@
  */
 
 import { useState } from "react";
-import {
-  canSelectElective,
-  ELECTIVE_REGIONS,
-  isRegionUnlocked,
-  type RegionId,
-} from "@/league";
+import { isRegionUnlocked, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { REGION_SHAPES } from "./data/regionShapes";
 import { smoothRing } from "./data/regionCurve";
@@ -32,7 +27,7 @@ const X = (u: number) => u * VB_W;
 const Y = (v: number) => v * VB_H;
 
 export function FlatBoard() {
-  const { build, toggleRegion } = useBuild();
+  const { build } = useBuild();
   const { focusRegion } = useMapFocus();
   const [hovered, setHovered] = useState<RegionId | null>(null);
 
@@ -49,8 +44,6 @@ export function FlatBoard() {
       {REGION_SHAPES.map((shape) => {
         const id = shape.id;
         const unlocked = isRegionUnlocked(build, id);
-        const elective = (ELECTIVE_REGIONS as readonly RegionId[]).includes(id);
-        const selectable = elective && canSelectElective(build, id);
         const isHover = hovered === id;
         const points = smoothRing(shape)
           .map(([u, v]) => `${X(u).toFixed(1)},${Y(v).toFixed(1)}`)
@@ -61,13 +54,8 @@ export function FlatBoard() {
             key={id}
             onPointerEnter={() => setHovered(id)}
             onPointerLeave={() => setHovered(null)}
-            onClick={() => {
-              focusRegion(id);
-              if (selectable) toggleRegion(id);
-            }}
-            style={{
-              cursor: selectable || !elective ? "pointer" : "not-allowed",
-            }}
+            onClick={() => focusRegion(id)}
+            style={{ cursor: "pointer" }}
           >
             <title>{`${name}: ${unlocked ? "unlocked" : "locked"} · ${REGION_METRICS_BY_ID.get(id)?.quests ?? 0} quests touching`}</title>
             <polygon

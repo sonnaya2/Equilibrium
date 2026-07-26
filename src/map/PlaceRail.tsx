@@ -1,10 +1,12 @@
 "use client";
 
 /**
- * Place chips for the framed region — under-board Board Sky rail.
+ * Place chips for the inspector's subject region — under-board Board Sky rail.
  *
- * Canvas markers stay visual (and aria-hidden); this is the keyboard-friendly
- * place list. Same gate as PlaceMarkers: framed region with anchors only.
+ * Canvas markers stay visual (and aria-hidden) and only mount when framed.
+ * The rail is the keyboard-friendly list and stays available for the subject
+ * region even on the table shot: picking a chip frames the region so the pin
+ * lands on screen. Hover only lights; it never writes the sticky selection.
  */
 
 import { useEffect } from "react";
@@ -14,14 +16,14 @@ import { useMapFocus } from "./useMapFocus";
 export function PlaceRail() {
   const { focus, selectPlace, hoverPlace } = useMapFocus();
   const places = PLACES_BY_REGION.get(focus.region) ?? [];
-  const active = focus.framed && places.length > 0;
+  const visible = places.length > 0;
 
-  // Rail stays mounted under the board; drop transient hover when it hides.
+  // Drop transient hover when the rail has nothing to show (region change / empty).
   useEffect(() => {
-    if (!active) hoverPlace(null);
-  }, [active, hoverPlace]);
+    if (!visible) hoverPlace(null);
+  }, [visible, hoverPlace]);
 
-  if (!active) return null;
+  if (!visible) return null;
 
   return (
     <div className="board-sky__places" role="group" aria-label="Places">

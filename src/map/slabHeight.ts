@@ -13,8 +13,8 @@ export const RAISED_Y = 0.02;
 export const SUNKEN_Y = -0.024;
 /** How much further the subject rises, and how far every other slab drops. */
 /** Daylit plinth: subject rises enough to read as framed without leaving the board. */
-export const FOCUS_LIFT = 0.058;
-export const UNFOCUSED_DROP = 0.012;
+export const FOCUS_LIFT = 0.062;
+export const UNFOCUSED_DROP = 0.016;
 /**
  * ExtrudeGeometry adds its bevel *outside* the requested depth, so a cap's real
  * top is `depth + bevelThickness`. Anything laid on a cap has to clear it.

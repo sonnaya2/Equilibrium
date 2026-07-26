@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { isRegionId, type RegionId } from "@/league";
 
 /**
@@ -60,6 +60,36 @@ export function focusRegionExternal(region: RegionId, place: string | null = nul
   emit({ region, framed: true, place, hover: null });
 }
 
+/** Focusing a region clears both place slots: they belong to another region. */
+export function focusRegion(region: RegionId) {
+  if (state.region !== region || !state.framed || state.place !== null) {
+    emit({ region, framed: true, place: null, hover: null });
+  }
+}
+
+/** Back to the table shot; the inspector keeps its subject and its pin. */
+export function unframe() {
+  if (state.framed) emit({ ...state, framed: false });
+}
+
+/**
+ * The click. Sticky, and a non-null pick frames the region so the pin is on
+ * screen. Re-selecting the same place while unframed re-frames without toggle.
+ * Hover is never written here — pointer-out must not erase a pin.
+ */
+export function selectPlace(place: string | null) {
+  if (state.place === place) {
+    if (place !== null && !state.framed) emit({ ...state, framed: true });
+    return;
+  }
+  emit({ ...state, framed: place === null ? state.framed : true, place });
+}
+
+/** The pointer. Transient, never touches the sticky selection. */
+export function hoverPlace(hover: string | null) {
+  if (state.hover !== hover) emit({ ...state, hover });
+}
+
 /**
  * `#region=<id>[&place=<area>]`, both ways.
  *
@@ -72,12 +102,18 @@ export function focusRegionExternal(region: RegionId, place: string | null = nul
  */
 export function useMapHashSync() {
   const { focus } = useMapFocus();
+  // Only strip a stale hash when we *transition* into rest. Cold mount is rest
+  // with INITIAL before apply() — clearing there would eat a deep link.
+  const prevActive = useRef(false);
 
   useEffect(() => {
     const apply = () => {
       const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
       const region = params.get("region");
-      if (region && isRegionId(region)) focusRegionExternal(region, params.get("place"));
+      if (!region || !isRegionId(region)) return;
+      const raw = params.get("place");
+      const place = raw && raw.length > 0 ? raw : null;
+      focusRegionExternal(region, place);
     };
     apply();
     window.addEventListener("hashchange", apply);
@@ -85,9 +121,15 @@ export function useMapHashSync() {
   }, []);
 
   useEffect(() => {
-    // Nothing framed and nothing pinned is the resting state, not a view worth
-    // a URL — a fresh visit should stay on a clean /map.
-    if (!focus.framed && !focus.place) return;
+    const active = focus.framed || focus.place !== null;
+    if (!active) {
+      if (prevActive.current && window.location.hash.startsWith("#region=")) {
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      }
+      prevActive.current = false;
+      return;
+    }
+    prevActive.current = true;
     const next = focus.place
       ? `#region=${focus.region}&place=${encodeURIComponent(focus.place)}`
       : `#region=${focus.region}`;
@@ -97,26 +139,6 @@ export function useMapHashSync() {
 
 export function useMapFocus() {
   const focus = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
-  return {
-    focus,
-    /** Focusing a region clears both place slots: they belong to another region. */
-    focusRegion: (region: RegionId) => {
-      if (state.region !== region || !state.framed || state.place !== null) {
-        emit({ region, framed: true, place: null, hover: null });
-      }
-    },
-    /** Back to the table shot; the inspector keeps its subject and its pin. */
-    unframe: () => {
-      if (state.framed) emit({ ...state, framed: false });
-    },
-    /** The click. Sticky, and it frames the region so the pin is on screen. */
-    selectPlace: (place: string | null) => {
-      if (state.place === place) return;
-      emit({ ...state, framed: place === null ? state.framed : true, place });
-    },
-    /** The pointer. Transient, never touches the selection. */
-    hoverPlace: (hover: string | null) => {
-      if (state.hover !== hover) emit({ ...state, hover });
-    },
-  };
+  // Module-level actions stay identity-stable for effect deps (PlaceRail hover clear).
+  return { focus, focusRegion, unframe, selectPlace, hoverPlace };
 }

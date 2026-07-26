@@ -198,11 +198,6 @@ export function RegionInspector({
               {UNLOCK_TEXT[planner.availability]}
             </span>
           </div>
-          <p className="mt-1 text-sm text-parch-200">
-            {focus.framed
-              ? "Rail or board pin selects a place. Tables below are catalog rows only."
-              : "Frame from ledger or board to raise the slab and open places."}
-          </p>
         </div>
         <div className="board-sky__pin-meter" aria-label="Places pinned">
           <div className="text-[11px] uppercase tracking-wide text-parch-400">Places pinned</div>
@@ -316,27 +311,30 @@ export function RegionInspector({
                 <div className="flex flex-wrap gap-1.5 py-1">
                   {/* Hovering a place lights its marker on the board, and the
                       marker lights this back. That link is the point of the route. */}
-                  {places.map((area) => (
-                    <span
-                      key={area}
-                      onPointerEnter={() => anchored.has(area) && hoverPlace(area)}
-                      onPointerLeave={() => hoverPlace(null)}
-                      onClick={() =>
-                        anchored.has(area)
-                          ? selectPlace(focus.place === area ? null : area)
-                          : undefined
-                      }
-                      className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
-                        focus.place === area
-                          ? "bg-stone-800 text-gem-300"
-                          : anchored.has(area)
-                            ? "text-parch-100"
-                            : "text-parch-500"
-                      }`}
-                    >
-                      {area}
-                    </span>
-                  ))}
+                  {places.map((area) => {
+                    const pinned = anchored.has(area);
+                    const on = focus.place === area;
+                    const lit = pinned && focus.hover === area;
+                    return (
+                      <span
+                        key={area}
+                        onPointerEnter={() => pinned && hoverPlace(area)}
+                        onPointerLeave={() => hoverPlace(null)}
+                        onClick={() => (pinned ? selectPlace(on ? null : area) : undefined)}
+                        className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
+                          on
+                            ? "bg-stone-800 text-gem-300"
+                            : lit
+                              ? "text-parch-50"
+                              : pinned
+                                ? "text-parch-100"
+                                : "text-parch-500"
+                        }`}
+                      >
+                        {area}
+                      </span>
+                    );
+                  })}
                 </div>
               )
             : empty

@@ -677,7 +677,7 @@ textarea:focus-visible {
   }
   .board-sky__place-chip {
     border: 1px solid var(--color-stone-750);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     background: transparent;
     color: var(--color-parch-100);
     font-size: 0.7rem;
@@ -712,11 +712,7 @@ textarea:focus-visible {
     justify-content: space-between;
     padding: 0.65rem 0.85rem;
     border-bottom: 1px solid var(--color-stone-800);
-    background: linear-gradient(
-      90deg,
-      rgb(46 203 143 / 6%),
-      transparent 42%
-    );
+    background: var(--color-stone-900);
   }
   .board-sky__dossier-copy {
     flex: 1 1 14rem;

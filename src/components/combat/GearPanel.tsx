@@ -39,6 +39,24 @@ const SLOT_LABELS: Record<EquipmentSlot, string> = {
   aura: "Aura",
 };
 
+/** Compact slot tag on picker rows. */
+const SLOT_SHORT: Record<EquipmentSlot, string> = {
+  mainhand: "MH",
+  offhand: "OH",
+  twohand: "2H",
+  helmet: "Helm",
+  body: "Body",
+  legs: "Legs",
+  gloves: "Gloves",
+  boots: "Boots",
+  cape: "Cape",
+  amulet: "Amulet",
+  ring: "Ring",
+  pocket: "Pocket",
+  ammo: "Ammo",
+  aura: "Aura",
+};
+
 /** Paper-doll grid positions (CSS grid 3× rows). */
 const DOLL_LAYOUT: Array<Array<EquipmentSlot | null>> = [
   [null, "helmet", null],
@@ -71,6 +89,17 @@ function styleMatches(record: EquipmentRecord, style: Loadout["style"]): boolean
   return record.style === style;
 }
 
+/** Show style tag when item is hybrid or not the active combat style. */
+function styleMismatchLabel(
+  record: EquipmentRecord,
+  style: Loadout["style"],
+): string | null {
+  if (!record.style) return null;
+  if (record.style === "hybrid") return "hybrid";
+  if (record.style !== style) return record.style;
+  return null;
+}
+
 /** True when any numeric bonus field is present and non-zero. Empty `{}` is the corpus default. */
 function hasSourcedBonuses(record: EquipmentRecord): boolean {
   const b = record.bonuses;
@@ -79,6 +108,24 @@ function hasSourcedBonuses(record: EquipmentRecord): boolean {
     if (typeof v === "number" && v !== 0) return true;
   }
   return false;
+}
+
+function emptyPickerCopy(
+  activeSlot: EquipmentSlot | null,
+  matchStyle: boolean,
+  style: Loadout["style"],
+): string {
+  const slotBit = activeSlot ? SLOT_LABELS[activeSlot] : null;
+  if (slotBit && matchStyle) {
+    return `No wearables for ${slotBit} under ${style} (or hybrid). Clear Match style, pick another slot, or broaden region/search.`;
+  }
+  if (slotBit) {
+    return `No wearables for ${slotBit} with the current region/search. Materials and set aggregates stay under Unlocks.`;
+  }
+  if (matchStyle) {
+    return `No wearables match ${style} (or hybrid) with the current filters. Wearables need a slot; try clearing Match style or region/search.`;
+  }
+  return "No wearables match. Wearables need a slot; materials and set aggregates stay under Unlocks.";
 }
 
 /** Paper doll + item picker. Item bonuses unsourced — placement is organisational. */
@@ -91,11 +138,13 @@ export function GearPanel({
 }) {
   const [activeSlot, setActiveSlot] = useState<EquipmentSlot | null>(null);
   const [search, setSearch] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("region");
+  const [sortKey, setSortKey] = useState<SortKey>("tier");
   const [regionFilter, setRegionFilter] = useState<RegionFilter>("all");
   /** Default on: only loadout.style / hybrid / unstyled wearables (items the player
    *  can wear for the active style). Toggle off for cross-style region browse. */
   const [matchStyle, setMatchStyle] = useState(true);
+  /** Cap long catalogues; toggle expands past the first 80. */
+  const [showAllWearables, setShowAllWearables] = useState(false);
 
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
@@ -128,14 +177,19 @@ export function GearPanel({
       }
       return true;
     });
+    const byName = (a: EquipmentRecord, b: EquipmentRecord) => a.name.localeCompare(b.name);
     const byRegion = (a: EquipmentRecord, b: EquipmentRecord) =>
       regionLabel(a).localeCompare(regionLabel(b));
     return [...filtered].sort((a, b) => {
-      if (sortKey === "tier") return (b.tier ?? 0) - (a.tier ?? 0) || byRegion(a, b);
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      return byRegion(a, b) || (b.tier ?? 0) - (a.tier ?? 0);
+      if (sortKey === "tier") return (b.tier ?? 0) - (a.tier ?? 0) || byName(a, b);
+      if (sortKey === "name") return byName(a, b);
+      return byRegion(a, b) || (b.tier ?? 0) - (a.tier ?? 0) || byName(a, b);
     });
   }, [wearables, activeSlot, matchStyle, loadout.style, regionFilter, search, sortKey]);
+
+  const WEARABLE_CAP = 80;
+  const wearablesCapped = pickerRows.length > WEARABLE_CAP && !showAllWearables;
+  const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
 
   const unlockRows = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -173,8 +227,8 @@ export function GearPanel({
       <div>
         <h2 className="text-sm font-medium text-parch-50">Paper doll</h2>
         <p className="mt-1 text-xs text-parch-300">
-          Wearables require a slot. Set pieces expanded from aggregates. Bonuses where sourced;
-          tier feeds AD. Click a slot, then pick an item. Empty bonus bags show as no numbers.
+          Wearables require a slot. Match style keeps the list to your combat style (and hybrid).
+          Bonuses where sourced; tier feeds AD. Click a slot, then pick an item.
         </p>
 
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
@@ -202,15 +256,15 @@ export function GearPanel({
                         : "border-stone-750 bg-stone-900 text-parch-50 hover:bg-stone-850"
                   }`}
                 >
-                  <span className="block text-[10px] uppercase tracking-wide text-parch-300">
+                  <span className="block text-[11px] uppercase tracking-wide text-parch-300">
                     {SLOT_LABELS[slot]}
                   </span>
                   <span className="block truncate">{item?.name ?? "Empty"}</span>
                   {item?.tier != null ? (
-                    <span className="block font-mono text-[10px] text-parch-100">T{item.tier}</span>
+                    <span className="block font-mono text-[11px] text-parch-100">T{item.tier}</span>
                   ) : null}
                   {noBonuses ? (
-                    <span className="block text-[10px] text-parch-300">no bonus numbers</span>
+                    <span className="block text-[11px] text-parch-300">no bonus numbers</span>
                   ) : null}
                 </button>
               );
@@ -289,7 +343,7 @@ export function GearPanel({
                 <span className="min-w-0">
                   <span className="block truncate">{item?.name ?? "Empty"}</span>
                   {item && !hasSourcedBonuses(item) ? (
-                    <span className="block text-[10px] text-parch-300">no bonus numbers</span>
+                    <span className="block text-[11px] text-parch-300">no bonus numbers</span>
                   ) : null}
                 </span>
               </button>
@@ -335,7 +389,7 @@ export function GearPanel({
             Match style
           </label>
           <div className="flex gap-1" role="group" aria-label="Sort equipment">
-            {(["region", "tier", "name"] as const).map((key) => (
+            {(["tier", "name", "region"] as const).map((key) => (
               <button
                 key={key}
                 type="button"
@@ -351,46 +405,116 @@ export function GearPanel({
             ))}
           </div>
           {activeSlot ? (
-            <span className="text-gem-400">Filter: {SLOT_LABELS[activeSlot]}</span>
+            <span className="text-gem-400">Filtering: {SLOT_LABELS[activeSlot]}</span>
           ) : (
             <span className="text-parch-300">All wearable slots</span>
           )}
         </div>
 
-        <h3 className="mt-3 text-xs font-medium uppercase tracking-wide text-parch-300">
-          Wearables · {pickerRows.length}
-        </h3>
-        <div className="mt-1 border-t border-stone-750">
+        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
+            Wearables
+          </h3>
+          <span className="text-xs text-parch-300">
+            {pickerRows.length === 0
+              ? "Showing 0 wearables"
+              : wearablesCapped
+                ? `Showing ${visiblePickerRows.length} of ${pickerRows.length} wearables`
+                : `Showing ${pickerRows.length} wearable${pickerRows.length === 1 ? "" : "s"}`}
+          </span>
+        </div>
+        <div className="mt-1 max-h-96 overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
-            <p className="py-3 text-xs text-parch-300">
-              No wearables match. Wearables need a slot; materials and set aggregates stay under
-              Unlocks. Try clearing Match style or the active slot filter.
+            <p className="px-2 py-3 text-xs leading-relaxed text-parch-300">
+              {emptyPickerCopy(activeSlot, matchStyle, loadout.style)}
             </p>
           ) : (
-            pickerRows.map((record) => {
-              const equipped = slots[record.slot!] === record.id;
-              const noBonuses = !hasSourcedBonuses(record);
+            <>
+              {visiblePickerRows.map((record) => {
+                const equipped = slots[record.slot!] === record.id;
+                const noBonuses = !hasSourcedBonuses(record);
+                const styleTag = styleMismatchLabel(record, loadout.style);
+                return (
+                  <button
+                    key={record.id}
+                    type="button"
+                    onClick={() => equip(record)}
+                    className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
+                      equipped
+                        ? "bg-stone-850 text-parch-50"
+                        : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
+                    }`}
+                  >
+                    <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span>{record.name}</span>
+                      {record.tier != null ? (
+                        <span className="font-mono text-parch-100">T{record.tier}</span>
+                      ) : null}
+                      <span className="text-[11px] text-parch-300">
+                        {SLOT_SHORT[record.slot!]}
+                      </span>
+                      {styleTag ? (
+                        <span className="text-[11px] capitalize text-parch-300">{styleTag}</span>
+                      ) : null}
+                      {noBonuses ? (
+                        <span className="text-[11px] text-parch-300">no bonus numbers</span>
+                      ) : null}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-parch-100">
+                      {recordRegions(record).map((id) => (
+                        <GameIcon key={id} src={regionCrestPath(id)} size={14} />
+                      ))}
+                      <span>{regionLabel(record)}</span>
+                    </span>
+                  </button>
+                );
+              })}
+              {pickerRows.length > WEARABLE_CAP ? (
+                <div className="sticky bottom-0 border-t border-stone-750 bg-stone-900 px-2 py-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setShowAllWearables((v) => !v)}
+                    className="text-xs text-gem-400 hover:text-gem-300"
+                  >
+                    {showAllWearables
+                      ? `Show first ${WEARABLE_CAP}`
+                      : `Show all ${pickerRows.length}`}
+                  </button>
+                </div>
+              ) : null}
+            </>
+          )}
+        </div>
+
+        <h3 className="mt-4 text-xs font-medium uppercase tracking-wide text-parch-300">
+          Unlocks &amp; materials · {unlockRows.length}
+        </h3>
+        <p className="mt-1 text-xs text-parch-300">
+          No slot — materials, codices, and set aggregates. Pin only; never equip on the doll.
+        </p>
+        <div className="mt-1 max-h-72 overflow-y-auto border-t border-stone-750">
+          {unlockRows.length === 0 ? (
+            <p className="px-2 py-3 text-xs text-parch-300">
+              No unlocks match the current region/search.
+            </p>
+          ) : (
+            unlockRows.map((record) => {
+              const pinned = unlockPins.has(record.id);
               return (
                 <button
                   key={record.id}
                   type="button"
-                  onClick={() => equip(record)}
+                  onClick={() => setLoadout(toggleUnlockPin(loadout, record.id))}
                   className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
-                    equipped
+                    pinned
                       ? "bg-stone-850 text-parch-50"
                       : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
                   }`}
                 >
-                  <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
+                  <span className="flex items-center gap-2">
                     <span>{record.name}</span>
                     {record.tier != null ? (
                       <span className="font-mono text-parch-100">T{record.tier}</span>
-                    ) : null}
-                    <span className="text-[11px] text-parch-300">
-                      {SLOT_LABELS[record.slot!]}
-                    </span>
-                    {equipped && noBonuses ? (
-                      <span className="text-[11px] text-parch-300">no bonus numbers</span>
                     ) : null}
                   </span>
                   <span className="flex items-center gap-1.5 text-parch-100">
@@ -403,43 +527,6 @@ export function GearPanel({
               );
             })
           )}
-        </div>
-
-        <h3 className="mt-4 text-xs font-medium uppercase tracking-wide text-parch-300">
-          Unlocks &amp; materials · {unlockRows.length}
-        </h3>
-        <p className="mt-1 text-xs text-parch-300">
-          No slot — materials, codices, and set aggregates. Pin only; never equip on the doll.
-        </p>
-        <div className="mt-1 border-t border-stone-750">
-          {unlockRows.map((record) => {
-            const pinned = unlockPins.has(record.id);
-            return (
-              <button
-                key={record.id}
-                type="button"
-                onClick={() => setLoadout(toggleUnlockPin(loadout, record.id))}
-                className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
-                  pinned
-                    ? "bg-stone-850 text-parch-50"
-                    : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <span>{record.name}</span>
-                  {record.tier != null ? (
-                    <span className="font-mono text-parch-100">T{record.tier}</span>
-                  ) : null}
-                </span>
-                <span className="flex items-center gap-1.5 text-parch-100">
-                  {recordRegions(record).map((id) => (
-                    <GameIcon key={id} src={regionCrestPath(id)} size={14} />
-                  ))}
-                  <span>{regionLabel(record)}</span>
-                </span>
-              </button>
-            );
-          })}
         </div>
       </div>
     </div>

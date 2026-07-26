@@ -1,23 +1,23 @@
 "use client";
 
 /**
- * Everything known about the region currently in focus, in one panel.
+ * Everything known about the region in focus, sorted into tabs.
  *
- * This absorbed the two stacked sections that used to sit under the planner —
- * "What each pick opens" repeated the ledger's numbers, and "Boundary rules"
- * repeated rules already shown here — so comparing two regions is a click
- * rather than a 2600px scroll.
+ * It used to be one content table with a `kind` dropdown, which did not work:
+ * the catalog's kinds are freeform prose, so Misthalin alone offered twelve
+ * one-row options, the 142 upgrade rows were squeezed into a second column, and
+ * the training methods were counted in the stat strip and then shown nowhere at
+ * all. Tabs come from regionDetail.ts, which classifies once and is tested.
  *
- * The filters exist because the content list mixes what Jagex has confirmed
- * with what we inferred. Filtering to `confirmed` is the one view that answers
- * "what do I actually know", and it is why the status column carries provenance
- * instead of being flattened to a yes.
+ * Hard rules and the source line stay outside the tabs — they qualify every tab,
+ * and e2e pins both.
  */
 
 import { useMemo, useState } from "react";
 import { PLACES_BY_REGION } from "./data/placeAnchors";
+import type { DetailRow, RegionDetail, TrainingRow } from "./data/regionDetail";
+import { REGION_DETAIL } from "./data/regionDetail";
 import type { PlannerRegion } from "./data/plannerRegion";
-import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { useMapFocus } from "./useMapFocus";
 
 const UNLOCK_TEXT = {
@@ -26,29 +26,103 @@ const UNLOCK_TEXT = {
   elective: "Elective pick — 3 of 8",
 } as const;
 
-type StatusFilter = "all" | "confirmed" | "inferred";
+type TabId = "bosses" | "skilling" | "gear" | "items" | "training" | "places";
 
-function Chip({
-  on,
-  onClick,
-  children,
-}: {
-  on: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+const TABS: { id: TabId; label: string }[] = [
+  { id: "bosses", label: "Bosses" },
+  { id: "skilling", label: "Skilling" },
+  { id: "gear", label: "Combat gear" },
+  { id: "items", label: "Skill items" },
+  { id: "training", label: "Training" },
+  { id: "places", label: "Places" },
+];
+
+function countFor(detail: RegionDetail, tab: TabId): number {
+  if (tab === "bosses") return detail.bosses.length;
+  if (tab === "skilling") return detail.skilling.length + detail.otherContent.length;
+  if (tab === "gear") return detail.gear.length;
+  if (tab === "items") return detail.skillItems.length;
+  if (tab === "training") return detail.training.length;
+  return detail.areas.length;
+}
+
+/** "189473.7" -> "189,474". Blank stays blank; the source had no number. */
+function xpPerHour(raw: string): string {
+  const value = Number(raw);
+  if (!raw || Number.isNaN(value)) return "—";
+  return Math.round(value).toLocaleString("en-GB");
+}
+
+function Status({ confidence }: { confidence: string }) {
+  return confidence.startsWith("confirmed") ? (
+    <span className="text-parch-500">confirmed</span>
+  ) : (
+    <span className="tag">inferred</span>
+  );
+}
+
+function RowTable({ rows, header }: { rows: DetailRow[]; header: string }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
-        on
-          ? "border-gem-500 bg-stone-800 text-gem-300"
-          : "border-stone-750 text-parch-300 hover:text-parch-50"
-      }`}
-    >
-      {children}
-    </button>
+    <table className="data-table">
+      <thead>
+        <tr>
+          <th>{header}</th>
+          <th>Kind</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr key={`${row.name}-${row.kind}`}>
+            <td className="text-parch-50">
+              {row.name}
+              {row.detail ? <span className="block text-xs text-parch-400">{row.detail}</span> : null}
+            </td>
+            <td>{row.kind || "—"}</td>
+            <td>
+              <Status confidence={row.confidence} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function TrainingTable({ rows }: { rows: TrainingRow[] }) {
+  return (
+    <table className="data-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Skill</th>
+          <th>Levels</th>
+          <th className="num">XP/hr</th>
+          <th>Where</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr key={row.id}>
+            <td className="text-parch-50">
+              {row.method}
+              {row.warning ? <span className="block text-xs text-parch-400">{row.warning}</span> : null}
+            </td>
+            <td>{row.skill}</td>
+            <td>{row.levelRange || "—"}</td>
+            {/* The rating players actually compare on, so it is the one number
+                that gets mono and right alignment. */}
+            <td className="num text-right text-parch-50">{xpPerHour(row.xpRate)}</td>
+            <td>
+              {row.location || "—"}
+              {row.regionLocked ? (
+                <span className="ml-1.5 text-xs text-gem-300">needs this region</span>
+              ) : null}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -60,46 +134,54 @@ export function RegionInspector({
   boundaryRules: string[];
 }) {
   const { focus, focusPlace } = useMapFocus();
-  const [kind, setKind] = useState<string>("all");
-  const [status, setStatus] = useState<StatusFilter>("all");
+  const [tab, setTab] = useState<TabId>("bosses");
   const [query, setQuery] = useState("");
+  const [confirmedOnly, setConfirmedOnly] = useState(false);
 
-  const detail = regions.find((r) => r.id === focus.region);
-  const metrics = REGION_METRICS_BY_ID.get(focus.region);
-  const anchored = new Set((PLACES_BY_REGION.get(focus.region) ?? []).map((p) => p.area));
-
-  const kinds = useMemo(
-    () => [...new Set((detail?.content ?? []).map((c) => c.kind))].sort(),
-    [detail],
+  const planner = regions.find((r) => r.id === focus.region);
+  const detail = REGION_DETAIL.get(focus.region);
+  const anchored = useMemo(
+    () => new Set((PLACES_BY_REGION.get(focus.region) ?? []).map((p) => p.area)),
+    [focus.region],
   );
 
-  if (!detail) return null;
+  if (!planner || !detail) return null;
 
   const needle = query.trim().toLowerCase();
-  const rows = detail.content.filter((c) => {
-    if (kind !== "all" && c.kind !== kind) return false;
-    const confirmed = c.confidence.startsWith("confirmed");
-    if (status === "confirmed" && !confirmed) return false;
-    if (status === "inferred" && confirmed) return false;
-    if (needle && !c.name.toLowerCase().includes(needle)) return false;
-    return true;
-  });
+  const keep = (row: DetailRow) =>
+    (!confirmedOnly || row.confidence.startsWith("confirmed")) &&
+    (!needle || row.name.toLowerCase().includes(needle) || row.kind.toLowerCase().includes(needle));
+
+  const bosses = detail.bosses.filter(keep);
+  const skilling = [...detail.skilling, ...detail.otherContent].filter(keep);
+  const gear = detail.gear.filter(keep);
+  const items = detail.skillItems.filter(keep);
+  const training = detail.training.filter(
+    (row) =>
+      !needle ||
+      row.method.toLowerCase().includes(needle) ||
+      row.skill.toLowerCase().includes(needle) ||
+      row.location.toLowerCase().includes(needle),
+  );
+  const places = detail.areas.filter((area) => !needle || area.toLowerCase().includes(needle));
+
+  const empty = <p className="py-3 text-sm text-parch-300">Nothing mapped here yet.</p>;
 
   return (
     <section className="panel" aria-live="polite">
       <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
-        {detail.name}
+        {planner.name}
         <span className="text-xs normal-case tracking-normal text-parch-300">
-          {UNLOCK_TEXT[detail.availability]}
+          {UNLOCK_TEXT[planner.availability]}
         </span>
       </div>
 
       <div className="stat-strip border-b border-stone-800 px-3.5 py-2.5">
         {[
-          ["Quests", detail.quests],
-          ["Content", metrics?.content ?? detail.content.length],
-          ["Upgrades", metrics?.upgrades ?? detail.upgrades.length],
-          ["Training", metrics?.training ?? detail.training],
+          ["Quests", planner.quests],
+          ["Bosses", detail.bosses.length],
+          ["Upgrades", detail.gear.length + detail.skillItems.length],
+          ["Training", detail.training.length],
         ].map(([label, value]) => (
           <div key={String(label)}>
             <div className="stat-label">{label}</div>
@@ -108,147 +190,127 @@ export function RegionInspector({
         ))}
       </div>
 
-      <div className="panel-body">
-        {detail.areas.length > 0 ? (
-          <div className="mb-3 flex flex-wrap gap-1.5">
-            {/* Hovering an area lights its marker on the board, and hovering the
-                marker lights the chip. That link is what the route exists for. */}
-            {detail.areas.map((area) => (
-              <span
-                key={area}
-                onPointerEnter={() => anchored.has(area) && focusPlace(area)}
-                onPointerLeave={() => focusPlace(null)}
-                className={`rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
-                  focus.place === area
-                    ? "bg-stone-800 text-gem-300"
-                    : anchored.has(area)
-                      ? "text-parch-100"
-                      : "text-parch-500"
-                }`}
-              >
-                {area}
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        {detail.hardRules.map((rule) => (
-          <p key={rule} className="mb-3 border-l-2 border-gem-500 pl-3 text-sm text-parch-100">
-            {rule}
-          </p>
-        ))}
-
-        <div className="mb-2 flex flex-wrap items-center gap-1.5">
-          {/* Kind is a select, not chips: the catalog's kinds are freeform
-              strings and Misthalin alone has twelve, which as buttons is a
-              two-row wall above a table with sixteen rows in it. */}
-          <select
-            value={kind}
-            onChange={(e) => setKind(e.target.value)}
-            aria-label="Filter content by kind"
-            className="max-w-56 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 focus:border-gem-500 focus:outline-none"
-          >
-            <option value="all">all kinds ({detail.content.length})</option>
-            {kinds.map((k) => (
-              <option key={k} value={k}>
-                {k}
-              </option>
-            ))}
-          </select>
-          <span className="mx-1 h-4 w-px bg-stone-750" aria-hidden="true" />
-          {(["all", "confirmed", "inferred"] as const).map((s) => (
-            <Chip key={s} on={status === s} onClick={() => setStatus(s)}>
-              {s}
-            </Chip>
+      {detail.hardRules.length > 0 || detail.skills.length > 0 ? (
+        <div className="border-b border-stone-800 px-3.5 py-2.5">
+          {detail.skills.length > 0 ? (
+            <p className="mb-2 text-xs text-parch-400">
+              Skills trained here: <span className="text-parch-100">{detail.skills.join(" · ")}</span>
+            </p>
+          ) : null}
+          {detail.hardRules.map((rule) => (
+            <p key={rule} className="mb-1.5 border-l-2 border-gem-500 pl-3 text-sm text-parch-100 last:mb-0">
+              {rule}
+            </p>
           ))}
+        </div>
+      ) : null}
+
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-stone-800 px-3.5 py-2">
+        {TABS.map(({ id, label }) => {
+          const count = countFor(detail, id);
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              aria-pressed={tab === id}
+              className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
+                tab === id
+                  ? "border-gem-500 bg-stone-800 text-gem-300"
+                  : count === 0
+                    ? "border-stone-800 text-parch-500"
+                    : "border-stone-750 text-parch-300 hover:text-parch-50"
+              }`}
+            >
+              {label} <span className="num ml-0.5">{count}</span>
+            </button>
+          );
+        })}
+        <div className="ml-auto flex items-center gap-1.5">
+          {tab !== "training" && tab !== "places" ? (
+            <button
+              type="button"
+              onClick={() => setConfirmedOnly((v) => !v)}
+              aria-pressed={confirmedOnly}
+              className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
+                confirmedOnly
+                  ? "border-gem-500 bg-stone-800 text-gem-300"
+                  : "border-stone-750 text-parch-300 hover:text-parch-50"
+              }`}
+            >
+              confirmed only
+            </button>
+          ) : null}
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Find content"
-            aria-label="Filter content by name"
-            className="ml-auto w-40 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 placeholder:text-parch-500 focus:border-gem-500 focus:outline-none"
+            placeholder="Find"
+            aria-label="Filter this region's records"
+            className="w-36 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 placeholder:text-parch-500 focus:border-gem-500 focus:outline-none"
           />
         </div>
+      </div>
 
-        {/* Capped and scrolled rather than pushing the page down: comparing two
-            regions has to stay a click, and Misthalin alone runs to 16 rows. */}
-        <div className="grid max-h-80 gap-4 overflow-y-auto lg:grid-cols-2">
-          {rows.length > 0 ? (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Content</th>
-                  <th>Kind</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((c) => (
-                  <tr key={c.name}>
-                    <td className="text-parch-50">{c.name}</td>
-                    <td>{c.kind}</td>
-                    <td>
-                      {c.confidence.startsWith("confirmed") ? (
-                        <span className="text-parch-500">confirmed</span>
-                      ) : (
-                        <span className="tag">inferred</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-sm text-parch-300">
-              {detail.content.length === 0
-                ? "No content mapped yet."
-                : "Nothing matches those filters."}
+      <div className="panel-body max-h-96 overflow-y-auto">
+        {tab === "bosses" ? (bosses.length ? <RowTable rows={bosses} header="Boss" /> : empty) : null}
+        {tab === "skilling" ? (skilling.length ? <RowTable rows={skilling} header="Content" /> : empty) : null}
+        {tab === "gear" ? (gear.length ? <RowTable rows={gear} header="Upgrade" /> : empty) : null}
+        {tab === "items" ? (items.length ? <RowTable rows={items} header="Skill item" /> : empty) : null}
+        {tab === "training" ? (training.length ? <TrainingTable rows={training} /> : empty) : null}
+        {tab === "places"
+          ? places.length
+            ? (
+                <div className="flex flex-wrap gap-1.5 py-1">
+                  {/* Hovering a place lights its marker on the board, and the
+                      marker lights this back. That link is the point of the route. */}
+                  {places.map((area) => (
+                    <span
+                      key={area}
+                      onPointerEnter={() => anchored.has(area) && focusPlace(area)}
+                      onPointerLeave={() => focusPlace(null)}
+                      className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
+                        focus.place === area
+                          ? "bg-stone-800 text-gem-300"
+                          : anchored.has(area)
+                            ? "text-parch-100"
+                            : "text-parch-500"
+                      }`}
+                    >
+                      {area}
+                    </span>
+                  ))}
+                </div>
+              )
+            : empty
+          : null}
+      </div>
+
+      {detail.warnings.length > 0 ? (
+        <div className="border-t border-stone-800 px-3.5 py-2">
+          {detail.warnings.map((w) => (
+            <p key={w} className="text-xs text-parch-500">
+              Note: {w}
             </p>
-          )}
-
-          {detail.upgrades.length > 0 ? (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Upgrade</th>
-                  <th>Kind</th>
-                </tr>
-              </thead>
-              <tbody>
-                {detail.upgrades.map((u) => (
-                  <tr key={u.name}>
-                    <td className="text-parch-50">{u.name}</td>
-                    <td>{u.kind}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : null}
+          ))}
         </div>
+      ) : null}
 
-        {detail.warnings.map((w) => (
-          <p key={w} className="mt-3 text-xs text-parch-500">
-            Note: {w}
-          </p>
-        ))}
-
-        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 border-t border-stone-800 pt-2">
-          <p className="num text-xs text-parch-500">
-            {detail.sourceCount} source{detail.sourceCount === 1 ? "" : "s"} · verified{" "}
-            {detail.verifiedAt ?? "never"}
-          </p>
-          <details className="text-xs text-parch-300">
-            <summary className="cursor-pointer text-parch-500 hover:text-parch-300">
-              Boundary rules ({boundaryRules.length})
-            </summary>
-            <div className="mt-2 space-y-1.5">
-              {boundaryRules.map((rule) => (
-                <p key={rule}>{rule}</p>
-              ))}
-            </div>
-          </details>
-        </div>
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-t border-stone-800 px-3.5 py-2">
+        <p className="num text-xs text-parch-500">
+          {detail.sourceCount} source{detail.sourceCount === 1 ? "" : "s"} · verified{" "}
+          {detail.verifiedAt ?? "never"}
+        </p>
+        <details className="text-xs text-parch-300">
+          <summary className="cursor-pointer text-parch-500 hover:text-parch-300">
+            Boundary rules ({boundaryRules.length})
+          </summary>
+          <div className="mt-2 space-y-1.5">
+            {boundaryRules.map((rule) => (
+              <p key={rule}>{rule}</p>
+            ))}
+          </div>
+        </details>
       </div>
     </section>
   );

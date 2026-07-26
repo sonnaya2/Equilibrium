@@ -1,0 +1,67 @@
+import { describe, expect, it } from "vitest";
+import { REGION_IDS } from "@/league";
+import { getResearchCatalog } from "@/research/catalog";
+import { REGION_DETAIL, _classify } from "./regionDetail";
+
+const catalog = getResearchCatalog();
+
+describe("regionDetail", () => {
+  it("covers all 11 regions", () => {
+    expect([...REGION_DETAIL.keys()].sort()).toEqual([...REGION_IDS].sort());
+  });
+
+  it("puts every content and upgrade row in exactly one bucket", () => {
+    // The point of the test: a future sync inventing a new kind cannot silently
+    // drop rows out of every tab. Totals have to reconcile, per region.
+    for (const region of catalog.regions) {
+      const detail = REGION_DETAIL.get(region.id as never);
+      expect(detail, region.id).toBeDefined();
+      const content = detail!.bosses.length + detail!.skilling.length + detail!.otherContent.length;
+      expect(content, `${region.id} content`).toBe(region.content.length);
+      const upgrades = detail!.gear.length + detail!.skillItems.length;
+      expect(upgrades, `${region.id} upgrades`).toBe(region.upgrades.length);
+    }
+  });
+
+  it("carries the training methods through, with their skill recovered", () => {
+    let total = 0;
+    for (const region of catalog.regions) {
+      const detail = REGION_DETAIL.get(region.id as never)!;
+      expect(detail.training.length, `${region.id} training`).toBe(region.training.length);
+      total += detail.training.length;
+      // getResearchCatalog drops which skill a method belongs to; without it
+      // the training tab cannot group, so check it came back.
+      for (const row of detail.training) expect(row.skill, `${region.id}/${row.id}`).not.toBe("");
+    }
+    expect(total, "the catalog carries training methods to show").toBeGreaterThan(50);
+  });
+
+  it("routes the kinds a player would expect to the boss tab", () => {
+    for (const kind of ["boss", "bossing", "Elite Dungeon", "God Wars Dungeon 1", "Barrows", "Slayer/bossing"]) {
+      expect(_classify.classifyContent(kind), kind).toBe("boss");
+    }
+    for (const kind of ["skilling", "Fishing", "Agility", "Divination", "city/skilling hub"]) {
+      expect(_classify.classifyContent(kind), kind).toBe("skilling");
+    }
+  });
+
+  it("splits upgrades into combat gear and skilling items", () => {
+    for (const category of ["combat gear", "combat cape", "tier-95 Magic / prayer / scripture", "combat Archaeology relic"]) {
+      expect(_classify.classifyUpgrade(category), category).toBe("gear");
+    }
+    for (const category of [
+      "tier-90 augmentable Woodcutting tool cross-region chain",
+      "Hunter skilling off-hand cross-region chain",
+      "cross-region augmentable Mining tool",
+    ]) {
+      expect(_classify.classifyUpgrade(category), category).toBe("skillItem");
+    }
+  });
+
+  it("finds real bosses and real training in the regions that have them", () => {
+    const desert = REGION_DETAIL.get("desert")!;
+    expect(desert.training.length, "desert training methods").toBeGreaterThan(5);
+    const asgarnia = REGION_DETAIL.get("asgarnia")!;
+    expect(asgarnia.bosses.map((b) => b.name).join(" ")).toContain("Graardor");
+  });
+});

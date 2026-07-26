@@ -26,6 +26,10 @@ import { SHAPE_BY_ID, TABLE_FRAMING, type Framing } from "./data/regionShapes";
 const FIT_HALF_WIDTH = 0.92;
 const FIT_HALF_DEPTH = 0.4;
 
+/** Where the land actually ends, for keeping it inside a focused shot. */
+const BOARD_HALF_WIDTH = 0.85;
+const BOARD_HALF_DEPTH = 0.46;
+
 /** Pointer parallax, in radians. ~1.7 deg of yaw, ~0.9 of pitch. */
 const PARALLAX_AZIMUTH = 0.03;
 const PARALLAX_ELEVATION = 0.015;
@@ -71,7 +75,37 @@ export function CameraRig({
     return { ...TABLE_FRAMING, radius: Math.max(TABLE_FRAMING.radius, forWidth, forDepth) };
   }, [aspect]);
 
-  const want = focus ? (SHAPE_BY_ID.get(focus)?.framing ?? table) : table;
+  /**
+   * A region shot keeps its authored angle but is not allowed to push the board
+   * out of frame. Focusing the Kharidian Desert used to slice Tirannwn in half
+   * against the left edge, chip and all, which reads as a broken viewport rather
+   * than as a deliberate crop.
+   *
+   * So the target is clamped to what the current radius can actually cover. When
+   * the board is wider than the view the clamp lands on 0 and the shot simply
+   * centres — focus is still perfectly legible, because it is carried by the
+   * slab rising, the rim, the barrier clearing and the markers appearing, not by
+   * filling the frame with one region.
+   */
+  const want = useMemo<Framing>(() => {
+    const shape = focus ? SHAPE_BY_ID.get(focus) : undefined;
+    if (!shape) return table;
+    const framing = shape.framing;
+    const halfFov = (framing.fov * Math.PI) / 360;
+    const halfWidth = framing.radius * Math.tan(halfFov) * aspect;
+    const halfDepth = (framing.radius * Math.tan(halfFov)) / Math.max(0.3, Math.sin(framing.elevation));
+    const limitX = Math.max(0, BOARD_HALF_WIDTH - halfWidth);
+    const limitZ = Math.max(0, BOARD_HALF_DEPTH - halfDepth);
+    const [x, y, z] = framing.target;
+    return {
+      ...framing,
+      target: [
+        Math.max(-limitX, Math.min(limitX, x)),
+        y,
+        Math.max(-limitZ, Math.min(limitZ, z)),
+      ],
+    };
+  }, [focus, table, aspect]);
 
   // Current solved framing. Seeded high and wide so the first frames are an
   // intro descent onto the table, exactly once.

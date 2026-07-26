@@ -16,10 +16,14 @@ export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoW
 }
 
 /**
- * Revolution evaluation (RuneScape Wiki, current): each global-cooldown slot fires
- * the first bar ability that is off cooldown, affordable, and passes its state
- * gates; when nothing is ready the style's basic attack fires. Deterministic and
- * expected-value only, sharing the single cast path with queued rotations.
+ * Revolution evaluation (RuneScape Wiki, current):
+ * "automatically triggers the first available compatible ability on the action bar"
+ * (https://runescape.wiki/w/Revolution). Available = off cooldown, affordable, and
+ * state-gated. Unaffordable high-priority slots (e.g. Berserk at <100% adren) are
+ * skipped — revo never waits or banks adrenaline for a later slot. Empty slots are
+ * also skipped with no delay (wiki Revolution/Bars). When nothing on the bar is
+ * ready, the style's basic attack fires. Deterministic EV only; same cast path as
+ * queued rotations. No invented "save for ultimate" rules.
  */
 export function simulateRevolution(input: RevolutionInput): RotationSummary {
   const ctx = createCastContext(input);
@@ -37,10 +41,10 @@ export function simulateRevolution(input: RevolutionInput): RotationSummary {
       );
     }
     const state = ctx.getState();
+    // First-available scan: insufficient adren / CD / gate => not available => skip.
     const ready = input.bar.find((ability) => {
       if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(state.magic, state.tick)) return false;
       if (!necroCanCast(ability, state.necro)) return false;
-      // Skip pure-buff ultimates that cost adren we don't have yet — revo never waits.
       return ctx.firstLegalTick(ability.id) <= state.tick && ctx.costOf(ability) <= state.adrenaline;
     });
     if (ready) {

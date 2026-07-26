@@ -3,12 +3,19 @@ import { combatRevolutionBars, abilityById } from "../data";
 import { resolveBar, specFromRecord } from "../data/specs";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { simulateRevolution } from "./revolution";
 import { secondsToTicks, TICK_SECONDS } from "./timeline";
 
 const ENGINE_SPECS = new Map(
-  [...MELEE_ABILITIES, ...RANGED_ABILITIES, ...MAGIC_ABILITIES].map((spec) => [spec.id, spec]),
+  [
+    ...MELEE_ABILITIES,
+    ...RANGED_ABILITIES,
+    ...MAGIC_ABILITIES,
+    ...NECROMANCY_ABILITIES,
+    volleyOfSouls(3),
+  ].map((spec) => [spec.id, spec]),
 );
 
 const baseInput = { base: 1000, level: 99, accuracy: 1, crit: { chance: 0 } };
@@ -87,8 +94,9 @@ describe("simulateRevolution", () => {
       durationTicks: 120,
     });
     expect(s.ok).toBe(true);
-    // Greater Sunshine leads the bar but is unaffordable at 0 adrenaline, so the
-    // first ready slot further down fires instead — revolution skips, never waits.
+    // Wiki: "first available compatible ability" — Greater Sunshine leads the bar
+    // but is unaffordable at 0 adrenaline, so revo skips to the next ready slot
+    // (never waits / banks for the ultimate).
     expect(s.casts[0].abilityId).toBe("greater_concentrated_blast");
     expect(s.casts[0].tick).toBe(0);
     // Basics fill slots where nothing on the bar is ready.
@@ -96,6 +104,32 @@ describe("simulateRevolution", () => {
     // Cost abilities drain the pool whenever they are ready and affordable.
     expect(s.casts.some((cast) => cast.abilityId === "wild_magic")).toBe(true);
     expect(s.casts.some((cast) => cast.abilityId === "asphyxiate")).toBe(true);
+  });
+
+  it("skips unaffordable Berserk and spends lower-priority thresholds (no adren banking)", () => {
+    // Wiki Revolution: first *available* ability — insufficient adren is not
+    // available. There is no special "save for Berserk" rule; Revo++ bars that
+    // put Berserk first still fire cheaper enhanced/thresholds behind it, so
+    // the ultimate often fires rarely (correct behaviour, not a sim bug).
+    const berserk = ENGINE_SPECS.get("berserk")!;
+    const assault = ENGINE_SPECS.get("assault")!; // 25% cost, short CD
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [berserk, assault],
+      style: "melee",
+      durationTicks: 120,
+    });
+    expect(s.ok).toBe(true);
+    // First non-basic spend is Assault once ~25% adren is banked by basics —
+    // Berserk (100%) is skipped while unaffordable.
+    const firstSpend = s.casts.find((cast) => !cast.auto)!;
+    expect(firstSpend.abilityId).toBe("assault");
+    const assaults = s.casts.filter((cast) => cast.abilityId === "assault").length;
+    const berserks = s.casts.filter((cast) => cast.abilityId === "berserk").length;
+    expect(assaults).toBeGreaterThan(0);
+    // Lower slots drain the pool; Berserk casts fewer times than Assault.
+    expect(berserks).toBeLessThan(assaults);
   });
 
   it("pools basics until a lone ultimate is affordable, then fires it", () => {
@@ -222,4 +256,44 @@ describe("revolution buff uptimes", () => {
     expect(expired.length).toBeGreaterThan(0);
     expect(expired.every((cast) => Math.abs(cast.result.expected - 1000) < 1e-9)).toBe(true);
   });
+});
+
+/** Structural 60s revo smoke — loadout-independent; do not pin damage numbers. */
+describe("golden 60s revo smoke", () => {
+  const CASES: Array<{
+    barId: string;
+    style: "melee" | "ranged" | "magic" | "necromancy";
+    basicId: string;
+  }> = [
+    { barId: "melee-dual-wield", style: "melee", basicId: "attack" },
+    { barId: "ranged", style: "ranged", basicId: "ranged_attack" },
+    { barId: "magic", style: "magic", basicId: "magic_attack" },
+    { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic" },
+  ];
+
+  for (const { barId, style, basicId } of CASES) {
+    it(`${barId}: 60s horizon structural smoke`, () => {
+      const bar = combatRevolutionBars.records.find((candidate) => candidate.id === barId)!;
+      const modelled = resolveBar(bar, ENGINE_SPECS)
+        .filter((slot) => slot.spec !== null)
+        .map((slot) => slot.spec!);
+      const durationTicks = secondsToTicks(60);
+      expect(durationTicks).toBe(100);
+
+      const s = simulateRevolution({
+        ...baseInput,
+        abilities: [...ENGINE_SPECS.values(), ...modelled],
+        bar: modelled,
+        style,
+        durationTicks,
+      });
+
+      expect(s.ok).toBe(true);
+      expect(s.casts.length).toBeGreaterThanOrEqual(25);
+      expect(s.horizonTicks).toBe(100);
+      expect(s.dps).toBeCloseTo(s.totalExpected / (100 * 0.6), 5);
+      // Style autoAttack / necro basic weaves when bar has nothing ready.
+      expect(s.casts.some((c) => c.auto && c.abilityId === basicId)).toBe(true);
+    });
+  }
 });

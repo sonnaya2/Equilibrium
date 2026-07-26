@@ -140,6 +140,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       <p className="mb-3 text-xs text-parch-300">
         Continuous revo over the duration: each GCD fires the first bar ability that is off
         cooldown and affordable; otherwise the style basic auto-weaves. Expected values only.
+        Unaffordable high-priority slots (e.g. Berserk) are skipped — revo never banks adrenaline
+        for a later ultimate.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">

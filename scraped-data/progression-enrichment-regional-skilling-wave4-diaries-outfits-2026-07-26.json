@@ -1,0 +1,583 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 diaries/outfits package: high-value skilling outfits, diary doubling (New Varrock), modified diviner head, enhanced yaktwee, Ports scrimshaw crafter facility, DG ring of kinship + warped gorajan trailblazer, volcanic trapper elite Hunter set, Hunter XP outfit (Arc/Waiko), and master-thief toolbelt tools. Complements wave4-critical-tools (which deferred kandarin:modified-diviners-headwear to this file) and thinner activity stubs in ironman-unlocks without re-emitting thin pointers as the sole record.",
+  "policy": {
+    "region_rule": "region_hint is practical acquisition geography for League planning. region_hints list support pressure. Never put multi-region/cross-region/global as a fake region except explicit cross-region: ids for fragment elites.",
+    "duplicate_guard": "Full equipment rows for thin activity stubs (elder divination, infinity ethereal) and missing outfit ids. kandarin:fishing-outfit already exists in ironman-gaps — re-emitted here as the wave4 package row with same id and full effects for diaries-outfits completeness. misthalin:thieves-guild-master-tools already exists — this file adds asgarnia:toolbelt-master-thief-tools only if treated as toolbelt-attach framing; wiki acquisition is Misthalin Thieves' Guild (tagged asgarnia per wave4 id list; league_treatment corrects).",
+    "outfit_rule": "Gameplay acquisition only. Prefer Invention fragments / Cache / Fish Flingers / Stealing Creation / Waiko chimes / Construction Contracts / Archaeology Guild over Treasure Hunter or DXP Token Store.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, and wiki-stated percent effects only.",
+    "no_trade_rule": "Ironman permanent unlocks that change outfit XP, gather QoL, DG economy, RC inventory, or Thieving toolbelt."
+  },
+  "already_present_checked": [
+    "kandarin:diviners-outfit",
+    "kandarin:diviners-outfit-guthixian-cache",
+    "kandarin:elder-divination-outfit",
+    "kandarin:fishing-outfit",
+    "kandarin:fury-shark-outfit",
+    "kandarin:shark-outfit-deep-sea",
+    "misthalin:runespan-ethereal-outfits",
+    "misthalin:area-tasks-varrock-armour",
+    "misthalin:thieves-guild-master-tools",
+    "morytania:constructors-outfit",
+    "forinthry:daemonheim-rewards-shop",
+    "forinthry:area-tasks-daemonheim-passives",
+    "asgarnia:player-owned-ports-skilling",
+    "cross-region:natures-sentinel-outfit",
+    "cross-region:magic-golem-outfit"
+  ],
+  "activity_additions": [
+    {
+      "id": "desert:scrimshaw-crafter",
+      "name": "Scrimshaw Crafter (Player-owned port workshop)",
+      "category": "permanent Ports Fletching scrimshaw craft facility",
+      "region_hint": "desert",
+      "region_hints": [
+        "desert",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
+      "requirements": [
+        "Player-owned port access (Port Sarim / Ports hub)",
+        "Refitted workshop upgrade (500 black slate + 2,000 bamboo) to unlock the Scrimshaw Crafter device",
+        "Minimum 85 Fletching for lowest scrimshaws; higher tiers to 95 Fletching for combat scrimshaws",
+        "Ancient bones + appropriate completed Ports scroll for each scrimshaw recipe"
+      ],
+      "unlocks": [
+        "Workshop Scrimshaw Crafter craft interface for all standard and superior skilling and combat scrimshaws",
+        "Skilling scrimshaws: log-splitting, rock-crushing, tree-shaking, gem-finding, whopper-baiting, casket-salvaging, memory-crushing, energy-gathering (and superior variants)",
+        "Combat scrimshaws (attack/ranging/magic/cruelty/elements/vampyrism/aggression/corruption/sacrifice lines and superior forms)",
+        "Base craft XP 4,000 Fletching per scrimshaw before workshop XP modifiers",
+        "Workshop tier XP bonus: +5% Fletching XP on crafter at refitted, scaling to +20% at revamped workshop"
+      ],
+      "region_pressure": [
+        "Asgarnia hard: Port Sarim player-owned port workshop is the facility home (Equilibrium Arc/Ports taxonomy is Asgarnia-local).",
+        "Desert optional: Menaphos/Eastern trade-goods pressure and ancient-bones supply loops; not required to place the crafter itself.",
+        "Id prefix desert: retained for wave4 audit list; planner should treat asgarnia as hard gate for the workshop."
+      ],
+      "notes": "Facility row, not a wearable. Complements asgarnia:player-owned-ports-skilling activity pointer. Ancient bones from Ports voyages; do not invent voyage rates. Superior combat scrimshaws may require inactive base + bones.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scrimshaw_Crafter",
+        "https://runescape.wiki/w/Player-owned_port",
+        "https://runescape.wiki/w/Scrimshaw"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Port Sarim workshop. Desert id is audit-tag only — require Asgarnia for unlock.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "asgarnia:player-owned-ports-skilling",
+        "asgarnia:arc-skilling-access"
+      ]
+    },
+    {
+      "id": "misthalin:new-varrock-achievements-doubling",
+      "name": "New Varrock achievements (Varrock armour doubling)",
+      "category": "achievement diary Mining and Smithing doubling package",
+      "region_hint": "misthalin",
+      "location": "New Varrock (Dimension of Disaster) — taskmaster Tiny Zemouregal",
+      "requirements": [
+        "Dimension of Disaster quest chain access to New Varrock",
+        "Easy / medium / hard / elite New Varrock achievement sets claimed in order via Tiny Zemouregal",
+        "Prior Varrock Area Tasks armour tiers for the underlying chance values that get doubled"
+      ],
+      "unlocks": [
+        "Easy set: mining / smithing / smelting chance effects of Varrock armour no longer require the armour equipped (1% bonus Mining XP remains worn-only)",
+        "Medium set: doubles the double-ore mining chances on all Varrock armour tiers",
+        "Hard set: doubles the double-bar smelting chances on all Varrock armour tiers (wiki notes medium Varrock diary interaction for bar effect)",
+        "Elite set: doubles the double-progress smithing chances on all Varrock armour tiers",
+        "Zemomark payouts and Curse of Arrav replay Zemomark increments per tier (skilling-secondary)"
+      ],
+      "region_pressure": [
+        "Misthalin hard: Dimension of Disaster / New Varrock is Varrock-adjacent Misthalin content; upgrades misthalin:area-tasks-varrock-armour."
+      ],
+      "notes": "Do not re-author the full Varrock armour 1-4 effect table — that lives on misthalin:area-tasks-varrock-armour. This row is the New Varrock doubling/passive-unlock ladder only. Required for master quest cape; achievements persist across Dimension of Disaster replays.",
+      "source_urls": [
+        "https://runescape.wiki/w/New_Varrock_achievements",
+        "https://runescape.wiki/w/Varrock_armour",
+        "https://runescape.wiki/w/Dimension_of_Disaster"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin. Pair with misthalin:area-tasks-varrock-armour for the base chance values.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "misthalin:area-tasks-varrock-armour"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "kandarin:elder-divination-elite-outfit",
+      "name": "Elder divination outfit",
+      "category": "Divination elite skilling outfit",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "asgarnia"
+      ],
+      "requirements": [
+        "70 Divination to gather divination fragments; 80 Divination, Crafting, and Smithing plus 20 Invention to discover/craft outfit blueprints",
+        "54,000 divination fragments total (3,600 per piece × 15 pieces across energy, chronicle, and memory outfits)",
+        "Combine full energy + chronicle + memory divination outfits into elder (irreversible)"
+      ],
+      "effects": [
+        "3 daily teleports to any wisp colony the player has the Divination level (and quests) for — not boostable",
+        "Unlimited teleports to May Stormbrewer, or Guthix's Cave / shrine after The World Wakes",
+        "7% chance to get two chronicle fragments / elder chronicles / knowledge fragments at once when harvesting the matching item",
+        "7% chance to temporarily gain +100% enriched memory drop chance (crit chance)",
+        "5% chance of gathering five times the energy while harvesting wisps (positive/negative/ancestral springs: occasionally +1 energy and occasionally double XP instead)",
+        "Inherits diviner's outfit XP (1% per owned piece, up to 6%) even while elder set is banked or at Diango — after base outfit worn",
+        "If modified diviner's headwear is owned, elder divination head inherits 5% chance to save half energy when weaving/transmuting (2.5% average save; not on divine charges) — head alone suffices for that inherit"
+      ],
+      "notes": "Named equipment upgrade of thin kandarin:elder-divination-elite-outfit activity. Primary ironman path is Invention fragments, not TH. Kandarin Cache/HoM geography still pressures base diviner acquisition for the XP inherit layer.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elder_divination_outfit",
+        "https://runescape.wiki/w/Divination_fragments",
+        "https://runescape.wiki/w/Diviner%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fragment craft is global Invention; Kandarin remains the practical Divination outfit hub. Prefer this equipment row over the thin activity stub.",
+      "links_existing_ids": [
+        "kandarin:diviners-outfit",
+        "kandarin:modified-diviners-headwear"
+      ]
+    },
+    {
+      "id": "kandarin:modified-diviners-headwear",
+      "name": "Modified diviner's headwear",
+      "category": "Divination modified outfit head",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Diviner's headwear piece of the diviner's outfit (Guthixian Cache route)",
+        "Diviner's headwear add-on applied to the base headwear"
+      ],
+      "effects": [
+        "1% Divination XP while worn (same as base head piece)",
+        "3 daily teleports to Guthixian ruins / May Stormbrewer / Guthix's shrine destinations",
+        "While weaving or transmuting: 5% chance to save half the divine energy (≈2.5% energy saved on average over time)",
+        "Energy-save effect does not apply to divine charges",
+        "Elder divination head inherits the energy-save benefit if this modified head is owned",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free chronicle-fragment claim removed — teleport + energy-save remain"
+      ],
+      "notes": "Deferred from wave4-critical-tools duplicate_guard. Free Diango reclaim. Distinct from full elder outfit — this is the base-outfit head upgrade path.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_diviner%27s_headwear",
+        "https://runescape.wiki/w/Diviner%27s_headwear_add-on",
+        "https://runescape.wiki/w/Diviner%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for diviner outfit + Cache geography. Add-on acquisition follows skill-outfit add-on rules (not TH as League path).",
+      "links_existing_ids": [
+        "kandarin:diviners-outfit",
+        "kandarin:elder-divination-elite-outfit"
+      ]
+    },
+    {
+      "id": "kandarin:fishing-outfit",
+      "name": "Fishing outfit (Fish Flingers)",
+      "category": "Fishing XP outfit",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Fish Flingers D&D access at Isla Anglerine (Kandarin)",
+        "140 Fish Flingers tokens per piece (560 full four-piece set) from the Fisherman"
+      ],
+      "effects": [
+        "1% Fishing XP per worn piece (4% for four pieces)",
+        "+1% set bonus when full set worn (5% total)",
+        "Does not boost Fish Flingers itself",
+        "Fury shark / shark outfits inherit this XP layer after fishing outfit worn at least once",
+        "Storeable in POH armour case or tackle box"
+      ],
+      "notes": "Wave4 package re-row matching ironman-gaps equipment. Base angler-class Fishing XP set; distinct from kandarin:fury-shark-outfit elite catch/QoL path.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fishing_outfit",
+        "https://runescape.wiki/w/Fish_Flingers",
+        "https://runescape.wiki/w/Isla_Anglerine"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin Fish Flingers path. Pair with fury shark for late Fishing stacks.",
+      "links_existing_ids": [
+        "kandarin:fury-shark-outfit",
+        "kandarin:shark-outfit-deep-sea"
+      ]
+    },
+    {
+      "id": "kandarin:enhanced-yaktwee-stick",
+      "name": "Enhanced yaktwee stick",
+      "category": "Hunter permanent XP and charm-sprite tool",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Yaktwee stick from Yaktwee Swinmari Cianta at the charm sprite hunter area",
+        "Catch 1,000 charm sprites with the yaktwee stick equipped",
+        "Talk to Yaktwee to upgrade (Yaktwee's a Charm achievement; completionist cape requirement)",
+        "Practical Hunter ~73+ after the 1,000-catch grind from the 72 entry band"
+      ],
+      "effects": [
+        "2% extra Hunter XP on any Hunter activity that allows the stick to be wielded (post-8-Jul-2019; was 5%)",
+        "20% increased chance to get rarer charm sprites while hunting charm sprites (post-8-Jul-2019; was 5% extra sprites)",
+        "Stacks with Hunter's outfit XP (up to 8% combined with full hunter set)",
+        "Usable barehanded for butterflies; Big Chinchompa moth dump tactic pairs protea flower then equip stick",
+        "Lost stick: buy regular stick from Yaktwee and re-upgrade talk; re-equip after upgrade for XP bonus"
+      ],
+      "notes": "Charm sprite hunter area is Kandarin-adjacent (north of Eagles' Peak / Piscatoris corridor). Complements asgarnia:hunters-outfit and cross-region:volcanic-trapper-outfit.",
+      "source_urls": [
+        "https://runescape.wiki/w/Enhanced_yaktwee_stick",
+        "https://runescape.wiki/w/Yaktwee_stick",
+        "https://runescape.wiki/w/Charm_sprite"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for charm sprite area + Yaktwee NPC.",
+      "links_existing_ids": [
+        "asgarnia:hunters-outfit",
+        "cross-region:volcanic-trapper-outfit"
+      ]
+    },
+    {
+      "id": "misthalin:infinity-ethereal-outfit",
+      "name": "Infinity ethereal outfit",
+      "category": "Runecrafting elite skilling outfit",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "morytania"
+      ],
+      "requirements": [
+        "54,000 rune ethereal fragments total to craft law + blood + death ethereal outfits then combine into infinity",
+        "Invention craft path for ethereal pieces (gameplay default; not TH)",
+        "Optional: Rune Mythos for impure essence fill order on body storage"
+      ],
+      "effects": [
+        "5 daily teleports to the yellow wizard within the Runespan (same floor) and free return after hand-in",
+        "7% chance to double runes when siphoning in the Runespan (double XP on the double)",
+        "Free movement between Runespan platforms (level requirements still apply)",
+        "Infinity ethereal body stores 12 rune / pure / impure essence",
+        "50% chance for runecrafting pouches not to degrade while runecrafting",
+        "Body and legs weight reduction (−9.5 kg / −7.5 kg)",
+        "Inherits Master runecrafter robes XP bonus if owned (after those robes worn once) even while ethereal is banked/Diango",
+        "Inherits wicked robes effects if owned; full set head acts as wicked hood",
+        "Infinity ethereal legs inherit Morytania legs 2 blood-altar benefits if owned; chance to save blood altar tablets if legs 3/4 owned"
+      ],
+      "notes": "Equipment upgrade of thin misthalin:runespan-ethereal-outfits activity. Wizards' Tower / Runespan portal is Misthalin. Complements master runecrafter robes and wicked hood stacks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Infinity_ethereal_outfit",
+        "https://runescape.wiki/w/Rune_ethereal_fragments",
+        "https://runescape.wiki/w/Runespan"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin for Runespan hub. Morytania optional for blood-altar inherit layer only.",
+      "links_existing_ids": [
+        "misthalin:runespan-ethereal-outfits"
+      ]
+    },
+    {
+      "id": "misthalin:master-archaeologists-outfit",
+      "name": "Master archaeologist's outfit",
+      "category": "Archaeology elite skilling outfit",
+      "region_hint": "misthalin",
+      "requirements": [
+        "99 Archaeology and Qualification - Guildmaster achievement",
+        "250,000 chronotes total from Archaeology Guild Shop (50,000 per piece × 5)"
+      ],
+      "effects": [
+        "1% Archaeology XP if no base archaeologist's outfit owned; each piece acts as the matching base piece if unlocked for up to 6% XP with full set",
+        "7% increase to excavation success rate",
+        "7% increase to screening success rate",
+        "7% increase to mattock base precision",
+        "Faster artefact restore (4.8 s per artefact, down from 6 s)",
+        "Faster soil screening (1.2 s per soil, down from 1.8 s)",
+        "50% longer material manuals, hi-spec monocles, tarpaulin sheets, and archaeologist's tea (30 min from 20)",
+        "3 daily Fixate uses guaranteeing a chosen artefact from an excavation (daily soft reset)",
+        "Unlimited hat teleports to dig sites (including Archaeology Campus, Kharid-et, Infernal Source, Everlight, Moonrise, Senntisten, Stormguard, Daemonheim, Warforge, Orthen) and collectors",
+        "Ability to see strange writings (Writings on the Walls mystery needs full set)"
+      ],
+      "notes": "Guild shop is on the Archaeology Campus (Misthalin). Free Diango reclaim. Dig-site destinations are multi-region pressure after unlock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_archaeologist%27s_outfit",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Guildmaster + chronote shop. Destinations are use-pressure only."
+    },
+    {
+      "id": "misthalin:master-constructors-outfit",
+      "name": "Master constructor's outfit",
+      "category": "Construction elite skilling outfit",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "morytania"
+      ],
+      "requirements": [
+        "Construction Contracts activity for contract credits",
+        "1,250 contract credits total (250 per piece) from Estate Agents Shop",
+        "Rough credit pace: ~50 mahogany / 84 teak / 125 oak / 250 basic-plank contracts per piece (Construction contract enhancer doubles credits)"
+      ],
+      "effects": [
+        "Hat: convert logs to planks (coin cost still applies)",
+        "Hat: temporary +3 Construction boost (no cooldown)",
+        "Unlimited teleports: house, current Construction contract, all house portals (Rimmington through Prif/Otot/Menaphos), and estate agents",
+        "6% Construction XP if constructor's outfit owned (even while master set banked/Diango/POH) after base outfit worn",
+        "Faster Construction Contract progress bars (regular ~2.02×, oak ~1.48×, teak ~1.38×, mahogany ~1.26× vs no outfit)",
+        "Chance to instantly fill contract progress bar while building",
+        "Chance to increase statue-restore progress during Croesus"
+      ],
+      "notes": "Complements morytania:constructors-outfit (Temple Trekking base XP set). Estate Agents Shop is multi-city; Misthalin is practical contract/estate hub association.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_constructor%27s_outfit",
+        "https://runescape.wiki/w/Construction_Contracts",
+        "https://runescape.wiki/w/Estate_Agents_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Contracts are multi-region destinations; outfit purchase is Estate Agents Shop. Prefer Misthalin as planner home; Morytania for base constructor XP inherit.",
+      "links_existing_ids": [
+        "morytania:constructors-outfit"
+      ]
+    },
+    {
+      "id": "misthalin:fletchers-outfit",
+      "name": "Fletcher's outfit",
+      "category": "Fletching XP outfit",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "forinthry"
+      ],
+      "requirements": [
+        "Stealing Creation Reward Shop: 100 Stealing Creation points per piece (500 full set)",
+        "Alternate: Stanley Limelight Traders — 360 thaler per piece (post-16-Mar-2026 DailyScape Overhaul)"
+      ],
+      "effects": [
+        "1% Fletching XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)"
+      ],
+      "notes": "Gameplay path is Stealing Creation or thaler — not TH (removed from TH 27 Sep 2021). Free Diango reclaim. Cannot store in POH costume room.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fletcher%27s_outfit",
+        "https://runescape.wiki/w/Stealing_Creation_Reward_Shop",
+        "https://runescape.wiki/w/Stanley_Limelight_Traders"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Stealing Creation is Wilderness/forinthry pressure; thaler path is multi-hub. Misthalin id per wave4 list — tag forinthry if SC is the chosen route."
+    },
+    {
+      "id": "forinthry:ring-of-kinship",
+      "name": "Ring of kinship",
+      "category": "Dungeoneering party ring and role upgrades",
+      "region_hint": "forinthry",
+      "requirements": [
+        "Speak to the Dungeoneering tutor outside Daemonheim castle (free ring; free reclaim keeps upgrades)",
+        "Members: spend Dungeoneering tokens on 15 passive role upgrades (3 melee / 3 ranged / 3 magic / 3 necromancy / 3 skiller) after 11-May-2026 remaster",
+        "Optional role reset: 1 free, then 50,000 tokens (46,500 with warped gorajan trailblazer owned)"
+      ],
+      "effects": [
+        "Unlimited teleport to Daemonheim peninsula (blocked beyond Wilderness 20 when opted into PvP)",
+        "Party form/join interface, floor/complexity selection, progress reset",
+        "Required surface item allowed into Daemonheim floors",
+        "Post-remaster: all unlocked role upgrades are always-on passives inside Daemonheim (no sub-ring swaps)",
+        "Skiller roles: Medic heal boost; Gatherer extra resources + skill-task damage reduction; Artisan resource save + multi-rune RC level when crafting multiple runes",
+        "Combat roles: tank damage reduction with shield; melee/ranged/magic/necro hit-chance and effect tiers per wiki classes table",
+        "Fast bank-adjacent teleport for surface skilling logistics (F2P-friendly bank hop)"
+      ],
+      "notes": "Core Forinthry DG infrastructure. Class costs rebalanced 11 May 2026 (lower T9–T10; necro roles added). Pair with forinthry:warped-gorajan-trailblazer for shop discount and reset discount.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_kinship",
+        "https://runescape.wiki/w/Ring_of_kinship/Classes",
+        "https://runescape.wiki/w/Update:Dungeoneering_Remastered:_Dive_in_Today!"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry (Daemonheim). Free ring is onboarding; token upgrades are the permanent skilling+combat package.",
+      "links_existing_ids": [
+        "forinthry:warped-gorajan-trailblazer",
+        "forinthry:daemonheim-rewards-shop",
+        "forinthry:area-tasks-daemonheim-passives"
+      ]
+    },
+    {
+      "id": "forinthry:warped-gorajan-trailblazer",
+      "name": "Warped gorajan trailblazer outfit",
+      "category": "Dungeoneering elite skilling outfit",
+      "region_hint": "forinthry",
+      "requirements": [
+        "70 Dungeoneering to gather dungeoneering fragments; 80 Dungeoneering and 20 Invention to craft",
+        "Combine frozen + furnished + abandoned + occult gorajan trailblazer outfits (four base sets — unique among elite outfits)",
+        "Outfit cannot enter Daemonheim as worn gear; effects still apply while Dungeoneering once owned"
+      ],
+      "effects": [
+        "7% discount in Daemonheim Rewards shop (not on token↔XP swap); does not need to be worn",
+        "7% XP boost to all skills within Daemonheim (vs 5% on non-warped gorajan sets)",
+        "7% base floor XP boost (also increases tokens) stacking multiplicatively with the skill XP boost (~14.5% DG XP at floor end)",
+        "7% reduced depletion rate on skilling nodes",
+        "7% damage boost to all combat in Daemonheim",
+        "+3 level boost to all stats while Dungeoneering except Dungeoneering and Summoning (reapplies every 15 s like perfect plus)",
+        "Increased spawn rate of DG slayer creatures",
+        "Ice-walking boots effect on icy puzzles / Plane-freezer Lakhrahnaz",
+        "Skip one puzzle room per party per floor via locked puzzle door",
+        "20% chance not to consume a Dungeoneering lock melter (vs 10% on base sets)",
+        "3 additional daily Sinkholes teleports; Sinkholes DG lamps give +10% XP"
+      ],
+      "notes": "Shop discount is the permanent ironman token economy unlock called out on forinthry:daemonheim-rewards-shop. Prefer Invention fragments over TH.",
+      "source_urls": [
+        "https://runescape.wiki/w/Warped_gorajan_trailblazer_outfit",
+        "https://runescape.wiki/w/Dungeoneering_fragments",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for DG fragment generation and shop use.",
+      "links_existing_ids": [
+        "forinthry:daemonheim-rewards-shop",
+        "forinthry:ring-of-kinship",
+        "forinthry:area-tasks-daemonheim-passives"
+      ]
+    },
+    {
+      "id": "cross-region:volcanic-trapper-outfit",
+      "name": "Volcanic trapper outfit",
+      "category": "Hunter elite skilling outfit",
+      "region_hint": "cross-region",
+      "region_hints": [
+        "anachronia",
+        "desert",
+        "kandarin",
+        "fremennik",
+        "karamja",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
+        "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
+        "54,000 trapper fragments total then combine three outfits into volcanic"
+      ],
+      "effects": [
+        "5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide",
+        "7% increased Hunter success chance (not on protean traps)",
+        "10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter)",
+        "Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple)",
+        "Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion",
+        "Deploy one extra trap (max 6; deadfall limit unchanged)",
+        "30% chance to instantly deploy/pick up traps (not protean)",
+        "Auto-reapplies juju hunter potion in Herblore Habitat",
+        "Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed",
+        "Functions as hunter's Catalyst fragment if that fragment is owned"
+      ],
+      "notes": "Fragment elite — do not hard-gate to one region. Anachronia Big Game Hunter / hunter marks pressure blueprint access; desert/jungle/arctic themes are cosmetic base tiers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Volcanic_trapper_outfit",
+        "https://runescape.wiki/w/Trapper_fragments",
+        "https://runescape.wiki/w/Hunter_mark_shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH.",
+      "links_existing_ids": [
+        "asgarnia:hunters-outfit",
+        "kandarin:enhanced-yaktwee-stick"
+      ]
+    },
+    {
+      "id": "asgarnia:hunters-outfit",
+      "name": "Hunter's outfit",
+      "category": "Hunter XP outfit",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "requirements": [
+        "The Arc / Waiko Reward Shop access (Equilibrium maps Arc under Asgarnia; Port Sarim portal)",
+        "10,000 chimes and 10 taijitu total for the full five-piece set",
+        "Buying full outfit required for Unlocking Waiko II achievement"
+      ],
+      "effects": [
+        "1% Hunter XP per worn piece",
+        "+1% set bonus when all five pieces worn (6% total)",
+        "Stacks with enhanced yaktwee stick for up to 8% Hunter XP",
+        "Volcanic trapper inherits this XP layer after hunter outfit worn at least once",
+        "Free Diango / Ianto reclaim"
+      ],
+      "notes": "Base Hunter XP set from Waiko, not the elite trapper set. Distinct from camouflage combat hunter gear.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hunter%27s_outfit",
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/The_Arc"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia under Equilibrium Arc mapping (Waiko chimes/taijitu). Pair with volcanic trapper and enhanced yaktwee.",
+      "links_existing_ids": [
+        "cross-region:volcanic-trapper-outfit",
+        "kandarin:enhanced-yaktwee-stick",
+        "asgarnia:arc-skilling-access"
+      ]
+    },
+    {
+      "id": "asgarnia:toolbelt-master-thief-tools",
+      "name": "Master thief's lockpick + stethoscope (toolbelt)",
+      "category": "Thieving permanent toolbelt tools",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "requirements": [
+        "Thieves' Guild access (Buyers and Cellars series) — Lumbridge, Misthalin",
+        "Dodgy Derek's Dirty Deals: 2,500 pilfer points each for master thief's lockpick and master thief's stethoscope",
+        "Add both tools to the tool belt (permanent account unlock)"
+      ],
+      "effects": [
+        "Master thief's lockpick: unbreakable lockpick on toolbelt; +7% chest lock success (vs +3% ordinary lockpick) inside and outside heists",
+        "Master thief's stethoscope: permanent safecracking toolbelt path (no inventory stethoscope)",
+        "Reclaim purchases from Dodgy Derek if destroyed before toolbelt attach"
+      ],
+      "region_pressure": [
+        "Misthalin hard: Thieves' Guild + Dodgy Derek are Lumbridge Misthalin (wiki League badge Misthalin).",
+        "Asgarnia id prefix is wave4 audit tag only — do not treat Falador as the shop."
+      ],
+      "notes": "Complements misthalin:thieves-guild-master-tools (purchase-focused row). This id emphasises toolbelt permanence for ironman Thieving planning. Trahaearn exoskeleton / master camouflage remain separate Thieving stacks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "https://runescape.wiki/w/Master_thief%27s_stethoscope",
+        "https://runescape.wiki/w/Dodgy_Derek%27s_Dirty_Deals",
+        "https://runescape.wiki/w/Tool_belt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin Thieves' Guild despite asgarnia: id prefix. Not Asgarnia acquisition.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "misthalin:thieves-guild-master-tools"
+      ]
+    }
+  ],
+  "stats": {
+    "activity_additions": 2,
+    "equipment_additions": 13,
+    "total_rows": 15,
+    "regions_touched": [
+      "desert",
+      "kandarin",
+      "misthalin",
+      "forinthry",
+      "cross-region",
+      "asgarnia"
+    ],
+    "ids": [
+      "desert:scrimshaw-crafter",
+      "kandarin:elder-divination-elite-outfit",
+      "kandarin:modified-diviners-headwear",
+      "kandarin:fishing-outfit",
+      "kandarin:enhanced-yaktwee-stick",
+      "misthalin:infinity-ethereal-outfit",
+      "misthalin:master-archaeologists-outfit",
+      "misthalin:master-constructors-outfit",
+      "misthalin:fletchers-outfit",
+      "misthalin:new-varrock-achievements-doubling",
+      "forinthry:ring-of-kinship",
+      "forinthry:warped-gorajan-trailblazer",
+      "cross-region:volcanic-trapper-outfit",
+      "asgarnia:hunters-outfit",
+      "asgarnia:toolbelt-master-thief-tools"
+    ]
+  }
+}

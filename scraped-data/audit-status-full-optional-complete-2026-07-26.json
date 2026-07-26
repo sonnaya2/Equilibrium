@@ -1,0 +1,19 @@
+{
+  "snapshot_date": "2026-07-26",
+  "pass": "full optional backlog complete — 11 agents + normalize:data",
+  "policy": {
+    "waiko_charms": "ignored",
+    "no_checkins": true
+  },
+  "completed": {
+    "combat_bis_polish": "weapons + armor/acc + bosses packs; combat unlocks ~187 after sync",
+    "prefer_x_pass3": "20 files, 50 rewrites, residual feed phantoms 0; resynced into product detail",
+    "catalog_comboLabel": "skilling backfill + synthesize; GOTE + Area Tasks source fix; multi-req missing 0",
+    "map_bis_join": "PlannerRegion combo fields + combatUnlocks/multiRegionUnlocks counts + inspector UI",
+    "combat_bis_data_panel": "Data workbench tab Combat BiS",
+    "museum_durable": "scraped mirror + supplements + stamp",
+    "region_combos_research": "museum multi + combat multi tabs",
+    "normalize_data": "full pipeline green"
+  },
+  "tests": "research suite + tsc expected green"
+}

@@ -416,6 +416,31 @@ function normalizeUpgrade(regionId, raw) {
   };
 }
 
+/** Existing catalog areas — never shrink place lists to thin scraped stubs. */
+let existingCatalogAreas = new Map();
+try {
+  const existing = read("data/research/catalog.json");
+  for (const region of list(existing.regions)) {
+    if (region?.id) existingCatalogAreas.set(region.id, list(region.areas).map(String).filter(Boolean));
+  }
+} catch {
+  existingCatalogAreas = new Map();
+}
+
+/** Drop non-place stubs that used to wipe Anachronia etc. */
+const AREA_STUBS = new Set(["dinosaurs", "hunting", "farming", "skilling", "combat"]);
+
+function mergeRegionAreas(regionId, scrapedAreas) {
+  const scraped = [...new Set(scrapedAreas.map(String).filter((a) => a && !AREA_STUBS.has(a.toLowerCase())))];
+  const preserved = (existingCatalogAreas.get(regionId) || []).filter(
+    (a) => a && !AREA_STUBS.has(String(a).toLowerCase()),
+  );
+  // Prefer the larger, place-first set. If both non-empty, union (preserve expansions).
+  if (!preserved.length) return scraped;
+  if (!scraped.length) return preserved;
+  return [...new Set([...preserved, ...scraped])];
+}
+
 const normalizedRegions = rawRegions.regions.map((region) => {
   const regionId = region.id;
   const methods = allTraining.filter((method) => method.regionHints.some((hint) => hintMatchesRegion(hint, regionId)));
@@ -440,12 +465,14 @@ const normalizedRegions = rawRegions.regions.map((region) => {
     ...content.map((row) => row.kind).filter((kind) => ACTUAL_SKILLS.has(kind)),
   ])].sort();
 
+  const scrapedAreas = [...list(region.major_areas), ...list(region.official_examples)];
+
   return {
     id: regionId,
     name: region.display_name || regionId.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase()),
     availability: region.availability,
     aliases: list(region.aliases),
-    areas: [...new Set([...list(region.major_areas), ...list(region.official_examples)])],
+    areas: mergeRegionAreas(regionId, scrapedAreas),
     skills,
     content,
     upgrades: regionUpgrades,

@@ -360,7 +360,7 @@
       "monster": "Nightmare creatures",
       "slayer_level": 80,
       "region_options": [
-        "unresolved_freneskae"
+        "kandarin"
       ],
       "location": "Ritual site on Freneskae via the World Gate",
       "requirements": [
@@ -382,7 +382,7 @@
         "nightmare_gauntlets_on_task": "1/2000",
         "nightmare_gauntlets_off_task": "1/10000"
       },
-      "league_note": "Do not map Freneskae to Kandarin merely because the World Gate is reached near Eagles' Peak; destination-instance treatment is unresolved for Equilibrium.",
+      "league_note": "Freneskae Nightmares package under Kandarin (user rule 2026-07-26; World Gate / Eagles Peak packaging).",
       "source_url": "https://pvme.io/pvme-guides/slayer/nightmare-creatures/",
       "confidence": "pvme_current_method_region_unresolved"
     },
@@ -390,7 +390,7 @@
       "id": "slayer-nihils",
       "monster": "Nihils",
       "region_options": [
-        "unresolved_freneskae"
+        "kandarin"
       ],
       "location": "The Pit on Freneskae via the World Gate",
       "requirements": [
@@ -407,7 +407,7 @@
         "Vampyre fangs",
         "Icyene feather"
       ],
-      "planner_value": "Important self-sufficient Summoning ingredient farm once Freneskae access is resolved.",
+      "planner_value": "Important self-sufficient Summoning ingredient farm once Freneskae (Kandarin packaging) is available.",
       "warning": "PvME explicitly warns some Nihil methods may not work after Q1 2026 combat changes; keep access/drop facts, not ranked KPH.",
       "source_url": "https://pvme.io/pvme-guides/slayer/nihils/",
       "confidence": "pvme_current_page_with_2026_method_warning_region_unresolved"

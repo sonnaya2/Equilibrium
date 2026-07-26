@@ -2011,7 +2011,9 @@
       "unlock": {
         "type": "quest",
         "requirement": "Complete Broken Home once; Complete the post-quest challenges; Complete a replay in under 37 minutes",
-        "regions": []
+        "regions": [
+          "misthalin"
+        ]
       },
       "sources": [
         {
@@ -2021,7 +2023,7 @@
           "verifiedAt": "2026-07-25"
         }
       ],
-      "displayDescription": "Show both possible region mappings without claiming both are required. Official Equilibrium quest locality can resolve this later. · Region status: unresolved_misthalin_morytania_boundary",
+      "displayDescription": "Hard Misthalin for Asylum surgeon's ring (Broken Home). User rule 2026-07-26 closes Misthalin/Morytania boundary as Misthalin.",
       "slot": "ring"
     },
     {
@@ -2066,25 +2068,6 @@
         }
       ],
       "displayDescription": "The Corporeal Beast cavern entrance is in the Wilderness. The lair itself is not dangerous Wilderness territory, but Forinthry is the useful region dependency for entering the normal self-supply chain. Holy elixir can also come from the tormented wraith, so this row describes the primary practical regional source rather than claiming Corp is the only source. · Unlocks: Holy elixir drop source, Spirit shield and sigil progression, Necrite and phasmatite stone-spirit supply relevant to Blessed flask crafting"
-    },
-    {
-      "id": "item:blessed-flask-production-chain",
-      "name": "Blessed flask production chain",
-      "bonuses": {},
-      "unlock": {
-        "type": "quest",
-        "requirement": "118 Herblore, boostable; 96 Crafting; Blessed flask shell and glorious silvthril chain; Holy elixir; Holy water; Five light cores; Five holy overload potions (6); Five extreme prayer potions (4); 500 positive energy",
-        "regions": []
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Blessed_flask",
-          "title": "Blessed flask production chain",
-          "verifiedAt": "2026-07-25"
-        }
-      ],
-      "displayDescription": "This is a real region-planning chain because no trading makes the ingredient sources matter, but it would be wrong to display Desert + Tirannwn + Karamja + Forinthry as four unconditional required picks while alternate supply routes and the unresolved Arc exist. Keep the full pressure visible instead. · Re-evaluate individual ingredient gates when Equilibrium publishes external-area handling, quest auto-completion details, or League-specific supply passives. · Effects: Holds up to 80 doses of extreme prayer in one inventory slot, At level 99 Prayer, 80 doses can represent up to 45,200 Prayer points before other modifiers, Holy wrench increases the Prayer restored per extreme-prayer dose and works with the Blessed flask · Region pressure: Desert: the normal direct source for the 1,200 red sandstone used in the shell chain; alternate account sources can weaken this as a hard region gate., Tirannwn: crystal-flecked sandstone and 5,000 harmonic dust are naturally supplied through Prifddinas; some alternate sources mean this is recorded as pressure rather than an unconditional hard gate., Karamja: Holy water production is learned through Legends' Quest and uses the Kharazi Jungle water pool., Forinthry: Corporeal Beast is the practical normal self-supply source for the holy elixir and several required stone spirits; the tormented wraith is an alternate holy-elixir source., External unresolved: 250 alaea sea salt comes from the Arc/Wushanko chain, which is not currently assigned to an Equilibrium elective region."
     },
     {
       "id": "item:drygore-mace",

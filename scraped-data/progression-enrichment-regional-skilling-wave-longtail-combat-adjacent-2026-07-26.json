@@ -1,0 +1,410 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Longtail combat-adjacent densify pass after wave5-combat-adjacent. Candidate checklist (Cinderbanes, Reaper crew, Death Note, ancient elven ritual shard, holy wrench, ectoplasmator/attuned, DG prayer necklaces, skilling scrimshaws, binding contracts) already first-class in data/research/regional-skilling-unlocks.json (613 ids). Emit only true MISSING high-value skilling-adjacent permanents: War's Blessing residual for wars-grimoire prayer swap, Altar of Zaros + multi-switcher network densify, Underworld Grimoire skilling milestone ladder densify, Salve amulet (e) equipment path, ghostly essence attuned-ecto supply, powder of penance sustain, War's Retreat hub amenities that host prayer/spellbook logistics.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Grep-confirmed ABSENT as first-class ids. SKIP already-present: anachronia:death-note-relic, tirannwn:ancient-elven-ritual-shard, morytania:holy-wrench, morytania:ectoplasmator, morytania:attuned-ectoplasmator, forinthry:demon-horn-necklace, forinthry:split-dragontooth-necklace, forinthry:twisted-bird-skull-necklace, asgarnia:skilling-scrimshaw-package, multi-region:scrimshaw-of-sacrifice, cross-region:binding-contract-ancient-summoning, misthalin:underworld-grimoire, misthalin:wars-grimoire, misthalin:ancient-curses-senntisten, tirannwn:elven-grimoire, misthalin:fort-chapel, morytania:abandoned-mine-salve-shards, morytania:ectophial, morytania:first-age-outfit-equipment, desert:powder-of-burials, desert:hets-oasis-prayer-powders, multi-region:prayer-training-infrastructure-stack, cross-region:bonecrusher-necklace. Combat-skip per brief: Cinderbanes, Reaper crew.",
+    "no_trade_rule": "Ironman permanent unlocks and region-gated supply that change Prayer AFK restore, prayer/spellbook logistics, Necromancy bone routing, or undead Slayer throughput.",
+    "rate_rule": "No invented XP/hour or CombatScore shortcuts. Unlock state, documented CombatScore gates, and wiki effects only.",
+    "densify_rule": "When a parent row is thin (wars-grimoire, underworld-grimoire, salve shards-only), add residual/milestone rows that link_existing_ids without re-emitting the parent id."
+  },
+  "already_present_checked": [
+    "anachronia:death-note-relic",
+    "tirannwn:ancient-elven-ritual-shard",
+    "morytania:holy-wrench",
+    "morytania:ectoplasmator",
+    "morytania:attuned-ectoplasmator",
+    "forinthry:demon-horn-necklace",
+    "forinthry:split-dragontooth-necklace",
+    "forinthry:twisted-bird-skull-necklace",
+    "asgarnia:skilling-scrimshaw-package",
+    "asgarnia:scrimshaw-of-the-elements",
+    "multi-region:scrimshaw-of-sacrifice",
+    "desert:scrimshaw-crafter",
+    "cross-region:binding-contract-ancient-summoning",
+    "misthalin:underworld-grimoire",
+    "misthalin:wars-grimoire",
+    "misthalin:ancient-curses-senntisten",
+    "tirannwn:elven-grimoire",
+    "misthalin:fort-chapel",
+    "morytania:abandoned-mine-salve-shards",
+    "morytania:ectophial",
+    "morytania:first-age-outfit-equipment",
+    "desert:powder-of-burials",
+    "desert:hets-oasis-prayer-powders",
+    "multi-region:prayer-training-infrastructure-stack",
+    "cross-region:bonecrusher-necklace",
+    "forinthry:bonecrusher",
+    "multi-region:toolbelt-bonecrusher-attach"
+  ],
+  "combat_skip": [
+    "Cinderbanes (pure combat gloves — not skilling infrastructure)",
+    "Reaper crew (boss log completion combat permanent — not skilling)"
+  ],
+  "activity_additions": [
+    {
+      "id": "misthalin:wars-blessing",
+      "name": "War's Blessing 1-4 (Combat Mastery residual)",
+      "category": "permanent Combat Mastery hub residual (prayer-book swap gate)",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "War's Retreat access (60 Combat or 1,000 total level)",
+        "Combat Mastery achievements progress toward CombatScore thresholds",
+        "War's Blessing 3: 661 CombatScore (all easy/medium/hard tasks or any mix reaching that score)",
+        "War's Blessing 4: higher CombatScore via elite/master/grandmaster Combat Mastery tasks (wiki tier ladder)",
+        "misthalin:wars-grimoire already unlocked (750 boss kills) before Blessing 3 prayer-book swap is useful"
+      ],
+      "unlocks": [
+        "Account-permanent War's Blessing ladder (interface unlock; not a reclaimable inventory item)",
+        "Blessing 3 residual of planner value: War's Grimoire gains prayer-book switching (standard ↔ Ancient Curses) without travelling to Altar of Zaros / Elven grimoire / Fort chapel tier 3",
+        "Blessing 1–2 support only for this pack: free daily boss-portal attunements, Marks of War earn rate, Reaper's choice chance bumps, GWD killcount remove (Blessing 2) — combat-hub QoL not skilling XP",
+        "Blessing 4 is combat/gizmo residual (Vorago rotation choice, +100% adrenaline crystal, guaranteed Reaper's choice, costless ancient gizmo shells) — list for completeness, not as skilling priority"
+      ],
+      "region_pressure": [
+        "Misthalin planner region_hint matches wars-grimoire / War's Retreat hub taxonomy.",
+        "CombatScore and boss kills are account-wide combat progression, not additional region locks."
+      ],
+      "notes": "wars-grimoire row already lists Blessing 3 as a requirement footnote — this residual surfaces the Combat Mastery permanent as a first-class checklist id so planners can track prayer-switch unlock separately from the 750-kill grimoire scenery unlock.",
+      "source_urls": [
+        "https://runescape.wiki/w/War%27s_Blessing",
+        "https://runescape.wiki/w/War%27s_Blessing_3",
+        "https://runescape.wiki/w/War%27s_Grimoire",
+        "https://runescape.wiki/w/Combat_Mastery_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Planner Misthalin for hub taxonomy. Combat Mastery score remains account-wide; do not invent League score discounts.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:wars-grimoire",
+        "misthalin:ancient-curses-senntisten",
+        "tirannwn:elven-grimoire",
+        "misthalin:fort-chapel"
+      ]
+    },
+    {
+      "id": "misthalin:altar-of-zaros",
+      "name": "Altar of Zaros (Senntisten Temple prayer switch)",
+      "category": "permanent Prayer book switch and restore facility",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "desert", "morytania", "forinthry"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["desert", "morytania", "forinthry", "fremennik", "asgarnia"],
+      "requirements": [
+        "The Temple at Senntisten completed",
+        "Ancient hymnal read to unlock Ancient Curses (misthalin:ancient-curses-senntisten)",
+        "50 Prayer quest gate (and full Senntisten prerequisite chain)"
+      ],
+      "unlocks": [
+        "Senntisten Temple Altar of Zaros under Varrock Dig Site: switch standard prayers ↔ Ancient Curses",
+        "Pray: restore prayer points and grant +15% prayer points over current maximum (level-scaled; at 99 Prayer ~1,130 points before Prayer cape boost)",
+        "Canonical early ironman prayer-book switch before Fort chapel tier 3, Elven grimoire, or War's Grimoire + Blessing 3"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Dig Site / restored Senntisten Temple geography.",
+        "Desert / Morytania / Forinthry remain quest-artefact pressure on the Temple at Senntisten chain only — not alternate altar homes."
+      ],
+      "notes": "ancient-curses-senntisten unlocks the book and footnotes the altar; this row is the facility itself so planners can checklist switch locations without re-emitting curse combat numbers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Altar_of_Zaros",
+        "https://runescape.wiki/w/Senntisten_Temple",
+        "https://runescape.wiki/w/The_Temple_at_Senntisten"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for temple. Quest prerequisites may pull multi-region pressure only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:ancient-curses-senntisten",
+        "misthalin:wars-grimoire",
+        "tirannwn:elven-grimoire",
+        "misthalin:fort-chapel"
+      ]
+    },
+    {
+      "id": "cross-region:prayer-book-switch-network",
+      "name": "Prayer-book switch network (Zaros / Fort / Elven / War)",
+      "category": "multi-region Prayer book logistics package",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "tirannwn", "desert", "fremennik"],
+      "required_regions": [],
+      "optional_pressure_regions": ["misthalin", "tirannwn", "desert", "fremennik", "forinthry", "morytania"],
+      "requirements": [
+        "Piecewise — package itself has no gate; each child facility has its own unlock",
+        "Ancient Curses book: misthalin:ancient-curses-senntisten",
+        "Primary switch sites: misthalin:altar-of-zaros, misthalin:fort-chapel (tier 3), tirannwn:elven-grimoire, misthalin:wars-grimoire + misthalin:wars-blessing (Blessing 3)"
+      ],
+      "unlocks": [
+        "Planner checklist comparing prayer-book swap sites without re-emitting full child rows",
+        "Altar of Zaros: earliest dedicated curses switch + +15% prayer restore boost",
+        "Fort Forinthry chapel tier 3: bank-adjacent swap on the Fort altar (Construction 90 chapel)",
+        "Elven grimoire (Cadarn): Prif-local prayer + spellbook swap; hard Fremennik adds Lunar as third spellbook target",
+        "War's Grimoire + War's Blessing 3: hub-side prayer swap next to Altar of War / boss portals (no Dig Site / Prif / Fort travel)",
+        "Seren skilling prayers (Superheat / Light Form / Chronicle Attraction) remain Ancient Curses extensions via The Light Within — not a third switchable prayer book"
+      ],
+      "region_pressure": [
+        "Misthalin: Altar of Zaros, Fort chapel, War's Retreat grimoire.",
+        "Tirannwn: Elven grimoire after Plague's End.",
+        "Desert/Fremennik: spellbook targets (Ancient Magicks / Lunar) when valuing full Elven grimoire third-book utility."
+      ],
+      "notes": "Meta densify row for prayer switchers. Prefer child ids for mechanical detail. Complements multi-region:prayer-training-infrastructure-stack (XP paths) without replacing it — this package is book logistics only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Altar_of_Zaros",
+        "https://runescape.wiki/w/Elven_grimoire",
+        "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
+        "https://runescape.wiki/w/War%27s_Grimoire",
+        "https://runescape.wiki/w/War%27s_Blessing_3"
+      ],
+      "confidence": "confirmed_wiki_stack",
+      "league_treatment": "Score each switch site by the region that owns its hard gate. Package is comparison edge, not a free global unlock.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:altar-of-zaros",
+        "misthalin:ancient-curses-senntisten",
+        "misthalin:fort-chapel",
+        "tirannwn:elven-grimoire",
+        "misthalin:wars-grimoire",
+        "misthalin:wars-blessing",
+        "multi-region:prayer-training-infrastructure-stack",
+        "tirannwn:seren-skilling-prayers-package"
+      ]
+    },
+    {
+      "id": "misthalin:underworld-grimoire-skilling-milestones",
+      "name": "Underworld Grimoire skilling milestone ladder (UG1–4 densify)",
+      "category": "Underworld achievement skilling breakpoint densify",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "fremennik"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["fremennik"],
+      "requirements": [
+        "Necromancy! / City of Um access",
+        "Easy → Medium → Hard → Elite Underworld achievements claimed in order",
+        "Prior grimoire tier claimed before the next (Icthlarin / Frank / Kili / Crunchy claim NPCs)"
+      ],
+      "unlocks": [
+        "UG1 (Easy): toggleable bones + big bones → focus storage (priority over bonecrusher); picked-up ashes → bank; 2.5% extra necrotic rune chance; 3% ritual-disturbance XP; 10% 4-dose necro potion chance in Um; 10 smithy teles/day; 60 weekly noted bones from Lupe",
+        "UG2 (Medium): baby dragon + wyvern bones to focus storage; 5% extra rune chance; 5% extra necroplasm (additive with Multiply glyphs); 6% disturbance XP; unlimited smithy tele + 10 shared daily Um/Ungael ritual-site teles; weekly baby dragon bones + regular candles/ink",
+        "UG3 (Hard): dragon / dagannoth / airut / ourg / hardened dragon / dragonkin bones to focus storage; 7.5% extra rune chance; 10% necroplasm; 9% disturbance XP; unlimited Um + Ungael ritual teles; disease-free City of Um mushroom patch; Soul Supplies 10 daily slime; weekly dragon bones + greater candles/ink",
+        "UG4 (Elite): dinosaur / frost dragon / reinforced dragon bones to focus storage; 10% extra rune chance; 15% necroplasm; 12% disturbance XP; potion 4-dose effects no longer Um-restricted; Lupe weekly ink to bank and bones to focus storage; free daily Death reclaim; daily Lupe teleport"
+      ],
+      "region_pressure": [
+        "Misthalin / City of Um owns claim NPCs, ritual site, mushroom patch, and Lupe supplies.",
+        "Fremennik optional: Ungael ritual-site teleports on UG2+ when valuing dual-site rituals."
+      ],
+      "notes": "Densify companion to misthalin:underworld-grimoire equipment row. Do not re-emit that id — this activity is the achievement-gated breakpoint checklist ironman Prayer/Necro/RC planners walk. Bone auto-deposit takes priority over bonecrusher when toggled; full focus storage falls through to crusher.",
+      "source_urls": [
+        "https://runescape.wiki/w/Underworld_Grimoire",
+        "https://runescape.wiki/w/Underworld_Grimoire_1",
+        "https://runescape.wiki/w/Underworld_Grimoire_2",
+        "https://runescape.wiki/w/Underworld_Grimoire_3",
+        "https://runescape.wiki/w/Underworld_Grimoire_4",
+        "https://runescape.wiki/w/Underworld_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for City of Um diary-style rewards. Achievement task access follows League quest/region rules.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:underworld-grimoire",
+        "misthalin:focus-storage",
+        "misthalin:um-ritual-site-infrastructure",
+        "misthalin:um-mushroom-patch",
+        "forinthry:bonecrusher",
+        "fremennik:ungael-ritual-site"
+      ]
+    },
+    {
+      "id": "morytania:ghostly-essence-supply",
+      "name": "Ghostly essence (attuned ectoplasmator supply)",
+      "category": "Prayer drop-cleaner recharge supply loop",
+      "region_hint": "morytania",
+      "region_hints": ["morytania", "misthalin", "forinthry", "tirannwn"],
+      "required_regions": ["morytania"],
+      "optional_pressure_regions": ["misthalin", "forinthry", "tirannwn", "desert", "asgarnia"],
+      "requirements": [
+        "Base ectoplasmator already obtained (morytania:ectoplasmator)",
+        "100 ghostly essence to create attuned ectoplasmator (morytania:attuned-ectoplasmator)",
+        "Ongoing essence for recharge: 10 charges per essence (max ~5,000 charges; fully degraded reverts to rechargeable degraded form)"
+      ],
+      "unlocks": [
+        "Self-sourced ghostly essence as the permanent attuned-ecto charge economy (ironman cannot GE-fill)",
+        "Primary density: Morytania ghasts / shades / spectres / tortured souls alongside Barrows-adjacent undead",
+        "Support farms: Misthalin ankous, Forinthry/Wilderness revenants and tormented wraith, Tirannwn edimmu, multi-region ghost tables",
+        "Optional POF As The Rooster Crows perk: +7% / +10% essence drop rate at perk tiers 1 / 2"
+      ],
+      "region_pressure": [
+        "Morytania hard framing for efficient ghost/ghast/shade density next to ectofuntus logistics.",
+        "Misthalin/Forinthry/Tirannwn are support farms only — do not re-home the attuned upgrade."
+      ],
+      "notes": "Attuned ectoplasmator and base ecto rows assume essence costs; this supply row is the missing planner checklist for the recharge grind. Do not invent essence/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ghostly_essence",
+        "https://runescape.wiki/w/Attuned_ectoplasmator",
+        "https://runescape.wiki/w/Ectoplasmator"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for primary farm framing. Support farms optional by region unlock.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:ectoplasmator",
+        "morytania:attuned-ectoplasmator",
+        "cross-region:bonecrusher-necklace",
+        "forinthry:demon-horn-necklace"
+      ]
+    },
+    {
+      "id": "misthalin:wars-retreat-skilling-hub",
+      "name": "War's Retreat hub amenities (bank / Altar of War / grimoire host)",
+      "category": "permanent PvM hub infrastructure with Prayer logistics",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "60 Combat or 1,000 total level for hub entry",
+        "Draynor War's Insignia / Death's office door / War's Retreat Teleport (10 boss kills for spell)",
+        "Altar of War unlock: 200 boss kills via War's Wares",
+        "War's Grimoire scenery: 750 boss kills (misthalin:wars-grimoire)",
+        "Prayer-book swap on grimoire: War's Blessing 3 (misthalin:wars-blessing)"
+      ],
+      "unlocks": [
+        "Bank chest + campfire bonfire boost + training dummy area as permanent hub amenities",
+        "Altar of War: restore Prayer and Summoning points at the hub (post-200 boss kills)",
+        "Host scenery for War's Grimoire spellbook/prayer logistics next to boss portals and adrenaline crystals",
+        "Clan representative decanting (potions/flasks) and jellyfish combine as inventory QoL at the hub"
+      ],
+      "region_pressure": [
+        "Misthalin planner region_hint for Draynor entry and hub taxonomy (matches wars-grimoire).",
+        "Boss-kill gates are account-wide, not region locks."
+      ],
+      "notes": "Hub pointer densify for wars-grimoire residual. Do not re-emit Marks of War shop combat unlocks or pure DPS amenities as skilling XP claims. Skilling value is Prayer restore + book-switch logistics co-located with bank.",
+      "source_urls": [
+        "https://runescape.wiki/w/War%27s_Retreat",
+        "https://runescape.wiki/w/Altar_of_War",
+        "https://runescape.wiki/w/War%27s_Grimoire",
+        "https://runescape.wiki/w/War%27s_Wares"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Planner Misthalin. Do not hard-gate League hub access until League documents region mapping.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:wars-grimoire",
+        "misthalin:wars-blessing",
+        "misthalin:altar-of-zaros",
+        "cross-region:prayer-book-switch-network"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "morytania:salve-amulet",
+      "name": "Salve amulet (base)",
+      "category": "undead combat necklace (Mining craft path)",
+      "region_hint": "morytania",
+      "region_hints": ["morytania"],
+      "required_regions": ["morytania"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Haunted Mine quest completed",
+        "Mine salve shard from crystal outcrop in Abandoned Mine bottom level (morytania:abandoned-mine-salve-shards)",
+        "String with ball of wool (or String Jewellery)",
+        "Hard Morytania achievements optional: crystal outcrop shortcut south of entrance"
+      ],
+      "effects": [
+        "+15% damage and +15% hit chance vs undead while worn (all styles; on-hit only — no DoT/conjure buff)",
+        "Prayer bonus 3",
+        "Multiple amulets craftable from multiple shards (post-2021 unlimited shard collect)",
+        "Stacks with full slayer helmet, Void, Undead Slayer perk/ability"
+      ],
+      "notes": "Shards mining row is first-class; base wearable was only implied. Vyres and ghouls are not Salve targets — use blisterwood/Sunspear for vyres. Prefer enchanted form after Tarn miniquest.",
+      "source_urls": [
+        "https://runescape.wiki/w/Salve_amulet",
+        "https://runescape.wiki/w/Haunted_Mine",
+        "https://runescape.wiki/w/Salve_shard"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for Haunted Mine + Abandoned Mine shard source.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "morytania:abandoned-mine-salve-shards",
+        "morytania:salve-amulet-enchanted",
+        "multi-region:full-slayer-helmet-and-upgrades"
+      ]
+    },
+    {
+      "id": "morytania:salve-amulet-enchanted",
+      "name": "Salve amulet (e)",
+      "category": "undead combat necklace (enchanted permanent)",
+      "region_hint": "morytania",
+      "region_hints": ["morytania"],
+      "required_regions": ["morytania"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Base salve amulet crafted (morytania:salve-amulet)",
+        "Lair of Tarn Razorlor miniquest completed",
+        "Use Tarn's diary on salve amulet (diary also appears in POH bookcase after miniquest)",
+        "Multiple amulets can be enchanted if multiple bases are inventoried"
+      ],
+      "effects": [
+        "+20% damage and +20% hit chance vs undead while worn (all styles; on-hit only)",
+        "Prayer bonus 3; small style damage bonuses on the enchanted form",
+        "Stacks with full slayer helmet, Void, Undead Slayer perk/ability",
+        "Works at Barrows and Rise of the Six (2023 restriction removal); also applies to Osseous (2025)"
+      ],
+      "notes": "Preferred permanent form. Combat-facing but ironman undead Slayer / Prayer AFK adjacent when farming spectres, shades, ankous, revenants for ecto/essence/bones. Do not restate full undead target list.",
+      "source_urls": [
+        "https://runescape.wiki/w/Salve_amulet_(e)",
+        "https://runescape.wiki/w/Lair_of_Tarn_Razorlor_(miniquest)",
+        "https://runescape.wiki/w/Tarn%27s_diary"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for Tarn's Lair / Abandoned Mine geography.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "morytania:salve-amulet",
+        "morytania:abandoned-mine-salve-shards",
+        "multi-region:full-slayer-helmet-and-upgrades",
+        "multi-region:ring-of-slaying-craft"
+      ]
+    },
+    {
+      "id": "desert:powder-of-penance",
+      "name": "Powder of penance",
+      "category": "Prayer point sustain consumable supply",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Het's Oasis access (Desert)",
+        "Dazzling whirligig shells from dazzling whirligigs (golden rose / shimmering honeycomb lure path at Het's Oasis)",
+        "1 dazzling whirligig shell ground per powder (pestle/mortar or Telekinetic Grind)"
+      ],
+      "effects": [
+        "Scatter: 30 minutes restore prayer points equal to 2.5% of damage taken (max 100 pp from a single hit = 2.5% of 4,000 damage)",
+        "Does not work in PvP",
+        "0.5 Prayer XP on scatter",
+        "Identical behaviour family to Penance aspect at half the restoration percentage",
+        "Sibling of powder of burials in the whirligig pipeline — penance is prayer-point sustain, burials is bury XP"
+      ],
+      "notes": "hets-oasis-prayer-powders lists penance as a bullet only. Surface first-class for AFK Prayer sustain planning next to DG necklaces / holy wrench / ritual shard. Do not invent catch rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Powder_of_penance",
+        "https://runescape.wiki/w/Dazzling_whirligig",
+        "https://runescape.wiki/w/Het%27s_Oasis",
+        "https://runescape.wiki/w/Prayer_powder"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert for Het's Oasis powder production. Use is global once banked.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:hets-oasis-prayer-powders",
+        "desert:powder-of-burials",
+        "morytania:holy-wrench",
+        "forinthry:demon-horn-necklace",
+        "tirannwn:ancient-elven-ritual-shard"
+      ]
+    }
+  ]
+}

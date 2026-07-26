@@ -1,0 +1,284 @@
+{
+  "snapshot_date": "2026-07-26",
+  "wave": "final-B1-archaeology",
+  "purpose": "FINAL PASS Wave B1 — high-value Archaeology permanent / shop infrastructure still missing from data/research/regional-skilling-unlocks.json after waves 1–5: tetracompass pieces → powered compass → ancient caskets → complete tomes loop; archaeological soil box + material storage capacity ladders; Archaeologist's tea Guild shop XP consumable path; Luck of the Dwarves framed for Archaeology rare-table / tetra / tome QoL (not combat BiS essay). Fills wave-5 still-missing ranks 6, 7, 15, 16.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "SKIP already first-class: misthalin:archaeology-guild-shop, misthalin:archaeology-campus-hub, misthalin:guildmaster-qualification, misthalin:guildmaster-tonys-mattock, misthalin:material-manuals, misthalin:auto-screener, misthalin:master-archaeologists-outfit, misthalin:master-archaeologists-outfit-claim, misthalin:mysterious-monolith-relic-hub, misthalin:monolith-energy-research-ladder, misthalin:archaeology-collectors, misthalin:archaeology-research, misthalin:archaeology-research-team, misthalin:screening-station, cross-region:mattock-of-time-and-space, dig-site hubs (kharid-et, everlight, orthen, moonrise, stormguard, warforge, senntisten, daemonheim, infernal-source), asgarnia:ore-box-tier-upgrades, misthalin:wood-box-tier-upgrades.",
+    "no_trade_rule": "Ironman permanent capacity ladders, shop-access consumable loops, material-sink progression, and luck-ring Archaeology rare-table QoL.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, capacity, duration, and wiki-stated effects only. Complete-tome XP is level-table only (studied at Guild desk).",
+    "combo_fields": "Every multi-region row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids.",
+    "archaeologists_tea_note": "Tea is a consumable (not a permanent passive), but Guild shop access after Qualification - Intern is permanent account infrastructure — same modeling class as misthalin:material-manuals. Include as first-class shop/supply row."
+  },
+  "already_present_checked": [
+    "misthalin:archaeology-guild-shop",
+    "misthalin:archaeology-campus-hub",
+    "misthalin:guildmaster-qualification",
+    "misthalin:guildmaster-tonys-mattock",
+    "misthalin:material-manuals",
+    "misthalin:auto-screener",
+    "misthalin:master-archaeologists-outfit",
+    "misthalin:master-archaeologists-outfit-claim",
+    "misthalin:mysterious-monolith-relic-hub",
+    "misthalin:monolith-energy-research-ladder",
+    "misthalin:archaeology-collectors",
+    "misthalin:archaeology-research",
+    "misthalin:archaeology-research-team",
+    "misthalin:screening-station",
+    "cross-region:mattock-of-time-and-space",
+    "asgarnia:ore-box-tier-upgrades",
+    "misthalin:wood-box-tier-upgrades",
+    "cross-region:tetracompass-and-tomes",
+    "misthalin:soil-box-material-storage",
+    "misthalin:archaeologists-tea",
+    "cross-region:luck-of-the-dwarves",
+    "fremennik:luck-of-the-dwarves"
+  ],
+  "id_presence_at_write": {
+    "cross-region:tetracompass-and-tomes": "MISSING",
+    "misthalin:soil-box-material-storage": "MISSING",
+    "misthalin:archaeologists-tea": "MISSING",
+    "cross-region:luck-of-the-dwarves": "MISSING",
+    "fremennik:luck-of-the-dwarves": "MISSING — emit cross-region:luck-of-the-dwarves only (skilling/Arch framing; freemennik is region_hint + required pressure for dwarf tele package)"
+  },
+  "activity_additions": [
+    {
+      "id": "cross-region:tetracompass-and-tomes",
+      "name": "Tetracompass pieces → ancient caskets → complete tomes",
+      "category": "Archaeology material-sink progression loop",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "kandarin",
+        "desert",
+        "morytania",
+        "forinthry",
+        "anachronia",
+        "havenhythe"
+      ],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [
+        "kandarin",
+        "desert",
+        "morytania",
+        "forinthry",
+        "anachronia",
+        "havenhythe"
+      ],
+      "location": "Piece drops / collection hand-ins at multi-region dig sites; restore + power at Archaeology Campus mysterious monolith; dig ancient casket at compass tip; study complete tomes at Guild upstairs desk",
+      "requirements": [
+        "50 Archaeology to restore tetracompass (unpowered) and to excavate the ancient-casket dig location pointed by a powered tetracompass",
+        "Four ordered pieces: left → right → dial → needle (excavation rare drops, guaranteed from listed collection repeats, or Mr Mordaut research Treasure Hoarder / 24h expedition guarantee)",
+        "Restore costs: 30 malachite green + 30 cadmium red + 30 cobalt blue + 30 Armadylean yellow + 30 Tyrian purple + the four pieces",
+        "Ironman self-source of malachite green and Armadylean yellow requires 76 Archaeology (boostable) — Warforge / Stormguard material access",
+        "Power unpowered tetracompass at the mysterious monolith (970 Archaeology XP each; up to ten at a time)",
+        "Complete tomes studied only at the study desk upstairs in the Archaeology Guild (base Archaeology level only — boosts do not raise tome XP)"
+      ],
+      "unlocks": [
+        "Account progression loop: tetracompass pieces → tetracompass (unpowered) → tetracompass (powered) → ancient casket dig",
+        "Ancient casket rolls: 3–5 damaged artefacts, materials, Archaeology supplies, 1–2 complete tomes, elite or master clue, and rare dragon mattock (1%) / shadowy key (Guildmaster Tony's mattock path)",
+        "Complete tome: large Archaeology XP by base level when studied at Guild desk (e.g. wiki table 45,002 XP at 99; 86,561 XP at 120) — cannot bank tomes",
+        "Collection-repeat piece sources include Urns of the Empire (67), Green Gobbo Goodies I–III, Red Rum Relics I–III, Saradominist II–IV, Zamorakian II–IV, Guthixian I–II, Dragonkin VII",
+        "Overflow casket loot reclaimable from ancient casket scenery next to research desk if backpack/bank full (tomes stay in Guild casket until reclaim)"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns monolith powering, Guild study desk for complete tomes, and casket reclaim scenery — the loop endpoint is starting-region campus.",
+        "Kandarin optional: Warforge Green Gobbo / Red Rum piece farms and malachite green / Armadylean yellow ironman material gate at 76.",
+        "Desert / Morytania / Forinthry / Anachronia / Havenhythe optional: other piece-reward collections and general excavation rare drops at their dig sites.",
+        "Tier-2+ luck (Luck of the Dwarves) increases chance of tetracompass pieces and complete tomes while excavating — link cross-region:luck-of-the-dwarves."
+      ],
+      "notes": "Wave-5 rank 7 first-class row. Not a dig-site hub and not a training XP/hour claim — permanent material-sink → XP/loot progression infrastructure. Complements dig-site hubs and misthalin:guildmaster-tonys-mattock (shadowy key) without re-emitting those ids. Do not invent piece rates or casket averages beyond wiki structure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tetracompass_(unpowered)",
+        "https://runescape.wiki/w/Tetracompass_(powered)",
+        "https://runescape.wiki/w/Ancient_casket",
+        "https://runescape.wiki/w/Complete_tome",
+        "https://runescape.wiki/w/Tetracompass_piece"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin required for power + tome study + reclaim. Piece farming and colour materials pressure elective dig-site regions (especially Kandarin Warforge for efficient ironman piece loops).",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:mysterious-monolith-relic-hub",
+        "misthalin:archaeology-campus-hub",
+        "misthalin:archaeology-collectors",
+        "misthalin:guildmaster-tonys-mattock",
+        "misthalin:archaeology-research-team",
+        "kandarin:warforge-dig-site",
+        "kandarin:stormguard-citadel-dig-site",
+        "cross-region:luck-of-the-dwarves"
+      ]
+    },
+    {
+      "id": "misthalin:soil-box-material-storage",
+      "name": "Soil box + material storage capacity ladders",
+      "category": "Archaeology inventory / storage permanent upgrades",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [],
+      "location": "Archaeological soil box from Ezreal (tutorial / Guild shop reclaim); material storage containers at Archaeology Campus, all dig sites, Fort Forinthry Workshop, and Memorial to Guthix (quest-only)",
+      "requirements": [
+        "Archaeology tutorial / free soil box claim from Ezreal (one owned; free reclaim retains upgrades and stored soil)",
+        "Soil box capacity upgrades from Archaeology Guild Shop by qualification: Intern free 50 each soil; Assistant 3,500 chronotes → 100; Associate 18,000 → 250; Professor 48,000 → 500",
+        "Material storage type-capacity upgrades from same shop: Intern free 30 material types; Assistant 7,000 chronotes → 35; Associate 25,000 → 40; Professor 60,000 → 45",
+        "Qualifications (Intern → Assistant → Associate → Professor) gate which upgrades appear — chronotes from collectors / dig sites"
+      ],
+      "unlocks": [
+        "Archaeological soil box: holds up to capacity of each soil type; fill/inspect without interrupting excavation; screen soil directly from the box; deposit contents via bank/deposit box",
+        "Soil box capacity ladder 50 → 100 → 250 → 500 of each soil (permanent account upgrades; auto-screener can make late soil-box ranks optional depending on loadout)",
+        "Material storage container: shared capacity across campus / dig-site / Fort containers; holds Archaeology restoration materials by type",
+        "Material storage type ladder 30 → 35 → 40 → 45 types (base raised to 30 on 15 June 2026 wiki; full late-game material sets need Professor upgrade)",
+        "Signs of the porter / Grace of the Elves send excavated materials straight into material storage; materials carts bank overflow when type slots full"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Guild shop upgrades, tutorial soil box, and campus material storage.",
+        "Dig-site containers exist in every Archaeology region once those sites unlock — capacity upgrades still purchase only at Misthalin Guild.",
+        "Fort Forinthry Workshop container is Forinthry convenience only after Workshop build — not a second upgrade shop."
+      ],
+      "notes": "Wave-5 rank 16. Parity row with asgarnia:ore-box-tier-upgrades and misthalin:wood-box-tier-upgrades — Archaeology's two permanent capacity ladders bundled (soil quantity + material type slots). Complements misthalin:auto-screener and misthalin:archaeology-guild-shop without re-emitting those ids. Do not invent soil XP rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeological_soil_box",
+        "https://runescape.wiki/w/Material_storage_container",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for shop capacity purchases. Dig-site use of containers follows whichever dig-site regions are unlocked.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:archaeology-guild-shop",
+        "misthalin:archaeology-campus-hub",
+        "misthalin:auto-screener",
+        "misthalin:screening-station",
+        "asgarnia:ore-box-tier-upgrades",
+        "misthalin:wood-box-tier-upgrades"
+      ]
+    },
+    {
+      "id": "misthalin:archaeologists-tea",
+      "name": "Archaeologist's tea (Guild shop excavation XP boost)",
+      "category": "Archaeology consumable shop infrastructure",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [],
+      "location": "Archaeology Guild Shop (Ezreal) — Archaeology Campus",
+      "requirements": [
+        "Qualification - Intern for Archaeology Guild Shop stock of archaeologist's tea",
+        "2,000 chronotes per cup from Ezreal (infinite stock)",
+        "Also obtainable: ancient casket (1/4), pickpocketing trainee archaeologists / archaeologists / archaeology professors, and Reiniger qualification claim packs (includes tea)"
+      ],
+      "unlocks": [
+        "Permanent shop access to archaeologist's tea after Intern qualification",
+        "Drink: +50% Archaeology excavation XP for 20 minutes (30 minutes with full master archaeologist's outfit); also +50% equipment XP on an augmented mattock",
+        "Duration stacks by drinking multiple cups up to 60 minutes total (warning if a drink would exceed the hour cap)",
+        "Tea is destroyed on drink; not a permanent passive — same consumable-shop class as material manuals"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Guild shop purchase and Reiniger claim path.",
+        "Chronotes and casket/pickpocket tea supply still pressure multi-region dig sites — shop access itself is Misthalin."
+      ],
+      "notes": "Wave-5 rank 15. Real permanent shop unlock + ironman 1–99 excavation XP consumable path. Not Cup of soil tea (level boost). Complements misthalin:material-manuals (same shop boost family) and misthalin:master-archaeologists-outfit (duration extension) without re-emitting those ids. Not a permanent account passive — model as shop infrastructure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Archaeologist%27s_tea",
+        "https://runescape.wiki/w/Archaeology_Guild_Shop",
+        "https://runescape.wiki/w/Archaeologist%27s_tea_(status)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for shop access after Intern. Excavation use is global once stocked.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:archaeology-guild-shop",
+        "misthalin:material-manuals",
+        "misthalin:master-archaeologists-outfit",
+        "misthalin:guildmaster-qualification",
+        "cross-region:tetracompass-and-tomes"
+      ]
+    },
+    {
+      "id": "cross-region:luck-of-the-dwarves",
+      "name": "Luck of the Dwarves (Archaeology rare-table / tetra / tome luck)",
+      "category": "skilling luck ring + Archaeology rare-drop QoL",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik", "asgarnia", "misthalin"],
+      "required_regions": ["fremennik", "asgarnia"],
+      "optional_pressure_regions": ["misthalin"],
+      "location": "Craft anywhere with furnace + ring mould after alchemical onyx; dwarf tele package centres on Keldagrim / Miscellania (Fremennik); Invention alchemical onyx at inventor's workbench (Asgarnia Guild natural hub)",
+      "requirements": [
+        "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious components) at an inventor's workbench",
+        "91 Crafting: alchemical onyx + gold bar → alchemical onyx ring",
+        "87 Magic: Lvl-6 Enchant on alchemical onyx ring → Luck of the Dwarves (tier-4 luck; includes tier 1–3 effects)",
+        "Keldagrim first-entry cutscene for Keldagrim teleport; Throne of Miscellania for Miscellania teleport",
+        "Optional: Hand of glory (dig-site Archaeology artefacts) + LotD → Luck of the Dwarves monolith relic power (passive luck without wearing the ring)",
+        "Optional: Dark Facet of Luck for clue-step skip / double casket rolls + Dwarven Outpost teleport"
+      ],
+      "unlocks": [
+        "Tier-4 luck enhancer worn (or harnessed as Archaeology monolith relic power after Hand of glory conversion)",
+        "Archaeology skilling luck: improved chance of finding a tetracompass piece or complete tome while excavating",
+        "Broader skilling luck also covers metamorphic geodes, Pyramid Plunder rares, implings, Seren's symbol pieces, clue-while-skilling, etc. — this row prioritises Arch rare-table framing",
+        "Unlimited teleports: Miscellania (quest-gated), Grand Exchange (Varrock), Keldagrim (first-entry), plus Dwarven Outpost with Dark Facet",
+        "Ring can be equipped at kill moment for combat rare tables — combat BiS comparison is out of scope here"
+      ],
+      "region_pressure": [
+        "Fremennik hard-owns dwarf-ring teleport identity (Keldagrim + Miscellania path) and namesake luck-ring geography.",
+        "Asgarnia hard-owns practical Invention Guild / inventor's workbench path for alchemical onyx manufacture on ironman.",
+        "Misthalin optional: GE teleport convenience + mysterious monolith harness if converting LotD into the Archaeology relic power via Hand of glory."
+      ],
+      "notes": "Wave-5 rank 6 under suggested id cross-region:luck-of-the-dwarves (not fremennik:luck-of-the-dwarves alone — craft/Invention pressure is multi-region). Skilling/Archaeology rare-table and tetra/tome QoL framing only; do not expand into full combat ring BiS essay. Complements cross-region:tetracompass-and-tomes and misthalin:mysterious-monolith-relic-hub. Ring of Fortune is the weaker tier-3 predecessor — not emitted separately.",
+      "source_urls": [
+        "https://runescape.wiki/w/Luck_of_the_Dwarves",
+        "https://runescape.wiki/w/Alchemical_onyx",
+        "https://runescape.wiki/w/Luck_of_the_Dwarves_(relic_power)",
+        "https://runescape.wiki/w/Complete_tome",
+        "https://runescape.wiki/w/Tetracompass_piece"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik + Asgarnia both required for full ironman craft + dwarf tele package. Misthalin optional for GE tele and monolith relic conversion. Arch luck effect works account-wide once the ring (or harnessed relic power) is owned.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "cross-region:tetracompass-and-tomes",
+        "misthalin:mysterious-monolith-relic-hub",
+        "asgarnia:invention-guild",
+        "asgarnia:charge-pack-infrastructure",
+        "fremennik:keldagrim-brewery"
+      ]
+    }
+  ],
+  "equipment_additions": [],
+  "skipped_with_reason": [
+    {
+      "topic": "fremennik:luck-of-the-dwarves as separate id",
+      "reason": "Emit single canonical cross-region:luck-of-the-dwarves (audit suggested_id). Fremennik is region_hint + required_regions member for dwarf tele package; separate freemennik-only id would double-count."
+    },
+    {
+      "topic": "Ring of Fortune standalone",
+      "reason": "Tier-3 luck predecessor superseded by LotD for Arch rare-table planning; not a distinct high-value permanent once LotD is first-class."
+    },
+    {
+      "topic": "Hi-spec monocle / tarpaulin sheet dedicated rows",
+      "reason": "Same Guild boost-consumable family already covered under misthalin:material-manuals detail and guild shop; tea was the only boost item with zero dedicated id."
+    },
+    {
+      "topic": "Cup of soil tea",
+      "reason": "Temporary Archaeology level boost drink — different item from archaeologist's tea; not the wave-5 missing shop path."
+    },
+    {
+      "topic": "Soil box vs material storage as two ids",
+      "reason": "Audit suggested single id misthalin:soil-box-material-storage for the asymmetric container-ladder gap; keep one bundled capacity row."
+    }
+  ],
+  "ids_emitted": [
+    "cross-region:tetracompass-and-tomes",
+    "misthalin:soil-box-material-storage",
+    "misthalin:archaeologists-tea",
+    "cross-region:luck-of-the-dwarves"
+  ],
+  "stats": {
+    "activity_additions": 4,
+    "equipment_additions": 0,
+    "combo_rows": 2,
+    "single_region_rows": 2,
+    "all_target_ids_were_missing": true,
+    "wave5_ranks_filled": [6, 7, 15, 16]
+  }
+}

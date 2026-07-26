@@ -1,20 +1,20 @@
 "use client";
 
 /**
- * Everything known about the region currently in focus, in one panel.
+ * Full-width region detail under Board Sky.
  *
- * This absorbed the two stacked sections that used to sit under the planner —
- * "What each pick opens" repeated the ledger's numbers, and "Boundary rules"
- * repeated rules already shown here — so comparing two regions is a click
- * rather than a 2600px scroll.
+ * Sits under the board + ledger as a deliberate instrument strip — not a
+ * leftover side-rail panel. Crest + identity head, compact fact strip,
+ * horizontal planner value, then the content/upgrade catalog at full width.
  *
- * The filters exist because the content list mixes what Jagex has confirmed
- * with what we inferred. Filtering to `confirmed` is the one view that answers
- * "what do I actually know", and it is why the status column carries provenance
- * instead of being flattened to a yes.
+ * Filters exist because the content list mixes what Jagex has confirmed with
+ * what we inferred. Filtering to `confirmed` is the one view that answers
+ * "what do I actually know".
  */
 
 import { useEffect, useMemo, useState } from "react";
+import { GameIcon } from "@/components/GameIcon";
+import { regionCrestPath } from "@/lib/gameArt";
 import autoQuests from "#data/league/equilibrium-auto-quests.json";
 import { getInventionComponentsByRegion } from "@/research/plannerExpansions";
 import { getSlayerMethodsByRegion } from "@/research/slayerPlanner";
@@ -83,7 +83,7 @@ export function RegionInspector({
     [detail],
   );
 
-  // Top content + upgrades for the compact planner-value strip (not a second table).
+  // Top content + upgrades for the compact value band (not a second table).
   // Dedup by name so content+upgrade twins do not React-key-collide.
   const plannerHighlights = useMemo(() => {
     if (!detail) return [] as string[];
@@ -145,22 +145,49 @@ export function RegionInspector({
   };
 
   const sourcesLine = `${detail.sourceCount} source${detail.sourceCount === 1 ? "" : "s"} · verified ${detail.verifiedAt ?? "never"}`;
+  const researchBits: string[] = [];
+  if (slayerMethods.length > 0) {
+    researchBits.push(
+      `Slayer: ${slayerMethods.slice(0, 3).map(slayerLabel).join(", ")}${
+        slayerMethods.length > 3 ? ` +${slayerMethods.length - 3}` : ""
+      }`,
+    );
+  }
+  if (inventionComponents.length > 0) {
+    researchBits.push(
+      `Invention: ${inventionComponents
+        .slice(0, 3)
+        .map((c) => c.component)
+        .join(", ")}${inventionComponents.length > 3 ? ` +${inventionComponents.length - 3}` : ""}`,
+    );
+  }
 
   return (
-    <section className="panel" aria-label="Region detail">
-      <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
-        {detail.name}
-        <span className="text-xs normal-case tracking-normal text-parch-100">
-          {UNLOCK_TEXT[detail.availability]}
-        </span>
+    <section className="panel map-detail-dock" aria-label="Region detail">
+      <div className="panel-head flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <GameIcon src={regionCrestPath(detail.id)} size={20} className="shrink-0" />
+          <span className="text-parch-50">{detail.name}</span>
+          <span className="text-xs normal-case tracking-normal text-parch-100">
+            {UNLOCK_TEXT[detail.availability]}
+          </span>
+        </div>
+        <section aria-live="polite" className="num text-xs normal-case tracking-normal text-parch-300">
+          <span className="sr-only">
+            {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
+          </span>
+          {sourcesLine}
+        </section>
       </div>
 
-      <div className="stat-strip border-b border-stone-800 px-3.5 py-2.5">
+      <div className="stat-strip border-b border-stone-800">
         {[
-          ["Quests touching", detail.quests],
+          ["Quests", detail.quests],
           ["Content", metrics?.content ?? detail.content.length],
           ["Upgrades", metrics?.upgrades ?? detail.upgrades.length],
           ["Training", metrics?.training ?? detail.training],
+          ["Combat", detail.combatUnlocks ?? 0],
+          ["Multi", detail.multiRegionUnlocks ?? 0],
         ].map(([label, value]) => (
           <div key={String(label)}>
             <div className="stat-label">{label}</div>
@@ -169,94 +196,77 @@ export function RegionInspector({
         ))}
       </div>
 
-      {/* Compact planner-value strip: highlights + cheap research joins + auto-quest honesty. */}
-      <div className="border-b border-stone-800 px-3.5 py-2.5">
-        <div className="text-xs font-medium uppercase tracking-[0.13em] text-parch-300">
-          Planner value
+      {(plannerHighlights.length > 0 || researchBits.length > 0 || autoEmpty) && (
+        <div className="border-b border-stone-800 px-3 py-1.5 text-xs text-parch-100">
+          {plannerHighlights.length > 0 ? plannerHighlights.slice(0, 4).join(" · ") : null}
+          {researchBits.length > 0 ? (
+            <span className="text-parch-300">
+              {plannerHighlights.length ? " · " : ""}
+              {researchBits.join(" · ")}
+            </span>
+          ) : null}
+          {autoEmpty ? (
+            <span className="text-parch-300">
+              {plannerHighlights.length || researchBits.length ? " · " : ""}
+              Auto-complete: none published
+            </span>
+          ) : null}
         </div>
-        {plannerHighlights.length > 0 ? (
-          <ul className="mt-1.5 space-y-0.5 text-xs text-parch-100">
-            {plannerHighlights.map((name) => (
-              <li key={name}>{name}</li>
+      )}
+
+      <div className="panel-body space-y-2 py-2">
+        {(detail.areas.length > 0 || detail.hardRules.length > 0) && (
+          <div className="space-y-1.5">
+            {detail.areas.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {[...new Set(detail.areas.filter(Boolean))].map((area, i) => {
+                  const isAnchored = anchored.has(area);
+                  const lit = focus.place === area;
+                  const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
+                    lit
+                      ? "bg-stone-800 text-gem-300"
+                      : isAnchored
+                        ? "text-parch-100"
+                        : "text-parch-300"
+                  }`;
+                  if (isAnchored) {
+                    return (
+                      <button
+                        key={`area-${i}-${area}`}
+                        type="button"
+                        onPointerEnter={() => lightPlace(area)}
+                        onPointerLeave={() => lightPlace(null)}
+                        onFocus={() => lightPlace(area)}
+                        onBlur={() => lightPlace(null)}
+                        onClick={() => lightPlace(area)}
+                        className={chipClass}
+                      >
+                        {area}
+                      </button>
+                    );
+                  }
+                  return (
+                    <span key={`area-${i}-${area}`} className={chipClass}>
+                      {area}
+                    </span>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            {detail.hardRules.map((rule) => (
+              <p
+                key={rule}
+                className="border-l-2 border-gem-500 pl-2.5 text-sm leading-snug text-parch-100"
+              >
+                {rule}
+              </p>
             ))}
-          </ul>
-        ) : (
-          <p className="mt-1.5 text-xs text-parch-300">No content or upgrades mapped yet.</p>
-        )}
-        {(slayerMethods.length > 0 || inventionComponents.length > 0) && (
-          <p className="mt-1.5 text-xs text-parch-100">
-            {slayerMethods.length > 0 ? (
-              <span>
-                Slayer: {slayerMethods.slice(0, 3).map(slayerLabel).join(", ")}
-                {slayerMethods.length > 3 ? ` +${slayerMethods.length - 3}` : ""}
-              </span>
-            ) : null}
-            {slayerMethods.length > 0 && inventionComponents.length > 0 ? " · " : null}
-            {inventionComponents.length > 0 ? (
-              <span>
-                Invention: {inventionComponents.slice(0, 3).map((c) => c.component).join(", ")}
-                {inventionComponents.length > 3 ? ` +${inventionComponents.length - 3}` : ""}
-              </span>
-            ) : null}
-          </p>
-        )}
-        {autoEmpty ? (
-          <p className="mt-1.5 text-xs text-parch-300">
-            Official auto-complete: none published yet
-          </p>
-        ) : null}
-      </div>
-
-      <div className="panel-body">
-        {detail.areas.length > 0 ? (
-          <div className="mb-3 flex flex-wrap gap-1.5">
-            {/* Anchored places are buttons so keyboard can light the marker;
-                unanchored areas stay text — nothing on the board to focus. */}
-            {[...new Set(detail.areas.filter(Boolean))].map((area) => {
-              const isAnchored = anchored.has(area);
-              const lit = focus.place === area;
-              const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
-                lit
-                  ? "bg-stone-800 text-gem-300"
-                  : isAnchored
-                    ? "text-parch-100"
-                    : "text-parch-300"
-              }`;
-              if (isAnchored) {
-                return (
-                  <button
-                    key={area}
-                    type="button"
-                    onPointerEnter={() => lightPlace(area)}
-                    onPointerLeave={() => lightPlace(null)}
-                    onFocus={() => lightPlace(area)}
-                    onBlur={() => lightPlace(null)}
-                    onClick={() => lightPlace(area)}
-                    className={chipClass}
-                  >
-                    {area}
-                  </button>
-                );
-              }
-              return (
-                <span key={area} className={chipClass}>
-                  {area}
-                </span>
-              );
-            })}
           </div>
-        ) : null}
+        )}
 
-        {detail.hardRules.map((rule) => (
-          <p key={rule} className="mb-3 border-l-2 border-gem-500 pl-3 text-sm text-parch-100">
-            {rule}
-          </p>
-        ))}
-
-        <div className="mb-2 flex flex-wrap items-center gap-1.5">
-          {/* Kind is a select, not chips: the catalog's kinds are freeform
-              strings and Misthalin alone has twelve, which as buttons is a
-              two-row wall above a table with sixteen rows in it. */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {/* Kind is a select, not chips: freeform catalog kinds would become a wall. */}
           <select
             value={activeKind}
             onChange={(e) => setKind(e.target.value)}
@@ -286,9 +296,8 @@ export function RegionInspector({
           />
         </div>
 
-        {/* Capped and scrolled rather than pushing the page down: comparing two
-            regions has to stay a click, and Misthalin alone runs to 16 rows. */}
-        <div className="grid max-h-80 gap-4 overflow-y-auto lg:grid-cols-2">
+        {/* Full-width catalog: two columns on lg so the strip uses the board span. */}
+        <div className="grid max-h-72 gap-3 overflow-y-auto lg:grid-cols-2">
           {rows.length > 0 ? (
             <table className="data-table">
               <thead>
@@ -299,8 +308,8 @@ export function RegionInspector({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((c) => (
-                  <tr key={c.name}>
+                {rows.map((c, i) => (
+                  <tr key={`content-${i}-${c.name}`}>
                     <td className="text-parch-50">{c.name}</td>
                     <td>{c.kind}</td>
                     <td>
@@ -331,9 +340,16 @@ export function RegionInspector({
                 </tr>
               </thead>
               <tbody>
-                {detail.upgrades.map((u) => (
-                  <tr key={u.name}>
-                    <td className="text-parch-50">{u.name}</td>
+                {detail.upgrades.map((u, i) => (
+                  <tr key={`upgrade-${i}-${u.name}`}>
+                    <td className="text-parch-50">
+                      <div>{u.name}</div>
+                      {u.comboLabel ? (
+                        <div className="mt-0.5 text-xs font-normal normal-case tracking-normal text-parch-300">
+                          {u.comboLabel}
+                        </div>
+                      ) : null}
+                    </td>
                     <td>{u.kind}</td>
                   </tr>
                 ))}
@@ -343,21 +359,12 @@ export function RegionInspector({
         </div>
 
         {detail.warnings.map((w) => (
-          <p key={w} className="mt-3 text-xs text-parch-300">
+          <p key={w} className="text-xs text-parch-300">
             Note: {w}
           </p>
         ))}
 
-        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 border-t border-stone-800 pt-2">
-          {/* Compact live status: name/unlock/sources only. Filters and the
-              content table stay outside so chip/select churn is not announced.
-              e2e pins section[aria-live] + the sources pattern (must be visible). */}
-          <section aria-live="polite" className="num text-xs text-parch-300">
-            <span className="sr-only">
-              {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
-            </span>
-            {sourcesLine}
-          </section>
+        <div className="flex flex-wrap items-baseline justify-end gap-2 border-t border-stone-800 pt-2">
           <details className="text-xs text-parch-100">
             <summary className="cursor-pointer text-parch-300 hover:text-parch-100">
               Boundary rules ({boundaryRules.length})

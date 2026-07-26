@@ -2,6 +2,7 @@ import collectionSource from "../../data/research/planner-expansions-archaeology
 import repeatableSource from "../../data/research/planner-expansions-archaeology-repeatables.json";
 import guildSource from "../../data/research/planner-expansions-archaeology-guild.json";
 import utilitySource from "../../data/research/planner-expansions-archaeology-utilities.json";
+import museumCollectionMatrix from "../../data/research/planner-expansions-archaeology-museum-collections-matrix.json";
 
 export type ArchaeologyQualificationMilestone = (typeof collectionSource)["qualification_milestones"][number];
 export type RelicSystemProgression = (typeof collectionSource)["relic_system_progression"][number];
@@ -83,4 +84,28 @@ export function getArchaeologyDataCorrections(): ArchaeologyDataCorrection[] {
 
 export function getCurrentArchaeologyRelicAdditions(): CurrentArchaeologyRelicAddition[] {
   return collectionSource.current_2026_relic_additions;
+}
+
+/** Full Velucia + dig-site collector matrix with region combos and unobtainable flags. */
+export type MuseumCollectionMatrixRow =
+  (typeof museumCollectionMatrix)["collections"][number];
+
+export function getMuseumCollectionMatrix(): MuseumCollectionMatrixRow[] {
+  return museumCollectionMatrix.collections ?? [];
+}
+
+export function getMuseumCollectionMatrixByRegion(region: string): MuseumCollectionMatrixRow[] {
+  const needle = region.trim().toLowerCase();
+  return getMuseumCollectionMatrix().filter((row) => {
+    const required = (row.required_regions ?? []) as string[];
+    const artifacts = (row.artifact_regions ?? []) as string[];
+    const collectors = (row.collector_regions ?? []) as string[];
+    return [...required, ...artifacts, ...collectors].some(
+      (candidate) => String(candidate).toLowerCase() === needle,
+    );
+  });
+}
+
+export function getUnobtainableMuseumCollections(): MuseumCollectionMatrixRow[] {
+  return getMuseumCollectionMatrix().filter((row) => row.status === "unobtainable");
 }

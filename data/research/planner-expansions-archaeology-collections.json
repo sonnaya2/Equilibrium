@@ -384,5 +384,7 @@
       "source_url": "https://patchtracker.gg/runescape/digging-up-the-past-at-moonrise",
       "confidence": "official_news_archive_current_collection_name_pending_structured_wiki"
     }
-  ]
+  ],
+  "museum_collection_matrix_path": "data/research/planner-expansions-archaeology-museum-collections-matrix.json",
+  "museum_collection_combo_table_path": "scraped-data/museum-collections-region-combo-table-2026-07-26.json"
 }

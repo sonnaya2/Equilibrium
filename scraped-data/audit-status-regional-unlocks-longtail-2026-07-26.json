@@ -1,0 +1,58 @@
+{
+  "snapshot_date": "2026-07-26",
+  "pass": "long-tail + P0/P1 verification",
+  "regional_skilling_unlocks": 655,
+  "stats": {
+    "activities": 451,
+    "equipment": 204,
+    "regionCombos_all_required": 113,
+    "comboLabeled": 211,
+    "name_duplicates_exact": 0,
+    "multi_region_without_comboLabel": 0,
+    "invalid_region_tokens": 0
+  },
+  "p0_p1": {
+    "status": "all present and already rich (detail 867-2380 chars)",
+    "hardened_reemit": "skipped — no thin rows",
+    "ids_ok": [
+      "karamja:perfect-juju-potions",
+      "cross-region:orthen-superheat-autoheater",
+      "tirannwn:elven-grimoire",
+      "fremennik:god-books-horror-from-the-deep",
+      "cross-region:luck-of-the-dwarves",
+      "cross-region:tetracompass-and-tomes",
+      "asgarnia:divine-charge-crafting",
+      "misthalin:soil-box-material-storage",
+      "misthalin:archaeologists-tea",
+      "forinthry:scroll-of-quick-teleportation",
+      "cross-region:rune-pouch-ladder",
+      "cross-region:portable-skilling-stations",
+      "cross-region:thaler-skilling-rewards",
+      "kandarin:pof-farm-totems-tier2"
+    ]
+  },
+  "longtail_delivered": {
+    "prefer_x_footnote_rewrites": "13 enrichment files; outbound cites map to live ids",
+    "waiko_arc": "12 rows (grill, contracts, supplies, journal, claimed island, Boni, siphon blueprint, bonecrusher auto-pickup, …)",
+    "museum_chronote": "14 rows (Velucia tiers, qualification ladder, research team size, Prodigal Spender, collectors assemble, …)",
+    "misc_residuals": "13 rows (scripture of Bik, alchemical onyx/hydrix, passage of abyss, crystal tool seed path, modified hats, invention perk ladder)",
+    "combat_adjacent_skilling": "9 rows (War's Blessing, Altar of Zaros, prayer switch network, UG milestones, salve, powder of penance)",
+    "diary_hygiene": "dropped morytania-legs-1..4 micro-splits; keep area-tasks ladder; drop fremennik-sea-boots equipment twin"
+  },
+  "before_after": {
+    "unlocks_before": 613,
+    "unlocks_after": 655,
+    "combo_labeled_before": 180,
+    "combo_labeled_after": 211
+  },
+  "gates": {
+    "research_tests": "10/10 pass",
+    "combo": "pass",
+    "name_dups": "pass"
+  },
+  "still_deferred": [
+    "Every Waiko chime consumable SKU (permanent unlocks only)",
+    "Every individual museum collection line (high-value collectors + chronote system done)",
+    "Combat BiS regional densify (out of skilling scope)"
+  ]
+}

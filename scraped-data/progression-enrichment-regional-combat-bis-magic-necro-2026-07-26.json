@@ -1,0 +1,704 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Regional densify for Magic and Necromancy combat BiS: high-end staff/wand chains, power and tank armour materials, Kerapac residual progression, Death Skull residual upgrades, Rasial gear, and style-critical accessories. Skips ids already present in data/research/regional-combat-unlocks.json (notably mage-arena:guthix-staff).",
+  "policy": {
+    "region_rule": "required_regions means every listed region contributes a mandatory base-game acquisition step. region_hints means the chain touches those regions but may have alternatives or unresolved League overrides.",
+    "league_rule": "Wiki Equilibrium League region badges on boss/item pages are preferred over geography alone when they disagree. Quest auto-completion and League passives are overlays — do not erase underlying item or boss geography.",
+    "combat_method_rule": "Support items are surfaced when they materially change Magic or Necromancy methods. Runic attuner is skilling-only and is intentionally omitted. Vestments of havoc are melee and are intentionally omitted.",
+    "duplicate_rule": "Do not re-emit mage-arena:guthix-staff / Claws of Guthix. Greater Concentrated Blast is separate Kerapac residual content and is included."
+  },
+  "equipment_additions": [
+    {
+      "id": "misthalin:fractured-staff-of-armadyl",
+      "name": "Fractured Staff of Armadyl",
+      "category": "Magic best-in-slot two-handed staff",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "95 Magic",
+        "95 Crafting to assemble (irreversible)",
+        "Kerapac, the bound hard mode for the three fractured pieces"
+      ],
+      "unlocks": [
+        "Fractured Armadyl symbol",
+        "Fractured stabilisation gem",
+        "Staff of Armadyl's fractured shaft",
+        "Instability special attack (crit lightning surges)",
+        "Surging Storm passive (+15–25% critical strike damage)"
+      ],
+      "effects": [
+        "Tier 95 two-handed Magic staff; common Magic BiS staff before Masterwork / Shard of Genesis Essence upgrades",
+        "Instability special costs 50% adrenaline with a 60s cooldown and grants 30s of Lightning Surge on Magic critical hits"
+      ],
+      "notes": "Wiki tags Kerapac league_region Misthalin (Nodon Front / EGWD Senntisten). Hard mode is mandatory for FSoA pieces; normal mode does not drop them. Skip Guthix staff (already catalogued as mage-arena:guthix-staff).",
+      "source_urls": [
+        "https://runescape.wiki/w/Fractured_Staff_of_Armadyl",
+        "https://runescape.wiki/w/Kerapac,_the_bound"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge",
+      "league_treatment": "Misthalin is the working Senntisten/EGWD region and matches the wiki Equilibrium badge. Keep quest gates (Desperate Measures etc.) as overlays rather than second elective regions."
+    },
+    {
+      "id": "misthalin:kerapac-magic-residuals",
+      "name": "Kerapac Magic residual progression",
+      "category": "Magic ability codex gloves and scripture residual",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Kerapac, the bound (normal or hard mode) for non-FSoA uniques"
+      ],
+      "unlocks": [
+        "Greater Concentrated Blast ability codex",
+        "Kerapac's wrist wraps (t85 Magic power gloves; Combust / Dragon Breath boost)",
+        "Scripture of Jas and Manuscript of Jas pages"
+      ],
+      "effects": [
+        "Greater Concentrated Blast is a core Magic basic upgrade used with FSoA / dual-wield crit setups",
+        "Wrist wraps are a strong mid-to-high Magic glove option and appear in many FSoA crit stacks",
+        "Scripture of Jas is a high-end pocket-slot Magic damage book"
+      ],
+      "notes": "Residual Magic value from Kerapac even when a planner already tracks FSoA hard-mode pieces. GConc is not covered by mage-arena:guthix-staff.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kerapac,_the_bound",
+        "https://runescape.wiki/w/Greater_Concentrated_Blast_ability_codex",
+        "https://runescape.wiki/w/Kerapac%27s_wrist_wraps"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "asgarnia:wand-of-the-praesul",
+      "name": "Wand of the praesul and Imperium core",
+      "category": "Magic dual-wield best-in-slot residual weapons",
+      "region_hint": "asgarnia",
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "92 Magic",
+        "Nex: Angel of Death in the Ancient Prison (GWD1 Zaros wing)"
+      ],
+      "unlocks": [
+        "Wand of the praesul (t92 main-hand Magic)",
+        "Imperium core (t92 off-hand Magic)",
+        "Praesul codex for Affliction / Desolation / Malevolence / Ruination prayer upgrades"
+      ],
+      "effects": [
+        "Tier 92 dual-wield Magic weapons; second-strongest one-handed Magic weapons behind Sanctum Roar / Ode before Innate Mastery",
+        "Praesul codex upgrades Torment into Affliction (Magic accuracy/damage prayer line)"
+      ],
+      "notes": "Wiki tags Nex, Angel of Death league_region Asgarnia. Residual geography for praesul dual-wield after FSoA / Masterwork staff paths are considered.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wand_of_the_praesul",
+        "https://runescape.wiki/w/Imperium_core",
+        "https://runescape.wiki/w/Nex,_Angel_of_Death"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "asgarnia:seismic-weapons",
+      "name": "Seismic wand and singularity",
+      "category": "Magic dual-wield mid-high residual weapons",
+      "region_hint": "asgarnia",
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Magic",
+        "Vorago borehole kills for seismic pieces"
+      ],
+      "unlocks": [
+        "Seismic wand",
+        "Seismic singularity"
+      ],
+      "effects": [
+        "Tier 90 dual-wield Magic weapons with Deep Impact special attack",
+        "Still a practical Magic dual-wield step and Masterwork staff essence pressure source"
+      ],
+      "notes": "Wiki tags tectonic energy (and Vorago) league_region Asgarnia. Residual dual-wield geography when praesul / Sanctum duals are out of reach.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seismic_wand",
+        "https://runescape.wiki/w/Seismic_singularity",
+        "https://runescape.wiki/w/Vorago"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "asgarnia:tectonic-armour",
+      "name": "Tectonic robe armour",
+      "category": "Magic power armour residual",
+      "region_hint": "asgarnia",
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "91–93 Runecrafting for mask / bottom / top",
+        "Tectonic energy from Vorago",
+        "Stones of binding (Wizards' Guild or Bandit Duty Free)"
+      ],
+      "unlocks": [
+        "Tectonic mask",
+        "Tectonic robe top",
+        "Tectonic robe bottom",
+        "Fracture Point critical-strike set passive (post-2025 power armour update)"
+      ],
+      "effects": [
+        "Tier 90 Magic power armour built from Vorago tectonic energy",
+        "Base set for elite tectonic upgrades"
+      ],
+      "notes": "Primary hard region is Asgarnia via Vorago energy (wiki Equilibrium badge). Stones of binding can come from Yanille Wizards' Guild (Kandarin) or Bandit Duty Free (Forinthry); treat stone shops as pressure, not a second hard gate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tectonic_energy",
+        "https://runescape.wiki/w/Tectonic_robe_armour",
+        "https://runescape.wiki/w/Vorago"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "cross-region:elite-tectonic-armour",
+      "name": "Elite tectonic robe armour",
+      "category": "Magic best-in-slot power armour cross-region chain",
+      "region_hints": ["asgarnia", "forinthry"],
+      "required_regions": ["asgarnia", "forinthry"],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Asgarnia: tectonic armour pieces and tectonic energy (Vorago)",
+        "Asgarnia: Virtus equipment broken into Praesulic essence (magic) at a dragonkin anvil (Nex/GWD Virtus)",
+        "Forinthry: draconic energy (Dragonkin Laboratory / Black Stone Dragon / ED chests)",
+        "Forinthry: chaotic remnant from Daemonheim Rewards (untradeable)",
+        "91–93 Runecrafting and stones of binding"
+      ],
+      "unlocks": [
+        "Elite tectonic mask / robe top / robe bottom",
+        "Elite Fracture Point: +2% critical strike chance per piece worn"
+      ],
+      "effects": [
+        "Tier 92 Magic power armour; standard high-end Magic armour before Tumeken's resplendence",
+        "Core FSoA crit-stack armour alongside Biting / channelled basics"
+      ],
+      "notes": "True multi-region no-trade chain: Vorago tectonic + Virtus/praesulic are Asgarnia; draconic energy and chaotic remnant are Forinthry/Daemonheim. Do not collapse to Asgarnia-only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elite_tectonic_robe_armour",
+        "https://runescape.wiki/w/Draconic_energy",
+        "https://runescape.wiki/w/Praesulic_essence_(magic)",
+        "https://runescape.wiki/w/Dragonkin_Laboratory"
+      ],
+      "confidence": "confirmed_current_wiki_cross_region_chain",
+      "league_treatment": "Display Asgarnia + Forinthry as both required for a self-sufficient elite tectonic craft."
+    },
+    {
+      "id": "desert:inquisitor-staff",
+      "name": "Inquisitor staff",
+      "category": "Magic anti-melee niche BiS staff",
+      "region_hint": "desert",
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Magic to wield",
+        "93 Runecrafting (boostable) to assemble",
+        "114 Archaeology (boostable) for the praetorian staff component path",
+        "Kharid-et Dig Site inquisitor staff pieces and praetorian staff materials"
+      ],
+      "unlocks": [
+        "Inquisitor staff (t80 with Dark Wither passive)",
+        "Optional Enchantment of affliction upgrade (+12.5% → +17.5% damage vs melee-classed)"
+      ],
+      "effects": [
+        "+12.5% damage and +10% hit chance against melee-classed enemies (up to +17.5% damage with enchantment)",
+        "+5 affinity when using the correct elemental spell weakness",
+        "Effective damage tiers in the mid-90s to ~105 against melee bosses despite t80 base"
+      ],
+      "notes": "Self-sufficient acquisition is Desert Archaeology at Kharid-et (wiki lists Desert Equilibrium badge on praetorian remains hotspots). Extremely strong Magic niche staff for melee-classed bosses; not a general replacement for FSoA.",
+      "source_urls": [
+        "https://runescape.wiki/w/Inquisitor_staff",
+        "https://runescape.wiki/w/Kharid-et_Dig_Site",
+        "https://runescape.wiki/w/Praetorian_staff"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "misthalin:cryptbloom-armour",
+      "name": "Cryptbloom armour",
+      "category": "Magic tank armour residual",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence / Magic",
+        "Croesus Front kills for incomplete pieces and croesus flakes"
+      ],
+      "unlocks": [
+        "Cryptbloom helm / top / bottoms / gloves / boots",
+        "Nature's Envoy set bonus (magic and melee damage reduction, fungal shield, deathspores)"
+      ],
+      "effects": [
+        "Tier 90 Magic tank armour; primary Magic tank set for Animate Dead methods",
+        "Stacks with Animate Dead for heavy magic/melee damage reduction"
+      ],
+      "notes": "Wiki tags Croesus league_region Misthalin (Croesus Front / EGWD Senntisten).",
+      "source_urls": [
+        "https://runescape.wiki/w/Cryptbloom_armour",
+        "https://runescape.wiki/w/Croesus"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "desert:staff-of-sliske",
+      "name": "Staff of Sliske",
+      "category": "Magic two-handed residual staff",
+      "region_hint": "desert",
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "92 Magic",
+        "Telos, the Warden for dormant staff of Sliske and the three anima orbs"
+      ],
+      "unlocks": [
+        "Staff of Sliske",
+        "From the Shadows special attack (shadow clone hits)"
+      ],
+      "effects": [
+        "Tier 92 two-handed Magic staff with a 100% hit-chance shadow clone special",
+        "Residual Magic staff option and Masterwork staff essence pressure"
+      ],
+      "notes": "Heart of Gielinor / Telos maps to Desert under current Equilibrium major-upgrade taxonomy (GWD2 / Heart).",
+      "source_urls": [
+        "https://runescape.wiki/w/Staff_of_Sliske",
+        "https://runescape.wiki/w/Telos,_the_Warden"
+      ],
+      "confidence": "confirmed_wiki_content_region_inferred_heart_of_gielinor_desert"
+    },
+    {
+      "id": "misthalin:roar-of-awakening-ode-to-deceit",
+      "name": "Roar of Awakening and Ode to Deceit",
+      "category": "Magic dual-wield best-in-slot weapons",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "95 Magic",
+        "Sanctum of Rebirth / Nakatra, Devourer Eternal for both weapons",
+        "Optional Shard of Genesis Essence for Innate Mastery tier-100 upgrade"
+      ],
+      "unlocks": [
+        "Roar of Awakening (main-hand)",
+        "Ode to Deceit (off-hand)",
+        "Song of Destruction set bonus (Essence Corruption stacks)",
+        "Soulfire special attack"
+      ],
+      "effects": [
+        "Tier 95 Magic dual-wield weapons with damage-over-time focused set passive",
+        "Strongest Magic dual-wield pair before Masterwork staff two-hand paths"
+      ],
+      "notes": "Wiki tags Nakatra / Roar of Awakening drop sources league_region Misthalin (Sanctum under City of Um / Underworld working taxonomy).",
+      "source_urls": [
+        "https://runescape.wiki/w/Roar_of_Awakening",
+        "https://runescape.wiki/w/Ode_to_Deceit",
+        "https://runescape.wiki/w/Sanctum_of_Rebirth"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "kandarin:magic-cape",
+      "name": "Magic cape residual",
+      "category": "Magic skillcape residual combat equipment",
+      "region_hint": "kandarin",
+      "required_regions": ["kandarin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "99 Magic",
+        "Purchase from the Robe Store owner in the Wizards' Guild (Yanille)"
+      ],
+      "unlocks": [
+        "Magic cape / Magic master cape",
+        "Access to the Wizards' Guild robe store (also sells stones of binding for tectonic crafts)"
+      ],
+      "effects": [
+        "Skillcape style bonus and perks for Magic methods",
+        "Same shop residual also supplies stones of binding used in tectonic / elite tectonic crafts"
+      ],
+      "notes": "Yanille Wizards' Guild is Kandarin geography. Residual Magic cape acquisition is region-bound even though 99 Magic itself is not.",
+      "source_urls": [
+        "https://runescape.wiki/w/Magic_cape",
+        "https://runescape.wiki/w/Wizards%27_Guild",
+        "https://runescape.wiki/w/Robe_Store_owner"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "misthalin:death-guard-skull-lantern",
+      "name": "Death guard and Skull lantern residual progression",
+      "category": "Necromancy weapon residual chain",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Kili Row completion for upgrade tutorials",
+        "Soul forge in the City of Um",
+        "Lesser / ensouled / greater ensouled bars plus spirit, bone, flesh, and miasma runes for each tier",
+        "Smithing level equal to weapon tier minus 5 for each craft"
+      ],
+      "unlocks": [
+        "Death guard tiers 10–90 (main-hand siphon)",
+        "Skull lantern tiers 10–90 (off-hand)",
+        "Death Grasp special attack from tier 70+ death guards"
+      ],
+      "effects": [
+        "Core Necromancy dual-wield progression up to tier 90 before Rasial weapons",
+        "Death Grasp consumes Necrosis stacks for high burst (up to ~885–975% at 12 stacks)"
+      ],
+      "notes": "City of Um / Underworld is working Misthalin taxonomy. Residual ladder is the Necromancy self-craft path; Rasial t95 weapons supersede end of ladder but do not remove the Um upgrade hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Death_guard",
+        "https://runescape.wiki/w/Skull_lantern",
+        "https://runescape.wiki/w/Kili_Row",
+        "https://runescape.wiki/w/City_of_Um"
+      ],
+      "confidence": "confirmed_current_wiki_working_misthalin_city_of_um_taxonomy"
+    },
+    {
+      "id": "misthalin:rasial-first-necromancer-equipment",
+      "name": "First Necromancer's equipment (Rasial)",
+      "category": "Necromancy best-in-slot weapons and power armour",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "95 Necromancy and 95 Defence for robes",
+        "Rasial, the First Necromancer kills for each piece"
+      ],
+      "unlocks": [
+        "Omni guard (t95 main-hand)",
+        "Soulbound lantern (t95 off-hand)",
+        "Robes of the First Necromancer (crown, top, bottom, hand wrap, foot wraps)"
+      ],
+      "effects": [
+        "Omni guard Death Spark passive doubles every fifth basic attack; Death Essence special readies Death Spark and extends spark generation",
+        "Soulbound lantern Soul Siphon raises maximum Residual Soul stacks by 2",
+        "Robes set bonus increases conjured-spirit basic damage and duration per piece"
+      ],
+      "notes": "Wiki tags Rasial league_region Misthalin (City of Um / Rasial's Citadel). This is the Necromancy t95 BiS weapon and power-armour package.",
+      "source_urls": [
+        "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+        "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+        "https://runescape.wiki/w/Omni_guard",
+        "https://runescape.wiki/w/Soulbound_lantern"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "misthalin:necromancy-conjure-residuals",
+      "name": "Necromancy conjure residual unlocks",
+      "category": "Necromancy conjure ability residual progression",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Necromancy skill progression and City of Um ritual / quest chain",
+        "Ability unlocks through the Necromancy tutorial and talent tree rather than elective-region bosses"
+      ],
+      "unlocks": [
+        "Conjure Skeleton Warrior",
+        "Conjure Putrid Zombie",
+        "Conjure Vengeful Ghost",
+        "Conjure Phantom Guardian",
+        "Command variants for each conjure"
+      ],
+      "effects": [
+        "Conjures are central Necromancy DPS and utility; First Necromancer robes scale conjure basic damage and duration",
+        "Residual Soul economy depends on conjure + Soul Sap / Volley loops"
+      ],
+      "notes": "Conjure residual is City of Um / Necromancy hub content under Misthalin working taxonomy. Record as residual method unlocks, not as a tradeable boss drop set.",
+      "source_urls": [
+        "https://runescape.wiki/w/Conjuration",
+        "https://runescape.wiki/w/City_of_Um",
+        "https://runescape.wiki/w/First_Necromancer%27s_equipment"
+      ],
+      "confidence": "confirmed_current_wiki_working_misthalin_city_of_um_taxonomy"
+    },
+    {
+      "id": "anachronia:occultists-ring",
+      "name": "Occultist's ring",
+      "category": "Necromancy best-in-slot ring residual",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Osseous (Rex Matriarchs family) kills for the Occultist's ring drop"
+      ],
+      "unlocks": [
+        "Occultist's ring"
+      ],
+      "effects": [
+        "Strongest Necromancy ring (tied with Zorgoth's soul ring)",
+        "Infliction passive: 10% chance for Necromancy attacks to generate 2 Necrosis stacks"
+      ],
+      "notes": "Wiki tags Osseous drop sources league_region Anachronia. Unlike other Matriarch rings it does not need a heart or lower-tier ring trade-up.",
+      "source_urls": [
+        "https://runescape.wiki/w/Occultist%27s_ring",
+        "https://runescape.wiki/w/Osseous",
+        "https://runescape.wiki/w/Rex_Matriarchs"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "anachronia:channellers-ring",
+      "name": "Channeller's ring",
+      "category": "Magic best-in-slot ring residual",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Rex Matriarchs (Heart of the Seer path) for the Channeller's ring"
+      ],
+      "unlocks": [
+        "Channeller's ring"
+      ],
+      "effects": [
+        "Preferred Magic ring for channelled abilities (Concentrated Blast / Smoke Tendrils) and FSoA crit stacks",
+        "Often preferred over Reaver's ring when channelled abilities dominate the rotation"
+      ],
+      "notes": "Anachronia Matriarch residual for Magic BiS accessories. Complements FSoA + elite tectonic crit packages.",
+      "source_urls": [
+        "https://runescape.wiki/w/Channeller%27s_ring",
+        "https://runescape.wiki/w/Rex_Matriarchs",
+        "https://runescape.wiki/w/Fractured_Staff_of_Armadyl"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "anachronia:reavers-ring",
+      "name": "Reaver's ring",
+      "category": "hybrid critical-strike ring residual",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Rex Matriarchs (Heart of the Berserker path) for the Reaver's ring"
+      ],
+      "unlocks": [
+        "Reaver's ring"
+      ],
+      "effects": [
+        "Critical-strike focused ring used in Magic when accuracy is not the bottleneck and non-channelled abilities dominate",
+        "Also relevant residual for hybrid crit setups"
+      ],
+      "notes": "Same Anachronia Matriarch residual family as Occultist's / Channeller's. Record separately so Magic accessory pressure is visible.",
+      "source_urls": [
+        "https://runescape.wiki/w/Reaver%27s_ring",
+        "https://runescape.wiki/w/Rex_Matriarchs"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "misthalin:necromancy-tank-armour-residual",
+      "name": "Deathwarden / Deathdealer armour residual",
+      "category": "Necromancy crafted armour residual progression",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Kili Row and City of Um soul-forge crafts",
+        "Ensouled cloth / thread / bars progression matching armour tier"
+      ],
+      "unlocks": [
+        "Deathwarden robe armour ladder (tank)",
+        "Deathdealer robe armour ladder (power) up to t90"
+      ],
+      "effects": [
+        "Self-crafted Necromancy armour path before Rasial t95 robes",
+        "Required craft-once gate mirrors Death guard / Skull lantern equip rules"
+      ],
+      "notes": "Residual Necromancy armour ladder is Um infrastructure, not an elective-region boss. Rasial robes supersede t95 power; mid-tier ladder still gates early/mid Necromancy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deathwarden_robe_armour",
+        "https://runescape.wiki/w/Deathdealer_robe_armour",
+        "https://runescape.wiki/w/Kili_Row"
+      ],
+      "confidence": "confirmed_current_wiki_working_misthalin_city_of_um_taxonomy"
+    },
+    {
+      "id": "misthalin:scripture-of-jas",
+      "name": "Scripture of Jas",
+      "category": "Magic pocket-slot residual scripture",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Kerapac, the bound unique drop",
+        "Manuscript of Jas pages for charging"
+      ],
+      "unlocks": [
+        "Scripture of Jas"
+      ],
+      "effects": [
+        "Elder God book pocket slot used in high-end Magic setups",
+        "Pairs with FSoA / dual-wield Magic crit packages"
+      ],
+      "notes": "Split from the broader Kerapac residual row so pocket-slot planning is visible without forcing FSoA hard mode.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Jas",
+        "https://runescape.wiki/w/Kerapac,_the_bound"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "misthalin:scripture-of-bik",
+      "name": "Scripture of Bik",
+      "category": "Magic pocket-slot residual scripture",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Croesus unique drop"
+      ],
+      "unlocks": [
+        "Scripture of Bik"
+      ],
+      "effects": [
+        "Elder God book pocket slot; Cryptbloom-adjacent residual from the same Misthalin front"
+      ],
+      "notes": "Croesus Front residual pocket upgrade alongside Cryptbloom tank pieces.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Bik",
+        "https://runescape.wiki/w/Croesus"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "asgarnia:virtus-praesulic-essence",
+      "name": "Virtus equipment and Praesulic essence residual",
+      "category": "Magic armour component residual",
+      "region_hint": "asgarnia",
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Nex (or Nex-linked GWD1 Zaros content) for Virtus armour pieces",
+        "Dragonkin anvil breakdown into Praesulic essence (magic)"
+      ],
+      "unlocks": [
+        "Virtus equipment",
+        "Praesulic essence (magic) for elite tectonic crafts"
+      ],
+      "effects": [
+        "Virtus remains a mid-high Magic power armour set",
+        "Essence is a hard input into elite tectonic — Asgarnia pressure beyond Vorago energy alone"
+      ],
+      "notes": "Asgarnia residual that feeds both direct Virtus use and the elite tectonic cross-region chain.",
+      "source_urls": [
+        "https://runescape.wiki/w/Virtus_equipment",
+        "https://runescape.wiki/w/Praesulic_essence_(magic)",
+        "https://runescape.wiki/w/Nex"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    },
+    {
+      "id": "forinthry:draconic-energy-magic",
+      "name": "Draconic energy Magic residual",
+      "category": "Magic armour material residual",
+      "region_hint": "forinthry",
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Dragonkin Laboratory / Black Stone Dragon / elite dungeon chests for draconic energy"
+      ],
+      "unlocks": [
+        "Draconic energy stock for elite tectonic crafts and elite tectonic repair patches"
+      ],
+      "effects": [
+        "Mandatory material for elite tectonic armour and repair patches",
+        "Also used with tectonic energy + summerdown wool + black stone hearts for repair-patch crafts"
+      ],
+      "notes": "Forinthry residual side of the elite tectonic chain. Dragonkin Laboratory is Wilderness/Daemonheim geography under Forinthry.",
+      "source_urls": [
+        "https://runescape.wiki/w/Draconic_energy",
+        "https://runescape.wiki/w/Dragonkin_Laboratory",
+        "https://runescape.wiki/w/Elite_tectonic_robe_armour"
+      ],
+      "confidence": "confirmed_current_wiki_region_geography"
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "misthalin:kerapac-hard-mode-fsoa-farm",
+      "name": "Kerapac hard mode FSoA farm residual",
+      "category": "Magic best-in-slot staff farming activity",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Access to the Nodon Front colosseum",
+        "Hard mode instance for fractured staff pieces"
+      ],
+      "unlocks": [
+        "Practical self-sufficient route to Fractured Staff of Armadyl pieces",
+        "Parallel rolls on GConc, wrist wraps, and Scripture of Jas"
+      ],
+      "notes": "Activity-facing residual for planners that separate boss farms from finished equipment rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kerapac,_the_bound",
+        "https://runescape.wiki/w/Fractured_Staff_of_Armadyl"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    },
+    {
+      "id": "misthalin:rasial-necro-bis-farm",
+      "name": "Rasial Necromancy BiS farm residual",
+      "category": "Necromancy best-in-slot farming activity",
+      "region_hint": "misthalin",
+      "required_regions": ["misthalin"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Necromancy questline progression to unlock Rasial",
+        "City of Um / Rasial's Citadel access"
+      ],
+      "unlocks": [
+        "Omni guard, Soulbound lantern, and First Necromancer robes as a single farm target"
+      ],
+      "notes": "Activity residual for the full Necromancy t95 package under Misthalin.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+        "https://runescape.wiki/w/First_Necromancer%27s_equipment"
+      ],
+      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
+    }
+  ],
+  "intentionally_omitted": [
+    {
+      "id": "mage-arena:guthix-staff",
+      "reason": "Already present in regional-combat-unlocks.json; user instructed to skip Gconc/gstaff mage-arena present entries for Guthix staff."
+    },
+    {
+      "id": "runic-attuner",
+      "reason": "Skilling off-hand for Runecrafting only; not combat-relevant despite Gate of Elidinis drop."
+    },
+    {
+      "id": "vestments-of-havoc",
+      "reason": "Melee power armour from Zamorak, Lord of Chaos — not Necromancy or Magic BiS."
+    },
+    {
+      "id": "omens-outfit",
+      "reason": "Vorago cosmetic/title track residual; not combat equipment BiS."
+    }
+  ],
+  "summary": {
+    "row_count_equipment": 22,
+    "row_count_activity": 2,
+    "total_new_rows": 24,
+    "styles": ["magic", "necromancy"],
+    "regions_touched": [
+      "misthalin",
+      "asgarnia",
+      "desert",
+      "forinthry",
+      "kandarin",
+      "anachronia"
+    ],
+    "wiki_league_badges_used": [
+      "Kerapac → Misthalin",
+      "Croesus → Misthalin",
+      "Rasial → Misthalin",
+      "Nakatra/Roar of Awakening → Misthalin",
+      "Nex Angel of Death → Asgarnia",
+      "Vorago tectonic energy → Asgarnia"
+    ]
+  }
+}

@@ -1,0 +1,402 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Continue densifying automatic/starting regions Havenhythe (~32 by regionHints) and Karamja (~58 by regionHints) that still lag elective hubs. Emit MISSING high-value permanent skilling unlocks only: Havenhythe residual hubs (Old Meats), Mining (Highweald Ruins / Deserted / Limestone — highweald-mining stays thin geography pointer), Fishing beyond fish farm + giant crayfish; Karamja Habitat residual (Jadinko Favour offering stone, witchdoctor mask teleport), base juju family residual (perfect-juju already first-class), overgrown idols (Karamja site; Anachronia row does not replace it), Brimhaven ticket-exchange residual, gemstone cavern residual, TzHaar onyx gem store residual. Nature altar / Habitat hub / perfect juju / tzhaar-city-skilling-hub already thick enough — do not re-emit.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "Grep-confirmed ABSENT from data/research/regional-skilling-unlocks.json id namespace before write. SKIP present: all havenhythe: wave5/wave4 ids (empowered-summoning-obelisks, jackalope-*, shaman-outfit, shrine-*, fang-of-mohegan, apex-hide-*, giant-crayfish-fishing, wendlewick-*, marigold-*, highweald-mining, amberfell-hub, moonrise-dig-site, birdhouses, canoe-network, creeping-ivy, eternal-magic-nursery, spirit-moths, volatile-chinchompas, tear-of-inanna-*, ring-of-kayazu, modified-shamans-headdress, eastfold-farm, altar-of-inanna, trader-woes-bank-chest); all karamja: live ids (herblore-habitat, papa-mambo-shop, juju-farming-potion-path, perfect-juju-*, witchdoctor-camo-outfit, nature-altar, tzhaar-city-skilling-hub, brimhaven-agility-arena, pirates-hook, shilo-gem-mine, area-tasks-karamja-gloves, curly-roots, hardwood-grove, etc.).",
+    "no_trade_rule": "Ironman permanent account unlocks, region-gated production hubs, and self-supply craft/shop paths.",
+    "rate_rule": "No invented XP/hour as planner truths. Unlock state, costs, effects, and region pressure only."
+  },
+  "already_present_checked": [
+    "havenhythe:highweald-mining",
+    "havenhythe:wendlewick-fish-farm",
+    "havenhythe:giant-crayfish-fishing",
+    "havenhythe:marigold-farm-patches",
+    "havenhythe:eternal-magic-nursery",
+    "havenhythe:shrine-of-inanna-summoning-hub",
+    "havenhythe:empowered-summoning-obelisks",
+    "havenhythe:shaman-outfit",
+    "havenhythe:amberfell-hub",
+    "karamja:herblore-habitat",
+    "karamja:papa-mambo-shop",
+    "karamja:juju-farming-potion-path",
+    "karamja:perfect-juju-potions",
+    "karamja:perfect-juju-recipe-hub",
+    "karamja:witchdoctor-camo-outfit",
+    "karamja:nature-altar",
+    "karamja:tzhaar-city-skilling-hub",
+    "karamja:brimhaven-agility-arena",
+    "karamja:pirates-hook",
+    "karamja:shilo-gem-mine",
+    "karamja:jadinko-lair-curly-roots",
+    "anachronia:overgrown-idols"
+  ],
+  "activity_additions": [
+    {
+      "id": "havenhythe:highweald-ruins-mine",
+      "name": "Highweald Ruins mine (necrite / phasmatite / platinum / havensilver)",
+      "category": "regional Mining infrastructure residual",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Partial completion of Hearts of Sanguine so Gidon clears the ancient boulder and opens the Highweald Ruins cave",
+        "Havenhythe access via Visions of Havenhythe progression",
+        "104 Mining (boostable) and members for primeval slabs that unlock the north-east platinum rocks (Oh Yeah! achievement)"
+      ],
+      "unlocks": [
+        "Underground Highweald Ruins mine: 4 necrite, 4 phasmatite, 4 platinum (after slabs), 3 havensilver rocks",
+        "Starting-region high-tier Mining geography beyond the surface Highweald copper/tin/iron/coal/silver site",
+        "Permanent platinum chamber access once primeval slabs broken (Oh Yeah!)"
+      ],
+      "notes": "Residual depth for havenhythe:highweald-mining (thin geography pointer only). Prefer this id for ore tables and Hearts of Sanguine gate; prefer highweald-mining for regional map checklist only. Do not invent XP/h.",
+      "source_urls": [
+        "https://runescape.wiki/w/Highweald_Ruins_mine",
+        "https://runescape.wiki/w/Highweald_Ruins",
+        "https://runescape.wiki/w/Hearts_of_Sanguine",
+        "https://runescape.wiki/w/Oh_Yeah!",
+        "https://runescape.wiki/w/Primeval_slabs"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Mining. Hearts of Sanguine is the permanent gate.",
+      "links_existing_ids": [
+        "havenhythe:highweald-mining",
+        "havenhythe:canoe-network",
+        "havenhythe:amberfell-hub"
+      ]
+    },
+    {
+      "id": "havenhythe:wendlewick-deserted-mine",
+      "name": "Wendlewick Deserted Mine (clay and uncommon gems)",
+      "category": "regional Mining infrastructure residual",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Partial completion of Visions of Havenhythe",
+        "Path to Deserted Mine south Havenhythe (canoe Grotto station optional)"
+      ],
+      "unlocks": [
+        "3 clay rocks and 3 uncommon gem rocks at the named Deserted Mine landmark",
+        "Early Crafting clay + gem supply colocated with giant crayfish / big-net fishing spots",
+        "Birdhouse plot and dilapidated canoe station logistics at the same sub-area"
+      ],
+      "notes": "Fills the ore table the highweald-mining blob never listed. Prefer this id for Deserted Mine ore access; keep highweald-mining as the umbrella geography row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wendlewick_Deserted_Mine",
+        "https://runescape.wiki/w/Deserted_Mine",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Uncommon_gem_rock"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Mining/Crafting supply.",
+      "links_existing_ids": [
+        "havenhythe:highweald-mining",
+        "havenhythe:canoe-network",
+        "havenhythe:giant-crayfish-fishing",
+        "havenhythe:birdhouses"
+      ]
+    },
+    {
+      "id": "havenhythe:wendlewick-limestone-mine",
+      "name": "Wendlewick Limestone Mine",
+      "category": "regional Mining and Construction supply residual",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Partial completion of Visions of Havenhythe",
+        "Mine north of Wendlewick"
+      ],
+      "unlocks": [
+        "5 limestone rocks north of Wendlewick",
+        "Local limestone for Construction (including Wendlewick lodestone build step limestone brick) without leaving the starting region"
+      ],
+      "notes": "Third Mining residual under thin highweald-mining. Distinct site from Deserted Mine and Highweald Ruins. Pair with havenhythe:wendlewick-lodestone Construction materials.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wendlewick_Limestone_Mine",
+        "https://runescape.wiki/w/Wendlewick",
+        "https://runescape.wiki/w/Wendlewick_lodestone",
+        "https://runescape.wiki/w/Limestone_rock"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe limestone supply.",
+      "links_existing_ids": [
+        "havenhythe:wendlewick-lodestone",
+        "havenhythe:highweald-mining",
+        "havenhythe:canoe-network"
+      ]
+    },
+    {
+      "id": "havenhythe:old-meats",
+      "name": "Old Meats (Hollow Hill meat shop)",
+      "category": "permanent regional food and farm-supply shop",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access; Hollow Hill north of Wendlewick",
+        "Coins for Meat trader stock"
+      ],
+      "unlocks": [
+        "Permanent ironman meat packs: raw rabbit / beef / bird meat packs plus individual raw rabbit, beef, bird, rat, bear, chicken",
+        "Cooked rabbit / cooked meat / cooked chicken stock for early food",
+        "Starting-region Ranch Out of Time / Player-Owned Farm meat top-up alternative to Kandarin Oo'glog Fresh Meat"
+      ],
+      "notes": "Hub residual: ironman dinosaur/dragon food bottlenecks cite Havenhythe Old Meats. Prefer this id for the shop; prefer havenhythe:big-game-hunter for BGH meat drops. Do not invent pack sizes beyond wiki stock table.",
+      "source_urls": [
+        "https://runescape.wiki/w/Old_Meats",
+        "https://runescape.wiki/w/Meat_trader",
+        "https://runescape.wiki/w/Hollow_Hill",
+        "https://runescape.wiki/w/Havenhythe"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe meat shop. Anachronia Ranch pressure is optional consumer, not a second home region.",
+      "links_existing_ids": [
+        "havenhythe:big-game-hunter",
+        "havenhythe:amberfell-hub",
+        "kandarin:oo-glog-spa"
+      ]
+    },
+    {
+      "id": "havenhythe:open-water-fishing-spots",
+      "name": "Havenhythe open-water fishing spots (beyond fish farm)",
+      "category": "regional Fishing infrastructure residual",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access via Visions of Havenhythe",
+        "Fishing gear for the relevant spot type (net/bait, cage/harpoon, lure/bait, big net/harpoon, crayfish cage)"
+      ],
+      "unlocks": [
+        "Named open-water spots: big net/harpoon south of Deserted Mine; lure/bait in Amberfell and north of Blighted Cave; cage/harpoon south of Shrine of Inanna and west Wendlewick beach; crayfish south of shrine and in Wendlewick; small net/bait west Wendlewick beach",
+        "Passive fishing ladder independent of multi-pool fish farm management",
+        "Complements giant crayfish spots without re-emitting farm pool construction"
+      ],
+      "notes": "wendlewick-fish-farm is thin (multi-pool only) and giant-crayfish-fishing is the named high fish. This row is the residual open-water network for early/mid self-supply. No invented XP/h.",
+      "source_urls": [
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Wendlewick_fish_farm",
+        "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)",
+        "https://runescape.wiki/w/Fishing_spot_(big_fishing_net,_harpoon)",
+        "https://runescape.wiki/w/Fishing_spot_(cage,_harpoon)"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Fishing geography.",
+      "links_existing_ids": [
+        "havenhythe:wendlewick-fish-farm",
+        "havenhythe:giant-crayfish-fishing",
+        "havenhythe:wendlewick-deserted-mine",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:amberfell-hub"
+      ]
+    },
+    {
+      "id": "karamja:overgrown-idols",
+      "name": "Karamja overgrown idols (Gara-Dul)",
+      "category": "Woodcutting permanent method and temporary buff infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "81 Woodcutting",
+        "Access to Karamja idol sites (near Jadinko Lair / Habitat approach; Max Guild Overgrown Idols skill portal targets the Karamja set)"
+      ],
+      "unlocks": [
+        "Leisurely Woodcutting: chop outer light jungle vine then inner medium/dense vines then idol (hardness 5/10/15/25 successful cuts; 315 base WC XP per successful cut)",
+        "On clear: random 5-minute (partial) or 15-minute (full — 4+ successful chops including idol attempt) Woodcutting buff — double cut rate, +10% success, +10% double cut, +5% XP, or auto-bank logs",
+        "Investigate cleared Karamjan idol for The End of Gara-Dul journal (Meeting your Idols achievement / Master Quest Cape path)",
+        "Crystallise and log-splitting scrimshaw do not work; Furnace perk does not apply; +10% sentinel fragment chance on vines/idol"
+      ],
+      "notes": "Audit residual: anachronia:overgrown-idols footnotes Karamja dual-site only. This is the first-class Karamja row — Gara-Dul journal and Max Guild portal are Karamja-rooted. Prefer Anachronia row for Roar of Osseous / compacted resources; prefer this id for Meeting your Idols and automatic-early WC buffs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Overgrown_idol",
+        "https://runescape.wiki/w/Meeting_your_Idols",
+        "https://runescape.wiki/w/The_End_of_Gara-Dul",
+        "https://runescape.wiki/w/Overgrown_idol_cut_rate"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja for Gara-Dul / portal site. Anachronia is optional alternate idol geography only.",
+      "links_existing_ids": [
+        "anachronia:overgrown-idols",
+        "karamja:jadinko-lair-curly-roots",
+        "karamja:herblore-habitat",
+        "cross-region:natures-sentinel-outfit"
+      ]
+    },
+    {
+      "id": "karamja:jadinko-favour-offering-stone",
+      "name": "Jadinko Favour offering stone",
+      "category": "Habitat residual seed and spiritbag infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "Jadinko Lair access (south-eastern Karamja; speak to Dotmatrix at first entry)",
+        "Earn Jadinko Favour: burn curly roots on dry-patch firepits (2 favour; inferno adze auto-burn grants none), light firepits (3), chop mutated roots (2), or kill mutated jadinkos (3/7/10 by tier)",
+        "Cap 2000 Jadinko Favour — spend near cap"
+      ],
+      "unlocks": [
+        "Spend favour at the offering stone east of Jadinko Queen: random mix (10 favour), fruits only (13), or seeds + juju teleport spiritbags (40 per seed / 80 per bag)",
+        "Ironman Habitat seed top-up path independent of Papa Mambo coin stock (seed pool mirrors currently attracted surface jadinkos)",
+        "Juju teleport spiritbag supply for Habitat teleports without witchdoctor mask",
+        "Deposit box via 40 Woodcutting shortcut past the Queen for banking favour rewards"
+      ],
+      "notes": "Habitat residual: curly-roots and herblore-habitat only footnote favour. Prefer this id for favour economy; prefer curly-roots for FM/WC method; prefer papa-mambo-shop for coin seed stock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Offering_stone",
+        "https://runescape.wiki/w/Jadinko_Favour",
+        "https://runescape.wiki/w/Jadinko_Lair",
+        "https://runescape.wiki/w/Juju_teleport_spiritbag"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja Habitat/Lair currency loop.",
+      "links_existing_ids": [
+        "karamja:jadinko-lair-curly-roots",
+        "karamja:herblore-habitat",
+        "karamja:papa-mambo-shop",
+        "karamja:witchdoctor-camo-outfit"
+      ]
+    },
+    {
+      "id": "karamja:witchdoctor-mask",
+      "name": "Witchdoctor mask (Habitat teleport)",
+      "category": "Hunter–Farming–Herblore travel equipment residual",
+      "region_hint": "karamja",
+      "requirements": [
+        "Weekly Habitat D&D: catch all normal jadinkos then all three god jadinkos in the same week (shadow/diseased/camouflaged must be tracked at Habitat — Anachronia tracking does not count for mask)",
+        "Effective floors: 81 Hunter / 77 Farming / 54 Herblore (boostable) and 55 Agility (not boostable for god-island vine)",
+        "Claim from Papa Mambo after god catches"
+      ],
+      "unlocks": [
+        "Unlimited right-click teleport to Herblore Habitat (Papa Mambo)",
+        "2% XP boost to Farming, Hunter, or Herblore while training inside Habitat when worn",
+        "Fast fruit-tree patch access on Habitat for iron farm runs",
+        "After any witchdoctor piece: Pauline Polaris (Livid Farm) Mambo's potion for 3,000 Farming XP (one-time style reward path)"
+      ],
+      "notes": "Equipment residual split from karamja:witchdoctor-camo-outfit (full set weekly D&D). Prefer outfit row for robes/legs catch-chance package; prefer this id for unlimited Habitat tele + worn XP. Do not double-count 2% with full-set effects in planners.",
+      "source_urls": [
+        "https://runescape.wiki/w/Witchdoctor_mask",
+        "https://runescape.wiki/w/Witchdoctor_camo_outfit",
+        "https://runescape.wiki/w/Herblore_Habitat",
+        "https://runescape.wiki/w/Papa_Mambo"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja for Habitat tracking claim path. Anachronia only accelerates non-mask bingo catches.",
+      "links_existing_ids": [
+        "karamja:witchdoctor-camo-outfit",
+        "karamja:herblore-habitat",
+        "karamja:papa-mambo-shop",
+        "karamja:jadinko-favour-offering-stone"
+      ]
+    },
+    {
+      "id": "karamja:base-juju-potion-family",
+      "name": "Base juju potion family (Herblore Habitat)",
+      "category": "Herblore production residual (non-perfect)",
+      "region_hint": "karamja",
+      "requirements": [
+        "Herblore Habitat access; juju vials from Papa Mambo",
+        "Herblore levels: juju hunter 54, scentless 59, juju farming 64, juju cooking 67, juju fishing 70, juju woodcutting 71, juju mining 74, god blessings 75",
+        "Vine herb unfinished potions + vine secondaries from Habitat hunter-farm loop"
+      ],
+      "unlocks": [
+        "Full base juju checklist: hunter (attract jadinkos), scentless (smoked traps), farming (+33% herb double-pick chance), cooking (juju gumbo path), fishing (baron shark chance), woodcutting (30s auto-bank window), mining (stone spirit chance), Saradomin/Guthix/Zamorak Habitat XP blessings",
+        "Six-minute dose baseline (hunter ten minutes); juju vial craft geography is hard Habitat",
+        "Bridge row into perfect juju (harmony moss / crystal flasks) without re-emitting perfect-juju-potions"
+      ],
+      "notes": "Juju residual: juju-farming-potion-path specialises farming; perfect-juju-potions / recipe-hub cover harmony upgrades. This id is the full base family checklist for ironman Herblore utility. Dropped juju-potions-pointer hygiene — do not resurrect that id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Juju_potion",
+        "https://runescape.wiki/w/Herblore_Habitat",
+        "https://runescape.wiki/w/Juju_farming_potion",
+        "https://runescape.wiki/w/Juju_woodcutting_potion",
+        "https://runescape.wiki/w/Juju_mining_potion"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja for base juju craft. Perfect tier remains optional Tirannwn pressure on separate rows.",
+      "links_existing_ids": [
+        "karamja:herblore-habitat",
+        "karamja:juju-farming-potion-path",
+        "karamja:perfect-juju-potions",
+        "karamja:papa-mambo-shop"
+      ]
+    },
+    {
+      "id": "karamja:agility-arena-ticket-exchange",
+      "name": "Agility Arena Ticket Exchange (Pirate Jackie)",
+      "category": "Brimhaven residual Agility reward shop",
+      "region_hint": "karamja",
+      "requirements": [
+        "Brimhaven Agility Arena access (200 coin entry; waived after Rocking Out)",
+        "Agility Arena tickets from tagging active pillars"
+      ],
+      "unlocks": [
+        "Ticket shop: small/medium/large/huge Agility lamps (1 / 10 / 100 / 1000 tickets; base 240 / 2,480 / 28,000 / 320,000 Agility XP — Karamja gloves 2+ add 10% to lamp XP)",
+        "Ironman herb sink: toadflax (1 ticket), wergali (5), snapdragon (10) noted or unnoted",
+        "Pirate hook (left) at 800 tickets — equipment detail stays on karamja:pirates-hook"
+      ],
+      "notes": "Brimhaven residual: arena row covers minigame play; pirates-hook covers the hand-slot item. This id is the permanent ticket-economy shop checklist for iron Herblore herbs and Agility lamps. Do not invent ticket/hour rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Agility_Arena_Ticket_Exchange",
+        "https://runescape.wiki/w/Brimhaven_Agility_Arena",
+        "https://runescape.wiki/w/Pirate_Jackie_the_Fruit",
+        "https://runescape.wiki/w/Agility_Arena_ticket"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja Brimhaven shop. Diary gloves amplify XP/tickets on separate area-tasks row.",
+      "links_existing_ids": [
+        "karamja:brimhaven-agility-arena",
+        "karamja:pirates-hook",
+        "karamja:area-tasks-karamja-gloves"
+      ]
+    },
+    {
+      "id": "karamja:gemstone-cavern",
+      "name": "Gemstone cavern (Shilo underground)",
+      "category": "Mining–Slayer residual infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "Karamja gloves 3 or 4 worn or in backpack to descend",
+        "Speak to Kelhar in Shilo underground mine; gemstone dragons Slayer task or pay incomplete hydrix / uncut onyx / uncut dragonstone",
+        "95 / 98 / 101 Slayer for dragonstone / onyx / hydrix dragons; 94 Agility for hydrix shortcut crevice"
+      ],
+      "unlocks": [
+        "Access to gemstone dragon cavern beneath Shilo Village mine (diary-gated permanent ladder path via gloves 3)",
+        "Gem rocks colocated with dragonstone/onyx/hydrix dragons for Mining during Slayer",
+        "Logistics synergy with Shilo gem mine surface bank and gloves 3 operate teleport to underground mine"
+      ],
+      "notes": "Residual of shilo-gem-mine + area-tasks gloves. Prefer gloves row for teleport/diary perks; prefer shilo-gem-mine for surface gem rocks; prefer this id for cavern gate and gemstone dragon Mining/Slayer package. Combat loot tables stay out of skilling detail.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gemstone_cavern",
+        "https://runescape.wiki/w/Karamja_gloves_3",
+        "https://runescape.wiki/w/Shilo_Village_mine",
+        "https://runescape.wiki/w/Kelhar"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja. Gloves 3 is the permanent access item on automatic-early diary path.",
+      "links_existing_ids": [
+        "karamja:shilo-gem-mine",
+        "karamja:area-tasks-karamja-gloves",
+        "karamja:nature-altar",
+        "karamja:duradel-lapalok-slayer-master"
+      ]
+    },
+    {
+      "id": "karamja:tzhaar-onyx-gem-store",
+      "name": "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
+      "category": "TzHaar residual TokKul shop permanent",
+      "region_hint": "karamja",
+      "requirements": [
+        "TzHaar City access under Karamja Volcano",
+        "TokKul currency (no coin purchases; TzHaar merchants do not buy-back for TokKul)"
+      ],
+      "unlocks": [
+        "Only permanent shop source of uncut onyx for 2,700,000 TokKul (ironman jewellery / hydrix path sink)",
+        "Ore and gem stock for self-sufficient Crafting alongside city lava furnace",
+        "Complements TzHaar-Mej-Roh rune store and TzHaar-Hur-Tel obsidian equipment store without re-listing full city hub"
+      ],
+      "notes": "TzHaar residual: tzhaar-city-skilling-hub already lists banks/furnace/shops as a checklist. This id is the ironman-critical onyx sink as a first-class shop row. Prefer hub for plaza logistics; prefer tokkul-zo for tele network; prefer this for onyx procurement.",
+      "source_urls": [
+        "https://runescape.wiki/w/TzHaar-Hur-Lek%27s_Ore_and_Gem_Store",
+        "https://runescape.wiki/w/TzHaar_City",
+        "https://runescape.wiki/w/Uncut_onyx",
+        "https://runescape.wiki/w/Tokkul"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja TzHaar shop. TokKul farming remains combat-adjacent pressure.",
+      "links_existing_ids": [
+        "karamja:tzhaar-city-skilling-hub",
+        "karamja:tokkul-zo",
+        "karamja:gemstone-cavern"
+      ]
+    }
+  ]
+}

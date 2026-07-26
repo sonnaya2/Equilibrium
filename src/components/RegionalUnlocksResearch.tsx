@@ -39,16 +39,22 @@ const TABS: ResearchTab[] = [
   {
     key: "combat-equipment",
     label: "Combat equipment",
-    description: `${combatEquipment.length} combat equipment unlocks with optional support-region notes.`,
+    description: `${combatEquipment.length} combat equipment unlocks including BiS chains with region combos.`,
     rows: combatEquipment,
   },
 ];
+
+const combatCombos = combatRows.filter(
+  (row) =>
+    Boolean(row.comboLabel) ||
+    (Array.isArray(row.requiredRegions) && (row.requiredRegions as string[]).length > 1),
+);
 
 export function RegionalUnlocksResearch() {
   return (
     <ResearchSection
       title="Regional unlocks"
-      intro="Skilling and combat unlocks that change what a region is worth. Support-region notes stay optional — they are not forced gates."
+      intro={`Skilling and combat unlocks that change what a region is worth. ${combatRows.length} combat records (${combatCombos.length} multi-region labeled). Support-region notes stay optional unless marked all-required.`}
       tabs={TABS}
       searchPlaceholder="Search regional unlocks"
       searchLabel="Search regional unlocks"

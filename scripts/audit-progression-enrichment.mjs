@@ -103,7 +103,11 @@ if (!blessed?.major_raw_dependencies?.some((row) => row.item === "Blessed sand" 
 const salve = byId(progression.equipment_models, "salve-amulet:enchanted");
 if (!salve?.effect?.includes("20%") || !salve?.quest_dependencies?.includes("Lair of Tarn Razorlor for Tarn's diary and the enchantment")) fail("Salve amulet (e) progression drifted");
 const asylum = byId(progression.equipment_models, "broken-home:asylum-surgeons-ring");
-if (!asylum?.requirements?.some((row) => row.includes("37 minutes")) || asylum?.region_status !== "unresolved_misthalin_morytania_boundary") fail("Asylum surgeon's ring acquisition drifted");
+const asylumRegions = [...(asylum?.required_regions || []), ...(asylum?.region_hints || [])].map(String);
+if (!asylum?.requirements?.some((row) => row.includes("37 minutes"))) fail("Asylum surgeon's ring acquisition drifted");
+// User rule 2026-07-26: hard Misthalin (not unresolved Misthalin/Morytania boundary).
+if (!asylumRegions.includes("misthalin") && asylum?.region_hint !== "misthalin") fail("Asylum surgeon's ring should map to Misthalin");
+if (asylum?.region_status === "unresolved_misthalin_morytania_boundary") fail("Asylum surgeon's ring still unresolved boundary");
 const split = byId(progression.equipment_models, "dungeoneering:split-dragontooth-necklace-current");
 if (split?.token_cost !== 15500 || split?.dungeoneering_level !== 41 || split?.prayer_level !== 60) fail("Split dragontooth remaster values drifted");
 const demonHorn = byId(progression.equipment_models, "dungeoneering:demon-horn-necklace-current");

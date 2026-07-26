@@ -427,7 +427,7 @@
         "+20% mattock base precision while active",
         "No soil received while active (including with tarpaulin sheet)"
       ],
-      "notes": "Orthen / Anachronia Soma craft is the regional unlock path. Precision-focused excavation trade-off versus material/soil methods. Always Adze is a separate relic (already indexed as anachronia:always-adze-relic).",
+      "notes": "Orthen / Anachronia Soma craft is the regional unlock path. Precision-focused excavation trade-off versus material/soil methods. Always Adze is a separate relic (already indexed as kandarin:always-adze-relic).",
       "source_urls": [
         "https://runescape.wiki/w/Flow_State",
         "https://runescape.wiki/w/Soma",
@@ -602,7 +602,7 @@
     }
   ],
   "notes_on_existing_relics": {
-    "always_adze": "Already indexed as anachronia:always-adze-relic (Seed of the Charyou Tree / Warforge Into the Forge path; dual WC+FM without prayer drain).",
+    "always_adze": "Already indexed as kandarin:always-adze-relic (Seed of the Charyou Tree / Warforge Into the Forge path; dual WC+FM without prayer drain).",
     "death_note": "Already indexed as anachronia:death-note-relic. Correct unlock is Dragonkin III → Kaladanda at Orthen (108 Archaeology); notes guaranteed bone/ash drops. Prefer Anachronia, not a second id.",
     "bait_and_switch": "Already indexed as anachronia:bait-and-switch-relic (Orthen death mask / Evil Bob's Catspaw)."
   }

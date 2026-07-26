@@ -1,0 +1,858 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 Thieving / Hunter / Farming permanent unlocks and region-defining patch/minigame packages still missing as first-class rows. Covers Pyramid Plunder infrastructure (not black-ibis re-row), Vault of Hereditas + Asuran Arsenal heists, Asgarnia safecracking circuit, hops/bush/fruit-tree/herb patch networks, HAM hideout, Puro-Puro dragon implings, Keldagrim dwarven traders, Big Chinchompa private grounds, enhanced yaktwee stick, POF breeding-log tier-1 perks, crystal skillchompas, harmony pillars, Wilderness herb patch, Het's Oasis farming + Dundee crocodile upgrades, calquat, and juju farming path. Complements regional desert/kandarin/karamja packs and training-gap-thieving without re-emitting desert:pyramid-plunder-black-ibis or desert:hets-oasis-prayer-powders as duplicates.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields as sole region_hint except cross-region:* packages that intentionally span.",
+    "duplicate_guard": "SKIP separate desert:sceptre-of-the-gods / pharaoh's-sceptre equipment row — sceptre acquisition + SotG charge caps already live under desert:pyramid-plunder-black-ibis notes and desert:area-tasks-desert-amulet (SotG caps / recharge). Use desert:pyramid-plunder once as the minigame infrastructure package; link black-ibis row. Do not re-emit desert:hets-oasis-prayer-powders, desert:kharid-et-dig-site heist footnote as full heist, kandarin:skillchompa-supply (generic), karamja:herblore-habitat / juju-potions-pointer, asgarnia:trollheim-disease-free-herb-patch, forinthry:area-tasks-wilderness-sword (sword effects only — this file adds wilderness-herb-patch site row).",
+    "no_trade_rule": "Ironman permanent unlocks, patch networks, and region-defining Thieving/Hunter/Farming infrastructure that change self-sufficient progression.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, effects, and gates only. Training rates stay in training-gap-thieving / training-methods."
+  },
+  "already_present_checked": [
+    "desert:pyramid-plunder-black-ibis",
+    "desert:black-ibis-outfit",
+    "desert:hets-oasis-prayer-powders",
+    "desert:kharid-et-dig-site",
+    "desert:area-tasks-desert-amulet",
+    "desert:menaphos-merchant-thieving",
+    "desert:shifting-tombs",
+    "kandarin:skillchompa-supply",
+    "kandarin:skillchompas",
+    "kandarin:cobalt-skillchompa-hunter-site",
+    "kandarin:farmers-market-master-farmer",
+    "kandarin:catherby-skilling",
+    "karamja:herblore-habitat",
+    "karamja:juju-potions-pointer",
+    "asgarnia:trollheim-disease-free-herb-patch",
+    "asgarnia:falador-farm-patches",
+    "fremennik:keldagrim-hub",
+    "forinthry:area-tasks-wilderness-sword",
+    "forinthry:scroll-of-life",
+    "misthalin:thieves-guild-master-tools"
+  ],
+  "activity_additions": [
+    {
+      "id": "desert:pyramid-plunder",
+      "name": "Pyramid Plunder (Jalsavrah / Sophanem)",
+      "category": "Thieving minigame infrastructure",
+      "region_hint": "desert",
+      "location": "Jalsavrah Pyramid, Sophanem",
+      "requirements": [
+        "Sophanem access (started Icthlarin's Little Helper in the normal game)",
+        "21 Thieving for room 1; +10 Thieving per room through room 8 at 91 (boosts cannot open higher rooms)",
+        "Optional: Contact! for Sophanem bank; hard Desert achievements reduce mummy/scarab spawns and double sceptre charges"
+      ],
+      "unlocks": [
+        "Five-minute Thieving minigame across eight rooms (urns, grand gold chests, sarcophagi, spear traps, tomb doors)",
+        "Pharaoh's sceptre rare drop from grand gold chests / sarcophagi — Jalsavrah teleport loop for re-entry",
+        "Sceptre of the gods rare from engraved sarcophagus (room 8: 91 Thieving + 75 Runecrafting) — more urns while equipped and improved black-ibis odds",
+        "Artefacts for Simon Templeton coin path; Menaphyrite gem chance from urns",
+        "Black ibis outfit pieces from urns / chests / sarcophagi (see desert:black-ibis-outfit for 2026 drop rules)"
+      ],
+      "region_pressure": [
+        "Desert owns Sophanem / Jalsavrah and all loot geography.",
+        "Tirannwn optional ceiling: Crystal Mask + Light Form success stack on urns.",
+        "Desert amulet 3+ permanent (not worn) reduces spawns and doubles sceptre recharge charges."
+      ],
+      "notes": "First-class minigame package. Does NOT re-emit desert:black-ibis-outfit. Does NOT add a separate sceptre equipment row — sceptre/SotG are rewards and teleports inside this activity; amulet diary already tracks SotG charge caps. Prefer room 7–8 urn focus for XP; room gates are hard level checks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Pyramid_Plunder",
+        "https://runescape.wiki/w/Pharaoh%27s_sceptre",
+        "https://runescape.wiki/w/Sceptre_of_the_gods",
+        "https://runescape.wiki/w/Sophanem"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert. Link desert:black-ibis-outfit for outfit XP bonuses.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "desert:black-ibis-outfit",
+        "desert:area-tasks-desert-amulet",
+        "desert:sophanem-plover-and-slayer-support"
+      ]
+    },
+    {
+      "id": "desert:vault-of-hereditas-heist",
+      "name": "Vault of Hereditas heist",
+      "category": "Thieving heist activity (post-2025)",
+      "region_hint": "desert",
+      "location": "Kharid-et Dig Site sealed vault wing (speak to Liara)",
+      "requirements": [
+        "95 Thieving (not boostable for entry)",
+        "Breaking the Seal Archaeology mystery completed",
+        "72 Agility recommended for crevices",
+        "102 Thieving recommended for safes (98 with abyssal lurker scroll; 101 with Thieving cape boost)"
+      ],
+      "unlocks": [
+        "Primary 95–108 Thieving heist loop after the November 2025 Heists update",
+        "Loot-point exit XP (base 400 per loot point with rare chest looted; half without rare chest)",
+        "Heist supply / reward path distinct from Pyramid Plunder and safecracking",
+        "Cross-skill pressure into Kharid-et Archaeology logistics"
+      ],
+      "region_pressure": [
+        "Desert owns Kharid-et vault entrance and heist instance.",
+        "Sticky Fingers / Crystal Mask / Light Form / Ring of Vitur are optional multi-region success stacks for dead-legionary pickpockets inside."
+      ],
+      "notes": "Complements desert:kharid-et-dig-site (which only footnotes the heist). Logging out resets progress and deletes loot. Do not invent XP/hour here — see training-gap-thieving-2026-07-26.json.",
+      "source_urls": [
+        "https://runescape.wiki/w/Vault_of_Hereditas",
+        "https://runescape.wiki/w/Heists",
+        "https://runescape.wiki/w/Thieving_training"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert. Archaeology mystery gate remains Desert dig-site progress.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "desert:kharid-et-dig-site"
+      ]
+    },
+    {
+      "id": "asgarnia:safecracking",
+      "name": "Asgarnia safecracking circuit",
+      "category": "Thieving activity and pilfer-point infrastructure",
+      "region_hint": "asgarnia",
+      "location": "Falador / Burthorpe / Port Sarim / Black Knights' Fortress safes",
+      "requirements": [
+        "62 Thieving global unlock for safecracking (A Guild of Our Own miniquest for stethoscope + loot bag QoL)",
+        "76 Thieving (boostable) for Asgarnia 4-dial safes",
+        "Thieves' Guild fence path for pilfer points (Dodgy Derek) — guild is Misthalin taxonomy",
+        "Black Knights' Fortress armour or Skull of Remembrance for fortress safes"
+      ],
+      "unlocks": [
+        "Asgarnia safe rotation: Falador houses + park, Burthorpe Castle roof, Port Sarim shops, Black Knights' Fortress treasure room (10 safes on Pilferin' in Asgarnia)",
+        "4-dial locks: ~6,215 Thieving XP per full open (omitting failed dial ticks) before loot-bag fence XP",
+        "Loot bag fill toward coins / Thieving XP / pilfer points for master thief's stethoscope and lockpick shop path",
+        "Mid-high Thieving training step after Misthalin 3-dial safes and before Kandarin 5-dial safes"
+      ],
+      "region_pressure": [
+        "Asgarnia owns the 76+ safe geography listed above.",
+        "Misthalin pressure: Thieves' Guild trainer, stethoscope/loot bag unlock, fence, and master-tool shop.",
+        "Kandarin optional later circuit at 83+; Desert Menaphos safes at 69+ are separate."
+      ],
+      "notes": "Region circuit package for planner checklists. Safecracking itself is multi-region; this row claims the Asgarnia leg only. ~5 minute safe respawns. Do not invent XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Safecracking",
+        "https://runescape.wiki/w/Safe",
+        "https://runescape.wiki/w/Pilferin%27_in_Asgarnia",
+        "https://runescape.wiki/w/Dodgy_Derek%27s_Dirty_Deals"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for this circuit. Guild tools remain Misthalin (misthalin:thieves-guild-master-tools).",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "misthalin:thieves-guild-master-tools"
+      ]
+    },
+    {
+      "id": "asgarnia:hops-patch-network",
+      "name": "Hops patch network (Entrana + run geography)",
+      "category": "Farming patch network infrastructure",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia",
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "location": "Entrana hops (Francis) plus cross-region hops run partners",
+      "requirements": [
+        "3+ Farming for barley; crop levels scale through wildblood (28), grapevine (49), reed (78), godly grapevine (95)",
+        "Entrana access via Port Sarim boat (Asgarnia logistics) — weapons/armour banned on the island",
+        "Optional: 4 seeds per plant (3 for jute); gardener payments for protection"
+      ],
+      "unlocks": [
+        "Entrana hops patch as the Asgarnia-locked hops node (Francis)",
+        "Brewing hop supply (barley through wildblood) and late grapevine / reed / godly grapevine produce",
+        "Planner hop-run package: Entrana + McGrubor's Wood (Rhonen) + Yanille (Selena) + Lumbridge (Vasquen) when those regions are unlocked"
+      ],
+      "region_pressure": [
+        "Asgarnia owns Entrana access via Port Sarim and is the hard region_hint for this package.",
+        "Kandarin: McGrubor's Wood and Yanille hops — dense midgame hop density.",
+        "Misthalin: Lumbridge north farm hops."
+      ],
+      "notes": "Only four standard hops patches exist worldwide. This row is the network checklist with Asgarnia primary via Entrana; do not invent a fifth Asgarnia mainland hops patch. Kelda hops (Keldagrim quest) is Fremennik-adjacent and excluded here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hops_Patch",
+        "https://runescape.wiki/w/Entrana",
+        "https://runescape.wiki/w/Francis"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia required for Entrana node. Full four-patch hop runs need Kandarin + Misthalin destination unlocks.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "misthalin:ham-hideout-thieving",
+      "name": "H.A.M. Hideout pickpocketing and store rooms",
+      "category": "Thieving early-game activity infrastructure",
+      "region_hint": "misthalin",
+      "location": "Lumbridge forest trapdoor north-west of Lumbridge Castle",
+      "requirements": [
+        "Pick trapdoor lock (Thieving; lockpick improves success)",
+        "15 Thieving female / 20 Thieving male H.A.M. member pickpockets",
+        "Death to the Dorgeshuun progress for secret store-room access and key chests"
+      ],
+      "unlocks": [
+        "Starting-region low-level Thieving dens (H.A.M. robes, keys, junk loot)",
+        "Store-room guards: bronze/iron/steel/silver keys for jewellery chests without hideout kick-out on fail",
+        "H.A.M. robe set acquisition path for quest disguises and early Thieving cosmetics",
+        "Quest adjacency: Lost Tribe, Death to the Dorgeshuun, Chosen Commander, Lost Her Marbles"
+      ],
+      "region_pressure": [
+        "Misthalin owns the hideout and store rooms (wiki League badge).",
+        "Failing pickpockets upstairs can jail or eject the player to Lumbridge forest."
+      ],
+      "notes": "Early ironman Thieving geography before Thieves' Guild doors / safecracking. Store rooms are the durable jewellery/key loop after Dorgeshuun progress. 2025–2026 Lumbridge trapdoor placement restored to pre-Battle hill ruin.",
+      "source_urls": [
+        "https://runescape.wiki/w/H.A.M._Hideout",
+        "https://runescape.wiki/w/H.A.M._Member",
+        "https://runescape.wiki/w/Death_to_the_Dorgeshuun"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin starting-region Thieving site.",
+      "region_requirement_type": "hard"
+    },
+    {
+      "id": "misthalin:puro-puro-dragon-implings",
+      "name": "Puro-Puro Impetuous Impulses (dragon implings)",
+      "category": "Hunter minigame and high-value impling supply",
+      "region_hint": "misthalin",
+      "location": "Puro-Puro (permanent Zanaris wheat crop circle; temporary crop circles worldwide)",
+      "requirements": [
+        "17 Hunter to enter Puro-Puro maze / catch baby implings",
+        "Lost City for permanent Zanaris crop circle (Misthalin / Zanaris taxonomy)",
+        "83 Hunter for dragon implings; butterfly net or magic butterfly net + empty impling jars (no barehand in Puro-Puro)",
+        "Higher Thieving reduces imp free-steal chance on carried jars"
+      ],
+      "unlocks": [
+        "Impetuous Impulses maze: all impling tiers including dragon, kingly, crystal",
+        "Dragon impling jars as ironman dragonhide / high-value loot supply path",
+        "Elnock Inquisitor jar generator / magic net / imp repellent exchange economy",
+        "Farmer's Affinity 30-minute wheat-speed bonus when entering via non-Zanaris crop circles",
+        "Max Guild skill portal attunement destination (late Tirannwn pressure, not unlock gate)"
+      ],
+      "region_pressure": [
+        "Misthalin owns Zanaris permanent portal and wiki League region for Puro-Puro.",
+        "Temporary crop circles spawn in other regions' wheat fields as convenience on-ramps only."
+      ],
+      "notes": "Planner-visible Puro-Puro package with dragon implings as the ironman supply hook. Magic boxes block entry. Do not invent catch rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Puro-Puro",
+        "https://runescape.wiki/w/Impetuous_Impulses",
+        "https://runescape.wiki/w/Dragon_impling",
+        "https://runescape.wiki/w/Zanaris"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin via Zanaris. Lost City gate resolved via League quest overlay where applicable.",
+      "region_requirement_type": "hard"
+    },
+    {
+      "id": "anachronia:asuran-arsenal-heist",
+      "name": "Asuran Arsenal heist",
+      "category": "Thieving heist activity (post-2025)",
+      "region_hint": "anachronia",
+      "location": "South-east Anachronia near Swamp Fortress shore (speak to Liara)",
+      "requirements": [
+        "108 Thieving (not boostable for entry)",
+        "75 / 85 / 97 Agility for rubble / crevices / railings on full routes",
+        "114 Thieving recommended for safes (110 with abyssal lurker scroll; 113 with Thieving cape boost)"
+      ],
+      "unlocks": [
+        "Top-end Thieving heist after Vault of Hereditas (108+)",
+        "Loot-point exit XP (base 450 per loot point with rare chest looted)",
+        "High-intensity dangerous heist: traps deal damage; deaths unsafe and wipe loot",
+        "Anachronia late Thieving ceiling when Desert heist is finished or locked"
+      ],
+      "region_pressure": [
+        "Anachronia owns the surface entrance and heist instance.",
+        "Food / Enhanced Excalibur / bone shield recommended; multi-region success gear still applies."
+      ],
+      "notes": "Sibling to desert:vault-of-hereditas-heist. Logging out or dying resets progress and deletes loot. Rates live in training-gap-thieving; this is unlock geography only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Asuran_Arsenal",
+        "https://runescape.wiki/w/Heists",
+        "https://runescape.wiki/w/Thieving_training"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia. Pair with Vault of Hereditas for the full heist ladder.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "desert:vault-of-hereditas-heist"
+      ]
+    },
+    {
+      "id": "fremennik:keldagrim-dwarven-traders",
+      "name": "Keldagrim dwarven traders and multi-step chests",
+      "category": "Thieving activity and city infrastructure",
+      "region_hint": "fremennik",
+      "location": "Keldagrim",
+      "requirements": [
+        "The Giant Dwarf started/completed for normal Keldagrim access",
+        "High Thieving for dwarven trader pickpockets and multi-step chests (94+ ironman guides for top chests)",
+        "Master thief's lockpick / stethoscope strongly recommended for chest efficiency (Misthalin Thieves' Guild)"
+      ],
+      "unlocks": [
+        "Dwarven trader pickpocket loop inside Keldagrim",
+        "Multi-step dwarven chests as mid/high Thieving ironman targets",
+        "City adjacency to Lava Flow Mine / Consortium / blast furnace logistics already on fremennik:keldagrim-hub"
+      ],
+      "region_pressure": [
+        "Fremennik owns Keldagrim League geography.",
+        "Misthalin pressure for master thief tools; Tirannwn exoskeleton / master camouflage are optional success stacks."
+      ],
+      "notes": "Splits Thieving content out of fremennik:keldagrim-hub (which only name-drops trader loops). Do not restate Imcando / LFM mining here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Keldagrim",
+        "https://runescape.wiki/w/The_Giant_Dwarf",
+        "https://runescape.wiki/w/Thieving_training"
+      ],
+      "confidence": "confirmed_wiki_region_inferred",
+      "league_treatment": "Hard Fremennik. Master tools remain Misthalin.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "fremennik:keldagrim-hub",
+        "misthalin:thieves-guild-master-tools"
+      ]
+    },
+    {
+      "id": "kandarin:big-chinchompa-private-hunting-grounds",
+      "name": "Big Chinchompa private hunting grounds",
+      "category": "Hunter D&D permanent access package",
+      "region_hint": "kandarin",
+      "location": "Tree Gnome Stronghold (Nyriki / Mieliki house + private portals)",
+      "requirements": [
+        "Participate in Big Chinchompa D&D (twice daily; starts :30 past each hour)",
+        "Competence points from feeding soporith moths to the plutonial chinchompa",
+        "Hunter levels for ticket creatures: green salamander 29, carnivorous chin 63, pawya 66, polar kebbit 70, grenwall 77",
+        "Quota tickets purchased from reward shop (points not coins)"
+      ],
+      "unlocks": [
+        "Instanced private hunting grounds at Gnome Stronghold for ticketed creatures",
+        "Self-sufficient ironman grenwall spikes / red chins / pawyas / polar kebbit / green salamander without wild-world competition",
+        "Competence-point shop: tickets, protea flowers, swamp toads/tar/flax, Hunter XP lamps",
+        "Nyriki portal (3/day) to active Big Chinchompa entrance locations"
+      ],
+      "region_pressure": [
+        "Kandarin owns the reward shop hub and private ground portals (Tree Gnome Stronghold).",
+        "D&D entrance holes rotate across many regions (including Isafdar, desert, Karamja) — destination pressure only."
+      ],
+      "notes": "Permanent Hunter QoL package. Crystallise cannot be used in private grounds. Clockwork box traps consume one ticket per catch multi-fill. Do not invent XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Big_Chinchompa",
+        "https://runescape.wiki/w/Reward_Shop_(Big_Chinchompa)",
+        "https://runescape.wiki/w/Tree_Gnome_Stronghold"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for private grounds + shop. Entrance rotation does not move the hub.",
+      "region_requirement_type": "hard"
+    },
+    {
+      "id": "kandarin:enhanced-yaktwee-stick",
+      "name": "Enhanced yaktwee stick",
+      "category": "permanent Hunter XP tool",
+      "region_hint": "kandarin",
+      "location": "Yaktwee Swinmari Cianta, charm sprite Hunter area (north-west of Outpost / south-west Gnome Stronghold)",
+      "requirements": [
+        "72 Hunter to open Yaktwee's shop and buy base yaktwee stick (2,000 coins)",
+        "Catch 1,000 charm sprites total (gleaelg / tranart / slithtils combined) while tracking on the stick",
+        "Talk to Yaktwee to upgrade to enhanced yaktwee stick"
+      ],
+      "unlocks": [
+        "Enhanced yaktwee stick: +2% Hunter XP on all Hunter activities where the stick can be wielded",
+        "Improved rarer charm-sprite rates when targeting neverberry bushes",
+        "Permanent charm-sprite transmute tool retained from base stick"
+      ],
+      "region_pressure": [
+        "Kandarin owns charm sprite site and Yaktwee NPC.",
+        "Works with Big Chinchompa moth-jar empty XP among other Hunter methods when wielded."
+      ],
+      "notes": "Ironman permanent Hunter XP stick. Always kept outside dangerous death. Distinct from skillchompas (consumable gather tools).",
+      "source_urls": [
+        "https://runescape.wiki/w/Yaktwee_stick",
+        "https://runescape.wiki/w/Enhanced_yaktwee_stick",
+        "https://runescape.wiki/w/Charm_sprite",
+        "https://runescape.wiki/w/Yaktwee_Swinmari_Cianta"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin permanent tool unlock.",
+      "region_requirement_type": "hard"
+    },
+    {
+      "id": "kandarin:pof-breeding-log-tier1-perks",
+      "name": "Player-owned farm breeding log tier-1 species perks",
+      "category": "permanent Farming / POF perk unlocks",
+      "region_hint": "kandarin",
+      "location": "Manor Farm (Granny Potterington) — breeding log on dining table; Sam the sheepdog",
+      "requirements": [
+        "17 Farming + 20 Construction for POF tutorial at Manor Farm",
+        "Breed every breed within a species category to complete that section of the animal breeding log",
+        "Anachronia Dinosaur Farm breeds count on the same log for dinosaur categories (Anachronia pressure for full Old Mc title)"
+      ],
+      "unlocks": [
+        "Passive tier-1 species perk for each completed breeding-log category (Jan 2024 rule — no farm totems required for tier 1)",
+        "Species perk examples include chinchompa skillchompa-save chance and other animal-family passive benefits",
+        "Old Mc title path when entire Manor + Anachronia breeding logs are complete (talk to Sam/Stan)",
+        "Planner-visible permanent POF progression beyond beans/market"
+      ],
+      "region_pressure": [
+        "Kandarin owns Manor Farm hub, Farmers' Market, and breeding-log reclaim.",
+        "Anachronia optional for dinosaur log completion and Ranch Out of Time species.",
+        "Tier-2 perks still need dual pens with farm totems — not granted by log alone."
+      ],
+      "notes": "Account-state permanent unlocks, not a training method. Complements kandarin:farmers-market-master-farmer without re-authoring bean shops.",
+      "source_urls": [
+        "https://runescape.wiki/w/Animal_breeding_log",
+        "https://runescape.wiki/w/Player-owned_farm",
+        "https://runescape.wiki/w/Perks_(player-owned_farm)",
+        "https://runescape.wiki/w/Manor_Farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for Manor Farm log. Full title may need Anachronia dinosaurs.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "kandarin:farmers-market-master-farmer",
+        "kandarin:skillchompas"
+      ]
+    },
+    {
+      "id": "kandarin:fruit-tree-patch-hubs",
+      "name": "Fruit tree patch hubs (Kandarin core)",
+      "category": "Farming patch network infrastructure",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "karamja",
+        "tirannwn",
+        "fremennik"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "karamja",
+        "tirannwn",
+        "fremennik",
+        "misthalin"
+      ],
+      "location": "Tree Gnome Stronghold, Catherby, Brimhaven-adjacent routes, and other fruit tree patches",
+      "requirements": [
+        "27+ Farming for apple trees; higher seeds through palm (68) and specials",
+        "Sapling prep (pot + water + compost path) before planting",
+        "Optional gardener payments for disease protection"
+      ],
+      "unlocks": [
+        "Fruit tree run backbone for Farming XP and produce (apples through palms and late specials)",
+        "Kandarin hub density: Gnome Stronghold + Catherby as classic ironman fruit-tree anchors",
+        "Produce for supercompost, cooking, and quest/supply sinks"
+      ],
+      "region_pressure": [
+        "Kandarin is the practical fruit-tree hub for early/mid runs.",
+        "Karamja: Brimhaven / Habitat fruit tree nodes.",
+        "Other regions add patch count when unlocked — this row is not a global exclusive claim."
+      ],
+      "notes": "Network package for region pickers, not a full patch coordinate dump. Pair with spirit trees / fairy rings for run logistics.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fruit_Tree_Patch",
+        "https://runescape.wiki/w/Tree_Gnome_Stronghold",
+        "https://runescape.wiki/w/Catherby"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin primary hub. Destination patches still need their regions.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "kandarin:bush-patch-network",
+      "name": "Bush patch network (Kandarin core)",
+      "category": "Farming patch network infrastructure",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "misthalin",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "misthalin",
+        "asgarnia",
+        "fremennik"
+      ],
+      "location": "Etcetera / Champions' Guild / Rimmington / Ardougne / Etc. bush patches with Kandarin anchors",
+      "requirements": [
+        "10+ Farming for redberry; scales through poison ivy (70) and late bushes",
+        "Optional payments to bush gardeners"
+      ],
+      "unlocks": [
+        "Bush run produce: berries for Summoning / Herblore / payments / supercompost",
+        "Poison ivy berries for calquat protection payments (Karamja calquat cross-link)",
+        "Kandarin-centric bush run planning with Ardougne and nearby patches"
+      ],
+      "region_pressure": [
+        "Kandarin hosts multiple high-value bush sites for midgame runs.",
+        "Misthalin/Asgarnia add Champions' Guild / Rimmington style nodes when unlocked."
+      ],
+      "notes": "Companion to fruit-tree and herb networks. Do not invent yield tables.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bush_Patch",
+        "https://runescape.wiki/w/Poison_ivy_berries"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin primary framing for bush-run logistics.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "karamja:calquat-farming-patch"
+      ]
+    },
+    {
+      "id": "tirannwn:crystal-skillchompas",
+      "name": "Crystal skillchompas (Isafdar catch + POF produce)",
+      "category": "consumable multi-skill gatherer tools",
+      "region_hint": "tirannwn",
+      "region_hints": [
+        "tirannwn",
+        "kandarin"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "kandarin"
+      ],
+      "location": "Isafdar forest north of Tyras Camp (wild); crystal chinchompa POF produce (Manor Farm)",
+      "requirements": [
+        "97 Hunter for wild crystal skillchompa catches (Regicide for Isafdar access)",
+        "71 Fishing / Mining / Woodcutting / Divination / Archaeology to wield benefits",
+        "54 Farming for POF crystal chinchompa produce path (10 skillchompas per collect)",
+        "Box traps for wild catches"
+      ],
+      "unlocks": [
+        "Highest skillchompa tier: +10% XP on success; 5% of success XP on failed actions (Fishing/WC/Div/Arch)",
+        "Mining: crystal-pickaxe-equivalent with 70 bonus crit damage on critical swings only (consumed on crit)",
+        "Divination: +22.5% enriched memory chance; Fishing: +5% catch chance",
+        "WC/Mining/Archaeology operate as crystal hatchet/pickaxe/mattock equivalents while consumed",
+        "POF chinchompa perk can save skillchompas (up to 5% not consumed)"
+      ],
+      "region_pressure": [
+        "Tirannwn owns wild crystal skillchompa catch site (wiki League badge).",
+        "Kandarin POF is the durable ironman reproduce path once crystal chinchompas are obtained."
+      ],
+      "notes": "Specialises crystal tier out of kandarin:skillchompas. Cobalt–crimson wild sites remain non-Tirannwn. Do not invent XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_skillchompa",
+        "https://runescape.wiki/w/Crystal_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Skillchompa"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for wild supply. Kandarin POF is optional sustain.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "kandarin:skillchompas",
+        "kandarin:pof-breeding-log-tier1-perks"
+      ]
+    },
+    {
+      "id": "tirannwn:harmony-pillars",
+      "name": "Harmony pillars (Meilyr harmony moss)",
+      "category": "Farming special patch and perfect-juju supply",
+      "region_hint": "tirannwn",
+      "location": "Meilyr Clan district, Prifddinas (4 pillars)",
+      "requirements": [
+        "Plague's End completed for Prifddinas / Meilyr access",
+        "75 Farming to plant harmony moss seeds on pillars",
+        "200,000 base XP (no bonus XP) in the skill the pillar is attuned to when planted — 50k XP per growth stage × 4"
+      ],
+      "unlocks": [
+        "Harmony moss harvest (1,133.3 Farming XP per moss; all moss taken at once)",
+        "Harmony moss ingredient for perfect juju potions and perfect plus (with crystal tree blossom + crystal flask)",
+        "Skill-attuned growth mechanic unique to Meilyr pillars",
+        "Tirannwn quiver 3/4: +10% chance extra moss; perfect juju farming: 25% double moss + global harvest moss chance"
+      ],
+      "region_pressure": [
+        "Tirannwn / Prif owns all four pillars.",
+        "Perfect juju chain pressures Karamja juju base potions + Tirannwn moss/blossom."
+      ],
+      "notes": "Region-defining Prif Farming infrastructure. Remote Farm works on pillars. Reroll attunement costs 10 vis wax. Distinct from standard herb/bush patches.",
+      "source_urls": [
+        "https://runescape.wiki/w/Harmony_pillar",
+        "https://runescape.wiki/w/Harmony_moss",
+        "https://runescape.wiki/w/Harmony_moss_seed",
+        "https://runescape.wiki/w/Perfect_plus_potion"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn after Plague's End.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "karamja:juju-farming-potion-path"
+      ]
+    },
+    {
+      "id": "forinthry:wilderness-herb-patch",
+      "name": "Wilderness herb patch",
+      "category": "Farming permanent patch unlock",
+      "region_hint": "forinthry",
+      "location": "Wilderness herb patch (north of the Wilderness Crater / Chaos Temple area logistics)",
+      "requirements": [
+        "Wilderness / Forinthry access",
+        "Farming level matching planted herb seeds",
+        "Wilderness hard achievements for disease-free state (Wilderness sword 3+ always: patch never diseased)",
+        "Wilderness sword 1+ operate teleport to the herb patch"
+      ],
+      "unlocks": [
+        "Extra herb-run node on Forinthry geography",
+        "Disease-free herb growth after hard Wilderness diary",
+        "Free herb-patch teleport on Wilderness sword operate (tier 1+)",
+        "Bloodweed and other Wilderness-only herb options where applicable"
+      ],
+      "region_pressure": [
+        "Forinthry owns the patch and sword diary ladder.",
+        "PvP risk remains on the surface — plan protection or safe worlds per League rules."
+      ],
+      "notes": "Site row complementary to forinthry:area-tasks-wilderness-sword (which lists the teleport/disease effects). First-class patch checklist for herb-run planners.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_patch_(Wilderness)",
+        "https://runescape.wiki/w/Wilderness_sword",
+        "https://runescape.wiki/w/Wilderness_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Diary tiers gate disease-free + teleport QoL.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "forinthry:area-tasks-wilderness-sword",
+        "cross-region:herb-patch-network"
+      ]
+    },
+    {
+      "id": "desert:hets-oasis-farming",
+      "name": "Het's Oasis Farming (flower bushes, cactus, honeycombs)",
+      "category": "Farming activity and POF supply infrastructure",
+      "region_hint": "desert",
+      "location": "Het's Oasis (former Duel Arena)",
+      "requirements": [
+        "Het's Oasis access (Desert; ring of duelling western entrance)",
+        "Speak to Dundee to open flower-bush activity",
+        "30 / 50 / 70 / 90 Farming for rose / iris / hydrangea / hollyhock bushes",
+        "20 Construction for water filtration system; teak planks + steel nails for flower baskets"
+      ],
+      "unlocks": [
+        "Active flower-bush cultivation (progress bar, fertiliser, pesty scarab / nutritious gas events)",
+        "Oasis flowers for player-owned farm honeycombs (breeding/trait influence)",
+        "Golden rose chance on harvest (improved by better compost) for dazzling whirligigs / shimmering honeycomb path",
+        "Cactus patch (Grouch) in south-west oasis",
+        "Farming reputation ticks while cultivating higher bushes"
+      ],
+      "region_pressure": [
+        "Desert owns all oasis Farming geography.",
+        "Honeycombs feed Kandarin Manor Farm / Anachronia Ranch animals — destination pressure only."
+      ],
+      "notes": "Farming-focused split from desert:hets-oasis-prayer-powders (Hunter powders) and desert:dundee-crocodile-upgrades (Hunter shop). Do not invent XP/hour for bush cultivate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Het%27s_Oasis",
+        "https://runescape.wiki/w/Honeycomb_(player-owned_farm)",
+        "https://runescape.wiki/w/Golden_roses"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_example",
+      "league_treatment": "Hard Desert. Official Equilibrium Desert example content.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "desert:hets-oasis-prayer-powders",
+        "desert:dundee-crocodile-upgrades",
+        "kandarin:pof-breeding-log-tier1-perks"
+      ]
+    },
+    {
+      "id": "desert:dundee-crocodile-upgrades",
+      "name": "Dundee's Crocodile Upgrades",
+      "category": "permanent Hunter upgrade shop",
+      "region_hint": "desert",
+      "location": "Dundee, north-west Het's Oasis",
+      "requirements": [
+        "Het's Oasis scarab / whirligig Hunter activity access",
+        "Lifetime scarabs caught thresholds (not consumed currency): 250 / 500 / 1,000 / 1,500 / 2,500 / 3,000 / 5,000"
+      ],
+      "unlocks": [
+        "Increased catch rate (+10% success) at 250 scarabs",
+        "25% double loot chance at 500",
+        "25% flower-save chance at 1,000",
+        "+5% scarab XP at 1,500",
+        "Automatic shell looting at 2,500",
+        "Increased scarab click-stack size to 5 at 3,000",
+        "Golden crocodile cosmetic at 5,000"
+      ],
+      "region_pressure": [
+        "Desert owns Dundee shop and crocodile Hunter ponds.",
+        "Pairs with prayer powder production for full oasis Hunter value."
+      ],
+      "notes": "Permanent account upgrades tracked by lifetime scarabs caught. Distinct from powder crafting and flower Farming rows. Achievement The Crocodile Hunter / Golden Crocodile Hunter track non-cosmetic / full unlocks.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dundee%27s_Crocodile_Upgrades",
+        "https://runescape.wiki/w/Het%27s_Oasis",
+        "https://runescape.wiki/w/Dundee"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert permanent Hunter shop.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "desert:hets-oasis-prayer-powders",
+        "desert:hets-oasis-farming"
+      ]
+    },
+    {
+      "id": "karamja:calquat-patch",
+      "name": "Calquat tree patch (Tai Bwo Wannai)",
+      "category": "Farming unique patch",
+      "region_hint": "karamja",
+      "location": "Tai Bwo Wannai calquat patch (Imiago)",
+      "requirements": [
+        "72 Farming and a calquat sapling",
+        "Jungle Potion completed to pay Imiago for protection (8 poison ivy berries; 6 with master farmer outfit)",
+        "21h 20m growth (8 × 2h 40m cycles)"
+      ],
+      "unlocks": [
+        "Only calquat patch in the game",
+        "Six calquat fruit per harvest (kegs, supercompost, supply)",
+        "High check-health Farming XP plant for mid/late Farming ladders",
+        "Scroll of life seed-return exclusion note: calquat is excluded from wasteless farming seed recover"
+      ],
+      "region_pressure": [
+        "Karamja owns the unique patch.",
+        "Poison ivy berries pressure bush runs (often Kandarin/Misthalin patches)."
+      ],
+      "notes": "Unique special tree — first-class for region pickers. Not a fruit-tree patch substitute.",
+      "source_urls": [
+        "https://runescape.wiki/w/Calquat_tree",
+        "https://runescape.wiki/w/Calquat_patch",
+        "https://runescape.wiki/w/Tai_Bwo_Wannai",
+        "https://runescape.wiki/w/Imiago"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja unique Farming node.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "kandarin:bush-patch-network",
+        "forinthry:scroll-of-life"
+      ]
+    },
+    {
+      "id": "karamja:juju-farming-potion-path",
+      "name": "Juju farming potion path (Herblore Habitat)",
+      "category": "Herblore and Farming supply chain",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "karamja"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn"
+      ],
+      "location": "Herblore Habitat, south-east Karamja",
+      "requirements": [
+        "Herblore Habitat access and jadinko attraction setup (Farming + Construction features)",
+        "Herblore levels for juju farming potion and related juju mixes",
+        "Vine herb / secondary ingredients from Habitat hunter-farm loop",
+        "Optional: Papa Mambo seed shop for ironman seed top-ups"
+      ],
+      "unlocks": [
+        "Juju farming potion production (herb-run yield QoL)",
+        "Broader juju family path (woodcutting, mining, hunter, fishing, etc.) from Habitat ingredients",
+        "Bridge into perfect juju farming via harmony moss (Tirannwn) on juju farming (3)",
+        "Self-sufficient ironman Habitat seed + secondary loop"
+      ],
+      "region_pressure": [
+        "Karamja owns Habitat and base juju craft geography.",
+        "Tirannwn harmony moss upgrades juju farming into perfect juju farming."
+      ],
+      "notes": "Specialises the farming-potion path out of karamja:herblore-habitat and karamja:herblore-habitat. Prefer Habitat row for multi-skill hub; this row for Herblore→Farming potion checklist.",
+      "source_urls": [
+        "https://runescape.wiki/w/Juju_farming_potion",
+        "https://runescape.wiki/w/Herblore_Habitat",
+        "https://runescape.wiki/w/Juju_potion",
+        "https://runescape.wiki/w/Perfect_juju_farming_potion"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja. Perfect tier needs Tirannwn moss.",
+      "region_requirement_type": "hard",
+      "links_existing_ids": [
+        "karamja:herblore-habitat",
+        "prifddinas:meilyr-harmony-pillars"
+      ]
+    },
+    {
+      "id": "cross-region:herb-patch-network",
+      "name": "Herb patch network (global herb-run map)",
+      "category": "Farming cross-region patch network package",
+      "region_hints": [
+        "asgarnia",
+        "kandarin",
+        "morytania",
+        "desert",
+        "forinthry",
+        "fremennik",
+        "misthalin",
+        "karamja",
+        "tirannwn"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "kandarin",
+        "morytania",
+        "desert",
+        "forinthry",
+        "fremennik",
+        "misthalin",
+        "karamja",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Farming levels matching planted herb seeds",
+        "Region unlocks for each destination patch",
+        "Optional disease-free / teleport QoL: Trollheim (My Arm), Wilderness hard diary, Morytania/Desert diary perks where applicable"
+      ],
+      "unlocks": [
+        "Planner checklist of herb-run nodes across regions rather than a single hub blurb",
+        "Core early nodes: Falador south farm, Catherby, Ardougne, Canifis, Port Phasmatys, etc.",
+        "Disease-free / premium nodes: Trollheim (Asgarnia), Wilderness (Forinthry hard diary), other diary-improved patches",
+        "Special vines: Herblore Habitat vine herbs (Karamja) treated as Habitat-adjacent, not standard herb patches"
+      ],
+      "region_pressure": [
+        "No single region owns the full herb run — score by unlocked destination count.",
+        "Asgarnia: Falador + Trollheim disease-free.",
+        "Forinthry: Wilderness herb patch + sword teleport.",
+        "Kandarin: Catherby / Ardougne classic midgame density.",
+        "Travel networks (fairy rings, spirit trees, amulets) determine real run speed."
+      ],
+      "notes": "Cross-region package only. Do not replace first-class site rows (asgarnia:trollheim-disease-free-herb-patch, forinthry:wilderness-herb-patch). No XP/hour claims.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_patch",
+        "https://runescape.wiki/w/Farming/Patch_locations",
+        "https://runescape.wiki/w/Herb_patch_(Trollheim)",
+        "https://runescape.wiki/w/Herb_patch_(Wilderness)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Score herb-run power by number of unlocked patch regions + diary disease-free nodes. Not a single hard region gate.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:trollheim-disease-free-herb-patch",
+        "forinthry:wilderness-herb-patch",
+        "asgarnia:falador-farm-patches",
+        "kandarin:catherby-skilling",
+        "cross-region:fairy-ring-network"
+      ]
+    }
+  ],
+  "row_count": 21,
+  "row_count_note": "User brief said 22 rows; listed IDs are 21 after skipping a separate desert sceptre row (would duplicate desert pack / pyramid-plunder-black-ibis / desert amulet SotG charges). desert:pyramid-plunder used once only.",
+  "skipped": [
+    {
+      "id": "desert:sceptre-of-the-gods",
+      "reason": "Would duplicate desert pack diary SotG charge caps and pyramid-plunder reward text. Sceptre acquisition covered inside desert:pyramid-plunder unlocks."
+    }
+  ]
+}

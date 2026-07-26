@@ -1,0 +1,589 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 regional skilling depth for Karamja, Havenhythe, and Forinthry: first-class rows for vessel fishing, plantation, TzHaar skilling hub, volcano/edgeville/peninsula resource dungeons, calquat patch, pirate hook, Marigold Farm, spirit moths, Havenhythe canoes, Amberfell hub, Highweald/Deserted Mine mining, dark-onyx core source package, Wilderness herb/bloodwood/runite, black salamanders, and Abyss RC stack. Complements karamja/forinthry/anachronia-havenhythe packs without re-emitting Habitat, gloves, TokKul-Zo, abyss-entrance, magical-thread, or resource-dungeon package rows already present.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Do not re-emit karamja:herblore-habitat, karamja:hardwood-grove, karamja:brimhaven-agility-arena, karamja:tokkul-zo, karamja:karamja-gloves-skilling, forinthry:abyss-entrance, forinthry:magical-thread-abyss-supply, forinthry:resource-dungeon-unlocks, forinthry:primal-ores, forinthry:charming-moths, forinthry:wilderness-agility-course, havenhythe:volatile-chinchompas, havenhythe:birdhouses, havenhythe:moonrise-dig-site, havenhythe:tear-of-inanna-hungry-like-the-wolf.",
+    "exclude": [
+      "havenhythe:no-tear-of-the-mists",
+      "croesus boundary hygiene noise / anti-rows"
+    ],
+    "no_trade_rule": "Prioritise permanent tools, region-defining hubs, gather sites, and ironman supply loops that change self-sufficient progression.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, and effects only."
+  },
+  "activity_additions": [
+    {
+      "id": "karamja:karambwan-vessel-fishing",
+      "name": "Karambwan vessel fishing",
+      "category": "Fishing method and bait tool unlock",
+      "region_hint": "karamja",
+      "requirements": [
+        "Tai Bwo Wannai Trio completed (learn vessel use from Lubufu near Brimhaven; post-quest spots move to eastern Karamja)",
+        "65 Fishing",
+        "Karambwan vessel (quest reward; restock 5 coins from Tiadeche's Karambwan Stall in Tai Bwo Wannai)",
+        "Raw karambwanji bait loaded into the vessel before each cast"
+      ],
+      "unlocks": [
+        "Karambwan fishing spots north-east Karamja / fairy ring DKP (two instances after quest)",
+        "Raw karambwan catch path for Cooking and ironman food supply",
+        "Vessel restock at Tiadeche's stall without GE dependence"
+      ],
+      "notes": "Pre-quest Lubufu spot is temporary tutorial fishing only; permanent method is post-Trio at DKP. Vessel must be filled with raw karambwanji each attempt; fish can steal bait without a catch. Distinct from Musa Point lobster dock / Stiles noting (karamja:musa-point-fishing-stiles).",
+      "source_urls": [
+        "https://runescape.wiki/w/Karambwan_vessel",
+        "https://runescape.wiki/w/Raw_karambwan",
+        "https://runescape.wiki/w/Tai_Bwo_Wannai_Trio",
+        "https://runescape.wiki/w/Tiadeche%27s_Karambwan_Stall"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja Fishing method. Fairy ring DKP is destination QoL, not a second region claim.",
+      "links_existing_ids": [
+        "karamja:tai-bwo-wannai-cleanup",
+        "karamja:musa-point-fishing-stiles",
+        "cross-region:fairy-ring-network"
+      ]
+    },
+    {
+      "id": "karamja:banana-plantation",
+      "name": "Musa Point banana plantation",
+      "category": "early gather and Cooking fruit supply",
+      "region_hint": "karamja",
+      "requirements": [
+        "Musa Point access (glory Karamja teleport, Port Sarim boat, or overland)",
+        "No skill gate to pick bananas from plantation trees"
+      ],
+      "unlocks": [
+        "33 banana trees (5 bananas each) at Luthas plantation opposite Zembo's bar",
+        "Luthas crate job: fill 10 bananas for 30 coins (quest logistics more important than wage)",
+        "Pirate's Treasure rum-smuggle crate path (Karamja half of the quest loop)",
+        "Free fruit for early Cooking / quests adjacent to Musa teaks and Stiles dock"
+      ],
+      "notes": "Automatic-early Karamja landmark, not a late-game method. Synergy with karamja:musa-point-teaks and karamja:musa-point-fishing-stiles on the same peninsula. Do not invent high XP/h claims.",
+      "source_urls": [
+        "https://runescape.wiki/w/Banana_plantation",
+        "https://runescape.wiki/w/Luthas",
+        "https://runescape.wiki/w/Musa_Point",
+        "https://runescape.wiki/w/Pirate%27s_Treasure"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja early infrastructure."
+    },
+    {
+      "id": "karamja:tzhaar-city-skilling-hub",
+      "name": "TzHaar City skilling hub",
+      "category": "regional city bank, furnace, and TokKul shop infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "Access under Karamja Volcano (members city; volcano surface is free-to-play approach)",
+        "TokKul currency for shops (no coin buy-back from TzHaar merchants)",
+        "TokTz-Ket-Dill for deeper TzHaar mine (coal/mithril/adamant rocks)",
+        "The Elder Kiln for TokKul-Zo travel ring (separate equipment row karamja:tokkul-zo)"
+      ],
+      "unlocks": [
+        "Plaza bank (TzHaar-Hur-Zuh) plus minigame lobby banks; bank areas heal like surface banks",
+        "Lava furnace for Smithing/Crafting smelt loops",
+        "Sulphur vents usable as cooking ranges across the city",
+        "TzHaar-Hur-Lek ore and gem store including uncut onyx for TokKul",
+        "TzHaar-Mej-Roh rune store and TzHaar-Hur-Tel equipment store (obsidian stock)",
+        "Small Summoning obelisk; fairy ring BLP near Fight Cave",
+        "City gold/silver mine plus post-TokTz-Ket-Dill coal/mithril/adamant mine"
+      ],
+      "notes": "Skilling half of TzHaar City for ironman banking, smelting, onyx sink, and BLP on-ramp. Combat minigames (Fight Cave/Pit/Kiln/Cauldron) stay in combat enrichment; this row is the city infrastructure checklist. Do not conflate Crafteneering (Daemonheim leather loop — forinthry:crafteneering-boundary) with TzHaar shops.",
+      "source_urls": [
+        "https://runescape.wiki/w/TzHaar_City",
+        "https://runescape.wiki/w/TzHaar-Hur-Lek%27s_Ore_and_Gem_Store",
+        "https://runescape.wiki/w/Tokkul"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja city hub. Pair with karamja:tokkul-zo for tele network.",
+      "links_existing_ids": [
+        "karamja:tokkul-zo",
+        "karamja:karamja-volcano-resource-dungeon",
+        "forinthry:crafteneering-boundary"
+      ]
+    },
+    {
+      "id": "karamja:karamja-volcano-resource-dungeon",
+      "name": "Karamja Volcano resource dungeon",
+      "category": "Dungeoneering resource dungeon (imp/lesser demon camp)",
+      "region_hint": "karamja",
+      "requirements": [
+        "25 Dungeoneering (boosts cannot bypass entry)",
+        "Enter Crandor and Karamja Dungeon via Karamja Volcano; portal in south-west lesser-demon room near TzHaar City entrance"
+      ],
+      "unlocks": [
+        "Permanent resource-dungeon access: 14 lesser demons and 11 imps",
+        "2,100 Dungeoneering XP on first entry (F2P-eligible resource dungeon)",
+        "Champion scroll and imp-in-a-box hunting density; urn / Death Note ash collection path",
+        "Hoardstalker ring / DG cape teleports after unlock"
+      ],
+      "notes": "Site detail under forinthry:resource-dungeon-unlocks account-state package. League badge is Karamja. Not a tree/ore room — value is monster density and first-entry XP on automatic-early Karamja.",
+      "source_urls": [
+        "https://runescape.wiki/w/Karamja_Volcano_resource_dungeon",
+        "https://runescape.wiki/w/Resource_dungeons",
+        "https://runescape.wiki/w/Very_Resourceful"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja surface dungeon. DG level is account-wide.",
+      "links_existing_ids": [
+        "forinthry:resource-dungeon-unlocks",
+        "karamja:tzhaar-city-skilling-hub"
+      ]
+    },
+    {
+      "id": "karamja:calquat-farming-patch",
+      "name": "Calquat farming patch (Tai Bwo Wannai)",
+      "category": "unique Farming tree patch",
+      "region_hint": "karamja",
+      "requirements": [
+        "72 Farming to plant a calquat sapling",
+        "Patch north of Tai Bwo Wannai",
+        "Jungle Potion completed to pay Imiago eight poison ivy berries for disease protection"
+      ],
+      "unlocks": [
+        "Sole classic calquat patch on Karamja (calquat tree crop at 72 Farming)",
+        "Six calquat fruit harvests per fully grown tree; clear with spade like a bush",
+        "Calquat fruit for keg crafting and Farming run completeness"
+      ],
+      "notes": "Buried inside tai-bwo-wannai-cleanup notes previously — first-class Farming unlock for region planners. Protection payment needs Jungle Potion; planting itself has no quest gate. Teleports: Tai Bwo Wannai teleport, Karamja lodestone, fairy ring CKR, Brimhaven house tablet.",
+      "source_urls": [
+        "https://runescape.wiki/w/Calquat_patch",
+        "https://runescape.wiki/w/Calquat_tree",
+        "https://runescape.wiki/w/Imiago"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja unique patch.",
+      "links_existing_ids": [
+        "karamja:tai-bwo-wannai-cleanup"
+      ]
+    },
+    {
+      "id": "havenhythe:marigold-farm-patches",
+      "name": "Marigold Farm patch cluster",
+      "category": "regional Farming infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access via Visions of Havenhythe progression",
+        "Farming levels matching planted crops (standard allotment/herb/flower gates)"
+      ],
+      "unlocks": [
+        "Two allotment patches, one herb patch, and one flower patch south-east of Wendlewick",
+        "Extra starting-region herb/allotment density beyond Manor Farm defaults",
+        "Birdhouse plot adjacency on Marigold Farm (see havenhythe:birdhouses)"
+      ],
+      "notes": "First-class split from the old farming-patch-cluster audit blob. Dalia's Tree Nursery (tree/fruit/eternal-magic plots) remains havenhythe:eternal-magic-nursery — do not merge. Marigold is the allotment/herb/flower half for daily Farming runs on automatic Havenhythe.",
+      "source_urls": [
+        "https://runescape.wiki/w/Marigold_Farm",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Wendlewick"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe starting-region Farming.",
+      "links_existing_ids": [
+        "havenhythe:eternal-magic-nursery",
+        "havenhythe:birdhouses"
+      ]
+    },
+    {
+      "id": "havenhythe:spirit-moths",
+      "name": "Spirit moths (Highweald charm supply)",
+      "category": "Hunter charm gathering",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Highweald Forest access east of Wendlewick",
+        "Butterfly net / magic butterfly net / Tellervo's net (or 85 Hunter + 80 Agility for barehand)",
+        "Hunter 18 gold / 32 green / 49 crimson / 64 blue spirit moth tiers"
+      ],
+      "unlocks": [
+        "Flush and catch spirit moths from Highweald hollow trees for matching-colour Summoning charms",
+        "Net path: gold 22 XP, green 48 XP, crimson 125 XP, blue 175 Hunter XP per catch with full charm yield",
+        "Barehand path at 85 Hunter / 80 Agility: reduced charms, 100 Hunter + 355 Agility XP per catch; Tellervo's lantern usable barehand"
+      ],
+      "notes": "Safe starting-region charm source — not Wilderness charming moths (forinthry:charming-moths). Pair with havenhythe:shrine-of-inanna-summoning-hub and shaman outfit for Summoning production stack. Distinct from volatile chinchompas (already first-class).",
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_moths",
+        "https://runescape.wiki/w/Highweald_Forest",
+        "https://runescape.wiki/w/Havenhythe"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Hunter/Summoning-supply activity.",
+      "links_existing_ids": [
+        "havenhythe:volatile-chinchompas",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:shaman-outfit",
+        "forinthry:charming-moths"
+      ]
+    },
+    {
+      "id": "havenhythe:canoe-network",
+      "name": "Havenhythe canoe network",
+      "category": "permanent regional travel infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access",
+        "Repair each dilapidated station before first use: Wendlewick stations need 20 Construction, 6 willow planks, 20 steel nails",
+        "Amberfell canoe station needs 40 Construction, 6 maple planks, 20 steel nails (after Secrets of Amberfell access)"
+      ],
+      "unlocks": [
+        "Four canoe stations: Wendlewick (Burnt Lobster Tavern dock), Wendlewick (Farm / Blighted Cave approach), Wendlewick (Grotto / Deserted Mine approach), Amberfell east dock",
+        "Intra-Havenhythe water travel without lodestone spam once stations are repaired",
+        "Quick routing to Sanguine Crawlers, Deserted Mine approach, and Amberfell / Moonrise logistics"
+      ],
+      "notes": "Havenhythe-local canoe system — not the River Lum / Wilderness canoe network used for forinthry:wilderness-herb-patch. Construction plank costs are one-time repairs per station.",
+      "source_urls": [
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Canoe_station_(Havenhythe)",
+        "https://runescape.wiki/w/Dilapidated_canoe_station"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe travel QoL.",
+      "links_existing_ids": [
+        "havenhythe:amberfell-hub",
+        "havenhythe:highweald-mining"
+      ]
+    },
+    {
+      "id": "havenhythe:amberfell-hub",
+      "name": "Amberfell village hub",
+      "category": "regional settlement and dig-site gateway",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Secrets of Amberfell progress to repair the bridge south of Hollow Hill",
+        "First visit unlocks fairy ring DLP; canoe station repair for network link"
+      ],
+      "unlocks": [
+        "Amberfell bank and three shops (Butcher of Amberfell, Fern's Finds, Heather's Crafting Supplies)",
+        "Maple tree density and lure/bait fishing spots in/near the village",
+        "Gateway settlement for Moonrise Temple exterior and Moonrise Dig Site (havenhythe:moonrise-dig-site)",
+        "Sister-village logistics toward Heathervein mining folk"
+      ],
+      "notes": "Members village released 1 June 2026. Hub row for bank/shops/travel — do not re-emit Moonrise dig-site or Tear of Inanna / Hungry Like the Wolf equipment here. Werewolf post-quest flavour is not a skilling gate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amberfell",
+        "https://runescape.wiki/w/Secrets_of_Amberfell",
+        "https://runescape.wiki/w/Moonrise_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe. Moonrise Archaeology remains the specialised dig-site row.",
+      "links_existing_ids": [
+        "havenhythe:moonrise-dig-site",
+        "havenhythe:canoe-network",
+        "havenhythe:ring-of-kayazu"
+      ]
+    },
+    {
+      "id": "havenhythe:highweald-mining",
+      "name": "Highweald / Deserted Mine mining access",
+      "category": "regional Mining infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access; path toward Highweald Forest and Deserted Mine",
+        "Mining levels for rocks present at local sites (do not invent ore tables beyond wiki live state)",
+        "Canoe Grotto station optional for Deserted Mine approach"
+      ],
+      "unlocks": [
+        "Deserted Mine as the named Havenhythe mining landmark on the regional map",
+        "Heathervein sister-settlement mining culture / quarry approach east of Amberfell for late map expansion",
+        "Local Mining pressure so Havenhythe region picks are not Hunter/Farming-only on the checklist"
+      ],
+      "notes": "Wiki Mining section on Havenhythe is still filling in post-launch; row records geography and access rather than stale XP/h. Pair with canoe Grotto station and Amberfell logistics. Not a dual-claim on Misthalin or Forinthry mines.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deserted_Mine",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Heathervein",
+        "https://runescape.wiki/w/Highweald_Forest"
+      ],
+      "confidence": "confirmed_wiki_2026_partial_detail",
+      "league_treatment": "Hard Havenhythe Mining geography.",
+      "links_existing_ids": [
+        "havenhythe:canoe-network",
+        "havenhythe:amberfell-hub"
+      ]
+    },
+    {
+      "id": "forinthry:dark-onyx-core-sources",
+      "name": "Dark onyx core source package",
+      "category": "Wilderness rare material package",
+      "region_hint": "forinthry",
+      "requirements": [
+        "Wilderness / Forinthry access and PvP risk awareness (core always lost on dangerous PvP death)",
+        "Activity-specific skill floors: 67 Hunter (black salamanders), 85 Woodcutting (bloodwood fell), Farming for herb harvest, Agility for course lap, Mandrith task eligibility"
+      ],
+      "unlocks": [
+        "Untradeable dark onyx core material for Dark Facet enchantments (Grace / Luck / Passage) at 85 Crafting with onyx + components",
+        "Source checklist after 16 March 2026 redistribution: black salamanders, Wilderness Agility Course final lap obstacle, fully felled Wilderness bloodwood, fully harvested Wilderness herb patch, Mandrith / Wilderness slayer chest",
+        "Shared rare table also rolls portable obelisk and obelisk shards on several of the same activities"
+      ],
+      "notes": "Planner package for the ironman onyx-core grind. Individual activity rows below are site detail; this row is the account-state craft ladder pointer. Farming cape auto-harvest may void herb-patch core rolls — manual last-herb harvest for the roll. Do not re-emit flash-event sack-only framing post-redistribution.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dark_onyx_core",
+        "https://runescape.wiki/w/Dark_Facet_of_Grace",
+        "https://runescape.wiki/w/Wilderness_Flash_Events"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Forinthry Wilderness package.",
+      "links_existing_ids": [
+        "forinthry:black-salamanders",
+        "forinthry:wilderness-bloodwood",
+        "forinthry:wilderness-herb-patch",
+        "forinthry:wilderness-agility-course",
+        "forinthry:mandrith-wilderness-slayer"
+      ]
+    },
+    {
+      "id": "forinthry:wilderness-herb-patch",
+      "name": "Wilderness herb patch",
+      "category": "unique Farming herb patch",
+      "region_hint": "forinthry",
+      "requirements": [
+        "Wilderness level ~38 north of Wilderness Crater / canoe destination",
+        "57 Farming to plant bloodweed (only patch in the game that accepts bloodweed seeds)",
+        "Wilderness sword 1 for unlimited herb-patch teleports; sword 3 makes the patch disease-free"
+      ],
+      "unlocks": [
+        "Bloodweed seed planting and grimy bloodweed harvest (Wilderness-only crop)",
+        "Any standard herb also plantable on this patch",
+        "Very rare dark onyx core / portable obelisk / obelisk shard on full manual harvest (post-16 March 2026)",
+        "Diary synergy with Wilderness achievements"
+      ],
+      "notes": "Region-defining Farming site for bloodweed potions and onyx-core rolls. No G.A.G. gardener. Prefer Wilderness sword tele over waka canoe for repeats. Demonic skull removed 20 July 2026 — do not plan skull XP on this patch.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_patch_(Wilderness)",
+        "https://runescape.wiki/w/Bloodweed_seed",
+        "https://runescape.wiki/w/Wilderness_sword"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Forinthry. Bloodweed cannot be dual-claimed to another region.",
+      "links_existing_ids": [
+        "forinthry:dark-onyx-core-sources",
+        "forinthry:area-tasks-wilderness-sword"
+      ]
+    },
+    {
+      "id": "forinthry:wilderness-bloodwood",
+      "name": "Wilderness bloodwood trees",
+      "category": "Woodcutting bakriminel supply",
+      "region_hint": "forinthry",
+      "requirements": [
+        "85 Woodcutting to chop; 93 Fletching to shaft bolts (boostable / assistable)",
+        "Bakriminel bolt tips recommended (logs/shafts crumble if taken too far without tips)",
+        "Wilderness access to the three no-quest trees: south of Pirates' Hideout, north-east Demonic Ruins, Chaos Temple"
+      ],
+      "unlocks": [
+        "Three always-available Wilderness bloodwood trees (no quest gate)",
+        "Bloodwood logs for bakriminel bolt shafts (320 WC XP per log action; ~6h regrow)",
+        "Very rare dark onyx core when fully felling a Wilderness bloodwood (post-16 March 2026)",
+        "Baseline ironman bakriminel path before quest-gated non-Wilderness trees (Manor Farm, Soul Wars, Ritual Site, Darkmeyer, Gorajo)"
+      ],
+      "notes": "Forinthry owns the three free Wilderness trees. Non-Wilderness trees exist but are not this row. Infernal Puzzle Box tier 5+ massively improves logs-per-tree. Pair with forinthry:dark-onyx-core-sources for the tertiary roll.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bloodwood_tree",
+        "https://runescape.wiki/w/Bloodwood_logs",
+        "https://runescape.wiki/w/Bakriminel_bolts"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Forinthry for the three Wilderness trees. Other locations remain destination pressure only.",
+      "links_existing_ids": [
+        "forinthry:dark-onyx-core-sources"
+      ]
+    },
+    {
+      "id": "forinthry:wilderness-runite-mine",
+      "name": "Wilderness runite rocks (Lava Maze north)",
+      "category": "high-level Mining ore site",
+      "region_hint": "forinthry",
+      "requirements": [
+        "50 Mining historically for runite (post-rework use current runite level gate from Mining skill guide)",
+        "Deep Wilderness travel near Lava Maze / level ~45 band",
+        "PvP risk awareness for contested rocks"
+      ],
+      "unlocks": [
+        "Dense Wilderness runite rock cluster (classic multi-rock site north of Lava Maze)",
+        "Ironman runite ore self-source under Forinthry when safer sites are contested or unavailable",
+        "Natural pairing with nearby Wilderness content loops (obelisks, flash events, Mandrith travel)"
+      ],
+      "notes": "Do not invent XP/h. Distinct from Daemonheim peninsula promethium / primal ores (forinthry:primal-ores, forinthry:daemonheim-peninsula-resource-island). Value is geography + risk ore access for no-trade accounts.",
+      "source_urls": [
+        "https://runescape.wiki/w/Runite_rock",
+        "https://runescape.wiki/w/Lava_Maze",
+        "https://runescape.wiki/w/Wilderness"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry Mining site."
+    },
+    {
+      "id": "forinthry:daemonheim-peninsula-resource-island",
+      "name": "Daemonheim Peninsula resource island",
+      "category": "Dungeoneering resource dungeon (trees + promethium)",
+      "region_hint": "forinthry",
+      "requirements": [
+        "30 Dungeoneering (boosts cannot bypass entry)",
+        "Walk the shore south-east of Daemonheim to the peninsula island portal"
+      ],
+      "unlocks": [
+        "Resource dungeon: 9 maple, 6 willow, 3 yew trees and 3 promethium rocks",
+        "2,400 Dungeoneering XP on first entry (F2P-eligible)",
+        "Early multi-skill gather room on Forinthry geography without entering a full dungeon floor"
+      ],
+      "notes": "Site detail under forinthry:resource-dungeon-unlocks. Surface primal ores on the peninsula (forinthry:primal-ores) are separate level-100 Mining content — this row is the DG resource-dungeon portal room.",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim_Peninsula_Island",
+        "https://runescape.wiki/w/Resource_dungeons"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry.",
+      "links_existing_ids": [
+        "forinthry:resource-dungeon-unlocks",
+        "forinthry:primal-ores"
+      ]
+    },
+    {
+      "id": "forinthry:edgeville-resource-dungeons",
+      "name": "Edgeville Dungeon resource dungeons",
+      "category": "Dungeoneering resource dungeons (chaos druids + hill giants)",
+      "region_hint": "forinthry",
+      "region_hints": [
+        "forinthry",
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
+      "requirements": [
+        "10 Dungeoneering for chaos-druid resource dungeon; 20 for hill-giant resource dungeon",
+        "Edgeville Dungeon access (Edgeville well / Wilderness ditch approaches)"
+      ],
+      "unlocks": [
+        "Chaos-druid RD (10 DG): 12 chaos druids + grimy marrentill/irit/harralander/ranarr spawns; 1,100 first-entry XP",
+        "Hill-giant RD (20 DG): 11 hill giants + 4 limpwurt root spawns; 1,600 first-entry XP",
+        "Early herb and limpwurt self-supply density for iron Herblore/Summoning secondaries"
+      ],
+      "region_pressure": [
+        "Forinthry owns Wilderness-adjacent Edgeville Dungeon taxonomy and DG progression framing.",
+        "Misthalin optional: Edgeville surface bank/lodestone on-ramp only."
+      ],
+      "notes": "Wave4 site detail called out by resource-dungeon package notes. Two portals, one checklist row. Do not split into two micro-rows unless planner demands it later.",
+      "source_urls": [
+        "https://runescape.wiki/w/Edgeville_Dungeon_chaos_druids_dungeon",
+        "https://runescape.wiki/w/Edgeville_Dungeon_hill_giant_resource_dungeon",
+        "https://runescape.wiki/w/Resource_dungeons"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Forinthry; Misthalin is travel support.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:resource-dungeon-unlocks"
+      ]
+    },
+    {
+      "id": "forinthry:black-salamanders",
+      "name": "Black salamanders (Boneyard Hunter)",
+      "category": "Hunter net-trap method and onyx-core source",
+      "region_hint": "forinthry",
+      "requirements": [
+        "67 Hunter",
+        "Small fishing net + rope on young trees in Boneyard Hunter area (Wilderness ~20, north-east of southern Chaos Temple / east of Bone Yard)",
+        "Optional harralander tar bait and lit torch for catch chance"
+      ],
+      "unlocks": [
+        "Black salamander weapon catches (517 Hunter XP per catch)",
+        "Wilderness achievement requirement progress for salamander catch",
+        "Very rare dark onyx core, portable obelisk, and obelisk shard rolls (rates adjusted 17 March 2026; sources redistributed 16 March 2026)"
+      ],
+      "notes": "Primary AFK-ish Wilderness Hunter onyx-core farm. Distinct from Havenhythe spirit moths and forinthry charming moths. Do not plan Demonic skull bonuses (removed 20 July 2026).",
+      "source_urls": [
+        "https://runescape.wiki/w/Black_salamander_(Hunter)",
+        "https://runescape.wiki/w/Boneyard_Hunter_area",
+        "https://runescape.wiki/w/Dark_onyx_core"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Forinthry Hunter.",
+      "links_existing_ids": [
+        "forinthry:dark-onyx-core-sources",
+        "forinthry:charming-moths"
+      ]
+    },
+    {
+      "id": "forinthry:abyss-runecrafting-stack",
+      "name": "Abyss Runecrafting stack",
+      "category": "Runecrafting access and efficiency stack",
+      "region_hint": "forinthry",
+      "region_hints": [
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "requirements": [
+        "Enter the Abyss miniquest; Mage of Zamorak entrance north of Edgeville (forinthry:abyss-entrance)",
+        "Wilderness Area Tasks / Wilderness sword for magical-thread rate tiers and inner-ring chance teleports",
+        "Runecrafting levels for target altars; pouches or sealed/grasping pouch chain for inventory economy"
+      ],
+      "unlocks": [
+        "Unified planner stack: Abyss outer/inner ring rifts to nearly all standard altars without talisman",
+        "Free pouch repair at Dark Mage (inner ring)",
+        "Magical thread farm rates scaling with Wilderness diary (easy 5% / medium 10% / hard 15% / elite 33.3%) feeding sealed/grasping pouch crafts",
+        "Post-29-Sep-2025: no Abyss RC XP buff (XP is base RC level); thread odds remain the diary pressure"
+      ],
+      "region_pressure": [
+        "Forinthry: Mage of Zamorak entrance, Abyss, Wilderness sword diary tiers.",
+        "Kandarin optional: Ourania altar / abyssal runic synapse alternate thread path.",
+        "Misthalin optional: Edgeville bank and essence logistics only."
+      ],
+      "notes": "Stack row pending from wave4-critical-tools notes. Does not re-emit forinthry:abyss-entrance or forinthry:magical-thread-abyss-supply — links them. Necromantic and Ourania altars excluded from Abyss rifts. Demonic skull no longer boosts thread (post-2025).",
+      "source_urls": [
+        "https://runescape.wiki/w/Abyss",
+        "https://runescape.wiki/w/Enter_the_Abyss_(miniquest)",
+        "https://runescape.wiki/w/Magical_thread",
+        "https://runescape.wiki/w/Wilderness_sword"
+      ],
+      "confidence": "confirmed_wiki_2025_2026_current",
+      "league_treatment": "Hard Forinthry for entrance + diary rate stack. Individual altar quest gates remain separate.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:abyss-entrance",
+        "forinthry:magical-thread-abyss-supply",
+        "forinthry:area-tasks-wilderness-sword"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "karamja:pirates-hook",
+      "name": "Pirate hook (left)",
+      "category": "Brimhaven Agility Arena hand-slot reward",
+      "region_hint": "karamja",
+      "requirements": [
+        "Brimhaven Agility Arena access (200 coin entry; waived after Rocking Out)",
+        "800 Agility Arena tickets exchanged with Pirate Jackie the Fruit",
+        "Karamja gloves 4 optional (25% double-ticket chance) to cut grind time"
+      ],
+      "effects": [
+        "Hand-slot melee tank gloves (tier 5 class stats; prestige/cosmetic primary value)",
+        "Combinable with crab claw (Patchy) into crabclaw and hook, or with pirate hook (right) into double pirate hooks",
+        "Tradeable GE sink after self-farm — iron prestige + completionist checklist item"
+      ],
+      "notes": "First-class equipment split from karamja:brimhaven-agility-arena ticket-shop blurb. Not core combat gear; tracks Arena completion depth and ticket economy. Minimum ~800 minutes of perfect pillars without gloves 4 (~640 with double-ticket proc average).",
+      "source_urls": [
+        "https://runescape.wiki/w/Pirate_hook_(left)",
+        "https://runescape.wiki/w/Agility_Arena_Ticket_Exchange",
+        "https://runescape.wiki/w/Brimhaven_Agility_Arena"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja Arena reward.",
+      "links_existing_ids": [
+        "karamja:brimhaven-agility-arena",
+        "karamja:area-tasks-karamja-gloves"
+      ]
+    }
+  ]
+}

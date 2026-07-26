@@ -281,7 +281,7 @@
         "Configured bone drops auto-convert into bury Prayer XP",
         "Synergises with Dungeoneering prayer necklaces that restore Prayer from crushed bones"
       ],
-      "notes": "Post-11-May-2026 remaster cost/req. Named row so it is not buried in forinthry:daemonheim-skilling-rewards. Matches dungeoneering:bonecrusher-current overlay costs.",
+      "notes": "Post-11-May-2026 remaster cost/req. Named row so it is not buried in forinthry:daemonheim-rewards-shop-hub. Matches forinthry:bonecrusher overlay costs.",
       "source_urls": [
         "https://runescape.wiki/w/Bonecrusher",
         "https://runescape.wiki/w/Daemonheim_Rewards",

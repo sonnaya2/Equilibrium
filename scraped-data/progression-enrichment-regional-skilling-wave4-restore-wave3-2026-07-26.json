@@ -1,0 +1,461 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Restore wave-3 first-class permanent unlocks wiped by file-sync. Re-emits ironman-critical rows that were present before wave4 densify then lost from disk.",
+  "policy": {
+    "region_rule": "Valid regions only. required_regions + region_requirement_type for combos. Never multi-region/cross-region as region tokens.",
+    "no_trade_rule": "Permanent ironman-relevant unlocks only.",
+    "rate_rule": "No invented XP/h.",
+    "duplicate_guard": "Skip if id already wins merge; these ids were confirmed missing from regional-skilling-unlocks.json at restore time."
+  },
+  "activity_additions": [
+    {
+      "id": "kandarin:barbarian-training",
+      "name": "Barbarian Training (Otto multi-skill package)",
+      "category": "permanent multi-skill unlock package",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "karamja"],
+      "requirements": [
+        "Otto Godblessed at Otto's Grotto north of Baxtorian Falls",
+        "35 Firemaking and 11 Crafting for bow firemaking",
+        "55 Fishing (boostable), 15 Agility, 35 Strength for heavy-rod fishing",
+        "5 Smithing plus Tai Bwo Wannai Trio for spear and hasta smithing",
+        "4 Herblore for barbarian mixes",
+        "Mithril dragon kill for chewed bones to finish pyre ships"
+      ],
+      "unlocks": [
+        "Barbarian Firemaking: bow-lighting and pyre ships (Ancient Cavern access)",
+        "Barbarian Fishing: leaping fish heavy rod and barehanded harpoon fishing",
+        "Barbarian Smithing: spears and hastae on the barbarian anvil",
+        "Barbarian Herblore: combat potion mixes with roe or caviar"
+      ],
+      "notes": "Kandarin hard gate at Otto. Karamja is support for Tai Bwo Wannai Trio on the smithing branch only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Barbarian_Training",
+        "https://runescape.wiki/w/Otto_Godblessed"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin. Karamja support for spear path.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "kandarin:always-adze-relic",
+      "name": "Always Adze (Seed of the Charyou Tree)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "asgarnia"],
+      "requirements": [
+        "83 Archaeology (boostable) for Warforge Into the Forge path",
+        "Inactive Seed of the Charyou Tree from Imcando anvil in Thalmund's Forge (Warforge Dig Site)",
+        "Flame gloves equipped (79 Firemaking, All Fired Up) to Activate the seed",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Always Adze relic power at the mysterious monolith",
+        "Auto-burn cut logs for Firemaking XP while Woodcutting",
+        "Also burns curly roots and timber fungus that cannot be lit from inventory"
+      ],
+      "notes": "Warforge is Kandarin — never Anachronia. Does not burn Arc bamboo, bloodwood, BGH jungle logs, divine location logs, or Daemonheim logs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Always_Adze",
+        "https://runescape.wiki/w/Seed_of_the_Charyou_Tree",
+        "https://runescape.wiki/w/Warforge_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin via Warforge. Flame gloves are Asgarnia support.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "kandarin:spirit-tree-network",
+      "name": "Spirit tree network (Tree Gnome Stronghold)",
+      "category": "Farming travel infrastructure",
+      "region_hint": "kandarin",
+      "requirements": [
+        "Tree Gnome Village for village spirit tree access",
+        "The Grand Tree for Stronghold spirit tree hub",
+        "Farming level for planted spirit tree patches"
+      ],
+      "unlocks": [
+        "Free teleport network between spirit trees",
+        "Core ironman Farming patch-run logistics",
+        "Foundation for later Prifddinas spirit tree destinations"
+      ],
+      "notes": "Kandarin owns the classic gnome backbone. Later destinations may sit in other regions.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_tree",
+        "https://runescape.wiki/w/Tree_Gnome_Stronghold"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin."
+    },
+    {
+      "id": "desert:mage-training-arena",
+      "name": "Mage Training Arena (bones to peaches + reward shop)",
+      "category": "Magic utility minigame and permanent unlock shop",
+      "region_hint": "desert",
+      "requirements": [
+        "Mage Training Arena access north of Al Kharid / Duel Arena",
+        "Magic levels for Telekinetic, Alchemist, Enchantment, and Graveyard rooms",
+        "Pizazz points for reward shop purchases"
+      ],
+      "unlocks": [
+        "Bones to Peaches spell permanent unlock",
+        "Infinity robes and wand progression shop",
+        "Mid-game Magic utility rewards"
+      ],
+      "notes": "Bones to Peaches is the ironman-facing permanent. No invented room XP/h.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mage_Training_Arena",
+        "https://runescape.wiki/w/Bones_to_Peaches"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "tirannwn:crystal-tree-farming",
+      "name": "Crystal tree Farming (crystal acorns)",
+      "category": "Prifddinas Farming unique content",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Plague's End for Prifddinas access",
+        "94 Farming (boostable) to plant a crystal acorn",
+        "Crystal acorn source (Max Guild gift, Ithell, or drops)"
+      ],
+      "unlocks": [
+        "Crystal tree patch in Prifddinas",
+        "Crystal geode produce for crystal supply chains"
+      ],
+      "notes": "Distinct from Max Guild garden portals.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_tree",
+        "https://runescape.wiki/w/Crystal_acorn"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn."
+    },
+    {
+      "id": "anachronia:totems",
+      "name": "Anachronia totems (permanent multi-skill buffs)",
+      "category": "island permanent passive buff system",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Anachronia access and base camp",
+        "Totem piece farms: BGH, Agility, rubble, zygomites, Herby Werby, idols, ranch, mining, Slayer",
+        "Three totem pedestals; Remototem for remote swap",
+        "After April 2026: no weekly charge — place and swap freely"
+      ],
+      "unlocks": [
+        "Totem of Treasure: clue step reduction",
+        "Totem of Navigation: -15% player-owned port voyage duration",
+        "Totem of Crystal: -25% Prif clan Thieving lock-out",
+        "Totem of the Abyss: Anachronia Teleport destination when placed",
+        "Totem of Intimidation: skip GWD general kill-count (not Nex)",
+        "Totem of Summoning: +16 minutes familiar duration",
+        "Totem of Vitality: +25% LP up to +1,500",
+        "Remototem: manage pedestals from base camp"
+      ],
+      "notes": "Totem of Auras was replaced by Totem of Vitality (April 2026).",
+      "source_urls": [
+        "https://runescape.wiki/w/Totem",
+        "https://runescape.wiki/w/Remototem"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia."
+    },
+    {
+      "id": "tirannwn:chronicle-attraction",
+      "name": "Chronicle Attraction (Seren skilling prayer)",
+      "category": "skilling prayer unlock",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "The Light Within completed",
+        "89 Prayer",
+        "Ancient Curses book unlocked"
+      ],
+      "unlocks": [
+        "Chronicle Attraction curse",
+        "Automatically harvest nearby chronicle fragments while skilling"
+      ],
+      "notes": "Third Seren gathering prayer with Superheat Form and Light Form. Drain offset by GOTE or Dark Facet of Grace.",
+      "source_urls": [
+        "https://runescape.wiki/w/Chronicle_Attraction",
+        "https://runescape.wiki/w/The_Light_Within"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn."
+    },
+    {
+      "id": "havenhythe:wendlewick-fish-farm",
+      "name": "Wendlewick fish farm (Havenhythe)",
+      "category": "starting-region Fishing infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe starting region access",
+        "Wendlewick multi-pool fish farm"
+      ],
+      "unlocks": [
+        "Multi-pool fish farm Fishing training infrastructure",
+        "Early self-sufficient fish supply on Havenhythe"
+      ],
+      "notes": "Complements birdhouses and Hunter cluster already indexed for the region.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fish_farm",
+        "https://runescape.wiki/w/Havenhythe"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe."
+    },
+    {
+      "id": "karamja:shilo-gem-mine",
+      "name": "Shilo Village underground gem mine",
+      "category": "Crafting self-supply mining infrastructure",
+      "region_hint": "karamja",
+      "requirements": [
+        "Shilo Village quest completed",
+        "Access to underground gem rocks beneath Shilo"
+      ],
+      "unlocks": [
+        "Dense gem rock mining for Crafting self-supply",
+        "Karamja gloves 3-4 adjacency for diary utility"
+      ],
+      "notes": "First-class mine row, not only a gloves footnote.",
+      "source_urls": [
+        "https://runescape.wiki/w/Shilo_Village_mine",
+        "https://runescape.wiki/w/Shilo_Village"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja."
+    },
+    {
+      "id": "morytania:werewolf-agility",
+      "name": "Werewolf Agility Course",
+      "category": "Agility course infrastructure",
+      "region_hint": "morytania",
+      "requirements": [
+        "Creature of Fenkenstrain for Canifis/werewolf access path",
+        "60 Agility typical course gate",
+        "Stick item for the course"
+      ],
+      "unlocks": [
+        "Werewolf Agility Course training method",
+        "Skullball adjacency Agility loop"
+      ],
+      "notes": "No invented XP/h.",
+      "source_urls": [
+        "https://runescape.wiki/w/Werewolf_Agility_Course"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania."
+    },
+    {
+      "id": "morytania:polypore-dungeon",
+      "name": "Polypore Dungeon (spore and stick resources)",
+      "category": "mid-game Magic and Farming resource dungeon",
+      "region_hint": "morytania",
+      "requirements": [
+        "Access east of Canifis (fairy ring BIP or lodestone route)",
+        "Combat for polypore creatures; neem oil for safe resource runs"
+      ],
+      "unlocks": [
+        "Polypore stick and fungal spore gathering",
+        "Polypore staff charge materials"
+      ],
+      "notes": "Resource dungeon infrastructure, not combat BiS.",
+      "source_urls": [
+        "https://runescape.wiki/w/Polypore_Dungeon",
+        "https://runescape.wiki/w/Polypore_staff"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania."
+    },
+    {
+      "id": "asgarnia:thieves-guild-master-tools",
+      "name": "Thieves' Guild master thief tools",
+      "category": "Thieving permanent tools",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "misthalin"],
+      "requirements": [
+        "Thieves' Guild access under Lumbridge (Buyers and Cellars chain)",
+        "Guild reputation / heist progression for master tools"
+      ],
+      "unlocks": [
+        "Master thief's lockpick",
+        "Master thief's stethoscope",
+        "Improved safecracking and Keldagrim chest QoL"
+      ],
+      "notes": "Guild entrance under Lumbridge (Misthalin support). Distinct from Rogues' Den gear.",
+      "source_urls": [
+        "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "https://runescape.wiki/w/Master_thief%27s_stethoscope",
+        "https://runescape.wiki/w/Thieves%27_Guild"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia packaging with Misthalin quest access support.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "desert:player-owned-port",
+      "name": "Player-owned port (first-class hub)",
+      "category": "Ports voyage economy and Eastern lands gate",
+      "region_hint": "desert",
+      "region_hints": ["desert", "asgarnia"],
+      "requirements": [
+        "Ports access via Menaphos / Port district portal",
+        "Captain and crew progression for voyage success"
+      ],
+      "unlocks": [
+        "Player-owned port voyage interface and trade goods",
+        "Eastern lands / Arc voyage gate materials",
+        "Ports resources for scroll of proficiency and related crafts"
+      ],
+      "notes": "asgarnia:player-owned-ports-skilling-rewards is Arc reward depth; this is the Ports hub itself.",
+      "source_urls": [
+        "https://runescape.wiki/w/Player-owned_port"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Desert/Menaphos. Asgarnia Arc shops support only.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "asgarnia:the-arc-waiko-shop",
+      "name": "The Arc Waiko reward shop (chime economy)",
+      "category": "Eastern lands skilling shop infrastructure",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "requirements": [
+        "Player-owned port progression for Arc voyages",
+        "Impressing the Locals / Arc island access",
+        "Chimes and taijitu for Waiko purchases"
+      ],
+      "unlocks": [
+        "Waiko reward shop permanent unlocks",
+        "Chime economy sinks for contracts and supplies"
+      ],
+      "notes": "Deepens asgarnia:arc-skilling-access. Desert remains Ports portal pressure.",
+      "source_urls": [
+        "https://runescape.wiki/w/The_Arc",
+        "https://runescape.wiki/w/Waiko"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia Arc packaging with Desert Ports support.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "cross-region:signs-of-the-porter-supply",
+      "name": "Signs of the porter (Divination supply system)",
+      "category": "Divination bank-transport supply chain",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "tirannwn", "asgarnia", "misthalin"],
+      "required_regions": ["kandarin", "tirannwn"],
+      "requirements": [
+        "Divination levels for sign of the porter tiers",
+        "Divine energy of appropriate tier to craft signs",
+        "Grace of the elves or other high-tier porters for capacity"
+      ],
+      "unlocks": [
+        "Craftable signs of the porter for auto bank deposit while gathering",
+        "Energy-tier ladder powering GOTE and gathering transport"
+      ],
+      "notes": "GOTE assembly is a separate chain row. This is the Divination sign craft supply system.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sign_of_the_porter",
+        "https://runescape.wiki/w/Grace_of_the_elves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin energy + Tirannwn GOTE are the hard stack ends.",
+      "region_requirement_type": "all_required"
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "morytania:drakans-medallion",
+      "name": "Drakan's medallion",
+      "category": "Morytania teleport network equipment",
+      "region_hint": "morytania",
+      "requirements": [
+        "The Branches of Darkmeyer completed",
+        "Reclaim from Burgh de Rott cave coffin if lost",
+        "Blood pool recharge (10) or congealed blood up to 25,000 charges"
+      ],
+      "effects": [
+        "Teleports: Barrows, Burgh de Rott, Meiyerditch hideout, Darkmeyer upper tier, Meiyerditch laboratory",
+        "Free (no charge) teleports when already inside most of Morytania"
+      ],
+      "notes": "Primary daily Morytania travel network. Distinct from ectophial.",
+      "source_urls": [
+        "https://runescape.wiki/w/Drakan%27s_medallion",
+        "https://runescape.wiki/w/The_Branches_of_Darkmeyer"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania."
+    },
+    {
+      "id": "tirannwn:ancient-elven-ritual-shard",
+      "name": "Ancient elven ritual shard",
+      "category": "Prayer sustain off-hand utility for Seren skilling prayers",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Lost Grove access",
+        "Drop from Lost Grove creatures (1/1,500 on task, 1/5,000 off-task) or Solak (1/1,000)"
+      ],
+      "effects": [
+        "Activate: restore 37.5% of total Prayer points over 30 seconds",
+        "5-minute cooldown; unlimited activations",
+        "Primary Superheat Form / Light Form / Chronicle Attraction sustain with GOTE"
+      ],
+      "notes": "Tradeable but ironman farm is Lost Grove / Solak — Tirannwn.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ancient_elven_ritual_shard",
+        "https://runescape.wiki/w/The_Lost_Grove"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn."
+    },
+    {
+      "id": "cross-region:dark-facet-of-grace",
+      "name": "Dark Facet of Grace (GOTE enchantment)",
+      "category": "Grace of the Elves permanent upgrade",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn", "forinthry", "asgarnia"],
+      "required_regions": ["tirannwn", "forinthry"],
+      "requirements": [
+        "Grace of the elves already crafted",
+        "Dark Facet of Grace enchantment (Invention craft: dark onyx core + Seren components + onyx + crystal tool seed)",
+        "Dark onyx core path (Forinthry / Spirit Realm)",
+        "Imbue once: permanent account unlock while wearing GOTE"
+      ],
+      "effects": [
+        "GOTE porter capacity 500 to 2,000",
+        "Seren skill-prayer drain reduction 50% to 100% (Light Form, Superheat Form, Chronicle Attraction)"
+      ],
+      "notes": "Destroy-on-imbue permanent. Invention Guild is craft support pressure only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dark_Facet_of_Grace",
+        "https://runescape.wiki/w/Grace_of_the_elves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn GOTE + Forinthry dark onyx are hard ends.",
+      "region_requirement_type": "all_required"
+    },
+    {
+      "id": "cross-region:gemstone-golem-outfit",
+      "name": "Gemstone golem outfit",
+      "category": "Mining XP outfit",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry", "desert", "asgarnia"],
+      "requirements": [
+        "Gemstone golem fragment path (Daemonheim / gemstone golem encounters)",
+        "Outfit piece assembly for full set XP bonus"
+      ],
+      "effects": [
+        "Mining experience outfit bonus when worn"
+      ],
+      "notes": "Complement/alternative to golden mining suit (Fremennik).",
+      "source_urls": [
+        "https://runescape.wiki/w/Gemstone_golem_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry primary; other regions support.",
+      "region_requirement_type": "support"
+    }
+  ]
+}

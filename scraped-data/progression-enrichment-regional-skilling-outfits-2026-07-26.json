@@ -16,7 +16,9 @@
       "karamja:witchdoctor-camo-outfit",
       "morytania:first-age-outfit-equipment"
     ],
-    "skip_combat": ["refined anima core of Zaros/Zamorak/Sliske — combat armour, not skilling XP outfit"],
+    "skip_combat": [
+      "refined anima core of Zaros/Zamorak/Sliske — combat armour, not skilling XP outfit"
+    ],
     "region_rule": "region_hint is the practical self-sufficient acquisition geography for League planning. Elite Invention fragment outfits are global craft once fragments exist — region_hint still marks the best associated hub or pressure.",
     "outfit_rule": "Gameplay acquisition only. Do not treat Treasure Hunter or DXP Token Store as the League path.",
     "id_rule": "Skip if the same id already exists as equipment in regional-skilling-unlocks. New ids may share a name with an activity row when the activity is only a hub pointer."
@@ -84,7 +86,11 @@
       "name": "Nature's sentinel outfit",
       "category": "Woodcutting elite skilling outfit",
       "region_hint": "cross-region",
-      "region_hints": ["asgarnia", "kandarin", "misthalin"],
+      "region_hints": [
+        "asgarnia",
+        "kandarin",
+        "misthalin"
+      ],
       "requirements": [
         "70 Woodcutting to collect sentinel fragments; 80 Woodcutting and 20 Invention to craft oaken/willow/maple pieces",
         "54,000 sentinel fragments total for the three base outfits then combine into Nature's sentinel"
@@ -111,7 +117,10 @@
       "name": "Magic golem outfit",
       "category": "Mining elite skilling outfit",
       "region_hint": "cross-region",
-      "region_hints": ["asgarnia", "fremennik"],
+      "region_hints": [
+        "asgarnia",
+        "fremennik"
+      ],
       "requirements": [
         "70 Mining for gemstone golem fragments; 80 Mining and 20 Invention to craft sapphire/emerald/ruby golem pieces",
         "54,000 gemstone golem fragments total then combine three outfits into magic golem"
@@ -280,7 +289,7 @@
         "Wiki also documents up to 700 additional Runecrafting XP per action across RC activities with full set",
         "Infinity ethereal elite outfit inherits the highest master-runecrafter XP previously achieved"
       ],
-      "notes": "Equipment split from misthalin:runespan-master-runecrafter-robes activity. Wizards' Tower / Runespan is Misthalin-accessible, not region-exclusive (thaler / GOP alternate currencies).",
+      "notes": "Equipment split from misthalin:master-runecrafter-robes activity. Wizards' Tower / Runespan is Misthalin-accessible, not region-exclusive (thaler / GOP alternate currencies).",
       "source_urls": [
         "https://runescape.wiki/w/Master_runecrafter_robes",
         "https://runescape.wiki/w/Runespan",
@@ -294,7 +303,11 @@
       "name": "Master camouflage outfit",
       "category": "Thieving elite skilling outfit",
       "region_hint": "cross-region",
-      "region_hints": ["desert", "tirannwn", "fremennik"],
+      "region_hints": [
+        "desert",
+        "tirannwn",
+        "fremennik"
+      ],
       "requirements": [
         "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
         "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
@@ -335,7 +348,7 @@
         "+1% set bonus when all five pieces worn (6% total)",
         "Modified ritualist's mask: 5% chance to save ritual focus objects; operate to spawn a deathshead moth once per day"
       ],
-      "notes": "Equipment split from misthalin:city-of-um-ritualist-outfit activity. Permanent non-MTX shop path from July 2025 — not Grim Harvest TH.",
+      "notes": "Equipment split from misthalin:ritualists-outfit activity. Permanent non-MTX shop path from July 2025 — not Grim Harvest TH.",
       "source_urls": [
         "https://runescape.wiki/w/Ritualist%27s_outfit",
         "https://runescape.wiki/w/Austin%27s_Place",

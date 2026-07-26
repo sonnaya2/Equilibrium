@@ -1,0 +1,635 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 CRITICAL ironman permanent tools still missing as first-class rows in data/research/regional-skilling-unlocks.json (359-record audit). Targets travel infrastructure, Prayer AFK stack pieces, Invention drop cleaner, All Fired Up adze equipment, Karamja TokKul-Zo, Abyss magical-thread supply package, DG resource-dungeon unlock map, individual crystal gather tools (pick/hatchet/mattock), Croesus seed bag, and high-value modified skill-outfit heads. Complements wave3-missing + other wave4 enrichments without re-emitting ids already present in research.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Grep-confirmed absent from regional-skilling-unlocks.json: fairy ring, Ava chain, bonecrusher necklace stack, attuned ectoplasmator, spring cleaner, inferno adze equipment, TokKul-Zo, magical-thread package, resource-dungeon unlock package, crystal pick/hatchet/mattock equipment, seed bag, modified farmer/botanist heads. SKIP: asgarnia:wicked-hood and multi-region:poh-gilded-altar (pending wave4-slayer-rc-prayer); cross-region:fired-up-inferno-adze-chain stack (pending wave4-cross-stacks — this file adds the missing equipment row only); kandarin:modified-diviners-headwear (pending wave4-diaries-outfits); forinthry:abyss-runecrafting-stack (pending — this file adds thread-supply package that links sword+abyss); individual resource dungeons already filed (mining-guild, edimmu, and wave4 edgeville/karamja volcano).",
+    "no_trade_rule": "Ironman permanent unlocks that change travel, Prayer AFK, inventory QoL, gather tools, or RC pouch economy.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, and effects only.",
+    "rs3_terminology": "RS3 has no fused 'bonecrusher necklace' craft item (OSRS). Stack = bonecrusher + demon horn necklace (Daemonheim Rewards). Ava top tier is alerter (not alethiometer)."
+  },
+  "already_present_checked": [
+    "forinthry:bonecrusher",
+    "multi-region:toolbelt-bonecrusher-attach",
+    "forinthry:abyss-entrance",
+    "forinthry:area-tasks-wilderness-sword",
+    "asgarnia:all-fired-up-beacons",
+    "asgarnia:ring-of-fire",
+    "asgarnia:flame-gloves",
+    "kandarin:always-adze-relic",
+    "kandarin:spirit-tree-network",
+    "prifddinas:crystal-tool-workshop",
+    "cross-region:crystal-tools-dragon-base",
+    "tirannwn:crystal-hammer",
+    "tirannwn:crystal-tinderbox",
+    "tirannwn:crystal-fishing-rod",
+    "asgarnia:mining-guild-resource-dungeon",
+    "prifddinas:edimmu-resource-dungeon",
+    "multi-region:seedicide",
+    "multi-region:toolbelt-seedicide-attach",
+    "desert:farmers-outfit",
+    "asgarnia:botanists-outfit",
+    "desert:desert-amulet-4",
+    "desert:area-tasks-desert-amulet",
+    "anachronia:no-area-tasks-diary",
+    "havenhythe:no-area-tasks-diary",
+    "desert:dominion-tower-combat-pointer"
+  ],
+  "activity_additions": [
+    {
+      "id": "cross-region:fairy-ring-network",
+      "name": "Fairy ring network (Zanaris hub)",
+      "category": "permanent multi-region travel infrastructure",
+      "region_hints": ["misthalin", "morytania", "kandarin"],
+      "required_regions": ["misthalin", "morytania"],
+      "optional_pressure_regions": ["kandarin", "karamja", "fremennik", "desert", "tirannwn", "havenhythe", "forinthry", "asgarnia"],
+      "requirements": [
+        "Priest in Peril + Nature Spirit (Morytania quest gate into fairy-tale chain)",
+        "Lost City (Misthalin / Zanaris access via Dramen tree)",
+        "A Fairy Tale I - Growing Pains completed",
+        "Started A Fairy Tale II - Cure a Queen and permission from the Fairy Godfather to use the network",
+        "Dramen staff or lunar staff to enter rings until A Fairy Tale III - Battle at Ork's Rift removes the staff requirement",
+        "Optional: portable fairy ring (Invention) or POH fairy ring furniture (code AKP) for remote entry"
+      ],
+      "unlocks": [
+        "Teleport network between surface fairy rings via three-letter codes through the Zanaris master ring (code AIP)",
+        "Ironman backbone for Farming patch runs, dig sites, Habitat, Phasmatys, Piscatoris, Menaphos CKQ, Havenhythe BKS, and TzHaar BLP",
+        "Travel log favourites after first visit; invalid/locked codes dump near Zanaris hub",
+        "Some rings require rebuild with 5 bittercap mushrooms (e.g. Ancient Cavern BJQ, Lost Grove BJS, Kharazi CJS)"
+      ],
+      "region_pressure": [
+        "Misthalin: Zanaris hub + Lost City + Wizards' Tower DIS / Edgeville DKR entry points.",
+        "Morytania: Nature Spirit / Priest in Peril quest gates; ALQ/CKS/BKR rings for swamp/Canifis logistics.",
+        "Kandarin optional value: dense ring count (ALS, CIQ, DJP, BLR, AJR, etc.) but not required to unlock the network itself.",
+        "Later destinations (Prif DJS, Menaphos CKQ, Havenhythe BKS, Fort BJP) are destination pressure only."
+      ],
+      "notes": "Spirit trees already first-class (kandarin:spirit-tree-network). Fairy rings were only footnotes on birdhouses / soul altar / Max Guild — this is the matching travel package. Zanaris is Misthalin taxonomy; do not invent a zanaris region token. Pair with ectophial / Drakan / TokKul-Zo / wilderness sword as alternate network on-ramps.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fairy_ring",
+        "https://runescape.wiki/w/A_Fairy_Tale_II_-_Cure_a_Queen",
+        "https://runescape.wiki/w/Zanaris"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin + Morytania for quest unlock + Zanaris hub. Kandarin and other regions score as destination value / optional on-ramps, not unlock gates.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "kandarin:spirit-tree-network",
+        "morytania:ectophial",
+        "morytania:drakans-medallion",
+        "forinthry:area-tasks-wilderness-sword"
+      ]
+    },
+    {
+      "id": "forinthry:resource-dungeon-unlocks",
+      "name": "Resource dungeon unlock map (Dungeoneering permanent access)",
+      "category": "permanent Dungeoneering gather infrastructure package",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry", "asgarnia", "misthalin", "karamja", "kandarin", "morytania", "desert", "tirannwn"],
+      "required_regions": ["forinthry"],
+      "optional_pressure_regions": ["asgarnia", "misthalin", "karamja", "kandarin", "morytania", "desert", "tirannwn"],
+      "requirements": [
+        "Dungeoneering level gates per dungeon (boosts cannot bypass entry level)",
+        "Quest gates where listed: Waterfall Quest (Baxtorian), A Clockwork Syringe (Braindeath 'Rum'-geon), One of a Kind (Dragontooth), Plague's End (Gorajo + Edimmu)",
+        "First-time entry grants fixed DG XP on most dungeons (total ~282,600 members XP if fully cleared historically; free-to-play subset lower)"
+      ],
+      "unlocks": [
+        "Permanent surface resource-dungeon access package for ironman gather planning (ores, trees, herbs, monster camps)",
+        "Key skilling rooms: Dwarven Mine phasmatite (15), Mining Guild luminite/drakolith (45), Al Kharid necrite/gem rocks (75), Asgarnian Ice frost dragons (85), Varrock Sewers magic trees (65), Brimhaven metal dragons (80), Kal'gerion rare gems (90), Slayer Tower dark beasts/abyssals (100), Edimmu crystal sandstone (115)",
+        "Hoardstalker ring / DG cape teleports to many resource dungeons after unlock",
+        "Very Resourceful achievement checklist of named dungeons"
+      ],
+      "region_pressure": [
+        "Forinthry owns Daemonheim level progression + peninsula island (30) and is the account-state home for DG tokens/rewards that fund related tools.",
+        "Asgarnia: Mining Guild RD, Taverley hellhound/blue dragon RDs, Asgarnian Ice frost dragons.",
+        "Misthalin: Edgeville chaos-druid / hill-giant RDs, Varrock Sewers.",
+        "Karamja: volcano lesser-demon RD + Brimhaven metal-dragon RD.",
+        "Tirannwn: Gorajo + Edimmu (Plague's End).",
+        "Individual first-class rows already exist for Mining Guild and Edimmu — this package is the remaining map checklist."
+      ],
+      "notes": "Do not re-emit asgarnia:mining-guild-resource-dungeon or prifddinas:edimmu-resource-dungeon. Wave4 pending edgeville / karamja volcano / peninsula rows remain site detail; this is the account-state unlock ladder ironmen checklist.",
+      "source_urls": [
+        "https://runescape.wiki/w/Resource_dungeon",
+        "https://runescape.wiki/w/Very_Resourceful"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for DG progression framing. Destination dungeons still need their surface regions unlocked to enter.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:mining-guild-resource-dungeon",
+        "prifddinas:edimmu-resource-dungeon",
+        "prifddinas:motherlode-maw"
+      ]
+    },
+    {
+      "id": "forinthry:magical-thread-abyss-supply",
+      "name": "Magical thread (Abyss RC + Wilderness diary rates)",
+      "category": "permanent Runecrafting pouch-economy supply package",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry", "kandarin", "misthalin"],
+      "required_regions": ["forinthry"],
+      "optional_pressure_regions": ["kandarin", "misthalin"],
+      "requirements": [
+        "Abyss entrance access (forinthry:abyss-entrance — Mage of Zamorak Wilderness)",
+        "Wilderness Area Tasks for thread-rate tiers via Wilderness sword worn or backpack (easy 5% / medium 10% / hard 15% / elite 33.3% cumulative chance boost)",
+        "Runecrafting through Abyss rifts (odds scale with essence used per craft; soul runes scale with charges)",
+        "Optional alternate sources: runic attuner every 25th attunement (1–4 thread); abyssal runic synapse at Ourania altar (guaranteed 1 thread + 250 runes)"
+      ],
+      "unlocks": [
+        "Magical thread material for sealed small rune pouch (30 thread, 55 RC), sealed large rune pouch (100 thread, 90 RC), grasping upgrade (+15 thread + Croesus flakes), and expansive pouch cord (100 thread)",
+        "Ironman RC inventory economy without GE thread — Abyss + sword 4 is the primary farm",
+        "Free pouch repair remains Dark Mage in Abyss inner ring (forinthry:abyss-entrance side effect)"
+      ],
+      "region_pressure": [
+        "Forinthry: Abyss entrance + Wilderness sword diary tiers own the rate ladder (post-2025 demonic skull no longer boosts thread).",
+        "Kandarin optional: Ourania altar synapse path and Ourania RC loop.",
+        "Misthalin optional: Wizards' Tower / essence logistics only."
+      ],
+      "notes": "Does not re-emit forinthry:abyss-entrance or forinthry:area-tasks-wilderness-sword. Complements pending forinthry:abyss-runecrafting-stack by making the thread→pouch craft ladder checklist-visible. Protean essence never yields thread.",
+      "source_urls": [
+        "https://runescape.wiki/w/Magical_thread",
+        "https://runescape.wiki/w/Abyss",
+        "https://runescape.wiki/w/Wilderness_sword",
+        "https://runescape.wiki/w/Grasping_rune_pouch",
+        "https://runescape.wiki/w/Sealed_large_rune_pouch"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for Abyss + Wilderness diary rate package. Ourania is Kandarin support.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:abyss-entrance",
+        "forinthry:area-tasks-wilderness-sword"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "misthalin:avas-device-chain",
+      "name": "Ava's device chain (attractor / accumulator / alerter)",
+      "category": "permanent Ranged ammo-recovery and cape-rack utility chain",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "desert"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Animal Magnetism completed — Ava in Draynor Manor (Misthalin)",
+        "Ava's attractor: minimum 30 Ranged (quest reward path)",
+        "Ava's accumulator: minimum 50 Ranged (upgrade from Ava)",
+        "Ava's alerter: partial Do No Evil — upgrade accumulator with metal crate during quest (Desert quest pressure); reclaim 999 coins + 75 steel arrows from Ava"
+      ],
+      "effects": [
+        "Ammo/projectile recovery for arrows, bolts (most types), darts, javelins, throwing axes/knives, blisterwood stakes, Toktz-xil-ul",
+        "After owning any device and 50 Ranged, ammo-attraction effect becomes permanent account-wide even if the cape is destroyed (24 June 2019)",
+        "Occasional steel ammo / iron ore / toy mouse attractions into backpack",
+        "Alerter adds elite clue crate detection (bwuk proximity dig) and stronger Ranged cape stats; POH cape rack storage",
+        "Toggle can limit attraction to ammo only"
+      ],
+      "region_pressure": [
+        "Misthalin hard: Animal Magnetism + Ava reclaim always at Draynor Manor.",
+        "Desert support for alerter tier via Do No Evil; base attractor/accumulator do not need Desert."
+      ],
+      "notes": "Not Asgarnia — Ava/Animal Magnetism are Misthalin. Top RS3 tier is alerter (not OSRS alethiometer). Combat BiS cape comparison is secondary; ironman skilling value is permanent ammo recovery + cape-rack staple.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ava%27s_devices",
+        "https://runescape.wiki/w/Ava%27s_alerter",
+        "https://runescape.wiki/w/Animal_Magnetism",
+        "https://runescape.wiki/w/Do_No_Evil"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Animal Magnetism and Ava. Tag Desert only when planning alerter / Do No Evil.",
+      "region_requirement_type": "support"
+    },
+    {
+      "id": "cross-region:bonecrusher-necklace",
+      "name": "Bonecrusher + demon horn necklace Prayer stack",
+      "category": "cross-region Prayer AFK restore package",
+      "region_hints": ["forinthry"],
+      "required_regions": ["forinthry"],
+      "requirements": [
+        "Bonecrusher owned (Daemonheim Rewards — forinthry:bonecrusher; post-11-May-2026 remaster costs apply)",
+        "Optional: multi-region:toolbelt-bonecrusher-attach (500 Slayer points) so crusher runs from toolbelt",
+        "Demon horn necklace: 90 Prayer, 75 Dungeoneering, 35,000 Dungeoneering tokens from Marmaros (Daemonheim Rewards)",
+        "Lower DG necklaces (twisted bird skull / split dragontooth) work with the same crusher stack at lower restore rates"
+      ],
+      "effects": [
+        "Configured bone drops auto-crush for bury Prayer XP (bonecrusher) while worn necklace restores prayer points per bury/crush",
+        "Demon horn restore bands: 50 pp (normal/bat/burnt bones), 100 pp (big/baby dragon/jogre/wyvern), 150 pp (dragon/dinosaur/dagannoth/ourg/airut/frost/hardened/reinforced dragon bones)",
+        "RS3 has no single fused 'bonecrusher necklace' craft (wiki Bonecrusher necklace redirects to demon horn) — the planner package is the dual-item stack ironmen equip",
+        "Pairs with attuned ectoplasmator for ash/ghost restore on the same necklace bands"
+      ],
+      "region_pressure": [
+        "Forinthry owns both Daemonheim Rewards purchases (bonecrusher + demon horn necklace)."
+      ],
+      "notes": "Bonecrusher alone and toolbelt attach already first-class; this row is the missing necklace stack milestone. Holy wrench (Pieces of Hate) can add +10% restore when worn/inventoried — combat-quest pressure, not a hard region gate here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bonecrusher",
+        "https://runescape.wiki/w/Demon_horn_necklace",
+        "https://runescape.wiki/w/Bonecrusher_necklace"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for both DG reward pieces.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "forinthry:bonecrusher",
+        "multi-region:toolbelt-bonecrusher-attach"
+      ]
+    },
+    {
+      "id": "morytania:attuned-ectoplasmator",
+      "name": "Attuned ectoplasmator",
+      "category": "permanent Prayer ash/ghost drop cleaner",
+      "region_hint": "morytania",
+      "region_hints": ["morytania", "misthalin", "forinthry"],
+      "required_regions": ["morytania"],
+      "optional_pressure_regions": ["misthalin", "forinthry"],
+      "requirements": [
+        "Base ectoplasmator drop from ghosts/ghasts/shades/Barrows brothers/revenants/etc. (many sources; Morytania density highest for shades/ghasts/Barrows)",
+        "100 ghostly essence used on ectoplasmator to create attuned version (starts with 1,000 charges)",
+        "Recharge: more ghostly essence (10 charges each; max ~5009 charges); fully degraded reverts to rechargeable degraded form",
+        "If discarded, charges are lost — rebuild from a standard ectoplasmator; Diango can reclaim base only when attuned is not charged"
+      ],
+      "effects": [
+        "Auto-scatters demonic ashes and absorbs ghosts for Prayer XP while carried/worn (pocket)",
+        "Unlike base ectoplasmator, triggers DG prayer necklaces (bird skull / dragontooth / demon horn) for prayer-point restore on ashes and ghosts",
+        "Consumes ashes before prayer urns can collect them — do not combine with urn meta",
+        "Powder of burials rows explicitly exclude ectoplasmator behaviour — this is the ash-side permanent ironmen were missing"
+      ],
+      "region_pressure": [
+        "Morytania primary: shades, ghasts, tortured souls, Barrows, Slayer Tower spectres for ectoplasmator + ghostly essence.",
+        "Misthalin: Diango reclaim path for base ectoplasmator.",
+        "Forinthry optional: revenant ghost farms and demon horn necklace pairing."
+      ],
+      "notes": "Ghosts Ahoy / ectophial are separate travel. First-age outfit Prayer XP does not stack with ectoplasmator. Planner should pair with cross-region:bonecrusher-necklace for full bone+ash AFK prayer restore.",
+      "source_urls": [
+        "https://runescape.wiki/w/Attuned_ectoplasmator",
+        "https://runescape.wiki/w/Ectoplasmator",
+        "https://runescape.wiki/w/Ghostly_essence"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for efficient ghost/ash sources and thematic Prayer hub. Base drop can appear elsewhere as pressure.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:ectophial",
+        "cross-region:bonecrusher-necklace",
+        "forinthry:bonecrusher"
+      ]
+    },
+    {
+      "id": "asgarnia:spring-cleaner",
+      "name": "Spring cleaner (Invention drop cleaner)",
+      "category": "permanent Invention-manufactured drop cleaner",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "requirements": [
+        "Invention unlocked and Discovery blueprint for spring cleaner",
+        "Craft at Invention: simple parts + tensile parts + flexible parts + precise components (one cleaner per account ownership rule)",
+        "Charge with springs / tight springs (max 250,000 charges); charges not lost on death",
+        "Upgrade path via springs used or Quick Upgrade: 2000 (200) → 3000 (400 more) → 5000 (1,200) → 9000 (2,200) → 9001 (6,000) cumulative 10,000 springs"
+      ],
+      "effects": [
+        "Auto-process monster drops (not implings/thieving/chests/PvP/LootShare): Research (bonus XP), Dismantle (bank materials), High Alch salvage (2000+), Disassembly salvage (3000+, free springs)",
+        "Pocket slot usable from spring cleaner 2000; 9001 allows noted items",
+        "Sibling cleaner family with bonecrusher / herbicide / seedicide / charming imp / gold accumulator — spring cleaner was the missing Invention permanent"
+      ],
+      "region_pressure": [
+        "Asgarnia: Invention Guild discovery/craft home (asgarnia:invention-guild)."
+      ],
+      "notes": "Reclaim shell from Diango if lost. Does not invent XP/hour for research mode. Fort Workshop power is optional later; base craft is Guild-centric.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spring_cleaner",
+        "https://runescape.wiki/w/Invention"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention Guild discovery path.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "cross-region:invention-machines-guild",
+        "forinthry:bonecrusher",
+        "multi-region:seedicide"
+      ]
+    },
+    {
+      "id": "asgarnia:inferno-adze",
+      "name": "Inferno adze",
+      "category": "All Fired Up dual hatchet-pickaxe equipment",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "misthalin"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["misthalin"],
+      "requirements": [
+        "All Fired Up quest completed",
+        "Light all 14 beacons simultaneously then claim from King Roald (92 Firemaking required to wield / activate incineration; boosts can claim but not wield effect)",
+        "Supporting skill floors for full beacon line include Agility, Construction, Crafting, Prayer, Smithing, Strength (see All Fired Up minigame)",
+        "Land of the Goblins + partial Troll Stronghold among beacon quest helpers",
+        "Cannot toolbelt; reclaim free from King Roald if lost"
+      ],
+      "effects": [
+        "Woodcutting as dragon hatchet with ~1/3 chance to incinerate cut logs for full WC + FM XP (no ashes)",
+        "Mining as rune pickaxe +3 (no special mine effect)",
+        "Incineration works on curly roots; Flame gloves + ring of fire boost the FM XP side",
+        "Always Adze relic is the 100% auto-burn alternative that does not require carrying the adze"
+      ],
+      "region_pressure": [
+        "Asgarnia taxonomy matches existing all-fired-up-beacons / ring-of-fire / flame-gloves rows (beacon line Asgarnia-heavy).",
+        "Misthalin: King Roald claim/reclaim geography only."
+      ],
+      "notes": "Equipment checklist row missing while ring/gloves/beacon activity exist. Do not re-emit cross-region:fired-up-inferno-adze-chain stack (pending wave4-cross-stacks) — link it after sync. Nature's Sentinel and Superheat Form are separate auto-burn paths.",
+      "source_urls": [
+        "https://runescape.wiki/w/Inferno_adze",
+        "https://runescape.wiki/w/All_Fired_Up_(minigame)",
+        "https://runescape.wiki/w/All_Fired_Up"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia under project Fired Up taxonomy. King Roald is Misthalin support for claim UI only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:all-fired-up-beacons",
+        "asgarnia:ring-of-fire",
+        "asgarnia:flame-gloves",
+        "kandarin:always-adze-relic"
+      ]
+    },
+    {
+      "id": "karamja:tokkul-zo",
+      "name": "TokKul-Zo",
+      "category": "Karamja TzHaar teleport ring and skilling travel tool",
+      "region_hint": "karamja",
+      "region_hints": ["karamja"],
+      "required_regions": ["karamja"],
+      "requirements": [
+        "The Elder Kiln completed (quest reward ring)",
+        "Reclaim uncharged from TzHaar-Mej-Jeh or TzHaar-Mej-Ak at TzHaar City Plaza if lost",
+        "Recharge: 50,000 Tokkul full (4,000 combat charges) or 12.5 Tokkul per missing charge",
+        "Fight Cauldron teleport unlocks after The Brink of Extinction"
+      ],
+      "effects": [
+        "Teleports (need ≥1 charge; teleports do not spend charges): Main Plaza, Fight Pit, Fight Cave, Fight Kiln, Fight Cauldron",
+        "Primary ironman Karamja banking + fairy ring BLP on-ramp (Fight Cave tele just south of BLP)",
+        "Hardwood Grove / TzHaar furnace / gemstone cavern loops without lodestone spam",
+        "Combat side: +10% damage vs TzHaar/TokHaar/TzekHaar/Igneous TzekHaar while charged (charges drain on hits) — skilling value is the tele network"
+      ],
+      "region_pressure": [
+        "Hard Karamja: Elder Kiln, plaza reclaim, Tokkul economy."
+      ],
+      "notes": "Only a banking footnote on hardwood-grove previously. Karamja gloves are diary travel; TokKul-Zo is the city hub ring. Combat damage ring notes stay secondary to skilling travel.",
+      "source_urls": [
+        "https://runescape.wiki/w/TokKul-Zo",
+        "https://runescape.wiki/w/The_Elder_Kiln",
+        "https://runescape.wiki/w/TzHaar_City"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "karamja:area-tasks-karamja-gloves",
+        "cross-region:fairy-ring-network"
+      ]
+    },
+    {
+      "id": "tirannwn:crystal-pickaxe",
+      "name": "Crystal pickaxe",
+      "category": "augmentable crystal Mining tool",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon pickaxe (or Imcando / gilded dragon — Ithell downgrades then crystals) + 4,000 harmonic dust to Lady Ithell",
+        "70 Mining to use (Plague's End already forces 75 Mining)"
+      ],
+      "effects": [
+        "Level 70 Mining pick with necronium +4-class success; toolbeltable; augmentable",
+        "Required piece for pickaxe of earth and song (with Imcando pick + blast fusion hammer)",
+        "Reversible to dragon pick (harmonic dust not refunded)"
+      ],
+      "region_pressure": [
+        "Tirannwn: Lady Ithell conversion + harmonic dust."
+      ],
+      "notes": "Workshop + dragon-base bundle exist; hammer/rod/tinderbox already have equipment rows — pick was missing at equipment granularity. Dragon base self-source remains cross-region pressure via cross-region:crystal-tools-dragon-base.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_pickaxe",
+        "https://runescape.wiki/w/Crystal_tool"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for conversion. Dragon pickaxe source is optional pressure.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "cross-region:crystal-tools-dragon-base",
+        "cross-region:pickaxe-of-earth-and-song"
+      ]
+    },
+    {
+      "id": "tirannwn:crystal-hatchet",
+      "name": "Crystal hatchet",
+      "category": "augmentable crystal Woodcutting tool",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon hatchet (backpack or toolbelt) + 4,000 harmonic dust to Lady Ithell",
+        "70 Woodcutting / 70 Attack to wield; can still chop without Plague's End if obtained another way"
+      ],
+      "effects": [
+        "Tier ~73 cutting power; ~15% faster than dragon hatchet; toolbeltable; augmentable",
+        "Doubled chance of Shattered Heart / golden rocks while chopping",
+        "Required piece for hatchet of ember and glade (with Imcando hatchet + shard of the Lumberjack)",
+        "Clobber special attack retained from dragon hatchet line"
+      ],
+      "region_pressure": [
+        "Tirannwn: Lady Ithell conversion + harmonic dust."
+      ],
+      "notes": "Matches crystal-hammer equipment granularity. Nature's Sentinel / Inferno adze / Always Adze are separate WC method layers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_hatchet",
+        "https://runescape.wiki/w/Crystal_tool"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for conversion.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "cross-region:crystal-tools-dragon-base",
+        "cross-region:hatchet-of-ember-and-glade",
+        "asgarnia:inferno-adze"
+      ]
+    },
+    {
+      "id": "tirannwn:crystal-mattock",
+      "name": "Crystal mattock",
+      "category": "augmentable crystal Archaeology tool",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prifddinas access",
+        "Dragon mattock (or Imcando mattock / augmented dragon mattock preserving perks) + 4,000 harmonic dust to Lady Ithell",
+        "70 Archaeology to use; precision/focus equal bane mattock (80 Arch tier stats at 70 req)"
+      ],
+      "effects": [
+        "Augmentable Archaeology mattock; toolbeltable",
+        "Required piece for Mattock of Time and Space (with Imcando mattock + energised meteorite shard at mysterious monolith)",
+        "Can upgrade augmented dragon → crystal while keeping equipment XP and perks"
+      ],
+      "region_pressure": [
+        "Tirannwn: Lady Ithell conversion + harmonic dust."
+      ],
+      "notes": "Closes the pick/hatchet/mattock equipment gap vs hammer/rod/tinderbox. Dragon mattock base remains multi-source pressure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_mattock",
+        "https://runescape.wiki/w/Crystal_tool"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for conversion.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "cross-region:crystal-tools-dragon-base"
+      ]
+    },
+    {
+      "id": "misthalin:seed-bag",
+      "name": "Seed bag (Croesus Front)",
+      "category": "permanent Farming seed storage tool",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "requirements": [
+        "Croesus Front access (Senntisten / Elder God Wars — Misthalin taxonomy with project croesus boundary)",
+        "85 Crafting (assistable) to craft from Croesus spore sack + timber fungus + fungal spore + fungal algae + calcified fungus + Croesus flakes",
+        "Only one shared seed inventory across bags — destroy filled bag requires a new craft to recover stored seeds"
+      ],
+      "effects": [
+        "Holds up to 40 different seed types to normal stack limits",
+        "Fill/Empty/Open interface; fill from inventory (not bank); does not auto-scoop ground seeds or seedicide collector output",
+        "Action-bar hold-to-fill works during Master Farmer pickpocket without interrupt"
+      ],
+      "region_pressure": [
+        "Misthalin: Croesus Front materials and craft."
+      ],
+      "notes": "multi-region:seedicide mentions optional collector upgrade (25k beans) but not the seed bag itself. Companion inventory permanent for seed-heavy ironmen. Not the Extinction quest seed bag variant.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seed_bag",
+        "https://runescape.wiki/w/Croesus_Front"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin via Croesus Front access.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "multi-region:seedicide",
+        "multi-region:toolbelt-seedicide-attach"
+      ]
+    },
+    {
+      "id": "desert:modified-farmers-hat",
+      "name": "Modified farmer's hat",
+      "category": "Farming outfit head add-on permanent",
+      "region_hint": "desert",
+      "region_hints": ["desert", "morytania", "asgarnia"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": ["morytania", "asgarnia"],
+      "requirements": [
+        "Farmer's hat piece owned (desert:farmers-outfit — Garden of Kharid Crux Eqal favour path)",
+        "Farmer's hat add-on applied to create modified hat"
+      ],
+      "effects": [
+        "+1% Farming XP (same as base hat piece)",
+        "2% chance to save seeds when sowing (including starbloom + battlestaff save when applicable)",
+        "Daily teleports to Morytania allotment patch (or Taverley if Morytania inaccessible) — three teleports/day",
+        "Historical daily bird's nest claim removed in Dailyscape Overhaul (16 March 2026) — teleports + seed-save remain"
+      ],
+      "region_pressure": [
+        "Desert: farmer outfit acquisition.",
+        "Morytania: preferred teleport destination value.",
+        "Asgarnia: Taverley fallback teleport."
+      ],
+      "notes": "Was buried inside desert:farmers-outfit effects only. First-class residual like modified botanist. Modified diviner already pending wave4-diaries-outfits.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_farmer%27s_hat",
+        "https://runescape.wiki/w/Farmer%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert for outfit + add-on. Teleport destinations are support value.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:farmers-outfit"
+      ]
+    },
+    {
+      "id": "asgarnia:modified-botanists-mask",
+      "name": "Modified botanist's mask",
+      "category": "Herblore outfit head add-on permanent",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "kandarin"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Botanist's mask owned (asgarnia:botanists-outfit — Flash Powder Factory Brian points; not Thaler)",
+        "Botanist's mask add-on (1,000 Brian points) applied to create modified mask"
+      ],
+      "effects": [
+        "Retains botanist head-piece Herblore XP share of the set",
+        "5% chance to duplicate finished potions and bank the extra",
+        "Daily teleports to Catherby herb patch"
+      ],
+      "region_pressure": [
+        "Asgarnia: FPF Brian-point grind.",
+        "Kandarin: Catherby herb-patch teleport destination value."
+      ],
+      "notes": "Was buried in botanists-outfit detail only. Ironman Herblore stack piece should be checklist-visible beside scroll of cleansing.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_botanist%27s_mask",
+        "https://runescape.wiki/w/Botanist%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for FPF outfit path.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:botanists-outfit",
+        "forinthry:scroll-of-cleansing"
+      ]
+    }
+  ],
+  "drop_suggestions": [
+    {
+      "id": "desert:desert-amulet-4",
+      "reason": "Stub superseded by desert:area-tasks-desert-amulet (full 1–4 ladder with complete elite effects). Keeping both inflates Desert diary count and confuses region scoring.",
+      "action": "drop_or_redirect",
+      "redirect_to": "desert:area-tasks-desert-amulet"
+    },
+    {
+      "id": "desert:dominion-tower-combat-pointer",
+      "reason": "Explicit combat minigame pointer labeled not skilling infrastructure. Belongs in regional-combat-unlocks or should be deleted from skilling set.",
+      "action": "drop_from_skilling"
+    },
+    {
+      "id": "morytania:temple-trekking-construction-dependency",
+      "reason": "Construction dependency pointer with no permanent skilling unlock payload — hygiene drop or fold into a real Construction Contracts row if added later.",
+      "action": "drop_or_fold"
+    },
+    {
+      "id": "anachronia:no-area-tasks-diary",
+      "reason": "Absence marker, not an unlock. Useful as note elsewhere; first-class unlock row pollutes diary scoring.",
+      "action": "drop_or_demote_to_note"
+    },
+    {
+      "id": "havenhythe:no-area-tasks-diary",
+      "reason": "Same absence-marker hygiene as Anachronia no-area-tasks.",
+      "action": "drop_or_demote_to_note"
+    },
+    {
+      "pattern": "combat-pointer / dependency-pointer categories",
+      "reason": "Any remaining combat BiS or pure dependency pointer rows without permanent skilling state should leave regional-skilling-unlocks.",
+      "action": "audit_and_drop"
+    }
+  ],
+  "stats": {
+    "activity_additions": 3,
+    "equipment_additions": 12,
+    "total_rows": 15,
+    "drop_suggestions": 6,
+    "audit_ranks_covered": [1, 3, 6, 7, 8, 9, 10, 14, 20, 31, 32, 33]
+  }
+}

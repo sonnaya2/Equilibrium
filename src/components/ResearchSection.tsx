@@ -17,22 +17,28 @@ const STRUCTURAL_KEYS = new Set([
   "category",
   "location",
   "region",
+  "regionId",
   "region_hint",
   "region_hints",
+  "regionHints",
   "region_status",
   "region_candidates",
   "region_pressure",
+  "regionRequirementType",
   "collector_region",
   "collector_regions",
   "acquisition_region",
   "working_region",
   "required_region",
   "required_regions",
+  "requiredRegions",
   "required_regions_for_collection_loop",
   "artifact_regions",
   "region_options",
   "acquisition_regions",
   "planner_default_region",
+  "comboLabel",
+  "isRegionCombo",
   "entry_side",
   "final_arena_side",
   "destination_side",
@@ -129,8 +135,23 @@ function nestedRegion(side: unknown): unknown {
 }
 
 function region(row: ResearchRow): string {
-  if (Array.isArray(row.required_regions) && row.required_regions.length) {
-    return `Requires regions: ${regionList(row.required_regions, " + ")}`;
+  // Combat/skilling sync rows use camelCase comboLabel + requiredRegions.
+  if (typeof row.comboLabel === "string" && row.comboLabel.trim()) {
+    return row.comboLabel;
+  }
+
+  const required = Array.isArray(row.requiredRegions)
+    ? row.requiredRegions
+    : Array.isArray(row.required_regions)
+      ? row.required_regions
+      : null;
+  if (required?.length) {
+    const type = String(row.regionRequirementType || "").toLowerCase();
+    if (required.length > 1) {
+      if (type === "support") return `Region chain (support pressure): ${regionList(required, " / ")}`;
+      return `Region combo (all required): ${regionList(required, " + ")}`;
+    }
+    return `Requires region: ${regionName(required[0])}`;
   }
 
   if (Array.isArray(row.required_regions_for_collection_loop) && row.required_regions_for_collection_loop.length) {
@@ -163,8 +184,15 @@ function region(row: ResearchRow): string {
     return `Acquisition: ${regionList(row.acquisition_regions, " / ")}`;
   }
 
-  if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
-    return `Region chain: ${regionList(row.region_hints, " / ")}`;
+  const hints = Array.isArray(row.regionHints)
+    ? row.regionHints
+    : Array.isArray(row.region_hints)
+      ? row.region_hints
+      : null;
+  if (hints && hints.length > 1) {
+    const type = String(row.regionRequirementType || "").toLowerCase();
+    if (type === "all_required") return `Region combo (all required): ${regionList(hints, " + ")}`;
+    return `Region chain (support pressure): ${regionList(hints, " / ")}`;
   }
 
   const entry = nestedRegion(row.entry_side);
@@ -181,7 +209,7 @@ function region(row: ResearchRow): string {
     row.acquisition_region ||
     row.working_region ||
     row.required_region ||
-    (Array.isArray(row.region_hints) && row.region_hints.length === 1 ? row.region_hints[0] : null) ||
+    (hints && hints.length === 1 ? hints[0] : null) ||
     row.region ||
     row.region_status;
   if (!direct) return "No hard region set";

@@ -1,5 +1,11 @@
 import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
 import combosData from "../../data/research/region-combos.json";
+import combat from "../../data/research/regional-combat-unlocks.json";
+import {
+  getMuseumCollectionMatrix,
+  getUnobtainableMuseumCollections,
+  type MuseumCollectionMatrixRow,
+} from "@/research/archaeologyPlanner";
 
 type ComboRecord = ResearchRow & {
   modeled?: boolean | string;
@@ -14,6 +20,67 @@ const pressure = combos.filter((row) => !Array.isArray(row.regions) || row.regio
 const modeled = combos.filter((row) => row.modeled === true);
 const partial = combos.filter((row) => row.modeled === "partial");
 const gaps = combos.filter((row) => row.modeled === false);
+
+const museumMatrix = getMuseumCollectionMatrix();
+const unobtainableMuseum = getUnobtainableMuseumCollections();
+const museumMulti = museumMatrix.filter((row) => (row.required_regions ?? []).length > 1);
+
+function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
+  const required = (row.required_regions ?? []) as string[];
+  const artifacts = (row.artifact_regions ?? []) as string[];
+  const collectors = (row.collector_regions ?? []) as string[];
+  const status = String(row.status || "obtainable");
+  const combo =
+    row.comboLabel ||
+    (required.length > 1 ? `Region combo (all required): ${required.join(" + ")}` : "");
+  const reason = row.unobtainable_reason ? ` · ${row.unobtainable_reason}` : "";
+  return {
+    id: row.id,
+    name: row.name,
+    recordType: "activity",
+    category: status === "unobtainable" ? "museum collection (unobtainable)" : "museum collection",
+    regionHints: [...new Set([...required, ...artifacts, ...collectors])],
+    requiredRegions: required,
+    regionRequirementType: required.length > 1 ? "all_required" : "single",
+    comboLabel: combo,
+    isRegionCombo: required.length > 1,
+    status,
+    dig_sites: row.dig_sites,
+    collector: row.collector,
+    first_reward: row.first_reward,
+    chronotes: row.chronotes,
+    archaeology_level: row.archaeology_level,
+    detail: [
+      combo,
+      status === "unobtainable" ? `UNOBTAINABLE${reason}` : "Obtainable in Equilibrium elective regions",
+      row.collector ? `Collector: ${row.collector}` : "",
+      Array.isArray(row.dig_sites) && row.dig_sites.length
+        ? `Dig sites: ${row.dig_sites.join(", ")}`
+        : "",
+      row.first_reward ? `First reward: ${row.first_reward}` : "",
+      row.chronotes != null ? `Chronotes: ${row.chronotes}` : "",
+    ]
+      .filter(Boolean)
+      .join(" · "),
+    requirements: [
+      row.archaeology_level != null ? `Archaeology ${row.archaeology_level}` : "",
+      ...required.map((region) => `Region: ${region}`),
+    ].filter(Boolean),
+    confidence: row.confidence || "confirmed_wiki",
+    source: row.source_urls?.[0]
+      ? { source: "runescape-wiki", url: row.source_urls[0], title: row.name }
+      : null,
+  };
+}
+
+const museumRows = museumMulti.map(museumToRow);
+
+const combatRows = (combat.records || []) as ResearchRow[];
+const combatCombos = combatRows.filter(
+  (row) =>
+    Boolean(row.comboLabel) ||
+    (Array.isArray(row.requiredRegions) && (row.requiredRegions as string[]).length > 1),
+);
 
 const TABS: ResearchTab[] = [
   {
@@ -33,6 +100,18 @@ const TABS: ResearchTab[] = [
     label: "Pressure only",
     description: `${pressure.length} supply / routing pressure stacks without a single hard lock.`,
     rows: pressure as ResearchRow[],
+  },
+  {
+    key: "museum-multi",
+    label: "Museum multi-region",
+    description: `${museumMulti.length} museum/dig-site collections needing 2+ regions of ${museumMatrix.length} permanent collections (seasonals excluded).`,
+    rows: museumRows,
+  },
+  {
+    key: "combat-multi",
+    label: "Combat multi-region",
+    description: `${combatCombos.length} combat unlocks with multi-region required stacks or combo labels.`,
+    rows: combatCombos,
   },
   {
     key: "modeled",
@@ -59,7 +138,7 @@ export function RegionCombosResearch() {
   return (
     <ResearchSection
       title="Region combos"
-      intro={`Self-sufficient multi-region stacks Leagues planners miss when scoring one region at a time. ${counts?.combos ?? combos.length} combos · ${counts?.globalIssues ?? issues.length} global issues. Ironman / no-trade only — no GE dual mode.`}
+      intro={`Self-sufficient multi-region stacks Leagues planners miss when scoring one region at a time. ${counts?.combos ?? combos.length} skilling combos · ${museumMulti.length} museum multi-region · ${combatCombos.length} combat multi-region · ${counts?.globalIssues ?? issues.length} global issues. Ironman / no-trade only — no GE dual mode.`}
       tabs={TABS}
       searchPlaceholder="Search region combos"
       searchLabel="Search region combos"

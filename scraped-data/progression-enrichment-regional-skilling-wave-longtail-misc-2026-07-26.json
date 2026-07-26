@@ -1,0 +1,672 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Long-tail / ironman-guide residual permanent skilling unlocks still missing from data/research/regional-skilling-unlocks.json after waves 1–5 + final fills. Targets: Scripture of Bik (skilling pocket residual; base god books + Citharede illumination already first-class), alchemical onyx/hydrix + Passage of the Abyss as GOTE/BoG craft-piece residuals, crystal tool seed acquisition residual (no GE shop — drop + NPC re-enchant), high-value modified skill-outfit hats still buried in outfit rows, Invention skilling gizmo perk ladder (Wise / Honed / Furnace / Imp Souled / Refined / Prosper), and kandarin:skillchompa-supply phantom-ref fix. 13 rows.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "Grep-confirmed ABSENT as first-class ids before write. SKIP already present: asgarnia:brooch-of-the-gods, tirannwn:grace-of-the-elves, cross-region:grace-of-the-elves-porter-chain, cross-region:dark-facet-of-grace, cross-region:gote-dark-facet-ritual-shard-sustain, prifddinas:crystal-tool-workshop, cross-region:crystal-tools-dragon-base, tirannwn:crystal-utility-tools, tirannwn:crystal-pickaxe/hatchet/mattock/hammer/tinderbox/fishing-rod, prifddinas:harmonic-dust-economy, desert:citharede-abbey-illuminated-books, fremennik:god-books-horror-from-the-deep, misthalin:dig-site-pendant, misthalin:skull-sceptre, cross-region:games-necklace-package, kandarin:seedicide-collector-upgrade, forinthry:seedicide-named, multi-region:toolbelt-seedicide-attach, prifddinas:serenity-posts, misthalin:fort-* buildings (town-hall/workshop/kitchen/chapel/command-centre/etc.), asgarnia:modified-botanists-mask, desert:modified-farmers-hat, kandarin:modified-diviners-headwear, asgarnia:blacksmiths-outfit, misthalin:artisans-outfit, kandarin:sous-chefs-outfit, havenhythe:shaman-outfit, morytania:first-age-outfit-equipment, misthalin:ritualists-outfit, asgarnia:divine-charge-crafting, asgarnia:inspire-genius-relic, asgarnia:divine-conversion-relic.",
+    "skip_combat_or_present": [
+      "Ring of vigour — pure combat adrenaline QoL; combat catalogs only (wave-5 combat-adjacent already skipped)",
+      "God-book illumination — desert:citharede-abbey-illuminated-books already first-class; base books fremennik:god-books-horror-from-the-deep already first-class — not thin",
+      "Brooch of the Gods — asgarnia:brooch-of-the-gods present",
+      "Finished GOTE + porter chain + dark facet — present; this pack only adds alchemical onyx craft residual",
+      "Crystal utility tools package + named gather tools + workshop — present; this pack only adds seed acquisition residual",
+      "Dig site pendant / skull sceptre / games necklace package / seedicide collector / serenity posts / Fort buildings — present first-class"
+    ],
+    "invention_perk_rule": "Invention gizmo perks are NOT Archaeology monolith relic powers and are NOT permanent account toggles without gear. Emit as ironman Invention Guild equipment-state milestones (ability to craft and wear the gizmo permanently once components exist). Do not invent gizmo success rates or GE component prices.",
+    "no_trade_rule": "Ironman permanent outfit add-ons, pocket skilling books, craft blueprints, seed acquisition loops, and Invention gizmo ladders that change no-trade skilling throughput.",
+    "rate_rule": "No invented XP/hour or drop rates beyond wiki structure. Unlock state, costs, effects, and region pressure only.",
+    "combo_fields": "Every multi-region row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids."
+  },
+  "already_present_checked": [
+    "asgarnia:brooch-of-the-gods",
+    "tirannwn:grace-of-the-elves",
+    "cross-region:grace-of-the-elves-porter-chain",
+    "cross-region:dark-facet-of-grace",
+    "prifddinas:crystal-tool-workshop",
+    "tirannwn:crystal-utility-tools",
+    "desert:citharede-abbey-illuminated-books",
+    "fremennik:god-books-horror-from-the-deep",
+    "misthalin:dig-site-pendant",
+    "misthalin:skull-sceptre",
+    "cross-region:games-necklace-package",
+    "kandarin:seedicide-collector-upgrade",
+    "prifddinas:serenity-posts",
+    "misthalin:fort-town-hall-rested-xp",
+    "misthalin:fort-forinthry-workshop",
+    "asgarnia:modified-botanists-mask",
+    "desert:modified-farmers-hat",
+    "kandarin:modified-diviners-headwear"
+  ],
+  "equipment_additions": [
+    {
+      "id": "misthalin:scripture-of-bik",
+      "name": "Scripture of Bik (skilling pocket book)",
+      "category": "permanent skilling pocket scripture",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
+      "requirements": [
+        "Croesus Front / Elder God Wars access (historical Senntisten working taxonomy under Misthalin)",
+        "Scripture of Bik drop from Croesus (tradeable until unlocked; unlocks untradeable with 3 hours charge)",
+        "Manuscripts of Bik to recharge (45 minutes per manuscript; max 24 hours / 32 manuscripts)"
+      ],
+      "unlocks": [
+        "Pocket-slot skilling book with +6 Prayer equip bonus when unlocked/used",
+        "Nature's Veil passive when activated: 17% chance once per minute on first eligible XP drop to spawn a catalyst of alteration (1–3 sealed clue scrolls of one tier to bank or Charos clue carrier) plus 5% XP boost for one minute on capture",
+        "Shares the first-XP-per-minute spawn roll with Grace of the elves Seren spirits and Brooch of the Gods divine blessings",
+        "Shred option converts a new scripture into 10 Manuscripts of Bik",
+        "Distinct from base god books (Horror from the Deep) and Citharede illuminated upgrades — EGWD scripture family residual"
+      ],
+      "region_pressure": [
+        "Misthalin owns Croesus Front / Senntisten EGWD working taxonomy and the scripture drop geography.",
+        "Desert optional: other EGWD fronts / Menaphite scriptures are separate combat-facing pocket books — do not dual-claim Bik there."
+      ],
+      "notes": "Wave-final godbooks pack explicitly left scriptures / Erethdor / chaotic grimoire out of scope. Bik is the ironman skilling residual (clues + temporary XP). Combat scriptures (Jas/Wen/Ful/Amascut/Elidinis) stay combat catalogs. Do not invent Croesus drop rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Bik",
+        "https://runescape.wiki/w/Manuscript_of_Bik",
+        "https://runescape.wiki/w/Croesus",
+        "https://runescape.wiki/w/God_book"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Croesus Front access under current EGWD taxonomy. Manuscript sustain is self-source or trade pressure only.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "fremennik:god-books-horror-from-the-deep",
+        "desert:citharede-abbey-illuminated-books",
+        "tirannwn:grace-of-the-elves",
+        "asgarnia:brooch-of-the-gods",
+        "misthalin:senntisten-dig-site"
+      ]
+    },
+    {
+      "id": "asgarnia:alchemical-onyx",
+      "name": "Alchemical onyx (GOTE / LOTD craft residual)",
+      "category": "permanent Invention craft blueprint residual",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "desert"
+      ],
+      "requirements": [
+        "107 Invention to discover and manufacture at an inventor's workbench (Invention Guild)",
+        "1 onyx + 50 fortunate components + 50 refined components + 10 precious components per craft",
+        "91 Crafting to smelt alchemical onyx necklace or ring (gold bar + mould at a furnace)",
+        "87 Magic Lvl-6 Enchant (or enchant tablet) for Grace of the elves / Luck of the Dwarves"
+      ],
+      "unlocks": [
+        "Permanent discovery of the alchemical onyx blueprint (misc support tab) — ironman GOTE/LOTD manufacture spine",
+        "Alchemical onyx necklace → Grace of the elves; alchemical onyx ring → Luck of the Dwarves",
+        "Also feeds Passage of the Abyss (118 Invention) and Ingenuity of the Humans ability codex (114 Invention) — note only; combat/utility siblings",
+        "Closes GOTE individual-piece residual when finished necklace + porter chain already first-class"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild workbench manufacture framing for the blueprint and craft.",
+        "Tirannwn optional: GOTE Seren-prayer value pairing and Max Guild portal attunement after enchant.",
+        "Desert optional: onyx / gem supply pressure for high necklaces — not a second hard gate."
+      ],
+      "notes": "Was buried only as a requirement line on GOTE/LOTD rows. First-class residual mirrors modified-hat pattern. Do not re-emit tirannwn:grace-of-the-elves or cross-region:luck-of-the-dwarves. Do not invent component GE prices.",
+      "source_urls": [
+        "https://runescape.wiki/w/Alchemical_onyx",
+        "https://runescape.wiki/w/Alchemical_onyx_(blueprint)",
+        "https://runescape.wiki/w/Grace_of_the_elves",
+        "https://runescape.wiki/w/Luck_of_the_Dwarves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention Guild manufacture. Enchant Magic level is global skill gate.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "tirannwn:grace-of-the-elves",
+        "cross-region:grace-of-the-elves-porter-chain",
+        "cross-region:luck-of-the-dwarves",
+        "asgarnia:divine-charge-crafting",
+        "asgarnia:invention-guild"
+      ]
+    },
+    {
+      "id": "asgarnia:modified-blacksmiths-helmet",
+      "name": "Modified blacksmith's helmet",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Blacksmith's helmet piece from Artisans' Workshop Respect shop (Asgarnia)",
+        "Blacksmith's helmet add-on (Respect shop rotation / skill-outfit add-on path)",
+        "Use helmet on add-on to create modified version; free Diango reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Smithing XP head-piece share of the blacksmith set",
+        "3 daily teleports to Artisans' Workshop",
+        "1% chance for double bars when smelting (examine-accurate; dialogue +5% is incorrect — excludes concentrated/enriched/immaculate alloy and masterwork alloy bars)",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free coal claim removed — teleports + double-smelt remain"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia for Artisans' Workshop Respect grind and shop geography."
+      ],
+      "notes": "Was buried only inside asgarnia:blacksmiths-outfit effects. First-class residual parity with asgarnia:modified-botanists-mask. Do not re-emit full outfit XP ladder.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_blacksmith%27s_helmet",
+        "https://runescape.wiki/w/Blacksmith%27s_helmet_add-on",
+        "https://runescape.wiki/w/Blacksmith%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Respect shop path.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:blacksmiths-outfit",
+        "asgarnia:artisans-workshop-full-rewards",
+        "asgarnia:artisans-workshop-burial-smithing",
+        "misthalin:smelting-gauntlets"
+      ]
+    },
+    {
+      "id": "misthalin:modified-artisans-bandana",
+      "name": "Modified artisan's bandana",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin",
+        "forinthry"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
+      "requirements": [
+        "Artisan's bandana from Stealing Creation / thaler path (not TH)",
+        "Artisan's bandana add-on",
+        "Use bandana on add-on; free Diango reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Crafting XP head-piece share of the artisan set",
+        "3 daily teleports outside the Crafting Guild",
+        "5% chance to save one leather / hide / cloth (including starbloom cloth) per crafted item — extra banks automatically",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free soft clay claim removed"
+      ],
+      "region_pressure": [
+        "Misthalin taxonomy for Crafting Guild teleport home and SC/Gamers' Grotto adjacency.",
+        "Forinthry optional: Stealing Creation Wilderness access if that is the chosen acquisition path."
+      ],
+      "notes": "Was buried only inside misthalin:artisans-outfit. Distinct from asgarnia:blacksmiths-outfit / modified blacksmith helmet. Do not re-emit full artisan set.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_artisan%27s_bandana",
+        "https://runescape.wiki/w/Artisan%27s_bandana_add-on",
+        "https://runescape.wiki/w/Artisan%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Crafting Guild teleport value. SC path adds Forinthry optional pressure.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:artisans-outfit",
+        "asgarnia:crafting-guild",
+        "asgarnia:modified-botanists-mask"
+      ]
+    },
+    {
+      "id": "kandarin:modified-sous-chefs-toque",
+      "name": "Modified sous chef's toque",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
+      "requirements": [
+        "Sous chef's toque from Gnome Restaurant (Kandarin gameplay path)",
+        "Sous chef's toque add-on",
+        "Use toque on add-on; free Diango reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Cooking XP head-piece share of the sous chef set",
+        "3 daily teleports outside the Cooks' Guild; wearing the toque also grants Cooks' Guild entry",
+        "5% chance to cook duplicate food (banks automatically); stacks with portable range / Waiko grill 5% duplication",
+        "Does not duplicate rocktail soup, sailfish soup, or primal feast; does work on apex sinew",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free pie shell claim removed"
+      ],
+      "region_pressure": [
+        "Hard Kandarin for Gnome Restaurant outfit acquisition.",
+        "Misthalin optional: Cooks' Guild geography for teleport destination value."
+      ],
+      "notes": "Was buried only inside kandarin:sous-chefs-outfit. First-class residual for ironman food production stacks with misthalin:cooking-gauntlets.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_sous_chef%27s_toque",
+        "https://runescape.wiki/w/Sous_chef%27s_toque_add-on",
+        "https://runescape.wiki/w/Sous_chef%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for outfit path. Cooks' Guild tele is Misthalin support value.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:sous-chefs-outfit",
+        "kandarin:gnome-restaurant-sous-chef",
+        "misthalin:cooks-guild",
+        "misthalin:cooking-gauntlets"
+      ]
+    },
+    {
+      "id": "havenhythe:modified-shamans-headdress",
+      "name": "Modified shaman's headdress",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "havenhythe",
+      "region_hints": [
+        "havenhythe",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "havenhythe"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
+      "requirements": [
+        "Shaman's headdress from Shrine of Inanna / spirit wolf blood path (havenhythe:shaman-outfit)",
+        "Shaman's headdress add-on",
+        "Use headdress on add-on; free Diango reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Summoning XP head-piece share of the shaman set",
+        "3 daily teleports to Bogrog (Gu'Tanoth / Asgarnia-adjacent Summoning exchange)",
+        "5% chance to save a charm while infusing pouches (prioritised over spirit gems)",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free spirit shard claim removed"
+      ],
+      "region_pressure": [
+        "Hard Havenhythe for Shrine of Inanna shaman outfit acquisition.",
+        "Asgarnia optional: Bogrog teleport destination and Taverley Summoning hub pairing."
+      ],
+      "notes": "Was buried only inside havenhythe:shaman-outfit. Charm-save residual is ironman Summoning checklist-critical beside forinthry:charming-imp.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_shaman%27s_headdress",
+        "https://runescape.wiki/w/Shaman%27s_headdress_add-on",
+        "https://runescape.wiki/w/Shaman%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe for outfit. Bogrog tele is Asgarnia support value.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "havenhythe:shaman-outfit",
+        "asgarnia:pikkupstix-summoning-obelisk",
+        "asgarnia:familiarisation",
+        "forinthry:charming-imp"
+      ]
+    },
+    {
+      "id": "morytania:modified-first-age-tiara",
+      "name": "Modified first age tiara",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "morytania",
+      "region_hints": [
+        "morytania",
+        "misthalin"
+      ],
+      "required_regions": [
+        "morytania"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
+      "requirements": [
+        "First age tiara from Ectofuntus / first age outfit path (morytania:first-age-outfit-equipment)",
+        "First age tiara add-on",
+        "Use tiara on add-on; free Diango reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Prayer XP head-piece share of the first age set",
+        "3 daily teleports to player-owned house near the portal",
+        "2% chance to save bones or ashes when buried, scattered, or used on an altar (message: Divine intervention saves your offering)",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free dragon bones claim removed"
+      ],
+      "region_pressure": [
+        "Hard Morytania for first age outfit / Ectofuntus acquisition geography.",
+        "Misthalin optional: common POH portal towns and Fort Forinthry house adjacency — not a hard gate."
+      ],
+      "notes": "Was buried only inside first-age outfit rows. Bone-save residual pairs with bonecrusher / demon horn stacks without re-emitting those ids.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_first_age_tiara",
+        "https://runescape.wiki/w/First_age_tiara_add-on",
+        "https://runescape.wiki/w/First_age_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for first age outfit path.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:first-age-outfit-equipment",
+        "morytania:ectofuntus-prayer-worship",
+        "forinthry:bonecrusher",
+        "cross-region:bonecrusher-necklace"
+      ]
+    },
+    {
+      "id": "misthalin:modified-ritualists-mask",
+      "name": "Modified ritualist's mask",
+      "category": "permanent modified skill-outfit head residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Ritualist's mask + add-on from Austin's Place (City of Um) after capturing 70 deathshead moths (ectoplasm shop path post-2025)",
+        "Use mask on add-on; free Diango / bank reclaim"
+      ],
+      "unlocks": [
+        "Retains 1% Necromancy XP head-piece share of the ritualist set (up to 6% with full set)",
+        "5% chance not to consume the ritual focus object on ritual completion",
+        "Once per day: spawn one deathshead moth (not usable in instances)",
+        "Post-16-Mar-2026 DailyScape Overhaul: daily free bucket of slime claim removed"
+      ],
+      "region_pressure": [
+        "Hard Misthalin for City of Um / Austin's Place acquisition and Necromancy ritual geography."
+      ],
+      "notes": "Was buried only inside misthalin:ritualists-outfit. Focus-save residual is ironman ritual economy QoL. Do not re-emit city-of-um-ritualist-outfit twin.",
+      "source_urls": [
+        "https://runescape.wiki/w/Modified_ritualist%27s_mask",
+        "https://runescape.wiki/w/Ritualist%27s_mask_add-on",
+        "https://runescape.wiki/w/Ritualist%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for City of Um shop path.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:ritualists-outfit"
+      ]
+    },
+    {
+      "id": "asgarnia:alchemical-hydrix",
+      "name": "Alchemical hydrix (Brooch of the Gods craft residual)",
+      "category": "permanent Invention craft blueprint residual",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "117 Invention (boostable from 100 with extreme invention) to manufacture at inventor's workbench",
+        "1 hydrix + 100 fortunate + 100 refined + 20 precious + 5 rumbling components per craft",
+        "97 Crafting for alchemical hydrix brooch (5 elder rune bars + alchemical hydrix + 5 gold leaf + bracelet mould at a furnace)",
+        "87 Magic Lvl-6 Enchant for Brooch of the Gods"
+      ],
+      "unlocks": [
+        "Permanent discovery of the alchemical hydrix blueprint — ironman Brooch of the Gods manufacture spine",
+        "Alchemical hydrix brooch → Brooch of the Gods after enchant",
+        "Also feeds Essence of Finality amulet path (combat — note only; do not dual-claim as skilling BiS)",
+        "Can crush into 10 alchemical hydrix dust for EoF recharge — combat sustain footnote only"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia for Invention Guild manufacture framing — same home as alchemical onyx."
+      ],
+      "notes": "Finished brooch is already asgarnia:brooch-of-the-gods; this is the missing craft-piece residual. Do not re-emit Brooch effects. Skip EoF as combat catalog.",
+      "source_urls": [
+        "https://runescape.wiki/w/Alchemical_hydrix",
+        "https://runescape.wiki/w/Alchemical_hydrix_brooch",
+        "https://runescape.wiki/w/Brooch_of_the_Gods"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention manufacture. Enchant Magic is global.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:brooch-of-the-gods",
+        "asgarnia:alchemical-onyx",
+        "asgarnia:invention-guild",
+        "asgarnia:divine-charge-crafting"
+      ]
+    },
+    {
+      "id": "asgarnia:passage-of-the-abyss",
+      "name": "Passage of the abyss (compacted jewellery pocket)",
+      "category": "permanent Invention teleport pocket residual",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "requirements": [
+        "118 Invention to discover and craft at inventor's workbench",
+        "1 alchemical onyx + 1 teleportation compactor + 50 magic parts",
+        "100× max charge of each compactable jewellery type to add that type (up to 6 unique types per passage)",
+        "Optional Dark Facet of Passage for infinite charges (Wilderness / Forinthry dark-core pressure)"
+      ],
+      "unlocks": [
+        "Pocket-slot item storing up to six compacted teleport jewellery types with 5,000 shared charges (fortunate components recharge at 500 charges each)",
+        "Accepts dig site pendant, games necklace, skills necklace, combat bracelet, ring of duelling, ring of wealth, glory, slaying, ferocious, traveller's, enlightened, respawn, delver's anklet",
+        "Tradeable until first jewellery type is added, then permanently untradeable",
+        "Recolour variants allow multiple passages with different teleport sets",
+        "Closes alchemical-onyx family residual beside GOTE/LOTD — travel QoL for skilling runs"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia for Invention manufacture and alchemical onyx craft home.",
+        "Forinthry optional: Dark Facet of Passage / dark onyx core for infinite charges.",
+        "Misthalin optional: dig site pendant and common jewellery craft loops."
+      ],
+      "notes": "Pairs with misthalin:dig-site-pendant and cross-region:games-necklace-package without re-emitting those ids. Do not invent charge GE costs. Combat-only jewellery uses are still valid skilling travel.",
+      "source_urls": [
+        "https://runescape.wiki/w/Passage_of_the_abyss",
+        "https://runescape.wiki/w/Teleportation_compactor",
+        "https://runescape.wiki/w/Dark_Facet_of_Passage"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for craft. Jewellery charge sinks remain multi-region material pressure.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:alchemical-onyx",
+        "misthalin:dig-site-pendant",
+        "cross-region:games-necklace-package",
+        "forinthry:dark-onyx-core-sources",
+        "asgarnia:invention-guild"
+      ]
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "tirannwn:crystal-tool-seed-acquisition",
+      "name": "Crystal tool seed acquisition + re-enchant residual",
+      "category": "permanent crystal tool seed supply residual",
+      "region_hint": "tirannwn",
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "misthalin"
+      ],
+      "requirements": [
+        "Plague's End completed for Prifddinas crystal tool singing / full seed utility",
+        "Crystal tool seed from Prif combat (Cadarn/Iorwerth 122s), Edimmu / elite edimmu, crystal implings, Ithell worker pickpocket (1/6,000), or rare POP treasure chest",
+        "No crystal tool seed GE shop — acquisition is drop/loot only",
+        "80 Smithing + 150 harmonic dust at Ithell singing bowl (300 Smithing XP) OR pay Ilfeen/Eluned/Islwyn/Rhodri Dail coin enchant (7,500 → 1,500 re-enchant ladder; fishing rod higher)"
+      ],
+      "unlocks": [
+        "Planner-visible permanent residual for crystal tool seed supply that feeds tirannwn:crystal-utility-tools and gather crystal tools",
+        "NPC re-enchant without dust for ironmen short on harmonic dust (declining coin ladder to 1,500 minimum after five re-enchants)",
+        "Seeds also sink into Dark Facet of Grace craft (5 crystal tool seeds) — link only, do not re-emit facet",
+        "Closes 'crystal tool seed shop residual' gap: there is no seed shop; this row is the acquisition + re-enchant infrastructure"
+      ],
+      "region_pressure": [
+        "Hard Tirannwn for Prif drop sources, singing bowl, and re-enchant NPCs.",
+        "Asgarnia optional: POP treasure chest is a rare alternate seed source under Equilibrium Arc mapping.",
+        "Misthalin optional: crystal impling geography when hunting outside Prif."
+      ],
+      "notes": "Workshop + utility tools + named gather tools already first-class; seed acquisition was only footnotes. Do not invent drop rates. Do not re-emit harmonic-dust-economy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_tool_seed",
+        "https://runescape.wiki/w/Crystal_chisel",
+        "https://runescape.wiki/w/Ilfeen",
+        "https://runescape.wiki/w/Harmonic_dust"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for seed conversion and primary drops. POP/impling are optional supply pressure only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "tirannwn:crystal-utility-tools",
+        "cross-region:crystal-tools-dragon-base",
+        "prifddinas:harmonic-dust-economy",
+        "cross-region:dark-facet-of-grace"
+      ]
+    },
+    {
+      "id": "asgarnia:invention-skilling-perk-ladder",
+      "name": "Invention skilling gizmo perk ladder (Wise / Honed / Furnace / Imp Souled / Refined / Prosper)",
+      "category": "permanent Invention equipment-state skilling perk ladder",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn",
+        "forinthry"
+      ],
+      "requirements": [
+        "Invention unlocked (80 Crafting / Divination / Smithing tutorial path) and Invention Guild access",
+        "Tool / armour / weapon gizmo shells (and ancient shells for high ranks)",
+        "Component farms for target perks (e.g. Seren / pious for Wise; silent / sharp for Honed; vintage / dragonfire for Furnace; historic / Zamorak for Imp Souled; resilient for Refined; evasive / third-age / timeworn for Prosper)",
+        "Augmented tools or armour slots to house the gizmos"
+      ],
+      "unlocks": [
+        "Planner-visible ironman Invention skilling perk checklist — NOT Archaeology monolith relics and NOT account toggles without worn gizmos",
+        "Wise (ranks 1–4): +1% XP per rank on non-reward XP while equipped, shared 50,000 extra XP/day cap; weapon/armour/tool gizmos",
+        "Honed (ranks 1–6, tool): +2% gather success per rank (Mining: double-ore chance; Arch materials; WC/Fish success multiplies)",
+        "Furnace (ranks 1–4, tool): 5% per rank chance to consume gathered resource for +100% XP (Mining: no progress, double XP)",
+        "Imp Souled (ranks 1–6, tool): 3% per rank chance to bank / metal-bank / material-store gathered resources for 30 prayer points",
+        "Refined (ranks 1–4, tool): 5% per rank chance to prevent tree/cache depletion; Mining +2% geode chance per rank",
+        "Prosper (rank 1, tool): chance to find sealed clue scrolls while skilling (skill-dependent rates); 1% elite→master upgrade on those finds"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild, inventor's workbench, and the natural manufacture home for gizmo shells.",
+        "Tirannwn optional: Seren components pressure for Wise rolls and crystal tool hosts.",
+        "Forinthry optional: ancient invention / high-end component farms — support only."
+      ],
+      "notes": "Closes 'Invention relic perks that are account unlocks' residual for regional-skilling: treat as permanent equipment-state milestones once the ironman can craft and keep the gizmo. Do not invent roll odds beyond wiki structure. Skip combat-only perks (Aftershock, Biting, Crackling, Planted Feet, etc.). Distinct from asgarnia:inspire-genius-relic / divine-conversion-relic (Archaeology monolith).",
+      "source_urls": [
+        "https://runescape.wiki/w/Wise",
+        "https://runescape.wiki/w/Honed",
+        "https://runescape.wiki/w/Furnace_(perk)",
+        "https://runescape.wiki/w/Imp_Souled",
+        "https://runescape.wiki/w/Refined",
+        "https://runescape.wiki/w/Prosper",
+        "https://runescape.wiki/w/Invention_Guild"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention Guild. Component sources may add optional multi-region pressure only.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "asgarnia:invention-guild-machines-named",
+        "asgarnia:ancient-invention-blueprints",
+        "asgarnia:divine-charge-crafting",
+        "asgarnia:inspire-genius-relic",
+        "asgarnia:divine-conversion-relic",
+        "cross-region:crystal-tools-dragon-base"
+      ]
+    },
+    {
+      "id": "kandarin:skillchompa-supply",
+      "name": "Skillchompa supply hub (wild + PoF ladder)",
+      "category": "permanent skilling consumable supply hub",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "optional_pressure_regions": [
+        "tirannwn"
+      ],
+      "requirements": [
+        "Hunter levels for wild skillchompa traps: cobalt 27, viridian 46, azure 68, crimson 89 (crystal 97 needs Tirannwn)",
+        "Box traps; Agility gates multi-catch per trap (up to six)",
+        "Optional Manor Farm / player-owned farm chinchompa produce path (Kandarin) as passive supply",
+        "Optional 'If Chins Could Skill' PoF perk (tier 1/2) for 3%/5% skillchompa save chance"
+      ],
+      "unlocks": [
+        "Planner-visible hub for skillchompa consumable ladder used across Archaeology, Divination, Fishing, Mining, and Woodcutting",
+        "Base effect: +10% base XP on successful actions (except Mining); 5% of successful XP on failed actions; one skillchompa consumed per XP grant",
+        "Tier tool/effect ladder: hatchet/mattock tier (mithril→crystal), Mining critical damage 30–70, Fishing +1–5% catch, Divination enriched chance scale",
+        "Closes broken outbound Prefer/companion cites from kandarin:skillchompas, kandarin:cobalt-skillchompa-hunter-site, and tirannwn:crystal-skillchompas"
+      ],
+      "region_pressure": [
+        "Hard Kandarin for cobalt→crimson wild sites and Manor Farm PoF production framing.",
+        "Tirannwn optional: crystal skillchompas only — not required for the hub identity of lower tiers."
+      ],
+      "notes": "Audit final still-missing rank 16 / phantom ref. Piece rows exist; this is the missing supply hub id they claim as companion. Do not invent XP/hour or trap rates. Do not double-score crystal site as a second hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Cobalt_skillchompa",
+        "https://runescape.wiki/w/Crystal_skillchompa",
+        "https://runescape.wiki/w/Manor_Farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for main wild + PoF supply. Crystal tier is Tirannwn optional pressure.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:skillchompas",
+        "kandarin:cobalt-skillchompa-hunter-site",
+        "tirannwn:crystal-skillchompas",
+        "kandarin:pof-breeding-log-tier1-perks",
+        "kandarin:farmers-market-master-farmer"
+      ]
+    }
+  ],
+  "row_count": {
+    "equipment_additions": 10,
+    "activity_additions": 3,
+    "total": 13
+  },
+  "skipped_present_summary": {
+    "ring_of_vigour": "combat skip",
+    "god_book_illumination": "fremennik base + desert illuminated already first-class (not thin)",
+    "brooch_of_the_gods": "asgarnia:brooch-of-the-gods",
+    "gote_finished_and_chain": "tirannwn:grace-of-the-elves + cross-region porter/dark-facet rows",
+    "crystal_tools_workshop_utility": "prifddinas:crystal-tool-workshop + tirannwn:crystal-utility-tools + named gather tools",
+    "dig_site_pendant_skull_sceptre_games_necklace": "misthalin + cross-region packages present",
+    "seedicide_collector": "kandarin:seedicide-collector-upgrade",
+    "serenity_posts": "prifddinas:serenity-posts",
+    "fort_buildings": "misthalin:fort-* first-class set present"
+  }
+}

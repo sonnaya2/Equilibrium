@@ -1,42 +1,57 @@
 {
   "snapshot_date": "2026-07-26",
-  "regional_skilling_unlocks": 272,
-  "by_region": {
-    "tirannwn": 41,
-    "asgarnia": 35,
-    "kandarin": 37,
-    "desert": 22,
-    "morytania": 27,
-    "fremennik": 31,
-    "misthalin": 45,
-    "forinthry": 39,
-    "anachronia": 27,
-    "karamja": 14,
-    "havenhythe": 11
+  "regional_skilling_unlocks": 604,
+  "stats": {
+    "activities": 407,
+    "equipment": 197,
+    "regionCombos_all_required": 83,
+    "comboLabeled": 167,
+    "name_duplicates": 0,
+    "multi_region_without_comboLabel": 0,
+    "invalid_region_tokens": 0
   },
-  "enrichment_files": [
-    "progression-enrichment-regional-skilling-2026-07-25.json",
-    "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json",
-    "progression-enrichment-regional-skilling-asgarnia-2026-07-26.json",
-    "progression-enrichment-regional-skilling-cross-chains-2026-07-26.json",
-    "progression-enrichment-regional-skilling-desert-2026-07-26.json",
-    "progression-enrichment-regional-skilling-forinthry-2026-07-26.json",
-    "progression-enrichment-regional-skilling-fremennik-2026-07-26.json",
-    "progression-enrichment-regional-skilling-gaps-2026-07-26.json",
-    "progression-enrichment-regional-skilling-ironman-unlocks-2026-07-26.json",
-    "progression-enrichment-regional-skilling-kandarin-2026-07-26.json",
-    "progression-enrichment-regional-skilling-karamja-2026-07-26.json",
-    "progression-enrichment-regional-skilling-misthalin-2026-07-26.json",
-    "progression-enrichment-regional-skilling-morytania-2026-07-26.json",
-    "progression-enrichment-regional-skilling-outfits-2026-07-25.json",
-    "progression-enrichment-regional-skilling-tirannwn-2026-07-26.json"
-  ],
-  "audit_files": [
-    "scraped-data/audit-regional-unlocks-missing-2026-07-26.json",
-    "scraped-data/audit-ironman-unlocks-vs-app-2026-07-26.json"
-  ],
+  "by_region_hints": {
+    "misthalin": 143,
+    "kandarin": 133,
+    "asgarnia": 131,
+    "tirannwn": 115,
+    "forinthry": 104,
+    "morytania": 93,
+    "desert": 86,
+    "fremennik": 71,
+    "anachronia": 68,
+    "karamja": 59,
+    "havenhythe": 31
+  },
+  "training_methods_catalog": 403,
+  "agents_this_pass": 17,
+  "waves": {
+    "wave3_restored": "progression-enrichment-regional-skilling-wave4-restore-wave3-2026-07-26.json",
+    "wave4_packs": 11,
+    "wave5_packs": 4,
+    "wave5_havenhythe_broken_ref_fix": true
+  },
+  "quality_gates": {
+    "combo_label_contract": {
+      "all_required": "Region combo (all required): a + b",
+      "support": "Region chain (support pressure): a / b",
+      "multi_id_fallback": "Region combo/chain (multi-source; see requirements)"
+    },
+    "sync_script": "scripts/sync-regional-skilling-unlocks.mjs (restored after file-sync wipe)"
+  },
   "before_after": {
-    "unlocks_before": 54,
-    "unlocks_after": 272
-  }
-}\n
+    "unlocks_session_start_approx": 359,
+    "unlocks_after_wave4_partial": 531,
+    "unlocks_after_wave3_restore": 550,
+    "unlocks_now": 604,
+    "combo_labeled_now": 167,
+    "training_methods_now": 403
+  },
+  "remaining_long_tail": [
+    "Deep Waiko individual chime purchases",
+    "Full museum chronote collection ladder detail",
+    "Combat BiS regional depth (out of skilling scope)",
+    "TH-only cosmetics and portables",
+    "Some name-near-dup diary ladders still multi-id by design (legs 1-4 style)"
+  ]
+}

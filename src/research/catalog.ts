@@ -55,6 +55,8 @@ export interface ResearchUpgrade {
   regionHints?: string[];
   requiredRegions?: string[];
   regionRequirementType?: string;
+  comboLabel?: string;
+  isRegionCombo?: boolean;
 }
 
 export interface ResearchRegion {
@@ -96,6 +98,9 @@ export interface ResearchDatasetStats {
   regionalCombatAccounts?: number;
   regionalCombatActivities?: number;
   regionalCombatEquipment?: number;
+  regionalCombatCombos?: number;
+  museumCollectionMatrix?: number;
+  museumCollectionUnobtainable?: number;
 }
 
 export interface ResearchSourcePolicy {

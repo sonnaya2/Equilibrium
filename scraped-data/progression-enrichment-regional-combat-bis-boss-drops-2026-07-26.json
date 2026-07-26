@@ -1,0 +1,474 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Region-locked combat BiS drop geography for Equilibrium: one row per major boss or boss family that defines elective/starting region value via unique combat gear, ability codices, or endgame upgrade materials. Not a strategy guide and not drop-rate research.",
+  "policy": {
+    "region_rule": "required_regions lists hard acquisition geography under the current repo League taxonomy (regions.json + major-upgrades-by-region.json + region-dependencies.json). region_hints / optional_pressure_regions cover cross-region chains or unresolved portals without inventing a second hard gate.",
+    "league_rule": "Senntisten EGWD, City of Um, Fort Forinthry, and Sanctum of Rebirth use working Misthalin taxonomy until Equilibrium publishes a finer locality. ED4 Zamorak is wiki-badged Misthalin but still carries a Forinthry portal residual warning. The Arc (ED1) stays unresolved external.",
+    "bis_rule": "effects lists the BiS / near-BiS uniques that make the boss region-defining. Skip pure fluff commons. Do not invent rates. Ironman notes are farm-access notes only.",
+    "duplicate_rule": "IDs are boss:slug hubs. Do not re-emit full igneous cape production detail already in cross-region:igneous-zuk-capes; this file only pins the boss drop side."
+  },
+  "equipment_additions": [
+    {
+      "id": "boss:araxxor",
+      "name": "Araxxor / Araxxi",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "morytania"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Noxious scythe (t90 2h melee) components",
+        "Noxious staff (t90 2h magic) components",
+        "Noxious longbow (t90 2h ranged) components",
+        "Spider leg assembly path for each noxious weapon"
+      ],
+      "notes": "Official Equilibrium Morytania example. Ironman farm is the Araxyte Hive path only — no alternate region source for noxious components. Primary mid-end all-style t90 2h BiS gate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Araxxor",
+        "https://runescape.wiki/w/Noxious_weapon"
+      ],
+      "confidence": "confirmed_official_region_example_plus_confirmed_wiki_drops",
+      "league_treatment": "Hard Morytania elective. Quest auto-completion does not relocate the hive."
+    },
+    {
+      "id": "boss:rasial",
+      "name": "Rasial, the First Necromancer",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Omni guard (t95 Necromancy main-hand)",
+        "Soulbound lantern (t95 Necromancy off-hand)",
+        "Robes of the First Necromancer (t95 Necromancy power armour set)"
+      ],
+      "notes": "Citadel above City of Um. Ironman Necromancy endgame BiS is locked to this farm once Um access is open; Hermod is the citadel unlock step, not a separate BiS table. Working Misthalin taxonomy for Um/Underworld.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
+        "https://runescape.wiki/w/First_Necromancer%27s_equipment"
+      ],
+      "confidence": "current_wiki_location_plus_historical_city_of_um_league_taxonomy",
+      "league_treatment": "Keep Misthalin as working League region for City of Um until Equilibrium overrides locality."
+    },
+    {
+      "id": "boss:kerapac",
+      "name": "Kerapac, the bound",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Fractured Staff of Armadyl components (HM only: symbol / gem / shaft) — t95 magic 2h BiS special",
+        "Greater Concentrated Blast ability codex",
+        "Kerapac's wrist wraps (magic gloves)",
+        "Scripture of Jas pocket book"
+      ],
+      "notes": "Elder God Wars Dungeon / Senntisten front — NOT Anachronia. Ironman FSoA is hard-mode Kerapac only; GConc is a major magic DPS permanent. Working Misthalin Senntisten taxonomy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kerapac,_the_bound",
+        "https://runescape.wiki/w/Fractured_Staff_of_Armadyl",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Do not map Kerapac to Anachronia. Senntisten EGWD stays Misthalin working taxonomy."
+    },
+    {
+      "id": "boss:arch-glacor",
+      "name": "Arch-Glacor",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Leng artefact + dark nilas → Blade of Leng / Off-hand Blade of Leng (t95 melee dual)",
+        "Frozen core of Leng",
+        "Scripture of Wen",
+        "Enhanced glove upgrade materials (glove path residual)"
+      ],
+      "notes": "EGWD Senntisten. Ironman t95 melee dual is Leng from this boss; enrage/mechanics options scale loot without inventing rates here. Working Misthalin taxonomy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Arch-Glacor",
+        "https://runescape.wiki/w/Blade_of_Leng"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Same Senntisten/Misthalin working map as Kerapac/Zuk/Croesus."
+    },
+    {
+      "id": "boss:croesus",
+      "name": "Croesus",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Cryptbloom armour (t90 Magic tank — combat BiS residual, not a skilling-only row)",
+        "Scripture of Bik",
+        "Croesus foultorch / sporehammer skilling off-hands (combat-adjacent note only)"
+      ],
+      "notes": "EGWD skilling boss with real combat armour BiS for Magic tank setups. Ironman Cryptbloom is contribution-chest locked to this encounter. Skilling off-hands are secondary; do not treat Croesus as pure skilling when planning Magic tank.",
+      "source_urls": [
+        "https://runescape.wiki/w/Croesus",
+        "https://runescape.wiki/w/Cryptbloom_armour"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Misthalin working Senntisten map. Safe encounter still requires region access to the front."
+    },
+    {
+      "id": "boss:tzkal-zuk",
+      "name": "TzKal-Zuk",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_hints": [
+        "karamja"
+      ],
+      "optional_pressure_regions": [
+        "karamja"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Igneous stone (flawless / no-checkpoint path) for Igneous Kal style capes",
+        "Ek-ZekKil (t95 melee 2h)",
+        "Magma Tempest ability codex (+ targeted variant)",
+        "Scripture of Ful"
+      ],
+      "notes": "TzekHaar Front / Senntisten working Misthalin map supplies the stone, weapon, ability, and scripture. Ironman igneous cape chain still needs a TokHaar-Kal base from Karamja Fight Kiln — see cross-region:igneous-zuk-capes. Obsidian armour / TokKul-Zo support is Karamja-side only.",
+      "source_urls": [
+        "https://runescape.wiki/w/TzKal-Zuk",
+        "https://runescape.wiki/w/Ek-ZekKil",
+        "https://runescape.wiki/w/Comparison_of_combat_capes"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Boss drops = Misthalin. Full BiS cape chain = Misthalin + Karamja."
+    },
+    {
+      "id": "boss:sanctum-of-rebirth",
+      "name": "Sanctum of Rebirth (Nakatra residual)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Roar of Awakening (t95 Magic main-hand) — Nakatra only",
+        "Ode to Deceit (t95 Magic off-hand) — Nakatra only",
+        "Divine Rage prayer codex (dungeon residual)",
+        "Scripture of Amascut (dungeon residual)",
+        "Shard of Genesis Essence (HM Nakatra — +5 tiers on t95 weapons)"
+      ],
+      "notes": "Three-boss dungeon via City of Um / Underworld. Ironman t95 Magic dual and Genesis upgrade material are Nakatra-gated; Divine Rage / Scripture roll from the dungeon residual. Working Misthalin Um taxonomy.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sanctum_of_Rebirth",
+        "https://runescape.wiki/w/Nakatra,_Devourer_Eternal",
+        "https://runescape.wiki/w/Roar_of_Awakening"
+      ],
+      "confidence": "current_wiki_content_plus_historical_city_of_um_league_taxonomy",
+      "league_treatment": "Treat as Misthalin until Equilibrium remaps Underworld locality."
+    },
+    {
+      "id": "boss:zamorak-lord-of-chaos",
+      "name": "Zamorak, Lord of Chaos (Undercity residual)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_hints": [
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Vestments of havoc (t95 melee power armour set)",
+        "Bow of the Last Guardian components (top / bottom / divine bowstring) — t95 ranged 2h",
+        "Chaos Roar ability codex",
+        "Codex of lost knowledge (Greater Sunshine / Greater Death's Swiftness craft path)"
+      ],
+      "notes": "ED4 final boss. Wiki Equilibrium badge currently lists Misthalin; base-game entrance/escape is Senntisten while the portal chain hits Wilderness Crater / Vestibule of Futility (Forinthry residual). Ironman enrage farm supplies melee t95 armour + BOLG + key ability codices. Do not invent enrage rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+        "https://runescape.wiki/w/The_Zamorakian_Undercity",
+        "https://runescape.wiki/w/Vestments_of_havoc_armour",
+        "https://runescape.wiki/w/Bow_of_the_Last_Guardian"
+      ],
+      "confidence": "confirmed_wiki_drops_region_cross_boundary_residual",
+      "league_treatment": "Primary badge Misthalin; keep Forinthry as cross-boundary residual until Equilibrium resolves ED4 locality (see region-dependencies cross_boundary_cases)."
+    },
+    {
+      "id": "boss:telos",
+      "name": "Telos, the Warden",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Zaros godsword (t92 melee 2h special)",
+        "Seren godbow (t92 ranged 2h special)",
+        "Staff of Sliske (t92 magic 2h special)",
+        "Reprisal ability codex",
+        "Dormant anima-core / orb of pure anima residual for anima-core upgrades"
+      ],
+      "notes": "Heart of Gielinor — Desert elective, NOT Forinthry/Wilderness. Ironman t92 special-attack 2h weapons are enrage-chest gated here. Do not copy enrage strategy into the planner.",
+      "source_urls": [
+        "https://runescape.wiki/w/Telos,_the_Warden",
+        "https://runescape.wiki/w/Heart_of_Gielinor"
+      ],
+      "confidence": "confirmed_wiki_content_region_inferred",
+      "league_treatment": "Desert/Heart mapping is current repo + Catalyst precedent. Do not reassign to Wilderness."
+    },
+    {
+      "id": "boss:gwd2",
+      "name": "God Wars Dungeon 2 (Heart of Gielinor)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Dragon Rider lance (t85+ melee polearm still used for mobility specials)",
+        "Wand of the Cywir elders + Orb of the Cywir elders",
+        "Shadow glaives (dual ranged)",
+        "Blade of Avaryss + Blade of Nymora (twin blades)",
+        "Anima core of Seren / Zaros / Zamorak / Sliske armour paths"
+      ],
+      "notes": "Heart of Gielinor family (Helwyr, Twin Furies, Vindicta, Gregorovic) — Desert, not Asgarnia/Fremennik. 2026: best GWD2 drop rates available immediately; reputation no longer gates rates (cap 2,000). Ironman midgame all-style weapon ladder.",
+      "source_urls": [
+        "https://runescape.wiki/w/Heart_of_Gielinor",
+        "https://runescape.wiki/w/Dragon_Rider_lance"
+      ],
+      "confidence": "confirmed_wiki_and_official_archive",
+      "league_treatment": "Hard Desert elective. Do not file under GWD1 Asgarnia."
+    },
+    {
+      "id": "boss:amascut",
+      "name": "Amascut, the Devourer",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Devourer's Guard (t95 Necromancy shield / tank residual)",
+        "Tumeken's Light (t95 Necromancy light source residual)",
+        "Tumeken's resplendence equipment",
+        "Shard of Genesis Essence residual (shared endgame +5 t95 upgrade economy with Sanctum HM)"
+      ],
+      "notes": "Menaphos Imperial district. Catalyst labelled Desert: Menaphos. Ironman Necromancy/Magic endgame residual alongside Sanctum; requires Eclipse of the Heart in the normal game.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amascut,_the_Devourer",
+        "https://runescape.wiki/w/Catalyst_League/Tasks"
+      ],
+      "confidence": "historical_catalyst_desert_menaphos_mapping_current_wiki_rewards",
+      "league_treatment": "Hard Desert. Quest auto-completion may soften Eclipse gates but not the Menaphos geography."
+    },
+    {
+      "id": "boss:gwd1",
+      "name": "God Wars Dungeon 1 (+ Nex)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Bandos equipment (melee power armour ladder)",
+        "Armadyl equipment (ranged power armour ladder)",
+        "Subjugation equipment (magic power armour ladder)",
+        "Godsword shard / hilt assembly (godswords)",
+        "Nex: Torva / Pernix / Virtus (t80 power armour sets)"
+      ],
+      "notes": "Official Equilibrium Asgarnia example (GWD approach). 2026: GWD1 killcount persists after leaving, capped at 200. Ironman midgame armour BiS before t90/t95 sets. Nex is the same dungeon complex, not a separate region.",
+      "source_urls": [
+        "https://runescape.wiki/w/God_Wars_Dungeon",
+        "https://runescape.wiki/w/Nex",
+        "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium"
+      ],
+      "confidence": "confirmed_official_region_example_with_base_game_drop_mapping",
+      "league_treatment": "Hard Asgarnia. Northern Asgarnia boundary includes the GWD approach."
+    },
+    {
+      "id": "boss:nex-angel-of-death",
+      "name": "Nex: Angel of Death",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Wand of the praesul (t92 magic main-hand)",
+        "Imperium core (t92 magic off-hand)",
+        "Praesul codex (prayer unlock residual)"
+      ],
+      "notes": "GWD complex Asgarnia. Ironman t92 Magic dual alternative to Telos staff path; group-content farm with distinct uniques from base Nex.",
+      "source_urls": [
+        "https://runescape.wiki/w/Nex:_Angel_of_Death",
+        "https://runescape.wiki/w/Wand_of_the_praesul"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Same Asgarnia GWD geography as GWD1/Nex."
+    },
+    {
+      "id": "boss:vorago",
+      "name": "Vorago",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Seismic wand (t90 magic main-hand)",
+        "Seismic singularity (t90 magic off-hand)",
+        "Tectonic energy (t90 Magic power armour craft material)"
+      ],
+      "notes": "Borehole near Falador — Asgarnia. Ironman seismic dual + tectonic armour energy farm. Hard-mode/team content; still the region-defining Magic mid-end BiS source before praesul/FSoA.",
+      "source_urls": [
+        "https://runescape.wiki/w/Vorago",
+        "https://runescape.wiki/w/Seismic_wand"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Hard Asgarnia. Do not file under Forinthry."
+    },
+    {
+      "id": "boss:ed2-dragonkin-laboratory",
+      "name": "Dragonkin Laboratory (ED2)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Greater Fury ability codex",
+        "Greater Flurry ability codex",
+        "Greater Barge ability codex",
+        "Draconic energy (elite tectonic / elite sirenic residual materials)"
+      ],
+      "notes": "Deep Wilderness Castle Ruins — hard Forinthry. Ironman melee ability upgrades (Greater Fury/Flurry/Barge) are ED2 residual; Black Stone Dragon is the final boss of the dungeon family. Not a fluff wilderness rare.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_Laboratory",
+        "https://runescape.wiki/w/Greater_Fury"
+      ],
+      "confidence": "confirmed_wiki_wilderness_location",
+      "league_treatment": "Hard Forinthry elective. Sticky Wilderness geography."
+    },
+    {
+      "id": "boss:ed3-shadow-reef",
+      "name": "The Shadow Reef / Ambassador (ED3)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Eldritch crossbow components (t90+ ranged special weapon)",
+        "Ambassador residual unique table (dungeon final boss)"
+      ],
+      "notes": "Accessed from eastern Daemonheim shore — Forinthry. Ironman eldritch crossbow is the region-defining ranged special from this family. Do not invent Ambassador strategy.",
+      "source_urls": [
+        "https://runescape.wiki/w/The_Shadow_Reef",
+        "https://runescape.wiki/w/The_Ambassador",
+        "https://runescape.wiki/w/Eldritch_crossbow"
+      ],
+      "confidence": "confirmed_wiki_daemonheim_access",
+      "league_treatment": "Hard Forinthry via Daemonheim access (official Equilibrium Forinthry example)."
+    },
+    {
+      "id": "boss:solak",
+      "name": "Solak",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "tirannwn"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Blightbound crossbow (t92 ranged main-hand)",
+        "Off-hand Blightbound crossbow",
+        "Erethdor's grimoire (pocket book)",
+        "Torn grimoire page residual for grimoire charges"
+      ],
+      "notes": "Lost Grove — official Tirannwn Equilibrium example. Ironman t92 dual crossbows + grimoire pocket are Solak-gated group content.",
+      "source_urls": [
+        "https://runescape.wiki/w/Solak",
+        "https://runescape.wiki/w/Blightbound_crossbow",
+        "https://runescape.wiki/w/The_Lost_Grove"
+      ],
+      "confidence": "confirmed_official_region_example_plus_confirmed_wiki_drops",
+      "league_treatment": "Hard Tirannwn elective. Prif access is designed to unlock with region quest completion."
+    },
+    {
+      "id": "boss:raksha",
+      "name": "Raksha, the Shadow Colossus",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "anachronia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Greater Ricochet ability codex",
+        "Greater Chain ability codex",
+        "Divert ability codex",
+        "Shadow spike upgrades for Fleeting / Laceration / Blast diffusion boots to t90"
+      ],
+      "notes": "Anachronia island boss. Ironman ability codices (GRico/GChain/Divert) and boot tier upgrades are the BiS reason to pick Anachronia for combat — not only BGH skilling.",
+      "source_urls": [
+        "https://runescape.wiki/w/Raksha,_the_Shadow_Colossus",
+        "https://runescape.wiki/w/Greater_Ricochet",
+        "https://runescape.wiki/w/Shadow_spike"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia elective."
+    },
+    {
+      "id": "boss:legiones",
+      "name": "Legiones (Monastery of Ascension)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Ascension crossbow (t90 ranged main-hand)",
+        "Off-hand Ascension crossbow",
+        "Ascension signet / keystone residual for dual assembly"
+      ],
+      "notes": "Kandarin Monastery of Ascension. Ironman t90 dual crossbows before blightbound/eldritch. Distinct from Solak t92 path.",
+      "source_urls": [
+        "https://runescape.wiki/w/Legiones",
+        "https://runescape.wiki/w/Ascension_crossbow"
+      ],
+      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+      "league_treatment": "Hard Kandarin elective."
+    },
+    {
+      "id": "boss:ed1-temple-of-aminishi",
+      "name": "Temple of Aminishi (ED1)",
+      "category": "regional boss BiS drop source",
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_hints": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "effects": [
+        "Ancient scales (elite sirenic upgrade residual)",
+        "Masuta's warspear (t82 spear residual)",
+        "Seasinger / Tetsu / Death lotus upgrade kits (t85→88 Ports weapon residual)"
+      ],
+      "notes": "Temple of Aminishi (Arc ED1) is Asgarnia under Equilibrium Arc packaging. Port Sarim is the practical access package. Ancient scales, Masuta warspear, and Ports t85→88 upgrade kits densify here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Temple_of_Aminishi",
+        "https://runescape.wiki/w/Ancient_scale",
+        "https://runescape.wiki/w/Impressing_the_Locals"
+      ],
+      "confidence": "confirmed_user_rule_arc_asgarnia_2026_07_26",
+      "league_treatment": "Hard Asgarnia (Arc / ED1). Optional Desert Ports pressure may be added later.",
+      "region_hint": "asgarnia"
+    }
+  ]
+}

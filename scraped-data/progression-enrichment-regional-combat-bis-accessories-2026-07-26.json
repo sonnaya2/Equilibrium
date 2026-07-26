@@ -1,0 +1,717 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Combat BiS residual pack for ACCESSORIES, Archaeology combat RELICS, and pocket/utility support not yet first-class in data/research/regional-combat-unlocks.json. Covers Essence of Finality component chain, Reaper/Souls neck residual, Cinderbanes + Erethdor grimoire (Tirannwn), Nightmare gauntlets residual, EGWD/Sanctum combat scriptures, missing combat Archaeology relics (Font of Life, Fury of the Small, Conservation of Energy), and War's Retreat combat hub residual. Skips ring of vigour / adrenaline urn (already present), Soul Split as a global prayer-book claim, FSOA weapon path (out of accessory scope), and Blessing of Het (already skilling desert:blessing-of-het-relic).",
+  "policy": {
+    "region_rule": "required_regions means every listed elective region contributes a mandatory base-game acquisition step. region_hints lists support pressure. Never invent multi-region/cross-region/global tokens in region fields.",
+    "hard_gate_rule": "Only use region_requirement_type all_required when every listed region is truly mandatory for self-supply. Global shop currency (reaper points) is not a second elective region.",
+    "duplicate_guard": "Grep-confirmed PRESENT in regional-combat-unlocks — do not re-emit: dungeoneering:ring-of-vigour-passive, morytania:berserkers-fury-relic, morytania:heightened-senses-relic, cross-region:death-ward-relic, salve-amulet:enchanted, morytania:amulet-of-forsaken-berserkers-fury, cross-region:igneous-zuk-capes, broken-home:asylum-surgeons-ring, rum-deal:holy-wrench, dungeoneering prayer necklaces, farm perks.",
+    "skilling_overlap_rule": "misthalin:wars-blessing / wars-grimoire / wars-retreat-skilling-hub already live in regional-skilling. Combat pack emits only combat-facing residual ids (not prayer-switch skilling densify).",
+    "scripture_combat_rule": "Jas/Wen/Ful/Amascut combat passives enter combat catalog. Bik/Elidinis stay skilling (already first-class).",
+    "external_area_rule": "Freneskae Nightmares package under Kandarin (user rule 2026-07-26; World Gate / Eagles Peak packaging).",
+    "no_trade_rule": "Ironman self-supply framing only. Do not invent drop rates, DPS averages, or GE prices as planner requirements.",
+    "skip_present_adrenaline": "Ring of vigour passive already first-class. Adrenaline urn not re-emitted (user skip present)."
+  },
+  "already_present_checked": [
+    "dungeoneering:ring-of-vigour-passive",
+    "morytania:berserkers-fury-relic",
+    "morytania:heightened-senses-relic",
+    "cross-region:death-ward-relic",
+    "salve-amulet:enchanted",
+    "morytania:amulet-of-forsaken-berserkers-fury",
+    "cross-region:igneous-zuk-capes",
+    "broken-home:asylum-surgeons-ring",
+    "rum-deal:holy-wrench",
+    "dungeoneering:demon-horn-necklace-current",
+    "dungeoneering:split-dragontooth-necklace-current"
+  ],
+  "equipment_additions": [
+    {
+      "id": "asgarnia:essence-of-finality-amulet",
+      "name": "Essence of Finality amulet (neck BiS chain)",
+      "category": "best-in-slot combat neckwear cross-region production",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "all_required",
+      "optional_pressure_regions": [],
+      "requirements": [
+        "99 Crafting (boostable) to assemble the amulet",
+        "Alchemical hydrix (117 Invention, boostable from 100 with extreme invention — inventor's workbench Misc support tab after alchemical hydrix blueprint discovery)",
+        "Fully charged amulet of souls (hydrix amulet + Lvl-6 Enchant)",
+        "Fully charged reaper necklace (hydrix necklace + Lvl-6 Enchant)"
+      ],
+      "unlocks": [
+        "Neck-slot BiS combining Reaper stacking hit-chance and Amulet of souls Soul Split / protect-prayer passives",
+        "Essence of Finality ability: permanently sacrifice a weapon to store its special attack for unlimited style-matched use without amulet charge loss",
+        "Alchemical hydrix dust recharge path (crush alchemical hydrix → 10 dust; each dust restores 50% amulet charge)"
+      ],
+      "effects": [
+        "+55.7 damage bonus in all styles and +7 Prayer (+58.6 damage with essence of finality ornament kit)",
+        "Successful hits stack +0.1% hit chance (cap 30 stacks / +3%) for 54 seconds (Reaper passive)",
+        "Soul Split has 50% chance to heal 25–50% more (average +18.75% Soul Split healing)",
+        "Protection prayers and deflect curses gain +10 percentage points base damage reduction (to 60%)"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild manufacture of the alchemical hydrix and the alchemical hydrix blueprint discovery home used by ironman EoF planners.",
+        "Incomplete hydrix is bought from Death's Store for 300 reaper points (wiki League badge Global — not a second elective region). Onyx completes incomplete hydrix into uncut hydrix.",
+        "Crafting levels and Lvl-6 Enchant are global skill gates, not region picks."
+      ],
+      "notes": "Primary combat neck BiS residual. Pair with combat:reaper-necklace and combat:amulet-of-souls as intermediate wearables. Do not dual-claim Brooch of the Gods craft path as combat BiS (skilling pocket). Do not invent special-attack DPS rankings.",
+      "source_urls": [
+        "https://runescape.wiki/w/Essence_of_Finality_amulet",
+        "https://runescape.wiki/w/Alchemical_hydrix",
+        "https://runescape.wiki/w/Essence_of_Finality",
+        "https://runescape.wiki/w/Incomplete_hydrix"
+      ],
+      "confidence": "confirmed_current_wiki_region_chain",
+      "league_treatment": "Hard Asgarnia for alchemical hydrix manufacture. Reaper-point hydrix supply remains Global shop framing under current wiki League badge."
+    },
+    {
+      "id": "combat:reaper-necklace",
+      "name": "Reaper necklace (EoF residual neck)",
+      "category": "combat neckwear residual and EoF ingredient",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [],
+      "region_requirement_type": "support",
+      "region_status": "global_reaper_shop_plus_crafting_no_hard_elective",
+      "requirements": [
+        "90 Crafting for hydrix necklace (or purchase finished reaper necklace)",
+        "Lvl-6 Enchant (87 Magic) or Lvl-6 enchant tablet on hydrix necklace",
+        "Incomplete hydrix (Death's Store, 300 reaper points) + cut onyx → uncut hydrix → cut hydrix for self-supply"
+      ],
+      "unlocks": [
+        "Pocketable mid-end neck before EoF assembly",
+        "Required fully-charged ingredient for Essence of Finality amulet"
+      ],
+      "effects": [
+        "Each successful hit grants +0.1% hit chance in all styles for 54 seconds, stacking to 30 (total +3%)",
+        "Stacks drop if the necklace is unequipped (switching to another EoF retains stacks)",
+        "Degrades over 100,000 hits; recharge 50% per cut onyx"
+      ],
+      "region_pressure": [
+        "No hard elective region for the hydrix gem itself — Death's Store incomplete hydrix is Global League badge.",
+        "Asgarnia optional pressure only as the EoF/alchemical-hydrix manufacture home that consumes this necklace.",
+        "Reaper points require boss kills (War's Retreat / Death integration) but are not region-locked currency."
+      ],
+      "notes": "Aqueduct/reaper residual row so planners scanning combat necks still see Reaper before EoF. Do not invent hit-chance uptime models. Prefer asgarnia:essence-of-finality-amulet for finished BiS.",
+      "source_urls": [
+        "https://runescape.wiki/w/Reaper_necklace",
+        "https://runescape.wiki/w/Incomplete_hydrix",
+        "https://runescape.wiki/w/Hydrix"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Treat as global-craft residual until Equilibrium publishes a reaper-shop locality override. Do not invent a second hard region."
+    },
+    {
+      "id": "combat:amulet-of-souls",
+      "name": "Amulet of souls (EoF residual neck)",
+      "category": "combat neckwear residual and EoF ingredient",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [],
+      "region_requirement_type": "support",
+      "region_status": "global_reaper_shop_plus_crafting_no_hard_elective",
+      "requirements": [
+        "99 Crafting for hydrix amulet (or purchase finished amulet of souls)",
+        "Lvl-6 Enchant (87 Magic) or Lvl-6 enchant tablet on hydrix amulet",
+        "Incomplete hydrix + onyx hydrix self-supply chain (same as reaper necklace)"
+      ],
+      "unlocks": [
+        "High-end Soul Split sustain neck before EoF assembly",
+        "Required fully-charged ingredient for Essence of Finality amulet"
+      ],
+      "effects": [
+        "Soul Split has 50% chance to heal 25–50% more (average +18.75% Soul Split healing)",
+        "Protection prayers and deflect curses gain +10 percentage points base damage reduction (to 60%)",
+        "Degrades over 100,000 hits; recharge 50% per cut onyx"
+      ],
+      "region_pressure": [
+        "Same Global Death's Store hydrix framing as reaper necklace — no hard elective for the gem.",
+        "Asgarnia optional as EoF manufacture home only."
+      ],
+      "notes": "Sibling residual to combat:reaper-necklace. Soul Split prayer itself remains Ancient Curses book unlock (Misthalin temple) — do not re-emit Soul Split as a neck-region claim.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amulet_of_souls",
+        "https://runescape.wiki/w/Essence_of_Finality_amulet"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Global-craft residual. Pair with asgarnia:essence-of-finality-amulet for the finished product."
+    },
+    {
+      "id": "tirannwn:cinderbane-gloves",
+      "name": "Cinderbane gloves",
+      "category": "best-in-slot hybrid poison combat gloves",
+      "region_hint": "tirannwn",
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "85 Defence to wear",
+        "Lost Grove creature or Solak drop (wiki League region badge Tirannwn on Solak)"
+      ],
+      "unlocks": [
+        "Tier 85 hybrid power gloves with weapon-poison application and poison-tier scaling",
+        "Core poison-stacking glove for multi-hit methods on poison-susceptible targets"
+      ],
+      "effects": [
+        "12.5% (1/8) chance per hit to apply tier-2 weapon poison (or +1 poison tier when another poison source is active)",
+        "Reapplying poison while already poisoned can deal an extra poison hit and refresh duration (can chain)",
+        "Does not apply to poison-immune targets",
+        "Degrades over 60,000 charges; base full repair 300,000 coins"
+      ],
+      "region_pressure": [
+        "Tirannwn hard-owns Lost Grove + Solak drop geography under current wiki League badge."
+      ],
+      "notes": "Skilling longtail combat-adjacent pack explicitly skipped Cinderbanes for combat catalogs — this is that combat residual. Do not invent poison DPM averages beyond wiki structure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Cinderbane_gloves",
+        "https://runescape.wiki/w/Solak,_Guardian_of_the_Grove",
+        "https://runescape.wiki/w/The_Lost_Grove"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Tirannwn for Lost Grove / Solak self-supply."
+    },
+    {
+      "id": "combat:nightmare-gauntlets",
+      "name": "Nightmare gauntlets (ranged residual)",
+      "category": "ranged power gloves residual",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Children of Mah completed for Nightmare access at the Freneskae Ritual Site",
+        "80 Slayer to harm Nightmares; optional 50 Slayer points to enable Nightmare creature assignments",
+        "85 Defence to wear",
+        "World Gate access to Freneskae Ritual Site"
+      ],
+      "unlocks": [
+        "Tier 85 ranged power gloves with Steady Hands Snipe passive",
+        "Enhanced nightmare gauntlets upgrade path (Leng artefact + glacor remnants — separate residual)"
+      ],
+      "effects": [
+        "Steady Hands: +25% hit chance and free movement while using Snipe",
+        "Degrades over 60,000 charges"
+      ],
+      "region_pressure": [
+        "Kandarin owns Freneskae Nightmare gauntlets under user taxonomy (World Gate near Eagles Peak packaging).",
+        "Quest auto-completion can satisfy Children of Mah without granting the gloves."
+      ],
+      "notes": "Hard Kandarin for Nightmare gauntlets (Freneskae via World Gate). Enhanced path remains Misthalin (Leng artefact).",
+      "source_urls": [
+        "https://runescape.wiki/w/Nightmare_gauntlets",
+        "https://runescape.wiki/w/Nightmare",
+        "https://runescape.wiki/w/Children_of_Mah",
+        "https://runescape.wiki/w/Freneskae"
+      ],
+      "confidence": "confirmed_user_rule_freneskae_kandarin_2026_07_26",
+      "league_treatment": "Hard Kandarin. Freneskae residual maps to Kandarin elective."
+    },
+    {
+      "id": "misthalin:scripture-of-jas",
+      "name": "Scripture of Jas (Time Rift pocket book)",
+      "category": "combat pocket scripture",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Kerapac, the bound drop in the Nodon Front (Elder God Wars Dungeon)",
+        "Manuscripts of Jas to recharge (45 minutes per manuscript; max 24 hours / 32 manuscripts)"
+      ],
+      "unlocks": [
+        "Pocket-slot combat book (+5 Prayer equip when unlocked/used; +10.9 style damage bonuses post-2026 equipment refinements)",
+        "Time Rift passive when activated"
+      ],
+      "effects": [
+        "6.6% chance on damaging attack release to open a Time Rift that stores damage for 10.2 seconds then releases 20% of tracked damage (cap 30,000)",
+        "15-second internal cooldown after application",
+        "Does not work in PvP"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns EGWD / Senntisten working taxonomy and wiki League region badge on Kerapac drops."
+      ],
+      "notes": "Combat scripture — do not re-emit under regional-skilling. Sibling of Wen/Ful/Amascut. Do not invent Time Rift DPM.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Jas",
+        "https://runescape.wiki/w/Kerapac,_the_bound",
+        "https://runescape.wiki/w/Nodon_Front"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Misthalin under current Senntisten / EGWD working map."
+    },
+    {
+      "id": "misthalin:scripture-of-wen",
+      "name": "Scripture of Wen (Sheer Cold pocket book)",
+      "category": "combat pocket scripture",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Arch-Glacor drop in the Glacor Front (Elder God Wars Dungeon; normal 5-mech or hard mode tables)",
+        "Manuscripts of Wen to recharge"
+      ],
+      "unlocks": [
+        "Pocket-slot combat book with Sheer Cold AoE passive",
+        "Strong choice for stacked / blocked targets and Legacy AoE Slayer"
+      ],
+      "effects": [
+        "6.6% chance on damaging attack release to fire Sheer Cold: 3x3 beam that hits five times then shatters for total ~252%–420% ability damage",
+        "19-tick internal lockout after proc"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Glacor Front / Arch-Glacor wiki League badge."
+      ],
+      "notes": "Combat scripture residual. Do not invent multi-target DPM beyond wiki structure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Wen",
+        "https://runescape.wiki/w/Arch-Glacor",
+        "https://runescape.wiki/w/Glacor_Front"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Misthalin under current EGWD taxonomy."
+    },
+    {
+      "id": "misthalin:scripture-of-ful",
+      "name": "Scripture of Ful (Gladiator's Rage pocket book)",
+      "category": "combat pocket scripture",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "optional_pressure_regions": [
+        "karamja"
+      ],
+      "requirements": [
+        "TzKal-Zuk drop in the TzekHaar Front (Elder God Wars Dungeon)",
+        "Manuscripts of Ful to recharge"
+      ],
+      "unlocks": [
+        "Pocket-slot combat book with Gladiator's Rage damage buff",
+        "Common single-target scripture pick when bleeds are not the damage plan"
+      ],
+      "effects": [
+        "6.6% chance on damaging attack release to grant Gladiator's Rage for 15 seconds: +20% damage dealt and +10% damage taken",
+        "15-second cooldown from activation; unequipping or deactivating the book ends the buff early",
+        "Does not boost bleeds, Crackling, or Aftershock"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns TzekHaar Front / TzKal-Zuk EGWD drop geography under wiki League badge.",
+        "Karamja optional: separate Fight Kiln / TokHaar-Kal / igneous cape chain (already cross-region:igneous-zuk-capes) — not a hard second gate for the scripture drop itself."
+      ],
+      "notes": "Do not dual-require Karamja for the EGWD scripture drop. Link igneous cape chain for Zuk support gear separately.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Ful",
+        "https://runescape.wiki/w/TzKal-Zuk",
+        "https://runescape.wiki/w/TzekHaar_Front"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Misthalin for EGWD Zuk drop. Karamja remains optional cape-chain pressure only."
+    },
+    {
+      "id": "misthalin:scripture-of-amascut",
+      "name": "Scripture of Amascut (Devourer's Corruption pocket book)",
+      "category": "combat pocket scripture",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "optional_pressure_regions": [
+        "desert"
+      ],
+      "requirements": [
+        "Sanctum of Rebirth boss unique (Vermyx, Kezalam, or Nakatra) — wiki League badge Misthalin",
+        "Manuscripts of Amascut to recharge"
+      ],
+      "unlocks": [
+        "Pocket-slot combat book with Devourer's Corruption / Contagion passive",
+        "Underworld Sanctum combat pocket path distinct from skilling Scripture of Elidinis"
+      ],
+      "effects": [
+        "6.6% chance on damaging attack release to grant +10% base damage for 10.2 seconds and spawn 3x3 soul residue",
+        "Soul residue applies Devourer's Contagion DoT (~30% ability damage every 1.2s; can refresh for up to nine hits)",
+        "15-second cooldown"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Sanctum of Rebirth / Underworld working taxonomy and wiki League badge on Sanctum uniques.",
+        "Desert optional thematic only (Menaphite / Sanctum narrative) — not a hard second production gate."
+      ],
+      "notes": "Combat sibling of misthalin:scripture-of-elidinis (skilling). Do not re-emit Gate of Elidinis hub here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scripture_of_Amascut",
+        "https://runescape.wiki/w/Sanctum_of_Rebirth",
+        "https://runescape.wiki/w/Nakatra,_Devourer_Eternal"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Misthalin for Sanctum drops under current Underworld taxonomy."
+    },
+    {
+      "id": "tirannwn:erethdors-grimoire",
+      "name": "Erethdor's grimoire (crit pocket book)",
+      "category": "combat pocket grimoire",
+      "region_hint": "tirannwn",
+      "region_hints": [
+        "tirannwn"
+      ],
+      "required_regions": [
+        "tirannwn"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Solak unique drop (wiki League region badge Tirannwn)",
+        "Torn grimoire pages to recharge (Solak + Lost Grove creatures; 45 minutes per page)"
+      ],
+      "unlocks": [
+        "Pocket-slot critical-strike chance book (illuminated god-book tier stats)",
+        "High upkeep pocket option for speed kills / high-end content"
+      ],
+      "effects": [
+        "When active: +12% critical strike chance (additive with Biting and other crit chance)",
+        "Charge model matches god books / scriptures (max 24 hours)"
+      ],
+      "region_pressure": [
+        "Tirannwn hard-owns Solak and Lost Grove page supply under current wiki League badge.",
+        "Solak arena effectively pauses active grimoire drain (net-zero interval restore) — encounter QoL only."
+      ],
+      "notes": "Combat pocket BiS residual alongside EGWD scriptures. Do not invent crit DPS conversions. Skilling god-book rows stay Fremennik/Desert illumination paths.",
+      "source_urls": [
+        "https://runescape.wiki/w/Erethdor%27s_grimoire",
+        "https://runescape.wiki/w/Torn_grimoire_page",
+        "https://runescape.wiki/w/Solak,_Guardian_of_the_Grove"
+      ],
+      "confidence": "confirmed_current_wiki_league_badge",
+      "league_treatment": "Hard Tirannwn for Solak self-supply."
+    },
+    {
+      "id": "misthalin:font-of-life-relic",
+      "name": "Font of Life relic (Archaeology tutorial)",
+      "category": "combat Archaeology relic",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Archaeology tutorial completion (The Mortal Cup)",
+        "1,000 chronotes and 50 monolith energy to harness (tutorial grants chronotes)"
+      ],
+      "unlocks": [
+        "Font of Life relic power"
+      ],
+      "effects": [
+        "+500 maximum life points while harnessed",
+        "Stacks additively with bonfire boosts"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Archaeology Campus / Dig Site tutorial and mysterious monolith reclaim."
+      ],
+      "notes": "Missing combat-unlock residual — tutorial combat relic not previously in regional-combat-unlocks. Free-to-play eligible. Do not invent LP/hour claims.",
+      "source_urls": [
+        "https://runescape.wiki/w/Font_of_Life",
+        "https://runescape.wiki/w/The_Mortal_Cup",
+        "https://runescape.wiki/w/Archaeology_tutorial"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Misthalin for Archaeology campus tutorial."
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "cross-region:fury-of-the-small-relic",
+      "name": "Fury of the Small relic chain",
+      "category": "combat Archaeology relic cross-region chain",
+      "region_hints": [
+        "kandarin",
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "97 Archaeology (boostable)",
+        "Warforge Dig Site: restore Thorobshuun battle standard and Garagorshuun anchor",
+        "Enter northern Warforge tunnel with battle standard for red hand cave painting",
+        "Enter southern Warforge tunnel with anchor for green skull cave painting",
+        "Combine paintings into Goblin Warpaints and offer at the mysterious monolith",
+        "3,000 chronotes and 150 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Goblin Warpaints",
+        "Fury of the Small"
+      ],
+      "effects": [
+        "All adrenaline-generating basic abilities generate +1% adrenaline (9% → 10%)",
+        "Also applies to Necromancy basic attack (2026 combat modernisation note)"
+      ],
+      "region_pressure": [
+        "Kandarin hard-owns Warforge Dig Site artefacts and cave-painting tunnels.",
+        "Misthalin hard-owns mysterious monolith harness / Archaeology campus reclaim."
+      ],
+      "notes": "Missing combat Archaeology residual after Berserker's Fury / Heightened Senses / Death Ward. Consumes both restored artefacts. Region combo (all required): kandarin + misthalin.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fury_of_the_Small",
+        "https://runescape.wiki/w/Goblin_Warpaints",
+        "https://runescape.wiki/w/Warforge_Dig_Site"
+      ],
+      "confidence": "confirmed_current_wiki_cross_region_chain",
+      "league_treatment": "Display Kandarin + Misthalin as all_required. Do not hide the Warforge dig dependency behind the monolith name."
+    },
+    {
+      "id": "cross-region:conservation-of-energy-relic",
+      "name": "Conservation of Energy relic chain",
+      "category": "combat Archaeology and Invention relic cross-region chain",
+      "region_hints": [
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia",
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "118 Archaeology (boostable) for Conservation of Energy harness framing",
+        "Stormguard Citadel: complete Howl's Floating Workshop mystery and Back to the Drawing Board research",
+        "Restore Chuluu stone from Howl's workshop debris and decipher theoretical blueprints",
+        "Inventor's workbench: craft Experimental Aether Reactor (Chuluu stone + 200 noted quintessence + historic/timeworn/vintage components)",
+        "Offer Experimental Aether Reactor at the mysterious monolith",
+        "7,000 chronotes and 350 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Experimental Aether Reactor",
+        "Conservation of Energy"
+      ],
+      "effects": [
+        "After using an ultimate ability, regain 10% adrenaline",
+        "Stacks with Ring of Vigour for up to 20% adrenaline retained/refunded after ultimates"
+      ],
+      "region_pressure": [
+        "Kandarin hard-owns Stormguard / Howl's workshop dig and blueprint decipher steps.",
+        "Asgarnia hard-owns Invention Guild inventor's workbench manufacture of the Experimental Aether Reactor.",
+        "Misthalin hard-owns mysterious monolith harness."
+      ],
+      "notes": "High-end adrenaline combat relic residual complementary to dungeoneering:ring-of-vigour-passive (do not re-emit RoV). Region combo (all required): kandarin + asgarnia + misthalin.",
+      "source_urls": [
+        "https://runescape.wiki/w/Conservation_of_Energy",
+        "https://runescape.wiki/w/Experimental_Aether_Reactor",
+        "https://runescape.wiki/w/Stormguard_Citadel"
+      ],
+      "confidence": "confirmed_current_wiki_cross_region_chain",
+      "league_treatment": "All three regions required for self-sufficient unlock. Stacks with existing RoV combat unlock."
+    },
+    {
+      "id": "misthalin:wars-retreat-combat-hub",
+      "name": "War's Retreat combat hub residual",
+      "category": "PvM hub combat infrastructure",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Combat level 60 or total level 1,000 for hub entry",
+        "Draynor War's Insignia entry (or Death's office door / War's Retreat Teleport after 10 boss kills)"
+      ],
+      "unlocks": [
+        "Boss portals (first free; second portal after 100 boss kills)",
+        "Reaper portal auto-attuned to current Soul Reaper assignment",
+        "Altar of War (200 boss kills) and ability-cooldown refresh upgrade",
+        "Adrenaline crystals (1,000 boss kills) for pre-fight adrenaline and optional adrenaline-potion debuff clear",
+        "War's Grimoire spellbook swap (750 boss kills) and Blessing 3 prayer-book swap (Combat Mastery path)",
+        "Campfire upgrades and Marks of War shop (War's Wares)"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Draynor entry geography and current planner War's Retreat taxonomy (matches skilling wars-grimoire / wars-blessing ids without re-emitting them)."
+      ],
+      "notes": "Combat-facing hub residual. Prefer misthalin:wars-blessing / misthalin:wars-grimoire for skilling prayer-switch detail already first-class. Do not invent Marks-of-War/hour rates. Adrenaline urn fill interaction is note-only (urn itself skipped as present/out of scope).",
+      "source_urls": [
+        "https://runescape.wiki/w/War%27s_Retreat",
+        "https://runescape.wiki/w/War%27s_Wares",
+        "https://runescape.wiki/w/War%27s_Blessing",
+        "https://runescape.wiki/w/Adrenaline_crystal_(War%27s_Retreat)"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Misthalin for Draynor / Death's office entry framing.",
+      "links_existing_ids": [
+        "misthalin:wars-grimoire",
+        "misthalin:wars-blessing",
+        "dungeoneering:ring-of-vigour-passive"
+      ]
+    },
+    {
+      "id": "misthalin:wars-blessing-combat-mastery",
+      "name": "War's Blessing combat mastery residual",
+      "category": "Combat Mastery permanent combat utilities",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Combat Mastery achievement progression through War at War's Retreat",
+        "War's Blessing tiers 1–4 for stacked permanent benefits"
+      ],
+      "unlocks": [
+        "Blessing 1: free daily boss-portal attunement, +5% Marks of War, Barrows crypt portal QoL, +5% Reaper's choice chance",
+        "Blessing 2: GWD killcount skip (except Nex), Heart of Gielinor killcount −50%, Sign of Life cooldown −50%, higher Marks of War and free attunements",
+        "Blessing 3: Araxxor / Rise of the Six rotation control; War's Grimoire prayer-book swap; +25% Marks of War and +500 hourly Marks cap",
+        "Blessing 4: Vorago rotation control; adrenaline crystals fill to 100% per action; guaranteed Reaper's choice; +50% Marks of War and +1,000 hourly cap; one-time costless ancient gizmo shells"
+      ],
+      "region_pressure": [
+        "Misthalin owns War's Retreat Combat Mastery hand-in geography under current taxonomy."
+      ],
+      "notes": "Combat residual companion to skilling misthalin:wars-blessing (prayer-switch focus). Surfaces killcount skips, rotation control, adrenaline crystal full-fill, and Reaper's choice as combat utilities. Do not invent achievement point totals.",
+      "source_urls": [
+        "https://runescape.wiki/w/War%27s_Blessing",
+        "https://runescape.wiki/w/War%27s_Blessing_1",
+        "https://runescape.wiki/w/War%27s_Blessing_3",
+        "https://runescape.wiki/w/War%27s_Blessing_4",
+        "https://runescape.wiki/w/Combat_Mastery_achievements"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Misthalin for War's Retreat mastery. Distinct id from skilling wars-blessing so combat catalog merge does not collapse prayer-switch densify.",
+      "links_existing_ids": [
+        "misthalin:wars-retreat-combat-hub",
+        "misthalin:wars-blessing",
+        "misthalin:wars-grimoire"
+      ]
+    },
+    {
+      "id": "cross-region:eof-hydrix-component-pressure",
+      "name": "EoF hydrix component self-supply checklist",
+      "category": "combat neck production pressure checklist",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Death's Store incomplete hydrix ×2+ for souls + reaper (300 reaper points each; Global shop)",
+        "Cut onyx ×2+ to complete uncut hydrixes plus ongoing recharge onyx",
+        "Alchemical hydrix manufacture (Asgarnia Invention Guild) after blueprint discovery",
+        "99 Crafting assembly of EoF from alchemical hydrix + amulet of souls + reaper necklace"
+      ],
+      "unlocks": [
+        "Planner-visible ironman checklist for neck BiS without re-emitting finished EoF effects",
+        "Explicit Global reaper-shop vs Asgarnia manufacture split"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for alchemical hydrix / Invention manufacture.",
+        "Reaper points and incomplete hydrix shop remain Global under wiki League badge — not a second elective."
+      ],
+      "notes": "Support checklist residual for asgarnia:essence-of-finality-amulet. Prefer finished EoF id for effects. Do not invent reaper points per hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Incomplete_hydrix",
+        "https://runescape.wiki/w/Death%27s_Store",
+        "https://runescape.wiki/w/Alchemical_hydrix",
+        "https://runescape.wiki/w/Essence_of_Finality_amulet"
+      ],
+      "confidence": "confirmed_current_wiki_cross_pressure",
+      "league_treatment": "Asgarnia manufacture hard gate. Global reaper shop framing until Equilibrium overrides.",
+      "links_existing_ids": [
+        "asgarnia:essence-of-finality-amulet",
+        "combat:reaper-necklace",
+        "combat:amulet-of-souls"
+      ]
+    }
+  ],
+  "account_additions": [],
+  "ids_emitted": [
+    "asgarnia:essence-of-finality-amulet",
+    "combat:reaper-necklace",
+    "combat:amulet-of-souls",
+    "tirannwn:cinderbane-gloves",
+    "combat:nightmare-gauntlets",
+    "misthalin:scripture-of-jas",
+    "misthalin:scripture-of-wen",
+    "misthalin:scripture-of-ful",
+    "misthalin:scripture-of-amascut",
+    "tirannwn:erethdors-grimoire",
+    "misthalin:font-of-life-relic",
+    "cross-region:fury-of-the-small-relic",
+    "cross-region:conservation-of-energy-relic",
+    "misthalin:wars-retreat-combat-hub",
+    "misthalin:wars-blessing-combat-mastery",
+    "cross-region:eof-hydrix-component-pressure"
+  ],
+  "skip_present_or_out_of_scope": [
+    {
+      "id": "dungeoneering:ring-of-vigour-passive",
+      "reason": "Already first-class in regional-combat-unlocks — user skip present."
+    },
+    {
+      "id": "adrenaline-urn",
+      "reason": "User skip present / out of residual scope; War's Retreat crystals note-only interaction."
+    },
+    {
+      "id": "soul-split-prayer",
+      "reason": "Ancient Curses book unlock is global skill/prayer-book progression (Misthalin temple already skilling); not a neck residual."
+    },
+    {
+      "id": "fractured-staff-of-armadyl / fsoa",
+      "reason": "Weapon path, not accessories/relics/utility — skip per brief when magic weapons already handled elsewhere."
+    },
+    {
+      "id": "desert:blessing-of-het-relic",
+      "reason": "Already first-class in regional skilling (Eye of Het II food/potion heal). Combat food heal is secondary to that row."
+    },
+    {
+      "id": "morytania:berserkers-fury-relic / heightened-senses / death-ward",
+      "reason": "Already first-class combat Archaeology relics."
+    },
+    {
+      "id": "misthalin:scripture-of-bik / scripture-of-elidinis",
+      "reason": "Skilling pocket scriptures already first-class; combat pack only Jas/Wen/Ful/Amascut."
+    }
+  ],
+  "sources_note": "Live RuneScape Wiki verified 2026-07-26 for Essence of Finality amulet, Reaper necklace, Amulet of souls, Incomplete hydrix, Alchemical hydrix, Cinderbane gloves, Nightmare gauntlets, Scriptures of Jas/Wen/Ful/Amascut, Erethdor's grimoire, Font of Life, Fury of the Small, Conservation of Energy / Experimental Aether Reactor, War's Retreat, and War's Blessing tiers."
+}

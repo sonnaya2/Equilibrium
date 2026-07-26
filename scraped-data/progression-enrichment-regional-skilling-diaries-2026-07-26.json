@@ -16,15 +16,27 @@
       "region_hint": "misthalin",
       "region_hints": [
         "misthalin",
+        "karamja",
         "asgarnia",
         "kandarin",
         "fremennik",
-        "karamja",
+        "forinthry",
         "desert",
         "morytania",
-        "forinthry",
         "tirannwn"
       ],
+      "required_regions": [
+        "misthalin",
+        "karamja",
+        "asgarnia",
+        "kandarin",
+        "fremennik",
+        "forinthry",
+        "desert",
+        "morytania",
+        "tirannwn"
+      ],
+      "region_requirement_type": "all_required",
       "requirements": [
         "Members for all Area Tasks sets except some free Lumbridge achievements",
         "Prior reward tier claimed before the next (e.g. armour 2 before armour 3)",
@@ -35,13 +47,13 @@
         "Task Master emote after completing all Area Tasks achievements",
         "Daemonheim Area Tasks benefits are passive (aura items removed)"
       ],
-      "notes": "This file is the diary-first skilling catalog. Prefer equipment rows below for stacking; regional skilling files may still carry activity context (e.g. Ourania, Abyss, Miscellania).",
+      "notes": "Planner multi-host frame for all classic diary regions (user KEEP). Each diary is completed in its own geography; required_regions lists every diary-owning region so hosts + comboLabel stay in sync. Prefer per-region equipment rows below for stacking.",
       "source_urls": [
         "https://runescape.wiki/w/Area_Tasks_achievements",
         "https://runescape.wiki/w/Tasks_set"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Achievement and quest gates follow Equilibrium auto-quest overlays. Region ownership of reward items follows diary geography, not task-start locality for every single task."
+      "league_treatment": "Multi-ok on every classic Area Tasks region with matching all_required list. Achievement/quest gates follow Equilibrium auto-quest overlays. Per-region reward items still live on dedicated area-tasks equipment rows."
     },
     {
       "id": "forinthry:area-tasks-daemonheim-passives",

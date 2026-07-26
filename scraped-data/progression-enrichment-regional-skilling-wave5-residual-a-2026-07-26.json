@@ -1,0 +1,594 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-5 residual pack A: high-value permanent skilling unlocks still missing as first-class ids in data/research/regional-skilling-unlocks.json after wave-4 critical tools and related fills. Targets Karamja Papa Mambo shop depth, Oo'glog spa permanent, crystal utility-tool residual (chisel/knife/saw/binding rod), Crafteneering first-class method, dwarven army axe, ironman enchanted jewellery travel (skills necklace, combat bracelet, ring of duelling, dig site pendant, skull sceptre, games necklace residual package), and Legends Guild jewellery recharge. Skips ids already present (seedicide attach, bonecrusher-necklace stack, magical-thread, resource-dungeon package, spring cleaner, inferno adze, broad fletching Learn, Smoking Kills, crystal pick/hatchet/mattock, games necklace Burgh-only row, invention machines).",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Grep-confirmed ABSENT from regional-skilling-unlocks.json before write. SKIP present: multi-region:toolbelt-seedicide-attach, forinthry:seedicide-named, cross-region:bonecrusher-necklace, forinthry:magical-thread-abyss-supply, forinthry:resource-dungeon-unlocks, asgarnia:spring-cleaner, asgarnia:inferno-adze, multi-region:slayer-broad-fletching, desert:smoking-kills-slayer-points, morytania:games-necklace-burgh-teleport, tirannwn:crystal-pickaxe/hatchet/mattock, prifddinas:crystal-tool-workshop, cross-region:crystal-tools-dragon-base, asgarnia:invention-guild-machines-named, cross-region:invention-machines-guild, morytania:endurance-relic (Archaeology Endurance only — not the spa pools).",
+    "no_trade_rule": "Ironman permanent unlocks that change travel, Habitat seed economy, spa run-energy QoL, early multi-tool XP, Crafting AFK, or crystal artisan tools.",
+    "rate_rule": "No invented XP/hour. Unlock state, costs, effects, and shop stock only.",
+    "rs3_terminology": "Oo'glog spa is quest-permanent pool access (As a First Resort), distinct from Endurance relic. Crystal utility tools use crystal tool seed + harmonic dust — not the dragon-base pick/hatchet/mattock path. Dwarven army axe is reclaimable permanent multi-tool; cannot toolbelt."
+  },
+  "already_present_checked": [
+    "multi-region:toolbelt-seedicide-attach",
+    "forinthry:seedicide-named",
+    "cross-region:bonecrusher-necklace",
+    "forinthry:magical-thread-abyss-supply",
+    "forinthry:resource-dungeon-unlocks",
+    "asgarnia:spring-cleaner",
+    "asgarnia:inferno-adze",
+    "cross-region:fired-up-inferno-adze-chain",
+    "multi-region:slayer-broad-fletching",
+    "desert:smoking-kills-slayer-points",
+    "morytania:games-necklace-burgh-teleport",
+    "tirannwn:crystal-pickaxe",
+    "tirannwn:crystal-hatchet",
+    "tirannwn:crystal-mattock",
+    "tirannwn:crystal-hammer",
+    "tirannwn:crystal-tinderbox",
+    "tirannwn:crystal-fishing-rod",
+    "prifddinas:crystal-tool-workshop",
+    "cross-region:crystal-tools-dragon-base",
+    "asgarnia:invention-guild-machines-named",
+    "cross-region:invention-machines-guild",
+    "karamja:herblore-habitat",
+    "karamja:witchdoctor-camo-outfit",
+    "morytania:endurance-relic"
+  ],
+  "activity_additions": [
+    {
+      "id": "karamja:papa-mambo-shop",
+      "name": "Papa Mambo's Shop (Herblore Habitat)",
+      "category": "permanent Habitat ironman seed and supply shop",
+      "region_hint": "karamja",
+      "region_hints": ["karamja"],
+      "required_regions": ["karamja"],
+      "requirements": [
+        "Herblore Habitat access (south-east Karamja; no quest gate)",
+        "Coins for stock (vine herb seeds 10,000 each; juju teleport spiritbags 2,000; blossom seeds 50)"
+      ],
+      "unlocks": [
+        "Ironman-buyable vine herb seeds (erzille, ugune, argway, shengo, samaden) — post-16-March-2026 stock caps accumulate over seven days to 35 each (was 5)",
+        "Blossom seeds (red/blue/green) and marasamaw plants for Habitat attraction setups",
+        "Juju teleport spiritbags for Habitat teleports without witchdoctor mask",
+        "Juju vials/packs, plant cure, and farming tools for Habitat loops",
+        "Witchdoctor robes/legs appear in stock at 0 for reclaim pricing after outfit D&D awards"
+      ],
+      "region_pressure": [
+        "Hard Karamja: shop is at Habitat next to Papa Mambo; juju production and witchdoctor D&D claim stay on the same site."
+      ],
+      "notes": "karamja:herblore-habitat and juju-farming-potion-path only footnote the shop. This row is the ironman seed-top-up + spiritbag checklist after the 2026 dailyscape stock-cap change. Do not invent seed drop rates from jadinkos.",
+      "source_urls": [
+        "https://runescape.wiki/w/Papa_Mambo%27s_Shop",
+        "https://runescape.wiki/w/Herblore_Habitat",
+        "https://runescape.wiki/w/Juju_teleport_spiritbag"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja for Habitat shop access.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "karamja:herblore-habitat",
+        "karamja:juju-farming-potion-path",
+        "karamja:witchdoctor-camo-outfit"
+      ]
+    },
+    {
+      "id": "kandarin:oo-glog-spa",
+      "name": "Oo'glog spa pools (As a First Resort)",
+      "category": "permanent multi-skill spa infrastructure",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "anachronia"],
+      "required_regions": ["kandarin"],
+      "optional_pressure_regions": ["anachronia"],
+      "requirements": [
+        "As a First Resort completed (Feldip Hills / Oo'glog)",
+        "48 Hunter, 51 Firemaking, 58 Woodcutting (boostable where allowed)",
+        "Ironman spear/chompy logistics as wiki quest ironman notes"
+      ],
+      "unlocks": [
+        "Permanent access to five spa pools (Bandos, sulphur, salt-water, thermal, mud) — effects stack when all bathed",
+        "Salt-water spring: unlimited run energy for 9–24 minutes (3-minute steps; re-roll by re-entering); Anachronia tier-3 base-camp spa multiplies duration 1.5×",
+        "Thermal bath life-point heal; sulphur prayer restore above base; mud Hunter camouflage boost; Bandos combat aggressiveness reduction",
+        "Ogre flask bottling of pool effects; Oo'glog bank and charter-ship destination",
+        "Robust glass / crystal glass machine path and Teplin Macagan flask decanting (5–6 dose flasks)"
+      ],
+      "region_pressure": [
+        "Kandarin: Oo'glog / Feldip Hills quest site and spa geography (near Warforge / South Feldip spirit tree).",
+        "Anachronia optional: base-camp spa tier-3 extends salt-water duration only — does not unlock the quest pools."
+      ],
+      "notes": "Distinct from morytania:endurance-relic (Archaeology Endurance power from Warforge Smoky Fings — infinite run while harnessed). Spa is the quest-permanent pool package ironmen use for Farming runs, RC, and beacon lines before Endurance. Do not invent pool durations beyond wiki bands.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spa",
+        "https://runescape.wiki/w/As_a_First_Resort",
+        "https://runescape.wiki/w/Salt-water_spring",
+        "https://runescape.wiki/w/Oo%27glog"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for As a First Resort and Oo'glog pools. Tag Anachronia only for spa-duration upgrade planning.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:endurance-relic",
+        "kandarin:spirit-tree-network",
+        "kandarin:warforge-dig-site"
+      ]
+    },
+    {
+      "id": "forinthry:crafteneering",
+      "name": "Crafteneering (Daemonheim leather loop)",
+      "category": "permanent Dungeoneering Crafting training method",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry"],
+      "required_regions": ["forinthry"],
+      "requirements": [
+        "Daemonheim / Dungeoneering access (Forinthry)",
+        "Smuggler leather buy + Crafting leather-body loop inside floors",
+        "Membership for full DG floors (free-to-play subset exists at lower efficiency)"
+      ],
+      "unlocks": [
+        "Repeatable Crafting XP inside Daemonheim via smuggler leather → leather items (ironman AFK Crafting path)",
+        "Rusty coin side-economy for dungeon supplies",
+        "Planner-visible method distinct from surface tanners / Invention hide tanner"
+      ],
+      "region_pressure": [
+        "Hard Forinthry: Crafteneering is the Daemonheim smuggler loop — not a TzHaar or Karamja supply chain."
+      ],
+      "notes": "Earlier enrichment only shipped forinthry:crafteneering-boundary as an anti-row in the Karamja pack and it never entered research. This is the first-class method row. Do not invent XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Daemonheim",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Smuggler"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for Daemonheim floors.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "forinthry:ring-of-kinship",
+        "forinthry:daemonheim-rewards-shop-hub",
+        "asgarnia:automatic-hide-tanner"
+      ]
+    },
+    {
+      "id": "kandarin:legends-guild-jewellery-recharge",
+      "name": "Legends' Guild totem jewellery recharge",
+      "category": "permanent jewellery recharge infrastructure",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "tirannwn"],
+      "required_regions": ["kandarin"],
+      "optional_pressure_regions": ["tirannwn"],
+      "requirements": [
+        "Partial Legends' Quest for totem pole access in Legends' Guild (east of Ardougne)",
+        "Optional full Legends' Quest + Plague's End for Tears of Seren fountain recharge in Prifddinas Cadarn"
+      ],
+      "unlocks": [
+        "Recharge skills necklaces and combat bracelets at the Legends' Guild totem pole",
+        "Brace Yourself achievement path (recharge combat bracelet or skills necklace here)",
+        "Alternate recharge at Tears of Seren (Prif) or geyser titan familiar"
+      ],
+      "region_pressure": [
+        "Kandarin hard: Legends' Guild totem is the classic recharge site.",
+        "Tirannwn optional: Tears of Seren after Plague's End + Legends' Quest."
+      ],
+      "notes": "Supports cross-region:skills-necklace and asgarnia:combat-bracelet rows. Do not re-emit individual necklace/bracelet effects here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Legends%27_Guild",
+        "https://runescape.wiki/w/Skills_necklace",
+        "https://runescape.wiki/w/Combat_bracelet",
+        "https://runescape.wiki/w/The_Tears_of_Seren"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin for totem access. Tirannwn only when planning Prif fountain path.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "cross-region:skills-necklace",
+        "asgarnia:combat-bracelet",
+        "tirannwn:plagues-end-unlocks"
+      ]
+    },
+    {
+      "id": "cross-region:games-necklace-package",
+      "name": "Games necklace teleport package",
+      "category": "permanent multi-destination enchanted jewellery travel package",
+      "region_hints": ["asgarnia", "kandarin", "misthalin", "morytania", "forinthry"],
+      "required_regions": [],
+      "optional_pressure_regions": ["asgarnia", "kandarin", "misthalin", "morytania", "forinthry"],
+      "requirements": [
+        "Lvl-1 Enchant on sapphire necklace (Magic) for games necklace (8 charges)",
+        "Sapphire + gold craft path for ironman self-supply",
+        "Burgh de Rott destination still needs Darkness of Hallowvale + Temple Trekking companion total 500+ (see morytania:games-necklace-burgh-teleport)"
+      ],
+      "unlocks": [
+        "Teleport destinations: Troll Invasion / Burthorpe Games Room, Barbarian Outpost, Gamers' Grotto (Fist of Guthix), Corporeal Beast cave, Tears of Guthix, Agoroth, Burgh de Rott (gated)",
+        "Ironman early travel backbone for Barbarian Assault / Outpost, Tears of Guthix D&D, and Guthixian Cache on-ramp",
+        "Compactable via teleportation compactor; feeds basic jewellery box construction"
+      ],
+      "region_pressure": [
+        "Asgarnia: Troll Invasion / Burthorpe Games Room destination pressure.",
+        "Kandarin: Barbarian Outpost destination.",
+        "Misthalin: Tears of Guthix / Lumbridge swamp cave logistics.",
+        "Morytania: Burgh destination already first-class as morytania:games-necklace-burgh-teleport — do not double-count that unlock.",
+        "Forinthry optional: Corporeal Beast cave destination only."
+      ],
+      "notes": "Residual package for destinations beyond the Burgh-only equipment row. Enchant is account Magic state; destinations score as optional region pressure, not hard multi-region gates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Games_necklace",
+        "https://runescape.wiki/w/Lvl-1_Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "No hard multi-region gate for the base necklace. Score destination regions as support pressure; Burgh still hard-gates Morytania quests.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:games-necklace-burgh-teleport",
+        "kandarin:barbarian-outpost-agility",
+        "misthalin:runespan-portal"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "asgarnia:dwarven-army-axe",
+      "name": "Dwarven army axe",
+      "category": "permanent early multi-tool and flat XP tool",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "requirements": [
+        "Claim from Major Mary Rancour at Burthorpe training camp (free; no tutorial path required post-10-July-2023)",
+        "Alternate historical path: To Lumbridge achievement path reward",
+        "Cannot be added to the tool belt — must be carried or equipped to apply bonuses"
+      ],
+      "effects": [
+        "Functions as bronze hatchet, bronze pickaxe, chisel, tinderbox, needle, and low-tier slash weapon in one item",
+        "+3 base XP on listed Mining/Crafting/Cooking/Hunter/Woodcutting/Firemaking/Fletching actions while wielded or in inventory (stacks multiplicatively with other XP boosts)",
+        "Overrides toolbelt hatchet/pickaxe while equipped even if a higher-tier tool is belted",
+        "Normal-tree wooden knot chance and copper/tin lapis lazuli side-products for early jewellery",
+        "Free reclaim from Major Rancour if lost"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia: Burthorpe claim/reclaim NPC."
+      ],
+      "notes": "Permanent ironman early-game multi-tool. Do not invent XP/hour from the flat +3. Higher-tier hatchet/pick should replace it for gather rate; keep for Fletching arrow-batch XP quirks and pottery-wheel clay moulding.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dwarven_army_axe",
+        "https://runescape.wiki/w/Major_Mary_Rancour"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Burthorpe reclaim.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "asgarnia:taverley-burthorpe-skilling-hub"
+      ]
+    },
+    {
+      "id": "tirannwn:crystal-utility-tools",
+      "name": "Crystal utility tools (chisel, knife, saw, binding rod)",
+      "category": "permanent crystal artisan tool residual package",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prifddinas access for Ithell singing bowl path",
+        "Crystal tool seed + 150 harmonic dust + 80 Smithing (or pay Ilfeen/Eluned/Islwyn/Rhodri Dail coin enchant without dust)",
+        "The Eyes of Glouphrie for player singing path; Roving Elves for NPC enchant path",
+        "Seeds degrade to crystal tool seed and re-enchant on a declining coin ladder (7,500 → 1,500 minimum)"
+      ],
+      "effects": [
+        "Crystal chisel: 2% chance extra cut gem (excludes onyx/hydrix/moonstone); doubles Crafting Shattered Heart rock chance when not gem-cutting",
+        "Crystal knife / crystal saw (Prifddinas) / crystal binding rod: artisan Crafting/Construction/Runecrafting tool upgrades from the same seed family",
+        "Charge-based tools (not the non-degrading dragon-base crystal pick/hatchet/mattock path)",
+        "Closes residual gap after gather tools (pick/hatchet/mattock) and hammer/rod/tinderbox already first-class"
+      ],
+      "region_pressure": [
+        "Hard Tirannwn for Prif singing / NPC re-enchant geography and harmonic dust economy."
+      ],
+      "notes": "User residual 'attuned crystal tools' maps to this seed-sung utility set — RS3 crystal gather tools are not 'attuned' (attuned is weapon/armour/teleport seed tier). Do not re-emit pick/hatchet/mattock/hammer/rod/tinderbox rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_chisel",
+        "https://runescape.wiki/w/Crystal_knife",
+        "https://runescape.wiki/w/Crystal_saw_(Prifddinas)",
+        "https://runescape.wiki/w/Crystal_binding_rod",
+        "https://runescape.wiki/w/Crystal_tool_seed"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for conversion and re-enchant.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "cross-region:crystal-tools-dragon-base",
+        "tirannwn:crystal-pickaxe",
+        "tirannwn:crystal-hatchet",
+        "tirannwn:crystal-mattock",
+        "tirannwn:crystal-hammer",
+        "prifddinas:harmonic-dust-economy"
+      ]
+    },
+    {
+      "id": "misthalin:dig-site-pendant",
+      "name": "Dig Site pendant",
+      "category": "permanent Archaeology and Curses travel jewellery",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "requirements": [
+        "The Dig Site completed",
+        "Show a clean necklace to a Varrock Museum archaeologist (unlocks enchant recipe)",
+        "Lvl-3 Enchant on ruby necklace (5 charges per pendant; crumbles at 0)",
+        "Optional: Temple at Senntisten awards one pendant during the quest"
+      ],
+      "effects": [
+        "Teleports: Varrock Dig Site (Archaeology workbench), Senntisten Temple (Ancient Curses swap), Exam Centre",
+        "Ironman mass-produce path for Curses banking and dark animica / Empty Throne Room mine access",
+        "Compactable to Dig Site pendant (c); can feed Passage of the Abyss dig-site destinations"
+      ],
+      "region_pressure": [
+        "Hard Misthalin: Dig Site quest, museum clean-necklace unlock, Dig Site / Exam Centre / Senntisten temple geography."
+      ],
+      "notes": "Archaeology journal is unlimited Guild tele only — pendant remains the cheap Curses/Exam Centre option. Do not invent enchant costs beyond wiki rune recipes.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dig_Site_pendant",
+        "https://runescape.wiki/w/The_Dig_Site",
+        "https://runescape.wiki/w/Lvl-3_Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "misthalin:archaeology-campus-hub",
+        "misthalin:varrock-museum-kudos",
+        "misthalin:ancient-curses-senntisten",
+        "misthalin:empty-throne-room"
+      ]
+    },
+    {
+      "id": "misthalin:skull-sceptre",
+      "name": "Skull sceptre",
+      "category": "permanent unlimited Stronghold of Security travel tool",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "requirements": [
+        "Stronghold of Security under Gunnarsgrunn (Barbarian Village)",
+        "Combine right/left skull halves + top/bottom of sceptre drops from minotaurs, flesh crawlers, catablepon, ankou",
+        "Floor teleports unlock after claiming that floor's end reward (any order)",
+        "Varrock armour worn increases part drop chance"
+      ],
+      "effects": [
+        "Unlimited teleports (post-28-November-2016 no charges) to Barbarian Village entrance and each unlocked Stronghold floor",
+        "Early ironman free travel near Edgeville / Grand Exchange / Varrock west bank",
+        "One assembled sceptre at a time (unless keepsaked); parts still drop while owned"
+      ],
+      "region_pressure": [
+        "Hard Misthalin: Stronghold of Security and Barbarian Village claim geography."
+      ],
+      "notes": "High-value free unlimited tele residual. Pairs with misthalin:varrock-armour for part rates. Combat staff stats are negligible — travel is the planner value.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skull_sceptre",
+        "https://runescape.wiki/w/Stronghold_of_Security"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "misthalin:varrock-armour",
+        "misthalin:edgeville-skilling-hub"
+      ]
+    },
+    {
+      "id": "cross-region:skills-necklace",
+      "name": "Skills necklace (guild teleports)",
+      "category": "permanent multi-guild skilling travel jewellery",
+      "region_hints": ["kandarin", "asgarnia", "misthalin", "tirannwn"],
+      "required_regions": [],
+      "optional_pressure_regions": ["kandarin", "asgarnia", "misthalin", "tirannwn"],
+      "requirements": [
+        "Lvl-5 Enchant on dragonstone necklace (Magic 68)",
+        "Dragonstone + gold craft path for ironman self-supply",
+        "Recharge at Legends' Guild totem (partial Legends' Quest) or Tears of Seren (Legends' Quest + Plague's End) or geyser titan"
+      ],
+      "effects": [
+        "Up to 4 charges teleporting to Fishing Guild, Mining Guild, Crafting Guild, Cooking Guild, Invention Guild, Farming Guild, Runecrafting Guild",
+        "Ironman backbone for guild training hubs without lodestone spam",
+        "Worn charged necklace slightly increases big-net casket chance while fishing",
+        "Compactable; feeds fancy jewellery box construction"
+      ],
+      "region_pressure": [
+        "Kandarin: Fishing Guild, Farming Guild (Manor Farm), Legends' Guild recharge, Ranging-adjacent logistics.",
+        "Asgarnia: Mining Guild, Crafting Guild, Invention Guild destinations.",
+        "Misthalin: Cooking Guild, Runecrafting Guild (Wizards' Tower) destinations.",
+        "Tirannwn optional: Tears of Seren recharge after Plague's End."
+      ],
+      "notes": "No single hard region gate for craft/enchant. Recharge infrastructure is kandarin:legends-guild-jewellery-recharge. Destinations score as support pressure for region pickers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skills_necklace",
+        "https://runescape.wiki/w/Lvl-5_Enchant",
+        "https://runescape.wiki/w/Legends%27_Guild"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Support multi-destination package. Tag Kandarin when planning recharge + Fishing/Farming guilds; Asgarnia for Mining/Crafting/Invention.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:legends-guild-jewellery-recharge",
+        "kandarin:fishing-guild",
+        "kandarin:manor-farm-farming-guild",
+        "asgarnia:mining-guild",
+        "asgarnia:crafting-guild",
+        "asgarnia:invention-guild",
+        "misthalin:cooks-guild",
+        "misthalin:wizards-tower-runecrafting-guild"
+      ]
+    },
+    {
+      "id": "asgarnia:combat-bracelet",
+      "name": "Combat bracelet",
+      "category": "permanent guild travel jewellery with Slayer counter",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "misthalin", "kandarin", "tirannwn"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["misthalin", "kandarin", "tirannwn"],
+      "requirements": [
+        "Lvl-5 Enchant on dragonstone bracelet",
+        "Recharge at Legends' Guild totem or Tears of Seren or geyser titan (same ladder as skills necklace)"
+      ],
+      "effects": [
+        "Up to 4 charges: Warriors' Guild, Champions' Guild, Edgeville Monastery, Ranging Guild teleports",
+        "Worn charged bracelet reports Slayer assignment kills remaining every 10 kills",
+        "Hard Seers' Village achievement path uses Ranging Guild tele (At Home on the Range)",
+        "Compactable; feeds fancy jewellery box with skills necklaces"
+      ],
+      "region_pressure": [
+        "Asgarnia primary: Warriors' Guild + Edgeville Monastery destinations and taxonomy home for the bracelet package.",
+        "Misthalin: Champions' Guild destination.",
+        "Kandarin: Ranging Guild destination + Legends' Guild recharge.",
+        "Tirannwn optional: Tears of Seren recharge."
+      ],
+      "notes": "Lodestones reduced some value but Ranging Guild tele and Slayer counter remain ironman QoL. Pair with skills necklace for full guild set.",
+      "source_urls": [
+        "https://runescape.wiki/w/Combat_bracelet",
+        "https://runescape.wiki/w/Lvl-5_Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Asgarnia destination density. Recharge may pull Kandarin/Tirannwn as support.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:legends-guild-jewellery-recharge",
+        "cross-region:skills-necklace",
+        "kandarin:ranging-guild",
+        "asgarnia:spria-turael-slayer-master"
+      ]
+    },
+    {
+      "id": "cross-region:ring-of-duelling",
+      "name": "Ring of duelling",
+      "category": "permanent multi-destination travel ring",
+      "region_hints": ["desert", "kandarin", "asgarnia", "misthalin"],
+      "required_regions": [],
+      "optional_pressure_regions": ["desert", "kandarin", "asgarnia", "misthalin"],
+      "requirements": [
+        "Lvl-2 Enchant on emerald ring (8 charges then crumbles)",
+        "Emerald + gold craft path for ironman self-supply"
+      ],
+      "effects": [
+        "Teleports: Het's Oasis, Castle Wars, Warforge Dig Site, Fist of Guthix (Gamers' Grotto)",
+        "Closest common teleport to a spirit tree (Warforge) and strong balloon-system on-ramp",
+        "Oo'glog / Feldip spa access via Warforge run east after kandarin:oo-glog-spa unlock",
+        "Compactable to 160-charge ring of duelling (c); Murky Matt can combine partial rings"
+      ],
+      "region_pressure": [
+        "Desert: Het's Oasis destination.",
+        "Kandarin: Warforge Dig Site destination (spirit tree + spa on-ramp).",
+        "Asgarnia/Misthalin support: Castle Wars / Fist of Guthix destination geography as applicable."
+      ],
+      "notes": "High-value ironman travel residual. No hard multi-region gate for enchant; destinations are support pressure. Links to spirit-tree and Oo'glog spa logistics.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_duelling",
+        "https://runescape.wiki/w/Lvl-2_Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Support multi-destination package. Score Desert for Het's Oasis, Kandarin for Warforge.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:warforge-dig-site",
+        "kandarin:spirit-tree-network",
+        "kandarin:oo-glog-spa",
+        "desert:hets-oasis-farming"
+      ]
+    },
+    {
+      "id": "misthalin:amulet-of-glory",
+      "name": "Amulet of glory",
+      "category": "permanent multi-city travel amulet",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "karamja", "desert", "asgarnia", "tirannwn"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["karamja", "desert", "asgarnia", "tirannwn"],
+      "requirements": [
+        "Lvl-4 Enchant on dragonstone amulet",
+        "Recharge at Fountain of Heroes (Heroes' Guild — Heroes' Quest) or Tears of Seren (Prif) or geyser titan",
+        "Dragonstone + gold craft path for ironman self-supply"
+      ],
+      "effects": [
+        "Up to 4 charges teleporting to Edgeville, Karamja (Musa Point), Draynor Village, Al Kharid",
+        "Ironman banking + early Karamja/Al Kharid on-ramps without fairy rings",
+        "Worn glories improve gem chance while Mining and clue-adjacent QoL historically",
+        "Compactable; POH glory mount / jewellery box endgame storage paths"
+      ],
+      "region_pressure": [
+        "Misthalin primary: Edgeville + Draynor destinations and common craft/enchant home.",
+        "Karamja: Musa Point destination.",
+        "Desert: Al Kharid destination.",
+        "Asgarnia: Heroes' Guild Fountain of Heroes recharge (Heroes' Quest).",
+        "Tirannwn optional: Tears of Seren recharge."
+      ],
+      "notes": "Classic ironman travel residual still missing while games necklace Burgh and TokKul-Zo are first-class. Recharge is Asgarnia Heroes' Guild pressure, not a hard second region for using Edgeville/Draynor teles.",
+      "source_urls": [
+        "https://runescape.wiki/w/Amulet_of_glory",
+        "https://runescape.wiki/w/Fountain_of_Heroes",
+        "https://runescape.wiki/w/Lvl-4_Enchant"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Misthalin for Edgeville/Draynor density. Tag Karamja/Desert when valuing those destinations; Asgarnia for Heroes' Guild recharge.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:edgeville-skilling-hub",
+        "misthalin:draynor-skilling-hub",
+        "karamja:musa-point-fishing-stiles",
+        "cross-region:fairy-ring-network"
+      ]
+    },
+    {
+      "id": "anachronia:spa-pools",
+      "name": "Anachronia base-camp spa pools",
+      "category": "permanent Anachronia spa duration infrastructure",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia", "kandarin"],
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Anachronia base camp built to unlock spa construction tiers",
+        "Tier-3 spa for the 1.5× salt-water spring duration multiplier (and matching Anachronia pool durations)",
+        "As a First Resort still required for the original Oo'glog pool unlocks that the multiplier extends"
+      ],
+      "effects": [
+        "Base-camp spa pools mirror Oo'glog bath family for on-island re-up",
+        "Tier-3 spa multiplies salt-water unlimited-run duration by 1.5× (wiki: 13.5–36 minute band)",
+        "Ogre flask (salt water) does not inherit the Anachronia tier-3 multiplier — flask uses base duration + optional lantadyme incense extension"
+      ],
+      "region_pressure": [
+        "Hard Anachronia for base-camp spa tiers.",
+        "Kandarin support: original Oo'glog unlock via As a First Resort (kandarin:oo-glog-spa)."
+      ],
+      "notes": "Residual companion to kandarin:oo-glog-spa. Endurance relic remains the infinite-run Archaeology alternative. Do not invent base-camp material costs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spa_(Anachronia_base_camp)",
+        "https://runescape.wiki/w/Salt-water_spring",
+        "https://runescape.wiki/w/Anachronia_base_camp"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia for spa build. Kandarin still required for original quest pools if not already unlocked.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:oo-glog-spa",
+        "anachronia:base-camp",
+        "anachronia:base-camp-structure-rewards",
+        "morytania:endurance-relic"
+      ]
+    }
+  ],
+  "summary": {
+    "rows_added": 14,
+    "activity_additions": 5,
+    "equipment_additions": 9,
+    "skipped_already_in_research": [
+      "seedicide (named + toolbelt attach)",
+      "cross-region:bonecrusher-necklace",
+      "forinthry:magical-thread-abyss-supply",
+      "forinthry:resource-dungeon-unlocks",
+      "asgarnia:spring-cleaner",
+      "asgarnia:inferno-adze (+ fired-up chain)",
+      "multi-region:slayer-broad-fletching",
+      "desert:smoking-kills-slayer-points",
+      "morytania:games-necklace-burgh-teleport (Burgh destination only — residual package still added)",
+      "crystal pick/hatchet/mattock/hammer/rod/tinderbox + workshop + dragon-base stack",
+      "invention guild machines (named + cross-region)"
+    ],
+    "focus": "Residual high-value permanent skilling unlocks: Habitat shop depth, Oo'glog spa, Crafteneering, crystal utility tools, dwarven army axe, ironman jewellery travel set."
+  }
+}

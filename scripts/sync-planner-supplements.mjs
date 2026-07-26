@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { stampCatalogMuseumDatasets } from "./stamp-catalog-museum-datasets.mjs";
 
 const ROOT = process.cwd();
 
@@ -10,6 +11,9 @@ const supplements = [
   "planner-expansions-archaeology-utilities.json",
   "planner-expansions-archaeology-production.json",
   "planner-expansions-archaeology-special-relics.json",
+  // Merged museum × region matrix (produced by merge-museum-collection-matrix.mjs;
+  // scraped-data mirror is durable source for normalize:data / sync:planner).
+  "planner-expansions-archaeology-museum-collections-matrix.json",
   "planner-expansions-invention-2026.json",
   "planner-expansions-invention-active-perks.json",
   "planner-expansions-invention-archaeology.json",
@@ -63,3 +67,7 @@ for (const file of supplements) {
 }
 
 console.log("Synced planner supplements:", supplements.length);
+
+// Keep catalog.datasets museum counts aligned with the matrix just re-emitted.
+// Standalone: node scripts/stamp-catalog-museum-datasets.mjs
+stampCatalogMuseumDatasets();

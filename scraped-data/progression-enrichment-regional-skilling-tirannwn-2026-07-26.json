@@ -308,7 +308,7 @@
   "equipment_additions": [
     {
       "id": "tirannwn:grace-of-the-elves",
-      "name": "Grace of the elves",
+      "name": "Grace of the elves (GOTE)",
       "category": "Seren prayer drain and porter necklace",
       "region_hint": "tirannwn",
       "requirements": [
@@ -322,14 +322,23 @@
         "Seren spirit rare-drop-table spawns while gathering",
         "Operated Max Guild garden portal teleports"
       ],
-      "notes": "Tradeable until first equip/charge/attune. Orthen furnace core takes priority over GoTE for Superheat Form drain negation when both would apply. Ancient elven ritual shard can sustain Superheat Form / Chronicle Attraction under GoTE halved drain. Not a combat necklace.",
+      "notes": "Planner dual-home GOTE row (user KEEP forinthry+tirannwn). Tradeable until first equip/charge/attune. Orthen furnace core takes priority over GoTE for Superheat Form drain negation when both would apply. Ancient elven ritual shard can sustain Superheat Form / Chronicle Attraction under GoTE halved drain. Not a combat necklace. Do not mega-chain Dark Facet / porter supply into this row.",
       "source_urls": [
         "https://runescape.wiki/w/Grace_of_the_elves",
         "https://runescape.wiki/w/Dark_Facet_of_Grace",
         "https://runescape.wiki/w/Superheat_Form"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Seren-prayer sustain QoL with strong Tirannwn thematic pressure via Max Guild/Prif teleports. Alchemical onyx craft is global once materials exist; do not hard-gate the finished necklace to Tirannwn alone."
+      "league_treatment": "Hard dual forinthry+tirannwn (user multi-keep). Dark Facet of Grace is a separate forinthry-only enchantment row. Do not re-emit porter mega-chains.",
+      "region_hints": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "forinthry",
+        "tirannwn"
+      ],
+      "region_requirement_type": "all_required"
     },
     {
       "id": "cross-region:thieving-crystal-mask-light-form",

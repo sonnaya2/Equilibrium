@@ -44,7 +44,12 @@ const nihilStyles = Object.fromEntries((nihil.variants || []).map((row) => [row.
 for (const style of ["melee", "ranged", "magic", "necromancy"]) {
   if (nihilStyles[style]?.accuracy_bonus_percent !== 5) fail(`${style} nihil accuracy bonus drifted`);
 }
-if (nihil.region_status !== "unresolved_external_region") fail("Freneskae was incorrectly assigned to an elective region");
+// User rule 2026-07-26: Freneskae packages under Kandarin (World Gate / Eagles Peak).
+const nihilRegions = [...(nihil.required_regions || []), ...(nihil.region_hints || []), nihil.region_hint]
+  .filter(Boolean)
+  .map(String);
+if (nihil.region_status === "unresolved_external_region") fail("Freneskae nihil should map to Kandarin elective packaging");
+if (!nihilRegions.includes("kandarin")) fail("Freneskae nihil should map to Kandarin");
 
 const milestones = byId(activities, "summoning:combat-and-burden-milestones");
 if (!milestones) fail("missing standard familiar milestones");

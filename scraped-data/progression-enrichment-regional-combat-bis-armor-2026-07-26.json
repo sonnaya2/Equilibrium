@@ -1,0 +1,643 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Combat BiS / power armour sets with regional acquisition for Equilibrium: malevolent / tectonic / sirenic craft, elite T92 upgrades, trimmed + custom-fit masterwork, Cryptbloom, GWD2 anima core + refined, Vestments of havoc, Nex T80 residual geography, necro deathdealer/deathwarden residual, Achto residual. 16 equipment rows. Skip all ids already first-class in data/research/regional-combat-unlocks.json.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard elective-region gates for normal self-supply. Never put multi-region/cross-region/global tokens in region_hint. Long craft chains with tradeable mats or alternate shops use region_hints + region_pressure instead of forcing all_required.",
+    "duplicate_guard": "SKIP already first-class in regional-combat-unlocks.json: achievements:*, anachronia:*, dungeoneering:*, morytania:berserkers-fury-relic, morytania:heightened-senses-relic, cross-region:death-ward-relic, morytania:vyre-combat-infrastructure, salve-amulet:enchanted, morytania:amulet-of-forsaken-berserkers-fury, cross-region:igneous-zuk-capes, farm-perk:*, mage-arena:guthix-staff, dominion-tower:dreadnips, rum-deal:holy-wrench, broken-home:asylum-surgeons-ring, karamja:*, forinthry:corporeal-beast-holy-elixir, cross-region:blessed-flask.",
+    "no_trade_rule": "No-trade League builds make boss-drop energy / scales / essence real region pressure even when pieces are GE-tradeable in the main game. Record normal self-supply geography, not GE short-circuits.",
+    "external_area_rule": "Mazcab (Achto / Liberation of Mazcab) = desert. Arc / Seiryu / Temple of Aminishi / seasinger = asgarnia (user rule 2026-07-26; Desert Ports pressure optional later).",
+    "boss_strategy_rule": "Record armour set acquisition and region pressure only — not kill strategies."
+  },
+  "already_present_checked": [
+    "achievements:morytania-barrows",
+    "karamja:fight-cauldron-obsidian-support",
+    "karamja:tokkul-zo",
+    "forinthry:corporeal-beast-holy-elixir",
+    "cross-region:blessed-flask",
+    "cross-region:igneous-zuk-capes",
+    "salve-amulet:enchanted",
+    "morytania:vyre-combat-infrastructure"
+  ],
+  "equipment_additions": [
+    {
+      "id": "morytania:malevolent-armour",
+      "name": "Malevolent armour (T90 melee power craft)",
+      "category": "BiS power armour craft / T90 melee",
+      "region_hint": "morytania",
+      "region_hints": [
+        "morytania"
+      ],
+      "required_regions": [
+        "morytania"
+      ],
+      "optional_pressure_regions": [
+        "fremennik",
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence to wear",
+        "91–93 Smithing to craft helm/greaves/cuirass (assistable)",
+        "Malevolent energy from Barrows – Rise of the Six",
+        "Reinforcing plates (shop: Saro in Keldagrim or Bandit Duty Free)"
+      ],
+      "effects": [
+        "Tier 90 melee power armour (helm, cuirass, greaves)",
+        "Degrades to dust after 100,000 combat charges unless dyed (dyed degrades to broken and repairs with malevolent energy)",
+        "Full set dismantles into malevolent essence on a dragonkin anvil for masterwork armour trim"
+      ],
+      "region_pressure": [
+        "Morytania hard-owns RoTS malevolent energy — the defining self-supply gate for the set and for malevolent essence used in trimmed masterwork.",
+        "Reinforcing plates are coin-shop items (Keldagrim Fremennik pressure or Bandit Duty Free Forinthry), not a second hard region lock."
+      ],
+      "notes": "Still the T90 melee power baseline before trimmed masterwork. Invention augmentation of body/legs is the usual long-term path. Do not treat plates as a Fremennik hard gate.",
+      "source_urls": [
+        "https://runescape.wiki/w/Malevolent_armour",
+        "https://runescape.wiki/w/Malevolent_energy",
+        "https://runescape.wiki/w/Barrows:_Rise_of_the_Six"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for normal RoTS energy self-supply. Quest auto-complete does not replace the boss drop region."
+    },
+    {
+      "id": "asgarnia:tectonic-armour",
+      "name": "Tectonic robe armour (T90 magic power craft)",
+      "category": "BiS power armour craft / T90 magic",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence to wear",
+        "91–93 Runecrafting to craft mask/bottom/top (assistable)",
+        "Tectonic energy from Vorago",
+        "Stones of binding (Wizard's Guild or Bandit Duty Free)"
+      ],
+      "effects": [
+        "Tier 90 magic power armour",
+        "Set bonus Fracture Point: +1% critical strike chance per piece worn (2025 set-bonus pass)",
+        "Base pieces for elite tectonic upgrade when at high charge"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Vorago / borehole tectonic energy self-supply.",
+        "Stones of binding are coin shops (Wizard's Guild Kandarin or Bandit Duty Free Forinthry) — support pressure only."
+      ],
+      "notes": "Primary magic power T90 before elite tectonic or Tumeken's resplendence. Crit-chance set bonus makes full tectonic pieces more attractive post-2025 than pure tank swaps for power setups.",
+      "source_urls": [
+        "https://runescape.wiki/w/Tectonic_robe_armour",
+        "https://runescape.wiki/w/Tectonic_energy",
+        "https://runescape.wiki/w/Vorago"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Vorago energy. Keep shop plates/stones as soft pressure only."
+    },
+    {
+      "id": "cross-region:sirenic-armour",
+      "name": "Sirenic armour (T90 ranged power craft)",
+      "category": "BiS power armour craft / T90 ranged",
+      "region_hints": [
+        "kandarin",
+        "morytania",
+        "forinthry"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "kandarin",
+        "morytania",
+        "forinthry"
+      ],
+      "region_requirement_type": "self_supply_pressure_with_alternates",
+      "requirements": [
+        "90 Defence to wear",
+        "91–93 Crafting to craft mask/chaps/hauberk (assistable)",
+        "Sirenic scales from many high-level monsters (distributed drop table)",
+        "Algarum thread (Ocellus at Monastery of Ascension or Bandit Duty Free)"
+      ],
+      "effects": [
+        "Tier 90 ranged power armour",
+        "Set bonus Chromatic Choir: while wielding a crossbow, chance to proc enchanted bolt effects (Dragonstone at 2pc; Dragonstone/Onyx/Hydrix at 3pc)",
+        "Base pieces for elite sirenic upgrade"
+      ],
+      "region_pressure": [
+        "Kandarin: Ocellus is the practical non-Wilderness algarum-thread shop at the Monastery of Ascension.",
+        "Morytania: Araxxor/Araxxi is a strong high-rate sirenic-scale self-supply boss among many drop sources.",
+        "Forinthry: Bandit Duty Free is the alternate thread shop; Wilderness high-level content can also drop scales.",
+        "No single elective region monopolises sirenic scales — do not mark one region all_required."
+      ],
+      "notes": "Unlike malevolent/tectonic, sirenic is intentionally multi-source. Planner should show scale + thread pressure, not a fake single-region hard lock. Dracolich is the competing non-degrade T90 ranged path (Misthalin Vorkath).",
+      "source_urls": [
+        "https://runescape.wiki/w/Sirenic_armour",
+        "https://runescape.wiki/w/Sirenic_scale",
+        "https://runescape.wiki/w/Algarum_thread"
+      ],
+      "confidence": "confirmed_wiki_cross_region_pressure",
+      "league_treatment": "Surface Kandarin shop + multi-boss scale pressure. Re-evaluate if Equilibrium grants thread or concentrates scale drops."
+    },
+    {
+      "id": "cross-region:elite-tectonic-armour",
+      "name": "Elite tectonic robe armour (T92 magic power)",
+      "category": "BiS power armour craft / T92 magic",
+      "region_hints": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "kandarin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "92 Defence to wear",
+        "Tectonic armour pieces at high charge (from Vorago energy — Asgarnia)",
+        "Draconic energy (Black Stone Dragon / Dragonkin Laboratory elite chests / rare Rex Matriarchs)",
+        "Praesulic essence (magic) from breaking down Virtus equipment at a dragonkin anvil (99 Runecrafting to create essence from scratch)",
+        "Stones of binding; chaotic remnant (Daemonheim rewards, untradeable) for the robe top"
+      ],
+      "effects": [
+        "Tier 92 magic power armour",
+        "Elite Fracture Point: +2% critical strike chance per piece",
+        "No charge use inside Elite Dungeons or Sanctum of Rebirth",
+        "Repaired with elite tectonic repair patches rather than raw energy"
+      ],
+      "region_pressure": [
+        "Asgarnia: tectonic base (Vorago) + Virtus/Nex praesulic essence chain.",
+        "Forinthry: Dragonkin Laboratory / Wilderness ED self-supply for draconic energy (repo major-upgrades geography); Daemonheim chaotic remnant.",
+        "Kandarin: optional stones-of-binding shop convenience only."
+      ],
+      "notes": "Distinct from base tectonic: elite adds Forinthry ED2 energy + Asgarnia Nex Virtus dismantle. Do not collapse into a single-region Vorago row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elite_tectonic_robe_armour",
+        "https://runescape.wiki/w/Draconic_energy",
+        "https://runescape.wiki/w/Dragonkin_Laboratory"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "All-required Asgarnia + Forinthry for normal self-supply of base tectonic and draconic energy. GE-era trade does not apply in no-trade League.",
+      "links_existing_ids": [
+        "asgarnia:tectonic-armour"
+      ]
+    },
+    {
+      "id": "cross-region:elite-sirenic-armour",
+      "name": "Elite sirenic armour (T92 ranged power)",
+      "category": "BiS power armour craft / T92 ranged",
+      "region_hints": [
+        "asgarnia",
+        "kandarin",
+        "forinthry"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "kandarin",
+        "forinthry",
+        "morytania"
+      ],
+      "region_requirement_type": "self_supply_pressure_with_alternates",
+      "requirements": [
+        "92 Defence to wear",
+        "Sirenic armour pieces at high charge",
+        "Ancient scales (Seiryu / Temple of Aminishi primary; elite chests; rare Rex Matriarchs)",
+        "Praesulic essence (ranged) from dismantling Pernix at a dragonkin anvil (99 Crafting to create from scratch)",
+        "Algarum thread; chaotic spikes (Daemonheim rewards) for the hauberk"
+      ],
+      "effects": [
+        "Tier 92 ranged power armour",
+        "Elite Chromatic Choir: doubled bolt-proc chances vs base sirenic while wielding a crossbow",
+        "No charge use inside Elite Dungeons or Sanctum of Rebirth"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Nex Pernix for praesulic essence (ranged) when self-sourcing from scratch.",
+        "Kandarin / Forinthry: algarum thread shops + sirenic base materials pressure.",
+        "Forinthry: Shadow Reef / Daemonheim ED infrastructure and chaotic spikes; secondary ancient-scale routes via elite chests.",
+        "Asgarnia owns Temple of Aminishi / Seiryu (Arc packaging) for primary ancient-scale self-supply; secondary scales via elite chests / Rex residual."
+      ],
+      "notes": "Asgarnia owns Nex Pernix essence + Arc ED1/Seiryu ancient-scale path under Equilibrium Arc=Asgarnia packaging. Secondary scale routes remain elite chests / Rex residual.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elite_sirenic_armour",
+        "https://runescape.wiki/w/Ancient_scale",
+        "https://runescape.wiki/w/Pernix_equipment"
+      ],
+      "confidence": "confirmed_wiki_with_external_dependency",
+      "league_treatment": "Asgarnia for Pernix essence and primary ancient scales (Seiryu / ED1). Revisit only if Equilibrium splits Arc electives.",
+      "links_existing_ids": [
+        "cross-region:sirenic-armour"
+      ]
+    },
+    {
+      "id": "cross-region:trimmed-masterwork-melee",
+      "name": "Trimmed masterwork melee armour (T92)",
+      "category": "BiS power armour craft / T92 melee",
+      "region_hints": [
+        "asgarnia",
+        "morytania"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "optional_pressure_regions": [
+        "kandarin"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "92 Defence to wear; 99 Smithing and It Should Have Been Called Aetherium to create",
+        "Masterwork melee base set (glorious-bar / masterwork rivet Smithing chain)",
+        "Masterwork melee armour trim: elder rune bar + malevolent essence + praesulic essence (melee) per trim",
+        "Malevolent essence from dismantling malevolent armour (RoTS energy)",
+        "Praesulic essence (melee) from dismantling Torva (Nex)",
+        "Twelve trims for a full set"
+      ],
+      "effects": [
+        "Tier 92 melee power armour with gloves and boots (full five-piece set)",
+        "Damage-delay set behaviour that softens incoming hits (paired against Vestments glass-cannon play)",
+        "No charge use inside Elite Dungeons or Sanctum of Rebirth",
+        "Cannot be dyed; repaired by consuming unused untrimmed masterwork pieces at an anvil"
+      ],
+      "region_pressure": [
+        "Asgarnia: Nex Torva for praesulic essence (melee); Artisans' Workshop is the practical masterwork smithing home.",
+        "Morytania: malevolent energy → malevolent armour → malevolent essence for every trim.",
+        "Kandarin: dragonkin anvil in the Ancient Cavern (dragon forge) is the wiki dismantle site for malevolent essence — access pressure, not a third hard elective if other anvils/paths exist in League overlays."
+      ],
+      "notes": "Melee T92 equivalent of elite tectonic/sirenic. Full trim is a genuine dual-region self-supply chain (Nex + RoTS). Keep separate from the custom-fit row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Trimmed_masterwork_melee_armour",
+        "https://runescape.wiki/w/Masterwork_melee_armour_trim",
+        "https://runescape.wiki/w/Malevolent_essence"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "All-required Asgarnia + Morytania for Torva and malevolent essence self-supply.",
+      "links_existing_ids": [
+        "morytania:malevolent-armour"
+      ]
+    },
+    {
+      "id": "asgarnia:custom-fit-trimmed-masterwork",
+      "name": "Custom-fit trimmed masterwork (Elof / Master Crafter)",
+      "category": "BiS armour permanent upgrade / T92 masterwork",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "morytania"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Full masterwork set equipped (melee trimmed, or masterwork magic / masterwork ranged variants)",
+        "Speak to Elof in Artisans' Workshop (melee custom-fit / spiked) or the Master Crafter (magic/ranged custom-fit paths)",
+        "Process is irreversible and makes the set permanently untradeable"
+      ],
+      "effects": [
+        "Doubles max charges from 100,000 to 200,000 (halves degradation rate)",
+        "Never degrades or loses charge when hit by the current Slayer task, Reaper task, or Elite Dungeon monster/miniboss/boss target"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns the custom-fit NPCs (Elof at Falador Artisans' Workshop; Master Crafter at the Crafting Guild).",
+        "Morytania remains upstream pressure only because melee custom-fit assumes trimmed masterwork (malevolent essence) already exists."
+      ],
+      "notes": "Custom-fit is a separate region-planning unlock from crafting the armour. Spiked melee variants are cosmetic (glorious bar per piece at Elof). Magic custom-fit and ranged custom-fit (2025–2026 masterwork armour expansions) share the same Asgarnia NPC geography.",
+      "source_urls": [
+        "https://runescape.wiki/w/Custom-fit",
+        "https://runescape.wiki/w/Elof",
+        "https://runescape.wiki/w/Trimmed_masterwork_melee_armour"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for the custom-fit service even if the set was obtained via other routes.",
+      "links_existing_ids": [
+        "cross-region:trimmed-masterwork-melee"
+      ]
+    },
+    {
+      "id": "misthalin:cryptbloom-armour",
+      "name": "Cryptbloom armour (T90 magic tank)",
+      "category": "BiS tank armour / magic",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence to wear",
+        "Incomplete Cryptbloom pieces dropped by Croesus (Elder God Wars Dungeon)",
+        "Croesus flakes to restore incomplete pieces and to repair"
+      ],
+      "effects": [
+        "Tier 90 magic tank armour (full five-piece set including gloves and boots)",
+        "Nature's Envoy set bonus: stacking magic/melee damage reduction; deathspore chance at 4pc; Fungal Shield at 5pc below 20% LP",
+        "Stacks with Animate Dead and innate tank reduction"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Croesus / EGWD Croesus Front under current Catalyst→Equilibrium working taxonomy for EGWD."
+      ],
+      "notes": "Primary high-end magic tank alternative to Achto Primeval. Gloves/boots often swapped for cinderbanes / Kerapac wraps / blast diffusion in power hybrids — still index the full set acquisition region.",
+      "source_urls": [
+        "https://runescape.wiki/w/Cryptbloom_armour",
+        "https://runescape.wiki/w/Croesus",
+        "https://runescape.wiki/w/Croesus_flakes"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin while EGWD remains filed under Misthalin. Re-map only if Equilibrium relocates Croesus."
+    },
+    {
+      "id": "desert:anima-core-armour",
+      "name": "Anima core armour (GWD2 T80 power)",
+      "category": "mid-high power armour / GWD2",
+      "region_hint": "desert",
+      "region_hints": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Defence to wear",
+        "Dormant anima core pieces + Crest of Zaros / Zamorak / Seren / Sliske from Heart of Gielinor (GWD2)",
+        "Combine dormant core with the matching crest"
+      ],
+      "effects": [
+        "Style-split T80 power sets: Zaros melee, Zamorak ranged, Seren magic, hybrid Sliske",
+        "Non-degrading base anima core (no prayer or LP bonuses unlike Torva family)",
+        "Stats comparable to Nex T80 power armour without Nex access"
+      ],
+      "region_pressure": [
+        "Desert hard-owns Heart of Gielinor / GWD2 crests and dormant cores."
+      ],
+      "notes": "Strong League bridge set when Desert is unlocked before Asgarnia Nex. 2026 GWD2 change: best drop rates available immediately; reputation no longer gates drop rates (cap 2,000).",
+      "source_urls": [
+        "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
+        "https://runescape.wiki/w/Heart_of_Gielinor",
+        "https://runescape.wiki/w/Dormant_anima_core"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert for GWD2 self-supply."
+    },
+    {
+      "id": "desert:refined-anima-core-armour",
+      "name": "Refined anima core armour (GWD2)",
+      "category": "mid-high power armour upgrade / GWD2",
+      "region_hint": "desert",
+      "region_hints": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Base anima core piece of the matching style",
+        "Serenic, Sliskean, Zamorakian, and Zarosian essences (1/2/3 of each for helm/legs/body)",
+        "Unlock refined craft by earning 750 reputation with the matching GWD2 faction (e.g. Zarosian for refined Zaros)"
+      ],
+      "effects": [
+        "Upgraded anima core stats (still style-split power armour)",
+        "Degrades after 100,000 charges back to unrefined; re-refine with more essences",
+        "Body and legs augmentable"
+      ],
+      "region_pressure": [
+        "Desert hard-owns all four essence types and the reputation unlocks inside Heart of Gielinor."
+      ],
+      "notes": "Refined is a pure Desert continuation of anima core — no second elective region. Useful when GWD2 is the only high combat region online.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
+        "https://runescape.wiki/w/Zarosian_essence",
+        "https://runescape.wiki/w/Reputation_(Heart_of_Gielinor)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert. Reputation unlocks stay Desert-local.",
+      "links_existing_ids": [
+        "desert:anima-core-armour"
+      ]
+    },
+    {
+      "id": "misthalin:vestments-of-havoc",
+      "name": "Vestments of havoc (T95 melee glass cannon)",
+      "category": "BiS power armour drop / T95 melee",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "95 Defence to wear",
+        "Rare drops from Zamorak, Lord of Chaos (Elite Dungeon 4 — The Zamorakian Undercity)"
+      ],
+      "effects": [
+        "Mixed tier: ~T110 damage bonus with ~T75 power armour rating (glass cannon)",
+        "Herald of Chaos: post-melee-ultimate adrenaline regen (2pc); +6s Berserk duration (3pc); +20% max adrenaline with melee weapon (4pc)",
+        "Does not degrade; top and bottom augmentable at T95 divine-charge drain",
+        "One piece prevents aggression from Zamorak followers in God Wars Dungeon"
+      ],
+      "region_pressure": [
+        "Wiki Equilibrium League area tag places Zamorak, Lord of Chaos under Misthalin (Senntisten / Undercity access taxonomy).",
+        "Forinthry optional: Wilderness crater / portal geography and ED wilderness adjacency — do not double-count as all_required until Equilibrium publishes a boundary different from the wiki League tag."
+      ],
+      "notes": "Melee BiS damage armour competing with custom-fit trimmed masterwork. Prefer 3-piece Berserk extension in many rotations; 4-piece is situational adrenaline-cap play. Not a craft set — pure boss drop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Vestments_of_havoc_armour",
+        "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+        "https://runescape.wiki/w/The_Zamorakian_Undercity"
+      ],
+      "confidence": "confirmed_wiki_equilibrium_region_tag",
+      "league_treatment": "Treat Misthalin as the current wiki League region for Zamorak. Re-verify if Equilibrium reveals reassign the Undercity to Forinthry."
+    },
+    {
+      "id": "asgarnia:nex-t80-power-armour",
+      "name": "Nex T80 power armour residual (Torva / Pernix / Virtus)",
+      "category": "residual power armour / T80 Nex",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Defence (and style levels) to wear",
+        "Torva (melee), Pernix (ranged), Virtus (magic) drops from Nex in God Wars Dungeon"
+      ],
+      "effects": [
+        "Tier 80 style power armour with life-point and prayer bonuses on the classic Nex sets",
+        "Primary source of praesulic essence when dismantled for T92 elite tectonic / elite sirenic / trimmed masterwork"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Nex inside GWD1."
+      ],
+      "notes": "Residual as worn BiS (superseded by T90/T92 power), but still region-critical as the essence feedstock for all three T92 power crafts. Angel of Death is a separate Asgarnia weapon/prayer chain.",
+      "source_urls": [
+        "https://runescape.wiki/w/Torva_equipment",
+        "https://runescape.wiki/w/Pernix_equipment",
+        "https://runescape.wiki/w/Virtus_equipment",
+        "https://runescape.wiki/w/Nex"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia. Keep essence-feedstock role visible even when worn BiS has moved on."
+    },
+    {
+      "id": "misthalin:deathdealer-armour",
+      "name": "Deathdealer robe armour (necro power residual)",
+      "category": "Necromancy power armour residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "City of Um / Underworld Necromancy progression (working League taxonomy: Misthalin)",
+        "Kili equipment-upgrade tasks for each tier unlock",
+        "Craft at the soul forge in the Um smithy from deathwarden base + ensouled cloth/thread + necrotic runes",
+        "Must craft a piece at least once to wear it"
+      ],
+      "effects": [
+        "Necromancy power armour at tiers 70 / 80 / 90",
+        "Set bonus: per-piece chance to apply Death Mark on necromancy hits (1% / 1.5% / 2% per piece by tier; 5% / 7.5% / 10% at five pieces)"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns City of Um infrastructure (soul forge, Kili, rituals) under Catalyst→Equilibrium working taxonomy."
+      ],
+      "notes": "Residual vs newer necro hybrid gear but still the style-native power ladder. Augmented tops/bottoms keep perks when tier-upgrading.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deathdealer_robe_armour",
+        "https://runescape.wiki/w/Soul_forge",
+        "https://runescape.wiki/w/Kili"
+      ],
+      "confidence": "confirmed_wiki_region_taxonomy",
+      "league_treatment": "Hard Misthalin while City of Um stays Misthalin-mapped."
+    },
+    {
+      "id": "misthalin:deathwarden-armour",
+      "name": "Deathwarden robe armour (necro tank residual)",
+      "category": "Necromancy tank armour residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "City of Um Necromancy progression",
+        "Tier ladder from low-tier deathwarden through T90 via soul forge upgrades",
+        "Kili tasks for higher-tier craft/wear unlocks"
+      ],
+      "effects": [
+        "Necromancy tank armour across tiers 10–90",
+        "Higher-tier set bonuses grant dodge chance (tank counterpart to deathdealer Death Mark)",
+        "T60 deathwarden is the craft base that upgrades into deathdealer power robes"
+      ],
+      "region_pressure": [
+        "Misthalin / City of Um same hard geography as deathdealer."
+      ],
+      "notes": "Residual tank path for necro; still the mandatory early craft spine before deathdealer. Do not treat as Misthalin-optional.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deathwarden_robe_armour",
+        "https://runescape.wiki/w/Deathdealer_robe_armour"
+      ],
+      "confidence": "confirmed_wiki_region_taxonomy",
+      "league_treatment": "Hard Misthalin with deathdealer.",
+      "links_existing_ids": [
+        "misthalin:deathdealer-armour"
+      ]
+    },
+    {
+      "id": "cross-region:achto-mazcab-residual",
+      "name": "Achto raids armour residual (Mazcab)",
+      "category": "residual tank armour / raids",
+      "region_hints": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert"
+      ],
+      "optional_pressure_regions": [],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Liberation of Mazcab raids (Beastmaster Durzag / Yakamaru)",
+        "Normal Primeval / Tempest / Teralith purchasable with teci; Achto superior is rare boss drop",
+        "Achto piece order is gated (must collect earlier Achto slots across styles before later body slots)"
+      ],
+      "effects": [
+        "Tier 90 tank sets per style (Primeval magic, Tempest ranged, Teralith melee)",
+        "Achto set: off-hand shield damage contribution scaling with pieces; chance to reset defensive ability cooldowns when damaged at 3+ pieces",
+        "Does not degrade inside Raids; degrades outside and repairs for coins / POH armour stand"
+      ],
+      "region_pressure": [
+        "Desert owns Liberation of Mazcab / Achto under Equilibrium Mazcab=Desert mapping.",
+        "Cryptbloom (Misthalin Croesus) remains the elective-region magic-tank alternative path."
+      ],
+      "notes": "Achto tank sets from Liberation of Mazcab. Hard Desert under Equilibrium Mazcab=Desert mapping. Prefer Cryptbloom / refined anima / style tanks when Desert is not unlocked.",
+      "source_urls": [
+        "https://runescape.wiki/w/Primeval_equipment",
+        "https://runescape.wiki/w/Liberation_of_Mazcab",
+        "https://runescape.wiki/w/Achto"
+      ],
+      "confidence": "confirmed_user_rule_mazcab_desert_2026_07_26",
+      "league_treatment": "Hard Desert. Mazcab residual maps to Desert elective.",
+      "region_hint": "desert"
+    },
+    {
+      "id": "asgarnia:turtling-perk-residual",
+      "name": "Turtling perk residual (tank gizmo)",
+      "category": "residual Invention armour perk",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Invention unlocked and armour gizmos available",
+        "Turtling perk materials / gizmo combinations (Historic components appear in high-rank turtling combos)"
+      ],
+      "effects": [
+        "Armour gizmo perk that improves defensive ability uptime / barrier-style tank play",
+        "Still used on tank shells (Cryptbloom, Achto, refined anima) rather than as a worn armour set"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild infrastructure for gizmo work in the normal self-supply path.",
+        "Misthalin optional: Archaeology Historic component supply for high-rank Turtling combinations."
+      ],
+      "notes": "Not a worn armour set — residual tank-support perk called out because BiS tank shells still socket Turtling. Do not present Asgarnia as mandatory solely for Turtling if League grants Invention globally; keep as normal infrastructure geography.",
+      "source_urls": [
+        "https://runescape.wiki/w/Turtling",
+        "https://runescape.wiki/w/Invention_Guild"
+      ],
+      "confidence": "confirmed_wiki_with_league_invention_caveat",
+      "league_treatment": "Asgarnia for Invention Guild unless Equilibrium globalises Invention tutorial/machines."
+    }
+  ]
+}

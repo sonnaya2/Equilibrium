@@ -26,7 +26,7 @@
         "Weathered wall Agility shortcut (58 Agility) shortening slime collection",
         "Robin daily bonemeal + free slime conversion scaling with Morytania legs 2/3/4"
       ],
-      "notes": "Core early/mid ironman Prayer path and permanent ecto-token farm. First age outfit purchases live on morytania:ectofuntus-first-age-outfit (outfits file) — this row is the worship activity itself. Powder of pulverising (Desert whirligig powders) can grind a full inventory of one bone type at once for 30 minutes; that powder is Desert-sourced, not Morytania. First age outfit XP does not apply while worshipping here.",
+      "notes": "Core early/mid ironman Prayer path and permanent ecto-token farm. First age outfit purchases live on morytania:first-age-outfit-equipment (outfits file) — this row is the worship activity itself. Powder of pulverising (Desert whirligig powders) can grind a full inventory of one bone type at once for 30 minutes; that powder is Desert-sourced, not Morytania. First age outfit XP does not apply while worshipping here.",
       "source_urls": [
         "https://runescape.wiki/w/Ectofuntus",
         "https://runescape.wiki/w/Ecto-token",
@@ -276,7 +276,7 @@
         "Hard diary shortcut to crystal outcrops",
         "Base for salve amulet (e) via Lair of Tarn Razorlor (combat permanent unlock)"
       ],
-      "notes": "Skilling-facing obtain path for Salve. Full +15%/+20% undead combat effects live under salve-amulet:enchanted in regional combat / support enrichment — do not restate combat percentages as skilling XP. Vyres and ghouls are not Salve targets.",
+      "notes": "Skilling-facing obtain path for Salve. Full +15%/+20% undead combat effects live under morytania:salve-amulet-enchanted in regional combat / support enrichment — do not restate combat percentages as skilling XP. Vyres and ghouls are not Salve targets.",
       "source_urls": [
         "https://runescape.wiki/w/Salve_amulet",
         "https://runescape.wiki/w/Haunted_Mine",
@@ -373,7 +373,7 @@
         "Always: all ghosts speak as if ghostspeak is equipped; halved Barrows prayer drain; double runes from Barrows chests; bank Barrows chest loot from the reward chest",
         "Always: 10% more Temple Trekking rewards; Abandoned Mine crystal outcrop shortcut; Big Book o' Piracy charge cap 20"
       ],
-      "notes": "Ghostspeak-passive is a permanent Ectofuntus / Port Phasmatys QoL unlock. Shade Prayer boost and Barrows banking are the other hard-tier skilling/PvM utilities. Full elite bundle remains morytania:morytania-legs-4 in gaps-2026-07-26.",
+      "notes": "Ghostspeak-passive is a permanent Ectofuntus / Port Phasmatys QoL unlock. Shade Prayer boost and Barrows banking are the other hard-tier skilling/PvM utilities. Full elite bundle remains morytania:area-tasks-morytania-legs in gaps-2026-07-26.",
       "source_urls": [
         "https://runescape.wiki/w/Morytania_legs_3",
         "https://runescape.wiki/w/Morytania_achievements",
@@ -467,7 +467,7 @@
         "Modified first age tiara: 3 daily POH teleports and 2% chance to save bones/ashes when buried, scattered, or offered on an altar",
         "Does not boost Ectofuntus worship, God Statues, or urn Prayer XP"
       ],
-      "notes": "Equipment detail companion to morytania:ectofuntus-first-age-outfit. Full set is 1,200 worships at 5 tokens each. Free reclaim from Diango storage if destroyed.",
+      "notes": "Equipment detail for first age outfit purchases (morytania:first-age-outfit-equipment). Full set is 1,200 worships at 5 tokens each. Free reclaim from Diango storage if destroyed.",
       "source_urls": [
         "https://runescape.wiki/w/First_age_outfit",
         "https://runescape.wiki/w/Modified_first_age_tiara",

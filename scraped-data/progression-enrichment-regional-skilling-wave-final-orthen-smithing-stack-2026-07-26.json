@@ -1,0 +1,111 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "FINAL PASS Wave B5 — emit the canonical three-region Orthen AFK Smithing/Firemaking stack under id cross-region:orthen-superheat-autoheater (Anachronia Orthen furnace core + Tirannwn Superheat Form + Forinthry advanced smithing autoheater). Resolves dual-stack desync with cross-region:orthen-furnace-core-stack and phantom Prefer references that never landed in regional-skilling-unlocks.json.",
+  "policy": {
+    "region_rule": "required_regions + region_requirement_type=all_required when every listed region is a hard gate for the full AFK stack. optional_pressure_regions improve plate supply only. Never put multi-region/cross-region/global tokens in region fields.",
+    "stack_rule": "This is a planner combo package. Prefer links_existing_ids to single-region piece rows; do not restate every sub-item as a new first-class unlock.",
+    "canonical_id": "cross-region:orthen-superheat-autoheater is the sole canonical three-region AFK smithing/FM stack id. It supersedes dual narrative with cross-region:orthen-furnace-core-stack for full AFK planning. Piece rows and the narrower two-region furnace-core-stack / masterwork plate-pressure rows remain.",
+    "drop_ids_note": "scripts/sync-regional-skilling-unlocks.mjs DROP_IDS currently contains cross-region:orthen-superheat-autoheater (and forinthry:daemonheim-skilling-rewards). Cross-chains already filed this id but sync drops it — remove the id from DROP_IDS for this enrichment to materialise in regional-skilling-unlocks.json.",
+    "no_trade_rule": "Ironman permanent unlocks and self-sourced stack pieces. Tradeable intermediates stay pressure unless craft/shop is region-locked.",
+    "rate_rule": "No invented XP/hour. Unlock state, effects, multi-region pressure, and wiki-stated AFK heat behaviour only.",
+    "duplicate_guard": "Do not re-emit piece rows already first-class: anachronia:orthen-furnace-core, tirannwn:superheat-form, tirannwn:crystal-hammer, forinthry:smithing-autoheater, forinthry:advanced-smithing-autoheater, forinthry:scroll-of-efficiency, asgarnia:masterwork-smithing-chain, cross-region:orthen-furnace-core-stack, cross-region:masterwork-orthen-plate-pressure. This file owns only the three-region canonical stack re-emit."
+  },
+  "decision": {
+    "problem": "Detail text Prefer cross-region:orthen-superheat-autoheater, but DROP_IDS may remove the cross-chains row; cross-region:orthen-furnace-core-stack exists as a narrower Anachronia+Tirannwn dual narrative.",
+    "action": "emit",
+    "emit_id": "cross-region:orthen-superheat-autoheater",
+    "skip_if_present_in_product": true,
+    "product_check": "absent_from_data/research/regional-skilling-unlocks.json",
+    "reason": "Product never materialised the promised three-region id. Emit canonical stack with all_required [anachronia, tirannwn, forinthry], links to piece ids, and wiki sources. Supersedes dual AFK narrative with orthen-furnace-core-stack; piece rows remain."
+  },
+  "already_present_checked": {
+    "product_has_orthen_superheat_autoheater": false,
+    "product_has_orthen_furnace_core_stack": true,
+    "piece_ids_present": [
+      "anachronia:orthen-furnace-core",
+      "tirannwn:superheat-form",
+      "tirannwn:crystal-hammer",
+      "forinthry:smithing-autoheater",
+      "forinthry:advanced-smithing-autoheater",
+      "forinthry:scroll-of-efficiency",
+      "asgarnia:masterwork-smithing-chain",
+      "cross-region:orthen-furnace-core-stack",
+      "cross-region:masterwork-orthen-plate-pressure"
+    ],
+    "scraped_but_drop_ids": [
+      "cross-region:orthen-superheat-autoheater"
+    ]
+  },
+  "equipment_additions": [
+    {
+      "id": "cross-region:orthen-superheat-autoheater",
+      "name": "Orthen furnace core + Superheat Form + smithing autoheater stack",
+      "category": "cross-region Smithing and Firemaking full AFK stack",
+      "region_hints": [
+        "anachronia",
+        "tirannwn",
+        "forinthry",
+        "asgarnia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "tirannwn",
+        "forinthry"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia"
+      ],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "Orthen furnace core (Anachronia): 99 Smithing, 102 Archaeology; 4 restored dragon burners from Orthen Observation outpost; 2 curved masterwork melee plates; listed consumable ingredients",
+        "Superheat Form (Tirannwn): The Light Within / Seren prayers, 91 Prayer, Ancient Curses active",
+        "Smithing autoheater (Forinthry / Daemonheim Rewards): base 35 Smithing + 35 Dungeoneering, 4,000 tokens; advanced upgrade 70 Smithing + 70 Dungeoneering + 40,000 tokens (advanced is the AFK stack partner)",
+        "Crystal hammer (Tirannwn) for the optimal tool half of the stack",
+        "Scroll of efficiency (Forinthry / Daemonheim) multiplies with furnace core bar-refund chance"
+      ],
+      "effects": [
+        "Furnace core off-hand: negates Superheat Form prayer drain when equipped before activating the prayer",
+        "Superheat Form: auto-burn logs while Woodcutting; faster smelting; low heat treated as medium and medium as high while smithing",
+        "Autoheater (esp. advanced): restores heat from metal-bank coal at 0% heat; with Superheat Form enables fully AFK medium-high heat smithing",
+        "Furnace core multiplies scroll of efficiency refund chance by 1.25 (2% → 2.5%)",
+        "Pyromaniac / Breakdown procs grant temporary Furnace Core XP status"
+      ],
+      "unlocks": [
+        "Fully AFK medium-high heat smithing when Orthen furnace core + Superheat Form + advanced smithing autoheater are all available",
+        "Sustained Superheat Form Firemaking/Woodcutting value without prayer-drain babysitting while the furnace core is equipped",
+        "Three-region combo pressure so planners score Anachronia + Tirannwn + Forinthry together for late AFK smithing/FM"
+      ],
+      "region_pressure": [
+        "Anachronia hard: Orthen Dig Site dragon burners and furnace-core craft (anachronia:orthen-furnace-core). Do not claim dual dig sites.",
+        "Tirannwn hard: Superheat Form and crystal hammer / crystal tinderbox tool half (tirannwn:superheat-form, tirannwn:crystal-hammer).",
+        "Forinthry hard: Daemonheim smithing autoheater (base + advanced) and scroll of efficiency permanent unlocks.",
+        "Asgarnia optional pressure: Artisans' Workshop curved masterwork melee plates / glorious-bar infrastructure consumed by the core craft (asgarnia:masterwork-smithing-chain / cross-region:masterwork-orthen-plate-pressure)."
+      ],
+      "notes": "FINAL PASS Wave B5 canonical emit. Audit combo:orthen-furnace-superheat-autoheater. This supersedes dual narrative with cross-region:orthen-furnace-core-stack for AFK smithing/FM planning — furnace-core-stack remains as the narrower Anachronia+Tirannwn Superheat sustain package (autoheater optional there); piece rows remain first-class. Prefer this id whenever ranking the full three-region AFK prayer+heat stack. Never imply Moonrise or a second dig site is part of this stack. Sync consumers must remove this id from DROP_IDS or the row will not land in regional-skilling-unlocks.json.",
+      "source_urls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Advanced_smithing_autoheater",
+        "https://runescape.wiki/w/Scroll_of_efficiency",
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Dragon_burner"
+      ],
+      "confidence": "confirmed_wiki_cross_region_chain",
+      "league_treatment": "Surface Anachronia + Tirannwn + Forinthry together when ranking fully AFK late smithing/firemaking. Keep Asgarnia as masterwork-plate pressure only. Never imply Moonrise is part of this stack.",
+      "links_existing_ids": [
+        "anachronia:orthen-furnace-core",
+        "tirannwn:superheat-form",
+        "tirannwn:crystal-hammer",
+        "forinthry:smithing-autoheater",
+        "forinthry:advanced-smithing-autoheater",
+        "forinthry:scroll-of-efficiency",
+        "asgarnia:masterwork-smithing-chain",
+        "cross-region:orthen-furnace-core-stack",
+        "cross-region:masterwork-orthen-plate-pressure"
+      ]
+    }
+  ],
+  "activity_additions": []
+}

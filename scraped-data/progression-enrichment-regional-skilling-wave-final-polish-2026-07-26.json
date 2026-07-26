@@ -1,0 +1,486 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "FINAL POLISH residual — high-value permanent skilling unlocks still MISSING from data/research/regional-skilling-unlocks.json after waves 1–5 + longtail. User checklist: dark facets PRESENT (grace/luck/passage), blessed flask PRESENT, silverhawk PRESENT, scroll of efficiency already first-class (forinthry:scroll-of-efficiency — not shop-only). Ship ironman Invention/Herblore permanents still footnotes: urn enhancer, decorated-urn craft package, enchanted-notepaper blueprint, skilling accumulators, potion reservoir, Meilyr supreme/elder overload recipe ladder residuals, staff-of-limitless family, auto-sanctifier. No Waiko chimes. 11 rows.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "Grep-confirmed ABSENT as first-class ids before write. SKIP already present: cross-region:dark-facet-of-grace, cross-region:dark-facet-of-luck, forinthry:dark-facet-of-passage, tirannwn:blessed-flask, cross-region:silverhawk-boots, forinthry:scroll-of-efficiency, forinthry:scroll-of-quick-teleportation, forinthry:daemonheim-rewards-shop-hub, prifddinas:meilyr-recipe-shop, forinthry:perfect-plus-recipe, asgarnia:spring-cleaner, asgarnia:invention-skilling-tools (rod-o-matic/hammer-tron/pyro-matic only — not urn enhancer/accumulators/reservoir), asgarnia:invention-skilling-perk-ladder, misthalin:auto-screener, kandarin:divine-o-matic-vacuum, morytania:ectoplasmator, morytania:attuned-ectoplasmator, asgarnia:brooch-of-the-gods, asgarnia:charge-pack-infrastructure, asgarnia:divine-charge-crafting.",
+    "skip_present_user_checklist": [
+      "Dark Facet of Grace / Luck / Passage — first-class",
+      "Blessed flask — tirannwn:blessed-flask first-class",
+      "Silverhawk boots — cross-region:silverhawk-boots first-class (ironman cannot buy boots/down at Thaler shop)",
+      "Scroll of efficiency — forinthry:scroll-of-efficiency first-class (20k tokens; 2% bar refund; Orthen core → 2.5%) — not shop-name-only residual"
+    ],
+    "no_trade_rule": "Ironman permanent account unlocks, Invention device discoveries, and Meilyr recipe purchases that change no-trade skilling throughput.",
+    "rate_rule": "No invented XP/hour or GE coin-per-XP. Unlock state, token/coin costs, effects, and region pressure only.",
+    "combo_fields": "Every multi-region row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids."
+  },
+  "already_present_checked": [
+    "cross-region:dark-facet-of-grace",
+    "cross-region:dark-facet-of-luck",
+    "forinthry:dark-facet-of-passage",
+    "tirannwn:blessed-flask",
+    "cross-region:silverhawk-boots",
+    "forinthry:scroll-of-efficiency",
+    "prifddinas:meilyr-recipe-shop",
+    "forinthry:perfect-plus-recipe",
+    "asgarnia:invention-skilling-tools",
+    "asgarnia:spring-cleaner",
+    "morytania:attuned-ectoplasmator",
+    "misthalin:auto-screener",
+    "asgarnia:brooch-of-the-gods"
+  ],
+  "equipment_additions": [
+    {
+      "id": "asgarnia:urn-enhancer",
+      "name": "Urn enhancer (permanent Invention device)",
+      "category": "permanent Invention skilling device",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "misthalin"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["misthalin"],
+      "requirements": [
+        "24 Invention to discover",
+        "Nomad's Elegy completed (blueprint reward)",
+        "Invention workbench manufacture (soul rune + tensile/clear parts + subtle/precise components)"
+      ],
+      "unlocks": [
+        "Permanent inventory device: +25% experience when teleporting full skilling urns (stacks with decorated 20% and exquisite 25% base urn bonuses — wiki frames enhancer as further +25% of tele XP)",
+        "Costs 20 charge-pack charges per urn teleported (one divine charge sustains ~150 enhanced urns)",
+        "One enhancer is enough — multiples do not stack extra XP; lasts until lost/destroyed then re-craft at workbench",
+        "Auto-teleport urn setting still works; chat reports enhancer bonus on tele"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention workbench manufacture and charge-pack sustain taxonomy.",
+        "Misthalin optional: Nomad's Elegy quest geography (Death's office / Underworld narrative) — not a second hard gate for using the finished device."
+      ],
+      "notes": "Highest-value missing Invention permanent for multi-skill urn meta. Distinct from asgarnia:invention-skilling-tools (rod-o-matic/hammer-tron/pyro-matic). Pair with decorated-urn craft package and Brooch of the Gods urn storage. Do not invent coins-per-XP tables.",
+      "source_urls": [
+        "https://runescape.wiki/w/Urn_enhancer",
+        "https://runescape.wiki/w/Nomad%27s_Elegy",
+        "https://runescape.wiki/w/Urns"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention manufacture. Score Misthalin only when ranking the quest unlock path.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "asgarnia:charge-pack-infrastructure",
+        "asgarnia:divine-charge-crafting",
+        "asgarnia:brooch-of-the-gods",
+        "cross-region:decorated-urns-infrastructure"
+      ]
+    },
+    {
+      "id": "forinthry:enchanted-notepaper-blueprint",
+      "name": "Enchanted notepaper blueprint (ironman note craft)",
+      "category": "permanent Invention blueprint and craft path",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry", "asgarnia"],
+      "required_regions": ["forinthry"],
+      "optional_pressure_regions": ["asgarnia"],
+      "requirements": [
+        "200,000 Dungeoneering tokens at Daemonheim Rewards (Marmaros)",
+        "97 Invention to research/discover the blueprint",
+        "Manufacture at Invention workbench: elder logs + astral runes + magic parts + ethereal components"
+      ],
+      "unlocks": [
+        "Permanent account blueprint: craft untradeable enchanted notepaper (identical note function to magic notepaper)",
+        "Ironman self-source of item-noting without Treasure Hunter / oddments magic notepaper",
+        "1 notepaper consumed per inventory stack noted; prefers enchanted over magic when both present"
+      ],
+      "region_pressure": [
+        "Forinthry hard-owns token shop and blueprint purchase.",
+        "Asgarnia optional: Invention workbench manufacture and charge/material economy."
+      ],
+      "notes": "Daemonheim shop residual — blueprint is the permanent unlock (consumable paper remains crafted). Not listed on forinthry:daemonheim-rewards-shop-hub named bullet list. Do not invent GE craft costs as unlock gates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Enchanted_notepaper",
+        "https://runescape.wiki/w/Daemonheim_Rewards",
+        "https://runescape.wiki/w/Magic_notepaper"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for tokens and rewards shop.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "forinthry:daemonheim-rewards-shop-hub",
+        "asgarnia:invention-guild",
+        "asgarnia:spring-cleaner"
+      ]
+    },
+    {
+      "id": "asgarnia:potion-reservoir",
+      "name": "Potion reservoir (Invention auto-dose device)",
+      "category": "permanent Invention device discovery",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["tirannwn"],
+      "requirements": [
+        "112 Invention to discover and craft",
+        "Invention workbench: potion flask + simple/clear parts",
+        "Activate one reservoir at a time; fill with up to 6 doses of a timer potion"
+      ],
+      "unlocks": [
+        "Permanent craft discovery for potion reservoirs that auto-drink 1–15s before a potion timer expires",
+        "Skilling AFK sustain for prayer renewal / super prayer renewal (Chronicle Attraction, Superheat Form, Light Form under GOTE) without manual re-sips",
+        "Also holds overloads, antifires, weapon poisons, many skilling/extreme skilling potions — one active reservoir only",
+        "Reservoir destroys when empty; re-craft at workbench (discovery permanent)"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention discovery/manufacture.",
+        "Tirannwn optional: Seren skill-prayer value when pairing renewal reservoirs with Light Form / Superheat Form / Chronicle Attraction."
+      ],
+      "notes": "Permanent discovery + AFK skilling QoL. Distinct from asgarnia:partial-potion-producer machine. Do not invent dose timer tables beyond wiki 1–15s pre-expiry window.",
+      "source_urls": [
+        "https://runescape.wiki/w/Potion_reservoir",
+        "https://runescape.wiki/w/Devices"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention device path.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "asgarnia:partial-potion-producer",
+        "tirannwn:superheat-form",
+        "tirannwn:light-form",
+        "tirannwn:chronicle-attraction",
+        "tirannwn:grace-of-the-elves"
+      ]
+    },
+    {
+      "id": "asgarnia:auto-sanctifier",
+      "name": "Auto-sanctifier (Dwarven tech Prayer device)",
+      "category": "Invention Prayer XP device (Dwarven technology tree)",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["forinthry", "morytania"],
+      "requirements": [
+        "70 Invention",
+        "55 Dwarven currency on the Dwarven technology tree",
+        "Craft with marrentill + spiritual/cover parts + pious components"
+      ],
+      "unlocks": [
+        "Pocket/inventory device granting 3.5× Prayer XP on buried bones and scattered ashes (gilded-altar-with-two-burners equivalent; multiplicative)",
+        "50 charges per device; one charge per bone/ash; destroyed when empty (blueprint permanent)",
+        "Works with bonecrusher and attuned ectoplasmator; does not stack with Dragon Rider amulet / Prayer brawling gloves / powder of burials",
+        "RS3 account-facing ash/bone Prayer device residual (wiki Ash sanctifier redirects here)"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild + Dwarven technology tree currency.",
+        "Forinthry/Morytania optional: bone/ash supply and bonecrusher/ectoplasmator pairing only."
+      ],
+      "notes": "Consumable charges but permanent discovery — same class as other Invention devices. Not a permanent account toggle. Pair with forinthry:bonecrusher and morytania:attuned-ectoplasmator; do not double-score with multi-region:poh-gilded-altar as free stack.",
+      "source_urls": [
+        "https://runescape.wiki/w/Auto-sanctifier",
+        "https://runescape.wiki/w/Dwarven_technology_tree",
+        "https://runescape.wiki/w/Ash_sanctifier"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention tech tree.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "forinthry:bonecrusher",
+        "morytania:attuned-ectoplasmator",
+        "multi-region:poh-gilded-altar",
+        "desert:powder-of-burials"
+      ]
+    },
+    {
+      "id": "prifddinas:supreme-overload-recipe",
+      "name": "Supreme overload potion recipe (Meilyr)",
+      "category": "permanent Herblore combination recipe",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["forinthry"],
+      "requirements": [
+        "Plague's End / Prifddinas Meilyr Recipe Shop access",
+        "900,000 coins to unlock supreme overload recipe at Lady Meilyr / Harmony pillar farmers",
+        "98 Herblore to mix (overload (4) + supers in crystal flask)"
+      ],
+      "unlocks": [
+        "Permanent account recipe: craft supreme overload (16%+4 combat boost, 6-dose flask, 6 min/dose)",
+        "Required intermediate for elder overload and supreme overload salve ladders",
+        "Does not re-emit prifddinas:meilyr-recipe-shop hub — this is the named high-value residual"
+      ],
+      "region_pressure": [
+        "Tirannwn hard-owns Meilyr Recipe Shop purchase.",
+        "Forinthry optional: some combination recipes need unreadable-page / 100k token discovery before shop unlock — not required for every Meilyr recipe (wiki: no level gate to purchase once available)."
+      ],
+      "notes": "Meilyr shop hub is thin (generic combination-potion bullets). Perfect plus already has forinthry:perfect-plus-recipe; promote supreme overload the same way. Combat boost numbers are recipe identity, not a combat gear catalog.",
+      "source_urls": [
+        "https://runescape.wiki/w/Supreme_overload_potion",
+        "https://runescape.wiki/w/Recipe_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for Meilyr shop.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:meilyr-district",
+        "prifddinas:crystal-flasks",
+        "prifddinas:elder-overload-recipe",
+        "forinthry:perfect-plus-recipe"
+      ]
+    },
+    {
+      "id": "prifddinas:elder-overload-recipe",
+      "name": "Elder overload potion recipe (Meilyr)",
+      "category": "permanent Herblore combination recipe",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn", "misthalin"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["misthalin", "anachronia"],
+      "requirements": [
+        "Meilyr Recipe Shop: 1,200,000 coins for elder overload recipe",
+        "106 Herblore to mix (supreme overload (6) + clean fellstalk + primal extract)",
+        "Supreme overload recipe already unlocked"
+      ],
+      "unlocks": [
+        "Permanent account recipe: elder overload (17%+5 combat boost — top non-salve overload tier)",
+        "Input for elder overload salve; Fort botanist workbench unfinished-potion prep optional logistics",
+        "Herblore master cape batch craft (120) is cape residual — not required for unlock"
+      ],
+      "region_pressure": [
+        "Tirannwn hard-owns recipe purchase and crystal flask culture.",
+        "Misthalin optional: Fort Forinthry Botanist's Workbench unfinished overload prep.",
+        "Anachronia optional: primal extract / ranch supply pressure only."
+      ],
+      "notes": "Named residual above thin meilyr-recipe-shop. Links supreme residual; do not invent ingredient GE totals as unlock gates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elder_overload_potion",
+        "https://runescape.wiki/w/Recipe_Shop",
+        "https://runescape.wiki/w/Primal_extract"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for Meilyr recipe unlock.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "prifddinas:supreme-overload-recipe",
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:elder-overload-salve-recipe",
+        "misthalin:fort-forinthry-workshop"
+      ]
+    },
+    {
+      "id": "prifddinas:elder-overload-salve-recipe",
+      "name": "Elder overload salve recipe (Meilyr)",
+      "category": "permanent Herblore combination recipe",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["misthalin"],
+      "requirements": [
+        "Meilyr Recipe Shop: 1,500,000 coins for elder overload salve recipe",
+        "107 Herblore to mix",
+        "Elder overload (6) + prayer renewal + prayer potion + super antipoison + antifire + super antifire"
+      ],
+      "unlocks": [
+        "Permanent account recipe: elder overload salve (top-tier combat boost + multi-utility potions in one flask)",
+        "Endgame ironman Herblore checklist item above supreme/elder potion residuals",
+        "Does not re-emit combat rotation advice — unlock state only"
+      ],
+      "region_pressure": [
+        "Tirannwn hard-owns Meilyr purchase.",
+        "Misthalin optional: Fort unfinished-salve prep via Granny Rowan after Botanist's Workbench T3."
+      ],
+      "notes": "Top Meilyr coin sink residual (1.5m). Completes supreme → elder → elder salve ladder as first-class planner ids.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elder_overload_salve",
+        "https://runescape.wiki/w/Recipe_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for Meilyr shop.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "prifddinas:elder-overload-recipe",
+        "prifddinas:supreme-overload-recipe",
+        "prifddinas:meilyr-recipe-shop"
+      ]
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "cross-region:decorated-urns-infrastructure",
+      "name": "Decorated and exquisite urn craft infrastructure",
+      "category": "permanent multi-skill urn production package",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "misthalin", "kandarin"],
+      "required_regions": [],
+      "optional_pressure_regions": ["asgarnia", "misthalin", "kandarin", "tirannwn"],
+      "requirements": [
+        "Crafting levels for decorated urns (skill-dependent; e.g. decorated cooking 81 Crafting) — assist system can cover form/fire/rune steps",
+        "Two soft clay per standard urn; soft porcelain + gem for exquisite tiers (103+ Crafting)",
+        "Potter's wheel + pottery oven (or portable crafter / Lunar Fire Urn)"
+      ],
+      "unlocks": [
+        "Planner-visible permanent craft ladder for decorated urns across Cooking/Fishing/Mining/Woodcutting/Smithing/Prayer/Divination/Farming/Hunter/Runecrafting",
+        "+20% tele XP from filled decorated urns (+25% exquisite); further +25% tele XP with asgarnia:urn-enhancer",
+        "Brooch of the Gods stores 1,000 of each decorated/exquisite empty urn type",
+        "Artificer's measure: 5% chance to duplicate urn while forming",
+        "Does not invent per-skill fill tables or XP/hour"
+      ],
+      "region_pressure": [
+        "No single hard region for clay/pottery — score optional pressure from unlocked pottery sites and soft clay mines.",
+        "Asgarnia optional: Brooch of the Gods storage + Invention urn enhancer.",
+        "Tirannwn optional: Artificer's measure for form-dupe.",
+        "Misthalin/Kandarin optional: classic pottery hubs and soft clay."
+      ],
+      "notes": "Urn family was never first-class while Brooch/urn enhancer were partial. Infrastructure residual only — not a training method row. Prayer urns conflict with attuned ectoplasmator ash consumption.",
+      "source_urls": [
+        "https://runescape.wiki/w/Urns",
+        "https://runescape.wiki/w/Decorated_cooking_urn",
+        "https://runescape.wiki/w/Brooch_of_the_Gods",
+        "https://runescape.wiki/w/Artificer%27s_measure"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Support-pressure by pottery access. Pair Asgarnia when scoring Brooch + urn enhancer stack.",
+      "region_requirement_type": "any_optional",
+      "links_existing_ids": [
+        "asgarnia:urn-enhancer",
+        "asgarnia:brooch-of-the-gods",
+        "cross-region:artificers-measure",
+        "cross-region:portable-skilling-stations",
+        "morytania:attuned-ectoplasmator"
+      ]
+    },
+    {
+      "id": "cross-region:skilling-accumulators-package",
+      "name": "Invention skilling accumulators (mining / fishing / woodcutting)",
+      "category": "Invention device discovery package",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Invention Tutorial + charged charge pack",
+        "Mining accumulator: 50 Invention + Dwarven technology tree currency unlock",
+        "Woodcutting accumulator: 50 Invention + Cave goblin technology tree currency unlock",
+        "Fishing accumulator: 60 Invention discovery (decorated fishing urn in recipe)",
+        "Decorated urns of matching skill as craft ingredients"
+      ],
+      "unlocks": [
+        "Permanent device discoveries: mining (charges on critical swings), fishing (charges on failed fish), woodcutting (charges on failed chops)",
+        "Study full accumulator for 2,500 XP in that skill then device is destroyed — re-craft at workbench",
+        "Auto-study when inventory auto-teleport urns option is on",
+        "Does not re-emit asgarnia:invention-skilling-tools (rod-o-matic / hammer-tron / pyro-matic)"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention Guild discovery, tech trees, and workbench manufacture for all three accumulators."
+      ],
+      "notes": "Package residual — three sibling devices missing while spring cleaner / rod-o-matic already first-class. Blueprint unlocks are permanent; filled study is consumable XP. Do not invent fill rates or coins/XP.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mining_accumulator",
+        "https://runescape.wiki/w/Fishing_accumulator",
+        "https://runescape.wiki/w/Woodcutting_accumulator",
+        "https://runescape.wiki/w/Devices"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention tech trees and manufacture.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "asgarnia:invention-skilling-tools",
+        "asgarnia:charge-pack-infrastructure",
+        "cross-region:decorated-urns-infrastructure",
+        "asgarnia:urn-enhancer"
+      ]
+    },
+    {
+      "id": "cross-region:staff-of-limitless-family",
+      "name": "Staff of limitless family (elemental impetus craft)",
+      "category": "permanent infinite-rune staff craft ladder",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "asgarnia", "kandarin"],
+      "required_regions": [],
+      "optional_pressure_regions": ["misthalin", "asgarnia", "kandarin", "desert", "fremennik"],
+      "requirements": [
+        "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
+        "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
+        "82 Magic to wield finished staff"
+      ],
+      "unlocks": [
+        "Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped",
+        "Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone",
+        "Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction",
+        "Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path"
+      ],
+      "region_pressure": [
+        "No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access.",
+        "Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture.",
+        "Asgarnia optional: Invention augmentation + repair whetstone."
+      ],
+      "notes": "Ironman permanent craft residual for infinite elemental runes. Not a combat BiS weapon catalog — skilling/utility rune QoL. Do not invent master-casket drop rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elemental_impetus",
+        "https://runescape.wiki/w/Staff_of_limitless_air",
+        "https://runescape.wiki/w/Staff_of_limitless_lava"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Support-pressure by clue and talisman access. No single hard region gate.",
+      "region_requirement_type": "any_optional",
+      "links_existing_ids": [
+        "asgarnia:wicked-hood",
+        "cross-region:rune-pouch-ladder",
+        "forinthry:magical-thread-abyss-supply",
+        "cross-region:luck-of-the-dwarves"
+      ]
+    },
+    {
+      "id": "asgarnia:herb-protector",
+      "name": "Herb protector (Invention farming device)",
+      "category": "Invention Farming device discovery",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["kandarin", "desert", "karamja"],
+      "requirements": [
+        "Invention discovery and workbench craft (plant cure + organic parts + healthy components)",
+        "Use on herb or vine herb patch before or after planting"
+      ],
+      "unlocks": [
+        "Permanent craft discovery: herb protector guarantees no disease on the protected herb/vine herb patch",
+        "Consumed when the herb fully grows (re-craft each cycle) — discovery permanent",
+        "Stacks with compost timing; works with greenfingers auras active",
+        "Pharm Ecology relic is the permanent no-upkeep alternative — do not re-emit that relic here"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Invention discovery/manufacture.",
+        "Herb patch regions optional pressure only for where protectors are spent."
+      ],
+      "notes": "Ironman Farming disease insurance device residual. Consumable per grow cycle; blueprint is the permanent unlock. Prefer Pharm Ecology when ranking zero-upkeep disease immunity.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_protector",
+        "https://runescape.wiki/w/Pharm_Ecology"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for Invention craft.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "cross-region:herb-patch-network",
+        "kandarin:manor-farm-farming-guild",
+        "desert:modified-farmers-hat"
+      ]
+    }
+  ],
+  "summary": {
+    "rows": 11,
+    "equipment": 7,
+    "activity": 4,
+    "skipped_present": [
+      "dark facets (grace/luck/passage)",
+      "blessed flask",
+      "silverhawk boots",
+      "scroll of efficiency (already first-class)"
+    ],
+    "themes": [
+      "Invention permanent devices (urn enhancer, notepaper blueprint, reservoir, auto-sanctifier, herb protector)",
+      "Urn + accumulator production package",
+      "Meilyr overload recipe ladder residuals",
+      "Staff of limitless infinite-rune craft"
+    ]
+  }
+}

@@ -9,6 +9,7 @@ const TABS = [
   { id: "progression", label: "Progression" },
   { id: "unlocks", label: "Permanent unlocks" },
   { id: "regional", label: "Regional unlocks" },
+  { id: "combatBis", label: "Combat BiS" },
   { id: "combos", label: "Region combos" },
   { id: "slayer", label: "Slayer" },
   { id: "invention", label: "Invention" },
@@ -32,6 +33,7 @@ export function DataWorkbench({
   progression,
   unlocks,
   regional,
+  combatBis,
   combos,
   slayer,
   invention,
@@ -49,6 +51,7 @@ export function DataWorkbench({
   progression: ReactNode;
   unlocks: ReactNode;
   regional: ReactNode;
+  combatBis: ReactNode;
   combos: ReactNode;
   slayer: ReactNode;
   invention: ReactNode;
@@ -64,9 +67,10 @@ export function DataWorkbench({
   const [tab, setTab] = useState<TabId>("browse");
 
   return (
-    <div className="flex min-h-[calc(100vh-12rem)] flex-col">
+    <div className="data-screen flex min-h-0 flex-1 flex-col">
       <WorkbenchTabs aria-label="Data categories" tabs={TABS} active={tab} onChange={setTab} />
 
+      <div className="min-h-0 flex-1 overflow-hidden">
       <WorkbenchPanel id="browse" active={tab}>
         {browse}
       </WorkbenchPanel>
@@ -81,6 +85,9 @@ export function DataWorkbench({
       </WorkbenchPanel>
       <WorkbenchPanel id="regional" active={tab}>
         {regional}
+      </WorkbenchPanel>
+      <WorkbenchPanel id="combatBis" active={tab}>
+        {combatBis}
       </WorkbenchPanel>
       <WorkbenchPanel id="combos" active={tab}>
         {combos}
@@ -110,10 +117,13 @@ export function DataWorkbench({
         {referenceNotes}
       </WorkbenchPanel>
       <WorkbenchPanel id="boundaries" active={tab}>
-        {boundaries}
+        <div className="h-full overflow-auto">{boundaries}</div>
       </WorkbenchPanel>
+      </div>
 
-      {tab === "browse" ? <div className="mt-6 border-t border-stone-750 pt-4">{notes}</div> : null}
+      {tab === "browse" ? (
+        <div className="mt-2 shrink-0 border-t border-stone-750 pt-2 text-xs">{notes}</div>
+      ) : null}
     </div>
   );
 }

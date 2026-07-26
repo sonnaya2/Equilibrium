@@ -10,7 +10,13 @@
       "areas": [
         "Lumbridge",
         "Varrock",
-        "Draynor Village"
+        "Draynor Village",
+        "Fort Forinthry",
+        "Varrock Dig Site",
+        "City of Um",
+        "Wizards' Tower",
+        "Edgeville",
+        "Zanaris"
       ],
       "hardRules": [
         "Use Misthalin as the working League region for Fort Forinthry content. Catalyst explicitly labelled Fort Forinthry tasks as Misthalin; Equilibrium has not yet published a finer Fort locality rule.",
@@ -43,7 +49,8 @@
         "Highweald Forest",
         "Shrine of Inanna",
         "Amberfell",
-        "Moonrise Dig Site"
+        "Moonrise Dig Site",
+        "Marigold Farm"
       ],
       "hardRules": [],
       "warnings": [],
@@ -62,10 +69,13 @@
       "availability": "automatic_early",
       "aliases": [],
       "areas": [
-        "Karamja",
+        "Musa Point",
         "Brimhaven",
+        "TzHaar City",
+        "Tai Bwo Wannai",
+        "Hardwood Grove",
         "Shilo Village",
-        "TzHaar area"
+        "Herblore Habitat"
       ],
       "hardRules": [],
       "warnings": [],
@@ -96,7 +106,12 @@
         "Death Plateau",
         "Trollheim",
         "Troll Stronghold",
-        "God Wars Dungeon"
+        "God Wars Dungeon",
+        "Rimmington",
+        "Entrana",
+        "Ice Mountain",
+        "Armadyl's Tower",
+        "Invention Guild"
       ],
       "hardRules": [
         "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
@@ -123,7 +138,21 @@
       "areas": [
         "Player-Owned Farm",
         "Hall of Memories",
-        "Deep Sea Fishing Hub"
+        "Deep Sea Fishing Hub",
+        "Seers' Village",
+        "Catherby",
+        "Fishing Guild",
+        "Ardougne",
+        "Piscatoris Fishing Colony",
+        "Ourania Runecrafting Altar",
+        "Tree Gnome Stronghold",
+        "Warforge Dig Site",
+        "Memorial to Guthix",
+        "Barbarian Outpost",
+        "Stormguard Citadel Dig Site",
+        "Temple of Ikov",
+        "Howl's Floating Workshop",
+        "Underground Pass"
       ],
       "hardRules": [],
       "warnings": [],
@@ -144,7 +173,13 @@
       "areas": [
         "Neitiznot",
         "Lunar Isle",
-        "Jatizso"
+        "Jatizso",
+        "Rellekka",
+        "Waterbirth Island",
+        "Miscellania",
+        "Keldagrim",
+        "Livid Farm",
+        "Lava Flow Mine"
       ],
       "hardRules": [],
       "warnings": [],
@@ -166,8 +201,19 @@
         "Wildy"
       ],
       "areas": [
-        "Wilderness Slayer",
-        "Daemonheim"
+        "Daemonheim",
+        "Wilderness Agility Course",
+        "Mage of Zamorak",
+        "Wilderness Crater",
+        "Forinthry Dungeon",
+        "Mage Arena",
+        "Lava Maze",
+        "Chaos Temple (Wilderness)",
+        "Bandit Camp",
+        "Rogues' Castle",
+        "Demonic Ruins",
+        "Frozen Waste Plateau",
+        "Pirates' Hideout"
       ],
       "hardRules": [
         "Dungeoneering through Daemonheim requires the Forinthry/Wilderness region."
@@ -191,7 +237,11 @@
       "aliases": [],
       "areas": [
         "Menaphos",
-        "Het's Oasis"
+        "Het's Oasis",
+        "Kharid-et Dig Site",
+        "Sophanem",
+        "Garden of Kharid",
+        "Al Kharid"
       ],
       "hardRules": [],
       "warnings": [],
@@ -210,7 +260,12 @@
       "availability": "elective",
       "aliases": [],
       "areas": [
-        "Araxxor",
+        "Canifis",
+        "Slayer Tower",
+        "Port Phasmatys",
+        "Araxyte Hive",
+        "Darkmeyer",
+        "Barrows",
         "Everlight Dig Site"
       ],
       "hardRules": [],
@@ -231,7 +286,10 @@
       "aliases": [],
       "areas": [
         "Prifddinas",
-        "Lost Grove"
+        "Lost Grove",
+        "Lletya",
+        "Isafdar",
+        "Port Tyras"
       ],
       "hardRules": [],
       "warnings": [],
@@ -250,9 +308,13 @@
       "availability": "elective",
       "aliases": [],
       "areas": [
-        "dinosaurs",
-        "hunting",
-        "farming"
+        "Orthen Dig Site",
+        "Anachronia base camp",
+        "Ranch Out of Time",
+        "Dream of Iaia",
+        "Time altar",
+        "Anachronia Agility Course",
+        "Slayer Lodge"
       ],
       "hardRules": [],
       "warnings": [],

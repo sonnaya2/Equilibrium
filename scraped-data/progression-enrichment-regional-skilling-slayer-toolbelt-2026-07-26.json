@@ -572,7 +572,7 @@
         "Destroys 10% of collected coin drops",
         "Toolbelt-eligible after multi-region:toolbelt-advanced-gold-accumulator-attach"
       ],
-      "notes": "Also tracked as dungeoneering:advanced-gold-accumulator-current in drop-cleaners enrichment. Named Forinthry regional-skilling id so Daemonheim permanent list is complete beside bonecrusher/herbicide/charming imp.",
+      "notes": "Also tracked as forinthry:advanced-gold-accumulator in drop-cleaners enrichment. Named Forinthry regional-skilling id so Daemonheim permanent list is complete beside bonecrusher/herbicide/charming imp.",
       "source_urls": [
         "https://runescape.wiki/w/Advanced_gold_accumulator",
         "https://runescape.wiki/w/Daemonheim_Rewards",

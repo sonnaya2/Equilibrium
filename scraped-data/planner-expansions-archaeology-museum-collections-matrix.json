@@ -1,0 +1,3943 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Merged Archaeology / museum collection region matrix (Part A A–M + Part B N–Z leftovers). required_regions hold only valid Equilibrium region ids; invalid tokens stripped to unresolved_regions and mark status=unobtainable.",
+  "policy": {
+    "valid_regions": [
+      "misthalin",
+      "havenhythe",
+      "karamja",
+      "asgarnia",
+      "kandarin",
+      "fremennik",
+      "forinthry",
+      "desert",
+      "morytania",
+      "tirannwn",
+      "anachronia"
+    ],
+    "combo_label": "Region combo (all required): a + b",
+    "unobtainable_rule": "status=unobtainable when unresolved_regions.length > 0, or required_regions empty with dig_sites outside the valid dig→region map, or invalid region tokens were present on required_regions",
+    "dig_site_region_map": {
+      "Kharid-et": "desert",
+      "Infernal Source": "forinthry",
+      "Everlight": "morytania",
+      "Stormguard Citadel": "kandarin",
+      "Stormguard": "kandarin",
+      "Warforge": "kandarin",
+      "Warforge!": "kandarin",
+      "Orthen": "anachronia",
+      "Daemonheim": "forinthry",
+      "Daemonheim Dig": "forinthry",
+      "Daemonheim Dig Site": "forinthry",
+      "Senntisten": "misthalin",
+      "Moonrise": "havenhythe",
+      "Archaeology Campus": "misthalin",
+      "Archaeology Guild": "misthalin",
+      "Varrock Dig Site": "misthalin",
+      "Zanaris": "unresolved_zanaris",
+      "Harvest Hollow": "unresolved_invalid"
+    },
+    "parts": {
+      "a": "scraped-data/planner-expansions-archaeology-museum-collections-matrix-part-a-2026-07-26.json",
+      "b": "scraped-data/planner-expansions-archaeology-museum-collections-matrix-part-b-2026-07-26.json"
+    }
+  },
+  "counts": {
+    "parts_loaded": [
+      "A",
+      "B"
+    ],
+    "raw_rows": 86,
+    "after_dedupe": 86,
+    "total": 86,
+    "obtainable": 86,
+    "unobtainable": 0,
+    "multi_region": 77,
+    "with_unresolved_regions": 0,
+    "from_part_a": 58,
+    "from_part_b": 28,
+    "from_both_parts": 0
+  },
+  "unobtainable_list": [],
+  "multi_region_list": [
+    {
+      "name": "Anarchic Abstraction",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Armadylean Expert (title)",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Armadylean I",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Armadylean II",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Armadylean III",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Bandosian Expert (title)",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Blingy Fings",
+      "required_regions": [
+        "desert",
+        "kandarin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + kandarin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Dragonkin Expert (title)",
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Dragonkin V",
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Dragonkin VI",
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Dragonkin VII",
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Entertaining the Masses",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Finery of the Inquisition",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Green Gobbo Goodies I",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Green Gobbo Goodies II",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Green Gobbo Goodies III",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Guthixian Expert (title)",
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable"
+    },
+    {
+      "name": "Guthixian I",
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable"
+    },
+    {
+      "name": "Guthixian II",
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable"
+    },
+    {
+      "name": "Hat Hoarder",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Hat Problem",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Hitty Fings",
+      "required_regions": [
+        "desert",
+        "kandarin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + kandarin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Imperial Impressionism",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Imperial Sorcery",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Knowledge is Power",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Magic Man",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Armadylean I",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Armadylean II",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Armadylean III",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Bandosian I",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Bandosian II",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Bandosian III",
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin I",
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin II",
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin III",
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin IV",
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin V",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin VI",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Dragonkin VII",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Guthixian I",
+      "required_regions": [
+        "havenhythe",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): havenhythe + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Guthixian II",
+      "required_regions": [
+        "havenhythe",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): havenhythe + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Saradominist I",
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Saradominist II",
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Saradominist III",
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Saradominist IV",
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zamorakian I",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zamorakian II",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zamorakian III",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zamorakian IV",
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zarosian I",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zarosian II",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zarosian III",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Museum - Zarosian IV",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Radiant Renaissance",
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Red Rum Relics I",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Red Rum Relics II",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Red Rum Relics III",
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Religious Iconography",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Saradominist Expert (title)",
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Saradominist I",
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Saradominist II",
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Saradominist III",
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Saradominist IV",
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Showy Fings",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Smoky Fings",
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Urns of the Empire",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Wise Am the Music Man",
+      "required_regions": [
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "comboLabel": "Region combo (all required): kandarin + misthalin + morytania",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zamorakian Expert (title)",
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zamorakian I",
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zamorakian II",
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zamorakian III",
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zamorakian IV",
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zarosian Expert (title)",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zarosian I",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zarosian II",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zarosian III",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    },
+    {
+      "name": "Zarosian IV",
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable"
+    }
+  ],
+  "collections": [
+    {
+      "id": "collector:anarchic-abstraction",
+      "name": "Anarchic Abstraction",
+      "kind": "collector_collection",
+      "archaeology_level": 89,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Art Critic Jacques",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Replica Zamorakian art",
+      "recurring_reward": null,
+      "chronotes": 1574,
+      "source_urls": [
+        "https://runescape.wiki/w/Anarchic_Abstraction",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "title:armadylean-expert",
+      "name": "Armadylean Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Lowse (culture track)",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Armadylean Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Armadylean_Expert",
+        "https://runescape.wiki/w/Armadylean_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ],
+      "notes": "Title = restore all Stormguard Armadylean artefacts (wiki). Zanaris Fairy Queen moonstone path is post-collection relic only — not required for this title."
+    },
+    {
+      "id": "collector:armadylean-i",
+      "name": "Armadylean I",
+      "kind": "collector_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Lowse",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "King Oberon's moonshroom spores",
+      "recurring_reward": null,
+      "chronotes": 5688,
+      "source_urls": [
+        "https://runescape.wiki/w/Armadylean_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:armadylean-ii",
+      "name": "Armadylean II",
+      "kind": "collector_collection",
+      "archaeology_level": 98,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Lowse",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6068,
+      "source_urls": [
+        "https://runescape.wiki/w/Armadylean_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:armadylean-iii",
+      "name": "Armadylean III",
+      "kind": "collector_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Lowse",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Howl's Thinking Cap",
+      "recurring_reward": null,
+      "chronotes": 10468,
+      "source_urls": [
+        "https://runescape.wiki/w/Armadylean_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "title:bandosian-expert",
+      "name": "Bandosian Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Bentnoze / Wartface (culture track)",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Bandosian Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Bandosian_Expert",
+        "https://runescape.wiki/w/Bandosian_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:blingy-fings",
+      "name": "Blingy Fings",
+      "kind": "collector_collection",
+      "archaeology_level": 69,
+      "dig_sites": [
+        "Kharid-et",
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "desert",
+        "morytania"
+      ],
+      "collector": "Chief Tess",
+      "collector_regions": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "desert",
+        "kandarin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + kandarin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 2484,
+      "source_urls": [
+        "https://runescape.wiki/w/Blingy_Fings",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:desperate-for-artefacts",
+      "name": "Desperate for Artefacts",
+      "kind": "collector_collection",
+      "archaeology_level": 90,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Giles",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Cosmic pyramid",
+      "recurring_reward": null,
+      "chronotes": 1335,
+      "source_urls": [
+        "https://runescape.wiki/w/Desperate_for_Artefacts",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "title:dragonkin-expert",
+      "name": "Dragonkin Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Daemonheim",
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "collector": "Sharrigan (culture track)",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Dragonkin Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_Expert",
+        "https://runescape.wiki/w/Dragonkin_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-i",
+      "name": "Dragonkin I",
+      "kind": "collector_collection",
+      "archaeology_level": 99,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5524,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-ii",
+      "name": "Dragonkin II",
+      "kind": "collector_collection",
+      "archaeology_level": 102,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3444,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-iii",
+      "name": "Dragonkin III",
+      "kind": "collector_collection",
+      "archaeology_level": 108,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Kaladanda",
+      "recurring_reward": null,
+      "chronotes": 4652,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-iv",
+      "name": "Dragonkin IV",
+      "kind": "collector_collection",
+      "archaeology_level": 120,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6980,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-v",
+      "name": "Dragonkin V",
+      "kind": "collector_collection",
+      "archaeology_level": 77,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 2532,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_V",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-vi",
+      "name": "Dragonkin VI",
+      "kind": "collector_collection",
+      "archaeology_level": 87,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Pastkeeper's tapestry",
+      "recurring_reward": null,
+      "chronotes": 4056,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_VI",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:dragonkin-vii",
+      "name": "Dragonkin VII",
+      "kind": "collector_collection",
+      "archaeology_level": 113,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Sharrigan",
+      "collector_regions": [
+        "anachronia"
+      ],
+      "required_regions": [
+        "anachronia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5772,
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_VII",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:entertaining-the-masses",
+      "name": "Entertaining the Masses",
+      "kind": "collector_collection",
+      "archaeology_level": 67,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Eblis",
+      "collector_regions": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "A random tier 2 Elder Trove",
+      "recurring_reward": null,
+      "chronotes": 2302,
+      "source_urls": [
+        "https://runescape.wiki/w/Entertaining_the_Masses",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:finery-of-the-inquisition",
+      "name": "Finery of the Inquisition",
+      "kind": "collector_collection",
+      "archaeology_level": 64,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Eblis",
+      "collector_regions": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "A random tier 2 Elder Trove",
+      "recurring_reward": null,
+      "chronotes": 1686,
+      "source_urls": [
+        "https://runescape.wiki/w/Finery_of_the_Inquisition",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:green-gobbo-goodies-i",
+      "name": "Green Gobbo Goodies I",
+      "kind": "collector_collection",
+      "archaeology_level": 83,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Wartface",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3252,
+      "source_urls": [
+        "https://runescape.wiki/w/Green_Gobbo_Goodies_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:green-gobbo-goodies-ii",
+      "name": "Green Gobbo Goodies II",
+      "kind": "collector_collection",
+      "archaeology_level": 97,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Wartface",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3758,
+      "source_urls": [
+        "https://runescape.wiki/w/Green_Gobbo_Goodies_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:green-gobbo-goodies-iii",
+      "name": "Green Gobbo Goodies III",
+      "kind": "collector_collection",
+      "archaeology_level": 119,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Wartface",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Helm of Terror (outside)",
+      "recurring_reward": null,
+      "chronotes": 6044,
+      "source_urls": [
+        "https://runescape.wiki/w/Green_Gobbo_Goodies_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "title:guthixian-expert",
+      "name": "Guthixian Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
+      "collector": "Artiefax (culture track)",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Guthixian Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Guthixian_Expert",
+        "https://runescape.wiki/w/Guthixian_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:guthixian-i",
+      "name": "Guthixian I",
+      "kind": "collector_collection",
+      "archaeology_level": 66,
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
+      "collector": "Artiefax",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Guardian's tear",
+      "recurring_reward": null,
+      "chronotes": 4248,
+      "source_urls": [
+        "https://runescape.wiki/w/Guthixian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:guthixian-ii",
+      "name": "Guthixian II",
+      "kind": "collector_collection",
+      "archaeology_level": 88,
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
+      "collector": "Artiefax",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "havenhythe"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + havenhythe",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4628,
+      "source_urls": [
+        "https://runescape.wiki/w/Guthixian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:hat-hoarder",
+      "name": "Hat Hoarder",
+      "kind": "collector_collection",
+      "archaeology_level": 116,
+      "dig_sites": [
+        "Infernal Source",
+        "Everlight",
+        "Kharid-et",
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "forinthry",
+        "morytania",
+        "desert",
+        "kandarin"
+      ],
+      "collector": "Wise Old Man",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5995,
+      "source_urls": [
+        "https://runescape.wiki/w/Hat_Hoarder",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:hat-problem",
+      "name": "Hat Problem",
+      "kind": "collector_collection",
+      "archaeology_level": 114,
+      "dig_sites": [
+        "Infernal Source",
+        "Warforge",
+        "Stormguard Citadel",
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "forinthry",
+        "kandarin",
+        "desert"
+      ],
+      "collector": "Wise Old Man",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6775,
+      "source_urls": [
+        "https://runescape.wiki/w/Hat_Problem",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:hitty-fings",
+      "name": "Hitty Fings",
+      "kind": "collector_collection",
+      "archaeology_level": 89,
+      "dig_sites": [
+        "Kharid-et",
+        "Everlight",
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "desert",
+        "morytania",
+        "kandarin"
+      ],
+      "collector": "Chief Tess",
+      "collector_regions": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "desert",
+        "kandarin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + kandarin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5136,
+      "source_urls": [
+        "https://runescape.wiki/w/Hitty_Fings",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:imperial-impressionism",
+      "name": "Imperial Impressionism",
+      "kind": "collector_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Art Critic Jacques",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Replica Zarosian art",
+      "recurring_reward": null,
+      "chronotes": 2086,
+      "source_urls": [
+        "https://runescape.wiki/w/Imperial_Impressionism",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:imperial-sorcery",
+      "name": "Imperial Sorcery",
+      "kind": "collector_collection",
+      "archaeology_level": 107,
+      "dig_sites": [
+        "Kharid-et",
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "collector": "Eblis",
+      "collector_regions": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "A random tier 2 Elder Trove",
+      "recurring_reward": null,
+      "chronotes": 5742,
+      "source_urls": [
+        "https://runescape.wiki/w/Imperial_Sorcery",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:knowledge-is-power",
+      "name": "Knowledge is Power",
+      "kind": "collector_collection",
+      "archaeology_level": 119,
+      "dig_sites": [
+        "Infernal Source",
+        "Stormguard Citadel",
+        "Kharid-et",
+        "Everlight",
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "forinthry",
+        "kandarin",
+        "desert",
+        "morytania"
+      ],
+      "collector": "Wise Old Man",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Amascut's Enchanted Gem",
+      "recurring_reward": null,
+      "chronotes": 5584,
+      "source_urls": [
+        "https://runescape.wiki/w/Knowledge_is_Power",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:magic-man",
+      "name": "Magic Man",
+      "kind": "collector_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Kharid-et",
+        "Infernal Source",
+        "Warforge",
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "desert",
+        "forinthry",
+        "kandarin"
+      ],
+      "collector": "Wise Old Man",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8600,
+      "source_urls": [
+        "https://runescape.wiki/w/Magic_Man",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:armadylean-i",
+      "name": "Museum - Armadylean I",
+      "kind": "museum_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 7110,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Armadylean_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:armadylean-ii",
+      "name": "Museum - Armadylean II",
+      "kind": "museum_collection",
+      "archaeology_level": 98,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 7585,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Armadylean_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:armadylean-iii",
+      "name": "Museum - Armadylean III",
+      "kind": "museum_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 13085,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Armadylean_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:bandosian-i",
+      "name": "Museum - Bandosian I",
+      "kind": "museum_collection",
+      "archaeology_level": 89,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8445,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Bandosian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:bandosian-ii",
+      "name": "Museum - Bandosian II",
+      "kind": "museum_collection",
+      "archaeology_level": 100,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8057,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Bandosian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:bandosian-iii",
+      "name": "Museum - Bandosian III",
+      "kind": "museum_collection",
+      "archaeology_level": 119,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 11925,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Bandosian_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-i",
+      "name": "Museum - Dragonkin I",
+      "kind": "museum_collection",
+      "archaeology_level": 99,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6905,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-ii",
+      "name": "Museum - Dragonkin II",
+      "kind": "museum_collection",
+      "archaeology_level": 102,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4305,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-iii",
+      "name": "Museum - Dragonkin III",
+      "kind": "museum_collection",
+      "archaeology_level": 108,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5815,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-iv",
+      "name": "Museum - Dragonkin IV",
+      "kind": "museum_collection",
+      "archaeology_level": 120,
+      "dig_sites": [
+        "Orthen"
+      ],
+      "artifact_regions": [
+        "anachronia"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "anachronia",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): anachronia + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8725,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-v",
+      "name": "Museum - Dragonkin V",
+      "kind": "museum_collection",
+      "archaeology_level": 77,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3165,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_V",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-vi",
+      "name": "Museum - Dragonkin VI",
+      "kind": "museum_collection",
+      "archaeology_level": 87,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5070,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_VI",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:dragonkin-vii",
+      "name": "Museum - Dragonkin VII",
+      "kind": "museum_collection",
+      "archaeology_level": 113,
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 7215,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Dragonkin_VII",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:guthixian-i",
+      "name": "Museum - Guthixian I",
+      "kind": "museum_collection",
+      "archaeology_level": 66,
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "havenhythe",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): havenhythe + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5310,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Guthixian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:guthixian-ii",
+      "name": "Museum - Guthixian II",
+      "kind": "museum_collection",
+      "archaeology_level": 88,
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "havenhythe",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): havenhythe + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5785,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Guthixian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:saradominist-i",
+      "name": "Museum - Saradominist I",
+      "kind": "museum_collection",
+      "archaeology_level": 56,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4997,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Saradominist_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:saradominist-ii",
+      "name": "Museum - Saradominist II",
+      "kind": "museum_collection",
+      "archaeology_level": 72,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6502,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Saradominist_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:saradominist-iii",
+      "name": "Museum - Saradominist III",
+      "kind": "museum_collection",
+      "archaeology_level": 100,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5685,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Saradominist_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:saradominist-iv",
+      "name": "Museum - Saradominist IV",
+      "kind": "museum_collection",
+      "archaeology_level": 117,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8777,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Saradominist_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:training-weapons",
+      "name": "Museum - Training Weapons",
+      "kind": "museum_collection",
+      "archaeology_level": 1,
+      "dig_sites": [
+        "Archaeology Campus"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "The Mortal Cup",
+      "recurring_reward": null,
+      "chronotes": 1000,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Training_Weapons",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zamorakian-i",
+      "name": "Museum - Zamorakian I",
+      "kind": "museum_collection",
+      "archaeology_level": 36,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3242,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zamorakian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zamorakian-ii",
+      "name": "Museum - Zamorakian II",
+      "kind": "museum_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6432,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zamorakian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zamorakian-iii",
+      "name": "Museum - Zamorakian III",
+      "kind": "museum_collection",
+      "archaeology_level": 104,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8260,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zamorakian_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zamorakian-iv",
+      "name": "Museum - Zamorakian IV",
+      "kind": "museum_collection",
+      "archaeology_level": 116,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "forinthry",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): forinthry + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6792,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zamorakian_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-i",
+      "name": "Museum - Zarosian I",
+      "kind": "museum_collection",
+      "archaeology_level": 25,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 2635,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-ii",
+      "name": "Museum - Zarosian II",
+      "kind": "museum_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 7165,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-iii",
+      "name": "Museum - Zarosian III",
+      "kind": "museum_collection",
+      "archaeology_level": 107,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 9302,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-iv",
+      "name": "Museum - Zarosian IV",
+      "kind": "museum_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 8512,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-v",
+      "name": "Museum - Zarosian V",
+      "kind": "museum_collection",
+      "archaeology_level": 62,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4117,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_V",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-vi",
+      "name": "Museum - Zarosian VI",
+      "kind": "museum_collection",
+      "archaeology_level": 64,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4207,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_VI",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "museum:zarosian-vii",
+      "name": "Museum - Zarosian VII",
+      "kind": "museum_collection",
+      "archaeology_level": 67,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Velucia",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "single",
+      "comboLabel": "",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4357,
+      "source_urls": [
+        "https://runescape.wiki/w/Museum_-_Zarosian_VII",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "A"
+      ]
+    },
+    {
+      "id": "collector:radiant-renaissance",
+      "name": "Radiant Renaissance",
+      "kind": "collector_collection",
+      "archaeology_level": 105,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Art Critic Jacques",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Replica Saradominist art",
+      "recurring_reward": null,
+      "chronotes": 2730,
+      "source_urls": [
+        "https://runescape.wiki/w/Radiant_Renaissance",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:red-rum-relics-i",
+      "name": "Red Rum Relics I",
+      "kind": "collector_collection",
+      "archaeology_level": 94,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Bentnoze",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 2884,
+      "source_urls": [
+        "https://runescape.wiki/w/Red_Rum_Relics_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:red-rum-relics-ii",
+      "name": "Red Rum Relics II",
+      "kind": "collector_collection",
+      "archaeology_level": 110,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Bentnoze",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3468,
+      "source_urls": [
+        "https://runescape.wiki/w/Red_Rum_Relics_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:red-rum-relics-iii",
+      "name": "Red Rum Relics III",
+      "kind": "collector_collection",
+      "archaeology_level": 119,
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector": "General Bentnoze",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "kandarin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + kandarin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Helm of Terror (inside)",
+      "recurring_reward": null,
+      "chronotes": 4540,
+      "source_urls": [
+        "https://runescape.wiki/w/Red_Rum_Relics_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:religious-iconography",
+      "name": "Religious Iconography",
+      "kind": "collector_collection",
+      "archaeology_level": 67,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Eblis",
+      "collector_regions": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "A random tier 2 Elder Trove",
+      "recurring_reward": null,
+      "chronotes": 2240,
+      "source_urls": [
+        "https://runescape.wiki/w/Religious_Iconography",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "title:saradominist-expert",
+      "name": "Saradominist Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Sir Atcha (culture track)",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Saradominist Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Saradominist_Expert",
+        "https://runescape.wiki/w/Saradominist_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:saradominist-i",
+      "name": "Saradominist I",
+      "kind": "collector_collection",
+      "archaeology_level": 56,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Sir Atcha",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Lock of hair",
+      "recurring_reward": null,
+      "chronotes": 3998,
+      "source_urls": [
+        "https://runescape.wiki/w/Saradominist_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ],
+      "notes": "Lock of hair first reward; Barrows Amulet of the forsaken for Dharok's Memento is post-collection relic crafting (Morytania already in dig regions)."
+    },
+    {
+      "id": "collector:saradominist-ii",
+      "name": "Saradominist II",
+      "kind": "collector_collection",
+      "archaeology_level": 72,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Sir Atcha",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5202,
+      "source_urls": [
+        "https://runescape.wiki/w/Saradominist_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:saradominist-iii",
+      "name": "Saradominist III",
+      "kind": "collector_collection",
+      "archaeology_level": 100,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Sir Atcha",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 4548,
+      "source_urls": [
+        "https://runescape.wiki/w/Saradominist_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:saradominist-iv",
+      "name": "Saradominist IV",
+      "kind": "collector_collection",
+      "archaeology_level": 117,
+      "dig_sites": [
+        "Everlight"
+      ],
+      "artifact_regions": [
+        "morytania"
+      ],
+      "collector": "Sir Atcha",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Petasos",
+      "recurring_reward": null,
+      "chronotes": 7022,
+      "source_urls": [
+        "https://runescape.wiki/w/Saradominist_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:showy-fings",
+      "name": "Showy Fings",
+      "kind": "collector_collection",
+      "archaeology_level": 92,
+      "dig_sites": [
+        "Everlight",
+        "Infernal Source",
+        "Kharid-et",
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "morytania"
+      ],
+      "collector": "Chief Tess",
+      "collector_regions": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 3158,
+      "source_urls": [
+        "https://runescape.wiki/w/Showy_Fings",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:smoky-fings",
+      "name": "Smoky Fings",
+      "kind": "collector_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Everlight",
+        "Infernal Source",
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert",
+        "forinthry",
+        "morytania"
+      ],
+      "collector": "Chief Tess",
+      "collector_regions": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "desert",
+        "forinthry",
+        "kandarin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + forinthry + kandarin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Oo'glog Wellspring",
+      "recurring_reward": null,
+      "chronotes": 2204,
+      "source_urls": [
+        "https://runescape.wiki/w/Smoky_Fings",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:urns-of-the-empire",
+      "name": "Urns of the Empire",
+      "kind": "collector_collection",
+      "archaeology_level": 67,
+      "dig_sites": [
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "misthalin"
+      ],
+      "collector": "Eblis",
+      "collector_regions": [
+        "desert"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 2820,
+      "source_urls": [
+        "https://runescape.wiki/w/Urns_of_the_Empire",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:wise-am-the-music-man",
+      "name": "Wise Am the Music Man",
+      "kind": "collector_collection",
+      "archaeology_level": 91,
+      "dig_sites": [
+        "Everlight",
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin",
+        "morytania"
+      ],
+      "collector": "Wise Old Man",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "kandarin",
+        "misthalin",
+        "morytania"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): kandarin + misthalin + morytania",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Koschei's needle",
+      "recurring_reward": null,
+      "chronotes": 4024,
+      "source_urls": [
+        "https://runescape.wiki/w/Wise_Am_the_Music_Man",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ],
+      "notes": "Collection obtainability is dig+collector regions. Koschei's needle → Fremennik Deathless relic path is post-collection (not a collection gate)."
+    },
+    {
+      "id": "title:zamorakian-expert",
+      "name": "Zamorakian Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Isaura (culture track)",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Zamorakian Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorakian_Expert",
+        "https://runescape.wiki/w/Zamorakian_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zamorakian-i",
+      "name": "Zamorakian I",
+      "kind": "collector_collection",
+      "archaeology_level": 36,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Isaura",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Abyssal thread",
+      "recurring_reward": null,
+      "chronotes": 2594,
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorakian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zamorakian-ii",
+      "name": "Zamorakian II",
+      "kind": "collector_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Isaura",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5146,
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorakian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zamorakian-iii",
+      "name": "Zamorakian III",
+      "kind": "collector_collection",
+      "archaeology_level": 104,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Isaura",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 6608,
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorakian_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zamorakian-iv",
+      "name": "Zamorakian IV",
+      "kind": "collector_collection",
+      "archaeology_level": 116,
+      "dig_sites": [
+        "Infernal Source"
+      ],
+      "artifact_regions": [
+        "forinthry"
+      ],
+      "collector": "Isaura",
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia",
+        "forinthry"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): asgarnia + forinthry",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Ariadne's Diadem",
+      "recurring_reward": null,
+      "chronotes": 5434,
+      "source_urls": [
+        "https://runescape.wiki/w/Zamorakian_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "title:zarosian-expert",
+      "name": "Zarosian Expert (title)",
+      "kind": "culture_expert_title",
+      "archaeology_level": null,
+      "dig_sites": [
+        "Kharid-et",
+        "Senntisten"
+      ],
+      "artifact_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "collector": "Soran, Emissary of Zaros (culture track)",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Zarosian Expert title",
+      "recurring_reward": null,
+      "chronotes": null,
+      "source_urls": [
+        "https://runescape.wiki/w/Zarosian_Expert",
+        "https://runescape.wiki/w/Zarosian_Expert_(title)",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zarosian-i",
+      "name": "Zarosian I",
+      "kind": "collector_collection",
+      "archaeology_level": 25,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Soran, Emissary of Zaros",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Seal of the Praefectus Praetorio",
+      "recurring_reward": null,
+      "chronotes": 2108,
+      "source_urls": [
+        "https://runescape.wiki/w/Zarosian_I",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zarosian-ii",
+      "name": "Zarosian II",
+      "kind": "collector_collection",
+      "archaeology_level": 81,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Soran, Emissary of Zaros",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 5732,
+      "source_urls": [
+        "https://runescape.wiki/w/Zarosian_II",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zarosian-iii",
+      "name": "Zarosian III",
+      "kind": "collector_collection",
+      "archaeology_level": 107,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Soran, Emissary of Zaros",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": null,
+      "recurring_reward": null,
+      "chronotes": 7442,
+      "source_urls": [
+        "https://runescape.wiki/w/Zarosian_III",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    },
+    {
+      "id": "collector:zarosian-iv",
+      "name": "Zarosian IV",
+      "kind": "collector_collection",
+      "archaeology_level": 118,
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
+      "collector": "Soran, Emissary of Zaros",
+      "collector_regions": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "desert",
+        "misthalin"
+      ],
+      "unresolved_regions": [],
+      "region_requirement_type": "all_required",
+      "comboLabel": "Region combo (all required): desert + misthalin",
+      "status": "obtainable",
+      "unobtainable_reason": "",
+      "first_reward": "Inquisitor staff piece",
+      "recurring_reward": null,
+      "chronotes": 6810,
+      "source_urls": [
+        "https://runescape.wiki/w/Zarosian_IV",
+        "https://runescape.wiki/w/Collections"
+      ],
+      "confidence": "confirmed_wiki",
+      "parts": [
+        "B"
+      ]
+    }
+  ],
+  "sources": [
+    "https://runescape.wiki/w/Collections",
+    "https://runescape.wiki/w/Collectors",
+    "https://runescape.wiki/w/It_Belongs_in_a_Museum!"
+  ],
+  "confidence": "merged_part_a_part_b_normalized"
+}

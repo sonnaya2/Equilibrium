@@ -1,0 +1,485 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-continue Fort Forinthry / City of Um residual densify under Misthalin working taxonomy. Main building hubs (fort-forinthry-workshop, fort-town-hall-rested-xp, fort-kitchen, fort-chapel, fort-command-centre, fort-guardhouse-slayer, fort-rangers-workroom, fort-botanists-workbench, woodcutters-grove-facilities, underworld-grimoire) are already first-class. This pack promotes permanent account-wide or planner-critical tier rewards that were still only bullets/footnotes inside those hubs, plus Eternal reinforcement (20 Jul 2026) and high-value Um residual infrastructure (soul forge, Selene Necromancy prayer unlocks). Does not re-emit whole-building ids or Varrock armour / UG ladders already densified.",
+  "policy": {
+    "region_rule": "region_hint misthalin for Fort Forinthry and City of Um under Catalyst/Equilibrium Misthalin working map. required_regions only for hard gates. Command Centre remote tables amplify other regions without claiming those regions as Misthalin content.",
+    "duplicate_guard": "Do NOT re-emit: misthalin:fort-forinthry-workshop, misthalin:fort-free-sawmill, misthalin:fort-town-hall-rested-xp, misthalin:fort-kitchen, misthalin:fort-chapel, misthalin:fort-command-centre, misthalin:fort-guardhouse-slayer, misthalin:fort-rangers-workroom, misthalin:fort-botanists-workbench, misthalin:woodcutters-grove, misthalin:woodcutters-grove-facilities, misthalin:wood-box-tier-upgrades, misthalin:imcando-hatchet, misthalin:underworld-grimoire, misthalin:underworld-grimoire-skilling-milestones, misthalin:um-ritual-site-infrastructure, misthalin:focus-storage, misthalin:soul-supplies-and-um-shops, misthalin:um-mushroom-patch, misthalin:necromantic-rune-temple, misthalin:well-of-souls, misthalin:passing-bracelet, misthalin:varrock-armour, misthalin:new-varrock-achievements-doubling, misthalin:wars-grimoire. This pack densifies residuals those rows only footnoted.",
+    "skip_rule": "Skip pure combat BiS (deathwarden/deathdealer product ladders at soul forge stay combat catalogs — row is smithy/ensoul facility only). Skip Varrock residual — armour + New Varrock doubling + museum/lumber already first-class. Skip re-listing full building amenities already on hub rows.",
+    "no_trade_rule": "Account-wide permanents, fort tier breakpoints that change self-sufficient throughput, and Um infrastructure gates. No invented XP/hour.",
+    "rate_rule": "Unlock state, Construction gates, numeric tier effects from wiki only."
+  },
+  "already_present_checked": [
+    "misthalin:fort-forinthry-workshop",
+    "misthalin:fort-free-sawmill",
+    "misthalin:fort-town-hall-rested-xp",
+    "misthalin:fort-kitchen",
+    "misthalin:fort-chapel",
+    "misthalin:fort-command-centre",
+    "misthalin:fort-guardhouse-slayer",
+    "misthalin:fort-rangers-workroom",
+    "misthalin:fort-botanists-workbench",
+    "misthalin:woodcutters-grove-facilities",
+    "misthalin:underworld-grimoire",
+    "misthalin:underworld-grimoire-skilling-milestones",
+    "misthalin:um-ritual-site-infrastructure",
+    "misthalin:varrock-armour",
+    "misthalin:new-varrock-achievements-doubling"
+  ],
+  "activity_additions": [
+    {
+      "id": "misthalin:fort-kitchen-never-fail-web-slash",
+      "name": "Fort Kitchen tier 1 never-fail web slash (account permanent)",
+      "category": "permanent account travel QoL from fort building",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Kitchen (reward is global once built)",
+      "requirements": [
+        "Partial completion of Murder on the Border for Kitchen tier 1",
+        "Construction 25 for Kitchen tier 1"
+      ],
+      "unlocks": [
+        "Permanent account unlock: slashing or passing spiderwebs and Wilderness webs never fails again",
+        "Applies outside the fort after the kitchen tier is built (not a location-only Cooking buff)"
+      ],
+      "notes": "Residual densify of a single high-value bullet on misthalin:fort-kitchen. Unlike burn chance / Cooking XP (kitchen-local), never-fail web slash is account-wide permanent utility ironman guides treat as a Fort Construction priority. Do not re-emit the full kitchen cooking stack.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Spiderweb",
+        "https://runescape.wiki/w/Web_(Wilderness)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort permanent under working taxonomy. Keep Murder on the Border / Construction 25 gates.",
+      "links_existing_ids": [
+        "misthalin:fort-kitchen"
+      ]
+    },
+    {
+      "id": "misthalin:fort-kitchen-soup-creation-station",
+      "name": "Fort Kitchen tier 3 soup creation station",
+      "category": "player-owned port soup production infrastructure",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Kitchen tier 3",
+      "requirements": [
+        "Murder on the Border completed for Kitchen tiers 2–3",
+        "Construction 85 for Kitchen tier 3",
+        "Player-owned port voyage progression and soup recipes for full value"
+      ],
+      "unlocks": [
+        "Soup creation station inside the Kitchen for player-owned port soups (rocktail soup / sailfish soup class production)",
+        "Player-owned port Workshop XP boosts apply to soups made at this station",
+        "Cooking soups here does not generate Town Hall rested experience"
+      ],
+      "notes": "Residual densify of the Kitchen T3 soup bullet only. Ports economy and Eastern lands remain multi-region; Misthalin owns the fort station convenience. Do not re-emit full kitchen burn/XP tiers or asgarnia player-owned-ports hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Soup_creation_station",
+        "https://runescape.wiki/w/Player-owned_port"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort production amenity. POP recipes and ship progression still need ports access.",
+      "links_existing_ids": [
+        "misthalin:fort-kitchen",
+        "misthalin:fort-command-centre",
+        "asgarnia:player-owned-ports-skilling-rewards"
+      ]
+    },
+    {
+      "id": "misthalin:fort-workshop-invention-machine-power",
+      "name": "Fort Workshop Invention remote management and power capacity",
+      "category": "Invention machine permanent fort residual",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Workshop (power applies to Invention Guild machines globally)",
+      "requirements": [
+        "Workshop tier 2: Construction 35 (remote Invention machine management)",
+        "Workshop tier 3: Construction 75 (+25% Invention machine power capacity)",
+        "Invention Guild machines unlocked separately (Asgarnia)"
+      ],
+      "unlocks": [
+        "Tier 2: remote access to manage Invention machines from Fort (Invention Machines interface)",
+        "Tier 3: +25% machine power capacity — jumbo generator 160 → 200 power allotment class planning",
+        "Enables denser tier-2 machine layouts without a second generator"
+      ],
+      "notes": "Residual densify of the two Invention bullets on misthalin:fort-forinthry-workshop that invention-machine rows only footnote. Do not re-emit sawmill, free-plank path (fort-free-sawmill), Construction hotspot XP %, or smithing/arch benches. Machines still build only in Invention Guild basement.",
+      "source_urls": [
+        "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Machines",
+        "https://runescape.wiki/w/Invention_Machines"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort residual. Asgarnia still owns machine hotspots; Fort only raises power/remote QoL.",
+      "links_existing_ids": [
+        "misthalin:fort-forinthry-workshop",
+        "asgarnia:invention-guild",
+        "asgarnia:invention-guild-machines-named",
+        "cross-region:invention-machines-guild"
+      ]
+    },
+    {
+      "id": "misthalin:fort-command-centre-global-ops-tiers",
+      "name": "Fort Command Centre global operations tier ladder densify",
+      "category": "remote operations permanent residual densify",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "anachronia", "fremennik", "asgarnia"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["anachronia", "fremennik", "asgarnia"],
+      "location": "Fort Forinthry Command Centre",
+      "requirements": [
+        "New Foundations completed",
+        "Construction 25 / 70 / 99 for Command Centre tiers 1 / 2 / 3",
+        "Destination systems unlocked independently (POP, Miscellania, Anachronia base camp, Archaeology research)"
+      ],
+      "unlocks": [
+        "Tier 1: Ports / Miscellania / Anachronia / Archaeology research remote tables; +3% player-owned port voyage success",
+        "Tier 2: +6% port voyage success total; +5 Anachronia base camp workers; −3% Archaeology research chronote cost",
+        "Tier 3: +10% port voyage success total; +10 Anachronia workers total; +3% Archaeology research speed; Miscellania approval lock purchase (750 coins per subject per day, up to 7 days, forces 100% approval while paid)"
+      ],
+      "region_pressure": [
+        "Misthalin owns the Command Centre building and remote tables.",
+        "Anachronia optional: base camp worker bonuses only matter once base camp is unlocked.",
+        "Fremennik optional: Managing Miscellania kingdom.",
+        "Asgarnia optional: player-owned port Port Sarim portal / voyage economy."
+      ],
+      "notes": "Residual densify of numeric global-ops ladder for planners ranking fort Construction priority against Anachronia/POP/Misc/Arch. Does not re-emit the hub id misthalin:fort-command-centre as a second building claim. Do not claim destination content is Misthalin-exclusive.",
+      "source_urls": [
+        "https://runescape.wiki/w/Command_Centre",
+        "https://runescape.wiki/w/Global_operations",
+        "https://runescape.wiki/w/Anachronia_base_camp",
+        "https://runescape.wiki/w/Managing_Miscellania",
+        "https://runescape.wiki/w/Research"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for the building. Score optional regions only when valuing the matching remote system.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "misthalin:fort-command-centre",
+        "misthalin:archaeology-research",
+        "anachronia:base-camp",
+        "asgarnia:player-owned-ports-skilling-rewards"
+      ]
+    },
+    {
+      "id": "misthalin:fort-guardhouse-slayer-passives",
+      "name": "Fort Guardhouse permanent Slayer passive tier ladder",
+      "category": "Slayer permanent facility residual densify",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Guardhouse (passives apply on Slayer assignments globally once built)",
+      "requirements": [
+        "Partial Unwelcome Guests for tier 1; full quest for tiers 2–3",
+        "Construction 40 / 65 / 95 for Guardhouse tiers 1 / 2 / 3"
+      ],
+      "unlocks": [
+        "Tier 1: +1% damage on Slayer assignments (+2% vs undead assignment); +2% elite monster spawn chance",
+        "Tier 2: +5% ushabti capture rate; +4% elite spawn chance total",
+        "Tier 3: 3% chance per ultimate hit to execute non-boss Slayer targets (excludes Sunshine damage hits); +10% damage vs non-boss Slayer targets below 25% LP; +6% elite spawn chance total",
+        "Trophy stands for Raptor Slayer challenge trophies remain Guardhouse scenery (not combat gear BiS)"
+      ],
+      "notes": "Residual densify of permanent Slayer passives that were only unlock bullets on misthalin:fort-guardhouse-slayer. Skilling-adjacent Slayer facility math for region scoring — not weapon/armour BiS. Raptor as master location stays on the hub row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Guardhouse",
+        "https://runescape.wiki/w/The_Raptor",
+        "https://runescape.wiki/w/Unwelcome_Guests"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort Slayer residual. Do not reframe as combat equipment progression.",
+      "links_existing_ids": [
+        "misthalin:fort-guardhouse-slayer"
+      ]
+    },
+    {
+      "id": "misthalin:fort-town-hall-rested-conversion",
+      "name": "Fort Town Hall rested XP conversion densify (Aster)",
+      "category": "rested experience conversion residual densify",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Town Hall — redeem with Aster",
+      "requirements": [
+        "Town Hall built (tiers 1–3 scale cap and in-fort accrual; offline accrual needs any Town Hall)",
+        "Rested experience banked via logout and/or fort skilling"
+      ],
+      "unlocks": [
+        "Trade rested experience with Aster for bonus experience in any skill (all banked points convert in one redeem — cannot split across skills)",
+        "Conversion: every 100 rested points ≈ one small prismatic fallen star of Bonus XP in the chosen skill (wiki formula RS/100 rounded down to nearest 0.1, R = rested traded, S = small star Bonus XP for that skill)",
+        "Offline accrual: 1 rested per 15 minutes uninterrupted logout from anywhere (lobby counts); in-fort skilling: 1 / 2 / 3 rested per 3 minutes at Town Hall tiers 1 / 2 / 3",
+        "Caps: 500 / 1,000 / 1,500 held rested at tiers 1 / 2 / 3; Woodcutters' Grove counts as in-fort for skilling accrual"
+      ],
+      "notes": "Residual densify of conversion math only lightly stated on misthalin:fort-town-hall-rested-xp. Prefer that hub for Construction gates and Copperpot bank; use this row for Aster redeem planning. Do not invent prismatic-star GE prices or skill-specific XP tables beyond the small-star equivalence.",
+      "source_urls": [
+        "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Rested_experience",
+        "https://runescape.wiki/w/Aster",
+        "https://runescape.wiki/w/Small_prismatic_fallen_star"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort residual. F2P can accrue rested after building as members but cannot redeem until membership resumes.",
+      "links_existing_ids": [
+        "misthalin:fort-town-hall-rested-xp",
+        "misthalin:woodcutters-grove-facilities"
+      ]
+    },
+    {
+      "id": "misthalin:fort-grove-wood-spirit-and-box-storage",
+      "name": "Grove wood-spirit / nest / geode wood-box storage residual",
+      "category": "Woodcutting inventory permanent residual from Grove",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Woodcutters' Grove / Grove cabin tiers",
+      "requirements": [
+        "Unwelcome Guests + eastern border wall progression for Grove blueprints",
+        "Grove tier 1 (Construction 50): wood spirits store in wood boxes; nests/geodes auto into backpack",
+        "Grove tier 2: nests/geodes store in wood boxes; fairy ring BJP; tree patch",
+        "Wood box crafted/upgraded separately (misthalin:wood-box-tier-upgrades)"
+      ],
+      "unlocks": [
+        "Permanent ability for wood boxes to store wood spirits (Grove tier 1+)",
+        "Automatic bird nest and crystal geode handling upgrades through Grove tiers (backpack then wood box)",
+        "Log piles bank deposit at the Grove",
+        "Fairy ring BJP and Farming tree patch at Grove tier 2 (facility residual, not a second Imcando claim)"
+      ],
+      "notes": "Residual densify of storage/transport permanents footnoted across woodcutters-grove-facilities and wood-box-tier-upgrades. Do not re-emit Imcando fragment nests (woodcutters-grove / imcando-hatchet). Do not re-emit full tree-tier list as a second Grove hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Grove",
+        "https://runescape.wiki/w/Woodcutters%27_Grove",
+        "https://runescape.wiki/w/Wood_box",
+        "https://runescape.wiki/w/Wood_spirits"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort Grove residual. Wood box Fletching craft gates remain.",
+      "links_existing_ids": [
+        "misthalin:woodcutters-grove-facilities",
+        "misthalin:wood-box-tier-upgrades",
+        "misthalin:woodcutters-grove",
+        "misthalin:imcando-hatchet"
+      ]
+    },
+    {
+      "id": "misthalin:fort-eternal-reinforcement",
+      "name": "Fort Forinthry eternal reinforcement (105 Construction training)",
+      "category": "high-level Construction training residual",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry blueprints table → Construction hotspots on a tier 3 building",
+      "requirements": [
+        "105 Construction",
+        "At least one Fort Forinthry building already at tier 3",
+        "Eternal frames + stone wall segments (eternal magic log plank chain if self-sourcing frames)"
+      ],
+      "unlocks": [
+        "Eternal reinforcement blueprint at Fort Forinthry blueprints table",
+        "Repeatable high-level Construction training: hotspots appear on one of the player's existing tier 3 buildings",
+        "Does not create a new building or fortification — XP method residual only"
+      ],
+      "notes": "Added 20 July 2026 mid-game rebalance. Missing first-class residual after the nine main fort building rows. Not a permanent buff beyond unlocking the training loop. Do not invent XP/hour. Prefer fort-forinthry-workshop for the broader Construction hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Eternal_reinforcement",
+        "https://runescape.wiki/w/Fort_Forinthry",
+        "https://runescape.wiki/w/Eternal_frame",
+        "https://runescape.wiki/w/Update:Mid-Game_Rebalance_is_Live!"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Misthalin fort Construction endgame residual. Keep 105 Construction and T3 prerequisite.",
+      "links_existing_ids": [
+        "misthalin:fort-forinthry-workshop",
+        "misthalin:construction-contracts"
+      ]
+    },
+    {
+      "id": "misthalin:fort-chapel-burner-save-ladder",
+      "name": "Fort Chapel burner save chance and duration ladder",
+      "category": "Prayer offering material-save residual densify",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Chapel",
+      "requirements": [
+        "New Foundations completed",
+        "Construction 15 / 55 / 90 for Chapel tiers 1 / 2 / 3",
+        "Clean herbs (noted OK) to feed Chapel Burners"
+      ],
+      "unlocks": [
+        "Tier 1: Chapel Burners 15s duration, 3% chance to save offerings at the altar",
+        "Tier 2: 18s burners, 6% save chance; altar offer XP 250% of bury/scatter base",
+        "Tier 3: 21s burners, 10% save chance; altar offer XP 300%; prayer-book swap on the altar",
+        "Burner timer shared between both burners and all players on the world; stacks up to 168 hours"
+      ],
+      "notes": "Residual densify of burner save math and post-16-Feb-2026 XP ladder (200%/250%/300% — not pre-rebalance 400%+). Hub misthalin:fort-chapel owns facility overview and book-swap pointer; this row is ironman bone/ash economy residual. POH altars may still lead raw XP/hour after the rebalance.",
+      "source_urls": [
+        "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Chapel_Burner",
+        "https://runescape.wiki/w/Altar_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Early-Game_Rebalance"
+      ],
+      "confidence": "confirmed_wiki_with_2026_current_rule",
+      "league_treatment": "Misthalin fort Prayer residual. Prefer current % ladder over pre-2026 guides.",
+      "links_existing_ids": [
+        "misthalin:fort-chapel",
+        "misthalin:wars-grimoire",
+        "tirannwn:elven-grimoire"
+      ]
+    },
+    {
+      "id": "misthalin:fort-rangers-workroom-fletch-save",
+      "name": "Ranger's Workroom Fletching save and XP residual densify",
+      "category": "Fletching facility residual densify",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Ranger's Workroom (bonuses while standing inside)",
+      "requirements": [
+        "Partial Dead and Buried for tier 1; full quest for later tiers",
+        "Construction 50 / 65 / 80 for workroom tiers 1 / 2 / 3"
+      ],
+      "unlocks": [
+        "Tier 1: 2% chance to save resources on many fletching actions (unstrung bows/stocks, feathering, tipping, ascension bolts, protean logs, bamboo bundles — not bow stringing); 1% extra arrow shaft bundles",
+        "Tier 2: 1% extra ranged ammo / headless arrows (full XP on extras); 2% chance to auto-string when fletching unstrung bows",
+        "Tier 3: +5% base Fletching XP inside the workroom (multiplicative with other XP boosts); Wisdom of Anima perk toggle on the fletching workbench (Anachronia anima unlocks still required)"
+      ],
+      "notes": "Residual densify of numeric save/XP bullets on misthalin:fort-rangers-workroom. Standing inside the room is enough — bank chest or portable fletcher inside still gets bonuses. Do not invent Fletching XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ranger%27s_Workroom",
+        "https://runescape.wiki/w/Fletching_workbench_(Fort_Forinthry)",
+        "https://runescape.wiki/w/Wisdom_of_Anima"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin fort Fletching residual. Wisdom of Anima remains Anachronia pressure.",
+      "links_existing_ids": [
+        "misthalin:fort-rangers-workroom"
+      ]
+    },
+    {
+      "id": "misthalin:fort-botanist-unfinished-overload-prep",
+      "name": "Botanist's Workbench tier 3 unfinished overload preparation",
+      "category": "Herblore batch-production residual densify",
+      "region_hint": "misthalin",
+      "region_status": "historical_fort_working_taxonomy",
+      "location": "Fort Forinthry Botanist's Workbench (Town Hall annex) — Granny Rowan",
+      "requirements": [
+        "Ancient Awakening completed",
+        "Construction 54 / 78 / 92 for workbench tiers 1 / 2 / 3",
+        "Granny Rowan unlock dialogue after building",
+        "Meilyr combination recipes still need Tirannwn Recipe Shop for finished combo lines"
+      ],
+      "unlocks": [
+        "Tier 3: Granny Rowan prepares unfinished overloads / overload-salves from noted ingredients",
+        "Tier 3 stackable unfinished overload chain finishing at the workbench",
+        "Herblore master cape batching options at tier 3",
+        "Tier 2 limited Herblore supplies and unnoted vials of water; all tiers potion/blubber decanting"
+      ],
+      "notes": "Residual densify of the ironman overload logistics bullet on misthalin:fort-botanists-workbench. Scroll of cleansing and some ingredient-save bonuses do not apply to Granny unfinished overload prep. Do not invent Herblore rates or re-emit full Meilyr recipe shop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Botanist%27s_Workbench",
+        "https://runescape.wiki/w/Granny_Rowan",
+        "https://runescape.wiki/w/Ancient_Awakening"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin owns the bench. Tirannwn Meilyr recipes remain separate for combination potions.",
+      "links_existing_ids": [
+        "misthalin:fort-botanists-workbench",
+        "prifddinas:meilyr-recipe-shop",
+        "forinthry:scroll-of-cleansing"
+      ]
+    },
+    {
+      "id": "misthalin:um-soul-forge",
+      "name": "City of Um soul forge (ensoul production hub)",
+      "category": "Necromancy craft/smith infrastructure",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "location": "Um smithy, north-east City of Um near Kili",
+      "requirements": [
+        "Necromancy! for City of Um access",
+        "Kili Row for full smithy resident/progression context",
+        "Ensoul material rituals for unensouled → ensouled bars/cloth/thread supply"
+      ],
+      "unlocks": [
+        "Soul forge station for upgrading Necromancy equipment with ensouled materials and necrotic runes",
+        "Also functions as a normal forge (heat / metal bank deposit-withdraw / smithing interface) with nearby anvils",
+        "Primary Underworld Grimoire smithy teleport destination for bank-adjacent forge loops"
+      ],
+      "notes": "High-value Um residual still only footnoted via UG smithy teles and shop blurbs — no first-class facility row. Combat gear product ladders (deathwarden/deathdealer tiers) stay combat catalogs; this row is the permanent Um craft station + ensoul consumer. Pair with um-ritual-site for ensoul rituals and necromantic-rune-temple for rune inputs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Soul_forge",
+        "https://runescape.wiki/w/Kili",
+        "https://runescape.wiki/w/Kili_Row",
+        "https://runescape.wiki/w/City_of_Um",
+        "https://runescape.wiki/w/Underworld_Grimoire"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "City of Um / Misthalin working taxonomy. Combat equipment outputs are separate planner rows.",
+      "links_existing_ids": [
+        "misthalin:underworld-grimoire",
+        "misthalin:um-ritual-site-infrastructure",
+        "misthalin:necromantic-rune-temple",
+        "misthalin:soul-supplies-and-um-shops"
+      ]
+    },
+    {
+      "id": "misthalin:um-selene-necromancy-prayers",
+      "name": "Selene Necromancy prayer and curse unlocks (City of Um)",
+      "category": "Prayer unlock infrastructure",
+      "region_hint": "misthalin",
+      "region_status": "historical_city_of_um_working_taxonomy",
+      "location": "Selene in City of Um chapel / graveyard shrine house",
+      "requirements": [
+        "Necromancy! for City of Um access to Selene",
+        "Individual Necromancy and Prayer level gates per prayer (not boostable for learn)",
+        "Sanctity: King's Ransom + Knight Waves training ground",
+        "Necromancy curses: The Temple at Senntisten; Ruination also needs praesul codex"
+      ],
+      "unlocks": [
+        "Standard book Necromancy prayers: Hand of Judgement / Fate / Doom accuracy ladder; Decay / Hastened / Accelerated Decay damage ladder; Sanctity multi-boost",
+        "Ancient Curses Necromancy lines via Selene: Sap/Leech Necromancy Attack and Strength; Sorrow; Ruination",
+        "Protect from Necromancy / Deflect Necromancy do not require Selene teach"
+      ],
+      "notes": "High-value Um residual permanent unlock hub for Necromancy prayer book content. Combat effect numbers live in prayer datasets — this row is the Misthalin geography + learn-NPC gate. Complements ancient-curses-senntisten book unlock without re-emitting the full curse book.",
+      "source_urls": [
+        "https://runescape.wiki/w/Selene",
+        "https://runescape.wiki/w/City_of_Um",
+        "https://runescape.wiki/w/Sanctity",
+        "https://runescape.wiki/w/Ruination",
+        "https://runescape.wiki/w/Sorrow"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Selene. Temple at Senntisten and praesul codex remain multi-region combat pressure.",
+      "links_existing_ids": [
+        "misthalin:ancient-curses-senntisten",
+        "misthalin:um-ritual-site-infrastructure",
+        "misthalin:well-of-souls"
+      ]
+    }
+  ],
+  "skipped_existing_or_out_of_scope": [
+    {
+      "id": "misthalin:fort-forinthry-workshop",
+      "reason": "Already first-class hub; residual Invention power densified as fort-workshop-invention-machine-power; free sawmill already fort-free-sawmill."
+    },
+    {
+      "id": "misthalin:fort-kitchen",
+      "reason": "Already first-class hub; account-wide web slash and soup station densified as separate residuals."
+    },
+    {
+      "id": "misthalin:fort-town-hall-rested-xp",
+      "reason": "Already first-class hub; Aster conversion densified as fort-town-hall-rested-conversion."
+    },
+    {
+      "id": "misthalin:fort-command-centre",
+      "reason": "Already first-class hub; numeric global-ops ladder densified as fort-command-centre-global-ops-tiers."
+    },
+    {
+      "id": "misthalin:fort-guardhouse-slayer",
+      "reason": "Already first-class hub; passive ladder densified as fort-guardhouse-slayer-passives."
+    },
+    {
+      "id": "misthalin:woodcutters-grove-facilities",
+      "reason": "Already first-class; wood-spirit/box residual densified without second Imcando claim."
+    },
+    {
+      "id": "misthalin:underworld-grimoire",
+      "reason": "Already first-class equipment + underworld-grimoire-skilling-milestones densify — no further UG split."
+    },
+    {
+      "id": "misthalin:varrock-armour",
+      "reason": "Already first-class with new-varrock-achievements-doubling — no high-value Varrock residual missing this wave."
+    }
+  ]
+}

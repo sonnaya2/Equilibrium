@@ -1,0 +1,527 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Longtail wave: first-class permanent Waiko / Boni / chime / taijitu ironman unlocks still missing depth after thin asgarnia:the-arc-waiko-shop and asgarnia:arc-skilling-access. Equilibrium packages The Arc under Asgarnia; Desert remains Ports gate support. Permanent account infrastructure only — no every-chime consumable, no cosmetic animation overrides (Ancestral Divination/Conversion), no island furniture cosmetics.",
+  "policy": {
+    "region_rule": "region_hint is primary geography (asgarnia for Arc packaging). required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint. Use region_requirement_type support when Desert Ports pressure is soft.",
+    "duplicate_guard": "SKIP already first-class: asgarnia:the-arc-waiko-shop (thin hub — this pack deepens named children), asgarnia:arc-skilling-access, asgarnia:hunters-outfit, asgarnia:player-owned-ports-skilling-rewards, asgarnia:skilling-scrimshaw-package, asgarnia:port-sarim-skilling-hub, desert:player-owned-port, desert:scrimshaw-crafter, forinthry:bonecrusher, multi-region:toolbelt-bonecrusher-attach, cross-region:bonecrusher-necklace, forinthry:scroll-of-proficiency. Do not re-emit hunter outfit or generic POP scrimshaw lists.",
+    "skip_not_permanent_or_missing": [
+      "Ancestral Divination I/II and Ancestral Conversion — cosmetic Divination animation overrides only",
+      "Death Lotus rogue / Gu ronin / Seasinger acolyte Waiko outfits — cosmetic overrides",
+      "Island customisations (deck chair, hammock, moai, house, etc.) — decorative only",
+      "XP lamps, teletab tablets as consumables, contract contact stacks — consumable sinks",
+      "Custom-fit trimming — not a Waiko Reward Shop permanent (not on Boni stock)",
+      "Soothing steam — not a Waiko Reward Shop permanent (not on Boni stock)",
+      "Hanto armour / Thalassia's Revenge / Rage of Hyu-Ji / Winds of Waiko — combat equipment, not skilling permanents"
+    ],
+    "no_trade_rule": "Ironman permanent account unlocks, chime/taijitu sinks that change uncharted/contract throughput, and no-trade skilling infrastructure (grill, deposit box, claimed island, siphon blueprint, bonecrusher auto-pickup).",
+    "rate_rule": "No invented XP/hour or chime/hour. Unlock costs, tier effects, and region pressure only.",
+    "combo_fields": "Every multi-region or support row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids."
+  },
+  "already_present_checked": [
+    "asgarnia:the-arc-waiko-shop",
+    "asgarnia:arc-skilling-access",
+    "asgarnia:hunters-outfit",
+    "asgarnia:player-owned-ports-skilling-rewards",
+    "asgarnia:skilling-scrimshaw-package",
+    "asgarnia:port-sarim-skilling-hub",
+    "desert:player-owned-port",
+    "forinthry:bonecrusher",
+    "multi-region:toolbelt-bonecrusher-attach",
+    "forinthry:scroll-of-proficiency"
+  ],
+  "activity_additions": [
+    {
+      "id": "asgarnia:waiko-uncharted-supplies-upgrades",
+      "name": "Waiko uncharted supplies permanent upgrades (cap + cost)",
+      "category": "Arc uncharted-isles voyage economy permanent unlocks",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Impressing the Locals completed (Arc access)",
+        "Waiko Reward Shop / Boni (rewards) on Waiko market",
+        "Supplies cap increase tiers 1–4: 2,000 chimes + 2 taijitu each (cap 200 → 1,000 supplies)",
+        "Supplies cost reduction tiers 1–5: 3,000 chimes + 3 taijitu each (Rosie price 25 → 10 chimes per supply)"
+      ],
+      "unlocks": [
+        "Permanent supplies capacity ladder: base 200, +200 per tier to max 1,000 in currency pouch",
+        "Permanent Rosie supplies cost ladder: 25 → 22 → 19 → 16 → 13 → 10 chimes each",
+        "Enables denser long voyages (20 supplies) and claimed-island loops without soft-capping the pouch early",
+        "Pairs with Rosie free daily crate (5/day, stores up to 50 unclaimed) as baseline ironman supply income"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Waiko shop and Rosie under Equilibrium Arc packaging (Port Sarim portal).",
+        "Desert optional: Player-owned port voyage gate / Menaphos hub framing (desert:player-owned-port) — not required once Arc is open."
+      ],
+      "notes": "Deepens thin asgarnia:the-arc-waiko-shop. Do not list every chime pack Rosie sells as separate rows — only the permanent Boni tiers. Comp cape path includes tier-1 of all upgrades.",
+      "source_urls": [
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Supplies_(Uncharted_Isles)",
+        "https://runescape.wiki/w/Rosie_(supplies)",
+        "https://runescape.wiki/w/Boni_(rewards)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia Arc packaging. Desert Ports is support pressure only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:arc-skilling-access",
+        "asgarnia:flag-fall-claimed-island",
+        "desert:player-owned-port"
+      ]
+    },
+    {
+      "id": "asgarnia:waiko-contracts-per-day",
+      "name": "Waiko contracts-per-day permanent upgrades",
+      "category": "Arc skilling contract throughput permanent unlocks",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Impressing the Locals / Arc access",
+        "Sojobo (The Tengu) contracts on Waiko available",
+        "Contracts per day increase tiers 1–4: 2,500 chimes + 2 taijitu each from Boni"
+      ],
+      "unlocks": [
+        "Permanent daily Arc contract capacity increases (four tiers from Waiko Reward Shop)",
+        "Higher daily chime/taijitu and skilling-assignment throughput for ironman Arc loops",
+        "Contract-only uncharted features (nests, gongs, braziers, safes, tortems, ritual circles, herb burners) scale with how many contracts you can run"
+      ],
+      "region_pressure": [
+        "Asgarnia owns Waiko Boni shop and Sojobo contract NPC under Equilibrium Arc mapping.",
+        "Desert optional only as POP / voyage framing pressure."
+      ],
+      "notes": "Do not invent base vs max contracts/day counts beyond wiki tier structure. Contract contact pocket consumables are not permanent unlocks — skip as SKUs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Contract",
+        "https://runescape.wiki/w/The_Tengu",
+        "https://runescape.wiki/w/Uncharted_Isles"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia. Pair with commodity sell upgrades for full chime economy.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:waiko-commodity-economy",
+        "asgarnia:arc-skilling-access"
+      ]
+    },
+    {
+      "id": "asgarnia:waiko-commodity-economy",
+      "name": "Waiko commodity sell permanent upgrades",
+      "category": "Arc chime economy permanent merchant upgrades",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Impressing the Locals / Arc access",
+        "Commodity sell price increase tiers 1–2: 8,000 chimes + 8 taijitu each (+10% then +20% of base sell price → 110% / 120%)",
+        "Commodity sell per day increase tiers 1–2: 1,500 chimes + 1 taijitu each (daily merchant sell cap)"
+      ],
+      "unlocks": [
+        "Permanent +10% / +20% chimes when selling Arc commodities to island merchants (stacked sell-price tiers)",
+        "Permanent daily commodity sell-cap increases (two tiers) so ironmen can liquidate more product per day",
+        "Core chime-throughput stack for shark soup / arc gumbo / processed materials loops that fund all other Boni unlocks"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Boni shop and Waiko/named-island merchant geography.",
+        "Some commodities sell higher on Cyclosis or Tuai Leit (wiki commodity tables) — still Asgarnia Arc packaging, not extra region claims."
+      ],
+      "notes": "Highest-value pure chime permanent after supplies/contracts. Do not re-list every commodity price table — link wiki Commodity sell price increase.",
+      "source_urls": [
+        "https://runescape.wiki/w/Commodity_sell_price_increase",
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Boni_(rewards)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia Arc packaging. Desert support only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:waiko-grill",
+        "asgarnia:waiko-contracts-per-day",
+        "asgarnia:arc-skilling-access"
+      ]
+    },
+    {
+      "id": "asgarnia:waiko-grill",
+      "name": "Waiko grill (permanent Arc Cooking station)",
+      "category": "permanent Cooking production scenery",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Impressing the Locals / Arc access",
+        "500 chimes from Boni Waiko Reward Shop (unique unlock)",
+        "Eastern-lands foods benefit: cooked pekin, fish oil, wobbegong oil, arc gumbo, shark soup"
+      ],
+      "unlocks": [
+        "Permanent market grill next to Tang Chufang usable as a range after purchase",
+        "Portable-range-like 5% chance to cook an extra portion of listed Arc foods (ironman-usable fixed scenery — not a TH portable)",
+        "Brooch of the Gods worn while cooking increases the extra-portion chance (asgarnia:brooch-of-the-gods stack)",
+        "Adjacent Tang Chufang sell loop for shark soup / arc gumbo without banking; azure parrot inspect hub while cooking soups"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia under Equilibrium Arc mapping. No second region gate."
+      ],
+      "notes": "Comp cape path requires Waiko grill + Whale's Maw campfire + deposit box. Cited as ironman portable-range exception in cross-region portable note — this is the first-class permanent scenery row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Grill_(Waiko)",
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Shark_soup",
+        "https://runescape.wiki/w/Arc_gumbo"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia. Pair with commodity sell upgrades for chime efficiency.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:brooch-of-the-gods",
+        "asgarnia:whales-maw-campfire-deposit",
+        "cross-region:portable-skilling-stations-ironman-note"
+      ]
+    },
+    {
+      "id": "asgarnia:whales-maw-campfire-deposit",
+      "name": "Whale's Maw campfire + deposit box permanent unlocks",
+      "category": "Arc island skilling convenience permanent unlocks",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Impressing the Locals / Arc access; Whale's Maw travel",
+        "Whale's Maw campfire unlock: 500 chimes from Boni",
+        "Whale's Maw deposit box unlock: 750 chimes from Boni"
+      ],
+      "unlocks": [
+        "Permanent camp fire on Whale's Maw for on-island Cooking after purchase",
+        "Permanent deposit box on Whale's Maw (Deposit-All gated until purchased)",
+        "Together with Waiko grill: core Unlocking Waiko I / comp-cape Arc scenery set"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia Arc packaging. Whale's Maw is a named Arc island under the same Equilibrium Asgarnia list as Waiko."
+      ],
+      "notes": "Do not invent Fishing XP rates for Whale's Maw — this row is scenery unlock state only. Pair with arc-skilling-access for activity geography.",
+      "source_urls": [
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Camp_fire_(Whale%27s_Maw)",
+        "https://runescape.wiki/w/Deposit_box_(Whale%27s_Maw)",
+        "https://runescape.wiki/w/Whale%27s_Maw"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:waiko-grill",
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:arc-skilling-access"
+      ]
+    },
+    {
+      "id": "asgarnia:arc-journal",
+      "name": "Arc journal (permanent Arc travel tracker)",
+      "category": "permanent Arc logistics and collection journal",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Impressing the Locals completed",
+        "Speak to Sharkborne on Waiko northern dock (free reclaim if destroyed)"
+      ],
+      "unlocks": [
+        "Permanent pocket journal tracking Arc birds, mushrooms, berries, kami, castaways, and Tales of the Arc miniquests",
+        "Unlimited free teleport to Port Sarim dock / Quartermaster Gully (no teletab consumed)",
+        "Stores active contract info and up to 25 contract contacts for uncharted hand-in without carrying the list",
+        "Full journal completion unlocks the Voyager title and uncharted treasure-chest minimap icon; Salty title needs journal + all permanent Boni unlocks"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia: free journal from Waiko and free Port Sarim teleport close the docks↔Arc logistics loop with asgarnia:port-sarim-skilling-hub."
+      ],
+      "notes": "Teletab storage feature is a separate paid unlock (asgarnia:arc-journal-teletabs). Do not collapse both into one id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Arc_journal",
+        "https://runescape.wiki/w/Sharkborne",
+        "https://runescape.wiki/w/The_Arc",
+        "https://runescape.wiki/w/Salty"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia permanent logistics tool.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:arc-journal-teletabs",
+        "asgarnia:port-sarim-skilling-hub",
+        "asgarnia:arc-skilling-access",
+        "asgarnia:flag-fall-claimed-island"
+      ]
+    },
+    {
+      "id": "asgarnia:arc-journal-teletabs",
+      "name": "Arc journal teletabs feature unlock",
+      "category": "permanent Arc teleport storage unlock",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Arc journal owned (asgarnia:arc-journal)",
+        "1,000 chimes from Boni Waiko Reward Shop (feature unlock)",
+        "Arc island teletabs purchased from Boni consumable stock and used on the journal (up to 1,000 charges per island destination)"
+      ],
+      "unlocks": [
+        "Permanent account feature: remotely cast stored Arc teletabs from the Arc journal without carrying the tablets",
+        "Covers Waiko, Aminishi, Whale's Maw, Cyclosis, Tuai Leit, Islands That Once Were Turtles, Goshima after each island teletab is unlocked via miniquests / stock",
+        "Stored charges survive journal destroy/reclaim; free Port Sarim teleport remains even without this unlock",
+        "Completionist cape requirement (with tier-1 upgrades, grill, Whale's Maw scenery, crystal tool siphon blueprint)"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia Boni purchase. Island destination tabs still need the corresponding Arc island unlocks."
+      ],
+      "notes": "The teletab tablets themselves are consumables — only the storage/use-from-journal feature is the permanent row. Comp cape cost note on wiki: 24,750 chimes + 21 taijitu for the listed permanent set.",
+      "source_urls": [
+        "https://runescape.wiki/w/Arc_journal",
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Magic_tablet#The_Arc"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia permanent QoL.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:arc-journal",
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:waiko-grill",
+        "asgarnia:crystal-tool-siphon-blueprint"
+      ]
+    },
+    {
+      "id": "asgarnia:flag-fall-claimed-island",
+      "name": "Flag Fall + claimed Uncharted Isle permanence",
+      "category": "permanent Uncharted Isles personal island unlock",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert", "kandarin"],
+      "requirements": [
+        "Impressing the Locals / Arc access",
+        "Flag Fall miniquest: collect 5 driftwood and return to Boni for free claim-island flags thereafter",
+        "Plant flag on a suitable uncharted isle (confirm prompt); revisit for 3 supplies regardless of original voyage size"
+      ],
+      "unlocks": [
+        "Permanent personal claimed island with daily special-resource replenish at 00:00 UTC hard reset",
+        "Claimed-island revisit costs 3 supplies (vs 5/12/20 for short/median/long discovery voyages)",
+        "Special resources on the claim (alaea crablets, golden bamboo, ornate tortles, wobbegong, mushroom clusters, dead moai / ancestral energy) persist as the daily farm set",
+        "Enables ironman taijitu/chime self-supply and skilling loops without re-rolling islands every day"
+      ],
+      "region_pressure": [
+        "Asgarnia owns Waiko Flag Fall / Boni flag source and Arc voyage entry.",
+        "Desert optional: POP gate framing. Kandarin optional: Deep Sea Fishing uncharted island maps for premium 3–6 special-resource islands before claim."
+      ],
+      "notes": "Island customisations from Boni are cosmetic and lost on re-claim — not planner permanents. Prefer claiming long-voyage islands with preferred special resources. Complements asgarnia:arc-skilling-access resource list.",
+      "source_urls": [
+        "https://runescape.wiki/w/Flag_Fall",
+        "https://runescape.wiki/w/Uncharted_Isles",
+        "https://runescape.wiki/w/Claim_island_flag",
+        "https://runescape.wiki/w/Boni_(rewards)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia. Kandarin DSF maps are optional claim quality pressure only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:arc-skilling-access",
+        "asgarnia:waiko-uncharted-supplies-upgrades",
+        "asgarnia:the-arc-waiko-shop",
+        "kandarin:deep-sea-fishing-hub"
+      ]
+    },
+    {
+      "id": "asgarnia:ports-reward-shop-boni",
+      "name": "Ports Reward Shop (Boni Waiko) permanent scrolls + trade-goods access",
+      "category": "Arc Ports chime/taijitu permanent shop infrastructure",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Impressing the Locals / Arc access; Boni Ports shop on Waiko market",
+        "Memory-crushing + energy-gathering scrimshaw scrolls: 5,000 chimes + 5 taijitu each (80 Divination to unlock stock)",
+        "Mitts/waders scroll packages: 2,500 chimes + 3 taijitu each for seasinger / tetsu / Death Lotus gloves and boots scrolls (90 RC / Smithing / Crafting gates)",
+        "Trade-goods packs require Hook region discovered in Player-owned port"
+      ],
+      "unlocks": [
+        "Permanent alternate purchase path for memory-crushing and energy-gathering scrimshaw scrolls (chimes+taijitu instead of voyage-only piece grinding)",
+        "Permanent Ports gloves/boots scroll unlocks for eastern armour completion (combat-facing but shop is Arc-gated ironman pressure)",
+        "Ironman trade-goods packs: spices, plate, lacquer, chi, pearls, koi scales, ancient bones — chime+taijitu sink that fills POP workshop materials including ancient bones for scrimshaw / related crafts",
+        "Ports resource packs (bamboo, gunpowder, slate, etc.) remain consumable voyage fillers — not separate permanent rows"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Boni Ports Reward Shop under Equilibrium Arc packaging.",
+        "Desert support: desert:player-owned-port hub / Hook region discovery and workshop framing; scrimshaw craft still asgarnia Port Sarim facility."
+      ],
+      "notes": "Do not re-emit full wearable scrimshaw ladder (asgarnia:skilling-scrimshaw-package). This row is the Waiko Ports shop as a first-class permanent sink. Ancient bones packs support forinthry:scroll-of-proficiency material pressure without claiming the DG scroll itself.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ports_Reward_Shop",
+        "https://runescape.wiki/w/Boni_(rewards)",
+        "https://runescape.wiki/w/Memory-crushing_scrimshaw",
+        "https://runescape.wiki/w/Energy-gathering_scrimshaw",
+        "https://runescape.wiki/w/Player-owned_port"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Asgarnia Arc shop ownership; Desert Ports support.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:player-owned-ports-skilling-rewards",
+        "asgarnia:skilling-scrimshaw-package",
+        "desert:player-owned-port",
+        "desert:scrimshaw-crafter",
+        "forinthry:scroll-of-proficiency",
+        "asgarnia:the-arc-waiko-shop"
+      ]
+    },
+    {
+      "id": "asgarnia:sojobo-arc-contracts",
+      "name": "Sojobo Arc contracts hub (Waiko)",
+      "category": "Arc skilling contract infrastructure",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Impressing the Locals / Arc access",
+        "Speak to Sojobo (The Tengu) on Waiko for skilling contracts",
+        "Optional: Sojobo contract guru unlock (100 chimes) after mask of gu — convenience tier, not required for base contracts"
+      ],
+      "unlocks": [
+        "Daily Arc skilling contract assignments as primary structured chime income alongside commodity selling",
+        "Contract-only uncharted isle features when the assignment requires them",
+        "Contract contact pocket item + Arc journal storage for remote hand-in on uncharted isles (consumable contacts; journal storage is permanent capacity)"
+      ],
+      "region_pressure": [
+        "Hard Asgarnia Waiko NPC hub. Throughput multiplies with asgarnia:waiko-contracts-per-day permanent tiers."
+      ],
+      "notes": "Hub activity row — permanent upgrade ladder lives on asgarnia:waiko-contracts-per-day. Skip listing every contract type.",
+      "source_urls": [
+        "https://runescape.wiki/w/The_Tengu",
+        "https://runescape.wiki/w/Contract",
+        "https://runescape.wiki/w/Waiko",
+        "https://runescape.wiki/w/Contract_contact"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "asgarnia:waiko-contracts-per-day",
+        "asgarnia:arc-journal",
+        "asgarnia:arc-skilling-access",
+        "asgarnia:the-arc-waiko-shop"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "asgarnia:crystal-tool-siphon-blueprint",
+      "name": "Crystal tool siphon blueprint (Waiko permanent)",
+      "category": "Invention permanent blueprint unlock",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert", "tirannwn"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert", "tirannwn"],
+      "requirements": [
+        "Impressing the Locals / Arc access; Boni Waiko Reward Shop",
+        "5,000 chimes + 5 taijitu for the crystal tool siphon blueprint",
+        "Prior Invention research: equipment dissolver and equipment siphon blueprints discovered",
+        "54 Invention to create the device after discovery; crystal parts + clear parts + imbued components craft path"
+      ],
+      "effects": [
+        "Permanent blueprint unlock: craft crystal tool siphons at Invention",
+        "Siphoning augmented crystal tools (hatchet, pickaxe, mattock, binding rod) awards Invention XP as if tier 90 instead of tier 70 (e.g. level-12 siphon 621k vs 459k XP)",
+        "Compatible with mechanised siphon auto-siphon loadout when filled with crystal tool siphons",
+        "Does not siphon Imcando+crystal hybrid tools (use normal equipment siphon); not for non-crystal tools"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Boni blueprint purchase under Equilibrium Arc mapping; Invention Guild craft home remains Asgarnia.",
+        "Tirannwn optional: crystal tool seed / crystal tool supply. Desert optional: POP voyage framing only."
+      ],
+      "notes": "Comp cape Arc set includes this blueprint. Distinct from generic equipment siphon row in invention production packs — this is the Waiko-gated permanent discovery.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_tool_siphon",
+        "https://runescape.wiki/w/Crystal_tool_siphon_(blueprint)",
+        "https://runescape.wiki/w/Waiko_Reward_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for blueprint purchase. Crystal tool sources may pull Tirannwn.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:the-arc-waiko-shop",
+        "asgarnia:invention-guild",
+        "asgarnia:arc-journal-teletabs",
+        "tirannwn:crystal-tools-pointer"
+      ]
+    },
+    {
+      "id": "asgarnia:bonecrusher-auto-pickup",
+      "name": "Bonecrusher auto-pickup upgrade (Waiko / Boni)",
+      "category": "permanent drop-cleaner upgrade unlock",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "forinthry", "desert"],
+      "required_regions": ["asgarnia", "forinthry"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Bonecrusher owned from Daemonheim Rewards (forinthry:bonecrusher; post-11-May-2026 remaster costs apply)",
+        "Impressing the Locals / Arc access",
+        "25,000 chimes + 25 taijitu from Boni Waiko Reward Shop (feature unlock on existing bonecrusher — not a new item)"
+      ],
+      "effects": [
+        "Permanent Bone collector: Auto-pickup toggle on bonecrusher settings",
+        "Bones not marked for crush auto-enter inventory unnoted (charming-imp-style keep mode); full inventory spills to floor",
+        "Pairs with toolbelt bonecrusher attach (multi-region:toolbelt-bonecrusher-attach) and Death Note / notepaper / pack yak for banked bone Prayer stacks",
+        "Noted-bone drop modifiers (e.g. some diary boots) take precedence over auto-pickup — planner must account for noted drops"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Waiko Boni upgrade purchase (Equilibrium Arc).",
+        "Forinthry hard for base bonecrusher item from Daemonheim Rewards.",
+        "Desert optional: powder-of-burials Prayer stack geography only."
+      ],
+      "notes": "Do not re-emit forinthry:bonecrusher base purchase. This is the Arc taijitu sink that turns crusher into a dual destroy/keep cleaner. Achievement Bone to Pick With You tracks the unlock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bonecrusher#Upgrade",
+        "https://runescape.wiki/w/Waiko_Reward_Shop",
+        "https://runescape.wiki/w/Bone_to_Pick_With_You"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Requires Asgarnia (Boni) AND Forinthry (base crusher). Desert support only.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "forinthry:bonecrusher",
+        "multi-region:toolbelt-bonecrusher-attach",
+        "cross-region:bonecrusher-necklace",
+        "asgarnia:the-arc-waiko-shop",
+        "desert:powder-of-burials"
+      ]
+    }
+  ],
+  "stats": {
+    "activity_additions": 10,
+    "equipment_additions": 2,
+    "total_rows": 12
+  },
+  "ids_emitted": [
+    "asgarnia:waiko-uncharted-supplies-upgrades",
+    "asgarnia:waiko-contracts-per-day",
+    "asgarnia:waiko-commodity-economy",
+    "asgarnia:waiko-grill",
+    "asgarnia:whales-maw-campfire-deposit",
+    "asgarnia:arc-journal",
+    "asgarnia:arc-journal-teletabs",
+    "asgarnia:flag-fall-claimed-island",
+    "asgarnia:ports-reward-shop-boni",
+    "asgarnia:sojobo-arc-contracts",
+    "asgarnia:crystal-tool-siphon-blueprint",
+    "asgarnia:bonecrusher-auto-pickup"
+  ]
+}

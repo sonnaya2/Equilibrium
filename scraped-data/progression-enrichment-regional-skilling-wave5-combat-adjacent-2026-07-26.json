@@ -1,0 +1,474 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-5 combat-adjacent permanent tools that ironman guides treat as skilling infrastructure (Prayer AFK restore ladder, drop-cleaner upgrades, POP scrimshaw craft, BoG pocket QoL, resource-dungeon teleports, RC pouch craft, Ancient Summoning bind contracts). Not pure combat BiS. Complements wave4-critical-tools + slayer-toolbelt without re-emitting first-class siblings already in regional-skilling-unlocks.json.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate. Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Grep-confirmed ABSENT from data/research/regional-skilling-unlocks.json (550 ids). SKIP already-present checklist: forinthry:charming-imp, forinthry:herbicide, forinthry:seedicide-named, forinthry:gold-accumulator, forinthry:advanced-gold-accumulator, forinthry:gem-bag, forinthry:gem-bag-upgraded, misthalin:auto-screener, misthalin:plank-box, anachronia:orthen-furnace-core, cross-region:orthen-furnace-core-stack, cross-region:bonecrusher-necklace (stack only — individual demon-horn necklace was missing), tirannwn:grace-of-the-elves, morytania:attuned-ectoplasmator, multi-region:toolbelt-*-attach, forinthry:smithing-autoheater*, asgarnia:spring-cleaner, desert:scrimshaw-crafter (facility only). Combat-skip per brief: Dragon Rider amulet, blood necklace, Luck of the Dwarves, ring of vigour.",
+    "no_trade_rule": "Ironman permanent unlocks that change Prayer AFK, drop-cleaner QoL, POP Fletching craft, pocket skilling, resource-dungeon travel, RC inventory, or Ancient Summoning bind economy.",
+    "rate_rule": "No invented XP/hour. Unlock state, token/bean costs, and effects only.",
+    "rs3_terminology": "RS3 has no fused 'bonecrusher necklace' craft item. DG prayer necklaces are twisted bird skull / split dragontooth / demon horn. Sacrifice scrimshaw base is Mimic/TH-family not POP scroll craft; superior upgrade uses Scrimshaw Crafter + ancient bones after DG token unlock."
+  },
+  "already_present_checked": [
+    "forinthry:charming-imp",
+    "forinthry:herbicide",
+    "forinthry:seedicide-named",
+    "forinthry:gold-accumulator",
+    "forinthry:advanced-gold-accumulator",
+    "forinthry:gem-bag",
+    "forinthry:gem-bag-upgraded",
+    "misthalin:auto-screener",
+    "misthalin:plank-box",
+    "anachronia:orthen-furnace-core",
+    "cross-region:orthen-furnace-core-stack",
+    "cross-region:bonecrusher-necklace",
+    "forinthry:bonecrusher",
+    "tirannwn:grace-of-the-elves",
+    "tirannwn:superheat-form",
+    "forinthry:smithing-autoheater",
+    "forinthry:advanced-smithing-autoheater",
+    "morytania:attuned-ectoplasmator",
+    "asgarnia:spring-cleaner",
+    "multi-region:toolbelt-bonecrusher-attach",
+    "multi-region:toolbelt-herbicide-attach",
+    "multi-region:toolbelt-seedicide-attach",
+    "multi-region:toolbelt-charming-imp-attach",
+    "multi-region:toolbelt-advanced-gold-accumulator-attach",
+    "desert:scrimshaw-crafter",
+    "asgarnia:player-owned-ports-skilling-rewards",
+    "desert:player-owned-port",
+    "forinthry:magical-thread-abyss-supply"
+  ],
+  "activity_additions": [
+    {
+      "id": "asgarnia:skilling-scrimshaw-package",
+      "name": "Skilling scrimshaw craft package (Player-owned port)",
+      "category": "permanent POP Fletching skilling pocket package",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["desert"],
+      "requirements": [
+        "Player-owned port access and Scrimshaw Crafter unlocked (desert:scrimshaw-crafter / asgarnia Port Sarim workshop)",
+        "Eastern scroll pieces completed per scrimshaw recipe (voyage chain)",
+        "Ancient bones + completed Ports scroll for each craft",
+        "Fletching gates: 85 for entry skilling scrimshaws (e.g. log-splitting); higher for gem-finding / energy-gathering / tree-shaking / casket-salvaging tiers"
+      ],
+      "unlocks": [
+        "Wearable pocket skilling scrimshaws: log-splitting, rock-crushing, tree-shaking, gem-finding, whopper-baiting, casket-salvaging, memory-crushing, energy-gathering (plus superior variants)",
+        "Activated duration (standard 3 hours before dust; superior longer) with combine-to-extend charges",
+        "Ironman gather XP / resource-filter pocket tools without GE fills once scrolls + bones are self-sourced"
+      ],
+      "region_pressure": [
+        "Asgarnia hard: Port Sarim POP workshop / Scrimshaw Crafter facility under Equilibrium Arc mapping.",
+        "Desert optional: Menaphos / desert:player-owned-port hub framing and voyage economy pressure."
+      ],
+      "notes": "Facility row desert:scrimshaw-crafter lists recipe names only — this package is the wearable skilling ladder planners checklist. Do not re-emit combat-only scrimshaw BiS lines here; elements and sacrifice are separate equipment rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scrimshaw",
+        "https://runescape.wiki/w/Log-splitting_scrimshaw",
+        "https://runescape.wiki/w/Scrimshaw_Crafter",
+        "https://runescape.wiki/w/Player-owned_port"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for craft facility. Voyage destinations may add optional region pressure only.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:scrimshaw-crafter",
+        "asgarnia:player-owned-ports-skilling-rewards",
+        "desert:player-owned-port"
+      ]
+    },
+    {
+      "id": "multi-region:scrimshaw-of-sacrifice",
+      "name": "Scrimshaw of sacrifice (+ superior POP upgrade)",
+      "category": "Slayer XP pocket (drop-for-XP trade)",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "forinthry"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["forinthry"],
+      "requirements": [
+        "Inactive scrimshaw of sacrifice from Giant Mimic loot chests (current self-source; Motherlode Maw path removed 16 March 2026 Dailyscape Overhaul)",
+        "Optional superior: 250,000 Dungeoneering tokens unlock at Daemonheim Rewards to upgrade sacrifice/aggression/corruption scrimshaws at Scrimshaw Crafter",
+        "Superior craft: inactive base + 10 ancient bones at Scrimshaw Crafter (95 Fletching)"
+      ],
+      "unlocks": [
+        "While active: +50% combat XP on kills and +50% Slayer XP on-task (augmented-item XP excluded)",
+        "Trade: no primary loot drops (secondary drops such as charms, spirit gems, clues, ferocious rings, ushabti souls still apply; Wilderness shared loot and Looting perk items can still land)",
+        "Standard duration 1 hour active before dust; superior lasts 4 hours; same-type combine extends remaining time",
+        "Ironman AFK Slayer XP path when loot is not the goal (Wilderness PvME-style farms)"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Scrimshaw Crafter superior upgrade path + Ports ancient bones.",
+        "Forinthry optional: 250k DG token permanent unlock for superior craft line."
+      ],
+      "notes": "Not a pure POP scroll craft like elements — base is Mimic. Still skilling-adjacent because ironman guides use it as a Slayer XP tool, not a combat BiS pocket. Sacrifice destroys bone drops so bonecrusher / DG prayer necklaces do not restore during its window.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scrimshaw_of_sacrifice",
+        "https://runescape.wiki/w/Superior_scrimshaw_of_sacrifice",
+        "https://runescape.wiki/w/Giant_Mimic",
+        "https://runescape.wiki/w/Scrimshaw_Crafter"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Surface Asgarnia for superior craft facility. Mimic access is boss geography (not a hard single skilling region).",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:scrimshaw-crafter",
+        "asgarnia:skilling-scrimshaw-package",
+        "forinthry:daemonheim-rewards-shop-hub"
+      ]
+    },
+    {
+      "id": "cross-region:binding-contract-ancient-summoning",
+      "name": "Binding contract (Ancient Summoning) craft + bind loop",
+      "category": "permanent Ancient Summoning + Slayer bind infrastructure",
+      "region_hints": ["misthalin", "asgarnia", "forinthry", "morytania"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["asgarnia", "forinthry", "morytania", "desert"],
+      "requirements": [
+        "Dagon Bye Archaeology mystery completed (Ancient Summoning unlock)",
+        "Summoning obelisk craft: 1 blue charm + pouch + 2 Blood of Orcus + 2 hellfire metal + 200 spirit shards per binding contract",
+        "Kill matching Slayer creature with free inventory space to bind pouch (charming imp can steal the free slot — plan inventory)",
+        "Summoning + Slayer level gates per familiar (e.g. waterfiend 50/50, gargoyle 75/75, abyssal demon 85/85)"
+      ],
+      "unlocks": [
+        "Ancient Summoning familiar pouches via combat bind (hellhound, waterfiend, blood reaver, gargoyle, abyssal demon, kal'gerion demon, ripper demon lines)",
+        "Skilling-relevant passives: waterfiend 5% gather duplicate storage (Mining/Fishing/WC/Div/Arch); gargoyle invisible +12 Mining damage",
+        "Account-state craft recipe after Dagon Bye — contracts also appear from ancient caskets but cannot bind until the mystery is done"
+      ],
+      "region_pressure": [
+        "Misthalin hard framing for Archaeology mystery unlock and Infernal Source material pressure (Blood of Orcus / hellfire metal).",
+        "Forinthry optional: kal'gerion bind DG level pressure.",
+        "Morytania / multi-region: abyssal and other bind monster farms."
+      ],
+      "notes": "Combat-adjacent Summoning permanent, not pure BiS DPS. Waterfiend and gargoyle binds are the skilling planner edges; combat-only binds stay secondary.",
+      "source_urls": [
+        "https://runescape.wiki/w/Binding_contract",
+        "https://runescape.wiki/w/Ancient_Summoning",
+        "https://runescape.wiki/w/Dagon_Bye"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for mystery unlock framing. Bind-monster geography is multi-region by creature.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:charming-imp",
+        "misthalin:archaeology-guild-shop"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "forinthry:twisted-bird-skull-necklace",
+      "name": "Twisted bird skull necklace",
+      "category": "Dungeoneering Prayer restore necklace (entry)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "30 Prayer and 21 Dungeoneering (post-11-May-2026 remaster purchase gates)",
+        "6,500 Dungeoneering tokens from Marmaros (Daemonheim Rewards)"
+      ],
+      "effects": [
+        "Restores 50 prayer points when burying configured bones (all eligible tiers share 50 on this necklace)",
+        "With attuned ectoplasmator: 50 pp on absorbed ashes/ghosts in the necklace bands",
+        "Prayer bonus 3; pairs with bonecrusher for entry AFK prayer sustain"
+      ],
+      "notes": "Lowest DG prayer necklace. cross-region:bonecrusher-necklace stack still points at demon horn as the end milestone — this row fills the missing individual ladder step.",
+      "source_urls": [
+        "https://runescape.wiki/w/Twisted_bird_skull_necklace",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry Daemonheim Rewards purchase."
+    },
+    {
+      "id": "forinthry:split-dragontooth-necklace",
+      "name": "Split dragontooth necklace",
+      "category": "Dungeoneering Prayer restore necklace (mid)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "60 Prayer and 41 Dungeoneering (post-11-May-2026 remaster purchase gates)",
+        "15,500 Dungeoneering tokens from Marmaros (Daemonheim Rewards)"
+      ],
+      "effects": [
+        "Restores 50 pp (normal/bat/burnt bones) or 100 pp (big/baby dragon/jogre/wyvern and higher bone tiers on this necklace)",
+        "With attuned ectoplasmator: 50/100 pp ash and ghost bands (high-tier ashes/ghosts cap at 100, not 150)",
+        "Prayer bonus 4; mid-ladder AFK restore before demon horn"
+      ],
+      "notes": "Mid DG prayer necklace. Prefer demon horn for 150 pp dragon/dinosaur bands.",
+      "source_urls": [
+        "https://runescape.wiki/w/Split_dragontooth_necklace",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry Daemonheim Rewards purchase."
+    },
+    {
+      "id": "forinthry:demon-horn-necklace",
+      "name": "Demon horn necklace",
+      "category": "Dungeoneering Prayer restore necklace (top)",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_wiki_league_region",
+      "requirements": [
+        "90 Prayer and 75 Dungeoneering (post-11-May-2026 remaster: DG gate reduced from 90 to 75)",
+        "35,000 Dungeoneering tokens from Marmaros (Daemonheim Rewards)"
+      ],
+      "effects": [
+        "Restores 50 / 100 / 150 prayer points by bone tier when burying or when bonecrusher auto-buries",
+        "With attuned ectoplasmator: 50 / 100 / 150 pp on ash and ghost absorption bands (including infernal/tortured/searing ashes and high-tier undead)",
+        "Prayer bonus 5; holy wrench (post-Pieces of Hate) adds +10% to necklace restore while worn or inventoried"
+      ],
+      "notes": "Individual equipment row missing while cross-region:bonecrusher-necklace stack already first-class. Prefer this id for ownership tracking; keep the stack id for dual-item Prayer AFK packaging.",
+      "source_urls": [
+        "https://runescape.wiki/w/Demon_horn_necklace",
+        "https://runescape.wiki/w/Bonecrusher",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry. Pair with forinthry:bonecrusher and multi-region:toolbelt-bonecrusher-attach.",
+      "links_existing_ids": [
+        "cross-region:bonecrusher-necklace",
+        "forinthry:bonecrusher",
+        "multi-region:toolbelt-bonecrusher-attach",
+        "morytania:attuned-ectoplasmator"
+      ]
+    },
+    {
+      "id": "morytania:ectoplasmator",
+      "name": "Ectoplasmator (base)",
+      "category": "Prayer drop cleaner for ghosts (pre-attuned)",
+      "region_hint": "morytania",
+      "region_hints": ["morytania", "forinthry", "misthalin"],
+      "requirements": [
+        "Rare drop from configured ghosts / undead (ghasts, shades, tortured souls, ankous, revenants, Barrows brothers, etc.)",
+        "Reclaim from Diango if lost (cannot reclaim base while a charged attuned is owned)"
+      ],
+      "effects": [
+        "Carried or pocket: Prayer XP on killing most ghosts (bonecrusher-like for spirits)",
+        "Does NOT trigger DG prayer necklaces for prayer-point restore — that requires attuned ectoplasmator",
+        "Does not stack First age outfit Prayer XP",
+        "Upgrade path: 100 ghostly essence → attuned ectoplasmator (morytania:attuned-ectoplasmator)"
+      ],
+      "notes": "Attuned row already first-class; base farm was only implied. Surface base as the rare drop milestone before essence upgrade.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ectoplasmator",
+        "https://runescape.wiki/w/Attuned_ectoplasmator"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Primary Morytania ghost density. Forinthry revenants and Misthalin ankous are support farms.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "morytania:attuned-ectoplasmator",
+        "cross-region:bonecrusher-necklace"
+      ]
+    },
+    {
+      "id": "morytania:holy-wrench",
+      "name": "Holy wrench",
+      "category": "Prayer potion and DG necklace restore amplifier",
+      "region_hint": "morytania",
+      "region_hints": ["morytania", "fremennik"],
+      "requirements": [
+        "Rum Deal quest completed (Port Phasmatys start → Braindeath Island)",
+        "Reclaim free from Davey on Braindeath Island or May's Quest Caravan Hub Track (150 QP invested)"
+      ],
+      "effects": [
+        "Pocket or inventory: extra prayer points from prayer / super restore / prayer renewal / extreme prayer style potions (level-scaled)",
+        "After Pieces of Hate: +10% prayer restore from twisted bird skull / split dragontooth / demon horn necklaces while wrench is worn or inventoried",
+        "No effect on ancient elven ritual shard over-time restore"
+      ],
+      "notes": "Combat-quest pressure item that ironman Prayer AFK stacks use as a permanent amplifier. Not combat BiS jewellery.",
+      "source_urls": [
+        "https://runescape.wiki/w/Holy_wrench",
+        "https://runescape.wiki/w/Rum_Deal",
+        "https://runescape.wiki/w/Pieces_of_Hate"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania for Rum Deal start. Braindeath Island reclaim is Fremennik support geography.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:demon-horn-necklace",
+        "cross-region:bonecrusher-necklace"
+      ]
+    },
+    {
+      "id": "asgarnia:scrimshaw-of-the-elements",
+      "name": "Scrimshaw of the elements",
+      "category": "POP Magic damage pocket (craft path)",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "desert"],
+      "requirements": [
+        "Player-owned port Elements eastern scroll fully assembled",
+        "92 Fletching (cannot be boosted) at Scrimshaw Crafter",
+        "10 ancient bones per craft (standard combat scrimshaw bone cost)",
+        "80 Magic to equip/activate"
+      ],
+      "effects": [
+        "+5% Magic damage while activated",
+        "3 hours total active time before dust (combine same-type to extend)",
+        "Superior elements variant exists via Ports upgrade path"
+      ],
+      "notes": "Combat pocket with multi-skill craft gate (Fletching + POP). Listed in ironman guides as POP craft path, not pure BiS checklist — pairs with asgarnia:skilling-scrimshaw-package for the same workshop.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scrimshaw_of_the_elements",
+        "https://runescape.wiki/w/Scrimshaw_Crafter",
+        "https://runescape.wiki/w/Player-owned_port"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia craft facility. Desert POP hub is support only.",
+      "links_existing_ids": [
+        "desert:scrimshaw-crafter",
+        "asgarnia:skilling-scrimshaw-package"
+      ]
+    },
+    {
+      "id": "kandarin:seedicide-collector-upgrade",
+      "name": "Seedicide collector upgrade",
+      "category": "Farming drop-cleaner pickup mode",
+      "region_hint": "kandarin",
+      "region_hints": ["kandarin", "anachronia", "asgarnia"],
+      "requirements": [
+        "Seedicide already owned (Farmers' Market beans / Cabbage Facepunch renown / thaler routes — forinthry:seedicide-named)",
+        "25,000 beans at Farmers' Market for seedicide collector upgrade",
+        "Toggle auto-pickup in seedicide settings after upgrade"
+      ],
+      "effects": [
+        "Configured non-destroyed seeds auto-collect (bonecrusher-upgrade style pickup)",
+        "Destroy mode still awards double plant XP when Farming level allows",
+        "Works with toolbelt seedicide after multi-region:toolbelt-seedicide-attach"
+      ],
+      "notes": "Item seedicide and toolbelt attach are first-class; collector upgrade was only a footnote. This is the permanent bean sink for keep-vs-burn seed routing.",
+      "source_urls": [
+        "https://runescape.wiki/w/Seedicide",
+        "https://runescape.wiki/w/Farmers%27_Market"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin Farmers' Market for the 25k bean upgrade. Anachronia market can sell base seedicide; Asgarnia renown remains alternate base acquisition.",
+      "links_existing_ids": [
+        "forinthry:seedicide-named",
+        "multi-region:toolbelt-seedicide-attach"
+      ]
+    },
+    {
+      "id": "asgarnia:brooch-of-the-gods",
+      "name": "Brooch of the Gods",
+      "category": "permanent pocket skilling amplifier",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia", "tirannwn"],
+      "requirements": [
+        "Alchemical hydrix jewellery craft path (Invention blueprint + hydrix materials)",
+        "Craft alchemical hydrix brooch then Lvl-6 Enchant (87 Magic) or enchant tablet",
+        "No level to wear; becomes permanently untradeable on first equip confirmation"
+      ],
+      "effects": [
+        "Stores up to 1,000 of each empty decorated/exquisite urn type and empty incubated effigies",
+        "Doubles portable skilling station special-effect chance",
+        "Enhances listed skilling distractions (Artisans pipes/swords, Deep Sea distractions, chronicle capture, nests/eggs, fire spirits, rockertunity multiplier, Archaeology sprite focus)",
+        "Divine blessing spawns while training non-combat skills (including Slayer) for Invention materials once Invention unlocked; drop cleaners can trigger rolls"
+      ],
+      "notes": "Ironman endgame pocket QoL — multi-skill, not combat BiS. Invention manufacture pressures Asgarnia Guild; hydrix/alchemical materials may pull broader pressure.",
+      "source_urls": [
+        "https://runescape.wiki/w/Brooch_of_the_Gods",
+        "https://runescape.wiki/w/Alchemical_hydrix_brooch"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia Invention manufacture framing. Do not hard-require every hydrix source region.",
+      "links_existing_ids": [
+        "asgarnia:invention-guild",
+        "asgarnia:spring-cleaner"
+      ]
+    },
+    {
+      "id": "forinthry:hoardstalker-ring",
+      "name": "Hoardstalker ring",
+      "category": "resource dungeon teleport ring",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry", "asgarnia", "misthalin", "karamja", "kandarin", "morytania", "desert", "tirannwn"],
+      "requirements": [
+        "Sinkholes D&D reward path (preening ibis after full hoardstalker outfit) or rare Sinkholes/chest sources",
+        "Prior first entry to a resource dungeon before the ring can teleport there",
+        "Depleted rings recharge via Daemonheim Rewards shop"
+      ],
+      "effects": [
+        "Up to 8 teleports to unlocked resource dungeons (lands outside entrance; places inside vs cape for some planning)",
+        "Shares destination list with Dungeoneering cape resource-dungeon teleports",
+        "Skilling travel backbone for Mining Guild RD, Al Kharid RD, Edimmu, Slayer Tower RD, Brimhaven metal dragons, etc."
+      ],
+      "notes": "Pairs with forinthry:resource-dungeon-unlocks package. Cape is unlimited alternate; ring is the pre-99 / ring-slot travel tool.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hoardstalker_ring",
+        "https://runescape.wiki/w/Resource_dungeon",
+        "https://runescape.wiki/w/Sinkholes"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for Sinkholes/DG reward framing. Destination dungeons still need surface regions unlocked.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "forinthry:resource-dungeon-unlocks",
+        "asgarnia:mining-guild-resource-dungeon",
+        "prifddinas:edimmu-resource-dungeon"
+      ]
+    },
+    {
+      "id": "cross-region:grasping-rune-pouch",
+      "name": "Grasping rune pouch",
+      "category": "permanent RC/Magic combat-skilling pouch upgrade",
+      "region_hints": ["morytania", "forinthry"],
+      "required_regions": ["morytania", "forinthry"],
+      "requirements": [
+        "90 Runecrafting to craft; 85 Magic to use",
+        "Large rune pouch (or sealed large) owned — magical thread craft ladder (forinthry:magical-thread-abyss-supply)",
+        "2,000 Croesus flakes (Croesus / Morytania front)",
+        "15 magical threads"
+      ],
+      "effects": [
+        "Holds 4 rune types (non-necrotic) at very high stack caps",
+        "25% chance not to consume all runes used on a combat spell while pouch is equipped",
+        "+4 prayer bonus",
+        "Dyeable; works with multiple pouches for inventory setups"
+      ],
+      "notes": "Thread supply package already first-class; this is the finished grasping craft ironmen checklist. Expansive pouch is a further optional path not re-emitted here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Grasping_rune_pouch",
+        "https://runescape.wiki/w/Large_rune_pouch",
+        "https://runescape.wiki/w/Magical_thread",
+        "https://runescape.wiki/w/Croesus_flake"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania (Croesus flakes) + Forinthry (magical thread Abyss ladder). Both gates are real self-source pressure.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "forinthry:magical-thread-abyss-supply",
+        "forinthry:abyss-runecrafting-stack"
+      ]
+    }
+  ],
+  "emitted_ids": [
+    "asgarnia:skilling-scrimshaw-package",
+    "multi-region:scrimshaw-of-sacrifice",
+    "cross-region:binding-contract-ancient-summoning",
+    "forinthry:twisted-bird-skull-necklace",
+    "forinthry:split-dragontooth-necklace",
+    "forinthry:demon-horn-necklace",
+    "morytania:ectoplasmator",
+    "morytania:holy-wrench",
+    "asgarnia:scrimshaw-of-the-elements",
+    "kandarin:seedicide-collector-upgrade",
+    "asgarnia:brooch-of-the-gods",
+    "forinthry:hoardstalker-ring",
+    "cross-region:grasping-rune-pouch"
+  ],
+  "skipped_present_or_combat_only": [
+    {
+      "name": "Charming imp / herbicide / seedicide item / gold accumulators / gem bag upgraded / auto-screener / plank box / Orthen furnace core + superheat stacks / Grace of the elves individual / toolbelt attaches",
+      "reason": "Already first-class in regional-skilling-unlocks.json"
+    },
+    {
+      "name": "Dragon Rider amulet / blood necklace / Luck of the Dwarves / ring of vigour",
+      "reason": "Combat-only skip per brief"
+    },
+    {
+      "name": "Bonecrusher + demon horn stack",
+      "reason": "cross-region:bonecrusher-necklace present; this pack adds the missing individual necklace ladder only"
+    }
+  ]
+}

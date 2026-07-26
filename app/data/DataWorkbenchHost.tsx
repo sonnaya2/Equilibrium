@@ -36,6 +36,13 @@ const RegionalUnlocksResearch = dynamic(
     })),
   { ssr: false, loading: panelFallback },
 );
+const CombatBisResearch = dynamic(
+  () =>
+    import("@/components/CombatBisResearch").then((m) => ({
+      default: m.CombatBisResearch,
+    })),
+  { ssr: false, loading: panelFallback },
+);
 const RegionCombosResearch = dynamic(
   () =>
     import("@/components/RegionCombosResearch").then((m) => ({
@@ -128,6 +135,7 @@ export function DataWorkbenchHost({
       progression={<ProgressionResearch />}
       unlocks={<PermanentUnlockResearch />}
       regional={<RegionalUnlocksResearch />}
+      combatBis={<CombatBisResearch />}
       combos={<RegionCombosResearch />}
       slayer={<SlayerResearch />}
       invention={<InventionResearch />}

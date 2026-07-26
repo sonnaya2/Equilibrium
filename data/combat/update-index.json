@@ -339,13 +339,6 @@
       "lastVerifiedAt": "2026-07-25"
     },
     {
-      "entityId": "item:blessed-flask-production-chain",
-      "kind": "equipment",
-      "wikiPage": "Blessed flask",
-      "lastRevid": 37083795,
-      "lastVerifiedAt": "2026-07-25"
-    },
-    {
       "entityId": "item:corporeal-beast-holy-elixir-supply",
       "kind": "equipment",
       "wikiPage": "Corporeal Beast",

@@ -1,0 +1,137 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-final B4 early Karamja Herblore residual: first-class perfect juju production unlock (audit suggested_id karamja:perfect-juju-potions). Closes the ironman skilling-efficiency end state that was only footnoted on harmony pillars and the thin juju-potions-pointer. Does not re-emit recipe-hub, perfect-plus recipe, Habitat, or Meilyr supply rows.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "SKIP already first-class: karamja:perfect-juju-recipe-hub, forinthry:perfect-plus-recipe, karamja:juju-potions-pointer, karamja:juju-farming-potion-path, karamja:herblore-habitat, karamja:papa-mambo-shop, prifddinas:meilyr-harmony-pillars, prifddinas:meilyr-recipe-shop, prifddinas:crystal-flasks, tirannwn:crystal-tree-farming, cross-region:herblore-efficiency-stack, forinthry:scroll-of-cleansing.",
+    "pointer_demotion": "karamja:juju-potions-pointer is superseded by karamja:perfect-juju-potions (this pack) plus existing karamja:perfect-juju-recipe-hub. Do not re-emit the pointer as a production unlock; treat it as historical thin notes only when reconciling older sourceFiles.",
+    "no_trade_rule": "Ironman permanent production path and self-supply ingredient geography — consumable doses are not permanent unlocks.",
+    "rate_rule": "No invented XP/hour or GE prices. Unlock state, ingredient gates, effects, and region pressure only.",
+    "combo_fields": "Multi-region row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids."
+  },
+  "already_present_checked": [
+    "karamja:perfect-juju-recipe-hub",
+    "forinthry:perfect-plus-recipe",
+    "karamja:juju-potions-pointer",
+    "karamja:juju-farming-potion-path",
+    "karamja:herblore-habitat",
+    "karamja:papa-mambo-shop",
+    "prifddinas:meilyr-harmony-pillars",
+    "prifddinas:meilyr-recipe-shop",
+    "prifddinas:crystal-flasks",
+    "tirannwn:crystal-tree-farming"
+  ],
+  "skipped_existing": [
+    {
+      "id": "karamja:perfect-juju-recipe-hub",
+      "reason": "Already in data/research/regional-skilling-unlocks.json (wave5 residual-b). Soft Tirannwn optional_pressure; this pack emits the audit id with hard dual-region production gate."
+    },
+    {
+      "id": "forinthry:perfect-plus-recipe",
+      "reason": "Already first-class permanent recipe unlock (Daemonheim unreadable page). Perfect plus mixing ingredients surface here as end-chain pressure only."
+    },
+    {
+      "id": "karamja:juju-potions-pointer",
+      "reason": "Superseded thin pointer — demote; do not re-emit."
+    }
+  ],
+  "demotions": [
+    {
+      "id": "karamja:juju-potions-pointer",
+      "status": "superseded",
+      "superseded_by": [
+        "karamja:perfect-juju-potions",
+        "karamja:perfect-juju-recipe-hub"
+      ],
+      "notes": "Pointer only named Habitat juju supply without a first-class perfect-tier production unlock. Prefer karamja:perfect-juju-potions for ironman production planning; keep recipe-hub for recipe-list checklist. Do not delete historical sourceFile rows during ingest — mark superseded when merging."
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "karamja:perfect-juju-potions",
+      "name": "Perfect juju potion production path",
+      "category": "Herblore perfect-juju production infrastructure",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "karamja",
+        "tirannwn"
+      ],
+      "optional_pressure_regions": [
+        "prifddinas",
+        "anachronia",
+        "forinthry"
+      ],
+      "requirements": [
+        "Herblore Habitat access (south-east Karamja) for vine herbs and base juju / god-blessing secondaries",
+        "Herblore 75–92 matching each perfect juju recipe (boostable where allowed); 99 Herblore for perfect plus",
+        "3-dose base juju or Habitat god potion as primary (juju woodcutting/farming/mining/hunter/fishing, scentless, Saradomin's blessing, Guthix's gift, Zamorak's favour)",
+        "Harmony moss secondary for most perfect jujus (Meilyr harmony pillars, 75 Farming to plant; unique XP-attuned growth)",
+        "Perfect juju fishing uses harmony dust ×10 instead of harmony moss (waterfall / Prif dust supply)",
+        "Optional six-dose containers: potion flasks (standard) or crystal flasks (combination / perfect plus path)",
+        "Perfect plus end chain: overload (4) + harmony moss + crystal tree blossom + crystal flask after permanent recipe unlock"
+      ],
+      "unlocks": [
+        "First-class ironman production path for perfect juju woodcutting / farming / mining / smithing / agility / prayer / herblore / dungeoneering / fishing",
+        "Upgrade loop: Habitat 3-dose juju base + Tirannwn harmony moss (or dust×10 for fishing) → perfect juju (3)",
+        "1-hour dose duration per perfect juju (perfect juju dungeoneering lasts 4 hours); jadinko farm perk can add +30 seconds",
+        "Decant into potion flasks for 6-dose perfect juju flasks",
+        "Bridge into perfect plus (all perfect juju effects for 4 hours per dose) via crystal tree blossom + crystal flask + overload after forinthry:perfect-plus-recipe",
+        "Planner-visible dual-region gate: incomplete without both Karamja Habitat bases and Tirannwn moss/flask/blossom supply"
+      ],
+      "region_pressure": [
+        "Karamja hard-owns Herblore Habitat vine herbs, base juju craft geography, and Papa Mambo seed/supply loop.",
+        "Tirannwn hard-owns harmony moss (Meilyr pillars), crystal tree blossom (Prif crystal tree, 94 Farming), and crystal flask infrastructure for combination / perfect plus.",
+        "Prifddinas is the Tirannwn city face of moss / blossom / flask supply (not a separate league region token).",
+        "Anachronia optional: player-owned farm jadinko perk +30s duration on perfect jujus.",
+        "Forinthry optional pressure for permanent perfect plus recipe (Daemonheim) — mixing still needs Tirannwn crystal components."
+      ],
+      "notes": "Audit rank-3 residual: perfect juju (harmony moss + crystal blossom + crystal flasks + juju bases) was not first-class — only harmony-pillar detail and a thin Habitat juju pointer mentioned consumers. This id (karamja:perfect-juju-potions) is the production unlock; prior recipe-hub / pointer twins are DROP. Prefer this id for production planning. Do not re-emit perfect-plus recipe, Meilyr pillars, or crystal flasks. Do not invent GE prices or XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Perfect_juju_potion",
+        "https://runescape.wiki/w/Juju_potion",
+        "https://runescape.wiki/w/Harmony_moss",
+        "https://runescape.wiki/w/Crystal_tree_blossom",
+        "https://runescape.wiki/w/Crystal_flask",
+        "https://runescape.wiki/w/Perfect_plus_potion",
+        "https://runescape.wiki/w/Herblore_Habitat"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja + hard Tirannwn for self-sufficient perfect juju production. Karamja alone yields base jujus only; Tirannwn alone yields moss/flask/blossom without Habitat bases. Perfect plus still needs Forinthry recipe + 99 Herblore.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "karamja:juju-farming-potion-path",
+        "karamja:herblore-habitat",
+        "karamja:papa-mambo-shop",
+        "prifddinas:meilyr-harmony-pillars",
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:crystal-flasks",
+        "tirannwn:crystal-tree-farming",
+        "forinthry:perfect-plus-recipe",
+        "cross-region:herblore-efficiency-stack"
+      ]
+    }
+  ],
+  "equipment_additions": [],
+  "ids_emitted": [
+    "karamja:perfect-juju-potions"
+  ],
+  "ids_skipped_already_present": [
+    "karamja:perfect-juju-recipe-hub",
+    "forinthry:perfect-plus-recipe",
+    "karamja:juju-potions-pointer",
+    "karamja:juju-farming-potion-path",
+    "karamja:herblore-habitat",
+    "prifddinas:meilyr-harmony-pillars",
+    "prifddinas:crystal-flasks"
+  ],
+  "stats": {
+    "activity_additions": 1,
+    "equipment_additions": 0,
+    "demotions": 1,
+    "combo_rows": 1
+  }
+}

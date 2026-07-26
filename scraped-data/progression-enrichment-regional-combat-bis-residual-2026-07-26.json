@@ -1,0 +1,859 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Combat BiS residual densify after regional-combat-unlocks ~120 first-class rows. Headline BiS (EoF, Reaper, Cinderbanes, FSoA, SGB, Bolg, Leng, ZGS, Cryptbloom, Rasial package, Nox scythe/longbow, Praesul, Seismic, Blightbound, Ascension, Vestments, Deathdealer) is already present — this pack only emits MISSING high-value residuals: GWD1 item ladders (thin boss hub only), GWD2 weapon uniques (thin package only), style-boot gaps (blast diffusion + glacor T85/T90), noxious staff magic residual, niche style weapons (hexhunter / terrasaur), Desert Magister / khopesh chain, chaotic staff. Not Waiko. Not fluff. Not strategy guides.",
+  "policy": {
+    "region_rule": "required_regions means every listed elective is a mandatory self-supply step. region_hints are soft pressure. Never invent multi-region/cross-region/global tokens as required_regions entries — use the cross-region: id prefix when geography is split. Never invent elective regions for Arc/Mazcab.",
+    "duplicate_guard": "Skip every id already first-class in data/research/regional-combat-unlocks.json (120 records at write time). Headline present: asgarnia:essence-of-finality-amulet, cross-region:essence-of-finality, combat:reaper-necklace, combat:amulet-of-souls, tirannwn:cinderbane-gloves, misthalin:fractured-staff-of-armadyl, desert:seren-godbow, misthalin:bow-of-the-last-guardian, misthalin:dark-leng-melee, desert:zaros-godsword, misthalin:cryptbloom-armour, boss:rasial / misthalin:rasial-*, morytania:noxious-scythe-longbow, asgarnia:wand-of-the-praesul, asgarnia:seismic-weapons, tirannwn:blightbound-crossbows, kandarin:ascension-crossbows, misthalin:vestments-of-havoc, misthalin:deathdealer-armour, anachronia:style-boots-shadow-spike, boss:gwd1, boss:gwd2, desert:anima-core-armour, desert:gwd2-anima-melee-ranged.",
+    "thin_residual_rule": "boss:gwd1 / boss:gwd2 / desert:gwd2-anima-melee-ranged / anachronia:style-boots-shadow-spike stay as hubs; this pack first-classes the item ladders they only name in effects. Blast diffusion was explicitly out of melee/ranged scope in style-boots-shadow-spike — emit magic boots here.",
+    "no_waiko": true,
+    "no_strategy": true
+  },
+  "already_present_checked": [
+    "asgarnia:essence-of-finality-amulet",
+    "cross-region:essence-of-finality",
+    "cross-region:eof-hydrix-component-pressure",
+    "combat:reaper-necklace",
+    "combat:amulet-of-souls",
+    "tirannwn:cinderbane-gloves",
+    "misthalin:fractured-staff-of-armadyl",
+    "desert:seren-godbow",
+    "misthalin:bow-of-the-last-guardian",
+    "misthalin:dark-leng-melee",
+    "desert:zaros-godsword",
+    "misthalin:cryptbloom-armour",
+    "boss:rasial",
+    "misthalin:rasial-first-necromancer-equipment",
+    "misthalin:rasial-necro-bis-farm",
+    "morytania:noxious-scythe-longbow",
+    "asgarnia:wand-of-the-praesul",
+    "asgarnia:seismic-weapons",
+    "tirannwn:blightbound-crossbows",
+    "kandarin:ascension-crossbows",
+    "misthalin:vestments-of-havoc",
+    "misthalin:deathdealer-armour",
+    "misthalin:deathwarden-armour",
+    "anachronia:style-boots-shadow-spike",
+    "boss:gwd1",
+    "boss:gwd2",
+    "desert:anima-core-armour",
+    "desert:refined-anima-core-armour",
+    "desert:gwd2-anima-melee-ranged",
+    "forinthry:chaotic-melee-ranged",
+    "forinthry:eldritch-crossbow",
+    "desert:drygore-weapons",
+    "desert:inquisitor-staff",
+    "cross-region:ek-zekkil",
+    "cross-region:trimmed-masterwork-melee",
+    "morytania:malevolent-armour",
+    "asgarnia:nex-t80-power-armour",
+    "asgarnia:torva-praesulic-melee",
+    "asgarnia:pernix-ranged",
+    "asgarnia:virtus-praesulic-essence"
+  ],
+  "equipment_additions": [
+    {
+      "id": "anachronia:blast-diffusion-boots",
+      "name": "Blast diffusion / enhanced blast diffusion boots",
+      "category": "style-specific BiS Magic combat boots residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Defence to wear base; 90-tier after shadow spike",
+        "Vile blooms on Anachronia (Devil's snare / Liverworts / Lampenflora / Luminous snaggler) for blast diffusion boots",
+        "Raksha, the Shadow Colossus for shadow spike",
+        "Attach shadow spike → enhanced blast diffusion boots (permanently untradeable; keeps Inner Wrath)"
+      ],
+      "unlocks": [
+        "Blast diffusion boots (T80 Magic power)",
+        "Enhanced blast diffusion boots (T90 Magic power)"
+      ],
+      "effects": [
+        "Inner Wrath: Wild Magic applies Blast Infused for 10 ticks (6s)",
+        "Blast Infused: Magic basic abilities (including basic attack and Combust) gain +8% base damage",
+        "Same Anachronia + Raksha geography as laceration/fleeting; this row first-classes the Magic sibling the melee/ranged hub only named"
+      ],
+      "region_pressure": [
+        "Anachronia hard-owns base boots and Raksha shadow spike self-supply."
+      ],
+      "notes": "Residual only — anachronia:style-boots-shadow-spike already covers laceration/fleeting + spike and explicitly left blast diffusion out of melee/ranged scope. Do not re-emit that hub id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Blast_diffusion_boots",
+        "https://runescape.wiki/w/Enhanced_blast_diffusion_boots",
+        "https://runescape.wiki/w/Shadow_spike"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Anachronia. Pair with style-boots-shadow-spike for the full three-style enhanced-boot ladder."
+    },
+    {
+      "id": "fremennik:glacor-tank-boots",
+      "name": "Steadfast / Ragefire / Glaiven boots (glacor T85 tank)",
+      "category": "mid-high style tank boots residual",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Defence to wear",
+        "Glacors (classic glacor cave / Ritual of the Mahjarrat glacor access — Fremennik geography for surface glacor farm)",
+        "Style split: Steadfast (melee tank), Ragefire (magic tank), Glaiven (ranged tank)"
+      ],
+      "unlocks": [
+        "Steadfast boots",
+        "Ragefire boots",
+        "Glaiven boots"
+      ],
+      "effects": [
+        "Highest non-degrading feet armour outside Daemonheim (tied trio)",
+        "Tank-class boots used as the T85 bridge before Anachronia power boots or T90 glacor upgrades",
+        "Feedstock for emberkeen / hailfire / flarefrost (separate residual row)"
+      ],
+      "region_pressure": [
+        "Fremennik hard for classic glacor self-supply. Senntisten Glacor Front glacors are a separate Misthalin working-map farm and are not required for this T85 trio."
+      ],
+      "notes": "User residual ask for ragefire/steadfast/glaiven. Not GWD1 drops. Do not invent Bandos/Kree/K'ril boot sources.",
+      "source_urls": [
+        "https://runescape.wiki/w/Steadfast_boots",
+        "https://runescape.wiki/w/Ragefire_boots",
+        "https://runescape.wiki/w/Glaiven_boots",
+        "https://runescape.wiki/w/Glacor"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Fremennik for the classic glacor cave ladder. Do not dual-claim Arch-Glacor Leng path under this id."
+    },
+    {
+      "id": "cross-region:t90-glacor-upgraded-boots",
+      "name": "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)",
+      "category": "tier-90 style power boots cross-region residual",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik", "forinthry"],
+      "required_regions": ["fremennik", "forinthry"],
+      "region_requirement_type": "all_required",
+      "requirements": [
+        "90 Defence to wear upgraded boots",
+        "Fremennik: base Steadfast / Ragefire / Glaiven from glacors",
+        "Forinthry-side upgrade glands (primary self-supply): steadfast scales (rune dragons; Temple of Aminishi is Arc-external alternate), ragefire glands (rune dragons / Shadow Reef ED3), glaiven wing-tips (Dragonkin Laboratory ED2 / rune dragons)",
+        "Combine two matching glands/scales/wing-tips with the matching base boots"
+      ],
+      "unlocks": [
+        "Emberkeen boots (melee T90 from Steadfast + 2 steadfast scales)",
+        "Hailfire boots (magic T90 from Ragefire + 2 ragefire glands)",
+        "Flarefrost boots (ranged T90 from Glaiven + 2 glaiven wing-tips)"
+      ],
+      "effects": [
+        "T90 power boots with prayer + style damage; degrade and revert to tradeable base when charge hits 0",
+        "Masterwork-boot-adjacent mid-end option when Anachronia enhanced style boots are unavailable",
+        "Still outclassed for pure DPS by enhanced laceration / fleeting / blast diffusion once Anachronia + Raksha are unlocked"
+      ],
+      "region_pressure": [
+        "Fremennik + Forinthry both required for normal ironman self-supply (base glacor boots + ED/rune-dragon glands).",
+        "Temple of Aminishi steadfast-scale route stays unresolved Arc external — do not invent an elective for it."
+      ],
+      "notes": "Cross-region residual. Prefer anachronia style boots when that region is unlocked; this ladder is the non-Anachronia T90 bridge.",
+      "source_urls": [
+        "https://runescape.wiki/w/Emberkeen_boots",
+        "https://runescape.wiki/w/Hailfire_boots",
+        "https://runescape.wiki/w/Flarefrost_boots"
+      ],
+      "confidence": "confirmed_current_wiki_cross_pressure",
+      "league_treatment": "Region combo Fremennik + Forinthry. Revisit if Equilibrium reassigns ED2/ED3 or rune dragons."
+    },
+    {
+      "id": "asgarnia:gwd1-bandos-equipment",
+      "name": "Bandos equipment (GWD1 melee power ladder)",
+      "category": "midgame GWD1 melee power armour residual",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "70 Defence to wear Bandos power armour",
+        "General Graardor and Bandosian bodyguards in God Wars Dungeon 1",
+        "Official Equilibrium Asgarnia GWD approach"
+      ],
+      "unlocks": [
+        "Bandos helmet / chestplate / tassets / gloves / boots",
+        "Bandos warshield adjacency"
+      ],
+      "effects": [
+        "Classic T70 non-degrading melee power armour ladder before Torva / malevolent / masterwork",
+        "Still a common ironman midgame set and disassembly source for Bandos components"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns GWD1 Bandos self-supply."
+      ],
+      "notes": "Residual densify under thin boss:gwd1 hub. Do not re-emit boss:gwd1.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bandos_equipment",
+        "https://runescape.wiki/w/Bandos_chestplate",
+        "https://runescape.wiki/w/God_Wars_Dungeon"
+      ],
+      "confidence": "confirmed_wiki_and_official_region_example",
+      "league_treatment": "Hard Asgarnia. Nex/Torva is a separate residual row already first-class."
+    },
+    {
+      "id": "asgarnia:gwd1-armadyl-equipment",
+      "name": "Armadyl equipment (GWD1 ranged power ladder)",
+      "category": "midgame GWD1 ranged power armour residual",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "70 Defence to wear Armadyl power armour",
+        "Kree'arra and Armadylean bodyguards in God Wars Dungeon 1"
+      ],
+      "unlocks": [
+        "Armadyl helmet / chestplate / chainskirt / gloves / boots",
+        "Armadyl buckler adjacency"
+      ],
+      "effects": [
+        "Classic T70 non-degrading ranged power armour ladder before Pernix / sirenic",
+        "Prayer bonus + ranged damage make it a durable midgame set"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns GWD1 Armadyl self-supply."
+      ],
+      "notes": "Residual densify under thin boss:gwd1 hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Armadyl_equipment",
+        "https://runescape.wiki/w/Armadyl_chestplate",
+        "https://runescape.wiki/w/God_Wars_Dungeon"
+      ],
+      "confidence": "confirmed_wiki_and_official_region_example",
+      "league_treatment": "Hard Asgarnia."
+    },
+    {
+      "id": "asgarnia:gwd1-subjugation-equipment",
+      "name": "Robes of subjugation (GWD1 magic power ladder)",
+      "category": "midgame GWD1 magic power armour residual",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "70 Defence to wear Subjugation power armour",
+        "K'ril Tsutsaroth and Zamorakian bodyguards in God Wars Dungeon 1"
+      ],
+      "unlocks": [
+        "Hood / garb / gown / gloves / boots of subjugation",
+        "Ward of subjugation (shield; not used for greater ensouled cloth)"
+      ],
+      "effects": [
+        "Classic T70 non-degrading Magic power armour ladder before Virtus / tectonic",
+        "Subjugation pieces (except ward) craft into greater ensouled cloth for Deathwarden / Deathdealer T80–T90 necro armour"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns GWD1 Subjugation self-supply.",
+        "Necromancy armour residual already first-class under misthalin:deathdealer-armour / deathwarden — this row owns the Subjugation feedstock geography."
+      ],
+      "notes": "High residual value because necro craft chains consume Subjugation cloth even when worn BiS has moved on.",
+      "source_urls": [
+        "https://runescape.wiki/w/Subjugation_robe_armour",
+        "https://runescape.wiki/w/Greater_ensouled_cloth",
+        "https://runescape.wiki/w/God_Wars_Dungeon"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Asgarnia for K'ril Subjugation self-supply."
+    },
+    {
+      "id": "asgarnia:gwd1-godswords",
+      "name": "Godswords (GWD1 hilt + shard assembly)",
+      "category": "midgame GWD1 two-handed melee special residual",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "75 Attack to wield",
+        "80 Smithing to forge godsword blade from shards 1–3 (assistable)",
+        "Godsword shards from GWD1 generals and bodyguards; hilts from the matching general only (Armadyl / Bandos / Saradomin / Zamorak)"
+      ],
+      "unlocks": [
+        "Armadyl godsword",
+        "Bandos godsword",
+        "Saradomin godsword",
+        "Zamorak godsword"
+      ],
+      "effects": [
+        "T75 non-degrading 2h melee with unique specials / passives per hilt",
+        "Still used as EoF-stored special switches and midgame 2h until ZGS / Ek-ZekKil / Leng / scythe paths"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns the four classic godsword hilt/shard farms. Zaros godsword is Telos/Desert and already first-class as desert:zaros-godsword."
+      ],
+      "notes": "Do not fold ZGS into this row. Residual under thin boss:gwd1 effects list.",
+      "source_urls": [
+        "https://runescape.wiki/w/Godsword",
+        "https://runescape.wiki/w/Godsword_blade",
+        "https://runescape.wiki/w/God_Wars_Dungeon"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Asgarnia for classic four godswords."
+    },
+    {
+      "id": "morytania:noxious-staff",
+      "name": "Noxious staff",
+      "category": "tier-90 residual two-handed Magic weapon",
+      "region_hint": "morytania",
+      "region_hints": ["morytania"],
+      "required_regions": ["morytania"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Magic to wield; 90 Crafting to assemble spider leg + Araxxi's eye",
+        "Araxxor / Araxxi (Morytania Araxyte Hive) for spider leg path + noxious eye/component"
+      ],
+      "unlocks": [
+        "Noxious staff (T90 2h Magic)",
+        "Mirrorback special attack (same family as noxious longbow)"
+      ],
+      "effects": [
+        "T90 Magic 2h bridge before FSoA / Roar+Ode dual-wield endgame",
+        "Same boss family as noxious scythe/longbow — magic style was out of melee-ranged pack scope"
+      ],
+      "region_pressure": [
+        "Morytania hard-owns the full noxious weapon family self-source."
+      ],
+      "notes": "Complement morytania:noxious-scythe-longbow. Do not re-emit that id. Boss hub boss:araxxor already lists noxious components.",
+      "source_urls": [
+        "https://runescape.wiki/w/Noxious_staff",
+        "https://runescape.wiki/w/Araxxor"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Morytania."
+    },
+    {
+      "id": "desert:gloves-of-passage",
+      "name": "Gloves of passage / enhanced gloves of passage",
+      "category": "melee power gloves residual with bleed passive",
+      "region_hint": "desert",
+      "region_hints": ["desert", "misthalin"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "optional_pressure_regions": ["misthalin"],
+      "requirements": [
+        "85 Defence for base gloves; enhanced is T90",
+        "The Magister (Sophanem Slayer Dungeon) — wiki League badge Desert",
+        "Enhanced: 1,000 glacor remnants + 10 necronium bars + Leng artefact + gloves of passage (90 Smithing craft path)",
+        "Optional Enchantment of agony permanent passive upgrade"
+      ],
+      "unlocks": [
+        "Gloves of passage (T85 melee power)",
+        "Enhanced gloves of passage (T90 melee power)"
+      ],
+      "effects": [
+        "Enduring Ruin: successful Rend → next melee hit within 6s deals +10% damage; target takes +20% bleed damage for ~10s",
+        "Still a high-end bleed/melee glove option beside cinderbanes (poison hybrid) depending on rotation"
+      ],
+      "region_pressure": [
+        "Desert hard for Magister drop.",
+        "Enhanced upgrade pulls Leng artefact / glacor remnants (Misthalin Arch-Glacor working map) — optional_pressure only; base gloves are Desert-complete."
+      ],
+      "notes": "Not present in accessories pack. Cinderbanes remain the hybrid poison glove row (tirannwn).",
+      "source_urls": [
+        "https://runescape.wiki/w/Gloves_of_passage",
+        "https://runescape.wiki/w/Enhanced_gloves_of_passage",
+        "https://runescape.wiki/w/The_Magister"
+      ],
+      "confidence": "confirmed_current_wiki_league_desert_badge",
+      "league_treatment": "Hard Desert for base gloves. Enhanced path adds Misthalin pressure without making Misthalin all_required for the base item."
+    },
+    {
+      "id": "desert:khopesh-tumeken-elidinis",
+      "name": "Khopesh of Tumeken / Elidinis (Magister DW melee)",
+      "category": "tier-92 dual-wield melee residual",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "92 Attack to wield upgraded khopeshes; 92 Crafting to bless",
+        "Khopesh of the Kharidian (main-hand) from Sophanem Slayer Dungeon monsters; off-hand Kharidian from Shifting Tombs chests",
+        "The Magister phylacteries → scraps of scripture → Blessings of Sea/Sky/Sand",
+        "Bless Kharidian khopeshes into Tumeken (MH) and Elidinis (OH)"
+      ],
+      "unlocks": [
+        "Khopesh of the Kharidian + off-hand (T82 stepping stones)",
+        "Khopesh of Tumeken (T92 MH)",
+        "Khopesh of Elidinis (T92 OH)"
+      ],
+      "effects": [
+        "T92 DW melee bridge when Leng / drygore / masterwork spear paths are region-locked out",
+        "Full Desert self-supply chain (Sophanem + Magister + Tombs)"
+      ],
+      "region_pressure": [
+        "Desert hard-owns the entire khopesh upgrade geography."
+      ],
+      "notes": "High-value residual missing from melee-ranged pack. Not Twin Furies blades (those are GWD2).",
+      "source_urls": [
+        "https://runescape.wiki/w/Khopesh_of_Tumeken",
+        "https://runescape.wiki/w/Khopesh_of_Elidinis",
+        "https://runescape.wiki/w/Khopesh_of_the_Kharidian",
+        "https://runescape.wiki/w/The_Magister"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "desert:gwd2-dragon-rider-lance",
+      "name": "Dragon Rider lance",
+      "category": "GWD2 residual two-handed melee polearm",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Attack to wield (tier-85* accuracy polearm)",
+        "Vindicta / Gorvek in Heart of Gielinor (GWD2)"
+      ],
+      "unlocks": [
+        "Dragon Rider lance"
+      ],
+      "effects": [
+        "Halberd-range T85* melee with strong mobility special still used in many rotations",
+        "Midgame 2h ladder piece before scythe / Ek-ZekKil / Tumeken's Light"
+      ],
+      "region_pressure": [
+        "Desert hard-owns GWD2 Vindicta self-supply."
+      ],
+      "notes": "Named inside desert:gwd2-anima-melee-ranged package; first-class residual for planners scanning weapons not anima cores.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dragon_Rider_lance",
+        "https://runescape.wiki/w/Vindicta",
+        "https://runescape.wiki/w/Heart_of_Gielinor"
+      ],
+      "confidence": "confirmed_wiki_and_official_archive_region",
+      "league_treatment": "Hard Desert. Do not file under Asgarnia GWD1."
+    },
+    {
+      "id": "desert:gwd2-cywir-magic-weapons",
+      "name": "Wand / Orb of the Cywir elders",
+      "category": "GWD2 residual dual-wield Magic weapons",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Magic to wield",
+        "Helwyr in Heart of Gielinor (GWD2)"
+      ],
+      "unlocks": [
+        "Wand of the Cywir elders",
+        "Orb of the Cywir elders"
+      ],
+      "effects": [
+        "T85* accuracy Magic DW pair with strong midgame performance before seismic / praesul / FSoA",
+        "Common ironman Magic bridge when Asgarnia Nex/Vorago is locked"
+      ],
+      "region_pressure": [
+        "Desert hard-owns Helwyr Cywir self-supply."
+      ],
+      "notes": "Magic residual missing from magic-necro pack (that pack focused FSoA/seismic/praesul/roar). boss:gwd2 only lists Cywir in effects.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wand_of_the_Cywir_elders",
+        "https://runescape.wiki/w/Orb_of_the_Cywir_elders",
+        "https://runescape.wiki/w/Helwyr"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "desert:gwd2-shadow-glaives",
+      "name": "Shadow glaives",
+      "category": "GWD2 residual dual-wield Ranged weapons",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Ranged to wield",
+        "Gregorovic in Heart of Gielinor (GWD2)"
+      ],
+      "unlocks": [
+        "Shadow glaive + off-hand shadow glaive"
+      ],
+      "effects": [
+        "T85* accuracy / T80 damage dual thrown weapons; no ammo",
+        "Strong midgame ranged DW before blightbound / ascension / Bolg"
+      ],
+      "region_pressure": [
+        "Desert hard-owns Gregorovic glaive self-supply."
+      ],
+      "notes": "Named lightly in desert:gwd2-anima-melee-ranged; first-class residual for ranged planners.",
+      "source_urls": [
+        "https://runescape.wiki/w/Shadow_glaive",
+        "https://runescape.wiki/w/Gregorovic"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "desert:gwd2-twin-fury-blades",
+      "name": "Blade of Avaryss / Blade of Nymora",
+      "category": "GWD2 residual dual-wield melee weapons",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Attack to wield",
+        "Twin Furies (Avaryss + Nymora) in Heart of Gielinor (GWD2)"
+      ],
+      "unlocks": [
+        "Blade of Avaryss",
+        "Blade of Nymora"
+      ],
+      "effects": [
+        "T85* accuracy dual blades midgame melee DW before drygore / Leng / khopesh T92",
+        "GWD2 melee weapon residual distinct from Dragon Rider lance 2h path"
+      ],
+      "region_pressure": [
+        "Desert hard-owns Twin Furies self-supply."
+      ],
+      "notes": "Not khopeshes. Residual densify under thin GWD2 weapon package.",
+      "source_urls": [
+        "https://runescape.wiki/w/Blade_of_Avaryss",
+        "https://runescape.wiki/w/Blade_of_Nymora",
+        "https://runescape.wiki/w/Twin_Furies"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "forinthry:hexhunter-bow",
+      "name": "Hexhunter bow",
+      "category": "niche anti-magic T80 ranged weapon residual",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry"],
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Ranged to wield; 99 Slayer for soulgazers",
+        "Soulgazers / elite soulgazers in the stalker dungeon (Zamorak's hideout / Daemonheim — Forinthry Daemonheim taxonomy)",
+        "Veil-ripper Ozharakha (stalker dungeon) is the practical unique hexhunter source; rare surface Wilderness soulgazer drops exist but are not a second elective"
+      ],
+      "unlocks": [
+        "Hexhunter bow (T80 shortbow)",
+        "Optional Enchantment of dispelling (+5% permanent damage passive upgrade)"
+      ],
+      "effects": [
+        "Soul Gaze: +12.5% damage and +10% hit chance vs magic-classed enemies (effective ~T94–97 at many magic bosses)",
+        "Ranged equivalent of terrasaur maul / inquisitor staff niche triangle"
+      ],
+      "region_pressure": [
+        "Forinthry hard for stalker-dungeon / Daemonheim soulgazer self-supply under current repo taxonomy."
+      ],
+      "notes": "Was fully missing. Inquisitor staff already Desert-first-class; terrasaur is Anachronia residual in this pack.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hexhunter_bow",
+        "https://runescape.wiki/w/Soulgazer",
+        "https://runescape.wiki/w/Stalker_dungeon",
+        "https://runescape.wiki/w/Veil-ripper_Ozharakha"
+      ],
+      "confidence": "confirmed_current_wiki_forinthry_daemonheim_taxonomy",
+      "league_treatment": "Hard Forinthry for stalker dungeon farm. Wilderness badge on Flesh-hatcher is not used as a second elective."
+    },
+    {
+      "id": "anachronia:terrasaur-maul",
+      "name": "Terrasaur maul",
+      "category": "niche anti-ranged T80 melee weapon residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Strength to wield; 93 Crafting + 93 Smithing to assemble (assistable)",
+        "Big Game Hunter tier-3 dinosaurs on Anachronia: tribal fin (Oculi apoterrasaur), superior long bone (Pavosaurus rex), volcanic fragments (Malletops)",
+        "Minimum ~96 Hunter / 76+ Slayer path for the tier-3 BGH chain",
+        "Optional Enchantment of savagery permanent +5% damage passive upgrade"
+      ],
+      "unlocks": [
+        "Terrasaur maul (T80 2h crush)"
+      ],
+      "effects": [
+        "Primal Savagery: +12.5% ability damage and +10% hit chance vs ranged-classed enemies (effective T90–100 at many ranged bosses)",
+        "Melee equivalent of hexhunter bow / inquisitor staff niche triangle"
+      ],
+      "region_pressure": [
+        "Anachronia hard-owns the full BGH piece self-supply."
+      ],
+      "notes": "Was fully missing. Complements anachronia:masterwork-ranged-pressure without overlapping that Hunter-mats row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Terrasaur_maul",
+        "https://runescape.wiki/w/Big_Game_Hunter"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Anachronia."
+    },
+    {
+      "id": "forinthry:chaotic-staff",
+      "name": "Chaotic staff",
+      "category": "tier-80 residual two-handed Magic weapon",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry"],
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Magic and 80 Dungeoneering to claim",
+        "Daemonheim Rewards trader token purchase (Forinthry Daemonheim taxonomy)",
+        "Token cost self-source inside Daemonheim"
+      ],
+      "unlocks": [
+        "Chaotic staff (T80 2h Magic)"
+      ],
+      "effects": [
+        "Strong early-league / early-region T80 Magic 2h when boss uniques are unavailable",
+        "Completes the chaotic weapon ladder — forinthry:chaotic-melee-ranged intentionally omitted Magic staff"
+      ],
+      "region_pressure": [
+        "Forinthry hard for Dungeoneering token self-source."
+      ],
+      "notes": "Residual gap beside forinthry:chaotic-melee-ranged. Do not re-emit that id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Chaotic_staff",
+        "https://runescape.wiki/w/Dungeoneering/Rewards"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Forinthry."
+    },
+    {
+      "id": "desert:magister-combat-hub",
+      "name": "The Magister (combat uniques hub residual)",
+      "category": "regional boss BiS drop source residual",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "115+ Slayer for The Magister",
+        "Sophanem Slayer Dungeon access (Desert)",
+        "Keys / soul devourer infrastructure inside the dungeon"
+      ],
+      "unlocks": [
+        "Gloves of passage",
+        "Phylacteries → scraps of scripture → Sea/Sky/Sand blessings for khopesh upgrades",
+        "Other Magister uniques as listed on wiki drop table"
+      ],
+      "effects": [
+        "Desert-defining high Slayer boss for melee gloves + T92 khopesh craft chain",
+        "Wiki Equilibrium League badge: Desert"
+      ],
+      "region_pressure": [
+        "Desert hard. Complements desert:gloves-of-passage and desert:khopesh-tumeken-elidinis without replacing those item rows."
+      ],
+      "notes": "Boss hub was missing from bis-boss-drops pack (20 bosses, no Magister). Residual only — not a strategy guide.",
+      "source_urls": [
+        "https://runescape.wiki/w/The_Magister",
+        "https://runescape.wiki/w/Sophanem_Slayer_Dungeon"
+      ],
+      "confidence": "confirmed_current_wiki_league_desert_badge",
+      "league_treatment": "Hard Desert."
+    },
+    {
+      "id": "asgarnia:saradomin-godsword-residual",
+      "name": "Saradomin godsword special residual (heal switch)",
+      "category": "GWD1 special-attack utility residual",
+      "region_hint": "asgarnia",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Same godsword assembly as asgarnia:gwd1-godswords",
+        "Commander Zilyana for Saradomin hilt"
+      ],
+      "unlocks": [
+        "Saradomin godsword (heal/prayer special — classic sustain switch and EoF store target)"
+      ],
+      "effects": [
+        "Healing special remains a high-value utility switch into late game",
+        "Often stored in Essence of Finality when Asgarnia is unlocked"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Zilyana hilt. Prefer asgarnia:gwd1-godswords for the full four-hilt assembly; this row flags the SGS utility role planners search for."
+      ],
+      "notes": "Thin utility densify — if orchestrator prefers single godsword row only, drop this id and keep asgarnia:gwd1-godswords.",
+      "source_urls": [
+        "https://runescape.wiki/w/Saradomin_godsword",
+        "https://runescape.wiki/w/Commander_Zilyana"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Asgarnia. Optional densify relative to gwd1-godswords."
+    },
+    {
+      "id": "forinthry:rune-dragon-boot-glands",
+      "name": "Rune dragon boot-upgrade glands residual",
+      "category": "T90 glacor-boot upgrade material residual",
+      "region_hint": "forinthry",
+      "region_hints": ["forinthry"],
+      "required_regions": ["forinthry"],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Access to rune dragons (Forinthry / Wilderness-edge dragon geography under current taxonomy)",
+        "Collect steadfast scales, ragefire glands, and glaiven wing-tips as tertiary upgrades for glacor boots"
+      ],
+      "unlocks": [
+        "Planner-visible self-supply path for emberkeen / hailfire / flarefrost without Arc Aminishi"
+      ],
+      "effects": [
+        "Primary non-Arc gland source that makes cross-region:t90-glacor-upgraded-boots completable inside Equilibrium electives",
+        "ED2/ED3 alternate routes remain Forinthry-adjacent for wing-tips / glands"
+      ],
+      "region_pressure": [
+        "Forinthry hard for rune-dragon / ED gland self-supply when Arc is unavailable."
+      ],
+      "notes": "Support residual for the T90 glacor boot row. Not a worn BiS item itself.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rune_dragon",
+        "https://runescape.wiki/w/Steadfast_scale",
+        "https://runescape.wiki/w/Ragefire_gland",
+        "https://runescape.wiki/w/Glaiven_wing-tip"
+      ],
+      "confidence": "confirmed_current_wiki_forinthry_pressure",
+      "league_treatment": "Hard Forinthry support row. Pair with fremennik:glacor-tank-boots + cross-region:t90-glacor-upgraded-boots."
+    }
+  ],
+  "ids_emitted": [
+    "anachronia:blast-diffusion-boots",
+    "fremennik:glacor-tank-boots",
+    "cross-region:t90-glacor-upgraded-boots",
+    "asgarnia:gwd1-bandos-equipment",
+    "asgarnia:gwd1-armadyl-equipment",
+    "asgarnia:gwd1-subjugation-equipment",
+    "asgarnia:gwd1-godswords",
+    "morytania:noxious-staff",
+    "desert:gloves-of-passage",
+    "desert:khopesh-tumeken-elidinis",
+    "desert:gwd2-dragon-rider-lance",
+    "desert:gwd2-cywir-magic-weapons",
+    "desert:gwd2-shadow-glaives",
+    "desert:gwd2-twin-fury-blades",
+    "forinthry:hexhunter-bow",
+    "anachronia:terrasaur-maul",
+    "forinthry:chaotic-staff",
+    "desert:magister-combat-hub",
+    "asgarnia:saradomin-godsword-residual",
+    "forinthry:rune-dragon-boot-glands"
+  ],
+  "skip_present_or_out_of_scope": [
+    {
+      "id": "asgarnia:essence-of-finality-amulet",
+      "reason": "PRESENT — EoF Asgarnia manufacture chain already first-class (not thin)"
+    },
+    {
+      "id": "cross-region:essence-of-finality",
+      "reason": "PRESENT — craft/ornament pressure row already first-class"
+    },
+    {
+      "id": "combat:reaper-necklace",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "tirannwn:cinderbane-gloves",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:fractured-staff-of-armadyl",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "desert:seren-godbow",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:bow-of-the-last-guardian",
+      "reason": "PRESENT (Bolg)"
+    },
+    {
+      "id": "misthalin:dark-leng-melee",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "desert:zaros-godsword",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:cryptbloom-armour",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:rasial-first-necromancer-equipment",
+      "reason": "PRESENT — omni guard + soulbound lantern + First Necromancer robes"
+    },
+    {
+      "id": "morytania:noxious-scythe-longbow",
+      "reason": "PRESENT — scythe + longbow only; staff emitted as new residual"
+    },
+    {
+      "id": "asgarnia:wand-of-the-praesul",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "asgarnia:seismic-weapons",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "tirannwn:blightbound-crossbows",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "kandarin:ascension-crossbows",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:vestments-of-havoc",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "misthalin:deathdealer-armour",
+      "reason": "PRESENT"
+    },
+    {
+      "id": "anachronia:style-boots-shadow-spike",
+      "reason": "PRESENT for laceration/fleeting + spike; blast diffusion emitted separately"
+    },
+    {
+      "id": "boss:gwd1",
+      "reason": "PRESENT hub — item ladders densified instead"
+    },
+    {
+      "id": "boss:gwd2",
+      "reason": "PRESENT hub — weapon uniques densified instead"
+    },
+    {
+      "id": "elite-malevolent",
+      "reason": "No elite malevolent armour set — malevolent essence feeds trimmed masterwork (already first-class)"
+    },
+    {
+      "id": "eof-ornament-kit-region",
+      "reason": "Soul + reaper ornament kits are master clue rewards (global clue table), not a clean elective-region BiS gate — already noted under cross-region:essence-of-finality"
+    },
+    {
+      "id": "waiko-/*",
+      "reason": "Out of scope per task"
+    },
+    {
+      "id": "invention:flanking-planted-feet",
+      "reason": "Global Invention perks — not region-locked combat BiS geography (skip fluff)"
+    },
+    {
+      "id": "staff-of-limitless",
+      "reason": "Lower residual priority vs rows above; god-book combination chain not a top BiS densify target this pass"
+    }
+  ],
+  "summary": {
+    "rows_emitted": 20,
+    "main_catalog_before": 120,
+    "focus": [
+      "style boots residual (blast diffusion + glacor T85/T90)",
+      "GWD1 residual densify (Bandos/Armadyl/Subjugation/godswords)",
+      "GWD2 residual densify (lance/cywir/glaives/twin blades)",
+      "noxious staff magic gap",
+      "hexhunter + terrasaur niche triangle completion",
+      "Magister gloves + khopesh T92",
+      "chaotic staff magic gap"
+    ],
+    "headline_bis_status": "EoF, Reaper, Cinderbanes, FSoA, SGB, Bolg, Leng, ZGS, Cryptbloom, Rasial, Nox melee/ranged, Praesul, Seismic, Blightbound, Ascension, Vestments, Deathdealer already first-class — not re-emitted"
+  },
+  "sources_note": "RuneScape Wiki pages fetched 2026-07-26 for Blast diffusion boots, Hexhunter bow, Gloves of passage, Terrasaur maul, Noxious staff, GWD1/GWD2 uniques, glacor boot upgrades, Khopesh of Tumeken/Elidinis, The Magister, Stalker dungeon, Chaotic staff. Equilibrium region taxonomy from data/league/regions.json + existing regional-combat-unlocks conventions (Senntisten/Um → Misthalin working map; Daemonheim → Forinthry)."
+}

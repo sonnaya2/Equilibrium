@@ -1,0 +1,544 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Continue residual pass for Anachronia + Tirannwn/Prifddinas permanent skilling unlocks still thin or missing after wave-4 tirannwn-anachronia, anachronia-havenhythe, guilds-hubs, and residual-a. Anachronia: base-camp per-building residual beyond structure-rewards blob, ranch elder perks + produce residual, Orthen Roar of Osseous + dragonkin potion recipes residual, agility section ladder residual. Tirannwn: missing clan district hub residuals (Hefin, Meilyr). Skips crystal singing / harps / Voice of Seren re-emits — already first-class as prifddinas:ithell-crystal-singing, prifddinas:ithell-harps, prifddinas:harmonic-dust-economy, prifddinas:voice-of-seren.",
+  "policy": {
+    "region_rule": "region_hint is primary geography (anachronia or tirannwn). prifddinas: ids still use region_hint tirannwn under Equilibrium taxonomy. required_regions + region_requirement_type=all_required only for hard multi-region gates. Never put multi-region/cross-region/global tokens in region fields.",
+    "duplicate_guard": "Grep-confirmed ABSENT from data/research/regional-skilling-unlocks.json before write. SKIP present: anachronia:base-camp, anachronia:base-camp-structure-rewards, anachronia:spa-pools, anachronia:essential-oils, anachronia:ranch-out-of-time, anachronia:dinosaur-farm-beans-market, anachronia:farm-animal-buyers, anachronia:accidental-fletching-firemaking, anachronia:orthen-dig-site, anachronia:orthen-site-mastery, anachronia:orthen-furnace-core, anachronia:agility-course, anachronia:codex-lectern, anachronia:big-game-hunter, anachronia:bgh-permanent-unlocks, anachronia:hunter-mark-shop, anachronia:quick-traps, anachronia:totems, prifddinas:voice-of-seren, prifddinas:ithell-harps, prifddinas:ithell-crystal-singing, prifddinas:harmonic-dust-economy, prifddinas:hefin-agility-course, prifddinas:serenity-posts, prifddinas:hefin-corrupted-seren-stone, prifddinas:meilyr-recipe-shop, prifddinas:meilyr-harmony-pillars, prifddinas:edimmu-resource-dungeon, prifddinas:amlodd-district, prifddinas:crwys-district, prifddinas:cadarn-skilling-hub, prifddinas:trahaearn-mining-hub, prifddinas:iorwerth-district-skilling.",
+    "no_trade_rule": "Permanent account/infrastructure unlocks that change island throughput, farm perk state, Orthen island buff windows, Agility section gates, or missing Prif district hubs. Do not mirror every animal breed, every harp retune percent, or every VoS tooltip.",
+    "rate_rule": "No invented XP/hour as training truth. Unlock state, permanent effects, costs, and level gates only. Wiki hourly bands stay context.",
+    "rs3_terminology": "Ranch Out of Time = Anachronia Dinosaur Farm. Roar of Osseous is the 65-minute island buff from fully restored Rex skeleton (Osseous), not the Osseous boss. Harmonic dust (harps) ≠ harmony dust (waterfall) ≠ harmony moss (Meilyr pillars)."
+  },
+  "already_present_checked": [
+    "anachronia:base-camp",
+    "anachronia:base-camp-structure-rewards",
+    "anachronia:spa-pools",
+    "anachronia:ranch-out-of-time",
+    "anachronia:dinosaur-farm-beans-market",
+    "anachronia:farm-animal-buyers",
+    "anachronia:orthen-dig-site",
+    "anachronia:orthen-site-mastery",
+    "anachronia:agility-course",
+    "anachronia:codex-lectern",
+    "prifddinas:voice-of-seren",
+    "prifddinas:ithell-harps",
+    "prifddinas:ithell-crystal-singing",
+    "prifddinas:harmonic-dust-economy",
+    "prifddinas:hefin-agility-course",
+    "prifddinas:serenity-posts",
+    "prifddinas:meilyr-recipe-shop",
+    "prifddinas:meilyr-harmony-pillars",
+    "prifddinas:edimmu-resource-dungeon"
+  ],
+  "activity_additions": [
+    {
+      "id": "anachronia:base-camp-buildings",
+      "name": "Anachronia base camp building-by-building permanents",
+      "category": "regional structure permanent infrastructure residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["forinthry"],
+      "requirements": [
+        "Anachronia base camp tutorial with Giles (anachronia:base-camp)",
+        "Town Hall tier gates all same-tier structure upgrades; skill gates on Spa / Hunter Lodge / Slayer Lodge / Player Lodge are unboostable",
+        "Rare tier-3 mats: essential oils (Spa), reinforced dinosaur pelt (Hunter Lodge), dinosaur tooth (Slayer Lodge), dinosaur rib bone (Player Lodge)"
+      ],
+      "unlocks": [
+        "First-class per-building residual above anachronia:base-camp-structure-rewards blob (Fort Forinthry-style scoring parity)",
+        "Town Hall T1–T3: unlocks same-tier buildings; compacted resource deposits 100/200/400; visitor stores general → armour/weapon → gem/rune",
+        "Storehouse T1–T3: resource caps 25k / 80k / 150k per type (5k pre-storehouse)",
+        "Sleeping Quarters T1–T3: +5 / +15 / +30 workers (900 / 1,800 / 3,600 resources/hour at full assignment, 60 per worker per hour)",
+        "Bank chest upgrade (replaces Town Hall deposit box), Anachronia lodestone, remote totem access point (Remototem management)",
+        "Skill lodges remain specialised: Spa Agility/pools (anachronia:spa-pools), Hunter Lodge BGH (anachronia:hunter-lodge), Slayer Lodge damage/helmet stand and Player Lodge skillcape rack on combat/support rows"
+      ],
+      "region_pressure": [
+        "Hard Anachronia for every base-camp structure.",
+        "Forinthry optional: Fort Command Centre T2/T3 adds +5/+5 workers (max 70 with Sleeping Quarters T3) — not Anachronia-local buildings."
+      ],
+      "notes": "Does not re-emit anachronia:base-camp or anachronia:base-camp-structure-rewards. Prefer this id when ranking individual building permanents; keep structure-rewards for compact tier math. Spa tier effects live on anachronia:spa-pools / anachronia:essential-oils.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_base_camp",
+        "https://runescape.wiki/w/Town_Hall_(Anachronia_base_camp)",
+        "https://runescape.wiki/w/Storehouse_(Anachronia_base_camp)",
+        "https://runescape.wiki/w/Sleeping_Quarters",
+        "https://runescape.wiki/w/Bank_chest_(Anachronia_base_camp)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia infrastructure residual. Fort worker bonuses are optional Forinthry pressure only.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:base-camp",
+        "anachronia:base-camp-structure-rewards",
+        "anachronia:spa-pools",
+        "anachronia:hunter-lodge",
+        "anachronia:essential-oils",
+        "anachronia:slayer-lodge",
+        "anachronia:player-lodge"
+      ]
+    },
+    {
+      "id": "anachronia:hunter-lodge",
+      "name": "Hunter Lodge (base-camp BGH permanent)",
+      "category": "base-camp Hunter structure permanent",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Town Hall + Storehouse at matching tier",
+        "40 / 70 / 90 unboostable Hunter for lodge tiers 1 / 2 / 3",
+        "Tier 3 also needs 1 reinforced dinosaur pelt"
+      ],
+      "unlocks": [
+        "Permanent Hunter Lodge at base camp with Irwinsson (BGH / hunter-mark adjacency)",
+        "Tier 1: 10% chance of additional Woodcutting resources during Big Game Hunter",
+        "Tier 2: BGH creatures take an extra 2.4 seconds to catch the player",
+        "Tier 3: one of the three poison frog colours is removed at the start of each BGH encounter"
+      ],
+      "region_pressure": [
+        "Hard Anachronia: lodge is a base-camp structure; BGH encounters are island content."
+      ],
+      "notes": "Skilling residual companion to anachronia:bgh-permanent-unlocks and anachronia:bgh-poison-frog-system. Structure-rewards only lists lodge tiers in a blob — this row is the permanent BGH throughput building. Do not invent pelt drop rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hunter_Lodge",
+        "https://runescape.wiki/w/Anachronia_base_camp",
+        "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+        "https://runescape.wiki/w/Reinforced_dinosaur_pelt"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia BGH QoL permanent. Pair with mark shop quick-traps, not as a second BGH hub.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:base-camp-buildings",
+        "anachronia:base-camp-structure-rewards",
+        "anachronia:big-game-hunter",
+        "anachronia:bgh-permanent-unlocks",
+        "anachronia:bgh-poison-frog-system",
+        "anachronia:quick-traps"
+      ]
+    },
+    {
+      "id": "anachronia:dinosaur-farm-perks",
+      "name": "Anachronia Dinosaur Farm elder animal perks",
+      "category": "player-owned farm permanent perk residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia", "kandarin"],
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Ranch Out of Time / Anachronia Dinosaur Farm access (anachronia:ranch-out-of-time)",
+        "Farm totem placed on a pen with at least one elder animal, OR completed breeding log for that animal category (grants tier-1 passively since Jan 2024)",
+        "Tier-2 large-dino perks need two large pens with elders + totems (second large pen deed at 104 Farming / 1,000 beans)"
+      ],
+      "unlocks": [
+        "Fourteen Anachronia-only farm perks (frogs through Pavosaurus) as permanent account buffs while conditions are met",
+        "Skilling highlights: Flycatcher (double stinkshroom yield), La La La La (+5% salamander Hunter XP), The Old Black Magic (+30s juju duration), Envenomed (10% 4-dose weapon poison/antipoison), Arcane Elements (+1/+2 elemental runes-per-essence), Living Mountain / Powerful Beast (geode + critical swing Mining), Butterfly Effect (Guthixian butterfly chance on produce), Steak Out (extra BGH meat), Rep-tile (+5%/+10% Farming Guild reputation)",
+        "Combat-adjacent ranch perks (King of Beasts bomb conserve, No Fear Meteor Strike crit, Armoured Hide Barricade ticks, Stubborn Regenerate) stay on this residual for farm-completion scoring — not separate combat rows",
+        "Small/medium Anachronia pens cannot reach tier-2 (only one pen each)"
+      ],
+      "region_pressure": [
+        "Hard Anachronia for ranch pens, dinosaur species, and Anachronia-only perk set.",
+        "Kandarin optional: Manor Farm tutorial/shared bean economy and farm totems from either market."
+      ],
+      "notes": "Does not re-emit anachronia:ranch-out-of-time hub, beans market, or animal buyers. Breeding-log passive tier-1 is the ironman long-tail path. Do not invent proc rates beyond wiki.",
+      "source_urls": [
+        "https://runescape.wiki/w/Perks_(player-owned_farm)",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+        "https://runescape.wiki/w/Farm_totem"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia ranch residual. Value elder dino logistics when scoring Anachronia Farming.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:ranch-out-of-time",
+        "anachronia:dinosaur-farm-beans-market",
+        "anachronia:farm-animal-buyers",
+        "anachronia:dinosaur-farm-produce",
+        "kandarin:manor-farm-farming-guild"
+      ]
+    },
+    {
+      "id": "anachronia:dinosaur-farm-produce",
+      "name": "Anachronia Dinosaur Farm gathered produce",
+      "category": "Farming produce and Herblore supply residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Adolescent+ animals in ranch pens",
+        "Farming level gates per species (42 frogs through 118 Pavosaurus)",
+        "Meat supply for many dinosaurs (Oo'glog Fresh Meat and/or Havenhythe meat traders as optional external pressure)"
+      ],
+      "unlocks": [
+        "Gathered produce from Anachronia livestock as a permanent self-sufficient Farming→Herblore/supply loop",
+        "Dinosaur farm produce feeds ironman Herblore training and specialised secondaries beyond Manor Farm animals",
+        "Bean generation path via selling/growing animals alongside produce harvest",
+        "Breeding-log completion path doubles as tier-1 perk unlock (see anachronia:dinosaur-farm-perks)"
+      ],
+      "region_pressure": [
+        "Hard Anachronia for pen geography and dinosaur produce species.",
+        "Meat shops remain optional supply edges (Kandarin Oo'glog / Havenhythe) — not dual-region locks for the produce row."
+      ],
+      "notes": "Ranch residual for ironman Herblore/Farming supply. Complements beans market without re-listing every unchecked source. Do not invent per-species produce tables here — wiki animal pages own those.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+        "https://runescape.wiki/w/Player-owned_farm",
+        "https://runescape.wiki/w/Gathered_produce"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia produce loop. Tag external meat only when planning high-tier dino pens.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:ranch-out-of-time",
+        "anachronia:dinosaur-farm-perks",
+        "anachronia:dinosaur-farm-beans-market",
+        "anachronia:farm-animal-buyers"
+      ]
+    },
+    {
+      "id": "anachronia:roar-of-osseous",
+      "name": "Roar of Osseous (Rex skeleton island buff)",
+      "category": "Orthen Archaeology island buff residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Orthen Dig Site access (anachronia:orthen-dig-site)",
+        "Rex skeleton fragments from Orthen excavation / Sharrigan collections contributed at the base-camp scaffold south of Mr Mordaut",
+        "Community restoration to 100% (global fragment pool; ironmen still contribute and receive XP)"
+      ],
+      "unlocks": [
+        "When fully restored, Osseous unleashes Roar of Osseous for 65 minutes (global broadcast)",
+        "+25% XP on Anachronia: BGH/Hunter traps (not protean), Orthen Archaeology excavate, Agility course, dinosaur/vile bloom Slayer, overgrown idols, Anachronia fishing/mining, Accidental F&F (and dinarrow imbue on-island)",
+        "Drop/rate ups: +10% BGH multi encounters; +10% Slayer uniques; +1 codex page whenever pages roll; +10% Arch materials / building resources / totem pieces / dragonkin recipe fragments; +1% Asuran Arsenal unique chance",
+        "Does not buff Ranch Out of Time, Herby Werby, Raksha, Rex Matriarchs, or artefact restoration XP"
+      ],
+      "region_pressure": [
+        "Hard Anachronia: skeleton, fragment sources, and all buffed activities are island content."
+      ],
+      "notes": "Orthen residual missing as first-class id despite footnotes on agility/idols/codex. Distinct from the Osseous boss. Contribution still grants Archaeology XP even when already complete. Do not invent fragment drop rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rex_skeleton",
+        "https://runescape.wiki/w/Roar_of_Osseous_(status)",
+        "https://runescape.wiki/w/Orthen_Dig_Site",
+        "https://runescape.wiki/w/Rex_skeleton_fragments"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Orthen residual. Schedule island skilling during active roar windows when fragments are flowing.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:orthen-dig-site",
+        "anachronia:orthen-site-mastery",
+        "anachronia:agility-course",
+        "anachronia:codex-lectern",
+        "anachronia:overgrown-idols",
+        "anachronia:big-game-hunter",
+        "anachronia:accidental-fletching-firemaking"
+      ]
+    },
+    {
+      "id": "anachronia:dragonkin-potion-recipes",
+      "name": "Dragonkin potion recipe fragments (Orthen)",
+      "category": "Orthen Archaeology Herblore recipe residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Orthen Dig Site excavation / collections for recipe fragments",
+        "Herblore levels to craft once recipes are assembled (wiki per-recipe gates)",
+        "Roar of Osseous gives +10% recipe fragment chance while active"
+      ],
+      "unlocks": [
+        "Permanent dragonkin potion recipes assembled from four fragments each: Archaeology potion, Summoning renewal, Holy aggroverload, Powerburst of opportunity, Spirit attraction potion",
+        "Orthen-exclusive Herblore recipe path beyond Meilyr combination shop",
+        "Recipes are account unlocks once complete — not consumable knowledge"
+      ],
+      "region_pressure": [
+        "Hard Anachronia Orthen dig site for fragment sources."
+      ],
+      "notes": "Orthen residual previously only footnoted inside dig-site/site-mastery unlock lists. Prefer this id when ranking Herblore recipe pressure from Anachronia. Do not invent fragment drop rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_potion_recipes",
+        "https://runescape.wiki/w/Orthen_Dig_Site",
+        "https://runescape.wiki/w/Archaeology_potion_recipe",
+        "https://runescape.wiki/w/Holy_aggroverload_recipe"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Herblore residual. Surface after dig-site access when planning high-end potions.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:orthen-dig-site",
+        "anachronia:orthen-site-mastery",
+        "anachronia:roar-of-osseous",
+        "prifddinas:meilyr-recipe-shop"
+      ]
+    },
+    {
+      "id": "anachronia:agility-section-ladder",
+      "name": "Anachronia Agility Course section ladder residual",
+      "category": "Agility course section and transit residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "30 Agility sections A/G (base-camp links); 50 sections B/F; 70 sections C/E; 85 section D for full island lap",
+        "Anachronia access; lodestone preferred start"
+      ],
+      "unlocks": [
+        "Seven-section permanent island transit grid (A–G) as the practical path between base camp, northern Time ruins approach, eastern content, and southern BGH/ranch approaches",
+        "Section completion XP bonuses + full-lap 15,500 bonus (20,040 total lap XP at 85) — rates illustrative only",
+        "10 guaranteed codex pages per full lap; 1–4 rare pages per unique obstacle per lap (tier-2+ luck improves rare roll; Roar of Osseous +1 page whenever pages roll)",
+        "Obstacle rewards residual: totem pieces, compacted leaves/vines, dinosaur rib bone, essential oils, Skeka hypnowand pieces (after aged journal)",
+        "Guards at base-camp entrances track best lap time / total laps and can reset lap progress"
+      ],
+      "region_pressure": [
+        "Hard Anachronia Agility infrastructure residual under anachronia:agility-course hub."
+      ],
+      "notes": "Does not re-emit anachronia:agility-course hub or anachronia:codex-lectern. Hub row is geography+codex overview; this residual is the section ladder + reward table for planner scoring. Do not hard-code XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Agility_Course",
+        "https://runescape.wiki/w/Codex_page",
+        "https://runescape.wiki/w/Essential_oils"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia. Prefer full 85 lap for codex; partial sections for island routing earlier.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:agility-course",
+        "anachronia:codex-lectern",
+        "anachronia:essential-oils",
+        "anachronia:roar-of-osseous",
+        "anachronia:spa-pools",
+        "cross-region:skekas-hypnowand"
+      ]
+    },
+    {
+      "id": "prifddinas:hefin-district",
+      "name": "Hefin district Agility and Prayer hub residual",
+      "category": "district skilling hub infrastructure residual",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prifddinas Hefin district access",
+        "77 Agility unboostable for Hefin course; 75 Agility for serenity posts; 75 Prayer for Corrupted Seren Stone"
+      ],
+      "unlocks": [
+        "District hub residual uniting Hefin Agility Course, serenity posts, Hefin Cathedral cleansing crystals, and Hefin workers (96 Thieving)",
+        "Lap rewards path: Prifddinian worker's outfit pieces, Hefin emotes (Lotus/Bow/Ward/Crane), Hefin course multipliers, Voice of the Elders lore book",
+        "Hefin herald / Clan Hefin cape; light-creature familiar synergy on course reward frequency",
+        "Hefin Voice of Seren: +20% course Agility, doubled velocity, 25% of base Agility XP as Prayer, +20% cleansing Prayer, more shortcuts"
+      ],
+      "region_pressure": [
+        "Tirannwn owns the entire Hefin district package."
+      ],
+      "notes": "Missing clan-district residual parity with Crwys/Cadarn/Trahaearn/Iorwerth hub rows. Does not re-emit prifddinas:hefin-agility-course, prifddinas:serenity-posts, or prifddinas:hefin-corrupted-seren-stone — prefer those for method ranking; prefer this id for district hub scoring.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hefin_Clan",
+        "https://runescape.wiki/w/Hefin_district",
+        "https://runescape.wiki/w/Hefin_Agility_Course",
+        "https://runescape.wiki/w/Hefin_Cathedral"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Hefin hub residual. Course for active rates; posts for AFK; cathedral for coin-sink Prayer.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:hefin-agility-course",
+        "prifddinas:serenity-posts",
+        "prifddinas:hefin-corrupted-seren-stone",
+        "prifddinas:voice-of-seren",
+        "prifddinas:elven-clan-thieving"
+      ]
+    },
+    {
+      "id": "prifddinas:meilyr-district",
+      "name": "Meilyr district Herblore and Dungeoneering hub residual",
+      "category": "district skilling hub infrastructure residual",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn", "forinthry"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["forinthry", "kandarin"],
+      "requirements": [
+        "Plague's End / Meilyr district access",
+        "75 Farming for harmony pillars; high Herblore for combination potions",
+        "95 Dungeoneering for Gorajo resource dungeon; 115 for Edimmu resource dungeon"
+      ],
+      "unlocks": [
+        "District hub residual uniting Lady Meilyr Recipe Shop, harmony pillars, fruit tree patch, Meilyr workers (98 Thieving), and dual resource dungeons",
+        "Gorajo resource dungeon (95 DG): bloodwood tree, pawya/grenwall, implings, Gorajo hoardstalker cards",
+        "Edimmu resource dungeon (115 DG): Meilyr crystal sandstone + edimmu (already has dedicated edimmu row for Maw adjacency)",
+        "Gnome glider (Captain Muggin) to Grand Tree; Wythien Motherlode shard exchange; Meilyr Clan Store / harmony pillar farmers",
+        "Meilyr Voice of Seren: +20% Farming on fruit tree and harmony pillars; +20% Herblore on combination potions"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Meilyr district geography and shops.",
+        "Forinthry optional: some combination recipes need Daemonheim discovery before Meilyr purchase.",
+        "Kandarin optional: gnome glider network destination."
+      ],
+      "notes": "Missing Meilyr district hub residual. Does not re-emit prifddinas:meilyr-recipe-shop, prifddinas:meilyr-harmony-pillars, or prifddinas:edimmu-resource-dungeon. Harmony moss ≠ harmonic dust.",
+      "source_urls": [
+        "https://runescape.wiki/w/Meilyr_Clan",
+        "https://runescape.wiki/w/Meilyr_district",
+        "https://runescape.wiki/w/Gorajo_resource_dungeon",
+        "https://runescape.wiki/w/Recipe_Shop"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Meilyr hub. Recipe discovery may optionally pressure Forinthry for some combos only.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:meilyr-harmony-pillars",
+        "prifddinas:edimmu-resource-dungeon",
+        "prifddinas:motherlode-maw",
+        "prifddinas:voice-of-seren",
+        "prifddinas:elven-clan-thieving"
+      ]
+    },
+    {
+      "id": "prifddinas:ithell-district",
+      "name": "Ithell district Crafting and Construction hub residual",
+      "category": "district skilling hub infrastructure residual",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn", "kandarin"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Plague's End / Ithell district access",
+        "The Eyes of Glouphrie for singing bowl permission",
+        "75 Crafting / 75 Construction for harps; Smithing gates per crystal product"
+      ],
+      "unlocks": [
+        "District hub residual uniting singing bowl, harmonium harps, robust glass / crystal flasks, soft clay mine, sawmill, tanner, estate agent, sandpit, Construction Supplies, and POH portal",
+        "Lady Ithell crystal gather-tool upgrades (4,000 harmonic dust each) and crystal seed storage",
+        "Ithell workers (92 Thieving) as secondary harmonic dust path",
+        "Ithell Voice of Seren: +20% harp Crafting/Construction XP and lower detune; +20% flask Crafting; soft clay bank chance; doubled Construction Supplies stock"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Ithell crystal economy and district services.",
+        "Kandarin optional: Eyes of Glouphrie quest geography."
+      ],
+      "notes": "Clan-district residual for Ithell parity. Does not re-emit prifddinas:ithell-harps, prifddinas:ithell-crystal-singing, prifddinas:harmonic-dust-economy, prifddinas:crystal-flasks, or prifddinas:crystal-tool-workshop — those remain the method/currency rows.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ithell_Clan",
+        "https://runescape.wiki/w/Ithell_district",
+        "https://runescape.wiki/w/Singing_bowl_(Ithell_district)",
+        "https://runescape.wiki/w/Crystal_singing"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Ithell hub residual. Budget harmonic dust via harps before crystal gear vanity.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:ithell-harps",
+        "prifddinas:ithell-crystal-singing",
+        "prifddinas:harmonic-dust-economy",
+        "prifddinas:crystal-tool-workshop",
+        "prifddinas:crystal-flasks",
+        "prifddinas:voice-of-seren",
+        "tirannwn:crystal-utility-tools"
+      ]
+    },
+    {
+      "id": "prifddinas:prifddinian-worker-outfit",
+      "name": "Prifddinian worker's outfit (Hefin course residual)",
+      "category": "Agility course permanent outfit residual",
+      "region_hint": "tirannwn",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Hefin Agility Course access (77 Agility unboostable, Plague's End)",
+        "Lap rewards until outfit pieces drop (wiki random lap rewards; light creature special increases reward frequency)"
+      ],
+      "unlocks": [
+        "Cosmetic Prifddinian worker's outfit pieces from Hefin course lap rewards",
+        "Outfit residual tied to Hefin course completionist path alongside Hefin emotes and course multipliers",
+        "Planner marker for Hefin course long-tail rewards beyond XP"
+      ],
+      "region_pressure": [
+        "Hard Tirannwn Hefin course for all pieces."
+      ],
+      "notes": "Hefin residual previously only footnoted inside hefin-agility-course unlock list. Cosmetic focus — do not invent skilling XP set bonuses if wiki lists cosmetic-only. Prefer course row for training; this row for reward-path scoring.",
+      "source_urls": [
+        "https://runescape.wiki/w/Prifddinian_worker%27s_outfit",
+        "https://runescape.wiki/w/Hefin_Agility_Course",
+        "https://runescape.wiki/w/Hefin_Clan"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Hefin residual. Low priority vs crystal tools / VoS methods.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:hefin-agility-course",
+        "prifddinas:hefin-district",
+        "prifddinas:voice-of-seren"
+      ]
+    },
+    {
+      "id": "anachronia:orthen-teleport-network",
+      "name": "Orthen teleportation device network residual",
+      "category": "Archaeology travel infrastructure residual",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia"],
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Orthen Dig Site access + base-camp tutorial",
+        "Teleport Node On mystery path: 90 Archaeology + 70 Runecrafting + 70 Crafting + 70 Divination for full device network",
+        "Know Thy Measure / Fragmented Memories co-path per wiki unlocking guide"
+      ],
+      "unlocks": [
+        "Permanent Orthen teleportation devices linking base camp ↔ Crypt of Varanus ↔ Observation outpost ↔ Moksha ritual site ↔ Xolo City",
+        "Primary island Archaeology logistics residual under dig-site hub",
+        "One-time skill XP awards per device activation during mystery (wiki Divination/RC/Crafting/Archaeology lamps on steps)"
+      ],
+      "region_pressure": [
+        "Hard Anachronia for all device locations and mystery steps."
+      ],
+      "notes": "Orthen residual previously only listed inside dig-site/site-mastery. Prefer this id when ranking travel QoL after 90 Archaeology. Does not re-emit full site mastery monolith package.",
+      "source_urls": [
+        "https://runescape.wiki/w/Orthen_teleportation_device",
+        "https://runescape.wiki/w/Teleport_Node_On",
+        "https://runescape.wiki/w/Orthen_Dig_Site/Unlocking_excavation_sites"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Archaeology travel residual. Build early after dig-site unlock.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:orthen-dig-site",
+        "anachronia:orthen-site-mastery",
+        "anachronia:base-camp"
+      ]
+    }
+  ],
+  "ids_emitted": [
+    "anachronia:base-camp-buildings",
+    "anachronia:hunter-lodge",
+    "anachronia:dinosaur-farm-perks",
+    "anachronia:dinosaur-farm-produce",
+    "anachronia:roar-of-osseous",
+    "anachronia:dragonkin-potion-recipes",
+    "anachronia:agility-section-ladder",
+    "anachronia:orthen-teleport-network",
+    "prifddinas:hefin-district",
+    "prifddinas:meilyr-district",
+    "prifddinas:ithell-district",
+    "prifddinas:prifddinian-worker-outfit"
+  ],
+  "skipped_already_present": [
+    "prifddinas:voice-of-seren",
+    "prifddinas:ithell-harps",
+    "prifddinas:ithell-crystal-singing",
+    "prifddinas:harmonic-dust-economy",
+    "anachronia:base-camp-structure-rewards",
+    "anachronia:ranch-out-of-time",
+    "anachronia:orthen-site-mastery",
+    "anachronia:agility-course",
+    "anachronia:spa-pools"
+  ],
+  "summary": {
+    "rows_added": 12,
+    "anachronia": 8,
+    "tirannwn_prifddinas": 4,
+    "notes": [
+      "Audit wave5 suggested anachronia:base-camp-buildings — emitted.",
+      "Crystal singing / harps / VoS already first-class — not re-emitted; Ithell/Hefin/Meilyr district hubs filled residual gaps instead.",
+      "Orthen thin residuals: Roar of Osseous, dragonkin recipes, teleport network."
+    ]
+  }
+}

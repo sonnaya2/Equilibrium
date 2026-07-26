@@ -203,7 +203,7 @@
         "1 in 8 (12.5%) chance to mix the next queued potion one tick faster",
         "1 in 10 (10%) chance to save a secondary ingredient (including clean herbs when making unfinished potions)"
       ],
-      "notes": "Explicit named Daemonheim reward. Must not stay buried inside the generic forinthry:daemonheim-skilling-rewards bundle. Does not affect tea or herb tars. Over long runs, secondary savings yield more potions per ingredient stock.",
+      "notes": "Explicit named Daemonheim reward. Must not stay buried inside the generic forinthry:daemonheim-rewards-shop-hub bundle. Does not affect tea or herb tars. Over long runs, secondary savings yield more potions per ingredient stock.",
       "source_urls": [
         "https://runescape.wiki/w/Scroll_of_cleansing",
         "https://runescape.wiki/w/Dungeoneering_Rewards",

@@ -1,0 +1,459 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-continue residual pack: high-value Desert + Fremennik permanent skilling unlocks still missing as first-class ids after desert-2026-07-26, fremennik-2026-07-26, and wave4 desert/frem fills. Targets Menaphos reputation engines (city quests, soul obelisks), Het residual infrastructure (Agility course, Statue of Het oasis XP, Blessing of Het relic), Lunar residual spells not micro-rowed (Magic Imbue, Repair Rune Pouch, Spin Flax), azure skillchompas (official Fremennik non-combat), and dragon pickaxe Chaos Battlefield pressure (Mining tool twin to existing DK hatchet). Skips re-rows of thick present hubs.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard gates; optional_pressure_regions are support only. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "Grep-confirmed ABSENT from data/research/regional-skilling-unlocks.json before write. SKIP present (not thin enough to re-emit): desert:menaphos-skilling-hub, desert:menaphos-reputation-vip, desert:menaphos-merchant-thieving, desert:menaphos-port-fish-cook, desert:menaphos-worker-mineral-deposits, desert:menaphos-imperial-acadia, desert:shifting-tombs (detail already covers camouflage 5x, soul talisman 1/200, feathers, tiers), desert:soul-altar, desert:hets-oasis-prayer-powders, desert:hets-oasis-farming, desert:powder-of-burials, desert:powder-of-penance, desert:dundee-crocodile-upgrades, desert:holy-scarab, desert:feather-of-maat-supply, desert:unexpected-diplomacy-relic, fremennik:lunar-spellbook, fremennik:lunar-isle-hub, fremennik:lunar-farming-utility, fremennik:livid-farm, fremennik:bake-pie, fremennik:telekinetic-grind, fremennik:npc-contact, fremennik:plank-make, fremennik:superglass-make, fremennik:humidify, fremennik:string-jewellery, fremennik:make-leather, fremennik:managing-miscellania (first-class; not missing), fremennik:dagannoth-kings-dragon-hatchet (DK skilling tool already filed — do not re-emit combat rings/staves), forinthry:pouch-protector-relic.",
+    "thin_skip_rule": "shifting-tombs and soul-altar live rows are not thin (wiki-grade unlock lists already ingested). Miscellania is first-class. Residual work only files buried engines and missing micro-unlocks.",
+    "dagannoth_rule": "Skilling-only: dragon hatchet already first-class. No berserker/seers/warrior/archers rings, mud battlestaff, or seercull. Dragon pickaxe is Chaos Dwarf Battlefield / Chaos Giants (Fremennik), not DKs — separate Mining tool residual.",
+    "no_trade_rule": "Ironman permanent unlocks that change reputation throughput, Prayer/RC supply, Lunar processing, gather tools, or oasis infrastructure.",
+    "rate_rule": "No invented XP/hour or drop rates beyond wiki structure. Unlock state, costs, effects, and region pressure only.",
+    "combo_fields": "Every multi-region row sets region_hints, required_regions, optional_pressure_regions, region_requirement_type, and links_existing_ids."
+  },
+  "already_present_checked": [
+    "desert:menaphos-skilling-hub",
+    "desert:menaphos-reputation-vip",
+    "desert:shifting-tombs",
+    "desert:soul-altar",
+    "desert:hets-oasis-prayer-powders",
+    "desert:hets-oasis-farming",
+    "desert:powder-of-burials",
+    "desert:powder-of-penance",
+    "desert:unexpected-diplomacy-relic",
+    "fremennik:lunar-spellbook",
+    "fremennik:livid-farm",
+    "fremennik:lunar-farming-utility",
+    "fremennik:managing-miscellania",
+    "fremennik:dagannoth-kings-dragon-hatchet",
+    "fremennik:bake-pie",
+    "fremennik:telekinetic-grind",
+    "fremennik:npc-contact",
+    "fremennik:plank-make",
+    "fremennik:superglass-make",
+    "fremennik:humidify",
+    "forinthry:pouch-protector-relic",
+    "cross-region:master-camouflage-outfit"
+  ],
+  "activity_additions": [
+    {
+      "id": "desert:menaphos-city-quests",
+      "name": "Menaphos City Quests (reputation engine)",
+      "category": "permanent Menaphos reputation and supply activity",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "The Jack of Spades completed for Menaphos access and reputation start",
+        "Urluk (Merchant) or world-map Menaphos Quest markers to find the active citizen",
+        "Stock common delivery items (seeds, logs, fish, bones, bars, sandstone 1kg, desert goat horns, etc.) for three-task runs"
+      ],
+      "unlocks": [
+        "Repeatable City Quest loop: accept one active three-task quest at a time from district citizens",
+        "2,000 faction reputation per full completion plus small/medium/large Menaphite gift offerings",
+        "Cooldown scales with overall Menaphos reputation: ~15–20 min default → none at overall tier 8",
+        "Chance at idocrase / hauyne Jewels of the Elid if not already owned",
+        "Optional Menaphos city quest enhancer to speed task progress"
+      ],
+      "region_pressure": [
+        "Hard Desert / Menaphos: assigners, map markers, reputation bank, and gift-offering economy are city-local."
+      ],
+      "notes": "Buried inside desert:menaphos-reputation-vip as a one-line earn method. First-class residual so planners score City Quests as the on-demand reputation engine beside Shifting Tombs and soul obelisks. Do not invent XP/hour or item quantity bands beyond wiki task tables.",
+      "source_urls": [
+        "https://runescape.wiki/w/City_Quest",
+        "https://runescape.wiki/w/Reputation_(Menaphos)",
+        "https://runescape.wiki/w/Menaphite_gift_offering_(large)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert. Complements VIP tier grind without re-emitting desert:menaphos-reputation-vip.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:menaphos-skilling-hub",
+        "desert:menaphos-reputation-vip",
+        "desert:shifting-tombs",
+        "desert:unexpected-diplomacy-relic"
+      ]
+    },
+    {
+      "id": "desert:menaphos-soul-obelisks",
+      "name": "Menaphos soul obelisks (daily reputation + RC/Prayer)",
+      "category": "permanent Menaphos daily reputation and Runecrafting/Prayer infrastructure",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "The Jack of Spades completed to start Menaphos reputation",
+        "District faction selected in the reputation interface",
+        "Food / sustain for ~1/16 max LP damage ticks while channelling (dangerous activity)"
+      ],
+      "unlocks": [
+        "World soul-obelisk spawns in Imperial, Merchant, Worker, or Port (~45–80 minutes between spawns; one active per world)",
+        "Daily hard-capped interactions (236) granting overall + district reputation, Runecrafting XP, and Prayer XP (Prayer below 50 doubles RC instead)",
+        "Base ~85 reputation per 4.8s tick; Menaphos quest chain multiplies daily reputation ceiling through Pharaoh's Folly",
+        "Unexpected Diplomacy relic applies +10% to soul-obelisk reputation (see desert:unexpected-diplomacy-relic)",
+        "Check progress option shows remaining daily cap; reset 00:00 UTC"
+      ],
+      "region_pressure": [
+        "Hard Desert / Menaphos: all four spawn sites and the reputation interface are city geography.",
+        "Leela's favour / Shifting Tombs district teleports are same-region travel QoL only."
+      ],
+      "notes": "Primary daily Menaphos reputation spike called out only as a footnote under VIP. Distinct from desert:soul-altar (Imperial fountain charge-and-craft). Do not invent LP/tick combat guides or XP/hour tables here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Soul_obelisk_(Menaphos)",
+        "https://runescape.wiki/w/Reputation_(Menaphos)",
+        "https://runescape.wiki/w/Unexpected_Diplomacy"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert daily infrastructure for VIP / district tier unlocks.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:menaphos-reputation-vip",
+        "desert:menaphos-skilling-hub",
+        "desert:soul-altar",
+        "desert:unexpected-diplomacy-relic",
+        "desert:shifting-tombs"
+      ]
+    },
+    {
+      "id": "desert:hets-oasis-agility-course",
+      "name": "Het's Oasis Agility Course",
+      "category": "permanent Desert Agility infrastructure",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Het's Oasis access (ring of duelling western entrance; northern Kharidian Desert)",
+        "65 Agility",
+        "Course rubble clearable during Eye of Het I or earlier"
+      ],
+      "unlocks": [
+        "Permanent mid/high Agility course on official Equilibrium Desert example geography",
+        "Full lap XP on wiki course page (do not paste hourly rates into planner guarantees)",
+        "Navigation across former Duel Arena ruins as oasis hub travel"
+      ],
+      "region_pressure": [
+        "Hard Desert: Het's Oasis is an official Jagex Equilibrium Desert example and northern desert skilling hub."
+      ],
+      "notes": "Named only inside desert:hets-oasis-prayer-powders unlock list. First-class residual so Agility planners see oasis without opening the Hunter powder row. Complements desert:hets-oasis-farming and powder production without restating whirligig tables.",
+      "source_urls": [
+        "https://runescape.wiki/w/Het%27s_Oasis_Agility_Course",
+        "https://runescape.wiki/w/Het%27s_Oasis",
+        "https://runescape.wiki/w/Eye_of_Het_I"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_example",
+      "league_treatment": "Hard Desert. Official region example geography.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:hets-oasis-prayer-powders",
+        "desert:hets-oasis-farming",
+        "desert:dundee-crocodile-upgrades"
+      ]
+    },
+    {
+      "id": "desert:statue-of-het-oasis-blessing",
+      "name": "Statue of Het (oasis skilling XP blessing)",
+      "category": "permanent Het's Oasis skilling buff infrastructure",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Het's Oasis access",
+        "200 Pieces of Het total (50 per repair stage × 4 stages)",
+        "Tier 2+ luck improves piece drop chance while training at the oasis"
+      ],
+      "unlocks": [
+        "Fully repaired Statue of Het in the oasis centre",
+        "Blessing of Het (status): +10% skilling XP while training at Het's Oasis",
+        "No further Pieces of Het after full repair"
+      ],
+      "region_pressure": [
+        "Hard Desert: statue, piece drops from oasis skilling, and the +10% buff are all Het's Oasis-local."
+      ],
+      "notes": "Permanent oasis XP multiplier distinct from desert:blessing-of-het-relic (monolith food/potion heal power from Eye of Het II). Do not invent piece drop rates. Pair with powder/farming/agility loops already first-class.",
+      "source_urls": [
+        "https://runescape.wiki/w/Statue_of_Het",
+        "https://runescape.wiki/w/Piece_of_Het",
+        "https://runescape.wiki/w/Blessing_of_Het_(status)",
+        "https://runescape.wiki/w/Het%27s_Oasis"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert Het residual for oasis training throughput.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:hets-oasis-prayer-powders",
+        "desert:hets-oasis-farming",
+        "desert:hets-oasis-agility-course",
+        "desert:blessing-of-het-relic"
+      ]
+    },
+    {
+      "id": "fremennik:magic-imbue",
+      "name": "Magic Imbue (Lunar)",
+      "category": "Runecrafting skilling spell",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Lunar Diplomacy completed and Lunar spellbook active",
+        "82 Magic",
+        "2 astral, 7 fire, 7 water runes per cast (steam/elemental staff reduces cost)"
+      ],
+      "unlocks": [
+        "Magic Imbue: ~12.6s buff to craft combination runes without opposing talismans",
+        "Use opposing runes on the target altar after cast (e.g. fire runes on earth altar for lava)",
+        "Does not remove binding-necklace need for 100% combo success"
+      ],
+      "region_pressure": [
+        "Hard Fremennik: spell unlock geography is Lunar Diplomacy / Lunar Isle.",
+        "Altar geography for each combination remains multi-region resource pressure — score methods by altar region, not as Fremennik-only XP."
+      ],
+      "notes": "Named only inside fremennik:lunar-spellbook unlock list. First-class residual for ironman combination-rune / pouch-RC planning. Complements fremennik:repair-rune-pouch and forinthry:pouch-protector-relic without re-emitting those ids.",
+      "source_urls": [
+        "https://runescape.wiki/w/Magic_Imbue",
+        "https://runescape.wiki/w/Lunar_spells",
+        "https://runescape.wiki/w/Combination_rune"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Lunar dependency. Pair altar regions separately.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "fremennik:lunar-spellbook",
+        "fremennik:astral-altar",
+        "fremennik:repair-rune-pouch",
+        "forinthry:pouch-protector-relic"
+      ]
+    },
+    {
+      "id": "fremennik:repair-rune-pouch",
+      "name": "Repair Rune Pouch (Livid Farm Lunar)",
+      "category": "Runecrafting pouch durability spell",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": ["forinthry"],
+      "requirements": [
+        "Lunar Diplomacy completed and Lunar spellbook active",
+        "Livid Farm produce points: 20,000 to unlock (post-16-March-2026 dailyscape cost; was 70,000)",
+        "75 Magic",
+        "1 astral, 1 cosmic, 1 law rune per cast"
+      ],
+      "unlocks": [
+        "Repair Rune Pouch spell from Pauline Polaris Livid Farm rewards",
+        "Repairs medium/large/giant Runecrafting pouches and strengthens durability to 400% (giant pouch ~48 uses vs 12)",
+        "Cannot repair small, expansive, or massive pouches"
+      ],
+      "region_pressure": [
+        "Hard Fremennik: Livid Farm / Lunar Isle unlock site.",
+        "Forinthry optional: Pouch Protector monolith relic is an alternate no-degrade path (forinthry:pouch-protector-relic) — not a second hard gate for this spell."
+      ],
+      "notes": "Buried as a bullet under fremennik:livid-farm. First-class residual for ironman essence-pouch RC. NPC Contact dark-mage repair remains a cheaper Diplomacy-only alternative without the 400% strengthen. Do not invent produce-point grind rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Repair_Rune_Pouch",
+        "https://runescape.wiki/w/Livid_Farm",
+        "https://runescape.wiki/w/Rewards_(Livid_Farm)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik via Livid Farm produce unlock.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "fremennik:livid-farm",
+        "fremennik:lunar-spellbook",
+        "fremennik:magic-imbue",
+        "fremennik:npc-contact",
+        "forinthry:pouch-protector-relic"
+      ]
+    },
+    {
+      "id": "fremennik:spin-flax",
+      "name": "Spin Flax (Lunar)",
+      "category": "Crafting and Fletching processing spell",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "Dream Mentor completed (Lunar Diplomacy pre-req)",
+        "Lunar spellbook active",
+        "81 Magic",
+        "1 astral, 2 nature, 5 air runes per cast (spins up to 5 flax → bowstrings)"
+      ],
+      "unlocks": [
+        "Spin Flax: bankstanding flax → bowstring conversion without a spinning wheel",
+        "Auto-casts across a full backpack of flax",
+        "Ironman Fletching bowstring supply path when flax is stocked (Miscellania / farming / shops)"
+      ],
+      "region_pressure": [
+        "Hard Fremennik: Dream Mentor + Lunar geography unlock the spell.",
+        "Flax supply often Fremennik Miscellania or multi-region Farming — resource region is separate pressure."
+      ],
+      "notes": "Missing Lunar micro-row alongside Bake Pie / Superglass / Plank Make. Do not invent GE profit tables; surface unlock state only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spin_Flax",
+        "https://runescape.wiki/w/Dream_Mentor",
+        "https://runescape.wiki/w/Lunar_spells"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Fremennik Dream Mentor Lunar residual.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "fremennik:lunar-spellbook",
+        "fremennik:plank-make",
+        "fremennik:superglass-make",
+        "fremennik:managing-miscellania"
+      ]
+    },
+    {
+      "id": "fremennik:azure-skillchompas",
+      "name": "Azure skillchompas (Rellekka Hunter area)",
+      "category": "Hunter gather-tool supply",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "68 Hunter to catch azure skillchompas north of the Rellekka Hunter area",
+        "51 in the relevant gather skill to wield/use as a tool (Mining, Woodcutting, Fishing, Divination, Archaeology)",
+        "81 Agility recommended for guaranteed higher catch stacks"
+      ],
+      "unlocks": [
+        "Azure skillchompa stackable gather tools from wild catches (always from azure skillchompa Hunter creatures)",
+        "Rune-equivalent hatchet/pick behaviour for WC/Mining; +10% XP on success and partial XP on failed attempts for most skills",
+        "Mining: consumed on critical swing with bonus crit damage",
+        "Divination: +10% enriched memory chance; Fishing: +3% catch chance"
+      ],
+      "region_pressure": [
+        "Hard Fremennik: wild catch site is the snowy Rellekka Hunter area (Equilibrium non-combat notable list).",
+        "Kandarin optional: azure chinchompa POF yield is an alternate supply path — does not remove wild catch region pressure for self-sufficiency."
+      ],
+      "notes": "Official Fremennik Equilibrium non-combat activity still missing first-class while cobalt (Kandarin) and crystal (Tirannwn) skillchompa rows exist. Complements kandarin:skillchompas without inventing a phantom skillchompa-supply hub id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Azure_skillchompa",
+        "https://runescape.wiki/w/Azure_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Rellekka_Hunter_area",
+        "https://runescape.wiki/w/Equilibrium_League/Areas/Fremennik"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_badge",
+      "league_treatment": "Hard Fremennik Hunter residual. Tag Kandarin only for POF alternate planning.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:skillchompas",
+        "kandarin:cobalt-skillchompa-hunter-site",
+        "tirannwn:crystal-skillchompas",
+        "fremennik:rellekka-hub"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "desert:blessing-of-het-relic",
+      "name": "Blessing of Het relic (Eye of Het II)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "desert",
+      "region_hints": ["desert"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": ["misthalin"],
+      "requirements": [
+        "Eye of Het II completed at Het's Oasis (Eye of Het I pre-req; City of Senntisten narrative chain)",
+        "Eye of Het (broken) quest reward used at the mysterious monolith",
+        "74 Archaeology (boostable); 2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "effects": [
+        "Blessing of Het relic power: food and potions heal 10% more life points",
+        "Applies before expensive spices +50 LP on food",
+        "No effect on food consumed inside Daemonheim"
+      ],
+      "region_pressure": [
+        "Hard Desert: Eye of Het II and the broken Eye reward are Het's Oasis quest geography.",
+        "Misthalin optional: City of Senntisten / EGWD narrative pre-req pressure only — not a second hard region for the relic item itself."
+      ],
+      "notes": "Het residual monolith power. Distinct from desert:statue-of-het-oasis-blessing (+10% oasis skilling XP status). Combat-adjacent sustain that still gates on Desert quest geography — surface for ironman food efficiency planning. Do not invent heal tables beyond the 10% rule.",
+      "source_urls": [
+        "https://runescape.wiki/w/Blessing_of_Het",
+        "https://runescape.wiki/w/Eye_of_Het_(broken)",
+        "https://runescape.wiki/w/Eye_of_Het_II",
+        "https://runescape.wiki/w/Het%27s_Oasis"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert via Eye of Het II. Tag Misthalin only when scoring the Senntisten pre-quest chain.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:statue-of-het-oasis-blessing",
+        "desert:hets-oasis-agility-course",
+        "desert:hets-oasis-prayer-powders",
+        "misthalin:senntisten-dig-site"
+      ]
+    },
+    {
+      "id": "fremennik:dragon-pickaxe-chaos-battlefield",
+      "name": "Dragon pickaxe (Chaos Battlefield / Chaos Giants)",
+      "category": "Mining tool base and crystal/Imcando pickaxe feedstock",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik", "tirannwn", "asgarnia"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": ["tirannwn", "asgarnia"],
+      "requirements": [
+        "Forgiveness of a Chaos Dwarf for Chaos Dwarf Battlefield drops; Birthright of the Dwarves for Chaos Giants",
+        "60 Mining to use (cutting power tier 63; toolbelt-eligible)",
+        "Combat capability for chaos dwarves/dwogres/hand cannoneers (1/3,000) or Chaos Giants (1/1,000; 1/970 with tier-3 luck) — rates per 20-Jul-2026 mid-game rebalance"
+      ],
+      "effects": [
+        "Primary ironman dragon-tier Mining tool (same tier as orikalkum +3 but augmentable and upgrade feedstock)",
+        "Gild via Liquid Gold Nymph path (fremennik:liquid-gold-nymph-path) before Imcando assembly",
+        "Crystal pickaxe feedstock: Lady Ithell + 4,000 harmonic dust (Tirannwn pressure)",
+        "Imcando pickaxe feedstock after gilding (Asgarnia Thurgo path)"
+      ],
+      "region_pressure": [
+        "Hard Fremennik: Chaos Dwarf Battlefield and Chaos Giants carry Fremennik League badges; Keldagrim/Birthright geography.",
+        "Tirannwn optional for crystal upgrade; Asgarnia optional for Imcando assembly and some POP treasure odds."
+      ],
+      "notes": "Mining twin to fremennik:dagannoth-kings-dragon-hatchet. Wiki sources are Chaos Battlefield/Giants — NOT Dagannoth Kings (hatchet-only skilling residual already filed). Triskelion is secondary Fremennik-tagged source. Do not invent kill times.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dragon_pickaxe",
+        "https://runescape.wiki/w/Chaos_Dwarf_Battlefield",
+        "https://runescape.wiki/w/Chaos_Giant",
+        "https://runescape.wiki/w/Crystal_pickaxe",
+        "https://runescape.wiki/w/Imcando_pickaxe"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_badge",
+      "league_treatment": "Hard Fremennik for acquisition. Crystal/Imcando still need Tirannwn/Asgarnia support tags.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "fremennik:dagannoth-kings-dragon-hatchet",
+        "fremennik:keldagrim-hub",
+        "fremennik:liquid-gold-nymph-path",
+        "fremennik:imcando-pickaxe",
+        "fremennik:lava-flow-mine",
+        "cross-region:pickaxe-of-earth-and-song",
+        "prifddinas:crystal-tool-workshop"
+      ]
+    }
+  ],
+  "skipped_present_or_out_of_scope": [
+    {
+      "id": "desert:shifting-tombs",
+      "reason": "Present; detail already encodes tiers, feathers, soul talisman 1/200, camouflage ~5x, reputation — not thin."
+    },
+    {
+      "id": "desert:soul-altar",
+      "reason": "Present with 'Phite Club gate, charge mechanic, fairy ring CKQ. Soul-obelisks + city quests are the missing Menaphos residual engines."
+    },
+    {
+      "id": "fremennik:managing-miscellania",
+      "reason": "First-class present (not missing). Royal Trouble gates already listed on that row."
+    },
+    {
+      "id": "fremennik:dagannoth-kings-dragon-hatchet",
+      "reason": "Present DK skilling residual. No combat DK equipment rows in this pack."
+    }
+  ],
+  "row_count": {
+    "activity_additions": 8,
+    "equipment_additions": 2,
+    "total": 10
+  },
+  "sources_note": "Live RuneScape Wiki verified 2026-07-26 for City Quest, Soul obelisk (Menaphos), Het's Oasis / Agility Course / Statue of Het / Blessing of Het, Magic Imbue, Repair Rune Pouch (20k produce post-dailyscape), Spin Flax, Azure skillchompa, Dragon pickaxe mid-game rebalance rates."
+}

@@ -1,0 +1,221 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Final-wave fill for base god books (Fremennik Horror from the Deep) and Archaeology luck ladder permanents still missing from data/research/regional-skilling-unlocks.json: fremennik:god-books-horror-from-the-deep, cross-region:luck-of-the-dwarves, cross-region:ring-of-wealth-relic, cross-region:ring-of-fortune-relic. Illuminated path already first-class as desert:citharede-abbey-illuminated-books — not re-emitted.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. region_hints lists support pressure. required_regions only when every listed region is a hard gate. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "Grep-confirmed absent from regional-skilling-unlocks.json for all 4 target ids. SKIP already first-class: desert:citharede-abbey-illuminated-books (illumination only; correctly notes base books from Horror from the Deep). Do not re-emit illuminated path.",
+    "luck_ladder_rule": "Ring of Fortune and Ring of Wealth relic powers are permanent Archaeology monolith luck-ladder rungs (tier 3 / tier 2). Emit only as monolith permanent unlocks — not as wear-slot gear rows. Luck of the Dwarves covers both the craftable tier-4 ring (teleports + wear luck) and the top Hand of Glory → monolith relic (passive tier-4 luck, no teleports).",
+    "no_trade_rule": "Ironman permanent pocket-slot god-book completion and permanent luck-relic ladder that free the ring slot while keeping rare-table / Archaeology QoL.",
+    "rate_rule": "No invented drop rates beyond wiki luck-tier summaries. Unlock state, costs, energy, and effects only."
+  },
+  "already_present_checked": [
+    "desert:citharede-abbey-illuminated-books",
+    "fremennik:rellekka-hub",
+    "fremennik:waterbirth-island",
+    "fremennik:keldagrim-hub",
+    "misthalin:mysterious-monolith-relic-hub",
+    "misthalin:archaeology-campus-hub",
+    "desert:kharid-et-dig-site",
+    "morytania:everlight-dig-site",
+    "kandarin:warforge-dig-site",
+    "forinthry:infernal-source-dig-site",
+    "cross-region:slayer-introspection-relic",
+    "cross-region:deathless-relic"
+  ],
+  "skipped_present": [
+    {
+      "id": "desert:citharede-abbey-illuminated-books",
+      "reason": "Illuminated upgrade path already first-class under Desert; this pack owns base damaged-book + page completion under Fremennik only."
+    }
+  ],
+  "activity_additions": [
+    {
+      "id": "fremennik:god-books-horror-from-the-deep",
+      "name": "God books base unlock (Horror from the Deep)",
+      "category": "permanent Prayer pocket-slot unlock",
+      "region_hint": "fremennik",
+      "region_hints": ["fremennik"],
+      "required_regions": ["fremennik"],
+      "optional_pressure_regions": ["desert", "morytania", "misthalin"],
+      "location": "Lighthouse (north of Barbarian Outpost / Fremennik coast) — Jossik after Horror from the Deep",
+      "requirements": [
+        "Horror from the Deep completed (Bar Crawl miniquest; 35 Agility for quest path)",
+        "Choose a damaged god book from Jossik (Saradomin / Guthix / Zamorak free at quest end; Bandos / Armadyl / Ancient purchasable for 5,000 coins each after first book — Ancient also needs The Dig Site)",
+        "Four matching god pages per book to complete (Treasure Trails, Columbarium vyre cremation, tetracompasses, or trade)",
+        "30 Prayer to equip a completed god book (40 Prayer for illuminated after Citharede path)"
+      ],
+      "unlocks": [
+        "Damaged god books reclaimable free from Jossik at the Lighthouse (one book per visit; order Saradomin → Guthix → Zamorak → Bandos → Armadyl → Zaros, or buy specific via menu once unlocked)",
+        "Completed god books (Law, War, Balance, Wisdom, Chaos, Ancient) in the pocket slot with combat passive effects when charged with matching pages (45 minutes per page, max 24 hours / 32 pages)",
+        "GWD faction protection from Armadyl / Bandos / Saradomin / Zamorak books (Guthix and Ancient provide no faction protection)",
+        "POH bookcase reclaim of completed books for 100,000 coins if lost",
+        "Prerequisite permanent for desert:citharede-abbey-illuminated-books (illumination creates a separate illuminated copy; base book is preserved)"
+      ],
+      "region_pressure": [
+        "Fremennik hard-owns Lighthouse quest end and Jossik damaged-book reclaim.",
+        "God-page supply is multi-region (clues, Morytania Columbarium, Archaeology tetracompasses) — not Fremennik-only.",
+        "Illumination is Desert-only (Citharede) — do not dual-claim here."
+      ],
+      "notes": "Base god-book permanent complementary to desert:citharede-abbey-illuminated-books. Wave-5 audit rank 5: illumination row already notes base books come from Horror from the Deep but never first-classed the Fremennik gate. Scriptures / Erethdor / chaotic grimoire are separate pocket items — out of scope.",
+      "source_urls": [
+        "https://runescape.wiki/w/God_book",
+        "https://runescape.wiki/w/Horror_from_the_Deep",
+        "https://runescape.wiki/w/Damaged_book",
+        "https://runescape.wiki/w/Jossik"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik for quest reward and Lighthouse reclaim. Page farming and illumination remain multi-region / Desert pressure.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "desert:citharede-abbey-illuminated-books",
+        "fremennik:rellekka-hub",
+        "fremennik:waterbirth-island"
+      ]
+    },
+    {
+      "id": "cross-region:ring-of-wealth-relic",
+      "name": "Ring of Wealth (relic power)",
+      "category": "Archaeology monolith luck-ladder relic power",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "morytania", "forinthry", "desert", "kandarin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["morytania", "forinthry", "desert", "kandarin"],
+      "location": "Mysterious monolith, Archaeology Campus (Varrock Dig Site)",
+      "requirements": [
+        "Hand of Glory (Ring of Luck) already created at some point (tier-1 ladder prereq)",
+        "Any unused hand of glory (Infernal Source 24 / Everlight 51 / Kharid-et 58 / Warforge 83) + fully charged Ring of Wealth → Hand of Glory (Ring of Wealth)",
+        "51 Archaeology (boostable) to harness",
+        "2,000 chronotes and 100 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Ring of Wealth relic power — always gain tier 2 luck while harnessed (frees the ring slot)",
+        "Tier 2 rare-drop / skilling luck ladder (mid bosses, Barrows pieces at T2+, Pyramid Plunder jewelled statuettes / Pharaoh's sceptre, Rogue outfit, easy–medium clues, crystal chest / Triskelion +1%)",
+        "Does not grant Ring of Wealth teleports",
+        "Required permanent rung before Ring of Fortune and Luck of the Dwarves relic powers"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns monolith harness and Archaeology campus reclaim (Easty).",
+        "Hands of glory are multi dig-site (Forinthry Infernal Source, Morytania Everlight, Desert Kharid-et, Kandarin Warforge) — any unused hand works.",
+        "Physical Ring of Wealth is craft/enchant supply pressure, not a region hard gate."
+      ],
+      "notes": "Permanent Archaeology luck ladder tier 2. Intermediate rung only — end state for planners is usually cross-region:luck-of-the-dwarves. Complements misthalin:mysterious-monolith-relic-hub without re-emitting it.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_Wealth_(relic_power)",
+        "https://runescape.wiki/w/Hand_of_Glory_(Ring_of_Wealth)",
+        "https://runescape.wiki/w/Hand_of_glory"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin for monolith. Dig-site hands are optional multi-region pressure (player may use any of the four hands).",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:mysterious-monolith-relic-hub",
+        "misthalin:archaeology-campus-hub",
+        "cross-region:ring-of-fortune-relic",
+        "cross-region:luck-of-the-dwarves"
+      ]
+    },
+    {
+      "id": "cross-region:ring-of-fortune-relic",
+      "name": "Ring of Fortune (relic power)",
+      "category": "Archaeology monolith luck-ladder relic power",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "morytania", "forinthry", "desert", "kandarin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["morytania", "forinthry", "desert", "kandarin"],
+      "location": "Mysterious monolith, Archaeology Campus (Varrock Dig Site)",
+      "requirements": [
+        "Hand of Glory (Ring of Luck) and Hand of Glory (Ring of Wealth) already created (prior ladder rungs)",
+        "Any remaining unused hand of glory + Ring of Fortune → Hand of Glory (Ring of Fortune)",
+        "58 Archaeology (boostable) to harness",
+        "3,000 chronotes and 150 monolith energy to harness"
+      ],
+      "unlocks": [
+        "Ring of Fortune relic power — always gain tier 3 luck while harnessed",
+        "Tier 3 rare-drop / skilling luck (broader boss list, all Slayer uniques +1%, Pyramid Plunder black ibis / Sceptre of the gods, Menaphite offerings, tetracompass pieces / complete tomes while excavating, hard clues, crystal chest / Triskelion +2%)",
+        "Does not grant Ring of Fortune teleports",
+        "Required permanent rung before Luck of the Dwarves relic power"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns monolith harness.",
+        "Typical hand for this rung is Kharid-et (58 Archaeology Orcus altar; needs pontifex signet ring) — Desert optional pressure, not exclusive.",
+        "Physical Ring of Fortune is hydrix enchant supply pressure."
+      ],
+      "notes": "Permanent Archaeology luck ladder tier 3. Skilling-relevant tetracompass / complete-tome excavating boost starts at this tier (shared with LotD). Pair with cross-region:luck-of-the-dwarves as the planner end rung.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_Fortune_(relic_power)",
+        "https://runescape.wiki/w/Hand_of_Glory_(Ring_of_Fortune)",
+        "https://runescape.wiki/w/Hand_of_glory"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin for monolith. Hands remain multi dig-site optional pressure.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:mysterious-monolith-relic-hub",
+        "cross-region:ring-of-wealth-relic",
+        "cross-region:luck-of-the-dwarves",
+        "desert:kharid-et-dig-site"
+      ]
+    },
+    {
+      "id": "cross-region:luck-of-the-dwarves",
+      "name": "Luck of the Dwarves (ring + Archaeology relic power)",
+      "category": "permanent luck enhancer and Archaeology monolith relic power",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "fremennik", "kandarin", "morytania", "forinthry", "desert"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["fremennik", "kandarin", "morytania", "forinthry", "desert"],
+      "location": "Craft/enchant anywhere; relic harness at mysterious monolith (Archaeology Campus). Physical ring teleports: Miscellania, Grand Exchange, Keldagrim (+ Dwarven Outpost with Dark Facet of Luck)",
+      "requirements": [
+        "91 Crafting + alchemical onyx + gold bar + ring mould → alchemical onyx ring; 87 Magic Lvl-6 Enchant → Luck of the Dwarves (or GE / trade path)",
+        "For relic power: prior Hand of Glory (Ring of Luck / Wealth / Fortune) rungs completed; any remaining unused hand of glory + Luck of the Dwarves ring → Hand of Glory (Luck of the Dwarves)",
+        "83 Archaeology (boostable) to harness the relic; 4,000 chronotes and 200 monolith energy",
+        "Optional: Dark Facet of Luck on the physical ring for clue-step skip / double casket / Dwarven Outpost tele (does not transfer to the relic power)"
+      ],
+      "unlocks": [
+        "Physical Luck of the Dwarves: tier 4 luck while worn (includes T1–T3 effects) plus unlimited teleports to Miscellania (Throne of Miscellania), Grand Exchange, and Keldagrim",
+        "Luck of the Dwarves relic power: always gain tier 4 luck while harnessed without occupying the ring slot",
+        "Tier 4 skilling QoL: improved tetracompass piece / complete tome chance while excavating; +2% metamorphic geode; Pyramid Plunder / Menaphite offerings / Seren's symbol pieces; rare drop table access including Vecna skull and Hazelmere's signet ring rolls; removes flax / raw lobsters / molten glass from RDT",
+        "Relic power does NOT grant the ring's teleports — keep a second physical ring (or accept tele loss) if teleports matter",
+        "Imbue at Mazcab Armoursmith (7,500 teci) is combat-stat only on the physical ring"
+      ],
+      "region_pressure": [
+        "Misthalin: monolith harness + Grand Exchange teleport destination.",
+        "Fremennik optional: Miscellania tele (Throne of Miscellania) and Keldagrim access lore; not required to harness the relic.",
+        "Kandarin optional: Warforge hand of glory (highest-level hand often used for the top rung).",
+        "Hands of glory also available from Infernal Source / Everlight / Kharid-et."
+      ],
+      "notes": "Wave-5 audit rank 6 ironman Archaeology rare-table QoL staple. Models both the craftable wear-slot ring and the permanent Hand of Glory → monolith top luck rung. Relic consumes the ring irreversibly — planners often delay until a second LotD is affordable. Does not re-emit intermediate wealth/fortune rungs (see sibling ids in this pack).",
+      "source_urls": [
+        "https://runescape.wiki/w/Luck_of_the_Dwarves",
+        "https://runescape.wiki/w/Luck_of_the_Dwarves_(relic_power)",
+        "https://runescape.wiki/w/Hand_of_Glory_(Luck_of_the_Dwarves)",
+        "https://runescape.wiki/w/Hand_of_glory",
+        "https://runescape.wiki/w/Dark_Facet_of_Luck"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Misthalin for monolith. Physical ring teleports and dig-site hands are optional multi-region pressure, not dual-hard gates for the relic unlock itself.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "misthalin:mysterious-monolith-relic-hub",
+        "misthalin:archaeology-campus-hub",
+        "cross-region:ring-of-wealth-relic",
+        "cross-region:ring-of-fortune-relic",
+        "fremennik:keldagrim-hub",
+        "kandarin:warforge-dig-site"
+      ]
+    }
+  ],
+  "ids_added": [
+    "fremennik:god-books-horror-from-the-deep",
+    "cross-region:ring-of-wealth-relic",
+    "cross-region:ring-of-fortune-relic",
+    "cross-region:luck-of-the-dwarves"
+  ],
+  "ids_skipped_already_present": [
+    "desert:citharede-abbey-illuminated-books"
+  ],
+  "verify": {
+    "method": "rg id/name against data/research/regional-skilling-unlocks.json + scraped-data enrichment packs; wiki pages God_book, Horror_from_the_Deep, Luck_of_the_Dwarves, Luck_of_the_Dwarves_(relic_power), Ring_of_Wealth_(relic_power), Ring_of_Fortune_(relic_power), Hand_of_glory",
+    "result": "4 missing → emitted; illuminated already present → skipped; no dups in research file for target ids"
+  }
+}

@@ -1,0 +1,845 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 Tirannwn/Prifddinas + Anachronia regional skilling depth still missing as first-class rows. Covers Hefin serenity posts, remaining Prif district hubs (Crwys/Cadarn/Trahaearn/Ithell/Iorwerth/Meilyr harmony pillars), Prif spirit-tree Glouron network gate (all_required tirannwn+kandarin), harmonic-dust economy + crystal singing, waterfall fishing depth, crystal teleport seed network + attuned seed equipment, Anachronia overgrown idols, dinosaur farm beans market + animal buyers, Hunter Mark Shop / quick traps / BGH permanent unlocks + poison-frog system, essential oils, Orthen site mastery, and codex lectern. Complements progression-enrichment-regional-skilling-tirannwn-2026-07-26 and anachronia-havenhythe without re-emitting already-indexed ids.",
+  "policy": {
+    "region_rule": "region_hint is primary geography (tirannwn for Prif content under Equilibrium taxonomy; anachronia for island content). region_hints lists support pressure. required_regions + region_requirement_type=all_required only when every listed region is a hard gate (Prif spirit tree needs Tirannwn + Kandarin gnome quest/network). Never put multi-region/cross-region/global in region fields.",
+    "duplicate_guard": "Does not re-emit prifddinas:skilling-hub, prifddinas:crystal-tool-workshop, prifddinas:waterfall-fishing-shop, prifddinas:meilyr-recipe-shop, prifddinas:crystal-flasks, prifddinas:ithell-harps, prifddinas:hefin-agility-course, prifddinas:voice-of-seren, prifddinas:corrupted-ore-smithing, prifddinas:seren-stones, prifddinas:amlodd-district, tirannwn:superheat-form, tirannwn:crystal-fishing-rod, tirannwn:crystal-hammer, tirannwn:crystal-tinderbox, tirannwn:trahaearn-exoskeleton, kandarin:spirit-tree-network, anachronia:orthen-dig-site, anachronia:base-camp, anachronia:ranch-out-of-time, anachronia:agility-course, anachronia:big-game-hunter, anachronia:dream-of-iaia, anachronia:orthen-furnace-core, cross-region:skekas-hypnowand.",
+    "no_trade_rule": "Prioritise permanent district infrastructure, travel seeds, dust/tool economy, BGH permanent shop unlocks, farm bean economy, and codex/lectern combat-skilling QoL. Do not mirror every clan shop item or every BGH bait consumable.",
+    "rate_rule": "Do not promote stale XP/hour into training truth. Record unlock state, effects, costs, and level gates. Wiki hourly bands may appear as context only.",
+    "rs3_terminology": "Use crystal urchin points (not OSRS fishing guild). Harmonic dust (harps) is distinct from harmony dust (urchin grind) and harmony moss (Meilyr pillars)."
+  },
+  "already_present_checked": [
+    "prifddinas:waterfall-fishing-shop",
+    "prifddinas:crystal-tool-workshop",
+    "prifddinas:ithell-harps",
+    "prifddinas:hefin-agility-course",
+    "prifddinas:voice-of-seren",
+    "prifddinas:amlodd-district",
+    "prifddinas:corrupted-ore-smithing",
+    "prifddinas:seren-stones",
+    "kandarin:spirit-tree-network",
+    "anachronia:orthen-dig-site",
+    "anachronia:ranch-out-of-time",
+    "anachronia:big-game-hunter",
+    "anachronia:agility-course",
+    "anachronia:base-camp",
+    "anachronia:dream-of-iaia",
+    "cross-region:skekas-hypnowand"
+  ],
+  "activity_additions": [
+    {
+      "id": "prifddinas:serenity-posts",
+      "name": "Hefin serenity posts (AFK Agility)",
+      "category": "Agility activity infrastructure",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "75 Agility",
+        "Plague's End / Prifddinas Hefin district access",
+        "Stand on one of six posts around Lady Hefin and select Bow / Crane / Lotus / Ward stances"
+      ],
+      "unlocks": [
+        "Unlimited AFK Agility training on serenity posts (16 March 2026 DailyScape Overhaul removed the former 20,000 base XP/day cap; rates reduced ~66% from pre-overhaul)",
+        "Matching Lady Hefin's indicated pose awards full tick XP every 2 ticks (1.2s); wrong pose awards ~1/10 that rate",
+        "Least click-intensive Agility method in the game when parking a single stance; popular Dojo Mojo pet grind via rapid XP drops",
+        "Compatible side activities on-post: ancient elven ritual shard, junk refiner, divine charge weaving, sharp shell shards, certain masterwork steps — not fletching, disassemble, or High Alchemy"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Hefin posts and Plague's End city access."
+      ],
+      "notes": "Distinct from prifddinas:hefin-agility-course (active course). Post-16-Mar-2026 numbers only. Temporary Agility boosts do not raise pose XP. Pair with magic carpet follower / Chronicle Attraction / Grace of the elves for passive side XP if desired — do not invent League rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Serenity_posts",
+        "https://runescape.wiki/w/Hefin_Clan",
+        "https://runescape.wiki/w/Update:DailyScape_Overhaul_%26_Free_Runemetrics_for_Members"
+      ],
+      "confidence": "confirmed_wiki_2026_dailyscape",
+      "league_treatment": "Hard Tirannwn AFK Agility once Prif is open. Prefer Hefin course for active high rates; posts for low-attention.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:hefin-agility-course",
+        "prifddinas:hefin-corrupted-seren-stone",
+        "tirannwn:grace-of-the-elves"
+      ]
+    },
+    {
+      "id": "prifddinas:crwys-district",
+      "name": "Crwys Farming and Woodcutting hub",
+      "category": "district skilling hub infrastructure",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Plague's End / Prifddinas Crwys district access",
+        "90 Farming for elder tree patch; lower levels for herb/bush patches",
+        "Crwys workers pickpocket at 97 Thieving"
+      ],
+      "unlocks": [
+        "Elder tree patch (Sior/Afenen) — first harvest unlocks of the Crwys title",
+        "Herb patch + bush patch + compost bin (Briallen/Eirlys; herb cannot be paid protection)",
+        "Coeden's Seed Store greenhouse with ivy walls",
+        "Four magic trees and five yew trees near Tower of Voices path",
+        "Bank chest at Lord Crwys platform",
+        "Prifddinas spirit tree + Glouron (see prifddinas:prif-spirit-tree-network for three-tree unlock)"
+      ],
+      "region_pressure": [
+        "Tirannwn owns the Crwys patches and trees.",
+        "Kandarin optional: Prisoner of Glouphrie / global spirit-tree network pressure via Glouron three-tree unlock."
+      ],
+      "notes": "Companion district row; does not re-emit Voice of Seren Crwys effects (prifddinas:voice-of-seren). Crwys VoS still boosts ivy/magic/yew WC and bush/herb/elder Farming when scheduled.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crwys_Clan",
+        "https://runescape.wiki/w/Crwys_district",
+        "https://runescape.wiki/w/Coeden%27s_Seed_Store"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Farming/WC hub. Glouron three-tree ability is the Kandarin combo gate filed separately.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:prif-spirit-tree-network",
+        "prifddinas:voice-of-seren",
+        "kandarin:spirit-tree-network"
+      ]
+    },
+    {
+      "id": "prifddinas:prif-spirit-tree-network",
+      "name": "Prifddinas spirit tree + Glouron three-tree unlock",
+      "category": "cross-region Farming travel infrastructure",
+      "region_hints": ["tirannwn", "kandarin"],
+      "required_regions": ["tirannwn", "kandarin"],
+      "requirements": [
+        "Plague's End / Prifddinas Crwys access to the permanent Prif spirit tree",
+        "The Prisoner of Glouphrie completed (Kandarin gnome quest chain)",
+        "89 Farming",
+        "Talk to Glouron next to the Prif spirit tree to unlock planting three spirit trees at once and teleport-to-Prif on the network"
+      ],
+      "unlocks": [
+        "Ability to plant three spirit trees simultaneously (was one / two depending on prior chain)",
+        "Teleport destination to Prifddinas Crwys spirit tree from any network tree",
+        "One-time 50,000 Farming XP lamp from Glouron after planting three spirit trees, checking health, and speaking to him again",
+        "Prif spirit tree requests Brimhaven / Etceteria / Manor Farm plantings as reconnection flavour (lamp reward path)"
+      ],
+      "region_pressure": [
+        "Tirannwn: physical Prif tree and Glouron NPC live in Crwys.",
+        "Kandarin: Prisoner of Glouphrie + Tree Gnome Stronghold spirit-tree network ownership (kandarin:spirit-tree-network is the base network row)."
+      ],
+      "notes": "all_required combo: without both regions the full Glouron package cannot complete. Base spirit-tree network already first-class as kandarin:spirit-tree-network — this row is the Prif destination + three-tree permanent upgrade only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_Tree_(Prifddinas)",
+        "https://runescape.wiki/w/Glouron",
+        "https://runescape.wiki/w/The_Prisoner_of_Glouphrie",
+        "https://runescape.wiki/w/Spirit_tree"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn + Kandarin. Do not treat as Tirannwn-only travel.",
+      "region_requirement_type": "all_required",
+      "links_existing_ids": [
+        "kandarin:spirit-tree-network",
+        "prifddinas:crwys-district"
+      ]
+    },
+    {
+      "id": "prifddinas:meilyr-harmony-pillars",
+      "name": "Meilyr harmony pillars (harmony moss)",
+      "category": "Farming and perfect-juju supply infrastructure",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "75 Farming",
+        "Plague's End / Meilyr district access",
+        "Harmony moss seeds planted on four Meilyr harmony pillars"
+      ],
+      "unlocks": [
+        "Four harmony pillars that grow harmony moss attuned to a skill chosen at plant time",
+        "Unique growth: each of 4 stages advances only after 50,000 base XP (no bonus XP) in the attuned skill — 200,000 total base XP to fully grow",
+        "1,133.3 Farming XP per moss harvested; all moss collected at once on pick",
+        "Harmony moss ingredient for perfect juju potions (farming/mining/smithing/woodcutting/herblore/prayer/agility/dungeoneering) and perfect plus (99 Herblore + crystal tree blossom + crystal flask)",
+        "Perfect juju farming: chance of harmony moss from normal patches + 25% chance of double moss from pillars; Tirannwn quiver 3/4 adds 10% extra moss chance; 10 vis wax re-roll per pillar; Remote Farm works"
+      ],
+      "region_pressure": [
+        "Tirannwn owns the only harmony pillars (Meilyr)."
+      ],
+      "notes": "Does not re-emit prifddinas:meilyr-recipe-shop. of the Meilyr title at 50 moss harvested. Distinct from harmonic dust (harps) and harmony dust (waterfall urchin grind).",
+      "source_urls": [
+        "https://runescape.wiki/w/Harmony_pillar",
+        "https://runescape.wiki/w/Harmony_moss",
+        "https://runescape.wiki/w/Meilyr_Clan",
+        "https://runescape.wiki/w/Perfect_juju_farming_potion"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn perfect-juju supply. Schedule high-XP methods in the attuned skill to advance pillars.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:meilyr-recipe-shop",
+        "prifddinas:crystal-flasks",
+        "prifddinas:voice-of-seren"
+      ]
+    },
+    {
+      "id": "prifddinas:cadarn-skilling-hub",
+      "name": "Cadarn Magic/Ranged and Max Guild hub",
+      "category": "district skilling and utility hub",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Cadarn district access",
+        "93 Thieving for Cadarn workers",
+        "Max Guild garden features still need skill/cape gates as documented on Max Guild"
+      ],
+      "unlocks": [
+        "Max Guild geography in southeast Cadarn (skill portals, garden, marketplace)",
+        "Haf's Battlestaves + Elven grimoire (swap standard/Ancient Magicks and standard prayers/Ancient Curses; +5 Defence/Ranged/Magic while remaining in Prif; Lunar swap with hard Fremennik diary without prayer drain)",
+        "Tears of Seren fountain for dragonstone jewellery recharge",
+        "Flax field + loom + spinning wheel north of Max Guild",
+        "Cadarn rangers/magi combat targets (1,000 kills for of the Cadarn); thievable chests in staff shop",
+        "Cadarn workers pickpocket (93 Thieving)"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Cadarn district and Max Guild location."
+      ],
+      "notes": "Skilling-utility focus; combat Cadarn Voice of Seren is not a skilling unlock. Grimoire boost resets on leaving Prifddinas.",
+      "source_urls": [
+        "https://runescape.wiki/w/Cadarn_Clan",
+        "https://runescape.wiki/w/Max_Guild",
+        "https://runescape.wiki/w/Elven_grimoire",
+        "https://runescape.wiki/w/Haf%27s_Battlestaves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn. Max Guild portals still gate individual destinations by skill requirements.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "tirannwn:grace-of-the-elves",
+        "prifddinas:voice-of-seren"
+      ]
+    },
+    {
+      "id": "prifddinas:trahaearn-mining-hub",
+      "name": "Trahaearn Mining and Smithing hub",
+      "category": "district Mining/Smithing infrastructure",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Trahaearn district access",
+        "89 Mining for Seren stones; 89 Smithing to smelt corrupted ore (boostable)",
+        "95 Thieving for Trahaearn workers"
+      ],
+      "unlocks": [
+        "Seren stones producing corrupted ore under Lady Trahaearn (see prifddinas:seren-stones / corrupted-ore-smithing for combat-free AFK detail)",
+        "District mine: coal, mithril, adamantite, runite; Prifddinas gem rocks east of mine",
+        "During Trahaearn Voice of Seren: chance any rock becomes light/dark animica; +20% Smithing on corrupted ore; extra ore chance",
+        "Anvil + furnace adjacent to Seren stones",
+        "Tree patch (Eifion/Tiwlip)",
+        "of the Trahaearn after 100 corrupted ores mined; one-time 50,000 Smithing lamp after first 100 ores smelted"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Trahaearn mine, stones, and furnace."
+      ],
+      "notes": "Hub package around already-indexed seren-stones and corrupted-ore-smithing rows. Pair Superheat Form + Orthen furnace core for AFK smelt sustain without re-emitting those ids here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Trahaearn_Clan",
+        "https://runescape.wiki/w/Seren_stone",
+        "https://runescape.wiki/w/Corrupted_ore"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Mining/Smithing destination.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:seren-stones",
+        "prifddinas:corrupted-ore-smithing",
+        "tirannwn:superheat-form",
+        "anachronia:orthen-furnace-core",
+        "tirannwn:trahaearn-exoskeleton"
+      ]
+    },
+    {
+      "id": "prifddinas:ithell-crystal-singing",
+      "name": "Ithell crystal singing bowl (tools, armour, weapons)",
+      "category": "Crafting/Smithing crystal-equipment infrastructure",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Plague's End / Ithell district access",
+        "The Eyes of Glouphrie (singing bowl access / crystal singing permission)",
+        "Smithing levels per product (75 crystal gear, 80 crystal tools from tool seeds, 85 attuned teleport seed, 90 attuned gear) — boostable, not assistable",
+        "Harmonic dust + appropriate crystal seeds"
+      ],
+      "unlocks": [
+        "Ithell singing bowl converts seeds + harmonic dust into crystal weapons/armour/tools and attuned variants",
+        "Lady Ithell upgrades dragon hatchet/pickaxe/mattock (or Imcando pick) into crystal gather tools for 4,000 dust each — even from toolbelt or augmented",
+        "Soft clay mine + pottery wheel/oven; crystal-flecked sandstone + robust glass machine for crystal flasks",
+        "POH portal, sawmill, tanner, estate agent, sandpit, Construction Supplies shop",
+        "Ithell workers (92 Thieving) drop dust and craft/con materials"
+      ],
+      "region_pressure": [
+        "Tirannwn owns singing bowl, harps, Lady Ithell, and flask infrastructure.",
+        "Kandarin optional: Eyes of Glouphrie quest geography (gnome)."
+      ],
+      "notes": "Does not re-emit prifddinas:crystal-tool-workshop or prifddinas:ithell-harps. Crystal singing cannot be assisted (30 Mar 2015). Ironman dust priority: pick/hatchet/mattock + attuned teleport + binding rod + blessed flask shell (~21,150 dust for core untradeables).",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_singing",
+        "https://runescape.wiki/w/Ithell_Clan",
+        "https://runescape.wiki/w/Singing_bowl_(Ithell_district)",
+        "https://runescape.wiki/w/Lady_Ithell"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn crystal economy. Dragon-base tools still pressure other regions (Fremennik/Anachronia/Forinthry).",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:crystal-tool-workshop",
+        "prifddinas:ithell-harps",
+        "prifddinas:harmonic-dust-economy",
+        "prifddinas:crystal-flasks",
+        "tirannwn:attuned-crystal-teleport-seed"
+      ]
+    },
+    {
+      "id": "prifddinas:harmonic-dust-economy",
+      "name": "Harmonic dust economy (harps + Ithell thieving)",
+      "category": "crystal-tool currency supply package",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "75 Crafting to play Ithell harps; 75 Construction to retune",
+        "92 Thieving for Ithell worker dust path (post-2026 continuous pickpocket with Crystal Mask upkeep)",
+        "Plague's End / Ithell access"
+      ],
+      "unlocks": [
+        "Primary harmonic dust from four Ithell harps (1 dust + 80 Crafting XP per successful note; VoS/artificer's measure halves detune)",
+        "Secondary dust from Ithell worker pickpocket (~350 dust/hour continuous with Crystal Mask post-2026 rebalance — illustrative only)",
+        "1,000 dust one-time from elite Tirannwn diary (Elen Anterth) — diary itself needs dust spent on attuned weapon first",
+        "Spend sinks: 4,000 dust per crystal pick/hatchet/mattock; 4,000 attuned teleport seed; 150 binding rod / crystal tools from tool seeds; 5,000 blessed flask shell"
+      ],
+      "region_pressure": [
+        "Tirannwn owns all primary dust sources and spend sinks."
+      ],
+      "notes": "Distinct from harmony dust (waterfall urchin grind) and harmony moss (Meilyr). Complements prifddinas:ithell-harps activity detail without re-emitting that row. Meg POP can gift dust rarely — not a plan source.",
+      "source_urls": [
+        "https://runescape.wiki/w/Harmonic_dust",
+        "https://runescape.wiki/w/Harp",
+        "https://runescape.wiki/w/Ithell_worker",
+        "https://runescape.wiki/w/Artificer%27s_measure"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn currency for crystal infrastructure. Budget dust for untradeable tools before gear.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:ithell-harps",
+        "prifddinas:ithell-crystal-singing",
+        "prifddinas:crystal-tool-workshop",
+        "cross-region:artificers-measure"
+      ]
+    },
+    {
+      "id": "prifddinas:waterfall-fishing-depth",
+      "name": "Prifddinas Waterfall Fishing depth (tiers, events, points)",
+      "category": "high-level Fishing activity depth",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Prif waterfall between Meilyr and Crwys",
+        "90 Agility + 90 Strength + 90 Ranged (boostable) for grapple shortcut, or Waterfall fishing teleports from shop (no 90s once owned)",
+        "93 / 95 / 97 Fishing for small / medium / large crystal urchin tiers",
+        "Enhanced grappling hook or mithril grapple + crossbow, or built hidey-hole"
+      ],
+      "unlocks": [
+        "Three fishing tiers: small (93), medium (95, bank chest platform), large (97) crystal urchins",
+        "Crystal urchin points (1/2/3 per size) spent at Mhistyll's Prifddinas Waterfall Fishing Shop — shop row already first-class",
+        "Distractions: big urchin co-op pull (300 Fish+Str XP + 100 points), leaping urchin click (300 Fish+Agi XP + 100 points), geyser scatter stacks",
+        "Max Guild skill portal attune to tier-2 bank platform (99 skill or Quest Cape garden; 90 Agi/Str/Range unboosted to attune)",
+        "Hermit crab pet chance; prawn balls; fishing urns and strange rocks work; Voice of Seren does not boost waterfall XP"
+      ],
+      "region_pressure": [
+        "Tirannwn owns the waterfall and reward shop."
+      ],
+      "notes": "Depth companion to prifddinas:waterfall-fishing-shop and tirannwn:crystal-fishing-rod. Do not hard-code 330k–500k XP/hour tables into training truth. Harmony dust from urchin grind is not harmonic dust.",
+      "source_urls": [
+        "https://runescape.wiki/w/Prifddinas_Waterfall_Fishing",
+        "https://runescape.wiki/w/Prifddinas_Waterfall_Fishing_Shop",
+        "https://runescape.wiki/w/Crystal_urchin_point"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Fishing flagship once 90 grapple triad or shop teleports resolve.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:waterfall-fishing-shop",
+        "tirannwn:crystal-fishing-rod"
+      ]
+    },
+    {
+      "id": "prifddinas:iorwerth-district-skilling",
+      "name": "Iorwerth Slayer and utility district",
+      "category": "district Slayer and skilling-support hub",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Plague's End / Iorwerth district access",
+        "85+ Slayer and 120 combat for Morvran as master",
+        "91 Thieving for Iorwerth workers"
+      ],
+      "unlocks": [
+        "Morvran Slayer master (Kuradal-like task set minus living rocks; adds elves; extendable; Hall of Fame challenge)",
+        "Rush of Blood weekly D&D (four difficulties; one-time 50,000 Slayer lamp at wave 20 on trial/reward run)",
+        "of the Iorwerth after 8 dark beast tasks from Morvran",
+        "Iorwerth Manor crystal chest (improved vs Taverley) and prayer altar (+Attack/Strength/Defence while remaining in Prif)",
+        "Small Summoning obelisk by Morvran; Iorwerth workers pickpocket; combat scouts/guards"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Morvran, Rush of Blood, and manor utilities."
+      ],
+      "notes": "Skilling-adjacent Slayer hub. Combat Voice of Seren for Iorwerth is not a skilling unlock. Altar boost resets on leaving Prif.",
+      "source_urls": [
+        "https://runescape.wiki/w/Iorwerth_Clan",
+        "https://runescape.wiki/w/Morvran",
+        "https://runescape.wiki/w/Rush_of_Blood",
+        "https://runescape.wiki/w/Crystal_chest_(Prifddinas)"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn Slayer master destination.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "prifddinas:voice-of-seren",
+        "prifddinas:elven-clan-thieving"
+      ]
+    },
+    {
+      "id": "cross-region:crystal-teleport-seed-network",
+      "name": "Crystal teleport seed Tirannwn travel network",
+      "category": "permanent regional travel infrastructure package",
+      "region_hints": ["tirannwn"],
+      "required_regions": ["tirannwn"],
+      "requirements": [
+        "Start Mourning's End Part I or The Prisoner of Glouphrie to obtain a seed; MEP1 progress required to charge uncharged seeds",
+        "Lletya unlock from MEP1; Temple of Light option after Within the Light + talk to Eluned/Islwyn with exactly one seed; Prif district options after walking onto Prif bridge post-Plague's End",
+        "Recharge only when fully depleted: Eluned/Islwyn/Ilfeen/Rhodri (or NPC Contact to Eluned/Islwyn) — 2,000 coins first recharge stepping down to 400"
+      ],
+      "unlocks": [
+        "Teleport crystal with up to 8 charges to Lletya, Temple of Light exterior, and all eight Prif clan districts",
+        "Prif option opens district submenu (Amlodd/Cadarn/Crwys/Hefin/Iorwerth/Ithell/Meilyr/Trahaearn)",
+        "Ironman re-obtain: Lletya elf warriors only (25/128 uncharged); elves elsewhere do not drop seeds",
+        "Up to 255 uncharged seeds bankable in Lady Ithell crystal seed storage"
+      ],
+      "region_pressure": [
+        "Tirannwn owns all destinations and recharge elves. Kandarin quest pressure for Prisoner of Glouphrie alternate obtain is optional only."
+      ],
+      "notes": "Network package; unlimited pocket-slot attuned version is tirannwn:attuned-crystal-teleport-seed. Do not invent League charge costs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_teleport_seed",
+        "https://runescape.wiki/w/Mourning%27s_End_Part_I",
+        "https://runescape.wiki/w/Within_the_Light",
+        "https://runescape.wiki/w/Plague%27s_End"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn travel backbone for Prif district hopping and Lletya.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "tirannwn:attuned-crystal-teleport-seed",
+        "tirannwn:plagues-end-unlocks",
+        "prifddinas:ithell-crystal-singing"
+      ]
+    },
+    {
+      "id": "anachronia:overgrown-idols",
+      "name": "Anachronia overgrown idols (Woodcutting)",
+      "category": "Woodcutting activity and temporary boost source",
+      "region_hint": "anachronia",
+      "region_hints": ["anachronia", "karamja"],
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["karamja"],
+      "requirements": [
+        "81 Woodcutting",
+        "Anachronia access; idols southeast of Herby Werby (rare tree map icons)",
+        "Chop outer light vine then inner medium/dense vines then idol (hardness 5/10/15/25 successful cuts)"
+      ],
+      "unlocks": [
+        "Leisurely 315 base WC XP per successful vine/idol cut",
+        "On clear: random 5-minute (partial) or 15-minute (full, 4+ successful chops including idol attempt) Woodcutting buff — double cut rate, +10% success, +10% double cut, +5% XP, or auto-bank logs",
+        "Anachronia-only: compacted leaves/wood chance, one-time Totem of Navigation base, tensile vine rare, Roar of Osseous +25% XP on Anachronia idols",
+        "Crystallise and log-splitting scrimshaw do not work; Furnace perk does not apply"
+      ],
+      "region_pressure": [
+        "Anachronia owns dragonkin idol set + Roar/compacted synergy.",
+        "Karamja has parallel idols (Gara-Dul journal / Meeting your Idols) — optional alternate site, not required for Anachronia row."
+      ],
+      "notes": "Anachronia-focused row. Max Guild Overgrown Idols portal targets Karamja idols — different geography. Do not invent League XP/hour.",
+      "source_urls": [
+        "https://runescape.wiki/w/Overgrown_idol",
+        "https://runescape.wiki/w/Anachronia"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia when valuing island WC + base-camp compacted resources. Tag Karamja only if planning Gara-Dul / dual-site buff loops.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:base-camp",
+        "anachronia:agility-course"
+      ]
+    },
+    {
+      "id": "anachronia:dinosaur-farm-beans-market",
+      "name": "Anachronia Dinosaur Farm Farmers' Market (beans)",
+      "category": "player-owned farm currency shop",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Anachronia Dinosaur Farm / Ranch Out of Time access",
+        "Shared bean currency with Manor Farm Farmers' Market",
+        "Farming level gates per pen deed (42 small through 104 second large)"
+      ],
+      "unlocks": [
+        "Bean shop via Prehistoric Potterington: small/medium/large/breeding dinosaur pen deeds (100–1,000 beans) plus base-camp resources for pen builds",
+        "Shared permanent unlocks with Manor market: bank chest (300), farm totems, noted produce (3,000), multi-trait boosts, pen breeding unlocks, storm barn chain",
+        "Anachronia-specific: Anachronia storm barn deeds (7,500 after base storm barn), Max Guild portal attunement to ranch (5,000), Anachronia Dinosaur Farm teleports (100 beans, post-Extinction)",
+        "Master farmer blueprint/fragments, herbicide/seedicide + collector upgrades, farm deeds titles (250,000 beans endgame)",
+        "Green frog / green salamander unchecked animals and supreme growth potions for beans"
+      ],
+      "region_pressure": [
+        "Anachronia owns ranch market NPC and pen geography.",
+        "Kandarin optional: Manor Farm bean generation and shared unlock state."
+      ],
+      "notes": "Does not re-emit anachronia:ranch-out-of-time hub. Beans are account-wide across both markets. Bean There, Done That achievement tracks Anachronia-specific purchases.",
+      "source_urls": [
+        "https://runescape.wiki/w/Farmers%27_Market_(Anachronia_Dinosaur_Farm)",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+        "https://runescape.wiki/w/Beans"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia for ranch deeds and Anachronia-only stock. Shared Manor unlocks still need bean supply from either farm.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:ranch-out-of-time",
+        "anachronia:farm-animal-buyers"
+      ]
+    },
+    {
+      "id": "anachronia:farm-animal-buyers",
+      "name": "Anachronia Dinosaur Farm animal buyers",
+      "category": "player-owned farm bean sink/source NPCs",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Corresponding dinosaur pens unlocked and animals raised to buyer-accepted stages",
+        "Anachronia Dinosaur Farm access"
+      ],
+      "unlocks": [
+        "Specialist buyers for frogs (Anphi), salamanders (Steven), jadinkos (Papa Mambo), varanusaurs (Laniakea), brutish (General Bentnoze), arcane/spicati associates (Glout/Ilona), birds (Odd Billy), scimitops (Doric), asciatops (Evil Dave), malletops (Moia), bagrada (Daya), rex buyers (Thok, Irwinsson)",
+        "Primary high-value bean generation path from selling farmed dinosaurs beyond base produce",
+        "Ties BGH/Slayer/Dream of Iaia unchecked animal supply into the bean economy"
+      ],
+      "region_pressure": [
+        "Anachronia owns all dinosaur-farm buyers and animal species."
+      ],
+      "notes": "Buyer checklist companion to dinosaur-farm-beans-market. Do not invent exact bean tables here — wiki buyer pages hold per-species prices.",
+      "source_urls": [
+        "https://runescape.wiki/w/Animal_buyer",
+        "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+        "https://runescape.wiki/w/Player-owned_farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia farm economy depth.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:dinosaur-farm-beans-market",
+        "anachronia:ranch-out-of-time",
+        "anachronia:big-game-hunter"
+      ]
+    },
+    {
+      "id": "anachronia:hunter-mark-shop",
+      "name": "Hunter Mark Shop (Irwinsson)",
+      "category": "Hunter currency shop infrastructure",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Anachronia access; Irwinsson at base camp / shipwreck area",
+        "Hunter marks from Anachronia Hunter (BGH skins, jadinkos, grenwall/pawya, salamanders, butterflies, bird snares; protean traps count)",
+        "One-time 25 marks for returning engraved compass (broken compass + BGH compass arrow)"
+      ],
+      "unlocks": [
+        "Shop currency for permanent Quick traps (50), elite trapper outfit blueprint (100, 20 Invention + 80 Hunter), Baiter title ladder (250 each tier)",
+        "Consumables: dinosaur lure (20), frog repellent (10), medium Hunter/Slayer lamps (25), random dinosaur eggs (80)",
+        "Marks not stored in currency pouch — track via Irwinsson"
+      ],
+      "region_pressure": [
+        "Anachronia owns mark generation and shop."
+      ],
+      "notes": "Parent shop for anachronia:quick-traps and related BGH permanent unlocks. ~2% mark chance per non-BGH catch is wiki-tested illustration only — do not hard-code rates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Hunter_mark",
+        "https://runescape.wiki/w/Hunter_Mark_Shop",
+        "https://runescape.wiki/w/Irwinsson"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Hunter currency loop.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:quick-traps",
+        "anachronia:bgh-permanent-unlocks",
+        "anachronia:big-game-hunter"
+      ]
+    },
+    {
+      "id": "anachronia:quick-traps",
+      "name": "Quick traps (BGH permanent trap speed)",
+      "category": "permanent Hunter Big Game Hunter unlock",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "50 hunter marks from Irwinsson Hunter Mark Shop",
+        "Anachronia Big Game Hunter access"
+      ],
+      "unlocks": [
+        "Permanent ~30%+ faster BGH trap build/arm times (account-wide)",
+        "Examples: scorpion build/arm 10→7 ticks; pressure plate 15→10; bait on plate 4→2; stacks further with Skeka's hypnowand (build scorpion 5 ticks combined)"
+      ],
+      "region_pressure": [
+        "Anachronia owns purchase and BGH encounters."
+      ],
+      "notes": "Priority early hunter-mark spend for ironman BGH efficiency. Hypnowand remains cross-region:skekas-hypnowand (Forinthry journal + Anachronia pieces).",
+      "source_urls": [
+        "https://runescape.wiki/w/Quick_traps",
+        "https://runescape.wiki/w/Hunter_Mark_Shop",
+        "https://runescape.wiki/w/Anachronia_Big_Game_Hunter"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia permanent BGH QoL.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:hunter-mark-shop",
+        "anachronia:bgh-permanent-unlocks",
+        "anachronia:big-game-hunter",
+        "cross-region:skekas-hypnowand"
+      ]
+    },
+    {
+      "id": "anachronia:bgh-permanent-unlocks",
+      "name": "Big Game Hunter permanent unlock package",
+      "category": "permanent Hunter BGH infrastructure package",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["forinthry"],
+      "requirements": [
+        "Anachronia Big Game Hunter access (75+ Hunter scaling by dinosaur tier)",
+        "Hunter marks for shop permanents; Hunter Lodge base-camp upgrades for QoL",
+        "Optional Skeka's hypnowand chain for additional trap speed"
+      ],
+      "unlocks": [
+        "Quick traps permanent (50 marks) — primary trap speed",
+        "Elite trapper outfit blueprint path (100 marks + Invention discovery)",
+        "Baiter title progression (cosmetic proficiency ladder)",
+        "Consumable support ecosystem: dinosaur lure (reset hide), frog repellent (strip one poison colour), poison-tipped wooden spears (golden/phantasmal/sky-blue weakness matching)",
+        "BGH drops path: dinosaur hide/scales/bones, dragon mattock, volcanic fragments, tribal fin, terrasaur maul materials, unchecked farm animals"
+      ],
+      "region_pressure": [
+        "Anachronia owns encounters and mark shop.",
+        "Forinthry optional: Daemonheim aged journal for Skeka hypnowand piece chain."
+      ],
+      "notes": "Package umbrella over quick-traps + mark shop without re-emitting anachronia:big-game-hunter activity hub. Poison frog combat detail is anachronia:bgh-poison-frog-system.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+        "https://runescape.wiki/w/Hunter_Mark_Shop",
+        "https://runescape.wiki/w/Quick_traps"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia BGH permanence checklist.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:big-game-hunter",
+        "anachronia:quick-traps",
+        "anachronia:hunter-mark-shop",
+        "anachronia:bgh-poison-frog-system",
+        "cross-region:skekas-hypnowand"
+      ]
+    },
+    {
+      "id": "anachronia:bgh-poison-frog-system",
+      "name": "BGH poison frog and spear weakness system",
+      "category": "Big Game Hunter combat-skilling mechanic",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Big Game Hunter encounter knowledge",
+        "Wooden spears fletched from jungle logs; tip with golden / phantasmal / sky-blue poison frog extracts",
+        "Optional frog repellent (10 hunter marks) to remove one poison frog type from the encounter"
+      ],
+      "unlocks": [
+        "Three poison frog colours create matching spear tips for dinosaur weakness (30k), normal (15k), or resistance (7.5k) damage bands on trap proc with Slayer XP",
+        "Correct weakness matching is the primary BGH kill-speed skill expression",
+        "Frog repellent simplifies multi-frog encounters by deleting one colour until dinosaurs re-hide",
+        "Frogs also feed player-owned farm unchecked frog supply"
+      ],
+      "region_pressure": [
+        "Anachronia owns BGH frogs and spear crafting loop."
+      ],
+      "notes": "Mechanic depth row under BGH. Do not invent exact spawn tables; wiki species pages own per-dinosaur weaknesses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Anachronia_Big_Game_Hunter",
+        "https://runescape.wiki/w/Golden_poison_frog",
+        "https://runescape.wiki/w/Phantasmal_poison_frog",
+        "https://runescape.wiki/w/Sky-blue_poison_frog",
+        "https://runescape.wiki/w/Frog_repellent"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia BGH skill ceiling.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:big-game-hunter",
+        "anachronia:bgh-permanent-unlocks",
+        "anachronia:hunter-mark-shop"
+      ]
+    },
+    {
+      "id": "anachronia:essential-oils",
+      "name": "Essential oils (base-camp spa tier 3)",
+      "category": "base-camp rare upgrade material",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Anachronia Agility Course obstacles (or Dream of Iaia rare drop post-Extinction)",
+        "1/1,800 chance per unique obstacle per lap (~1/35 per full 85 Agility lap; repeating same obstacle does not re-roll)",
+        "Town Hall tier 3 + Storehouse tier 3 already built; 120,000 each wood/leaves/clay + oils at Giles for spa tier 3 (90 Agility gate)"
+      ],
+      "unlocks": [
+        "Essential oils item for Spa tier 3 upgrade",
+        "Spa tier 3 grants Anachronia-only +10% Agility XP (tier ladder 5/7/10%)",
+        "One oils max needed; destroy warning is permanent"
+      ],
+      "region_pressure": [
+        "Anachronia owns agility course rolls, Dream of Iaia alternate, and spa structure."
+      ],
+      "notes": "Same per-obstacle-once-per-lap rule as codex pages (Mod Daze). Complements anachronia:base-camp without re-emitting it.",
+      "source_urls": [
+        "https://runescape.wiki/w/Essential_oils",
+        "https://runescape.wiki/w/Spa_(Anachronia_base_camp)",
+        "https://runescape.wiki/w/Anachronia_Agility_Course"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia base-camp completionist material.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:base-camp",
+        "anachronia:agility-course",
+        "anachronia:dream-of-iaia",
+        "anachronia:codex-lectern"
+      ]
+    },
+    {
+      "id": "anachronia:orthen-site-mastery",
+      "name": "Orthen Dig Site full mastery (monolith + recipes)",
+      "category": "Archaeology dig-site completion package",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "90 Archaeology + associate qualification + base-camp tutorial for site access (anachronia:orthen-dig-site)",
+        "Unlock all four permanent excavation sites: Crypt of Varanus (90), Observation outpost (101), Moksha ritual site (106), Xolo City (113+; 108 boostable Archaeology + 86 boostable Hunter for last site entry path)",
+        "Complete Orthen mysteries including Teleport Node On (90 Arch + 70 RC/Crafting/Divination for full teleport network) and Mysterious City",
+        "120 Archaeology for final monolith power reward"
+      ],
+      "unlocks": [
+        "Mysterious monolith power cap +150 (to 650 total) after 120 Archaeology + all sites + Mysterious City",
+        "Dragonkin potion recipes and skilling off-hand artefacts (dragon burners path to Orthen furnace core remains separate id)",
+        "Mr Mordaut becomes research consultant with Treasure Hoarder tetracompass-piece chance on expeditions after all mysteries",
+        "Full Orthen teleportation device network between base camp and four sites",
+        "Death mask path for Bait and Switch still tracked on anachronia:bait-and-switch-relic"
+      ],
+      "region_pressure": [
+        "Anachronia owns Orthen exclusively — never dual dig-site claim."
+      ],
+      "notes": "Completion/mastery package above anachronia:orthen-dig-site hub. Prefer specialised rows for furnace core, herb bag, and Bait and Switch when ranking those unlocks. Do not invent League chronote costs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Orthen_Dig_Site",
+        "https://runescape.wiki/w/Orthen_Dig_Site/Unlocking_excavation_sites",
+        "https://runescape.wiki/w/Mysterious_City",
+        "https://runescape.wiki/w/Teleport_Node_On",
+        "https://runescape.wiki/w/Mysterious_monolith"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia Archaeology endgame. Surface after base dig-site row when ranking monolith power.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:orthen-dig-site",
+        "anachronia:orthen-furnace-core",
+        "anachronia:bait-and-switch-relic",
+        "anachronia:base-camp"
+      ]
+    },
+    {
+      "id": "anachronia:codex-lectern",
+      "name": "Anachronia codex lectern (Double Surge/Escape)",
+      "category": "Agility codex craft infrastructure",
+      "region_hint": "anachronia",
+      "required_regions": ["anachronia"],
+      "requirements": [
+        "Codex pages from Anachronia Agility Course (10 guaranteed per full lap at 85 Agility; 1–4 rare per obstacle; +1 whenever pages roll under Roar of Osseous)",
+        "One-time 25 pages from searching the lectern SE of Anachronia lodestone",
+        "Tier 2+ luck improves obstacle bonus page chance"
+      ],
+      "unlocks": [
+        "Lectern SE of base-camp lodestone assembles Double Surge or Double Escape codices",
+        "500 pages → untradeable personal codex; 750 pages → tradeable codex",
+        "Permanent mobility upgrades critical for high-level skilling and PvM pathing",
+        "Pages cannot convert from backpack — must study at lectern"
+      ],
+      "region_pressure": [
+        "Anachronia owns course pages and lectern craft."
+      ],
+      "notes": "Does not re-emit anachronia:agility-course hub. Ironman plan 500-page untradeable first. Same once-per-obstacle rule as essential oils for bonus rolls.",
+      "source_urls": [
+        "https://runescape.wiki/w/Codex_page",
+        "https://runescape.wiki/w/Lectern_(Anachronia)",
+        "https://runescape.wiki/w/Double_Surge_codex",
+        "https://runescape.wiki/w/Double_Escape_codex",
+        "https://runescape.wiki/w/Anachronia_Agility_Course"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia mobility codex grind.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "anachronia:agility-course",
+        "anachronia:essential-oils",
+        "anachronia:base-camp"
+      ]
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "tirannwn:attuned-crystal-teleport-seed",
+      "name": "Attuned crystal teleport seed",
+      "category": "permanent unlimited Tirannwn teleport pocket item",
+      "region_hint": "tirannwn",
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["kandarin"],
+      "requirements": [
+        "Plague's End / Ithell singing bowl access",
+        "The Eyes of Glouphrie",
+        "85 Smithing (boostable, not assistable)",
+        "Uncharged crystal teleport seed + 4,000 harmonic dust at Ithell singing bowl (4,000 Smithing XP)"
+      ],
+      "effects": [
+        "Unlimited teleports to Lletya, Temple of Light, and all eight Prif clan districts",
+        "Equippable in pocket slot",
+        "Lost on death must be re-sung (elf warriors Lletya for new seed + 4,000 dust again)",
+        "Beast of Burden expiry destroys seed instead of dropping — do not BoB-store",
+        "Component for Seren teleport stone POH furniture with corrupted ore + cleansing crystals"
+      ],
+      "region_pressure": [
+        "Tirannwn owns dust, singing bowl, and destinations.",
+        "Kandarin optional: Eyes of Glouphrie."
+      ],
+      "notes": "Equipment companion to cross-region:crystal-teleport-seed-network. Ironmen often keep charged non-attuned seeds until dust budget allows attune.",
+      "source_urls": [
+        "https://runescape.wiki/w/Attuned_crystal_teleport_seed",
+        "https://runescape.wiki/w/Crystal_teleport_seed",
+        "https://runescape.wiki/w/Harmonic_dust"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn travel BiS once dust spent.",
+      "region_requirement_type": "single",
+      "links_existing_ids": [
+        "cross-region:crystal-teleport-seed-network",
+        "prifddinas:harmonic-dust-economy",
+        "prifddinas:ithell-crystal-singing"
+      ]
+    }
+  ]
+}

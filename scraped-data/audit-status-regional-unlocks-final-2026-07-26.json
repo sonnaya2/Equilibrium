@@ -1,0 +1,88 @@
+{
+  "snapshot_date": "2026-07-26",
+  "pass": "FINAL PASS complete — quality lock + residual high-value fill",
+  "agents_this_pass": 12,
+  "regional_skilling_unlocks": 613,
+  "stats": {
+    "activities": 419,
+    "equipment": 194,
+    "regionCombos_all_required": 97,
+    "comboLabeled": 180,
+    "name_duplicates_exact": 0,
+    "multi_region_without_comboLabel": 0,
+    "invalid_region_tokens": 0,
+    "false_all_required_singles": 0
+  },
+  "by_region_hints": {
+    "misthalin": 152,
+    "kandarin": 137,
+    "asgarnia": 136,
+    "tirannwn": 120,
+    "forinthry": 112,
+    "morytania": 100,
+    "desert": 93,
+    "fremennik": 76,
+    "anachronia": 73,
+    "karamja": 58,
+    "havenhythe": 32
+  },
+  "training_methods_catalog": 428,
+  "quality_gates": {
+    "combo": "pass",
+    "exact_name_dups": "pass",
+    "invalid_tokens": "pass",
+    "false_all_required": "pass",
+    "research_tests": "pass 10/10",
+    "sync_script": "comboLabel + DROP_IDS + VALID_REGIONS present"
+  },
+  "p0_p1_residuals": {
+    "karamja:perfect-juju-potions": "ok",
+    "cross-region:orthen-superheat-autoheater": "ok (restored from DROP_IDS)",
+    "tirannwn:elven-grimoire": "ok",
+    "fremennik:god-books-horror-from-the-deep": "ok",
+    "cross-region:luck-of-the-dwarves": "ok",
+    "cross-region:tetracompass-and-tomes": "ok",
+    "asgarnia:divine-charge-crafting": "ok",
+    "misthalin:soil-box-material-storage": "ok",
+    "misthalin:archaeologists-tea": "ok",
+    "forinthry:scroll-of-quick-teleportation": "ok",
+    "cross-region:rune-pouch-ladder": "ok",
+    "cross-region:portable-skilling-stations": "ok",
+    "cross-region:thaler-skilling-rewards": "ok",
+    "kandarin:pof-farm-totems-tier2": "ok"
+  },
+  "hygiene_dropped": [
+    "karamja:calquat-patch",
+    "asgarnia:thieves-guild-master-tools",
+    "kandarin:area-tasks-seers-headband",
+    "kandarin:seers-village-achievements",
+    "karamja:karamja-gloves-skilling",
+    "desert:slayer-codex",
+    "misthalin:runespan-master-runecrafter-robes",
+    "misthalin:city-of-um-ritualist-outfit",
+    "kandarin:ardougne-cloak-ourania",
+    "karamja:juju-potions-pointer"
+  ],
+  "before_after": {
+    "unlocks_before_final_pass": 604,
+    "unlocks_after": 613,
+    "combo_labeled_before": 167,
+    "combo_labeled_after": 180,
+    "training_before": 403,
+    "training_after": 428
+  },
+  "audits": [
+    "scraped-data/audit-final-still-missing-2026-07-26.json",
+    "scraped-data/audit-final-dedupe-patch-2026-07-26.json",
+    "scraped-data/audit-schema-hygiene-2026-07-26.json",
+    "scraped-data/audit-final-broken-refs-2026-07-26.json"
+  ],
+  "remaining_long_tail": [
+    "Some detail strings still Prefer dropped phantom ids (black-ibis activity, first-age activity path, elder-divination bare id) — rewrite footnotes only, not new content",
+    "Morytania legs 1-4 still four equipment rows by design (other diaries collapsed)",
+    "Deep Waiko individual chime SKUs",
+    "Full museum chronote collection line items",
+    "Combat BiS regional densify (out of skilling scope)"
+  ],
+  "verdict": "Final pass gates green. Residual ironman P0/P1 permanents first-class. Near-dup severe groups collapsed. Orthen AFK stack restored. Training +25 methods."
+}

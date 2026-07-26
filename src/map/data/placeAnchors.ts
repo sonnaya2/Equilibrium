@@ -32,6 +32,8 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "misthalin", area: "Varrock Dig Site", uv: [0.558, 0.4] },
   { region: "misthalin", area: "City of Um", uv: [0.51, 0.62] },
   { region: "misthalin", area: "Wizards' Tower", uv: [0.5, 0.63] },
+  { region: "misthalin", area: "Edgeville", uv: [0.505, 0.4] },
+  { region: "misthalin", area: "Zanaris", uv: [0.515, 0.61] },
 
   // Asgarnia — Falador central, the troll country stacked in the north-west.
   { region: "asgarnia", area: "Falador", uv: [0.412, 0.472] },
@@ -43,6 +45,11 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "asgarnia", area: "Troll Stronghold", uv: [0.377, 0.336] },
   { region: "asgarnia", area: "Trollheim", uv: [0.398, 0.352] },
   { region: "asgarnia", area: "God Wars Dungeon", uv: [0.42, 0.33] },
+  { region: "asgarnia", area: "Rimmington", uv: [0.4, 0.58] },
+  { region: "asgarnia", area: "Entrana", uv: [0.385, 0.55] },
+  { region: "asgarnia", area: "Ice Mountain", uv: [0.445, 0.4] },
+  { region: "asgarnia", area: "Armadyl's Tower", uv: [0.42, 0.5] },
+  { region: "asgarnia", area: "Invention Guild", uv: [0.43, 0.48] },
 
   // Kandarin — Piscatoris/Hall north-west, Seers–Catherby band, Ardougne/POF
   // south, Feldip Warforge on the south coast, DSF off the southern pier.
@@ -59,14 +66,18 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "kandarin", area: "Player-Owned Farm", uv: [0.268, 0.6] },
   { region: "kandarin", area: "Warforge Dig Site", uv: [0.3, 0.66] },
   { region: "kandarin", area: "Deep Sea Fishing Hub", uv: [0.258, 0.7] },
+  { region: "kandarin", area: "Stormguard Citadel Dig Site", uv: [0.28, 0.48] },
+  { region: "kandarin", area: "Temple of Ikov", uv: [0.29, 0.5] },
+  { region: "kandarin", area: "Howl's Floating Workshop", uv: [0.275, 0.49] },
+  { region: "kandarin", area: "Underground Pass", uv: [0.228, 0.53] },
 
   // Karamja — Musa Point north, Brimhaven west, Shilo south, TzHaar inland,
   // Habitat/grove/Tai Bwo Wannai on the south-west half.
-  { region: "karamja", area: "Karamja", uv: [0.3, 0.758] },
+
   { region: "karamja", area: "Musa Point", uv: [0.33, 0.74] },
   { region: "karamja", area: "Brimhaven", uv: [0.264, 0.775] },
   { region: "karamja", area: "Hardwood Grove", uv: [0.275, 0.8] },
-  { region: "karamja", area: "TzHaar area", uv: [0.338, 0.812] },
+  { region: "karamja", area: "TzHaar City", uv: [0.338, 0.812] },
   { region: "karamja", area: "Tai Bwo Wannai", uv: [0.29, 0.84] },
   { region: "karamja", area: "Herblore Habitat", uv: [0.32, 0.86] },
   { region: "karamja", area: "Shilo Village", uv: [0.305, 0.882] },
@@ -84,18 +95,27 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "fremennik", area: "Keldagrim", uv: [0.33, 0.22] },
   { region: "fremennik", area: "Lava Flow Mine", uv: [0.31, 0.25] },
 
-  // Forinthry — Daemonheim on the south-east coast, slayer ground central,
-  // Agility course north, Abyss entrance west of centre.
+  // Forinthry — Daemonheim SE coast; crater / Mage Arena / Agility north-central;
+  // Mage of Zamorak (Abyss) west of centre; Forinthry Dungeon mid-east.
   { region: "forinthry", area: "Wilderness Agility Course", uv: [0.48, 0.12] },
-  { region: "forinthry", area: "Wilderness Slayer", uv: [0.502, 0.172] },
-  { region: "forinthry", area: "Abyss entrance", uv: [0.45, 0.2] },
+  { region: "forinthry", area: "Mage Arena", uv: [0.49, 0.15] },
+  { region: "forinthry", area: "Wilderness Crater", uv: [0.502, 0.172] },
+  { region: "forinthry", area: "Mage of Zamorak", uv: [0.45, 0.2] },
+  { region: "forinthry", area: "Forinthry Dungeon", uv: [0.53, 0.2] },
   { region: "forinthry", area: "Daemonheim", uv: [0.624, 0.292] },
+  { region: "forinthry", area: "Lava Maze", uv: [0.48, 0.168] },
+  { region: "forinthry", area: "Chaos Temple (Wilderness)", uv: [0.525, 0.235] },
+  { region: "forinthry", area: "Bandit Camp", uv: [0.458, 0.188] },
+  { region: "forinthry", area: "Rogues' Castle", uv: [0.528, 0.108] },
+  { region: "forinthry", area: "Demonic Ruins", uv: [0.568, 0.132] },
+  { region: "forinthry", area: "Frozen Waste Plateau", uv: [0.448, 0.098] },
+  { region: "forinthry", area: "Pirates' Hideout", uv: [0.462, 0.105] },
 
-  // Kharidian Desert — dig site north, oasis mid-south, Menaphite south,
-  // Garden of Kharid on the north-west shoulder toward Al Kharid.
+  // Kharidian Desert — Al Kharid / dig / oasis on the north band, Menaphite south.
+  { region: "desert", area: "Al Kharid", uv: [0.492, 0.7] },
   { region: "desert", area: "Garden of Kharid", uv: [0.5, 0.72] },
   { region: "desert", area: "Kharid-et Dig Site", uv: [0.52, 0.75] },
-  { region: "desert", area: "Het's Oasis", uv: [0.545, 0.845] },
+  { region: "desert", area: "Het's Oasis", uv: [0.53, 0.73] },
   { region: "desert", area: "Sophanem", uv: [0.58, 0.9] },
   { region: "desert", area: "Menaphos", uv: [0.56, 0.928] },
 
@@ -105,13 +125,16 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "morytania", area: "Canifis", uv: [0.64, 0.48] },
   { region: "morytania", area: "Everlight Dig Site", uv: [0.7, 0.5] },
   { region: "morytania", area: "Port Phasmatys", uv: [0.72, 0.52] },
-  { region: "morytania", area: "Araxxor", uv: [0.658, 0.558] },
+  { region: "morytania", area: "Araxyte Hive", uv: [0.658, 0.558] },
   { region: "morytania", area: "Darkmeyer", uv: [0.69, 0.55] },
   { region: "morytania", area: "Barrows", uv: [0.68, 0.58] },
 
-  // Tirannwn — Prifddinas central, the Lost Grove off the south.
+  // Tirannwn — Prifddinas central, Lost Grove south, Isafdar/Lletya/Port Tyras.
   { region: "tirannwn", area: "Prifddinas", uv: [0.155, 0.52] },
   { region: "tirannwn", area: "Lost Grove", uv: [0.137, 0.7] },
+  { region: "tirannwn", area: "Lletya", uv: [0.175, 0.58] },
+  { region: "tirannwn", area: "Isafdar", uv: [0.15, 0.62] },
+  { region: "tirannwn", area: "Port Tyras", uv: [0.125, 0.68] },
 
   // Anachronia — base camp west, Orthen / Time altar more central-north,
   // Agility and Slayer Lodge inland, Ranch south, Dream of Iaia east.
@@ -130,6 +153,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "havenhythe", area: "Hollow Hill", uv: [0.815, 0.545] },
   { region: "havenhythe", area: "Shrine of Inanna", uv: [0.803, 0.592] },
   { region: "havenhythe", area: "Eastfold Farm", uv: [0.876, 0.59] },
+  { region: "havenhythe", area: "Marigold Farm", uv: [0.86, 0.575] },
   { region: "havenhythe", area: "Highweald Forest", uv: [0.842, 0.622] },
   { region: "havenhythe", area: "Amberfell", uv: [0.826, 0.68] },
 ];

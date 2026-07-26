@@ -3927,17 +3927,17 @@
       "quest_type": "",
       "release": "11 July 2016",
       "members": "Yes",
-      "primary_region": "unmapped",
-      "mapping_reason": "Starts in Port Sarim, but the quest exists to open The Arc / Wushanko. Equilibrium has not assigned that external area to a planner region yet, so Port Sarim alone is not enough to classify it.",
+      "primary_region": "asgarnia",
+      "mapping_reason": "Opens The Arc / Wushanko. User taxonomy 2026-07-26 packages Arc (Seiryu / ED1) as Asgarnia for planner pressure.",
       "source_url": "https://runescape.wiki/w/Impressing_the_Locals",
       "source_revision": 36964137,
       "source_revision_timestamp": "2026-03-11T04:02:00Z",
       "direct_prerequisites": [],
       "required_regions": [
-        "unmapped"
+        "asgarnia"
       ],
       "cross_region": false,
-      "region_confidence": "needs_boundary_review",
+      "region_confidence": "user_rule_arc_asgarnia_2026_07_26",
       "equilibrium_auto_completion": {
         "status": "unknown_pending_official_jagex_list",
         "regions": [],

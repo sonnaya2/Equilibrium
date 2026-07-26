@@ -1,0 +1,415 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-5 Havenhythe thin-coverage fix for regional-skilling-unlocks.json. CRITICAL: emit first-class havenhythe:empowered-summoning-obelisks and havenhythe:jackalope-familiar so shrine hub outbound refs stop gaslighting planners. Plus other high-value Havenhythe permanent skilling unlocks still missing (jackalope hunting tertiary, Spirit Wolves shop / Blessings of the Wolf, Fang of Mohegan, Apex Hide → Masterwork Ranged craft path, giant crayfish, Wendlewick lodestone + teleport, Altar of Inanna, Eastfold Farm, Trader Woes bank). Wiki-backed only; no re-emit of the 16 present primary ids.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. Never put multi-region/cross-region/global tokens in region_hint.",
+    "duplicate_guard": "SKIP already first-class: havenhythe:amberfell-hub, havenhythe:big-game-hunter, havenhythe:birdhouses, havenhythe:canoe-network, havenhythe:creeping-ivy, havenhythe:eternal-magic-nursery, havenhythe:highweald-mining, havenhythe:marigold-farm-patches, havenhythe:moonrise-dig-site, havenhythe:ring-of-kayazu, havenhythe:shaman-outfit, havenhythe:shrine-of-inanna-summoning-hub, havenhythe:spirit-moths, havenhythe:tear-of-inanna-hungry-like-the-wolf, havenhythe:volatile-chinchompas, havenhythe:wendlewick-fish-farm, havenhythe:no-area-tasks-diary, havenhythe:no-tear-of-the-mists.",
+    "broken_ref_fix": "Emit empowered-summoning-obelisks + jackalope-familiar as real rows (wiki-confirmed). Do not rewrite shrine hub notes to drop those ids — the ids are real product unlocks that never landed in regional-skilling.",
+    "no_trade_rule": "Ironman permanent account unlocks, region-gated production hubs, and self-supply craft paths.",
+    "rate_rule": "No invented XP/hour as planner truths. Unlock state, costs, effects, and region pressure only. Wiki rate bands may appear as notes, not optimizers."
+  },
+  "already_present_checked": [
+    "havenhythe:amberfell-hub",
+    "havenhythe:big-game-hunter",
+    "havenhythe:birdhouses",
+    "havenhythe:canoe-network",
+    "havenhythe:creeping-ivy",
+    "havenhythe:eternal-magic-nursery",
+    "havenhythe:highweald-mining",
+    "havenhythe:marigold-farm-patches",
+    "havenhythe:moonrise-dig-site",
+    "havenhythe:ring-of-kayazu",
+    "havenhythe:shaman-outfit",
+    "havenhythe:shrine-of-inanna-summoning-hub",
+    "havenhythe:spirit-moths",
+    "havenhythe:tear-of-inanna-hungry-like-the-wolf",
+    "havenhythe:volatile-chinchompas",
+    "havenhythe:wendlewick-fish-farm"
+  ],
+  "broken_references_fixed": [
+    "havenhythe:empowered-summoning-obelisks",
+    "havenhythe:jackalope-familiar"
+  ],
+  "activity_additions": [
+    {
+      "id": "havenhythe:empowered-summoning-obelisks",
+      "name": "Havenhythe empowered Summoning obelisks (Spirit Plane Connection)",
+      "category": "regional pouch-production infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access via Visions of Havenhythe progression",
+        "Reach Shrine of Inanna (south of Wendlewick; fairy ring BKS later access)",
+        "Summoning materials for pouch infusion at the currently empowered obelisk"
+      ],
+      "unlocks": [
+        "Three Shrine of Inanna obelisks; exactly one is empowered at any time for Spirit Plane Connection training",
+        "Spirit Plane Connection: gain 2% when infusing a pouch at the empowered obelisk; lose 2% when infusing at a non-empowered obelisk; lose 1% every 20 seconds if no pouches are being infused",
+        "Connection effects at empowered obelisks: 23–50% Summoning XP (+3% XP per 10% connection) and 1–10% chance to save materials (+1 percentage point per 10% connection); max 100% connection",
+        "Spirit Communion: offer 100 spirit shards to the visiting Spirit Wolf — speeds pouch infusion by 0.6 seconds (4→3 ticks) and stops connection decay from pouch creation for the next 100 infusions",
+        "Each pouch infused at any of the three shrine obelisks grants 1 Blessings of the Wolf toward Pikkenflix shop unlocks",
+        "Achievements: Dialed In (100% connection), Getting Familiar (offer shards to Spirit Wolf)",
+        "Binding contracts do not receive empowered bonuses; Spirit Weaver relic has no effect here"
+      ],
+      "notes": "CANONICAL Spirit Plane Connection math row — shrine hub is pointer only and must keep linking this id. Connection state is separate from Amlodd Voice of Seren and from Desert Holy scarab. Do not re-emit shaman outfit equipment here. Buffs clear when leaving vicinity after slow Summoning (26 May 2026 patch).",
+      "source_urls": [
+        "https://runescape.wiki/w/Empowered_obelisk",
+        "https://runescape.wiki/w/Spirit_Plane_Connection",
+        "https://runescape.wiki/w/Spirit_Communion",
+        "https://runescape.wiki/w/Shrine_of_Inanna",
+        "https://runescape.wiki/w/Dialed_In",
+        "https://runescape.wiki/w/Getting_Familiar"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Summoning production advantage. Not global access to Havenhythe familiars or ingredients.",
+      "links_existing_ids": [
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:shaman-outfit",
+        "havenhythe:shrine-of-the-spirit-wolves",
+        "asgarnia:pikkupstix-summoning-obelisk",
+        "prifddinas:amlodd-district"
+      ]
+    },
+    {
+      "id": "havenhythe:jackalope-familiar",
+      "name": "Jackalope familiar (Archaeology soil BoB)",
+      "category": "Archaeology soil-support familiar",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "30 Summoning",
+        "Jackalope pouch: gold charm + 10 spirit shards + empty pouch + jackalope antlers tertiary",
+        "Antlers from Havenhythe jackalope hunting (see havenhythe:jackalope-hunting)"
+      ],
+      "unlocks": [
+        "Non-combat Beast of Burden / forager familiar with 16-minute duration and 40 summoning-point cost",
+        "30 inventory slots restricted to Archaeology soil only; stores received soil when space remains",
+        "Passive screening: screens stored soil over time with 33% chance to receive materials per soil (uses a sign-of-the-porter charge to bank materials if available); very rare artefact discovery chance",
+        "Special Dig for Soil (Jackalope scroll): 12 special-move points (9 with spirit cape) — +10% chance of finding soil while excavating for 1 minute, stackable to 5 minutes maximum",
+        "Scroll conversion: 10 scrolls normal / 12 under Amlodd Voice of Seren"
+      ],
+      "notes": "CANONICAL jackalope equipment row referenced by shrine hub. Havenhythe owns the antler tertiary; Archaeology utility is global after pouch creation. Not a combat familiar and not an unrestricted BoB. Pair with Moonrise dig-site soil volume.",
+      "source_urls": [
+        "https://runescape.wiki/w/Jackalope",
+        "https://runescape.wiki/w/Jackalope_pouch",
+        "https://runescape.wiki/w/Jackalope_scroll_(Dig_for_Soil)",
+        "https://runescape.wiki/w/Jackalope_antlers",
+        "https://runescape.wiki/w/Summoning_familiars"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Havenhythe supplies antlers. Familiar use is global post-pouch; do not require Havenhythe to stay summoned.",
+      "links_existing_ids": [
+        "havenhythe:jackalope-hunting",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:moonrise-dig-site",
+        "havenhythe:empowered-summoning-obelisks",
+        "forinthry:spirit-cape"
+      ]
+    },
+    {
+      "id": "havenhythe:jackalope-hunting",
+      "name": "Jackalope hunting (antler tertiary)",
+      "category": "Hunter tertiary supply for Summoning",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "32 Hunter",
+        "Rabbit snares at jackalope burrows south-west of Shrine of Inanna",
+        "Optional: teasing stick to flush one burrow; ferret (Eagles' Peak) to flush multiple burrows"
+      ],
+      "unlocks": [
+        "Always-drop jackalope antlers (tertiary for jackalope pouch) plus bones and raw rabbit",
+        "202 Hunter XP per successful catch (wiki method rates are approximate only — do not hardcode optimizer XP/h)",
+        "Starting-region tertiary loop colocated with empowered obelisks and birdhouse plot at the shrine",
+        "Trader Woes bank chest northwest of the shrine unlock path for non-drop loot banking"
+      ],
+      "notes": "Distinct first-class row from the jackalope familiar. Hunter method only — pouch/BoB effects stay on havenhythe:jackalope-familiar. Not Wilderness black-chin style risk content.",
+      "source_urls": [
+        "https://runescape.wiki/w/Jackalope_(Hunter)",
+        "https://runescape.wiki/w/Jackalope_burrow",
+        "https://runescape.wiki/w/Jackalope_antlers",
+        "https://runescape.wiki/w/Shrine_of_Inanna"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Hunter/Summoning-supply. Eagles' Peak ferret is optional multi-region convenience only.",
+      "links_existing_ids": [
+        "havenhythe:jackalope-familiar",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:trader-woes-bank-chest",
+        "havenhythe:birdhouses"
+      ]
+    },
+    {
+      "id": "havenhythe:shrine-of-the-spirit-wolves",
+      "name": "Shrine of the Spirit Wolves (Blessings of the Wolf shop)",
+      "category": "Summoning reward-shop infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Access to Shrine of Inanna / Pikkenflix",
+        "Infuse summoning pouches at any of the three shrine obelisks to earn Blessings of the Wolf (1 per pouch)",
+        "5,000 cumulative Blessings required to unlock the entire ordered stock list (comp cape requirement via No Need to Pikkenchoose)"
+      ],
+      "unlocks": [
+        "Permanent ordered shop unlocks: full shaman's outfit pieces, shaman's headdress add-on, Fang of Mohegan, the Spirit Wolf title",
+        "Blessings of the Wolf currency is not spent when unlocking — thresholds gate purchases only (Het's Oasis scarabs-caught pattern)",
+        "Pre-Havenhythe owners of shaman outfit + Fang of Mohegan start at 4,200 Blessings without pouch work",
+        "Pikkenflix also runs Summoning Supplies at the shrine for local shard/pouch logistics"
+      ],
+      "notes": "Shop infrastructure row — do not re-emit havenhythe:shaman-outfit equipment effects here. Prefer this id for Blessings/No Need to Pikkenchoose progression; prefer shaman-outfit for worn XP bonuses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Shrine_of_the_Spirit_Wolves",
+        "https://runescape.wiki/w/Blessings_of_the_Wolf",
+        "https://runescape.wiki/w/Pikkenflix",
+        "https://runescape.wiki/w/No_Need_to_Pikkenchoose"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Summoning shop path. Complements empowered-obelisk production without duplicating connection math.",
+      "links_existing_ids": [
+        "havenhythe:empowered-summoning-obelisks",
+        "havenhythe:shaman-outfit",
+        "havenhythe:fang-of-mohegan",
+        "havenhythe:shrine-of-inanna-summoning-hub"
+      ]
+    },
+    {
+      "id": "havenhythe:fang-of-mohegan",
+      "name": "Fang of Mohegan",
+      "category": "Summoning tele necklace and charm double",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Unlock from Shrine of the Spirit Wolves after accumulating at least 4,200 Blessings of the Wolf (ordered shop unlock)",
+        "Visions of Havenhythe for Havenhythe shrine teleport option among daily obelisk destinations"
+      ],
+      "unlocks": [
+        "Daily teleport to a chosen large Summoning obelisk (Taverley, Gu'Tanoth, Brimhaven, Nature Grotto, Desert, Piscatoris, Well of Voyage, Amlodd, Menaphos Merchant, Havenhythe Shrine of Inanna)",
+        "25% chance on kill to activate charm-double on single-charm drops (250 charges total; no recharge; Diango reclaim preserves charges)",
+        "Does not stack with Familiarisation triple-charm window; no effect on multi-charm or non-charm NPCs"
+      ],
+      "notes": "Re-obtainable via Havenhythe shop after prior SoF/Marketplace history. Equipment row is Havenhythe-gated for ironman reacquire path even though teleports land multi-region.",
+      "source_urls": [
+        "https://runescape.wiki/w/Fang_of_Mohegan",
+        "https://runescape.wiki/w/Shrine_of_the_Spirit_Wolves",
+        "https://runescape.wiki/w/Blessings_of_the_Wolf"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe for modern ironman unlock path. Teleport destinations remain optional multi-region pressure only.",
+      "links_existing_ids": [
+        "havenhythe:shrine-of-the-spirit-wolves",
+        "havenhythe:shaman-outfit",
+        "havenhythe:empowered-summoning-obelisks",
+        "asgarnia:pikkupstix-summoning-obelisk",
+        "asgarnia:familiarisation"
+      ]
+    },
+    {
+      "id": "havenhythe:apex-hide-masterwork-ranged-path",
+      "name": "Apex hide → Masterwork Ranged craft path",
+      "category": "Hunter–Crafting production permanent",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe Big Game Hunter access (high Hunter / Slayer band for apex hides)",
+        "100 Crafting to tailor apex hide armour from apex leather",
+        "It Should Have Been Called Chinskin: craft a full apex hide set upgraded to +5 (384 apex leather total for full +5 set path)",
+        "110 Crafting (and associated multi-skill floors) for masterwork ranged armour after the apex +5 achievement"
+      ],
+      "unlocks": [
+        "Apex leather / apex sinew self-supply from Havenhythe BGH hides — regional Crafting material not found elsewhere",
+        "Tier 85–90 apex hide tank armour via tailoring (non-augmentable, non-degrading); upgrade ladder through +5",
+        "Masterwork ranged equipment unlock gate (It Should Have Been Called Chinskin) after full apex +5 set",
+        "Masterwork path still consumes multi-region materials (essences, lacquer, glorious bars) — Havenhythe owns the apex leather bottle-neck, not the entire masterwork recipe"
+      ],
+      "notes": "Skilling half of BGH. Activity row havenhythe:big-game-hunter stays XP/encounters; this id is the permanent material → armour craft edge for region pickers. Do not invent hide drop tables or XP/h.",
+      "source_urls": [
+        "https://runescape.wiki/w/Apex_hide_armour",
+        "https://runescape.wiki/w/Apex_leather",
+        "https://runescape.wiki/w/Masterwork_ranged_equipment",
+        "https://runescape.wiki/w/It_Should_Have_Been_Called_Chinskin",
+        "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe for apex hide supply and craft gate. Masterwork finishing materials remain multi-region pressure.",
+      "links_existing_ids": [
+        "havenhythe:big-game-hunter",
+        "havenhythe:volatile-chinchompas"
+      ]
+    },
+    {
+      "id": "havenhythe:giant-crayfish-fishing",
+      "name": "Giant crayfish fishing and cooking",
+      "category": "regional Fishing and Cooking food ladder",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "82 Fishing with lobster pot for raw giant crayfish",
+        "86 Cooking to cook giant crayfish (never stop burning without cooking gauntlets at 94 or Cooking cape)",
+        "Havenhythe giant crayfish spots (Highweald Forest, north of Deserted Mine, west Havenhythe fish-farm giant crayfish pool after pool construction)"
+      ],
+      "unlocks": [
+        "Raw giant crayfish: 270 Fishing XP per catch — Havenhythe-native high food fish",
+        "Cooked giant crayfish: 212 Cooking XP; heals 2,150 life points",
+        "Fish-farm giant crayfish pool construction path as optional active method beyond open water spots",
+        "Cray-zy for Crayfish achievement (catch and cook one)"
+      ],
+      "notes": "Beyond the multi-pool fish farm blob (wendlewick-fish-farm). This is the named high-tier fish unique to Havenhythe geography. Complements fish farm without re-emitting lobster/swordfish/shark farm management.",
+      "source_urls": [
+        "https://runescape.wiki/w/Giant_crayfish",
+        "https://runescape.wiki/w/Raw_giant_crayfish",
+        "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Wendlewick_fish_farm"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Fishing/Cooking food ladder.",
+      "links_existing_ids": [
+        "havenhythe:wendlewick-fish-farm",
+        "havenhythe:highweald-mining",
+        "havenhythe:canoe-network"
+      ]
+    },
+    {
+      "id": "havenhythe:wendlewick-lodestone",
+      "name": "Wendlewick lodestone",
+      "category": "permanent regional travel infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Progress Visions of Havenhythe",
+        "Build the lodestone from the mud pile hotspot (limestone brick during the quest build step)",
+        "Activate the lodestone (Wendlewick achievement)"
+      ],
+      "unlocks": [
+        "Permanent Home Teleport destination to Wendlewick on the Lodestone Network (Alt+W shortcut)",
+        "Primary free return path to Havenhythe after first quest access via Captain Lorris",
+        "Gateway travel for fish farm, Marigold Farm, shrine, and Highweald logistics"
+      ],
+      "notes": "Starting-region lodestone is planner-critical travel QoL. Distinct from Wendlewick Teleport spell and from canoe network one-time repairs.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wendlewick_lodestone",
+        "https://runescape.wiki/w/Visions_of_Havenhythe",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Lodestone_Network"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe permanent travel unlock from the starting quest line.",
+      "links_existing_ids": [
+        "havenhythe:wendlewick-teleport",
+        "havenhythe:canoe-network",
+        "havenhythe:wendlewick-fish-farm",
+        "havenhythe:marigold-farm-patches"
+      ]
+    },
+    {
+      "id": "havenhythe:wendlewick-teleport",
+      "name": "Wendlewick Teleport (standard spellbook)",
+      "category": "permanent Magic travel unlock",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "28 Magic on the standard spellbook",
+        "Havenhythe / Visions of Havenhythe progression so the spell is usable to the town",
+        "Right-click options include Marigold Farm destination for farming/shrine routing"
+      ],
+      "unlocks": [
+        "Standard spellbook teleport to Wendlewick centre",
+        "Marigold Farm right-click option for allotment/herb runs and shrine approach",
+        "Tablet form exists for non-spellbook use"
+      ],
+      "notes": "Complements lodestone without duplicating it. Spell is the Magic-gated fast farm/shrine approach; lodestone is free Home Teleport.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wendlewick_Teleport",
+        "https://runescape.wiki/w/Havenhythe",
+        "https://runescape.wiki/w/Marigold_Farm",
+        "https://runescape.wiki/w/Shrine_of_Inanna"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Magic travel. Standard spellbook access is assumed global once unlocked.",
+      "links_existing_ids": [
+        "havenhythe:wendlewick-lodestone",
+        "havenhythe:marigold-farm-patches",
+        "havenhythe:shrine-of-inanna-summoning-hub"
+      ]
+    },
+    {
+      "id": "havenhythe:altar-of-inanna",
+      "name": "Altar of Inanna",
+      "category": "regional Prayer infrastructure",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Access to Shrine of Inanna (south of Wendlewick)",
+        "Visions of Havenhythe visits the altar; Secrets of Amberfell uses a temporary Inanna's Den pray path (not permanent post-quest)"
+      ],
+      "unlocks": [
+        "Starting-region Prayer altar for point restore at the Summoning hub",
+        "Bones and ashes can be offered on the altar for Prayer XP (no Offer option — use-item on altar)",
+        "Colocated with empowered obelisks, birdhouse plot, and magic trees for multi-skill shrine days"
+      ],
+      "notes": "Normal prayer altar, not a second ectofuntus. Quest-only Inanna's Den access is not a permanent skilling unlock after Secrets of Amberfell.",
+      "source_urls": [
+        "https://runescape.wiki/w/Altar_of_Inanna",
+        "https://runescape.wiki/w/Shrine_of_Inanna",
+        "https://runescape.wiki/w/Visions_of_Havenhythe"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Prayer convenience at the Summoning shrine.",
+      "links_existing_ids": [
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:empowered-summoning-obelisks",
+        "havenhythe:birdhouses"
+      ]
+    },
+    {
+      "id": "havenhythe:eastfold-farm",
+      "name": "Eastfold Farm (sheep and spinning)",
+      "category": "regional Crafting and Farming support hub",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Havenhythe access; farm is south-east of Marigold Farm / Wendlewick",
+        "Fairy ring BKS then north-east, or Wendlewick Teleport → Marigold Farm then south-east"
+      ],
+      "unlocks": [
+        "Two sheep pens (six white sheep, three black sheep) for early Crafting wool supply",
+        "Spinning wheel inside Farmer Rachel's house",
+        "Birdhouse plot on Eastfold Farm (part of the eight-plot Havenhythe birdhouse network)",
+        "Quest touchpoint for Hearts of Sanguine (missing-sheep investigation) — not a skilling gate"
+      ],
+      "notes": "Fills Farming/Crafting density beyond Marigold allotment/herb and Dalia nursery. Do not invent patch types the wiki does not list — sheep + spinning wheel + birdhouse are the confirmed skilling features.",
+      "source_urls": [
+        "https://runescape.wiki/w/Eastfold_Farm",
+        "https://runescape.wiki/w/Farmer_Rachel",
+        "https://runescape.wiki/w/Birdhouses",
+        "https://runescape.wiki/w/Havenhythe"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe Crafting/Farming support geography.",
+      "links_existing_ids": [
+        "havenhythe:marigold-farm-patches",
+        "havenhythe:birdhouses",
+        "havenhythe:wendlewick-teleport",
+        "havenhythe:eternal-magic-nursery"
+      ]
+    },
+    {
+      "id": "havenhythe:trader-woes-bank-chest",
+      "name": "Trader Woes shrine bank chest",
+      "category": "permanent regional banking QoL",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Complete Trader Woes achievement near Shrine of Inanna",
+        "30 iron nails for the repair/unlock step"
+      ],
+      "unlocks": [
+        "Permanent bank chest northwest of Shrine of Inanna",
+        "Banking for empowered-obelisk pouch runs, jackalope hunting loot, and shrine birdhouse trips without Wendlewick runbacks"
+      ],
+      "notes": "Small permanent unlock with outsized Summoning/Hunter loop value. Documented on Shrine of Inanna and jackalope hunting strategy pages.",
+      "source_urls": [
+        "https://runescape.wiki/w/Trader_Woes",
+        "https://runescape.wiki/w/Shrine_of_Inanna",
+        "https://runescape.wiki/w/Jackalope_(Hunter)",
+        "https://runescape.wiki/w/Bank_chest_(Wendlewick)"
+      ],
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe banking QoL at the Summoning/Hunter shrine cluster.",
+      "links_existing_ids": [
+        "havenhythe:empowered-summoning-obelisks",
+        "havenhythe:jackalope-hunting",
+        "havenhythe:shrine-of-inanna-summoning-hub",
+        "havenhythe:birdhouses"
+      ]
+    }
+  ]
+}

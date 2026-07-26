@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The eleven-row rail beside the board.
+ * The region pick rail under Board Sky.
  *
  * It owns the route's whole keyboard and screen-reader surface, and every
  * assertion e2e/map.spec.ts pins: one `<button>` per region whose accessible
@@ -11,7 +11,8 @@
  * Playwright strict-mode failure.
  *
  * Focusing a row also drives the camera, so the 3D is a view over the store and
- * never the only way to do anything.
+ * never the only way to do anything. Full-width under the board uses a dense
+ * multi-column grid so the rail does not read as a sparse single-file list.
  */
 
 import { Pips } from "@/components/Pips";
@@ -60,6 +61,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
     // Cap and pre-hydrate both block toggle only — keep the button focusable so
     // inspector/camera still work. aria-disabled marks the inert pick state.
     const pickBlocked = !fixed && (!loaded || !selectable);
+    const focusOn = focus.region === id;
     return (
       <li key={id}>
         <button
@@ -70,27 +72,14 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
             focusRegion(id);
             if (!fixed && loaded && selectable) toggleRegion(id);
           }}
-          className={`flex w-full items-center gap-2.5 border-b border-stone-800 px-3 py-1.5 text-left transition-colors duration-150 last:border-b-0 ${
-            focus.region === id ? "bg-stone-800" : ""
-          } ${pickBlocked ? "cursor-not-allowed opacity-40" : ""} ${
-            selected ? "text-gem-300" : unlocked ? "text-parch-50" : "text-parch-100"
-          } hover:text-parch-50`}
+          className={`comp-region-btn${selected ? " is-picked" : ""}${focusOn ? " is-focus" : ""}${
+            pickBlocked ? "" : ""
+          }`}
         >
           <Hex on={unlocked} />
-          <span className="text-sm font-medium">{region.name}</span>
-          {/* The row's one data value, so it clears the 13px floor the labels
-              around it do not have to. */}
-          <span className="num ml-auto text-sm text-parch-100" title="Quests touching this region">
+          <span className="min-w-0 flex-1 truncate font-medium">{region.name}</span>
+          <span className="comp-pick-count text-[11px]" title="Quests touching this region">
             {region.quests}
-          </span>
-          <span className="w-20 text-right text-xs text-parch-300">
-            {region.availability === "starting"
-              ? "start"
-              : region.availability === "automatic_early"
-                ? "first milestone"
-                : selected
-                  ? "picked"
-                  : ""}
           </span>
         </button>
       </li>
@@ -100,38 +89,32 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
   const hasElectives = pickCount > 0;
 
   return (
-    <section className="panel flex flex-col" aria-busy={!loaded}>
-      <div className="panel-head flex items-center justify-between">
-        Regions
-        <span
-          className={`inline-flex items-center gap-2 normal-case tracking-normal ${
-            loaded ? "" : "opacity-60"
-          }`}
-        >
-          <Pips
-            total={ELECTIVE_CAP}
-            filled={loaded ? pickCount : 0}
-            label={
-              loaded
-                ? `${pickCount} of ${ELECTIVE_CAP} elective picks used`
-                : "Loading elective picks"
-            }
-          />
-          {/* The focal point of the rail: how much of the build is spent is the
-              one number you glance at while reading anything else on the page. */}
-          <span className="num text-2xl leading-none text-parch-50">{counterLabel}</span>
+    <section className="flex h-full min-h-0 flex-col" aria-busy={!loaded}>
+      <div className="comp-ledger-head">
+        <h2 className="comp-ledger-title">Region ledger</h2>
+        <span className={`comp-pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
+          {counterLabel}
         </span>
+        <Pips
+          total={ELECTIVE_CAP}
+          filled={loaded ? pickCount : 0}
+          label={
+            loaded
+              ? `${pickCount} of ${ELECTIVE_CAP} elective picks used`
+              : "Loading elective picks"
+          }
+        />
       </div>
-      <ul className={loaded ? undefined : "pointer-events-none opacity-60"}>
+      <ul className={`comp-region-list${loaded ? "" : " pointer-events-none opacity-60"}`}>
         {[...STARTING_REGIONS, MILESTONE_REGION].map(row)}
       </ul>
-      <div className="border-t border-stone-750 px-3 py-1.5 text-xs text-parch-300">
+      <div className="border-t border-stone-750 px-3 py-1 text-[11px] uppercase tracking-wide text-parch-300">
         Elective — pick 3 of 8
       </div>
-      <ul className={loaded ? undefined : "pointer-events-none opacity-60"}>
+      <ul className={`comp-region-list${loaded ? "" : " pointer-events-none opacity-60"}`}>
         {ELECTIVE_REGIONS.map(row)}
       </ul>
-      <div className="border-t border-stone-750 px-3 py-1.5">
+      <div className="mt-auto border-t border-stone-750 px-3 py-1.5">
         <button
           type="button"
           disabled={!loaded || !hasElectives}
@@ -144,3 +127,4 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
     </section>
   );
 }
+

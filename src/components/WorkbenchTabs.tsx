@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-/** Shared gem-active tab chrome for Control Surface production shell. */
+/** Composite segment strip — gem underline + shell rail (champion DNA). */
 export function WorkbenchTabs<T extends string>({
   tabs,
   active,
@@ -15,11 +15,7 @@ export function WorkbenchTabs<T extends string>({
   "aria-label": string;
 }) {
   return (
-    <div
-      role="tablist"
-      aria-label={ariaLabel}
-      className="flex flex-wrap gap-1 border-b border-stone-750"
-    >
+    <div role="tablist" aria-label={ariaLabel} className="comp-seg">
       {tabs.map((tab) => {
         const selected = tab.id === active;
         return (
@@ -30,11 +26,7 @@ export function WorkbenchTabs<T extends string>({
             aria-selected={selected}
             id={`tab-${tab.id}`}
             onClick={() => onChange(tab.id)}
-            className={`border-b-2 px-3 py-2 text-sm transition-colors duration-150 ${
-              selected
-                ? "border-gem-400 font-medium text-gem-300"
-                : "border-transparent text-parch-100 hover:text-parch-50"
-            }`}
+            className={`comp-seg__btn${selected ? " is-active" : ""}`}
           >
             {tab.label}
           </button>
@@ -55,7 +47,11 @@ export function WorkbenchPanel({
 }) {
   if (id !== active) return null;
   return (
-    <div role="tabpanel" aria-labelledby={`tab-${id}`} className="min-h-0 flex-1 pt-4">
+    <div
+      role="tabpanel"
+      aria-labelledby={`tab-${id}`}
+      className="flex min-h-0 h-full flex-1 flex-col pt-2"
+    >
       {children}
     </div>
   );

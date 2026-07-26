@@ -18,11 +18,26 @@
       "base_unlock": {
         "requirement": "Complete the Dagon Bye mystery at the Infernal Source.",
         "blank_contract_recipe": [
-          {"item": "Blue charm", "quantity": 1},
-          {"item": "Pouch", "quantity": 1},
-          {"item": "Blood of Orcus", "quantity": 2},
-          {"item": "Hellfire metal", "quantity": 2},
-          {"item": "Spirit shards", "quantity": 200}
+          {
+            "item": "Blue charm",
+            "quantity": 1
+          },
+          {
+            "item": "Pouch",
+            "quantity": 1
+          },
+          {
+            "item": "Blood of Orcus",
+            "quantity": 2
+          },
+          {
+            "item": "Hellfire metal",
+            "quantity": 2
+          },
+          {
+            "item": "Spirit shards",
+            "quantity": 200
+          }
         ],
         "binding_rule": "Carry a blank binding contract while killing the target creature. Summoning and Slayer must both meet that familiar's level."
       },
@@ -61,7 +76,10 @@
           "role": "damage",
           "passive": "Deals more damage as the target loses life points.",
           "special_move": "Death From Above deals 200-320% of the familiar's maximum hit.",
-          "source_regions": ["desert", "forinthry"],
+          "source_regions": [
+            "desert",
+            "forinthry"
+          ],
           "source_region_status": "multiple_confirmed_base_game_locations"
         }
       ],
@@ -78,18 +96,50 @@
       "id": "fate-of-the-gods:nihil-familiars",
       "name": "Nihil familiar progression",
       "category": "quest-gated accuracy familiars",
-      "region_status": "unresolved_external_region",
-      "base_requirements": ["Fate of the Gods", "87 Summoning"],
+      "base_requirements": [
+        "Fate of the Gods",
+        "87 Summoning"
+      ],
       "shared_recipe": [
-        {"item": "Elder charm", "quantity": 1},
-        {"item": "Elder energy", "quantity": 150},
-        {"item": "Pouch", "quantity": 1}
+        {
+          "item": "Elder charm",
+          "quantity": 1
+        },
+        {
+          "item": "Elder energy",
+          "quantity": 150
+        },
+        {
+          "item": "Pouch",
+          "quantity": 1
+        }
       ],
       "variants": [
-        {"name": "Blood nihil", "accuracy_style": "melee", "accuracy_bonus_percent": 5, "tertiary": "Vampyre fangs"},
-        {"name": "Shadow nihil", "accuracy_style": "ranged", "accuracy_bonus_percent": 5, "tertiary": "Demon horn"},
-        {"name": "Smoke nihil", "accuracy_style": "magic", "accuracy_bonus_percent": 5, "tertiary": "Aviansie talons"},
-        {"name": "Ice nihil", "accuracy_style": "necromancy", "accuracy_bonus_percent": 5, "tertiary": "Icyene feather", "additional_effect": "Chance to reduce target accuracy and defence by 5%."}
+        {
+          "name": "Blood nihil",
+          "accuracy_style": "melee",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Vampyre fangs"
+        },
+        {
+          "name": "Shadow nihil",
+          "accuracy_style": "ranged",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Demon horn"
+        },
+        {
+          "name": "Smoke nihil",
+          "accuracy_style": "magic",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Aviansie talons"
+        },
+        {
+          "name": "Ice nihil",
+          "accuracy_style": "necromancy",
+          "accuracy_bonus_percent": 5,
+          "tertiary": "Icyene feather",
+          "additional_effect": "Chance to reduce target accuracy and defence by 5%."
+        }
       ],
       "source_urls": [
         "https://runescape.wiki/w/Fate_of_the_Gods/Quick_guide",
@@ -97,8 +147,16 @@
         "https://runescape.wiki/w/Calculator:Summoning/Pouches",
         "https://runescape.wiki/w/Hit_chance"
       ],
-      "confidence": "confirmed_current_wiki_external_region_unresolved",
-      "league_treatment": "Freneskae is another world. Keep the quest and ingredient chain explicit, but do not assign the destination to an elective Gielinor region until Equilibrium publishes its external-world rule."
+      "confidence": "confirmed_user_rule_freneskae_kandarin_2026_07_26",
+      "league_treatment": "Hard Kandarin. Freneskae packages under Kandarin (World Gate / Eagles Peak) per user rule 2026-07-26.",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin"
+      ],
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_requirement_type": "acquisition_region"
     },
     {
       "id": "summoning:combat-and-burden-milestones",
@@ -110,28 +168,68 @@
           "summoning_level": 99,
           "role": "standard combat familiar",
           "recipe": [
-            {"item": "Crimson charm", "quantity": 1},
-            {"item": "Spirit shards", "quantity": 178},
-            {"item": "Steel ingot", "quantity": 1},
-            {"item": "Pouch", "quantity": 1}
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 178
+            },
+            {
+              "item": "Steel ingot",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
           ],
           "source_region_status": "global_smithing_supply"
         }
       ],
       "burden_milestones": [
-        {"name": "Spirit kalphite", "summoning_level": 25, "inventory_slots": 6},
-        {"name": "Bull ant", "summoning_level": 40, "inventory_slots": 9},
-        {"name": "Spirit terrorbird", "summoning_level": 52, "inventory_slots": 12},
-        {"name": "War tortoise", "summoning_level": 67, "inventory_slots": 18},
+        {
+          "name": "Spirit kalphite",
+          "summoning_level": 25,
+          "inventory_slots": 6
+        },
+        {
+          "name": "Bull ant",
+          "summoning_level": 40,
+          "inventory_slots": 9
+        },
+        {
+          "name": "Spirit terrorbird",
+          "summoning_level": 52,
+          "inventory_slots": 12
+        },
+        {
+          "name": "War tortoise",
+          "summoning_level": 67,
+          "inventory_slots": 18
+        },
         {
           "name": "Pack yak",
           "summoning_level": 96,
           "inventory_slots": 30,
           "recipe": [
-            {"item": "Crimson charm", "quantity": 1},
-            {"item": "Spirit shards", "quantity": 211},
-            {"item": "Yak-hide", "quantity": 1},
-            {"item": "Pouch", "quantity": 1}
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 211
+            },
+            {
+              "item": "Yak-hide",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
           ],
           "source_region_hint": "fremennik",
           "source_dependency": "Yak-hide from yaks on Neitiznot"
@@ -141,10 +239,22 @@
           "summoning_level": 99,
           "inventory_slots": 32,
           "recipe": [
-            {"item": "Crimson charm", "quantity": 1},
-            {"item": "Spirit shards", "quantity": 222},
-            {"item": "Mammoth tusk", "quantity": 1},
-            {"item": "Pouch", "quantity": 1}
+            {
+              "item": "Crimson charm",
+              "quantity": 1
+            },
+            {
+              "item": "Spirit shards",
+              "quantity": 222
+            },
+            {
+              "item": "Mammoth tusk",
+              "quantity": 1
+            },
+            {
+              "item": "Pouch",
+              "quantity": 1
+            }
           ],
           "source_region_hint": "forinthry",
           "source_dependency": "Mammoth tusk from Wilderness mammoths"
@@ -173,8 +283,14 @@
         "Big Game Hunter"
       ],
       "related_unlocks": [
-        {"id": "livid-farm:lunar-spells", "interaction": "Spiritual Healing extends a familiar by 20% of its starting duration once per familiar."},
-        {"id": "dungeoneering:spirit-cape-passive", "interaction": "Spirit Cape permanently reduces familiar special-move point costs by 20%."}
+        {
+          "id": "livid-farm:lunar-spells",
+          "interaction": "Spiritual Healing extends a familiar by 20% of its starting duration once per familiar."
+        },
+        {
+          "id": "dungeoneering:spirit-cape-passive",
+          "interaction": "Spirit Cape permanently reduces familiar special-move point costs by 20%."
+        }
       ],
       "source_urls": [
         "https://runescape.wiki/w/Anachronia",

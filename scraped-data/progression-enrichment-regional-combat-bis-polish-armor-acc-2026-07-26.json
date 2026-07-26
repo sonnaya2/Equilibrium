@@ -1,0 +1,753 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Combat BiS polish pack B — armour/accessory EDGE CASES only. Closes residual gaps after main BiS packs: no elite malevolent (does not exist), gemstone armour residual, Dracolich T90/T92 bow armour, Leng-enhanced T90 gloves (nightmare present but enhanced missing; enhanced Kerapac wraps), EoF ornament kit, hydrix hand/ring residuals (deathtouch + ring of death), combat scrimshaw pocket package, and regional prayer codices (praesul style curses, Divine Rage, Eclipsed Soul). 14 equipment rows. Skip every id already first-class in data/research/regional-combat-unlocks.json.",
+  "policy": {
+    "region_rule": "region_hint is primary geography. required_regions lists hard elective gates for normal self-supply. Never put multi-region/cross-region/global tokens in region_hint. Global clue / Death shop / skill crafts use support or empty required_regions with explicit region_status.",
+    "duplicate_guard": "PRESENT — do not re-emit: morytania:malevolent-armour, desert:refined-anima-core-armour, desert:anima-core-armour, misthalin:cryptbloom-armour, misthalin:deathdealer-armour, misthalin:deathwarden-armour, tirannwn:cinderbane-gloves, combat:nightmare-gauntlets (base only — enhanced is new), asgarnia:essence-of-finality-amulet, cross-region:essence-of-finality, combat:reaper-necklace, combat:amulet-of-souls, cross-region:reavers-ring, cross-region:stalkers-ring, cross-region:channellers-ring, desert:gloves-of-passage (base+enhanced named), misthalin:kerapac-magic-residuals, asgarnia:wand-of-the-praesul / boss:nex-angel-of-death (praesul nested only), boss:sanctum-of-rebirth (Divine Rage nested only), scriptures Jas/Wen/Ful/Amascut/Bik, tirannwn:erethdors-grimoire, asgarnia:scrimshaw-of-the-elements / asgarnia:skilling-scrimshaw-package (skilling catalog).",
+    "no_elite_malevolent": "There is no Elite malevolent armour page/set. T92 melee power is trimmed masterwork (already first-class). Malevolent essence feeds trims — do not invent elite malevolent.",
+    "deathbound_rule": "No Deathbound armour set on wiki. Deathwarden / Deathdealer / Soulbound lantern already first-class under necro BiS. Treat deathbound? as resolved-skip.",
+    "cryptbloom_pieces_rule": "Full Cryptbloom set already first-class as misthalin:cryptbloom-armour — do not split helm/top/bottom/gloves/boots into separate polish rows.",
+    "nightmare_rule": "Base combat:nightmare-gauntlets PRESENT. Emit enhanced upgrade + Leng artefact ladder only.",
+    "eof_ornament_rule": "Soul + reaper ornament kits are master-clue Global table (wiki League badge Global). Combine into EoF ornament kit; style-bonus residual only — not a second elective hard gate.",
+    "reaver_stalker_rule": "cross-region:reavers-ring and cross-region:stalkers-ring already first-class — skip.",
+    "pocket_remaining_rule": "Combat scriptures + Erethdor already first-class. Remaining combat pocket densify: POP combat scrimshaws (cruelty/elements/vampyrism/attack/magic/ranging). God books / illuminated stay skilling (fremennik + desert).",
+    "prayer_regional_rule": "Praesul codex style curses were only nested under AoD weapons — first-class prayer residual here. Divine Rage and Eclipsed Soul only nested under dungeon hubs — first-class here.",
+    "no_trade_rule": "Ironman self-supply framing. Do not invent drop rates, GE prices as requirements, or kill strategies.",
+    "external_area_rule": "Freneskae (base nightmare drop) remains external unresolved. Mazcab teci imbue for ring of death (i) is external unresolved — record as support note only."
+  },
+  "already_present_checked": [
+    "morytania:malevolent-armour",
+    "desert:refined-anima-core-armour",
+    "desert:anima-core-armour",
+    "misthalin:cryptbloom-armour",
+    "misthalin:deathdealer-armour",
+    "misthalin:deathwarden-armour",
+    "tirannwn:cinderbane-gloves",
+    "combat:nightmare-gauntlets",
+    "asgarnia:essence-of-finality-amulet",
+    "cross-region:essence-of-finality",
+    "combat:reaper-necklace",
+    "combat:amulet-of-souls",
+    "cross-region:reavers-ring",
+    "cross-region:stalkers-ring",
+    "cross-region:channellers-ring",
+    "desert:gloves-of-passage",
+    "misthalin:kerapac-magic-residuals",
+    "asgarnia:wand-of-the-praesul",
+    "boss:nex-angel-of-death",
+    "boss:sanctum-of-rebirth",
+    "misthalin:scripture-of-jas",
+    "misthalin:scripture-of-wen",
+    "misthalin:scripture-of-ful",
+    "misthalin:scripture-of-amascut",
+    "tirannwn:erethdors-grimoire",
+    "cross-region:trimmed-masterwork-melee",
+    "cross-region:elite-sirenic-armour",
+    "cross-region:elite-tectonic-armour"
+  ],
+  "equipment_additions": [
+    {
+      "id": "misthalin:dracolich-armour",
+      "name": "Dracolich armour (T90 ranged bow power)",
+      "category": "BiS power armour craft / T90 ranged bow residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "fremennik"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence to wear; 90 Crafting to craft each piece from undead dragonhide + Vorkath's spikes",
+        "Zemouregal & Vorkath (Battle of Forinthry / Fort Forinthry) for Vorkath's spikes and undead dragonhide feedstock",
+        "Undead dragonhide coif/body/chaps/vambraces/boots as craft bases"
+      ],
+      "unlocks": [
+        "Dracolich coif / hauberk / chaps / vambraces / boots (T90 ranged power)",
+        "Base set for elite Dracolich (Vorkath's scale or ancient-scale path)"
+      ],
+      "effects": [
+        "Dracolich Remnant set bonus after 9s worn: Rapid Fire generates extra adrenaline per piece; 3pc+ while wielding a bow grants Dracolich infusion (+20% ranged crit chance) after full Rapid Fire channel",
+        "Bow-focused T90 alternative to sirenic (crossbow Chromatic Choir) — non-degrade craft path from Vorkath materials"
+      ],
+      "region_pressure": [
+        "Wiki tags Vorkath league_region Misthalin&Fremennik. Fort Forinthry / Battle of Forinthry working taxonomy is Misthalin (repo regions.json).",
+        "Fremennik optional: Ungael / Vorkath lore geography and dual wiki badge — do not force all_required Fremennik for Fort access under current working map."
+      ],
+      "notes": "Sirenic notes already name Dracolich as the competing non-degrade T90 ranged path but never first-classed the set. Prefer this id for bow setups; elite row for T92. Do not invent kill strategies.",
+      "source_urls": [
+        "https://runescape.wiki/w/Dracolich_armour",
+        "https://runescape.wiki/w/Vorkath",
+        "https://runescape.wiki/w/Vorkath%27s_spike",
+        "https://runescape.wiki/w/Zemouregal_%26_Vorkath"
+      ],
+      "confidence": "confirmed_wiki_equilibrium_region_tag",
+      "league_treatment": "Hard Misthalin for Fort Forinthry / Vorkath self-supply under current working map. Revisit if Equilibrium splits Fort to Forinthry."
+    },
+    {
+      "id": "misthalin:elite-dracolich-armour",
+      "name": "Elite Dracolich armour (T92 ranged bow power)",
+      "category": "BiS power armour craft / T92 ranged bow residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "asgarnia",
+        "forinthry",
+        "kandarin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "92 Defence to wear; 92 Crafting to create",
+        "Base Dracolich pieces (Vorkath chain — Misthalin)",
+        "Path A (Vorkath-only): 1× Vorkath's scale per piece",
+        "Path B (elite-sirenic-like): ancient scales + algarum thread + praesulic essence (ranged) + chaotic spikes on hauberk"
+      ],
+      "unlocks": [
+        "Elite Dracolich coif / hauberk / chaps / vambraces / boots (T92 ranged power)",
+        "Elite Dracolich Remnant: stronger Rapid Fire adrenaline + 40% Dracolich infusion crit (vs 20% base)"
+      ],
+      "effects": [
+        "Primary difference vs base: Dracolich infusion crit chance 40% instead of 20%",
+        "Vorkath's scale path keeps the upgrade fully on the Vorkath farm; ancient-scale path shares elite-sirenic material geography"
+      ],
+      "region_pressure": [
+        "Misthalin hard for base Dracolich + Vorkath's scale self-supply (preferred ironman path).",
+        "Asgarnia optional: Nex Pernix for praesulic essence (ranged) if using Path B.",
+        "Forinthry / Kandarin optional: chaotic spikes + algarum thread shops / ancient-scale residual if Path B; Temple of Aminishi remains Arc-external for primary Seiryu scales."
+      ],
+      "notes": "Distinct from elite sirenic: bow Rapid Fire crit infusion vs crossbow bolt-proc set. Prefer Vorkath scale path for single-region League planning.",
+      "source_urls": [
+        "https://runescape.wiki/w/Elite_Dracolich_armour",
+        "https://runescape.wiki/w/Vorkath%27s_scale",
+        "https://runescape.wiki/w/Dracolich_armour"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Vorkath scale path. Path B adds Asgarnia/Forinthry/Kandarin soft pressure only.",
+      "links_existing_ids": [
+        "misthalin:dracolich-armour",
+        "cross-region:elite-sirenic-armour",
+        "asgarnia:pernix-ranged"
+      ]
+    },
+    {
+      "id": "karamja:gemstone-armour",
+      "name": "Gemstone armour (T80 hybrid Enchanted touch)",
+      "category": "mid-high hybrid armour residual / gemstone dragons",
+      "region_hint": "karamja",
+      "region_hints": [
+        "karamja"
+      ],
+      "required_regions": [
+        "karamja"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "80 Defence to wear (all-class hybrid)",
+        "Karamja gloves 3+ for gemstone cavern ladder access (Shilo Village mine / Kelhar)",
+        "Dragonstone / onyx / hydrix dragons for armour piece drops (Slayer 95/98/101 or gem payment entry)",
+        "Uncut dragonstone / uncut onyx / incomplete hydrix to charge Enchanted touch bolt effects"
+      ],
+      "unlocks": [
+        "Gemstone helm (onyx dragons), hauberk (hydrix dragons), greaves (onyx dragons), gauntlets + boots (dragonstone dragons)"
+      ],
+      "effects": [
+        "Enchanted touch set bonus: proc enchanted bolt effects (dragonstone/onyx/hydrix) on melee/ranged/magic/necromancy attacks at 40%/70%/100% of base chance for 3/4/5 pieces",
+        "Disabled while any enchanted bolts (including bakriminel variants) are equipped on a crossbow",
+        "Niche hybrid power when multi-style bolt effects matter without carrying enchanted bolts"
+      ],
+      "region_pressure": [
+        "Karamja hard-owns Shilo gemstone cavern and Karamja gloves 3 access. Skilling already has karamja:gemstone-cavern for Mining/access — this row is the combat armour loot residual."
+      ],
+      "notes": "Not endgame BiS vs T90/T92 power. Still a region-defining hybrid residual for Karamja planners and Enchanted-touch niche stacks. Do not re-emit skilling cavern access id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gemstone_armour",
+        "https://runescape.wiki/w/Gemstone_cavern",
+        "https://runescape.wiki/w/Dragonstone_dragon"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja. Pair with Karamja gloves diary path for permanent ladder access."
+    },
+    {
+      "id": "misthalin:leng-artefact-t90-glove-ladder",
+      "name": "Leng artefact T90 glove upgrades (shared Arch-Glacor)",
+      "category": "style glove T90 upgrade hub residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Leng artefact drop from Arch-Glacor (wiki League badge Misthalin — Glacor Front / EGWD)",
+        "1,000 glacor remnants per upgrade",
+        "Base gloves: nightmare gauntlets (ranged) / Kerapac's wrist wraps (magic) / gloves of passage (melee) + 10 necronium bars for enhanced passage"
+      ],
+      "unlocks": [
+        "Enhanced nightmare gauntlets (T90 ranged)",
+        "Enhanced Kerapac's wrist wraps (T90 magic)",
+        "Enhanced gloves of passage (T90 melee) — base already desert:gloves-of-passage"
+      ],
+      "effects": [
+        "Shared Leng artefact is the hard Arch-Glacor bottleneck across all three style glove upgrades",
+        "Glacor remnants are the repeatable craft fuel"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Arch-Glacor Leng artefact + remnant self-supply under EGWD taxonomy.",
+        "Desert optional: gloves of passage base drop (Magister) before melee enhanced path.",
+        "Base nightmare is Kandarin (Freneskae packaging); base Kerapac wraps are Misthalin Kerapac residual."
+      ],
+      "notes": "Hub so planners see one Leng artefact demand instead of three silent upgrades. Prefer style-specific enhanced rows for worn effects. desert:gloves-of-passage already names enhanced path — do not re-emit that id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Leng_artefact",
+        "https://runescape.wiki/w/Glacor_remnants",
+        "https://runescape.wiki/w/Arch-Glacor"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Leng artefact. Base glove sources remain style-specific region pressure.",
+      "links_existing_ids": [
+        "combat:nightmare-gauntlets",
+        "desert:gloves-of-passage",
+        "misthalin:kerapac-magic-residuals",
+        "boss:arch-glacor"
+      ]
+    },
+    {
+      "id": "misthalin:enhanced-nightmare-gauntlets",
+      "name": "Enhanced nightmare gauntlets (T90 ranged)",
+      "category": "best-in-slot ranged power gloves residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [],
+      "region_requirement_type": "acquisition_region",
+      "region_status": "upgrade_misthalin_base_kandarin",
+      "requirements": [
+        "90 Defence to wear; 90 Crafting to create",
+        "Nightmare gauntlets (base — Freneskae Nightmares / Kandarin)",
+        "Leng artefact + 1,000 glacor remnants (Arch-Glacor — Misthalin)"
+      ],
+      "unlocks": [
+        "Enhanced nightmare gauntlets (T90 ranged power)",
+        "Optional permanent Enchantment of dread (Invention: sliver of power + shifting components + dark bow) for extra Snipe shot vs targets not facing you"
+      ],
+      "effects": [
+        "Steady Hands: +25% hit chance and free movement while using Snipe (same as base)",
+        "T90 damage/armour vs base T85",
+        "Enchantment of dread: after 9s worn, Snipe fires an additional 50%-damage shot against targets not facing you (Flanking rules)",
+        "Degrades over 60,000 charges; armour-stand repair"
+      ],
+      "region_pressure": [
+        "Misthalin hard for Leng artefact + remnants upgrade step.",
+        "Base gauntlets hard Kandarin (combat:nightmare-gauntlets) under Freneskae=Kandarin mapping."
+      ],
+      "notes": "Enhanced residual: Misthalin Leng artefact upgrade. Base gauntlets are Kandarin (Freneskae packaging). Enchantment of dread is Invention global craft.",
+      "source_urls": [
+        "https://runescape.wiki/w/Enhanced_nightmare_gauntlets",
+        "https://runescape.wiki/w/Enchantment_of_dread",
+        "https://runescape.wiki/w/Leng_artefact"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for upgrade. Base glove is Kandarin.",
+      "links_existing_ids": [
+        "combat:nightmare-gauntlets",
+        "misthalin:leng-artefact-t90-glove-ladder"
+      ]
+    },
+    {
+      "id": "misthalin:enhanced-kerapac-wrist-wraps",
+      "name": "Enhanced Kerapac's wrist wraps (T90 magic)",
+      "category": "best-in-slot magic power gloves residual",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "90 Defence to wear; 90 Runecrafting + Crafting to create",
+        "Kerapac's wrist wraps (Kerapac / EGWD — Misthalin)",
+        "Leng artefact + 1,000 glacor remnants (Arch-Glacor — Misthalin)"
+      ],
+      "unlocks": [
+        "Enhanced Kerapac's wrist wraps (T90 magic power)",
+        "Optional permanent Enchantment of flames for +15% extra Combust amplify (25% → 40%) after 9s worn"
+      ],
+      "effects": [
+        "For 6s after Dragon Breath: Combust deals 25% more damage and lands instantly (same passive as base wraps)",
+        "T90 damage/armour vs base T85 Kerapac wraps",
+        "Degrades over 60,000 charges"
+      ],
+      "region_pressure": [
+        "Misthalin hard for both base Kerapac wraps and Leng upgrade (single elective can complete the full ladder)."
+      ],
+      "notes": "misthalin:kerapac-magic-residuals names base wrist wraps + GConc + Scripture of Jas but not the T90 enhanced upgrade. Pair with leng-artefact hub.",
+      "source_urls": [
+        "https://runescape.wiki/w/Enhanced_Kerapac%27s_wrist_wraps",
+        "https://runescape.wiki/w/Kerapac%27s_wrist_wraps",
+        "https://runescape.wiki/w/Enchantment_of_flames"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for full base+enhanced chain.",
+      "links_existing_ids": [
+        "misthalin:kerapac-magic-residuals",
+        "misthalin:leng-artefact-t90-glove-ladder"
+      ]
+    },
+    {
+      "id": "asgarnia:praesul-codex-style-prayers",
+      "name": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
+      "category": "regional prayer unlock residual / Ancient Curses BiS",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "99 Prayer to use the unlocked curses",
+        "Praesul codex from Nex, Angel of Death (one curse per codex — four codices for full set)",
+        "Ancient Curses prayer book unlocked (Temple at Senntisten — Misthalin pressure, not second AoD gate)",
+        "Ruination: hand codex to Selene in City of Um at 95 Necromancy (Misthalin Um working map)"
+      ],
+      "unlocks": [
+        "Malevolence (melee style curse)",
+        "Desolation (ranged style curse)",
+        "Affliction (magic style curse)",
+        "Ruination (necromancy style curse via Selene)"
+      ],
+      "effects": [
+        "Upgrades the Turmoil / Anguish / Torment / Sorrow accuracy-damage prayer lines into the praesul endgame variants",
+        "One codex = one choice; full four-style coverage is a multi-drop AoD project"
+      ],
+      "region_pressure": [
+        "Asgarnia hard-owns Nex Angel of Death praesul codex drops (wiki League badge Asgarnia).",
+        "Misthalin optional: Senntisten Ancient Curses book gate + Selene for Ruination teach — prayer book infrastructure, not the codex drop home."
+      ],
+      "notes": "Previously only nested under asgarnia:wand-of-the-praesul / boss:nex-angel-of-death. First-class so prayer planners see the four-codex requirement without opening weapon rows. Do not invent prayer DPS percentages here — prayer datasets own effect numbers.",
+      "source_urls": [
+        "https://runescape.wiki/w/Praesul_codex",
+        "https://runescape.wiki/w/Malevolence",
+        "https://runescape.wiki/w/Nex,_Angel_of_Death"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia for codex drops. Misthalin for curses book + Ruination Selene only.",
+      "links_existing_ids": [
+        "asgarnia:wand-of-the-praesul",
+        "boss:nex-angel-of-death"
+      ]
+    },
+    {
+      "id": "misthalin:divine-rage-prayer-codex",
+      "name": "Divine Rage prayer codex",
+      "category": "regional prayer unlock residual / standard book",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "85 Strength, Ranged, Magic, Necromancy, and Prayer to use Divine Rage",
+        "Divine Rage prayer codex from Sanctum of Rebirth bosses (Vermyx / Kezalam / Nakatra — wiki League badge Misthalin)"
+      ],
+      "unlocks": [
+        "Divine Rage prayer on the standard prayer book"
+      ],
+      "effects": [
+        "Sanctum residual prayer unlock previously only named inside boss:sanctum-of-rebirth / misthalin:roar-of-awakening-ode-to-deceit hubs",
+        "Standard-book multi-style damage prayer used in high-end setups"
+      ],
+      "region_pressure": [
+        "Misthalin hard-owns Sanctum of Rebirth / City of Um working taxonomy and wiki League badge on drop sources."
+      ],
+      "notes": "Prayer-item densify for regional combat. Effect combat numbers live in prayer datasets — this row is geography + unlock gate only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Divine_Rage_prayer_codex",
+        "https://runescape.wiki/w/Divine_Rage",
+        "https://runescape.wiki/w/Sanctum_of_Rebirth"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin. Pair with boss:sanctum-of-rebirth for the full dungeon package without re-emitting weapon rows.",
+      "links_existing_ids": [
+        "boss:sanctum-of-rebirth",
+        "misthalin:roar-of-awakening-ode-to-deceit"
+      ]
+    },
+    {
+      "id": "misthalin:eclipsed-soul-prayer-codex",
+      "name": "Eclipsed Soul prayer codex",
+      "category": "regional prayer unlock residual / standard book",
+      "region_hint": "misthalin",
+      "region_hints": [
+        "misthalin"
+      ],
+      "required_regions": [
+        "misthalin"
+      ],
+      "optional_pressure_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "75 Strength, Ranged, Magic, Necromancy, and Prayer to use Eclipsed Soul",
+        "Eclipsed Soul prayer codex from The Gate of Elidinis (wiki League badge Misthalin)"
+      ],
+      "unlocks": [
+        "Eclipsed Soul prayer on the standard prayer book"
+      ],
+      "effects": [
+        "Gate of Elidinis combat prayer residual (skilling pack already notes Eclipsed Soul is combat-catalog scope)",
+        "Standard-book prayer unlock distinct from Scripture of Elidinis skilling pocket"
+      ],
+      "region_pressure": [
+        "Misthalin hard under current Underworld / Um / Gate working taxonomy and wiki League badge.",
+        "Desert optional thematic (Elidinis Menaphite lore) — not a hard second gate under current badge."
+      ],
+      "notes": "Complements Divine Rage as the other recent standard-book codex prayer. Do not dual-claim Scripture of Elidinis (skilling).",
+      "source_urls": [
+        "https://runescape.wiki/w/Eclipsed_Soul_prayer_codex",
+        "https://runescape.wiki/w/Eclipsed_Soul",
+        "https://runescape.wiki/w/The_Gate_of_Elidinis"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for Gate drop geography."
+    },
+    {
+      "id": "combat:deathtouch-bracelet",
+      "name": "Deathtouch bracelet (hydrix hybrid gloves)",
+      "category": "hybrid power gloves residual / hydrix jewellery",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [],
+      "region_requirement_type": "support",
+      "region_status": "global_reaper_shop_plus_crafting_no_hard_elective",
+      "requirements": [
+        "Hydrix bracelet + Lvl-6 Enchant (87 Magic) or Lvl-6 enchant tablet",
+        "Incomplete hydrix (Death's Store, 300 reaper points, Global League badge) + onyx hydrix chain for self-supply",
+        "No combat level requirement to wear"
+      ],
+      "unlocks": [
+        "Deathtouch bracelet (hybrid power gloves with reflect passive)"
+      ],
+      "effects": [
+        "20% chance to reflect 25–50% of damage taken (avg ~7.5% of incoming, cap 5,000) without reducing the hit on the wearer",
+        "All-style +14 damage bonus and +3 Prayer; degrades over 100,000 hits; 50% recharge per cut onyx",
+        "Situational hybrid glove vs style power gloves (cinderbanes / enhanced nightmare / enhanced Kerapac / enhanced passage)"
+      ],
+      "region_pressure": [
+        "No hard elective for hydrix gem — Death's Store incomplete hydrix is Global.",
+        "Asgarnia optional only as hydrix jewellery craft home pressure shared with EoF chain."
+      ],
+      "notes": "Sibling residual to reaper necklace / amulet of souls. Prefer style gloves for pure DPS; deathtouch for reflect niches. Do not invent reflect DPM models.",
+      "source_urls": [
+        "https://runescape.wiki/w/Deathtouch_bracelet",
+        "https://runescape.wiki/w/Hydrix_bracelet",
+        "https://runescape.wiki/w/Incomplete_hydrix"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Global-craft residual. Pair with asgarnia:essence-of-finality-amulet hydrix pressure checklist, not a second hard region."
+    },
+    {
+      "id": "combat:ring-of-death",
+      "name": "Ring of death (hydrix combat ring residual)",
+      "category": "hybrid combat ring residual / hydrix jewellery",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [],
+      "optional_pressure_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "support",
+      "region_status": "global_reaper_shop_plus_crafting_no_hard_elective",
+      "requirements": [
+        "Hydrix ring + Lvl-6 Enchant (87 Magic)",
+        "Incomplete hydrix Global Death's Store self-supply chain",
+        "Optional imbue: ring of death (i) at Mazcab Armoursmith for 15,000 teci (Desert Mazcab Armoursmith)",
+        "Optional overcharge: 150 reaper points unlock + 5 onyx + 25 black stone hearts at Death"
+      ],
+      "unlocks": [
+        "Ring of death (revive + adrenaline-on-kill passives)",
+        "Ring of death (i) / (o) / (i)(o) upgrade paths"
+      ],
+      "effects": [
+        "On kill: 50% chance to restore adrenaline (1% per 1,500 target max LP, cap 5%)",
+        "On death: revive at full health with Ring of Death bleed DoT until safe area or death (sign of life / Immortality take priority)",
+        "All-style damage ring; reaver's ring notes tie hybrid strength with ring of death (i)",
+        "Degrades 100,000 hits (500,000 when overcharged); onyx recharge"
+      ],
+      "region_pressure": [
+        "Base craft is Global hydrix framing — same as other hydrix jewellery.",
+        "Forinthry optional: black stone hearts for overcharge (ED3 / high-level wild content residual).",
+        "Desert owns Mazcab teci imbue at the Armoursmith."
+      ],
+      "notes": "Reaver/stalker/channeller rings already first-class as boss-heart chains. This closes the hydrix ring residual for adrenaline/revive play. Do not invent death-save DPS models.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_death",
+        "https://runescape.wiki/w/Ring_of_death_(i)",
+        "https://runescape.wiki/w/Black_stone_heart"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Global-craft residual. Forinthry soft for overcharge hearts; Desert (Mazcab) for teci imbue."
+    },
+    {
+      "id": "combat:eof-ornament-kit",
+      "name": "Essence of Finality ornament kit (style bonus residual)",
+      "category": "combat neck ornament residual / master clue",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [],
+      "region_requirement_type": "support",
+      "region_status": "global_master_clue_table_no_hard_elective",
+      "requirements": [
+        "Soul ornament kit from master clue reward caskets (wiki League badge Global)",
+        "Reaper ornament kit from master clue reward caskets (wiki League badge Global)",
+        "Combine soul + reaper kits into essence of finality ornament kit",
+        "Attach to Essence of Finality amulet → Essence of Finality amulet (or)"
+      ],
+      "unlocks": [
+        "Essence of Finality amulet (or) with increased style damage bonuses (+58.6 vs +55.7 base)",
+        "Cosmetic EoF ornament appearance (kit removable/re-sellable)"
+      ],
+      "effects": [
+        "Pure style-bonus upgrade — does not change EoF ability, degradation, or stored special",
+        "Soul/reaper ornament kits also work on amulet of souls / reaper necklace individually before EoF assembly"
+      ],
+      "region_pressure": [
+        "Master clue table is Global League badge — not a clean elective-region BiS gate.",
+        "Asgarnia optional only as finished EoF manufacture home that receives the kit."
+      ],
+      "notes": "Residual pack previously skipped eof-ornament-kit-region as global clue fluff. Emit as explicit Global residual so planners see the style-bonus step without inventing Kerapac ornament geography (older cross-region:essence-of-finality notes that path — kits are master clues per current wiki).",
+      "source_urls": [
+        "https://runescape.wiki/w/Essence_of_finality_ornament_kit",
+        "https://runescape.wiki/w/Soul_ornament_kit",
+        "https://runescape.wiki/w/Reaper_ornament_kit",
+        "https://runescape.wiki/w/Essence_of_Finality_amulet"
+      ],
+      "confidence": "confirmed_wiki_global_clue",
+      "league_treatment": "Global master-clue residual. Do not mark any elective all_required for ornament kits.",
+      "links_existing_ids": [
+        "asgarnia:essence-of-finality-amulet",
+        "cross-region:essence-of-finality",
+        "combat:reaper-necklace",
+        "combat:amulet-of-souls"
+      ]
+    },
+    {
+      "id": "asgarnia:combat-scrimshaw-pocket-package",
+      "name": "Combat scrimshaw pocket package (POP)",
+      "category": "combat pocket residual / player-owned port",
+      "region_hint": "asgarnia",
+      "region_hints": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "asgarnia"
+      ],
+      "optional_pressure_regions": [
+        "desert",
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Player-owned port workshop Scrimshaw Crafter (Port Sarim — Asgarnia under Equilibrium Arc mapping)",
+        "Eastern combat scrimshaw scrolls from POP voyages (cruelty, elements, vampyrism, attack, magic, ranging, plus aggression/corruption/sacrifice siblings)",
+        "Ancient bones (10 per standard combat scrimshaw craft; higher for some superiors)",
+        "Fletching 85–95 depending on scrimshaw (92 for cruelty/elements/vampyrism lines)"
+      ],
+      "unlocks": [
+        "Scrimshaw of cruelty (+5% Ranged damage when active)",
+        "Scrimshaw of the elements (+5% Magic damage when active)",
+        "Scrimshaw of vampyrism (melee lifesteal line)",
+        "Scrimshaw of attack / magic / ranging (style accuracy-damage lines)",
+        "Superior variants via Ports upgrade / DG token unlocks where applicable"
+      ],
+      "effects": [
+        "Pocket-slot activated combat buffs (standard ~3 hours before dust; combine same type to extend up to 24 hours)",
+        "Compete with scriptures / Erethdor grimoire / god books for the pocket slot — mid-to-high ironman pocket ladder when EGWD books are offline"
+      ],
+      "region_pressure": [
+        "Asgarnia hard for Port Sarim POP workshop / Scrimshaw Crafter under Equilibrium Arc taxonomy.",
+        "Desert optional: Menaphos / desert:player-owned-port hub and voyage economy pressure.",
+        "Forinthry optional: 250k DG tokens for some superior combat scrimshaw unlock lines (sacrifice/aggression/corruption)."
+      ],
+      "notes": "Skilling already has asgarnia:scrimshaw-of-the-elements and skilling-scrimshaw-package — this row is the combat pocket checklist (cruelty/vampyrism/style lines) for combat catalog merge without re-emitting pure skilling scrimshaws. Sacrifice stays multi-region skilling (Mimic) and is not re-emitted.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scrimshaw_of_cruelty",
+        "https://runescape.wiki/w/Scrimshaw_of_the_elements",
+        "https://runescape.wiki/w/Scrimshaw_of_vampyrism",
+        "https://runescape.wiki/w/Scrimshaw"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia craft facility. Voyage destinations add soft pressure only."
+    },
+    {
+      "id": "forinthry:spirit-shield-sigil-residual",
+      "name": "Spirit shield + holy elixir / sigil residual densify",
+      "category": "tank shield residual / Corporeal Beast chain",
+      "region_hint": "forinthry",
+      "region_hints": [
+        "forinthry"
+      ],
+      "required_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "requirements": [
+        "Spirit shield base from Corporeal Beast (or related sources)",
+        "Holy elixir to bless into blessed spirit shield (forinthry:corporeal-beast-holy-elixir already first-class for elixir geography)",
+        "Arcane / divine / elysian / spectral sigils from Corporeal Beast to complete named spirit shields"
+      ],
+      "unlocks": [
+        "Blessed spirit shield intermediate",
+        "Arcane / divine / elysian / spectral spirit shields (sigil completion)"
+      ],
+      "effects": [
+        "Divine spirit shield remains a top damage-reduction tank shield option",
+        "Arcane is the classic magic-offensive spirit shield residual",
+        "Densifies the shield ladder that holy-elixir row only partially names"
+      ],
+      "region_pressure": [
+        "Forinthry hard for Corporeal Beast cavern entrance / primary self-supply framing (matches existing holy elixir residual)."
+      ],
+      "notes": "forinthry:corporeal-beast-holy-elixir stays as the elixir + blessed-flask material pointer. This row first-classes finished spirit-shield / sigil equipment residual without re-emitting that id.",
+      "source_urls": [
+        "https://runescape.wiki/w/Spirit_shield",
+        "https://runescape.wiki/w/Divine_spirit_shield",
+        "https://runescape.wiki/w/Holy_elixir",
+        "https://runescape.wiki/w/Corporeal_Beast"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry for Corp self-supply. Pair with existing holy elixir residual.",
+      "links_existing_ids": [
+        "forinthry:corporeal-beast-holy-elixir",
+        "cross-region:blessed-flask"
+      ]
+    }
+  ],
+  "ids_emitted": [
+    "misthalin:dracolich-armour",
+    "misthalin:elite-dracolich-armour",
+    "karamja:gemstone-armour",
+    "misthalin:leng-artefact-t90-glove-ladder",
+    "misthalin:enhanced-nightmare-gauntlets",
+    "misthalin:enhanced-kerapac-wrist-wraps",
+    "asgarnia:praesul-codex-style-prayers",
+    "misthalin:divine-rage-prayer-codex",
+    "misthalin:eclipsed-soul-prayer-codex",
+    "combat:deathtouch-bracelet",
+    "combat:ring-of-death",
+    "combat:eof-ornament-kit",
+    "asgarnia:combat-scrimshaw-pocket-package",
+    "forinthry:spirit-shield-sigil-residual"
+  ],
+  "skip_present_or_out_of_scope": [
+    {
+      "id": "elite-malevolent",
+      "reason": "No Elite malevolent armour set exists on wiki. T92 melee is trimmed masterwork (PRESENT). Malevolent essence feeds trims."
+    },
+    {
+      "id": "desert:refined-anima-core-armour",
+      "reason": "PRESENT — pure Desert refined anima residual already first-class."
+    },
+    {
+      "id": "misthalin:cryptbloom-armour",
+      "reason": "PRESENT — full set including gloves/boots already first-class; do not split pieces."
+    },
+    {
+      "id": "deathbound-armour",
+      "reason": "No Deathbound armour wiki set. Deathwarden/Deathdealer/Soulbound lantern already covered under necro BiS."
+    },
+    {
+      "id": "tirannwn:cinderbane-gloves",
+      "reason": "PRESENT — skip."
+    },
+    {
+      "id": "combat:nightmare-gauntlets",
+      "reason": "PRESENT base; enhanced emitted as misthalin:enhanced-nightmare-gauntlets."
+    },
+    {
+      "id": "cross-region:reavers-ring",
+      "reason": "PRESENT — skip."
+    },
+    {
+      "id": "cross-region:stalkers-ring",
+      "reason": "PRESENT — skip."
+    },
+    {
+      "id": "asgarnia:essence-of-finality-amulet",
+      "reason": "PRESENT finished EoF; ornament residual emitted separately as combat:eof-ornament-kit."
+    },
+    {
+      "id": "fremennik:god-books / desert:citharede-abbey-illuminated-books",
+      "reason": "Skilling first-class. Combat pocket densify is scriptures + Erethdor + combat scrimshaws only."
+    },
+    {
+      "id": "desert:gloves-of-passage",
+      "reason": "PRESENT including enhanced path note; Leng hub links without re-emitting."
+    },
+    {
+      "id": "asgarnia:scrimshaw-of-the-elements (skilling)",
+      "reason": "Skilling owns single elements row; combat package covers multi-scrimshaw combat pocket checklist."
+    }
+  ],
+  "summary": {
+    "rows_emitted": 14,
+    "focus": [
+      "Dracolich T90/T92 bow armour residual (named but never first-classed)",
+      "Gemstone hybrid armour Karamja residual",
+      "Leng-enhanced T90 gloves (nightmare + Kerapac) + shared artefact hub",
+      "Praesul / Divine Rage / Eclipsed Soul prayer regional densify",
+      "Hydrix deathtouch + ring of death residuals",
+      "EoF ornament kit Global residual",
+      "Combat scrimshaw pocket package",
+      "Spirit shield sigil densify beside holy elixir"
+    ],
+    "user_checklist": {
+      "elite_malevolent": "skip_nonexistent",
+      "refined_anima": "skip_present",
+      "cryptbloom_pieces": "skip_set_present",
+      "deathbound": "skip_nonexistent_use_deathwarden",
+      "gemstone_armour": "emitted",
+      "cinderbanes": "skip_present",
+      "nightmare_gauntlets": "base_present_enhanced_emitted",
+      "eof_ornament": "emitted_global",
+      "reaver_stalker": "skip_present",
+      "pocket_bis_remaining": "combat_scrimshaws_emitted",
+      "prayer_items_regional": "praesul_divine_rage_eclipsed_soul_emitted"
+    }
+  },
+  "sources_note": "RuneScape Wiki verified 2026-07-26: Dracolich armour, Elite Dracolich armour, Vorkath (Misthalin&Fremennik badges; Fort Forinthry working Misthalin), Gemstone armour/cavern, Leng artefact, Enhanced nightmare gauntlets, Enhanced Kerapac's wrist wraps, Enchantment of dread/flames, Praesul codex, Divine Rage prayer codex, Eclipsed Soul prayer codex, Deathtouch bracelet, Ring of death, Essence of finality ornament kit, Soul/Reaper ornament kits (master clue Global), Scrimshaw of cruelty, Spirit shield / holy elixir. Equilibrium taxonomy from data/league/regions.json + existing regional-combat-unlocks conventions."
+}

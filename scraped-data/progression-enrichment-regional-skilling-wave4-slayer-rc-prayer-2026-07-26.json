@@ -1,0 +1,814 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Wave-4 Slayer masters ladder + Smoking Kills point economy, permanent Slayer Rewards (prefer/block/extend, broad fletching, quick killing blows), Tirannwn death-altar RC, Asgarnia wicked hood, Misthalin ancient-curses / vis-wax RC guild history, and multi-region Prayer infrastructure (POH gilded altar + training stack). Complements slayer-toolbelt, mandrith, and wave4-critical-tools (which skipped wicked-hood + poh-gilded-altar into this pack).",
+  "policy": {
+    "region_rule": "region_hint is master/site geography. region_hints + optional_pressure_regions carry task-monster and quest pressure (combo:slayer-masters-vs-task-regions). required_regions only for hard dual gates. Never put multi-region/cross-region/global into region_hint.",
+    "duplicate_guard": "forinthry:mandrith-wilderness-slayer and kandarin:kuradal-dungeon-ferocious-ring-hub already exist — do not re-emit. multi-region:slayer-helmet-* / toolbelt attaches live in slayer-toolbelt pack. asgarnia:wicked-hood and multi-region:poh-gilded-altar were pending from wave4-critical-tools and are filed here.",
+    "no_trade_rule": "Ironman / Equilibrium no-trade framing: permanent unlocks, point sinks, altar infrastructure. No invented kill times or XP/hour.",
+    "rate_rule": "Slayer point tables and construction levels only. Prayer XP multipliers from wiki altar tables; training rates stay in training datasets.",
+    "2026_current": "Rune Goldberg Machine removed 16 March 2026 (Dailyscape Overhaul) — no new vis wax. Wicked hood daily essence/runes/free teleports also removed same patch; talisman storage + token teleports + unlimited RC Guild teleport remain. POH gilded altar still 350% with both burners."
+  },
+  "activity_additions": [
+    {
+      "id": "desert:smoking-kills-slayer-points",
+      "name": "Smoking Kills (full Slayer points unlock)",
+      "category": "permanent Slayer point economy quest",
+      "region_hint": "desert",
+      "region_hints": ["desert", "morytania"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": ["morytania"],
+      "requirements": [
+        "Smoking Kills completed (Pollnivneach / Sumona start)",
+        "35 Slayer, 25 Crafting; recommended combat ~60+",
+        "Prerequisite chain: The Restless Ghost; Icthlarin's Little Helper (+ Gertrude's Cat, Diamond in the Rough, Stolen Hearts)",
+        "Earmuffs + face mask craft into masked earmuffs; catspeak + ghostspeak; banshee mistress kill in Pollnivneach Slayer Dungeon"
+      ],
+      "unlocks": [
+        "Full Slayer point awards from all standard masters (without quest: half points, rounded down)",
+        "Sumona as usable Slayer Master (combat 90 + 35 Slayer still required for her tasks)",
+        "Pollnivneach Slayer Dungeon + Tomb of Catolax access",
+        "Ability to craft slayer helmets / full slayer helmets after the separate 400-point Learn unlock",
+        "Desert Slayer Dungeon miniquest path; 5,000 Slayer XP + 1 QP"
+      ],
+      "region_pressure": [
+        "Desert owns quest geography (Pollnivneach, Ullek tombs, smoke dungeon).",
+        "Morytania pressure is soft via Restless Ghost / ILH chain locality only — not a second hard region for the point unlock itself."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions — doubles point value of every master row below",
+        "multi-region:slayer-prefer-block-extend — points are the currency",
+        "multi-region:slayer-broad-fletching / slayer-quick-killing-blows — Learn sinks"
+      ],
+      "notes": "Account-state permanent. First four consecutive tasks still award no points even after the quest; points start from the fifth. Turael/Spria never award points and never contribute to streak. Full points persist after membership expiry if the quest was completed as a member.",
+      "source_urls": [
+        "https://runescape.wiki/w/Smoking_Kills",
+        "https://runescape.wiki/w/Slayer_points",
+        "https://runescape.wiki/w/Slayer_Masters"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert quest for full point economy. Surface as early Desert Slayer priority before valuing high-master point farms.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:sumona-slayer-master",
+        "multi-region:slayer-prefer-block-extend",
+        "multi-region:slayer-helmet-component-farms"
+      ]
+    },
+    {
+      "id": "desert:sumona-slayer-master",
+      "name": "Sumona (Pollnivneach Slayer Master)",
+      "category": "regional Slayer master hub",
+      "region_hint": "desert",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["desert", "karamja", "morytania", "forinthry", "kandarin"],
+      "required_regions": ["desert"],
+      "optional_pressure_regions": ["karamja", "morytania", "forinthry", "kandarin", "tirannwn", "anachronia"],
+      "requirements": [
+        "Smoking Kills completed",
+        "Combat level 90 and 35 Slayer to take assignments",
+        "Pollnivneach house (central Pollnivneach)"
+      ],
+      "unlocks": [
+        "12 Slayer points per task with Smoking Kills (6 without); 60/180 on 10th/50th; long-term avg ~19.2",
+        "Task list similar to Duradel but typically lower quantities",
+        "Late unlocks can include corrupted creatures when quest gates met",
+        "Slayer Rewards shop + equipment stock; 5 co-op Slayer points on social tasks"
+      ],
+      "region_pressure": [
+        "Desert owns the master NPC and Pollnivneach / smoke-dungeon tasks.",
+        "Task monsters still scatter across Karamja, Morytania, Forinthry, Kandarin, etc. — master region ≠ task region (combo:slayer-masters-vs-task-regions)."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "desert:smoking-kills-slayer-points"
+      ],
+      "notes": "Mid-hard master bridge when combat/Slayer is too low for Duradel. NPC Contact (Lunar Diplomacy) and ring of slaying / desert amulet / Pollnivneach teleports are logistics, not region gates.",
+      "source_urls": [
+        "https://runescape.wiki/w/Sumona",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Desert master. Score task geography separately when ranking region picks.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "forinthry:mandrith-wilderness-slayer"
+      ]
+    },
+    {
+      "id": "karamja:duradel-lapalok-slayer-master",
+      "name": "Duradel / Lapalok (Shilo Village Slayer Masters)",
+      "category": "regional Slayer master hub",
+      "region_hint": "karamja",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["karamja", "desert", "morytania", "forinthry", "kandarin"],
+      "required_regions": ["karamja"],
+      "optional_pressure_regions": ["desert", "morytania", "forinthry", "kandarin", "tirannwn", "anachronia"],
+      "requirements": [
+        "Combat level 100 and 50 Slayer",
+        "Shilo Village quest completed",
+        "Duradel on 1st floor of Fernahei's Fishing Hut (south of river; enter shop, climb ladder, cross bridge)",
+        "After While Guthix Sleeps: Lapalok permanently replaces Duradel"
+      ],
+      "unlocks": [
+        "15 points/task with Smoking Kills (7 without); 75 on 10th (80 after Elite Karamja achievements); 225 on 50th; long-term avg ~24",
+        "Standard high-value midgame task list",
+        "Slayer Rewards shop access; 6 co-op points on social tasks"
+      ],
+      "region_pressure": [
+        "Karamja owns Shilo master geography and Karamja gloves 3 / cart / fairy CKR access.",
+        "Task monsters remain multi-region — do not treat Karamja unlock as free access to all Duradel kills."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "desert:smoking-kills-slayer-points"
+      ],
+      "notes": "Recommended point-earning master when Kuradal/Morvran/Laniakea are locked. Elite Karamja diary only slightly improves 10th-task points (75→80).",
+      "source_urls": [
+        "https://runescape.wiki/w/Duradel",
+        "https://runescape.wiki/w/Lapalok",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Karamja master + Shilo Village quest gate.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "kandarin:kuradal-slayer-master"
+      ]
+    },
+    {
+      "id": "kandarin:kuradal-slayer-master",
+      "name": "Kuradal (Ancient Cavern Slayer Master)",
+      "category": "regional Slayer master hub",
+      "region_hint": "kandarin",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["kandarin", "tirannwn", "desert", "morytania", "forinthry", "karamja"],
+      "required_regions": ["kandarin"],
+      "optional_pressure_regions": ["tirannwn", "desert", "morytania", "forinthry", "karamja", "anachronia", "fremennik"],
+      "requirements": [
+        "Combat level 110 and 75 Slayer for assignments",
+        "Ancient Cavern access via Barbarian Firemaking (first section) / whirlpool at Baxtorian Falls — or NPC Contact without physical entry",
+        "Located up the stairs SW toward Dragon Forge"
+      ],
+      "unlocks": [
+        "18 points/task with Smoking Kills; 90/270 on 10th/50th; long-term avg ~28.8",
+        "Kuradal's Dungeon permission ecosystem (separate ferocious-ring hub row)",
+        "Slayer cape seller; 7 co-op points on social tasks",
+        "Optional Learn unlocks for aquanites/muspah/nihil/glacors/TDs/nightmares on her list (50 points each, quest gates)"
+      ],
+      "region_pressure": [
+        "Kandarin owns Ancient Cavern / Kuradal NPC and dungeon.",
+        "High-tier optional task unlocks often pressure Fremennik (glacors), Forinthry (TDs), etc."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "kandarin:kuradal-dungeon-ferocious-ring-hub"
+      ],
+      "notes": "Do not re-emit ferocious ring / dungeon damage as this row — that lives on kandarin:kuradal-dungeon-ferocious-ring-hub. Fairy BJQ (5 mushrooms repair) and ferocious ring charges are logistics.",
+      "source_urls": [
+        "https://runescape.wiki/w/Kuradal",
+        "https://runescape.wiki/w/Kuradal%27s_Dungeon",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Kandarin master. Pair with dungeon hub row for full Kuradal package.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:kuradal-dungeon-ferocious-ring-hub",
+        "desert:smoking-kills-slayer-points",
+        "tirannwn:morvran-slayer-master"
+      ]
+    },
+    {
+      "id": "tirannwn:morvran-slayer-master",
+      "name": "Morvran (Prifddinas Slayer Master)",
+      "category": "regional Slayer master hub",
+      "region_hint": "tirannwn",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["tirannwn", "kandarin", "anachronia", "morytania", "forinthry", "desert"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["kandarin", "anachronia", "morytania", "forinthry", "desert", "fremennik", "asgarnia"],
+      "requirements": [
+        "Combat level 120 and 85 Slayer",
+        "Plague's End completed (Prifddinas access)",
+        "Iorwerth district SW of Prifddinas lodestone"
+      ],
+      "unlocks": [
+        "20 points/task with Smoking Kills; 100/300 on 10th/50th; long-term avg ~32",
+        "Famous-monsters challenge (giant mole, KQ, KBD, QBD, Dagannoth Kings, GWD generals, Araxxor) → 50,000 Slayer XP + 45 points",
+        "Morvran's Dungeon / ferocious-ring dungeon upgrade (100-point Buy unlock for ring bonuses there)",
+        "8 co-op points on social tasks"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Prif master + dungeon.",
+        "Famous-monster challenge is explicitly multi-region (Asgarnia mole, Desert KQ, Forinthry KBD, etc.) — challenge value, not unlock gate."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "kandarin:kuradal-dungeon-ferocious-ring-hub"
+      ],
+      "notes": "Top standard master before Laniakea. Prefer/block lists apply (unlike Mandrith). 100-point ferocious ring Morvran-dungeon upgrade is Tirannwn pressure on the Kandarin ring farm.",
+      "source_urls": [
+        "https://runescape.wiki/w/Morvran",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points",
+        "https://runescape.wiki/w/Slayer_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn + Plague's End. Do not claim Anachronia for Morvran himself.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "kandarin:kuradal-slayer-master",
+        "anachronia:laniakea-slayer-master",
+        "desert:smoking-kills-slayer-points"
+      ]
+    },
+    {
+      "id": "tirannwn:death-altar-runecrafting",
+      "name": "Death altar (Temple of Light Runecrafting)",
+      "category": "regional Runecrafting altar infrastructure",
+      "region_hint": "tirannwn",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["tirannwn", "forinthry", "asgarnia"],
+      "required_regions": ["tirannwn"],
+      "optional_pressure_regions": ["forinthry", "asgarnia", "misthalin"],
+      "requirements": [
+        "Most of Mourning's End Part II completed for ruins access in Temple of Light",
+        "65 Runecrafting to craft death runes (10 RC XP per pure essence; 230 XP per protean essence)",
+        "Death talisman/tiara, omni-talisman/tiara, wicked hood fed with death, or Abyss entry without talisman"
+      ],
+      "unlocks": [
+        "Death rune craft at the death altar",
+        "Death tiara craft (tiara + death talisman on altar, 50 RC XP)",
+        "Surface ruins path through Temple of Light light-door puzzle; Abyss shortcut; death-altar teleport tablet; Tirannwn quiver 3/4 ruins teleport (5/day)",
+        "Magical thread chance when crafting via Abyss (Wilderness sword diary rate ladder — Forinthry pressure)"
+      ],
+      "region_pressure": [
+        "Tirannwn owns Temple of Light ruins and MEP2 gate.",
+        "Forinthry optional: Abyss + Wilderness sword thread rates.",
+        "Asgarnia optional: wicked hood free claim / token teleports into the altar once death is unlocked on the hood.",
+        "Misthalin optional: Runecrafting Guild omni path / Finix hood alternate claim."
+      ],
+      "combo_edges": [
+        "asgarnia:wicked-hood",
+        "forinthry:magical-thread-abyss-supply",
+        "forinthry:abyss-entrance"
+      ],
+      "notes": "Catalytic mid-high RC product. Do not invent XP/hour. Imbue-weapons option added to altars 3 March 2025 — not a region claim.",
+      "source_urls": [
+        "https://runescape.wiki/w/Death_altar",
+        "https://runescape.wiki/w/Mourning%27s_End_Part_II",
+        "https://runescape.wiki/w/Death_rune",
+        "https://runescape.wiki/w/Magical_thread"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Tirannwn for surface altar. Abyss is Forinthry-adjacent alternate entry, not a replacement for the ruins unlock path when valuing Tirannwn RC.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:wicked-hood",
+        "forinthry:magical-thread-abyss-supply"
+      ]
+    },
+    {
+      "id": "anachronia:laniakea-slayer-master",
+      "name": "Laniakea (Anachronia highest standard Slayer Master)",
+      "category": "regional Slayer master hub",
+      "region_hint": "anachronia",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["anachronia", "tirannwn", "kandarin", "forinthry", "desert", "morytania"],
+      "required_regions": ["anachronia"],
+      "optional_pressure_regions": ["tirannwn", "kandarin", "forinthry", "desert", "morytania", "karamja", "fremennik"],
+      "requirements": [
+        "Combat level 120 and 90 Slayer",
+        "Anachronia introductory sequence completed",
+        "Anachronia Swamp Fortress / base-camp master locations"
+      ],
+      "unlocks": [
+        "22 points/task with Smoking Kills; 110/330 on 10th/50th; long-term avg ~35.2 (tied with Mandrith for highest standard points)",
+        "Cluster tasks (e.g. dragons cluster allows any dragon type instead of a single species assignment)",
+        "Same optional Learn task-list expansions as Kuradal/Morvran (aquanites, muspah, nihil, glacors, TDs, nightmares)",
+        "9 co-op points on social tasks (highest co-op among standard masters)"
+      ],
+      "region_pressure": [
+        "Anachronia owns the master NPC and local dinosaur / island tasks.",
+        "Cluster freedom still requires the actual monster regions for the chosen kill site."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "tirannwn:morvran-slayer-master"
+      ],
+      "notes": "Trained under Morvran and Kuradal in lore; mechanically independent master. Prefer/block apply. Distinct from Mandrith (Wilderness-only, ignores prefer/block).",
+      "source_urls": [
+        "https://runescape.wiki/w/Laniakea",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia master. Point parity with Mandrith without Wilderness risk.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "tirannwn:morvran-slayer-master",
+        "forinthry:mandrith-wilderness-slayer",
+        "desert:smoking-kills-slayer-points"
+      ]
+    },
+    {
+      "id": "morytania:mazchna-slayer-master",
+      "name": "Mazchna / Achtryn (Canifis Slayer Masters)",
+      "category": "regional mid-tier Slayer master hub",
+      "region_hint": "morytania",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["morytania", "misthalin", "asgarnia", "kandarin"],
+      "required_regions": ["morytania"],
+      "optional_pressure_regions": ["misthalin", "asgarnia", "kandarin", "desert"],
+      "requirements": [
+        "Combat level 50 for assignments",
+        "Canifis (northeast of town); Achtryn temporarily replaces Mazchna during While Guthix Sleeps"
+      ],
+      "unlocks": [
+        "4 points/task with Smoking Kills; 20/60 on 10th/50th; long-term avg ~6.4",
+        "Higher XP-per-task than Vannaka at the same mid band",
+        "3 co-op points on social tasks; Slayer Rewards shop"
+      ],
+      "region_pressure": [
+        "Morytania owns Canifis master and many early undead / swamp tasks.",
+        "Some assignments still leave the region — apply combo edge, not a hard multi-region gate."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "desert:smoking-kills-slayer-points"
+      ],
+      "notes": "Early members point ladder after Jacquelyn/Vannaka. Canifis lodestone / fairy CKS / Kharyrll POH portal are logistics.",
+      "source_urls": [
+        "https://runescape.wiki/w/Mazchna",
+        "https://runescape.wiki/w/Achtryn",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Morytania mid master.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "misthalin:chaeldar-slayer-master"
+      ]
+    },
+    {
+      "id": "misthalin:chaeldar-slayer-master",
+      "name": "Chaeldar (Zanaris Slayer Master)",
+      "category": "regional hard Slayer master hub",
+      "region_hint": "misthalin",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["misthalin", "morytania", "kandarin", "desert", "karamja"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["morytania", "kandarin", "desert", "karamja", "asgarnia"],
+      "requirements": [
+        "Combat level 75 for assignments (no separate Slayer level gate)",
+        "Lost City completed for Zanaris access (indirect requirement)",
+        "Fairy Queen's house in Zanaris; dramen/lunar staff until Fairy Tale III"
+      ],
+      "unlocks": [
+        "10 points/task with Smoking Kills; 50/150 on 10th/50th; long-term avg ~16",
+        "Highest master without a Slayer-level requirement",
+        "4 co-op points on social tasks; Slayer Rewards shop"
+      ],
+      "region_pressure": [
+        "Misthalin taxonomy owns Zanaris / Lost City hub (wiki League badge: Misthalin).",
+        "Task list still multi-region — fairy network is travel, not a free second master region."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "cross-region:fairy-ring-network"
+      ],
+      "notes": "Bridge master before Sumona/Duradel. Wiki Equilibrium region for Chaeldar shop is Misthalin — do not invent a zanaris region token.",
+      "source_urls": [
+        "https://runescape.wiki/w/Chaeldar",
+        "https://runescape.wiki/w/Zanaris",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin (Zanaris) master via Lost City.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "cross-region:fairy-ring-network",
+        "desert:smoking-kills-slayer-points",
+        "morytania:mazchna-slayer-master"
+      ]
+    },
+    {
+      "id": "misthalin:ancient-curses-senntisten",
+      "name": "Ancient Curses (The Temple at Senntisten)",
+      "category": "permanent Prayer book unlock",
+      "region_hint": "misthalin",
+      "region_hints": ["misthalin", "desert", "morytania", "forinthry", "fremennik"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": ["desert", "morytania", "forinthry", "fremennik", "asgarnia"],
+      "requirements": [
+        "The Temple at Senntisten completed",
+        "50 Prayer",
+        "Major quest prerequisites include Desert Treasure, Dig Site, Devious Minds, Curse of Arrav chain, 125 Kudos, Morytania access, etc.",
+        "Read the Ancient hymnal from Azzanadra after the quest to unlock the curse book"
+      ],
+      "unlocks": [
+        "Ancient Curses prayer book (Sap/Leech/Deflect lines, Soul Split, Turmoil/Anguish/Torment, etc.)",
+        "Altar of Zaros in Senntisten Temple under Varrock Dig Site — pray to restore prayer points to 15% over maximum",
+        "Book switching at Altar of Zaros (and later Elven grimoire / Fort chapel tier 3 / War's Grimoire when those are unlocked)",
+        "Ghorrock fortress access as quest side geography (ice/waterfiends, iron/steel dragons)"
+      ],
+      "region_pressure": [
+        "Misthalin owns Dig Site / restored Senntisten Temple and hymnal unlock.",
+        "Desert pressure: quest start via Ali the Wise in Nardah + Desert Treasure / Missing My Mummy chain.",
+        "Morytania pressure: Barrows icon artefact step.",
+        "Forinthry / Frozen Waste: Frostenhorn / Ghorrock fortress step (Wilderness-edge but fortress not deep PvP)."
+      ],
+      "combo_edges": [
+        "multi-region:prayer-training-infrastructure-stack",
+        "tirannwn:superheat-form (requires Ancient Curses book + The Light Within)"
+      ],
+      "notes": "Combat prayer unlock with skilling side effects only via later Seren extensions (Superheat Form, etc.). Do not re-emit individual curse combat numbers here — prayer books dataset owns effects. Praesul codex and Selene necromancy curses are separate post-unlock paths.",
+      "source_urls": [
+        "https://runescape.wiki/w/The_Temple_at_Senntisten",
+        "https://runescape.wiki/w/Ancient_Curses",
+        "https://runescape.wiki/w/Altar_of_Zaros",
+        "https://runescape.wiki/w/Senntisten_Temple"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Misthalin for temple + hymnal. Surface Desert/Morytania/Forinthry as quest-artefact pressure, not alternate book homes.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "tirannwn:superheat-form",
+        "multi-region:prayer-training-infrastructure-stack"
+      ]
+    },
+    {
+      "id": "misthalin:rune-goldberg-vis-wax",
+      "name": "Rune Goldberg Machine / vis wax (historical RC Guild D&D)",
+      "category": "removed daily RC utility — residual item economy",
+      "region_hint": "misthalin",
+      "region_status": "confirmed_wiki_removed_2026",
+      "region_hints": ["misthalin"],
+      "required_regions": ["misthalin"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "HISTORICAL: 50 Runecrafting + Runecrafting Guild access to operate the machine (removed 16 March 2026)",
+        "Existing banked/inventory vis wax still usable; no new wax can be created"
+      ],
+      "unlocks": [
+        "REMOVED: daily Rune Goldberg Machine (up to 100 vis wax/day from three-slot rune combinations)",
+        "REMAINING vis wax sinks (post-Dailyscape Overhaul): lodestone quick-teleport charges (1 wax → 10 charges, cap 4,000), divine location daily gather limit extend 50% or 100% once/day, harmony pillar skill reset once/day",
+        "Historical sinks no longer relevant for planning: aura extend/reset, daily challenge extend/reroll, masterwork-bow bucket intermediate (aura system retired)"
+      ],
+      "region_pressure": [
+        "Misthalin owns Runecrafting Guild (Wizards' Tower portal) where the machine lived."
+      ],
+      "combo_edges": [
+        "asgarnia:wicked-hood — same Dailyscape Overhaul pass stripped daily RC freebies"
+      ],
+      "notes": "Planner must mark NEW vis-wax farming as unavailable after 16 March 2026. Do not list Goldberg as an active daily. Tradeable leftover wax remains a GE/iron bank item for quick teleports and divine limits only. Runecrafting cape perk that revealed slot-3 perfect rune is dead content with the machine.",
+      "source_urls": [
+        "https://runescape.wiki/w/Rune_Goldberg_Machine",
+        "https://runescape.wiki/w/Vis_wax",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Dailyscape_Overhaul"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Do not score Misthalin for active vis-wax income. Residual wax QoL is account-state inventory, not a region farm.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "asgarnia:wicked-hood"
+      ]
+    },
+    {
+      "id": "asgarnia:spria-turael-slayer-master",
+      "name": "Turael / Spria (Burthorpe starter Slayer Masters)",
+      "category": "regional starter Slayer master and task-reset hub",
+      "region_hint": "asgarnia",
+      "region_status": "confirmed_wiki_league_region",
+      "region_hints": ["asgarnia"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": [],
+      "requirements": [
+        "No combat or Slayer level gate",
+        "Burthorpe (north of bank); Spria permanently replaces Turael after While Guthix Sleeps"
+      ],
+      "unlocks": [
+        "0 Slayer points always; assignments do not advance the completion streak for point milestones",
+        "Free easier-task reassignment when the current task is outside their list (or count is far above their assign range)",
+        "WARNING: accepting a replacement from Turael/Spria while on another master's task RESETS the task streak to 0 (must complete four more before points resume)",
+        "1 co-op point on social tasks; Burthorpe/Taverley-local creature list post-2021 rework"
+      ],
+      "region_pressure": [
+        "Asgarnia owns Burthorpe master geography exclusively."
+      ],
+      "combo_edges": [
+        "multi-region:slayer-prefer-block-extend — free cancel alternative vs 30-point cancel; streak reset tradeoff"
+      ],
+      "notes": "Utility master for emergency skips and early onboarding, not a point farm. Prefer paid Cancel (30) over Turael skip when protecting a high streak. Obtaining a new task while unassigned does not reset streak.",
+      "source_urls": [
+        "https://runescape.wiki/w/Turael",
+        "https://runescape.wiki/w/Spria",
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Asgarnia starter master. Score as QoL/reset tool, not XP/points.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "multi-region:slayer-prefer-block-extend",
+        "desert:smoking-kills-slayer-points"
+      ]
+    },
+    {
+      "id": "asgarnia:wicked-hood",
+      "name": "Wicked hood (Runecrafting talisman storage + altar teleports)",
+      "category": "permanent Runecrafting travel tool",
+      "region_hint": "asgarnia",
+      "region_status": "confirmed_wiki",
+      "region_hints": ["asgarnia", "misthalin", "tirannwn", "desert", "forinthry", "karamja", "fremennik", "kandarin"],
+      "required_regions": ["asgarnia"],
+      "optional_pressure_regions": ["misthalin", "tirannwn", "desert", "forinthry", "karamja", "fremennik", "kandarin", "morytania"],
+      "requirements": [
+        "Free claim from Tam McGrubor in northern Burthorpe (Asgarnia) — primary ironman path",
+        "Alternate: Wizard Finix, Wizards' Tower roof, 175 Runespan points (Misthalin)",
+        "Feed corresponding talisman/tiara (or omni-talisman/tiara) to unlock each altar; air+mind free; elemental talisman unlocks all elemental; astral needs Lunar Diplomacy + omni on hood"
+      ],
+      "unlocks": [
+        "Single head-slot item acting as all fed talismans/tiaras for altar entry",
+        "Unlimited Runecrafting Guild / Wizards' Tower portal teleport",
+        "Altar teleports via wicked hood teleport tokens (3 charges per token, max 250 stored charges) — tokens no longer daily-free after 16 March 2026",
+        "Reclaim free from Tam if lost (unlocked altars + stored charges persist); one hood at a time"
+      ],
+      "region_pressure": [
+        "Asgarnia owns free Tam McGrubor claim.",
+        "Misthalin: Finix alternate, RC Guild, omni from Wizard Elriss.",
+        "Destination altars remain their own regions (death=Tirannwn, soul=Desert/Menaphos, nature=Karamja, etc.)."
+      ],
+      "combo_edges": [
+        "tirannwn:death-altar-runecrafting",
+        "forinthry:magical-thread-abyss-supply",
+        "misthalin:rune-goldberg-vis-wax"
+      ],
+      "notes": "Dailyscape Overhaul (16 March 2026) removed daily essence withdraw, daily free runes, and free daily altar teleport charges. Post-patch hood is talisman storage + Guild teleport + token-funded altar teleports only. Examine text updated to 'store talismans'. Do not plan daily free pure essence from the hood.",
+      "source_urls": [
+        "https://runescape.wiki/w/Wicked_hood",
+        "https://runescape.wiki/w/Tam_McGrubor",
+        "https://runescape.wiki/w/Wicked_hood_teleport_token",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Dailyscape_Overhaul"
+      ],
+      "confidence": "confirmed_wiki_2026_current",
+      "league_treatment": "Hard Asgarnia for free claim. Misthalin optional for Finix/Runespan path. Score as permanent RC travel infrastructure, not daily essence income.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "tirannwn:death-altar-runecrafting",
+        "forinthry:magical-thread-abyss-supply",
+        "misthalin:rune-goldberg-vis-wax"
+      ]
+    },
+    {
+      "id": "multi-region:slayer-prefer-block-extend",
+      "name": "Slayer prefer / block / extend (Assignment Rewards)",
+      "category": "permanent multi-region Slayer task list control",
+      "region_hints": ["desert", "karamja", "kandarin", "tirannwn", "anachronia", "morytania", "misthalin", "asgarnia", "forinthry"],
+      "required_regions": [],
+      "optional_pressure_regions": ["desert", "karamja", "kandarin", "tirannwn", "anachronia", "morytania", "misthalin", "asgarnia", "forinthry"],
+      "requirements": [
+        "Smoking Kills strongly recommended so point income is full rate",
+        "Slayer points from any eligible master (not Turael/Spria)",
+        "Prefer/block lists are shared across all masters"
+      ],
+      "unlocks": [
+        "Cancel task — 30 points: skip current assignment without streak penalty; next task progresses normally",
+        "Block task — 100 points: skip current + permanently remove that assignment from all masters' lists (until unblocked)",
+        "Prefer task — 100 points: auto-extends current assignment and approximately doubles future chance of that assignment",
+        "Extend task — 30 points: +20% kill count based on initial assignment size (no extra points vs boss reaper; cannot extend same task twice in a row if previous was extended)"
+      ],
+      "region_pressure": [
+        "Currency generation is master-region dependent (Sumona Desert, Duradel Karamja, Kuradal Kandarin, Morvran Tirannwn, Laniakea Anachronia, Mandrith Forinthry, etc.).",
+        "Blocked/preferred monsters often live in different regions than the master — this is the core combo with task geography."
+      ],
+      "combo_edges": [
+        "combo:slayer-masters-vs-task-regions",
+        "desert:smoking-kills-slayer-points",
+        "forinthry:mandrith-wilderness-slayer — Mandrith IGNORES prefer/block lists"
+      ],
+      "notes": "Account-state permanent. Mandrith exception is critical for Forinthry planning. Turael free skip resets streak — prefer 30-point Cancel when streak matters. Block slot count scales with account progression (quest points historically gate extra slots — verify current UI rather than hardcoding a count here).",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Slayer_points",
+        "https://runescape.wiki/w/Mandrith"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Global unlock purchasable from any master shop. Score point-farm masters by region; score blocked-monster relief by task regions.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "desert:sumona-slayer-master",
+        "karamja:duradel-lapalok-slayer-master",
+        "kandarin:kuradal-slayer-master",
+        "tirannwn:morvran-slayer-master",
+        "anachronia:laniakea-slayer-master",
+        "forinthry:mandrith-wilderness-slayer",
+        "asgarnia:spria-turael-slayer-master"
+      ]
+    },
+    {
+      "id": "multi-region:slayer-broad-fletching",
+      "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
+      "category": "permanent Slayer Rewards Learn unlock",
+      "region_hints": ["desert", "karamja", "kandarin", "tirannwn", "anachronia", "misthalin", "morytania", "forinthry"],
+      "required_regions": [],
+      "optional_pressure_regions": ["desert", "karamja", "kandarin", "tirannwn", "anachronia"],
+      "requirements": [
+        "300 Slayer points (unique Learn purchase at any Slayer Rewards shop)",
+        "52 Fletching for broad arrows; 55 Fletching for broad-tipped bolts",
+        "Assist System usable for the fletch levels"
+      ],
+      "unlocks": [
+        "Permanent ability to fletch broad arrows and broad-tipped bolts from purchased unfinished broad tips + headless arrows / feathers",
+        "Self-sufficient ironman ammo for broad-ammo-only tasks (e.g. kurasks, warped terrorbirds pathing) without GE finished ammo",
+        "Points can still buy finished broad packs (35 points per tiered packs) as a temporary bridge before the Learn unlock"
+      ],
+      "region_pressure": [
+        "Point farm follows high masters (Desert/Karamja/Kandarin/Tirannwn/Anachronia).",
+        "Fletching skill training is multi-region and not gated by this unlock."
+      ],
+      "combo_edges": [
+        "desert:smoking-kills-slayer-points",
+        "multi-region:slayer-prefer-block-extend"
+      ],
+      "notes": "Trimmed completionist path includes this Learn set with helmet craft and quick killing blows. Distinct from buying finished broads in the Buy tab.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Broad_arrows",
+        "https://runescape.wiki/w/Broad-tipped_bolts",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Global permanent unlock; fund with any region's point-capable masters after Smoking Kills.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "multi-region:slayer-prefer-block-extend"
+      ]
+    },
+    {
+      "id": "multi-region:slayer-quick-killing-blows",
+      "name": "Learn quicker killing blows (400 Slayer points)",
+      "category": "permanent Slayer Rewards Learn unlock",
+      "region_hints": ["desert", "karamja", "kandarin", "tirannwn", "anachronia", "morytania", "misthalin", "forinthry"],
+      "required_regions": [],
+      "optional_pressure_regions": ["desert", "karamja", "kandarin", "tirannwn", "anachronia", "morytania"],
+      "requirements": [
+        "400 Slayer points (unique Learn)",
+        "75 Slayer"
+      ],
+      "unlocks": [
+        "Monsters that normally need a finishing item (rock slugs, desert lizards, zygomites, gargoyles, etc.) die at 0 life points like normal monsters when the required item is in the backpack or tool belt",
+        "Removes per-kill bag click / special finish animation friction on those tasks",
+        "Trimmed completionist requirement together with craft unlocks"
+      ],
+      "region_pressure": [
+        "Point funding is multi-master.",
+        "Affected monsters appear across Desert (lizards), Morytania (gargoyles), etc. — QoL value tracks which blocked tasks you still do."
+      ],
+      "combo_edges": [
+        "desert:smoking-kills-slayer-points",
+        "multi-region:slayer-prefer-block-extend",
+        "multi-region:slayer-broad-fletching"
+      ],
+      "notes": "Does not remove the need to own/have the finish item available — it only auto-applies when the item is present. Pair with toolbelt where applicable.",
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Rewards",
+        "https://runescape.wiki/w/Slayer_points"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Global permanent QoL; prioritise after helmet craft and broad fletching when points are tight.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "desert:smoking-kills-slayer-points",
+        "multi-region:slayer-broad-fletching"
+      ]
+    },
+    {
+      "id": "multi-region:poh-gilded-altar",
+      "name": "POH gilded altar (Chapel offering)",
+      "category": "permanent multi-region Prayer training infrastructure",
+      "region_hints": ["asgarnia", "misthalin", "kandarin", "desert", "karamja", "fremennik", "tirannwn", "morytania"],
+      "required_regions": [],
+      "optional_pressure_regions": ["asgarnia", "misthalin", "kandarin", "desert", "tirannwn"],
+      "requirements": [
+        "75 Construction unboosted for gilded altar (boostable from ~65 with crystal saw +3, sculpting chisel +1, orange spicy stew up to +6)",
+        "Player-owned house Chapel room with altar hotspot",
+        "Materials: 2 marble blocks, 2 bolts of cloth, 4 gold leaves",
+        "Both incense burners lit with clean marrentill (or Prayer cape substitute per wiki) for max multiplier"
+      ],
+      "unlocks": [
+        "Gilded altar Offer: +150% Prayer XP base altar bonus",
+        "Each lit incense burner +50% extra → both burners = +250% extra → 350% of bury/scatter base total",
+        "Any visitor to the house can use the altar; official open-altar community world 31",
+        "First Age outfit stacks on POH offering (unlike Ectofuntus)"
+      ],
+      "region_pressure": [
+        "House portal location is player-chosen (not a hard region lock once Construction materials exist).",
+        "Marble/gold-leaf shops pressure (e.g. stonemason / Prif Construction supplies) are optional supply regions.",
+        "Asgarnia Taverley is the classic open-altar hub world geography, not a craft requirement."
+      ],
+      "combo_edges": [
+        "multi-region:prayer-training-infrastructure-stack",
+        "forinthry:wilderness-chaos-altar-offer (parallel 350% at Elite Wilderness without incense cost)"
+      ],
+      "notes": "Feb 2026 Fort Forinthry chapel rebalance cut Fort multipliers so POH gilded+burners again leads raw multiplier; Fort still wins bank proximity + material-save chance. Double XP does not further multiply altar Offer. Brawling gloves (Prayer) stack on POH/gilded path (not Ectofuntus/chaos). Ironmen usually self-build rather than rely on open houses.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gilded_altar",
+        "https://runescape.wiki/w/Chapel",
+        "https://runescape.wiki/w/Incense_burners"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Not a hard single-region unlock. Score Construction + bone supply regions instead of inventing a POH region.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "multi-region:prayer-training-infrastructure-stack"
+      ]
+    },
+    {
+      "id": "multi-region:prayer-training-infrastructure-stack",
+      "name": "Prayer training infrastructure stack (altars + powders + books)",
+      "category": "multi-region Prayer progression package",
+      "region_hints": ["misthalin", "forinthry", "desert", "morytania", "asgarnia", "kandarin", "tirannwn"],
+      "required_regions": [],
+      "optional_pressure_regions": ["misthalin", "forinthry", "desert", "morytania", "asgarnia", "tirannwn"],
+      "requirements": [
+        "Piecewise: none for the package itself — each component has its own gates",
+        "POH gilded path: multi-region:poh-gilded-altar",
+        "Ancient Curses combat prayers: misthalin:ancient-curses-senntisten",
+        "Wilderness chaos Offer ladder: Forinthry achievements (see forinthry chaos-altar rows)",
+        "Powder of burials: Desert Het's Oasis whirligig shells",
+        "Ectofuntus / ectophial: Morytania"
+      ],
+      "unlocks": [
+        "Planner checklist linking the major Prayer XP infrastructures without re-emitting full child rows",
+        "Gilded altar 350% (both burners) vs Wilderness chaos Offer up to 350% at Elite (no incense) vs Fort chapel banked Offer (post-Feb 2026 half of old Fort rates)",
+        "Powder of burials banked-bone AFK path (Desert powder farm)",
+        "Ancient Curses book for combat Prayer (Soul Split / Turmoil line) once Senntisten is done",
+        "Seren skilling prayer Superheat Form remains Tirannwn Light Within extension on the curses book"
+      ],
+      "region_pressure": [
+        "Misthalin: Senntisten temple, Fort Forinthry chapel (working taxonomy), Dig Site.",
+        "Forinthry: Wilderness chaos altars + diary multiplier ladder.",
+        "Desert: powder of burials / Het's Oasis; Senntisten quest start pressure.",
+        "Morytania: Ectofuntus classic path + ectophial logistics.",
+        "Asgarnia/Taverley: open gilded world logistics.",
+        "Tirannwn: Superheat Form / Elven grimoire book switch."
+      ],
+      "combo_edges": [
+        "multi-region:poh-gilded-altar",
+        "misthalin:ancient-curses-senntisten",
+        "tirannwn:superheat-form",
+        "combo:prayer-powder-desert-bones"
+      ],
+      "notes": "Meta-row for planners. Prefer child ids for mechanical detail. Do not invent XP/hour; compare only documented multipliers and unlock gates. Powder of burials and chaos altar still beat pure bury even when altar access is region-locked.",
+      "source_urls": [
+        "https://runescape.wiki/w/Gilded_altar",
+        "https://runescape.wiki/w/Chaos_altar_(Wilderness)",
+        "https://runescape.wiki/w/Powder_of_burials",
+        "https://runescape.wiki/w/Ectofuntus",
+        "https://runescape.wiki/w/Ancient_Curses",
+        "https://runescape.wiki/w/Chapel_(Fort_Forinthry)"
+      ],
+      "confidence": "confirmed_wiki_stack",
+      "league_treatment": "Score each Prayer path by the region that owns its hard gate; this package is the comparison edge, not a free global unlock.",
+      "region_requirement_type": "support",
+      "links_existing_ids": [
+        "multi-region:poh-gilded-altar",
+        "misthalin:ancient-curses-senntisten",
+        "tirannwn:superheat-form",
+        "morytania:ectophial"
+      ]
+    }
+  ],
+  "row_count": 18,
+  "ids": [
+    "desert:smoking-kills-slayer-points",
+    "desert:sumona-slayer-master",
+    "karamja:duradel-lapalok-slayer-master",
+    "kandarin:kuradal-slayer-master",
+    "tirannwn:morvran-slayer-master",
+    "tirannwn:death-altar-runecrafting",
+    "anachronia:laniakea-slayer-master",
+    "morytania:mazchna-slayer-master",
+    "misthalin:chaeldar-slayer-master",
+    "misthalin:ancient-curses-senntisten",
+    "misthalin:rune-goldberg-vis-wax",
+    "asgarnia:spria-turael-slayer-master",
+    "asgarnia:wicked-hood",
+    "multi-region:slayer-prefer-block-extend",
+    "multi-region:slayer-broad-fletching",
+    "multi-region:slayer-quick-killing-blows",
+    "multi-region:poh-gilded-altar",
+    "multi-region:prayer-training-infrastructure-stack"
+  ]
+}

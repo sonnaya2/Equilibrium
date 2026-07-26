@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
+
+export const metadata: Metadata = {
+  title: "Sources",
+  description:
+    "Sources and credits for RS3 Equilibrium — wiki, combat math references, and Jagex policy notes.",
+};
 
 const CREDITS = [
   {
@@ -37,8 +44,9 @@ export default function SourcesPage() {
             <dt className="text-sm">
               <a
                 href={c.url}
-                className="font-medium text-parch-50 transition-colors duration-150 hover:text-gold-300"
+                target="_blank"
                 rel="noreferrer noopener"
+                className="font-medium text-parch-50 transition-colors duration-150 hover:text-gem-300"
               >
                 {c.name}
               </a>

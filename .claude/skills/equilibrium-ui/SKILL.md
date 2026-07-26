@@ -1,177 +1,262 @@
 ---
 name: equilibrium-ui
-description: The RS3 Equilibrium visual system - the palette sampled from the in-game league panel and RuneScape DragonWilds key art, the gem-green chrome accent ruling, the hexagon lattice and shield-crest motifs, the game art pipeline, density floors, and the exceptions to no-slop-ui that are sanctioned for this product. Use before any UI, theme, CSS, component or copy work in this repo, and when a bot-audit finding needs adjudicating.
+description: >
+  Binding visual system for RS3 Equilibrium (this repo). Palette, gem-green chrome,
+  hexagon/shield motifs, component inventory, route anatomy, Tailwind v4 token map,
+  3D map fence, frozen e2e contracts, sanctioned no-slop exceptions, and how global
+  anti-slop skills + frontend-design + Context7 apply here. Use before any UI, theme,
+  CSS, component or copy work in this repo; wins over EverSense/NTE notes in no-slop-ui.
 ---
 
 # Equilibrium visual system
 
-This is the RS3 counterpart to `no-slop-ui` §5. That section's rulings were measured against
-EverSense/NTE, a different product: its `#FD61A8` pink accent, its "all dark grounds are now
-rejected" verdict and its "this codebase is not Tailwind" note describe that product, not this one.
-Everything else in `no-slop-ui` still applies, and its bans still win over generic pretty defaults.
+**Product:** companion webapp for RuneScape 3 Leagues II: Equilibrium.
+**Class:** game-world surface + tool workbench. Free fan tool — nothing is sold.
 
-## Precedence — read this before quoting a ban at someone
+This skill is the **binding product law** for UI in `Rs3Equilibrium`. Global skills
+(`no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`,
+`data-readability`) still apply for fingerprint bans and density floors, but
+**EverSense/NTE product bindings do not**. Pink `#FD61A8`, light paper/halftone
+Print skin, "not Tailwind", and "all dark grounds rejected" are a different app.
 
-1. **What the user asked for wins.** These skills exist to stop the model's
-   defaults from being generic, not to overrule a person who told you what they
-   want. If a request collides with a ban, build the request, say once which ban
-   it touches and why the ban exists, and move on. Do not talk them out of it,
-   and do not water it down and call that a compromise.
-2. **The game's own language wins over the ban list.** If RuneScape does it —
-   blur on unrevealed content, a lit bevel on a hexagon, a loud desert — it is
-   in-world, not slop. The bans target the *model's* reflexes (rainbow chrome,
-   hero pitches, glassmorphism), not the world's material.
-3. **Only then, the ban list.**
+## Precedence
 
-`no-slop-ui` is written as enumerated prohibitions with prose encouragement
-(§4.5, §9) as the counterweight. Enumerated rules fire harder than prose, so the
-practical failure mode here is over-guarding: refusing a good idea because a rule
-*could* be read to cover it. §4.5 exists precisely because bleached, over-corrected
-output fails just as hard as slop. When in doubt, build the bolder version — a
-timid screen is a failure state, not a safe one.
+1. **What the user asked for wins.** Skills stop generic model defaults; they do not
+   overrule an explicit request. Build the request, note the ban once, move on.
+2. **The game's own language wins over the ban list.** Blur on unrevealed content,
+   lit bevel on hexes, loud desert terrain — in-world, not slop.
+3. **This skill wins over no-slop-ui §5 / §7 product notes** when they conflict.
+4. **Fingerprint bans in no-slop-ui §1–4 still win** over pretty defaults (rainbow
+   gradients, hero pitch, glassmorphism-as-default, SaaS skeleton).
+5. **Claude `frontend-design`** is craft only (type scale, cascade, restraint). Its
+   "open with a hero thesis" and trend-palette instincts are overridden — see §Craft
+   companions below.
+6. **When in doubt, build the bolder game-faithful version.** Over-guarded bleach is
+   a failure mode equal to slop (`no-slop-ui` §4.5).
 
-Its "Tournament results" ledger is NTE verdicts. Useful as evidence, not binding
-here; "don't re-litigate" applies to that product's rounds, not to ours.
+## Stack (do not invent another)
 
-**Product class:** game-world surface plus tool workbench. A free fan tool for players. Nothing is
-sold, nothing converts.
+| Layer | Binding choice |
+|---|---|
+| Framework | Next.js App Router (`app/`), React **19.2.8** exactly (fiber peer) |
+| Style | **Tailwind v4 CSS-first** — tokens in `@theme` inside `app/globals.css`. No `tailwind.config`. |
+| Display type | **Cinzel** via `next/font/google` → `--font-cinzel` / `--font-display` |
+| Body / mono | system ui-sans-serif; ui-monospace + `tabular-nums` (global on body) |
+| 3D | `@react-three/fiber` + `drei` + `three`, **fenced under `src/map/`**, loaded `next/dynamic` `ssr: false` |
+| Data | static JSON under `data/`; picks in `localStorage` via `@/league/useBuild` |
+| Deploy | Vercel, git-connected `main` → production |
 
-## Palette, and where it came from
+**Not this product:** NiceGUI, PySide6, `print-tokens.css`, MiSans, Impact, pink accent.
 
-Measured, not recalled. Two sources, blended: the in-game Leagues II panel supplies the structure,
-RuneScape: DragonWilds supplies the warmth.
+### Token map (canonical)
 
-DragonWilds key art (`WILheader.png`, pixel-bucketed): near-black `#060707` ground; dark olive
-`#262817` / `#2a3418` / `#363717`; a saturated green ramp `#013801` to `#018700`; sunlit sand-gold
-display type `#f3c97b`. DragonWilds gameplay stills average luminance 111 and saturation 0.50 with a
-timber/earth ramp `#553d1d` to `#aa844a` across half the frame — the game itself is warm and bright,
-not dark. The in-game Equilibrium panel supplies dark warm stone, a brass double-line frame,
-parchment text, the teal gem, diamond progress pips, and the chaos-red / balance-green / order-blue
-row triad.
+Defined in `app/globals.css` `@theme`. Inline hex in components is a defect.
+3D mirrors numbers in `src/map/palette.ts` only (TSL/lights need numbers, not CSS vars).
 
 ```
-surface  void #0d0a07 · deep #14100b · panel #1b1610 · raised #231d15
-edge     line #332a1e · carve #463a29
-ink      #efe7d5 · #d3c8b0 · #a2957a · #8b7f68
-gem      #8ff0cd · #57e0ae · #2ecb8f · #1fa372 · #157a55
-gold     #f3c97b · #e0b264 · #a87c3c
-path     chaos #b5402f · balance #6fae45 · order #4a7ec2
-ember    #e2622a
-radius   2px, 4px
+parch   50 #efe7d5 · 100 #d3c8b0 · 300 #a99f88 · 400 #948a73 · 500 #8b7f68
+stone   750 line #332a1e · 800 raised #231d15 · 850 panel #1b1610
+        900 deep #14100b · 950 void #0d0a07 · carve #463a29
+gold    300 #f3c97b · 400 #e0b264 · 500 #a87c3c     (display ink only)
+gem     200 #8ff0cd · 300 #57e0ae · 400 #2ecb8f · 500 #1fa372 · 600 #157a55
+path    chaos-300 #d4614d · chaos-400 #b5402f · order-400 #4a7ec2 · balance-400 #6fae45
+ember   400 #e2622a                                 (unlock sweep only)
+radius  sm 2px · md 4px
 ```
 
-Tokens live in the `@theme` block of `app/globals.css` (Tailwind v4 is CSS-first, there is no config
-file). Inline hex is a defect.
+**Tailwind class names** match token suffixes: `bg-stone-950`, `text-parch-50`,
+`text-gem-400`, `border-stone-750`, `font-display`, `text-gold-400`, `rounded-sm`.
 
-## The accent ruling
+Do **not** invent `stone-700` as a design token — it is not in `@theme`. Prefer
+`stone-750` / `stone-800` for edges and raised surfaces. If you see `border-stone-700`
+in combat tabs, treat it as accidental Tailwind default leakage and migrate toward
+`stone-750` when you touch that file.
 
-**Chrome accent is gem green.** Ground is warm umber (hue ~30°), accent is gem green (hue ~160°) —
-130° apart, which keeps the accent able to punch. Warming the ground toward DragonWilds while keeping
-brass as the accent would put both in the same hue family and cannibalise it, and it re-triggers the
-"gold edge highlights on every panel" failure.
+Contrast floor: body ≥ 4.5:1 on its surface. Chaos fill `#b5402f` fails as text —
+use `chaos-300` when chaos must be read as ink.
 
-**Gold is engraved display ink only.** Headings and the brand mark. It never marks an interactive
-state, an active nav item, or a selected row. That is the gem's job.
+## Accent ruling
 
-**The path triad is data, never chrome.** Order blue in particular must never reach a border, button
-or active state — `no-slop-ui` bans blue as chrome, and it is only admissible here because it carries
-a real game semantic.
+| Role | Token | Use |
+|---|---|---|
+| Chrome accent | gem green | Active nav, primary focus ring, selected cell inset, key actions |
+| Display ink | gold | Brand mark, `PageHeading` / page `h1` only — never active state |
+| Path triad | chaos / balance / order | Blessing path data only — never button/border/active chrome |
+| Ember | ember-400 | Unlock sweep transition only — never at rest |
+| Neutrals | stone + parch | 95% of chrome |
 
-**Ember is transition-only.** It appears inside the unlock sweep and never at rest, which keeps "one
-chrome accent" strictly true.
-
-Contrast is gated at 4.5:1 against the surface a token actually sits on. `#7a6f5b` was the original
-faint ink and fails at 3.86:1 — `#8b7f68` replaced it at 4.87:1. Chaos `#b5402f` fails as text at
-3.39:1, so it is a fill or marker; use `#d4614d` when chaos must be read as text.
+One chrome accent. Order blue in particular must never become a button or active border.
 
 ## Motifs
 
-The game gives us two distinct shapes and they mean different things. Keeping them separate is what
-stops this reading as generic hex decoration.
+- **Hexagon** — layout grid (relic tiers, 8×3 blessing lattice, region cells, pip shape). Not a logo stamp.
+- **Shield crests** — region identity from `public/game/regions/{id}.png` inside cells.
+- **Diamond/hex pips** — progress (`Pips` component); structure mode dims all, progress mode fills.
+- **Timber slats + crystal** — locked cells (`.cell-locked`).
+- **Carved edge** — sole depth method: 1px `stone-750` border + 1px inset `stone-carve` (`.panel`).
 
-- **Hexagon** is the lattice system: relic tiers, the 8×3 blessing lattice, the league gem, and the
-  region-lock barrier. It is a layout grid, not a logo.
-- **Shield crests** are region identity. The 11 real in-game crests live in `assets/rs3/regions/` and
-  sit *inside* lattice cells.
-- **Diamond pips** mark progress along a track, as the in-game progress bars do.
-- **Timber slats with green crystal** is the locked state, lifted from the region-lock barrier.
-- **Carved edge** is the single depth method: 1px `line` border with a 1px inset `carve` highlight.
-  Not blur plus glow plus inset plus border at once.
+## Component inventory (extend these; do not fork)
 
-## Sanctioned exceptions
+| Piece | Path | Job |
+|---|---|---|
+| `Page` | `src/components/Page.tsx` | `max-w-6xl` page shell |
+| `PageHeading` | `src/components/Heading.tsx` | Gold display title + optional note |
+| `Nav` | `src/components/Nav.tsx` | Brand + six primary links |
+| `Hex` / `HexRow` / `hexClass` | `src/components/Hex.tsx` | Lattice cells (`open`/`selected`/`locked`/`unrevealed`) |
+| `Pips` | `src/components/Pips.tsx` | Hex-pip progress / structure |
+| `Stat` | `src/components/Stat.tsx` | Label + mono value |
+| `GameIcon` | `src/components/GameIcon.tsx` | `public/game/` art; default `alt=""` inside named controls |
+| `panel` / `panel-head` / `panel-body` | `globals.css` | Carved stone surfaces |
+| `data-table` / `num` / `stat-key` / `tag` | `globals.css` | Dense records, key figure, state tags |
+| `stat-strip` | `globals.css` | Inspector fact strip (4-up) |
+| `map-chip` / `slab-chip` / `vine-frame` | `globals.css` | Map overlays and pick-bound vine growth |
+| `cell*` | `globals.css` | Hex lattice material states |
 
-Each of these trips a `no-slop-ui` or `bot-audit` pattern and is nonetheless correct here. Do not
-strip them in a humanizer pass; the citation is the justification.
+Combat UI lives under `src/components/combat/` (Quick, Build, Rotation, Analysis tabs).
+Research/data browsers under `src/components/*Research.tsx` + `ResearchBrowser`.
 
-**Frosted unrevealed cells.** Blur on unrevealed relics and blessings reproduces how the game itself
-renders them — the in-game Relics and Blessings tabs show unrevealed content blurred. This is the
-§4.5 "prove it with a screenshot of the game" exemption, not glassmorphism-as-default. It also solves
-a real problem: `blessings.json` has 8 tiers and zero revealed choices and `tasks.json` has zero
-records, so any other treatment becomes the banned "COMING SOON" card grid. The lattice is the shape
-of the choice, not a guess at its contents.
+**Art path helper:** `@/lib/gameArt` → `gameIconPath`, `regionCrestPath`, `styleIconPath`.
+Source art is `assets/rs3/` (not web-served); published copies are `public/game/`.
 
-**Two material gradients.** A low-opacity top-light on lattice cells (the game's own hexes are
-top-lit) and a repeating slat gradient for locked-cell timber. Both are world material, which §4.5
-explicitly permits — the ban targets brand-chrome gradients on text, buttons and hairlines. No other
-gradient is allowed, and never a div-painted scene faking key art.
+## Route anatomy (IA)
 
-**Dark ground.** Correct for this product. The "all dark grounds rejected" verdict is an NTE finding;
-RS3's own league panel is dark and the Wiki's dark mode is the familiar register for this audience.
+```
+EQUILIBRIUM   Overview  Map  Tasks  Build  Combat  Data   (+ /sources footer)
+```
 
-**Selection glow.** Permitted on the selected cell or marker. Nothing glows at rest.
+| Route | Working surface |
+|---|---|
+| `/` | League status + planner link list + systems table (opens on facts, not a pitch) |
+| `/map` | `RegionPlanner`: board (`MapLoader`→3D/`FlatBoard`) + `RegionLedger` rail + `RegionInspector` |
+| `/tasks` | Task records (empty Equilibrium list may fall back to Catalyst test data when enabled) |
+| `/build` | `BuildPlanner`: region hexes, relic/blessing lattices, share link — same `useBuild` as map |
+| `/combat` | Tabs: Quick · Build · Rotation · Analysis · Reference |
+| `/data` | Sticky section nav + research browsers |
+| `/sources` | Credits and provenance |
+
+Map rule: **ledger owns a11y and e2e picks**; canvas never duplicates accessible pick controls.
+3D is the good view; region planning must work without WebGPU (`no WebGPU` fallback string is frozen).
+
+## Frozen UI contracts (e2e pins these — CI does not run Playwright)
+
+Treat as API. Break them only by updating `e2e/` in the same change.
+
+- Brand link accessible name exactly `EQUILIBRIUM`
+- `<nav>` with Overview, Map, Tasks, Build, Combat, Data
+- Footer substring `RuneScape is a trademark of Jagex Ltd.`
+- All 11 regions as `<button>` whose name **starts with** the display name (`GameIcon` inside needs `alt=""`)
+- Literal `0/3` and `3/3` pick counters; genuinely `disabled` 4th elective; `Clear picks` verbatim
+- `section[aria-live]` for region detail matching `/sources? · verified <date>/` (pattern, not a fixed date)
+- Substring `no WebGPU` in the WebGPU-absent fallback
+
+Do not pin scraped `verifiedAt` dates or rule wording in e2e.
+
+## Sanctioned exceptions (do not strip in humanizer)
+
+Each trips a generic ban and is still correct here:
+
+1. **Frosted unrevealed cells** — game blurs unrevealed relics/blessings; not default glassmorphism.
+2. **Two material gradients** — top-light on lattice cells; timber slat repeat on locked cells. No brand-chrome gradients.
+3. **Dark warm ground** — league panel / Wiki dark mode register. NTE "dark grounds rejected" does not apply.
+4. **Selection glow** — selected cell/marker only; nothing glows at rest.
+5. **Path triad colors** — data semantics for Order/Chaos/Balance, never chrome.
+6. **Vine frame** — pick-count instrument on the map (`vine-frame`); state-change only; reduced-motion kills it.
+7. **Honeycomb offset** — region hive may interlock; blessing lattice keeps aligned columns (tier number carries meaning).
 
 ## Density floors
 
-`data-readability` is law equal to `no-slop-ui` on any data surface. Data values 14px working size and
-13px absolute floor in the densest tables; labels 11px; the key number on a screen 20px+; mono with
-`tabular-nums` for figures; at least 70% of a 1440p viewport is real content; no 40px+ voids inside a
-working surface; related facts adjacent so the eye does not cross the viewport to join two facts about
-one thing.
+`data-readability` is equal law on data surfaces.
 
-Density has to come from real records. Regions (11), relics (3 revealed choices) and blessings (0)
-cannot carry a screen alone. `data/league/quests.json` has 281 records plus precomputed
-`region_group_counts` and `primary_region_counts` histograms, and `data/research/catalog.json` is
-157KB — lead with those.
+- Data ≥14px working (13px densest floor); labels ≥11px; key number ≥20px (`.stat-key` is 1.75rem gem)
+- Mono + `tabular-nums` for figures
+- ≥70% of 1440p viewport is content on working views; no 40px+ voids inside a work surface
+- Related facts adjacent (ledger row next to board; inspector under both — not a 2600px scroll)
 
-## Art pipeline
+Density comes from real records (quests histograms, research catalog). Empty unrevealed lattices stay blurred cells, not "COMING SOON" card gardens.
 
-Real game art is the identity; a game tool with no game art scores BUSTED on `bot-audit` sweep 5.
-`assets/rs3/` holds 121 real PNGs and is not web-served, so art reaches the app through
-`public/game/`. When a crest sits inside a region button it needs `alt=""`, or it changes the
-accessible name the e2e suite pins.
+## Art rules
 
-**What you may use.** Extracted game art, RuneScape Wiki imagery, world-map art and map tiles, and
-official icons. The wiki is CC BY-NC-SA 3.0 and this is a free non-commercial fan tool: attribute it
-where the art shows and keep derived art under the same terms. Reach for more real art rather than
-inventing substitutes.
+| Allowed | Banned |
+|---|---|
+| Extracted game art, wiki imagery (CC BY-NC-SA 3.0 credit), map tiles, skill/combat icons | Gen-AI imagery |
+| Procedural/script textures (seeded noise, TSL materials, SVG from data) | Copying pvme / rs-analysis / leagues.build **layout, components, or wording** |
 
-**What you may make.** Procedural and script-generated assets — seeded noise, shader/TSL materials,
-SVG built from our own data. Deterministic output from code is authored work, not generated imagery.
-The terrain tiles are built this way, one graph with per-region parameters plus a shared grade pass.
+A game tool with no game art fails identity. Prefer more real art, not substitutes.
 
-**What stays banned.** Gen-AI imagery, and copying another tool's *design* — pvme.io,
-rs-analysis.xyz and leagues.build give facts and lessons, never layout, components or wording. The
-distinction is art versus interface: their art is not theirs to guard, their interface is.
+## Motion
+
+- 90–180ms on color/border/background; state change only
+- Map vine grow ~160–180ms; unlock ember is transitional
+- `prefers-reduced-motion: reduce` hard-kills transitions (global rule in `globals.css`)
+- Focus-visible: 1px `gem-400` outline, offset 2px
+
+## Craft companions (how to load them here)
+
+### no-slop-ui / human-grade / ui-humanizer / text-humanizer / bot-audit
+
+| Step | Skill | Equilibrium binding |
+|---|---|---|
+| Route | `human-grade` | Product class: **game-world surface + tool workbench**; load this skill as §5 |
+| Law | `no-slop-ui` | §§1–4, 4.5, 6, 8–9 apply; **§5 EverSense Print skin and §7 "not Tailwind" do not** |
+| Density | `data-readability` | Full apply |
+| Surgery | `ui-humanizer` | Tokens = this skill's map; accent = gem, not pink |
+| Copy | `text-humanizer` | RS3 player voice; nouns/verbs; no marketing |
+| Detect | `bot-audit` | Before ship; **adjudicate** frosted cells, timber gradients, dark ground, path triad via this skill — do not strip sanctioned exceptions |
+
+### Claude frontend-design
+
+Use for craft after law is loaded: type hierarchy, spacing cascade, self-critique, restraint.
+**Overridden for this product:**
+
+- No marketing hero / thesis billboard — tools open on the working surface
+- No cream+terracotta / acid-green-noir / broadsheet default clusters when they fight the sampled league palette
+- No scroll-reveal orchestras; motion stays state-change only
+- "One aesthetic risk" = total commitment to RS3 league language (hex lattice, crests, carved stone), not a trend layer
+
+### Context7 (library docs)
+
+Use Context7 when the question is **library API/config**, not visual law:
+
+| Library | Typical Context7 ID |
+|---|---|
+| Next.js App Router / `next/font` / `dynamic` | `/vercel/next.js` (prefer v16.x) |
+| Tailwind v4 `@theme` | `/tailwindlabs/tailwindcss.com` or `/websites/tailwindcss` |
+| React Three Fiber / drei | resolve via Context7 library search when editing `src/map/` |
+
+Do **not** use Context7 to invent a new palette or component design language.
+
+## Implementation checklist (every UI change)
+
+- [ ] Tokens from `@theme` / Tailwind classes above — no new hex in JSX
+- [ ] Reuse `Page` / `PageHeading` / `panel` / `data-table` / `Hex` / `Pips` / `GameIcon`
+- [ ] Active chrome is gem; headings are gold; path colors only on path data
+- [ ] Open on working surface; empty = one plain sentence (+ one action if needed)
+- [ ] Map/build share `useBuild`; do not fork pick state
+- [ ] 3D stays under `src/map/` with `ssr: false`; no `three` in shared layout chunk
+- [ ] Crests in named buttons: `alt=""`
+- [ ] Frozen e2e strings/roles still match
+- [ ] bot-audit clean after adjudicating sanctioned exceptions
+- [ ] `npm run typecheck` / `npm test`; `npm run test:e2e` if selectors or map/ledger change
 
 ## Tournament ledger
 
-Verdicts, so losses are not rebuilt.
+Verdicts so losses are not rebuilt.
 
-- **Hex Lattice — shipped.** The hexagon as literal layout grid at three densities, real crests inside
-  cells, locked cells behind timber-and-crystal barrier. Survives because cells read as carved stone
-  rather than neon.
-- **War Table — shipping, and now the primary map.** Its flat form failed on one hard fact: the
-  Jagex plate is a screenshot of the game's own Regions tab, so it carries Jagex's markers and every
-  overlaid crest read doubled. Raised per-region geometry replaced the plate. Landed: authored region
-  rings on a shared border-node graph (~100 nodes, seams as shared polylines, invariants tested), an
-  SVG flat board that doubles as the no-WebGPU fallback, extruded slabs with crests and quest counts,
-  and authored per-region camera framings. Outstanding: TSL materials, vines, ledger/inspector split.
-- **Region identity is structural, not hue.** Four green regions rendered as interchangeable mush at
-  slab scale. Furrows, hedgerow plots, open heath and canopy clumps separate them; tint alone does
-  not. Any future terrain work keeps structure as the differentiator and the shared grade pass as
-  the unifier.
-- **Stone Ledger — scrapped.** Rail plus dense grid plus inspector. Passed every ban and had no
-  identity; the Fribbels topology alone is not a visual direction.
-- **Honeycomb offset harms tabular meaning.** The region hive interlocks, but the blessing lattice
-  keeps aligned columns because the tier number above each column carries the meaning. Shape is the
-  motif; the grid is the data.
+- **Hex Lattice — shipped.** Three densities, real crests, timber-crystal lock. Cells read as carved stone.
+- **War Table — primary map.** Flat Jagex plate doubled markers; raised authored geometry replaced it. SVG flat board = no-WebGPU fallback. Ledger owns a11y; inspector holds confirmed/inferred filters.
+- **Region identity is structural, not hue.** Structure (furrows, canopy, heath) differentiates green regions; shared grade pass unifies.
+- **Stone Ledger topology alone — scrapped.** Rail+grid+inspector without world identity had no presence.
+- **Honeycomb offset harms tabular meaning** on blessing columns — keep tiers aligned; offset only the region hive.
+- **Vine frame — instrument, not décor.** Bound to pick count; one transition on change.
+- **Overview is status + systems table**, not a marketing landing.
+
+## What not to do
+
+- Import EverSense Print tokens, pink accent, or MiSans/Impact as identity
+- Add `tailwind.config` or move tokens out of `app/globals.css` `@theme`
+- Put hero CTAs, feature-card gardens, or COMING SOON card grids on tool routes
+- Let order-blue or gold mark interactive chrome
+- Inline hex outside `palette.ts` / documented material exceptions
+- Server-render or route-share the Three bundle
+- Pin live wiki dates in e2e
+- Gen-AI icons or cloned third-party tool chrome

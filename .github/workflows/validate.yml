@@ -1,3 +1,6 @@
+# App validate: normalize, audit, typecheck, unit tests, build.
+# Playwright e2e is intentionally local-only (npm run test:e2e on port 3100).
+# Do not add a CI e2e job here without solving headless WebGPU / map flake risk.
 name: Validate app
 
 on:

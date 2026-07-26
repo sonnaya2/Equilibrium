@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseCatalystTasksHtml } from "./catalyst";
+import { catalystRecordsPassIntegrity, parseCatalystTasksHtml } from "./catalyst";
 
 const HTML = `
 <table><tbody><tr><th>Tier</th><th>Total tasks</th></tr><tr><td>Easy</td><td>229</td></tr></tbody></table>
@@ -46,5 +46,17 @@ describe("parseCatalystTasksHtml", () => {
       catalystCompletionRate: 0.1,
       catalystCompletionRateQualifier: "<",
     });
+  });
+});
+
+describe("catalystRecordsPassIntegrity", () => {
+  it("accepts counts at or above 90% of expected", () => {
+    expect(catalystRecordsPassIntegrity(1117, 1117)).toBe(true);
+    expect(catalystRecordsPassIntegrity(1006, 1117)).toBe(true);
+  });
+
+  it("rejects truncated scrapes", () => {
+    expect(catalystRecordsPassIntegrity(1005, 1117)).toBe(false);
+    expect(catalystRecordsPassIntegrity(2, 1117)).toBe(false);
   });
 });

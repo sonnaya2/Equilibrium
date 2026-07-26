@@ -38,7 +38,7 @@ The repo is a working Next.js scaffold with a real combat engine underway, but *
 | `app/map/page.tsx` | `<Stub />` |
 | `data/league/regions.json` | `{"lastSynced": null, "verified": false, "records": []}` — **empty** |
 | `src/league/index.ts` | `export {}` — TODO only |
-| `scripts/sync-league-data.ts` | Not implemented, exits 1 |
+| `scripts/sync-league-data.ts` | **Disabled** (intentionally exits 1) — incompatible blessings/relics envelope; use `npm run normalize:data` |
 | `public/` | Empty |
 | 3D libraries | **None installed** |
 | `src/combat/` | Real code, 18 tests passing |
@@ -139,7 +139,7 @@ Shape: the selected region set plus derived unlock order. Misthalin and Havenhyt
 
 ### Task system
 
-`data/league/tasks.json` is empty and `sync-league-data.ts` is unimplemented. Tasks are region-gated, tiered Easy→Master at 10–400 points, and points drive both the League Trophy tier and Relic tier unlocks.
+`data/league/tasks.json` may still be empty until launch data exists. `npm run sync:league` / `scripts/sync-league-data.ts` is **disabled** (exits 1; would write an incompatible schema). League planner JSON is owned by `npm run normalize:data`. Tasks are region-gated, tiered Easy→Master at 10–400 points, and points drive both the League Trophy tier and Relic tier unlocks.
 
 The map's surface is a per-region summary — task count and points available — joined at render time. Until verified data exists, show the explicit unverified state. **The map must not reimplement task tracking**; `/tasks` owns that interface.
 

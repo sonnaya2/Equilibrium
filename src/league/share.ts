@@ -6,6 +6,9 @@ import { normalizeBuild, type BuildState } from "./index";
  * same tolerant normalizeBuild as localStorage hydration.
  */
 
+/** Reject hostile oversized hashes before base64/JSON work (real builds are tiny). */
+export const MAX_SHARE_PAYLOAD_CHARS = 4096;
+
 export function encodeBuild(state: BuildState): string {
   const bytes = new TextEncoder().encode(JSON.stringify(state));
   let bin = "";
@@ -14,8 +17,12 @@ export function encodeBuild(state: BuildState): string {
 }
 
 export function decodeBuild(value: string): BuildState | null {
+  if (typeof value !== "string" || value.length === 0 || value.length > MAX_SHARE_PAYLOAD_CHARS) {
+    return null;
+  }
   try {
     const bin = atob(value.replaceAll("-", "+").replaceAll("_", "/"));
+    if (bin.length > MAX_SHARE_PAYLOAD_CHARS) return null;
     const parsed: unknown = JSON.parse(
       new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))),
     );
@@ -33,15 +40,17 @@ export function buildShareUrl(state: BuildState): string {
   return `${window.location.origin}${window.location.pathname}#b=${encodeBuild(state)}`;
 }
 
-/**
- * A shared link beats localStorage once, then the hash is stripped — otherwise
- * every later reload would re-import the old shared state over the user's edits.
- */
-export function readBuildFromLocation(): BuildState | null {
+/** Read #b= without mutating the URL — ShareImport decides when to strip. */
+export function peekBuildFromLocation(): BuildState | null {
   if (typeof window === "undefined") return null;
   const match = /#b=([A-Za-z0-9_-]+)/.exec(window.location.hash);
   if (!match) return null;
-  const build = decodeBuild(match[1]);
-  if (build) window.history.replaceState(null, "", window.location.pathname + window.location.search);
-  return build;
+  return decodeBuild(match[1]);
+}
+
+/** Drop the share hash so reloads do not re-prompt. */
+export function stripShareHash(): void {
+  if (typeof window === "undefined") return;
+  if (!/#b=/.test(window.location.hash)) return;
+  window.history.replaceState(null, "", window.location.pathname + window.location.search);
 }

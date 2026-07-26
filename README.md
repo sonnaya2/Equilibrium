@@ -11,11 +11,11 @@ math on one site.
 ## What's in it
 
 **Map** plans the three elective regions and shows what each one actually opens up. **Tasks** tracks
-tasks and points. **Build** keeps regions, Relics, Blessings and gear in one place, so you aren't
-maintaining four plans that quietly disagree with each other. **Combat** calculates against current
-RS3 rules, with league modifiers layered on through a separate ruleset rather than baked into the
-formulas. **Data** shows the records behind all of it, and every number links back to where it
-came from.
+tasks and points; until Equilibrium publishes its own list, it shows Catalyst tasks as a marked
+stand-in. **Build** keeps regions, Relics and Blessings in one place, so you aren't maintaining
+three plans that quietly disagree with each other. **Combat** calculates against current RS3 rules,
+with league modifiers layered on through a separate ruleset rather than baked into the formulas.
+**Data** shows the records behind all of it, and every number links back to where it came from.
 
 ## What's actually finished
 
@@ -62,9 +62,9 @@ that server if you've got a dev server running from the same checkout, so stop y
 ## Data jobs
 
 ```bash
-npm run normalize:data   # rebuild app-facing data from scraped-data/
+npm run normalize:data   # rebuild app-facing data from scraped-data/ (includes league planner JSON)
 npm run sync:combat      # refresh combat data
-npm run sync:league      # refresh League data
+npm run sync:league      # disabled — exits 1; use normalize:data for data/league/*
 npm run sync:assets      # refresh sourced RS3 and League media
 npm run sync:quests      # rebuild quest and region data from the Wiki
 npm run sync:quests:auto # apply official auto-completion lists when published

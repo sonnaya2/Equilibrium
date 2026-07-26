@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
 import { RegionPlanner } from "@/map/RegionPlanner";
@@ -6,6 +7,12 @@ import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { REGION_METRICS_BY_ID } from "@/map/data/regionMetrics";
 import { getResearchCatalog } from "@/research/catalog";
 import type { RegionId } from "@/league";
+
+export const metadata: Metadata = {
+  title: "Map",
+  description:
+    "Plan your three elective region picks for RS3 Leagues II: Equilibrium and see what each region opens.",
+};
 
 export default function MapPage() {
   const catalog = getResearchCatalog();
@@ -22,7 +29,12 @@ export default function MapPage() {
     training: r.training.length,
     hardRules: r.hardRules,
     warnings: r.warnings,
-    sourceCount: (r.source ? 1 : 0) + r.content.filter((c) => c.source).length,
+    // Region row + every content / upgrade / training row that carries a SourceReference.
+    sourceCount:
+      (r.source ? 1 : 0) +
+      r.content.filter((c) => c.source).length +
+      r.upgrades.filter((u) => u.source).length +
+      r.training.filter((t) => t.source).length,
     verifiedAt: r.source?.verifiedAt ?? null,
   }));
 

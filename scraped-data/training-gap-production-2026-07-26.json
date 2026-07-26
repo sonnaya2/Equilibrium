@@ -1,0 +1,662 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Training-gap fill for Herblore / Prayer / Summoning production: region-tagged unlock methods, high-tier bone and herb supply, and Summoning tertiary/charm routes that matter under no-trading League constraints. Focus is supply geography and missing method rows rather than re-documenting powder/cleansing/vyre/chaos XP tables already in training-high-value.json.",
+  "verification_notes": [
+    "Steel ingots from celestial dragons: CONFIRMED. Wiki drop table lists Steel ingot x8 (noted) at 8/136. Location: Dragontooth Island resource dungeon after One of a Kind; League region badge is Morytania.",
+    "Water talismans from celestial dragons: CONFIRMED. Water talisman x2 (noted) at 6/136 on the same table. Also many other combat/boss sources by region (see supply_routes).",
+    "Scroll of cleansing is a Daemonheim Rewards purchase (20k Dungeoneering tokens), not a Wilderness drop. Region pressure is Forinthry because Daemonheim sits on the Wilderness/Forinthry peninsula in the current Equilibrium region model.",
+    "Powder of burials is ground from speedy whirligig shells at Het's Oasis (Desert). The burial buff itself can be used anywhere; Desert is the self-sufficient powder source.",
+    "Charming moths remain a Forinthry Hunter route that also dumps Summoning charms; see training-methods.json Hunter row for XP rates."
+  ],
+  "methods": [
+    {
+      "id": "herblore:flash-powder-factory-outfits",
+      "skill": "Herblore",
+      "method": "Flash Powder Factory — botanist's and factory outfits",
+      "region": "asgarnia",
+      "location": "Rogues' Den under the Pick and Lute, Taverley",
+      "level_range": "50 Herblore; 75 Thieving and Agility to access the factory",
+      "category": "outfit_unlock",
+      "effect": "Botanist's outfit: up to 6% Herblore XP (1% per piece + 1% set). Factory outfit three-piece effect: 10% chance to make a 4-dose potion instead of 3-dose; five-piece unfinished-potion XP bonus. Modified botanist's mask: 5% chance to create a duplicate potion (no extra XP).",
+      "notes": "Self-sufficient League path is Asgarnia only — do not assume Treasure Hunter. Optimized setups often mix factory pieces (dose economy) with botanist pieces (XP) rather than wearing one full set for every potion.",
+      "source": "https://runescape.wiki/w/Flash_Powder_Factory",
+      "source_urls": [
+        "https://runescape.wiki/w/Flash_Powder_Factory",
+        "https://runescape.wiki/w/Botanist%27s_outfit",
+        "https://runescape.wiki/w/Factory_outfit",
+        "https://runescape.wiki/w/Rogues%27_Den"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "herblore:scroll-of-cleansing",
+      "skill": "Herblore",
+      "method": "Scroll of cleansing (Wasteless Herblore)",
+      "region": "forinthry",
+      "location": "Daemonheim Rewards shop (Marmaros); alternate seasonal Prifddinas Daemonheim Rewards shop is discontinued/seasonal",
+      "level_range": "49 Herblore and 49 Dungeoneering",
+      "category": "permanent_unlock",
+      "cost": "20,000 Dungeoneering tokens",
+      "effect": "Permanent 12.5% chance to mix one tick faster and 10% chance to save a secondary ingredient (including clean herbs when making unfinished potions). Roughly 11.1% more potions from a fixed secondary stock over the long run.",
+      "notes": "Purchase geography is Daemonheim, mapped to Forinthry/Wilderness in Equilibrium. Effect is global after unlock. Does not save the first ingredient (vial/flask/base) and does not apply to herb tars or cups of tea.",
+      "source": "https://runescape.wiki/w/Scroll_of_cleansing",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki_region_via_daemonheim_mapping",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "herblore:morytania-legs-4-prayer-renewal",
+      "skill": "Herblore",
+      "method": "Morytania legs 4 — prayer renewal dose chance (while in Morytania)",
+      "region": "morytania",
+      "location": "Old Man Ral, Meiyerditch (elite Morytania achievements)",
+      "category": "task_reward_modifier",
+      "effect": "While worn and making prayer renewals in Morytania: 20% chance to create a 4-dose prayer renewal instead of 3-dose. Stacks with botanist's amulet and factory outfit.",
+      "prayer_adjacent": {
+        "vyre_cremation": "50% more Firemaking and Prayer XP when cremating vyre corpses (including Sunspear)",
+        "ectofuntus_support": "Unlimited slime-pit teleports; Robin converts 39 bone sets/day with free slime buckets"
+      },
+      "notes": "Primarily a Prayer multi-skill and Ectofuntus QoL reward; the Herblore-relevant piece is the in-region 4-dose prayer renewal chance. Not a general Herblore XP outfit.",
+      "source": "https://runescape.wiki/w/Morytania_legs_4",
+      "source_urls": [
+        "https://runescape.wiki/w/Morytania_legs_4",
+        "https://runescape.wiki/w/Morytania_achievements"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "herblore:herb-bag-anachronia",
+      "skill": "Herblore",
+      "method": "Herb bag (Herby Werby)",
+      "region": "anachronia",
+      "location": "Ancient Zygomite elder / Herby Werby Reward Shop, Anachronia",
+      "category": "storage_tool",
+      "cost": "200 spirit points base; +200 for upgrade to 100 of each grimy herb",
+      "effect": "Stores 50 (upgrade 100) of each grimy herb. Auto-stores unnoted grimy herb pickups and most herb-patch harvests while carried. Works with upgraded Herbicide auto-collect into the bag.",
+      "notes": "League-critical inventory QoL for self-sufficient herb farming and boss herb drops. Reclaimable from the elder if lost; filled state is preserved on reclaim.",
+      "source": "https://runescape.wiki/w/Herb_bag",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_bag",
+        "https://runescape.wiki/w/Herby_Werby"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "prayer:powder-of-burials",
+      "skill": "Prayer",
+      "method": "Powder of burials + banked bones",
+      "region": "desert",
+      "resource_region": "desert",
+      "method_region": "global_once_supplied",
+      "location": "Het's Oasis (speedy whirligigs / hollyhock baskets) → grind 15 speedy whirligig shells per powder",
+      "category": "consumable_method",
+      "effect": "Scatter for 30 minutes: burying bones awards 350% of base Prayer XP (250% bonus). Stacks up to 1 hour. Does not work with ashes, ectoplasmator, cremation, gilded/chaos altar offerings, or Double XP Prayer rules matching gilded altars.",
+      "throughput_reference": "Wiki training table ~4,700 bones/hour; 5,000–5,800 with tight action-bar execution. Example base XP/h with powder: dragon ~1.18m, dragonkin ~2.63m, dinosaur ~2.80m, frost dragon ~2.96m.",
+      "notes": "Desert is required for self-sufficient powder production, not for where bones are buried. Dragon Rider amulet cancels powder. Already in training-high-value.json; retained here as the Desert production dependency row.",
+      "source": "https://runescape.wiki/w/Powder_of_burials",
+      "source_urls": [
+        "https://runescape.wiki/w/Powder_of_burials",
+        "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+        "https://runescape.wiki/w/Het%27s_Oasis"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "prayer:cleansing-crystals-prif",
+      "skill": "Prayer",
+      "method": "Cleansing crystals at Hefin Cathedral",
+      "region": "tirannwn",
+      "location": "Hefin Cathedral, Prifddinas",
+      "level_range": "75 Prayer",
+      "category": "coin_sink_method",
+      "effect": "9,800 Prayer XP per uninterrupted crystal (11,760 during Hefin Voice of Seren). Shop restocks ~1/10s up to 30 at 110k each. Full-crystal route ~284k–341k XP/h; restart-spam initial XP is much higher XP/h at extreme coin cost.",
+      "notes": "Low-movement Tirannwn Prayer sink. Tirannwn quiver 3/4 auto-continues next crystal. Already summarised in training-high-value.json; kept as region production row for crystal shop access.",
+      "source": "https://runescape.wiki/w/Cleansing_crystal",
+      "source_urls": [
+        "https://runescape.wiki/w/Cleansing_crystal",
+        "https://runescape.wiki/w/Pay-to-play_Prayer_training"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "prayer:vyrewatch-sunspear-cremation",
+      "skill": "Prayer",
+      "method": "Cremating vyrewatch with Sunspear",
+      "region": "morytania",
+      "location": "Darkmeyer / Morytania vyre combat",
+      "category": "multi_skill_combat_method",
+      "effect": "Sunspear cremates vyre corpses for Prayer + Firemaking (and combat) XP. Morytania legs 4 worn: +50% Firemaking and Prayer XP from cremating vyre corpses.",
+      "throughput_reference": "Wiki guide ~400k Prayer XP/h with legs 4, ~266k without; also large combat/constitution/firemaking side XP.",
+      "notes": "Already in training-high-value.json. Aura-sustain advice on that guide is obsolete after 2026 Aura Overhaul; method geography is unchanged.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+        "https://runescape.wiki/w/Morytania_legs_4",
+        "https://runescape.wiki/w/Sunspear"
+      ],
+      "confidence": "confirmed_wiki_with_legacy_setup_warning",
+      "freshness": "2026_current_method_legacy_aura_notes"
+    },
+    {
+      "id": "prayer:chaos-altar",
+      "skill": "Prayer",
+      "method": "Chaos altar (Wilderness)",
+      "region": "forinthry",
+      "location": "Chaos Temple altar, Wilderness",
+      "category": "altar_method",
+      "throughput_reference": "About 1,600 bones/hour before achievement conveniences; ~3.5× base bone XP (elite Wilderness achievements improve reliability).",
+      "notes": "Forinthry Prayer sink that consumes banked bones without Desert powder. PvP risk remains.",
+      "source": "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+      "source_urls": [
+        "https://runescape.wiki/w/Pay-to-play_Prayer_training",
+        "https://runescape.wiki/w/Chaos_altar_(Wilderness)"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "summoning:charming-moths-forinthry",
+      "skill": "Summoning",
+      "method": "Charming moths (Hunter + charm supply)",
+      "region": "forinthry",
+      "location": "Wilderness charming moth area",
+      "level_range": "88+ Hunter; 83+ Agility",
+      "category": "skilling_charm_source",
+      "linked_skills": ["Hunter", "Agility"],
+      "effect": "Barehanded moth catching produces large volumes of gold/green charms (wiki obtaining-charms guide: high gold/green output; training-methods.json cites ~360 Summoning charms/hour near 99 alongside Hunter XP).",
+      "notes": "Link to existing Hunter training-methods.json row. Ignore legacy Demonic Skull XP bonus (removed July 2026 mid-game rebalance). Primary League value is simultaneous Hunter XP and charm banking under no trade.",
+      "source": "https://runescape.wiki/w/Summoning_training/Obtaining_charms",
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms",
+        "https://runescape.wiki/w/Hunter_training",
+        "https://runescape.wiki/w/Charming_moth"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current_demonic_skull_removed"
+    },
+    {
+      "id": "summoning:yak-hide-shop-fremennik",
+      "skill": "Summoning",
+      "method": "Yak-hide shop stock (pack yak tertiary)",
+      "region": "fremennik",
+      "location": "Vanligga Gastfrihet, Contraband Yak Produce, Jatizso",
+      "level_range": "96 Summoning for pack yak pouches; Fremennik Isles access for shop",
+      "category": "tertiary_shop",
+      "effect": "Yak-hide is the tertiary for pack yak pouches (crimson charm + 211 shards). Shop sells individual hides (35 stock @ 50 coins) and yak-hide packs (50 hides each; large weekly stock). Tax-paid quest path unlocks free trading; otherwise 5k fee.",
+      "notes": "Also available as always-drop from Neitiznot yaks and from Fremennik/spirit yaks on Player-Owned Farm, but the Jatizso shop is the bulk self-sufficient purchase route.",
+      "source": "https://runescape.wiki/w/Yak-hide",
+      "source_urls": [
+        "https://runescape.wiki/w/Yak-hide",
+        "https://runescape.wiki/w/Pack_yak_pouch",
+        "https://runescape.wiki/w/Vanligga_Gastfrihet"
+      ],
+      "confidence": "confirmed_wiki",
+      "freshness": "2026_current"
+    },
+    {
+      "id": "summoning:celestial-dragons-steel-ingots-water-talismans",
+      "skill": "Summoning",
+      "method": "Celestial dragons — steel ingots, water talismans, crimson charms",
+      "region": "morytania",
+      "location": "Dragontooth Island resource dungeon (One of a Kind)",
+      "category": "combat_tertiary_and_charm_camp",
+      "drop_table_verified": {
+        "steel_ingot": { "quantity": "8 noted", "rarity": "8/136", "status": "confirmed" },
+        "water_talisman": { "quantity": "2 noted", "rarity": "6/136", "status": "confirmed" },
+        "crimson_charm": { "quantity": 2, "rarity": "749/1000", "status": "confirmed" },
+        "dragon_bones": { "quantity": 1, "rarity": "Always", "status": "confirmed" }
+      },
+      "effect": "Steel ingots are a Summoning tertiary (steel titan line and related pouches). Water talismans are tertiaries for geyser titan and ice titan. Extremely high crimson charm rate makes this a dual tertiary+charm camp.",
+      "notes": "Claim 'celestial dragons drop steel ingots in Morytania' is correct. They also drop water talismans (not only steel). Requires One of a Kind for access.",
+      "source": "https://runescape.wiki/w/Celestial_dragon",
+      "source_urls": [
+        "https://runescape.wiki/w/Celestial_dragon",
+        "https://runescape.wiki/w/Steel_ingot",
+        "https://runescape.wiki/w/Water_talisman"
+      ],
+      "confidence": "confirmed_wiki_drop_table",
+      "freshness": "2026_current"
+    }
+  ],
+  "supply_routes": [
+    {
+      "id": "supply:herbs-farming-patches",
+      "skill": "Herblore",
+      "item_family": "high_tier_herbs",
+      "category": "farming",
+      "items": ["torstol", "fellstalk", "dwarf_weed", "lantadyme", "snapdragon", "cadantine"],
+      "routes": [
+        {
+          "region": "asgarnia",
+          "source": "Herb patch south of Falador",
+          "notes": "Standard herb patch; plant high-tier seeds from bossing/thieving/farming shops.",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "morytania",
+          "source": "Herb patch west of Port Phasmatys",
+          "notes": "Standard herb patch; pairs with herb bag + Morytania logistics.",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "kandarin",
+          "source": "Herb patch north of Catherby (and other Kandarin patches)",
+          "notes": "Catherby is a classic multi-patch farming loop hub.",
+          "source_url": "https://runescape.wiki/w/Herb_patch"
+        },
+        {
+          "region": "desert",
+          "source": "Garden of Kharid / Desert farming infrastructure",
+          "notes": "Garden of Kharid shop (Sydekix) sells permanent Farming upgrades (Bountiful Harvest, Speedy Growth, etc.) that amplify herb yields — region infrastructure, not a unique high-tier herb exclusivity.",
+          "source_url": "https://runescape.wiki/w/Garden_of_Kharid"
+        },
+        {
+          "region": "tirannwn",
+          "source": "Cadarn district seed/chest farming support (Prifddinas)",
+          "notes": "Ironman farming guides list Cadarn chest among seed sources for high-tier herb seeds.",
+          "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Farming"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Herbs",
+        "https://runescape.wiki/w/Herb_patch",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:herbs-boss-drops-by-region",
+      "skill": "Herblore",
+      "item_family": "high_tier_grimy_herbs",
+      "category": "boss_and_slayer_drops",
+      "routes": [
+        {
+          "item": "grimy_torstol",
+          "sources": [
+            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
+            { "name": "Nex", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Nex" },
+            { "name": "Vorago", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Vorago" },
+            { "name": "Queen Black Dragon", "region": "forinthry", "source_url": "https://runescape.wiki/w/Queen_Black_Dragon" },
+            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
+            { "name": "Rasial, the First Necromancer", "region": "misthalin", "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer" }
+          ],
+          "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+        },
+        {
+          "item": "grimy_dwarf_weed",
+          "sources": [
+            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
+            { "name": "Araxxi", "region": "morytania", "source_url": "https://runescape.wiki/w/Araxxi" },
+            { "name": "Nex", "region": "asgarnia", "source_url": "https://runescape.wiki/w/Nex" },
+            { "name": "Heart of Gielinor generals", "region": "desert", "source_url": "https://runescape.wiki/w/Heart_of_Gielinor" },
+            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
+            { "name": "Croesus", "region": "morytania", "source_url": "https://runescape.wiki/w/Croesus" },
+            { "name": "Rasial, the First Necromancer", "region": "misthalin", "source_url": "https://runescape.wiki/w/Rasial,_the_First_Necromancer" },
+            { "name": "Vault of Hereditas (95 Thieving)", "region": "anachronia", "source_url": "https://runescape.wiki/w/Vault_of_Hereditas" }
+          ],
+          "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+        },
+        {
+          "item": "grimy_lantadyme",
+          "sources": [
+            { "name": "Telos, the Warden", "region": "forinthry", "source_url": "https://runescape.wiki/w/Telos,_the_Warden" },
+            { "name": "Helwyr", "region": "tirannwn", "source_url": "https://runescape.wiki/w/Helwyr" },
+            { "name": "Araxxi", "region": "morytania", "source_url": "https://runescape.wiki/w/Araxxi" },
+            { "name": "Beastmaster Durzag / Liberation of Mazcab", "region": "unresolved_mazcab", "source_url": "https://runescape.wiki/w/Beastmaster_Durzag" },
+            { "name": "Sunspear vyrelords/ladies", "region": "morytania", "source_url": "https://runescape.wiki/w/Vyrelord" },
+            { "name": "Exiled kalphite marauder/guardian", "region": "desert", "source_url": "https://runescape.wiki/w/Exiled_kalphite_marauder" }
+          ],
+          "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+        },
+        {
+          "item": "grimy_fellstalk",
+          "sources": [
+            {
+              "name": "Farming fellstalk seeds (primary reliable source on ironman guide)",
+              "region": "multi_region_farming",
+              "source_url": "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore"
+            },
+            {
+              "name": "Fellstalk seeds from dark beasts, aberrant spectres, aquanites, Zemouregal & Vorkath, evil trees, Zanaris seed stall",
+              "region": "multi_region",
+              "source_url": "https://runescape.wiki/w/Fellstalk_seed"
+            }
+          ],
+          "source_url": "https://runescape.wiki/w/Fellstalk_seed"
+        }
+      ],
+      "notes": "Boss region tags follow Equilibrium area badges where published on wiki drop tables; Mazcab remains unresolved until Eastern Lands/Mazcab region rules are published. Prefer farming + herb bag for volume; bossing tops up scarce seeds and noted grimies.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Farming"
+      ],
+      "confidence": "confirmed_wiki_ironman_guide_plus_seed_pages"
+    },
+    {
+      "id": "supply:herbs-thieving-vaults",
+      "skill": "Herblore",
+      "item_family": "high_tier_herbs_and_bones",
+      "category": "thieving",
+      "routes": [
+        {
+          "region": "anachronia",
+          "source": "Vault of Hereditas / Asuran Arsenal",
+          "items": ["grimy dwarf weed (hereditas completion path)", "dinosaur bones and dragonkin bones from Asuran Arsenal"],
+          "level_range": "up to 108 Thieving for Asuran Arsenal",
+          "source_url": "https://runescape.wiki/w/Vault_of_Hereditas"
+        },
+        {
+          "region": "tirannwn",
+          "source": "Prifddinas worker pickpocketing / district chests",
+          "items": ["herb-related and general resources; Hefin workers rarely drop cleansing crystals"],
+          "source_url": "https://runescape.wiki/w/Hefin_worker"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Herblore",
+        "https://runescape.wiki/w/Asuran_Arsenal",
+        "https://runescape.wiki/w/Dinosaur_bones"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:bones-frost-dragon",
+      "skill": "Prayer",
+      "item": "frost_dragon_bones",
+      "category": "high_tier_bone_source",
+      "base_prayer_xp_bury": 180,
+      "region": "asgarnia",
+      "source": "Frost dragons in Asgarnian Ice Dungeon resource dungeon",
+      "requirements": ["85 Dungeoneering"],
+      "notes": "Always drop frost dragon bones. Also drop water talismans (2 noted, 3/128) as a minor Summoning tertiary side-product. Access via fairy ring AIQ / Port Sarim area.",
+      "source_url": "https://runescape.wiki/w/Frost_dragon",
+      "source_urls": [
+        "https://runescape.wiki/w/Frost_dragon",
+        "https://runescape.wiki/w/Frost_dragon_bones"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:bones-dinosaur",
+      "skill": "Prayer",
+      "item": "dinosaur_bones",
+      "category": "high_tier_bone_source",
+      "base_prayer_xp_bury": 170,
+      "region": "anachronia",
+      "source": "Anachronia dinosaurs (combat + Big Game Hunter), Osseous/rex trio, Raksha noted stacks, Asuran Arsenal",
+      "notes": "Primary high-tier bone for powder-of-burials XP tables. Big Game Hunter dinosaurs always drop 3–5 dinosaur bones.",
+      "source_url": "https://runescape.wiki/w/Dinosaur_bones",
+      "source_urls": [
+        "https://runescape.wiki/w/Dinosaur_bones",
+        "https://runescape.wiki/w/Big_Game_Hunter"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:bones-dragonkin",
+      "skill": "Prayer",
+      "item": "dragonkin_bones",
+      "category": "high_tier_bone_source",
+      "base_prayer_xp_bury": 160,
+      "region": "misthalin",
+      "source": "Nodon dragonkin (Elder God Wars / Nodon Front) always; Kerapac the bound noted stacks; Elder Troves; also Asuran Arsenal on Anachronia",
+      "notes": "Misthalin is the primary combat camp (EGWD Nodon). Dragon Rider amulet doubles bury XP on dragonkin bones (does not stack with powder of burials — powder is cancelled by the amulet).",
+      "source_url": "https://runescape.wiki/w/Dragonkin_bones",
+      "source_urls": [
+        "https://runescape.wiki/w/Dragonkin_bones",
+        "https://runescape.wiki/w/Kerapac,_the_bound"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:bones-dragon-generic",
+      "skill": "Prayer",
+      "item": "dragon_bones",
+      "category": "mid_high_bone_source",
+      "routes": [
+        {
+          "region": "morytania",
+          "source": "Celestial dragons (always dragon bones) + standard green/blue/red/black dragon spots in Morytania-adjacent content",
+          "source_url": "https://runescape.wiki/w/Celestial_dragon"
+        },
+        {
+          "region": "forinthry",
+          "source": "King Black Dragon, wilderness green dragons, other wildy dragons",
+          "source_url": "https://runescape.wiki/w/King_Black_Dragon"
+        },
+        {
+          "region": "asgarnia",
+          "source": "Taverley Dungeon blue dragons; other Asgarnia dragon dens",
+          "source_url": "https://runescape.wiki/w/Blue_dragon"
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Dragon_bones"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:charms-premium-by-region",
+      "skill": "Summoning",
+      "item_family": "standard_charms",
+      "category": "premium_charm_camps",
+      "routes": [
+        {
+          "region": "fremennik",
+          "sources": [
+            {
+              "name": "Rock lobsters (Waterbirth Island Dungeon)",
+              "charms": "crimson-focused; Ice Burst/Barrage multi-target classic",
+              "source_url": "https://runescape.wiki/w/Rock_lobster"
+            },
+            {
+              "name": "Waterfiends (Ancient Cavern)",
+              "charms": "crimson-focused mid/high ranged camp",
+              "source_url": "https://runescape.wiki/w/Waterfiend"
+            },
+            {
+              "name": "Dagannoth Kings / Waterbirth content",
+              "charms": "mixed; also water talismans from Prime",
+              "source_url": "https://runescape.wiki/w/Dagannoth_Prime"
+            }
+          ]
+        },
+        {
+          "region": "desert",
+          "sources": [
+            {
+              "name": "Exiled kalphite guardians and marauders",
+              "charms": "Very high blue + crimson throughput; wiki cites AFK multi-hundred charms/hour setups",
+              "source_url": "https://runescape.wiki/w/Exiled_kalphite_marauder"
+            },
+            {
+              "name": "Exiled Kalphite Queen",
+              "charms": "Guaranteed multi-charm drops per kill",
+              "source_url": "https://runescape.wiki/w/Exiled_Kalphite_Queen"
+            }
+          ]
+        },
+        {
+          "region": "forinthry",
+          "sources": [
+            {
+              "name": "Charming moths",
+              "charms": "gold/green skilling charms + Hunter XP",
+              "source_url": "https://runescape.wiki/w/Charming_moth"
+            },
+            {
+              "name": "Greater demons in Forinthry Dungeon (cannon)",
+              "charms": "200+ crimson/hour cited on obtaining-charms guide",
+              "source_url": "https://runescape.wiki/w/Forinthry_Dungeon"
+            },
+            {
+              "name": "King Black Dragon",
+              "charms": "profit + crimson for high-level melee",
+              "source_url": "https://runescape.wiki/w/King_Black_Dragon"
+            },
+            {
+              "name": "Waterfiends / giant rock crabs in Chaos Tunnels",
+              "charms": "crimson (waterfiends) or gold stacks (giant rock crabs)",
+              "source_url": "https://runescape.wiki/w/Chaos_Tunnels"
+            }
+          ]
+        },
+        {
+          "region": "morytania",
+          "sources": [
+            {
+              "name": "Celestial dragons",
+              "charms": "crimson dominant (~74.9% for 2 charms)",
+              "source_url": "https://runescape.wiki/w/Celestial_dragon"
+            }
+          ]
+        },
+        {
+          "region": "asgarnia",
+          "sources": [
+            {
+              "name": "Gelatinous abominations (Taverley Slayer Dungeon)",
+              "charms": "early gold charms",
+              "source_url": "https://runescape.wiki/w/Gelatinous_abomination"
+            },
+            {
+              "name": "Glacors / tormented demons (quest-gated high blue)",
+              "charms": "blue-focused premium camps when quests unlocked",
+              "source_url": "https://runescape.wiki/w/Glacor"
+            }
+          ]
+        },
+        {
+          "region": "kandarin",
+          "sources": [
+            {
+              "name": "Monastery of Ascension (gladii / order members)",
+              "charms": "crimson (gladii) with profit; other members skew gold/green/blue",
+              "source_url": "https://runescape.wiki/w/Gladius"
+            }
+          ]
+        },
+        {
+          "region": "global_weekly",
+          "sources": [
+            {
+              "name": "Familiarisation triple-charm reward",
+              "charms": "40 minutes of triple eligible monster charms",
+              "source_url": "https://runescape.wiki/w/Familiarisation"
+            }
+          ]
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Summoning_training/Obtaining_charms"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "supply:water-talismans-by-region",
+      "skill": "Summoning",
+      "item": "water_talisman",
+      "category": "tertiary_source",
+      "used_for": ["geyser_titan_pouch", "ice_titan_pouch", "combination_runes"],
+      "routes": [
+        {
+          "region": "morytania",
+          "source": "Celestial dragons — 2 noted at 6/136",
+          "source_url": "https://runescape.wiki/w/Celestial_dragon",
+          "verified": true
+        },
+        {
+          "region": "asgarnia",
+          "source": "Frost dragons — 2 noted at 3/128; water wizards near Wizard's Tower approach",
+          "source_url": "https://runescape.wiki/w/Frost_dragon",
+          "verified": true
+        },
+        {
+          "region": "fremennik",
+          "source": "Dagannoth Prime (4–8 noted, 6/128); Acheron mammoths (3–5 noted); wallasalki / rock lobsters / giant rock crabs",
+          "source_url": "https://runescape.wiki/w/Dagannoth_Prime",
+          "verified": true
+        },
+        {
+          "region": "forinthry",
+          "source": "King Black Dragon F2P table includes water talismans; abyss creatures share Misthalin/Wilderness tags",
+          "source_url": "https://runescape.wiki/w/King_Black_Dragon",
+          "verified": true
+        },
+        {
+          "region": "misthalin",
+          "source": "Runecrafting Guild shop (tokens); abyss leeches/walkers/guardians; low-level frogs/wizards",
+          "source_url": "https://runescape.wiki/w/Water_talisman",
+          "verified": true
+        }
+      ],
+      "notes": "No single boss monopolises water talismans. Celestial dragons are a strong Morytania dual-camp with steel ingots; Fremennik DKS/Prime is the classic noted bulk boss source.",
+      "source_urls": [
+        "https://runescape.wiki/w/Water_talisman"
+      ],
+      "confidence": "confirmed_wiki_drop_sources"
+    },
+    {
+      "id": "supply:steel-ingots",
+      "skill": "Summoning",
+      "item": "steel_ingot",
+      "category": "tertiary_source",
+      "used_for": ["steel_titan_and_related_summoning_tertiaries"],
+      "routes": [
+        {
+          "region": "morytania",
+          "source": "Celestial dragons — 8 noted at 8/136 (post Mining & Smithing rework replacement for steel platebodies)",
+          "source_url": "https://runescape.wiki/w/Celestial_dragon",
+          "verified": true,
+          "claim_status": "confirmed_correct"
+        },
+        {
+          "region": "global_craft",
+          "source": "Smithing: 5 steel bars / steel platebody at a furnace (level 20 Smithing) when combat drops are unavailable",
+          "source_url": "https://runescape.wiki/w/Steel_ingot",
+          "verified": true
+        },
+        {
+          "region": "global_reward",
+          "source": "Raptor's chest of slaying — 100 steel ingots always (when obtained)",
+          "source_url": "https://runescape.wiki/w/Steel_ingot",
+          "verified": true
+        }
+      ],
+      "notes": "User hypothesis that celestial dragons (Morytania) drop steel ingots is correct per current wiki drop table. Not exclusive to Morytania — craftable anywhere with steel bars.",
+      "source_urls": [
+        "https://runescape.wiki/w/Steel_ingot",
+        "https://runescape.wiki/w/Celestial_dragon"
+      ],
+      "confidence": "confirmed_wiki_drop_table"
+    },
+    {
+      "id": "supply:yak-hides",
+      "skill": "Summoning",
+      "item": "yak-hide",
+      "category": "tertiary_source",
+      "used_for": ["pack_yak_pouch"],
+      "routes": [
+        {
+          "region": "fremennik",
+          "source": "Vanligga Gastfrihet shop (Jatizso) + Neitiznot yaks always drop 1 yak-hide",
+          "source_url": "https://runescape.wiki/w/Yak-hide",
+          "verified": true
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Yak-hide",
+        "https://runescape.wiki/w/Pack_yak_pouch"
+      ],
+      "confidence": "confirmed_wiki"
+    }
+  ]
+}

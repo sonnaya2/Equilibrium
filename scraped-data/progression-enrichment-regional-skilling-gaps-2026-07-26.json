@@ -1,0 +1,368 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Fill high-value regional skilling gaps missing from progression-enrichment-regional-skilling-2026-07-25: consumable skilling tools, named Daemonheim permanent unlocks, Seren skilling prayer, diary utility, Orthen/Tirannwn smithing stack pressure, and Havenhythe ritual ring.",
+  "policy": {
+    "region_rule": "region_hint marks where the unlock or activity lives in the current planner taxonomy. region_hints marks a cross-region chain. required_regions is only used when both regions are needed for a full stack, not for dual dig-site claims. Quest auto-completion and League-specific overrides must be applied separately.",
+    "no_trade_rule": "Prioritise unlocks that materially change self-sufficient progression, training throughput, supply access, or tool progression. Do not mirror every shop item.",
+    "rate_rule": "Do not promote stale XP/hour figures. Training rates belong in training datasets; this file records unlock state and effects."
+  },
+  "activity_additions": [
+    {
+      "id": "kandarin:skillchompa-supply",
+      "name": "Skillchompa Hunter and Player-Owned Farm supply",
+      "category": "consumable multi-skill gatherer tools",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requirements": [
+        "27+ Hunter for cobalt skillchompas (higher tiers scale to 97 Hunter for crystal)",
+        "Box traps for wild catches",
+        "Player-Owned Farm / Manor Farm access for chinchompa produce path"
+      ],
+      "unlocks": [
+        "Cobalt through crystal skillchompa tiers as stackable consumable skilling tools",
+        "Self-supplied skillchompas from Hunter catch sites and Manor Farm produce",
+        "Crystal skillchompa tier via Tirannwn catch / farm path"
+      ],
+      "notes": "Skillchompas are used for Archaeology, Divination, Fishing, Mining and Woodcutting. Cobalt wild catches sit at the Tree Gnome Stronghold Hunter area (Kandarin). Manor Farm in Kandarin is the durable self-supply loop for ironman planning. Crystal-tier supply pressures Tirannwn. Do not invent XP/hour figures for skillchompa methods here.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Cobalt_skillchompa_(Hunter)",
+        "https://runescape.wiki/w/Manor_Farm"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Kandarin is the practical supply hub via Hunter and POF. Crystal tier is a Tirannwn pressure, not a second Kandarin-only claim."
+    },
+    {
+      "id": "anachronia:bait-and-switch-relic",
+      "name": "Bait and Switch (Evil Bob's Catspaw)",
+      "category": "Archaeology monolith relic power",
+      "region_hint": "anachronia",
+      "requirements": [
+        "99 Archaeology for the normal death-mask unlock path",
+        "Death mask artefact (normal source: Orthen Dig Site)",
+        "Catspeak amulet, catspeak amulet (e), or cramulet to speak with Bob the cat",
+        "2,000 chronotes and 100 monolith energy to harness after unlock"
+      ],
+      "unlocks": [
+        "Bait and Switch relic power at the mysterious monolith",
+        "Compatible fish auto-cooked on catch with half Cooking XP and no burns",
+        "Porter-compatible cooked fish bank transport after cook"
+      ],
+      "notes": "Unlock item is Evil Bob's Catspaw from offering a death mask to Bob the cat. Death mask does not require dual dig sites; Orthen on Anachronia is the normal self-sufficient source. Exclusions include Arc fish, divine locations, Daemonheim vile fish, and uncookable catches such as crystal urchins.",
+      "source_urls": [
+        "https://runescape.wiki/w/Bait_and_Switch",
+        "https://runescape.wiki/w/Evil_Bob%27s_Catspaw",
+        "https://runescape.wiki/w/Orthen_Dig_Site"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Anachronia / Orthen is the regional dependency for the normal unlock path. Monolith energy and chronotes remain global Archaeology systems."
+    },
+    {
+      "id": "tirannwn:superheat-form",
+      "name": "Superheat Form (Seren prayer)",
+      "category": "skilling prayer unlock",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "The Light Within completed in the normal game",
+        "91 Prayer",
+        "Ancient Curses book unlocked"
+      ],
+      "unlocks": [
+        "Superheat Form curse",
+        "Auto-burn chopped logs for Firemaking XP while Woodcutting",
+        "Smelting 0.6 seconds / 1 game tick faster (including corrupted ore)",
+        "Smithing low heat treated as medium heat and medium heat treated as high heat"
+      ],
+      "notes": "This is a Seren / The Light Within skilling unlock, not a combat prayer. Drain is 100 prayer points per minute unless offset. Orthen furnace core fully negates Superheat Form drain when equipped before activating the prayer. Always Adze is a separate monolith alternative for log-burning without prayer drain.",
+      "source_urls": [
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Seren_Prayer"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn owns the Light Within / Seren prayer unlock. Pair with Anachronia for Orthen furnace core when valuing sustained Superheat Form AFK smithing and firemaking."
+    },
+    {
+      "id": "anachronia:herby-werby-herb-bag",
+      "name": "Herby Werby herb bag skilling unlock",
+      "category": "Herblore inventory container activity",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Herby Werby access on Anachronia",
+        "Spirit points for base bag and upgrade (200 each)"
+      ],
+      "unlocks": [
+        "Herb bag (50 of each grimy herb)",
+        "Herb bag upgrade (100 of each grimy herb)",
+        "Noted grimy-herb storage for self-sufficient Herblore runs"
+      ],
+      "notes": "Detailed capacity and currency numbers already live in progression-enrichment-container-bags-2026-07-25 as anachronia:herb-bag-current. This row is the regional skilling activity pointer so Anachronia planning surfaces Herby Werby as a permanent Herblore QoL unlock, not only a bag merge.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herby_Werby",
+        "https://runescape.wiki/w/Herb_bag"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia weekly-currency route. Prefer the container-bags row for capacity and costs; keep this as the regional activity pointer."
+    }
+  ],
+  "equipment_additions": [
+    {
+      "id": "kandarin:skillchompas",
+      "name": "Skillchompas",
+      "category": "consumable multi-skill gatherer tools",
+      "region_hint": "kandarin",
+      "region_hints": [
+        "kandarin",
+        "tirannwn"
+      ],
+      "requirements": [
+        "Skill-specific level gates matching skillchompa tier (mithril through crystal tool tiers)",
+        "Hunter level 27/46/68/89/97 for cobalt/viridian/azure/crimson/crystal tiers"
+      ],
+      "effects": [
+        "Except Mining: +10% base XP on successful gather actions; 5% of a successful action as XP on failed attempts; one skillchompa consumed per XP grant",
+        "Archaeology: acts as a mattock (tier by skillchompa tier)",
+        "Woodcutting: acts as a hatchet (tier by skillchompa tier)",
+        "Mining: adds 30-70 critical-swing damage by tier while using a pickaxe; consumed on criticals; no direct Mining XP boost",
+        "Fishing: +1% catch rate per tier (1% cobalt through 5% crystal)",
+        "Divination: increased enriched-memory / critical harvest chance by tier"
+      ],
+      "notes": "Wielded or backpack; wielded takes priority. POF perk If Chins Could Skill can save skillchompas. Supply is regional; the tools themselves are global once obtained.",
+      "source_urls": [
+        "https://runescape.wiki/w/Skillchompa",
+        "https://runescape.wiki/w/Cobalt_skillchompa",
+        "https://runescape.wiki/w/Crystal_skillchompa"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Track Kandarin for practical mid-tier supply and Tirannwn for crystal tier. Do not invent League-specific catch rates."
+    },
+    {
+      "id": "havenhythe:ring-of-kayazu",
+      "name": "Ring of Kayazu",
+      "category": "Necromancy ritual skilling ring",
+      "region_hint": "havenhythe",
+      "requirements": [
+        "Moonrise Dig Site / Havenhythe Archaeology progression",
+        "88 Archaeology and 67 Crafting to assemble",
+        "Moonstone ring plus restored fang of Kayazu",
+        "The Final Revolution mystery solved"
+      ],
+      "effects": [
+        "Additive +80% soul attraction during rituals when worn",
+        "20% chance to double item rewards from ritual disturbances"
+      ],
+      "notes": "Zero combat style bonuses. This is a ritual / Necromancy skilling ring from Moonrise Dig Site, not combat ring BiS. Do not rank it against combat rings.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_Kayazu",
+        "https://runescape.wiki/w/Fang_of_Kayazu",
+        "https://runescape.wiki/w/Update:Digging_up_the_past_at_Moonrise"
+      ],
+      "confidence": "confirmed_wiki_2026_release",
+      "league_treatment": "Havenhythe owns Moonrise Dig Site. Keep ritual-utility framing only."
+    },
+    {
+      "id": "tirannwn:crystal-hammer",
+      "name": "Crystal hammer",
+      "category": "augmentable Smithing tool",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Crystal tool seed",
+        "150 harmonic dust and 80 Smithing at the Ithell singing bowl, or NPC seed enchant with coins",
+        "Prifddinas / crystal-tool infrastructure"
+      ],
+      "effects": [
+        "+1% chance of double progress when smithing any core metal",
+        "3,000 strikes before reverting to seed unless augmented",
+        "Doubled chance of Smithing golden/strange rocks from Shattered Heart"
+      ],
+      "notes": "Named crystal tool missing from the 2026-07-25 crystal-tool workshop row (that row listed pickaxe, hatchet, mattock, rod, tinderbox paths but not the hammer explicitly as equipment). Optimal Smithing stacks often pair augmented crystal hammer with Orthen furnace core and Superheat Form.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Crystal_tool",
+        "https://runescape.wiki/w/Orthen_furnace_core"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn crystal-tool infrastructure. Harmonic dust and seed supply remain Prifddinas-gated."
+    },
+    {
+      "id": "forinthry:scroll-of-cleansing",
+      "name": "Scroll of cleansing",
+      "category": "permanent Herblore Daemonheim reward",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "49 Herblore",
+        "49 Dungeoneering",
+        "20,000 Dungeoneering tokens at Daemonheim Rewards"
+      ],
+      "effects": [
+        "Permanent Wasteless Herblore trait after reading",
+        "1 in 8 (12.5%) chance to mix the next queued potion one tick faster",
+        "1 in 10 (10%) chance to save a secondary ingredient (including clean herbs when making unfinished potions)"
+      ],
+      "notes": "Explicit named Daemonheim reward. Must not stay buried inside the generic forinthry:daemonheim-skilling-rewards bundle. Does not affect tea or herb tars. Over long runs, secondary savings yield more potions per ingredient stock.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_cleansing",
+        "https://runescape.wiki/w/Dungeoneering_Rewards",
+        "https://runescape.wiki/w/Daemonheim"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry dependency via Daemonheim. Token costs stay at wiki values unless Equilibrium publishes a multiplier."
+    },
+    {
+      "id": "forinthry:smithing-autoheater",
+      "name": "Smithing autoheater",
+      "category": "permanent Smithing Daemonheim reward",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "35 Smithing and 35 Dungeoneering for base autoheater (4,000 tokens)",
+        "70 Smithing and 70 Dungeoneering plus base autoheater for advanced upgrade (40,000 tokens)"
+      ],
+      "effects": [
+        "Base: on 0% heat, consumes 5 coal from metal bank to restore 30% heat",
+        "Advanced overheat mode: on 0% heat, consumes 50 coal to restore 60% heat",
+        "Enables AFK low/medium heat smithing without manual reheating"
+      ],
+      "notes": "Named Forinthry / Daemonheim Smithing unlock. With Superheat Form, low/medium heat is promoted so autoheater plus Superheat Form can hold medium-high heat AFK. Complements Orthen furnace core rather than replacing it.",
+      "source_urls": [
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Advanced_smithing_autoheater",
+        "https://runescape.wiki/w/Dungeoneering_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Forinthry dependency. Track base and advanced as two milestones."
+    },
+    {
+      "id": "cross-region:orthen-furnace-core-stack",
+      "name": "Orthen furnace core full skilling stack",
+      "category": "cross-region Smithing and Firemaking stack",
+      "region_hints": [
+        "anachronia",
+        "tirannwn"
+      ],
+      "required_regions": [
+        "anachronia",
+        "tirannwn"
+      ],
+      "requirements": [
+        "99 Smithing and 102 Archaeology to craft the Orthen furnace core",
+        "Four restored dragon burners from Orthen Observation outpost excavation (Anachronia)",
+        "Superheat Form from The Light Within / Seren prayers (Tirannwn)",
+        "Crystal hammer from Prifddinas crystal-tool infrastructure (Tirannwn) for the full named tool half of the stack"
+      ],
+      "effects": [
+        "Orthen furnace core off-hand: negates Superheat Form prayer drain when equipped before activating the prayer",
+        "Superheat Form: auto-burn logs while Woodcutting; faster smelting; promoted smithing heat bands",
+        "Crystal hammer: +1% double smithing progress and augmentable Invention perks",
+        "Furnace core plus autoheater plus Superheat Form enables fully AFK medium-high heat smithing"
+      ],
+      "region_pressure": [
+        "Anachronia owns Orthen Dig Site dragon burners and the furnace-core craft side.",
+        "Tirannwn owns Superheat Form and crystal hammer; it does not own Orthen dig-site artefacts.",
+        "Do not claim dual dig sites: Orthen is Anachronia-only in this chain."
+      ],
+      "notes": "UPDATE-style companion to anachronia:orthen-furnace-core. That single-region row still tracks the item obtain. This stack row records Anachronia+Tirannwn combo pressure for planners valuing sustained Superheat Form smithing/firemaking. Smithing autoheater (Forinthry) is a strong third-region AFK partner but is not required to name the Anachronia+Tirannwn core stack.",
+      "source_urls": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Dragon_burner"
+      ],
+      "confidence": "confirmed_wiki_cross_region_chain",
+      "league_treatment": "Surface Anachronia plus Tirannwn together when ranking late-game smithing/firemaking QoL. Never imply Moonrise or a second dig site is part of this stack."
+    },
+    {
+      "id": "morytania:morytania-legs-4",
+      "name": "Morytania legs 4",
+      "category": "elite achievement skilling utility",
+      "region_hint": "morytania",
+      "requirements": [
+        "All Morytania achievements including elite",
+        "Claim from Old Man Ral in Meiyerditch"
+      ],
+      "effects": [
+        "When worn: +50% Firemaking and Prayer XP from cremating vyre corpses (including with Sunspear)",
+        "When worn: +10% Slayer XP for Slayer Tower task kills",
+        "When worn: 20% chance of 4-dose prayer renewal instead of 3-dose when making them in Morytania",
+        "Operated: unlimited slime-pit teleports under the Ectofuntus (post-16-March-2026)",
+        "Always: Robin converts 39 bone sets and supplies 39 free slime buckets daily; double mushroom yield at Canifis, Isafdar and City of Um patches (XP not doubled)"
+      ],
+      "notes": "Vyre cremation Prayer bonus is already known from combat/aura rows; this equipment row captures the full elite diary skilling utility bundle for regional planning.",
+      "source_urls": [
+        "https://runescape.wiki/w/Morytania_legs_4",
+        "https://runescape.wiki/w/Morytania_achievements",
+        "https://runescape.wiki/w/Update:Patch_Notes:_Dailyscape_Overhaul"
+      ],
+      "confidence": "confirmed_wiki_and_2026_teleport_update",
+      "league_treatment": "Morytania achievement set. Resolve quest and achievement access through Equilibrium auto-quest overlays before treating elite tasks as manual gates."
+    },
+    {
+      "id": "anachronia:herb-bag-skilling-pointer",
+      "name": "Herb bag (Herby Werby)",
+      "category": "Herblore inventory container pointer",
+      "region_hint": "anachronia",
+      "requirements": [
+        "Herby Werby spirit points on Anachronia"
+      ],
+      "effects": [
+        "Stores large quantities of each grimy herb type (base 50, upgraded 100)",
+        "Stores noted grimy herbs"
+      ],
+      "notes": "Skilling-unlock pointer. Full cost and capacity data live under anachronia:herb-bag-current in progression-enrichment-container-bags-2026-07-25. Include here so regional skilling enrichment does not drop the bag when only reading skilling files.",
+      "source_urls": [
+        "https://runescape.wiki/w/Herb_bag",
+        "https://runescape.wiki/w/Herby_Werby"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia dependency. Prefer container-bags row as canonical capacity source."
+    },
+    {
+      "id": "forinthry:scroll-of-efficiency",
+      "name": "Scroll of efficiency",
+      "category": "permanent Smithing Daemonheim reward",
+      "region_hint": "forinthry",
+      "region_status": "confirmed_official",
+      "requirements": [
+        "Dungeoneering Rewards shop purchase and read unlock"
+      ],
+      "effects": [
+        "Permanent chance to refund bars when finishing a smithing project",
+        "Orthen furnace core multiplies this chance by 1.25 (wiki: 2% becomes 2.5%)"
+      ],
+      "notes": "High-value permanent Smithing unlock that completes the Orthen furnace core smithing package. Named explicitly so it is not lost inside the generic Daemonheim skilling-rewards bundle.",
+      "source_urls": [
+        "https://runescape.wiki/w/Scroll_of_efficiency",
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Dungeoneering_Rewards"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Forinthry Daemonheim shop. Pair with Anachronia furnace core in late smithing planning."
+    },
+    {
+      "id": "tirannwn:crystal-tinderbox",
+      "name": "Crystal tinderbox",
+      "category": "augmentable Firemaking tool",
+      "region_hint": "tirannwn",
+      "requirements": [
+        "Crystal tool seed and harmonic dust or NPC crystal-tool enchant",
+        "Prifddinas crystal-tool infrastructure"
+      ],
+      "effects": [
+        "Augmentable Firemaking tool used in high-end firemaking setups",
+        "Common pair with Orthen furnace core and Superheat Form for Firemaking stacks"
+      ],
+      "notes": "Named crystal tool gap alongside crystal hammer. Do not invent XP rates; record unlock state only.",
+      "source_urls": [
+        "https://runescape.wiki/w/Crystal_tinderbox",
+        "https://runescape.wiki/w/Crystal_tool",
+        "https://runescape.wiki/w/Orthen_furnace_core"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Tirannwn crystal-tool side of late Firemaking QoL."
+    }
+  ]
+}

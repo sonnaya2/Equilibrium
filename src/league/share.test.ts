@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyBuild, toggleElective, toggleRelic, pickBlessing } from "./index";
-import { decodeBuild, encodeBuild } from "./share";
+import { decodeBuild, encodeBuild, MAX_SHARE_PAYLOAD_CHARS } from "./share";
 
 describe("encodeBuild / decodeBuild", () => {
   it("round-trips a full build through URL-safe text", () => {
@@ -20,6 +20,10 @@ describe("encodeBuild / decodeBuild", () => {
     expect(decodeBuild(encodeBuild(emptyBuild()).slice(0, 4))).toBeNull();
     expect(decodeBuild(btoa(JSON.stringify("hello")))).toBeNull();
     expect(decodeBuild(btoa(JSON.stringify({ unrelated: true })))).toBeNull();
+  });
+
+  it("rejects oversized base64 payloads", () => {
+    expect(decodeBuild("A".repeat(MAX_SHARE_PAYLOAD_CHARS + 1))).toBeNull();
   });
 
   it("normalizes through the same rules as storage hydration", () => {

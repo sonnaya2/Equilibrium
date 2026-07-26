@@ -33,14 +33,25 @@ const RENDERERS = new WeakMap<HTMLCanvasElement, Promise<THREE.WebGPURenderer>>(
 
 type RendererParams = ConstructorParameters<typeof THREE.WebGPURenderer>[0];
 
-function rendererFor(props: Record<string, unknown>): Promise<THREE.WebGPURenderer> {
+function rendererFor(
+  props: Record<string, unknown>,
+  onFail?: () => void,
+): Promise<THREE.WebGPURenderer> {
   const canvas = props.canvas as HTMLCanvasElement | undefined;
   const existing = canvas ? RENDERERS.get(canvas) : undefined;
   if (existing) return existing;
   const made = (async () => {
-    const r = new THREE.WebGPURenderer({ ...props, antialias: true } as RendererParams);
-    await r.init();
-    return r;
+    try {
+      const r = new THREE.WebGPURenderer({ ...props, antialias: true } as RendererParams);
+      await r.init();
+      return r;
+    } catch (err) {
+      // A rejected promise stuck in the WeakMap permanently poisons this canvas
+      // — adapter present, init dead. Drop it so a remount can retry or fall back.
+      if (canvas) RENDERERS.delete(canvas);
+      onFail?.();
+      throw err;
+    }
   })();
   if (canvas) RENDERERS.set(canvas, made);
   return made;
@@ -64,6 +75,10 @@ export default function MapScene() {
   // Gate on a real adapter, not just the API — three would otherwise fall back
   // to WebGL2 silently, and the honest-unsupported state is the spec.
   const [supported, setSupported] = useState<boolean | null>(null);
+  // Adapter can exist while WebGPURenderer.init() still fails (driver, flags).
+  // Fall through to FlatBoard rather than leave a blank/broken canvas.
+  const failRef = useRef(() => setSupported(false));
+  failRef.current = () => setSupported(false);
   const { focus, unframe } = useMapFocus();
   const reducedMotion = useReducedMotion();
   // Exactly one renderer, and it must be built from R3F's own canvas — the
@@ -130,7 +145,9 @@ export default function MapScene() {
           // intro descent (a hard cut under reduced motion).
           camera={{ position: [0.9, 2.4, 2.1], fov: 42, near: 0.05, far: 20 }}
           onPointerMissed={unframe}
-          gl={(props) => rendererFor(props as unknown as Record<string, unknown>)}
+          gl={(props) =>
+            rendererFor(props as unknown as Record<string, unknown>, () => failRef.current())
+          }
         >
           <color attach="background" args={[SURFACE_VOID]} />
 

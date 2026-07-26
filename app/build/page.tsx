@@ -1,10 +1,19 @@
+import type { Metadata } from "next";
 import blessingsData from "#data/league/blessings.json";
 import questsData from "#data/league/quests.json";
 import relicsData from "#data/league/relics.json";
 import { Page } from "@/components/Page";
 import { PageHeading } from "@/components/Heading";
 import { BuildPlanner } from "@/components/BuildPlanner";
+import type { RegionId } from "@/league";
+import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { getResearchCatalog } from "@/research/catalog";
+
+export const metadata: Metadata = {
+  title: "Build",
+  description:
+    "Regions, Relics, and Blessings in one plan for RS3 Leagues II: Equilibrium.",
+};
 
 export default function BuildPage() {
   const catalog = getResearchCatalog();
@@ -14,7 +23,8 @@ export default function BuildPage() {
 
   const regions = catalog.regions.map((region) => ({
     id: region.id,
-    name: region.name,
+    // Same display names as the map (Wilderness, Kharidian Desert, Fremennik Province).
+    name: REGION_ANCHOR_BY_ID.get(region.id as RegionId)?.name ?? region.name,
     availability: region.availability,
     skills: region.skills,
     trainingCount: region.training.length,
@@ -53,7 +63,7 @@ export default function BuildPage() {
     <Page>
       <PageHeading
         title="Build planner"
-        note="Regions, relics, blessings and gear in one plan. The picks are the same ones you make on the map."
+        note="Regions, relics and blessings in one plan. The picks are the same ones you make on the map."
       />
       <BuildPlanner
         regions={regions}

@@ -2,6 +2,9 @@ import type { TaskRecord, TaskTier } from "./index";
 
 export const CATALYST_TASKS_URL = "https://runescape.wiki/w/Catalyst_League/Tasks";
 
+/** Wiki table size used when callers omit expectedRecords (Catalyst stand-in integrity gate). */
+export const CATALYST_EXPECTED_RECORDS = 1117;
+
 const CATALYST_TASKS_API =
   "https://runescape.wiki/api.php?action=parse&page=Catalyst_League%2FTasks&prop=text&format=json&formatversion=2&disableeditsection=1";
 
@@ -13,8 +16,10 @@ const POINT_TO_TIER = new Map<number, TaskTier>([
   [400, "master"],
 ]);
 
+/** Catalyst League task as a stand-in until Equilibrium ships its own list. */
 export interface CatalystTaskRecord extends TaskRecord {
   sourceLeague: "catalyst";
+  /** Marks non-Equilibrium rows in shared renderers; not a product "test data" flag. */
   testingOnly: true;
   requirements?: string;
   catalystCompletionRate?: number;
@@ -103,13 +108,30 @@ export function parseCatalystTasksHtml(html: string): CatalystTaskRecord[] {
   });
 }
 
-export async function loadCatalystTestTasks(): Promise<CatalystTaskLoadResult> {
+/** True when the parsed Catalyst table looks complete enough to show as stand-in. */
+export function catalystRecordsPassIntegrity(
+  recordCount: number,
+  expectedRecords: number = CATALYST_EXPECTED_RECORDS,
+): boolean {
+  return recordCount >= expectedRecords * 0.9;
+}
+
+/**
+ * Load Catalyst League tasks as a stand-in until Equilibrium publishes its list.
+ * Export name kept for import stability; product copy treats this as provisional, not "test data".
+ */
+export async function loadCatalystTestTasks(
+  expectedRecords?: number,
+): Promise<CatalystTaskLoadResult> {
+  const expected = expectedRecords ?? CATALYST_EXPECTED_RECORDS;
   try {
     const response = await fetch(CATALYST_TASKS_API, {
       headers: {
         "User-Agent": "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)",
       },
       next: { revalidate: 60 * 60 * 24 },
+      // Bound SSR so a hung wiki cannot hold the whole /tasks render open.
+      signal: AbortSignal.timeout(8_000),
     });
 
     if (!response.ok) {
@@ -121,13 +143,21 @@ export async function loadCatalystTestTasks(): Promise<CatalystTaskLoadResult> {
     if (!html) throw new Error("RuneScape Wiki response did not include parsed task HTML");
 
     const records = parseCatalystTasksHtml(html);
-    if (records.length === 0) throw new Error("Catalyst task table was not found in the RuneScape Wiki response");
+    if (records.length === 0) {
+      throw new Error("Catalyst task table was not found in the RuneScape Wiki response");
+    }
+
+    if (!catalystRecordsPassIntegrity(records.length, expected)) {
+      throw new Error(
+        `Catalyst task list incomplete: got ${records.length}, expected at least ${Math.ceil(expected * 0.9)} of ${expected}`,
+      );
+    }
 
     return { records };
   } catch (error) {
     return {
       records: [],
-      error: error instanceof Error ? error.message : "Unable to load Catalyst task data",
+      error: error instanceof Error ? error.message : "Unable to load Catalyst task list",
     };
   }
 }

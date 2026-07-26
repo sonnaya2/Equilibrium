@@ -84,7 +84,15 @@ export function BuildPlanner({
   resetCount: number;
 }) {
   // All picks live in the shared unlock store — same state the map edits.
-  const { build, toggleRegion, toggleRelic, pickBlessing, resetBlessings } = useBuild();
+  const {
+    build,
+    loaded,
+    toggleRegion,
+    toggleRelic,
+    pickBlessing,
+    resetBlessings,
+    clearElectives,
+  } = useBuild();
   const picks = build.elective;
   const [focusId, setFocusId] = useState<string>(regions[0]?.id ?? "");
 
@@ -92,6 +100,7 @@ export function BuildPlanner({
   const isOpen = (r: PlannerRegion) => r.availability !== "elective" || picked(r.id);
   const focus = regions.find((r) => r.id === focusId) ?? regions[0];
   const openCount = regions.filter(isOpen).length;
+  const pickCounter = loaded ? `${picks.length}/3` : "…/3";
   const paths = blessingTiers.find((t) => !t.godTier)?.paths ?? ["Order", "Balance", "Chaos"];
 
   const revealedRelicTiers = relicTiers.filter((t) => t.revealed && t.choices.length > 0).length;
@@ -101,28 +110,32 @@ export function BuildPlanner({
   const alignments = godTierAlignments(build.blessingPicks);
   const resetsLeft = blessingResetsLeft(build);
 
-  const [copied, setCopied] = useState(false);
+  const [copyFeedback, setCopyFeedback] = useState<"idle" | "ok" | "err">("idle");
+  const flashCopy = (next: "ok" | "err") => {
+    setCopyFeedback(next);
+    setTimeout(() => setCopyFeedback("idle"), 1500);
+  };
   const copyShareLink = () => {
-    if (!navigator.clipboard) return;
+    if (!navigator.clipboard?.writeText) {
+      flashCopy("err");
+      return;
+    }
     void navigator.clipboard
       .writeText(buildShareUrl(build))
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-      })
-      .catch(() => {});
+      .then(() => flashCopy("ok"))
+      .catch(() => flashCopy("err"));
   };
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="flex flex-col gap-6">
-        <section>
+        <section aria-busy={!loaded}>
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
               Regions
             </h2>
-            <span className="num text-xs text-parch-400">
-              {openCount} of {regions.length} open · {picks.length}/3 picks
+            <span className={`num text-xs text-parch-400 ${loaded ? "" : "opacity-60"}`}>
+              {openCount} of {regions.length} open · {pickCounter} picks
             </span>
             <span className="h-px flex-1 bg-stone-750" />
             <button
@@ -130,18 +143,21 @@ export function BuildPlanner({
               onClick={copyShareLink}
               className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50"
             >
-              {copied ? "Copied" : "Copy link"}
+              {copyFeedback === "ok" ? "Copied" : copyFeedback === "err" ? "Copy failed" : "Copy link"}
             </button>
             <button
               type="button"
-              onClick={() => picks.forEach((id) => toggleRegion(id as RegionId))}
-              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50"
+              onClick={clearElectives}
+              disabled={!loaded || picks.length === 0}
+              className="rounded-sm border border-stone-750 px-2.5 py-1 text-xs text-parch-100 hover:border-stone-carve hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Clear picks
             </button>
           </div>
 
-          <div className="flex flex-col">
+          <div
+            className={`flex flex-col ${loaded ? "" : "pointer-events-none opacity-60"}`}
+          >
             {[regions.slice(0, 6), regions.slice(6)].map((row, rowIndex) => (
               <HexRow key={rowIndex} offset={rowIndex === 1} className={rowIndex ? "-mt-[42px]" : ""}>
                 {row.map((region) => {
@@ -153,10 +169,10 @@ export function BuildPlanner({
                     <button
                       key={region.id}
                       type="button"
-                      disabled={barred}
+                      disabled={barred || (elective && !loaded)}
                       aria-pressed={picked(region.id)}
                       onClick={() => {
-                        if (elective) toggleRegion(region.id as RegionId);
+                        if (elective && loaded) toggleRegion(region.id as RegionId);
                         setFocusId(region.id);
                       }}
                       // Content sits above the bottom slope, which the next row overlaps.
@@ -181,10 +197,12 @@ export function BuildPlanner({
                         {region.name}
                       </span>
                       <span
-                        className={`num text-[19px] ${barred ? "text-parch-500" : "text-gem-400"}`}
+                        className={`num text-[19px] leading-none ${barred ? "text-parch-500" : "text-gem-400"}`}
+                        title="Quests starting here (primary_region_counts)"
                       >
                         {region.primaryQuests}
                       </span>
+                      <span className="text-[9px] leading-none text-parch-500">starting here</span>
                     </button>
                   );
                 })}
@@ -195,7 +213,7 @@ export function BuildPlanner({
 
         <section className="border-t border-stone-750 pt-4">
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
               Relics
             </h2>
             <span className="num text-xs text-parch-400">
@@ -271,7 +289,7 @@ export function BuildPlanner({
 
         <section className="border-t border-stone-750 pt-4">
           <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-gold-300">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-parch-300">
               Blessings
             </h2>
             <span className="text-xs text-parch-400">
@@ -316,7 +334,7 @@ export function BuildPlanner({
                     if (tier.godTier) {
                       return (
                         <Hex key={tier.tier} size="sm" state="unrevealed">
-                          <span className="absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 bg-gold-400 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
+                          <span className="absolute left-1/2 top-1.5 h-[9px] w-[8px] -translate-x-1/2 bg-gem-400 [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
                         </Hex>
                       );
                     }

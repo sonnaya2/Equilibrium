@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Page } from "@/components/Page";
+import { PageHeading } from "@/components/Heading";
 import { Pips } from "@/components/Pips";
+
+export const metadata: Metadata = {
+  title: { absolute: "RS3 Equilibrium" },
+  description:
+    "Planner, task tracker, and combat calculator for RuneScape 3 Leagues II: Equilibrium. Fan tool, not affiliated with Jagex.",
+};
 
 const STATUS: [string, string][] = [
   ["Launch", "10 Aug 2026 on dedicated League worlds."],
@@ -13,7 +21,7 @@ const STATUS: [string, string][] = [
 const SURFACES = [
   ["/map", "Map", "Plan your 3 elective region picks and see what each one opens up."],
   ["/tasks", "Tasks", "Track League tasks and the points that drive progression."],
-  ["/build", "Build", "Keep regions, Relics, Blessings and gear in one plan."],
+  ["/build", "Build", "Keep regions, Relics and Blessings in one plan."],
   ["/combat", "Combat", "Current RS3 damage math with League modifiers layered on top."],
   ["/data", "Data", "Browse the game data behind the planner and follow its sources."],
 ] as const;
@@ -21,15 +29,10 @@ const SURFACES = [
 export default function OverviewPage() {
   return (
     <Page>
-      <header className="mb-6">
-        <h1 className="font-display text-lg uppercase tracking-[0.16em] text-gold-400">
-          Leagues II: Equilibrium
-        </h1>
-        <p className="mt-1 max-w-prose text-sm text-parch-300">
-          Current game data comes from the Wiki. Fresh League reveals use Jagex until the Wiki catches up.
-          Anything that has not been published stays blank.
-        </p>
-      </header>
+      <PageHeading
+        title="Leagues II: Equilibrium"
+        note="Current game data comes from the Wiki. Fresh League reveals use Jagex until the Wiki catches up. Anything that has not been published stays blank."
+      />
 
       <div className="grid gap-4 md:grid-cols-5">
         <section className="panel md:col-span-2">
@@ -57,7 +60,7 @@ export default function OverviewPage() {
               >
                 <Link
                   href={href}
-                  className="w-20 shrink-0 font-medium text-parch-50 transition-colors duration-150 hover:text-gold-300"
+                  className="w-20 shrink-0 font-medium text-parch-50 transition-colors duration-150 hover:text-gem-300"
                 >
                   {name}
                 </Link>

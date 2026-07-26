@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
-import { readBuildFromLocation } from "./share";
 import {
   emptyBuild,
   normalizeBuild,
@@ -21,6 +20,9 @@ import type { BlessingPath } from "./blessings";
  * all read and mutate this single instance. Module-local state is only ever
  * written client-side (user actions, localStorage hydrate); server renders
  * always see the empty build.
+ *
+ * Share links are owned by ShareImport (layout). This module only hydrates
+ * localStorage and exposes applyBuild for that one-shot import path.
  */
 
 let state: BuildState = emptyBuild();
@@ -44,18 +46,48 @@ function setState(next: BuildState) {
   listeners.forEach((l) => l());
 }
 
+export function buildHasContent(b: BuildState): boolean {
+  return (
+    b.elective.length > 0 ||
+    Object.keys(b.relics).length > 0 ||
+    b.blessingPicks.length > 0 ||
+    b.blessingResetsUsed > 0
+  );
+}
+
+export function buildsEqual(a: BuildState, b: BuildState): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/** Load localStorage once. Idempotent — ShareImport and useBuild both call this. */
+export function hydrateLocalBuild(): BuildState {
+  if (hydrated) return state;
+  hydrated = true;
+  // normalizeBuild owns shape validation; loadState passes raw parse through.
+  state = loadState(STORAGE_KEY, emptyBuild(), normalizeBuild);
+  listeners.forEach((l) => l());
+  return state;
+}
+
+/** Replace store + persist (share import, reset). Marks hydrated. */
+export function applyBuild(next: BuildState): void {
+  hydrated = true;
+  setState(next);
+}
+
+export function getBuildState(): BuildState {
+  return state;
+}
+
 export function useBuild() {
   // Server snapshot stays the empty build so hydration matches; real state
-  // loads from localStorage after mount.
+  // loads from localStorage after mount. Share hashes are handled only by
+  // ShareImport so any route can import without double-apply.
   const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
   const [loaded, setLoaded] = useState(hydrated);
 
   useEffect(() => {
-    if (!hydrated) {
-      hydrated = true;
-      const shared = readBuildFromLocation();
-      setState(shared ?? normalizeBuild(loadState(STORAGE_KEY, emptyBuild())));
-    }
+    hydrateLocalBuild();
     setLoaded(true);
   }, []);
 
@@ -67,6 +99,9 @@ export function useBuild() {
     pickBlessing: (pathTier: number, path: BlessingPath) =>
       setState(pickBlessing(state, pathTier, path)),
     resetBlessings: () => setState(resetBlessings(state)),
+    /** Electives only — relics and blessings stay. Map "Clear picks" uses this. */
+    clearElectives: () =>
+      setState(state.elective.length === 0 ? state : { ...state, elective: [] }),
     resetBuild: () => setState(emptyBuild()),
   };
 }

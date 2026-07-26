@@ -131,13 +131,23 @@ export function getResearchCatalog(): ResearchCatalog {
     for (const method of skill.methods) methods.set(method.id, method);
   }
 
+  // Drop unresolved ids quietly — catalog.test asserts orphans empty.
+  const regions = source.regions.map(({ trainingMethodIds, ...region }) => ({
+    ...region,
+    training: trainingMethodIds
+      .map((id) => methods.get(id))
+      .filter((method): method is ResearchTrainingMethod => Boolean(method)),
+  }));
+
+  // Derive array-backed counts so hand-authored dataset stats cannot lie.
   return {
     ...source,
-    regions: source.regions.map(({ trainingMethodIds, ...region }) => ({
-      ...region,
-      training: trainingMethodIds
-        .map((id) => methods.get(id))
-        .filter((method): method is ResearchTrainingMethod => Boolean(method)),
-    })),
+    datasets: {
+      ...source.datasets,
+      regions: regions.length,
+      skills: source.skills.length,
+      trainingMethods: methods.size,
+    },
+    regions,
   };
 }

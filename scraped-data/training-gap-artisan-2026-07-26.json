@@ -1,0 +1,617 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Fill high-value artisan training and region-unlock gaps for Equilibrium planning: Smithing outfit/tools and burial pipeline, Construction/Cooking/Crafting ironman routes, and Firemaking curly-roots ceiling when Superheat Form (Tirannwn prayer) is available. Methods are base-game ironman-relevant rates; region labels use Equilibrium/official or working Catalyst locality mappings already used in this repo.",
+  "methods": [
+    {
+      "id": "smithing:burial-sets-artisans-workshop",
+      "skill": "Smithing",
+      "method": "Burial armour / burial sets at Artisans' Workshop",
+      "method_region": "asgarnia",
+      "location": "Artisans' Workshop, Falador (eastern burial wing from 40 Smithing)",
+      "level_range": "40-110",
+      "row_type": "training_method",
+      "importance": "Primary ironman Smithing XP spine: highest-tier burial sets destroy the product for +50% XP/bar, then set bonus; train at Artisans' Workshop for respect and luminite injector buffs.",
+      "throughput": "Can exceed 1,000,000 XP/h; ideal stacked setups exceed 4,000,000 XP/h off DXP per main training guide framing.",
+      "ironman_notes": [
+        "Do not pre-smelt all bars; smelt as needed until double-bar chance level for that metal.",
+        "Skip orikalkum for ironmen when rune is faster after mining time; primal only when Mining is high enough.",
+        "Corrupted ore is no longer competitive vs bane/elder rune for pure XP; use only if free from other content."
+      ],
+      "region_combo": ["asgarnia"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Artisans%27_Workshop",
+        "https://runescape.wiki/w/Pay-to-play_Smithing_training"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "smithing:blacksmith-outfit-respect",
+      "skill": "Smithing",
+      "method": "Blacksmith's outfit (respect priority)",
+      "method_region": "asgarnia",
+      "location": "Artisans' Workshop Reward Shop, Falador",
+      "row_type": "unlock_and_training_amplifier",
+      "importance": "Highest XP-per-respect spend: full outfit is 6% Smithing XP (1% per piece + 1% set). Helmet add-on adds 1% double bars while smelting and Artisans' Workshop teleport.",
+      "respect_priority": "Buy full blacksmith's outfit (incl. headgear) first — 300% respect / ~3M burial-equivalent XP — before solemn smith and ceremonial upgrades.",
+      "emphasis": "Burial smithing already exists as the Asgarnia method; outfit is the missing permanent amplifier that should be planned as a first respect dump, not an optional cosmetic.",
+      "region_combo": ["asgarnia"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Blacksmith%27s_outfit",
+        "https://runescape.wiki/w/Artisans%27_Workshop_Reward_Shop"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "smithing:crystal-hammer",
+      "skill": "Smithing",
+      "method": "Crystal hammer (augmentable)",
+      "method_region": "tirannwn",
+      "location": "Sing at Ithell singing bowl (Prifddinas) or pay Tirannwn crystal rechargers",
+      "row_type": "unlock",
+      "importance": "1% chance of double progress on smithing swings; best base for Tinker/Rapid/Breakdown Invention perks once augmented.",
+      "requirements": [
+        "Crystal tool seed",
+        "150 harmonic dust + 80 Smithing to sing, OR coins via Ilfeen/Eluned/Islwyn/Rhodri Dail",
+        "Plague's End / Prifddinas for free singing path; Roving Elves path for paid convert"
+      ],
+      "region_combo": ["tirannwn"],
+      "league_note": "Harmonic dust is also a Construction/Crafting side product on harps — Tirannwn double-dips artisan planning.",
+      "sources": [
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "smithing:superheat-form",
+      "skill": "Smithing",
+      "method": "Superheat Form (Seren prayer) while smelting/smithing",
+      "method_region": "tirannwn",
+      "location": "Prayer unlock from The Light Within; usable anywhere once unlocked",
+      "row_type": "unlock_and_training_amplifier",
+      "importance": "Smelting 1 tick faster; low/medium heat treated as medium/high — major AFK and throughput upgrade for burial smithing.",
+      "requirements": [
+        "The Light Within complete",
+        "91 Prayer",
+        "Ancient Curses book"
+      ],
+      "region_combo": ["tirannwn"],
+      "sustain_notes": [
+        "Base drain 100 prayer points/minute.",
+        "Grace of the elves (Tirannwn) halves drain; Dark Facet of Grace can null it.",
+        "Orthen furnace core (Anachronia craft) fully stops Superheat Form prayer drain when equipped before activating the prayer."
+      ],
+      "region_combo_ceiling": ["tirannwn", "anachronia"],
+      "sources": [
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/The_Light_Within",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Orthen_furnace_core"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "smithing:autoheater",
+      "skill": "Smithing",
+      "method": "Smithing autoheater / Advanced smithing autoheater",
+      "method_region": "forinthry",
+      "location": "Daemonheim Rewards (Marmaros); Equilibrium maps Daemonheim to Forinthry/Wilderness",
+      "row_type": "unlock",
+      "importance": "AFK heat: base autoheater spends 5 coal for 30% heat at 0%; advanced spends 50 coal for 60% heat. Paired with Superheat Form, heat can stay medium-high with almost no reheat clicks.",
+      "requirements": [
+        "Basic: 35 Smithing + 35 Dungeoneering, 4,000 tokens",
+        "Advanced: 70 Smithing + 70 Dungeoneering, 40,000 tokens (upgrades the basic unit)"
+      ],
+      "region_combo": ["forinthry"],
+      "region_combo_with_prayer": ["forinthry", "tirannwn"],
+      "league_note": "Hard region dependency: no-trading ironman/league cannot buy the pocket item without Daemonheim token access.",
+      "sources": [
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Advanced_smithing_autoheater",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_mapping"
+    },
+    {
+      "id": "smithing:orthen-furnace-core-obtain",
+      "skill": "Smithing",
+      "method": "Orthen furnace core — obtain (craft)",
+      "method_region": "anachronia",
+      "location": "Crafted on anvil (masterwork tab); dragon burners excavated at Orthen Observation outpost",
+      "row_type": "unlock_obtain",
+      "importance": "Top-end Smithing/Firemaking off-hand. Obtain path is Anachronia Archaeology-heavy, not Tirannwn-only.",
+      "requirements": [
+        "99 Smithing (boostable for craft)",
+        "102 Archaeology (boostable for craft; untradeable masterwork ingredients cannot be assisted)",
+        "4 restored dragon burners from Orthen experiment workbench digs",
+        "Masterwork plate chain (curved masterwork melee plates), vital sparks, stone spirits, tarromin incense, etc."
+      ],
+      "obtain_vs_use": "obtain",
+      "region_combo": ["anachronia"],
+      "secondary_material_regions": [
+        "Global bar/ore bank for alloy chain",
+        "Slayer for vital sparks (88+ typical)"
+      ],
+      "sources": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Orthen_Dig_Site",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "smithing:orthen-furnace-core-use",
+      "skill": "Smithing",
+      "method": "Orthen furnace core — use (equipped)",
+      "method_region": "global_once_obtained",
+      "location": "Anywhere while smithing/firemaking/woodcutting with Superheat Form",
+      "row_type": "unlock_use",
+      "importance": "Stops Superheat Form prayer drain; Breakdown can grant 5% Smithing/Firemaking XP buff (Furnace Core) for 5 minutes; scroll of efficiency 2% → 2.5%; forge phoenix spawns.",
+      "obtain_vs_use": "use",
+      "region_combo": ["anachronia", "tirannwn"],
+      "region_combo_notes": "Craft needs Anachronia (Orthen) + 99 Smithing infrastructure; full value needs Tirannwn Superheat Form (The Light Within). Autoheater (Forinthry) is the third piece of the AFK smith stack.",
+      "league_note": "Track as Anachronia+Tirannwn combo unlock; do not treat as pure-XP BIS vs every augmented off-hand setup.",
+      "sources": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "construction:fort-forinthry-buildings",
+      "skill": "Construction",
+      "method": "Fort Forinthry building tiers + quest series",
+      "method_region": "misthalin",
+      "location": "Fort Forinthry (working League taxonomy: Catalyst Misthalin; Equilibrium boundary not re-published)",
+      "level_range": "1-80+",
+      "row_type": "training_method",
+      "importance": "Ironman Construction spine: New Foundations → tier upgrades → maple buildings (Miscellania maple) → magic buildings. Workshop first for XP, Town Hall for rested XP.",
+      "ironman_notes": [
+        "Portable workbenches cannot be used in Ironman Mode.",
+        "Boosts only needed to start blueprints.",
+        "Hardwood from Managing Miscellania (Fremennik questline) feeds teak/mahogany and maple Fort loops."
+      ],
+      "region_combo": ["misthalin"],
+      "related_supply_regions": ["fremennik"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+        "https://runescape.wiki/w/Construction_training",
+        "https://runescape.wiki/w/Fort_Forinthry"
+      ],
+      "confidence": "confirmed_wiki_method_working_league_taxonomy"
+    },
+    {
+      "id": "construction:contracts",
+      "skill": "Construction",
+      "method": "Construction contracts (teak → mahogany)",
+      "method_region": "multi_region",
+      "location": "Estate agents (e.g. Ithell/Prifddinas restock loop highly efficient); contracts buildable at assigned houses",
+      "level_range": "40+ unlock; 60+ teak efficient; 70+ mahogany",
+      "row_type": "training_method",
+      "importance": "Best ironman AFK Construction: ~10k base XP/contract + furniture XP, lower plank burn than flatpacks. Teak contracts ~250k+ XP/h at 60+; mahogany can exceed ~625k XP/h with full plank-box upgrades.",
+      "ironman_notes": [
+        "Plank box upgrades and Beast of Burden before max box are critical.",
+        "NPC Contact (Lunar, 67 Magic) or attuned crystal teleport seed to Ithell speeds restock.",
+        "Constructor's outfit from Temple Trekking (Morytania) is the permanent XP set."
+      ],
+      "region_combo": ["misthalin", "tirannwn", "morytania"],
+      "region_combo_notes": "Contracts are global once unlocked; Tirannwn speeds restock/teleports; Morytania supplies constructor's outfit; plank supply often Fremennik Miscellania or Kandarin/Ape Atoll woodcutting.",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+        "https://runescape.wiki/w/Construction_Contracts",
+        "https://runescape.wiki/w/Constructor%27s_outfit"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "construction:harps-harmonic-side-xp",
+      "skill": "Construction",
+      "method": "Ithell harps (incidental Construction XP while gathering harmonic dust)",
+      "method_region": "tirannwn",
+      "location": "Prifddinas Ithell district, Voice of Seren preferred",
+      "level_range": "75-80 bridge (ironman guide framing) / ongoing while farming crystal tools",
+      "row_type": "training_method",
+      "importance": "After Plague's End, harp play yields Construction XP as a side effect of ~15k harmonic dust targets for crystal tools — not a pure Construction grind but a high-value Tirannwn artisan multi-skill node.",
+      "region_combo": ["tirannwn"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+        "https://runescape.wiki/w/Harp",
+        "https://runescape.wiki/w/Harmonic_dust"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "construction:prawnbrokers-flatpacks",
+      "skill": "Construction",
+      "method": "Driftwood / Flotsam prawnbroker flatpacks",
+      "method_region": "global_once_supplied",
+      "location": "POH workshop flatpacks",
+      "level_range": "63+ driftwood; 73+ flotsam",
+      "row_type": "training_method",
+      "importance": "Late ironman Construction sink when hardwood/miscellania supply is strong; listed on ironman Construction guide as 63-99 / 73-99 options.",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "cooking:fort-tier3-kitchen-bonfire",
+      "skill": "Cooking",
+      "method": "Player bonfire + Fort Forinthry tier-3 kitchen",
+      "method_region": "misthalin",
+      "location": "Fort Forinthry kitchen (tier 3 needs 85 Construction) with player-built bonfire",
+      "level_range": "any cookable food; best once kitchen is tier 3",
+      "row_type": "training_method",
+      "importance": "Optimal ironman cook XP stack: player bonfires +10% vs range; Fort kitchen +5% at tier 3 — they stack. Pre-built bonfires (Prif, Menaphos, Yeti Town, Rogues' Den) do not give the +10%.",
+      "requirements": [
+        "Partial Murder on the Border for Fort kitchen path",
+        "85 Construction for tier-3 kitchen bonus"
+      ],
+      "region_combo": ["misthalin"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+        "https://runescape.wiki/w/Fort_Forinthry"
+      ],
+      "confidence": "confirmed_wiki_method_working_league_taxonomy"
+    },
+    {
+      "id": "cooking:menaphos-port-fish",
+      "skill": "Cooking",
+      "method": "Menaphos port fish (desert sole / catfish / beltfish) catch + cook",
+      "method_region": "desert",
+      "location": "Menaphos fishing spots near bank",
+      "level_range": "52 sole / 60 catfish / 72 beltfish Cooking; burn stops 81/86/90 with cooking gauntlets",
+      "row_type": "training_method",
+      "importance": "Core mid-level ironman food + Cooking XP: one banked spot yields multiple food tiers for Slayer and training.",
+      "region_combo": ["desert"],
+      "related_unlocks": [
+        "Cooking gauntlets (Family Crest) — high priority early",
+        "Sous chef's outfit (Gnome Restaurant, Kandarin) — 6% Cooking XP"
+      ],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+        "https://runescape.wiki/w/Menaphos"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "cooking:swarm-and-pvm-raws",
+      "skill": "Cooking",
+      "method": "Swarm fishing + boss raw fish banks",
+      "method_region": "kandarin",
+      "location": "Deep Sea Fishing hub swarm; cook at Fort/Prif/Max guild as available",
+      "level_range": "high Cooking; many swarm foods burn until 94-99 gauntlets/cape",
+      "row_type": "training_method",
+      "importance": "Late ironman food for bossing; Cooking XP is secondary to food stock. Heart of Gielinor generals / Croesus / high bosses dump raw sharks/rocktails.",
+      "region_combo": ["kandarin"],
+      "secondary_supply": "PVM multi-region",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+        "https://runescape.wiki/w/Deep_Sea_Fishing"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "cooking:dairy-churn-pof",
+      "skill": "Cooking",
+      "method": "Dairy churn cheese / cream cheese with Player-Owned Farm totems",
+      "method_region": "kandarin",
+      "location": "Dairy churns + POF cow pens (Manor Farm)",
+      "level_range": "low Cooking start; 49/71 Farming and 60 Construction for double/quadruple XP totems",
+      "row_type": "training_method",
+      "importance": "Low-risk ironman XP: 64 base XP/bucket (cheese wheel), 80 cream cheese after Chef's Assistant; ×2/×4 with elder cows + farm totems; full sous chef can push ~215k XP/h at low coin cost.",
+      "region_combo": ["kandarin"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+        "https://runescape.wiki/w/Dairy_Churn",
+        "https://runescape.wiki/w/Player-owned_farm"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "cooking:bait-and-switch-relic",
+      "skill": "Cooking",
+      "method": "Bait and Switch relic (auto-cook catch at 50% Cooking XP)",
+      "method_region": "global_once_relic",
+      "row_type": "training_method",
+      "importance": "Not a primary grind (doubles time fishing for full Cooking XP) but strong low-intensity when raw fish comes from PVM or shark outfit consume mode.",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking",
+        "https://runescape.wiki/w/Bait_and_Switch"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "crafting:crafteneering",
+      "skill": "Crafting",
+      "method": "Crafteneering (Dungeon Smuggler leather loop)",
+      "method_region": "forinthry",
+      "location": "Daemonheim floors — buy protomastyx hide + thread, craft protoleather bodies, sell back",
+      "level_range": "9+",
+      "row_type": "training_method",
+      "importance": "Early-mid ironman Crafting without surface materials; benefits from artisan + gatherer kinship roles and scroll of gathering.",
+      "region_combo": ["forinthry"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Daemonheim"
+      ],
+      "confidence": "confirmed_wiki_plus_official_region_mapping"
+    },
+    {
+      "id": "crafting:gem-cut-and-necklaces",
+      "skill": "Crafting",
+      "method": "Uncommon gem rocks + gold necklace production (porter loop)",
+      "method_region": "desert",
+      "location": "Al Kharid / gem rocks; smelt/craft at Fort Forinthry for rested XP",
+      "level_range": "16-20 common gems; 20-75 uncommon cuts; 22/40-75 necklaces",
+      "row_type": "training_method",
+      "importance": "Self-supplied ironman midgame: cut gems for porters; concentrated gold (80 Mining) + emerald necklaces → Sign of the porter IV (68 Divination) closes the resource loop.",
+      "region_combo": ["desert", "misthalin"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Gem_rocks",
+        "https://runescape.wiki/w/Sign_of_the_porter"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "crafting:prif-harps",
+      "skill": "Crafting",
+      "method": "Ithell harps (harmonic dust + Crafting XP)",
+      "method_region": "tirannwn",
+      "location": "Prifddinas Ithell, Voice of Seren preferred",
+      "level_range": "75-99",
+      "row_type": "training_method",
+      "importance": "Classic high-level ironman Crafting AFK after Plague's End; simultaneously feeds crystal tools (hammer, hatchet, pickaxe, etc.).",
+      "region_combo": ["tirannwn"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Harp"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "crafting:dream-of-iaia-tannery",
+      "skill": "Crafting",
+      "method": "Dream of Iaia tannery (Anachronia base-camp hide workers)",
+      "method_region": "anachronia",
+      "location": "Anachronia base camp → Dream of Iaia",
+      "level_range": "75-99 passive",
+      "row_type": "training_method",
+      "importance": "Best ironman Crafting XP per played-hour: workers on hides ~720 XP/day each; 60/65/70 workers ≈ 43.2k / 46.8k / 50.4k XP/day with command centre tiers — faster than harps for active time.",
+      "region_combo": ["anachronia"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Dream_of_Iaia",
+        "https://runescape.wiki/w/Anachronia_base_camp"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "crafting:gate-of-elidinis-moonstone",
+      "skill": "Crafting",
+      "method": "Gate of Elidinis moonstone fragment AFK",
+      "method_region": "misthalin",
+      "location": "Gate of Elidinis (Ode of the Devourer / City of Um access path)",
+      "level_range": "quest-gated; high rates toward 99",
+      "row_type": "training_method",
+      "importance": "Skilling-boss Crafting: AFK moonstone fragments can exceed ~300k XP/h at 99 with sustain setup; conduit repair reduces damage for longer sessions.",
+      "region_combo": ["misthalin"],
+      "league_note": "City of Um / Gate use historical Catalyst Misthalin working mapping until Equilibrium publishes a locality override.",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/The_Gate_of_Elidinis",
+        "https://runescape.wiki/w/Ode_of_the_Devourer"
+      ],
+      "confidence": "confirmed_wiki_method_working_league_taxonomy"
+    },
+    {
+      "id": "firemaking:bonfires-yeti-prif-max",
+      "skill": "Firemaking",
+      "method": "Bonfire log burning (Yeti Town / Prif / Max Guild)",
+      "method_region": "multi_region",
+      "location": "Yeti Town permanent bonfire (Violet is Blue, +4% as 5-player); Prif Tower of Voices (log save chance); Max Guild",
+      "level_range": "1-110 progressive log tiers",
+      "row_type": "training_method",
+      "importance": "Default ironman Firemaking: Miscellania maple/teak/mahogany passive logs; magic logs from bosses. Always prefer permanent high-bonus bonfires.",
+      "region_combo": ["fremennik", "tirannwn"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/Bonfire"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "firemaking:curly-roots-baseline",
+      "skill": "Firemaking",
+      "method": "Curly roots (Jadinko Lair firepits)",
+      "method_region": "karamja",
+      "location": "Jadinko Lair, south-eastern Karamja",
+      "level_range": "83+ Firemaking and 83+ Woodcutting",
+      "row_type": "training_method",
+      "importance": "Baseline high-end free Firemaking: chop curly jade roots, burn in lair firepits. ~250k FM XP/h min; ~305k FM + ~90k WC at high level with Nature's Sentinel + Ring of Fire; also ~1,100 Jadinko favour/h.",
+      "xp_per_root": 378.5,
+      "region_combo": ["karamja"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/Curly_root",
+        "https://runescape.wiki/w/Pay-to-play_Firemaking_training"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "firemaking:curly-roots-superheat-form-ceiling",
+      "skill": "Firemaking",
+      "method": "Curly roots with Superheat Form (or Always Adze)",
+      "method_region": "karamja",
+      "location": "Jadinko Lair — Superheat Form auto-burns roots while chopping",
+      "level_range": "83+ FM/WC; 91 Prayer + The Light Within for Superheat Form",
+      "row_type": "training_method",
+      "importance": "Ceiling method: ~670k Firemaking XP/h and ~120k Woodcutting XP/h with Flame gloves + Ring of Fire + Superheat Form (or Always Adze relic). No Jadinko favour on this variant. Ironman guide frames this as the high-level best XP route.",
+      "dependency": "Superheat Form is a Tirannwn Seren prayer unlock — curly roots sit in Karamja but the XP ceiling is a Tirannwn prayer dependency (sustain via Grace of the elves / Orthen furnace core).",
+      "region_combo": ["karamja", "tirannwn"],
+      "region_combo_optional_sustain": ["anachronia"],
+      "region_combo_notes": "Karamja = method site; Tirannwn = Superheat Form (The Light Within) + often Grace of the elves sustain; Anachronia = Orthen furnace core for zero prayer drain. Always Adze relic can substitute Superheat Form without prayer drain.",
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Pay-to-play_Firemaking_training"
+      ],
+      "confidence": "confirmed_wiki_with_setup_dependency"
+    },
+    {
+      "id": "firemaking:accidental-firemaking",
+      "skill": "Firemaking",
+      "method": "'Accidental' Firemaking (Extinction products)",
+      "method_region": "anachronia",
+      "location": "Post-Extinction accidental FM methods producing shell shards / fungal shafts / dinosaur propellant",
+      "level_range": "82-110",
+      "row_type": "training_method",
+      "importance": "Ironman-friendly: Firemaking XP while crafting useful combat/skilling products with no log input; gated by Extinction grandmaster quest.",
+      "region_combo": ["anachronia"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking",
+        "https://runescape.wiki/w/Extinction"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "firemaking:vyrelord-passive",
+      "skill": "Firemaking",
+      "method": "Vyrelord auto-cremation (Sunspear)",
+      "method_region": "morytania",
+      "location": "Darkmeyer vyrelords",
+      "level_range": "76+ after Lord of Vampyrium; River of Blood for reforged Sunspear auto-cremate",
+      "row_type": "training_method",
+      "importance": "Passive multi-skill: ~150 FM XP/kill; roughly 70k-200k FM XP/h depending on kill rate, plus combat/prayer/farming/invention side XP.",
+      "region_combo": ["morytania"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/Vyrewatch/Strategies"
+      ],
+      "confidence": "confirmed_wiki"
+    }
+  ],
+  "unlock_notes": [
+    {
+      "id": "combo:asgarnia-smithing-core",
+      "title": "Asgarnia owns burial Smithing + Blacksmith outfit",
+      "summary": "Artisans' Workshop is the ironman Smithing home. Plan respect first into Blacksmith outfit (6% XP + helmet double-bar/teleport), then solemn smith and ceremonial upgrades. Burial sets 40+ are the training method; the outfit is the permanent amplifier often under-specified when only burial is listed.",
+      "regions": ["asgarnia"],
+      "skills": ["Smithing"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Artisans%27_Workshop_Reward_Shop"
+      ]
+    },
+    {
+      "id": "combo:tirannwn-artisan-prayer-tools",
+      "title": "Tirannwn artisan stack: Superheat Form + crystal hammer + harps",
+      "summary": "The Light Within unlocks Superheat Form (91 Prayer) for Smithing heat/smelt speed and Firemaking curly-roots ceiling. Crystal hammer is sung/recharged in Prif/Tirannwn. Harps simultaneously train Crafting (and side Construction) while producing harmonic dust for crystal tools. Grace of the elves sustains Superheat Form drain.",
+      "regions": ["tirannwn"],
+      "skills": ["Smithing", "Firemaking", "Crafting", "Construction", "Prayer"],
+      "sources": [
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Crystal_hammer",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking"
+      ]
+    },
+    {
+      "id": "combo:forinthry-autoheater-crafteneering",
+      "title": "Forinthry/Daemonheim: autoheater + crafteneering",
+      "summary": "Equilibrium locks Daemonheim to Forinthry. Smithing autoheater (and advanced) is a token shop unlock with no GE substitute. Early Crafting crafteneering also lives inside Daemonheim. League planners treating Forinthry as combat-only will undersell artisan AFK quality.",
+      "regions": ["forinthry"],
+      "skills": ["Smithing", "Crafting", "Dungeoneering"],
+      "sources": [
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting",
+        "https://runescape.wiki/w/Daemonheim_Rewards"
+      ]
+    },
+    {
+      "id": "combo:anachronia-orthen-iaia-accidental",
+      "title": "Anachronia: Orthen furnace core obtain + Iaia Crafting + Accidental FM",
+      "summary": "Orthen dig site supplies dragon burners for Orthen furnace core craft (99 Smithing / 102 Archaeology). Dream of Iaia hide workers are the highest Crafting XP-per-played-hour ironman route. Accidental Firemaking post-Extinction needs no log bank. Separate obtain (Anachronia) from use (global, best with Tirannwn Superheat Form).",
+      "regions": ["anachronia"],
+      "skills": ["Smithing", "Archaeology", "Crafting", "Firemaking"],
+      "sources": [
+        "https://runescape.wiki/w/Orthen_furnace_core",
+        "https://runescape.wiki/w/Dream_of_Iaia",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking"
+      ]
+    },
+    {
+      "id": "combo:smithing-afk-trinity",
+      "title": "Smithing AFK trinity: Asgarnia workshop + Forinthry autoheater + Tirannwn Superheat Form (+ Anachronia core)",
+      "summary": "Burial XP is Asgarnia-local. Autoheater is Forinthry-token. Superheat Form is Tirannwn-quest/prayer. Orthen furnace core (Anachronia craft) removes Superheat Form drain and buffs efficiency. Full AFK burial stack is a four-region artisan combo, not a single-region pick.",
+      "regions": ["asgarnia", "forinthry", "tirannwn", "anachronia"],
+      "skills": ["Smithing"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Smithing",
+        "https://runescape.wiki/w/Smithing_autoheater",
+        "https://runescape.wiki/w/Superheat_Form",
+        "https://runescape.wiki/w/Orthen_furnace_core"
+      ]
+    },
+    {
+      "id": "combo:firemaking-curly-ceiling",
+      "title": "Curly roots ceiling is Karamja site + Tirannwn prayer",
+      "summary": "Do not list 670k FM XP/h curly roots as pure Karamja. Site is Jadinko Lair (Karamja); Superheat Form (or Always Adze) is the multiplier. Tirannwn also supplies Grace of the elves; Anachronia core is optional zero-drain. Without those, use the ~250-305k firepit baseline.",
+      "regions": ["karamja", "tirannwn", "anachronia"],
+      "skills": ["Firemaking", "Woodcutting", "Prayer"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Firemaking",
+        "https://runescape.wiki/w/Superheat_Form"
+      ]
+    },
+    {
+      "id": "combo:construction-misthalin-tirannwn-morytania",
+      "title": "Construction: Fort (Misthalin) + contracts + outfit (Morytania) + Prif restock (Tirannwn)",
+      "summary": "Fort Forinthry building is the structured early-mid path under working Misthalin taxonomy. Construction contracts are the ironman AFK bulk XP path. Constructor's outfit is Temple Trekking (Morytania). Prif estate agent / crystal teleports improve mahogany contract logistics. Miscellania hardwood (Fremennik) is the plank pipeline.",
+      "regions": ["misthalin", "tirannwn", "morytania", "fremennik"],
+      "skills": ["Construction"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+        "https://runescape.wiki/w/Construction_Contracts"
+      ]
+    },
+    {
+      "id": "combo:cooking-desert-misthalin-kandarin",
+      "title": "Cooking: Desert fish + Misthalin Fort kitchen + Kandarin outfit/POF",
+      "summary": "Menaphos fish are Desert. Optimal cook XP needs Fort tier-3 kitchen (Misthalin working mapping) with player bonfires. Sous chef's outfit is Gnome Restaurant (Kandarin). Dairy ×4 XP needs Manor Farm totems (Kandarin). Cooking gauntlets (Family Crest) are an early multi-region quest priority.",
+      "regions": ["desert", "misthalin", "kandarin"],
+      "skills": ["Cooking"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking"
+      ]
+    },
+    {
+      "id": "combo:crafting-late-game-split",
+      "title": "Crafting late game: Tirannwn harps vs Anachronia Iaia vs Misthalin Gate",
+      "summary": "Harps are AFK crystal-tool synergy in Tirannwn. Dream of Iaia wins XP-per-played-hour with Anachronia workers. Gate of Elidinis moonstones are a high active-AFK rate under Misthalin working taxonomy after Ode of the Devourer. Early game can lean Forinthry crafteneering without surface materials.",
+      "regions": ["tirannwn", "anachronia", "misthalin", "forinthry"],
+      "skills": ["Crafting"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Crafting"
+      ]
+    },
+    {
+      "id": "note:no-portables-ironman",
+      "title": "Ironman artisan constraint: no portables",
+      "summary": "Portable workbenches and portable ranges cannot be used in Ironman Mode. All Construction/Cooking routes must assume permanent facilities (Fort, POH, Rogues' Den, Prif bonfires, etc.).",
+      "regions": [],
+      "skills": ["Construction", "Cooking"],
+      "sources": [
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Construction",
+        "https://runescape.wiki/w/Ironman_Mode/Guide/Cooking"
+      ]
+    }
+  ]
+}

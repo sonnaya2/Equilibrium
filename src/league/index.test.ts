@@ -8,6 +8,8 @@ import {
   ELECTIVE_REGIONS,
   emptyBuild,
   isRegionUnlocked,
+  MAX_RELIC_KEYS,
+  MAX_RELIC_NAME_LEN,
   MILESTONE_REGION,
   normalizeBuild,
   pickBlessing,
@@ -135,6 +137,16 @@ describe("normalizeBuild", () => {
     });
     expect(state.blessingPicks).toHaveLength(PATH_TIERS.length);
     expect(state.blessingResetsUsed).toBe(BLESSING_RESET_COUNT);
+  });
+
+  it("caps relic key count and name length so hostile hashes cannot pollute storage", () => {
+    const flood: Record<string, string> = {};
+    for (let i = 1; i <= MAX_RELIC_KEYS + 8; i++) flood[String(i)] = `Relic ${i}`;
+    flood["99"] = "x".repeat(MAX_RELIC_NAME_LEN + 1);
+    const state = normalizeBuild({ elective: [], relics: flood });
+    expect(Object.keys(state.relics).length).toBeLessThanOrEqual(MAX_RELIC_KEYS);
+    expect(state.relics["99"]).toBeUndefined();
+    expect(Object.values(state.relics).every((n) => n.length <= MAX_RELIC_NAME_LEN)).toBe(true);
   });
 });
 

@@ -6,7 +6,7 @@ export interface PlannerRegion {
   id: RegionId;
   name: string;
   availability: "starting" | "automatic_early" | "elective";
-  /** Quests touching the region — the count a pick unlocks. */
+  /** Quests touching the region (quests.json region_group_counts). */
   quests: number;
   areas: string[];
   content: Array<{ name: string; kind: string; confidence: string }>;
@@ -14,7 +14,7 @@ export interface PlannerRegion {
   training: number;
   hardRules: string[];
   warnings: string[];
-  /** Region-level source plus every content-level source. */
+  /** Region source + content/upgrade/training rows that carry a SourceReference. */
   sourceCount: number;
   verifiedAt: string | null;
 }

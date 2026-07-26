@@ -60,6 +60,10 @@ export interface BuildState {
 
 export const STORAGE_KEY = "eq:build:v1";
 
+/** Hostile share hashes / corrupt storage cannot flood localStorage with junk relics. */
+export const MAX_RELIC_KEYS = 16;
+export const MAX_RELIC_NAME_LEN = 64;
+
 export function emptyBuild(): BuildState {
   return { elective: [], relics: {}, blessingPicks: [], blessingResetsUsed: 0 };
 }
@@ -80,7 +84,15 @@ export function normalizeBuild(value: unknown): BuildState {
   const relics = (value as { relics?: unknown }).relics;
   if (typeof relics === "object" && relics !== null) {
     for (const [tier, name] of Object.entries(relics)) {
-      if (/^\d+$/.test(tier) && typeof name === "string" && name) base.relics[tier] = name;
+      if (Object.keys(base.relics).length >= MAX_RELIC_KEYS) break;
+      if (
+        /^\d+$/.test(tier) &&
+        typeof name === "string" &&
+        name.length > 0 &&
+        name.length <= MAX_RELIC_NAME_LEN
+      ) {
+        base.relics[tier] = name;
+      }
     }
   }
 

@@ -7,6 +7,9 @@ const necromancyTiers = pass3.necromancy.tiers.map((tier) => ({
   category: `${tier.souls} soul${tier.souls === 1 ? "" : "s"} maximum`,
   unlocks: tier.unlocks,
   confidence: pass3.necromancy.confidence,
+  region_hint: pass3.necromancy.region_hint,
+  region_status: pass3.necromancy.region_status,
+  source_urls: pass3.necromancy.source_urls,
 }));
 
 const archaeologyRelics = pass3.archaeology.relics.map((relic) => ({

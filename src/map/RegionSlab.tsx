@@ -194,7 +194,7 @@ export function RegionSlab({
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     focusRegion(id);
-    if (elective) toggleRegion(id);
+    if (selectable) toggleRegion(id);
   };
   const over = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
@@ -205,6 +205,13 @@ export function RegionSlab({
     setHovered(false);
     document.body.style.cursor = "auto";
   };
+  // PointerOut can miss when the canvas unmounts (WebGPU fallback, route leave).
+  useEffect(
+    () => () => {
+      document.body.style.cursor = "auto";
+    },
+    [],
+  );
 
   const [mx, mz] = [
     (shape.markerUv[0] - 0.5) * MAP_WORLD.width,
@@ -296,7 +303,9 @@ export function RegionSlab({
         >
           <div aria-hidden="true" className="map-chip">
             <span className="map-chip-name">{anchor.name}</span>
-            <span className="map-chip-state">{statusLabel(id, elective, unlocked, selectable)}</span>
+            <span className="map-chip-state">
+              {statusLabel(id, elective, unlocked, selectable)} · {quests} quests touching
+            </span>
           </div>
         </Html>
       ) : null}

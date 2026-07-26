@@ -148,11 +148,23 @@ function details(row: Row): string[] {
   ].map(format).filter(Boolean);
 }
 
+function mapKey(row: Row, index: number, prefix: string): string {
+  if (row.id != null && row.id !== "") return String(row.id);
+  if (typeof row.name === "string" && row.name) return `${prefix}:${row.name}`;
+  if (typeof row.quest === "string" && row.quest) return `${prefix}:${row.quest}`;
+  return `${prefix}:${index}`;
+}
+
 function rowsFor(section: SectionKey): Row[] {
   const base = unlockData[section] as unknown as Row[];
   const rows = new Map<string, Row>();
-  for (const row of SUPPLEMENTS[section]) rows.set(String(row.id), row);
-  for (const row of base) rows.set(String(row.id), row);
+  // Base first, then supplements — on id collision the newer supplement wins.
+  base.forEach((row, index) => {
+    rows.set(mapKey(row, index, "base"), row);
+  });
+  SUPPLEMENTS[section].forEach((row, index) => {
+    rows.set(mapKey(row, index, "supplement"), row);
+  });
   return [...rows.values()];
 }
 
@@ -182,35 +194,44 @@ export function PermanentUnlockResearch() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search unlocks"
           aria-label="Search permanent unlocks"
-          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-sm text-parch-50 outline-none placeholder:text-parch-300/70 focus:border-parch-300 sm:w-64"
+          className="w-full border border-stone-750 bg-transparent px-3 py-2 text-sm text-parch-50 placeholder:text-parch-300/70 focus:border-gem-400 sm:w-64"
         />
       </div>
 
-      <div className="mt-5 flex gap-1 overflow-x-auto border-b border-stone-750 pb-px">
-        {SECTIONS.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            onClick={() => setSection(item.key)}
-            className={`whitespace-nowrap border-b-2 px-3 py-2 text-xs ${section === item.key ? "border-parch-50 text-parch-50" : "border-transparent text-parch-300 hover:text-parch-50"}`}
-          >
-            {item.label}
-          </button>
-        ))}
+      <div role="tablist" aria-label="Permanent unlock sections" className="mt-5 flex gap-1 overflow-x-auto border-b border-stone-750 pb-px">
+        {SECTIONS.map((item) => {
+          const active = section === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setSection(item.key)}
+              className={`whitespace-nowrap border-b-2 px-3 py-2 text-xs transition-colors duration-150 ${
+                active
+                  ? "border-gem-400 text-gem-300"
+                  : "border-transparent text-parch-300 hover:text-parch-50"
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="py-4">
+      <div className="py-3">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <p className="text-sm leading-6 text-parch-300">{selected.description}</p>
           <span className="text-xs text-parch-300">{rows.length} shown</span>
         </div>
 
         <div className="mt-3 border-t border-stone-750">
-          {rows.length ? rows.map((row) => {
+          {rows.length ? rows.map((row, index) => {
             const sourceLinks = links(row);
             const rowDetails = details(row);
             return (
-              <article key={String(row.id)} className="grid gap-2 border-b border-stone-750/70 py-4 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6">
+              <article key={mapKey(row, index, "row")} className="grid gap-2 border-b border-stone-750/70 py-2.5 lg:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)_160px] lg:gap-6">
                 <div>
                   <h3 className="text-sm font-medium text-parch-50">{title(row)}</h3>
                   <p className="mt-1 text-xs text-parch-300">{format(row.category)}</p>

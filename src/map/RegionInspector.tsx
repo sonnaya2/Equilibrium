@@ -14,7 +14,7 @@
  * instead of being flattened to a yes.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PLACES_BY_REGION } from "./data/placeAnchors";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
@@ -41,6 +41,7 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={on}
       className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
         on
           ? "border-gem-500 bg-stone-800 text-gem-300"
@@ -59,7 +60,7 @@ export function RegionInspector({
   regions: PlannerRegion[];
   boundaryRules: string[];
 }) {
-  const { focus, focusPlace } = useMapFocus();
+  const { focus, focusPlace, focusRegion } = useMapFocus();
   const [kind, setKind] = useState<string>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [query, setQuery] = useState("");
@@ -73,11 +74,19 @@ export function RegionInspector({
     [detail],
   );
 
+  // Stale kind from a previous region would empty the table with no chip on.
+  useEffect(() => {
+    setKind("all");
+    setStatus("all");
+    setQuery("");
+  }, [focus.region]);
+
   if (!detail) return null;
 
+  const activeKind = kind === "all" || kinds.includes(kind) ? kind : "all";
   const needle = query.trim().toLowerCase();
   const rows = detail.content.filter((c) => {
-    if (kind !== "all" && c.kind !== kind) return false;
+    if (activeKind !== "all" && c.kind !== activeKind) return false;
     const confirmed = c.confidence.startsWith("confirmed");
     if (status === "confirmed" && !confirmed) return false;
     if (status === "inferred" && confirmed) return false;
@@ -85,8 +94,17 @@ export function RegionInspector({
     return true;
   });
 
+  // PlaceMarkers only mounts while framed. focusPlace alone lights the chip
+  // CSS but leaves the pin off the board after an unframe (or on first load).
+  const lightPlace = (area: string | null) => {
+    if (area !== null && !focus.framed) focusRegion(focus.region);
+    focusPlace(area);
+  };
+
+  const sourcesLine = `${detail.sourceCount} source${detail.sourceCount === 1 ? "" : "s"} · verified ${detail.verifiedAt ?? "never"}`;
+
   return (
-    <section className="panel" aria-live="polite">
+    <section className="panel" aria-label="Region detail">
       <div className="panel-head flex flex-wrap items-baseline justify-between gap-2">
         {detail.name}
         <span className="text-xs normal-case tracking-normal text-parch-300">
@@ -96,7 +114,7 @@ export function RegionInspector({
 
       <div className="stat-strip border-b border-stone-800 px-3.5 py-2.5">
         {[
-          ["Quests", detail.quests],
+          ["Quests touching", detail.quests],
           ["Content", metrics?.content ?? detail.content.length],
           ["Upgrades", metrics?.upgrades ?? detail.upgrades.length],
           ["Training", metrics?.training ?? detail.training],
@@ -111,24 +129,40 @@ export function RegionInspector({
       <div className="panel-body">
         {detail.areas.length > 0 ? (
           <div className="mb-3 flex flex-wrap gap-1.5">
-            {/* Hovering an area lights its marker on the board, and hovering the
-                marker lights the chip. That link is what the route exists for. */}
-            {detail.areas.map((area) => (
-              <span
-                key={area}
-                onPointerEnter={() => anchored.has(area) && focusPlace(area)}
-                onPointerLeave={() => focusPlace(null)}
-                className={`rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
-                  focus.place === area
-                    ? "bg-stone-800 text-gem-300"
-                    : anchored.has(area)
-                      ? "text-parch-100"
-                      : "text-parch-500"
-                }`}
-              >
-                {area}
-              </span>
-            ))}
+            {/* Anchored places are buttons so keyboard can light the marker;
+                unanchored areas stay text — nothing on the board to focus. */}
+            {detail.areas.map((area) => {
+              const isAnchored = anchored.has(area);
+              const lit = focus.place === area;
+              const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${
+                lit
+                  ? "bg-stone-800 text-gem-300"
+                  : isAnchored
+                    ? "text-parch-100"
+                    : "text-parch-500"
+              }`;
+              if (isAnchored) {
+                return (
+                  <button
+                    key={area}
+                    type="button"
+                    onPointerEnter={() => lightPlace(area)}
+                    onPointerLeave={() => lightPlace(null)}
+                    onFocus={() => lightPlace(area)}
+                    onBlur={() => lightPlace(null)}
+                    onClick={() => lightPlace(area)}
+                    className={chipClass}
+                  >
+                    {area}
+                  </button>
+                );
+              }
+              return (
+                <span key={area} className={chipClass}>
+                  {area}
+                </span>
+              );
+            })}
           </div>
         ) : null}
 
@@ -143,10 +177,10 @@ export function RegionInspector({
               strings and Misthalin alone has twelve, which as buttons is a
               two-row wall above a table with sixteen rows in it. */}
           <select
-            value={kind}
+            value={activeKind}
             onChange={(e) => setKind(e.target.value)}
             aria-label="Filter content by kind"
-            className="max-w-56 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 focus:border-gem-500 focus:outline-none"
+            className="max-w-56 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 focus:border-gem-400"
           >
             <option value="all">all kinds ({detail.content.length})</option>
             {kinds.map((k) => (
@@ -167,7 +201,7 @@ export function RegionInspector({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Find content"
             aria-label="Filter content by name"
-            className="ml-auto w-40 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 placeholder:text-parch-500 focus:border-gem-500 focus:outline-none"
+            className="ml-auto w-40 rounded-sm border border-stone-750 bg-stone-900 px-2 py-0.5 text-xs text-parch-100 placeholder:text-parch-500 focus:border-gem-400"
           />
         </div>
 
@@ -234,10 +268,15 @@ export function RegionInspector({
         ))}
 
         <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2 border-t border-stone-800 pt-2">
-          <p className="num text-xs text-parch-500">
-            {detail.sourceCount} source{detail.sourceCount === 1 ? "" : "s"} · verified{" "}
-            {detail.verifiedAt ?? "never"}
-          </p>
+          {/* Compact live status: name/unlock/sources only. Filters and the
+              content table stay outside so chip/select churn is not announced.
+              e2e pins section[aria-live] + the sources pattern (must be visible). */}
+          <section aria-live="polite" className="num text-xs text-parch-500">
+            <span className="sr-only">
+              {detail.name}. {UNLOCK_TEXT[detail.availability]}.{" "}
+            </span>
+            {sourcesLine}
+          </section>
           <details className="text-xs text-parch-300">
             <summary className="cursor-pointer text-parch-500 hover:text-parch-300">
               Boundary rules ({boundaryRules.length})

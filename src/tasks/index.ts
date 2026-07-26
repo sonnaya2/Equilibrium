@@ -1,7 +1,7 @@
 /**
- * Shared task-record contract. Equilibrium records stay canonical. A Catalyst
- * League fixture may temporarily use the same renderer while the Equilibrium
- * task list is unpublished.
+ * Shared task-record contract. Equilibrium records stay canonical. Catalyst
+ * League rows may use the same renderer as a stand-in until Equilibrium
+ * publishes its task list.
  */
 
 export const TASK_ORDER = ["easy", "medium", "hard", "elite", "master"] as const;

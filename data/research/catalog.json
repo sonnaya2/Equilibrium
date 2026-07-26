@@ -2725,7 +2725,6 @@
       ],
       "trainingMethodIds": [
         "agility:wilderness-course",
-        "combat-styles:abyss-afk-combat-training",
         "dungeoneering:daemonheim-floors",
         "hunter:black-salamanders",
         "hunter:charming-moths",

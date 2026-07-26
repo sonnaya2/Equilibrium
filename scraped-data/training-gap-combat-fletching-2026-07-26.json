@@ -1,0 +1,485 @@
+{
+  "snapshot_date": "2026-07-26",
+  "purpose": "Close Ironman / Equilibrium training-data gaps for post–20 Jul 2026 Fletching (mid-game rebalance), Ranged chinchompa utility, and high-level Slayer master region gates — including region combo friction. Do not trust pre-rebalance Fletching level gates or ironman Fletching ladders as current truth.",
+  "methods": [
+    {
+      "id": "fletching-rebalance-context",
+      "skill": "Fletching",
+      "category": "meta / patch context",
+      "summary": "20 Jul 2026 mid-game rebalance re-tiered core bows, crossbows, arrows and bolts to align Fletching with modern Ranged / Woodcutting / Smithing ladders. Darts, knives and javelins were intentionally left for later work.",
+      "planner_rules": [
+        "Do not copy pre-20-Jul Fletching level requirements for core bows, crossbows, arrows or bolts without rechecking the rebalance tables.",
+        "Wiki Pay-to-play Fletching training page is marked out of date for the rebalance — use method families and infrastructure here, not its stale level-band tables as absolute truth.",
+        "High-end reference rates already captured in midgame-rebalance-2026-07-20.json: primal arrows ~900k XP/h, primal bolts ~975k XP/h."
+      ],
+      "rebalance_highlights": {
+        "longbows": "Shieldbows reverted to longbows; +1 attack range (up to 9) vs shortbows/crossbows (range 7). Longbows match shortbow combat stats except range; longbows need +5 Fletching vs same-tier shortbow.",
+        "crossbows": "Crossbow Fletching sits ~+3 levels over same-tier shortbows; stock wood now matches Woodcutting tier (e.g. mithril xbow uses teak stock, not maple).",
+        "new_mid_tiers": ["Acadia short/longbow (tier 50)", "Orikalkum xbow/arrows/bolts (60)", "Necronium xbow/arrows/bolts (70)", "Bane xbow/arrows/bolts (80)", "Elder rune xbow/arrows/bolts (90)", "Eternal magic longbow + primal 2h crossbow (99 band)"],
+        "primal_ammo_process": "Primal bolts (unf) are 50 per bar then feathered (no more primal bolt tips + eternal magic headless shafts). Primal arrows still use eternal magic shafts. Proficiency levelling benefits removed; XP increased.",
+        "bane_ammo": "Tune Bane Ore now tunes finished bane arrows/bolts into abyssal/basilisk/dragon/wallasalkibane ammo (Jas-dragonbane style). Ironman smithing gate effectively higher (80 vs old 76 path).",
+        "f2p_impact": "Yew/magic bows now require 70/80 Ranged — no longer free-to-play weapons."
+      },
+      "known_high_end_rates": {
+        "source": "scraped-data/midgame-rebalance-2026-07-20.json",
+        "primal_arrows_xp_per_hour": 900000,
+        "primal_bolts_xp_per_hour": 975000
+      },
+      "source_urls": [
+        "https://runescape.wiki/w/2026_mid-game_rebalance",
+        "https://secure.runescape.com/m=news/patch-notes-mid-game-rebalance",
+        "https://runescape.wiki/w/Pay-to-play_Fletching_training"
+      ],
+      "confidence": "official_patch_plus_wiki_overview; midband XP/h still sparse"
+    },
+    {
+      "id": "fletching-post-rebalance-training-path",
+      "skill": "Fletching",
+      "category": "training path notes",
+      "summary": "Post-rebalance mid-game path should follow re-tiered shortbow → longbow (+5 Fletching) → matching ammo, then orikalkum/necronium/bane/elder ammo and stocks as levels open — not the pre-rebalance maple/yew/magic level gates.",
+      "path_notes": [
+        "Early: shafts / headless shafts / low-tier bows remain the on-ramp; exact XP tables on the wiki guide are pre-rebalance and must be revalidated.",
+        "Mid: maple re-tiered toward 40 Ranged band; acadia fills the tier-50 bow gap; yew/magic sit at 70/80 Ranged with matching Fletching.",
+        "Crossbow chain now tracks metal tiers with correct stock woods (teak→…→eternal) — ironman material planning is Smithing + Woodcutting dual-gated.",
+        "Ammo: arrow/bolt Fletching levels re-aligned; smithing XP on heads/unf bolts was cut hard (−27.5% iron up to −50% primal) so ironman head production is slower relative to Fletching XP.",
+        "High: eternal magic bows / primal crossbows and primal ammo are the known end-band; use 900k/975k only as ceiling references, not guaranteed ironman rates without self-sourced materials.",
+        "Darts still appear on the stale wiki guide as 'fastest' mid/high methods — rebalance explicitly did not retier darts/knives/javelins; treat dart XP as possibly still valid but separate from the re-tiered core ladder."
+      ],
+      "method_families": [
+        {
+          "name": "Bow / longbow fletch + string",
+          "style": "slow, often cheaper / self-sourced",
+          "ironman_note": "Preferred when logs and bowstrings are the bottleneck rather than GP. Portable fletcher + Ranger's Workroom stack material saves."
+        },
+        {
+          "name": "Arrows and bolts",
+          "style": "fast, material-heavy",
+          "ironman_note": "Best XP when heads/unf bolts and feathers are stocked; post-rebalance smithing XP nerf makes heads a larger Smithing tax."
+        },
+        {
+          "name": "Primal arrows / primal bolts",
+          "style": "end-band peak XP",
+          "reference_xp_per_hour": {
+            "primal_arrows": 900000,
+            "primal_bolts": 975000
+          },
+          "ironman_note": "Requires high-end metal + eternal magic shaft pipeline; not a mid-game method."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/2026_mid-game_rebalance",
+        "https://runescape.wiki/w/Pay-to-play_Fletching_training",
+        "scraped-data/midgame-rebalance-2026-07-20.json"
+      ],
+      "confidence": "path_structural_confirmed; per-level material counts not frozen post-patch"
+    },
+    {
+      "id": "fletching-rangers-workroom",
+      "skill": "Fletching",
+      "category": "infrastructure",
+      "name": "Ranger's Workroom (Fort Forinthry)",
+      "location": "Fort Forinthry",
+      "region_hints": ["misthalin", "forinthry"],
+      "region_note": "Physical building is Fort Forinthry. Catalyst League historically filed Fort under Misthalin; user/planner may treat Fort+Raptor as Forinthry-adjacent wilderness framing. Keep dual-label until Equilibrium publishes a hard Fort boundary.",
+      "requirements": [
+        "Dead and Buried (partial for T1 build progress; full for higher tiers)",
+        "Construction 50 (T1) / 65 (T2) / 80 (T3)"
+      ],
+      "benefits_by_tier": {
+        "tier_1": [
+          "2% chance to save resources while fletching various weapons and ammo (arrows, bolts, darts; also unstrung bows/stocks, feathering, proteans, bamboo bundles per wiki testing notes)",
+          "1% chance extra shaft bundle",
+          "Bank chest, spinning wheel, fletching workbench, ranged target"
+        ],
+        "tier_2": [
+          "1% chance extra ranged ammo / headless shafts (full XP on extras)",
+          "2% chance to produce strung bows when fletching unstrung bows (string XP equivalent)"
+        ],
+        "tier_3": [
+          "+5% base Fletching XP inside the workroom (stacks multiplicatively with other XP boosts)",
+          "Wisdom of Anima toggle on the workbench (dinarrows imbued efficiently but low XP)"
+        ]
+      },
+      "usage_notes": [
+        "Bonuses apply while standing in the workroom — workbench click not required. Bank chest + portable fletcher inside room is the common setup; W84 GE portables also common.",
+        "Brooch of the Gods extends portable fletcher save rates (wiki table: 10% → 20% with brooch on relevant saves).",
+        "Still valid and high-value post-rebalance: infrastructure bonuses are independent of item re-tiering."
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Ranger%27s_Workroom",
+        "https://runescape.wiki/w/Pay-to-play_Fletching_training",
+        "https://runescape.wiki/w/Fort_Forinthry"
+      ],
+      "confidence": "confirmed_wiki"
+    },
+    {
+      "id": "fletching-zygomite-carestyling",
+      "skill": "Fletching",
+      "category": "alternative training / supply",
+      "name": "Zygomite Carestyling ('Accidental' Fletching and Firemaking)",
+      "location": "Anachronia Dinosaur Farm south / Accidental F&F station",
+      "region_hints": ["anachronia"],
+      "still_valid": true,
+      "validity_note": "Still present on current wiki with ongoing 2025 patches; not removed by mid-game rebalance. Remains a valid AFK-leaning Fletching alternative and dinarrow component source.",
+      "requirements": [
+        "Extinction quest",
+        "82 Fletching (boostable) OR 82 Firemaking for carestyling start"
+      ],
+      "rates_wiki": {
+        "fletching_xp_per_action": 196.1,
+        "approx_fletching_xp_per_hour": 225515,
+        "outputs_per_action": "12–15 tempered fungal shafts",
+        "crystal_knife": "5% chance double shafts + XP when earning Fletching XP; does not degrade while carestyling"
+      },
+      "related_accidental_ff_pipeline": {
+        "seggregation": { "level": "87 Firemaking", "output": "sharp shell shards" },
+        "eggsperimentation": { "level": "95 Firemaking", "output": "dinosaur 'propellant'" },
+        "construct_dinarrows": { "level": "95 Fletching", "inputs": ["tempered fungal shafts", "dinosaur 'propellant'", "sharp shell shards"], "product": "dinarrows (T95; imbue with resonant anima)" }
+      },
+      "ironman_value": [
+        "Tempered fungal shafts → fungal bowstring (5 shafts → stackable bowstring) eases stringing without flax loops",
+        "Dinarrow components are Anachronia-local combat ammo progression"
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking",
+        "https://runescape.wiki/w/Pay-to-play_Fletching_training"
+      ],
+      "confidence": "confirmed_wiki_still_valid"
+    },
+    {
+      "id": "fletching-material-sources-by-region",
+      "skill": "Fletching",
+      "category": "material geography",
+      "summary": "Region-relevant material pressure for ironman Fletching after rebalance (logs track Woodcutting tiers; metals track Smithing; niche products are region-locked).",
+      "materials": [
+        {
+          "material": "Standard logs ladder (normal→elder)",
+          "region_pressure": "broad / multi-region",
+          "note": "Core bow stocks after rebalance expect wood tier = weapon tier. Self-source wherever trees exist in unlocked regions."
+        },
+        {
+          "material": "Acadia logs / acadia bows",
+          "region_hints": ["desert"],
+          "note": "New tier-50 bow band; Menaphos/desert acadia is the natural self-source."
+        },
+        {
+          "material": "Eternal magic logs / shafts",
+          "region_hints": ["anachronia"],
+          "note": "Primal arrows and late eternal magic bow work still consume eternal magic shaft pipeline."
+        },
+        {
+          "material": "Arrowheads / unfinished bolts (bronze→primal)",
+          "region_pressure": "Smithing-gated, multi-region ore",
+          "note": "Smithing XP on heads/unf bolts cut in rebalance; plan more bars per Fletching XP hour."
+        },
+        {
+          "material": "Bane ammunition tune path",
+          "region_hints": ["asgarnia", "global_magic"],
+          "note": "Bane ammo now tuned from finished bane arrows/bolts via Tune Bane — no longer the old banite-ore-from-remains smithing maze. Still needs bane metal production."
+        },
+        {
+          "material": "Bowstrings / fungal bowstring",
+          "region_hints": ["multi", "anachronia"],
+          "note": "Flax/spinning is global-ish; fungal bowstring from Accidental F&F shafts is Anachronia-gated stackable alternative. Ranger's Workroom spinning wheel colocates with fletch bank."
+        },
+        {
+          "material": "Tempered fungal shafts / dinarrow components",
+          "region_hints": ["anachronia"],
+          "note": "Carestyling / seggregation / eggsperimentation are Anachronia-only."
+        },
+        {
+          "material": "Portable fletcher / GE social banks",
+          "region_hints": ["misthalin"],
+          "note": "GE remains default portable hub; ironmen rely more on Fort workroom self-infrastructure."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/2026_mid-game_rebalance",
+        "https://runescape.wiki/w/Ranger%27s_Workroom",
+        "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking"
+      ],
+      "confidence": "region_hints_for_planning; not a full tree-spawn atlas"
+    },
+    {
+      "id": "ranged-chinchompas",
+      "skill": "Ranged",
+      "category": "combat ammo / hunter supply",
+      "summary": "Chinchompas are stackable thrown Ranged weapons with innate 3×3 AoE (up to 9 targets) dealing 90–110% of the ability damage applied to the primary target per thrown chin (Combat Style Modernisation 2 Mar 2026).",
+      "combat_utility": [
+        "Primary mid-game multi-target Ranged tool for stacked tasks, abyss-style piles, and general AoE training.",
+        "Each throw consumes one chinchompa; ability-based explosion (not old ability-duplication model).",
+        "Mechanised chinchompas (Invention) are a higher-tier red-chin product path, not a separate hunt region."
+      ],
+      "variants": [
+        {
+          "item": "Chinchompa (grey)",
+          "ranged_level": 45,
+          "hunter_creature": "Chinchompa (Hunter)",
+          "hunter_level": 53,
+          "catch_location": "Piscatoris Hunter area (north of Eagles' Peak)",
+          "region_hints": ["kandarin"],
+          "xp_on_catch": 198.4
+        },
+        {
+          "item": "Red chinchompa",
+          "ranged_level": 55,
+          "hunter_creature": "Carnivorous chinchompa",
+          "hunter_level": 63,
+          "catch_location": "Feldip Hunter area",
+          "region_hints": ["kandarin"],
+          "xp_on_catch": 230.5,
+          "bait": "spicy minced meat"
+        },
+        {
+          "item": "Black chinchompa",
+          "ranged_level": 65,
+          "hunter_creature": "Volatile chinchompa",
+          "hunter_level": 73,
+          "catch_location": "Highweald Forest, Havenhythe (west of Hollow Hill overlook)",
+          "region_hints": ["havenhythe"],
+          "xp_on_catch": 270,
+          "bait": "spicy tomato",
+          "stale_assumption_corrected": "User assumed black chins in Forinthry/Wilderness. Post–23 Mar 2026 Havenhythe release, live wiki places volatile/black chins in Havenhythe, not Forinthry. Do not region-gate black chins behind Forinthry."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Chinchompa",
+        "https://runescape.wiki/w/Chinchompa_(Hunter)",
+        "https://runescape.wiki/w/Red_chinchompa",
+        "https://runescape.wiki/w/Carnivorous_chinchompa",
+        "https://runescape.wiki/w/Black_chinchompa",
+        "https://runescape.wiki/w/Volatile_chinchompa"
+      ],
+      "confidence": "confirmed_wiki_2026_locations"
+    },
+    {
+      "id": "slayer-master-region-gates",
+      "skill": "Slayer",
+      "category": "master access / region gates",
+      "summary": "High-level Slayer master access is region- and requirement-gated. No task lists invented here — only master location, access gates, and planner region mapping.",
+      "policy": "Do not invent assignment tables. Prefer/block and task composition stay on wiki Slayer master pages. Focus region unlock + combat/Slayer level gates.",
+      "masters": [
+        {
+          "master": "The Raptor",
+          "location": "Fort Forinthry (north of Guardhouse)",
+          "access_requirements": [
+            "Combat 35",
+            "Unwelcome Guests quest",
+            "Quest line grants access; wiki notes ~10 Slayer soft-touch via quest chain"
+          ],
+          "region_hints": ["forinthry", "misthalin"],
+          "region_note": "User assumes Forinthry/wilderness framing for Raptor. Building sits at Fort Forinthry; Catalyst historically taxed Fort under Misthalin. Dual-label until Equilibrium hard boundary.",
+          "points_note": "Points scale with Slayer level (~6–18 base); Guardhouse trophies add up to +3 base points (30/50/90 Slayer mount gates).",
+          "task_region_combo": "Master access ≠ task kill location. Raptor can assign creatures that live outside Fort/Misthalin — plan travel/region pairs per assignment, not only master region."
+        },
+        {
+          "master": "Kuradal",
+          "location": "Ancient Cavern (stairs to Dragon Forge, SW)",
+          "access_requirements": [
+            "Combat 110",
+            "Slayer 75",
+            "Barbarian Firemaking section far enough to enter Ancient Cavern (or NPC Contact without cavern entry)"
+          ],
+          "region_hints": ["kandarin"],
+          "teleports": ["Ferocious ring", "Fairy ring BJQ (repaired)", "Baxtorian whirlpool entry"]
+        },
+        {
+          "master": "Morvran",
+          "location": "Prifddinas Iorwerth district (SW of lodestone)",
+          "access_requirements": [
+            "Combat 120",
+            "Slayer 85",
+            "Plague's End (Prifddinas access)"
+          ],
+          "region_hints": ["tirannwn"],
+          "notes": "Hosts famous-monster challenge D&D; highest standard point band among pre-Anachronia masters (20/100/300)."
+        },
+        {
+          "master": "Laniakea",
+          "location": "Anachronia",
+          "access_requirements": [
+            "Combat 120",
+            "Slayer 90",
+            "Anachronia introductory sequence complete"
+          ],
+          "region_hints": ["anachronia"],
+          "points_note": "22 / 110 / 330 after Smoking Kills (avg ~35.2 long-term)."
+        },
+        {
+          "master": "Mandrith",
+          "location": "Deep Wilderness, east of Pirates' Hideout (NW of Mage Arena)",
+          "access_requirements": [
+            "Combat 120",
+            "Slayer 95"
+          ],
+          "region_hints": ["forinthry"],
+          "hard_rules": [
+            "Assignments must be completed in the Wilderness",
+            "Ignores prefer and block lists",
+            "NPC Contact available post Lunar Diplomacy"
+          ],
+          "rewards_extra": ["Wilderness slayer chest", "Reaper point if no death / no non-Wilderness kill / no skip on streak rules"]
+        },
+        {
+          "master": "Duradel / Lapalok",
+          "location": "Shilo Village (Fernahei's Fishing Hut upper floor)",
+          "access_requirements": [
+            "Combat 100",
+            "Slayer 50",
+            "Shilo Village quest"
+          ],
+          "region_hints": ["karamja"],
+          "notes": "Lapalok replaces Duradel after While Guthix Sleeps."
+        },
+        {
+          "master": "Sumona",
+          "location": "Pollnivneach",
+          "access_requirements": [
+            "Combat 90",
+            "Slayer 35",
+            "Smoking Kills"
+          ],
+          "region_hints": ["desert"],
+          "notes": "Fewer-count variant of hard-task band; Smoking Kills also doubles points globally for standard masters."
+        },
+        {
+          "master": "Chaeldar",
+          "location": "Zanaris (Fairy Queen's house)",
+          "access_requirements": [
+            "Combat 75",
+            "Lost City (Zanaris access)"
+          ],
+          "region_hints": ["misthalin", "unresolved_zanaris"],
+          "region_note": "Zanaris is a known historical boundary case (fairy-ring / Lost City). Do not hard-force a single elective region without Equilibrium confirmation."
+        },
+        {
+          "master": "Mazchna / Achtryn",
+          "location": "Canifis",
+          "access_requirements": ["Combat 50"],
+          "region_hints": ["morytania"]
+        },
+        {
+          "master": "Vannaka",
+          "location": "Edgeville ruins (south of bank)",
+          "access_requirements": ["Combat 30"],
+          "region_hints": ["misthalin", "forinthry"],
+          "region_note": "Edgeville sits on the Misthalin/Wilderness approach; treat as starting-region accessible unless Equilibrium re-slices Edgeville."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/The_Raptor",
+        "https://runescape.wiki/w/Kuradal",
+        "https://runescape.wiki/w/Morvran",
+        "https://runescape.wiki/w/Laniakea",
+        "https://runescape.wiki/w/Mandrith"
+      ],
+      "confidence": "confirmed_wiki_access_gates"
+    },
+    {
+      "id": "region-combo-issues",
+      "skill": "multi",
+      "category": "region combos / planner friction",
+      "summary": "Master access region + task kill region + supply region often diverge. These are the combos that matter for Equilibrium region picks.",
+      "combos": [
+        {
+          "id": "raptor-fort-vs-task-world",
+          "master_region_candidates": ["forinthry", "misthalin"],
+          "issue": "Raptor lives at Fort Forinthry, but his assignments are not Fort-local only. Picking a region for Raptor access does not unlock every creature he assigns.",
+          "planner_action": "Score Raptor as a master hub unlock; score task monsters separately by kill location."
+        },
+        {
+          "id": "mandrith-forinthry-hard-pair",
+          "master_region": "forinthry",
+          "task_region": "forinthry",
+          "issue": "Mandrith is the clean Forinthry-locked master: access + completion both require Wilderness. Prefer/block ignored — bad task = skip/death risk, not re-roll via list.",
+          "planner_action": "Only plan Mandrith when Forinthry is unlocked and Wilderness risk is acceptable."
+        },
+        {
+          "id": "morvran-tirannwn-plus-global-tasks",
+          "master_region": "tirannwn",
+          "issue": "Morvran access is hard Tirannwn (Plague's End), but many high-value tasks live in other regions (e.g. abyssal creatures Forinthry/Desert pyramid routes, Lost Grove Tirannwn-local, etc.).",
+          "planner_action": "Tirannwn for master hub; do not assume all Morvran XP is Tirannwn-sourced."
+        },
+        {
+          "id": "laniakea-anachronia-plus-off-island-tasks",
+          "master_region": "anachronia",
+          "issue": "Laniakea is Anachronia-gated; dinosaurs are Anachronia-local, but her list still includes non-Anachronia creatures (exact list not duplicated here).",
+          "planner_action": "Anachronia buys master access + dino tasks; keep off-island task destinations as separate region edges."
+        },
+        {
+          "id": "kuradal-kandarin-plus-dungeon-travel",
+          "master_region": "kandarin",
+          "issue": "Ancient Cavern access is Kandarin/Barbarian Training; tasks still scatter worldwide.",
+          "planner_action": "Kuradal is a Kandarin hub tax, not a Kandarin-only kill plan."
+        },
+        {
+          "id": "sumona-desert-smoking-kills",
+          "master_region": "desert",
+          "issue": "Sumona requires Smoking Kills (Desert). Points doubling from that quest benefits every standard master globally — Desert quest value leaks outside Desert.",
+          "planner_action": "Count Smoking Kills as global Slayer economy unlock with Desert access cost."
+        },
+        {
+          "id": "fletching-fort-plus-materials",
+          "hub": "Ranger's Workroom",
+          "hub_region_candidates": ["misthalin", "forinthry"],
+          "supply_regions": ["desert (acadia)", "anachronia (eternal magic / dinarrow parts)", "multi (ores/logs)"],
+          "issue": "Best Fletching XP room is Fort-local, but post-rebalance materials pull Desert/Anachronia/Smithing regions.",
+          "planner_action": "Workroom is a hub bonus, not a closed supply loop."
+        },
+        {
+          "id": "chinchompa-ranged-aoe-supply",
+          "combat_use": "global",
+          "supply_regions": {
+            "grey": "kandarin (Piscatoris)",
+            "red": "kandarin (Feldip)",
+            "black": "havenhythe (Highweald) — NOT forinthry"
+          },
+          "issue": "AoE Ranged training wants chins; highest tier black chins now tax Havenhythe, not Wilderness. User Forinthry assumption is stale.",
+          "planner_action": "Gate black-chin supply on Havenhythe; grey/red on Kandarin Hunter areas. Mechanised path adds Invention on red chins."
+        },
+        {
+          "id": "accidental-ff-anachronia-fletching",
+          "hub_region": "anachronia",
+          "optional_hub": "Ranger's Workroom for dinarrow construct saves",
+          "issue": "Zygomite Carestyling XP is Anachronia-only; finishing dinarrows efficiently may want Fort workroom T2+ — cross-region skilling commute.",
+          "planner_action": "Anachronia for components/XP; Misthalin/Forinthry Fort for construct bonuses if both unlocked."
+        },
+        {
+          "id": "slayer-abyssal-known-multi-route",
+          "example_from_existing_scrapes": "Abyssal lords/beasts",
+          "master_can_be": "any high master that assigns them",
+          "kill_region_options": ["forinthry (Wilderness)", "desert (Sunken Pyramid POSD)", "unresolved_senntisten"],
+          "issue": "Classic master-in-A / monsters-in-B pattern already documented in planner-expansions-slayer scrapes.",
+          "planner_action": "Keep multi-route monsters as region_options arrays; never collapse to master region alone."
+        }
+      ],
+      "source_urls": [
+        "https://runescape.wiki/w/Slayer_Masters",
+        "https://runescape.wiki/w/Volatile_chinchompa",
+        "https://runescape.wiki/w/Ranger%27s_Workroom",
+        "scraped-data/planner-expansions-slayer.json"
+      ],
+      "confidence": "planner_synthesis_from_confirmed_locations"
+    }
+  ],
+  "combo_issues_index": [
+    "Raptor hub region (Fort / user-Forinthry) does not equal task kill regions",
+    "Mandrith is the only high master with hard Forinthry completion lock + ignore prefer/block",
+    "Morvran/Laniakea/Kuradal are hard hub taxes (Tirannwn/Anachronia/Kandarin) with worldwide tasks",
+    "Smoking Kills (Desert) doubles points for all standard masters — cross-region economy",
+    "Black chinchompas are Havenhythe supply, not Forinthry — corrects common stale assumption",
+    "Ranger's Workroom Fort hub + Desert/Anachronia material chains for post-rebalance Fletching",
+    "Accidental F&F Anachronia XP/components ± Fort workroom dinarrow construct"
+  ],
+  "freshness": {
+    "fletching_wiki_training_guide": "marked out of date for 2026 mid-game rebalance — do not freeze pre-rebalance level gates",
+    "midgame_rebalance": "2026-07-20",
+    "black_chinchompa_location": "Havenhythe since 2026-03-23",
+    "revalidate": [
+      "Exact post-rebalance per-item Fletching XP and midband XP/h once wiki guide is rewritten",
+      "Equilibrium official Fort Forinthry vs Forinthry region boundary",
+      "Any further Havenhythe hunter relocation patches"
+    ]
+  }
+}

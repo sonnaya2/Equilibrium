@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Page } from "@/components/Page";
+import { PageHeading } from "@/components/Heading";
 import { PermanentUnlockResearch } from "@/components/PermanentUnlockResearch";
 import { ProgressionResearch } from "@/components/ProgressionResearch";
 import { ResearchBrowser } from "@/components/ResearchBrowser";
@@ -9,6 +11,12 @@ import { ArchaeologyProductionResearch } from "@/components/ArchaeologyProductio
 import { MasterworkChainResearch } from "@/components/MasterworkChainResearch";
 import { RegionBoundariesResearch } from "@/components/RegionBoundariesResearch";
 import { getResearchCatalog } from "@/research/catalog";
+
+export const metadata: Metadata = {
+  title: "Data",
+  description:
+    "Browse region content, progression notes, and sourced game data behind the Equilibrium planner.",
+};
 
 const SECTION_LINKS = [
   ["browse", "Browse"],
@@ -22,8 +30,14 @@ const SECTION_LINKS = [
 ] as const;
 
 export default function DataPage() {
+  const catalog = getResearchCatalog();
+
   return (
     <Page>
+      <PageHeading
+        title="Data"
+        note={`Region unlocks, upgrades and training routes checked on ${catalog.snapshotDate}. Most links go to the Wiki; PvME, RS Analysis and fresh Jagex updates stay attached when they are the actual source.`}
+      />
       <nav aria-label="Data sections" className="sticky top-0 z-10 -mx-4 border-b border-stone-750 bg-stone-950 px-4">
         <ul className="flex gap-1 overflow-x-auto text-xs">
           {SECTION_LINKS.map(([id, label]) => (
@@ -37,7 +51,7 @@ export default function DataPage() {
       </nav>
 
       <div id="browse" className="scroll-mt-16">
-        <ResearchBrowser catalog={getResearchCatalog()} />
+        <ResearchBrowser catalog={catalog} />
       </div>
       <div id="progression" className="scroll-mt-16">
         <ProgressionResearch />

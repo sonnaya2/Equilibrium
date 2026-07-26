@@ -21,13 +21,13 @@ repeat.
 | `combat-math` | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier pipeline, rounding |
 | `league-data` | Regions, the 7 relic tiers, the 8 blessing tiers and God Tier derivation, tasks, the provisional rule |
 | `data-sync` | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format |
-| `equilibrium-ui` | Visual system: sampled palette, accent ruling, hexagon motif, sanctioned exceptions |
-| `no-slop-ui`, `ui-humanizer`, `text-humanizer`, `bot-audit` | Anti-AI-slop law, surgery, detection |
+| `equilibrium-ui` | Binding UI law: tokens, components, routes, map fence, e2e contracts, sanctioned exceptions |
+| `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Fingerprint bans, density, surgery, detection — product-aware; load after `equilibrium-ui` |
 | `rs3-ponytail` | Lean-code intensity per domain |
 
-`no-slop-ui` §5 and §7 were measured against EverSense/NTE, a different product: its pink accent, its
-"all dark grounds rejected" ledger and its "not Tailwind" note do not bind here. `equilibrium-ui`
-holds the RS3 equivalents and wins on conflict.
+`equilibrium-ui` is binding for chrome, stack, and motifs here. Global anti-slop skills now multi-product
+route: EverSense Print/pink notes do not apply. Tailwind v4 `@theme` is correct. Claude
+`frontend-design` is craft only (no marketing hero). Context7 for library APIs (Next/Tailwind/R3F), not palette.
 
 ## Gotchas
 
@@ -40,9 +40,11 @@ first.
 would publish the private one.
 
 **Playwright runs on port 3100**, not 3000 — another app on this machine holds 3000. E2E is *not* in
-CI (`.github/workflows/validate.yml` stops at `build`), so a broken selector ships silently unless you
-run it. Next refuses a second dev server in the same directory, so a dev server you started yourself
-blocks `test:e2e` from booting its own; stop it first.
+CI (`.github/workflows/validate.yml` stops at `build` — no Playwright job, optional or otherwise).
+Run `npm run test:e2e` locally before merge; a broken selector ships silently otherwise. WebGPU /
+3D map paths are easy to flake in headless CI, so keep e2e local. Next refuses a second dev server
+in the same directory, so a dev server you started yourself blocks `test:e2e` from booting its own;
+stop it first.
 
 **Do not pin scraped values in e2e.** `verifiedAt` dates and rule wording move whenever the sync
 scripts run, and a hardcoded date turns every data refresh into a red suite. Match a pattern.
@@ -50,15 +52,16 @@ scripts run, and a hardcoded date turns every data refresh into a red suite. Mat
 **Tailwind v4 is CSS-first.** There is no `tailwind.config`; design tokens live in the `@theme` block
 of `app/globals.css`.
 
-**React is pinned to exactly `19.2.8`** for the `@react-three/fiber` 9 peer range. `three-stdlib` is
-imported by `src/map/CameraRig.tsx` but is only a transitive dependency of drei, so a drei major can
-break `typecheck` without any direct dependency changing.
+**React is pinned to exactly `19.2.8`** for the `@react-three/fiber` 9 peer range.
 
 **Worktrees start without `node_modules`.** Run `npm ci` in a fresh one.
 
-**`public/map/league-map.jpg` is a screenshot of the game's own Regions tab**, so it already carries
-Jagex's region markers and labels. Anything overlaying its own markers on that texture renders them
-doubled.
+**The 3D map is a wartable of original geometry** (`MapTable` / region slabs), not a photo plate —
+there is no served `public/map/league-map.jpg`. Do not reintroduce a Regions-tab screenshot as the
+board texture (it doubles Jagex markers and fights the slab model).
+
+**`npm run sync:league` is disabled** — it used to write a blessings/relics envelope the app cannot
+read. League planner JSON is produced by `npm run normalize:data`.
 
 **`assets/` is not web-served.** It holds 121 real RS3 PNGs (11 region crests, 29 skill icons, 10
 combat icons) managed by `scripts/sync-assets.mjs`. Art reaches the app through `public/game/`.
@@ -89,8 +92,8 @@ carries its own `SourceReference`.
 
 ## Design
 
-Load `no-slop-ui` (law) and `equilibrium-ui` before UI work; run `bot-audit` before calling a screen
-shippable. The tool opens on the working surface. Nothing here is being sold.
+Load `equilibrium-ui` first, then `no-slop-ui` / `human-grade` for fingerprint law; run `bot-audit`
+before calling a screen shippable. The tool opens on the working surface. Nothing here is being sold.
 
 Visual identity is the game's own: warm umber ground sampled from RuneScape: DragonWilds, one chrome
 accent in Equilibrium gem green, gold reserved for engraved display type, and the Order/Chaos/Balance
@@ -120,8 +123,9 @@ Top-level IA:
 EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 ```
 
-`Build` holds Regions, Relics, Blessings, Gear. `Combat` holds Quick, Build, Analysis, Rotation.
-Tasks gets a purpose-built interface rather than a generic checklist grid.
+`Build` holds Regions, Relics and Blessings (no Gear tab). `Combat` holds Quick, Build, Analysis,
+Rotation. Tasks gets a purpose-built interface rather than a generic checklist grid; while
+Equilibrium has no published list it may show Catalyst stand-in data, marked provisional.
 
 ### Frozen UI contract
 
@@ -131,7 +135,7 @@ Tasks gets a purpose-built interface rather than a generic checklist grid.
 - footer string `RuneScape is a trademark of Jagex Ltd.`
 - all 11 regions as `<button>` whose accessible name *starts with* the display name — an icon inside
   one needs `alt=""` or the name breaks
-- literal `0/3` and `3/3` pick counters; a genuinely `disabled` 4th pick; `Clear picks` verbatim
+- literal `0/3` and `3/3` pick counters; 4th pick `aria-disabled="true"` (still focusable); `Clear picks` always present (disabled when empty)
 - `section[aria-live]` holding the region detail, matching `/sources? · verified <date>/`
 - the substring `no WebGPU` in the WebGPU-absent fallback
 

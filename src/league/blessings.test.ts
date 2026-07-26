@@ -28,6 +28,13 @@ function orderings(picks: Triple): Triple[] {
 }
 
 describe("canonical blessings data contract", () => {
+  it("pins god tiers and reset count to confirmed Equilibrium structure", () => {
+    // Absolute pins — not only equality with JSON, so a bad normalize cannot
+    // silently redefine the God Tier positions or reset budget.
+    expect(GOD_TIERS).toEqual([4, 8]);
+    expect(BLESSING_RESET_COUNT).toBe(3);
+  });
+
   it("keeps the compile-time path union in step with data/league/blessings.json", () => {
     expect([...BLESSING_PATHS].sort()).toEqual([...blessingsData.paths].sort());
     expect(GOD_TIERS).toEqual(blessingsData.godTiers);
@@ -35,7 +42,7 @@ describe("canonical blessings data contract", () => {
   });
 
   it("marks exactly tiers 4 and 8 as god tiers in the records", () => {
-    expect(blessingsData.records.filter((r) => r.godTier).map((r) => r.tier)).toEqual([...GOD_TIERS]);
+    expect(blessingsData.records.filter((r) => r.godTier).map((r) => r.tier)).toEqual([4, 8]);
   });
 });
 

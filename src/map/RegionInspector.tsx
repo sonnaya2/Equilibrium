@@ -84,11 +84,22 @@ export function RegionInspector({
   );
 
   // Top content + upgrades for the compact planner-value strip (not a second table).
+  // Dedup by name so content+upgrade twins do not React-key-collide.
   const plannerHighlights = useMemo(() => {
     if (!detail) return [] as string[];
-    const fromContent = detail.content.slice(0, 3).map((c) => c.name);
-    const fromUpgrades = detail.upgrades.slice(0, 2).map((u) => u.name);
-    return [...fromContent, ...fromUpgrades].slice(0, 5);
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const name of [
+      ...detail.content.map((c) => c.name),
+      ...detail.upgrades.map((u) => u.name),
+    ]) {
+      const n = String(name || "").trim();
+      if (!n || seen.has(n)) continue;
+      seen.add(n);
+      out.push(n);
+      if (out.length >= 5) break;
+    }
+    return out;
   }, [detail]);
 
   const slayerMethods = useMemo(
@@ -201,7 +212,7 @@ export function RegionInspector({
           <div className="mb-3 flex flex-wrap gap-1.5">
             {/* Anchored places are buttons so keyboard can light the marker;
                 unanchored areas stay text — nothing on the board to focus. */}
-            {detail.areas.map((area) => {
+            {[...new Set(detail.areas.filter(Boolean))].map((area) => {
               const isAnchored = anchored.has(area);
               const lit = focus.place === area;
               const chipClass = `rounded-sm px-1.5 py-0.5 text-xs transition-colors duration-150 ${

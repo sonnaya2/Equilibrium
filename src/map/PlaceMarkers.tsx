@@ -74,7 +74,7 @@ export function PlaceMarkers() {
         const z = (place.uv[1] - 0.5) * MAP_WORLD.height;
         const lit = focus.place === place.area;
         return (
-          <group key={place.area} position={[x, y, z]}>
+          <group key={`${place.region}:${place.area}`} position={[x, y, z]}>
             <mesh
               rotation={[-Math.PI / 2, 0, 0]}
               material={lit ? materials.lit : materials.base}

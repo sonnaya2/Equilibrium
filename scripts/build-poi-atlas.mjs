@@ -47,7 +47,9 @@ const ALIASES = {
   "armady-ls-tower": "god-wars-dungeon",
   "ourania-runecrafting-altar": "ourania-runecrafting-altar",
   "ourania-altar": "ourania-altar",
-  "chaos-temple-wilderness": "chaos-altar",
+  // Wilderness Chaos Temple surface fort — not the old underground altar plate.
+  "chaos-temple-wilderness": "chaos-temple-wilderness",
+  "chaos-temple": "chaos-temple-wilderness",
   // Lava Maze / Wilderness Crater have their own activity plates — do not alias
   // to runite/slayer art (those made crater "gone" and maze wrong).
   "bandit-camp": "bandit-camp",

@@ -28,6 +28,11 @@ const FILES = {
   "bandit-camp": "Bandit Camp.png",
   // Mandrith at the snowy slayer-equipment hut — not the black studio model.
   "wilderness-slayer": "Slayer Equipment (Wilderness).png",
+  // Aerial Zamorak temple fort in lava — not the underground altar cave plate.
+  "chaos-temple-wilderness": "ChaosAltar.png",
+  "chaos-altar": "ChaosAltar.png",
+  // Revenant chamber wreckage — not the lesser-demon lava overlook.
+  "forinthry-dungeon": "Forinthry Dungeon revenants.png",
 };
 
 async function wikiFileInfo(title) {

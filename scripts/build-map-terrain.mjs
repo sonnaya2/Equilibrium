@@ -404,16 +404,21 @@ const owner = new Uint8Array(N);
       }
 
       // --- Forinthry ditch: S bank = Misthalin; N bank = Forinthry ---
-      // Ditch ~y 3521–3525 Edgeville→Silvarea. West of ~3065 stays Asgarnia
-      // highland (Ice Mountain / Black Knights). Skip fort (handled above).
+      // Ditch ~y 3521–3525 Edgeville→Silvarea. Ice Mountain / Black Knights stay
+      // Asgarnia *south* of the ditch; the hard dark-gray floor north of it is
+      // wilderness even west of Edgeville. Skip fort (handled above).
       if (gx >= 3075 && gx <= 3405 && gy >= 3485 && gy <= 3522) {
         if (owner[i] === foriId || owner[i] === mistId) force(i, mistId);
         continue;
       }
+      // Main wildy body (Edgeville → Salve). Steal Asgarnia wedges too — Voronoi
+      // and the ice-mountain box used to leave dark-gray wildy as asgarnia.
       // Cap x short of the Salve so Slayer Tower / north Mory stay Morytania.
-      if (gx >= 3065 && gx <= 3415 && gy >= 3526 && gy <= 3920) {
-        // Do not steal Asgarnia Trollheim / Death Plateau west fringe.
-        if (owner[i] === mistId || owner[i] === foriId) force(i, foriId);
+      // Western dark-gray reclaim (x < 3065) runs *after* asg mountain forces.
+      if (gx >= 3065 && gx <= 3415 && gy >= 3526 && gy <= 4000) {
+        if (owner[i] === mistId || owner[i] === foriId || owner[i] === asgId) {
+          force(i, foriId);
+        }
         continue;
       }
 
@@ -517,11 +522,15 @@ const owner = new Uint8Array(N);
           continue;
         }
       } else if (gy >= 3360 && gy < 3470) {
-        if (gx >= 2920 && gx <= 3085 && either(i, mistId, asgId)) {
+        // Cut on the River Lum, not through the village. Barbarian Village runs
+        // x3072-3098, so the old ~3086 line sliced it down the middle; the river
+        // at x~3100 is the feature the border should have been on all along, and
+        // it keeps the whole village in Asgarnia as intended.
+        if (gx >= 2920 && gx <= 3100 && either(i, mistId, asgId)) {
           force(i, asgId);
           continue;
         }
-        if (gx >= 3090 && gx <= 3185 && either(i, mistId, asgId)) {
+        if (gx >= 3104 && gx <= 3185 && either(i, mistId, asgId)) {
           force(i, mistId);
           continue;
         }
@@ -558,21 +567,24 @@ const owner = new Uint8Array(N);
         continue;
       }
       // Death Plateau / Burthorpe approach ridge (before troll massif).
+      // Cap x short of the hard-dark-gray wildy floor (~2952+).
       if (gx >= 2840 && gx <= 2950 && gy >= 3560 && gy < 3620) {
-        if (owner[i] === fremId || owner[i] === asgId) {
-          force(i, asgId);
-          continue;
-        }
-      }
-      // Asgarnia troll / GWD massif (do not let fre paint the mounts to fre's right).
-      if (gx >= 2815 && gx <= 2965 && gy >= 3620 && gy <= 3800) {
         if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
           force(i, asgId);
           continue;
         }
       }
-      // Ice Mountain / Black Knights body — fre tongue from Lava Flow / bad seed.
-      if (gx >= 2885 && gx <= 3065 && gy >= 3480 && gy <= 3680) {
+      // Asgarnia troll / GWD massif (do not let fre paint the mounts to fre's right).
+      // Max x 2950 — east of that is hard dark-gray wilderness, not the ridge.
+      if (gx >= 2815 && gx <= 2950 && gy >= 3620 && gy <= 3800) {
+        if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
+          force(i, asgId);
+          continue;
+        }
+      }
+      // Ice Mountain / Black Knights body — south of the ditch only. North of the
+      // ditch the floor is hard dark gray = Forinthry (reclaim below).
+      if (gx >= 2885 && gx <= 3065 && gy >= 3480 && gy <= 3525) {
         if (owner[i] === fremId || owner[i] === asgId) {
           force(i, asgId);
           continue;
@@ -583,6 +595,17 @@ const owner = new Uint8Array(N);
       if (gx >= 2650 && gx <= 2810 && gy >= 3680 && gy <= 3950) {
         if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
           force(i, fremId);
+          continue;
+        }
+      }
+
+      // --- Western hard-dark-gray wilderness (after asg mountain forces) ---
+      // Wiki paints the wildy floor as hard dark gray. Asgarnia keeps the brown
+      // troll ridge above; this reclaim takes dark wildy west of Edgeville that
+      // Voronoi / the old ice-mountain box left as asgarnia. Fort is mist above.
+      if (gx >= 2952 && gx <= 3068 && gy >= 3526 && gy <= 4000) {
+        if (owner[i] === asgId || owner[i] === mistId || owner[i] === foriId) {
+          force(i, foriId);
           continue;
         }
       }
@@ -623,6 +646,14 @@ const owner = new Uint8Array(N);
         continue;
       }
       if (gx >= 2180 && gx <= 2315 && gy >= 3180 && gy <= 3360 && either(i, kandId, tirId)) {
+        force(i, tirId);
+        continue;
+      }
+
+      // --- Tirannwn SE brown-rock edge of Isafdar ---
+      // Brown cliff / rock mass SE of Isafdar. Kandarin keeps Castle Wars
+      // (~2440,3090) and Arandar; stop short of both.
+      if (gx >= 2260 && gx <= 2390 && gy >= 3030 && gy <= 3155 && either(i, kandId, tirId)) {
         force(i, tirId);
       }
     }

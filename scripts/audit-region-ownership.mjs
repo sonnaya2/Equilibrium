@@ -35,7 +35,7 @@ const PROBES = [
   ["Salve bridge E", 3430, 3485, "morytania"],
   ["Desert top N of Al Kharid", 3320, 3240, "desert"],
   ["Desert top E sand", 3380, 3280, "desert"],
-  ["Varrock W corridor", 3100, 3420, "misthalin"],
+  ["Varrock W corridor", 3110, 3420, "misthalin"],
   ["Draynor Manor", 3100, 3330, "misthalin"],
 
   // ── Asgarnia cores ───────────────────────────────────────────────────────
@@ -109,7 +109,9 @@ const PROBES = [
   // =========================================================================
 
   // ── Misthalin–Asgarnia west edge ─────────────────────────────────────────
-  // Corridor cut: asg x<=3083, mist x>=3088 (build-map-terrain.mjs).
+  // Corridor cut (build-map-terrain.mjs): south y<3360 cut ~3065; mid y 3360–3470
+  // on the River Lum (~3100) so Barb Village x3072–3098 stays whole Asgarnia;
+  // north Edgeville cut ~3065/3070.
   ["Draynor W market", 3080, 3250, "misthalin"],
   ["Draynor S bank", 3090, 3220, "misthalin"],
   ["Draynor NW road", 3070, 3280, "misthalin"],
@@ -122,9 +124,10 @@ const PROBES = [
   ["Barb Village E fence", 3085, 3420, "asgarnia"],
   ["Barb Village SE", 3082, 3400, "asgarnia"],
   ["Barb Village NE", 3082, 3445, "asgarnia"],
-  ["Just E of Barb (mist)", 3095, 3420, "misthalin"],
-  ["Just E of Barb N", 3095, 3450, "misthalin"],
-  ["Just E of Barb S", 3095, 3380, "misthalin"],
+  ["Barb Village E river bank", 3095, 3420, "asgarnia"],
+  ["Just E of Lum (mist)", 3110, 3420, "misthalin"],
+  ["Just E of Lum N", 3110, 3450, "misthalin"],
+  ["Just E of Lum S", 3110, 3380, "misthalin"],
   ["Ice Mtn summit", 3005, 3485, "asgarnia"],
   ["Ice Mtn E slope", 3040, 3485, "asgarnia"],
   ["Ice Mtn far E", 3065, 3480, "asgarnia"],
@@ -292,6 +295,10 @@ const PROBES = [
   ["Arandar W of pass", 2305, 3275, "tirannwn"],
   ["Lletya", 2340, 3170, "tirannwn"],
   ["Isafdar SE rock", 2320, 3090, "tirannwn"],
+  ["Isafdar SE rock mid", 2340, 3095, "tirannwn"],
+  ["Isafdar SE rock E", 2370, 3080, "tirannwn"],
+  ["Isafdar SE rock far E", 2385, 3090, "tirannwn"],
+  ["Castle Wars (not SE rock)", 2440, 3090, "kandarin"],
   ["Port Tyras", 2180, 3120, "tirannwn"],
   ["Prif S gate", 2240, 3300, "tirannwn"],
   ["Ourania altar", 2465, 3245, "kandarin"],
@@ -308,9 +315,14 @@ const PROBES = [
   ["Trollheim", 2885, 3675, "asgarnia"],
   ["Troll Stronghold", 2830, 3675, "asgarnia"],
   ["GWD approach", 2910, 3745, "asgarnia"],
-  // Fre must not stab through Ice Mountain (old seed 2960,3620).
-  ["Ice Mtn fre ban", 2960, 3620, "asgarnia"],
-  ["Ice Mtn fre ban N", 2940, 3650, "asgarnia"],
+  // Hard dark-gray wildy floor is Forinthry (not fre, not asgarnia).
+  ["Dark gray wildy W", 2960, 3620, "forinthry"],
+  ["Dark gray wildy SW", 3000, 3600, "forinthry"],
+  ["Dark gray wildy ditch W", 3020, 3550, "forinthry"],
+  ["Dark gray wildy Edge W", 3040, 3540, "forinthry"],
+  // Brown troll ridge stays Asgarnia (not fre).
+  ["Troll ridge fre ban", 2940, 3650, "asgarnia"],
+  ["Troll ridge fre ban W", 2920, 3680, "asgarnia"],
   // NE fre snow west of troll ridge (was asgarnia-stolen).
   ["Frem NE snow W", 2750, 3800, "fremennik"],
   ["Frem NE snow mid", 2780, 3850, "fremennik"],
@@ -411,8 +423,9 @@ const GRIDS = [
         if (x <= 3062) return "asgarnia";
         if (x >= 3068) return "misthalin";
       } else if (y < 3470) {
-        if (x <= 3085) return "asgarnia";
-        if (x >= 3090) return "misthalin";
+        // River Lum cut — whole Barb Village (x3072–3098) is Asgarnia.
+        if (x <= 3100) return "asgarnia";
+        if (x >= 3104) return "misthalin";
       } else {
         if (x <= 3065) return "asgarnia";
         if (x >= 3070) return "misthalin";

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The region pick rail under Board Sky.
+ * The region pick rail under map board.
  *
  * It owns the route's whole keyboard and screen-reader surface, and every
  * assertion e2e/map.spec.ts pins: one `<button>` per region whose accessible
@@ -31,7 +31,7 @@ import { useMapFocus } from "./useMapFocus";
 
 const ORDER: RegionId[] = [...STARTING_REGIONS, MILESTONE_REGION, ...ELECTIVE_REGIONS];
 
-export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
+export function RegionPicker({ regions }: { regions: PlannerRegion[] }) {
   const { build, loaded, toggleRegion, clearElectives } = useBuild();
   const { focus, focusRegion } = useMapFocus();
   const regionById = new Map(regions.map((r) => [r.id, r]));
@@ -47,11 +47,11 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
   const clearDisabled = !loaded || pickCount === 0;
 
   return (
-    <section className="board-sky__regions" aria-busy={!loaded}>
+    <section className="map-layout__regions" aria-busy={!loaded}>
       <RegionCrestPreload regionIds={ORDER} />
-      <div className="board-sky__regions-head">
-        <h2 className="board-sky__rail-label">Regions</h2>
-        <span className={`comp-pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
+      <div className="map-layout__regions-head">
+        <h2 className="map-layout__rail-label">Regions</h2>
+        <span className={`region-pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
           {counterLabel}
         </span>
         <Pips
@@ -63,12 +63,12 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
           type="button"
           disabled={clearDisabled}
           onClick={clearElectives}
-          className="board-sky__clear"
+          className="map-layout__clear"
         >
           Clear picks
         </button>
       </div>
-      <ul className={`board-sky__region-chips${loaded ? "" : " pointer-events-none opacity-60"}`}>
+      <ul className={`map-layout__region-chips${loaded ? "" : " pointer-events-none opacity-60"}`}>
         {ORDER.map((id) => {
           const region = regionById.get(id);
           if (!region) return null;
@@ -93,7 +93,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
                   if (!fixed && loaded && selectable) toggleRegion(id);
                 }}
                 className={[
-                  "board-sky__region-chip",
+                  "map-layout__region-chip",
                   picked ? "is-picked" : "",
                   focusOn ? "is-focus" : "",
                   !unlocked ? "is-locked" : "",
@@ -101,9 +101,9 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
                   .filter(Boolean)
                   .join(" ")}
               >
-                <RegionCrest regionId={id} size={12} className="board-sky__region-crest" />
-                <span className="board-sky__region-name">{region.name}</span>
-                {!unlocked ? <span className="board-sky__lock"> locked</span> : null}
+                <RegionCrest regionId={id} size={12} className="map-layout__region-crest" />
+                <span className="map-layout__region-name">{region.name}</span>
+                {!unlocked ? <span className="map-layout__lock"> locked</span> : null}
               </button>
             </li>
           );

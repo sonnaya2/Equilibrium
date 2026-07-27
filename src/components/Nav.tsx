@@ -17,12 +17,12 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <header className="comp-mast">
-      <Link href="/" className="comp-brand">
+    <header className="site-header">
+      <Link href="/" className="site-brand">
         EQUILIBRIUM
       </Link>
       <nav aria-label="Primary">
-        <ul className="comp-nav">
+        <ul className="primary-nav">
           {LINKS.map(([href, label]) => {
             const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
             return (
@@ -30,7 +30,7 @@ export function Nav() {
                 <Link
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`comp-nav__btn${active ? " is-active" : ""}`}
+                  className={`primary-nav__link${active ? " is-active" : ""}`}
                 >
                   {label}
                 </Link>

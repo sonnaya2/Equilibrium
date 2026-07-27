@@ -22,6 +22,7 @@ repeat.
 | `skills/league-data/SKILL.md` | Regions, relics, blessings, task presentation/data boundaries, Catalyst test-data law, provisional rules |
 | `data-sync` | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format |
 | `skills/equilibrium-ui/SKILL.md` | Authoritative UI law: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA |
+| `skills/anti-clanker-code/SKILL.md` | Public-release cleanup for generated-sounding comments, concept-era naming, CSS archaeology, dead scaffolding, and implementation jargon |
 | `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Optional audit companions; use as detectors, never as authority over a supplied visual reference |
 | `rs3-ponytail` | Lean-code intensity per domain |
 
@@ -111,15 +112,15 @@ Read `skills/equilibrium-ui/SKILL.md` before UI work. Use anti-slop skills as a 
 audit, not as a layout generator or a reason to flatten hierarchy and depth.
 
 Visual identity is a **premium public game companion site** (not a developer console). Hybrid
-composition champion (tournament 9.2):
+composition production (tournament 9.2):
 
-| Layer | DNA |
+| Layer | structure |
 |---|---|
 | Colors | Editorial (Echo ladder in `@theme`) |
-| Overview | Daylight courtyard / keyart aperture |
-| Map | Editorial Board Sky — 3D top, detail under board, no side inspector |
+| Overview | plan overview / keyart aperture |
+| Map | interactive map board — 3D top, detail under board, no side inspector |
 | Tasks | Reference-led League browser: summary cards · planner filters · spacious task cards · progress rail |
-| Build | Editorial Relic Court (monogram frames until Jagex icons land) |
+| Build | region, relic, and blessing planner (monogram frames until Jagex icons land) |
 | Combat | Crystal desk + Editorial chrome |
 | Data | Lattice + Daylight browse rail + full sources inspector |
 

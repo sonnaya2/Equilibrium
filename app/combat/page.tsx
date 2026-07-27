@@ -81,7 +81,7 @@ export default function CombatPage() {
 
   return (
     <Page className="!max-w-none !px-0 !py-0">
-      <div className="workbench-fill">
+      <div className="route-fill">
         <div className="combat-route-meta mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
           <span className="combat-route-title font-medium text-parch-50">Combat</span>
           <span className="ml-auto flex gap-3">

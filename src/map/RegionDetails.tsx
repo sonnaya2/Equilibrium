@@ -12,7 +12,7 @@
  * Hard rules and the source line stay outside the tabs — they qualify every tab,
  * and e2e pins both.
  *
- * Under-board Board Sky dossier: framed note + places-pinned meter over live
+ * Under-board map board dossier: framed note + places-pinned meter over live
  * catalog counts only. No concept fixture drops, no invented lore.
  */
 
@@ -145,7 +145,7 @@ function TrainingTable({ rows }: { rows: TrainingRow[] }) {
   );
 }
 
-export function RegionInspector({
+export function RegionDetails({
   regions,
   boundaryRules,
 }: {
@@ -203,8 +203,8 @@ export function RegionInspector({
 
   return (
     <section className="panel" aria-label="Region detail" aria-live="polite">
-      <div className="board-sky__dossier-band">
-        <div className="board-sky__dossier-copy">
+      <div className="map-layout__dossier-band">
+        <div className="map-layout__dossier-copy">
           <div className="panel-head flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-0 bg-transparent p-0">
             <span>
               {planner.name}
@@ -217,7 +217,7 @@ export function RegionInspector({
             </span>
           </div>
         </div>
-        <div className="board-sky__pin-meter" aria-label="Places pinned">
+        <div className="map-layout__pin-meter" aria-label="Places pinned">
           <div className="text-[11px] uppercase tracking-wide text-parch-400">Places pinned</div>
           <div className="stat-key text-gem-400">
             <span className="num">
@@ -227,9 +227,9 @@ export function RegionInspector({
           <p className="mt-0.5 text-[11px] normal-case tracking-normal text-parch-500">
             catalog areas on the board
           </p>
-          <div className="board-sky__pin-track" aria-hidden="true">
+          <div className="map-layout__pin-track" aria-hidden="true">
             {Array.from({ length: pinSegs }).map((_, i) => (
-              <span key={i} className={`board-sky__pin-seg${i < pinLit ? " is-on" : ""}`} />
+              <span key={i} className={`map-layout__pin-seg${i < pinLit ? " is-on" : ""}`} />
             ))}
           </div>
         </div>

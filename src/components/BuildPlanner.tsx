@@ -293,7 +293,7 @@ export function BuildPlanner({
             <button
               type="button"
               className="mc__btn"
-              // Elective count only (empty server snapshot) — same as RegionLedger.
+              // Elective count only (empty server snapshot) — same as RegionPicker.
               disabled={Boolean(picks.length === 0)}
               onClick={clearElectives}
             >

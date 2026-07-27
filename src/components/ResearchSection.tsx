@@ -7,7 +7,7 @@ import { dataEntityIconPath } from "@/lib/gameArt";
 import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
-import { DataViewHeader, useDataRegion } from "./DataWorkbench";
+import { DataViewHeader, useDataRegion } from "./DataBrowser";
 
 export type ResearchRow = Record<string, unknown>;
 
@@ -966,7 +966,7 @@ export function ResearchSection({
         />
       </DataViewHeader>
 
-      <div role="tablist" aria-label={`${heading} sections`} className="comp-seg data-record-tabs">
+      <div role="tablist" aria-label={`${heading} sections`} className="ui-seg data-record-tabs">
         {tabs.map((tab) => {
           const active = tabKey === tab.key;
           return (
@@ -976,7 +976,7 @@ export function ResearchSection({
               role="tab"
               aria-selected={active}
               onClick={() => setTabKey(tab.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`ui-seg__btn${active ? " is-active" : ""}`}
             >
               {tab.label}
             </button>

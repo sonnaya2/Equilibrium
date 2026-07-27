@@ -34,7 +34,7 @@ import { safeWikiPage } from "@/lib/wikiArticle";
 import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";
 import { compareLocale, type SortDir } from "./DataTableOrganize";
 import { clipProse } from "./ResearchSection";
-import { useDataRegion } from "./DataWorkbench";
+import { useDataRegion } from "./DataBrowser";
 
 const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   "runescape-wiki": "Wiki",
@@ -597,7 +597,7 @@ export function DataRegionRail({
         aria-pressed={mineOnly}
         disabled={!loaded}
         title={loaded ? "Only regions you've unlocked" : "Loading your picks…"}
-        className={`comp-facet data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
+        className={`ui-facet data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
       >
         My regions
       </button>

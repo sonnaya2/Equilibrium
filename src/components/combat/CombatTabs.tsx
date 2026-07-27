@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { WorkbenchPanel, WorkbenchTabs } from "@/components/WorkbenchTabs";
+import { WorkbenchPanel, SectionTabs } from "@/components/SectionTabs";
 import { AnalysisTab } from "./AnalysisTab";
 import { QuickCalculator } from "./QuickCalculator";
 import { RotationPlanner } from "./RotationPlanner";
@@ -22,12 +22,7 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
 
   return (
     <div className="combat-screen flex min-h-0 flex-1 flex-col">
-      <WorkbenchTabs
-        aria-label="Combat sections"
-        tabs={COMBAT_TABS}
-        active={tab}
-        onChange={setTab}
-      />
+      <SectionTabs aria-label="Combat sections" tabs={COMBAT_TABS} active={tab} onChange={setTab} />
 
       <div className="combat-tab-stage min-h-0 flex-1 overflow-hidden">
         <WorkbenchPanel id="Quick" active={tab}>

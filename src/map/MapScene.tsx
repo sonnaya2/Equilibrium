@@ -144,8 +144,8 @@ export default function MapScene() {
    */
   if (focus.flat) {
     return (
-      <div className="board-sky__scene">
-        <div className="board-sky__canvas-host">
+      <div className="map-layout__scene">
+        <div className="map-layout__canvas-host">
           <FlatBoard />
         </div>
       </div>
@@ -156,8 +156,8 @@ export default function MapScene() {
     // Flat raster during the adapter probe so the cell is never an empty void
     // if the probe stalls. WebGPU path replaces this once the adapter resolves.
     return (
-      <div className="board-sky__scene" aria-hidden="true">
-        <div className="board-sky__canvas-host">
+      <div className="map-layout__scene" aria-hidden="true">
+        <div className="map-layout__canvas-host">
           <FlatBoard />
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function MapScene() {
 
   if (!supported) {
     return (
-      <div className="board-sky__scene">
+      <div className="map-layout__scene">
         {/* Visible copy always carries the frozen e2e substring (not sr-only-only). */}
         <p className="shrink-0 px-2 pt-2 text-sm text-parch-300">
           {narrow
@@ -175,7 +175,7 @@ export default function MapScene() {
         </p>
         {/* Same canvas-host contract as the WebGPU path: absolute fill, no
             intrinsic-SVG growth into the under ledger. */}
-        <div className="board-sky__canvas-host">
+        <div className="map-layout__canvas-host">
           <FlatBoard />
         </div>
       </div>
@@ -183,11 +183,11 @@ export default function MapScene() {
   }
 
   return (
-    <div className="board-sky__scene">
+    <div className="map-layout__scene">
       {/* Host is sized by the board flex cell, not an aspect-ratio strip.
           CameraRig fits the map from live aspect; absolute canvas fill keeps
           WebGPU glued to the host so min-h-0 ancestors actually work. */}
-      <div className="board-sky__canvas-host">
+      <div className="map-layout__canvas-host">
         <Canvas
           // Cap dpr: 2x on a 4k display multiplies subpixel z-fight and coast
           // aliasing into visible shimmer under the demand loop.
@@ -228,7 +228,7 @@ export default function MapScene() {
           <KickFirstFrame />
         </Canvas>
       </div>
-      <p className="board-sky__credit">{MAP_IMAGE.credit}</p>
+      <p className="map-layout__credit">{MAP_IMAGE.credit}</p>
     </div>
   );
 }

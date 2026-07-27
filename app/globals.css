@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
-  Hybrid composition champion (Team Composite 9.2) — production skin.
+  Hybrid composition champion (Team ) — production skin.
   Colors: Editorial (Echo ladder). Route DNA varies by page (see AGENTS / equilibrium-ui).
 
   Gem = interactive chrome only. Gold = display titles. Path triad = data only.
@@ -453,11 +453,11 @@ textarea:focus-visible {
     color: var(--color-parch-50);
   }
 
-  /* Map Board Sky — 3D primary, ledger+detail under (no side inspector / side rail).
+  /* Map map board — 3D primary, ledger+detail under (no side inspector / side rail).
      Board takes free height (flex 1 1 0); under is content-sized with a hard
      cap so the ledger never steals majority from the canvas.
      grid-template-columns: none — never inherit Orbit ledger|board side-rail. */
-  .board-sky {
+  .map-layout {
     display: flex;
     flex-direction: column;
     grid-template-columns: none;
@@ -465,7 +465,7 @@ textarea:focus-visible {
     flex: 1 1 auto;
     min-height: 0;
   }
-  .board-sky__board {
+  .map-layout__board {
     position: relative;
     /* Bounded, not greedy. The board used to take every pixel the planner did
        not claim, which on a laptop left the ledger and the region dossier
@@ -487,27 +487,27 @@ textarea:focus-visible {
   }
   /* Only the scene slot flex-fills. Overlays (look chrome, dialog) must NOT
      get flex:1 — that was the giant empty slab under the map. */
-  .board-sky__scene-slot {
+  .map-layout__scene-slot {
     position: relative;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
   }
-  .board-sky__scene {
+  .map-layout__scene {
     position: relative;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
   }
-  .board-sky__canvas-host {
+  .map-layout__canvas-host {
     position: relative;
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
   }
-  .board-sky__credit {
+  .map-layout__credit {
     position: absolute;
     right: 0.45rem;
     bottom: 0.35rem;
@@ -521,7 +521,7 @@ textarea:focus-visible {
     pointer-events: none;
   }
   /* Look-at + zoom chrome over the board (outside WebGPU). */
-  .board-sky__look {
+  .map-layout__look {
     position: absolute;
     left: 0.5rem;
     top: 0.5rem;
@@ -538,13 +538,13 @@ textarea:focus-visible {
     box-shadow: 0 4px 18px rgb(0 0 0 / 45%);
     pointer-events: auto;
   }
-  .board-sky__look-main {
+  .map-layout__look-main {
     display: flex;
     align-items: center;
     gap: 0.45rem;
     min-width: 0;
   }
-  .board-sky__look-art {
+  .map-layout__look-art {
     width: 36px;
     height: 36px;
     object-fit: contain;
@@ -552,18 +552,18 @@ textarea:focus-visible {
     border-radius: 2px;
     background: rgb(0 0 0 / 35%);
   }
-  .board-sky__look-copy {
+  .map-layout__look-copy {
     display: grid;
     gap: 0.05rem;
     min-width: 0;
   }
-  .board-sky__look-kicker {
+  .map-layout__look-kicker {
     color: var(--color-parch-400);
     font-size: 0.625rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
-  .board-sky__look-title {
+  .map-layout__look-title {
     color: var(--color-parch-50);
     font-family: var(--font-display);
     font-size: 0.9rem;
@@ -573,13 +573,13 @@ textarea:focus-visible {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .board-sky__look-actions {
+  .map-layout__look-actions {
     display: flex;
     align-items: center;
     gap: 0.3rem;
     margin-left: auto;
   }
-  .board-sky__zoom {
+  .map-layout__zoom {
     width: 1.75rem;
     height: 1.75rem;
     border: 1px solid var(--color-stone-750);
@@ -590,15 +590,15 @@ textarea:focus-visible {
     line-height: 1;
     cursor: pointer;
   }
-  .board-sky__zoom:hover:not(:disabled) {
+  .map-layout__zoom:hover:not(:disabled) {
     border-color: var(--color-gem-600);
     color: var(--color-gem-200);
   }
-  .board-sky__zoom:disabled {
+  .map-layout__zoom:disabled {
     opacity: 0.35;
     cursor: not-allowed;
   }
-  .board-sky__look-btn {
+  .map-layout__look-btn {
     height: 1.75rem;
     padding: 0 0.55rem;
     border: 1px solid var(--color-stone-750);
@@ -611,34 +611,34 @@ textarea:focus-visible {
     text-transform: uppercase;
     cursor: pointer;
   }
-  .board-sky__look-btn:hover {
+  .map-layout__look-btn:hover {
     border-color: var(--color-stone-600);
     color: var(--color-parch-50);
   }
-  .board-sky__look-btn.is-on {
+  .map-layout__look-btn.is-on {
     color: var(--color-gem-100);
     border-color: var(--color-gem-500);
     background: rgb(12 34 30 / 88%);
   }
-  .board-sky__look-btn--gem {
+  .map-layout__look-btn--gem {
     border-color: rgb(46 160 110 / 45%);
     color: var(--color-gem-200);
   }
-  .board-sky__look-btn--gem:hover {
+  .map-layout__look-btn--gem:hover {
     border-color: var(--color-gem-500);
     color: var(--color-gem-100);
   }
   /* Board surface (R3F root div *or* FlatBoard SVG) — absolute fill so the
      host size drives the surface, not intrinsic content height. Without this
      the SVG h-auto path grows the flex chain and can crush the under ledger. */
-  .board-sky__canvas-host > :first-child {
+  .map-layout__canvas-host > :first-child {
     position: absolute !important;
     inset: 0;
     width: 100% !important;
     height: 100% !important;
   }
   /* Under stack: taller info box (ledger + places + dossier). Scroll inside. */
-  .board-sky__under {
+  .map-layout__under {
     /* Roughly a third more room than the old min(36vh, 360px), which is what
        gets picks, places and the top of the dossier on screen together — but
        still capped, so it can never out-rank the board. */
@@ -653,10 +653,10 @@ textarea:focus-visible {
     border: 1px solid var(--color-stone-750);
     background: var(--color-stone-950);
   }
-  .board-sky__ledger {
+  .map-layout__ledger {
     max-height: none;
   }
-  .board-sky__rail-label {
+  .map-layout__rail-label {
     margin: 0;
     font-size: 0.65rem;
     font-weight: 600;
@@ -664,14 +664,14 @@ textarea:focus-visible {
     text-transform: uppercase;
     color: var(--color-parch-400);
   }
-  .board-sky__regions-head {
+  .map-layout__regions-head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.35rem 0.55rem;
     margin-bottom: 0.4rem;
   }
-  .board-sky__clear {
+  .map-layout__clear {
     margin-left: auto;
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
@@ -683,15 +683,15 @@ textarea:focus-visible {
     cursor: pointer;
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
-  .board-sky__clear:hover:not(:disabled) {
+  .map-layout__clear:hover:not(:disabled) {
     color: var(--color-parch-50);
     border-color: color-mix(in srgb, var(--color-stone-carve) 80%, var(--color-stone-750));
   }
-  .board-sky__clear:disabled {
+  .map-layout__clear:disabled {
     opacity: 0.4;
     cursor: not-allowed;
   }
-  .board-sky__region-chips {
+  .map-layout__region-chips {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -699,10 +699,10 @@ textarea:focus-visible {
     grid-template-columns: repeat(11, minmax(0, 1fr));
     gap: 0.3rem;
   }
-  .board-sky__region-chips li {
+  .map-layout__region-chips li {
     min-width: 0;
   }
-  .board-sky__region-chip {
+  .map-layout__region-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.28rem;
@@ -718,25 +718,25 @@ textarea:focus-visible {
     cursor: pointer;
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
-  .board-sky__region-crest {
+  .map-layout__region-crest {
     opacity: 0.92;
   }
-  .board-sky__region-name {
+  .map-layout__region-name {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 500;
   }
-  .board-sky__region-chip:hover:not([aria-disabled="true"]) {
+  .map-layout__region-chip:hover:not([aria-disabled="true"]) {
     color: var(--color-parch-50);
     border-color: color-mix(in srgb, var(--color-stone-carve) 80%, var(--color-stone-750));
   }
-  .board-sky__region-chip:hover:not([aria-disabled="true"]) .board-sky__region-crest {
+  .map-layout__region-chip:hover:not([aria-disabled="true"]) .map-layout__region-crest {
     opacity: 1;
   }
   /* Daylit-quality gem chrome: tinted well + soft inset, not border-only */
-  .board-sky__region-chip.is-picked {
+  .map-layout__region-chip.is-picked {
     color: var(--color-gem-300);
     border-color: var(--color-gem-500);
     background: color-mix(in srgb, var(--color-stone-800) 88%, var(--color-gem-600) 12%);
@@ -744,33 +744,33 @@ textarea:focus-visible {
       inset 0 0 0 1px color-mix(in srgb, var(--color-gem-400) 18%, transparent),
       inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
-  .board-sky__region-chip.is-picked .board-sky__region-crest {
+  .map-layout__region-chip.is-picked .map-layout__region-crest {
     opacity: 1;
   }
-  .board-sky__region-chip.is-focus {
+  .map-layout__region-chip.is-focus {
     box-shadow:
       inset 0 0 0 1px var(--color-gem-400),
       inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
-  .board-sky__region-chip.is-picked.is-focus {
+  .map-layout__region-chip.is-picked.is-focus {
     border-color: var(--color-gem-400);
     box-shadow:
       inset 0 0 0 1px var(--color-gem-400),
       inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
   /* Cap blocks pick only — still focusable; do not mute already-picked chips */
-  .board-sky__region-chip[aria-disabled="true"]:not(.is-picked) {
+  .map-layout__region-chip[aria-disabled="true"]:not(.is-picked) {
     opacity: 0.55;
     cursor: not-allowed;
   }
-  .board-sky__region-chip[aria-disabled="true"].is-picked {
+  .map-layout__region-chip[aria-disabled="true"].is-picked {
     cursor: pointer;
   }
-  .board-sky__region-chip.is-locked:not(.is-picked) {
+  .map-layout__region-chip.is-locked:not(.is-picked) {
     color: var(--color-parch-300);
     opacity: 0.72;
   }
-  .board-sky__lock {
+  .map-layout__lock {
     flex-shrink: 0;
     font-size: 0.58rem;
     font-weight: 600;
@@ -779,7 +779,7 @@ textarea:focus-visible {
     color: var(--color-parch-400);
   }
   /* Place rail under board: wrap chips in place — never a modal/overflow drawer. */
-  .board-sky__places {
+  .map-layout__places {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
@@ -787,18 +787,18 @@ textarea:focus-visible {
     min-width: 0;
     padding: 0.1rem 0;
   }
-  .board-sky__places .board-sky__rail-label {
+  .map-layout__places .map-layout__rail-label {
     flex: 0 0 auto;
     line-height: 1.4;
   }
-  .board-sky__place-chips {
+  .map-layout__place-chips {
     display: flex;
     gap: 0.3rem;
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: thin;
   }
-  .board-sky__place-chip {
+  .map-layout__place-chip {
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
     background: var(--color-stone-900);
@@ -816,18 +816,18 @@ textarea:focus-visible {
       border-color 120ms ease,
       background-color 120ms ease;
   }
-  .board-sky__place-chip:hover,
-  .board-sky__place-chip.is-lit {
+  .map-layout__place-chip:hover,
+  .map-layout__place-chip.is-lit {
     color: var(--color-parch-50);
     border-color: var(--color-stone-carve);
   }
-  .board-sky__place-chip.is-on,
-  .board-sky__place-chip[aria-pressed="true"] {
+  .map-layout__place-chip.is-on,
+  .map-layout__place-chip[aria-pressed="true"] {
     border-color: var(--color-gem-500);
     color: var(--color-gem-300);
     background: var(--color-stone-800);
   }
-  .board-sky__dossier-band {
+  .map-layout__dossier-band {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem 1.25rem;
@@ -837,28 +837,28 @@ textarea:focus-visible {
     border-bottom: 1px solid var(--color-stone-800);
     background: var(--color-stone-900);
   }
-  .board-sky__dossier-copy {
+  .map-layout__dossier-copy {
     flex: 1 1 14rem;
     min-width: 0;
   }
-  .board-sky__pin-meter {
+  .map-layout__pin-meter {
     flex: 0 0 auto;
     min-width: 7.5rem;
     text-align: right;
   }
-  .board-sky__pin-track {
+  .map-layout__pin-track {
     display: flex;
     gap: 0.2rem;
     justify-content: flex-end;
     margin-top: 0.35rem;
   }
-  .board-sky__pin-seg {
+  .map-layout__pin-seg {
     width: 0.55rem;
     height: 0.22rem;
     border-radius: 1px;
     background: var(--color-stone-750);
   }
-  .board-sky__pin-seg.is-on {
+  .map-layout__pin-seg.is-on {
     background: var(--color-gem-400);
   }
 
@@ -1282,7 +1282,7 @@ textarea:focus-visible {
     /* Match workbench / Tasks nav gap (not Page py-4). */
     padding: clamp(0.75rem, 1.25vw, 1.5rem);
   }
-  .map-shell > :not(.board-sky) {
+  .map-shell > :not(.map-layout) {
     flex-shrink: 0;
   }
 }

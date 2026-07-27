@@ -25,7 +25,7 @@ function regionLabel(id: string): string {
   return REGION_ANCHOR_BY_ID.get(id as RegionId)?.name ?? id;
 }
 
-export function OverviewCourtyard({
+export function OverviewPlan({
   taskTotal,
   catalogCount,
 }: {
@@ -51,34 +51,34 @@ export function OverviewCourtyard({
   const t1Fig = relicMono ?? "—";
 
   return (
-    <div className="comp-courtyard">
-      <header className="comp-lintel">
-        <h2 className="comp-lintel__title">Plan</h2>
-        <p className="comp-lintel__meta">
+    <div className="overview">
+      <header className="overview-header">
+        <h2 className="overview-header__title">Plan</h2>
+        <p className="overview-header__meta">
           T1 {t1Fig}
           {" · "}
           tasks {taskFig}
         </p>
       </header>
 
-      <div className="comp-gate">
-        <aside className="comp-jamb comp-jamb--west" aria-label="Region picks">
-          <p className="comp-jamb__label">Picks</p>
+      <div className="overview-summary">
+        <aside className="overview-side overview-side--regions" aria-label="Region picks">
+          <p className="overview-side__label">Picks</p>
           {slots.map((id, i) =>
             id ? (
-              <div key={id} className="comp-standing">
+              <div key={id} className="region-slot">
                 <GameIcon src={regionCrestPath(id)} size={22} className="shrink-0" />
-                <p className="comp-standing__name">{regionLabel(id)}</p>
+                <p className="region-slot__name">{regionLabel(id)}</p>
               </div>
             ) : (
-              <div key={`empty-${i}`} className="comp-standing is-empty">
+              <div key={`empty-${i}`} className="region-slot is-empty">
                 Slot {i + 1}
               </div>
             ),
           )}
         </aside>
 
-        <div className="comp-aperture">
+        <div className="overview-art">
           {/* Keyart fills the aperture; cover + object-position crop for faces. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -91,43 +91,43 @@ export function OverviewCourtyard({
           />
         </div>
 
-        <aside className="comp-jamb comp-jamb--east" aria-label="Plan milestones">
-          <div className="comp-milestone">
-            <p className="comp-milestone__k">Tasks</p>
-            <p className="comp-milestone__v">
+        <aside className="overview-side overview-side--stats" aria-label="Plan milestones">
+          <div className="overview-stat">
+            <p className="overview-stat__label">Tasks</p>
+            <p className="overview-stat__value">
               {taskDone}
               {taskTotal > 0 ? `/${taskTotal}` : ""}
             </p>
           </div>
-          <div className="comp-milestone">
-            <p className="comp-milestone__k">Catalog</p>
-            <p className="comp-milestone__v">{catalogCount > 0 ? catalogCount : "—"}</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">Catalog</p>
+            <p className="overview-stat__value">{catalogCount > 0 ? catalogCount : "—"}</p>
           </div>
-          <div className="comp-milestone">
-            <p className="comp-milestone__k">T1</p>
-            <p className={`comp-milestone__v${relicMono ? "" : " is-quiet"}`}>{t1Fig}</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">T1</p>
+            <p className={`overview-stat__value${relicMono ? "" : " is-quiet"}`}>{t1Fig}</p>
           </div>
-          <div className="comp-milestone">
-            <p className="comp-milestone__k">Blessings</p>
-            <p className="comp-milestone__v is-quiet">—</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">Blessings</p>
+            <p className="overview-stat__value is-quiet">—</p>
           </div>
         </aside>
       </div>
 
-      <div className="comp-desk">
-        <div className="comp-desk__grid">
-          <div className="comp-panel comp-panel--slate">
-            <div className="comp-panel__head">Ledger</div>
-            <div className="comp-panel__body">
-              <dl className="comp-ledger">
+      <div className="overview-details">
+        <div className="overview-details__grid">
+          <div className="surface-panel surface-panel--muted">
+            <div className="surface-panel__header">Ledger</div>
+            <div className="surface-panel__body">
+              <dl className="overview-facts">
                 <dt>Regions</dt>
                 <dd>
                   {pickNames.length > 0 ? (
-                    <span style={{ color: "var(--echo-parch-100, var(--color-parch-100))" }}>
+                    <span style={{ color: "var(--text-strong, var(--color-parch-100))" }}>
                       {pickNames.join(" · ")}
                     </span>
                   ) : (
-                    <span style={{ color: "var(--echo-parch-300, var(--color-parch-300))" }}>
+                    <span style={{ color: "var(--text-secondary, var(--color-parch-300))" }}>
                       —
                     </span>
                   )}
@@ -147,23 +147,23 @@ export function OverviewCourtyard({
             </div>
           </div>
 
-          <div className="comp-panel comp-panel--carved">
-            <div className="comp-panel__head">Next</div>
-            <div className="comp-panel__body text-[13px]">
-              <ul className="comp-desk__checks m-0 list-none p-0">
+          <div className="surface-panel surface-panel--emphasized">
+            <div className="surface-panel__header">Next</div>
+            <div className="surface-panel__body text-[13px]">
+              <ul className="overview-details__checks m-0 list-none p-0">
                 {(
                   [
                     [regionsFull, `Regions ${loaded ? picks.length : "…"}/${ELECTIVE_CAP}`],
                     [Boolean(t1Relic), t1Relic ? `T1 ${t1Relic}` : "T1"],
                   ] as const
                 ).map(([ok, label]) => (
-                  <li key={label} className="comp-desk__check">
+                  <li key={label} className="overview-details__check">
                     <span
                       className="font-mono text-[11px]"
                       style={{
                         color: ok
-                          ? "var(--echo-gem, var(--color-gem-400))"
-                          : "var(--echo-parch-400, var(--color-parch-400))",
+                          ? "var(--accent-interactive, var(--color-gem-400))"
+                          : "var(--text-muted, var(--color-parch-400))",
                       }}
                     >
                       {ok ? "ok" : "··"}
@@ -172,7 +172,7 @@ export function OverviewCourtyard({
                   </li>
                 ))}
               </ul>
-              <p className="comp-note">
+              <p className="overview-links">
                 <Link href="/map" className="text-gem-300 hover:underline">
                   Map
                 </Link>
@@ -192,10 +192,10 @@ export function OverviewCourtyard({
             </div>
           </div>
 
-          <div className="comp-panel">
-            <div className="comp-panel__head">Structure</div>
-            <div className="comp-panel__body">
-              <dl className="comp-ledger">
+          <div className="surface-panel">
+            <div className="surface-panel__header">Structure</div>
+            <div className="surface-panel__body">
+              <dl className="overview-facts">
                 <dt>Regions</dt>
                 <dd>2 start + Karamja + 3 electives</dd>
                 <dt>Relics</dt>

@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from "react";
 import questsData from "#data/league/quests.json";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
-import { DataViewHeader, useDataRegion } from "./DataWorkbench";
+import { DataViewHeader, useDataRegion } from "./DataBrowser";
 
 type Quest = (typeof questsData.quests)[number];
 

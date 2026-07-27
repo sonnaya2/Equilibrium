@@ -17,7 +17,7 @@ import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPrese
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
-import { DataViewHeader, useDataRegion } from "./DataWorkbench";
+import { DataViewHeader, useDataRegion } from "./DataBrowser";
 import { PROGRESSION_SYSTEM_TABS } from "./ProgressionSystemsResearch";
 
 type Row = Record<string, unknown>;
@@ -358,7 +358,7 @@ export function ProgressionResearch() {
       <div
         role="tablist"
         aria-label="Progression sections"
-        className="comp-seg data-progression__tabs"
+        className="ui-seg data-progression__tabs"
       >
         {SECTIONS.map((item) => {
           const active = section === item.key;
@@ -369,7 +369,7 @@ export function ProgressionResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`ui-seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>

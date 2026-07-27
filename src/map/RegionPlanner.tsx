@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * The map route's working surface: Board Sky.
+ * The map route's working surface: map board.
  *
  * Board majority height on top; ledger · places · region detail under the board.
- * No side inspector column (Hybrid Board Sky DNA).
+ * No side inspector column (Hybrid map board DNA).
  *
  * One client boundary for board + under stack because all read the same focus
  * store and the board must not server-render (three/webgpu would land in the
@@ -17,10 +17,10 @@
 
 import { useEffect } from "react";
 import { MapLoader } from "./MapLoader";
-import { MapLookChrome } from "./MapLookChrome";
-import { PlaceRail } from "./PlaceRail";
-import { RegionInspector } from "./RegionInspector";
-import { RegionLedger } from "./RegionLedger";
+import { MapToolbar } from "./MapToolbar";
+import { PlaceList } from "./PlaceList";
+import { RegionDetails } from "./RegionDetails";
+import { RegionPicker } from "./RegionPicker";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { hydrateFlatBoard, useMapHashSync } from "./useMapFocus";
 
@@ -40,19 +40,19 @@ export function RegionPlanner({
     hydrateFlatBoard();
   }, []);
   return (
-    <div className="board-sky">
-      <div className="board-sky__board">
-        <div className="board-sky__scene-slot">
+    <div className="map-layout">
+      <div className="map-layout__board">
+        <div className="map-layout__scene-slot">
           <MapLoader />
         </div>
-        <MapLookChrome />
+        <MapToolbar />
       </div>
-      <div className="board-sky__under">
-        <div className="board-sky__ledger">
-          <RegionLedger regions={regions} />
+      <div className="map-layout__under">
+        <div className="map-layout__ledger">
+          <RegionPicker regions={regions} />
         </div>
-        <PlaceRail />
-        <RegionInspector regions={regions} boundaryRules={boundaryRules} />
+        <PlaceList />
+        <RegionDetails regions={regions} boundaryRules={boundaryRules} />
       </div>
     </div>
   );

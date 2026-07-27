@@ -10,7 +10,7 @@ import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPrese
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
-import { DataViewHeader, useDataRegion } from "./DataWorkbench";
+import { DataViewHeader, useDataRegion } from "./DataBrowser";
 
 type Row = Record<string, unknown>;
 type SectionKey =
@@ -301,7 +301,7 @@ export function PermanentUnlockResearch() {
         />
       </DataViewHeader>
 
-      <div role="tablist" aria-label="Unlock sections" className="comp-seg data-record-tabs">
+      <div role="tablist" aria-label="Unlock sections" className="ui-seg data-record-tabs">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -311,7 +311,7 @@ export function PermanentUnlockResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`ui-seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>

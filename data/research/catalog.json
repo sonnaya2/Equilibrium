@@ -20883,14 +20883,14 @@
         },
         {
           "name": "Het's Oasis",
-          "kind": "skilling",
-          "detail": "Agility course, flower bushes, whirligigs for prayer powders, Statue of Het blessing. Desert oasis skilling hub.",
+          "kind": "skilling hub",
+          "detail": "Oasis hub: Agility course, flower bushes / cactus / honeycombs, whirligigs for prayer powders (burials, penance, pulverising), Statue of Het XP blessing.",
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Het%27s_Oasis",
             "title": "Het's Oasis",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -21781,85 +21781,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Garden_of_Kharid",
             "title": "Garden of Kharid and Sydekix's Shop of Balance",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Het's Oasis Agility Course",
-          "category": "permanent Desert Agility infrastructure",
-          "detail": "Named only inside unlock list. powder production without restating whirligig tables · Hard Desert. Official region example geography · Unlocks: Permanent mid/high Agility course on official Equilibrium Desert example geography, Full lap XP on wiki course page ( · Region pressure: Hard Desert: Het's Oasis is an official Jagex Equilibrium Desert example and northern desert skilling hub",
-          "requirements": [
-            "Het's Oasis access (ring of duelling western entrance; northern Kharidian Desert)",
-            "65 Agility",
-            "Course rubble clearable during Eye of Het I or earlier"
-          ],
-          "confidence": "confirmed_wiki_plus_official_region_example",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Het%27s_Oasis_Agility_Course",
-            "title": "Het's Oasis Agility Course",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Het's Oasis Farming (flower bushes, cactus, honeycombs)",
-          "category": "Farming activity and POF supply infrastructure",
-          "detail": "Official Equilibrium Desert example content · Unlocks: Active flower-bush cultivation (progress bar, fertiliser, pesty scarab / nutritious gas events), Oasis flowers for player-owned farm honeycombs (breeding/trait influence), Golden rose chance on harvest (improved by better compost) for dazzling whirligigs / shimmering honeycomb path, Cactus patch (Grouch) in south-west oasis, Farming reputation ticks while cultivating higher bushes · Region pressure: Desert owns all oasis Farming geography., Honeycombs feed Kandarin Manor Farm / Anachronia Ranch animals — destination pressure only",
-          "requirements": [
-            "Het's Oasis access (Desert; ring of duelling western entrance)",
-            "Speak to Dundee to open flower-bush activity",
-            "30 / 50 / 70 / 90 Farming for rose / iris / hydrangea / hollyhock bushes",
-            "20 Construction for water filtration system; teak planks + steel nails for flower baskets"
-          ],
-          "confidence": "confirmed_wiki_plus_official_region_example",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Het%27s_Oasis",
-            "title": "Het's Oasis Farming (flower bushes, cactus, honeycombs)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Het's Oasis whirligigs and prayer powder production",
-          "category": "Hunter and Prayer training supply",
-          "detail": "Official Equilibrium Desert example. Powder of burials is the region-defining Prayer bank-stand supply; bone sources and bonecrusher remain multi-region. Does not work with demonic ashes, ectoplasmator, Double XP Prayer rules shared with gilded altars, or Dragon Rider amulet · Desert owns powder production. Pair with multi-region bone supply and Forinthry bonecrusher for the full Prayer stack ( · Unlocks: Prayer powders from ground whirligig shells (15 shells per powder except penance), Powder of burials: +250% base Prayer XP when burying bones for 30 minutes (350% total base); stacks duration to 1 hour; works with bonecrusher, Powder of pulverising, penance, defence, protection, item protection as the other shell products, Dundee crocodile Hunter upgrades (catch rate, double loot, flower save, auto-loot, stack size), Holy scarab Summoning pouch path from mixed whirligig shells (80 Summoning), Het's Oasis Agility course (65 Agility) and active Farming flower bushes for PoF honeycombs · Region status: confirmed_official_region_example",
-          "requirements": [
-            "Het's Oasis access (Desert; ring of duelling option)",
-            "Hunter 16–90 by whirligig tier (speedy / powder of burials at 90 Hunter)",
-            "Farming 30–90 for oasis flower bushes that supply lure flowers (hollyhocks at 90 for burials)",
-            "Flower baskets built (Construction) to stock lure flowers at each pond"
-          ],
-          "confidence": "confirmed_wiki_plus_official_region_example",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Het%27s_Oasis",
-            "title": "Het's Oasis whirligigs and prayer powder production",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",

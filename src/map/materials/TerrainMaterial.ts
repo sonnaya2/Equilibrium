@@ -37,6 +37,20 @@ const PRINT_CONTRAST = 1.2;
 const PRINT_SAT = 1.14;
 const PRINT_LIFT = 0.008;
 
+/** Soft heat disc — desert anchor UV, wide enough for atmosphere. */
+const DESERT_U = 0.491;
+const DESERT_V = 0.844;
+const DESERT_R = 0.19;
+/**
+ * Hard wet kill (ellipse). Soft DESERT_R falloff still leaves Elid at ~85% shimmer;
+ * a circular hard r cannot separate Elid (d≤0.124) from Karamja wet (d≥0.127).
+ * Ellipse covers Elid + Menaphite sand basins; Lum / Kara / Mory stay open.
+ */
+const DESERT_WET_U = 0.5;
+const DESERT_WET_V = 0.83;
+const DESERT_WET_RX = 0.075;
+const DESERT_WET_RY = 0.15;
+
 type MapUv = ReturnType<typeof mapUvFrom>;
 type FieldSample = ReturnType<typeof texture>;
 
@@ -74,8 +88,8 @@ function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
 
 function regionMasks(mapUv: MapUv, F: FieldSample) {
   const land = smoothstep(float(0.5), float(0.56), F.g).mul(smoothstep(float(0.4), float(0.65), F.r));
-  // Wider disc so Elid / sand basins gate out river shimmer.
-  const desert = softDisc(mapUv, 0.491, 0.844, 0.19).mul(land);
+  // Soft atmosphere disc (heat haze). Wet kill is a separate hard ellipse below.
+  const desert = softDisc(mapUv, DESERT_U, DESERT_V, DESERT_R).mul(land);
   const prif = softDisc(mapUv, 0.126, 0.648, 0.055)
     .add(softDisc(mapUv, 0.149, 0.663, 0.07))
     .clamp(0, 1)
@@ -145,8 +159,10 @@ export function createTerrainMaterials(
   const atmospheres = regionMasks(mapUv, F);
 
   if (options.water) {
-    // No river FX on the Kharidian Desert.
-    const desertGate = float(1).sub(atmospheres.desert);
+    // No river FX on the Kharidian Desert — hard ellipse, not soft disc weight.
+    const dwx = mapUv.x.sub(DESERT_WET_U).div(DESERT_WET_RX);
+    const dwy = mapUv.y.sub(DESERT_WET_V).div(DESERT_WET_RY);
+    const desertGate = smoothstep(float(0.9), float(1.1), dwx.mul(dwx).add(dwy.mul(dwy)));
     const t = float(FIELD_TEXEL);
     const gx = texture(field, mapUv.add(vec2(t, float(0)))).g.sub(
       texture(field, mapUv.add(vec2(t.negate(), float(0)))).g,

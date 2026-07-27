@@ -780,6 +780,23 @@ describe("contentRewardsFull — catalog boss packages", () => {
         minIcons: 4,
       },
       { name: "Ruinous weapons", must: [/Ruinous rapier/i, /Ruinous staff/i] },
+      {
+        name: "Edgeville resource dungeons",
+        must: [/Limpwurt/i, /ranarr/i],
+        minIcons: 2,
+      },
+      {
+        name: "Revenants",
+        must: [/Statius/i, /Vesta/i, /Morrigan/i, /Zuriel/i],
+        minIcons: 4,
+      },
+      {
+        name: "Ripper Demons",
+        must: [/Ripper claw/i, /Off-hand ripper claw/i],
+        minIcons: 2,
+      },
+      { name: "Abyssal beasts", must: [/Jaws of the Abyss/i], minIcons: 1 },
+      { name: "Abyssal lords", must: [/Abyssal scourge/i], minIcons: 1 },
     ];
     for (const { name, must, minIcons } of cases) {
       const { row, upgrades } = contentRow("forinthry", name);
@@ -795,6 +812,8 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(
       for_.upgrades.some((u) => /holy-elixir supply|Resource dungeon unlock map/i.test(u.name)),
     ).toBe(false);
+    const region = regionById("forinthry");
+    expect(region.content.some((c) => c.name === "Forinthry Dungeon")).toBe(false);
   });
 
   it("Havenhythe bosses resolve unique drops with inventory icons", () => {

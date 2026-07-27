@@ -148,8 +148,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // Forinthry majors — short reward chips, no essay.
   "Abyss Runecrafting": "Multi-altar rifts, Magical thread, Pouch repair",
   "Abyss entrance": "Multi-altar rifts, Magical thread, Pouch repair",
-  "Edgeville resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
-  "Edgeville Dungeon resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
+  // Item chips only (mob labels share icon src and would collapse).
+  "Edgeville resource dungeons": "Limpwurt roots, Grimy ranarr",
+  "Edgeville Dungeon resource dungeons": "Limpwurt roots, Grimy ranarr",
   "Wilderness bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Black salamanders": "Black salamander, Dark onyx core",
@@ -163,7 +164,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Chaos Altar": "Prayer Offer XP, Wilderness achievement bonus",
 
   // Resource / wildy dungeons — prefer resolvable chips over essay prose.
-  "Forinthry Dungeon": "Resource dungeon",
+  Revenants:
+    "Statius's warhammer, Vesta's longsword, Morrigan's javelin, Zuriel's staff, Ancient statuette",
+  "Ripper Demons": "Ripper claw, Off-hand ripper claw",
+  "Abyssal beasts": "Jaws of the Abyss",
+  "Abyssal lords": "Abyssal scourge",
 
   // Hub / activity majors — short chips instead of Unlocks essays.
   "Invention Guild": "Workbenches, machines, blueprints, generators",

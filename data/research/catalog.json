@@ -15820,7 +15820,7 @@
         {
           "name": "Edgeville resource dungeons",
           "kind": "Dungeoneering resource dungeons",
-          "detail": "Two early DG rooms off Edgeville Dungeon: chaos druids (10 DG) for herb spawns, hill giants (20 DG) for limpwurt. First-entry DG XP; early iron herb/secondary supply under Forinthry.",
+          "detail": "Two DG rooms off Edgeville Dungeon: chaos druids (10 DG) with herb spawns, hill giants (20 DG) with limpwurt roots. First-entry DG XP.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -15875,18 +15875,6 @@
             "url": "https://runescape.wiki/w/Mage_Arena",
             "title": "Mage Arena",
             "verifiedAt": "2026-07-27"
-          }
-        },
-        {
-          "name": "Forinthry Dungeon",
-          "kind": "Wilderness dungeon",
-          "detail": "Forinthry Dungeon (multi-combat Wilderness dungeon with green dragons and revenant-adjacent routes).",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Forinthry_Dungeon",
-            "title": "Forinthry Dungeon",
-            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -16042,6 +16030,54 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Lava_strykewyrm",
             "title": "Lava strykewyrm",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Revenants",
+          "kind": "Wilderness combat",
+          "detail": "Forinthry Dungeon revenants. Ancient Warriors equipment, corrupt dragon gear, ancient artefacts, and the Wilderness shared loot table.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Revenants",
+            "title": "Revenants",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Ripper Demons",
+          "kind": "Slayer",
+          "detail": "Wilderness Ripper Demons (96 Slayer). Unique ripper claws and off-hand ripper claw. Also in the desert Ripper cave.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ripper_Demon",
+            "title": "Ripper Demons",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Abyssal beasts",
+          "kind": "Slayer",
+          "detail": "Abyssal beasts (Senntisten Asylum / Wilderness access). Drop Jaws of the Abyss.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Abyssal_beast",
+            "title": "Abyssal beasts",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Abyssal lords",
+          "kind": "Slayer",
+          "detail": "Abyssal lords (115 Slayer). Drop Abyssal scourge.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Abyssal_lord",
+            "title": "Abyssal lords",
             "verifiedAt": "2026-07-27"
           }
         }

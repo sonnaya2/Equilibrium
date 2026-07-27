@@ -5082,32 +5082,62 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-residual-2026-07-26.json"
     },
     {
-      "id": "dungeoneering:ring-of-vigour-passive",
-      "name": "Ring of Vigour and passive conversion",
+      "id": "dungeoneering:ring-of-vigour",
+      "name": "Ring of Vigour",
       "recordType": "account",
-      "category": "permanent adrenaline combat progression",
+      "category": "Daemonheim ring",
       "regionHints": [
         "forinthry"
       ],
       "requiredRegions": [
         "forinthry"
       ],
-      "regionRequirementType": "base_item_region",
+      "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "detail": "Forinthry is the normal base-ring source. Treat Extinction as a separate quest-auto-completion dependency rather than a second elective region. · Effects: Retains 10% adrenaline after using an ultimate ability, Warped-gem conversion makes the effect permanently active without equipping the ring",
+      "detail": "50,000 Dungeoneering tokens at Daemonheim Rewards. Keep 10% adrenaline after ultimates and 10% cheaper specials while worn. Forinthry / Daemonheim shop.",
       "requirements": [
         "62 Attack",
         "62 Dungeoneering",
-        "50,000 Dungeoneering tokens for the base ring",
-        "Extinction for the warped-gem passive conversion in the normal game"
+        "50,000 Dungeoneering tokens"
       ],
       "confidence": "confirmed_current_wiki",
       "source": {
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Ring_of_vigour",
-        "title": "Ring of Vigour and passive conversion",
-        "verifiedAt": "2026-07-26"
+        "title": "Ring of Vigour",
+        "verifiedAt": "2026-07-27"
+      },
+      "sourceFile": "progression-enrichment-regional-combat-pass-2-2026-07-25.json"
+    },
+    {
+      "id": "dungeoneering:ring-of-vigour-passive",
+      "name": "Ring of Vigour passive",
+      "recordType": "account",
+      "category": "account passive",
+      "regionHints": [
+        "forinthry",
+        "anachronia"
+      ],
+      "requiredRegions": [
+        "forinthry",
+        "anachronia"
+      ],
+      "regionRequirementType": "all_required",
+      "comboLabel": "Forinthry + Anachronia",
+      "isRegionCombo": true,
+      "detail": "After Extinction, Vicendithas on Anachronia gives a warped gem. Combine with Ring of Vigour to make the effect permanent without wearing the ring. Needs Forinthry (ring) + Anachronia (gem).",
+      "requirements": [
+        "Ring of Vigour owned (Daemonheim Rewards / Forinthry)",
+        "Extinction complete",
+        "Warped gem from Vicendithas after Dream of Iaia (Anachronia)"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Ring_of_vigour",
+        "title": "Ring of Vigour passive",
+        "verifiedAt": "2026-07-27"
       },
       "sourceFile": "progression-enrichment-regional-combat-pass-2-2026-07-25.json"
     },

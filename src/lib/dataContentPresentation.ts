@@ -633,6 +633,9 @@ export function presentInterestName(value: string): string {
   if (/^Daemonheim Divination$/i.test(raw)) return "Daemonheim Divination";
   if (/^Primal ores?$/i.test(raw)) return "Primal ores";
   if (/^Wilderness bloodwood trees$/i.test(raw)) return "Bloodwood trees";
+  if (/^Ring of Vigour and passive conversion$/i.test(raw)) return "Ring of Vigour";
+  if (/^Ring of Vigour passive$/i.test(raw)) return "RoV passive";
+  if (/^Ring of Vigour$/i.test(raw)) return "Ring of Vigour";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -794,6 +797,9 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent endgame rc essence-storage pouch": "Essence storage",
     "regional boss bis drop source": "Boss uniques",
     "regional boss bis drop source residual": "Boss uniques",
+    "permanent adrenaline combat progression": "Adrenaline",
+    "daemonheim ring": "Daemonheim ring",
+    "account passive": "Account passive",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

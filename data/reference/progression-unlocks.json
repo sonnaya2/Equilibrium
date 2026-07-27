@@ -773,19 +773,46 @@
       ]
     },
     {
-      "id": "dungeoneering:ring-of-vigour-passive",
-      "name": "Ring of Vigour and passive conversion",
-      "category": "permanent adrenaline combat progression",
+      "id": "dungeoneering:ring-of-vigour",
+      "name": "Ring of Vigour",
+      "category": "Daemonheim ring",
       "region_pressure": [
-        "forinthry: 50,000 Dungeoneering tokens for the Ring of Vigour",
-        "quest-chain: Extinction for the warped gem conversion"
+        "forinthry: 50,000 Dungeoneering tokens for the Ring of Vigour"
       ],
       "base_ring": {
         "dungeoneering_tokens": 50000,
         "attack_level": 62,
         "dungeoneering_level": 62,
-        "effect": "Retains 10% adrenaline after using an ultimate ability."
+        "effect": "Retains 10% adrenaline after using an ultimate ability; 10% cheaper specials while worn."
       },
+      "source_urls": [
+        "https://runescape.wiki/w/Ring_of_vigour"
+      ],
+      "confidence": "confirmed_current_wiki",
+      "league_treatment": "Hard Forinthry via Daemonheim Rewards.",
+      "region_hint": "forinthry",
+      "required_regions": [
+        "forinthry"
+      ],
+      "region_requirement_type": "single",
+      "requirements": [
+        "62 Attack",
+        "62 Dungeoneering",
+        "50,000 Dungeoneering tokens"
+      ],
+      "effects": [
+        "Retains 10% adrenaline after using an ultimate ability",
+        "10% cheaper special attack / EoF special adrenaline cost while worn"
+      ]
+    },
+    {
+      "id": "dungeoneering:ring-of-vigour-passive",
+      "name": "Ring of Vigour passive",
+      "category": "account passive",
+      "region_pressure": [
+        "forinthry: Ring of Vigour from Daemonheim Rewards",
+        "anachronia: Warped gem from Vicendithas after Extinction / Dream of Iaia"
+      ],
       "conversion": {
         "quest": "Extinction",
         "item": "Warped gem",
@@ -794,24 +821,24 @@
       "source_urls": [
         "https://runescape.wiki/w/Ring_of_vigour",
         "https://runescape.wiki/w/Extinction/Quick_guide",
-        "https://runescape.wiki/w/PvM_unlock_guide"
+        "https://runescape.wiki/w/Warped_gem"
       ],
       "confidence": "confirmed_current_wiki",
-      "league_treatment": "Forinthry is the normal base-ring source. Treat Extinction as a separate quest-auto-completion dependency rather than a second elective region",
+      "league_treatment": "Forinthry + Anachronia both required for the permanent passive.",
       "region_hint": "forinthry",
       "required_regions": [
-        "forinthry"
+        "forinthry",
+        "anachronia"
       ],
-      "region_requirement_type": "base_item_region",
+      "region_requirement_type": "all_required",
       "requirements": [
-        "62 Attack",
-        "62 Dungeoneering",
-        "50,000 Dungeoneering tokens for the base ring",
-        "Extinction for the warped-gem passive conversion in the normal game"
+        "Ring of Vigour owned (Daemonheim Rewards / Forinthry)",
+        "Extinction complete",
+        "Warped gem from Vicendithas after Dream of Iaia (Anachronia)"
       ],
       "effects": [
-        "Retains 10% adrenaline after using an ultimate ability",
-        "Warped-gem conversion makes the effect permanently active without equipping the ring"
+        "Permanent 10% adrenaline retain after ultimates without wearing the ring",
+        "Does not stack with a worn Ring of Vigour"
       ]
     },
     {

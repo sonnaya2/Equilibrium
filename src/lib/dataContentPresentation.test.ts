@@ -564,6 +564,10 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestName("Varrock Lumber Yard sawmill operator")).toBe(
       "Varrock sawmill",
     );
+    expect(presentInterestName("Ring of Vigour and passive conversion")).toBe("Ring of Vigour");
+    expect(presentInterestName("Ring of Vigour passive")).toBe("RoV passive");
+    expect(presentInterestName("Ring of Vigour")).toBe("Ring of Vigour");
+    expect(presentInterestMeta("permanent adrenaline combat progression")).toBe("Adrenaline");
     expect(presentInterestName("Kerapac Magic progression")).toBe("Kerapac magic");
     expect(presentInterestName("Velucia museum Archaeology collections")).toBe(
       "Velucia collections",

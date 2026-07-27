@@ -1046,6 +1046,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "ring of slaying (craft unlock)": "ring-of-slaying",
   "ring of vigour": "ring-of-vigour",
   "ring of vigour and passive conversion": "ring-of-vigour",
+  "ring of vigour passive": "ring-of-vigour",
   "ring of vitur": "ring-of-vitur",
   "ring of wealth": "ring-of-wealth",
   "ring of wealth (relic power)": "ring-of-wealth",

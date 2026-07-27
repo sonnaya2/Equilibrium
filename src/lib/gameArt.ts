@@ -1268,6 +1268,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "slayer introspection (amascut's enchanted gem)": "slayer-introspection",
   "slayer lodge progression": "slayer-lodge",
   "slayer tower": "slayer-tower",
+  "ghost hunter gear": "ghost-hunter-gear",
+  cremation: "cremation",
   "smelting gauntlets": "smelting-gauntlets",
   "smithing autoheater": "smithing-autoheater",
   "smoking kills (full slayer points unlock)": "smoking-kills",

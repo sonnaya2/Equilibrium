@@ -255,7 +255,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Gleaming wisp colony": "Gleaming wisps / energy",
   "Pyramid Plunder": "Thieving XP, sceptre",
   "Soul altar": "Soul runes",
-  "Slayer Tower": "Abyssal scourge, Abyssal whip",
+  "Slayer Tower":
+    "Abyssal scourge, Abyssal whip, Ghost hunter gear, Cremation",
   "Darkmeyer": "Vyres, bank, shops",
   "Vyre combat and Sunspear progression": "Sunspear",
   "Vyres / Sunspear multi-skill training": "Sunspear",

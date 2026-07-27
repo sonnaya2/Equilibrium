@@ -595,8 +595,8 @@
 .eq-champion .comp-gate {
   display: grid;
   grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr) minmax(7.5rem, 10rem);
-  /* Tall enough for keyart to read; no max-height crop on the gate band */
-  min-height: min(42vh, 380px);
+  /* Keyart is the hero band — tall enough to read faces, not a thin strip. */
+  min-height: min(48vh, 440px);
   border-bottom: 1px solid var(--echo-border);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--echo-carve) 20%, transparent);
 }
@@ -688,7 +688,7 @@
   position: relative;
   /* Explicit height so img height:100% resolves (min-height alone collapses cover crop). */
   height: 100%;
-  min-height: min(38vh, 340px);
+  min-height: min(44vh, 400px);
   overflow: hidden;
   background: var(--echo-inset);
   display: flex;
@@ -704,9 +704,9 @@
   display: block;
   width: 100%;
   height: 100%;
-  /* Show the full keyart plate — cover was clipping subjects at the gate max-height. */
-  object-fit: contain;
-  object-position: center center;
+  /* Fill the aperture; crop rather than letterbox. */
+  object-fit: cover;
+  object-position: 50% 28%;
   min-height: 0;
 }
 
@@ -1960,21 +1960,21 @@
 
 /* ── Production layout fixes (user pass) ───────────────────── */
 
-/* Courtyard: no full-viewport stretch — desk panels hug content. */
+/* Courtyard: large keyart gate, desk panels hug content. */
 .eq-champion .comp-courtyard {
   min-height: 0;
-  max-width: 1600px;
+  max-width: 1680px;
   margin: 0 auto;
 }
 
 .eq-champion .comp-gate {
-  min-height: min(22vh, 200px) !important;
-  max-height: min(32vh, 260px);
+  min-height: min(42vh, 380px) !important;
+  max-height: min(56vh, 520px);
   grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
 }
 
 .eq-champion .comp-aperture {
-  min-height: min(18vh, 170px) !important;
+  min-height: min(38vh, 340px) !important;
   height: 100%;
 }
 
@@ -1985,6 +1985,7 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
+  object-position: 50% 28% !important;
 }
 
 .eq-champion .comp-desk {
@@ -2155,14 +2156,14 @@
    USER PASS — full viewport work surfaces (overrides above)
    ============================================================ */
 
-/* Overview: gate band + compact plan desk.
-   Ledger / Next / Structure hug content — do not stretch to fill the viewport. */
+/* Overview: large keyart gate + compact plan desk.
+   Desk panels hug content; aperture fills most of the upper screen. */
 .eq-champion .comp-courtyard {
   display: grid !important;
-  grid-template-rows: auto minmax(9rem, min(28vh, 240px)) auto !important;
+  grid-template-rows: auto minmax(18rem, min(54vh, 520px)) auto !important;
   height: auto !important;
   min-height: 0 !important;
-  max-width: min(1600px, 100%) !important;
+  max-width: min(1680px, 100%) !important;
   margin: 0 auto !important;
   overflow: visible !important;
 }
@@ -2171,7 +2172,7 @@
   display: grid !important;
   grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
   min-height: 0 !important;
-  max-height: min(28vh, 240px) !important;
+  max-height: min(54vh, 520px) !important;
   height: 100% !important;
   border-bottom: 1px solid var(--echo-border);
 }
@@ -2194,8 +2195,9 @@
   width: 100% !important;
   height: 100% !important;
   min-height: 0 !important;
+  /* Cover the aperture; bias crop toward faces / upper third of keyart. */
   object-fit: cover !important;
-  object-position: 50% 32% !important;
+  object-position: 50% 28% !important;
 }
 
 .eq-champion .comp-desk {
@@ -2269,8 +2271,8 @@
     max-height: none !important;
   }
   .eq-champion .comp-aperture {
-    height: min(32vh, 200px) !important;
-    min-height: 140px !important;
+    height: min(42vh, 280px) !important;
+    min-height: 200px !important;
   }
   .eq-champion .comp-desk__grid {
     grid-template-columns: 1fr !important;

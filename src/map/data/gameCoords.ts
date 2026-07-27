@@ -11,10 +11,14 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Draynor Village", [3093, 3243]],
   ["Fort Forinthry", [3308, 3553]],
   ["Varrock Dig Site", [3360, 3420]],
+  // Dig Site campus → Senntisten temple / EGWD approach (Misthalin working taxonomy).
+  ["Senntisten Dig Site", [3375, 3405]],
   ["City of Um", [3110, 3300]],
   ["Wizards' Tower", [3109, 3157]],
   ["Edgeville", [3087, 3494]],
   ["Zanaris", [3201, 3169]],
+  // Cosmic Altar is inside Zanaris; pin sits with the hub, not a second island.
+  ["Cosmic Altar", [3208, 3165]],
   ["Sanctum of Rebirth", [3096, 3292]],
   ["Rasial", [3122, 3293]],
   ["Falador", [3000, 3353]],

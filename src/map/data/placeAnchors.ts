@@ -43,10 +43,12 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "misthalin", area: "Draynor Village" },
   { region: "misthalin", area: "Fort Forinthry" },
   { region: "misthalin", area: "Varrock Dig Site" },
+  { region: "misthalin", area: "Senntisten Dig Site" },
   { region: "misthalin", area: "City of Um" },
   { region: "misthalin", area: "Wizards' Tower" },
   { region: "misthalin", area: "Edgeville" },
   { region: "misthalin", area: "Zanaris" },
+  { region: "misthalin", area: "Cosmic Altar" },
 
   // Asgarnia — Falador central, the asgarnia stacked in the north-west.
   { region: "asgarnia", area: "Falador" },

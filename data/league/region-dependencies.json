@@ -27,7 +27,7 @@
         "Fort Forinthry",
         "Fort Forinthry crypt"
       ],
-      "planner_rule": "Use Misthalin as the working League region for Fort Forinthry content. Catalyst explicitly labelled Fort Forinthry tasks as Misthalin; Equilibrium has not yet published a finer Fort locality rule.",
+      "planner_rule": "Fort Forinthry is Misthalin for League planning until Equilibrium draws a finer line. Catalyst tasks already filed it that way.",
       "confidence": "historical_catalyst_working_taxonomy",
       "source_urls": [
         "https://runescape.wiki/w/Catalyst_League/Tasks"
@@ -44,7 +44,7 @@
         "Sanctum of Rebirth",
         "Gate of Elidinis"
       ],
-      "planner_rule": "Use Misthalin as the working League region for City of Um / Underworld content until Equilibrium publishes its own locality override.",
+      "planner_rule": "City of Um and the Underworld sit under Misthalin until Equilibrium publishes its own locality rule.",
       "confidence": "historical_catalyst_working_taxonomy",
       "source_urls": [
         "https://runescape.wiki/w/Catalyst_League/Tasks"
@@ -58,7 +58,7 @@
         "Zanaris",
         "Cosmic Altar"
       ],
-      "planner_rule": "Use Misthalin as the working League region for Zanaris/Cosmic-Altar access. Catalyst filed entering Zanaris via Lumbridge Swamp and crafting cosmic runes under Misthalin.",
+      "planner_rule": "Zanaris and Cosmic Altar access count as Misthalin — Catalyst put swamp entry and cosmic runes there.",
       "confidence": "historical_catalyst_working_taxonomy",
       "source_urls": [
         "https://runescape.wiki/w/Catalyst_League/Tasks"
@@ -73,7 +73,7 @@
         "Elder God Wars Dungeon",
         "Zamorakian Undercity entrance"
       ],
-      "planner_rule": "Use Misthalin as the working League taxonomy for Senntisten-linked content unless a specific encounter has a separately established region mapping. This is historical/entrance evidence, not an Equilibrium-specific reveal.",
+      "planner_rule": "Senntisten-linked content uses Misthalin taxonomy unless a specific encounter has its own mapping. That follows dig-site entrance geography, not an Equilibrium reveal.",
       "confidence": "historical_catalyst_varrock_senntisten_precedent",
       "source_urls": [
         "https://runescape.wiki/w/Catalyst_League/Tasks",

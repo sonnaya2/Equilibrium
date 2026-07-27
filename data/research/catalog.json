@@ -22428,35 +22428,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Smoking Kills (full Slayer points unlock)",
-          "category": "permanent Slayer point economy quest",
-          "detail": "Account-state permanent. First four consecutive tasks still award no points even after the quest; points start from the fifth. Turael/Spria never award points and never contribute to streak. Full points persist after membership expiry if the quest was completed as a member · Hard Desert quest for full point economy. Surface as early Desert Slayer priority before valuing high-master point farms · Unlocks: Full Slayer point awards from all standard masters (without quest: half points, rounded down), Sumona as usable Slayer Master (combat 90 + 35 Slayer still required for her tasks), Pollnivneach Slayer Dungeon + Tomb of Catolax access, Ability to craft slayer helmets / full slayer helmets after the separate 400-point Learn unlock, Desert Slayer Dungeon miniquest path; 5,000 Slayer XP + 1 QP · Region pressure: Desert owns quest geography (Pollnivneach, Ullek tombs, smoke dungeon)., Morytania pressure is soft via Restless Ghost / ILH chain locality only — not a second hard region for the point unlock itself",
-          "requirements": [
-            "Smoking Kills completed (Pollnivneach / Sumona start)",
-            "35 Slayer, 25 Crafting; recommended combat ~60+",
-            "Prerequisite chain: The Restless Ghost; Icthlarin's Little Helper (+ Gertrude's Cat, Diamond in the Rough, Stolen Hearts)",
-            "Earmuffs + face mask craft into masked earmuffs; catspeak + ghostspeak; banshee mistress kill in Pollnivneach Slayer Dungeon"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Smoking_Kills",
-            "title": "Smoking Kills (full Slayer points unlock)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "morytania"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / morytania",
-          "isRegionCombo": false
-        },
-        {
           "name": "Sophanem plover birds",
           "category": "Hunter",
           "detail": "73 Hunter in Sophanem. Good Menaphos reputation while catching. Near Pyramid Plunder, red sandstone, and the Slayer dungeon. Feathers of Ma'at for dungeon kills mostly come from Shifting Tombs.",

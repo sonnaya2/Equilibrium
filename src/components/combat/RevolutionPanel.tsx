@@ -129,11 +129,22 @@ function BarGraphic({
       {slots.map((slot, index) => {
         const isKeybind = index >= revoSize;
         const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
+        const cat =
+          slot.spec?.category === "enhanced"
+            ? "threshold"
+            : slot.spec?.category === "basic"
+              ? "basic"
+              : slot.spec?.category === "ultimate"
+                ? "ultimate"
+                : slot.spec?.category === "utility"
+                  ? "utility"
+                  : undefined;
         return (
           <div
             key={`${slot.name}-${index}`}
             role="listitem"
             title={slot.name}
+            data-category={cat}
             className={`ability-bar-slot border ${
               isKeybind
                 ? "border-dashed border-stone-750/40 text-parch-300/45"

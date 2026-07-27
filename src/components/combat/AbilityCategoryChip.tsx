@@ -1,14 +1,28 @@
 import { abilityCategoryLabel } from "@/lib/gameArt";
 
-/** Compact category chip matching the revo timeline "basic" badge. */
+/** Compact category chip — basics blue, thresholds purple, ultimates red. */
 export function AbilityCategoryChip({
   category,
 }: {
   category: "basic" | "enhanced" | "ultimate" | "utility" | string;
 }) {
   const label = abilityCategoryLabel(category);
+  const kind =
+    category === "enhanced" || label === "threshold"
+      ? "threshold"
+      : category === "basic"
+        ? "basic"
+        : category === "ultimate"
+          ? "ultimate"
+          : category === "utility"
+            ? "utility"
+            : "utility";
+
   return (
-    <span className="ml-1.5 inline-block border border-gem-600/50 bg-stone-850 px-1 py-px font-mono text-[10px] uppercase tracking-wide text-gem-300">
+    <span
+      className={`ability-cat-chip ability-cat-chip--${kind}`}
+      data-category={kind}
+    >
       {label}
     </span>
   );

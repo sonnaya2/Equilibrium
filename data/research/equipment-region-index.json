@@ -1,5 +1,5 @@
 {
-  "snapshotDate": "2026-07-26",
+  "snapshotDate": "2026-07-27",
   "purpose": "Equipment id/name → required regions map stamped from regional combat corpus. Reuse in merge-equipment-sync; never invent regions.",
   "validRegions": [
     "misthalin",
@@ -14,7 +14,7 @@
     "tirannwn",
     "anachronia"
   ],
-  "count": 544,
+  "count": 543,
   "byId": {
     "item:seismic-wand": [
       "asgarnia"
@@ -531,7 +531,8 @@
       "forinthry"
     ],
     "item:wyvern-crossbow": [
-      "asgarnia"
+      "asgarnia",
+      "forinthry"
     ],
     "item:chaotic-crossbow": [
       "forinthry"
@@ -1103,7 +1104,7 @@
       "anachronia"
     ],
     "item:legatuss-emberstaff": [
-      "misthalin"
+      "desert"
     ],
     "item:ruinous-staff": [
       "forinthry"
@@ -1573,9 +1574,6 @@
     ],
     "item:kalphite-rebounder": [
       "desert"
-    ],
-    "item:ancient-rebounder": [
-      "morytania"
     ],
     "item:stalker-arrows": [
       "forinthry"
@@ -2271,7 +2269,8 @@
       "forinthry"
     ],
     "Wyvern crossbow": [
-      "asgarnia"
+      "asgarnia",
+      "forinthry"
     ],
     "Chaotic crossbow": [
       "forinthry"
@@ -2843,7 +2842,7 @@
       "anachronia"
     ],
     "Legatus's Emberstaff": [
-      "misthalin"
+      "desert"
     ],
     "Ruinous staff": [
       "forinthry"
@@ -3313,9 +3312,6 @@
     ],
     "Kalphite rebounder": [
       "desert"
-    ],
-    "Ancient rebounder": [
-      "morytania"
     ],
     "Stalker arrows": [
       "forinthry"

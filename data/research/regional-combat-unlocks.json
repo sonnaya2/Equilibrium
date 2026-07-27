@@ -469,7 +469,7 @@
     },
     {
       "id": "misthalin:wars-retreat-combat-hub",
-      "name": "War's Retreat combat hub residual",
+      "name": "War's Retreat",
       "recordType": "activity",
       "category": "PvM hub combat infrastructure",
       "regionHints": [
@@ -3223,12 +3223,12 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
     },
     {
-      "id": "misthalin:enhanced-nightmare-gauntlets",
+      "id": "kandarin:enhanced-nightmare-gauntlets",
       "name": "Enhanced nightmare gauntlets (T90 ranged)",
       "recordType": "equipment",
       "category": "best-in-slot ranged power gloves residual",
       "regionHints": [
-        "misthalin"
+        "kandarin"
       ],
       "requiredRegions": [
         "misthalin"
@@ -3249,7 +3249,14 @@
         "title": "Enhanced nightmare gauntlets (T90 ranged)",
         "verifiedAt": "2026-07-26"
       },
-      "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
+      "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json",
+      "region_hint": "kandarin",
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_hints": [
+        "kandarin"
+      ]
     },
     {
       "id": "misthalin:enhanced-kerapac-wrist-wraps",
@@ -4460,13 +4467,12 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json"
     },
     {
-      "id": "cross-region:spear-of-annihilation-base",
+      "id": "kandarin:spear-of-annihilation-base",
       "name": "Spear of Annihilation (base archaeology spear)",
       "recordType": "equipment",
       "category": "archaeology spear base residual for masterwork spear",
       "regionHints": [
-        "misthalin",
-        "anachronia"
+        "kandarin"
       ],
       "requiredRegions": [
         "misthalin"
@@ -4487,7 +4493,14 @@
         "title": "Spear of Annihilation (base archaeology spear)",
         "verifiedAt": "2026-07-26"
       },
-      "sourceFile": "progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json"
+      "sourceFile": "progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json",
+      "region_hint": "kandarin",
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_hints": [
+        "kandarin"
+      ]
     },
     {
       "id": "anachronia:blast-diffusion-boots",

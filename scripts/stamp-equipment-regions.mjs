@@ -7,6 +7,7 @@
  *   scraped-data/major-upgrades-by-region.json
  *   scraped-data/progression-enrichment-regional-combat*.json
  *   scraped-data/agent-region-map-*.json (parallel agent audits)
+ *   scraped-data/agent-region-gaps-*.json (per-region densify / gap re-assert passes)
  *   scraped-data/agent-slayer-midgear*.json (pass3 slayer/mid combat densify)
  *   scraped-data/agent-accessories-pass*.json (pass3 accessories densify)
  *   scraped-data/agent-accessories-pass3.json (pockets/capes/hybrid accessories densify)
@@ -1055,9 +1056,16 @@ const FAMILY = [
   },
   {
     regions: ["asgarnia"],
-    requirement: "Wyvern crossbow / zaryte / masuta",
+    requirement: "Zaryte / masuta / armadyl battlestaff",
     source: "family:asgarnia-misc",
-    test: (r) => /^(wyvern crossbow|zaryte bow|masuta'?s warspear|armadyl battlestaff)$/i.test(r.name),
+    // Wyvern crossbow is dual asgarnia+forinthry (Ice Dungeon + Frozen Waste Plateau) — stamped below.
+    test: (r) => /^(zaryte bow|masuta'?s warspear|armadyl battlestaff)$/i.test(r.name),
+  },
+  {
+    regions: ["asgarnia", "forinthry"],
+    requirement: "Wyvern crossbow (Asgarnian Ice Dungeon + Frozen Waste Plateau)",
+    source: "family:asgarnia-forinthry-wyvern-crossbow",
+    test: (r) => /^wyvern crossbow$/i.test(r.name),
   },
   // elite tectonic is asgarnia+forinthry — stamped below as combo family
 
@@ -1623,7 +1631,7 @@ const FAMILY = [
   },
   {
     // Vault of Hereditas = Desert (wiki leagueRegion + desert:vault-of-hereditas-heist).
-    // Pass1 morytania-gloomfire-bow was a false lock.
+    // Pass1 morytania-gloomfire-bow was a false lock. Legatus is family:desert-legatus-emberstaff.
     regions: ["desert"],
     requirement: "Vault of Hereditas (Gloomfire bow)",
     source: "family:desert-gloomfire-bow",
@@ -1676,9 +1684,11 @@ const FAMILY = [
     test: (r) => /^ascendri bolts/i.test(r.name),
   },
   {
-    regions: ["misthalin"],
-    requirement: "Legatus's Emberstaff",
-    source: "family:misthalin-legatus-emberstaff",
+    // Vault of Hereditas (Kharid-et = Desert) — sibling of gloomfire / Misalionar death mask.
+    // Pass1–8 family:misthalin-legatus-emberstaff was a false home (Senntisten name pollution).
+    regions: ["desert"],
+    requirement: "Legatus's Emberstaff (Vault of Hereditas)",
+    source: "family:desert-legatus-emberstaff",
     test: (r) => /legatus'?s? emberstaff/i.test(r.name),
   },
 
@@ -1930,7 +1940,8 @@ const USER_FORCE = new Map([
   ["kerapacs-wrist-wraps", ["misthalin"]],
   ["enhanced-kerapacs-wrist-wraps", ["misthalin"]],
   // enhanced-nightmare-gauntlets: dual kandarin+misthalin later (base World Gate + Leng).
-  ["legatuss-emberstaff", ["misthalin"]],
+  // pass9: Legatus's Emberstaff = Vault of Hereditas (Desert), not Misthalin.
+  ["legatuss-emberstaff", ["desert"]],
   // Dominion Tower gloves — hard Desert (pass2 densify black recolours + swift).
   ["goliath-gloves", ["desert"]],
   ["goliath-gloves-black", ["desert"]],
@@ -2239,7 +2250,8 @@ const USER_FORCE = new Map([
   ["essence-of-finality", ["asgarnia"]],
   // QBD path (razorback is desert — never reaffirm here).
   ["royal-crossbow", ["asgarnia"]],
-  ["wyvern-crossbow", ["asgarnia"]],
+  // pass9: wyvern dual Asgarnian Ice Dungeon + Frozen Waste Plateau (Wilderness/Forinthry).
+  ["wyvern-crossbow", ["asgarnia", "forinthry"]],
   // Ports / Arc combat armour+weapons+accessories (NOT scrimshaws).
   ["seasingers-hood", ["asgarnia"]],
   ["seasingers-robe-top", ["asgarnia"]],
@@ -2622,11 +2634,12 @@ const AGENT_GROUP_EXPAND = new Map([
   ["death-guard-skull-lantern", ["deathguard-t90", "skull-lantern-t90"]],
 ]);
 
-// agent-region-map-* + agent-accessories-pass* + agent-slayer-midgear* (pass3)
+// agent-region-map-* + agent-region-gaps-* + agent-accessories-pass* + agent-slayer-midgear* (pass3)
 const agentMapFiles = readdirSync(join(ROOT, "scraped-data"))
   .filter(
     (n) =>
       /^agent-region-map-.*\.json$/i.test(n) ||
+      /^agent-region-gaps-.*\.json$/i.test(n) ||
       /^agent-accessories-pass\d+\.json$/i.test(n) ||
       /^agent-slayer-midgear.*\.json$/i.test(n),
   )
@@ -2639,10 +2652,11 @@ for (const file of agentMapFiles) {
     continue;
   }
   // agent-accessories-passN may use verified[] as the stampable list (items preferred).
+  // agent-region-gaps-passN may also expose clear[] (handled only via USER_FORCE empties).
   const agentItems = pack.items?.length ? pack.items : pack.verified || [];
   for (const it of agentItems) {
     if (!it?.id?.startsWith("item:")) continue;
-    if (it.lockType === "soft" || it.lockType === "pressure") continue;
+    if (it.lockType === "soft" || it.lockType === "pressure" || it.lockType === "clear") continue;
     if (/pressure_not_hard/i.test(it.confidence || "")) continue;
     const bare = stripItemPrefix(it.id);
     // Pass2 intentional empties — never re-stamp from agent maps.

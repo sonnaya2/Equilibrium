@@ -4557,7 +4557,8 @@
         "type": "drop",
         "requirement": "Wyvern crossbow",
         "regions": [
-          "asgarnia"
+          "asgarnia",
+          "forinthry"
         ]
       }
     },
@@ -5008,7 +5009,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Sirenic craft — multi-source material pressure (no single hard region)",
+        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
         "regions": []
       }
     },
@@ -5033,7 +5034,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Sirenic craft — multi-source material pressure (no single hard region)",
+        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
         "regions": []
       }
     },
@@ -5058,7 +5059,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Sirenic craft — multi-source material pressure (no single hard region)",
+        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
         "regions": []
       }
     },
@@ -8700,7 +8701,7 @@
       "displayDescription": "Effect-only pocket (lifesteal) — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -8721,7 +8722,7 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -8742,7 +8743,7 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -8764,7 +8765,7 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -8785,7 +8786,7 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -8806,7 +8807,7 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Player-owned ports craft (not region-gated)",
+        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
         "regions": []
       }
     },
@@ -9171,7 +9172,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Fletching craft (not region-gated)",
+        "requirement": "user ruling: invent fletching global — not region-hard",
         "regions": []
       }
     },
@@ -9193,7 +9194,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Invention / Fletching craft (not region-gated)",
+        "requirement": "user ruling: invent fletching global — not region-hard",
         "regions": []
       }
     },
@@ -9592,7 +9593,7 @@
         "type": "drop",
         "requirement": "Legatus's Emberstaff",
         "regions": [
-          "misthalin"
+          "desert"
         ]
       }
     },
@@ -9712,7 +9713,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Invention craft off-hand (not region-gated)",
+        "requirement": "user ruling: invent-global offhand — leave empty (no hard region)",
         "regions": []
       }
     },
@@ -9758,7 +9759,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Treasure Trails / global reward (not region-gated)",
+        "requirement": "user ruling: master casket / Global reward — not region-hard",
         "regions": []
       }
     },
@@ -9876,7 +9877,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Runespan reward (not a hard elective region gate)",
+        "requirement": "user ruling: Runespan reward — Misthalin-accessible not region-exclusive",
         "regions": []
       }
     },
@@ -10662,7 +10663,7 @@
       "setId": "second-age",
       "unlock": {
         "type": "drop",
-        "requirement": "Treasure Trails / global reward (not region-gated)",
+        "requirement": "user ruling: master casket / Global reward — not region-hard",
         "regions": []
       }
     },
@@ -11545,7 +11546,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -11568,7 +11569,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -11912,7 +11913,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -11935,7 +11936,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -11958,7 +11959,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -11981,7 +11982,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Treasure Trails / global reward (not region-gated)",
+        "requirement": "user ruling: master casket / Global reward — not region-hard",
         "regions": []
       }
     },
@@ -12447,7 +12448,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -12470,7 +12471,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -12493,7 +12494,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Skilling bow (not a League combat region gate)",
+        "requirement": "user ruling: skilling bow — not league-hard combat gate",
         "regions": []
       }
     },
@@ -13914,37 +13915,6 @@
         "requirement": "Kalphite King defender residual",
         "regions": [
           "desert"
-        ]
-      }
-    },
-    {
-      "id": "item:ancient-rebounder",
-      "name": "Ancient rebounder",
-      "style": "magic",
-      "slot": "offhand",
-      "tier": 80,
-      "bonuses": {
-        "accuracy": 1924,
-        "armour": 192.4
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Ancient_rebounder",
-          "verifiedAt": "2026-07-26"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Ancient_lantern",
-          "verifiedAt": "2026-07-26",
-          "title": "Ancient lantern"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
-        "regions": [
-          "morytania"
         ]
       }
     },

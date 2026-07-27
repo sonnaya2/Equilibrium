@@ -237,6 +237,7 @@ function polishPlayerCopy(seg) {
     // orphan clause after wiping a leading region:id subject
     .replace(/^Arc reward depth;\s*/i, "")
     .replace(/^this is the Ports hub itself\.?\s*/i, "Player-owned port hub. ")
+    .replace(/^Player-owned port hub\.\s*/i, "Player-owned port hub. ")
     // hanging em-dash before segment glue left by agent strip
     .replace(/\s*[—–]\s*$/g, "")
     .replace(/^[—–]\s*/g, "")
@@ -369,6 +370,7 @@ function humanizeDetail(detail, requiredRegions = []) {
     .replace(/\bpermanent\s+Consumable\b/g, "permanent. Consumable")
     .replace(/\bpermanent\s+([A-Z])/g, "permanent. $1")
     .replace(/\.\s*\./g, ".")
+    .replace(/\.\s*·/g, " ·")
     .replace(/\s{2,}/g, " ")
     .replace(/·\s*·/g, "·")
     .replace(/,\s*,/g, ",")

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/apply-invention-global-regions.mjs && node scripts/sync-training-gaps.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs && node scripts/stamp-equipment-regions.mjs && node scripts/fix-aura-regions-2026.mjs && node scripts/humanize-region-detail.mjs",
+    "normalize:data": "node scripts/normalize-scraped-data.mjs && node scripts/sync-reference-data.mjs && node scripts/sync-regional-skilling-unlocks.mjs && node scripts/apply-invention-global-regions.mjs && node scripts/sync-training-gaps.mjs && node scripts/sync-regional-combat-unlocks.mjs && node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs && node scripts/sync-permanent-unlock-passes.mjs && node scripts/sync-combat-records.mjs && node scripts/stamp-equipment-regions.mjs && node scripts/stamp-empty-equipment-regions.mjs && node scripts/fix-aura-regions-2026.mjs && node scripts/humanize-region-detail.mjs",
     "stamp:equipment-regions": "node scripts/stamp-equipment-regions.mjs",
     "sync:training-gaps": "node scripts/sync-training-gaps.mjs",
     "sync:catalyst-snapshot": "node scripts/refresh-catalyst-snapshot.mjs",

@@ -4967,36 +4967,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
     },
     {
-      "id": "cross-region:portable-skilling-stations",
-      "name": "Portable skilling stations (ironman craft/deployment permanent note)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "asgarnia",
-        "tirannwn",
-        "desert"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / asgarnia / tirannwn / desert",
-      "isRegionCombo": true,
-      "category": "production infrastructure permanent note (TH consumables — ironman-scoped)",
-      "detail": "ONE permanent note only — not every TH portable SKU. Prefer permanent scenery (Fort kitchen/workroom, Guild machines, regional facilities) for no-trade routes · Unlocks: Planner-visible permanent. RULE: TH portables (brazier / crafter / fletcher / range / sawmill / well / workbench) are NOT ironman production infrastructure — never score them as region power for no-trade routes, Deployment model (main game only): place near bank; 5-minute base duration; same-type stations extend by +5 minutes each up to soft 60-minute cap (repeatable); 3x3 effect after first interact; Brooch of the Gods doubles special-effect proc chance, Ironman-adjacent exceptions ( · Region pressure: No hard region gate — this is a permanent planner policy row, not a craft unlock., Misthalin taxonomy home for common public portable hubs (GE / Lumbridge Market) and Fort Workshop banks., Asgarnia: Burthorpe portable hubs + Artisans' Workshop luminite injector exception + Invention Guild machine substitutes., Tirannwn: Prifddinas public portable hubs (main-game convenience only)., Desert: Shantay Pass public portable hub (main-game convenience only)",
-      "requirements": [
-        "Main game: portable skilling stations and portable skilling packs are Treasure Hunter / promotion rewards (tradeable on GE for non-iron)",
-        "Ironman Mode: cannot interact with most portable skilling stations placed by other players",
-        "Do not treat portables as craftable Invention devices or permanent account unlocks"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Portable_skilling_stations",
-        "title": "Portable skilling stations (ironman craft/deployment permanent note)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-final-invention-production-2026-07-26.json"
-    },
-    {
       "id": "cross-region:prayer-book-switch-network",
       "name": "Prayer-book switch network (Zaros / Fort / Elven / War)",
       "recordType": "activity",
@@ -6407,7 +6377,7 @@
       "comboLabel": "Region chain (support pressure): desert / asgarnia",
       "isRegionCombo": false,
       "category": "Ports voyage economy and Eastern lands gate",
-      "detail": "Player-owned port hub. · Primary Desert/Menaphos. Asgarnia Arc shops support only · Unlocks: Player-owned port voyage interface and trade goods, Eastern lands / Arc voyage gate materials, Ports resources for scroll of proficiency and related crafts",
+      "detail": "Player-owned port hub · Primary Desert/Menaphos. Asgarnia Arc shops support only · Unlocks: Player-owned port voyage interface and trade goods, Eastern lands / Arc voyage gate materials, Ports resources for scroll of proficiency and related crafts",
       "requirements": [
         "Ports access via Menaphos / Port district portal",
         "Captain and crew progression for voyage success"
@@ -15209,96 +15179,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:fort-command-centre-global-ops-tiers",
-      "name": "Fort Command Centre global operations tier ladder densify",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "anachronia",
-        "fremennik",
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / anachronia / fremennik / asgarnia",
-      "isRegionCombo": false,
-      "category": "remote operations permanent densify",
-      "detail": "densify of numeric global-ops ladder for planners ranking fort Construction priority against Anachronia/POP/Misc/Arch · Hard Misthalin for the building. Score optional regions only when valuing the matching remote system · Unlocks: Tier 1: Ports / Miscellania / Anachronia / Archaeology research remote tables; +3% player-owned port voyage success, Tier 2: +6% port voyage success total; +5 Anachronia base camp workers; −3% Archaeology research chronote cost, Tier 3: +10% port voyage success total; +10 Anachronia workers total; +3% Archaeology research speed; Miscellania approval lock purchase (750 coins per subject per day, up to 7 days, forces 100% approval while paid) · Region pressure: Misthalin owns the Command Centre building and remote tables",
-      "requirements": [
-        "New Foundations completed",
-        "Construction 25 / 70 / 99 for Command Centre tiers 1 / 2 / 3",
-        "Destination systems unlocked independently (POP, Miscellania, Anachronia base camp, Archaeology research)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Command_Centre",
-        "title": "Fort Command Centre global operations tier ladder densify",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-fort-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-construction-materials-ladder",
-      "name": "Fort refined plank / timber frame materials ladder",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / asgarnia",
-      "isRegionCombo": false,
-      "category": "Fort Construction materials production infrastructure",
-      "detail": "Continue2. Split across fort-free-sawmill + fort-forinthry-workshop + plank-maker without a single materials ladder id. No invented XP/hour for frame construction · Hard Misthalin for fort materials loop. Invention plank machines stay Asgarnia support · Region pressure: Misthalin Fort sawmill + woodworking bench geography",
-      "requirements": [
-        "Fort Workshop / free sawmill access (New Foundations progression for full amenities)",
-        "Logs of the matching wood type for standard planks at the fort sawmill",
-        "Planks refined into refined planks (and refined oak/maple/magic plank variants) at the fort sawmill",
-        "Refined planks → wooden/oak/maple/magic frames at the woodworking bench (3 refined planks per frame class)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Refined_planks",
-        "title": "Fort refined plank / timber frame materials ladder",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue2-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-eternal-reinforcement",
-      "name": "Fort Forinthry eternal reinforcement (105 Construction training)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "high-level Construction training",
-      "detail": "Added 20 July 2026 mid-game rebalance. Missing Not a permanent buff beyond unlocking the training loop. Prefer fort-forinthry-workshop for the broader Construction hub · Misthalin fort Construction endgame. Keep 105 Construction and T3 prerequisite · Unlocks: Eternal reinforcement blueprint at Fort Forinthry blueprints table, Repeatable high-level Construction training: hotspots appear on one of the player's existing tier 3 buildings, Does not create a new building or fortification — XP method only · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "105 Construction",
-        "At least one Fort Forinthry building already at tier 3",
-        "Eternal frames + stone wall segments (eternal magic log plank chain if self-sourcing frames)"
-      ],
-      "confidence": "confirmed_wiki_2026_current",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Eternal_reinforcement",
-        "title": "Fort Forinthry eternal reinforcement (105 Construction training)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-fort-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:fort-forinthry-workshop",
       "name": "Fort Forinthry Workshop",
       "recordType": "activity",
@@ -15323,32 +15203,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-free-sawmill",
-      "name": "Fort Forinthry free sawmill and woodworking",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Construction free plank and fort material infrastructure",
-      "detail": "Misthalin fort infrastructure under working taxonomy · Unlocks: Free logs→planks conversion (no coin fee) with small Construction XP per plank (2 ticks each), Planks→refined planks processing for Fort construction materials, Woodworking bench (left of sawmill) refined planks→timber frames for fort buildings, Plank box contents usable when constructing refined planks, Ironman Construction backbone that removes sawmill operator coin pressure · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Fort Workshop access (New Foundations progression for full amenities; free sawmill interact does not require the quest for the standard variant)",
-        "Logs for planks; planks for refined planks; refined planks for timber frames at woodworking bench"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Sawmill",
-        "title": "Fort Forinthry free sawmill and woodworking",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
       "id": "misthalin:fort-guardhouse-slayer",
@@ -15458,32 +15312,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-continue2-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-town-hall-rested-xp",
-      "name": "Fort Forinthry Town Hall rested experience",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "rested experience and fort bank infrastructure",
-      "detail": "Rested XP is fort-wide QoL that stacks with every Fort skilling building. Woodcutters' Grove counts as in-fort for rested gain · Treat as starting-region fort infrastructure under the Misthalin working map · Unlocks: Rested experience while offline or skilling in the fort, convertible to bonus experience, Tier 1: 1 rested XP per 15 minutes logged out; 1 rested XP every 3 minutes skilling in fort; 500 cap, Tier 2: 2 rested XP every 3 minutes skilling in fort; 1,000 cap, Tier 3: 3 rested XP every 3 minutes skilling in fort; 1,500 cap, Copperpot banker and courtyard bank chest access with Town Hall · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "New Foundations completed for full fort construction access",
-        "Construction 10 / 45 / 80 for Town Hall tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
-        "title": "Fort Forinthry Town Hall rested experience",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
     {
       "id": "misthalin:gate-of-elidinis",
@@ -16162,34 +15990,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
     },
     {
-      "id": "misthalin:mysterious-monolith-relic-hub",
-      "name": "Mysterious monolith relic power hub",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology permanent relic infrastructure",
-      "detail": "Starting Misthalin Archaeology hub. Relic sources may need other regions · Unlocks: Offer relics and harness up to three relic powers within monolith energy budget, Monolith energy ladder 150 → 250 → 400 → 500 → 650, Relic presets (2 default; 3rd shop 80k chronotes at Professor; 4th free at Guildmaster) with 80% chronote cost on preset swap, Archaeology cape / master cape bank-side relic management without walking campus, Mattock of Time and Space and powered tetracompass craft at the monolith, Account-wide permanent skilling and combat power selection (Always Adze, Bait and Switch, Death Note, Sticky Fingers, Flow State, etc. — individual powers keep dig-site region_hints on their own rows)",
-      "requirements": [
-        "Archaeology tutorial for base +150 monolith energy",
-        "Special research: Mysterious Monolith Existence (Assistant, +100), Architecture (Associate, +150), Symbology (Professor, +100)",
-        "Mysterious City mystery (120 Archaeology, Associate) for final +150 → 650 energy cap",
-        "Chronotes to harness powers (cost = energy × 20); up to 3 powers active at once"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Mysterious_monolith",
-        "title": "Mysterious monolith relic power hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:necromantic-rune-temple",
       "name": "Necromantic Rune Temple",
       "recordType": "activity",
@@ -16449,39 +16249,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:quest-cape",
-      "name": "Quest Cape (lore teleports + Tears of Guthix)",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "asgarnia",
-        "kandarin",
-        "fremennik",
-        "forinthry"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + fremennik + forinthry",
-      "isRegionCombo": true,
-      "category": "permanent quest-completion cape with skilling teleports",
-      "detail": "High skilling-value (Tears duration + multi-hub lore teles), not a quest checklist essay. Master quest cape (Curator Haig Halen, 120k) shares the same teleport + Tears perk; MQC is trim-comp prestige — keep this row as the skilling-effect first class and only footnote MQC · Hard Misthalin for purchase NPC. Quest auto-complete overlays may collapse the achievement gate in Equilibrium League — still score the cape effect when the achievement resolves · Unlocks: Activate perk: +30 seconds in Tears of Guthix D&D (skilling XP for the lowest skill), Lore teleport menu (shared with master quest cape after 16 January 2023): Ancient Guthix Temple, Behind the Scenes, Empty Throne Room, Glacor Cave, Fountain of Heroes, Tears of Guthix (Chasm of Tears), Eligible for Max Guild garden entry as wearable Quest Cape (pairs with garden gate), Can be stored on Anachronia skillcape rack for Tears-of-Guthix duration perk without wearing the cape, Can be consumed into max/completionist cape perk slots like other Capes of Accomplishment (quest cape is returned if requirements drop) · Region pressure: Misthalin Wise Old Man purchase and Draynor reclaim geography., Fremennik /",
-      "requirements": [
-        "Complete all quests / maximum quest points for the Quest Cape achievement (current wiki maximum quest points tracked on the cape page)",
-        "99,000 coins purchase from Wise Old Man in Draynor Village (Misthalin)",
-        "Cape unequips when new quests release until they are completed; reclaim free from Wise Old Man if bank/inventory full"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Quest_Cape",
-        "title": "Quest Cape (lore teleports + Tears of Guthix)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-capes-boots-2026-07-26.json"
     },
     {
       "id": "misthalin:research-team-size-ladder",
@@ -16949,11 +16716,10 @@
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:spottier-cape",
+      "id": "kandarin:spottier-cape",
       "name": "Spottier cape (Hunter weight-reduction cape)",
       "recordType": "equipment",
       "regionHints": [
-        "misthalin",
         "kandarin"
       ],
       "requiredRegions": [
@@ -16976,7 +16742,14 @@
         "title": "Spottier cape (Hunter weight-reduction cape)",
         "verifiedAt": "2026-07-26"
       },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-capes-boots-2026-07-26.json"
+      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-capes-boots-2026-07-26.json",
+      "region_hint": "kandarin",
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_hints": [
+        "kandarin"
+      ]
     },
     {
       "id": "misthalin:taggas-corehammer",
@@ -17426,37 +17199,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-final-prayer-magic-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:wars-retreat-skilling-hub",
-      "name": "War's Retreat hub amenities (bank / Altar of War / grimoire host)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent PvM hub infrastructure with Prayer logistics",
-      "detail": "Hub pointer densify for wars-grimoire. Skilling value is Prayer restore + book-switch logistics co-located with bank · Unlocks: Bank chest + campfire bonfire boost + training dummy area as permanent hub amenities, Altar of War: restore Prayer and Summoning points at the hub (post-200 boss kills), Host scenery for War's Grimoire spellbook/prayer logistics next to boss portals and adrenaline crystals, Clan representative decanting (potions/flasks) and jellyfish combine as inventory QoL at the hub · Region pressure: Misthalin planner region_hint for Draynor entry and hub taxonomy (matches wars-grimoire)., Boss-kill gates are account-wide, not region locks",
-      "requirements": [
-        "60 Combat or 1,000 total level for hub entry",
-        "Draynor War's Insignia / Death's office door / War's Retreat Teleport (10 boss kills for spell)",
-        "Altar of War unlock: 200 boss kills via War's Wares",
-        "War's Grimoire scenery: 750 boss kills (misthalin:wars-grimoire)",
-        "Prayer-book swap on grimoire: War's Blessing 3 (misthalin:wars-blessing)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/War%27s_Retreat",
-        "title": "War's Retreat hub amenities (bank / Altar of War / grimoire host)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-combat-adjacent-2026-07-26.json"
     },
     {
       "id": "misthalin:well-of-souls",
@@ -19177,44 +18919,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-slayer-rc-prayer-2026-07-26.json"
     },
     {
-      "id": "multi-region:slayer-helmet-component-farms",
-      "name": "Slayer helmet component farms",
-      "recordType": "activity",
-      "regionHints": [
-        "morytania",
-        "karamja",
-        "desert",
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "morytania",
-        "karamja",
-        "desert",
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): morytania + karamja + desert + misthalin",
-      "isRegionCombo": true,
-      "category": "multi-region Slayer equipment acquisition",
-      "detail": "Planner activity hub for the full style-coverage helmet. Individual equipment rows below carry region_hint and effects. Spiny/face/earmuffs/nose peg are Slayer Master shop items (any master with stock) — not region-locked drops. Black mask also has a rare Shadow Reef sea-horror path (not the practical ironman farm) · Surface Morytania (horrors), Karamja (jungle strykewyrms), Desert (desert strykewyrms + profane scabarites), and Misthalin/City of Um (ensoul ritual) when ranking full-style helmet completion. Shop protection pieces are multi-master and not a hard single-region gate · Region combo (all required): morytania + karamja + desert + misthalin · Unlocks: Black mask farm geography (melee helm component), Hexcrest farm geography (Magic helm component), Focus sight farm geography (Ranged helm component), Spectral lens farm + ensoul ritual path (Necromancy helm component), Shop-bought protective pieces: spiny helmet, face mask, earmuffs, nose peg",
-      "requirements": [
-        "Smoking Kills for helmet craft unlock path",
-        "58 Slayer + Cabin Fever for Mos Le'Harmless cave/unspeakable horrors (black mask)",
-        "73 Slayer for jungle strykewyrms (hexcrest)",
-        "77 Slayer for desert strykewyrms (focus sight)",
-        "Profane Scabarites / Scabarites access for spectral lens (Necromancy style component)",
-        "80 Necromancy for ensoul spectral lens ritual (City of Um / ritual site)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Slayer_helmet",
-        "title": "Slayer helmet component farms",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
-    },
-    {
       "id": "multi-region:slayer-helmet-craft",
       "name": "Slayer helmet (craft unlock + base helm)",
       "recordType": "equipment",
@@ -19272,48 +18976,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Slayer_helmet",
         "title": "Fuse rings to full Slayer helmet",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
-    },
-    {
-      "id": "multi-region:slayer-helmet-shop-protections",
-      "name": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "morytania",
-        "desert",
-        "karamja",
-        "kandarin",
-        "tirannwn",
-        "anachronia",
-        "forinthry"
-      ],
-      "requiredRegions": [
-        "misthalin",
-        "morytania",
-        "desert",
-        "karamja",
-        "kandarin",
-        "tirannwn",
-        "anachronia",
-        "forinthry"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + morytania + desert + karamja + kandarin + tirannwn + anachronia + forinthry",
-      "isRegionCombo": true,
-      "category": "Slayer helmet protective components",
-      "detail": "Multi-master shop pack. Region pressure is whichever masters the league unlocks, not a fixed region · Region combo (all required): misthalin + morytania + desert + karamja + kandarin + tirannwn + anachronia + forinthry · Effects: Spiny helmet: wall-beast protection (Lumbridge Swamp Caves), Face mask: Smoke Dungeon dust and dust devil drain protection, Earmuffs: banshee scream protection, Nose peg: aberrant spectre drain protection, All four effects merge into the crafted slayer helmet",
-      "requirements": [
-        "Coins at any Slayer Master equipment/rewards shop stocking the pieces",
-        "Combined with uncharged black mask at 55 Crafting after Learn how to craft Slayer helmets"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Spiny_helmet",
-        "title": "Spiny helmet, face mask, earmuffs, nose peg (shop pack)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
@@ -21442,90 +21104,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
     },
     {
-      "id": "desert:greenfingers-passive",
-      "name": "Greenfingers passive",
-      "recordType": "activity",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Farming unlock",
-      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura",
-      "requirements": [
-        "30,000 Crux Eqal favour",
-        "Garden of Kharid access (Desert)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "misthalin:focused-siphoning-passive",
-      "name": "Focused Siphoning passive",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Runespan unlock",
-      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura",
-      "requirements": [
-        "20,000 Runespan points",
-        "Wizards' Tower (Misthalin)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "misthalin:five-finger-discount-passive",
-      "name": "Five-Finger Discount passive",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Thieving unlock",
-      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura",
-      "requirements": [
-        "Thieves' Guild (Misthalin)",
-        "1,000 pilfer points per rank"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
       "id": "desert:vampyrism-aspect",
       "name": "Vampyrism Aspect",
       "recordType": "activity",
@@ -21623,96 +21201,6 @@
       "requirements": [
         "Anachronia base camp / totem system"
       ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:divination-enrichment-progression",
-      "name": "Enriched memory chance (ex-Enrichment aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Divination level passive",
-      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated",
-      "requirements": [
-        "Divination level thresholds"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:mining-critical-progression",
-      "name": "Mining critical chance (ex-Quarrymaster aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Mining level passive",
-      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated",
-      "requirements": [
-        "Mining 59 / 85"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:material-cache-consistency",
-      "name": "Material cache consistency (ex-Resourceful aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Archaeology gathering passive",
-      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated",
-      "requirements": [
-        "Archaeology material caches"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:aura-system-removed",
-      "name": "Combat auras removed (Berserker / Maniacal / Reckless…)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — system removal",
-      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras",
-      "requirements": [],
       "confidence": "confirmed_official_2026",
       "source": {
         "source": "jagex",

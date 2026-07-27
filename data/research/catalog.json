@@ -19210,13 +19210,13 @@
         },
         {
           "name": "Citharede Abbey",
-          "kind": "Prayer / Crafting",
-          "detail": "Book-making table after One Piercing Note. Illuminate completed god books (60 Crafting + 60 Prayer): Law, War, Balance, Wisdom, Chaos, Ancient. First illumination each book grants 10k Crafting + 10k Prayer XP.",
+          "kind": "Quest / combat abilities",
+          "detail": "One Piercing Note quest hub. Permanent unlocks: Sacrifice, Devotion, and Transfigure (moved off GWD1 loot 18 Aug 2025), plus illuminated god books at the book-making table (60 Crafting + 60 Prayer).",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Illuminated_god_book",
-            "title": "Citharede Abbey",
+            "url": "https://runescape.wiki/w/One_Piercing_Note",
+            "title": "One Piercing Note / Citharede Abbey",
             "verifiedAt": "2026-07-27"
           }
         },

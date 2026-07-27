@@ -1219,6 +1219,12 @@ describe("contentRewardsFull — catalog boss packages", () => {
       // Rot6 is upgrade-only in catalog (no content row) — covered by alias pack tests.
       { region: "desert", name: /Telos/, re: /Seren godbow|Staff of Sliske|Zaros godsword/i },
       { region: "desert", name: /Amascut/, re: /Devourer's Guard|Tumeken/i },
+      // GWD1 ability drops moved to One Piercing Note (Aug 2025); books as one package chip.
+      {
+        region: "desert",
+        name: "Citharede Abbey",
+        re: /Sacrifice|Devotion|Transfigure|Illuminated god books/i,
+      },
       { region: "desert", name: "Kalphite King", re: /Drygore/i },
       {
         region: "desert",

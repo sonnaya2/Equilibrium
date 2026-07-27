@@ -371,10 +371,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Mage Training Arena": "Bones to Peaches, Infinity robes",
   "Mage Training Arena (bones to peaches + reward shop)":
     "Bones to Peaches, Infinity robes",
+  // GWD1 ability drops moved here (18 Aug 2025) via One Piercing Note.
   "Citharede Abbey":
-    "Illuminated Book of Law, Illuminated Book of War, Illuminated Book of Balance, Illuminated Book of Wisdom, Illuminated Book of Chaos",
+    "Sacrifice, Devotion, Transfigure, Illuminated god books",
   "Citharede Abbey illuminated god books":
-    "Illuminated Book of Law, Illuminated Book of War, Illuminated Book of Balance, Illuminated Book of Wisdom, Illuminated Book of Chaos",
+    "Sacrifice, Devotion, Transfigure, Illuminated god books",
 
   // Remaining long hub essays — short chips.
   "Ourania Runecrafting Altar (ZMI)": "1.5× RC XP, random runes",

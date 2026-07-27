@@ -33,6 +33,9 @@ const FILES = {
   "chaos-altar": "ChaosAltar.png",
   // Revenant chamber wreckage — not the lesser-demon lava overlook.
   "forinthry-dungeon": "Forinthry Dungeon revenants.png",
+  // Underwater shipwreck plate — not the tall Ambassador model crop.
+  "the-shadow-reef": "The Shadow Reef.png",
+  "shadow-reef": "The Shadow Reef.png",
 };
 
 async function wikiFileInfo(title) {

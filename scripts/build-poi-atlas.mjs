@@ -56,7 +56,7 @@ const ALIASES = {
   "demonic-ruins": "demonic-ruins",
   "rogues-castle": "rogues-castle",
   "araxyte-hive": "araxxor",
-  // ED2 / ED3 pins use the dungeon boss icons (not exterior plates).
+  // ED2 pin keeps the BSD plate; ED3 uses the underwater landscape (not tall Ambassador).
   "dragonkin-laboratory": "dragonkin-laboratory",
   "the-shadow-reef": "the-shadow-reef",
   "shadow-reef": "the-shadow-reef",

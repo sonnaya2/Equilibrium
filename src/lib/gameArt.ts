@@ -10,6 +10,7 @@ import {
   SKILL_ICON_SLUGS,
   UPGRADE_ICON_BY_SLUG,
 } from "./dataIconIndex";
+import { decodeHtmlEntities } from "./htmlEntities";
 import equipmentIconSlugs from "../../data/combat/equipment-icon-slugs.json";
 
 /** Slugs with a verified local equipment inventory icon (no 404 wells). */
@@ -82,9 +83,14 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "abyss entrance": "abyss",
   "abyss runecrafting": "abyss",
   "abyss runecrafting stack": "abyss",
+  "the abyss": "abyss",
   "abomination": "abomination",
   "amascut": "amascut",
   "amascut, the devourer": "amascut",
+  // Gem → inventory, never the boss plate.
+  "amascut's enchanted gem": "enchanted-gem",
+  "amascuts enchanted gem": "enchanted-gem",
+  "enchanted gem": "enchanted-gem",
   "abyssal link (the subtle blade)": "abyssal-link",
   "abyssal scourge": "abyssal-scourge",
   "abyssal wand and abyssal orb": "abyssal-wand",
@@ -126,8 +132,17 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "anachronia base camp structure tier rewards": "anachronia-base-camp",
   "anachronia base-camp spa pools": "anachronia-base-camp",
   "anachronia big game hunter": "big-game-hunter",
-  "anachronia codex lectern": "anachronia-agility-course",
+  "anachronia codex lectern": "double-surge",
   "anachronia codex lectern (double surge/escape)": "double-surge",
+  "anachronia codex lectern (double surge / double escape)": "double-surge",
+  "roar of osseous": "roar-of-osseous",
+  "roar of osseous (rex skeleton island buff)": "roar-of-osseous",
+  "orthen dig site": "orthen-teleportation-device",
+  "ranch out of time": "ranch-out-of-time",
+  "ranch out of time (anachronia dinosaur farm)": "ranch-out-of-time",
+  "hunter mark shop (irwinsson)": "quick-traps",
+  "anachronia big game hunter": "big-game-hunter",
+  "time altar": "time-rune",
   "anachronia dinosaur farm": "anachronia-dinosaur-farm",
   "anachronia dinosaur farm animal buyers": "anachronia-dinosaur-farm",
   "anachronia dinosaur farm elder animal perks": "anachronia-dinosaur-farm",
@@ -192,7 +207,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "artisans' workshop reward shop": "artisans-workshop-reward-shop",
   "ascension crossbows": "ascension-crossbow",
   "asgarnia runecrafting altars (mind, body, law)": "mind-altar",
-  "asgarnia safecracking circuit": "safecracking",
+
   "astral altar": "astral-altar",
   "astral altar (lunar isle)": "astral-altar",
   "asuran arsenal heist": "asuran-arsenal",
@@ -351,9 +366,14 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "misthalin wisp colonies": "divination",
   "wisps near draynor": "divination",
   "pale wisps near draynor": "divination",
-  "varrock palace tree patch": "farming",
-  "lumbridge hops patch": "farming",
-  "draynor willow trees": "woodcutting",
+  "varrock palace tree patch": "varrock-palace-tree-patch",
+  "varrock tree patch": "varrock-palace-tree-patch",
+  "tree patch": "tree-patch",
+  "lumbridge hops patch": "lumbridge-hops-patch",
+  "hops patch": "hops-patch",
+  "draynor willow trees": "draynor-willow-trees",
+  "draynor willows": "draynor-willow-trees",
+  "um mushroom patch": "um-mushroom-patch",
   "daemonheim dig site (dragonkin mini-site)": "daemonheim-dig-site",
   "daemonheim dungeoneering floors": "daemonheim",
   "daemonheim peninsula resource island": "daemonheim-peninsula",
@@ -361,17 +381,47 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "daemonheim rewards shop": "daemonheim-rewards",
   "daemonheim rewards": "daemonheim-rewards",
   "daemonheim divination": "daemonheim",
-  "dark facets": "dark-facet-of-grace",
-  "brawling gloves": "brawling-gloves",
+  "dark facets": "dark-onyx-core",
+  "brawling gloves": "brawling-gloves-melee",
+  "melee brawling gloves": "brawling-gloves-melee",
+  "ranged brawling gloves": "brawling-gloves-ranged",
+  "magic brawling gloves": "brawling-gloves-magic",
+  "agility brawling gloves": "brawling-gloves-agility",
+  "cooking brawling gloves": "brawling-gloves-cooking",
+  "firemaking brawling gloves": "brawling-gloves-firemaking",
+  "fishing brawling gloves": "brawling-gloves-fishing",
+  "hunter brawling gloves": "brawling-gloves-hunter",
+  "mining brawling gloves": "brawling-gloves-mining",
+  "prayer brawling gloves": "brawling-gloves-prayer",
+  "smithing brawling gloves": "brawling-gloves-smithing",
+  "thieving brawling gloves": "brawling-gloves-thieving",
+  "woodcutting brawling gloves": "brawling-gloves-woodcutting",
+  "brawling gloves (melee)": "brawling-gloves-melee",
+  "brawling gloves (ranged)": "brawling-gloves-ranged",
+  "brawling gloves (magic)": "brawling-gloves-magic",
+  "brawling gloves (agility)": "brawling-gloves-agility",
+  "brawling gloves (cooking)": "brawling-gloves-cooking",
+  "brawling gloves (firemaking)": "brawling-gloves-firemaking",
+  "brawling gloves (fishing)": "brawling-gloves-fishing",
+  "brawling gloves (hunter)": "brawling-gloves-hunter",
+  "brawling gloves (mining)": "brawling-gloves-mining",
+  "brawling gloves (prayer)": "brawling-gloves-prayer",
+  "brawling gloves (smithing)": "brawling-gloves-smithing",
+  "brawling gloves (thieving)": "brawling-gloves-thieving",
+  "brawling gloves (woodcutting)": "brawling-gloves-woodcutting",
   "balarak's sash brush": "balaraks-sash-brush",
   "skeka's hypnowand": "skekas-hypnowand",
   "ruinous weapons": "ruinous-rapier",
   "daemonheim skilling reward infrastructure": "daemonheim-rewards",
   "dagannoth kings": "dagannoth-kings",
   "dalia's tree nursery eternal magic plots": "dalias-tree-nursery",
+  "dark facet of grace": "dark-facet-of-grace",
+  "dark facet of luck": "dark-facet-of-luck",
+  "dark facet of passage": "dark-facet-of-passage",
   "dark facet of grace (gote enchantment)": "dark-facet-of-grace",
   "dark facet of luck (tier-4 luck account permanent)": "dark-facet-of-luck",
   "dark facet of passage (passage of the abyss infinite charges)": "dark-facet-of-passage",
+  "dark onyx core": "dark-onyx-core",
   "dark ice -> dark shard/sliver of leng": "dark-shard-of-leng",
   "dark ice → dark shard/sliver of leng": "dark-shard-of-leng",
   "dark onyx core source package": "dark-onyx-core",
@@ -537,6 +587,13 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "first necromancer equipment": "first-necromancer-robe-top",
   "first necromancer's equipment": "first-necromancer-robe-top",
   "first necromancer's equipment (rasial)": "first-necromancer-robe-top",
+  // Piece names (wiki drop tables / set pages) → inventory equipment art
+  "crown of the first necromancer": "first-necromancer-helm",
+  "robe top of the first necromancer": "first-necromancer-body",
+  "robe bottom of the first necromancer": "first-necromancer-legs",
+  "hand wrap of the first necromancer": "first-necromancer-gloves",
+  "foot wraps of the first necromancer": "first-necromancer-boots",
+  "robes of the first necromancer set": "first-necromancer-body",
   "fish farming": "fish-farm",
   "fish flingers (isla anglerine d&d)": "fish-flingers",
   "fishing guild": "fishing-guild",
@@ -555,8 +612,15 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "focused siphoning passive": "focused-siphoning",
   "font of life relic (archaeology tutorial)": "font-of-life",
   "forinthry dungeon": "forinthry-dungeon",
+  "karamja volcano resource dungeon": "karamja-volcano-resource-dungeon",
+  "edimmu resource dungeon": "edimmu-resource-dungeon",
   "fort command centre global operations tier ladder densify": "fort-forinthry-command-centre",
   "fort forinthry": "fort-forinthry",
+  "fort forinthry chapel": "fort-forinthry-chapel",
+  "h.a.m. hideout pickpocketing and store rooms": "clue-scroll-easy",
+  "ham hideout pickpocketing and store rooms": "clue-scroll-easy",
+  "expansive essence pouch (70 essence, non-degrading)": "expansive-essence-pouch",
+  "expansive essence pouch": "expansive-essence-pouch",
   "fort forinthry botanist's workbench": "botanists-workbench",
   "fort forinthry chapel": "fort-forinthry-chapel",
   "fort forinthry command centre": "fort-forinthry-command-centre",
@@ -661,7 +725,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "havenhythe open-water fishing spots (beyond fish farm)": "raw-sailfish",
   "hefin agility course": "hefin-agility-course",
   "hefin district agility and prayer hub": "hefin-clan",
-  "hefin serenity posts (afk agility)": "hefin-agility-course",
+  "hefin serenity posts (afk agility)": "serenity-posts",
+  "hefin serenity posts": "serenity-posts",
   "heightened senses relic chain": "heightened-senses",
   "herb bag progression": "herb-bag",
 
@@ -689,7 +754,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "holy scarab familiar": "holy-scarab-familiar",
   "hops patch network (entrana + run geography)": "hops-seed",
   "humidify (lunar)": "humidify",
-  "hunter mark shop (irwinsson)": "hunter-mark-shop",
+  "hunter mark shop (irwinsson)": "quick-traps",
   "hunter's outfit": "hunters-outfit",
   "igneous cape progression": "igneous-kal-zuk",
   "imcando hatchet": "imcando-hatchet",
@@ -750,6 +815,10 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "keldagrim dwarven traders and multi-step chests": "keldagrim",
   "kerapac the bound": "kerapac",
   "kerapac, the bound": "kerapac",
+  "leng gloves": "leng-artefact",
+  "leng artefact t90 glove upgrades (shared arch-glacor)": "leng-artefact",
+  "enhanced kerapac's wrist wraps (t90 magic)": "enhanced-kerapacs-wrist-wraps",
+  "enhanced kerapac's wrist wraps": "enhanced-kerapacs-wrist-wraps",
   "kezalam, the wanderer": "kezalam",
   "kharid-et dig site": "kharid-et-dig-site",
   "kharid-et dig-site progression": "kharid-et-dig-site",
@@ -760,6 +829,14 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "kril tsutsaroth": "kril-tsutsaroth",
   "kuradal (ancient cavern slayer master)": "kuradal",
   "kuradal's dungeon and ferocious ring hub": "ferocious-ring",
+  kuradal: "kuradal",
+  "ferocious ring": "ferocious-ring",
+  "manor farm animal perks": "nopenopenope",
+  "freneskae via world gate": "nightmare",
+  "nightmare creatures": "nightmare",
+  muspah: "muspah",
+  "rune dragons": "rune-dragon",
+  "rune dragon": "rune-dragon",
   "kwuarm incense sticks": "kwuarm-incense-sticks",
   "laniakea": "laniakea",
   "laniakea (anachronia highest standard slayer master)": "laniakea",
@@ -772,8 +849,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "learn quicker killing blows (400 slayer points)": "full-slayer-helmet",
   "learn to move souls in personal slayer dungeon (1,000 slayer points)": "slayer-codex",
   "legends' guild totem jewellery recharge": "legends-guild",
-  "legiones": "legiones",
-  "legiones (monastery of ascension)": "legiones",
+  // Inventory crossbow — boss plate + multi-MB monastery dump crop poorly in name wells.
+  "legiones": "ascension-crossbow",
+  "legiones (monastery of ascension)": "ascension-crossbow",
   "leng artefact": "leng-artefact",
   "liberation of mazcab (beastmaster durzag / yakamaru)": "liberation-of-mazcab",
   "liberation of mazcab": "liberation-of-mazcab",
@@ -821,8 +899,10 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "mandrith (wilderness slayer master)": "mandrith",
   "marble blocks (poh construction)": "marble-blocks",
   "marigold farm patch cluster": "marigold-farm",
-  "master archaeologist's outfit": "master-archaeologist",
-  "master archaeologist's outfit (guildmaster shop claim)": "master-archaeologist",
+  "master archaeologist's outfit": "master-archaeologists-outfit",
+  "master archaeologist's outfit (guildmaster shop claim)": "master-archaeologists-outfit",
+  "archaeology shop": "master-archaeologists-outfit",
+  "archaeology guild shop and qualification upgrades": "master-archaeologists-outfit",
   "master camouflage outfit": "master-camouflage",
   "master constructor outfit": "master-constructors-outfit",
   "master constructor's outfit": "master-constructors-outfit",
@@ -831,6 +911,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "master farmer seed pickpocketing (kandarin sites)": "master-farmer",
   "master farmer seed supply (farmers' market + pickpocket)": "master-farmer",
   "master runecrafter robes": "master-runecrafter",
+  // master-runecrafter-robes permanent is inventory hat after green-screen fix
   "master thief's lockpick + stethoscope (toolbelt)": "master-thiefs-lockpick",
   "masterwork melee plate / glorious-bar smithing chain": "masterwork-platebody",
   "masterwork plate → orthen furnace core pressure stack": "orthen-furnace-core",
@@ -887,8 +968,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "morytania legs 1-4": "morytania-legs-4",
   "morytania legs 2": "morytania-legs-2",
   "morytania legs 3": "morytania-legs-3",
-  "motherlode maw": "motherlode-maw",
-  "motherlode maw and meilyr resource dungeons": "motherlode-maw",
+
   "musa point banana plantation": "musa-point-banana-plantation",
   "musa point fishing dock and stiles": "stiles",
   "musa point free teaks": "musa-point",
@@ -936,8 +1016,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "one piercing note": "one-piercing-note",
   "oo'glog spa pools (as a first resort)": "ooglog-spa",
   "ore box tier upgrades": "ore-box",
-  "orthen dig site": "orthen-dig-site",
-  "orthen dig site full mastery (monolith + recipes)": "orthen-dig-site",
+  "orthen dig site": "orthen-teleportation-device",
+  "orthen dig site full mastery (monolith + recipes)": "orthen-teleportation-device",
   "orthen dig-site collections and mysteries": "orthen-dig-site",
   "orthen furnace core full skilling stack": "orthen-furnace-core",
   "orthen teleportation device network": "orthen-dig-site",
@@ -968,14 +1048,16 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "plague's end prifddinas unlock package": "plagues-end",
   "plank make (lunar)": "plank-make",
   "plank maker / high capacity plank maker (invention guild)": "high-capacity-plank-maker",
-  "player owned farm": "player-owned-farm",
+  "player owned farm": "master-farmer",
+  "player-owned farm": "master-farmer",
+  "player-owned farm / manor farm": "master-farmer",
   "player owned house portal towns and construction utilities": "house-portal",
-  "player-owned farm": "player-owned-farm",
-  "player-owned farm breeding log tier-1 species perks": "player-owned-farm",
-  "player-owned farm combat perk state": "player-owned-farm",
+  "player-owned farm breeding log tier-1 species perks": "master-farmer",
+  "player-owned farm combat perk state": "master-farmer",
   "player-owned house aquarium and prawnbroker": "prawnbroker",
   "player-owned house portal towns and construction utilities": "house-portal",
-  "pof farm totems + tier-2 dual-pen animal perks": "player-owned-farm",
+  "pof farm totems + tier-2 dual-pen animal perks": "master-farmer",
+  "manor farm (farming guild) and reputation rewards": "master-farmer",
   "poh gilded altar (chapel offering)": "gilded-altar",
   "poh portal towns": "house-portal",
   "poh portal towns and construction utilities": "house-portal",
@@ -1087,7 +1169,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "runespan portals at wizards' tower": "runespan",
   "runespan reward shop and master runecrafter robes": "master-runecrafter-robes",
   "runic attuner": "runic-attuner",
-  "safecracking route": "safecracking",
+
   "salve amulet (base)": "salve-amulet",
   "sana's fyrtorch": "sanas-fyrtorch",
   // Sanctum major uses final-boss plate (Nakatra), not dungeon scenery screenshot.
@@ -1127,18 +1209,20 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "seers headband": "seers-headband-4",
   "seers village achievements and seer's headband": "seers-headband-4",
   "seers village combat achievement rewards": "seers-headband-4",
-  "seers village skilling hub": "seers-village",
-  "seers' village": "seers-village",
+  // Headband inventory — multi-MB Seers plate is unreadable at 3rem.
+  "seers village skilling hub": "seers-headband-4",
+  "seers' village": "seers-headband-4",
   "seers' village achievements and seer's headband": "seers-headband-4",
   "seers' village achievements and seers headband": "seers-headband-4",
   "seers' village combat achievement rewards": "seers-headband-4",
-  "seers' village skilling hub": "seers-village",
+  "seers' village skilling hub": "seers-headband-4",
   "seismic wand and singularity": "seismic-wand",
   "selene necromancy prayer and curse unlocks (city of um)": "selene",
   "senntisten dig site": "senntisten-dig-site",
   "seren skilling prayers package (the light within)": "the-light-within",
   "seren stones and corrupted ore": "seren-stones",
-  "shades of mort'ton cremation": "shades-of-mortton",
+  "shades of mort'ton cremation": "mortton",
+  "shades of mort'ton": "mortton",
   "shadow glaives": "shadow-glaives",
   // ED3 Major unlocks Name well: Ambassador plate (not reef scenery).
   "shadow reef": "ambassador",
@@ -1231,7 +1315,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "superior dragon claws (wilderness hilt upgrade)": "superior-dragon-claws",
   "supreme overload potion recipe (meilyr)": "supreme-overload",
   "tagga's corehammer": "taggas-corehammer",
-  "tai bwo wannai cleanup and trading sticks": "tai-bwo-wannai-cleanup",
+  "tai bwo wannai cleanup and trading sticks": "tai-bwo-wannai",
+  "tai bwo wannai cleanup": "tai-bwo-wannai",
   "taverley": "taverley",
   "taverley / burthorpe early-mid skilling hub": "taverley",
   "taverley / burthorpe early–mid skilling hub": "taverley",
@@ -1259,7 +1344,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "the arc waiko reward shop (chime economy)": "chimes",
   "the barrows brothers": "barrows",
   "the dig site": "the-dig-site",
-  "the empty throne room": "the-empty-throne-room",
+  // Prefer activity plate path via activityIconPath when permanent-unlock is a huge screenshot.
+  "the empty throne room": "empty-throne-room",
+  "empty throne room": "empty-throne-room",
   "the gate of elidinis": "gate-of-elidinis",
   "the light within": "the-light-within",
   "the lost grove": "lost-grove",
@@ -1274,7 +1361,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "thieves' guild (lumbridge)": "thieves-guild",
   "thieves' guild master thief tools": "thieves-guild",
   "tier 3 woodcutter's grove and imcando hatchet fragments": "imcando-hatchet",
-  "time altar": "time-altar",
+  "time altar": "time-rune",
+  "time altar / 110 runecrafting": "time-rune",
   "tirannwn combat achievement rewards": "tirannwn-quiver-4",
   "tirannwn quiver 1-4": "tirannwn-quiver-4",
   "tokhaar-kal capes": "tokhaar",
@@ -1332,7 +1420,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "vindicta & gorvek": "vindicta-gorvek",
   "virtus equipment and praesulic essence": "virtus-robe-top",
   "virtus equipment and praesulic essence residual": "virtus-robe-top",
-  "voice of seren district rotations": "voice-of-seren",
+  "voice of seren district rotations": "seren-stones",
+  "voice of seren": "seren-stones",
   "volatile chinchompas": "volatile-chinchompas",
   "volcanic trapper outfit": "volcanic-trapper",
   "vorago": "vorago",
@@ -1359,8 +1448,12 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "warped depths (daemonheim depths excavation)": "warped-depths",
   "warped gem": "warped-gem",
   "warped gorajan trailblazer outfit": "warped-gorajan",
-  "warriors guild": "warriors-guild",
-  "warriors' guild": "warriors-guild",
+  // Prefer defender inventory look over multi-MB guild plate for name wells.
+  "warriors guild": "dragon-defender",
+  "warriors' guild": "dragon-defender",
+  "safecracking": "safe",
+  "safecracking route": "safe",
+  "asgarnia safecracking circuit": "safe",
   "wars retreat": "wars-retreat-hub",
   "wars retreat combat hub": "wars-retreat-hub",
   "waterbirth island": "waterbirth-island",
@@ -1393,8 +1486,10 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "wilderness sword 1-4": "wilderness-sword-4",
   "witchdoctor camo outfit": "witchdoctor-camo",
   "witchdoctor mask (habitat teleport)": "witchdoctor-mask",
-  "wizards' guild": "yanille",
-  "wizards' guild (magic guild, yanille)": "yanille",
+  // permanent-unlocks/wizards-guild is a tiny landscape still flagged "guild" scenery —
+  // Magic cape is the honest inventory mark for this major.
+  "wizards' guild": "magic-cape",
+  "wizards' guild (magic guild, yanille)": "magic-cape",
   "wizards' tower and runecrafting guild": "wizards-tower",
   "wood box tier upgrades": "eternal-magic-wood-box",
   "woodcutters grove": "woodcutters-grove",
@@ -1418,7 +1513,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
 
 /** Normalize a free-text label to a kebab slug candidate. */
 export function slugifyIconLabel(label: string): string {
-  return label
+  // Decode first — wiki titles like First Necromancer&#039;s equipment must
+  // not become first-necromancer-and-039-s-equipment.
+  return decodeHtmlEntities(label)
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
@@ -1453,7 +1550,7 @@ const ARCH_ENTITY_RE =
  * Prefer no icon over a weakly related one.
  */
 export function iconSlugCandidates(name: string): string[] {
-  const raw = name.trim();
+  const raw = decodeHtmlEntities(name).trim();
   if (!raw) return [];
   const lower = raw.toLowerCase();
   const out: string[] = [];
@@ -1522,7 +1619,7 @@ function firstHit(
 
 /** Exact-only candidates (alias + full slug + first clause) — no containment. */
 function exactSlugCandidates(name: string): string[] {
-  const raw = name.trim();
+  const raw = decodeHtmlEntities(name).trim();
   if (!raw) return [];
   const out: string[] = [];
   const seen = new Set<string>();
@@ -1602,6 +1699,253 @@ export function upgradeIconPath(name: string): string | null {
 }
 
 /**
+ * permanent-unlocks slugs that are place/scenery screenshots (often multi-MB).
+ * Never use these in the name-column well — skill glyph or empty is better.
+ * Inventory-ish permanents (gloves, rings, spellbooks, tools, ores) stay allowed.
+ */
+const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
+  "abandoned-mine",
+  "altar-of-inanna",
+  "amberfell",
+  "anachronia-base-camp",
+  "anachronia-dinosaur-farm",
+  "barbarian-outpost",
+  "barbarian-outpost-agility-course",
+  "big-chinchompa",
+  "burthorpe",
+  "crafting-guild",
+  "eastfold-farm",
+  "elven-clan",
+  "fish-farm",
+  "gemstone-cavern",
+  "gnome-stronghold-agility-course",
+  "hefin-agility-course",
+  // Multi-MB place plates — never reward chips (keep inventory permanents allowed).
+  "hets-oasis",
+  "highweald",
+  "highweald-ruins-mine",
+  "hunter-mark-shop",
+  "jatizso-dungeon-mine",
+  "karamja-volcano-resource-dungeon",
+  "liberation-of-mazcab",
+  "manor-farm",
+  "marigold-farm",
+  "menaphos",
+  "menaphos-imperial",
+  "mort-myre",
+  "mortton",
+  "musa-point-banana-plantation",
+  "nature-grotto",
+  "penguin-agility-course",
+  "piscatoris-fishing-colony",
+  "piscatoris-hunter-area",
+  "rellekka",
+  "rimmington",
+  "rogues-den",
+  "seers-village",
+  "shades-of-mortton",
+  "soul-altar",
+  "tai-bwo-wannai",
+  "tai-bwo-wannai-cleanup",
+  "the-empty-throne-room",
+  "tzhaar",
+  "tzhaar-city",
+  "vip-skilling-area",
+  "voice-of-seren",
+  "wendlewick-deserted-mine",
+  "wendlewick-fish-farm",
+  "werewolf-agility-course",
+  "yanille",
+  "catherby",
+  "deep-sea-fishing",
+  "fishing-guild",
+  "ourania-altar",
+  "ourania-runecrafting-altar",
+  "livid-farm",
+  "lunar-isle",
+  "fruit-tree-patch",
+]);
+
+function permanentUnlockSlug(path: string): string | null {
+  const m = path.match(/\/permanent-unlocks\/([^/]+)\.(?:png|jpg|jpeg|webp)$/i);
+  return m?.[1]?.toLowerCase() ?? null;
+}
+
+/**
+ * Multi-MB activity place plates that crop badly in name wells.
+ * Prefer skill glyphs / inventory over these when skillHub matches;
+ * also reject as a last resort so we never show a random landscape as an "icon".
+ */
+const SCENERY_ACTIVITY_SLUGS = new Set([
+  "barbarian-outpost",
+  "barbarian-outpost-agility-course",
+  "catherby",
+  "deep-sea-fishing",
+  "fishing-guild",
+  "manor-farm",
+  "ourania-altar",
+  "ourania-runecrafting-altar",
+  "piscatoris-fishing-colony",
+  "piscatoris-hunter-area",
+  "player-owned-farm",
+  "ranging-guild",
+  "seers-village",
+  "yanille",
+  "livid-farm",
+  "lunar-isle",
+]);
+
+function activitySlug(path: string): string | null {
+  const m = path.match(/\/activities\/([^/]+)\.(?:png|jpg|jpeg|webp)$/i);
+  return m?.[1]?.toLowerCase() ?? null;
+}
+
+export function isSceneryActivityPath(path: string): boolean {
+  const slug = activitySlug(path);
+  if (!slug) return false;
+  if (SCENERY_ACTIVITY_SLUGS.has(slug)) return true;
+  // Heuristic: bare place/course/guild activity dumps (not dig sites / named hubs with good plates).
+  if (
+    /(?:^|-)(course|area|farm|village|hub|colony|guild|outpost|stronghold)(?:-|$)/i.test(slug) &&
+    !/(training|glider|restaurant|spirit-tree|dig-site|citadel|warforge|stormguard|hall-of|memorial|empty-throne|necromantic)/i.test(
+      slug,
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/** True when upgrade path is a place/scenery permanent-unlock dump. */
+export function isSceneryPermanentUnlock(path: string): boolean {
+  const slug = permanentUnlockSlug(path);
+  if (!slug) return false;
+  if (SCENERY_PERMANENT_UNLOCK_SLUGS.has(slug)) return true;
+  // Heuristic: bare place photos (course/area/farm/patch…) without inventory tokens.
+  // Do NOT blanket-ban "altar" — astral-altar inventory art is fine; Ourania is listed above.
+  // "archaeology-guild-shop" / "ferocious-ring" must stay — not scenery.
+  if (
+    /(?:^|-)(course|area|farm|village|hub|cavern|colony|plantation|outpost|stronghold|cathedral|district|patch|fishing|catherby|yanille|seers|piscatoris|memorial|deep-sea)(?:-|$)/i.test(
+      slug,
+    ) &&
+    !/(gloves|ring|spellbook|wand|brush|maul|mask|codex|cape|outfit|pickaxe|hatchet|seed|flask|potion|totem|ores?|facet|sword|spear|shield|torch|vessel|scroll|token|shop|trap|mark|headband|crossbow)/i.test(
+      slug,
+    )
+  ) {
+    return true;
+  }
+  // Bare "…-guild" place plates only (Crafting Guild), not "…-guild-shop".
+  if (/(?:^|-)guild$/i.test(slug)) return true;
+  return false;
+}
+
+/**
+ * Map skill-hub / patch / course bags to a skill glyph path.
+ * Used for major-unlock name wells — never invent scenery as a substitute.
+ */
+function skillHubIconFromBag(bag: string): string | null {
+  const hit = (skill: string) => skillIconPath(skill);
+
+  // Farming first — "crystal tree Farming" must not fall through to woodcutting.
+  if (
+    /\bfarming patch\b|\bfarming patches\b|\bfarm(?:ing)?\b.*\bpatch|\bpatch cluster\b|\ballotment\b|\bherb patch\b|\btree patch\b|\bhops patch\b|\bbush patch\b|\bmushroom patch\b|\bcactus patch\b|\bcalquat\b|\bflower patch\b|\bharmony pillar|\bcrystal tree\b|\bmarigold farm\b|\beastfold farm\b|\bmanor farm\b/i.test(
+      bag,
+    )
+  ) {
+    return hit("farming");
+  }
+  if (
+    /\bagility course\b|\bserenity posts\b|\bagility arena\b|\bflash powder factory\b|\bstronghold course\b|\boutpost agility\b/i.test(
+      bag,
+    ) ||
+    (/\bagility\b/i.test(bag) && /\bcourse\b/i.test(bag))
+  ) {
+    return hit("agility");
+  }
+  // Named masters keep portrait art via upgrade path — only abstract slayer rows use the skill.
+  if (/\bslayer master\b/i.test(bag) && !/\b(?:kuradal|morvran|sumona|duradel|laniakea|konar)\b/i.test(bag)) {
+    return hit("slayer");
+  }
+  // Box-trap / birdhouse inventory art is better when published — skill only for bare areas.
+  if (
+    /\bhunter area\b|\bhunter mark shop\b|\bcharming moths\b/i.test(bag) ||
+    (/\bchin(?:chompa)?s?\b/i.test(bag) && !/\buniques?\b|\bequipment\b/i.test(bag))
+  ) {
+    return hit("hunter");
+  }
+  if (
+    /\bmining\b|\bdungeon mine\b|\bdeserted mine\b|\bsandstone\b|\bgemstone cavern\b|\bgem rocks?\b|\bprimal ores\b/i.test(
+      bag,
+    ) &&
+    !/mattock|pickaxe|armour|equipment/i.test(bag)
+  ) {
+    return hit("mining");
+  }
+  if (
+    /\bfishing guild\b|\bfishing colony\b|\bdeep sea fishing\b|\bfish(?:ing)? dock\b|\bstiles\b|\bfish farms?\b|\bfish farming\b|\bkarambwan\b|\bcatherby\b.*\bfish|\bfish.*\bcatherby\b/i.test(
+      bag,
+    ) ||
+    (/\bfishing\b/i.test(bag) &&
+      !/\boutfit\b|\bfury shark\b|\bcape\b|\buniques?\b|\bequipment\b|\bcrossbow\b/i.test(bag))
+  ) {
+    return hit("fishing");
+  }
+  if (/\bthiev|\brogues'? den\b|\bpickpocket/i.test(bag)) {
+    return hit("thieving");
+  }
+  if (/\bcrafting guild\b/i.test(bag)) {
+    return hit("crafting");
+  }
+  if (/\branging guild\b|\branged guild\b/i.test(bag)) {
+    return hit("ranged");
+  }
+  if (/\bwizards'? guild\b|\bmagic guild\b/i.test(bag)) {
+    return hit("magic");
+  }
+  if (/\blunar (?:isle|island|spell)\b|\blivid farm\b/i.test(bag)) {
+    return hit("magic");
+  }
+  if (/\bblast furnace\b|\bsmithing\b.*\bfurnace\b/i.test(bag)) {
+    return hit("smithing");
+  }
+  if (
+    /\bshades of mort|\bnature grotto\b|\baltar of nature\b|\bcremation\b/i.test(bag) &&
+    !/\buniques?\b|\bequipment\b/i.test(bag)
+  ) {
+    return hit("prayer");
+  }
+  // Named Inanna shrine only — "Empowered Summoning obelisks" keeps inventory art.
+  if (/\bshrine of inanna\b|\baltar of inanna\b/i.test(bag)) {
+    return hit("summoning");
+  }
+  if (
+    /\bdeath altar\b|\bnature altar\b|\bourania\b|\bzmi\b|\brunecrafting altar\b|\brunecraft/i.test(
+      bag,
+    )
+  ) {
+    return hit("runecrafting");
+  }
+  if (/\bherblore\b|\bmeilyr recipe\b|\bfungi bloom\b|\bcombination potions?\b/i.test(bag)) {
+    return hit("herblore");
+  }
+  if (/\baccidental fletching\b|\bfletching and firemaking\b/i.test(bag)) {
+    return hit("fletching");
+  }
+  if (
+    /\bwoodcutting\b|\bwillow\b|\bteak\b|\bmahogany\b|\barctic pine\b|\bovergrown idol|\bbanana plantation\b/i.test(
+      bag,
+    ) &&
+    !/mattock|pickaxe/i.test(bag)
+  ) {
+    return hit("woodcutting");
+  }
+  if (/\bwisp colon|\bdivination\b.*wisp|\bwisp.*divination|\bgleaming wisp/i.test(bag)) {
+    return hit("divination");
+  }
+  return null;
+}
+
+/**
  * Resolve a Data-route entity to a local icon path, or null.
  * Prefer correct empty well over a wrong related image.
  */
@@ -1616,14 +1960,21 @@ export function dataEntityIconPath(input: {
     return equipmentIconPath(id);
   }
 
-  const name = (input.name ?? "").trim();
-  const kind = (input.kind ?? "").toLowerCase();
+  const name = decodeHtmlEntities(input.name ?? "").trim();
+  const kind = decodeHtmlEntities(input.kind ?? "").toLowerCase();
 
   // Explicit skill field or a pure skill kind — not "skillcape" / "skilling outfit" packages.
+  // Named places with a published activity plate still win (skill= must not steal Empty Throne
+  // Room / Necromantic Rune Temple into mining.png / runecrafting.png). Pure skill titles
+  // ("Mining") have no activity hit and keep the skill glyph.
   const pureSkillKind =
     Boolean(input.skill) ||
     (/^(skill|skills)\b/.test(kind) && !/skillcape|skilling|outfit|infrastructure|package|codex/i.test(kind));
   if (pureSkillKind) {
+    if (name) {
+      const placePlate = activityIconPath(name);
+      if (placePlate) return placePlate;
+    }
     const skill = skillIconPath(input.skill || name);
     if (skill) return skill;
   }
@@ -1652,23 +2003,50 @@ export function dataEntityIconPath(input: {
     /\bgate of\b/.test(kind) ||
     /\bgod wars\b/.test(kind) ||
     /\belite dungeon\b/.test(kind);
+  // Full alias to inventory (Legiones → ascension-crossbow) beats bossish kind routing.
+  // Prefer activity plate for place majors (Empty Throne / Rune Temple) over permanent
+  // unlock screenshots. Multi-MB scenery activity (fish-farm, *course) stays fenced so
+  // skillHub can pick a skill glyph later.
+  if (fullAlias && !BOSS_ICON_SLUGS.has(fullAlias)) {
+    const aliasAct = activityIconPath(name);
+    const aliasUp = upgradeIconPath(name);
+    if (aliasUp && !aliasUp.includes("/permanent-unlocks/")) return aliasUp;
+    if (aliasAct && !isSceneryActivityPath(aliasAct)) return aliasAct;
+    if (aliasUp && !isSceneryPermanentUnlock(aliasUp)) return aliasUp;
+    const aliasEq = equipmentIconPath(fullAlias);
+    if (aliasEq) return aliasEq;
+  }
+
   // Bossish kinds: try full containment boss before scenery (Major unlocks Name column).
-  if (bossish) {
+  // Skip when full alias already mapped away from boss art.
+  if (bossish && (!fullAlias || BOSS_ICON_SLUGS.has(fullAlias))) {
     const boss = bossIconPath(name);
     if (boss) return boss;
     if (!archRelated) {
-      const act = activityIconPath(name);
-      if (act) return act;
+      const actBoss = activityIconPath(name);
+      if (actBoss && !isSceneryActivityPath(actBoss)) return actBoss;
     }
   }
 
-  // Inventory / unlock art (equipment packages, hubs with permanent-unlock icons).
+  // Inventory / progression first. Non-scenery place plates next (Empty Throne,
+  // dig sites). Then skill glyphs for un-aliased courses / hubs / patches.
+  const bag = `${kind} ${name}`;
+  const act = activityIconPath(name);
   const up = upgradeIconPath(name);
-  if (up) return up;
+  if (up && !up.includes("/permanent-unlocks/")) return up;
+  if (act && !isSceneryActivityPath(act)) return act;
 
-  // Places / dig sites / NPCs before skill glyphs (hubs must not become skill caps).
-  const actEarly = activityIconPath(name);
-  if (actEarly) return actEarly;
+  const hubSkill = skillHubIconFromBag(bag);
+  if (hubSkill) return hubSkill;
+
+  if (up && !isSceneryPermanentUnlock(up)) return up;
+
+  // Curated alias with only scenery-class place art left (Livid Farm, etc.):
+  // better than an empty well once skill-hub declined.
+  if (fullAlias) {
+    if (act) return act;
+    if (up) return up;
+  }
 
   // Exact skill title only (e.g. row named "Mining").
   const skill = skillIconPath(name);

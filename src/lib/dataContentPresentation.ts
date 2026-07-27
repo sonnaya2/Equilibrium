@@ -9,9 +9,11 @@ import { isRegionId } from "@/league";
 import {
   dataEntityIconPath,
   equipmentIconPath,
+  isSceneryPermanentUnlock,
   slugifyIconLabel,
   upgradeIconPath,
 } from "@/lib/gameArt";
+import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import { pinForHighlight } from "@/map/data/placeAnchors";
 import {
   hasRewardIconAlias,
@@ -19,7 +21,8 @@ import {
 } from "@/lib/rewardIconAliases";
 
 /** Default chip cap; Chaotic/Ruinous weapon rows need room for the full set. */
-export const REWARD_ICON_CAP = 12;
+/** Chip strip capacity — high enough for full brawling-glove sets (13) + overflow. */
+export const REWARD_ICON_CAP = 14;
 /** Display clip for Rewards/access prose — icons always resolve from full source. */
 export const REWARD_DISPLAY_MAX = 96;
 
@@ -222,6 +225,13 @@ function expandSlashList(label: string): string[] {
       p.toLowerCase().startsWith(prefix.toLowerCase()) ? p : `${prefix} ${p}`,
     );
   }
+  // "Hood / garb / boots of subjugation" → shared trailing "of <set>" on bare heads.
+  const last = parts[parts.length - 1]!;
+  const ofSuffix = last.match(/\s+(of\s+\S+(?:\s+\S+)?)$/i);
+  if (ofSuffix) {
+    const suffix = ofSuffix[1]!;
+    return parts.map((p) => (/\sof\s/i.test(p) ? p : `${p} ${suffix}`));
+  }
   return parts;
 }
 
@@ -300,6 +310,8 @@ function acceptRewardPath(src: string | null): string | null {
 
 /** Reward chips: inventory / upgrade art only — never skill caps or place scenery. */
 function isStrictRewardPath(src: string): boolean {
+  // Multi-MB place dumps under permanent-unlocks look broken as tiny chips.
+  if (isSceneryPermanentUnlock(src)) return false;
   if (src.startsWith("/game/upgrades/")) return true;
   if (src.startsWith("/game/combat/equipment/")) return true;
   if (src.startsWith("/game/combat/abilities/")) return true;
@@ -545,9 +557,9 @@ export function contentTypeLabel(kind: string, name: string): string {
 
 /** Light cleanup shared by interest display helpers. */
 function cleanInterestText(value: string): string {
-  return String(value ?? "")
+  // Decode before display — wiki/source titles often ship First Necromancer&#039;s …
+  return decodeHtmlEntities(String(value ?? ""))
     .replace(/\u00a0/g, " ")
-    .replace(/&nbsp;/gi, " ")
     .replace(/\[(?:edit|citation needed|source|note\s*\d*)\]/gi, "")
     .replace(/[ \t\f\v]+/g, " ")
     .replace(/ *\n */g, "\n")
@@ -679,8 +691,11 @@ export function presentInterestName(value: string): string {
 
   // Archaeology — exact / prefix renames
   if (/^Chronotes currency economy\b/i.test(name)) return "Chronotes";
+  if (/^Archaeology (Guild )?shop\b/i.test(name)) {
+    return "Archaeology shop";
+  }
   if (/^Archaeology Guild Shop and qualification upgrades$/i.test(name)) {
-    return "Archaeology Guild shop";
+    return "Archaeology shop";
   }
   if (/^Archaeology Guild qualifications Intern\s*[→-]\s*Professor$/i.test(name)) {
     return "Guild qualifications";

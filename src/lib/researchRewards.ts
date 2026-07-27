@@ -3,7 +3,10 @@
  * Pure (no React) so unit tests can pin boss → package mapping.
  */
 
-import { contentRewardsSource } from "./dataContentPresentation";
+import {
+  clipRewardDisplay,
+  contentRewardsSource,
+} from "./dataContentPresentation";
 
 export type RewardUpgrade = { name: string; detail?: string | null };
 export type RewardContentRow = { name: string; detail?: string | null };
@@ -47,6 +50,8 @@ export const CONTENT_ACCESS: Record<string, string> = {
   "City of Um / Underworld": "Ritual site · City of Um",
   // Hermodic plates have no local inventory art — Deathdealer is the power-armour craft path.
   "Hermod, the Spirit of War": "Deathdealer robe armour",
+  // GWD1 hub is approach only — Bandos/Armadyl/Subjugation/godswords live on boss rows.
+  "God Wars Dungeon 1": "God camps · killcount · altar healing",
 };
 
 /**
@@ -56,32 +61,71 @@ export const CONTENT_ACCESS: Record<string, string> = {
  * Cap-5 chip order for Zuk: weapon, ability, scripture, BiS cape, one style cape.
  */
 export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
+  "Fort Forinthry Chapel": "Prayer altar",
+  "H.A.M. Hideout pickpocketing and store rooms": "Clue scroll",
+  "Expansive essence pouch (70 essence, non-degrading)": "Expansive essence pouch",
   // Main Zuk uniques + BiS igneous cape only (no +N from listing every style stone).
   "TzKal-Zuk": "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk",
   "TzHaar Fight Cave": "Fire cape",
   "Fight Kiln": "TokHaar-Kal-Ket, TokHaar-Kal-Xil, TokHaar-Kal-Mej, TokHaar-Kal-Mor",
   // Catalog Unlocks essay is huge — keep the two things players need.
-  "The Empty Throne Room": "Auto-cycles · unique rocks inside",
-  "Empty Throne Room": "Auto-cycles · unique rocks inside",
-  // Drop planner meta about Forinthry gap lists.
-  "Infernal Source Dig Site": "Hotspots · Ancient Summoning mats",
+  // Empty Throne Room mine is dark animica only (not light — light is Anachronia Swamp mine).
+  "The Empty Throne Room": "Manual Auto-cycle, Dark animica",
+  "Empty Throne Room": "Manual Auto-cycle, Dark animica",
+  // Infernal Source: Ancient Summoning pipeline + dig-site relics / tetras.
+  "Infernal Source Dig Site":
+    "Ancient Summoning, Binding contract, Tetracompass, Inspire Love, Slayer Introspection",
+  "Infernal Source Dig Site (Zamorakian)":
+    "Ancient Summoning, Binding contract, Tetracompass, Inspire Love, Slayer Introspection",
   // Abilities + boots would overflow the 5-chip strip (+2).
-  Raksha: "Greater Ricochet, Greater Chain, Divert, Fleeting boots, Laceration boots",
-  // Full GWD2 weapon list is 7 items — keep five headline uniques.
+  Raksha: "Greater Ricochet, Divert, Fleeting boots, Laceration boots, Blast diffusion boots",
+  // GWD1 K'ril: package Unlocks use "Hood / garb / … of subjugation" (suffix form) —
+  // expandSlashList prefix path only handles "Bandos helmet / chestplate". Explicit pieces.
+  "K'ril Tsutsaroth":
+    "Hood of subjugation, Garb of subjugation, Gown of subjugation, Gloves of subjugation, Boots of subjugation",
+  // Cap-5 GWD2 headline weapons (icons resolve; anima core deferred for chip space).
   "Heart of Gielinor / God Wars Dungeon 2":
-    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
+    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
   "Heart of Gielinor":
-    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
+    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
+  // Zilyana uniques with published inventory icons (murmur/hiss/whisper have none).
+  "Commander Zilyana":
+    "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
   // No upgrade package in catalog — short honest label.
   "Kalphite Queen": "Dragon chainbody, Kalphite queen head, Dragon 2h sword",
+  // Giant Mole — claw/skin lack inventory art; dragon 2h is the chase unique with art.
+  "Giant Mole": "Dragon 2h sword",
+  // QBD — royal crossbow path + shared dragon uniques with local art.
+  "Queen Black Dragon": "Royal crossbow, Dragon 2h sword, Dragon chainbody",
+  // Legiones — dual ACB + grips.
+  Legiones: "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
+  "Monastery of Ascension": "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
+  // ED3 — crossbow + black stone ammo + hexhunter side drop.
+  "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow, Hexhunter bow",
+  "The Shadow Reef": "Eldritch crossbow, Black stone arrow, Hexhunter bow",
+  // Mazcab — one piece per Achto style (melee / mage / range).
+  "Beastmaster Durzag":
+    "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  Yakamaru: "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  "Liberation of Mazcab":
+    "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  // Barrows brothers — five headline weapons.
+  Barrows:
+    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail",
+  // Slayer hubs / resource dungeons with resolvable chips.
+  "Kuradal's Dungeon and ferocious ring hub": "Ferocious ring",
+  "Polypore Dungeon (spore and stick resources)": "Polypore staff",
+  "Rex Matriarchs": "Occultist's ring, Reaver's ring, Skeka's hypnowand",
   // Farming / woodcutting majors — avoid wrong upgrade binds.
   "Varrock Palace tree patch": "Tree patch",
   "Lumbridge hops patch": "Hops patch",
   "Draynor willow trees": "Willow trees",
   "City of Um mushroom patch": "Mushroom patch · disease-free with UG3",
-  // ED4 — Vestments of havoc is the headline package players care about.
-  "Zamorak, Lord of Chaos": "Vestments of havoc, Chaos witch equipment",
-  "Zamorak, Lord of Chaos (Undercity)": "Vestments of havoc, Chaos witch equipment",
+  // ED4 uniques — Vestments, Bolg, Chaos Roar, Lost Knowledge codices (Greater Sun / GDS).
+  "Zamorak, Lord of Chaos":
+    "Vestments of havoc, Bow of the Last Guardian, Chaos Roar, Greater Sunshine, Greater Death's Swiftness",
+  "Zamorak, Lord of Chaos (Undercity)":
+    "Vestments of havoc, Bow of the Last Guardian, Chaos Roar, Greater Sunshine, Greater Death's Swiftness",
   // Necrotic altars — four runes + max RC rate (20 XP/ess Miasma · ~2.5k ess/h pouches).
   "Necromantic Rune Temple":
     "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
@@ -107,6 +151,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Black salamanders (Boneyard Hunter)": "Black salamander, Dark onyx core",
   "Mage Arena": "God staves, Claws of Guthix",
 
+  // Resource / wildy dungeons — prefer resolvable chips over essay prose.
+  "Forinthry Dungeon": "Resource dungeon",
+  "Edimmu resource dungeon": "Crystal sandstone, Resource dungeon",
+
   // Hub / activity majors — short chips instead of Unlocks essays.
   "Invention Guild": "Workbenches, machines, blueprints, generators",
   Prifddinas: "Spirit trees ×3, crystal tools, clan districts, Max Guild",
@@ -119,19 +167,23 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Harmony pillars (Meilyr harmony moss)": "Harmony moss per skill",
   Canifis: "Mushroom patch, Slayer Tower, Mazchna",
   "Ranging Guild": "Ranged shops, skillcape, tickets",
-  "Port Sarim docks and skilling hub": "Ports portal, Entrana, charters",
-  "Warforge Dig Site (Bandosian)": "Bandosian hotspots, materials",
-  "Warforge Dig Site": "Bandosian hotspots, materials",
-  "Roar of Osseous (Rex skeleton island buff)": "+25% XP island buff (65 min)",
-  "Roar of Osseous": "+25% XP island buff (65 min)",
+  "Port Sarim docks and skilling hub": "Player-owned port, The Arc, Ports portal",
+  "Warriors' Guild": "Dragon defender",
+  "Safecracking route": "Safecracking",
+  "Warforge Dig Site (Bandosian)": "Imcando mattock, Inspire Awe, Endurance",
+  "Warforge Dig Site": "Imcando mattock, Inspire Awe, Endurance",
+  "Roar of Osseous (Rex skeleton island buff)": "Roar of Osseous",
+  "Roar of Osseous": "Roar of Osseous",
   "Hall of Memories": "Memory jars, storage bot, Divination XP",
-  "Wizards' Guild (Magic Guild, Yanille)": "Rune essence tele, Magic shops",
+  "Wizards' Guild (Magic Guild, Yanille)": "Magic cape, Rune essence teleport",
   "Hefin serenity posts (AFK Agility)": "AFK Agility posts",
   "Kuradal (Ancient Cavern Slayer Master)": "Slayer points, personal dungeon",
   "Memorial to Guthix": "Engrams, echo buffs, prestige",
-  "Stormguard Citadel Dig Site (Armadylean)": "Armadylean hotspots, Howl's workshop",
-  "Stormguard Citadel Dig Site": "Armadylean hotspots, Howl's workshop",
-  "Orthen Dig Site": "Crypt / outpost / Moksha / material cache",
+  "Stormguard Citadel Dig Site (Armadylean)":
+    "Inspire Genius, Ancient Invention, Howl's workshop",
+  "Stormguard Citadel Dig Site": "Inspire Genius, Ancient Invention, Howl's workshop",
+  "Orthen Dig Site":
+    "Orthen furnace core, Flow State, Death Note, Orthen teleportation device",
   "Amlodd Summoning and Divination hub": "Obelisk, shard shop, light rift",
   "Herblore Habitat": "Jadinko patches, vine herbs, Papa Mambo",
   "Burgh de Rott skilling hub": "Bank near Barrows / Shades / Tarn",
@@ -141,12 +193,21 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Seers' Village skilling hub": "Flax, yews, maples, bank",
   "Barbarian Outpost Agility Course": "Course + agile top",
   "Catherby fishing and farming hub": "Fishing spots, patches, bank",
-  "Manor Farm (Farming Guild) and reputation rewards": "Farming Guild shop, reputation",
-  "Player-Owned Farm / Manor Farm": "PoF animals, beans, buyers",
+  "Manor Farm (Farming Guild) and reputation rewards":
+    "Master farmer outfit, Beans, Skillchompas, NopeNopeNope",
+  "Player-Owned Farm / Manor Farm":
+    "Master farmer outfit, Beans, NopeNopeNope, Skillchompas",
+  "Manor Farm animal perks":
+    "NopeNopeNope, Master farmer outfit, Beans, Skillchompas",
   "Falador farm allotment / flower / herb patches": "Allotment, flower, herb patches",
   "Troll Stronghold disease-free herb patch": "Disease-free herb patch",
   "Ardougne farming patches and Manor Farm": "Ardougne patches · Manor Farm access",
   "Fruit tree patch hubs": "Fruit tree patches",
+  // Freneskae via Kandarin World Gate packaging.
+  "Freneskae via World Gate": "Nightmare gauntlets, Muspah, Rune dragons",
+  "Nightmare creatures": "Nightmare gauntlets",
+  Muspah: "Muspah",
+  "Rune dragons": "Rune dragons",
   "Calquat farming patch": "Calquat patch (only one)",
   "Desert cactus Farming patches": "Cactus patches",
   "Port Phasmatys farming patches": "Allotment / flower / herb",
@@ -157,19 +218,24 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Fort Forinthry": "Fort buildings · chapel · Slayer hub",
   "Varrock Dig Site / early Archaeology": "Guild, monolith, museum, dig site",
   "Archaeology Campus": "Guild shop, workbench, screening",
+  "Archaeology shop":
+    "Master archaeologist's outfit, Soil box, Material storage, Mattock precision, Archaeologist's tea",
+  "Archaeology Guild Shop and qualification upgrades":
+    "Master archaeologist's outfit, Soil box, Material storage, Mattock precision, Archaeologist's tea",
   "City of Um / Underworld": "Ritual site · Um services",
   "Wizards' Tower and Runecrafting Guild": "Runespan, essence, RC guild",
   "Fairy ring network (Zanaris)": "Fairy ring codes",
   "Woodcutters' Grove": "Trees, wood box, log piles",
-  "Anachronia base camp": "Workers, spa, lodestone, buildings",
-  "Anachronia Agility Course": "Course, codex pages, totems",
-  "Anachronia Big Game Hunter": "Hunter XP, dinosaur hide, mattock path",
-  "Dream of Iaia": "Passive multi-skill stations",
+  "Anachronia base camp": "Essential oils, Quick traps, Hunter Lodge",
+  "Anachronia Agility Course": "Double Surge, Double Escape",
+  "Anachronia Big Game Hunter": "Dragon mattock, Terrasaur maul, Quick traps",
+  "Dream of Iaia": "Dream of Iaia stations",
+  "Skillcape rack": "Skillcape rack",
+  "Volcanic trapper outfit": "Volcanic trapper outfit",
   "Laniakea": "Highest standard Slayer master",
-  "Time altar": "Time runes, 110 RC path",
+  "Time altar": "Time rune",
   "Max Guild": "Prif hub, portals, skillcape stand",
   "Hefin Agility Course": "Course, prayer bonus, serenity",
-  "Motherlode Maw and Meilyr resource dungeons": "Daily maw, resource dungeons",
   "Morvran (Prifddinas Slayer Master)": "Slayer points, vip room",
   "TzHaar City skilling hub": "Banks, furnace, TokKul shops",
   "Musa Point fishing dock and Stiles": "Lobster/swordfish, note fish",
@@ -178,45 +244,49 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Gleaming wisp colony": "Gleaming wisps / energy",
   "Pyramid Plunder": "Thieving XP, sceptre",
   "Soul altar": "Soul runes",
-  Barrows: "Barrows equipment, crypts",
-  "Slayer Tower": "Undead tasks, bank path",
+  "Slayer Tower": "Undead tasks, bank",
   "Darkmeyer": "Vyres, bank, shops",
   "Abandoned Mine": "Salve shards, haunted mine",
   "Shades of Mort'ton": "Cremation, temples",
-  "Temple Trekking": "Burgh path, rewards",
+  "Temple Trekking": "Burgh rewards",
   "Managing Miscellania": "Daily kingdom resources",
   "Lunar Isle skilling hub": "Lunar spellbook, astral altar",
   "Livid Farm": "Lunar spell unlocks",
   "Astral altar": "Astral runes",
   "Blast Furnace (Keldagrim)": "Coal-free bars, bank chest",
-  "Lava Flow Mine": "Golden mining suit path",
+  "Lava Flow Mine": "Golden mining suit",
   "Keldagrim dwarven hub": "Blast furnace, traders, brewery",
   "Rellekka Fremennik hub": "Bank, docks, market",
   "Neitiznot yak Crafting and Cooking loop": "Yak hide, meat, crafts",
   "Ungael ritual site": "Necromancy rituals",
   "Penguin Agility Course (Iceberg)": "Agility course",
-  "Jatizso dungeon mine": "Coal + mithril rocks",
+  "Jatizso dungeon mine": "Resource dungeon",
   "Sparkling wisp colony": "Sparkling wisps / energy",
   "Arctic pine Woodcutting (Neitiznot)": "Arctic pine logs",
   "Anachronia overgrown idols": "WC XP, XP lamps on clear",
-  "Hunter Mark Shop (Irwinsson)": "Quick traps, trapper blueprint",
-  "Anachronia totems": "Totem buffs",
-  "Anachronia codex lectern": "Double Surge / Escape codices",
-  "Always Adze": "Auto-burn logs for FM XP",
+  "Hunter Mark Shop (Irwinsson)": "Quick traps, Hunter marks",
+  "Anachronia totems": "Totem of Vitality, Totem of Treasure, Totem of Navigation",
+
+
+
+  "Always Adze": "Always Adze",
   "Accidental Fletching and Firemaking": "Farm peninsula skilling",
   "Asuran Arsenal heist": "High Thieving heist XP",
-  "Rex Matriarchs": "Heart of the rings, Skeka hypnowand",
-  "Ranch Out of Time": "Dinosaur paddocks, beans",
-  "Herby Werby": "Herb bag, noted herbs",
-  "Big Game Hunter": "Hunter XP, dinosaur produce",
-  "Laniakea (Anachronia highest standard Slayer Master)": "Slayer points, tasks",
+  "Ranch Out of Time": "King of Beasts, No Fear, Armoured Hide, Beans",
+  "Ranch Out of Time (Anachronia Dinosaur Farm)":
+    "King of Beasts, No Fear, Armoured Hide, Beans",
+  "Herby Werby": "Herb bag",
+  "Big Game Hunter": "Dragon mattock, Terrasaur maul, Quick traps",
+  "Laniakea (Anachronia highest standard Slayer Master)": "Laniakea's spear, Slayer points",
   "Dinosaur and plant Slayer (Laniakea / Anachronia)": "Dino / plant tasks",
   "Prehistoric Potterington's 'Accidental' Fletching and Firemaking":
     "Farm peninsula Fletching / Firemaking",
   "Corporeal Beast":
     "Spirit shield, Holy elixir, Arcane sigil, Elysian sigil, Divine sigil, Spectral sigil",
-  "The Shadow Reef (ED3)": "Eldritch crossbow",
-  "Daemonheim Rewards shop": "Chaotics, Ruinous weapons, Scrolls, Cleaners",
+  "Daemonheim Rewards shop":
+    "Ring of Vigour, Bonecrusher, Charming imp, Gem bag, Herbicide, Scroll of cleansing, Scroll of efficiency, Scroll of gathering, Scroll of life, Scroll of proficiency, Scroll of dexterity, Advanced smithing autoheater, Chaotics, Ruinous weapons",
+  "Daemonheim Rewards shop (Marmaros)":
+    "Ring of Vigour, Bonecrusher, Charming imp, Gem bag, Herbicide, Scroll of cleansing, Scroll of efficiency, Scroll of gathering, Scroll of life, Scroll of proficiency, Scroll of dexterity, Advanced smithing autoheater, Chaotics, Ruinous weapons",
   "Chaotic weapons":
     "Chaotic rapier, Off-hand chaotic rapier, Chaotic longsword, Off-hand chaotic longsword, Chaotic maul, Chaotic spear, Chaotic staff, Chaotic crossbow, Off-hand chaotic crossbow, Chaotic claw, Off-hand chaotic claw",
   "Chaotic equipment":
@@ -224,7 +294,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Ruinous weapons":
     "Ruinous rapier, Off-hand ruinous rapier, Ruinous maul, Ruinous staff, Ruinous crossbow, Off-hand ruinous crossbow, Ruinous guard, Ruinous lantern",
   "Dark facets": "Dark Facet of Grace, Dark Facet of Luck, Dark Facet of Passage",
-  "Brawling gloves": "Brawling gloves",
+  // Every Wilderness brawling glove (no parentheses — tokeniser strips parentheticals).
+  "Brawling gloves":
+    "Melee brawling gloves, Ranged brawling gloves, Magic brawling gloves, Agility brawling gloves, Cooking brawling gloves, Firemaking brawling gloves, Fishing brawling gloves, Hunter brawling gloves, Mining brawling gloves, Prayer brawling gloves, Smithing brawling gloves, Thieving brawling gloves, Woodcutting brawling gloves",
   "Balarak's sash brush": "Balarak's sash brush",
   "Skeka's hypnowand": "Skeka's hypnowand",
   "Daemonheim Divination": "Time-Worn Memories, Scroll of gathering · Kandarin Memorial hub",
@@ -241,14 +313,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Vital spark, Key to the Crossing, Corrupted gem, Corrupted magic logs, Khopesh of the Kharidian",
   "Shifting Tombs":
     "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
-  "Liberation of Mazcab": "Achto armour, Raids uniques",
-  "Beastmaster Durzag": "Achto armour",
-  Yakamaru: "Achto armour",
   "Mazcab Emergency Merchants":
     "Super restore, Super attack, Super strength, Super defence, Super magic potion, Super ranging potion, Super necromancy, Cooked eeligator",
   "Goebie scavengers": "Teci, Burial charms, Cooked eeligator, Mazcab reroll tokens",
-  "Sunken Pyramid / player-owned Slayer dungeon":
-    "Fourth room, Move souls layout, Slayer Codex",
+  "Sunken Pyramid / player-owned Slayer dungeon": "Slayer Codex",
   "Het's Oasis":
     "Powder of burials, Powder of penance, Powder of pulverising, Powder of protection, Powder of item protection",
   "Agility Pyramid": "Agility XP, Menaphos reputation",
@@ -287,7 +355,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Hardwood Grove teaks and mahoganies": "Teaks / mahoganies (trading sticks)",
   "Karambwan vessel fishing": "Karambwan spots (DKP)",
   "Brimhaven Agility Arena": "Tickets, pirate's hooks path",
-  "Karamja Volcano resource dungeon": "Imps, lesser demons, resources",
+  "Karamja Volcano resource dungeon": "Resource dungeon",
   "Gemstone cavern (Shilo underground)": "Gem rocks",
   "Jadinko Lair": "Curly roots, jadinkos",
   "Calquat tree patch (Tai Bwo Wannai)": "Calquat patch (only one)",
@@ -350,12 +418,12 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   Vorago: "Vorago progression",
   "General Graardor": "Bandos equipment",
   "Kree'arra": "Armadyl equipment",
-  "K'ril Tsutsaroth": "subjugation",
-  "Commander Zilyana": "Godswords",
-  "God Wars Dungeon 1": "God Wars Dungeon 1 equipment",
+  "K'ril Tsutsaroth": "Robes of subjugation",
+  // Prefer CONTENT_REWARD_OVERRIDES for Zilyana (sword + ACB pack); key is fallback only.
+  "Commander Zilyana": "Saradomin godsword",
   "Bandos equipment": "Bandos equipment",
   "Armadyl equipment": "Armadyl equipment",
-  "Subjugation equipment": "subjugation",
+  "Subjugation equipment": "Robes of subjugation",
   "Queen Black Dragon": "Queen Black Dragon",
   "Temple of Aminishi (ED1)": "Temple of Aminishi",
   "Temple of Aminishi": "Temple of Aminishi",
@@ -500,6 +568,22 @@ function isSiblingPackage(nameLower: string, stem: string): boolean {
   return /\b(uniques?|equipment|progression|upgrades?|ability|boot|weapons?)\b/i.test(
     nameLower,
   );
+}
+
+/**
+ * Subtitle under a content major name: prefer catalog `detail` prose; when empty
+ * (common on majors), fall back to clipped rewards/access from contentRewardsFull.
+ * Never invents text — returns "" when both detail and rewards are blank/"—".
+ */
+export function contentDetailOrRewards(
+  row: RewardContentRow,
+  upgrades: readonly RewardUpgrade[] = [],
+): string {
+  const detail = cleanRewardText(row.detail ?? "");
+  if (detail) return detail;
+  const source = contentRewardsSource(contentRewardsFull(row, upgrades));
+  if (!source || source === "—") return "";
+  return clipRewardDisplay(source);
 }
 
 /**

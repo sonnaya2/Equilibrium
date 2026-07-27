@@ -15,12 +15,8 @@ export const MAP_BOUNDS = {
 export const MAP_IMAGE = {
   width: MAP_BOUNDS.maxX - MAP_BOUNDS.minX,
   height: MAP_BOUNDS.maxY - MAP_BOUNDS.minY,
-  /** Full-detail albedo (GPU path may step down via pickMapAlbedoSrc). */
   src: "/map/world-surface-wiki.webp",
-  mediumSrc: "/map/world-3200.webp",
-  smallSrc: "/map/world-1600.webp",
-  /** FlatBoard / no-WebGPU — medium tier is plenty for SVG. */
-  fallbackSrc: "/map/world-3200.webp",
+  fallbackSrc: "/map/world-surface-wiki.webp",
   credit:
     "RuneScape map cache © Jagex Ltd. · tiles via the RuneScape Wiki (CC BY-NC-SA 3.0).",
 } as const;

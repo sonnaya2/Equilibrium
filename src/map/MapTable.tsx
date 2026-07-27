@@ -13,7 +13,7 @@
  * from the water darkening against every coast.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
 import { REGION_IDS, type RegionId } from "@/league";
@@ -26,7 +26,6 @@ import { PLATES_URL, TERRAIN_FIELD_URL, parsePlates, ringsFor, seamsFor } from "
 import { MAP_IMAGE } from "./data/regionAnchors";
 import { asAlbedoTexture, asDataTexture } from "./materials/shared";
 import { mapFlags } from "./mapQuality";
-import { pickMapAlbedoSrc } from "./mapPerf";
 
 /**
  * Warm key from the upper left — steep enough to sculpt emboss, not a
@@ -36,22 +35,17 @@ export const KEY_DIRECTION = new THREE.Vector3(-0.55, 0.86, -0.38).normalize();
 
 export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
   const flags = mapFlags();
-  // Pick once per mount — viewport class rarely changes mid-session.
-  const [albedoSrc] = useState(() =>
-    pickMapAlbedoSrc(MAP_IMAGE.src, MAP_IMAGE.mediumSrc, MAP_IMAGE.smallSrc),
-  );
 
   const [albedoRaw, fieldRaw, atlasRaw] = useLoader(THREE.TextureLoader, [
-    albedoSrc,
+    MAP_IMAGE.src,
     TERRAIN_FIELD_URL,
     POI_ATLAS_IMAGE,
   ]);
   const platesRaw = useLoader(THREE.FileLoader, PLATES_URL) as unknown as string;
 
-  // Anisotropy 4 on the big board albedo — 16 was free VRAM on 4K×1.5 dpr.
-  const albedo = useMemo(() => asAlbedoTexture(albedoRaw, 4), [albedoRaw]);
+  const albedo = useMemo(() => asAlbedoTexture(albedoRaw), [albedoRaw]);
   const field = useMemo(() => asDataTexture(fieldRaw), [fieldRaw]);
-  const atlas = useMemo(() => asAlbedoTexture(atlasRaw, 4), [atlasRaw]);
+  const atlas = useMemo(() => asAlbedoTexture(atlasRaw, 8), [atlasRaw]);
   const plates = useMemo(() => parsePlates(platesRaw), [platesRaw]);
   const rings = useMemo(
     () => new Map(REGION_IDS.map((id) => [id as RegionId, ringsFor(plates, id as RegionId)])),

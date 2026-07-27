@@ -40,17 +40,3 @@ export function mapBloomWanted(): boolean {
   if (typeof performance === "undefined") return false;
   return performance.now() < bloomUntil;
 }
-
-/** Pick albedo URL by viewport × dpr. Game UV math uses MAP_BOUNDS, not texels. */
-export function pickMapAlbedoSrc(
-  fullSrc: string,
-  mediumSrc = "/map/world-3200.webp",
-  smallSrc = "/map/world-1600.webp",
-): string {
-  if (typeof window === "undefined") return mediumSrc;
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  const w = Math.max(window.innerWidth, 1) * dpr;
-  if (w <= 1400) return smallSrc;
-  if (w <= 2600) return mediumSrc;
-  return fullSrc;
-}

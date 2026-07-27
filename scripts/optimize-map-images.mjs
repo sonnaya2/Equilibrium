@@ -1,5 +1,5 @@
 /**
- * Recompress public/map albedo / atlas / field WebPs for GPU bandwidth.
+ * OPTIONAL destructive recompress of public/map albedo / atlas / field WebPs for GPU bandwidth.
  * UV math uses game bounds, not texel size — surface may shrink.
  *
  *   node scripts/optimize-map-images.mjs

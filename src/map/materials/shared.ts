@@ -73,7 +73,7 @@ export function asDataTexture(tex: THREE.Texture): THREE.Texture {
 }
 
 /** Prepare the HD surface raster — this one is artwork, so it is sRGB. */
-export function asAlbedoTexture(tex: THREE.Texture, anisotropy = 8): THREE.Texture {
+export function asAlbedoTexture(tex: THREE.Texture, anisotropy = 16): THREE.Texture {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.wrapS = THREE.ClampToEdgeWrapping;
   tex.wrapT = THREE.ClampToEdgeWrapping;

@@ -596,7 +596,7 @@
   display: grid;
   grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr) minmax(7.5rem, 10rem);
   /* Keyart is the hero band — tall enough to read faces, not a thin strip. */
-  min-height: min(48vh, 440px);
+  min-height: min(57vh, 520px);
   border-bottom: 1px solid var(--echo-border);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--echo-carve) 20%, transparent);
 }
@@ -688,7 +688,7 @@
   position: relative;
   /* Explicit height so img height:100% resolves (min-height alone collapses cover crop). */
   height: 100%;
-  min-height: min(44vh, 400px);
+  min-height: min(52vh, 470px);
   overflow: hidden;
   background: var(--echo-inset);
   display: flex;

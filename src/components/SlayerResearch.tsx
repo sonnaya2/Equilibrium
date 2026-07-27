@@ -15,7 +15,7 @@ const stale = getStaleSlayerMethodCorrections().map((row) => {
   const loose = row as { name?: string; topic?: string; method?: string; monster?: string; id?: string };
   return {
     ...row,
-    name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Stale fix",
+    name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Old method",
   };
 }) as unknown as ResearchRow[];
 
@@ -35,7 +35,7 @@ const archRelics = getAllArchaeologyRelicAcquisitions().map((row) => {
 const TABS: ResearchTab[] = [
   {
     key: "methods",
-    label: "Slayer routes",
+    label: "Routes",
     description: "",
     rows: methods,
   },
@@ -53,7 +53,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "arch-relics",
-    label: "Archaeology relics",
+    label: "Arch relics",
     description: "",
     rows: archRelics,
   },
@@ -65,7 +65,7 @@ export function SlayerResearch() {
       title="Slayer"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search Slayer"
+      searchPlaceholder="Search"
       searchLabel="Search Slayer"
     />
   );

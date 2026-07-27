@@ -45,7 +45,7 @@ export function CombatBisResearch() {
       title="BiS"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search BiS"
+      searchPlaceholder="Search"
       searchLabel="Search BiS"
     />
   );

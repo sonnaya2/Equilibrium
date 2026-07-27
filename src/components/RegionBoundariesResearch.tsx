@@ -16,7 +16,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "crossings",
-    label: "Fuzzy edges",
+    label: "Edge cases",
     description: "",
     rows: dependencies.cross_boundary_cases.map((row) => ({
       ...row,
@@ -31,7 +31,7 @@ export function RegionBoundariesResearch() {
       title="Boundaries"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search boundaries"
+      searchPlaceholder="Search"
       searchLabel="Search boundaries"
     />
   );

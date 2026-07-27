@@ -14,31 +14,31 @@ const combatEquipment = combatRows.filter((row) => row.recordType === "equipment
 const TABS: ResearchTab[] = [
   {
     key: "skilling-activities",
-    label: "Skilling activities",
+    label: "Skilling",
     description: "",
     rows: skillingActivities,
   },
   {
     key: "skilling-equipment",
-    label: "Skilling equipment",
+    label: "Skilling gear",
     description: "",
     rows: skillingEquipment,
   },
   {
     key: "combat-accounts",
-    label: "Combat account",
+    label: "Account",
     description: "",
     rows: combatAccounts,
   },
   {
     key: "combat-activities",
-    label: "Combat activities",
+    label: "Combat",
     description: "",
     rows: combatActivities,
   },
   {
     key: "combat-equipment",
-    label: "Combat equipment",
+    label: "Combat gear",
     description: "",
     rows: combatEquipment,
   },
@@ -50,8 +50,8 @@ export function RegionalUnlocksResearch() {
       title="Regional"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search unlocks"
-      searchLabel="Search unlocks"
+      searchPlaceholder="Search"
+      searchLabel="Search regional unlocks"
     />
   );
 }

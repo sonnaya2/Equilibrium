@@ -50,19 +50,19 @@ function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
     archaeology_level: row.archaeology_level,
     detail: [
       combo,
-      status === "unobtainable" ? `Can't get${reason}` : "Needs electives",
-      row.collector ? `Collector: ${row.collector}` : "",
+      status === "unobtainable" ? `Can't get${reason}` : "Needs region picks",
+      row.collector ? `Collector ${row.collector}` : "",
       Array.isArray(row.dig_sites) && row.dig_sites.length
-        ? `Dig sites: ${row.dig_sites.join(", ")}`
+        ? `Sites ${row.dig_sites.join(", ")}`
         : "",
-      row.first_reward ? `First reward: ${row.first_reward}` : "",
-      row.chronotes != null ? `Chronotes: ${row.chronotes}` : "",
+      row.first_reward ? `Reward ${row.first_reward}` : "",
+      row.chronotes != null ? `Chronotes ${row.chronotes}` : "",
     ]
       .filter(Boolean)
       .join(" · "),
     requirements: [
       row.archaeology_level != null ? `Archaeology ${row.archaeology_level}` : "",
-      ...required.map((region) => `Region: ${region}`),
+      ...required,
     ].filter(Boolean),
     confidence: row.confidence || "confirmed_wiki",
     // Pass full source_urls through — ResearchSection links() reads the array.
@@ -85,7 +85,7 @@ const combatCombos = combatRows.filter(
 const TABS: ResearchTab[] = [
   {
     key: "all-combos",
-    label: "All combos",
+    label: "All",
     description: "",
     rows: combos as ResearchRow[],
   },
@@ -103,13 +103,13 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "museum-multi",
-    label: "Museum combos",
+    label: "Museum",
     description: "",
     rows: museumRows,
   },
   {
     key: "combat-multi",
-    label: "Combat combos",
+    label: "Combat",
     description: "",
     rows: combatCombos,
   },
@@ -127,7 +127,7 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "global-issues",
-    label: "Open questions",
+    label: "Open",
     description: "",
     rows: issues as ResearchRow[],
   },
@@ -139,7 +139,7 @@ export function RegionCombosResearch() {
       title="Combos"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search combos"
+      searchPlaceholder="Search"
       searchLabel="Search combos"
     />
   );

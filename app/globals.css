@@ -462,7 +462,7 @@ textarea:focus-visible {
     display: flex;
     flex-direction: column;
     grid-template-columns: none;
-    gap: 0.45rem;
+    gap: 0.5rem;
     flex: 1 1 auto;
     min-height: 0;
   }
@@ -471,12 +471,10 @@ textarea:focus-visible {
     flex: 1 1 0;
     min-height: 14rem;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--color-gold-500) 40%, var(--color-stone-750));
+    border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
-    background: #173742;
-    box-shadow:
-      inset 0 0 0 1px rgb(224 178 100 / 8%),
-      inset 0 0 36px rgb(0 0 0 / 35%);
+    background: #8293ae;
+    box-shadow: inset 0 0 0 1px rgb(224 178 100 / 7%);
     display: flex;
     flex-direction: column;
   }
@@ -489,6 +487,7 @@ textarea:focus-visible {
     flex-direction: column;
   }
   .board-sky__scene {
+    position: relative;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
@@ -500,42 +499,41 @@ textarea:focus-visible {
     min-height: 0;
     overflow: hidden;
   }
+  .board-sky__credit {
+    position: absolute;
+    right: 0.45rem;
+    bottom: 0.35rem;
+    z-index: 1;
+    margin: 0;
+    padding: 0.18rem 0.4rem;
+    color: var(--color-parch-300);
+    background: rgb(10 8 6 / 76%);
+    font-size: 0.625rem;
+    line-height: 1.2;
+    pointer-events: none;
+  }
   /* Board surface (R3F root div *or* FlatBoard SVG) — absolute fill so the
      host size drives the surface, not intrinsic content height. Without this
      the SVG h-auto path grows the flex chain and can crush the under ledger. */
-  .board-sky__canvas-host > :first-child:not(.vine-frame) {
+  .board-sky__canvas-host > :first-child {
     position: absolute !important;
     inset: 0;
     width: 100% !important;
     height: 100% !important;
   }
-  /* Pick-bound edge vines: overlay the board, never intercept pointer hits. */
-  .vine-frame {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .vine-frame path {
-    transition: stroke-dashoffset 420ms ease;
-    stroke-dashoffset: calc(var(--vine-grow, 1) * 1);
-  }
-  .vine-frame .leaf {
-    transition: opacity 320ms ease;
-    opacity: calc(var(--leaf-on, 0) * 0.5);
-  }
   /* Content-sized under stack: never flex-shrink away. Cap height + scroll so
      region chips and detail stay reachable when 3D is absent (FlatBoard path). */
   .board-sky__under {
     flex: 0 0 auto;
-    max-height: min(36vh, 340px);
+    max-height: min(22vh, 220px);
     min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    padding-bottom: 0.25rem;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-stone-750);
+    background: var(--color-stone-950);
   }
   .board-sky__ledger {
     max-height: none;
@@ -553,7 +551,7 @@ textarea:focus-visible {
     flex-wrap: wrap;
     align-items: center;
     gap: 0.35rem 0.55rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
   }
   .board-sky__clear {
     margin-left: auto;
@@ -563,7 +561,7 @@ textarea:focus-visible {
     color: var(--color-parch-100);
     font-size: 0.72rem;
     line-height: 1.2;
-    padding: 0.22rem 0.48rem;
+    padding: 0.3rem 0.6rem;
     cursor: pointer;
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   }
@@ -579,21 +577,25 @@ textarea:focus-visible {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.28rem;
+    display: grid;
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+  .board-sky__region-chips li {
+    min-width: 0;
   }
   .board-sky__region-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.28rem;
-    max-width: 12.5rem;
-    padding: 0.26rem 0.46rem;
+    width: 100%;
+    min-height: 2.35rem;
+    padding: 0.36rem 0.5rem;
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
     background: var(--color-stone-850);
     color: var(--color-parch-100);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     line-height: 1.2;
     cursor: pointer;
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
@@ -660,12 +662,12 @@ textarea:focus-visible {
   }
   /* Place rail under board: wrap chips in place — never a modal/overflow drawer. */
   .board-sky__places {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.3rem 0.5rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.55rem;
     min-width: 0;
-    padding: 0.1rem 0 0.15rem;
+    padding: 0.1rem 0;
   }
   .board-sky__places .board-sky__rail-label {
     flex: 0 0 auto;
@@ -673,19 +675,19 @@ textarea:focus-visible {
   }
   .board-sky__place-chips {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.22rem;
-    flex: 1 1 12rem;
+    gap: 0.3rem;
     min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
   .board-sky__place-chip {
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
-    background: transparent;
+    background: var(--color-stone-900);
     color: var(--color-parch-100);
     font-size: 0.7rem;
     line-height: 1.25;
-    padding: 0.12rem 0.45rem;
+    padding: 0.25rem 0.5rem;
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
@@ -711,9 +713,9 @@ textarea:focus-visible {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem 1.25rem;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding: 0.65rem 0.85rem;
+    padding: 0.55rem 0.8rem;
     border-bottom: 1px solid var(--color-stone-800);
     background: var(--color-stone-900);
   }
@@ -1043,26 +1045,23 @@ textarea:focus-visible {
   .map-region-marker {
     display: grid;
     justify-items: center;
-    min-width: 64px;
+    min-width: 56px;
     padding: 0;
     border: 0;
     color: var(--color-parch-50);
     background: transparent;
     cursor: pointer;
-    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 90%));
-    transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 88%));
+    transition: transform 140ms ease, opacity 140ms ease;
   }
   .map-region-marker:hover,
   .map-region-marker.is-focus {
     z-index: 2;
-    transform: translateY(-2px) scale(1.06);
-    filter:
-      drop-shadow(0 0 4px rgb(46 203 143 / 68%))
-      drop-shadow(0 2px 4px rgb(0 0 0 / 95%));
+    transform: translateY(-1px) scale(1.04);
   }
   .map-region-marker img {
-    width: 36px;
-    height: 41px;
+    width: 30px;
+    height: 34px;
     object-fit: contain;
   }
   .map-region-marker.is-locked {
@@ -1072,19 +1071,19 @@ textarea:focus-visible {
     filter: grayscale(0.7) brightness(0.72);
   }
   .map-region-marker.is-unlocked img {
-    filter: drop-shadow(0 0 5px rgb(46 203 143 / 70%));
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 85%));
   }
   .map-region-marker__name,
   .map-region-marker__count {
     padding: 1px 4px;
     white-space: nowrap;
-    background: rgb(6 10 13 / 72%);
+    background: rgb(8 8 7 / 76%);
     text-shadow: 0 1px 2px #000;
   }
   .map-region-marker__name {
-    margin-top: -3px;
+    margin-top: -2px;
     font-family: var(--font-display);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.045em;
     text-transform: uppercase;
@@ -1092,12 +1091,12 @@ textarea:focus-visible {
   .map-region-marker__count {
     color: var(--color-parch-300);
     font-family: var(--font-mono);
-    font-size: 7px;
+    font-size: 6.5px;
   }
   .map-region-marker.is-focus .map-region-marker__name,
   .map-region-marker.is-focus .map-region-marker__count {
     color: var(--color-gem-100);
-    background: rgb(5 16 15 / 88%);
+    background: rgb(5 16 15 / 92%);
   }
 
   .flat-map-marker {
@@ -1156,11 +1155,11 @@ textarea:focus-visible {
   }
   .map-poi-marker:hover .map-poi-marker__dot,
   .map-poi-marker.is-selected .map-poi-marker__dot {
-    transform: scale(1.35);
+    transform: scale(1.2);
     background: var(--color-gem-400);
     box-shadow:
       0 1px 3px rgb(0 0 0 / 92%),
-      0 0 0 3px rgb(46 203 143 / 22%);
+      0 0 0 2px rgb(46 203 143 / 22%);
   }
   .map-poi-marker__label {
     position: absolute;

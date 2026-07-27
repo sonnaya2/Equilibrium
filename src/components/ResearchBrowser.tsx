@@ -14,17 +14,24 @@ import type {
   ResearchTrainingMethod,
   SourceReference,
 } from "@/research/catalog";
-import { isRegionUnlocked } from "@/league";
+import { isRegionId, isRegionUnlocked, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
-import type { RegionId } from "@/league";
 import { GameIcon } from "@/components/GameIcon";
 
 import {
+  bossIconPath,
   dataEntityIconPath,
   regionCrestPath,
   skillIconPath,
   upgradeIconPath,
 } from "@/lib/gameArt";
+import {
+  contentTypeLabel,
+  presentContentRewards,
+  resolveContentLocation,
+  resolveTrainingLocation,
+} from "@/lib/dataContentPresentation";
+import { contentRewardsFull } from "@/lib/researchRewards";
 import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse } from "./ResearchSection";
 import { useDataRegion } from "./DataWorkbench";
@@ -58,8 +65,8 @@ function methodAccess(method: ResearchTrainingMethod): string {
     .replaceAll("_plus_", " + ")
     .replaceAll("multi_region_dependency", "multi-region")
     .replaceAll("multi_region", "multi-region")
-    .replaceAll("global_if_materials_available", "global if mats available")
-    .replaceAll("global_once_supplied", "global once supplied")
+    .replaceAll("global_if_materials_available", "any region if mats available")
+    .replaceAll("global_once_supplied", "any region once supplied")
     .replaceAll("player_owned_house_global_with_resource_dependency", "PoH · mats by region")
     .replaceAll("materials_and_altar_dependent", "mats + altar")
     .replaceAll("arc_unresolved", "The Arc")
@@ -80,50 +87,6 @@ function contentName(value: string): string {
     .replace(/\s+Dig Site\s+(?:full mastery|mini-site)$/i, " Dig Site")
     .replace(/\s+/g, " ")
     .trim();
-}
-
-const CONTENT_ACCESS: Record<string, string> = {
-  "Varrock Dig Site / early Archaeology": "Archaeology Guild · monolith · museum",
-  "Pale wisps near Draynor": "Pale energy · Divination 1–10",
-  "Fort Forinthry construction and Slayer hub": "Fort buildings · chapel · Slayer hub",
-  "City of Um / Underworld": "Ritual site · City of Um services",
-  "Hermod, the Spirit of War": "Hermodic plates · Necromancy power armour",
-};
-
-const CONTENT_REWARD_KEYS: Record<string, string> = {
-  "Sanctum of Rebirth": "Sanctum of Rebirth uniques",
-  "Rasial, the First Necromancer": "First Necromancer's equipment",
-  "The Gate of Elidinis": "Gate of Elidinis uniques",
-  "Vermyx, Brood Mother": "Sanctum of Rebirth uniques",
-  "Kezalam, the Wanderer": "Sanctum of Rebirth uniques",
-  "Nakatra, Devourer Eternal": "Sanctum of Rebirth uniques",
-};
-
-function contentRewards(
-  row: ResearchRegion["content"][number],
-  upgrades: ResearchRegion["upgrades"],
-): string {
-  const access = CONTENT_ACCESS[row.name];
-  if (access) return access;
-
-  const key =
-    CONTENT_REWARD_KEYS[row.name] ??
-    contentName(row.name).replace(/^The\s+/i, "").replace(/,.*/, "");
-  const upgrade = upgrades.find((candidate) =>
-    cleanText(candidate.name).toLocaleLowerCase().startsWith(key.toLocaleLowerCase()),
-  );
-  if (upgrade?.detail) {
-    const detail = cleanText(upgrade.detail);
-    const rewards = detail.match(/(?:^| · )(?:Unlocks|Effects):\s*([^·]+)/i)?.[1]
-      ?? detail.split(" · ")[0];
-    return clipProse(rewards, 96);
-  }
-
-  const detail = cleanText(row.detail ?? "");
-  if (detail && !/(?:working league mapping|catalyst|unannounced|locality boundary)/i.test(detail)) {
-    return clipProse(detail, 96);
-  }
-  return "—";
 }
 
 function interestName(value: string): string {
@@ -313,13 +276,17 @@ function ImageViewer({
 function MethodTable({
   methods,
   label,
+  regionId,
 }: {
   methods: ResearchTrainingMethod[];
   label?: string;
+  regionId?: string;
 }) {
   if (!methods.length) {
-    return <p className="px-3 py-2 text-[13px] text-parch-100">No methods.</p>;
+    return <p className="px-3 py-2 text-[13px] text-parch-100">No training methods.</p>;
   }
+
+  const region = regionId && isRegionId(regionId) ? regionId : null;
 
   return (
     <div className="overflow-x-auto">
@@ -337,7 +304,11 @@ function MethodTable({
           {methods.map((method) => {
             const skillSrc = skillIconPath(method.skill);
             const rate = methodRate(method.xpRate);
-            const location = cleanText(method.location) || methodAccess(method);
+            const fallback = cleanText(method.location) || methodAccess(method);
+            const resolved = region
+              ? resolveTrainingLocation(region, method.location || fallback, method.regionHints)
+              : null;
+            const locationLabel = resolved?.label || fallback;
             return (
             <tr key={method.id} className="align-top">
               <td>
@@ -361,8 +332,18 @@ function MethodTable({
               <td className="data-training-table__rate font-mono" title={rate}>
                 {rate}
               </td>
-              <td className="data-training-table__location secondary" title={location}>
-                {location}
+              <td className="data-training-table__location secondary" title={locationLabel}>
+                {resolved?.href ? (
+                  <a
+                    href={resolved.href}
+                    className="data-location-link"
+                    aria-label={`Open ${locationLabel} on map`}
+                  >
+                    {locationLabel}
+                  </a>
+                ) : (
+                  locationLabel
+                )}
               </td>
             </tr>
             );
@@ -420,7 +401,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       <section className="panel data-region-panel data-region-panel--content">
         <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Major unlocks</span>
-          <span className="font-normal text-parch-100">{region.content.length} entries</span>
+          <span className="font-normal text-parch-100">{region.content.length}</span>
         </div>
         <div className="overflow-x-auto">
           <table className="data-table data-region-content-table w-full min-w-0">
@@ -429,11 +410,29 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                 <th>Name</th>
                 <th>Rewards / access</th>
                 <th>Type</th>
+                <th>Location</th>
               </tr>
             </thead>
             <tbody>
               {region.content.map((row, index) => {
-                const iconSrc = dataEntityIconPath({ name: row.name, kind: row.kind });
+                // Major unlocks Name column: official boss plates when the row is a boss
+                // (kind is often "Elder God Wars Dungeon" / place tags, not "boss").
+                const displayName = contentName(row.name);
+                const iconSrc =
+                  bossIconPath(row.name) ??
+                  bossIconPath(displayName) ??
+                  dataEntityIconPath({ name: row.name, kind: row.kind });
+                // Icons from full Unlocks/Effects; +N only for capped resolved overflow.
+                const presented = presentContentRewards(
+                  contentRewardsFull(row, region.upgrades),
+                );
+                const rewardIcons = presented.icons;
+                const overflowResolved = presented.overflowResolved;
+                const typeLabel = contentTypeLabel(row.kind, row.name);
+                const location = isRegionId(region.id)
+                  ? resolveContentLocation(region.id, row.name, row.kind)
+                  : { label: null, place: null, href: null };
+                const locationLabel = location.label ?? "—";
                 return (
                   <tr key={`${row.name}-${index}`} className="align-top">
                     <td>
@@ -442,9 +441,9 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                           <button
                             type="button"
                             className="data-icon-well data-image-button"
-                            aria-label={`View ${contentName(row.name)} image`}
+                            aria-label={`View ${displayName} image`}
                             onClick={() =>
-                              setPreviewImage({ src: iconSrc, name: contentName(row.name) })
+                              setPreviewImage({ src: iconSrc, name: displayName })
                             }
                           >
                             <GameIcon src={iconSrc} size={34} />
@@ -453,18 +452,46 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                           <span className="data-icon-well data-icon-well--empty" aria-hidden />
                         )}
                         <span className="data-content-name__text">
-                          {contentName(row.name)}
+                          {displayName}
                           <InlineSource source={row.source} />
                         </span>
                       </div>
                     </td>
-                    <td
-                      className="data-content-rewards"
-                      title={contentRewards(row, region.upgrades)}
-                    >
-                      {contentRewards(row, region.upgrades)}
+                    <td className="data-content-rewards" title={presented.sourceText}>
+                      <div className="data-content-rewards__inner">
+                        {rewardIcons.length ? (
+                          <span className="data-reward-icons" aria-hidden="true">
+                            {rewardIcons.map((item) => (
+                              <span
+                                key={`${item.src}-${item.label}`}
+                                className="data-icon-well data-reward-icons__well"
+                                title={item.label}
+                              >
+                                <GameIcon src={item.src} size={22} />
+                              </span>
+                            ))}
+                            {overflowResolved > 0 ? (
+                              <span className="data-reward-icons__more">+{overflowResolved}</span>
+                            ) : null}
+                          </span>
+                        ) : null}
+                        <span className="data-content-rewards__text">{presented.displayText}</span>
+                      </div>
                     </td>
-                    <td className="secondary">{row.kind}</td>
+                    <td className="data-content-type secondary">{typeLabel}</td>
+                    <td className="data-content-location">
+                      {location.href ? (
+                        <a
+                          href={location.href}
+                          className="data-location-link"
+                          aria-label={`Open ${locationLabel} on map`}
+                        >
+                          {locationLabel}
+                        </a>
+                      ) : (
+                        <span className="secondary">{locationLabel}</span>
+                      )}
+                    </td>
                   </tr>
                 );
               })}
@@ -478,7 +505,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       <section className="panel data-region-panel data-region-panel--upgrades">
         <div className="panel-head flex items-baseline justify-between gap-3">
           <span>Points of interest</span>
-          <span className="font-normal text-parch-100">{region.upgrades.length} entries</span>
+          <span className="font-normal text-parch-100">{region.upgrades.length}</span>
         </div>
         <div className="data-upgrades-list">
           {region.upgrades.length ? (
@@ -537,7 +564,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
               );
             })
           ) : (
-            <p className="px-3 py-2 text-[13px] text-parch-100">No upgrades.</p>
+            <p className="px-3 py-2 text-[13px] text-parch-100">None listed.</p>
           )}
         </div>
       </section>
@@ -550,10 +577,12 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
 function SkillDetail({
   skill,
   regionName,
+  regionId,
   extra,
 }: {
   skill: ResearchSkill;
   regionName: string;
+  regionId?: string;
   extra?: ReactNode;
 }) {
   return (
@@ -562,13 +591,14 @@ function SkillDetail({
         <section className="panel data-region-panel">
           <MethodTable
             methods={skill.methods}
+            regionId={regionId}
             label={`${skill.name} training in ${cleanText(regionName)}`}
           />
         </section>
       ) : null}
       {extra}
       {!skill.methods.length && !extra ? (
-        <p className="data-empty">No methods are mapped to {cleanText(regionName)}.</p>
+        <p className="data-empty">Nothing for {cleanText(regionName)} yet.</p>
       ) : null}
     </article>
   );
@@ -645,14 +675,14 @@ export function DataRegionRail({
             </button>
           );
         })}
-        {filteredRegions.length === 0 ? <p className="data-selector-empty">Nothing matches.</p> : null}
+        {filteredRegions.length === 0 ? <p className="data-selector-empty">No regions match.</p> : null}
       </div>
       <button
         type="button"
         onClick={toggleMineOnly}
         aria-pressed={mineOnly}
         disabled={!loaded}
-        title={loaded ? "Filter to your Map/Build unlocks" : "Loading picks…"}
+        title={loaded ? "Only regions you've unlocked" : "Loading your picks…"}
         className={`comp-facet data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
       >
         My regions
@@ -704,8 +734,8 @@ export function ResearchBrowser({
           (parent) =>
             parent !== row &&
             cleanText(parent.name).toLowerCase() === cleanText(row.kind).toLowerCase() &&
-            contentRewards(parent, selectedRegion.upgrades) ===
-              contentRewards(row, selectedRegion.upgrades),
+            contentRewardsFull(parent, selectedRegion.upgrades) ===
+              contentRewardsFull(row, selectedRegion.upgrades),
         ),
     );
     const content = normalizedQuery
@@ -795,7 +825,7 @@ export function ResearchBrowser({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={`Search ${selectedRegion?.name ?? "region"}`}
-            aria-label="Search selected region"
+            aria-label="Search this region"
             className="field-inset data-browser__search"
           />
           <select
@@ -804,7 +834,7 @@ export function ResearchBrowser({
             aria-label="Sort browse data"
             className="field-inset data-browser__sort"
           >
-            <option value="catalog">Catalog order</option>
+            <option value="catalog">As listed</option>
             <option value="name">Name A–Z</option>
           </select>
         </div>
@@ -815,12 +845,13 @@ export function ResearchBrowser({
             <SkillDetail
               skill={selectedSkillInRegion}
               regionName={selectedRegion.name}
+              regionId={selectedRegion.id}
               extra={skillDetails[selectedSkillInRegion.id]}
             />
           ) : filteredRegion ? (
             <RegionDetail region={filteredRegion} />
           ) : (
-            <p className="py-6 text-[13px] text-parch-100">Select a record.</p>
+            <p className="py-6 text-[13px] text-parch-100">Pick a region.</p>
           )}
       </div>
     </section>

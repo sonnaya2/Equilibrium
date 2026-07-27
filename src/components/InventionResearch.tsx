@@ -42,43 +42,43 @@ const bottlenecks = getPerkMaterialBottlenecks().map((row) => ({
 const TABS: ResearchTab[] = [
   {
     key: "active",
-    label: "Active perks",
+    label: "Perks",
     description: "",
     rows: activePerks,
   },
   {
     key: "armour",
-    label: "Armour recipes",
+    label: "Armour",
     description: "",
     rows: armour as unknown as ResearchRow[],
   },
   {
     key: "utility",
-    label: "Utility recipes",
+    label: "Utility",
     description: "",
     rows: utility as unknown as ResearchRow[],
   },
   {
     key: "supply",
-    label: "Component supply",
+    label: "Components",
     description: "",
     rows: [...supply, ...globalRoutes, ...account] as unknown as ResearchRow[],
   },
   {
     key: "rare",
-    label: "Rare components",
+    label: "Rares",
     description: "",
     rows: [...rare, ...remaining] as unknown as ResearchRow[],
   },
   {
     key: "2026",
-    label: "Current routes",
+    label: "Routes",
     description: "",
     rows: [...routes2026, ...perkDeps2026] as unknown as ResearchRow[],
   },
   {
     key: "bottlenecks",
-    label: "Material bottlenecks",
+    label: "Bottlenecks",
     description: "",
     rows: bottlenecks,
   },
@@ -90,7 +90,7 @@ export function InventionResearch() {
       title="Invention"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search invention"
+      searchPlaceholder="Search"
       searchLabel="Search invention"
     />
   );

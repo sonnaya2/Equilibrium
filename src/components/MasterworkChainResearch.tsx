@@ -30,19 +30,19 @@ const regionPressure = (chain.region_pressure as PressureRow[]).map((row) => {
 export const MASTERWORK_CHAIN_TABS: ResearchTab[] = [
   {
     key: "region-pressure",
-    label: "Region needs",
+    label: "Regions",
     description: "",
     rows: regionPressure,
   },
   {
     key: "assembly",
-    label: "Assembly steps",
+    label: "Assembly",
     description: "",
     rows: chain.assembly_evidence as unknown as ResearchRow[],
   },
   {
     key: "requirements",
-    label: "Requirements",
+    label: "Reqs",
     description: "",
     rows: chain.requirements as unknown as ResearchRow[],
   },

@@ -79,7 +79,7 @@ export function QuestBrowser() {
               {rows.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-parch-300">
-                    {query ? "No quest names match this search." : `No quests are mapped to ${selectedRegion?.name ?? "this region"}.`}
+                    {query ? "Nothing matches." : `No quests in ${selectedRegion?.name ?? "this region"}.`}
                   </td>
                 </tr>
               ) : (

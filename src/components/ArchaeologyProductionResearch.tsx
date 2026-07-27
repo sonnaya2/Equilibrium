@@ -120,7 +120,7 @@ const museumRows = museumMatrix.map((row) => {
     id: loose.id,
     name: loose.name,
     recordType: "activity",
-    category: status === "unobtainable" ? "museum · unobtainable" : "museum",
+    category: status === "unobtainable" ? "museum · can't get" : "museum",
     regionHints: [...new Set([...required, ...artifacts, ...collectors])],
     requiredRegions: required,
     regionRequirementType: required.length > 1 ? "all_required" : "single",
@@ -134,7 +134,7 @@ const museumRows = museumMatrix.map((row) => {
     archaeology_level: loose.archaeology_level,
     detail: [
       combo,
-      status === "unobtainable" ? `Unobtainable${reason}` : "Obtainable",
+      status === "unobtainable" ? `Can't get${reason}` : "Can get",
       loose.collector ? `Collector ${loose.collector}` : "",
       Array.isArray(loose.dig_sites) && loose.dig_sites.length
         ? `Sites ${loose.dig_sites.join(", ")}`
@@ -172,13 +172,13 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "repeatables",
-    label: "Repeatable rewards",
+    label: "Repeatables",
     description: "",
     rows: repeatables,
   },
   {
     key: "production",
-    label: "Production routes",
+    label: "Production",
     description: "",
     rows: productionRoutes,
   },
@@ -196,13 +196,13 @@ const TABS: ResearchTab[] = [
   },
   {
     key: "relic-system",
-    label: "Relic system",
+    label: "Relics",
     description: "",
     rows: relicSystemRows,
   },
   {
     key: "relic-loadouts",
-    label: "Relic loadouts",
+    label: "Loadouts",
     description: "",
     rows: relicLoadoutRows,
   },

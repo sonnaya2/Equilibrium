@@ -126,7 +126,7 @@ export function ReferenceNotesResearch() {
       title="Notes"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search notes"
+      searchPlaceholder="Search"
       searchLabel="Search notes"
     />
   );

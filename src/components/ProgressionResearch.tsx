@@ -37,7 +37,7 @@ const SECTIONS: Array<{ key: string; label: string }> = [
   { key: "invention_component_sources", label: "Components" },
   { key: "archaeology_progression", label: "Archaeology" },
   { key: "archaeology_combat_relics", label: "Arch relics" },
-  { key: "regional_unique_drops", label: "Unique drops" },
+  { key: "regional_unique_drops", label: "Uniques" },
   ...SYSTEM_TABS.map((tab) => ({
     key: `system-${tab.key}`,
     label: tab.label,
@@ -67,11 +67,11 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
 };
 
 const REGION_LABELS: Record<string, string> = {
-  global_if_materials_available: "Global if supplied",
-  global_once_unlocked: "Global once unlocked",
+  global_if_materials_available: "Any region if supplied",
+  global_once_unlocked: "Any region once unlocked",
   not_mapped_yet: "Unmapped",
   unresolved: "Unresolved",
-  unresolved_cross_boundary: "Cross-region unclear",
+  unresolved_cross_boundary: "Cross-region?",
 };
 
 /** Plain player-facing string — never a URL, never a SourceReference dump. */
@@ -122,15 +122,15 @@ function regionName(value: unknown): string {
 function rowRegionLabel(row: Row): string {
   if (Array.isArray(row.required_regions) && row.required_regions.length) {
     const list = row.required_regions.map(regionName).join(" + ");
-    return row.required_regions.length > 1 ? `Combo: ${list}` : list;
+    return row.required_regions.length > 1 ? `Combo ${list}` : list;
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Could be: ${row.region_candidates.map(regionName).join(" / ")}`;
+    return `Maybe ${row.region_candidates.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
-    return `Chain: ${row.region_hints.map(regionName).join(" / ")}`;
+    return `Chain ${row.region_hints.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.acquisition_regions) && row.acquisition_regions.length) {
@@ -335,9 +335,9 @@ export function ProgressionResearch() {
 
       <div className="data-progression__body">
         <div className="data-ledger-head" aria-hidden="true">
-          <span>Record</span>
-          <span>Region access</span>
-          <span>Details</span>
+          <span>Name</span>
+          <span>Regions</span>
+          <span>Notes</span>
         </div>
 
         <div className="data-progression__list">
@@ -389,7 +389,7 @@ export function ProgressionResearch() {
                 </div>
               </article>
             );
-          }) : <p className="data-empty">{query ? "No progression records match this search." : `No ${sectionLabel.toLowerCase()} records are mapped to ${selectedRegion?.name ?? "this region"}.`}</p>}
+          }) : <p className="data-empty">{query ? "Nothing matches." : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>}
         </div>
       </div>
     </section>

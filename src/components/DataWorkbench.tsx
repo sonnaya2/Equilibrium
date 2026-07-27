@@ -29,7 +29,7 @@ export function DataViewHeader({
       <div className="data-view-head__copy">
         <h2>{title}</h2>
         <p className="data-view-head__region">
-          {region ? `in ${region.name}` : "all regions"}
+          {region ? region.name : "All regions"}
         </p>
         {description ? <p className="data-view-head__description">{description}</p> : null}
       </div>

@@ -6,7 +6,7 @@ const chain = consumables.overload_chain;
 const TABS: ResearchTab[] = [
   {
     key: "overload",
-    label: "Overload chain",
+    label: "Overloads",
     description: "",
     rows: chain.records as unknown as ResearchRow[],
   },
@@ -42,7 +42,7 @@ export function ConsumablesResearch() {
       title="Consumables"
       intro=""
       tabs={TABS}
-      searchPlaceholder="Search consumables"
+      searchPlaceholder="Search"
       searchLabel="Search consumables"
     />
   );

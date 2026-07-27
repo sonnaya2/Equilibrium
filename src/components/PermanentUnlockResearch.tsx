@@ -15,12 +15,12 @@ type Row = Record<string, unknown>;
 type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models" | "consumable_unlocks";
 
 const SECTIONS: Array<{ key: SectionKey; label: string }> = [
-  { key: "quest_unlocks", label: "Quest unlocks" },
+  { key: "quest_unlocks", label: "Quests" },
   { key: "ability_unlocks", label: "Abilities" },
   { key: "prayer_unlocks", label: "Prayers" },
   { key: "account_unlocks", label: "Account" },
   { key: "activity_unlocks", label: "Activities" },
-  { key: "equipment_models", label: "Equipment" },
+  { key: "equipment_models", label: "Gear" },
   { key: "consumable_unlocks", label: "Consumables" },
 ];
 
@@ -96,19 +96,19 @@ function regionName(value: unknown): string {
 function region(row: Row): string {
   if (Array.isArray(row.required_regions) && row.required_regions.length) {
     const list = row.required_regions.map(regionName).join(" + ");
-    return row.required_regions.length > 1 ? `Combo: ${list}` : list;
+    return row.required_regions.length > 1 ? `Combo ${list}` : list;
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Unresolved: ${row.region_candidates.map(regionName).join(" / ")}`;
+    return `Maybe ${row.region_candidates.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_hints) && row.region_hints.length > 1) {
-    return `Chain: ${row.region_hints.map(regionName).join(" / ")}`;
+    return `Chain ${row.region_hints.map(regionName).join(" / ")}`;
   }
 
   if (Array.isArray(row.region_pressure) && row.region_pressure.length) {
-    return `Soft: ${row.region_pressure.map(format).join(" · ")}`;
+    return `Optional ${row.region_pressure.map(format).join(" · ")}`;
   }
 
   const value = row.region_hint;
@@ -183,17 +183,17 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "effect", label: "Effect" },
   { key: "cost", label: "Cost" },
   { key: "currency", label: "Currency" },
-  { key: "cost_per_rank", label: "Cost / rank" },
+  { key: "cost_per_rank", label: "Per rank" },
   { key: "ranks", label: "Ranks" },
   { key: "spellbook", label: "Spellbook" },
   { key: "magic_level", label: "Magic" },
-  { key: "duration_minutes", label: "Duration (min)" },
+  { key: "duration_minutes", label: "Mins" },
   { key: "milestones", label: "Milestones" },
   { key: "thresholds", label: "Thresholds" },
   { key: "bonuses", label: "Bonuses" },
   { key: "tiers", label: "Tiers" },
-  { key: "tool_bonuses", label: "Tool bonuses" },
-  { key: "familiar_bonuses", label: "Familiar bonuses" },
+  { key: "tool_bonuses", label: "Tools" },
+  { key: "familiar_bonuses", label: "Familiars" },
   { key: "migration", label: "If you owned the aura" },
   { key: "rules", label: "How it works" },
   { key: "account_rule", label: "Account" },
@@ -295,9 +295,9 @@ export function PermanentUnlockResearch() {
 
       <div className="data-record-surface">
         <div className="data-ledger-head" aria-hidden="true">
-          <span>Record</span>
-          <span>Region access</span>
-          <span>Details</span>
+          <span>Name</span>
+          <span>Regions</span>
+          <span>Notes</span>
         </div>
         <div>
           {rows.length ? rows.map((row, index) => {
@@ -350,7 +350,7 @@ export function PermanentUnlockResearch() {
                 </div>
               </article>
             );
-          }) : <p className="data-empty">{query ? "No unlocks match this search." : `No ${sectionLabel.toLowerCase()} are mapped to ${selectedRegion?.name ?? "this region"}.`}</p>}
+          }) : <p className="data-empty">{query ? "Nothing matches." : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>}
         </div>
       </div>
     </section>

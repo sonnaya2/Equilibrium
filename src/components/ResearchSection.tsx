@@ -260,7 +260,7 @@ const FIELD_LABELS: Record<string, string> = {
   first_reward: "First reward",
   relic_effect_summary: "Effect",
   effect_summary: "Effect",
-  support_item_effect: "Support effect",
+  support_item_effect: "Support",
   monolith_energy: "Energy",
   dig_sites: "Dig sites",
   dig_site: "Dig site",
@@ -322,7 +322,7 @@ const FIELD_LABELS: Record<string, string> = {
   summary: "Summary",
   description: "Detail",
   detail: "Detail",
-  acquisition: "How to get",
+  acquisition: "How",
   acquisition_routes: "Routes",
   production: "Make",
   stack: "Stack",
@@ -561,20 +561,20 @@ function region(row: ResearchRow): string {
   if (required?.length) {
     const type = String(row.regionRequirementType || "").toLowerCase();
     if (required.length > 1) {
-      if (type === "support") return `Chain: ${regionList(required, " / ")}`;
-      return `Combo: ${regionList(required, " + ")}`;
+      if (type === "support") return `Chain ${regionList(required, " / ")}`;
+      return `Combo ${regionList(required, " + ")}`;
     }
     return `Needs ${regionName(required[0])}`;
   }
 
   if (Array.isArray(row.required_regions_for_collection_loop) && row.required_regions_for_collection_loop.length) {
-    return `Loop: ${regionList(row.required_regions_for_collection_loop, " + ")}`;
+    return `Loop needs ${regionList(row.required_regions_for_collection_loop, " + ")}`;
   }
 
   if (Array.isArray(row.artifact_regions) && row.artifact_regions.length) {
     const artifacts = regionList(row.artifact_regions, " / ");
     if (Array.isArray(row.collector_regions) && row.collector_regions.length) {
-      return `Artifacts ${artifacts} · Collector ${regionList(row.collector_regions, " / ")}`;
+      return `Artifacts ${artifacts} · collector ${regionList(row.collector_regions, " / ")}`;
     }
     return `Artifacts ${artifacts}`;
   }
@@ -584,13 +584,13 @@ function region(row: ResearchRow): string {
   }
 
   if (Array.isArray(row.region_candidates) && row.region_candidates.length) {
-    return `Could be ${regionList(row.region_candidates, " / ")}`;
+    return `Maybe ${regionList(row.region_candidates, " / ")}`;
   }
 
   if (Array.isArray(row.region_options) && row.region_options.length) {
     const options = regionList(row.region_options, " / ");
-    const preferred = row.planner_default_region ? ` · Prefer ${regionName(row.planner_default_region)}` : "";
-    return `Pick: ${options}${preferred}`;
+    const preferred = row.planner_default_region ? ` · prefer ${regionName(row.planner_default_region)}` : "";
+    return `Pick ${options}${preferred}`;
   }
 
   if (Array.isArray(row.acquisition_regions) && row.acquisition_regions.length) {
@@ -601,13 +601,13 @@ function region(row: ResearchRow): string {
   if (Array.isArray(row.regions) && row.regions.length) {
     const hard = regionList(row.regions, " + ");
     if (Array.isArray(row.optionalRegions) && row.optionalRegions.length) {
-      return `Needs ${hard} · Soft ${regionList(row.optionalRegions, " / ")}`;
+      return `Needs ${hard} · optional ${regionList(row.optionalRegions, " / ")}`;
     }
-    return row.regions.length > 1 ? `Combo: ${hard}` : `Needs ${regionName(row.regions[0])}`;
+    return row.regions.length > 1 ? `Combo ${hard}` : `Needs ${regionName(row.regions[0])}`;
   }
 
   if (Array.isArray(row.optionalRegions) && row.optionalRegions.length) {
-    return `Soft ${regionList(row.optionalRegions, " / ")}`;
+    return `Optional ${regionList(row.optionalRegions, " / ")}`;
   }
 
   const hints = Array.isArray(row.regionHints)
@@ -617,8 +617,8 @@ function region(row: ResearchRow): string {
       : null;
   if (hints && hints.length > 1) {
     const type = String(row.regionRequirementType || "").toLowerCase();
-    if (type === "all_required") return `Combo: ${regionList(hints, " + ")}`;
-    return `Chain: ${regionList(hints, " / ")}`;
+    if (type === "all_required") return `Combo ${regionList(hints, " + ")}`;
+    return `Chain ${regionList(hints, " / ")}`;
   }
 
   const entry = nestedRegion(row.entry_side);
@@ -981,9 +981,9 @@ export function ResearchSection({
 
       <div className="data-record-surface">
         <div className="data-ledger-head" aria-hidden="true">
-          <span>Record</span>
-          <span>Region access</span>
-          <span>Details</span>
+          <span>Name</span>
+          <span>Regions</span>
+          <span>Notes</span>
         </div>
         <div>
           {rows.length ? (
@@ -1041,7 +1041,7 @@ export function ResearchSection({
               );
             })
           ) : (
-            <p className="data-empty">{query ? "No records match this search." : `No ${selected.label.toLowerCase()} records are mapped to ${selectedRegion?.name ?? "this region"}.`}</p>
+            <p className="data-empty">{query ? "Nothing matches." : `No ${selected.label.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>
           )}
         </div>
       </div>

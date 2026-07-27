@@ -87,7 +87,7 @@ export function PrayerResearch() {
       title="Prayers"
       intro=""
       tabs={PRAYER_TABS}
-      searchPlaceholder="Search prayers"
+      searchPlaceholder="Search"
       searchLabel="Search prayers"
     />
   );
@@ -99,7 +99,7 @@ export function MagicResearch() {
       title="Magic"
       intro=""
       tabs={MAGIC_TABS}
-      searchPlaceholder="Search Magic"
+      searchPlaceholder="Search"
       searchLabel="Search Magic"
     />
   );

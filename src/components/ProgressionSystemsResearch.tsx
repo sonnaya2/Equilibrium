@@ -25,7 +25,7 @@ const farmPerks = pass5.farm_combat_perks.records.map((record) => ({
 export const PROGRESSION_SYSTEM_TABS: ResearchTab[] = [
   {
     key: "necromancy",
-    label: "Necromancy talents",
+    label: "Necro talents",
     description: "",
     rows: necromancyTiers as unknown as ResearchRow[],
   },
@@ -55,7 +55,7 @@ export const PROGRESSION_SYSTEM_TABS: ResearchTab[] = [
   },
   {
     key: "region-passives",
-    label: "Region passives",
+    label: "Passives",
     description: "",
     rows: pass5.region_achievement_passives as unknown as ResearchRow[],
   },
@@ -73,8 +73,8 @@ export function ProgressionSystemsResearch() {
       title="Progression"
       intro=""
       tabs={PROGRESSION_SYSTEM_TABS}
-      searchPlaceholder="Search systems"
-      searchLabel="Search systems"
+      searchPlaceholder="Search"
+      searchLabel="Search progression systems"
     />
   );
 }

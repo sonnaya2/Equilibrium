@@ -286,6 +286,54 @@
             "title": "Nakatra, Devourer Eternal",
             "verifiedAt": "2026-07-25"
           }
+        },
+        {
+          "name": "The Empty Throne Room",
+          "kind": "Agility / Divination / Mining multi-skill excavation hub",
+          "detail": "Not the Senntisten Archaeology dig site. Caps make this a mid-level Agility/Divination bridge, not infinite training. Dig Site pendant / Archaeology journal / Varrock lodestone are natural access",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Empty_Throne_Room",
+            "title": "The Empty Throne Room",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Necromantic Rune Temple",
+          "kind": "Runecrafting altar infrastructure for necrotic runes",
+          "detail": "Cannot be reached via wicked hood or Abyss. Common access routes: Underworld portal/ritual site, City of Um ferry to Haunt on the Hill, passing bracelet Haunt on the Hill, or Underworld Grimoire smithy teleports then ferry. Abyss XP buff does not apply after the September 2023 fi",
+          "confidence": "confirmed_wiki_method_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Necromantic_Rune_Temple",
+            "title": "Necromantic Rune Temple",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Infernal Source Dig Site",
+          "kind": "Archaeology dig site and Ancient Summoning materials",
+          "detail": "Included because Forinthry gap lists often name Infernal Source. Wiki Equilibrium League region tags excavation hotspots as Misthalin (entrance west of Jolly Boar Inn / north of Varrock). The Source itself sits under the Wilderness Crater but is not dangerous Wilderness",
+          "confidence": "confirmed_wiki_league_region_misthalin",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Infernal_Source_Dig_Site",
+            "title": "Infernal Source Dig Site",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "City of Um mushroom patch",
+          "kind": "Farming patch unlock",
+          "detail": "Underworld Grimoire 3 makes the Um mushroom patch disease-free. Morytania legs 4 double mushroom yield at City of Um among other patches (XP not doubled) is a separate Morytania diary effect",
+          "confidence": "confirmed_wiki_method_working_league_taxonomy",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/City_of_Um",
+            "title": "City of Um mushroom patch",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -5432,7 +5480,7 @@
         {
           "name": "Ivar, King of Bones",
           "kind": "boss",
-          "detail": "",
+          "detail": "Havenhythe boss (King of Bones). Starting-region boss ladder major.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -5444,7 +5492,7 @@
         {
           "name": "Silverquill, the Dreadhog",
           "kind": "boss",
-          "detail": "",
+          "detail": "Havenhythe boss (the Dreadhog). Starting-region boss ladder major.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -5456,7 +5504,7 @@
         {
           "name": "Sanguine Crawler",
           "kind": "Slayer",
-          "detail": "Slayer 35",
+          "detail": "Slayer 35. Havenhythe Slayer boss path (Blighted Cave).",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -5472,21 +5520,9 @@
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hunter_update",
+            "url": "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter",
             "title": "Havenhythe Big Game Hunter",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Birdhouses",
-          "kind": "Hunter",
-          "detail": "Eight birdhouse plots are spread around Havenhythe; they use logs, clockwork and seeds and are harvested after a passive catch period.",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Birdhouses",
-            "title": "Birdhouses",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         },
         {
@@ -5514,30 +5550,6 @@
           }
         },
         {
-          "name": "Fish farming",
-          "kind": "Fishing",
-          "detail": "Havenhythe fish-farm progression spans levels 45-84, ending with giant crayfish at the farm.",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Update:Welcome_to_Havenhythe",
-            "title": "Fish farming",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Giant crayfish fishing",
-          "kind": "Fishing",
-          "detail": "Wild giant crayfish spots require level 82 Fishing; the fish-farm giant-crayfish stage is level 84.",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)",
-            "title": "Giant crayfish fishing",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
           "name": "Moonrise Dig Site",
           "kind": "Archaeology",
           "detail": "Live since 15 June 2026. Moonrise adds 15 artefacts across two collections, five mysteries, a relic power and a Necromancy ritual ring.",
@@ -5546,18 +5558,6 @@
             "source": "jagex",
             "url": "https://secure.runescape.com/m=news/digging-up-the-past-at-moonrise",
             "title": "Moonrise Dig Site",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Apex Hide Armour",
-          "kind": "upgrade",
-          "detail": "Tier 85-90 progression · Ranged",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Apex_hide_armour",
-            "title": "Apex Hide Armour",
             "verifiedAt": "2026-07-25"
           }
         },
@@ -5571,6 +5571,138 @@
             "url": "https://runescape.wiki/w/Masterwork_ranged_equipment",
             "title": "Masterwork Ranged Armour materials",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "name": "Altar of Inanna",
+          "kind": "regional Prayer infrastructure",
+          "detail": "Normal prayer altar, not a second ectofuntus. Quest-only Inanna's Den access is not a permanent skilling unlock after Secrets of Amberfell",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Altar_of_Inanna",
+            "title": "Altar of Inanna",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Amberfell village hub",
+          "kind": "regional settlement and dig-site gateway",
+          "detail": "Members village released 1 June 2026. Hub row for bank/shops/travel — Werewolf post-quest flavour is not a skilling gate",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Amberfell",
+            "title": "Amberfell village hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Havenhythe canoe network",
+          "kind": "permanent regional travel infrastructure",
+          "detail": "Havenhythe-local canoe system — not the River Lum / Wilderness canoe network used for. Construction plank costs are one-time repairs per station",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Havenhythe",
+            "title": "Havenhythe canoe network",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Marigold Farm patch cluster",
+          "kind": "regional Farming infrastructure",
+          "detail": "split from the old farming-patch-cluster audit blob. Dalia's Tree Nursery (tree/fruit/eternal-magic plots) remains — do not merge. Marigold is the allotment/herb/flower half for daily Farming runs on automatic Havenhythe",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Marigold_Farm",
+            "title": "Marigold Farm patch cluster",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Shrine of Inanna Summoning",
+          "kind": "regional Summoning production hub pointer",
+          "detail": "Empowered Summoning obelisks with Spirit Plane Connection (see havenhythe:empowered-summoning-obelisks for full connection math); Shaman's outfit shop path via Pikkenflix at Shrine of the Spirit Wolves; Jackalope antler hunting nearby for Archaeology soil familiar (havenhythe:jac",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Shrine_of_Inanna",
+            "title": "Shrine of Inanna Summoning hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Wendlewick fish farm",
+          "kind": "starting-region Fishing infrastructure",
+          "detail": "Multi-pool fish farm Fishing training infrastructure; Early self-sufficient fish supply on Havenhythe",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Wendlewick_fish_farm",
+            "title": "Wendlewick fish farm",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Eastfold Farm (sheep and spinning)",
+          "kind": "regional Crafting and Farming support hub",
+          "detail": "Fills Farming/Crafting density beyond Marigold allotment/herb and Dalia nursery",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Eastfold_Farm",
+            "title": "Eastfold Farm (sheep and spinning)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Highweald / Deserted Mine mining access",
+          "kind": "regional Mining infrastructure",
+          "detail": "Wiki Mining section on Havenhythe is still filling in post-launch; row records geography and access rather than stale XP/h. Pair with canoe Grotto station and Amberfell logistics. Not a dual-claim on Misthalin or Forinthry mines",
+          "confidence": "confirmed_wiki_2026_partial_detail",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Deserted_Mine",
+            "title": "Highweald / Deserted Mine mining access",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Charming moths / Highweald charm training",
+          "kind": "Hunter charm training method",
+          "detail": "Surfaces the Havenhythe charm-moth training method under major content. Wilderness charming moths remain a separate Forinthry optional path.",
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Charming_moth",
+            "title": "Charming moths / Highweald charm training",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Empowered Summoning obelisks",
+          "kind": "regional pouch-production infrastructure",
+          "detail": "CANONICAL Spirit Plane Connection math row — shrine hub is pointer only and must keep linking this id. Connection state is separate from Amlodd Voice of Seren and from Desert Holy scarab. Buffs clear when leaving vicinity after slow Summoning (26 May 2026 patch)",
+          "confidence": "confirmed_wiki_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Empowered_obelisk",
+            "title": "Havenhythe empowered Summoning obelisks (Spirit Plane Connection)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Havenhythe birdhouses",
+          "kind": "Hunter passive route",
+          "detail": "Eight birdhouse plots across Havenhythe (Wendlewick, Marigold Farm x3, Eastfold Farm, Shrine of Inanna, fairy ring BKS, Dalia's Tree Nursery).",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Bird_house_trapping",
+            "title": "Havenhythe birdhouses",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -6470,6 +6602,90 @@
           "regionRequirementType": "support",
           "comboLabel": "Region chain (support pressure): havenhythe / anachronia",
           "isRegionCombo": false
+        },
+        {
+          "name": "Jackalopes (BIS early–mid Hunter method)",
+          "category": "Hunter method",
+          "detail": "BIS early–mid Hunter method on Havenhythe; also Archaeology soil BoB familiar adjacency.",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Jackalope",
+            "title": "Jackalopes (BIS early–mid Hunter method)",
+            "verifiedAt": "2026-07-26"
+          },
+          "regionId": "havenhythe",
+          "regionHints": [
+            "havenhythe"
+          ],
+          "requiredRegions": [],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
+        },
+        {
+          "name": "Ivar, King of Bones uniques",
+          "category": "boss uniques",
+          "detail": "Ivar unique drop ladder for starting-region boss progression.",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ivar,_King_of_Bones",
+            "title": "Ivar, King of Bones uniques",
+            "verifiedAt": "2026-07-26"
+          },
+          "regionId": "havenhythe",
+          "regionHints": [
+            "havenhythe"
+          ],
+          "requiredRegions": [],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
+        },
+        {
+          "name": "Silverquill, the Dreadhog uniques",
+          "category": "boss uniques",
+          "detail": "Silverquill unique drop ladder for starting-region boss progression.",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Silverquill,_the_Dreadhog",
+            "title": "Silverquill, the Dreadhog uniques",
+            "verifiedAt": "2026-07-26"
+          },
+          "regionId": "havenhythe",
+          "regionHints": [
+            "havenhythe"
+          ],
+          "requiredRegions": [],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
+        },
+        {
+          "name": "Sanguine Crawler uniques",
+          "category": "Slayer boss uniques",
+          "detail": "Sanguine Crawler unique path (Blighted Cave Slayer boss).",
+          "requirements": [],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sanguine_Crawler",
+            "title": "Sanguine Crawler uniques",
+            "verifiedAt": "2026-07-26"
+          },
+          "regionId": "havenhythe",
+          "regionHints": [
+            "havenhythe"
+          ],
+          "requiredRegions": [],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
         }
       ],
       "trainingMethodIds": [
@@ -6534,7 +6750,7 @@
         {
           "name": "Duradel",
           "kind": "Slayer",
-          "detail": "100 combat, 50 Slayer",
+          "detail": "100 combat, 50 Slayer — high-end Karamja Slayer master (Shilo).",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -6546,7 +6762,7 @@
         {
           "name": "TzHaar Fight Cave",
           "kind": "combat",
-          "detail": "Fire cape",
+          "detail": "Fire cape path through the TzHaar Fight Cave.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -6558,7 +6774,7 @@
         {
           "name": "Fight Kiln",
           "kind": "combat",
-          "detail": "TokHaar-Kal capes",
+          "detail": "TokHaar-Kal cape path through the Fight Kiln.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -6577,6 +6793,210 @@
             "url": "https://runescape.wiki/w/Abomination",
             "title": "Abomination",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "name": "Calquat tree patch (Tai Bwo Wannai)",
+          "kind": "Farming unique patch",
+          "detail": "Only calquat patch in the game; Six calquat fruit per harvest (kegs, supercompost, supply); High check-health Farming XP plant for mid/late Farming ladders; Scroll of life seed-return exclusion note: calquat is excluded from wasteless farming seed recover",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Calquat_tree",
+            "title": "Calquat tree patch (Tai Bwo Wannai)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Herblore Habitat",
+          "kind": "Herblore / Hunter habitat",
+          "detail": "Southern Karamja Herblore Habitat — juju potion vines, jadinko favour, and Papa Mambo shop.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Herblore_Habitat",
+            "title": "Herblore Habitat",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Nature altar",
+          "kind": "Runecrafting altar and catalytic supply",
+          "detail": "Karamja's permanent catalytic Runecrafting site. Abyss remains a global alternative path; this row values the surface ruins living in Karamja for self-sufficient nature rune production and regional travel synergies with gleaming wisps / Hardwood Grove",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Nature_altar",
+            "title": "Nature altar",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Gleaming wisp colony",
+          "kind": "Divination gathering colony",
+          "detail": "Karamja's named mid-tier Divination colony. Watch wandering warriors on the western side for lower-level accounts",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Gleaming_wisp",
+            "title": "Gleaming wisp colony",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Musa Point free teaks",
+          "kind": "Woodcutting early teak access",
+          "detail": "Four teaks were added behind the general store in the 9 December 2024 Woodcutting/Fletching/Firemaking update. Lower density than Hardwood Grove but zero entry cost — useful before trading-stick supply is online. Not a substitute for grove density once sticks are available",
+          "confidence": "confirmed_wiki_2024_spawn_update",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Musa_Point",
+            "title": "Musa Point free teaks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Brimhaven Agility Arena",
+          "kind": "Agility minigame and ticket shop",
+          "detail": "Dangerous minigame (death loses items). Tickets fund Agility lamps and a clean herb sink for iron Herblore. Pirate hook is a prestige hand-slot cosmetic/money item, not core combat gear. Keep as Karamja Agility infrastructure rather than pure XP/h ranking",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Brimhaven_Agility_Arena",
+            "title": "Brimhaven Agility Arena",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Jadinko Lair curly roots",
+          "kind": "Firemaking and Woodcutting regional method",
+          "detail": "Core free high-end Firemaking site on automatic-early Karamja. Baseline is chop curly roots then burn on lair dry-patch firepits. Superheat Form (Tirannwn Seren prayer / The Light Within, 91 Prayer) or Always Adze relic is the XP ceiling and yields no Jadinko Favour on that varia",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Curly_root",
+            "title": "Jadinko Lair curly roots",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Karambwan vessel fishing",
+          "kind": "Fishing method and bait tool unlock",
+          "detail": "Pre-quest Lubufu spot is temporary tutorial fishing only; permanent method is post-Trio at DKP. Vessel must be filled with raw karambwanji each attempt; fish can steal bait without a catch. Distinct from Musa Point lobster dock / Stiles noting",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Karambwan_vessel",
+            "title": "Karambwan vessel fishing",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "TzHaar City skilling hub",
+          "kind": "regional city bank, furnace, and TokKul shop infrastructure",
+          "detail": "Skilling half of TzHaar City for ironman banking, smelting, onyx sink, and BLP on-ramp. Combat minigames (Fight Cave/Pit/Kiln/Cauldron) stay in combat enrichment; this row is the city infrastructure checklist. Do not conflate Crafteneering (Daemonheim leather loop — ) with TzHaar",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/TzHaar_City",
+            "title": "TzHaar City skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Musa Point banana plantation",
+          "kind": "early gather and Cooking fruit supply",
+          "detail": "Automatic-early Karamja landmark, not a late-game method. Synergy with and on the same peninsula",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Banana_plantation",
+            "title": "Musa Point banana plantation",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Karamja Volcano resource dungeon",
+          "kind": "Dungeoneering resource dungeon (imp/lesser demon camp)",
+          "detail": "Site detail. League badge is Karamja. Not a tree/ore room — value is monster density and first-entry XP on automatic-early Karamja",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Karamja_Volcano_resource_dungeon",
+            "title": "Karamja Volcano resource dungeon",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Musa Point fishing dock and Stiles",
+          "kind": "Fishing and fish-noting infrastructure",
+          "detail": "Early/mid Fishing infrastructure on automatic-early Karamja. Stiles removes the classic bank run. Members usually outgrow this dock for Deep Sea Fishing (Kandarin) but Stiles remains a regional QoL landmark",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Musa_Point",
+            "title": "Musa Point fishing dock and Stiles",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Shilo Village",
+          "kind": "Southern Karamja hub",
+          "detail": "Shilo Village bank, gem mine, and Duradel / Lapalok Slayer master hub.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Shilo_Village",
+            "title": "Shilo Village",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Hardwood Grove teaks and mahoganies",
+          "kind": "Woodcutting and Construction log supply",
+          "detail": "Primary midgame teak/mahogany Construction plank source for iron accounts that do not yet have Miscellania or other dense hardwoods. Entry fee is every visit. Banking options: Rionasta (sticks), TokKul-Zo + Tai Bwo Wannai teleport, Brimhaven POH, porters, or Deadliest Catch south",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hardwood_grove",
+            "title": "Hardwood Grove teaks and mahoganies",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Tai Bwo Wannai Cleanup and trading sticks",
+          "kind": "regional currency and jungle skilling hub",
+          "detail": "Trading sticks are the gate currency for Hardwood Grove density teaks/mahoganies on no-trade accounts. Cleanup is the durable self-supply loop; treat sticks as infrastructure currency, not a GE convenience",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup",
+            "title": "Tai Bwo Wannai Cleanup and trading sticks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Jadinko Favour offering stone",
+          "kind": "Habitat residual seed and spiritbag infrastructure",
+          "detail": "Habitat: curly-roots and herblore-habitat only footnote favour",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Offering_stone",
+            "title": "Jadinko Favour offering stone",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Gemstone cavern (Shilo underground)",
+          "kind": "Mining–Slayer residual infrastructure",
+          "detail": "of shilo-gem-mine + area-tasks gloves. Prefer gloves row for teleport/diary perks; prefer shilo-gem-mine for surface gem rocks; Combat loot tables stay out of skilling detail",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Gemstone_cavern",
+            "title": "Gemstone cavern (Shilo underground)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -7901,20 +8321,8 @@
           }
         },
         {
-          "name": "Nex: Angel of Death",
-          "kind": "God Wars Dungeon",
-          "detail": "",
-          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
-            "title": "Nex: Angel of Death",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Artisans' Workshop burial smithing",
-          "kind": "Smithing",
+          "name": "Artisans' Workshop",
+          "kind": "Smithing hub",
           "detail": "Burial equipment is available in the Falador workshop from 40 Smithing and is a high-throughput Smithing route when materials allow.",
           "confidence": "confirmed_wiki",
           "source": {
@@ -7937,51 +8345,146 @@
           }
         },
         {
+          "name": "Mining Guild",
+          "kind": "Mining guild infrastructure",
+          "detail": "Core mid-game Mining geography for Asgarnia ironmen. Not the highest AFK method forever, but the Falador metal-bank adjacency is permanent infrastructure value",
+          "confidence": "confirmed_wiki_plus_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mining_Guild",
+            "title": "Mining Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Crafting Guild",
+          "kind": "Crafting guild infrastructure",
+          "detail": "Compact Crafting production hub. Hard Falador achievements upgrade deposit boxes to bank chests — diary region is Asgarnia/Falador",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crafting_Guild",
+            "title": "Crafting Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Invention Guild",
+          "kind": "Invention workshop and machine infrastructure",
+          "detail": "Primary Invention hub geography sits in Asgarnia. Machines continue while logged out if charge and inputs remain. BoB inventory is inaccessible inside the guild",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Invention_Guild",
+            "title": "Invention Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Warriors' Guild",
+          "kind": "Melee guild / defender path",
+          "detail": "Burthorpe Warriors' Guild — defender acquisition, combat minigames, and melee hub.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Warriors%27_Guild",
+            "title": "Warriors' Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Port Sarim docks and skilling hub",
+          "kind": "Transport and shop hub",
+          "detail": "Port Sarim docks, shops, and transport (charter / boats) under Asgarnia.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Port_Sarim",
+            "title": "Port Sarim docks and skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Rimmington Construction supply loop",
+          "kind": "Construction production",
+          "detail": "Rimmington estate agent / Construction supply geography and POH portal adjacency.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rimmington",
+            "title": "Rimmington Construction supply loop",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "God Wars Dungeon 1",
+          "kind": "Boss dungeon",
+          "detail": "GWD1 approach and god camps under Asgarnia (Graardor / Kree'arra / Zilyana / K'ril + Nex).",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/God_Wars_Dungeon",
+            "title": "God Wars Dungeon 1",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Falador farm allotment / flower / herb patches",
+          "kind": "Farming patches",
+          "detail": "South Falador farm allotment, flower, and herb patches.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Falador_farm",
+            "title": "Falador farm allotment / flower / herb patches",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Rogues' Den banking, safes, and Thieving hub",
+          "kind": "Thieving and support skilling infrastructure",
+          "detail": "Rogues' Den under The Pick and Lute (Taverley) — banking, safes, and Flash Powder Factory access.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rogues%27_Den",
+            "title": "Rogues' Den banking, safes, and Thieving hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Flash Powder Factory minigame and reward shop",
+          "kind": "Agility / Thieving / Herblore minigame infrastructure",
+          "detail": "Flash Powder Factory minigame under Taverley with reward shop and Herblore outfit path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Flash_Powder_Factory",
+            "title": "Flash Powder Factory minigame and reward shop",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Troll Stronghold disease-free herb patch",
+          "kind": "Farming permanent patch unlock",
+          "detail": "My Arm's disease-free herb patch on the Troll Stronghold roof.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Herb_patch_(Trollheim)",
+            "title": "Troll Stronghold disease-free herb patch",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
           "name": "Bandos equipment",
           "kind": "upgrade",
-          "detail": "",
-          "confidence": "unclassified",
+          "detail": "Unlocks: Bandos helmet / chestplate / tassets / gloves / boots, Bandos warshield adjacency",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Bandos_equipment",
             "title": "Bandos equipment",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Armadyl equipment",
-          "kind": "upgrade",
-          "detail": "",
-          "confidence": "unclassified",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Armadyl_equipment",
-            "title": "Armadyl equipment",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Subjugation equipment",
-          "kind": "upgrade",
-          "detail": "",
-          "confidence": "unclassified",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Subjugation_equipment",
-            "title": "Subjugation equipment",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
-          "name": "Nex tier-80 armour sets",
-          "kind": "upgrade",
-          "detail": "",
-          "confidence": "unclassified",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Nex_tier-80_armour_sets",
-            "title": "Nex tier-80 armour sets",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -11950,6 +12453,210 @@
             "title": "Advanced Gnome Stronghold course",
             "verifiedAt": "2026-07-25"
           }
+        },
+        {
+          "name": "Fishing Guild",
+          "kind": "Fishing guild infrastructure and Deep Sea Fishing access",
+          "detail": "Official Equilibrium Kandarin content. The guild is the structural gate for Deep Sea Fishing (Goomah) and a durable mid/high-level Fishing food and bank hub. Logging out while boosted out of 68 Fishing places the player outside the guild",
+          "confidence": "confirmed_wiki_plus_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fishing_Guild",
+            "title": "Fishing Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Piscatoris Hunter area",
+          "kind": "Hunter training area",
+          "detail": "Completes the Piscatoris cluster for Kandarin planning (colony fishing + Hunter + Memorial/Hall). Not a unique reward shop — infrastructure adjacency matters for route planning",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Piscatoris_Hunter_area",
+            "title": "Piscatoris Hunter area",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Piscatoris Fishing Colony",
+          "kind": "Fishing settlement and food infrastructure",
+          "detail": "Wiki marks Piscatoris as Kandarin Equilibrium content. Self-sufficient food hub: banked monkfish next to a range. Also a practical base for Piscatoris Hunter area, Phoenix Lair, platinum mining, and the nearby Memorial to Guthix / Hall of Memories cluster",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Piscatoris_Fishing_Colony",
+            "title": "Piscatoris Fishing Colony",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Seers' Village skilling hub",
+          "kind": "regional skilling infrastructure",
+          "detail": "Core Fletching supply (flax to bowstring) and mid-level Woodcutting geography. Elemental Workshop quest chain and coal trucks are planner-relevant permanent infrastructure, not just scenery",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Seers%27_Village",
+            "title": "Seers' Village skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Warforge Dig Site (Bandosian)",
+          "kind": "Archaeology dig-site hub",
+          "detail": "Bandosian excavation hotspots levels 76–119 (crucible, tunnels, Thalmund's forge, Bandos's sanctum); Site materials: warforged bronze, mark of the Kyzaj, malachite green, vulcanised rubber, Yu'biusk clay; Thalmund's Forge: Imcando anvil/forge for Imcando mattock craft; Seed of th",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Warforge_Dig_Site",
+            "title": "Warforge Dig Site (Bandosian)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ourania Runecrafting Altar (ZMI)",
+          "kind": "Runecrafting altar infrastructure",
+          "detail": "Wiki marks Ourania as Kandarin Equilibrium content. Major self-sufficient Runecrafting training and mixed-rune supply. XP multiplier was reduced from 2x to 1.5x when Abyss boosts began applying (29 September 2025). Ourania Teleport (71 Magic, Lunar spellbook) is the classic acces",
+          "confidence": "confirmed_wiki_with_2025_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ourania_Runecrafting_Altar",
+            "title": "Ourania Runecrafting Altar (ZMI)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Barbarian Outpost Agility Course",
+          "kind": "Agility course and outfit progression",
+          "detail": "Agile top is a permanent weight-reducing Agility outfit piece from this course. Bar Crawl is the hard access gate for the outer yard and several quests. Barbarian Assault rewards are combat/honour-point content — do not collapse them into the Agility unlock row",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Barbarian_Outpost",
+            "title": "Barbarian Outpost Agility Course",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Catherby fishing and farming hub",
+          "kind": "Fishing, Farming, and Fletching support settlement",
+          "detail": "Classic self-sufficient early/mid Kandarin gather-and-process loop: fish, cook, farm herbs/allotments, buy tools. Seers flax/bowstring and Fishing Guild / Deep Sea late-game routes",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Catherby",
+            "title": "Catherby fishing and farming hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Stormguard Citadel Dig Site (Armadylean)",
+          "kind": "Archaeology dig-site hub",
+          "detail": "Official wiki League tags are Kandarin",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+            "title": "Stormguard Citadel Dig Site (Armadylean)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Manor Farm (Farming Guild) and reputation rewards",
+          "kind": "Farming guild and player-owned farm hub",
+          "detail": "RS3 Farming Guild is Manor Farm — there is no separate OSRS-style multi-tier Farming Guild dungeon. Expands beyond the thin farmers-market outfit row into reputation infrastructure and guild patches",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Manor_Farm",
+            "title": "Manor Farm (Farming Guild) and reputation rewards",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ardougne farming patches and Manor Farm access geography",
+          "kind": "Farming patch infrastructure",
+          "detail": "Patch density and POF geography, not a second master-farmer outfit claim. Use with for the permanent. Farming progression stack",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Manor_Farm",
+            "title": "Ardougne farming patches and Manor Farm access geography",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ranging Guild",
+          "kind": "Ranged guild infrastructure, shops, and archery competition",
+          "detail": "Official Equilibrium Kandarin badge. Ironman value is shop self-supply for mid-game Ranged ammo/armour and ticket exchange, not BiS late-game. Fletching cape is no longer sold here",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ranging_Guild",
+            "title": "Ranging Guild",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Yanille multi-skill hub",
+          "kind": "regional multi-skill settlement infrastructure",
+          "detail": "Planner hub bundle for southern Kandarin. Wizards' Guild is the permanent. Magic flagship; Aleck's and cookery support Hunter/Cooking loops. Pair with Port Khazard trawler north-east and Feldip Warforge further south",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Yanille",
+            "title": "Yanille multi-skill hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Wizards' Guild (Magic Guild, Yanille)",
+          "kind": "Magic guild infrastructure and rune-essence logistics",
+          "detail": "Official Equilibrium Kandarin badge on the guild page. Ironman RC logistics value is Distentor's bank-adjacent essence tele; mystic robe and rune shops are self-supply infrastructure. Portals are outbound only",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Wizards%27_Guild",
+            "title": "Wizards' Guild (Magic Guild, Yanille)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Kuradal (Ancient Cavern Slayer Master)",
+          "kind": "regional Slayer master hub",
+          "detail": "18 points/task with Smoking Kills; 90/270 on 10th/50th; long-term avg ~28.8; Kuradal's Dungeon permission ecosystem (separate ferocious-ring hub row); Slayer cape seller; 7 co-op points on social tasks; Optional Learn unlocks for aquanites/muspah/nihil/glacors/TDs/nightmares on h",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kuradal",
+            "title": "Kuradal (Ancient Cavern Slayer Master)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Kuradal's Dungeon and ferocious ring hub",
+          "kind": "Slayer dungeon infrastructure and ring farm",
+          "detail": "Skilling-adjacent permanent combat QoL and teleport sink, not a general BiS ring outside the dungeon. Ferocious ring fuse into full slayer helmet is a separate 500-point Learn unlock (",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kuradal%27s_Dungeon",
+            "title": "Kuradal's Dungeon and ferocious ring hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Memorial to Guthix",
+          "kind": "Divination D&D and passive-buff infrastructure",
+          "detail": "Official Equilibrium Kandarin area list includes Hall of Memories; the Memorial is the surface site above it in the Piscatoris Hunter area. Engram collection is global geography but the permanent buff hub and Hall entrance are Kandarin-sited. High-value buffs for skilling plannin",
+          "confidence": "confirmed_wiki_plus_official_region_example",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Memorial_to_Guthix",
+            "title": "Memorial to Guthix",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -15063,6 +15770,150 @@
             "title": "Waterbirth Island",
             "verifiedAt": "2026-07-25"
           }
+        },
+        {
+          "name": "Jatizso dungeon mine",
+          "kind": "Mining resource dungeon and elite banite extension",
+          "detail": "Fremennik League badge. Practical mid-game coal/mithril density with bank-distance tradeoff vs troll risk. Elite banite is diary-gated permanent. Mining unlock, not a second region",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Jatizso_dungeon_mine",
+            "title": "Jatizso dungeon mine",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Keldagrim dwarven hub",
+          "kind": "Mining Smithing Thieving infrastructure hub",
+          "detail": "Planner taxonomy already maps Keldagrim under Fremennik (confirmed on Lava Flow Mine wiki League region badge). This hub row exists so Keldagrim is not only visible through the Imcando pickaxe equipment line",
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Keldagrim",
+            "title": "Keldagrim dwarven hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Sparkling wisp colony",
+          "kind": "Divination training colony",
+          "detail": "Fills the Divination gap for Fremennik so the region is not invisible between early and late wisp tiers. Do not promote stale XP/hour; training datasets own rates. Enriched sparkling wisps follow normal chronicle contribution rules",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sparkling_wisp",
+            "title": "Sparkling wisp colony",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Rellekka Fremennik hub",
+          "kind": "coastal skilling hub",
+          "detail": "Rellekka is the ordinary Fremennik logistics hub rather than a single unique XP method. Surface it so region planners",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rellekka",
+            "title": "Rellekka Fremennik hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Lunar Isle skilling hub",
+          "kind": "regional multi-skill settlement infrastructure",
+          "detail": "Official Fremennik League badge. Hub bundle for Lunar geography — Seal of passage daily teleport charge is travel QoL after Diplomacy. Livid Farm is Fremennik (Lunar Isle), never Kandarin",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Lunar_Isle",
+            "title": "Lunar Isle skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Livid Farm Lunar spell unlocks",
+          "kind": "Lunar spell additions",
+          "detail": "South Falador Teleport; Repair Rune Pouch; North Ardougne Teleport; Remote Farm",
+          "confidence": "confirmed_wiki_current_2026",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rewards_(Livid_Farm)",
+            "title": "Livid Farm Lunar spell unlocks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Lava Flow Mine skilling unlocks",
+          "kind": "Mining outfit and pickaxe progression",
+          "detail": "Keldagrim's Lava Flow Mine is the normal-game source for the golden mining suit and the Imcando-pickaxe branch of late-game Mining tool progression",
+          "confidence": "confirmed_wiki_region_inferred",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Lava_Flow_Mine",
+            "title": "Lava Flow Mine skilling unlocks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Penguin Agility Course (Iceberg)",
+          "kind": "Agility course unlock",
+          "detail": "Iceberg penguin outpost Agility course (crushers, stepping stones, icicles, ice cross, finish gate); 900 Agility XP per completed lap (unlock-state figure; not a training-rate claim); Gaps, Traps and Laps checklist course credit; Fremennik League region badge geography for iceber",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Penguin_Agility_Course",
+            "title": "Penguin Agility Course (Iceberg)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Arctic pine Woodcutting (Neitiznot)",
+          "kind": "Woodcutting resource and split-log production",
+          "detail": "Region-defining Neitiznot Woodcutting. as the island's gather half",
+          "confidence": "confirmed_wiki_plus_official_region_badge",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Arctic_Pine",
+            "title": "Arctic pine Woodcutting (Neitiznot)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Keldagrim brewery (Laughing Miner Pub)",
+          "kind": "Cooking brewery infrastructure",
+          "detail": "One of only two surface brewery vats in the game (Keldagrim upstairs Laughing Miner); Full ale/cider brewing production loop (vat fill, yeast, mature, drain into beer glasses/calquat kegs); Ironman self-supply for mature ales used in quests, Cooking training, and specialty drinks",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Keldagrim",
+            "title": "Keldagrim brewery (Laughing Miner Pub)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Neitiznot yak Crafting and Cooking loop",
+          "kind": "Crafting and Cooking hub activity",
+          "detail": "Classic Fremennik early-mid Crafting hub. Yaks also drop raw yak meat for Cooking food stock. POF Fremennik yak (unchecked) is a rare tertiary (1/3000 after farm tutorial)",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Neitiznot",
+            "title": "Neitiznot yak Crafting and Cooking loop",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Blast Furnace (Keldagrim)",
+          "kind": "Smithing bar production minigame infrastructure",
+          "detail": "Planner taxonomy maps Keldagrim under Fremennik (same as Lava Flow Mine). Post Mining & Smithing rework the furnace only works through rune bars. Solo is click-intensive and often slower than Artisans' Workshop paths — still a permanent no-secondary-ore ironman tool",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Blast_Furnace",
+            "title": "Blast Furnace (Keldagrim)",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -16992,7 +17843,7 @@
         {
           "name": "Abyss entrance",
           "kind": "Runecrafting",
-          "detail": "",
+          "detail": "Mage of Zamorak teleports into the Abyss for multi-altar Runecrafting under Forinthry.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -17004,7 +17855,7 @@
         {
           "name": "Wilderness Agility Course",
           "kind": "Agility",
-          "detail": "",
+          "detail": "Wilderness Agility Course training under Forinthry risk.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -17040,7 +17891,7 @@
         {
           "name": "Corporeal Beast",
           "kind": "Wilderness",
-          "detail": "",
+          "detail": "Corporeal Beast spirit-shield / holy elixir path under Forinthry.",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
@@ -17052,13 +17903,145 @@
         {
           "name": "Chaos Elemental",
           "kind": "Wilderness",
-          "detail": "",
+          "detail": "Chaos Elemental Wilderness boss.",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Chaos_Elemental",
             "title": "Chaos Elemental",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "name": "Wilderness herb patch",
+          "kind": "unique Farming herb patch",
+          "detail": "Region-defining Farming site for bloodweed potions and onyx-core rolls. No G.A.G. gardener. Prefer Wilderness sword tele over waka canoe for repeats. Demonic skull removed 20 July 2026",
+          "confidence": "confirmed_wiki_2026_current",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Herb_patch_(Wilderness)",
+            "title": "Wilderness herb patch",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Infernal Source Dig Site (Zamorakian)",
+          "kind": "Archaeology dig-site hub",
+          "detail": "Zamorakian hotspots levels 20–110+ (lodge storage through chthonian trophies / hellfire forges); Materials for Ancient Summoning and site exclusives (cadmium red, chaotic brimstone, Eye of Dagon, hellfire metal, demonhide); Zamorakian collections for Isaura (Zamorakian I → Pouch ",
+          "confidence": "confirmed_wiki_region_pack_override",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Infernal_Source_Dig_Site",
+            "title": "Infernal Source Dig Site (Zamorakian)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Wilderness bloodwood trees",
+          "kind": "Woodcutting bakriminel supply",
+          "detail": "Forinthry owns the three free Wilderness trees. Non-Wilderness trees exist but are not this row. Infernal Puzzle Box tier 5+ massively improves logs-per-tree",
+          "confidence": "confirmed_wiki_2026_current",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Bloodwood_tree",
+            "title": "Wilderness bloodwood trees",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Edgeville Dungeon resource dungeons",
+          "kind": "Dungeoneering resource dungeons (chaos druids + hill giants)",
+          "detail": "Chaos-druid RD (10 DG): 12 chaos druids + grimy marrentill/irit/harralander/ranarr spawns; 1,100 first-entry XP; Hill-giant RD (20 DG): 11 hill giants + 4 limpwurt root spawns; 1,600 first-entry XP; Early herb and limpwurt self-supply density for iron Herblore/Summoning secondari",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Edgeville_Dungeon_chaos_druids_dungeon",
+            "title": "Edgeville Dungeon resource dungeons",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Black salamanders (Boneyard Hunter)",
+          "kind": "Hunter net-trap method and onyx-core source",
+          "detail": "Black salamander weapon catches (517 Hunter XP per catch); Wilderness achievement requirement progress for salamander catch; Very rare dark onyx core, portable obelisk, and obelisk shard rolls (rates adjusted 17 March 2026; sources redistributed 16 March 2026)",
+          "confidence": "confirmed_wiki_2026_current",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Black_salamander_(Hunter)",
+            "title": "Black salamanders (Boneyard Hunter)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Wilderness runite rocks (Lava Maze north)",
+          "kind": "high-level Mining ore site",
+          "detail": "Dense Wilderness runite rock cluster (classic multi-rock site north of Lava Maze); Ironman runite ore self-source under Forinthry when safer sites are contested or unavailable; Natural pairing with nearby Wilderness content loops (obelisks, flash events, Mandrith travel)",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Runite_rock",
+            "title": "Wilderness runite rocks (Lava Maze north)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Charming moths",
+          "kind": "Hunter and Agility activity with Summoning supply",
+          "detail": "Primary mid-deep Wilderness charm source next to Daemonheim. Tellervo net/lantern path trades multi-catch and Agility XP for higher Hunter XP. Demonic skull formerly added +40% Hunter/Agility here; skull removed 20 July 2026 — Rare soulgazer aggro if pulled too far west",
+          "confidence": "confirmed_wiki_2026_current",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Charming_moth",
+            "title": "Charming moths",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Wilderness Chaos altars (Prayer Offer)",
+          "kind": "Prayer training infrastructure",
+          "detail": "Current Wilderness Prayer offer ladder: base Offer is +50%, then Easy/Medium/Hard/Elite Wilderness achievements each add +50% at these altars, peaking at gilded-altar-with-burners equivalent (350% base) at Elite with no incense cost. 16 March 2026 patched the Forgotten Cemetery-a",
+          "confidence": "confirmed_wiki_2026_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chaos_altar_(Wilderness)",
+            "title": "Wilderness Chaos altars (Prayer Offer)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Mage Arena",
+          "kind": "Wilderness Magic hub",
+          "detail": "Wilderness Mage Arena — god staves, Claws of Guthix, and arena combat access.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Guthix_staff",
+            "title": "Mage Arena",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Forinthry Dungeon",
+          "kind": "Wilderness dungeon",
+          "detail": "Forinthry Dungeon (multi-combat Wilderness dungeon with green dragons and revenant-adjacent routes).",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Forinthry_Dungeon",
+            "title": "Forinthry Dungeon",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Mage of Zamorak (Abyss entrance)",
+          "kind": "Runecrafting access",
+          "detail": "Mage of Zamorak teleports into the Abyss for multi-altar Runecrafting under Forinthry.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mage_of_Zamorak",
+            "title": "Mage of Zamorak (Abyss entrance)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -20252,6 +21235,102 @@
             "title": "Amascut, the Devourer",
             "verifiedAt": "2026-07-25"
           }
+        },
+        {
+          "name": "Desert cactus Farming patches",
+          "kind": "Farming patch infrastructure",
+          "detail": "Anachronia northern totem cactus is separate region geography — Menaphos patch is the Imperial-district build, not VIP",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Cactus_patch",
+            "title": "Desert cactus Farming patches",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Agility Pyramid (Jaleustrophos)",
+          "kind": "Agility course and Menaphos reputation supply",
+          "detail": "Dual-purpose Desert Agility training and Menaphos reputation farm via Simon. Pets and familiars banned on the pyramid. Pyramid tops are not stackable and weigh 11 kg — sell before next ascent",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Agility_Pyramid",
+            "title": "Agility Pyramid (Jaleustrophos)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Pyramid Plunder",
+          "kind": "Thieving minigame infrastructure",
+          "detail": "minigame package. Does NOT add a separate sceptre equipment row — sceptre/SotG are rewards and teleports inside this activity; amulet diary already tracks SotG charge caps. Prefer room 7–8 urn focus for XP; room gates are hard level checks",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pyramid_Plunder",
+            "title": "Pyramid Plunder (Jalsavrah / Sophanem)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Kharid-et Dig Site",
+          "kind": "Archaeology dig site progression",
+          "detail": "Canonical Desert dig site in league mapping (Kharid-et → desert). Pylon charge is a shared world state; batteries are unbankable hand-ins. Robust-glass Archaeology collections that include Kharid-et artefacts are multi-region production rows elsewhere",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Kharid-et_Dig_Site",
+            "title": "Kharid-et Dig Site",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Red sandstone and potion flasks",
+          "kind": "Herblore flask infrastructure",
+          "detail": "Red sandstone at Oo'glog and Sophanem feeds potion-flask production. The 2026 DailyScape overhaul removed the old daily cap, and July 2026 reduced rock hitpoints",
+          "confidence": "confirmed_wiki_and_2026_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Red_sandstone",
+            "title": "Red sandstone and potion flasks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Sumona (Pollnivneach Slayer Master)",
+          "kind": "regional Slayer master hub",
+          "detail": "Mid-hard master bridge when combat/Slayer is too low for Duradel. NPC Contact (Lunar Diplomacy) and ring of slaying / desert amulet / Pollnivneach teleports are logistics, not region gates",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sumona",
+            "title": "Sumona (Pollnivneach Slayer Master)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Shifting Tombs",
+          "kind": "skilling minigame",
+          "detail": "Menaphos Shifting Tombs multi-skill minigame.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Shifting_Tombs",
+            "title": "Shifting Tombs",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Soul altar",
+          "kind": "Runecrafting altar",
+          "detail": "Soul Runecrafting altar in Menaphos Imperial district.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Soul_altar",
+            "title": "Soul altar",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -23119,15 +24198,159 @@
           }
         },
         {
-          "name": "Barrows: Rise of the Six",
-          "kind": "Barrows",
-          "detail": "",
-          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "name": "Blood altar",
+          "kind": "Runecrafting altar infrastructure",
+          "detail": "Self-sufficient blood rune supply is a Morytania Runecrafting unlock. Abyss still pressures Forinthry for the high-throughput entrance if used. Legs 2 double-rune chance is the key diary skilling interaction",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Barrows:_Rise_of_the_Six",
-            "title": "Barrows: Rise of the Six",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Blood_altar",
+            "title": "Blood altar Runecrafting",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Burgh de Rott skilling hub",
+          "kind": "regional skilling infrastructure",
+          "detail": "Treat Burgh as the southern Morytania bank + shark + Temple Trekking hub, not only a quest town. Vyrewatch aggression near the furnace makes it a poor pure Smithing AFK site. Barrows and Mort'ton loops",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Burgh_de_Rott",
+            "title": "Burgh de Rott skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Port Phasmatys",
+          "kind": "regional skilling infrastructure",
+          "detail": "Bank and charter ship access; Ectofuntus Prayer loop adjacent to the city; Furnace used with Morytania legs 2+ for accelerated regular cannonball smithing (7 ticks to 4 ticks while worn); Robin for daily bone-to-bonemeal and free slime buckets (scales with legs tier)",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Port_Phasmatys",
+            "title": "Port Phasmatys skilling hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Shades of Mort'ton cremation",
+          "kind": "Prayer and Firemaking activity",
+          "detail": "Secondary Prayer/FM path before or beside vyre cremation. Construction plank supply via Razmire is a useful ironman side unlock from the same diary ladder",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Shades_of_Mort%27ton",
+            "title": "Shades of Mort'ton cremation",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Nature Grotto altar of nature",
+          "kind": "Prayer altar and Nature Spirit infrastructure",
+          "detail": "Not the nature Runecrafting altar (Karamja). Core early Morytania Prayer + Bloom infrastructure. Temple Trekking shortcuts without re-emitting ectofuntus rows",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Altar_of_nature",
+            "title": "Nature Grotto altar of nature",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Mort Myre fungi Bloom harvest",
+          "kind": "Herblore supply and druid pouch fill activity",
+          "detail": "Primary self-sufficient super energy secondary farm for ironmen in Morytania. Bloom also yields stems/pears/vine flowers for pouch filling. Pair with ouroboros pouch / ghast familiar so swamp logistics stop destroying stacks",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mort_myre_fungus",
+            "title": "Mort Myre fungi Bloom harvest",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Abandoned Mine salve shard mining",
+          "kind": "Mining and undead-combat tool source",
+          "detail": "Skilling-facing obtain path for Salve. Full +15%/+20% undead combat effects live. Vyres and ghouls are not Salve targets",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Salve_amulet",
+            "title": "Abandoned Mine salve shard mining",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Werewolf Agility Course",
+          "kind": "Agility course infrastructure",
+          "detail": "Werewolf Agility Course in Morytania.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Werewolf_Agility_Course",
+            "title": "Werewolf Agility Course",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Vyre combat and Sunspear progression",
+          "kind": "combat and multi-skill support infrastructure",
+          "detail": "Vyrewatch are not a Salve-amulet method. Their important progression is the Ivandis/blisterwood/Sunspear system plus corpse-cremation bonuses",
+          "confidence": "confirmed_current_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Sunspear_(melee)",
+            "title": "Vyre combat and Sunspear progression",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Polypore Dungeon (spore and stick resources)",
+          "kind": "mid-game Magic and Farming resource dungeon",
+          "detail": "Resource dungeon infrastructure, not combat BiS",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Polypore_Dungeon",
+            "title": "Polypore Dungeon (spore and stick resources)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ectofuntus",
+          "kind": "Prayer training infrastructure",
+          "detail": "Core early/mid ironman Prayer path and permanent ecto-token farm. First age outfit purchases live. Powder of pulverising (Desert whirligig powders) can grind a full inventory of one bone type at once for 30 minutes; that powder is Desert-sourced, not Morytania. First age outfit X",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ectofuntus",
+            "title": "Ectofuntus Prayer worship",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Darkmeyer",
+          "kind": "Thieving activity and skilling ring",
+          "detail": "Ring of Vitur is the late Thieving premium for Morytania: global success chance plus Darkmeyer free-slot anti-aggression so master camouflage or other gear can replace House Drakan / Darkmeyer outfits. Drop rates are rare (wiki order ~1/5k chests, ~1/10k stall, ~1/20k consumers b",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ring_of_Vitur",
+            "title": "Darkmeyer Thieving and Ring of Vitur",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Canifis",
+          "kind": "regional mid-tier Slayer master hub",
+          "detail": "Early members point ladder after Jacquelyn/Vannaka. Canifis lodestone / fairy CKS / Kharyrll POH portal are logistics",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mazchna",
+            "title": "Mazchna / Achtryn (Canifis Slayer Masters)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -25234,6 +26457,30 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Prifddinas",
             "title": "Prifddinas",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Morvran (Prifddinas Slayer Master)",
+          "kind": "regional Slayer master hub",
+          "detail": "Jagex says region quest completion is designed to provide immediate access.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Prifddinas",
+            "title": "Prifddinas",
+            "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "name": "Crystal equipment and Prifddinas skilling content",
+          "kind": "progression",
+          "detail": "",
+          "confidence": "inferred_region",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_equipment",
+            "title": "Crystal equipment and Prifddinas skilling content",
             "verifiedAt": "2026-07-25"
           }
         },
@@ -25250,18 +26497,6 @@
           }
         },
         {
-          "name": "Crystal equipment and Prifddinas skilling content",
-          "kind": "progression",
-          "detail": "",
-          "confidence": "inferred_region",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Prifddinas",
-            "title": "Crystal equipment and Prifddinas skilling content",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
           "name": "Solak",
           "kind": "The Lost Grove",
           "detail": "",
@@ -25271,6 +26506,222 @@
             "url": "https://runescape.wiki/w/Solak",
             "title": "Solak",
             "verifiedAt": "2026-07-25"
+          }
+        },
+        {
+          "name": "Harmony pillars (Meilyr harmony moss)",
+          "kind": "Farming special patch and perfect-juju supply",
+          "detail": "Region-defining Prif Farming infrastructure. Remote Farm works on pillars. Reroll attunement costs 10 vis wax. Distinct from standard herb/bush patches",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Harmony_pillar",
+            "title": "Harmony pillars (Meilyr harmony moss)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Hefin Agility Course",
+          "kind": "Agility course and incidental Prayer",
+          "detail": "Teleports blocked mid-lap. Collector's insignia does not stack with Hefin VoS. Perfect juju agility increases shortcut frequency. XP/hour tables on wiki are illustrative; keep training rates out of this unlock row",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hefin_Agility_Course",
+            "title": "Hefin Agility Course",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Corrupted ore smelting loop",
+          "kind": "Smithing from Seren-stone Mining",
+          "detail": "Companion detail row to (Mining side). Seren stones use 1.2x Mining XP multiplier without rockertunities. Corrupted ore does not grant Artisans' Workshop respect. Pair Superheat Form with Orthen furnace core or Grace of the elves for drain management",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Corrupted_ore",
+            "title": "Corrupted ore smelting loop",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Seren stones and corrupted ore",
+          "kind": "AFK Mining and Smithing supply loop",
+          "detail": "Seren stones are a durable Prifddinas skilling unlock even when they are not the absolute fastest Mining route. They matter for low-input training and self-supplied Smithing experience",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Seren_stone",
+            "title": "Seren stones and corrupted ore",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Elven clan worker pickpocketing",
+          "kind": "high-level Thieving activity",
+          "detail": "February 2026 Early-Game Rebalance aligned Prif workers with the global pickpocket success model (base 75% at unlock level +1%/level, then decaying success; Crystal Mask recast resets target). Pair with Crystal Mask (15%, 30% with Light Form) and Trahaearn exoskeleton stun avoida",
+          "confidence": "confirmed_wiki_with_2026_thieving_rebalance",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Elven_clan_worker",
+            "title": "Elven clan worker pickpocketing",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Voice of Seren district rotations",
+          "kind": "city-wide skilling blessing",
+          "detail": "Player must stand in the illuminated district to receive that clan's effects. Two-hour cool-down per clan after its hour ends. Cadarn/Iorwerth Voice rows are combat XP side-effects, not skilling unlocks",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Voice_of_Seren",
+            "title": "Voice of Seren district rotations",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Trahaearn Mining and Smithing hub",
+          "kind": "district Mining/Smithing infrastructure",
+          "detail": "Hub package around already-indexed seren-stones and corrupted-ore-smithing rows. Pair Superheat Form + Orthen furnace core for AFK smelt sustain without re-emitting those ids here",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Trahaearn_Clan",
+            "title": "Trahaearn Mining and Smithing hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Waterfall Fishing and Fishing Shop",
+          "kind": "Fishing activity and permanent tool unlock",
+          "detail": "The crystal fishing rod is 5% more likely to catch fish and can be augmented. This makes Waterfall Fishing a permanent tool unlock as well as a training activity",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Waterfall_Fishing",
+            "title": "Waterfall Fishing and Fishing Shop",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Hefin serenity posts (AFK Agility)",
+          "kind": "Agility activity infrastructure",
+          "detail": "Distinct from (active course). Post-16-Mar-2026 numbers only. Temporary Agility boosts do not raise pose XP. Pair with magic carpet follower / Chronicle Attraction / Grace of the elves for passive side XP if desired",
+          "confidence": "confirmed_wiki_2026_dailyscape",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Serenity_posts",
+            "title": "Hefin serenity posts (AFK Agility)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Amlodd Summoning and Divination hub",
+          "kind": "Summoning and Divination district infrastructure",
+          "detail": "Core conversion of 15 of each shadow core type for Lord Amlodd's 50k Divination lamp is a completionist-style milestone, not required for basic hub value. Fairy ring DJS sits in the district",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Amlodd_Clan",
+            "title": "Amlodd Summoning and Divination hub",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Crystal sandstone and crystal flasks",
+          "kind": "combination-potion flask infrastructure",
+          "detail": "Crystal sandstone is the local Prifddinas supply for crystal flasks. The 2026 DailyScape overhaul removed the old daily mining cap, so old daily-cap advice must not be used",
+          "confidence": "confirmed_wiki_with_2026_current_rule",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal-flecked_sandstone",
+            "title": "Crystal sandstone and crystal flasks",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Crystal tree Farming (crystal acorns)",
+          "kind": "Prifddinas Farming unique content",
+          "detail": "Distinct from Max Guild garden portals",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_tree",
+            "title": "Crystal tree Farming (crystal acorns)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ithell harmonium harps (harmonic dust)",
+          "kind": "Crafting and Construction harmonic-dust activity",
+          "detail": "Four harps around the Ithell statue. Rolls every 5 ticks; detune chance only on failed dust rolls (40% base, 20% with Ithell Voice of Seren or artificer's measure). Artificer's measure permanently applies the Ithell harp VoS benefit and is redundant with active Ithell VoS. Wiki d",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Harp",
+            "title": "Ithell harmonium harps (harmonic dust)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Meilyr Recipe Shop and combination potions",
+          "kind": "Herblore recipe and shop infrastructure",
+          "detail": "Some combination-potion recipes are purchased directly once requirements are met; others first need recipe discovery from Daemonheim or another source",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Recipe_Shop",
+            "title": "Meilyr Recipe Shop and combination potions",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Death altar (Temple of Light Runecrafting)",
+          "kind": "regional Runecrafting altar infrastructure",
+          "detail": "Death rune craft at the death altar; Death tiara craft (tiara + death talisman on altar, 50 RC XP); Surface ruins path through Temple of Light light-door puzzle; Abyss shortcut; death-altar teleport tablet; Tirannwn quiver 3/4 ruins teleport (5/day); Magical thread chance when cr",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Death_altar",
+            "title": "Death altar (Temple of Light Runecrafting)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Motherlode Maw and Meilyr resource dungeons",
+          "kind": "high-level skilling reward infrastructure",
+          "detail": "The Maw is a high-level Prifddinas reward source and can also help with otherwise awkward unlocks such as Meilyr potion recipes",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Motherlode_Maw",
+            "title": "Motherlode Maw and Meilyr resource dungeons",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Edimmu resource dungeon (post-Maw DailyScape)",
+          "kind": "high-level resource dungeon access",
+          "detail": "2026 DailyScape Overhaul removed Motherlode Maw daily arm-pull rewards; the scenery is examine-only. This row documents what remains after that removal. remains the historical hub pointer and should be treated as partially stale on daily rewards",
+          "confidence": "confirmed_wiki_2026_dailyscape",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Motherlode_Maw",
+            "title": "Edimmu resource dungeon (post-Maw DailyScape)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Corrupted Seren Stone cleansing (Hefin Cathedral)",
+          "kind": "Prayer training infrastructure",
+          "detail": "Cleansing-crystal Prayer method at the Corrupted Seren Stone; 9,800 Prayer XP per crystal base; 11,760 during Hefin Voice of Seren (+20%); Coin-sink Prayer route that accepts knowledge bombs and perfect juju prayer unlike some burial methods",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Corrupted_Seren_Stone",
+            "title": "Corrupted Seren Stone cleansing (Hefin Cathedral)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -28112,15 +29563,135 @@
           }
         },
         {
-          "name": "Herby Werby / Ranch Out of Time",
-          "kind": "skilling",
-          "detail": "",
-          "confidence": "inferred_region",
+          "name": "Time altar",
+          "kind": "Runecrafting altar infrastructure",
+          "detail": "Altar geography is Anachronia. Highest-throughput Abyss route uses Wilderness/Forinthry Mage of Zamorak entrance — surface Forinthry as optional throughput pressure, not a dual dig-site claim. North-western Anachronia teleport and Orthen observation-outpost paths are pure Anachro",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ranch_Out_of_Time",
-            "title": "Herby Werby / Ranch Out of Time",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Time_altar",
+            "title": "Time altar",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Orthen Dig Site",
+          "kind": "Archaeology dig-site hub",
+          "detail": "Anachronia-only dig site. Base camp holds the archaeologist's workbench and material storage for Orthen work",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Orthen_Dig_Site",
+            "title": "Orthen Dig Site",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ranch Out of Time (Anachronia Dinosaur Farm)",
+          "kind": "player-owned farm expansion",
+          "detail": "Meat supply for dinos often pressures external meat shops (Oo'glog Fresh Meat after As a First Resort, and/or Havenhythe meat traders). Treat meat access as optional region pressure, not a hard dual-region lock for unlocking the ranch itself",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+            "title": "Ranch Out of Time (Anachronia Dinosaur Farm)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Laniakea (Anachronia highest standard Slayer Master)",
+          "kind": "regional Slayer master hub",
+          "detail": "Trained under Morvran and Kuradal in lore; mechanically independent master. Prefer/block apply. Distinct from Mandrith (Wilderness-only, ignores prefer/block)",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Laniakea",
+            "title": "Laniakea (Anachronia highest standard Slayer Master)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Anachronia base camp",
+          "kind": "regional passive resource and structure hub",
+          "detail": "Slayer Lodge damage/helmet-stand and Player Lodge skillcape rack already have combat/support rows; this hub row covers the passive resource economy and structure dependency graph. Spa gives Anachronia-only Agility XP boosts (5/7/10% by tier). Hunter Lodge improves Big Game Hunter",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Anachronia_base_camp",
+            "title": "Anachronia base camp",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Hunter Mark Shop (Irwinsson)",
+          "kind": "Hunter currency shop infrastructure",
+          "detail": "Shop currency for permanent Quick traps (50), elite trapper outfit blueprint (100, 20 Invention + 80 Hunter), Baiter title ladder (250 each tier); Consumables: dinosaur lure (20), frog repellent (10), medium Hunter/Slayer lamps (25), random dinosaur eggs (80); Marks not stored in",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hunter_mark",
+            "title": "Hunter Mark Shop (Irwinsson)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Anachronia codex lectern (Double Surge/Escape)",
+          "kind": "Agility codex craft infrastructure",
+          "detail": "Lectern SE of base-camp lodestone assembles Double Surge or Double Escape codices; 500 pages → untradeable personal codex; 750 pages → tradeable codex; Permanent mobility upgrades critical for high-level skilling and PvM pathing; Pages cannot convert from backpack — must study at",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Codex_page",
+            "title": "Anachronia codex lectern (Double Surge/Escape)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Anachronia totems (permanent multi-skill buffs)",
+          "kind": "island permanent passive buff system",
+          "detail": "Totem of Auras was replaced by Totem of Vitality (April 2026)",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Totem",
+            "title": "Anachronia totems (permanent multi-skill buffs)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Dinosaur and plant Slayer (Laniakea / Anachronia)",
+          "kind": "regional Slayer assignment infrastructure",
+          "detail": "Major Anachronia combat-skilling loop: Laniakea master + dinosaur/plant task set. Distinct from Big Game Hunter and Ranch Out of Time.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Laniakea",
+            "title": "Dinosaur and plant Slayer (Laniakea / Anachronia)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Prehistoric Potterington's 'Accidental' Fletching and Firemaking",
+          "kind": "Fletching and Firemaking production activity",
+          "detail": "Located on the Anachronia Dinosaur Farm peninsula. Components also feed fungal bowstring, ultracompost, and pure Firemaking via shell shards. Strong self-sufficient Ranged ammo path in no-trade planning",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/%27Accidental%27_Fletching_and_Firemaking",
+            "title": "Prehistoric Potterington's 'Accidental' Fletching and Firemaking",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Roar of Osseous (Rex skeleton island buff)",
+          "kind": "Orthen Archaeology island buff residual",
+          "detail": "Distinct from the Osseous boss. Contribution still grants Archaeology XP even when already complete",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rex_skeleton",
+            "title": "Roar of Osseous (Rex skeleton island buff)",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],

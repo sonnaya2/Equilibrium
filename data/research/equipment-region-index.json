@@ -14,7 +14,7 @@
     "tirannwn",
     "anachronia"
   ],
-  "count": 543,
+  "count": 556,
   "byId": {
     "item:seismic-wand": [
       "asgarnia"
@@ -586,6 +586,15 @@
     "item:sunspear-ranged": [
       "morytania"
     ],
+    "item:sirenic-mask": [
+      "kandarin"
+    ],
+    "item:sirenic-hauberk": [
+      "kandarin"
+    ],
+    "item:sirenic-chaps": [
+      "kandarin"
+    ],
     "item:elite-sirenic-mask": [
       "asgarnia"
     ],
@@ -1015,6 +1024,24 @@
     "item:tokhaar-kal-mor": [
       "karamja"
     ],
+    "item:scrimshaw-of-vampyrism": [
+      "asgarnia"
+    ],
+    "item:scrimshaw-of-the-elements": [
+      "asgarnia"
+    ],
+    "item:scrimshaw-of-cruelty": [
+      "asgarnia"
+    ],
+    "item:superior-scrimshaw-of-vampyrism": [
+      "asgarnia"
+    ],
+    "item:superior-scrimshaw-of-the-elements": [
+      "asgarnia"
+    ],
+    "item:superior-scrimshaw-of-cruelty": [
+      "asgarnia"
+    ],
     "item:erethdors-grimoire": [
       "tirannwn"
     ],
@@ -1053,6 +1080,12 @@
     ],
     "item:ascendri-bolts-e": [
       "kandarin"
+    ],
+    "item:hydra-bakriminel-bolts-e": [
+      "forinthry"
+    ],
+    "item:onyx-bakriminel-bolts-e": [
+      "forinthry"
     ],
     "item:slayer-helmet-i": [
       "morytania"
@@ -1118,6 +1151,10 @@
     "item:static-gloves": [
       "desert"
     ],
+    "item:ancient-lantern": [
+      "asgarnia",
+      "forinthry"
+    ],
     "item:attuned-crystal-staff": [
       "tirannwn"
     ],
@@ -1132,6 +1169,9 @@
     ],
     "item:enhanced-ancient-staff": [
       "desert"
+    ],
+    "item:greater-runic-staff": [
+      "misthalin"
     ],
     "item:polypore-staff": [
       "morytania"
@@ -2324,6 +2364,15 @@
     "Sunspear (ranged)": [
       "morytania"
     ],
+    "Sirenic mask": [
+      "kandarin"
+    ],
+    "Sirenic hauberk": [
+      "kandarin"
+    ],
+    "Sirenic chaps": [
+      "kandarin"
+    ],
     "Elite sirenic mask": [
       "asgarnia"
     ],
@@ -2753,6 +2802,24 @@
     "TokHaar-Kal-Mor": [
       "karamja"
     ],
+    "Scrimshaw of vampyrism": [
+      "asgarnia"
+    ],
+    "Scrimshaw of the elements": [
+      "asgarnia"
+    ],
+    "Scrimshaw of cruelty": [
+      "asgarnia"
+    ],
+    "Superior scrimshaw of vampyrism": [
+      "asgarnia"
+    ],
+    "Superior scrimshaw of the elements": [
+      "asgarnia"
+    ],
+    "Superior scrimshaw of cruelty": [
+      "asgarnia"
+    ],
     "Erethdor's grimoire": [
       "tirannwn"
     ],
@@ -2791,6 +2858,12 @@
     ],
     "Ascendri bolts (e)": [
       "kandarin"
+    ],
+    "Hydrix bakriminel bolts (e)": [
+      "forinthry"
+    ],
+    "Onyx bakriminel bolts (e)": [
+      "forinthry"
     ],
     "Full slayer helmet": [
       "morytania"
@@ -2856,6 +2929,10 @@
     "Static gloves": [
       "desert"
     ],
+    "Ancient lantern": [
+      "asgarnia",
+      "forinthry"
+    ],
     "Attuned crystal staff": [
       "tirannwn"
     ],
@@ -2870,6 +2947,9 @@
     ],
     "Enhanced ancient staff": [
       "desert"
+    ],
+    "Greater runic staff": [
+      "misthalin"
     ],
     "Polypore staff": [
       "morytania"
@@ -3490,5 +3570,48 @@
       "misthalin",
       "desert"
     ]
-  }
+  },
+  "item:sirenic-mask": [
+    "forinthry",
+    "kandarin"
+  ],
+  "item:sirenic-hauberk": [
+    "forinthry",
+    "kandarin"
+  ],
+  "item:sirenic-chaps": [
+    "forinthry",
+    "kandarin"
+  ],
+  "item:scrimshaw-of-vampyrism": [
+    "asgarnia"
+  ],
+  "item:scrimshaw-of-the-elements": [
+    "asgarnia"
+  ],
+  "item:scrimshaw-of-cruelty": [
+    "asgarnia"
+  ],
+  "item:superior-scrimshaw-of-vampyrism": [
+    "asgarnia"
+  ],
+  "item:superior-scrimshaw-of-the-elements": [
+    "asgarnia"
+  ],
+  "item:superior-scrimshaw-of-cruelty": [
+    "asgarnia"
+  ],
+  "item:hydra-bakriminel-bolts-e": [
+    "forinthry"
+  ],
+  "item:onyx-bakriminel-bolts-e": [
+    "forinthry"
+  ],
+  "item:ancient-lantern": [
+    "asgarnia",
+    "forinthry"
+  ],
+  "item:greater-runic-staff": [
+    "misthalin"
+  ]
 }

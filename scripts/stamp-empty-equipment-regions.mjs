@@ -1,9 +1,17 @@
+/**
+ * Post-pass reaffirm for items that may still need a durable unlock stamp.
+ * pass10 (2026-07-26): no intentional empties for combat residual —
+ * second-age + skilling bows are REMOVE_IDS in stamp-equipment-regions.mjs.
+ * This script only reaffirms multi-source / late stamps if still present.
+ */
 import { readFileSync, writeFileSync } from "node:fs";
 
 const eqPath = "data/combat/equipment.json";
 const eq = JSON.parse(readFileSync(eqPath, "utf8"));
 
+/** @type {Record<string, { regions: string[], requirement: string }>} */
 const stamps = {
+  // Base sirenic — Algarium thread Forinthry OR Kandarin; list both for filter visibility.
   "item:sirenic-mask": {
     regions: ["forinthry", "kandarin"],
     requirement:
@@ -19,6 +27,7 @@ const stamps = {
     requirement:
       "Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)",
   },
+  // POP / Arc scrimshaws — Asgarnia packaging under Equilibrium Arc mapping.
   "item:scrimshaw-of-vampyrism": {
     regions: ["asgarnia"],
     requirement: "Player-owned ports / Arc craft (Asgarnia mapping)",
@@ -43,65 +52,24 @@ const stamps = {
     regions: ["asgarnia"],
     requirement: "Player-owned ports / Arc craft (Asgarnia mapping)",
   },
+  // Bakriminel — Wilderness bloodwood (Forinthry).
   "item:hydra-bakriminel-bolts-e": {
-    regions: [],
-    requirement: "Invention/Fletching craft (not region-gated)",
+    regions: ["forinthry"],
+    requirement: "Bakriminel bolts (Wilderness bloodwood tree, Forinthry)",
   },
   "item:onyx-bakriminel-bolts-e": {
-    regions: [],
-    requirement: "Invention/Fletching craft (not region-gated)",
+    regions: ["forinthry"],
+    requirement: "Bakriminel bolts (Wilderness bloodwood tree, Forinthry)",
   },
+  // Ancient lantern — Nex emblem + chaotic splint.
   "item:ancient-lantern": {
-    regions: [],
-    requirement: "Invention craft (not region-gated)",
+    regions: ["asgarnia", "forinthry"],
+    requirement: "Ancient lantern (Nex emblem Asgarnia + chaotic splint Forinthry)",
   },
-  "item:second-age-staff": {
-    regions: [],
-    requirement: "Master clue / global reward (not region-gated)",
-  },
-  "item:second-age-sword": {
-    regions: [],
-    requirement: "Master clue / global reward (not region-gated)",
-  },
-  "item:second-age-bow": {
-    regions: [],
-    requirement: "Master clue / global reward (not region-gated)",
-  },
+  // Greater runic — Runespan via Wizards' Tower.
   "item:greater-runic-staff": {
-    regions: [],
-    requirement: "Runespan reward (Wizards' Tower shop)",
-  },
-  "item:elder-longbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:elder-shortbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:magic-composite-bow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:magic-longbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:magic-shortbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:yew-composite-bow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:yew-longbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
-  },
-  "item:yew-shortbow": {
-    regions: [],
-    requirement: "Skilling bow craft (not region-gated)",
+    regions: ["misthalin"],
+    requirement: "Greater runic staff (Runespan / Wizards' Tower, Misthalin)",
   },
 };
 
@@ -143,7 +111,9 @@ console.log(
       emptyLeft: empty.length,
       empty: empty.map((r) => r.id),
       sirenic: eq.records.find((r) => r.id === "item:sirenic-mask")?.unlock,
-      scrim: eq.records.find((r) => r.id === "item:scrimshaw-of-vampyrism")?.unlock,
+      bakriminel: eq.records.find((r) => r.id === "item:onyx-bakriminel-bolts-e")?.unlock,
+      lantern: eq.records.find((r) => r.id === "item:ancient-lantern")?.unlock,
+      grs: eq.records.find((r) => r.id === "item:greater-runic-staff")?.unlock,
     },
     null,
     2,

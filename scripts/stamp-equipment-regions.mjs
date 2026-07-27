@@ -773,7 +773,7 @@ for (const [regionRaw, entries] of Object.entries(major.regions ?? {})) {
       note: entry.category || "",
     };
     // Whitelist set-root expansions only (never free-form comparison prose).
-    // Base sirenic intentionally omitted — multi-source pressure only; elite via family:elite-sirenic.
+    // Base sirenic: USER_FORCE kandarin (Ascension + Ocellus); elite via family:elite-sirenic.
     const SET_ROOTS = [
       "torva", "pernix", "virtus", "bandos", "armadyl", "subjugation",
       "anima-core", "malevolent", "tectonic", "cryptbloom",
@@ -2034,10 +2034,7 @@ const USER_FORCE = new Map([
   // ─── pass5 hard audit 2026-07-26 ───────────────────────────────────────────
   // Celestial dragons / Dragontooth Island = Morytania (not Dominion Tower desert).
   ["celestial-handwraps", ["morytania"]],
-  // Master reward caskets = Global — not region-hard (strip false forinthry DG residual).
-  ["second-age-sword", []],
-  ["second-age-staff", []],
-  ["second-age-bow", []],
+  // Second-Age weapons: Global master casket — REMOVE_IDS (not region-stamped).
   // ─── pass6 Forinthry densify 2026-07-26 ────────────────────────────────────
   // DG style kiteshields + blessed spirit intermediate (catalog-injected above).
   ["chaotic-kiteshield", ["forinthry"]],
@@ -2296,10 +2293,14 @@ const USER_FORCE = new Map([
   ["superior-reefwalkers-cape", ["asgarnia"]],
   ["leviathan-ring", ["asgarnia"]],
   ["superior-leviathan-ring", ["asgarnia"]],
-  // Elite sirenic (base sirenic stays intentional empty).
+  // Elite sirenic: ancient scales / Arc packaging → asgarnia.
+  // Base sirenic: Ascension Legiones + Ocellus algarum → kandarin (pass10 user ruling).
   ["elite-sirenic-mask", ["asgarnia"]],
   ["elite-sirenic-hauberk", ["asgarnia"]],
   ["elite-sirenic-chaps", ["asgarnia"]],
+  ["sirenic-mask", ["kandarin"]],
+  ["sirenic-hauberk", ["kandarin"]],
+  ["sirenic-chaps", ["kandarin"]],
   // Masterwork hub (Artisans') + dual chains.
   ["masterwork-helm", ["asgarnia"]],
   ["masterwork-platebody", ["asgarnia"]],
@@ -2318,73 +2319,59 @@ const USER_FORCE = new Map([
   ["masterwork-2h-sword", ["desert", "forinthry"]],
   // Mid-asgarnia residual already forced above (defender / korasi / jessika / vanquish / DFS).
 
-  // ─── intentional empty (USER_FORCE clear) — pass2 + pass3 policy 2026-07-26 ─
-  // Invention / POP scrimshaws — craft path, NOT Asgarnia-hard like EoF.
-  ["scrimshaw-of-vampyrism", []],
-  ["scrimshaw-of-the-elements", []],
-  ["scrimshaw-of-cruelty", []],
-  ["superior-scrimshaw-of-vampyrism", []],
-  ["superior-scrimshaw-of-the-elements", []],
-  ["superior-scrimshaw-of-cruelty", []],
-  // Historical Loyalty/Solomon combat auras deleted post-Aura Overhaul (not loadout items).
-  // Generic skilling bows — not league-hard combat gates.
-  ["magic-longbow", []],
-  ["magic-shortbow", []],
-  ["magic-composite-bow", []],
-  ["elder-longbow", []],
-  ["elder-shortbow", []],
-  // pass3: yew tier skilling bows (same policy as magic/elder).
-  ["yew-longbow", []],
-  ["yew-shortbow", []],
-  ["yew-composite-bow", []],
-  // Bakriminel / onyx / hydrix enchanted bolts — invent fletching global.
-  ["onyx-bakriminel-bolts-e", []],
-  ["hydra-bakriminel-bolts-e", []],
+  // ─── pass10 user ruling 2026-07-26 ─────────────────────────────────────────
+  // Skilling bows (magic/elder/yew): REMOVE_IDS — not loadout residual.
+  // Bakriminel: Wilderness bloodwood tree → forinthry.
+  ["onyx-bakriminel-bolts-e", ["forinthry"]],
+  ["hydra-bakriminel-bolts-e", ["forinthry"]],
+  // Ancient lantern: Nex emblem (asgarnia) + chaotic splint (forinthry DG).
+  ["ancient-lantern", ["asgarnia", "forinthry"]],
+  // Greater runic staff: Runespan shop via Wizards' Tower → misthalin.
+  ["greater-runic-staff", ["misthalin"]],
+  // Base sirenic already forced above (kandarin: Ascension Legiones + Ocellus).
+  // limitless-staff / second-age / skilling bows → REMOVE_IDS.
 
-  // limitless-staff removed pass7 (plural family aggregate "Limitless staves" — see REMOVE_IDS).
-  // Invention-global offhand — leave empty unless corpus hard required_regions.
-  ["ancient-lantern", []],
-  // Greater runic staff — Runespan shop (Misthalin-accessible, not region-exclusive).
-  ["greater-runic-staff", []],
-  // Base sirenic — multi-source scale/thread pressure only; never invent a hard lock.
-  // Elite sirenic stays family:elite-sirenic → asgarnia (not cleared here).
-  ["sirenic-mask", []],
-  ["sirenic-hauberk", []],
-  ["sirenic-chaps", []],
+  // ─── multi-region hard stamps (League self-supply) ─────────────────────────
+  // POP / Arc scrimshaws — Asgarnia packaging under Equilibrium Arc mapping.
+  ["scrimshaw-of-vampyrism", ["asgarnia"]],
+  ["scrimshaw-of-the-elements", ["asgarnia"]],
+  ["scrimshaw-of-cruelty", ["asgarnia"]],
+  ["superior-scrimshaw-of-vampyrism", ["asgarnia"]],
+  ["superior-scrimshaw-of-the-elements", ["asgarnia"]],
+  ["superior-scrimshaw-of-cruelty", ["asgarnia"]],
 ]);
 
 /** Clear-reason text for empty USER_FORCE (category by id/name). */
 function userForceClearReason(key, rec) {
   const blob = `${key} ${rec?.name || ""}`;
-  if (/second-age/i.test(blob)) {
-    return "user ruling: master casket / Global reward — not region-hard";
-  }
   if (/scrimshaw/i.test(blob)) {
     return "user ruling: invent/POP craft — not Asgarnia-gated like EoF";
   }
   if (/\baura\b/i.test(blob)) {
     return "user ruling: Loyalty/Solomon store aura — not League region-gated";
   }
-  if (/bakriminel|bolts \(e\)|bolts-e/i.test(blob)) {
-    return "user ruling: invent fletching global — not region-hard";
+  return "Not elective-region gated";
+}
+
+/** Requirement text when USER_FORCE stamps non-empty regions. */
+function userForceStampRequirement(key, rec, regions) {
+  const blob = `${key} ${rec?.name || ""}`;
+  if (/scrimshaw/i.test(blob)) {
+    return "Player-owned ports / Arc craft (Asgarnia mapping)";
   }
-  if (
-    /magic (long|short)bow|magic composite|elder (long|short)bow|yew (long|short)bow|yew composite/i.test(
-      blob,
-    )
-  ) {
-    return "user ruling: skilling bow — not league-hard combat gate";
+  if (/sirenic/i.test(blob) && !/elite/i.test(blob)) {
+    return "Sirenic armour (Ascension Legiones + Ocellus algarum thread, Kandarin)";
+  }
+  if (/bakriminel/i.test(blob)) {
+    return "Bakriminel bolts (Wilderness bloodwood tree, Forinthry)";
   }
   if (/ancient lantern/i.test(blob)) {
-    return "user ruling: invent-global offhand — leave empty (no hard region)";
+    return "Ancient lantern (Nex emblem Asgarnia + chaotic splint Forinthry)";
   }
   if (/greater runic/i.test(blob)) {
-    return "user ruling: Runespan reward — Misthalin-accessible not region-exclusive";
+    return "Greater runic staff (Runespan / Wizards' Tower, Misthalin)";
   }
-  if (/^sirenic |item:sirenic-|sirenic-(mask|hauberk|chaps)/i.test(blob) && !/elite/i.test(blob)) {
-    return "user ruling: base sirenic multi-source pressure — no hard required_regions";
-  }
-  return "user ruling: intentionally unverified / not region-gated";
+  return `League self-supply: ${regions.join(" + ")}`;
 }
 
 /** True if key must never receive corpus stamps (USER_FORCE empty clear). */
@@ -2545,6 +2532,19 @@ const REMOVE_IDS = new Set([
   // pass9 — catalog hygiene: wiki-redirect phantom duplicate of a kept wearable
   // "Ancient rebounder" redirects to "Ancient lantern" (same item); pass6 inject invented a twin row.
   "item:ancient-rebounder",
+  // pass10 — user ruling: Global master-casket Second-Age weapons (not region-gated combat residual)
+  "item:second-age-sword",
+  "item:second-age-staff",
+  "item:second-age-bow",
+  // pass10 — user ruling: skilling bows (not league-hard combat loadout residual)
+  "item:magic-longbow",
+  "item:magic-shortbow",
+  "item:magic-composite-bow",
+  "item:elder-longbow",
+  "item:elder-shortbow",
+  "item:yew-longbow",
+  "item:yew-shortbow",
+  "item:yew-composite-bow",
 ]);
 
 for (const rule of FAMILY) {
@@ -2663,7 +2663,7 @@ for (const file of agentMapFiles) {
     if (isUserForceClear(bare)) continue;
     if (/scrimshaw/i.test(it.id) || /scrimshaw/i.test(it.name || "")) continue;
     if (/\baura\b/i.test(it.id) || /\baura\b/i.test(it.name || "")) continue;
-    if (/^sirenic-(mask|hauberk|chaps)$/i.test(bare)) continue; // base only; elite is hard family
+    // base sirenic: USER_FORCE kandarin (pass10); elite stays family:elite-sirenic → asgarnia
     if (it.id === "item:luck-of-the-dwarves") continue;
     // pass6: invent craft / global residual — never hard-lock from agent maps (EoF is explicit).
     if (/invent|gizmo|blueprint|turtling|pneumatic|static-glove|tracking-glove/i.test(`${it.id} ${it.name || ""}`)) {
@@ -2871,7 +2871,7 @@ for (const [key, regions] of USER_FORCE) {
   } else {
     rec.unlock = {
       type: rec.unlock?.type || "drop",
-      requirement: rec.unlock?.requirement || "user region ruling 2026-07-26",
+      requirement: userForceStampRequirement(key, rec, next),
       regions: next,
     };
     userForceSet++;

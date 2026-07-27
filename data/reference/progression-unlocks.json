@@ -931,6 +931,170 @@
       ],
       "confidence": "confirmed_current_wiki",
       "league_treatment": "Duration and scroll-efficiency effects are independent account modifiers. Keep them composable instead of baking them into each familiar record"
+    },
+    {
+      "id": "aura-overhaul:greenfingers-passive",
+      "name": "Greenfingers passive",
+      "category": "permanent Farming yield unlock",
+      "region_hint": "desert",
+      "currency": "Crux Eqal favour",
+      "cost": 30000,
+      "source_shop": "Sydekix's Shop of Balance",
+      "effect": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields.",
+      "migration": "Players who already owned Master Greenfingers (Tier 3) or higher received the passive automatically.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [
+        "desert"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "location_note": "Sydekix's Shop of Balance, Garden of Kharid (Desert) — 30,000 Crux Eqal favour"
+    },
+    {
+      "id": "aura-overhaul:focused-siphoning-passive",
+      "name": "Focused Siphoning passive",
+      "category": "permanent Runespan success unlock",
+      "region_status": "shop_misthalin_runespan_points_global",
+      "currency": "Runespan points",
+      "cost": 20000,
+      "source_shop": "Wizard Rinsit's Runecrafting Shop",
+      "effect": "7.5% increased siphoning success chance across the Runespan.",
+      "migration": "Players who already owned Master Focused Siphoning (Tier 3) or higher received the passive automatically.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "regionHints": [],
+      "regionRequirementType": "single",
+      "isRegionCombo": false,
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_hint": "misthalin",
+      "region_requirement_type": "acquisition_region",
+      "location_note": "Wizard Rinsit's Runecrafting Shop, Wizards' Tower roof (Misthalin) — 20,000 Runespan points"
+    },
+    {
+      "id": "aura-overhaul:five-finger-discount-passive",
+      "name": "Five-Finger Discount passive",
+      "category": "permanent Thieving success progression",
+      "region_hint": "misthalin",
+      "currency": "Pilfer points",
+      "ranks": 5,
+      "cost_per_rank": 1000,
+      "success_per_rank_percent": 2,
+      "maximum_success_bonus_percent": 10,
+      "source": "Thieves' Guild",
+      "migration": "Previous aura tiers converted to the equivalent number of passive ranks.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [
+        "misthalin"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "location_note": "Thieves' Guild (Misthalin) — pilfer points; also from Heists"
+    },
+    {
+      "id": "aura-overhaul:divination-enrichment-progression",
+      "name": "Enriched memory chance progression",
+      "category": "Divination level passive",
+      "bonuses": [
+        {
+          "divination_level": 39,
+          "enriched_memory_chance_percent": 2
+        },
+        {
+          "divination_level": 59,
+          "enriched_memory_chance_percent": 4
+        },
+        {
+          "divination_level": 79,
+          "enriched_memory_chance_percent": 7
+        },
+        {
+          "divination_level": 99,
+          "enriched_memory_chance_percent": 10
+        }
+      ],
+      "stacking": "The bonuses are not additive; only the highest unlocked bonus applies.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_skill",
+      "region_requirement_type": "none",
+      "location_note": "Divination level passive (39 / 59 / 79 / 99) — not region-gated"
+    },
+    {
+      "id": "aura-overhaul:mining-critical-progression",
+      "name": "Mining critical-chance progression",
+      "category": "Mining level passive",
+      "bonuses": [
+        {
+          "mining_level": 59,
+          "critical_chance_percent": 5
+        },
+        {
+          "mining_level": 85,
+          "additional_critical_chance_percent": 5
+        }
+      ],
+      "maximum_added_critical_chance_percent": 10,
+      "historical_source": "Quarrymaster aura",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_skill",
+      "region_requirement_type": "none",
+      "location_note": "Mining level passive (59 / 85) — not region-gated"
+    },
+    {
+      "id": "aura-overhaul:resourceful-material-cache-rule",
+      "name": "Material cache consistency rule",
+      "category": "Archaeology gathering passive",
+      "effect": "An Archaeology material cache cannot expire on either of the first two gathers from that cache.",
+      "historical_source": "Resourceful aura",
+      "note": "The old extra-sandstone effect was no longer needed after the DailyScape overhaul removed sandstone daily caps.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_skill",
+      "region_requirement_type": "none",
+      "location_note": "Archaeology material-cache rule (global skill) — not region-gated"
+    },
+    {
+      "id": "aura-overhaul:sunspear-prayer-sustain",
+      "name": "Sunspear Vyre prayer-sustain progression",
+      "category": "Morytania combat account passive",
+      "region_hint": "morytania",
+      "prerequisite": "Sunspear / Vyre cremation progression",
+      "thresholds": [
+        {
+          "vyres_cremated": 50,
+          "prayer_restore_percent_on_vyre_kill": 1
+        },
+        {
+          "vyres_cremated": 100,
+          "prayer_restore_percent_on_vyre_kill": 2
+        },
+        {
+          "vyres_cremated": 150,
+          "prayer_restore_percent_on_vyre_kill": 3
+        },
+        {
+          "vyres_cremated": 200,
+          "prayer_restore_percent_on_vyre_kill": 4
+        },
+        {
+          "vyres_cremated": 250,
+          "prayer_restore_percent_on_vyre_kill": 5
+        }
+      ],
+      "historical_source": "Harmony, Corruption and Salvation auras",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [
+        "morytania"
+      ],
+      "region_requirement_type": "acquisition_region",
+      "location_note": "Sunspear Vyre cremation / Columbarium (Morytania) — Harmony/Corruption/Salvation replacement"
     }
   ],
   "activity_unlocks": [
@@ -2526,7 +2690,7 @@
     {
       "id": "havenhythe:moonrise-dig-site",
       "name": "Moonrise Dig Site",
-      "category": "Archaeology dig-site hub",
+      "category": "Archaeology dig-site hub (First Age / Guthixian)",
       "region_hint": "havenhythe",
       "requirements": [
         "Partial Secrets of Amberfell for Amberfell access",
@@ -2540,7 +2704,7 @@
         "Fang of Kayazu path into Ring of Kayazu (separate id havenhythe:ring-of-kayazu)",
         "Anzagar pet on full mystery completion"
       ],
-      "notes": "Live First Age / Guthixian dig site on Havenhythe (15 June 2026). Starting-region Archaeology progression for Equilibrium, not future elective content. Ring of Kayazu ritual use is primarily outside Havenhythe (Um / Ungael)",
+      "notes": "Live First Age dig site on Havenhythe (Moonrise Temple). Starting-region Archaeology progression — hotspots after speaking to Utu. Not Anachronia Orthen.",
       "source_urls": [
         "https://runescape.wiki/w/Moonrise_Dig_Site",
         "https://runescape.wiki/w/Update:Digging_up_the_past_at_Moonrise",
@@ -2553,7 +2717,7 @@
     {
       "id": "havenhythe:big-game-hunter",
       "name": "Havenhythe Big Game Hunter",
-      "category": "Hunter apex encounters",
+      "category": "Hunter apex encounters (Havenhythe)",
       "region_hint": "havenhythe",
       "requirements": [
         "Havenhythe access",
@@ -2564,19 +2728,18 @@
         "New BGH encounters native to Havenhythe",
         "Hunter progression without spending an elective region slot (starting region)"
       ],
-      "notes": "Keep separate from. Exact optimizer-grade post-launch XP/hour tables still belong in training datasets once re-benchmarked",
+      "notes": "Havenhythe-native BGH loop (giant kebbits / chinchompas and local encounters). Distinct from Anachronia dinosaur Big Game Hunter — do not reuse Anachronia BGH art or drop tables.",
       "source_urls": [
         "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter",
-        "https://runescape.wiki/w/Big_Game_Hunter",
-        "https://runescape.wiki/w/Hunter_update"
+        "https://runescape.wiki/w/Big_Game_Hunter"
       ],
       "confidence": "confirmed_wiki_plus_official_2026",
-      "league_treatment": ""
+      "league_treatment": "Hard Havenhythe starting-region Hunter flagship. Anachronia BGH is a separate elective region unlock."
     },
     {
       "id": "havenhythe:birdhouses",
       "name": "Havenhythe birdhouses",
-      "category": "Hunter passive route",
+      "category": "Hunter passive birdhouse route",
       "region_hint": "havenhythe",
       "requirements": [
         "5–101 Hunter by birdhouse tier",
@@ -2584,10 +2747,9 @@
         "Seeds to bait; eight birdhouse plots across Havenhythe"
       ],
       "unlocks": [
-        "Birdhouse tiers from regular through eternal magic (101 Hunter / 100 Crafting craft)",
-        "Passive Hunter XP plus raw bird meat, feathers, bird nests, and occasional oaken keys",
-        "Clockwork returned on harvest; birdhouse consumed",
-        "Nest rolls can include Imcando hatchet fragments if Fort Grove tier 3 is built"
+        "Eight birdhouse plots across Havenhythe",
+        "Birdhouse tiers regular → eternal magic (craft gated by Hunter / Crafting / logs + clockwork)",
+        "Nest and seed passive income; clockwork returned on harvest"
       ],
       "notes": "Eight plots (Wendlewick, Marigold Farm x3, Eastfold Farm, Shrine of Inanna, fairy ring BKS, Dalia's Tree Nursery). Wait times are short (30–75 seconds by tier). Strong early-to-late starting-region Hunter QoL",
       "source_urls": [
@@ -20105,8 +20267,8 @@
     },
     {
       "id": "havenhythe:jackalope-hunting",
-      "name": "Jackalope hunting (antler tertiary)",
-      "category": "Hunter tertiary supply for Summoning",
+      "name": "Jackalopes (BIS early–mid Hunter method)",
+      "category": "Hunter training method",
       "region_hint": "havenhythe",
       "requirements": [
         "32 Hunter",
@@ -20114,12 +20276,11 @@
         "Optional: teasing stick to flush one burrow; ferret (Eagles' Peak) to flush multiple burrows"
       ],
       "unlocks": [
-        "Always-drop jackalope antlers (tertiary for jackalope pouch) plus bones and raw rabbit",
-        "202 Hunter XP per successful catch (wiki method rates are approximate only — do not hardcode optimizer XP/h)",
-        "Starting-region tertiary loop colocated with empowered obelisks and birdhouse plot at the shrine",
-        "Trader Woes bank chest northwest of the shrine unlock path for non-drop loot banking"
+        "Jackalope hunting as the best early-to-mid-game Hunter XP method on Havenhythe",
+        "Antler tertiary for Summoning (jackalope pouch / soil familiar path)",
+        "Pairs with Shrine of Inanna Summoning hub and Highweald geography"
       ],
-      "notes": "",
+      "notes": "Surface as Jackalopes — the primary early/mid Hunter method for the starting region, not only an antler tertiary footnote.",
       "source_urls": [
         "https://runescape.wiki/w/Jackalope_(Hunter)",
         "https://runescape.wiki/w/Jackalope_burrow",
@@ -21742,6 +21903,239 @@
       ],
       "confidence": "confirmed_current_wiki",
       "league_treatment": "This is a Tirannwn production advantage, not a prerequisite for using the familiar elsewhere"
+    },
+    {
+      "id": "aura-overhaul:system-removal-guard",
+      "name": "Aura system removal guard",
+      "category": "Aura Overhaul — system removal",
+      "aura_slot_removed": true,
+      "aura_refreshes_removed": true,
+      "wars_wares_aura_refreshes_removed": true,
+      "removed_auras": [
+        "Aegis",
+        "Ancestor Spirits",
+        "Berserker",
+        "Brawler",
+        "Dark Magic",
+        "Inspiration",
+        "Invigorate",
+        "Knock-out",
+        "Maniacal",
+        "Reckless",
+        "Runic Accuracy",
+        "Sharpshooter",
+        "Equilibrium",
+        "Friend in Need",
+        "Illumination",
+        "Oddball",
+        "Reverence",
+        "Wisdom",
+        "Mahjarrat",
+        "Prime",
+        "Dedicated Slayer",
+        "Dwarven Instinct",
+        "Flameproof",
+        "Surefooted"
+      ],
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "league_treatment": "",
+      "notes": "Timed combat auras and the worn aura power slot were removed on 13 April 2026. Useful skilling/combat effects moved to passives, tools, Aspects, Sunspear, and Anachronia totems — see Aura Overhaul account unlocks.",
+      "effect": "No Berserker / Maniacal / Reckless / Mahjarrat / Equilibrium / Dark Magic combat aura path. Plan without those slots."
+    },
+    {
+      "id": "anachronia:dinosaur-plant-slayer",
+      "name": "Dinosaur and plant Slayer (Laniakea / Anachronia)",
+      "category": "regional Slayer assignment infrastructure",
+      "region_hint": "anachronia",
+      "required_regions": [
+        "anachronia"
+      ],
+      "region_hints": [
+        "anachronia"
+      ],
+      "requirements": [
+        "Anachronia unlocked",
+        "Laniakea as Slayer Master (highest standard master on Anachronia)",
+        "Slayer level for assigned dinosaur / plant tasks"
+      ],
+      "unlocks": [
+        "Dinosaur Slayer assignments (Anachronia dinosaurs via Laniakea)",
+        "Plant Slayer assignments (Anachronia plant creatures)",
+        "Laniakea tip / spear pressure and Anachronia Slayer Lodge synergy"
+      ],
+      "notes": "Major Anachronia combat-skilling loop: Laniakea master + dinosaur/plant task set. Distinct from Big Game Hunter and Ranch Out of Time.",
+      "source_urls": [
+        "https://runescape.wiki/w/Laniakea",
+        "https://runescape.wiki/w/Slayer",
+        "https://runescape.wiki/w/Anachronia"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Anachronia for Laniakea hub and local dinosaur/plant task spawns"
+    },
+    {
+      "id": "fremennik:yak-pof-babies",
+      "name": "Yak hide and Player-Owned Farm yak babies",
+      "category": "Farming / Crafting supply infrastructure",
+      "region_hint": "fremennik",
+      "required_regions": [
+        "fremennik"
+      ],
+      "region_hints": [
+        "fremennik"
+      ],
+      "requirements": [
+        "Neitiznot access (The Fremennik Isles line) for wild yaks and yak-hide curing",
+        "Player-Owned Farm unlocked for breeding yak animals",
+        "Yak breeding pair / beans path for farm babies as a renewable yak-hide source"
+      ],
+      "unlocks": [
+        "Wild yak kills on Neitiznot for raw yak-hide → cured hides with Thakkrad",
+        "Yak-hide armour craft path (body / legs / boots)",
+        "Player-Owned Farm yak babies as a self-sufficient hide / beans loop under Fremennik ownership of the animal species geography",
+        "Contraband yak produce shop (Jatizso) as optional shop restock — not the primary ironman path"
+      ],
+      "notes": "Bundles the yak hide craft supply with PoF baby source so Fremennik surfaces both combat-skilling Crafting gear and farm breed pressure. Distinct from yak-hide armour equipment row.",
+      "source_urls": [
+        "https://runescape.wiki/w/Yak",
+        "https://runescape.wiki/w/Yak-hide",
+        "https://runescape.wiki/w/Player-owned_farm",
+        "https://runescape.wiki/w/Neitiznot"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik for Neitiznot yaks and isles hide path; PoF pens remain account-global once animals are sourced"
+    },
+    {
+      "id": "havenhythe:clockwork-box-traps",
+      "name": "Clockwork box traps",
+      "category": "Hunter trapping infrastructure",
+      "region_hint": "havenhythe",
+      "required_regions": [
+        "havenhythe"
+      ],
+      "region_hints": [
+        "havenhythe"
+      ],
+      "requirements": [
+        "Hunter level for target creatures",
+        "Clockwork + logs to craft clockwork box traps (or box traps for lower tiers)"
+      ],
+      "unlocks": [
+        "Clockwork box trap craft and deployment for Havenhythe trapping routes",
+        "Core infrastructure for chinchompa / kebbit-style trap hunting on the starting continent"
+      ],
+      "notes": "Content row for the /data major list. Distinct from Anachronia BGH traps.",
+      "source_urls": [
+        "https://runescape.wiki/w/Clockwork_box_trap",
+        "https://runescape.wiki/w/Box_trap"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe for local trap training routes"
+    },
+    {
+      "id": "havenhythe:charming-moths-highweald",
+      "name": "Charming moths / Highweald charm training",
+      "category": "Hunter charm training method",
+      "region_hint": "havenhythe",
+      "required_regions": [
+        "havenhythe"
+      ],
+      "region_hints": [
+        "havenhythe"
+      ],
+      "requirements": [
+        "Hunter level for moth catching",
+        "Highweald Forest access on Havenhythe"
+      ],
+      "unlocks": [
+        "Charm / moth hunting loop on Highweald for Summoning charm supply",
+        "Pairs with Spirit moths content and Shrine of Inanna Summoning production"
+      ],
+      "notes": "Surfaces the Havenhythe charm-moth training method under major content. Wilderness charming moths remain a separate Forinthry optional path.",
+      "source_urls": [
+        "https://runescape.wiki/w/Charming_moth",
+        "https://runescape.wiki/w/Highweald_Forest",
+        "https://runescape.wiki/w/Havenhythe"
+      ],
+      "confidence": "confirmed_wiki_region_inferred",
+      "league_treatment": "Havenhythe for Highweald charm routes; Forinthry still owns classic wilderness charming moths"
+    },
+    {
+      "id": "havenhythe:ivar-uniques",
+      "name": "Ivar, King of Bones uniques",
+      "category": "regional boss unique progression",
+      "region_hint": "havenhythe",
+      "required_regions": [
+        "havenhythe"
+      ],
+      "region_hints": [
+        "havenhythe"
+      ],
+      "requirements": [
+        "Havenhythe access",
+        "Ivar, King of Bones encounter unlocked"
+      ],
+      "unlocks": [
+        "Ivar unique drop table for Havenhythe boss progression planning"
+      ],
+      "notes": "Major unlock visibility for Ivar uniques on the starting region boss ladder.",
+      "source_urls": [
+        "https://runescape.wiki/w/Ivar,_King_of_Bones",
+        "https://runescape.wiki/w/Ivar,_King_of_Bones/Strategies"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe boss uniques"
+    },
+    {
+      "id": "havenhythe:silverquill-uniques",
+      "name": "Silverquill, the Dreadhog uniques",
+      "category": "regional boss unique progression",
+      "region_hint": "havenhythe",
+      "required_regions": [
+        "havenhythe"
+      ],
+      "region_hints": [
+        "havenhythe"
+      ],
+      "requirements": [
+        "Havenhythe access",
+        "Silverquill encounter unlocked"
+      ],
+      "unlocks": [
+        "Silverquill unique drop table for Havenhythe boss progression planning"
+      ],
+      "notes": "Major unlock visibility for Silverquill uniques.",
+      "source_urls": [
+        "https://runescape.wiki/w/Silverquill,_the_Dreadhog"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe boss uniques"
+    },
+    {
+      "id": "havenhythe:sanguine-crawler-uniques",
+      "name": "Sanguine Crawler uniques",
+      "category": "regional Slayer boss unique progression",
+      "region_hint": "havenhythe",
+      "required_regions": [
+        "havenhythe"
+      ],
+      "region_hints": [
+        "havenhythe"
+      ],
+      "requirements": [
+        "Havenhythe access",
+        "Blighted Cave / Sanguine Crawler path"
+      ],
+      "unlocks": [
+        "Sanguine Crawler unique drops for Havenhythe Slayer/boss planning"
+      ],
+      "notes": "Major unlock visibility for Sanguine Crawler uniques (Slayer-adjacent).",
+      "source_urls": [
+        "https://runescape.wiki/w/Sanguine_crawler",
+        "https://runescape.wiki/w/Blighted_Cave"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Havenhythe"
     }
   ],
   "equipment_models": [
@@ -25613,7 +26007,7 @@
     },
     {
       "id": "anachronia:masterwork-ranged-pressure",
-      "name": "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)",
+      "name": "Masterwork ranged armour (Havenhythe / Anachronia material pressure)",
       "category": "tier-100 ranged armour region pressure",
       "region_hints": [
         "havenhythe",
@@ -25633,14 +26027,15 @@
       "effects": [
         "New 2026 ranged armour endgame competing with elite sirenic"
       ],
-      "notes": "",
+      "notes": "Apex hide and Havenhythe Hunter pressure feed Masterwork ranged craft. Anachronia remains secondary material geography — do not treat as Anachronia-only.",
       "source_urls": [
         "https://runescape.wiki/w/Masterwork_equipment",
         "https://runescape.wiki/w/Masterwork_ranged_equipment",
         "https://runescape.wiki/w/Havenhythe"
       ],
       "confidence": "confirmed_official_havenhythe_pressure_recipe_partial",
-      "league_treatment": ""
+      "league_treatment": "",
+      "region_hint": "havenhythe"
     },
     {
       "id": "ports:seasinger-residual-note",
@@ -36626,6 +37021,131 @@
       ],
       "confidence": "confirmed_current_wiki",
       "league_treatment": ""
+    },
+    {
+      "id": "aura-overhaul:fishing-catch-replacements",
+      "name": "Call of the Sea replacement bonuses",
+      "category": "Fishing familiar/tool catch-rate progression",
+      "familiar_bonuses": [
+        {
+          "name": "Granite crab",
+          "catch_rate_percent": 1
+        },
+        {
+          "name": "Ibis",
+          "catch_rate_percent": 2
+        },
+        {
+          "name": "Granite lobster",
+          "catch_rate_percent": 3
+        }
+      ],
+      "tool_bonuses": [
+        {
+          "name": "Rod-o-matic",
+          "catch_rate_percent": 3
+        },
+        {
+          "name": "Enhanced rod-o-matic",
+          "catch_rate_percent": 4
+        },
+        {
+          "name": "Dragon harpoon",
+          "catch_rate_percent": 9
+        },
+        {
+          "name": "Crystal fishing rod",
+          "catch_rate_percent": 8
+        },
+        {
+          "name": "Tavia's fishing rod",
+          "catch_rate_percent": 14
+        }
+      ],
+      "potion_bonuses": [
+        {
+          "name": "Perfect juju fishing potion",
+          "catch_rate_percent": 10
+        },
+        {
+          "name": "Perfect plus potion",
+          "catch_rate_percent": 10
+        }
+      ],
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_tools",
+      "region_requirement_type": "none",
+      "location_note": "Call of the Sea folded into Fishing tools / familiars — not region-gated"
+    },
+    {
+      "id": "aura-overhaul:hatchet-chopping-bonuses",
+      "name": "Lumberjack replacement hatchet bonuses",
+      "category": "Woodcutting tool progression",
+      "tiers": [
+        {
+          "range": "Mithril through Rune",
+          "chopping_chance_percent": 5
+        },
+        {
+          "range": "Orikalkum through Bane",
+          "chopping_chance_percent": 10
+        },
+        {
+          "range": "Imcando and higher",
+          "chopping_chance_percent": 15
+        }
+      ],
+      "level_scaling": "Woodcutting levels above the tree requirement further improve success chance; this stacks conceptually with the tool-tier replacement bonus.",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_tools",
+      "region_requirement_type": "none",
+      "location_note": "Lumberjack folded into hatchet tiers — not region-gated"
+    },
+    {
+      "id": "aura-overhaul:antipoison-totem",
+      "name": "Antipoison totem",
+      "category": "Poison-immunity pocket item",
+      "slot": "pocket",
+      "poison_immunity_percent": 100,
+      "historical_source": "Poison Purge aura",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+      "confidence": "confirmed_official_2026",
+      "required_regions": [],
+      "region_hint": "global_item",
+      "region_requirement_type": "none",
+      "location_note": "Poison Purge replacement — 100% poison immunity pocket item (craft/global item)"
+    },
+    {
+      "id": "fremennik:imcando-pickaxe-major",
+      "name": "Imcando pickaxe (Lava Flow Mine / Birthright path)",
+      "category": "Mining tool progression",
+      "region_hint": "fremennik",
+      "required_regions": [
+        "fremennik"
+      ],
+      "region_hints": [
+        "fremennik"
+      ],
+      "requirements": [
+        "Keldagrim / Lava Flow Mine access under Fremennik",
+        "Imcando pickaxe fragment path (Birthright of the Dwarves / Lava Flow Mine)"
+      ],
+      "unlocks": [
+        "Imcando pickaxe — high-tier Mining pick before crystal / Earth and Song fusions",
+        "Fragment + gilding path through Keldagrim Lava Flow Mine content"
+      ],
+      "notes": "Standalone Fremennik major for the Imcando pick so planners do not only see the multi-region Imcando tools family package.",
+      "source_urls": [
+        "https://runescape.wiki/w/Imcando_pickaxe",
+        "https://runescape.wiki/w/Lava_Flow_Mine",
+        "https://runescape.wiki/w/Birthright_of_the_Dwarves"
+      ],
+      "confidence": "confirmed_wiki",
+      "league_treatment": "Hard Fremennik for Keldagrim / Lava Flow Mine fragment geography"
     }
   ],
   "ability_unlocks": [
@@ -36934,6 +37454,86 @@
       ],
       "confidence": "confirmed_current_wiki_generated_recipe",
       "league_treatment": ""
+    },
+    {
+      "id": "aura-overhaul:vampyrism-aspect",
+      "name": "Vampyrism",
+      "category": "combat Aspect spell",
+      "spellbook": "Ancient Magicks",
+      "magic_level": 69,
+      "duration_minutes": 12,
+      "runes": [
+        {
+          "name": "Blood rune",
+          "quantity": 15
+        },
+        {
+          "name": "Death rune",
+          "quantity": 10
+        },
+        {
+          "name": "Soul rune",
+          "quantity": 6
+        },
+        {
+          "name": "Fire rune",
+          "quantity": 40
+        }
+      ],
+      "effect": "Heals 5% of damage dealt, capped at 50 life points per hit.",
+      "aspect_rule": "Only one Aspect can be active at a time.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Vampyrism"
+      ],
+      "confidence": "confirmed_official_2026",
+      "historical_correction": "This replaces the removed Vampyrism aura. Do not model an aura duration/cooldown or War's Wares aura purchase.",
+      "required_regions": [
+        "desert"
+      ],
+      "region_hint": "desert",
+      "region_requirement_type": "spellbook_region",
+      "location_note": "Ancient Magicks Aspect (Magic 69) — requires Ancient Magicks (Desert Treasure / desert spellbook path)",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul"
+    },
+    {
+      "id": "aura-overhaul:penance-aspect",
+      "name": "Penance",
+      "category": "combat Aspect spell",
+      "spellbook": "Standard spellbook",
+      "magic_level": 67,
+      "duration_minutes": 12,
+      "runes": [
+        {
+          "name": "Law rune",
+          "quantity": 3
+        },
+        {
+          "name": "Body rune",
+          "quantity": 30
+        },
+        {
+          "name": "Soul rune",
+          "quantity": 10
+        },
+        {
+          "name": "Chaos rune",
+          "quantity": 20
+        }
+      ],
+      "effect": "Restores Prayer points equal to 5% of damage received, capped at 100 Prayer points per hit.",
+      "aspect_rule": "Only one Aspect can be active at a time.",
+      "source_urls": [
+        "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "https://runescape.wiki/w/Penance"
+      ],
+      "confidence": "confirmed_official_2026",
+      "historical_correction": "This replaces the removed Penance aura. Do not model an aura duration/cooldown or War's Wares aura purchase.",
+      "required_regions": [],
+      "region_hint": "global_skill",
+      "region_requirement_type": "none",
+      "location_note": "Standard spellbook Aspect (Magic 67) — not elective-region gated",
+      "source_url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul"
     }
   ],
   "prayer_unlocks": [

@@ -21104,8 +21104,92 @@
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
     },
     {
+      "id": "desert:greenfingers-passive",
+      "name": "Greenfingers passive (ex-aura)",
+      "recordType": "activity",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [
+        "desert"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Farming unlock",
+      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura.",
+      "requirements": [
+        "30,000 Crux Eqal favour",
+        "Garden of Kharid access (Desert)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "misthalin:focused-siphoning-passive",
+      "name": "Focused Siphoning passive (ex-aura)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Runespan unlock",
+      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura.",
+      "requirements": [
+        "20,000 Runespan points",
+        "Wizards' Tower (Misthalin)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "misthalin:five-finger-discount-passive",
+      "name": "Five-Finger Discount passive (ex-aura)",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Thieving unlock",
+      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura.",
+      "requirements": [
+        "Thieves' Guild (Misthalin)",
+        "1,000 pilfer points per rank"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
       "id": "desert:vampyrism-aspect",
-      "name": "Vampyrism Aspect",
+      "name": "Vampyrism Aspect (ex-aura)",
       "recordType": "activity",
       "regionHints": [
         "desert"
@@ -21117,7 +21201,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Ancient Magicks combat Aspect",
-      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
+      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks.",
       "requirements": [
         "69 Magic",
         "Ancient Magicks spellbook (Desert Treasure path)"
@@ -21133,7 +21217,7 @@
     },
     {
       "id": "global:penance-aspect",
-      "name": "Penance Aspect",
+      "name": "Penance Aspect (ex-aura)",
       "recordType": "activity",
       "regionHints": [],
       "requiredRegions": [],
@@ -21141,7 +21225,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Standard spellbook combat Aspect",
-      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated",
+      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated.",
       "requirements": [
         "67 Magic",
         "Standard spellbook"
@@ -21157,7 +21241,7 @@
     },
     {
       "id": "morytania:sunspear-prayer-sustain",
-      "name": "Sunspear Vyre prayer sustain",
+      "name": "Sunspear Vyre prayer sustain (ex-aura)",
       "recordType": "activity",
       "regionHints": [
         "morytania"
@@ -21169,7 +21253,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Morytania combat passive",
-      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain",
+      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain.",
       "requirements": [
         "Sunspear",
         "Vyre cremation / Columbarium (Morytania)"
@@ -21197,10 +21281,100 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Anachronia totem",
-      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging",
+      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging.",
       "requirements": [
         "Anachronia base camp / totem system"
       ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:divination-enrichment-progression",
+      "name": "Enriched memory chance (ex-Enrichment aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Divination level passive",
+      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated.",
+      "requirements": [
+        "Divination level thresholds"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:mining-critical-progression",
+      "name": "Mining critical chance (ex-Quarrymaster aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Mining level passive",
+      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated.",
+      "requirements": [
+        "Mining 59 / 85"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:material-cache-consistency",
+      "name": "Material cache consistency (ex-Resourceful aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Archaeology gathering passive",
+      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated.",
+      "requirements": [
+        "Archaeology material caches"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:aura-system-removed",
+      "name": "Combat auras removed (Berserker / Maniacal / Reckless…)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — system removal",
+      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras.",
+      "requirements": [],
       "confidence": "confirmed_official_2026",
       "source": {
         "source": "jagex",

@@ -77,7 +77,10 @@
         "Shilo Village",
         "Herblore Habitat",
         "Karamja",
-        "TzHaar area"
+        "TzHaar area",
+        "Nature altar",
+        "Jadinko Lair",
+        "Brimhaven Agility Arena"
       ],
       "hardRules": [],
       "warnings": [],
@@ -113,7 +116,10 @@
         "Entrana",
         "Ice Mountain",
         "Armadyl's Tower",
-        "Invention Guild"
+        "Invention Guild",
+        "Warriors' Guild",
+        "Mining Guild",
+        "Artisans' Workshop"
       ],
       "hardRules": [
         "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",

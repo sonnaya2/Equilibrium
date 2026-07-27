@@ -12,7 +12,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -37,7 +37,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -66,7 +66,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -94,7 +94,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -122,7 +122,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -146,7 +146,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Nex: Angel of Death progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -171,7 +171,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Nex: Angel of Death progression",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -393,7 +393,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Rise of the Six progression",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -421,7 +421,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Rise of the Six progression",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -449,7 +449,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Rise of the Six progression",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -473,7 +473,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Kerapac progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -500,7 +500,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Kerapac progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -532,7 +532,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Arch-Glacor progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -565,7 +565,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -591,7 +591,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -617,7 +617,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -643,7 +643,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -669,7 +669,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -693,7 +693,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Croesus progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -724,7 +724,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "TzKal-Zuk progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -751,7 +751,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "TzKal-Zuk progression",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -783,7 +783,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -809,7 +809,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -837,7 +837,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -864,7 +864,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -891,7 +891,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -918,7 +918,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -945,7 +945,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -968,7 +968,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Gate of Elidinis uniques",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -997,7 +997,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Sanctum of Rebirth uniques",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1022,7 +1022,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Sanctum of Rebirth uniques",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1049,7 +1049,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Sanctum of Rebirth uniques",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1083,7 +1083,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1111,7 +1111,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1139,7 +1139,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1167,7 +1167,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1195,7 +1195,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1223,7 +1223,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1251,7 +1251,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1279,7 +1279,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1307,7 +1307,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1335,7 +1335,7 @@
       },
       "unlock": {
         "type": "drop",
-        "requirement": "Zemouregal & Vorkath progression",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1373,7 +1373,7 @@
       "tier": 90,
       "unlock": {
         "type": "drop",
-        "requirement": "Essence of Finality amulet (neck BiS chain)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -1390,7 +1390,7 @@
       },
       "unlock": {
         "type": "quest",
-        "requirement": "Haunted Mine for the base salve amulet; Lair of Tarn Razorlor for Tarn's diary and the enchantment",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -1411,7 +1411,7 @@
       "bonuses": {},
       "unlock": {
         "type": "quest",
-        "requirement": "Rum Deal; Pieces of Hate for the Dungeoneering prayer-necklace interaction",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -1435,7 +1435,7 @@
       },
       "unlock": {
         "type": "quest",
-        "requirement": "75 Dungeoneering; 90 Prayer; 35,000 Dungeoneering tokens",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1465,7 +1465,7 @@
       },
       "unlock": {
         "type": "quest",
-        "requirement": "41 Dungeoneering; 60 Prayer; 15,500 Dungeoneering tokens",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -1495,7 +1495,7 @@
       },
       "unlock": {
         "type": "quest",
-        "requirement": "Complete Broken Home once; Complete the post-quest challenges; Complete a replay in under 37 minutes",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1520,7 +1520,7 @@
       },
       "unlock": {
         "type": "quest",
-        "requirement": "The Elder Kiln in the normal game",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -1713,7 +1713,7 @@
       "setId": "noxious",
       "unlock": {
         "type": "drop",
-        "requirement": "Noxious scythe and noxious longbow",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -1765,7 +1765,7 @@
       "setId": "masterwork",
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork Spear of Annihilation",
+        "requirement": "League self-supply: kandarin + forinthry + morytania + asgarnia",
         "regions": [
           "kandarin",
           "forinthry",
@@ -1794,7 +1794,7 @@
       "setId": "annihilation",
       "unlock": {
         "type": "drop",
-        "requirement": "Spear of Annihilation (base archaeology spear)",
+        "requirement": "League self-supply: kandarin + forinthry",
         "regions": [
           "kandarin",
           "forinthry"
@@ -1848,7 +1848,7 @@
       "setId": "leng",
       "unlock": {
         "type": "drop",
-        "requirement": "Dark ice → Dark Shard/Sliver of Leng",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1875,7 +1875,7 @@
       "setId": "leng",
       "unlock": {
         "type": "drop",
-        "requirement": "Dark ice → Dark Shard/Sliver of Leng",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1907,7 +1907,7 @@
       "setId": "leng",
       "unlock": {
         "type": "drop",
-        "requirement": "Dark ice → Dark Shard/Sliver of Leng",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1939,7 +1939,7 @@
       "setId": "leng",
       "unlock": {
         "type": "drop",
-        "requirement": "Dark ice → Dark Shard/Sliver of Leng",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -1965,7 +1965,7 @@
       "setId": "abyssal",
       "unlock": {
         "type": "drop",
-        "requirement": "Abyssal scourge",
+        "requirement": "League self-supply: misthalin + forinthry",
         "regions": [
           "misthalin",
           "forinthry"
@@ -2408,7 +2408,7 @@
       "setId": "mizuyari",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2460,7 +2460,7 @@
       "setId": "lava",
       "unlock": {
         "type": "drop",
-        "requirement": "Lava whip (wyrm spike / Wildywyrm)",
+        "requirement": "League self-supply: morytania + forinthry",
         "regions": [
           "morytania",
           "forinthry"
@@ -2487,7 +2487,7 @@
       "setId": "abyssal",
       "unlock": {
         "type": "drop",
-        "requirement": "Abyssal whip (Slayer Tower / abyssal demons)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -2513,7 +2513,7 @@
       "setId": "abyssal",
       "unlock": {
         "type": "drop",
-        "requirement": "Abyssal vine whip (whip + whip vine)",
+        "requirement": "League self-supply: morytania + karamja",
         "regions": [
           "morytania",
           "karamja"
@@ -2618,7 +2618,7 @@
       "setId": "tetsu",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2644,7 +2644,7 @@
       "setId": "tetsu",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2670,7 +2670,7 @@
       "setId": "elite-tetsu",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2696,7 +2696,7 @@
       "setId": "elite-tetsu",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2722,7 +2722,7 @@
       "setId": "masuta",
       "unlock": {
         "type": "drop",
-        "requirement": "Masuta's warspear",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2748,7 +2748,7 @@
       "setId": "sunspear",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -2775,7 +2775,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Torva armour and praesulic essence (melee)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2802,7 +2802,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2829,7 +2829,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2856,7 +2856,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2883,7 +2883,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2915,7 +2915,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork melee armour (Artisans' Workshop)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2947,7 +2947,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork melee armour (Artisans' Workshop)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -2979,7 +2979,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork melee armour (Artisans' Workshop)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3011,7 +3011,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork melee armour (Artisans' Workshop)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3043,7 +3043,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork melee armour (Artisans' Workshop)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3075,7 +3075,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -3108,7 +3108,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -3141,7 +3141,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -3174,7 +3174,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -3207,7 +3207,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -3239,7 +3239,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vestments of havoc",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -3270,7 +3270,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vestments of havoc",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -3301,7 +3301,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vestments of havoc",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -3332,7 +3332,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vestments of havoc",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -3359,7 +3359,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Bandos equipment (GWD1 melee power ladder)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3386,7 +3386,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3413,7 +3413,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3440,7 +3440,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3467,7 +3467,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3898,7 +3898,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3923,7 +3923,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3948,7 +3948,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -3979,7 +3979,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4010,7 +4010,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4041,7 +4041,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4094,7 +4094,7 @@
       "setId": "razorback",
       "unlock": {
         "type": "drop",
-        "requirement": "Razorback gauntlets (Airut / Beastmaster Durzag)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -4198,7 +4198,7 @@
       "setId": "goliath",
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -4223,7 +4223,7 @@
       "setId": "malevolent",
       "unlock": {
         "type": "drop",
-        "requirement": "Rise of the Six progression",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -4250,7 +4250,7 @@
       "setId": "kalphite",
       "unlock": {
         "type": "drop",
-        "requirement": "Kalphite King defender residual",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -4277,7 +4277,7 @@
       "setId": "ancient-defender",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -4303,7 +4303,7 @@
       "setId": "spirit-shield",
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit shield sigils",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -4328,7 +4328,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Noxious scythe and noxious longbow",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -4432,7 +4432,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Eldritch crossbow",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -4505,7 +4505,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Annihilation / Decimation / Obliteration (Wilderness T87 trio)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -4530,7 +4530,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Hexhunter bow",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -4555,7 +4555,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Wyvern crossbow",
+        "requirement": "League self-supply: asgarnia + forinthry",
         "regions": [
           "asgarnia",
           "forinthry"
@@ -4754,7 +4754,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4779,7 +4779,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4880,7 +4880,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Strykebow (wyrm scalp + dark bow)",
+        "requirement": "League self-supply: forinthry + tirannwn",
         "regions": [
           "forinthry",
           "tirannwn"
@@ -4907,7 +4907,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Zaryte bow",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4932,7 +4932,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Royal crossbow",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -4957,7 +4957,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Bow of the Last Guardian (Bolg)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -4982,7 +4982,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -5009,8 +5009,11 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
-        "regions": []
+        "requirement": "Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)",
+        "regions": [
+          "forinthry",
+          "kandarin"
+        ]
       }
     },
     {
@@ -5034,8 +5037,11 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
-        "regions": []
+        "requirement": "Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)",
+        "regions": [
+          "forinthry",
+          "kandarin"
+        ]
       }
     },
     {
@@ -5059,8 +5065,11 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: base sirenic multi-source pressure — no hard required_regions",
-        "regions": []
+        "requirement": "Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)",
+        "regions": [
+          "forinthry",
+          "kandarin"
+        ]
       }
     },
     {
@@ -5084,7 +5093,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Elite sirenic armour",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5111,7 +5120,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Elite sirenic armour",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5138,7 +5147,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Elite sirenic armour",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5165,7 +5174,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Pernix armour",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5192,7 +5201,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5219,7 +5228,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5246,7 +5255,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5273,7 +5282,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5505,7 +5514,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -5530,7 +5539,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5555,7 +5564,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5580,7 +5589,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5612,7 +5621,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5644,7 +5653,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5676,7 +5685,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5953,7 +5962,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Armadyl equipment (GWD1 ranged power ladder)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -5980,7 +5989,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6007,7 +6016,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6034,7 +6043,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6061,7 +6070,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6085,7 +6094,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows: Rise of the Six style kiteshields",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6109,7 +6118,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fractured Staff of Armadyl",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -6157,7 +6166,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Noxious staff",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6230,7 +6239,7 @@
       "setId": "seasinger",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6255,7 +6264,7 @@
       "setId": "seasinger",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6280,7 +6289,7 @@
       "setId": "elite-seasinger",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6305,7 +6314,7 @@
       "setId": "elite-seasinger",
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6402,7 +6411,7 @@
       "setId": "virtus",
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6427,7 +6436,7 @@
       "setId": "virtus",
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6451,7 +6460,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Annihilation / Decimation / Obliteration (Wilderness T87 trio)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -6499,7 +6508,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Staff of darkness (staff of light + wyrm heart)",
+        "requirement": "League self-supply: fremennik + forinthry",
         "regions": [
           "fremennik",
           "forinthry"
@@ -6548,7 +6557,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Abyssal wand and abyssal orb",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6572,7 +6581,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Abyssal wand and abyssal orb",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6596,7 +6605,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6623,7 +6632,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6650,7 +6659,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6677,7 +6686,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6704,7 +6713,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6731,7 +6740,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Nex equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -6912,7 +6921,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Polypore Dungeon (ganodermic / polypore staff)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6937,7 +6946,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Polypore Dungeon (ganodermic / polypore staff)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6962,7 +6971,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Polypore Dungeon (ganodermic / polypore staff)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -6989,7 +6998,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7016,7 +7025,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7043,7 +7052,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7070,7 +7079,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7097,7 +7106,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Robes of subjugation (GWD1 magic power ladder)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7372,7 +7381,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7397,7 +7406,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7422,7 +7431,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7454,7 +7463,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7486,7 +7495,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7518,7 +7527,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -7545,7 +7554,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Elite tectonic robe armour",
+        "requirement": "League self-supply: asgarnia + forinthry",
         "regions": [
           "asgarnia",
           "forinthry"
@@ -7573,7 +7582,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia + forinthry",
         "regions": [
           "asgarnia",
           "forinthry"
@@ -7601,7 +7610,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vorago progression",
+        "requirement": "League self-supply: asgarnia + forinthry",
         "regions": [
           "asgarnia",
           "forinthry"
@@ -7705,7 +7714,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Celestial handwraps (celestial dragons / Dragontooth)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -7729,7 +7738,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -7754,7 +7763,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Leng artefact T90 glove upgrades (shared Arch-Glacor)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -7778,7 +7787,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows: Rise of the Six style kiteshields",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -7803,7 +7812,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit shield sigils",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -7828,7 +7837,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit shield sigils",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -7853,7 +7862,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit shield sigils",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -7885,7 +7894,7 @@
       "setId": "death-guard",
       "unlock": {
         "type": "drop",
-        "requirement": "Death guard / Skull lantern (City of Um)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -7917,7 +7926,7 @@
       "setId": "skull-lantern",
       "unlock": {
         "type": "drop",
-        "requirement": "Death guard / Skull lantern (City of Um)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -7949,7 +7958,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -7981,7 +7990,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8013,7 +8022,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8045,7 +8054,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8077,7 +8086,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8102,7 +8111,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Reaper necklace / Amulet of souls / Ring of death (Misthalin)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8127,7 +8136,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Reaper necklace / Amulet of souls / Ring of death (Misthalin)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8152,7 +8161,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Amulet of the forsaken / Berserker's Fury chain",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -8178,7 +8187,7 @@
       "setId": "brawler",
       "unlock": {
         "type": "drop",
-        "requirement": "Blood necklaces (Barrows residual)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -8202,7 +8211,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blood necklaces (Barrows residual)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -8227,7 +8236,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blood necklaces (Barrows residual)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -8252,7 +8261,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dragon Rider amulet (Wilderness / KBD path)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8277,7 +8286,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Reaper necklace / Amulet of souls / Ring of death (Misthalin)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8303,7 +8312,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Reaver's ring",
+        "requirement": "League self-supply: anachronia + fremennik",
         "regions": [
           "anachronia",
           "fremennik"
@@ -8329,7 +8338,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Channeller's ring",
+        "requirement": "League self-supply: anachronia + fremennik",
         "regions": [
           "anachronia",
           "fremennik"
@@ -8355,7 +8364,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Stalker's ring",
+        "requirement": "League self-supply: anachronia + fremennik",
         "regions": [
           "anachronia",
           "fremennik"
@@ -8382,7 +8391,7 @@
       "setId": "champions-ring",
       "unlock": {
         "type": "drop",
-        "requirement": "Reaver's / Stalker's / Channeller's / Champion's ring",
+        "requirement": "League self-supply: anachronia + fremennik",
         "regions": [
           "anachronia",
           "fremennik"
@@ -8407,7 +8416,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Luck of the Dwarves (combat luck ring)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8432,7 +8441,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathtouch bracelet (hydrix residual)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -8459,7 +8468,7 @@
       "setId": "igneous",
       "unlock": {
         "type": "drop",
-        "requirement": "Igneous cape progression",
+        "requirement": "League self-supply: karamja + misthalin",
         "regions": [
           "karamja",
           "misthalin"
@@ -8487,7 +8496,7 @@
       "setId": "igneous",
       "unlock": {
         "type": "drop",
-        "requirement": "Igneous cape progression",
+        "requirement": "League self-supply: karamja + misthalin",
         "regions": [
           "karamja",
           "misthalin"
@@ -8515,7 +8524,7 @@
       "setId": "igneous",
       "unlock": {
         "type": "drop",
-        "requirement": "Igneous cape progression",
+        "requirement": "League self-supply: karamja + misthalin",
         "regions": [
           "karamja",
           "misthalin"
@@ -8543,7 +8552,7 @@
       "setId": "igneous",
       "unlock": {
         "type": "drop",
-        "requirement": "Igneous cape progression",
+        "requirement": "League self-supply: karamja + misthalin",
         "regions": [
           "karamja",
           "misthalin"
@@ -8571,7 +8580,7 @@
       "setId": "igneous",
       "unlock": {
         "type": "drop",
-        "requirement": "Igneous cape progression",
+        "requirement": "League self-supply: karamja + misthalin",
         "regions": [
           "karamja",
           "misthalin"
@@ -8599,7 +8608,7 @@
       "setId": "tokhaar",
       "unlock": {
         "type": "drop",
-        "requirement": "TokHaar-Kal capes",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -8625,7 +8634,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "TokHaar-Kal capes",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -8651,7 +8660,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "TokHaar-Kal capes",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -8677,7 +8686,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "TokHaar-Kal capes",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -8701,8 +8710,10 @@
       "displayDescription": "Effect-only pocket (lifesteal) — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8722,8 +8733,10 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8743,8 +8756,10 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8765,8 +8780,10 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8786,8 +8803,10 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8807,8 +8826,10 @@
       "displayDescription": "Effect-only pocket — no static Infobox Bonuses",
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent/POP craft — not Asgarnia-gated like EoF",
-        "regions": []
+        "requirement": "Player-owned ports / Arc craft (Asgarnia mapping)",
+        "regions": [
+          "asgarnia"
+        ]
       }
     },
     {
@@ -8830,7 +8851,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Erethdor's grimoire (crit pocket book)",
+        "requirement": "League self-supply: tirannwn",
         "regions": [
           "tirannwn"
         ]
@@ -8855,7 +8876,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -8880,7 +8901,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -8905,7 +8926,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -8930,7 +8951,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -8955,7 +8976,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -8980,7 +9001,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Underworld Grimoire",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -9172,8 +9193,10 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent fletching global — not region-hard",
-        "regions": []
+        "requirement": "Bakriminel bolts (Wilderness bloodwood tree, Forinthry)",
+        "regions": [
+          "forinthry"
+        ]
       }
     },
     {
@@ -9194,8 +9217,10 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent fletching global — not region-hard",
-        "regions": []
+        "requirement": "Bakriminel bolts (Wilderness bloodwood tree, Forinthry)",
+        "regions": [
+          "forinthry"
+        ]
       }
     },
     {
@@ -9218,7 +9243,7 @@
       "displayDescription": "Full slayer helmet (RS3). Id kept as slayer-helmet-i for loadout stability; wiki has no (i) suffix.",
       "unlock": {
         "type": "drop",
-        "requirement": "Full slayer helmet (black mask path)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -9394,7 +9419,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Max cape",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -9418,7 +9443,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork staff",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -9446,7 +9471,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9470,7 +9495,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9494,7 +9519,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9518,7 +9543,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9591,7 +9616,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Legatus's Emberstaff",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -9640,7 +9665,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9664,7 +9689,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -9688,7 +9713,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -9713,8 +9738,11 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: invent-global offhand — leave empty (no hard region)",
-        "regions": []
+        "requirement": "Ancient lantern (Nex emblem Asgarnia + chaotic splint Forinthry)",
+        "regions": [
+          "asgarnia",
+          "forinthry"
+        ]
       }
     },
     {
@@ -9742,28 +9770,6 @@
       }
     },
     {
-      "id": "item:second-age-staff",
-      "name": "Second-Age staff",
-      "style": "magic",
-      "slot": "twohand",
-      "tier": 80,
-      "bonuses": {
-        "accuracy": 1924
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Second-Age_staff",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: master casket / Global reward — not region-hard",
-        "regions": []
-      }
-    },
-    {
       "id": "item:spellcaster-gloves-black",
       "name": "Spellcaster gloves (black)",
       "style": "magic",
@@ -9781,7 +9787,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -9829,7 +9835,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Armadyl battlestaff (Storm's End special residual)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -9853,7 +9859,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Enhanced ancient staff (Ancient Magicks / desert residual)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -9877,8 +9883,10 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user ruling: Runespan reward — Misthalin-accessible not region-exclusive",
-        "regions": []
+        "requirement": "Greater runic staff (Runespan / Wizards' Tower, Misthalin)",
+        "regions": [
+          "misthalin"
+        ]
       }
     },
     {
@@ -9899,7 +9907,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Polypore Dungeon (ganodermic / polypore staff)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -9923,7 +9931,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Staff of light (ice strykewyrms)",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -9954,7 +9962,7 @@
       "setId": "ahrims",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -9985,7 +9993,7 @@
       "setId": "ahrims",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10009,7 +10017,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blisterwood weapons (Darkmeyer / vyre combat)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10033,7 +10041,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blisterwood weapons (Darkmeyer / vyre combat)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10057,7 +10065,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blisterwood weapons (Darkmeyer / vyre combat)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10088,7 +10096,7 @@
       "setId": "ahrims",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10189,7 +10197,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Warriors' Guild dragon defender",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10213,7 +10221,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Wand of treachery (Wilderness Warbands residual)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -10239,7 +10247,7 @@
       "setId": "masterwork",
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork 2h sword",
+        "requirement": "League self-supply: desert + forinthry",
         "regions": [
           "desert",
           "forinthry"
@@ -10397,7 +10405,7 @@
       "setId": "annihilation",
       "unlock": {
         "type": "drop",
-        "requirement": "Annihilation / Decimation / Obliteration (Wilderness T87 trio)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -10423,7 +10431,7 @@
       "setId": "jaws-of-the-abyss",
       "unlock": {
         "type": "drop",
-        "requirement": "Jaws of the Abyss (abyssal beasts)",
+        "requirement": "League self-supply: misthalin + forinthry",
         "regions": [
           "misthalin",
           "forinthry"
@@ -10450,7 +10458,7 @@
       "setId": "ripper",
       "unlock": {
         "type": "drop",
-        "requirement": "Ripper claws (Ripper Demon cave)",
+        "requirement": "League self-supply: desert + forinthry",
         "regions": [
           "desert",
           "forinthry"
@@ -10476,7 +10484,7 @@
       "setId": "pneumatic",
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -10502,7 +10510,7 @@
       "setId": "ripper",
       "unlock": {
         "type": "drop",
-        "requirement": "Ripper claws",
+        "requirement": "League self-supply: desert + forinthry",
         "regions": [
           "desert",
           "forinthry"
@@ -10580,7 +10588,7 @@
       "setId": "goliath",
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -10637,34 +10645,10 @@
       "setId": "linza",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
-      }
-    },
-    {
-      "id": "item:second-age-sword",
-      "name": "Second-Age sword",
-      "style": "melee",
-      "slot": "mainhand",
-      "tier": 80,
-      "bonuses": {
-        "damage": 768,
-        "accuracy": 1924
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Second-Age_sword",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "setId": "second-age",
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: master casket / Global reward — not region-hard",
-        "regions": []
       }
     },
     {
@@ -10691,7 +10675,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Void Knight / Pest Control residual weapons",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10721,7 +10705,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Void Knight / Pest Control residual weapons",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10841,7 +10825,7 @@
       "setId": "godsword",
       "unlock": {
         "type": "drop",
-        "requirement": "Godswords (GWD1 hilt + shard assembly)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10868,7 +10852,7 @@
       "setId": "godsword",
       "unlock": {
         "type": "drop",
-        "requirement": "Godswords (GWD1 hilt + shard assembly)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10921,7 +10905,7 @@
       "setId": "godsword",
       "unlock": {
         "type": "drop",
-        "requirement": "Godswords (GWD1 hilt + shard assembly)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10947,7 +10931,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 unique weapons",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -10973,7 +10957,7 @@
       "setId": "sunspear",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -10999,7 +10983,7 @@
       "setId": "vanquish",
       "unlock": {
         "type": "drop",
-        "requirement": "The Death of Chivalry (Vanquish)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -11026,7 +11010,7 @@
       "setId": "godsword",
       "unlock": {
         "type": "drop",
-        "requirement": "Godswords (GWD1 hilt + shard assembly)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -11053,7 +11037,7 @@
       "setId": "zamorakian",
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 unique weapons",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -11085,7 +11069,7 @@
       "setId": "barrows",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11112,7 +11096,7 @@
       "setId": "corrupted-defender",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11195,7 +11179,7 @@
       "setId": "barrows",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11226,7 +11210,7 @@
       "setId": "barrows",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11283,7 +11267,7 @@
       "setId": "barrows",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11315,7 +11299,7 @@
       "setId": "barrows",
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11396,7 +11380,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -11421,7 +11405,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: kandarin",
         "regions": [
           "kandarin"
         ]
@@ -11446,7 +11430,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork bow",
+        "requirement": "League self-supply: kandarin + morytania",
         "regions": [
           "kandarin",
           "morytania"
@@ -11471,7 +11455,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -11495,7 +11479,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -11525,52 +11509,6 @@
         "regions": [
           "kandarin"
         ]
-      }
-    },
-    {
-      "id": "item:elder-longbow",
-      "name": "Elder longbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 90,
-      "bonuses": {
-        "damage": 1020,
-        "accuracy": 1924
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Elder_longbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:elder-shortbow",
-      "name": "Elder shortbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 90,
-      "bonuses": {
-        "damage": 702,
-        "accuracy": 1924
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Elder_shortbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
       }
     },
     {
@@ -11617,7 +11555,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Leng artefact T90 glove upgrades (shared Arch-Glacor)",
+        "requirement": "League self-supply: kandarin + misthalin",
         "regions": [
           "kandarin",
           "misthalin"
@@ -11643,7 +11581,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Vault of Hereditas (Gloomfire bow)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -11668,7 +11606,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Hellfire bow (Wilderness)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -11693,7 +11631,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Kalphite King defender residual",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -11790,7 +11728,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -11815,7 +11753,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -11863,7 +11801,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -11895,98 +11833,6 @@
       }
     },
     {
-      "id": "item:magic-composite-bow",
-      "name": "Magic composite bow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 80,
-      "bonuses": {
-        "damage": 956.3,
-        "accuracy": 1694
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Magic_composite_bow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:magic-longbow",
-      "name": "Magic longbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 80,
-      "bonuses": {
-        "damage": 956,
-        "accuracy": 1694
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Magic_longbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:magic-shortbow",
-      "name": "Magic shortbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 80,
-      "bonuses": {
-        "damage": 658,
-        "accuracy": 1694
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Magic_shortbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:second-age-bow",
-      "name": "Second-Age bow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 80,
-      "bonuses": {
-        "damage": 1020,
-        "accuracy": 1924
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Second-Age_bow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: master casket / Global reward — not region-hard",
-        "regions": []
-      }
-    },
-    {
       "id": "item:swift-gloves-black",
       "name": "Swift gloves (black)",
       "style": "ranged",
@@ -12004,7 +11850,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dominion Tower wearable rewards (main-game usable gloves)",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -12029,7 +11875,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -12054,7 +11900,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Hand cannon (Chaos Dwarf Battlefield)",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -12079,7 +11925,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -12109,7 +11955,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim token residual (mercenary gloves)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -12134,7 +11980,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -12159,7 +12005,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Black salamander (Wilderness Boneyard Hunter)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -12184,7 +12030,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Blisterwood weapons (Darkmeyer / vyre combat)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -12258,7 +12104,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dark bow (dark beasts / Tirannwn)",
+        "requirement": "League self-supply: tirannwn",
         "regions": [
           "tirannwn"
         ]
@@ -12282,7 +12128,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dragonfire shield / deflector residual",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -12313,7 +12159,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -12343,7 +12189,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -12373,7 +12219,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows brothers weapons (classic + Akrisae / Linza)",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -12398,7 +12244,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Barrows defenders / corruption sigil ladder",
+        "requirement": "League self-supply: morytania",
         "regions": [
           "morytania"
         ]
@@ -12423,79 +12269,10 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
-      }
-    },
-    {
-      "id": "item:yew-composite-bow",
-      "name": "Yew composite bow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 70,
-      "bonuses": {
-        "damage": 892.5,
-        "accuracy": 1486
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Yew_composite_bow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:yew-longbow",
-      "name": "Yew longbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 70,
-      "bonuses": {
-        "damage": 892,
-        "accuracy": 1486
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Yew_longbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
-      }
-    },
-    {
-      "id": "item:yew-shortbow",
-      "name": "Yew shortbow",
-      "style": "ranged",
-      "slot": "twohand",
-      "tier": 70,
-      "bonuses": {
-        "damage": 614.3,
-        "accuracy": 1486
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Yew_shortbow",
-          "verifiedAt": "2026-07-26"
-        }
-      ],
-      "unlock": {
-        "type": "drop",
-        "requirement": "user ruling: skilling bow — not league-hard combat gate",
-        "regions": []
       }
     },
     {
@@ -12518,7 +12295,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fire cape",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12543,7 +12320,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dagannoth Kings uniques",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -12567,7 +12344,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dagannoth Kings uniques",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -12597,7 +12374,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dagannoth Kings uniques",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -12627,7 +12404,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dagannoth Kings uniques",
+        "requirement": "League self-supply: fremennik",
         "regions": [
           "fremennik"
         ]
@@ -12651,7 +12428,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dragonfire shield / deflector residual",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -12676,7 +12453,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -12701,7 +12478,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -12726,7 +12503,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -12751,7 +12528,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -12776,7 +12553,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Deathdealer / Deathwarden armour",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -12801,7 +12578,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour progression",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12826,7 +12603,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour progression",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12851,7 +12628,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour progression",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12876,7 +12653,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12901,7 +12678,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12926,7 +12703,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12951,7 +12728,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -12976,7 +12753,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Fight Cauldron obsidian armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13001,7 +12778,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Gemstone armour (T80 hybrid Enchanted touch)",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13026,7 +12803,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Gemstone armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13051,7 +12828,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Gemstone armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13076,7 +12853,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Gemstone armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13101,7 +12878,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Gemstone armour",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13125,7 +12902,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Chaotic melee and ranged weapons",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13149,7 +12926,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Daemonheim / Dungeoneering residual weapons",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13174,7 +12951,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit shield sigils",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13199,7 +12976,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Abomination progression",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13224,7 +13001,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Classic TzHaar obsidian weapons",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13249,7 +13026,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Classic TzHaar obsidian weapons",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13274,7 +13051,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Classic TzHaar obsidian weapons",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13299,7 +13076,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Classic TzHaar obsidian weapons",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13324,7 +13101,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Classic TzHaar obsidian weapons",
+        "requirement": "League self-supply: karamja",
         "regions": [
           "karamja"
         ]
@@ -13350,7 +13127,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13376,7 +13153,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13407,7 +13184,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13438,7 +13215,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13469,7 +13246,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "God Wars Dungeon 1 equipment",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13494,7 +13271,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13519,7 +13296,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13544,7 +13321,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13569,7 +13346,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13594,7 +13371,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13619,7 +13396,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13645,7 +13422,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13671,7 +13448,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13702,7 +13479,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13733,7 +13510,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13758,7 +13535,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13783,7 +13560,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Player-Owned Port combat residual (Arc = Asgarnia)",
+        "requirement": "League self-supply: asgarnia",
         "regions": [
           "asgarnia"
         ]
@@ -13814,7 +13591,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Occultist's ring",
+        "requirement": "League self-supply: anachronia",
         "regions": [
           "anachronia"
         ]
@@ -13838,7 +13615,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Ring of vigour (Daemonheim tokens)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13862,7 +13639,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Guthix staff (Mage Arena)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13887,7 +13664,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Spirit cape (Daemonheim tokens)",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13912,7 +13689,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Kalphite King defender residual",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -13936,7 +13713,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Hexhunter bow / stalker dungeon ammo",
+        "requirement": "League self-supply: forinthry",
         "regions": [
           "forinthry"
         ]
@@ -13967,7 +13744,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dragon claws (Slice & Dice EoF / weapon-switch residual)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -13992,7 +13769,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Dragon claws (Tormented demons)",
+        "requirement": "League self-supply: misthalin",
         "regions": [
           "misthalin"
         ]
@@ -14018,7 +13795,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Apex hide armour (Havenhythe BGH / craft)",
+        "requirement": "League self-supply: havenhythe",
         "regions": [
           "havenhythe"
         ]
@@ -14044,7 +13821,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Apex hide armour (Havenhythe BGH / craft)",
+        "requirement": "League self-supply: havenhythe",
         "regions": [
           "havenhythe"
         ]
@@ -14070,7 +13847,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Apex hide armour (Havenhythe BGH / craft)",
+        "requirement": "League self-supply: havenhythe",
         "regions": [
           "havenhythe"
         ]
@@ -14096,7 +13873,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Apex hide armour (Havenhythe BGH / craft)",
+        "requirement": "League self-supply: havenhythe",
         "regions": [
           "havenhythe"
         ]
@@ -14122,7 +13899,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Apex hide armour (Havenhythe BGH / craft)",
+        "requirement": "League self-supply: havenhythe",
         "regions": [
           "havenhythe"
         ]
@@ -14149,7 +13926,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14178,7 +13955,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14207,7 +13984,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14236,7 +14013,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14265,7 +14042,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14294,7 +14071,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14325,7 +14102,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14356,7 +14133,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14387,7 +14164,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14418,7 +14195,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14449,7 +14226,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -14477,7 +14254,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -14505,7 +14282,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -14533,7 +14310,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -14561,7 +14338,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Trimmed / custom-fit trimmed masterwork melee armour",
+        "requirement": "League self-supply: asgarnia + morytania",
         "regions": [
           "asgarnia",
           "morytania"
@@ -14589,7 +14366,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14620,7 +14397,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14651,7 +14428,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14682,7 +14459,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14713,7 +14490,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork magic armour",
+        "requirement": "League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin",
         "regions": [
           "asgarnia",
           "desert",
@@ -14744,7 +14521,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14773,7 +14550,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14802,7 +14579,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14831,7 +14608,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14860,7 +14637,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "Masterwork ranged armour",
+        "requirement": "League self-supply: anachronia + forinthry + kandarin",
         "regions": [
           "anachronia",
           "forinthry",
@@ -14938,7 +14715,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "user region ruling 2026-07-26",
+        "requirement": "League self-supply: desert",
         "regions": [
           "desert"
         ]
@@ -14964,7 +14741,7 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "First Necromancer's equipment",
+        "requirement": "League self-supply: misthalin + desert",
         "regions": [
           "misthalin",
           "desert"

@@ -1510,18 +1510,38 @@ textarea:focus-visible {
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    gap: 0.85rem;
-    padding: 1rem 1.05rem;
+    gap: 0.65rem 0.75rem;
+    padding: 0.85rem 1rem;
   }
 
   .tasks-toolbar__primary {
     border-bottom: 1px solid var(--tasks-line);
+    /* One control row: search grows, region + toggles share one baseline. */
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) minmax(9.5rem, 12rem) auto auto;
+    align-items: end;
+    column-gap: 0.75rem;
+    row-gap: 0.55rem;
+  }
+
+  .tasks-toolbar__wikisync-note {
+    margin: 0;
+    padding: 0 1rem 0.7rem;
+    border-bottom: 1px solid var(--tasks-line);
+    color: var(--color-parch-400);
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  .tasks-toolbar__wikisync-note a {
+    color: var(--color-gem-300);
+    text-underline-offset: 3px;
   }
 
   .tasks-field {
     display: grid;
     gap: 0.18rem;
-    min-width: 9.5rem;
+    min-width: 0;
     color: var(--color-parch-300);
     font-size: 0.72rem;
     letter-spacing: 0.07em;
@@ -1529,34 +1549,24 @@ textarea:focus-visible {
   }
 
   .tasks-field--search {
-    flex: 1 1 18rem;
+    min-width: 0;
   }
 
-  .tasks-import {
-    display: grid;
-    gap: 0.25rem;
-  }
-
-  .tasks-import__source {
-    color: var(--color-parch-400);
-    font-size: 0.72rem;
-    text-underline-offset: 3px;
-  }
-
-  .tasks-import__source:hover {
-    color: var(--color-gem-300);
+  .tasks-field--region {
+    min-width: 9.5rem;
   }
 
   .tasks-field input,
   .tasks-field select,
   .tasks-results__sort select {
-    min-height: 2.75rem;
-    padding: 0.55rem 0.7rem;
+    min-height: 2.5rem;
+    width: 100%;
+    padding: 0.45rem 0.65rem;
     border: 1px solid var(--tasks-line);
     border-radius: var(--radius-sm);
     background: var(--tasks-inset);
     color: var(--color-parch-50);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     letter-spacing: 0;
     text-transform: none;
   }
@@ -1569,24 +1579,28 @@ textarea:focus-visible {
   .tasks-import__open,
   .tasks-toolbar__clear,
   .tasks-pagination button {
-    min-height: 2.75rem;
-    padding: 0.5rem 0.75rem;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.75rem;
     border: 1px solid var(--tasks-line);
     border-radius: var(--radius-sm);
     background: var(--tasks-inset);
     color: var(--color-parch-100);
+    white-space: nowrap;
   }
 
   .tasks-toggle {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    justify-self: start;
   }
 
   .tasks-import__open {
+    justify-self: start;
     border-color: var(--color-gem-500);
     background: var(--tasks-raised);
     color: var(--color-gem-300);
+    font-size: 0.875rem;
   }
 
   .tasks-toggle__pip {
@@ -1609,9 +1623,30 @@ textarea:focus-visible {
   }
 
   .tasks-toolbar__build-note {
+    grid-column: 1 / -1;
     align-self: center;
     color: var(--color-parch-300);
     font-size: 0.8125rem;
+  }
+
+  @media (max-width: 900px) {
+    .tasks-toolbar__primary {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .tasks-toolbar__primary .tasks-field--search {
+      grid-column: 1 / -1;
+    }
+
+    .tasks-import__open {
+      justify-self: stretch;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .tasks-toolbar__primary {
+      grid-template-columns: 1fr;
+    }
   }
 
   .tasks-toolbar__build-note a,
@@ -1877,6 +1912,7 @@ textarea:focus-visible {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.8rem;
+    align-items: stretch;
   }
 
   .task-card {
@@ -1886,7 +1922,9 @@ textarea:focus-visible {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 10.15rem;
+    /* Shared card height so footers line up across a row. */
+    min-height: 11.5rem;
+    height: 100%;
     border: 1px solid var(--tasks-line-soft);
     border-radius: var(--radius-sm);
     background: color-mix(in srgb, var(--tasks-raised) 94%, var(--tasks-surface));
@@ -1939,8 +1977,8 @@ textarea:focus-visible {
 
   .task-card__top {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 0.7rem;
+    grid-template-columns: 3rem minmax(0, 1fr) 3.25rem;
+    gap: 0.65rem;
     align-items: start;
     padding: 0.75rem 0.75rem 0.45rem;
   }
@@ -1990,15 +2028,17 @@ textarea:focus-visible {
     border: 0;
     background: transparent;
     color: var(--color-parch-50);
-    font-size: 0.98rem;
+    font-size: 0.9375rem;
     font-weight: 600;
-    line-height: 1.38;
+    line-height: 1.35;
     text-align: left;
     cursor: pointer;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     overflow: hidden;
+    /* Reserve three lines so points columns align across cards. */
+    min-height: calc(1.35em * 3);
   }
 
   .task-card__title:hover {
@@ -2006,11 +2046,13 @@ textarea:focus-visible {
   }
 
   .task-card__points {
+    min-width: 3.25rem;
     color: var(--color-gem-300);
     font-family: var(--font-mono);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     line-height: 1;
     text-align: right;
+    font-variant-numeric: tabular-nums;
   }
 
   .task-card__points small {
@@ -2030,7 +2072,8 @@ textarea:focus-visible {
     justify-content: flex-end;
     gap: 0.25rem 0.5rem;
     margin-top: auto;
-    padding: 0.1rem 0.75rem 0.4rem;
+    min-height: 1.35rem;
+    padding: 0.15rem 0.75rem 0.35rem;
     color: var(--color-parch-300);
     font-size: 0.8125rem;
     line-height: 1.25;
@@ -2051,7 +2094,9 @@ textarea:focus-visible {
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
+    flex: 0 0 auto;
     min-height: 2.35rem;
+    margin-top: 0;
     padding: 0.4rem 0.65rem;
     border-top: 1px solid var(--tasks-line-soft);
     background: var(--tasks-inset);

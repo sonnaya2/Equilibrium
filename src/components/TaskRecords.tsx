@@ -251,31 +251,7 @@ export function TaskRecords({
                     />
                   </label>
 
-                  {dataset.wikiSyncSupported ? (
-                    <div className="tasks-import">
-                      <button
-                        type="button"
-                        className="tasks-import__open"
-                        onClick={() => {
-                          setWikiHtmlFile(null);
-                          setWikiSyncNotice("");
-                          wikiImportDialog.current?.showModal();
-                        }}
-                      >
-                        Import Wiki progress
-                      </button>
-                      <a
-                        className="tasks-import__source"
-                        href="https://runescape.wiki/w/RuneScape:WikiSync"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        RuneScape Wiki: “publicly available to anyone”
-                      </a>
-                    </div>
-                  ) : null}
-
-                  <label className="tasks-field">
+                  <label className="tasks-field tasks-field--region">
                     <span>Region</span>
                     <select
                       value={region}
@@ -300,12 +276,39 @@ export function TaskRecords({
                     My build only
                   </button>
 
+                  {dataset.wikiSyncSupported ? (
+                    <button
+                      type="button"
+                      className="tasks-import__open"
+                      onClick={() => {
+                        setWikiHtmlFile(null);
+                        setWikiSyncNotice("");
+                        wikiImportDialog.current?.showModal();
+                      }}
+                    >
+                      Import Wiki progress
+                    </button>
+                  ) : null}
+
                   {buildOnly && build.elective.length === 0 ? (
                     <span className="tasks-toolbar__build-note">
                       Starting regions · <Link href="/build">Edit build</Link>
                     </span>
                   ) : null}
                 </div>
+                {dataset.wikiSyncSupported ? (
+                  <p className="tasks-toolbar__wikisync-note">
+                    Import uses a saved Wiki task page after{" "}
+                    <a
+                      href="https://runescape.wiki/w/RuneScape:WikiSync"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      RuneScape Wiki: “publicly available to anyone”
+                    </a>
+                    .
+                  </p>
+                ) : null}
 
                 <div className="tasks-toolbar__secondary">
                   <fieldset className="tasks-difficulty">

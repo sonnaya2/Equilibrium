@@ -31,11 +31,11 @@ const STEM_RADIUS = 0.0005;
 const TENDRIL_RADIUS = 0.00028;
 const TENDRIL_WIGGLE = 0.0014;
 const MAX_NODES = 160;
-const LEAF_SPACING = 0.004;
+const LEAF_SPACING = 0.0036;
 const MAX_LEAVES_PER_SEAM = 180;
-const LEAF_SIDE = 0.0028;
-const LEAF_W = 0.0038;
-const LEAF_H = 0.0058;
+const LEAF_SIDE = 0.003;
+const LEAF_W = 0.0044;
+const LEAF_H = 0.0066;
 const CORNER_GAIN = 1.4;
 
 function hash(n: number): number {

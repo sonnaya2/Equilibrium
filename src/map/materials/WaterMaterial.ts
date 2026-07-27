@@ -61,9 +61,10 @@ type FloatNode = Node<"float">;
 
 /** The long waves the mesh actually follows. */
 function longSwell(x: FloatNode, z: FloatNode): FloatNode {
-  const a = x.mul(5.1).add(z.mul(2.6)).add(mapClock.mul(0.75)).sin();
-  const b = z.mul(6.4).sub(x.mul(3.1)).sub(mapClock.mul(0.55)).sin();
-  const c = x.mul(3.2).add(z.mul(4.1)).add(mapClock.mul(0.38)).sin();
+  // Slightly quicker than a still pond — cartographic life, not storm sea.
+  const a = x.mul(5.1).add(z.mul(2.6)).add(mapClock.mul(0.88)).sin();
+  const b = z.mul(6.4).sub(x.mul(3.1)).sub(mapClock.mul(0.64)).sin();
+  const c = x.mul(3.2).add(z.mul(4.1)).add(mapClock.mul(0.46)).sin();
   return a.mul(0.48).add(b.mul(0.34)).add(c.mul(0.18));
 }
 
@@ -71,8 +72,8 @@ function longSwell(x: FloatNode, z: FloatNode): FloatNode {
 function surfaceHeight(x: FloatNode, z: FloatNode): FloatNode {
   return longSwell(x, z)
     .mul(0.62)
-    .add(x.mul(23).add(z.mul(17)).add(mapClock.mul(1.35)).sin().mul(0.24))
-    .add(z.mul(31).sub(x.mul(12)).sub(mapClock.mul(0.95)).sin().mul(0.14));
+    .add(x.mul(23).add(z.mul(17)).add(mapClock.mul(1.55)).sin().mul(0.24))
+    .add(z.mul(31).sub(x.mul(12)).sub(mapClock.mul(1.08)).sin().mul(0.14));
 }
 
 export interface WaterMaterial {
@@ -128,17 +129,22 @@ export function createWaterMaterial(
   const F = texture(field, mapUvFrom(positionWorld));
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
 
-  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.08).mul(nearSea)));
+  // Height tint keeps troughs readable without relying on specular wash.
+  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.1).mul(nearSea)));
   water = water.mul(mix(float(0.78), float(1), offshore));
-  water = mix(water, linear(SKY), fresnel.mul(0.1).mul(nearSea2));
+  // Quiet sky rim — grazing fresnel under plate rims was reading as soft white shafts.
+  water = mix(water, linear(SKY), fresnel.mul(0.055).mul(nearSea2));
 
   const reflected = normal.mul(normal.dot(key).mul(2)).sub(key);
   const toward = reflected.dot(view).clamp(0, 1);
-  // nearSea² × offshore: no god-rays under island bottoms or far stretch.
-  const glint = toward.pow(70).mul(fresnel.mul(0.55).add(0.06)).mul(0.22).mul(nearSea2).mul(offshore);
-  const sheen = toward.pow(14).mul(0.01).mul(nearSea2).mul(offshore);
+  // nearSea² × offshore gates far stretch + under-land UV. Residual coastal shafts
+  // were the remaining path: high scale + non-zero nadir floor on glint. Tighter
+  // lobe, lower weight, fresnel-led (tiny floor) keeps cartographic sparkle without
+  // vertical white beams at island edges.
+  const glint = toward.pow(96).mul(fresnel.mul(0.82).add(0.015)).mul(0.11).mul(nearSea2).mul(offshore);
+  const sheen = toward.pow(22).mul(0.004).mul(nearSea2).mul(offshore);
 
-  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.12).mul(nearSea2);
+  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.1).mul(nearSea2).mul(offshore);
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
     .mul(height.mul(0.35).add(0.65))

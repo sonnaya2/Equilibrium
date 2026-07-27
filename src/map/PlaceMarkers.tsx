@@ -25,15 +25,22 @@ import { useMapFocus } from "./useMapFocus";
 
 const Y_SPEED = 6.5;
 
-/** POI stake sizes — faces ~1.4× prior for overview/focus readability; beams/feet ~1.25× so stakes stay proportional (not stubby, not god-ray columns). Region crest chips are CSS — leave those alone. */
+/**
+ * POI stake sizes (world units on the board — not CSS chips).
+ * Face is the readable hero (~0.07). Beam is a short soft pedestal under the
+ * tilted disc: height ≥ ~0.275×face so the easel cant clears the plate, but
+ * well under 0.5×face so it never reads as a god-ray column. Radius stays
+ * slim vs face so the additive frustum is a glow stake, not a light pipe.
+ * Region crest chips are CSS — leave those alone.
+ */
 const FACE_AREA = 0.07;
 const FACE_SITE = 0.062;
-const BEAM_H_AREA = 0.0275;
-const BEAM_H_SITE = 0.024;
-const BEAM_R_BASE_AREA = 0.014;
-const BEAM_R_BASE_SITE = 0.0125;
-const FOOT_AREA = 0.02;
-const FOOT_SITE = 0.0175;
+const BEAM_H_AREA = 0.026;
+const BEAM_H_SITE = 0.023;
+const BEAM_R_BASE_AREA = 0.0095;
+const BEAM_R_BASE_SITE = 0.0085;
+const FOOT_AREA = 0.015;
+const FOOT_SITE = 0.013;
 const FACE_TILT = -0.72;
 const HIT_OVERSIZE = 1.55;
 

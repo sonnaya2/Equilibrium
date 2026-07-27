@@ -26,8 +26,8 @@ import {
 import type { Node } from "three/webgpu";
 import { linear } from "./shared";
 
-/** Fine dark scrub — gain and card size kept low (CEO competitive pass). */
-const FOLIAGE_GAIN = 0.94;
+/** Fine dark scrub — small presence uptick after competitive crush (still scrub, not stickers). */
+const FOLIAGE_GAIN = 1.05;
 const STEM_GAIN = 1.05;
 const TENDRIL_GAIN = 1.0;
 
@@ -35,11 +35,11 @@ const BARK_DARK = 0x16120e;
 const BARK = 0x2a2218;
 const BARK_MOSS = 0x2e3622;
 
-const LEAF_DEEP = 0x24331c;
-const LEAF_MID = 0x3d4a28;
-const LEAF_PALE = 0x5a5e36;
-const LEAF_DRY = 0x5c4a28;
-const LEAF_BURN = 0x4a381c;
+const LEAF_DEEP = 0x283820;
+const LEAF_MID = 0x42522c;
+const LEAF_PALE = 0x62663c;
+const LEAF_DRY = 0x64522c;
+const LEAF_BURN = 0x503c20;
 
 export interface VineMaterials {
   stem: THREE.MeshStandardNodeMaterial;

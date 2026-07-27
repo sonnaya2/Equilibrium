@@ -6,8 +6,8 @@
  * Long swell displaces the mesh, so the plane is subdivided just enough to carry
  * it — the short detail is normal-only and costs no vertices. Everything else
  * about how it looks lives in WaterMaterial; everything about when it is allowed
- * to move lives in MotionDriver, which owns the single 30Hz heartbeat the whole
- * board shares.
+ * to move lives in MotionDriver, which owns the single MOTION_HZ (60) heartbeat
+ * the whole board shares.
  */
 
 import { useEffect, useMemo } from "react";

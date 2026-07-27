@@ -48,25 +48,28 @@ function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
 /**
  * Tight lava basins only (TzHaar, Lava Maze, Wilderness Crater).
  * Chroma + land + dry gates stop heat painting open ocean under plate rims
- * (clipboard god-rays).
+ * (clipboard god-rays) and non-red land inside the discs.
  */
 function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
-  const land = smoothstep(float(0.52), float(0.58), F.g).mul(smoothstep(float(0.45), float(0.7), F.r));
-  const dry = float(1).sub(smoothstep(float(0.12), float(0.35), F.b));
+  // Inland + solid land only — plate-rim ocean stays cold.
+  const land = smoothstep(float(0.53), float(0.6), F.g).mul(smoothstep(float(0.55), float(0.85), F.r));
+  const dry = float(1).sub(smoothstep(float(0.1), float(0.28), F.b));
   const r = albedoRgb.x;
   const g = albedoRgb.y;
   const b = albedoRgb.z;
+  // No chroma floor: real lava is red-dominant on the HD raster; a floor was
+  // washing green/grey land inside the discs.
   const hotChroma = r
     .sub(g.max(b))
-    .mul(2.2)
+    .mul(2.5)
     .clamp(0, 1)
-    .mul(smoothstep(float(0.25), float(0.55), r));
-  const heat = softDisc(mapUv, 0.3444, 0.7046, 0.02)
-    .add(softDisc(mapUv, 0.416, 0.37, 0.014))
-    .add(softDisc(mapUv, 0.4372, 0.3848, 0.016))
+    .mul(smoothstep(float(0.22), float(0.5), r));
+  // Discs retargeted onto hot-pixel centroids; radii ~ tile-scale basins only.
+  const heat = softDisc(mapUv, 0.342, 0.6995, 0.011)
+    .add(softDisc(mapUv, 0.4176, 0.3691, 0.012))
+    .add(softDisc(mapUv, 0.445, 0.3306, 0.011))
     .clamp(0, 1);
-  // Floor 0.06 (not 0.25): real dark lava still registers; non-red land does not.
-  return heat.mul(land).mul(dry).mul(hotChroma.add(0.06).clamp(0, 1));
+  return heat.mul(land).mul(dry).mul(hotChroma);
 }
 
 function regionMasks(mapUv: MapUv, F: FieldSample) {
@@ -182,18 +185,19 @@ export function createTerrainMaterials(
       .add(linear(0xd0e4ea).mul(bank.mul(0.08)));
   }
 
-  // Desert heat, Prif blue, Mory green — soft atmospheres.
+  // Desert heat, Prif blue, Mory green — soft atmospheres (not paint washes).
+  // Mix muls stay well under 0.5 so the HD raster still owns the plate.
   const heatWave = mx_noise_float(vec3(mapUv.x.mul(18), mapUv.y.mul(18), mapClock.mul(0.12)))
     .mul(0.5)
     .add(0.5);
-  base = mix(base, base.mul(vec3(1.1, 0.97, 0.82)).add(linear(0xc4782a).mul(0.05)), atmospheres.desert.mul(0.75));
+  base = mix(base, base.mul(vec3(1.06, 0.985, 0.9)).add(linear(0xc4782a).mul(0.028)), atmospheres.desert.mul(0.38));
   base = mix(
     base,
-    base.mul(vec3(1.05, 0.98, 0.9)).add(linear(0xe8a050).mul(heatWave.mul(0.05))),
-    atmospheres.desert.mul(0.675),
+    base.mul(vec3(1.03, 0.99, 0.94)).add(linear(0xe8a050).mul(heatWave.mul(0.028))),
+    atmospheres.desert.mul(0.32),
   );
-  base = mix(base, base.mul(vec3(0.9, 0.97, 1.1)).add(linear(0x3a8fbf).mul(0.045)), atmospheres.prif.mul(0.75));
-  base = mix(base, base.mul(vec3(0.92, 1.04, 0.94)).add(linear(0x3d6b45).mul(0.04)), atmospheres.mory.mul(0.675));
+  base = mix(base, base.mul(vec3(0.94, 0.98, 1.06)).add(linear(0x3a8fbf).mul(0.028)), atmospheres.prif.mul(0.4));
+  base = mix(base, base.mul(vec3(0.95, 1.03, 0.96)).add(linear(0x3d6b45).mul(0.025)), atmospheres.mory.mul(0.36));
 
   const lavaHeat = softLava(mapUv, F, albedoSample.rgb);
   const ember = linear(0xff6a2a);
@@ -210,7 +214,7 @@ export function createTerrainMaterials(
     .mul(capRim.mul(focus).mul(0.5))
     .add(rimGem.mul(capRim.mul(sweep).mul(0.85)));
   const lavaGlow = ember.mul(lavaHeat.mul(lavaPulse.mul(0.01).add(0.008)));
-  const prifGlow = linear(0x4ec4e8).mul(atmospheres.prif.mul(0.024));
+  const prifGlow = linear(0x4ec4e8).mul(atmospheres.prif.mul(0.014));
 
   base = base.mul(float(1).add(focus.mul(0.07)));
   const lum = base.x.mul(0.2126).add(base.y.mul(0.7152)).add(base.z.mul(0.0722));

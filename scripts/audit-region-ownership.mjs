@@ -167,24 +167,30 @@ const PROBES = [
   ["Obelisk low wildy", 3150, 3620, "forinthry"],
 
   // ── Misthalin–Desert (Al Kharid gate, digsite S/SE, Lumbridge swamp) ─────
-  // Desert force: x 3260–3425, y 2900–3275. Dig SE force: x 3240–3390, y 3270–3450.
+  // Desert force up to y≤3382; dig hill y≥3385; Exam Centre blob ~[3362,3339].
   ["Al Kharid gate desert", 3290, 3225, "desert"],
   // West of the gate (Lumbridge side) = Misthalin; east stays Desert.
   ["Al Kharid gate mist W", 3255, 3228, "misthalin"],
   ["Al Kharid gate desert E", 3280, 3227, "desert"],
-  // North of Al Kharid city toward Dig Site scrub — still desert until dig band.
+  // North of Al Kharid city toward Dig Site scrub — desert until dig hill / exam.
   ["Al Kharid N scrub", 3300, 3250, "desert"],
   ["Al Kharid palace", 3293, 3170, "desert"],
   ["Al Kharid NW wall", 3275, 3200, "desert"],
   ["Lumbridge E swamp", 3240, 3180, "misthalin"],
   ["Lumbridge swamp S", 3205, 3165, "misthalin"],
   ["Lumbridge SE river", 3255, 3200, "misthalin"],
-  ["Cabbage patch band", 3260, 3270, "misthalin"], // just N of desert cap y
+  ["Cabbage patch band", 3260, 3270, "misthalin"], // Lumbridge-side west approach
   ["Dig Site core", 3360, 3420, "misthalin"],
-  ["Dig Site S campus", 3360, 3380, "misthalin"],
+  ["Dig Site hill S", 3360, 3395, "misthalin"],
+  ["Exam Centre", 3362, 3340, "misthalin"],
   ["Desert top mid", 3360, 3300, "desert"],
+  // Northern Kharidian sand — desert west/east of the narrow Exam corridor.
+  ["Desert top high W", 3320, 3360, "desert"],
+  ["Desert top high E", 3392, 3345, "desert"], // just W of Salve strip, S of dig hill
+  ["Desert under dig W", 3325, 3375, "desert"], // west of Exam corridor
+  ["Exam corridor mid", 3360, 3375, "misthalin"],
   ["Oasis NE sand", 3400, 3280, "desert"],
-  ["Dig Site E ridge", 3390, 3360, "misthalin"],
+  ["Dig Site E ridge", 3395, 3365, "misthalin"], // Salve west-bank strip
   ["Senntisten approach", 3350, 3400, "misthalin"],
   ["Desert N of AK", 3320, 3240, "desert"],
   ["Desert NE finger", 3395, 3270, "desert"],
@@ -193,7 +199,7 @@ const PROBES = [
   ["Uzer path N", 3480, 3100, "desert"],
 
   // ── Misthalin–Morytania (Salve, Paterdomus, Silvarea, Canifis W) ─────────
-  // Salve mist force: x 3300–3416, y 3360–3535. Mory force: x 3420–3560, y 3240–3565.
+  // Salve: river strip x≥3390 y≥3360; inland mist x<3390 y≥3390.
   ["Silvarea path", 3375, 3465, "misthalin"],
   ["Silvarea E ridge", 3395, 3470, "misthalin"],
   ["Paterdomus W bank", 3400, 3488, "misthalin"],
@@ -353,20 +359,34 @@ const GRIDS = [
     name: "Misth/Desert dig SE",
     x0: 3240, x1: 3420, y0: 3200, y1: 3400, step: 10,
     expect: (x, y) => {
-      // Dig Site campus only; northern desert sand is desert (not mist).
-      if (y >= 3345 && x >= 3310 && x <= 3395) return "misthalin";
-      if (y <= 3338 && x >= 3260 && x <= 3405) return "desert";
-      if (x >= 3400 && y <= 3338 && y >= 3200) return "desert";
+      // Dig hill + narrow Exam corridor — not a sand blanket.
+      if (y >= 3385 && x >= 3320 && x <= 3395) return "misthalin";
+      if (y >= 3328 && y < 3385 && x >= 3340 && x <= 3385) return "misthalin";
+      // Salve true west-bank strip.
+      if (x >= 3390 && x <= 3416 && y >= 3360) return "misthalin";
+      // Lumbridge side of Al Kharid gate is mist (west approach corridor).
+      if (x <= 3275 && y >= 3215 && y <= 3275) return "misthalin";
+      // Northern sand is desert up to dig hill (west/east of exam corridor).
+      if (y <= 3382 && y >= 3200 && x >= 3260 && x < 3390) {
+        if (y >= 3328 && y < 3385 && x >= 3340 && x <= 3385) return "misthalin";
+        return "desert";
+      }
+      if (x >= 3390 && x < 3440 && y <= 3324 && y >= 3200) return "desert";
       return null;
     },
   },
   {
     // Stop south of the wildy ditch; north of ~3525 is Forinthry, not Salve mist.
+    // Inland west of river is mist only for y≥3390; low-y west sand is desert.
     name: "Salve banks",
     x0: 3360, x1: 3500, y0: 3360, y1: 3520, step: 10,
     expect: (x, y) => {
-      if (x <= 3416) return "misthalin";
       if (x >= 3420) return "morytania";
+      if (x >= 3390 && x <= 3416) return "misthalin";
+      if (x < 3390 && y >= 3390) return "misthalin";
+      // Exam corridor: narrow mist finger dig hill → Exam Centre.
+      if (x >= 3340 && x <= 3385 && y >= 3328 && y < 3385) return "misthalin";
+      if (x < 3390 && y < 3385) return "desert";
       return null;
     },
   },

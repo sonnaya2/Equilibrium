@@ -370,13 +370,19 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Salve: Paterdomus / Dig Site west bank = Misthalin; east bank = Mory ---
-      // Temple ~[3405,3488] west bank; bridge ~[3425,3485].
-      // Mory E bank is y≥3325 only — river/sand contact below owns Mine/Burgh/N dunes
-      // through y=3320 so the vertical cut @x≈3440 is not truncated early.
+      // --- Salve: west bank = Misthalin; east bank = Mory ---
+      // Temple ~[3405,3488]; bridge ~[3425,3485].
+      // Split the old full rectangle (x 3300–3416, y≥3360) — it painted the whole
+      // northern Kharidian sand top as Misthalin. River bank stays low-y mist;
+      // inland mist starts higher (dig hill / Silvarea), not mid-sand.
+      // Mory E bank y≥3325 only — river/sand contact below owns Mine/Burgh.
       // Always force mory (no desert skip): a prior skip+continue preserved Voronoi
       // desert fingers into Mort Myre and blocked the Burgh/contact boxes.
-      if (gx >= 3300 && gx <= 3416 && gy >= 3360 && gy <= 3535) {
+      if (gx >= 3390 && gx <= 3416 && gy >= 3360 && gy <= 3535) {
+        force(i, mistId);
+        continue;
+      }
+      if (gx >= 3300 && gx < 3390 && gy >= 3390 && gy <= 3535) {
         force(i, mistId);
         continue;
       }
@@ -385,19 +391,25 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Dig Site campus only = Misthalin ---
-      // Dig Site [3360,3420]. Prior gy≥3270 box painted the whole northern
-      // Kharidian sand top as Misthalin (user report). Campus only.
-      if (gx >= 3310 && gx <= 3395 && gy >= 3345 && gy <= 3485) {
+      // --- Dig Site hill + Exam Centre = Misthalin (connected, not a sand blanket) ---
+      // Dig Site [3360,3420]; Exam Centre ~[3362,3339]. Prior campus y≥3345 across
+      // a wide x band stole the desert *top*. Keep a narrow N–S corridor so Exam
+      // Centre stays mist without painting the whole northern sand, and so the
+      // mist body stays one plate (an island blob breaks ring/mask agreement).
+      if (gx >= 3320 && gx <= 3395 && gy >= 3385 && gy <= 3485) {
+        force(i, mistId);
+        continue;
+      }
+      if (gx >= 3340 && gx <= 3385 && gy >= 3328 && gy < 3385) {
         force(i, mistId);
         continue;
       }
 
       // --- Mory–Desert river / sand contact (piecewise diagonal, not sawtooth) ---
-      // Band ~x 3405–3525, y 3175–3320. Desert west/south (Het's, Uzer dunes,
+      // Band ~x 3405–3525, y 3175–3324. Desert west/south (Het's, Uzer dunes,
       // northern Kharidian sand). Mory east/north (Abandoned Mine [3441,3233],
       // Burgh de Rott, Mort'ton, Mort Myre SW).
-      //   y 3260–3320: near-vertical x≈3440
+      //   y 3260–3324: near-vertical x≈3440
       //   y 3220–3260: slight west drift (Mine mory, SW sand desert)
       //   y 3175–3220: swings east toward Burgh (dunes SW of town = desert)
       if (gx >= 3405 && gx <= 3525 && gy >= 3175 && gy <= 3324) {
@@ -432,9 +444,9 @@ const owner = new Uint8Array(N);
 
       // --- Northern desert sand (top of Kharidian) = Desert ---
       // Al Kharid [3293,3184], Het's Oasis [3360,3120], sand north of the city.
-      // Dig Site campus force starts at y 3345 — desert holds up to 3338 so the
-      // desert *top* is not painted Misthalin. East of x3405: mory contact box.
-      if (gx >= 3260 && gx <= 3405 && gy >= 2900 && gy <= 3338) {
+      // Holds up to y 3382 under the dig hill (y≥3385) and around the Exam Centre
+      // blob (forced mist above). East of x3405: mory contact box.
+      if (gx >= 3260 && gx <= 3405 && gy >= 2900 && gy <= 3382) {
         force(i, desertId);
         continue;
       }

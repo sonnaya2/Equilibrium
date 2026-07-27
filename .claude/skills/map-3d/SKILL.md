@@ -120,6 +120,34 @@ and that is the whole reveal; a sidelined region recedes through its material, n
 sinking. Seed each plate's `position.y` before the first paint (layout / first frame) —
 do not ease from `0` on mount.
 
+## Rivers — measured, and not yet solved
+
+Do not start from "the inland-water channel must be broken". It is doing exactly
+what it was written to do; the definition is wrong for this raster.
+
+- **The Wiki paints rivers in the open-sea colour.** 97% of every bluish pixel on
+  `world-surface-wiki.webp` is the one value `#7789a5`. There is no second colour
+  to key a river off.
+- **So the ocean flood runs up every river.** The Lum and the Salve are reachable
+  from the frame edge, get classified as sea, and are cut out of the land mask.
+  That means rivers already *are* channels through the plates — they are inlets in
+  the outer ring, not holes.
+- **Which is why the B channel is nearly empty.** It marks water the coastline
+  encloses; almost nothing qualifies. Measured: 3.1% of land area, and 11 of 12
+  real river probes read zero. The terrain shader's flow code is correct and is
+  simply handed an empty mask.
+- **Emitting hole rings does almost nothing** — one hole across all eleven regions,
+  because enclosed water is rare. Tried, measured, reverted.
+- **Width alone does not separate a river from a cove.** Requiring land on
+  opposing banks within 7 tiles catches the Lum, the Salve and the Elid correctly
+  *and* outlines most of the coastline, because a narrow bay satisfies it too.
+  Tried at reach 11 and 7, rendered both, reverted.
+
+Whatever finally works has to separate "long and thin" from "narrow opening to
+the sea" — component shape, not local width. And since rivers are cut out rather
+than painted, the flow belongs in the **ocean** material reading the field, not
+in the terrain material.
+
 ## Materials
 
 `positionWorld.xz -> map uv` (`mapUvFrom`) is the single geographic transform. Every

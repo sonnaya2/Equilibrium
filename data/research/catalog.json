@@ -1146,41 +1146,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Staff of limitless family (elemental impetus craft)",
-          "category": "permanent infinite-rune staff craft ladder",
-          "detail": "Support-pressure by clue and talisman access. No single hard region gate · Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik · Unlocks: Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped, Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone, Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction, Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path · Region pressure: No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access., Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture., Asgarnia optional: Invention augmentation + repair whetstone",
-          "requirements": [
-            "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
-            "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
-            "82 Magic to wield finished staff"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elemental_impetus",
-            "title": "Staff of limitless family (elemental impetus craft)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
-          "isRegionCombo": true
-        },
-        {
           "name": "Tetracompass pieces → ancient caskets → complete tomes",
           "category": "Archaeology material-sink progression loop",
           "detail": "Misthalin required for power + tome study + reclaim. Piece farming and colour materials pressure elective dig-site regions (especially Kandarin Warforge for efficient ironman piece loops) · Unlocks: Account progression loop: tetracompass pieces → tetracompass (unpowered) → tetracompass (powered) → ancient casket dig, Ancient casket rolls: 3–5 damaged artefacts, materials, Archaeology supplies, 1–2 complete tomes, elite or master clue, and rare dragon mattock (1%) / shadowy key (Guildmaster Tony's mattock path), Complete tome: large Archaeology XP by base level when studied at Guild desk (e.g. wiki table 45,002 XP at 99; 86,561 XP at 120) — cannot bank tomes, Collection-repeat piece sources include Urns of the Empire (67), Green Gobbo Goodies I–III, Red Rum Relics I–III, Saradominist II–IV, Zamorakian II–IV, Guthixian I–II, Dragonkin VII, Overflow casket loot reclaimable from ancient casket scenery next to research desk if backpack/bank full (tomes stay in Guild casket until reclaim) · Region pressure: Misthalin monolith powering, Guild study desk for complete tomes, and casket reclaim scenery — the loop endpoint is starting-region campus., Desert / Morytania / Forinthry / Anachronia /, Tier-2+ luck (Luck of the Dwarves) increases chance of tetracompass pieces and complete tomes while excavating — link",
@@ -10697,41 +10662,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Staff of limitless family (elemental impetus craft)",
-          "category": "permanent infinite-rune staff craft ladder",
-          "detail": "Support-pressure by clue and talisman access. No single hard region gate · Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik · Unlocks: Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped, Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone, Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction, Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path · Region pressure: No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access., Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture., Asgarnia optional: Invention augmentation + repair whetstone",
-          "requirements": [
-            "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
-            "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
-            "82 Magic to wield finished staff"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elemental_impetus",
-            "title": "Staff of limitless family (elemental impetus craft)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "asgarnia",
-          "regionHints": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
-          "isRegionCombo": true
-        },
-        {
           "name": "Thaler skilling rewards hub (Stanley Limelight Traders)",
           "category": "global minigame currency skilling-outfit sink hub",
           "detail": "Outfits already note Thaler alternate paths without a sink id ( Hub only — Prefer native activity currencies (Brian points for factory, beans for farmer pieces where applicable) when both exist; Thaler is the multi-minigame escape hatch · No single hard region — score optional pressure from which spotlight minigames the unlocked regions contain. Asgarnia is the richest default ironman thaler geography · Unlocks: Planner-visible Thaler sink for permanent. XP-boosting skilling outfit pieces sold at Stanley Limelight (wiki stock includes Fletcher's, Farmer's, Diviner's, Artisan's, Blacksmith's, Botanist's, Sous chef's, Shaman's, First age sets — typically 360 thaler per piece where listed), Silverhawk boots (750 thaler) and Silverhawk down x10 (35 thaler) as Agility supply alternate to other paths, ) — this is the currency hub + geography scoring row, Spotlight rotation lets ironmen farm any of the 13 games rather than a single minigame ticket currency · Region pressure: Thaler is account-global; region pressure is which minigames the player can enter under league/region locks., Asgarnia: Flash Powder Factory, Pest Control, Fist of Guthix / Gamers' Grotto adjacency — strong default hub for ironman thaler., Kandarin: Fishing Trawler, Castle Wars-adjacent pressure., Misthalin: Stealing Creation / Heist / Conquest-style Gamers' Grotto cluster., Morytania: Soul Wars., Karamja: Trouble Brewing (rare spotlight slot)., Fremennik: Barbarian Assault",
@@ -13057,41 +12987,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): misthalin + morytania + kandarin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Staff of limitless family (elemental impetus craft)",
-          "category": "permanent infinite-rune staff craft ladder",
-          "detail": "Support-pressure by clue and talisman access. No single hard region gate · Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik · Unlocks: Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped, Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone, Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction, Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path · Region pressure: No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access., Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture., Asgarnia optional: Invention augmentation + repair whetstone",
-          "requirements": [
-            "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
-            "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
-            "82 Magic to wield finished staff"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elemental_impetus",
-            "title": "Staff of limitless family (elemental impetus craft)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "kandarin",
-          "regionHints": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
           "isRegionCombo": true
         },
         {
@@ -16101,41 +15996,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Staff of limitless family (elemental impetus craft)",
-          "category": "permanent infinite-rune staff craft ladder",
-          "detail": "Support-pressure by clue and talisman access. No single hard region gate · Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik · Unlocks: Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped, Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone, Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction, Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path · Region pressure: No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access., Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture., Asgarnia optional: Invention augmentation + repair whetstone",
-          "requirements": [
-            "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
-            "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
-            "82 Magic to wield finished staff"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elemental_impetus",
-            "title": "Staff of limitless family (elemental impetus craft)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "fremennik",
-          "regionHints": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
           "isRegionCombo": true
         },
         {
@@ -21249,68 +21109,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Ring of duelling",
-          "category": "permanent multi-destination travel ring",
-          "detail": "High-value ironman travel. No hard multi-region gate for enchant; destinations are support pressure. Links to spirit-tree and Oo'glog spa logistics · Support multi-destination package. Score Desert for Het's Oasis, Kandarin for Warforge · Effects: Teleports: Het's Oasis, Castle Wars, Warforge Dig Site, Fist of Guthix (Gamers' Grotto), Closest common teleport to a spirit tree (Warforge) and strong balloon-system on-ramp, Oo'glog / Feldip spa access via Warforge run east · Region pressure: Desert: Het's Oasis destination., Kandarin: Warforge Dig Site destination (spirit tree + spa on-ramp)., Asgarnia/Misthalin support: Castle Wars / Fist of Guthix destination geography as applicable",
-          "requirements": [
-            "Lvl-2 Enchant on emerald ring (8 charges then crumbles)",
-            "Emerald + gold craft path for ironman self-supply"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ring_of_duelling",
-            "title": "Ring of duelling",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "kandarin",
-            "asgarnia",
-            "misthalin"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / kandarin / asgarnia / misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Staff of limitless family (elemental impetus craft)",
-          "category": "permanent infinite-rune staff craft ladder",
-          "detail": "Support-pressure by clue and talisman access. No single hard region gate · Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik · Unlocks: Permanent craft path for staff of limitless air/water/earth/fire/lava/mud/steam — infinite elemental runes while equipped, Tier-82 degradable augmentable Magic 2H; 60,000 combat charges to broken; repair via NPCs / armour stand / whetstone, Skilling value: rune-free elemental casts for Lunar/standard utility (humidify, string jewellery, superheat, etc.) and combat RC inventory tax reduction, Disassemble impetus for fortunate components; higher yield via level-9 augmented staff disassemble path · Region pressure: No single hard region — master clues and mystic staves are multi-region. Score by unlocked clue geography and talisman access., Misthalin optional default: Wizards' Tower / Runecrafting Guild talisman culture., Asgarnia optional: Invention augmentation + repair whetstone",
-          "requirements": [
-            "Elemental impetus from master Treasure Trail reward caskets (or Magical Dice T5)",
-            "75 Crafting (assistable) to combine impetus + mystic elemental staff + matching talisman(s)",
-            "82 Magic to wield finished staff"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elemental_impetus",
-            "title": "Staff of limitless family (elemental impetus craft)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin",
-            "asgarnia",
-            "kandarin",
-            "desert",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
           "isRegionCombo": true
         },
         {

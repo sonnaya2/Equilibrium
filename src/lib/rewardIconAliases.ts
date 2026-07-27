@@ -26,6 +26,17 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "flesh rune": skProd("flesh-rune"),
   "miasma rune": skProd("miasma-rune"),
 
+  // --- Havenhythe uniques ---
+  "bonecrusher maul": perm("bonecrusher-maul"),
+  "magic skull mask": perm("magic-skull-mask"),
+  "colossal bone": perm("colossal-bone"),
+  "colossal bones": perm("colossal-bone"),
+  "silver spines": skProd("silver-spines"),
+  "sanguine spines": skProd("sanguine-spines"),
+  "vampyrism gloves": perm("vampyrism-gloves"),
+  "tainted seed": perm("tainted-seed"),
+  "sanguine matter": skProd("sanguine-matter"),
+
   // --- Kerapac ---
   "fractured staff of armadyl": prog("fractured-staff-of-armadyl"),
   "fractured staff of armadyl components": prog("fractured-staff-of-armadyl"),

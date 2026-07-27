@@ -625,6 +625,32 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
+  it("Havenhythe bosses resolve unique drops with inventory icons", () => {
+    const cases: Array<{ name: string; must: RegExp[] }> = [
+      {
+        name: "Ivar, King of Bones",
+        must: [/Bonecrusher maul/i, /Magic skull mask/i, /Colossal bone/i],
+      },
+      {
+        name: "Silverquill, the Dreadhog",
+        must: [/Silver spines/i, /Sanguine spines/i],
+      },
+      {
+        name: "Sanguine Crawler",
+        must: [/Vampyrism gloves/i, /Tainted seed/i, /Sanguine matter/i],
+      },
+    ];
+    for (const { name, must } of cases) {
+      const { row, upgrades } = contentRow("havenhythe", name);
+      const full = contentRewardsFull(row, upgrades);
+      for (const re of must) expect(full).toMatch(re);
+      expect(full).not.toMatch(/unique drop ladder|unique path/i);
+      const presented = presentContentRewards(full);
+      expect(presented.icons.length).toBeGreaterThanOrEqual(must.length);
+      expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    }
+  });
+
   it("Kerapac full text contains Fractured Staff of Armadyl", () => {
     const { row, upgrades } = contentRow("misthalin", "Kerapac, the bound");
     const full = contentRewardsFull(row, upgrades);

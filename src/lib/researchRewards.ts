@@ -78,6 +78,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
   "Necrotic altars":
     "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
+  // Havenhythe bosses — packages were stubs without Unlocks lists.
+  "Ivar, King of Bones": "Bonecrusher maul, Magic skull mask, Colossal bone",
+  "Silverquill, the Dreadhog": "Silver spines, Sanguine spines",
+  "Sanguine Crawler": "Vampyrism gloves, Tainted seed, Sanguine matter",
 };
 
 /**

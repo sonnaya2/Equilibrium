@@ -6501,7 +6501,7 @@
         {
           "name": "Ivar, King of Bones uniques",
           "category": "boss uniques",
-          "detail": "Ivar unique drop ladder for starting-region boss progression.",
+          "detail": "Starting-region boss uniques · Unlocks: Bonecrusher maul, Magic skull mask, Colossal bone",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -6522,7 +6522,7 @@
         {
           "name": "Silverquill, the Dreadhog uniques",
           "category": "boss uniques",
-          "detail": "Silverquill unique drop ladder for starting-region boss progression.",
+          "detail": "Havenhythe bolt-spine boss uniques · Unlocks: Silver spines, Sanguine spines",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {
@@ -6543,7 +6543,7 @@
         {
           "name": "Sanguine Crawler uniques",
           "category": "Slayer boss uniques",
-          "detail": "Sanguine Crawler unique path (Blighted Cave Slayer boss).",
+          "detail": "Blighted Cave Slayer uniques · Unlocks: Vampyrism gloves, Tainted seed, Sanguine matter",
           "requirements": [],
           "confidence": "confirmed_wiki",
           "source": {

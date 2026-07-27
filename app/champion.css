@@ -1968,13 +1968,13 @@
 }
 
 .eq-champion .comp-gate {
-  min-height: min(42vh, 380px) !important;
-  max-height: min(56vh, 520px);
+  min-height: min(50vh, 450px) !important;
+  max-height: min(66vh, 615px);
   grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
 }
 
 .eq-champion .comp-aperture {
-  min-height: min(38vh, 340px) !important;
+  min-height: min(45vh, 400px) !important;
   height: 100%;
 }
 
@@ -2160,7 +2160,7 @@
    Desk panels hug content; aperture fills most of the upper screen. */
 .eq-champion .comp-courtyard {
   display: grid !important;
-  grid-template-rows: auto minmax(18rem, min(54vh, 520px)) auto !important;
+  grid-template-rows: auto minmax(21rem, min(64vh, 615px)) auto !important;
   height: auto !important;
   min-height: 0 !important;
   max-width: min(1680px, 100%) !important;
@@ -2172,7 +2172,7 @@
   display: grid !important;
   grid-template-columns: minmax(8.5rem, 11.5rem) minmax(0, 1fr) minmax(7.5rem, 10.5rem) !important;
   min-height: 0 !important;
-  max-height: min(54vh, 520px) !important;
+  max-height: min(64vh, 615px) !important;
   height: 100% !important;
   border-bottom: 1px solid var(--echo-border);
 }
@@ -2271,8 +2271,8 @@
     max-height: none !important;
   }
   .eq-champion .comp-aperture {
-    height: min(42vh, 280px) !important;
-    min-height: 200px !important;
+    height: min(50vh, 330px) !important;
+    min-height: 235px !important;
   }
   .eq-champion .comp-desk__grid {
     grid-template-columns: 1fr !important;

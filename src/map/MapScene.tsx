@@ -192,6 +192,7 @@ export default function MapScene() {
           <CameraRig
             focus={focus.framed ? focus.region : null}
             place={focus.place}
+            zoom={focus.zoom}
             reducedMotion={reducedMotion}
           />
           {mapFlags().bloom && !mapFlags().debugGeometry ? <Effects /> : null}

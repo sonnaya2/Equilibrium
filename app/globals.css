@@ -289,7 +289,7 @@ textarea:focus-visible {
   .courtyard-gate {
     display: grid;
     grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) minmax(7rem, 10rem);
-    min-height: 14rem;
+    min-height: min(42vh, 380px);
     border-bottom: 1px solid var(--color-stone-750);
   }
   @media (max-width: 720px) {
@@ -370,17 +370,21 @@ textarea:focus-visible {
   }
   .courtyard-aperture {
     position: relative;
-    min-height: 14rem;
+    height: 100%;
+    min-height: min(38vh, 340px);
     overflow: hidden;
     background: var(--color-stone-950);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .courtyard-aperture img {
     display: block;
     width: 100%;
     height: 100%;
-    min-height: 14rem;
-    object-fit: cover;
-    object-position: 50% 38%;
+    min-height: 0;
+    object-fit: contain;
+    object-position: center center;
   }
   .courtyard-aperture__caption {
     position: absolute;
@@ -478,9 +482,10 @@ textarea:focus-visible {
     display: flex;
     flex-direction: column;
   }
-  /* Scene root (MapLoader / MapScene) must fill the board cell — R3F Canvas
-     sizes itself to 100% of this box, so min-h-0 is load-bearing. */
-  .board-sky__board > * {
+  /* Only the scene slot flex-fills. Overlays (look chrome, dialog) must NOT
+     get flex:1 — that was the giant empty slab under the map. */
+  .board-sky__scene-slot {
+    position: relative;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
@@ -512,6 +517,109 @@ textarea:focus-visible {
     line-height: 1.2;
     pointer-events: none;
   }
+  /* Look-at + zoom chrome over the board (outside WebGPU). */
+  .board-sky__look {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.65rem;
+    max-width: min(28rem, calc(100% - 1rem));
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background: rgb(12 10 8 / 88%);
+    box-shadow: 0 4px 18px rgb(0 0 0 / 45%);
+    pointer-events: auto;
+  }
+  .board-sky__look-main {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+  .board-sky__look-art {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 2px;
+    background: rgb(0 0 0 / 35%);
+  }
+  .board-sky__look-copy {
+    display: grid;
+    gap: 0.05rem;
+    min-width: 0;
+  }
+  .board-sky__look-kicker {
+    color: var(--color-parch-400);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .board-sky__look-title {
+    color: var(--color-parch-50);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .board-sky__look-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: auto;
+  }
+  .board-sky__zoom {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background: var(--color-stone-900);
+    color: var(--color-parch-50);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .board-sky__zoom:hover:not(:disabled) {
+    border-color: var(--color-gem-600);
+    color: var(--color-gem-200);
+  }
+  .board-sky__zoom:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .board-sky__look-btn {
+    height: 1.75rem;
+    padding: 0 0.55rem;
+    border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
+    background: var(--color-stone-900);
+    color: var(--color-parch-200);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .board-sky__look-btn:hover {
+    border-color: var(--color-stone-600);
+    color: var(--color-parch-50);
+  }
+  .board-sky__look-btn--gem {
+    border-color: rgb(46 160 110 / 45%);
+    color: var(--color-gem-200);
+  }
+  .board-sky__look-btn--gem:hover {
+    border-color: var(--color-gem-500);
+    color: var(--color-gem-100);
+  }
   /* Board surface (R3F root div *or* FlatBoard SVG) — absolute fill so the
      host size drives the surface, not intrinsic content height. Without this
      the SVG h-auto path grows the flex chain and can crush the under ledger. */
@@ -521,12 +629,11 @@ textarea:focus-visible {
     width: 100% !important;
     height: 100% !important;
   }
-  /* Content-sized under stack: never flex-shrink away. Cap height + scroll so
-     region chips and detail stay reachable when 3D is absent (FlatBoard path). */
+  /* Under stack: taller info box (ledger + places + dossier). Scroll inside. */
   .board-sky__under {
     flex: 0 0 auto;
-    max-height: min(22vh, 220px);
-    min-height: 0;
+    max-height: min(36vh, 360px);
+    min-height: min(18vh, 180px);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -1045,58 +1152,48 @@ textarea:focus-visible {
   .map-region-marker {
     display: grid;
     justify-items: center;
-    min-width: 64px;
+    min-width: 88px;
     padding: 0;
     border: 0;
     color: var(--color-parch-50);
     background: transparent;
     /* The plate under it owns the pointer; this is a caption, not a control. */
     pointer-events: none;
-    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 88%));
+    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 90%));
     transition: transform 140ms ease, opacity 140ms ease;
   }
   .map-region-marker.is-focus {
     z-index: 2;
-    transform: translateY(-2px) scale(1.06);
+    transform: translateY(-3px) scale(1.12);
   }
   .map-region-marker img {
-    /* War-table crest: scan-readable on overview; under flat-board 40x46 and
-       well under framed POI stake faces (world ~0.07, ~70-90px on screen). */
-    width: 32px;
-    height: 38px;
+    /* Region crests (Karamja, Desert, …) — must read on overview; not 28px chips. */
+    width: 64px;
+    height: 72px;
     object-fit: contain;
   }
   .map-region-marker.is-locked {
-    opacity: 0.58;
+    opacity: 0.62;
   }
   .map-region-marker.is-locked img {
-    filter: grayscale(0.7) brightness(0.72);
+    filter: grayscale(0.75) brightness(0.7);
   }
   .map-region-marker.is-unlocked img {
-    filter: drop-shadow(0 1px 3px rgb(0 0 0 / 85%));
-  }
-  .map-region-marker__name,
-  .map-region-marker__count {
-    padding: 1px 5px;
-    white-space: nowrap;
-    background: rgb(8 8 7 / 76%);
-    text-shadow: 0 1px 2px #000;
+    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 88%));
   }
   .map-region-marker__name {
-    margin-top: -1px;
+    margin-top: 1px;
+    padding: 2px 7px;
+    white-space: nowrap;
+    background: rgb(8 8 7 / 82%);
+    text-shadow: 0 1px 2px #000;
     font-family: var(--font-display);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  .map-region-marker__count {
-    color: var(--color-parch-300);
-    font-family: var(--font-mono);
-    font-size: 8px;
-  }
-  .map-region-marker.is-focus .map-region-marker__name,
-  .map-region-marker.is-focus .map-region-marker__count {
+  .map-region-marker.is-focus .map-region-marker__name {
     color: var(--color-gem-100);
     background: rgb(5 16 15 / 92%);
   }
@@ -1117,17 +1214,12 @@ textarea:focus-visible {
   .flat-map-marker text {
     fill: var(--color-parch-50);
     font-family: var(--font-display);
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 700;
     paint-order: stroke;
     stroke: rgb(5 8 10 / 90%);
-    stroke-width: 3px;
+    stroke-width: 3.5px;
     text-transform: uppercase;
-  }
-  .flat-map-marker .flat-map-marker__count {
-    fill: var(--color-parch-300);
-    font-family: var(--font-mono);
-    font-size: 8px;
   }
 
   /* Canvas POI names were dropped — crest stakes are geometry-only; the ledger

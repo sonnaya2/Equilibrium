@@ -16,6 +16,7 @@
  */
 
 import { MapLoader } from "./MapLoader";
+import { MapLookChrome } from "./MapLookChrome";
 import { PlaceRail } from "./PlaceRail";
 import { RegionInspector } from "./RegionInspector";
 import { RegionLedger } from "./RegionLedger";
@@ -35,7 +36,10 @@ export function RegionPlanner({
   return (
     <div className="board-sky">
       <div className="board-sky__board">
-        <MapLoader />
+        <div className="board-sky__scene-slot">
+          <MapLoader />
+        </div>
+        <MapLookChrome />
       </div>
       <div className="board-sky__under">
         <div className="board-sky__ledger">

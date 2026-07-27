@@ -29,9 +29,26 @@ export interface MapFocus {
   place: string | null;
   /** Transient: dies on pointer-out. Never drives the camera. */
   hover: string | null;
+  /**
+   * Designed zoom step on the spherical solve (not free orbit).
+   * Higher = closer. Multiplies framing radius by ZOOM_STEP_MUL^zoom.
+   */
+  zoom: number;
 }
 
-const INITIAL: MapFocus = { region: "misthalin", framed: false, place: null, hover: null };
+/** Zoom in raises this; zoom out lowers it. */
+export const ZOOM_MIN = -2;
+export const ZOOM_MAX = 4;
+/** Radius scale per zoom step — <1 means zoom-in shortens the shot. */
+export const ZOOM_STEP_MUL = 0.82;
+
+const INITIAL: MapFocus = {
+  region: "misthalin",
+  framed: false,
+  place: null,
+  hover: null,
+  zoom: 0,
+};
 
 let state: MapFocus = INITIAL;
 const listeners = new Set<() => void>();
@@ -57,13 +74,13 @@ export function mapFocusSnapshot(): MapFocus {
 }
 
 export function focusRegionExternal(region: RegionId, place: string | null = null) {
-  emit({ region, framed: true, place, hover: null });
+  emit({ ...state, region, framed: true, place, hover: null });
 }
 
 /** Focusing a region clears both place slots: they belong to another region. */
 export function focusRegion(region: RegionId) {
   if (state.region !== region || !state.framed || state.place !== null) {
-    emit({ region, framed: true, place: null, hover: null });
+    emit({ ...state, region, framed: true, place: null, hover: null });
   }
 }
 
@@ -88,6 +105,21 @@ export function selectPlace(place: string | null) {
 /** The pointer. Transient, never touches the sticky selection. */
 export function hoverPlace(hover: string | null) {
   if (state.hover !== hover) emit({ ...state, hover });
+}
+
+/** Step the designed zoom. +1 closer, −1 wider. Clamped; keeps spherical solve. */
+export function nudgeZoom(delta: number) {
+  const next = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, state.zoom + delta));
+  if (next !== state.zoom) emit({ ...state, zoom: next });
+}
+
+export function setZoom(zoom: number) {
+  const next = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, Math.round(zoom)));
+  if (next !== state.zoom) emit({ ...state, zoom: next });
+}
+
+export function zoomRadiusMul(zoom: number = state.zoom): number {
+  return Math.pow(ZOOM_STEP_MUL, zoom);
 }
 
 /**
@@ -140,5 +172,5 @@ export function useMapHashSync() {
 export function useMapFocus() {
   const focus = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
   // Module-level actions stay identity-stable for effect deps (PlaceRail hover clear).
-  return { focus, focusRegion, unframe, selectPlace, hoverPlace };
+  return { focus, focusRegion, unframe, selectPlace, hoverPlace, nudgeZoom, setZoom };
 }

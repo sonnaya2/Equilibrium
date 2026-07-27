@@ -26,26 +26,39 @@ import { useMapFocus } from "./useMapFocus";
 const Y_SPEED = 6.5;
 
 /**
- * POI stake sizes (world units on a 2-unit board — not CSS chips).
- * Agents inflated faces to ~0.07 for "readability"; that swallowed framed
- * regions. Target is a pin, not a medallion: ~half a percent of board width.
- * Beam is a short glow pedestal under the tilted disc (height ~0.4×face so the
- * easel clears the plate without reading as a god-ray). Hit pad stays oversized.
- * Region crest chips are CSS — leave those alone.
+ * POI stake sizes (world units). Keep small under framed/table shots —
+ * oversized discs ate the desert (clipboard). Areas still beat sites.
+ * Elite Dungeon 2 (Dragonkin Laboratory) is deliberately larger so the ED2 pin
+ * reads among the dense Wilderness cluster.
  */
 const FACE_AREA = 0.03;
-const FACE_SITE = 0.026;
-const BEAM_H_AREA = 0.012;
+const FACE_SITE = 0.018;
+/** ED2 — between area and site so the pin is readable without drowning neighbours. */
+const FACE_ED2 = 0.028;
+const BEAM_H_AREA = 0.014;
 const BEAM_H_SITE = 0.01;
-const BEAM_R_BASE_AREA = 0.006;
+const BEAM_H_ED2 = 0.013;
+const BEAM_R_BASE_AREA = 0.007;
 const BEAM_R_BASE_SITE = 0.005;
-const FOOT_AREA = 0.009;
+const BEAM_R_BASE_ED2 = 0.0065;
+const FOOT_AREA = 0.011;
 const FOOT_SITE = 0.008;
+const FOOT_ED2 = 0.01;
 const FACE_TILT = -0.72;
-const HIT_OVERSIZE = 1.75;
+const HIT_OVERSIZE = 1.55;
 
-export const POI_ATLAS_URL = "/map/poi-atlas.json";
-export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp";
+function pinScale(place: PlaceAnchor) {
+  if (place.area === "Dragonkin Laboratory") {
+    return { face: FACE_ED2, beamH: BEAM_H_ED2, beamR: BEAM_R_BASE_ED2, foot: FOOT_ED2 };
+  }
+  if (place.site) {
+    return { face: FACE_SITE, beamH: BEAM_H_SITE, beamR: BEAM_R_BASE_SITE, foot: FOOT_SITE };
+  }
+  return { face: FACE_AREA, beamH: BEAM_H_AREA, beamR: BEAM_R_BASE_AREA, foot: FOOT_AREA };
+}
+
+export const POI_ATLAS_URL = "/map/poi-atlas.json?v=wiki193";
+export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp?v=wiki193";
 
 export interface AtlasIndex {
   cell: number;
@@ -278,11 +291,11 @@ export function PlaceMarkers({
         continue;
       }
 
-      const site = pin.place.site;
-      const faceW = (site ? FACE_SITE : FACE_AREA) * (0.88 + reveal * 0.12) * (lit ? 1.06 : 1);
-      const beamH = (site ? BEAM_H_SITE : BEAM_H_AREA) * reveal;
-      const beamR = (site ? BEAM_R_BASE_SITE : BEAM_R_BASE_AREA) * reveal;
-      const footW = (site ? FOOT_SITE : FOOT_AREA) * reveal;
+      const sz = pinScale(pin.place);
+      const faceW = sz.face * (0.88 + reveal * 0.12) * (lit ? 1.06 : 1);
+      const beamH = sz.beamH * reveal;
+      const beamR = sz.beamR * reveal;
+      const footW = sz.foot * reveal;
 
       face.position.set(pin.x, surfaceY + beamH + faceW * 0.1, pin.z);
       face.scale.setScalar(faceW);

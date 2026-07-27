@@ -48,10 +48,11 @@ const ALIASES = {
   "ourania-runecrafting-altar": "ourania-runecrafting-altar",
   "ourania-altar": "ourania-altar",
   "chaos-temple-wilderness": "chaos-altar",
-  "lava-maze": "wilderness-runite",
-  "wilderness-crater": "wilderness-slayer",
+  // Lava Maze / Wilderness Crater have their own activity plates — do not alias
+  // to runite/slayer art (those made crater "gone" and maze wrong).
   "bandit-camp": "bandit-camp",
   "demonic-ruins": "demonic-ruins",
+  "rogues-castle": "rogues-castle",
   "araxyte-hive": "araxxor",
   "slayer-lodge": "hunter-lodge",
   "temple-of-ikov": "temple-of-ikov",

@@ -204,52 +204,14 @@ export function createTerrainMaterials(
     const dwx = mapUv.x.sub(float(DESERT_WET_U)).div(float(DESERT_WET_RX));
     const dwy = mapUv.y.sub(float(DESERT_WET_V)).div(float(DESERT_WET_RY));
     const desertGate = smoothstep(float(0.9), float(1.1), dwx.mul(dwx).add(dwy.mul(dwy)));
-    const t = float(FIELD_TEXEL);
-    const gx = texture(field, mapUv.add(vec2(t, float(0)))).g.sub(
-      texture(field, mapUv.add(vec2(t.negate(), float(0)))).g,
-    );
-    const gy = texture(field, mapUv.add(vec2(float(0), t))).g.sub(
-      texture(field, mapUv.add(vec2(float(0), t.negate()))).g,
-    );
-    const bx = texture(field, mapUv.add(vec2(t, float(0)))).b.sub(
-      texture(field, mapUv.add(vec2(t.negate(), float(0)))).b,
-    );
-    const by = texture(field, mapUv.add(vec2(float(0), t))).b.sub(
-      texture(field, mapUv.add(vec2(float(0), t.negate()))).b,
-    );
-    const gSlope = gx.mul(gx).add(gy.mul(gy)).sqrt();
-    const bSlope = bx.mul(bx).add(by.mul(by)).sqrt();
-    const useB = smoothstep(float(0.001), float(0.006), bSlope.sub(gSlope));
-    const fx = mix(gy.negate(), by.negate(), useB);
-    const fy = mix(gx, bx, useB);
-    const slope = mix(gSlope, bSlope, useB);
-    const flow = vec2(fx, fy).div(slope.add(float(0.0004)));
-
-    const along = mapUv.x.mul(flow.x).add(mapUv.y.mul(flow.y));
-    const drift = along.mul(float(200)).sub(mapClock.mul(float(0.85)));
-    const ripple = drift
-      .sin()
-      .mul(float(0.6))
-      .add(drift.mul(float(1.7)).add(float(1.7)).sin().mul(float(0.4)));
-    const shimmer = mx_noise_float(
-      vec3(mapUv.x.mul(float(140)), mapUv.y.mul(float(140)), mapClock.mul(float(0.1))),
-    );
-    const directional = smoothstep(float(0.0006), float(0.004), slope);
-    const surface = mix(shimmer, ripple, directional);
-
+    // Soft wet darken only — no flow-aligned ripple streaks (those read as
+    // glitched green lines across plate rims into the sea).
     const wet = F.b.mul(smoothstep(float(0.16), float(0.52), F.b)).mul(desertGate);
     const bank = wet.mul(float(1).sub(wet)).mul(float(4)).clamp(float(0), float(1));
-    const glint = smoothstep(float(0.45), float(0.9), surface).mul(wet);
-    // River shimmer restored — prior pass left wet dark without enough glint.
     base = base
-      .mul(float(1).sub(wet.mul(float(0.14))))
-      .add(linear(0xbfe4e2).mul(glint.mul(float(0.22))))
-      .add(
-        linear(0x1d3f4e).mul(
-          wet.mul(surface.mul(float(0.4)).add(float(0.6))).mul(float(0.08)),
-        ),
-      )
-      .add(linear(0xd0e4ea).mul(bank.mul(float(0.1))));
+      .mul(float(1).sub(wet.mul(float(0.12))))
+      .add(linear(0x1d3f4e).mul(wet.mul(float(0.05))))
+      .add(linear(0xd0e4ea).mul(bank.mul(float(0.06))));
   }
 
   // Desert heat, Prif blue, Mory green — soft atmospheres (not paint washes).

@@ -59,7 +59,7 @@ export const SWELL = 0.0032;
  * points. Shading it as if the ripples were deeper is what breaks that blob up.
  * Keep modest — high relief turns the key into island god-ray shafts (clipboard).
  */
-const NORMAL_RELIEF = 0.014;
+const NORMAL_RELIEF = 0.008;
 
 type FloatNode = Node<"float">;
 
@@ -214,35 +214,22 @@ export function createWaterMaterial(
 
   const reflected = normal.mul(normal.dot(key).mul(float(2))).sub(key);
   const toward = reflected.dot(view).clamp(float(0), float(1));
-  // Specular is a pinprick cartographic sparkle only. Soft sheen is what
-  // stretched into white island god-rays on the clipboard — keep it near zero.
-  const glint = toward
-    .pow(float(160))
-    .mul(fresnel)
-    .mul(float(0.06))
-    .mul(nearSea2)
-    .mul(openWater)
-    .mul(lookDown);
-  const sheen = toward
-    .pow(float(40))
-    .mul(float(0.0015))
-    .mul(nearSea2)
-    .mul(openWater)
-    .mul(lookDown);
+  // No open-ocean specular / sheen — soft shafts along wave crests read as
+  // glitched green lines off the desert (Bug.png). Sparkle is gone entirely.
+  const glint = float(0);
+  const sheen = float(0);
 
-  const crest = smoothstep(float(0.78), float(0.96), height.abs())
-    .mul(float(0.12))
-    .mul(nearSea.mul(float(0.6)).add(float(0.4)))
-    .mul(offshore);
+  // Shore foam only — a tight band on the waterline. Crest foam across the
+  // whole swell made parallel streaks out into open sea; remove that entirely.
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
-    .mul(height.mul(float(0.35)).add(float(0.65)))
-    .mul(float(0.26));
+    .mul(height.mul(float(0.2)).add(float(0.55)))
+    .mul(float(0.14));
   // clamp edges as float() — bare 0 / 0.45 are abstract and fail WebGPU validation.
   water = mix(
     water,
     linear(FOAM),
-    crest.add(surf).clamp(float(0), float(0.42)).mul(notRiver),
+    surf.clamp(float(0), float(0.22)).mul(notRiver),
   );
 
   // River water: darker and greener than the sea it joins, with the current

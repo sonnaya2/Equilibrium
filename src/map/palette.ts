@@ -20,7 +20,7 @@ export const GEM_200 = 0x9af5d4;
 export const GEM_300 = 0x57e0ae;
 export const GEM_400 = 0x2ecb8f;
 export const GEM_500 = 0x1fa372;
-export const GEM_600 = 0x157a55;
+export const GEM_600 = 0x167a55;
 
 export const GOLD_300 = 0xf0d08a;
 export const GOLD_400 = 0xe0b264;

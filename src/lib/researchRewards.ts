@@ -69,7 +69,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Heart of Gielinor":
     "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
   // No upgrade package in catalog — short honest label.
-  "Kalphite Queen": "Dragon chainbody, Kalphite queen head",
+  "Kalphite Queen": "Dragon chainbody, Kalphite queen head, Dragon 2h sword",
   // ED4 — Vestments of havoc is the headline package players care about.
   "Zamorak, Lord of Chaos": "Vestments of havoc, Chaos witch equipment",
   "Zamorak, Lord of Chaos (Undercity)": "Vestments of havoc, Chaos witch equipment",
@@ -116,7 +116,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Daemonheim Dig Site": "Dragonkin collections, Aged journal, Balarak pieces",
 
   // —— Desert ——
-  "Kalphite King": "Drygore rapier, Drygore longsword, Drygore mace",
+  "Kalphite King":
+    "Drygore rapier, Off-hand drygore rapier, Drygore longsword, Off-hand drygore longsword, Drygore mace, Off-hand drygore mace",
   "Sophanem Slayer Dungeon / The Magister":
     "Gloves of passage, Phylactery, Vital spark, Key to the Crossing",
   "The Magister": "Gloves of passage, Phylactery, Khopesh of Tumeken",
@@ -125,7 +126,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Shifting Tombs":
     "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
   "Liberation of Mazcab": "Achto armour, Raids uniques",
-  "Het's Oasis": "Prayer powders, Agility course, Statue of Het",
+  "Het's Oasis":
+    "Powder of burials, Powder of penance, Powder of pulverising, Powder of protection, Powder of item protection",
   "Agility Pyramid": "Agility XP, Menaphos reputation",
   "Agility Pyramid (Jaleustrophos)": "Agility XP, Menaphos reputation",
 };

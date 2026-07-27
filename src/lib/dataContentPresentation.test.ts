@@ -665,8 +665,18 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       {
         name: "Kalphite King",
-        must: [/Drygore/i],
+        must: [/Drygore rapier/i, /Drygore mace/i, /Off-hand drygore/i],
+        minIcons: 6,
+      },
+      {
+        name: "Kalphite Queen",
+        must: [/Dragon chainbody/i, /Kalphite queen head/i],
         minIcons: 2,
+      },
+      {
+        name: "Het's Oasis",
+        must: [/Powder of burials/i, /Powder of penance/i, /Powder of pulverising/i],
+        minIcons: 5,
       },
     ];
     for (const { name, must, minIcons } of cases) {
@@ -680,6 +690,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presentInterestName("Corrupted creatures & soul devourers")).toBe(
       "Corrupted creatures",
     );
+    // Het powders must not collapse to a single generic "Prayer powders" chip.
+    const het = contentRow("desert", "Het's Oasis");
+    const hetPresented = presentContentRewards(contentRewardsFull(het.row, het.upgrades));
+    expect(hetPresented.icons.some((i) => /powder-of-burials/i.test(i.src))).toBe(true);
+    expect(hetPresented.icons.some((i) => /powder-of-penance/i.test(i.src))).toBe(true);
   });
 
   it("Forinthry majors: Abyss, Chaotics, Corp shields, Dark facets", () => {

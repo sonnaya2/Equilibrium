@@ -970,8 +970,6 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "player-owned farm combat perk state": "player-owned-farm",
   "player-owned house aquarium and prawnbroker": "prawnbroker",
   "player-owned house portal towns and construction utilities": "house-portal",
-  "player-owned port": "player-owned-ports",
-  "player-owned ports skilling rewards (asgarnia arc mapping)": "player-owned-ports",
   "pof farm totems + tier-2 dual-pen animal perks": "player-owned-farm",
   "poh gilded altar (chapel offering)": "gilded-altar",
   "poh portal towns": "house-portal",

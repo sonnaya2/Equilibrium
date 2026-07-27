@@ -21724,29 +21724,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Feather of Ma'at (Shifting Tombs supply)",
-          "category": "Slayer consumable supply from skilling minigame",
-          "detail": "Desert supply loop via Shifting Tombs · Effects: Required consumable to kill corrupted/devourer creatures in Sophanem Slayer Dungeon, Common chest loot; overall Menaphos reputation tier 5 and coin-mode toggles improve quantities",
-          "requirements": [
-            "Shifting Tombs access and treasure-chest opens"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Feather_of_Ma%27at",
-            "title": "Feather of Ma'at (Shifting Tombs supply)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Focus sight",
           "category": "Slayer unique",
           "detail": "Desert strykewyrm unique. On-task Ranged damage/accuracy. With Hexcrest unlocks full slayer helmet path.",

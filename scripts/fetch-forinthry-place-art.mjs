@@ -22,6 +22,10 @@ const FILES = {
   "demonic-ruins": "Demonic Ruins.png",
   // ED2 — larger plate for the site pin
   "dragonkin-laboratory": "Dragonkin Laboratory exterior.png",
+  // Full camp plate (not the lava-entrance crop).
+  "bandit-camp": "Bandit Camp.png",
+  // Mandrith at the snowy slayer-equipment hut — not the black studio model.
+  "wilderness-slayer": "Slayer Equipment (Wilderness).png",
 };
 
 async function wikiFileInfo(title) {

@@ -16,8 +16,10 @@ const OUT_DIRS = [
 
 /** slug → wiki File: title */
 const FILES = {
-  "wilderness-crater": "Wilderness Crater entrance.png",
-  "lava-maze": "Lava Maze.png",
+  // Sword of Edicts at crater centre — not the dim valley "entrance" crop.
+  "wilderness-crater": "VolcanoCentre.png",
+  // Hellhound approach with lava channels; aerial maze plate washes out at pin size.
+  "lava-maze": "Lava Maze entrance.png",
   "rogues-castle": "Rogues' Castle.png",
   "demonic-ruins": "Demonic Ruins.png",
   // ED2 — larger plate for the site pin

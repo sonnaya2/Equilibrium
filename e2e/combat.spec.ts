@@ -134,18 +134,17 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
 
   // Revolution is the default Rotation mode — no need to switch away from manual.
-  await expect(page.getByRole("button", { name: "Run revolution" })).toBeVisible();
-  await expect(page.getByText("Run revolution for the cast log")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Run bar" })).toBeVisible();
+  await expect(page.getByText("Hit Run to see how the bar plays out.")).toBeVisible();
   await expect(page.getByTestId("revo-horizon-plan")).toHaveText(/100 ticks/);
 
   // Default melee dual-wield bar is fully engine-mapped post-audit.
-  // Backreference, not a literal count: the assertion is "every slot on the bar
-  // is engine-mapped", and pinning 10 turns a bar change into a red suite.
-  await expect(page.getByText(/(\d+) of \1 revo slots modelled/)).toBeVisible();
+  // Count is variable; assert the full-bar ready line rather than a hard slot total.
+  await expect(page.getByText(/All \d+ revo slots ready/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
-  await page.getByRole("button", { name: "Run revolution" }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
   await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-horizon")).toHaveText(/^100$/);
   await expect(page.getByTestId("revo-casts")).toBeVisible();

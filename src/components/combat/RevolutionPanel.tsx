@@ -295,7 +295,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                   ))}
                   {unsupported.map((candidate) => (
                     <option key={candidate.id} value={candidate.id} disabled>
-                      {barOptionLabel(candidate)} — unsupported
+                      {barOptionLabel(candidate)} — not in sim
                     </option>
                   ))}
                 </optgroup>
@@ -304,15 +304,19 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </select>
         </label>
         <span className="text-parch-300">
-          {modelled.length} of {managedSlots.length} revo slots modelled
+          {modelled.length === managedSlots.length && managedSlots.length > 0
+            ? `All ${managedSlots.length} revo slots ready`
+            : `${modelled.length} of ${managedSlots.length} revo slots ready`}
           {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-          {keybindCount > 0 ? ` · ${keybindCount} keybind` : ""}
+          {keybindCount > 0
+            ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
+            : ""}
         </span>
       </div>
 
       {styleMismatch && bar ? (
         <p className="mt-2 text-xs text-chaos-300">
-          Loadout: {loadout.style}. Bar: {bar.style}. AD and crit may not match.
+          Loadout is {loadout.style}; this bar is {bar.style}. Accuracy and crit may be off.
         </p>
       ) : null}
 
@@ -339,7 +343,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           onClick={run}
           className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
         >
-          Run revolution
+          Run bar
         </button>
       </div>
 
@@ -349,7 +353,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       {!result ? (
         <p className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300" data-testid="revo-empty">
-          Run revolution for the cast log
+          Hit Run to see how the bar plays out.
         </p>
       ) : null}
 

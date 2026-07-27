@@ -29,7 +29,11 @@ export interface PlaceAnchor {
  * Catalog areas that deliberately get no board pin (base-camp structure,
  * underground-only, etc.). Still valid league areas — just not on the 3D map.
  */
-export const MAP_OMITTED_AREAS: ReadonlySet<string> = new Set(["Slayer Lodge"]);
+export const MAP_OMITTED_AREAS: ReadonlySet<string> = new Set([
+  "Slayer Lodge",
+  // Underground under Memorial to Guthix — same surface mouth, no second pin.
+  "Hall of Memories",
+]);
 
 export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   // Misthalin — cities on the south half, fort and dig site north of Varrock,
@@ -63,8 +67,9 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   // Kandarin — Piscatoris/Hall north-west, Seers–Catherby band, Ardougne/POF
   // south, Feldip Warforge on the south coast, DSF off the southern pier.
   { region: "kandarin", area: "Piscatoris Fishing Colony" },
+  // Surface shrine (Piscatoris hunter area). Hall of Memories is underground
+  // under the pool — site pin, not a second overworld area.
   { region: "kandarin", area: "Memorial to Guthix" },
-  { region: "kandarin", area: "Hall of Memories" },
   { region: "kandarin", area: "Seers' Village" },
   { region: "kandarin", area: "Barbarian Outpost" },
   { region: "kandarin", area: "Catherby" },

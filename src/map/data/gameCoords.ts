@@ -48,8 +48,9 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Invention Guild", [2997, 3440]],
   ["Warriors' Guild", [2880, 3545]],
   ["Piscatoris Fishing Colony", [2340, 3690]],
-  ["Memorial to Guthix", [2360, 3520]],
-  ["Hall of Memories", [2272, 3554]],
+  // Orla Fairweather at the shrine entrance (wiki NPC map). Hall of Memories
+  // is under the pool (same surface mouth) — catalog-only, no separate pin.
+  ["Memorial to Guthix", [2289, 3554]],
   ["Seers' Village", [2710, 3482]],
   ["Barbarian Outpost", [2520, 3570]],
   ["Catherby", [2809, 3434]],

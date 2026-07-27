@@ -291,7 +291,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "draconic energy": prog("draconic-energy"),
 
   // --- ED3 Shadow Reef ---
-  "eldritch crossbow": prog("eldritch-crossbow"),
   "eldritch crossbow components": prog("eldritch-crossbow"),
 
   // --- Legiones / Monastery of Ascension ---
@@ -364,11 +363,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "soul altar": perm("soul-altar"),
   // Drygore / KQ uniques live under skilling-production so reward chips pass acceptRewardPath
   // (equipmentIconPath closed set rejects brand-new combat/equipment slugs).
-  "drygore rapier": skProd("drygore-rapier"),
   "off-hand drygore rapier": skProd("off-hand-drygore-rapier"),
-  "drygore longsword": skProd("drygore-longsword"),
   "off-hand drygore longsword": skProd("off-hand-drygore-longsword"),
-  "drygore mace": skProd("drygore-mace"),
   "off-hand drygore mace": skProd("off-hand-drygore-mace"),
   "dragon chainbody": skProd("dragon-chainbody"),
   "kalphite queen head": skProd("kalphite-queen-head"),
@@ -413,8 +409,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   deathdealer: equip("deathdealer-robe-top"),
 
   // --- Corporeal Beast ---
-  "holy elixir": `/game/upgrades/skilling-production/holy-elixir.png`,
-  "spirit shield": perm("spirit-shield"),
   "spectral spirit shield": equip("spectral-spirit-shield"),
   "arcane spirit shield": equip("arcane-spirit-shield"),
   "elysian spirit shield": equip("elysian-spirit-shield"),
@@ -422,8 +416,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   // sigils: no inventory icons published — omit (wrong finished-shield art worse than none)
 
   // --- Rex Matriarchs / Osseous ---
-  "skeka's hypnowand": offhand("skekas-hypnowand"),
-  "skekas hypnowand": offhand("skekas-hypnowand"),
   "occultist's ring": equip("occultists-ring"),
   "occultists ring": equip("occultists-ring"),
   "champion's ring": util("champions-ring"),
@@ -462,16 +454,9 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   lunar: perm("lunar-spellbook"),
 
   // --- Desert drygore / khopesh pieces ---
-  "off-hand drygore mace": equip("off-hand-drygore-mace"),
   "offhand drygore mace": equip("off-hand-drygore-mace"),
-  "off-hand drygore longsword": equip("off-hand-drygore-longsword"),
   "offhand drygore longsword": equip("off-hand-drygore-longsword"),
-  "off-hand drygore rapier": equip("off-hand-drygore-rapier"),
   "offhand drygore rapier": equip("off-hand-drygore-rapier"),
-  "khopesh of the kharidian": equip("khopesh-of-the-kharidian"),
-  "khopesh of tumeken": equip("khopesh-of-tumeken"),
-  "khopesh of elidinis": equip("khopesh-of-elidinis"),
-  "off-hand khopesh of the kharidian": equip("off-hand-khopesh-of-the-kharidian"),
   "offhand khopesh of the kharidian": equip("off-hand-khopesh-of-the-kharidian"),
 
   // --- GWD2 refined + style splits ---
@@ -537,9 +522,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "elite tectonic armour": prog("elite-tectonic-robe-top"),
   "gemstone armour": prog("gemstone-hauberk"),
   "chaotic equipment": prog("chaotic-rapier"),
-  "chaotic rapier": prog("chaotic-rapier"),
-  "chaotic staff": equip("chaotic-staff"),
-  "chaotic crossbow": equip("chaotic-crossbow"),
   "chaotic kiteshield": prog("chaotic-kiteshield"),
   "masuta's warspear": equip("masutas-warspear"),
   "masutas warspear": equip("masutas-warspear"),
@@ -551,10 +533,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "artificers measure": perm("artificers-measure"),
   "ferocious ring": perm("ferocious-ring"),
   "hexcrest": perm("hexcrest"),
-  "focus sight": perm("focus-sight"),
   "luck of the dwarves": perm("luck-of-the-dwarves"),
   "always adze": perm("always-adze"),
-  "slayer codex": perm("slayer-codex"),
 };
 
 /** Apostrophe-stripped key → path (when map only has the apostrophe form). */

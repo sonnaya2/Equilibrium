@@ -4605,6 +4605,31 @@
 .eq-champion .data-icon-well img[src*="/regions/"] {
   padding: 0;
   object-fit: cover;
+  object-position: center center;
+}
+
+/* Tall full-body plates (Hermod) — keep head+torso in frame. */
+.eq-champion .data-icon-well img[src*="/bosses/hermod"],
+.eq-champion .data-icon-well > img[src*="/bosses/hermod"] {
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+
+/* Wide dig-site entrance shot — bias toward the doorway, not empty grass. */
+.eq-champion .data-icon-well img[src*="empty-throne-room"],
+.eq-champion .data-icon-well > img[src*="empty-throne-room"],
+.eq-champion .data-icon-well img[src*="the-empty-throne"],
+.eq-champion .data-icon-well > img[src*="the-empty-throne"] {
+  object-fit: cover;
+  object-position: 48% 38%;
+}
+
+/* Inventory-style mushroom icon — letterbox, don't crop. */
+.eq-champion .data-icon-well img[src*="um-mushroom"],
+.eq-champion .data-icon-well > img[src*="um-mushroom"] {
+  object-fit: contain;
+  object-position: center;
+  padding: 0.1rem;
 }
 
 .eq-champion .data-icon-well > span,
@@ -4690,67 +4715,920 @@
   background: var(--echo-raised);
 }
 
-/* Zoom dialog: center art; never stretch low-res icons to full viewport. */
-/*
- * Native <dialog> is display:none when closed. Never force display:flex here —
- * that kept a 100vh box in the region flex column and collapsed Major/POI to 0 height.
- */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Image viewer + wiki article dialog
+   Editorial stone panel: borders, raised, subtle inset. No glass / glow / SaaS.
+   Native <dialog> is display:none when closed — flex ONLY on [open].
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .eq-champion .data-image-viewer {
+  position: relative;
   box-sizing: border-box;
-  width: min(96vw, 72rem);
+  width: min(96vw, 56rem);
   max-width: 96vw;
   max-height: 92vh;
   margin: auto;
-  padding: 2.5rem 2rem 1.5rem;
+  padding: 2.75rem 1.75rem 1.5rem;
   border: 1px solid var(--echo-border);
   overflow: hidden;
-  background: var(--echo-void);
+  background: var(--echo-shell);
   color: var(--echo-parch-50);
   text-align: center;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 55%, transparent),
+    0 12px 40px color-mix(in srgb, var(--echo-void) 72%, transparent);
 }
 
+/* Flex only when open — never force display on the closed dialog. */
 .eq-champion .data-image-viewer[open] {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.65rem;
 }
 
 .eq-champion .data-image-viewer::backdrop {
-  background: color-mix(in srgb, var(--echo-void) 90%, transparent);
+  background: color-mix(in srgb, var(--echo-void) 88%, transparent);
 }
 
-.eq-champion .data-image-viewer img {
+/* Direct children: image-only mode (bare <img> + caption). */
+.eq-champion .data-image-viewer > img {
   display: block;
+  box-sizing: border-box;
   width: auto;
   height: auto;
-  max-width: min(90vw, 960px);
-  max-height: min(80vh, 960px);
+  max-width: min(90vw, 52rem);
+  max-height: min(72vh, 40rem);
+  margin: 0 auto;
+  padding: 0.75rem;
   object-fit: contain;
   image-rendering: auto;
+  border: 1px solid var(--echo-border);
+  background: var(--echo-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
 }
 
-/* Small inventory glyphs: crisp integer upscale (class set by ImageViewer onLoad). */
-.eq-champion .data-image-viewer img.is-pixel {
+.eq-champion .data-image-viewer > img.is-pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-image-viewer p {
-  margin: 0.5rem 0 0;
+.eq-champion .data-image-viewer > p {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--echo-parch-100);
   font-size: 0.9375rem;
+  line-height: 1.35;
 }
 
 .eq-champion .data-image-viewer__close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  padding: 0.45rem 0.75rem;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 2;
+  padding: 0.4rem 0.7rem;
   border: 1px solid var(--echo-border);
   background: var(--echo-raised);
   color: var(--echo-parch-50);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.2;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
+}
+
+.eq-champion .data-image-viewer__close:hover,
+.eq-champion .data-image-viewer__close:focus-visible {
+  border-color: var(--echo-gem-deep);
+  color: var(--echo-gem-bright);
+  background: color-mix(in srgb, var(--echo-raised) 88%, var(--echo-void));
+}
+
+/* Image-only plate — local art stack + optional rail (class variants). */
+.eq-champion .data-image-viewer .data-wiki-article__image-only {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  min-width: min(16rem, 88vw);
+  max-width: min(92vw, 34rem);
+  padding: 0.35rem 0.5rem 0.15rem;
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-well {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 9rem;
+  min-height: 9rem;
+  padding: 1.35rem 1.6rem;
+  border: 1px solid var(--echo-border);
+  background: var(--echo-raised);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 55%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--echo-void) 30%, transparent);
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-well img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(78vw, 22rem);
+  max-height: min(58vh, 22rem);
+  object-fit: contain;
+  image-rendering: auto;
+  padding: 0.25rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
+  background: var(--echo-inset);
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-well img.is-pixel {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-well .data-wiki-article__art-empty {
+  width: 5rem;
+  height: 5rem;
+}
+
+.eq-champion .data-image-viewer p.data-wiki-article__image-only-name {
+  margin: 0;
+  max-width: 100%;
+  color: var(--echo-gold);
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-rail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem 0.55rem;
+  max-width: 100%;
+  margin: 0.15rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid var(--echo-border);
+  list-style: none;
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 3.75rem;
+  min-width: 0;
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-item img {
+  display: block;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  max-width: 2rem;
+  max-height: 2rem;
+  padding: 0.2rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 1px solid var(--echo-border);
+  background: var(--echo-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+}
+
+.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-label {
+  display: block;
+  max-width: 100%;
+  color: var(--echo-parch-400);
+  font-size: 0.625rem;
+  line-height: 1.2;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Live wiki article (coexists with .data-image-viewer) ──────────────────
+   Closed: native dialog display:none. Only [open] is flex.
+   Vertical stack: title → large art → lead → drops → rail → body → footer.
+   Echo tokens only — no glass, glow, or brand gradients. */
+
+.eq-champion .data-wiki-article {
+  position: relative;
+  width: min(96vw, 64rem);
+  max-width: 96vw;
+  max-height: 92vh;
+  padding: 0;
+  text-align: left;
+  overflow: hidden;
+  background: var(--echo-void);
+  border-color: var(--echo-border);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 42%, transparent),
+    0 16px 48px color-mix(in srgb, var(--echo-void) 78%, transparent);
+}
+
+.eq-champion .data-wiki-article[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+/* Shell — single vertical column, scrolls as one. */
+.eq-champion .data-wiki-article__shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 92vh;
+  gap: 0.75rem;
+  padding: 2.35rem 1.35rem 0.9rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--echo-void);
+  scrollbar-width: thin;
+  scrollbar-color: var(--echo-border) transparent;
+}
+
+.eq-champion .data-wiki-article__header {
+  flex: 0 0 auto;
+  padding: 0 5.5rem 0.55rem 0;
+  margin: 0;
+  border-bottom: 1px solid var(--echo-border);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--echo-carve) 28%, transparent);
+}
+
+.eq-champion .data-wiki-article__title {
+  margin: 0;
+  color: var(--echo-gold);
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* Legacy __top: was art|main grid — now a vertical stack so art dominates. */
+.eq-champion .data-wiki-article__top {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+}
+
+/* Main column under art (or shell sibling when markup is flat). Full width. */
+.eq-champion .data-wiki-article__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  order: 2;
+}
+
+/* Prefer lead before drops when both live inside __main (legacy markup). */
+.eq-champion .data-wiki-article__main > .data-wiki-article__status {
+  order: 0;
+}
+.eq-champion .data-wiki-article__main > .data-wiki-article__lead {
+  order: 1;
+}
+.eq-champion .data-wiki-article__main > .data-wiki-article__drops {
+  order: 2;
+}
+.eq-champion .data-wiki-article__main > .data-wiki-article__facts {
+  order: 3;
+}
+
+/* ── Art stage — large, left-aligned plate ─────────────────────────────────
+   Works for __stage (new) and __art (legacy under __top). */
+
+.eq-champion .data-wiki-article__stage,
+.eq-champion .data-wiki-article__art {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  order: 1;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  box-sizing: border-box;
+  /* Dominant hero plate — much larger than inventory glyph wells. */
+  width: min(56vw, 34rem);
+  min-width: min(16rem, 100%);
+  max-width: 100%;
+  min-height: 0;
+  padding: 0.85rem 0.9rem 0.75rem;
+  border: 1px solid var(--echo-border);
+  background: var(--echo-raised);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 48%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--echo-void) 35%, transparent);
+  overflow: hidden;
+}
+
+/* Flat shell children (new markup): stage sits after header, full vertical flow. */
+.eq-champion .data-wiki-article__shell > .data-wiki-article__stage,
+.eq-champion .data-wiki-article__shell > .data-wiki-article__art {
+  order: 0;
+}
+
+.eq-champion .data-wiki-article__art-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.eq-champion .data-wiki-article__stage img,
+.eq-champion .data-wiki-article__art-primary img,
+.eq-champion .data-wiki-article__art > img {
+  display: block;
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(58vh, 30rem);
+  object-fit: contain;
+  image-rendering: auto;
+  padding: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 85%, transparent);
+  background: var(--echo-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+}
+
+.eq-champion .data-wiki-article__stage img.is-pixel,
+.eq-champion .data-wiki-article__art-primary img.is-pixel,
+.eq-champion .data-wiki-article__art > img.is-pixel {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.eq-champion .data-wiki-article__art-empty {
+  display: block;
+  width: min(14rem, 70%);
+  height: min(14rem, 70%);
+  min-width: 8rem;
+  min-height: 8rem;
+  border: 1px dashed color-mix(in srgb, var(--echo-border) 80%, transparent);
+  background: color-mix(in srgb, var(--echo-inset) 88%, var(--echo-void));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-void) 40%, transparent);
+}
+
+.eq-champion .data-wiki-article__art-name {
+  margin: 0;
+  color: var(--echo-parch-100);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+
+/* ── Lead ────────────────────────────────────────────────────────────────── */
+
+.eq-champion .data-wiki-article__lead {
+  margin: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.eq-champion .data-wiki-article__shell > .data-wiki-article__lead {
+  order: 0;
+}
+
+/* ── Drops — full width, dense 14px ──────────────────────────────────────── */
+
+.eq-champion .data-wiki-article__drops {
+  flex: 0 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+.eq-champion .data-wiki-article__shell > .data-wiki-article__drops {
+  order: 0;
+}
+
+.eq-champion .data-wiki-article__drop-table {
+  width: 100%;
+  margin: 0 0 0.35rem;
+  border-collapse: collapse;
+  border: 1px solid var(--echo-border);
+  font-size: 0.875rem; /* 14px */
+  background: var(--echo-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 16%, transparent);
+}
+
+.eq-champion .data-wiki-article__drop-table-caption {
+  caption-side: top;
+  padding: 0 0 0.35rem;
+  color: var(--echo-gold);
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.eq-champion .data-wiki-article__drop-table-th {
+  padding: 0.28rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
+  color: var(--echo-parch-100);
+  background: var(--echo-raised);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 30%, transparent);
+}
+
+.eq-champion .data-wiki-article__drop-table-row td {
+  padding: 0.24rem 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 85%, transparent);
+  color: var(--echo-parch-50);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  vertical-align: middle;
+}
+
+.eq-champion .data-wiki-article__drop-table-row:nth-child(even) td {
+  background: var(--echo-zebra);
+}
+
+.eq-champion .data-wiki-article__drop-table-row:hover td {
+  background: color-mix(in srgb, var(--echo-raised) 55%, var(--echo-stage));
+}
+
+.eq-champion .data-wiki-article__drop-table-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.eq-champion .data-wiki-article__drop-table-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 1.875rem;
+  height: 1.875rem;
+  padding: 0.12rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 86%, transparent);
+  background: var(--echo-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+}
+
+.eq-champion .data-wiki-article__drop-table-icon img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: auto;
+}
+
+.eq-champion .data-wiki-article__drop-table-name {
+  min-width: 0;
+  color: var(--echo-parch-50);
+  font-size: 0.875rem;
+  line-height: 1.3;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.eq-champion .data-wiki-article__drop-table-qty {
+  width: 4.5rem;
+  color: var(--echo-parch-100);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.eq-champion .data-wiki-article__drop-table-rarity {
+  width: 7rem;
+  color: var(--echo-parch-100);
+  font-size: 0.875rem;
+}
+
+/* ── Asset rail ──────────────────────────────────────────────────────────── */
+
+.eq-champion .data-wiki-article__asset-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.25rem, 2.25rem));
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.45rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
+  list-style: none;
+}
+
+.eq-champion .data-wiki-article__asset-item {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.eq-champion .data-wiki-article__asset.data-icon-well,
+.eq-champion .data-wiki-article__asset-rail .data-icon-well {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  max-width: 2rem;
+  max-height: 2rem;
+}
+
+/* Full-width strip when rail is a shell sibling. */
+.eq-champion .data-wiki-article__shell > .data-wiki-article__asset-rail,
+.eq-champion .data-wiki-article__top + .data-wiki-article__asset-rail {
+  flex: 0 0 auto;
+  grid-template-columns: repeat(auto-fill, minmax(2rem, 2.1rem));
+  justify-content: start;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--echo-border);
+  background: var(--echo-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 28%, transparent);
+}
+
+.eq-champion .data-wiki-article__status {
+  margin: 0;
+  color: var(--echo-parch-300);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.eq-champion .data-wiki-article__status[role="alert"] {
+  color: var(--echo-parch-100);
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--echo-border);
+  background: color-mix(in srgb, var(--echo-inset) 80%, var(--echo-void));
+}
+
+/* Fact strip — carved mini-slabs. */
+.eq-champion .data-wiki-article__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.4rem 0.65rem;
+  margin: 0;
+  padding: 0;
+}
+
+.eq-champion .data-wiki-article__fact {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.4rem;
+  row-gap: 0.1rem;
+  align-items: start;
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 88%, transparent);
+  background: var(--echo-stage);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+}
+
+.eq-champion .data-wiki-article__fact-icon {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.1rem;
+  overflow: hidden;
+}
+
+.eq-champion .data-wiki-article__fact-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.eq-champion .data-wiki-article__fact-label,
+.eq-champion .data-wiki-article__fact dt {
+  grid-column: 2;
+  color: var(--echo-parch-400);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.eq-champion .data-wiki-article__fact-value,
+.eq-champion .data-wiki-article__fact dd {
+  grid-column: 2;
+  margin: 0;
+  color: var(--echo-parch-50);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.eq-champion .data-wiki-article__fact:not(:has(.data-wiki-article__fact-icon)) .data-wiki-article__fact-label,
+.eq-champion .data-wiki-article__fact:not(:has(.data-wiki-article__fact-icon)) .data-wiki-article__fact-value,
+.eq-champion .data-wiki-article__fact:not(:has(.data-wiki-article__fact-icon)) dt,
+.eq-champion .data-wiki-article__fact:not(:has(.data-wiki-article__fact-icon)) dd {
+  grid-column: 1 / -1;
+}
+
+/* Body scroll region — remaining details under the rail. */
+.eq-champion .data-wiki-article__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: min(36vh, 22rem);
+  overflow: auto;
+  margin: 0;
+  padding: 0.65rem 0.35rem 0.35rem 0;
+  border-top: 1px solid var(--echo-border);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+  scrollbar-width: thin;
+  scrollbar-color: var(--echo-border) transparent;
+}
+
+.eq-champion .data-wiki-article__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 1rem;
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding: 0.55rem 0 0.15rem;
+  border-top: 1px solid var(--echo-border);
+  color: var(--echo-parch-400);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.eq-champion .data-wiki-article__external {
+  color: var(--echo-gem-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.eq-champion .data-wiki-article__external:hover,
+.eq-champion .data-wiki-article__external:focus-visible {
+  color: var(--echo-gem);
+}
+
+.eq-champion .data-wiki-article__credit {
+  color: var(--echo-parch-400);
+}
+
+/* ── Wiki HTML skin — Vector chrome stripped; tables + type only ─────────── */
+
+.eq-champion .data-wiki-article__content {
+  color: var(--echo-parch-50);
+  font-size: 0.875rem; /* 14px working text */
+  line-height: 1.4;
+}
+
+.eq-champion .data-wiki-article__content :where(h2, h3, h4) {
+  margin: 0.7rem 0 0.4rem;
+  color: var(--echo-gold);
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.015em;
+}
+
+.eq-champion .data-wiki-article__content :where(h2):first-child,
+.eq-champion .data-wiki-article__content :where(h3):first-child,
+.eq-champion .data-wiki-article__content :where(h4):first-child {
+  margin-top: 0;
+}
+
+.eq-champion .data-wiki-article__content :where(p) {
+  margin: 0 0 0.5rem;
+  color: var(--echo-parch-100);
+}
+
+.eq-champion .data-wiki-article__content :where(a) {
+  color: var(--echo-gem-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.eq-champion .data-wiki-article__content :where(a):hover,
+.eq-champion .data-wiki-article__content :where(a):focus-visible {
+  color: var(--echo-gem);
+}
+
+.eq-champion .data-wiki-article__content :where(ul, ol) {
+  margin: 0 0 0.55rem;
+  padding-left: 1.2rem;
+  color: var(--echo-parch-100);
+}
+
+.eq-champion .data-wiki-article__content :where(li) {
+  margin: 0.12rem 0;
+}
+
+.eq-champion .data-wiki-article__content :where(li)::marker {
+  color: var(--echo-parch-400);
+}
+
+.eq-champion .data-wiki-article__content :where(table) {
+  width: 100%;
+  margin: 0 0 0.65rem;
+  border-collapse: collapse;
+  border: 1px solid var(--echo-border);
+  font-size: 0.875rem;
+  background: var(--echo-stage);
+}
+
+.eq-champion .data-wiki-article__content :where(th, td) {
+  padding: 0.32rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.eq-champion .data-wiki-article__content :where(th) {
+  color: var(--echo-parch-100);
+  background: var(--echo-raised);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 30%, transparent);
+}
+
+.eq-champion .data-wiki-article__content :where(td) {
+  color: var(--echo-parch-50);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.eq-champion .data-wiki-article__content :where(tbody tr:nth-child(even) td) {
+  background: var(--echo-zebra);
+}
+
+.eq-champion .data-wiki-article__content :where(tbody tr:hover td) {
+  background: color-mix(in srgb, var(--echo-raised) 55%, var(--echo-stage));
+}
+
+/* HTML drop fallback tables — icon-width first col, 14px type. */
+.eq-champion .data-wiki-article__drops .data-wiki-article__content :where(table) {
+  font-size: 0.875rem;
+}
+
+.eq-champion .data-wiki-article__drops .data-wiki-article__content :where(th, td) {
+  padding: 0.3rem 0.45rem;
+}
+
+.eq-champion .data-wiki-article__drops .data-wiki-article__content :where(td:first-child),
+.eq-champion .data-wiki-article__drops .data-wiki-article__content :where(th:first-child) {
+  width: 2.25rem;
+  min-width: 2.25rem;
+}
+
+/* Kill remote wiki media — local art lives only in __art / __stage / image-only. */
+/* Prose/body: no remote wiki art. Drop-table icons are allowed separately. */
+.eq-champion .data-wiki-article__content :where(img, picture, video, svg, figure) {
+  display: none !important;
+}
+
+.eq-champion .data-wiki-article__drop-table-icon img {
+  display: block !important;
+  width: 1.75rem;
+  height: 1.75rem;
+  max-width: 1.75rem;
+  max-height: 1.75rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Mobile: art still large, but capped ~12rem. */
+@media (max-width: 720px) {
+  .eq-champion .data-wiki-article {
+    width: min(96vw, 64rem);
+  }
+
+  .eq-champion .data-wiki-article__shell {
+    padding: 2.25rem 0.85rem 0.75rem;
+    gap: 0.65rem;
+  }
+
+  .eq-champion .data-wiki-article__top {
+    gap: 0.65rem;
+  }
+
+  .eq-champion .data-wiki-article__stage,
+  .eq-champion .data-wiki-article__art {
+    width: min(100%, 22rem);
+    min-width: 0;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .eq-champion .data-wiki-article__stage img,
+  .eq-champion .data-wiki-article__art-primary img,
+  .eq-champion .data-wiki-article__art > img {
+    max-height: 12rem;
+  }
+
+  .eq-champion .data-wiki-article__art-empty {
+    width: 5rem;
+    height: 5rem;
+    min-width: 5rem;
+    min-height: 5rem;
+  }
+
+  .eq-champion .data-wiki-article__art-name {
+    text-align: left;
+  }
+
+  .eq-champion .data-wiki-article__asset-rail {
+    grid-template-columns: repeat(auto-fill, minmax(2rem, 2rem));
+  }
+
+  .eq-champion .data-wiki-article__main {
+    max-height: none;
+  }
+
+  .eq-champion .data-wiki-article__body {
+    max-height: min(34vh, 16rem);
+  }
+
+  .eq-champion .data-wiki-article__facts {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  }
+
+  .eq-champion .data-wiki-article__drop-table-qty {
+    width: 3.5rem;
+  }
+
+  .eq-champion .data-wiki-article__drop-table-rarity {
+    width: 5.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .eq-champion .data-image-viewer {
+    width: min(96vw, 56rem);
+    padding: 2.5rem 0.85rem 1.15rem;
+  }
+
+  .eq-champion .data-image-viewer > img {
+    max-width: min(92vw, 52rem);
+    padding: 0.5rem;
+  }
+
+  .eq-champion .data-wiki-article__header {
+    padding-right: 4.75rem;
+  }
+
+  .eq-champion .data-wiki-article__title {
+    font-size: 1.1rem;
+  }
+
+  .eq-champion .data-wiki-article__stage,
+  .eq-champion .data-wiki-article__art {
+    width: 100%;
+  }
+
+  .eq-champion .data-wiki-article__stage img,
+  .eq-champion .data-wiki-article__art-primary img,
+  .eq-champion .data-wiki-article__art > img {
+    max-height: 12rem;
+  }
+
+  .eq-champion .data-wiki-article__asset-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .eq-champion .data-content-name__text {

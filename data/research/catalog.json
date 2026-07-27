@@ -108,15 +108,15 @@
           }
         },
         {
-          "name": "Pale wisps near Draynor",
+          "name": "Misthalin wisp colonies",
           "kind": "Divination",
-          "detail": "",
+          "detail": "Pale wisps near Draynor, bright wisps east of Varrock, brilliant wisps by the Mage Training Arena.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pale_wisp",
-            "title": "Pale wisps near Draynor",
-            "verifiedAt": "2026-07-25"
+            "url": "https://runescape.wiki/w/Divination_training",
+            "title": "Misthalin wisp colonies",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -313,8 +313,8 @@
         },
         {
           "name": "Infernal Source Dig Site",
-          "kind": "Archaeology dig site and Ancient Summoning materials",
-          "detail": "Included because Forinthry gap lists often name Infernal Source. Wiki Equilibrium League region tags excavation hotspots as Misthalin (entrance west of Jolly Boar Inn / north of Varrock). The Source itself sits under the Wilderness Crater but is not dangerous Wilderness",
+          "kind": "Archaeology dig site",
+          "detail": "Zarosian dig site entrance west of the Jolly Boar Inn (north of Varrock). Hotspots and Ancient Summoning materials.",
           "confidence": "confirmed_wiki_league_region_misthalin",
           "source": {
             "source": "runescape-wiki",
@@ -361,6 +361,42 @@
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
+        },
+        {
+          "name": "Draynor willow trees",
+          "kind": "Woodcutting",
+          "detail": "Willow trees south of Draynor Village.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Willow_tree",
+            "title": "Draynor willow trees",
+            "verifiedAt": "2026-07-27"
+          },
+          "confidence": "confirmed_wiki"
+        },
+        {
+          "name": "Varrock Palace tree patch",
+          "kind": "Farming patch",
+          "detail": "Tree patch in the Varrock Palace gardens.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Tree_patch",
+            "title": "Varrock Palace tree patch",
+            "verifiedAt": "2026-07-27"
+          },
+          "confidence": "confirmed_wiki"
+        },
+        {
+          "name": "Lumbridge hops patch",
+          "kind": "Farming patch",
+          "detail": "Hops patch north of Lumbridge.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Hops_patch",
+            "title": "Lumbridge hops patch",
+            "verifiedAt": "2026-07-27"
+          },
+          "confidence": "confirmed_wiki"
         }
       ],
       "upgrades": [
@@ -6788,6 +6824,18 @@
             "title": "Gemstone cavern (Shilo underground)",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Calquat farming patch",
+          "kind": "Farming patch",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Calquat_patch",
+            "title": "Calquat farming patch (Tai Bwo Wannai)",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -12387,6 +12435,30 @@
             "title": "Memorial to Guthix",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Ardougne farming patches and Manor Farm",
+          "kind": "Farming patch",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Manor_Farm",
+            "title": "Ardougne farming patches and Manor Farm access geography",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Fruit tree patch hubs",
+          "kind": "Farming patch",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Fruit_Tree_Patch",
+            "title": "Fruit tree patch hubs (Kandarin core)",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -17669,6 +17741,18 @@
             "url": "https://runescape.wiki/w/Primal_iron_ore",
             "title": "Primal ores",
             "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Wilderness herb patch",
+          "kind": "Farming patch",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Herb_patch_(Wilderness)",
+            "title": "Wilderness herb patch",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -23076,6 +23160,18 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Mazchna",
             "title": "Mazchna / Achtryn (Canifis Slayer Masters)",
+            "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Port Phasmatys farming patches",
+          "kind": "Farming patch",
+          "detail": "",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ectophial",
+            "title": "Port Phasmatys farming patches",
             "verifiedAt": "2026-07-26"
           }
         }

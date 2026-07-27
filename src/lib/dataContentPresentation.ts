@@ -836,7 +836,6 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "thieving activity and summoning utility": "Thieving",
     "fishing and cooking supply infrastructure": "Fishing",
     "regional reputation skilling unlocks": "Reputation",
-    "regional skilling infrastructure": "Skilling hub",
     "permanent desert agility infrastructure": "Agility",
     "farming activity and pof supply infrastructure": "Farming",
     "hunter and prayer training supply": "Hunter / Prayer",

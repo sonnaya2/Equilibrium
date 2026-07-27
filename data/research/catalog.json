@@ -5472,18 +5472,6 @@
           }
         },
         {
-          "name": "Havenhythe canoe network",
-          "kind": "permanent regional travel infrastructure",
-          "detail": "Havenhythe-local canoe system — not the River Lum / Wilderness canoe network used for. Construction plank costs are one-time repairs per station",
-          "confidence": "confirmed_wiki_2026",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Havenhythe",
-            "title": "Havenhythe canoe network",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
           "name": "Marigold Farm patch cluster",
           "kind": "regional Farming infrastructure",
           "detail": "split from the old farming-patch-cluster audit blob. Dalia's Tree Nursery (tree/fruit/eternal-magic plots) remains — do not merge. Marigold is the allotment/herb/flower half for daily Farming runs on automatic Havenhythe",

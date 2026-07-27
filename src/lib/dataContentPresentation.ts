@@ -619,6 +619,7 @@ export function presentInterestName(value: string): string {
   if (/^Wizards' Tower\b/i.test(raw)) return "Wizards' Tower";
   if (/^Woodcutters?' Grove\b/i.test(raw)) return "Woodcutters' Grove";
   if (/^Tier 3 Woodcutter's Grove\b/i.test(raw)) return "Woodcutters' Grove";
+  if (/^Havenhythe canoe network$/i.test(raw)) return "Canoe network";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -821,6 +822,7 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent slayer teleport jewellery equipment": "Slayer",
     "woodcutting tool progression": "Woodcutting",
     "woodcutting hub infrastructure": "Woodcutting",
+    "permanent regional travel infrastructure": "Travel",
   };
   if (exact[lower]) return exact[lower];
 

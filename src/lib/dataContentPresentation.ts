@@ -642,7 +642,7 @@ export function presentInterestName(value: string): string {
   }
   if (/^Liberation of Mazcab$/i.test(raw)) return "Liberation of Mazcab";
   if (/^Agility Pyramid\b/i.test(raw)) return "Agility Pyramid";
-  if (/^Het's Oasis$/i.test(raw)) return "Het's Oasis";
+  if (/^Het's Oasis\b/i.test(raw)) return "Het's Oasis";
   if (/^Mazcab Emergency Merchants$/i.test(raw)) return "Mazcab potion shop";
   if (/^Goebie scavengers$/i.test(raw)) return "Goebie scavengers";
   if (/^Sunken Pyramid\b/i.test(raw)) return "Sunken Pyramid";
@@ -835,6 +835,9 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "fishing and cooking supply infrastructure": "Fishing",
     "regional reputation skilling unlocks": "Reputation",
     "regional skilling infrastructure": "Skilling hub",
+    "permanent desert agility infrastructure": "Agility",
+    "farming activity and pof supply infrastructure": "Farming",
+    "hunter and prayer training supply": "Hunter / Prayer",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

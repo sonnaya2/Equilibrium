@@ -83,7 +83,6 @@ export default function CombatPage() {
       <div className="workbench-fill">
         <div className="combat-route-meta mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-parch-100">
           <span className="combat-route-title font-medium text-parch-50">Combat</span>
-          <span className="text-parch-300">Post-March 2026 rules</span>
           <span className="ml-auto flex gap-3">
             <SourceLink source={combatWiki} label="Wiki" />
             <SourceLink source={patchOne} label="Patch 1" />

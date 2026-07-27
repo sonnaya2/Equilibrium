@@ -155,6 +155,12 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // Item chips only (mob labels share icon src and would collapse).
   "Edgeville resource dungeons": "Limpwurt roots, Grimy ranarr",
   "Edgeville Dungeon resource dungeons": "Limpwurt roots, Grimy ranarr",
+  "Edgeville Dungeon combat": "Hill giants, Chaos druids",
+  "Green dragons": "Green dragonhide, Dragon bones",
+  "Chaos Tunnels": "Multi-combat training",
+  "Lesser demons": "Lesser demons",
+  Ghouls: "Ghoul Champion's scroll",
+  "Slayer Tower early floors": "Crawling hands, Banshees",
   "Wilderness bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Black salamanders": "Black salamander, Dark onyx core",

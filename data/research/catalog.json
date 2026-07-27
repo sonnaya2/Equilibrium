@@ -16104,6 +16104,54 @@
             "title": "Acheron mammoths",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Green dragons",
+          "kind": "combat training",
+          "detail": "Classic Wilderness green dragons for combat XP, dragon bones, and green dragonhide.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Green_dragon",
+            "title": "Green dragons",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Chaos Tunnels",
+          "kind": "combat training",
+          "detail": "Low Wilderness multi-combat dungeon network north of Edgeville. Dense low-to-mid combat training.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chaos_Tunnels",
+            "title": "Chaos Tunnels",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Lesser demons",
+          "kind": "combat training",
+          "detail": "Wilderness lesser demons for early-to-mid combat XP under Forinthry risk.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Lesser_demon",
+            "title": "Lesser demons",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Edgeville Dungeon combat",
+          "kind": "combat training",
+          "detail": "Hill giants and chaos druids in Edgeville Dungeon / resource rooms. Early combat next to Edgeville banking.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Edgeville_Dungeon",
+            "title": "Edgeville Dungeon combat",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -21405,6 +21453,30 @@
             "url": "https://runescape.wiki/w/Ectophial",
             "title": "Port Phasmatys farming patches",
             "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Ghouls",
+          "kind": "combat training",
+          "detail": "North of Canifis. Early Morytania combat training and Ghoul Champion scroll path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ghoul",
+            "title": "Ghouls",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Slayer Tower early floors",
+          "kind": "combat training",
+          "detail": "Ground and lower tower: crawling hands and banshees. Early Slayer and combat training in Morytania.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Slayer_Tower",
+            "title": "Slayer Tower early floors",
+            "verifiedAt": "2026-07-27"
           }
         }
       ],

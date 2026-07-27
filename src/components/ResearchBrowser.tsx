@@ -28,10 +28,12 @@ import {
 import {
   contentTypeLabel,
   presentContentRewards,
+  presentInterestMeta,
+  presentInterestName,
   resolveContentLocation,
   resolveTrainingLocation,
 } from "@/lib/dataContentPresentation";
-import { contentRewardsFull } from "@/lib/researchRewards";
+import { contentRewardsFull, majorContentRows } from "@/lib/researchRewards";
 import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse } from "./ResearchSection";
 import { useDataRegion } from "./DataWorkbench";
@@ -90,80 +92,11 @@ function contentName(value: string): string {
 }
 
 function interestName(value: string): string {
-  const name = cleanText(value)
-    .replace(/\s*\([^)]*\)/g, "")
-    .replace(/\s+progression$/i, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  // Non-Archaeology keepers (must stay ahead of generic trailing strips)
-  if (/^Binding contract\b/i.test(name)) return "Ancient Summoning";
-  if (/^Master thief's lockpick \+ stethoscope\b/i.test(name)) return "Master thief's tools";
-  if (/^Ava's device chain$/i.test(name)) return "Ava's devices";
-  if (/^Research team size ladder\b/i.test(name)) return "Research team upgrades";
-  if (/^Underworld Grimoire skilling milestone ladder$/i.test(name)) return "Underworld Grimoire";
-  if (/^Prayer training infrastructure stack$/i.test(name)) return "Prayer training";
-  if (/^War's Retreat hub amenities$/i.test(name)) return "War's Retreat";
-
-  // Archaeology — exact / prefix renames (player-facing short labels)
-  if (/^Chronotes currency economy\b/i.test(name)) return "Chronotes";
-  if (/^Archaeology Guild Shop and qualification upgrades$/i.test(name)) {
-    return "Archaeology Guild shop";
-  }
-  if (/^Archaeology Guild qualifications Intern\s*[→-]\s*Professor$/i.test(name)) {
-    return "Guild qualifications";
-  }
-  if (/^Archaeology collectors and collection system$/i.test(name)) return "Collectors";
-  if (/^Collectors Assemble\b/i.test(name)) return "Collectors Assemble";
-  if (/^Hireable research team recruitment ladder$/i.test(name)) return "Research team";
-  if (/^Archaeology research system$/i.test(name)) return "Archaeology research";
-  if (/^Archaeology research team permanent\b/i.test(name)) return "Research team";
-  if (/^Mysterious monolith\b/i.test(name)) return "Mysterious monolith";
-  if (/^Professor additional relic loadout\b/i.test(name)) return "Extra relic loadout";
-  if (/^Mattock precision upgrades\b/i.test(name)) return "Mattock precision";
-  if (/^Tetracompass pieces\b/i.test(name)) return "Tetracompass";
-  if (/^Museum donation bin\b/i.test(name)) return "Museum donation bin";
-  if (/^Velucia museum\b/i.test(name)) return "Velucia collections";
-  if (/^Archaeology Campus and Varrock Dig Site hub$/i.test(name)) return "Archaeology Campus";
-  if (/^Screening station\b/i.test(name)) return "Screening station";
-  if (/^Archaeologist's workbench\b/i.test(name)) return "Archaeologist's workbench";
-  if (/^Spear of Annihilation\b/i.test(name)) return "Spear of Annihilation";
-  if (/^Font of Life relic\b/i.test(name)) return "Font of Life";
-  if (/^Guildmaster Tony's mattock$/i.test(name)) return "Guildmaster Tony's mattock";
-  if (/^Master archaeologist's outfit\b/i.test(name)) return "Master archaeologist outfit";
-  if (/^Archaeologist's outfit$/i.test(name)) return "Archaeologist's outfit";
-  if (/^High-value collector first-time permanent rewards$/i.test(name)) {
-    return "Collector rewards";
-  }
-  if (/^Warforge Dig Site\b/i.test(name)) return "Warforge Dig Site";
-  if (/^Stormguard Citadel Dig Site\b/i.test(name)) return "Stormguard Dig Site";
-  if (/^Infernal Source Dig Site\b/i.test(name)) return "Infernal Source Dig Site";
-  if (/^Senntisten Dig Site$/i.test(name)) return "Senntisten Dig Site";
-  if (/^Imcando tools family\b/i.test(name)) return "Imcando tools";
-  if (/^Dragon mattock\b/i.test(name)) return "Dragon mattock";
-  if (/^Mattock of Time and Space$/i.test(name)) return "Mattock of Time and Space";
-  if (/^It Belongs in a Museum!/i.test(name)) return "Museum log";
-  if (/^Archaeology culture Expert titles$/i.test(name)) return "Expert titles";
-
-  // Generic trailing clutter (safe for non-Archaeology residual titles)
-  return name
-    .replace(
-      /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
-      "",
-    )
-    .replace(/\s+/g, " ")
-    .trim();
+  return presentInterestName(value);
 }
 
 function interestMeta(value: string): string {
-  return clipProse(
-    cleanText(value)
-      .replace(/\b(?:permanent|infrastructure|package|densify|residual)\b/gi, "")
-      .replace(/\bfollow-on chain\b/gi, "")
-      .replace(/\s+/g, " ")
-      .trim(),
-    48,
-  );
+  return presentInterestMeta(value, 48);
 }
 
 function methodRate(rate: string): string {
@@ -728,15 +661,10 @@ export function ResearchBrowser({
     if (!selectedRegion) return selectedRegion;
     const matches = (values: unknown[]) =>
       values.filter(Boolean).join(" ").toLowerCase().includes(normalizedQuery);
-    const majorContent = selectedRegion.content.filter(
-      (row) =>
-        !selectedRegion.content.some(
-          (parent) =>
-            parent !== row &&
-            cleanText(parent.name).toLowerCase() === cleanText(row.kind).toLowerCase() &&
-            contentRewardsFull(parent, selectedRegion.upgrades) ===
-              contentRewardsFull(row, selectedRegion.upgrades),
-        ),
+    // Collapse multi-boss package children (Sanctum) — not place hubs (Lost Grove ≠ Solak).
+    const majorContent = majorContentRows(
+      selectedRegion.content,
+      selectedRegion.upgrades,
     );
     const content = normalizedQuery
       ? majorContent.filter((row) =>

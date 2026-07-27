@@ -13,6 +13,10 @@ import {
 } from "@/research/plannerExpansions";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
+import {
+  presentInterestMeta,
+  presentInterestName,
+} from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
@@ -181,7 +185,8 @@ function sourceLinks(row: Row): string[] {
 function rowTitle(row: Row): string {
   // Prefer explicit names. Plain-string `source` is the drop-source boss label on unique-drop rows
   // (never a SourceReference — those are objects and are filtered by humanString).
-  return (
+  // presentInterestName only trims planner hub suffixes; icons still resolve from raw row.name.
+  const raw =
     humanString(row.name) ||
     humanString(row.method) ||
     humanString(row.unlock) ||
@@ -190,19 +195,28 @@ function rowTitle(row: Row): string {
     humanString(row.component) ||
     humanString(row.location) ||
     humanString(row.source) ||
-    "—"
-  );
+    "";
+  if (!raw) return "—";
+  return presentInterestName(raw) || raw;
 }
 
 function rowSubtitle(row: Row): string {
   const title = rowTitle(row);
+  const rawName = humanString(row.name);
   // When location is the title, prefer level band under it.
-  if (humanString(row.location) === title) {
-    return humanString(row.level_range) || humanString(row.category) || "";
+  if (humanString(row.location) === title || humanString(row.location) === rawName) {
+    return humanString(row.level_range) || presentInterestMeta(humanString(row.category), 80) || "";
+  }
+  const location = humanString(row.location);
+  if (location && location !== title && location !== rawName) {
+    return clipProse(location, 80);
+  }
+  const category = humanString(row.category);
+  if (category) {
+    const meta = presentInterestMeta(category, 80);
+    if (meta && meta !== title) return meta;
   }
   const value =
-    humanString(row.location) ||
-    humanString(row.category) ||
     humanString(row.level_range) ||
     humanString(row.effect_summary) ||
     humanString(row.support_item_effect) ||
@@ -346,8 +360,13 @@ export function ProgressionResearch() {
             const details = rowDetails(row);
             const subtitle = rowSubtitle(row);
             const heading = rowTitle(row);
+            const rawName =
+              humanString(row.name) ||
+              humanString(row.method) ||
+              humanString(row.unlock) ||
+              (heading !== "—" ? heading : "");
             const iconSrc = dataEntityIconPath({
-              name: heading !== "—" ? heading : typeof row.name === "string" ? row.name : null,
+              name: rawName || null,
               kind: String(row.recordType || row.category || row.kind || ""),
               id: row.id != null ? String(row.id) : null,
             });

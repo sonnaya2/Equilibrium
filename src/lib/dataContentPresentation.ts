@@ -541,3 +541,184 @@ export function resolveTrainingLocation(
 export function contentTypeLabel(kind: string, name: string): string {
   return splitContentKind(kind, name).type;
 }
+
+/** Light cleanup shared by interest display helpers. */
+function cleanInterestText(value: string): string {
+  return String(value ?? "")
+    .replace(/\u00a0/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\[(?:edit|citation needed|source|note\s*\d*)\]/gi, "")
+    .replace(/[ \t\f\v]+/g, " ")
+    .replace(/ *\n */g, "\n")
+    .replace(/(?:\s*·\s*){2,}/g, " · ")
+    .trim();
+}
+
+/**
+ * Player-facing unlock / POI title. Drops planner suffixes ("skilling hub",
+ * "on-ramp hub", residual/package/infrastructure) while keeping place names.
+ */
+export function presentInterestName(value: string): string {
+  const name = cleanInterestText(value)
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s+progression$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!name) return "";
+
+  // Non-Archaeology keepers (must stay ahead of generic trailing strips)
+  if (/^Binding contract\b/i.test(name)) return "Ancient Summoning";
+  if (/^Master thief's lockpick \+ stethoscope\b/i.test(name)) return "Master thief's tools";
+  if (/^Ava's device chain$/i.test(name)) return "Ava's devices";
+  if (/^Research team size ladder\b/i.test(name)) return "Research team upgrades";
+  if (/^Underworld Grimoire skilling milestone ladder$/i.test(name)) return "Underworld Grimoire";
+  if (/^Prayer training infrastructure stack$/i.test(name)) return "Prayer training";
+  if (/^War's Retreat hub amenities$/i.test(name)) return "War's Retreat";
+
+  // Archaeology — exact / prefix renames
+  if (/^Chronotes currency economy\b/i.test(name)) return "Chronotes";
+  if (/^Archaeology Guild Shop and qualification upgrades$/i.test(name)) {
+    return "Archaeology Guild shop";
+  }
+  if (/^Archaeology Guild qualifications Intern\s*[→-]\s*Professor$/i.test(name)) {
+    return "Guild qualifications";
+  }
+  if (/^Archaeology collectors and collection system$/i.test(name)) return "Collectors";
+  if (/^Collectors Assemble\b/i.test(name)) return "Collectors Assemble";
+  if (/^Hireable research team recruitment ladder$/i.test(name)) return "Research team";
+  if (/^Archaeology research system$/i.test(name)) return "Archaeology research";
+  if (/^Archaeology research team permanent\b/i.test(name)) return "Research team";
+  if (/^Mysterious monolith\b/i.test(name)) return "Mysterious monolith";
+  if (/^Professor additional relic loadout\b/i.test(name)) return "Extra relic loadout";
+  if (/^Mattock precision upgrades\b/i.test(name)) return "Mattock precision";
+  if (/^Tetracompass pieces\b/i.test(name)) return "Tetracompass";
+  if (/^Museum donation bin\b/i.test(name)) return "Museum donation bin";
+  if (/^Velucia museum\b/i.test(name)) return "Velucia collections";
+  if (/^Archaeology Campus and Varrock Dig Site hub$/i.test(name)) return "Archaeology Campus";
+  if (/^Screening station\b/i.test(name)) return "Screening station";
+  if (/^Archaeologist's workbench\b/i.test(name)) return "Archaeologist's workbench";
+  if (/^Spear of Annihilation\b/i.test(name)) return "Spear of Annihilation";
+  if (/^Font of Life relic\b/i.test(name)) return "Font of Life";
+  if (/^Guildmaster Tony's mattock$/i.test(name)) return "Guildmaster Tony's mattock";
+  if (/^Master archaeologist's outfit\b/i.test(name)) return "Master archaeologist outfit";
+  if (/^Archaeologist's outfit$/i.test(name)) return "Archaeologist's outfit";
+  if (/^High-value collector first-time permanent rewards$/i.test(name)) {
+    return "Collector rewards";
+  }
+  if (/^Warforge Dig Site\b/i.test(name)) return "Warforge Dig Site";
+  if (/^Stormguard Citadel Dig Site\b/i.test(name)) return "Stormguard Dig Site";
+  if (/^Infernal Source Dig Site\b/i.test(name)) return "Infernal Source Dig Site";
+  if (/^Senntisten Dig Site$/i.test(name)) return "Senntisten Dig Site";
+  if (/^Imcando tools family\b/i.test(name)) return "Imcando tools";
+  if (/^Dragon mattock\b/i.test(name)) return "Dragon mattock";
+  if (/^Mattock of Time and Space$/i.test(name)) return "Mattock of Time and Space";
+  if (/^It Belongs in a Museum!/i.test(name)) return "Museum log";
+  if (/^Archaeology culture Expert titles$/i.test(name)) return "Expert titles";
+
+  // Place hubs — keep the place, drop planner speak
+  if (/^Edgeville\b/i.test(name) && /wilderness|on-ramp|skilling/i.test(name)) {
+    return "Edgeville";
+  }
+  if (/^Port Sarim\b/i.test(name) && /dock|skilling/i.test(name)) return "Port Sarim";
+  if (/^Taverley\b/i.test(name) && /Burthorpe/i.test(name)) return "Taverley / Burthorpe";
+  if (/^Menaphos\b/i.test(name) && /skilling|district/i.test(name)) return "Menaphos";
+  if (/^Lumbridge\b/i.test(name) && /skilling|early/i.test(name)) return "Lumbridge";
+  if (/^Draynor Village\b/i.test(name) && /skilling|hub/i.test(name)) return "Draynor Village";
+  if (/^Seers' Village\b/i.test(name) && /skilling|hub/i.test(name)) return "Seers' Village";
+  if (/^Burgh de Rott\b/i.test(name) && /skilling|hub/i.test(name)) return "Burgh de Rott";
+  if (/^Port Phasmatys\b/i.test(name) && /skilling|hub/i.test(name)) return "Port Phasmatys";
+  if (/^Lunar Isle\b/i.test(name) && /skilling|hub/i.test(name)) return "Lunar Isle";
+  if (/^TzHaar City\b/i.test(name) && /skilling|hub/i.test(name)) return "TzHaar City";
+  if (/^Prifddinas\b/i.test(name) && /skilling|hub/i.test(name)) return "Prifddinas";
+  if (/^Yanille\b/i.test(name) && /multi-skill|hub/i.test(name)) return "Yanille";
+  if (/^Rellekka\b/i.test(name) && /Fremennik|hub/i.test(name)) return "Rellekka";
+  if (/^Keldagrim\b/i.test(name) && /dwarven|hub/i.test(name)) return "Keldagrim";
+  if (/^Amberfell\b/i.test(name) && /hub|village/i.test(name)) return "Amberfell";
+  if (/^Catherby\b/i.test(name) && /fishing|farming|hub/i.test(name)) return "Catherby";
+  if (/^Deep Sea Fishing hub\b/i.test(name)) {
+    return /methods|boosts/i.test(name) ? "Deep Sea Fishing methods" : "Deep Sea Fishing";
+  }
+
+  return name
+    .replace(
+      /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
+      "",
+    )
+    .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
+    .replace(/\s+docks and skilling hub$/i, "")
+    .replace(/\s+early[–\-]?mid skilling hub$/i, "")
+    .replace(/\s+early skilling hub$/i, "")
+    .replace(/\s+skilling hub$/i, "")
+    .replace(/\s+multi-skill hub$/i, "")
+    .replace(/\s+production hub$/i, "")
+    .replace(/\s+on-ramp hub$/i, "")
+    .replace(/\s+skilling boss hub$/i, "")
+    .replace(/\s+hub amenities$/i, "")
+    .replace(/\s+hubs$/i, "")
+    .replace(/\s+hub$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Short subtitle under a POI name. Strips "regional multi-skill … infrastructure"
+ * planner taxonomy into something a player would skim.
+ */
+export function presentInterestMeta(value: string, maxLen = 48): string {
+  let s = cleanInterestText(value);
+  if (!s) return "";
+
+  const lower = s.toLowerCase();
+  const exact: Record<string, string> = {
+    "regional multi-skill bank and production hub": "Bank and production",
+    "regional multi-skill transport and shop infrastructure": "Docks and shops",
+    "regional multi-skill settlement infrastructure": "Settlement",
+    "regional skilling infrastructure": "Skilling",
+    "regional starter multi-skill infrastructure": "Starter town",
+    "regional city bank, furnace, and tokkul shop infrastructure": "Bank, furnace, TokKul",
+    "coastal skilling hub": "Coastal skilling",
+    "district skilling hub infrastructure residual": "District hub",
+    "district skilling hub infrastructure": "District hub",
+    "district skilling and utility hub": "District hub",
+    "district mining/smithing infrastructure": "Mining and Smithing",
+    "fishing activity and shop hub": "Fishing hub",
+    "fishing activity method bundle": "Fishing methods",
+    "passive multi-skill xp stations": "Passive XP stations",
+    "regional summoning production hub pointer": "Summoning hub",
+    "herblore perfect-juju production hub": "Perfect juju recipes",
+  };
+  if (exact[lower]) return exact[lower];
+
+  s = s
+    .replace(/\bfollow-on chain\b/gi, "")
+    .replace(
+      /\b(?:regional|permanent|global|explicit|working|canonical)\b/gi,
+      "",
+    )
+    .replace(
+      /\b(?:infrastructure|package|residual|pointer|densify|taxonomy)\b/gi,
+      "",
+    )
+    .replace(/\bmulti-skill\b/gi, "")
+    .replace(/\bskilling hub\b/gi, "skilling")
+    .replace(/\bproduction hub\b/gi, "production")
+    .replace(/\bhub\b/gi, "")
+    .replace(/\s*[,;·]\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .replace(/^[,.\s]+|[,.\s]+$/g, "")
+    .trim();
+
+  if (!s) return "Skilling";
+
+  // Sentence-case the first letter only — keep wiki proper nouns as-is mid-string.
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+
+  if (s.length <= maxLen) return s;
+  const ellipsis = "...";
+  const budget = Math.max(8, maxLen - ellipsis.length);
+  const cut = s.slice(0, budget);
+  const sp = cut.lastIndexOf(" ");
+  const base = (sp > budget * 0.55 ? cut.slice(0, sp) : cut).trimEnd();
+  return `${base}${ellipsis}`;
+}

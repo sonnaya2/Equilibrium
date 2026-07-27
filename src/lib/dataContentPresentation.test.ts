@@ -9,6 +9,8 @@ import {
   contentTypeLabel,
   mapPlaceHref,
   presentContentRewards,
+  presentInterestMeta,
+  presentInterestName,
   resolveContentLocation,
   resolveRewardIcon,
   resolveTrainingLocation,
@@ -19,7 +21,7 @@ import {
   REWARD_ICON_BY_LABEL,
   resolveRewardIconLabel,
 } from "./rewardIconAliases";
-import { contentRewardsFull } from "./researchRewards";
+import { contentRewardsFull, majorContentRows } from "./researchRewards";
 import { getResearchCatalog } from "@/research/catalog";
 const PUBLIC = join(process.cwd(), "public");
 const catalog = getResearchCatalog();
@@ -217,10 +219,9 @@ describe("presentContentRewards — major boss uniques", () => {
     },
     {
       name: "TzKal-Zuk",
-      full:
-        "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk, Igneous Kal-Ket",
-      minResolved: 5,
-      srcRe: /ek-zekkil|magma-tempest|scripture-of-ful|igneous-kal/,
+      full: "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk",
+      minResolved: 4,
+      srcRe: /ek-zekkil|magma-tempest|scripture-of-ful|igneous-kal-zuk/,
     },
     {
       name: "Sanctum of Rebirth",
@@ -512,6 +513,30 @@ describe("contentTypeLabel", () => {
   });
 });
 
+describe("presentInterestName / presentInterestMeta", () => {
+  it("drops planner hub suffixes from place names", () => {
+    expect(presentInterestName("Draynor Village skilling hub")).toBe("Draynor Village");
+    expect(presentInterestName("Edgeville skilling and Wilderness on-ramp hub")).toBe(
+      "Edgeville",
+    );
+    expect(presentInterestName("Lumbridge early skilling hub")).toBe("Lumbridge");
+    expect(presentInterestName("Port Sarim docks and skilling hub")).toBe("Port Sarim");
+    expect(presentInterestName("Seers' Village skilling hub")).toBe("Seers' Village");
+  });
+
+  it("rewrites multi-skill category taxonomy into short meta", () => {
+    expect(presentInterestMeta("regional multi-skill bank and production hub")).toBe(
+      "Bank and production",
+    );
+    expect(
+      presentInterestMeta("regional multi-skill transport and shop infrastructure"),
+    ).toBe("Docks and shops");
+    expect(presentInterestMeta("regional starter multi-skill infrastructure")).toBe(
+      "Starter town",
+    );
+  });
+});
+
 describe("contentRewardsFull — catalog boss packages", () => {
   it("Kerapac full text contains Fractured Staff of Armadyl", () => {
     const { row, upgrades } = contentRow("misthalin", "Kerapac, the bound");
@@ -520,18 +545,18 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(full).not.toMatch(/working league mapping|densify|residual/i);
   });
 
-  it("TzKal-Zuk rewards include igneous cape set", () => {
+  it("TzKal-Zuk rewards show main uniques + igneous cape without +N", () => {
     const { row, upgrades } = contentRow("misthalin", "TzKal-Zuk");
     const full = contentRewardsFull(row, upgrades);
     expect(full).toMatch(/Ek-ZekKil/i);
     expect(full).toMatch(/Magma Tempest/i);
     expect(full).toMatch(/Scripture of Ful/i);
     expect(full).toMatch(/Igneous Kal-Zuk/i);
-    expect(full).toMatch(/Igneous Kal-Ket/i);
+    // Style stones not listed — listing all five caused +3 chip spam.
+    expect(full).not.toMatch(/Igneous Kal-Ket|Igneous Kal-Mej|Igneous Kal-Xil|Igneous Kal-Mor/i);
     const presented = presentContentRewards(full);
-    expect(presented.icons.some((i) => /igneous-kal/i.test(i.src))).toBe(true);
-    expect(presented.icons.some((i) => /ek-zekkil/i.test(i.src))).toBe(true);
-    expect(presented.icons.length).toBeGreaterThanOrEqual(4);
+    expect(presented.icons.length).toBe(4);
+    expect(presented.overflowResolved).toBe(0);
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
@@ -614,5 +639,17 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(contentRewardsFull(parent, region.upgrades)).toBe(
       contentRewardsFull(child, region.upgrades),
     );
+  });
+
+  it("Tirannwn majors keep Solak (not collapsed under Lost Grove)", () => {
+    const region = regionById("tirannwn");
+    const majors = majorContentRows(region.content, region.upgrades);
+    expect(majors.some((c) => c.name === "Solak")).toBe(true);
+    expect(majors.some((c) => c.name === "The Lost Grove")).toBe(true);
+    // Sanctum children still collapse on Misthalin.
+    const misth = regionById("misthalin");
+    const misthMajors = majorContentRows(misth.content, misth.upgrades);
+    expect(misthMajors.some((c) => c.name === "Sanctum of Rebirth")).toBe(true);
+    expect(misthMajors.some((c) => c.name === "Vermyx, Brood Mother")).toBe(false);
   });
 });

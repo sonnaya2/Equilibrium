@@ -6,6 +6,10 @@ import supportItems from "../../data/reference/progression-support-items-2026-07
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
+import {
+  presentInterestMeta,
+  presentInterestName,
+} from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
@@ -78,13 +82,14 @@ function format(value: unknown): string {
   return String(value);
 }
 function title(row: Row): string {
-  return (
+  const raw =
     humanString(row.name) ||
     humanString(row.quest) ||
     humanString(row.unlock) ||
     humanString(row.method) ||
-    "Unlock"
-  );
+    "";
+  if (!raw) return "Unlock";
+  return presentInterestName(raw) || raw;
 }
 
 function regionName(value: unknown): string {
@@ -303,10 +308,12 @@ export function PermanentUnlockResearch() {
           {rows.length ? rows.map((row, index) => {
             const sourceLinks = links(row);
             const rowDetails = details(row);
-            const category = humanString(row.category);
+            const categoryRaw = humanString(row.category);
+            const category = categoryRaw ? presentInterestMeta(categoryRaw, 64) : "";
             const rowTitle = title(row);
+            const rawName = humanString(row.name) || (rowTitle !== "Unlock" ? rowTitle : "");
             const iconSrc = dataEntityIconPath({
-              name: rowTitle !== "Unlock" ? rowTitle : typeof row.name === "string" ? row.name : null,
+              name: rawName || null,
               kind: String(row.recordType || row.category || row.kind || ""),
               id: row.id != null ? String(row.id) : null,
             });

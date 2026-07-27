@@ -73,8 +73,8 @@ three were bugs first:
   different runs on the two sides;
 - check sharing *before* the closed-ring branch, or a run that returns to its own start
   takes a simplification the neighbour never sees;
-- emit a seam only where both sides actually drew geometry, or a vine grows along a
-  border to a plate that was filtered out as a sliver.
+- emit a seam only where both sides actually drew geometry, or debug would draw a
+  border against a plate that was filtered out as a sliver.
 
 Runs that cannot be reconciled ship unsimplified — denser, but identical.
 
@@ -93,7 +93,7 @@ debugging "the map draws but does not respond", start here.
 The loop sleeps unless something calls `invalidate()`. `MotionDriver` owns the only
 timer: 30Hz, stopped by reduced motion, an offscreen canvas (IntersectionObserver) or a
 hidden tab, and it advances the single shared `mapClock` in `materials/shared.ts`.
-Everything else that animates — river flow, vine wind, marker gems — rides frames that
+Everything else that animates — river flow, lock glow, marker gems — rides frames that
 already happen and **must not** invalidate at rest. Do not add a second driver.
 
 The throttle is a timer and not a frame accumulator. Accumulating delta inside
@@ -101,9 +101,8 @@ The throttle is a timer and not a frame accumulator. Accumulating delta inside
 keeping the sea awake, and the frame its own invalidate produced arrives one rAF later,
 far short of 1/30, so the loop sleeps for good.
 
-Transitions (lock, unlock sweep, vine growth, plate raise, marker reveal) invalidate
-while moving and stop when settled. `e2e/map-ocean.spec.ts` counts the ticks in both
-directions.
+Transitions (lock, unlock sweep, plate raise, marker reveal) invalidate while moving
+and stop when settled. `e2e/map-ocean.spec.ts` counts the ticks in both directions.
 
 ## World frame and sea level — fixed
 
@@ -155,9 +154,9 @@ layer samples the raster and the field through it, which is what keeps Varrock o
 same pixel whether its plate is resting, raised or framed. Never derive terrain uv from
 per-plate geometry uv.
 
-Albedo is brightened **before** lighting (`ALBEDO_GAIN`, `FOLIAGE_GAIN`): a lit surface
-returns roughly albedo × irradiance, so feeding it the value you want back gives you
-something much darker. That mistake is why an earlier board rendered near-black.
+Albedo is brightened **before** lighting (`ALBEDO_GAIN`): a lit surface returns roughly
+albedo × irradiance, so feeding it the value you want back gives you something much
+darker. That mistake is why an earlier board rendered near-black.
 
 **Canvas is `flat` (NoToneMapping).** R3F's default ACES filmic crush midtones on LDR
 wiki albedos under the sparse light rig — FlatBoard stayed bright, the 3D path went
@@ -179,27 +178,31 @@ is flat to within a degree, and a flat mirror turns the sun into one enormous bl
 across half the ocean. Keep the specular gated by fresnel, and keep the noise warp high
 frequency and low amplitude — a slow large warp marbles the whole sea into an oil slick.
 
-The vines are **foliage, not a drawn line** — a thin dead-wood stem plus instanced leaf
-cards carrying a per-instance seed for colour and dryness. A fat even tube along the
-seam reads as rubber cable laid over the map, which is the one thing the Wiki raster
-does not contain.
+**No border vine layer.** Locked regions are material-only (`TerrainMaterial` drain +
+soft lock glow on the plate cutout). Do not reintroduce `BorderVines` / `VineMaterial`.
+Seams remain for plate parity and MapDebug only.
 
 ## Camera — never tumbles
 
-No `OrbitControls`, no `MapControls`, no free pan/zoom, no orthographic top-down. Every
-shot is four spherical scalars plus a target, and a move is a damped lerp of those —
-never a cartesian position lerp, which cuts through the board on long moves. Radius is
-solved from the live aspect, and focus targets are clamped against the map extents so
-pushing in on the Desert cannot sail Tirannwn off the frame. Elevation has a floor: the
-camera never goes under the board. Pointer parallax is a degree and a half, no more.
+No free `OrbitControls` / unlimited sandbox. Every shot is still four spherical scalars
+plus a target (azimuth, elevation, radius, look-at), damped toward a designed framing.
+**Restricted mouse** is allowed inside hard clamps only:
+
+- LMB drag: orbit (azimuth / elevation) with max offsets
+- RMB / MMB / Shift+LMB: pan the look target on the board plane, clamped to map extents
+- Wheel / UI ±: discrete zoom steps (`ZOOM_MIN`…`ZOOM_MAX`), never infinite dolly
+- Elevation floor + max: never under the board, never straight-up spin lock
+- Focus / place changes clear manual offsets so the designed shot wins again
+
+Never a free cartesian fly-cam. Cartesian position lerps between shots are still banned
+(they cut through Kandarin). Soft pointer parallax stays tiny and disables while dragging.
 
 ## Picking
 
 R3F raycasts in NDC with fresh rects. Hit-testing bugs here are never stale
 `getBoundingClientRect` — they are the pick set.
 
-- **Decorative meshes opt out** with `raycast={() => null}` (vines, leaves, marker
-  stems and feet).
+- **Decorative meshes opt out** with `raycast={() => null}` (marker stems and feet).
 - **Invisible hit targets use `colorWrite: false`, never `visible={false}`** — three's
   raycaster skips invisible objects. A marker's hit plane is wider than the painted
   flag; the painted face itself does not take rays.
@@ -244,7 +247,7 @@ unpinned and the inspector states `N of M pinned`.
 
 `src/map/mapQuality.ts`, query string only, no settings UI:
 `?debugGeometry=1` (outlines, seams, anchors, ids over the raster), `?topDown=1`,
-`?wireframe=1`, `?no=water,vines,relief,markers,bloom`.
+`?wireframe=1`, `?no=water,relief,markers,bloom`.
 Prove geometry with `debugGeometry` before polishing anything.
 
 ## Accessibility surface

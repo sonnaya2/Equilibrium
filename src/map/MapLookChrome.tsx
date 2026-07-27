@@ -32,7 +32,7 @@ function wikiUrlFor(name: string): string {
 }
 
 export function MapLookChrome() {
-  const { focus, nudgeZoom, unframe } = useMapFocus();
+  const { focus, nudgeZoom, unframe, setFlatBoard } = useMapFocus();
   const [wiki, setWiki] = useState<WikiArticleTarget | null>(null);
 
   const region = REGION_ANCHOR_BY_ID.get(focus.region);
@@ -98,6 +98,17 @@ export function MapLookChrome() {
               Table
             </button>
           ) : null}
+          {/* Reads as the state you are in, not the state you would move to —
+              aria-pressed carries the "would switch" meaning for a reader. */}
+          <button
+            type="button"
+            className={`board-sky__look-btn${focus.flat ? " is-on" : ""}`}
+            onClick={() => setFlatBoard(!focus.flat)}
+            aria-pressed={focus.flat}
+            title={focus.flat ? "Switch to the 3D board" : "Switch to the flat 2D map"}
+          >
+            {focus.flat ? "2D" : "3D"}
+          </button>
           <button type="button" className="board-sky__look-btn board-sky__look-btn--gem" onClick={openWiki}>
             Wiki
           </button>

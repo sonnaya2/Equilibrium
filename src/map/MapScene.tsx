@@ -126,6 +126,21 @@ export default function MapScene() {
       .catch(() => setSupported(false));
   }, [narrow]);
 
+  /**
+   * Chosen 2D. Checked before the adapter probe and before mounting anything,
+   * so picking flat never pays for a WebGPU context — and, unlike the
+   * unsupported branch, it says nothing about WebGPU, because nothing is wrong.
+   */
+  if (focus.flat) {
+    return (
+      <div className="board-sky__scene">
+        <div className="board-sky__canvas-host">
+          <FlatBoard />
+        </div>
+      </div>
+    );
+  }
+
   if (supported === null) {
     // Keep the flat raster up during the adapter probe so the cell does not
     // flash empty clear-colour before WebGPU mounts.

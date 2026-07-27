@@ -15,13 +15,14 @@
  * content, which is what turns a full-height board into an overflowing one.
  */
 
+import { useEffect } from "react";
 import { MapLoader } from "./MapLoader";
 import { MapLookChrome } from "./MapLookChrome";
 import { PlaceRail } from "./PlaceRail";
 import { RegionInspector } from "./RegionInspector";
 import { RegionLedger } from "./RegionLedger";
 import type { PlannerRegion } from "./data/plannerRegion";
-import { useMapHashSync } from "./useMapFocus";
+import { hydrateFlatBoard, useMapHashSync } from "./useMapFocus";
 
 export type { PlannerRegion };
 
@@ -33,6 +34,11 @@ export function RegionPlanner({
   boundaryRules: string[];
 }) {
   useMapHashSync();
+  // After mount only: the server snapshot has flat=false, so reading storage
+  // during render would make the first client paint disagree with the HTML.
+  useEffect(() => {
+    hydrateFlatBoard();
+  }, []);
   return (
     <div className="board-sky">
       <div className="board-sky__board">

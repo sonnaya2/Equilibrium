@@ -472,8 +472,13 @@ textarea:focus-visible {
   }
   .board-sky__board {
     position: relative;
-    flex: 1 1 0;
-    min-height: 14rem;
+    /* Bounded, not greedy. The board used to take every pixel the planner did
+       not claim, which on a laptop left the ledger and the region dossier
+       fighting over a 180px strip. Capped rather than shrunk — the map still
+       dominates the route, it just stops eating the whole page. */
+    flex: 1 1 auto;
+    max-height: min(60vh, 46rem);
+    min-height: 17rem;
     overflow: hidden;
     border: 1px solid var(--color-stone-750);
     border-radius: var(--radius-sm);
@@ -612,6 +617,11 @@ textarea:focus-visible {
     border-color: var(--color-stone-600);
     color: var(--color-parch-50);
   }
+  .board-sky__look-btn.is-on {
+    color: var(--color-gem-100);
+    border-color: var(--color-gem-500);
+    background: rgb(12 34 30 / 88%);
+  }
   .board-sky__look-btn--gem {
     border-color: rgb(46 160 110 / 45%);
     color: var(--color-gem-200);
@@ -631,8 +641,11 @@ textarea:focus-visible {
   }
   /* Under stack: taller info box (ledger + places + dossier). Scroll inside. */
   .board-sky__under {
-    flex: 0 0 auto;
-    max-height: min(36vh, 360px);
+    /* Roughly a third more room than the old min(36vh, 360px), which is what
+       gets picks, places and the top of the dossier on screen together — but
+       still capped, so it can never out-rank the board. */
+    flex: 0 1 auto;
+    max-height: min(42vh, 460px);
     min-height: min(18vh, 180px);
     overflow-y: auto;
     display: flex;

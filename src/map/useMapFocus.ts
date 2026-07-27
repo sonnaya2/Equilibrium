@@ -34,6 +34,15 @@ export interface MapFocus {
    * Higher = closer. Multiplies framing radius by ZOOM_STEP_MUL^zoom.
    */
   zoom: number;
+  /**
+   * Flat board instead of the 3D one, by choice rather than by capability.
+   *
+   * Separate from the WebGPU probe in MapScene: that one reports what the
+   * browser can do, this one reports what the player wants. Both land on
+   * FlatBoard, and the planner is complete either way — the 3D is the good
+   * version of the experience, not a dependency of it.
+   */
+  flat: boolean;
 }
 
 /** Zoom in raises this; zoom out lowers it. */
@@ -42,12 +51,16 @@ export const ZOOM_MAX = 4;
 /** Radius scale per zoom step — <1 means zoom-in shortens the shot. */
 export const ZOOM_STEP_MUL = 0.82;
 
+/** Remembered across visits — a 2D preference is a preference, not a session. */
+export const FLAT_STORAGE_KEY = "eq:map:flat:v1";
+
 const INITIAL: MapFocus = {
   region: "misthalin",
   framed: false,
   place: null,
   hover: null,
   zoom: 0,
+  flat: false,
 };
 
 let state: MapFocus = INITIAL;
@@ -118,6 +131,34 @@ export function setZoom(zoom: number) {
   if (next !== state.zoom) emit({ ...state, zoom: next });
 }
 
+/**
+ * Flat board on or off, remembered.
+ *
+ * Written straight to localStorage rather than through the build store: this is
+ * a view preference, not player progress, and it must not ride along in a share
+ * hash or an export.
+ */
+export function setFlatBoard(flat: boolean) {
+  if (state.flat === flat) return;
+  try {
+    window.localStorage.setItem(FLAT_STORAGE_KEY, flat ? "1" : "0");
+  } catch {
+    // Private mode / storage disabled. The toggle still works for this session.
+  }
+  emit({ ...state, flat });
+}
+
+/** Read the stored preference once, after mount. Server snapshot stays false. */
+export function hydrateFlatBoard() {
+  try {
+    if (window.localStorage.getItem(FLAT_STORAGE_KEY) === "1" && !state.flat) {
+      emit({ ...state, flat: true });
+    }
+  } catch {
+    // Nothing stored, or storage unavailable.
+  }
+}
+
 export function zoomRadiusMul(zoom: number = state.zoom): number {
   return Math.pow(ZOOM_STEP_MUL, zoom);
 }
@@ -172,5 +213,14 @@ export function useMapHashSync() {
 export function useMapFocus() {
   const focus = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
   // Module-level actions stay identity-stable for effect deps (PlaceRail hover clear).
-  return { focus, focusRegion, unframe, selectPlace, hoverPlace, nudgeZoom, setZoom };
+  return {
+    focus,
+    focusRegion,
+    unframe,
+    selectPlace,
+    hoverPlace,
+    nudgeZoom,
+    setZoom,
+    setFlatBoard,
+  };
 }

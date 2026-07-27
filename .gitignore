@@ -43,7 +43,10 @@ certificates/
 .cursor
 .agents/
 .grok/
+.kimi-code/
+.codex/
 *.kate-swp
+.mcp.json
 
 # Claude project configuration is tracked.
 # Only machine-specific state and mutable local work stay untracked.
@@ -65,6 +68,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.dev-*.log
+.codex-*.log
 
 # Local scratch / scraped intermediates.
 # Canonical datasets under data/combat/ and data/league/ ARE tracked - only
@@ -76,11 +81,17 @@ pnpm-debug.log*
 data/**/*.raw.json
 data/**/.cache/
 
-# Playwright / E2E artifacts
+# ---------------------------------------------------------------------------
+# Playwright / E2E artifacts (configs in repo root stay tracked)
+# ---------------------------------------------------------------------------
 /playwright-report/
 /test-results/
 /blob-report/
 /playwright/.cache/
+.playwright-mcp/
+.shots/
+playwright/.auth/
+**/trace.zip
 
 # OS junk
 .DS_Store
@@ -100,31 +111,75 @@ design-previews/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-.shots/
 dev-server.log
-.kimi-code/
 
 # Scratch output of the dev-only region authoring scripts
 scripts/.region-draft.json
 scripts/.region-areas.json
+scripts/.map-terrain-debug.png
+scripts/.map-anchor-audit/
+scripts/.*.png
+scripts/.*.jpg
+scripts/.*.webp
 
-# Local agent scratch (never ship)
-.playwright-mcp/
+# ---------------------------------------------------------------------------
+# Local agent / one-shot scratch (never ship)
+# ---------------------------------------------------------------------------
+tmp-*/
+/tmp-*.*
+tmp-*.mjs
+tmp-*.mts
+tmp-*.js
+tmp-*.ts
+tmp-*.ps1
+tmp-*.cmd
+tmp-*.png
+tmp-*.jpg
+tmp-*.webp
 tmp-*.json
+tmp-*.txt
+tmp-*.md
+tmp_*/
+/tmp_*.*
+.tools-scratch/
+
+# Root QA screenshots (not product art)
 /audit-data-*.png
 /data-broken-check.png
 /data-fixed-layout.png
 /data-icons-audit.png
+/map-fix-*.png
+/map-overview-*.png
+/clipboard-*.png
+/*.png.new
+/**/*.png.new
+/**/*.jpg.new
+
+# One-shot tools (product scripts live under scripts/ without leading _)
+tools/_*
+tools/__pycache__/
 scripts/_*.mjs
 scripts/_*.txt
+scripts/_*.ps1
+scripts/_*.cmd
+scripts/_*.py
+
+# ---------------------------------------------------------------------------
+# scraped-data: durable research inputs stay tracked; dumps do not
+# ---------------------------------------------------------------------------
 scraped-data/_tmp_*
 scraped-data/_run_*
+scraped-data/_fetch-*
 scraped-data/*.ndjson
 scraped-data/agent-*.json
 scraped-data/bulk-icon-harvest-*.json
 scraped-data/unresolved-harvest-*.json
 scraped-data/public-game-provenance-gap.json
 scraped-data/archive/
+scraped-data/pvme-revo/
+scraped-data/fix-patches/
+scraped-data/info-patches/
+
 # One-shot audit dumps (durable research stays tracked)
 scraped-data/audit-status-*.json
 scraped-data/audit-final-*.json
@@ -132,14 +187,28 @@ scraped-data/audit-still-*.txt
 scraped-data/audit-longtail-*.json
 scraped-data/audit-phantom-*.json
 scraped-data/audit-wave*.json
-scraped-data/equipment-sync-report-*.json
+scraped-data/audit-trim-*.json
+scraped-data/audit-mazcab-*.json
+scraped-data/audit-detail-*.json
+scraped-data/audit-false-*.json
+scraped-data/audit-false-*.txt
+scraped-data/audit-false-*.md
 scraped-data/audit-schema-hygiene-*.json
+scraped-data/audit-regional-unlocks-*.json
+scraped-data/audit-region-rulings-*.json
+scraped-data/equipment-sync-report-*.json
+scraped-data/data-audit-*.json
+scraped-data/data-icon-audit.json
+scraped-data/data-icon-gaps-*.md
+scraped-data/bench-tasks-wiki-*.json
+scraped-data/bench-tasks-wiki-*.md
+scraped-data/reapply-all-user-rulings-*.txt
+scraped-data/foreign-upgrades-*.json
+scraped-data/patch-*.json
+scraped-data/*-report-*.json
+scraped-data/exp*.log
 
-# Untracked render of the map terrain partition (npm run build:map)
-scripts/.map-terrain-debug.png
-
-# Untracked render of the map terrain partition (npm run build:map)
-scripts/.map-terrain-debug.png
-
-# Untracked pin-audit renders (node scripts/audit-map-anchors.mjs --render)
-scripts/.map-anchor-audit/
+# Keep these audit inputs used by sync/normalize scripts:
+!scraped-data/audit-ironman-gaps-crosscheck-2026-07-26.json
+!scraped-data/audit-ironman-unlocks-vs-app-2026-07-26.json
+!scraped-data/audit-region-combos-skilling-2026-07-26.json

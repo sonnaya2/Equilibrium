@@ -27,6 +27,17 @@ Later research arrives in named families rather than new top-level files:
 - `postits.json` — source-linked working notes for facts still moving. Not app data.
 - `pr20-salvage-audit-2026-07-24.json` — PR salvage provenance record. Not app data.
 
+### Not tracked (local / gitignored)
+
+One-shot dumps stay out of the release tree — see root `.gitignore`:
+
+- `pvme-revo/` — research icon harvest (not used by the app)
+- `fix-patches/`, `info-patches/`, most `audit-*` status dumps
+- `agent-*.json`, harvest reports, equipment-sync reports
+
+Durable pipeline inputs that **are** tracked include the ironman/region-combo audit
+JSON files referenced by sync scripts, plus the named enrichment families above.
+
 ## Confidence fields
 
 - `confirmed_official` — explicitly stated by Jagex.

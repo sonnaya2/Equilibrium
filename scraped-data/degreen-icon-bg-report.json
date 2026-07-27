@@ -1,0 +1,390 @@
+{
+  "dry": false,
+  "count": 48,
+  "results": [
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\bake-pie.png",
+      "width": 64,
+      "height": 88,
+      "keyedRatio": 0.828,
+      "cleared": 4665,
+      "opaqueAfter": 967
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\barricade.png",
+      "width": 64,
+      "height": 49,
+      "keyedRatio": 0.918,
+      "cleared": 2878,
+      "opaqueAfter": 258
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\chronicle-attraction.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.798,
+      "cleared": 5312,
+      "opaqueAfter": 1344
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\crystal-mask.png",
+      "width": 64,
+      "height": 121,
+      "keyedRatio": 0.741,
+      "cleared": 5736,
+      "opaqueAfter": 2008
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\elder-divination.png",
+      "width": 64,
+      "height": 88,
+      "keyedRatio": 0.516,
+      "cleared": 2907,
+      "opaqueAfter": 2725
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\humidify.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.551,
+      "cleared": 3670,
+      "opaqueAfter": 2986
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\lumberjack-outfit.png",
+      "width": 64,
+      "height": 158,
+      "keyedRatio": 0.633,
+      "cleared": 6405,
+      "opaqueAfter": 3707
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\magic-imbue.png",
+      "width": 64,
+      "height": 131,
+      "keyedRatio": 0.234,
+      "cleared": 1958,
+      "opaqueAfter": 6426
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\make-leather.png",
+      "width": 64,
+      "height": 87,
+      "keyedRatio": 0.521,
+      "cleared": 2902,
+      "opaqueAfter": 2666
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\master-farmer.png",
+      "width": 288,
+      "height": 763,
+      "keyedRatio": 0.203,
+      "cleared": 44649,
+      "opaqueAfter": 175095
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\master-runecrafter-robes.png",
+      "width": 64,
+      "height": 152,
+      "keyedRatio": 0.63,
+      "cleared": 6131,
+      "opaqueAfter": 3597
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\npc-contact.png",
+      "width": 64,
+      "height": 111,
+      "keyedRatio": 0.625,
+      "cleared": 4439,
+      "opaqueAfter": 2665
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\penance.png",
+      "width": 64,
+      "height": 99,
+      "keyedRatio": 0.907,
+      "cleared": 5744,
+      "opaqueAfter": 592
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\plank-make.png",
+      "width": 64,
+      "height": 96,
+      "keyedRatio": 0.613,
+      "cleared": 3767,
+      "opaqueAfter": 2377
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\repair-rune-pouch.png",
+      "width": 64,
+      "height": 141,
+      "keyedRatio": 0.312,
+      "cleared": 2813,
+      "opaqueAfter": 6211
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\spin-flax.png",
+      "width": 64,
+      "height": 149,
+      "keyedRatio": 0.208,
+      "cleared": 1985,
+      "opaqueAfter": 7551
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\string-jewellery.png",
+      "width": 64,
+      "height": 95,
+      "keyedRatio": 0.637,
+      "cleared": 3870,
+      "opaqueAfter": 2210
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\superglass-make.png",
+      "width": 64,
+      "height": 86,
+      "keyedRatio": 0.751,
+      "cleared": 4134,
+      "opaqueAfter": 1370
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\superheat-form.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.798,
+      "cleared": 5312,
+      "opaqueAfter": 1344
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\telekinetic-grind.png",
+      "width": 64,
+      "height": 82,
+      "keyedRatio": 0.216,
+      "cleared": 1131,
+      "opaqueAfter": 4117
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\permanent-unlocks\\wendlewick-teleport.png",
+      "width": 64,
+      "height": 136,
+      "keyedRatio": 0.476,
+      "cleared": 4144,
+      "opaqueAfter": 4560
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\progression\\magic-golem-outfit.png",
+      "width": 349,
+      "height": 723,
+      "keyedRatio": 0.242,
+      "cleared": 61099,
+      "opaqueAfter": 191228
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\progression\\nimble-outfit.png",
+      "width": 64,
+      "height": 146,
+      "keyedRatio": 0.605,
+      "cleared": 5649,
+      "opaqueAfter": 3695
+    },
+    {
+      "file": "assets\\rs3\\upgrades\\skilling-outfits\\master-farmer.png",
+      "width": 288,
+      "height": 763,
+      "keyedRatio": 0.203,
+      "cleared": 44649,
+      "opaqueAfter": 175095
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\bake-pie.png",
+      "width": 64,
+      "height": 88,
+      "keyedRatio": 0.828,
+      "cleared": 4665,
+      "opaqueAfter": 967
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\barricade.png",
+      "width": 64,
+      "height": 49,
+      "keyedRatio": 0.918,
+      "cleared": 2878,
+      "opaqueAfter": 258
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\chronicle-attraction.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.798,
+      "cleared": 5312,
+      "opaqueAfter": 1344
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\crystal-mask.png",
+      "width": 64,
+      "height": 121,
+      "keyedRatio": 0.741,
+      "cleared": 5736,
+      "opaqueAfter": 2008
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\elder-divination.png",
+      "width": 64,
+      "height": 88,
+      "keyedRatio": 0.516,
+      "cleared": 2907,
+      "opaqueAfter": 2725
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\humidify.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.551,
+      "cleared": 3670,
+      "opaqueAfter": 2986
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\lumberjack-outfit.png",
+      "width": 64,
+      "height": 158,
+      "keyedRatio": 0.633,
+      "cleared": 6405,
+      "opaqueAfter": 3707
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\magic-imbue.png",
+      "width": 64,
+      "height": 131,
+      "keyedRatio": 0.234,
+      "cleared": 1958,
+      "opaqueAfter": 6426
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\make-leather.png",
+      "width": 64,
+      "height": 87,
+      "keyedRatio": 0.521,
+      "cleared": 2902,
+      "opaqueAfter": 2666
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\master-farmer.png",
+      "width": 288,
+      "height": 763,
+      "keyedRatio": 0.203,
+      "cleared": 44649,
+      "opaqueAfter": 175095
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\master-runecrafter-robes.png",
+      "width": 64,
+      "height": 152,
+      "keyedRatio": 0.63,
+      "cleared": 6131,
+      "opaqueAfter": 3597
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\npc-contact.png",
+      "width": 64,
+      "height": 111,
+      "keyedRatio": 0.625,
+      "cleared": 4439,
+      "opaqueAfter": 2665
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\penance.png",
+      "width": 64,
+      "height": 99,
+      "keyedRatio": 0.907,
+      "cleared": 5744,
+      "opaqueAfter": 592
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\plank-make.png",
+      "width": 64,
+      "height": 96,
+      "keyedRatio": 0.613,
+      "cleared": 3767,
+      "opaqueAfter": 2377
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\repair-rune-pouch.png",
+      "width": 64,
+      "height": 141,
+      "keyedRatio": 0.312,
+      "cleared": 2813,
+      "opaqueAfter": 6211
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\spin-flax.png",
+      "width": 64,
+      "height": 149,
+      "keyedRatio": 0.208,
+      "cleared": 1985,
+      "opaqueAfter": 7551
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\string-jewellery.png",
+      "width": 64,
+      "height": 95,
+      "keyedRatio": 0.637,
+      "cleared": 3870,
+      "opaqueAfter": 2210
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\superglass-make.png",
+      "width": 64,
+      "height": 86,
+      "keyedRatio": 0.751,
+      "cleared": 4134,
+      "opaqueAfter": 1370
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\superheat-form.png",
+      "width": 64,
+      "height": 104,
+      "keyedRatio": 0.798,
+      "cleared": 5312,
+      "opaqueAfter": 1344
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\telekinetic-grind.png",
+      "width": 64,
+      "height": 82,
+      "keyedRatio": 0.216,
+      "cleared": 1131,
+      "opaqueAfter": 4117
+    },
+    {
+      "file": "public\\game\\upgrades\\permanent-unlocks\\wendlewick-teleport.png",
+      "width": 64,
+      "height": 136,
+      "keyedRatio": 0.476,
+      "cleared": 4144,
+      "opaqueAfter": 4560
+    },
+    {
+      "file": "public\\game\\upgrades\\progression\\magic-golem-outfit.png",
+      "width": 349,
+      "height": 723,
+      "keyedRatio": 0.242,
+      "cleared": 61099,
+      "opaqueAfter": 191228
+    },
+    {
+      "file": "public\\game\\upgrades\\progression\\nimble-outfit.png",
+      "width": 64,
+      "height": 146,
+      "keyedRatio": 0.605,
+      "cleared": 5649,
+      "opaqueAfter": 3695
+    },
+    {
+      "file": "public\\game\\upgrades\\skilling-outfits\\master-farmer.png",
+      "width": 288,
+      "height": 763,
+      "keyedRatio": 0.203,
+      "cleared": 44649,
+      "opaqueAfter": 175095
+    }
+  ]
+}

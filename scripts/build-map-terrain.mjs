@@ -330,7 +330,8 @@ const owner = new Uint8Array(N);
   const karaId = REGIONS.indexOf("karamja") + 1;
   const foriId = REGIONS.indexOf("forinthry") + 1;
   const tirId = REGIONS.indexOf("tirannwn") + 1;
-  if ([mistId, moryId, desertId, asgId, kandId, karaId, foriId, tirId].some((id) => id < 1)) {
+  const fremId = REGIONS.indexOf("fremennik") + 1;
+  if ([mistId, moryId, desertId, asgId, kandId, karaId, foriId, tirId, fremId].some((id) => id < 1)) {
     throw new Error("frontier region ids missing from seeds");
   }
   let forced = 0;
@@ -499,6 +500,45 @@ const owner = new Uint8Array(N);
       if (gx >= 2850 && gx <= 2925 && gy >= 3380 && gy <= 3565 && either(i, asgId, kandId)) {
         force(i, asgId);
         continue;
+      }
+
+      // --- Fremennik / Asgarnia mountain + NE snow ---
+      // HardRules: Death Plateau, Trollheim, Troll Stronghold, GWD = Asgarnia.
+      // Fremennik: Rellekka, Mountain Camp path, Keldagrim, NE snow west of trolls.
+      // Bad fre seed [2960,3620] used to stab fre through Ice Mountain; kill that tongue.
+      // Keldagrim [2850,3580] fre pocket — keep clear of Death Plateau [2865,3595].
+      if (gx >= 2838 && gx <= 2868 && gy >= 3565 && gy <= 3590) {
+        force(i, fremId);
+        continue;
+      }
+      // Death Plateau / Burthorpe approach ridge (before troll massif).
+      if (gx >= 2840 && gx <= 2950 && gy >= 3560 && gy < 3620) {
+        if (owner[i] === fremId || owner[i] === asgId) {
+          force(i, asgId);
+          continue;
+        }
+      }
+      // Asgarnia troll / GWD massif (do not let fre paint the mounts to fre's right).
+      if (gx >= 2815 && gx <= 2965 && gy >= 3620 && gy <= 3800) {
+        if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
+          force(i, asgId);
+          continue;
+        }
+      }
+      // Ice Mountain / Black Knights body — fre tongue from Lava Flow / bad seed.
+      if (gx >= 2885 && gx <= 3065 && gy >= 3480 && gy <= 3680) {
+        if (owner[i] === fremId || owner[i] === asgId) {
+          force(i, asgId);
+          continue;
+        }
+      }
+      // Fremennik NE snow: west of troll ridge, north of Rellekka mountain path.
+      // Reclaims the snowy band asgarnia was stealing left of ~2815.
+      if (gx >= 2650 && gx <= 2810 && gy >= 3680 && gy <= 3950) {
+        if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
+          force(i, fremId);
+          continue;
+        }
       }
 
       // --- Crandor (volcanic islet N of Musa / W of Rimmington) = Karamja ---

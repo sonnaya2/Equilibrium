@@ -299,10 +299,18 @@ const PROBES = [
   ["Rellekka", 2670, 3661, "fremennik"],
   ["Rellekka SE approach", 2700, 3620, "fremennik"],
   ["Keldagrim entrance", 2850, 3580, "fremennik"],
-  ["Lava Flow Mine", 2930, 3520, "asgarnia"], // surface near Ice/Black Knights
+  // Lava Flow surface sits on Ice Mountain body = Asgarnia plate (mine content is fre).
+  ["Lava Flow Mine", 2930, 3520, "asgarnia"],
   ["Trollheim", 2885, 3675, "asgarnia"],
   ["Troll Stronghold", 2830, 3675, "asgarnia"],
   ["GWD approach", 2910, 3745, "asgarnia"],
+  // Fre must not stab through Ice Mountain (old seed 2960,3620).
+  ["Ice Mtn fre ban", 2960, 3620, "asgarnia"],
+  ["Ice Mtn fre ban N", 2940, 3650, "asgarnia"],
+  // NE fre snow west of troll ridge (was asgarnia-stolen).
+  ["Frem NE snow W", 2750, 3800, "fremennik"],
+  ["Frem NE snow mid", 2780, 3850, "fremennik"],
+  ["Frem Mountain Camp", 2790, 3670, "fremennik"],
   ["Wildy W of GWD", 2980, 3750, "forinthry"],
   ["Frozen Waste", 2960, 3935, "forinthry"],
   ["Bandit Camp wildy", 3030, 3700, "forinthry"],

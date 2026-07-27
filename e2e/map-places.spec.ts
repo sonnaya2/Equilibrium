@@ -87,22 +87,22 @@ test("selecting a place writes a shareable hash", async ({ page }) => {
     .toBe("#region=misthalin&place=Lumbridge");
 });
 
-test("keyboard reaches a place and the inspector pick control", async ({ page }) => {
+test("keyboard reaches a place and the ledger toggles elective picks", async ({ page }) => {
   const chip = page.getByRole("button", { name: "Lumbridge", exact: true });
   await chip.focus();
   await expect(chip).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(chip).toHaveAttribute("aria-pressed", "true");
 
-  // Picking lives on a named control now that the board no longer toggles.
-  // "Pick <region>" / "Remove <region>" deliberately do not start with the
-  // region name, so the ledger's /^<name>/ locators stay single-match.
-  await page.getByRole("button", { name: /^Kandarin/ }).click();
+  // Elective picks live on the region ledger chips (not the 3D board, and not
+  // a separate Pick/Remove control). Name still starts with the region so the
+  // frozen /^Region/ locators stay single-match.
+  const kandarin = page.getByRole("button", { name: /^Kandarin/ });
+  await kandarin.click();
   await expect(page.getByText("1/3")).toBeVisible();
+  await expect(kandarin).toHaveAttribute("aria-pressed", "true");
 
-  const remove = page.getByRole("button", { name: "Remove Kandarin" });
-  await expect(remove).toBeVisible();
-  await remove.click();
+  await kandarin.click();
   await expect(page.getByText("0/3")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Pick Kandarin" })).toBeVisible();
+  await expect(kandarin).toHaveAttribute("aria-pressed", "false");
 });

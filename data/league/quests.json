@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-26T18:46:06.640Z",
-  "snapshot_date": "2026-07-26",
+  "generated_at": "2026-07-27T20:47:45.248Z",
+  "snapshot_date": "2026-07-27",
   "quest_count": 281,
   "quest_list_entry_count": 281,
   "wiki_numbered_quest_count": 276,
@@ -2331,8 +2331,8 @@
       "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Varrock Palace",
       "source_url": "https://runescape.wiki/w/Defender_of_Varrock",
-      "source_revision": 37056554,
-      "source_revision_timestamp": "2026-05-29T20:43:27Z",
+      "source_revision": 37124995,
+      "source_revision_timestamp": "2026-07-27T06:06:19Z",
       "direct_prerequisites": [
         "Shield of Arrav",
         "The Knight's Sword",
@@ -2468,8 +2468,8 @@
       "primary_region": "asgarnia",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Burthorpe",
       "source_url": "https://runescape.wiki/w/Desperate_Times",
-      "source_revision": 37065540,
-      "source_revision_timestamp": "2026-06-09T08:09:01Z",
+      "source_revision": 37125771,
+      "source_revision_timestamp": "2026-07-27T15:39:51Z",
       "direct_prerequisites": [
         "The Needle Skips",
         "You Are It"
@@ -3722,8 +3722,8 @@
       "primary_region": "fremennik",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Rellekka",
       "source_url": "https://runescape.wiki/w/Hero's_Welcome",
-      "source_revision": 37035658,
-      "source_revision_timestamp": "2026-05-07T17:59:36Z",
+      "source_revision": 37125782,
+      "source_revision_timestamp": "2026-07-27T15:45:29Z",
       "direct_prerequisites": [
         "Lunar Diplomacy"
       ],
@@ -4329,8 +4329,8 @@
       "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Draynor Outskirts",
       "source_url": "https://runescape.wiki/w/Love_Story",
-      "source_revision": 37106810,
-      "source_revision_timestamp": "2026-07-19T01:27:38Z",
+      "source_revision": 37125822,
+      "source_revision_timestamp": "2026-07-27T16:25:24Z",
       "direct_prerequisites": [
         "Swan Song"
       ],
@@ -4670,8 +4670,8 @@
       "primary_region": "misthalin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fort Forinthry",
       "source_url": "https://runescape.wiki/w/Murder_on_the_Border",
-      "source_revision": 37112318,
-      "source_revision_timestamp": "2026-07-21T10:47:52Z",
+      "source_revision": 37125739,
+      "source_revision_timestamp": "2026-07-27T15:17:44Z",
       "direct_prerequisites": [
         "New Foundations"
       ],
@@ -5681,8 +5681,8 @@
       "primary_region": "morytania",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Port Phasmatys",
       "source_url": "https://runescape.wiki/w/Rocking_Out",
-      "source_revision": 37041804,
-      "source_revision_timestamp": "2026-05-13T04:42:14Z",
+      "source_revision": 37124580,
+      "source_revision_timestamp": "2026-07-27T02:42:56Z",
       "direct_prerequisites": [
         "The Great Brain Robbery"
       ],
@@ -6181,8 +6181,8 @@
       "primary_region": "desert",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Kharidian Desert",
       "source_url": "https://runescape.wiki/w/Smoking_Kills",
-      "source_revision": 36873827,
-      "source_revision_timestamp": "2025-11-20T21:24:09Z",
+      "source_revision": 37124876,
+      "source_revision_timestamp": "2026-07-27T05:37:22Z",
       "direct_prerequisites": [
         "The Restless Ghost",
         "Icthlarin's Little Helper"
@@ -6209,8 +6209,8 @@
       "primary_region": "kandarin",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Ardougne Zoo",
       "source_url": "https://runescape.wiki/w/Some_Like_It_Cold",
-      "source_revision": 36823793,
-      "source_revision_timestamp": "2025-09-18T20:56:57Z",
+      "source_revision": 37125246,
+      "source_revision_timestamp": "2026-07-27T09:26:49Z",
       "direct_prerequisites": [
         "Hunt for Red Raktuber"
       ],
@@ -7018,8 +7018,8 @@
       "primary_region": "morytania",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Port Phasmatys",
       "source_url": "https://runescape.wiki/w/The_Great_Brain_Robbery",
-      "source_revision": 37061220,
-      "source_revision_timestamp": "2026-06-04T04:38:30Z",
+      "source_revision": 37125245,
+      "source_revision_timestamp": "2026-07-27T09:20:54Z",
       "direct_prerequisites": [
         "Creature of Fenkenstrain",
         "Cabin Fever"
@@ -7452,8 +7452,8 @@
       "primary_region": "desert",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Kharidian Desert",
       "source_url": "https://runescape.wiki/w/The_Tourist_Trap",
-      "source_revision": 36976350,
-      "source_revision_timestamp": "2026-03-22T17:55:49Z",
+      "source_revision": 37125058,
+      "source_revision_timestamp": "2026-07-27T06:30:34Z",
       "direct_prerequisites": [],
       "required_regions": [
         "desert"
@@ -7575,8 +7575,8 @@
       "primary_region": "fremennik",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Fremennik Isles",
       "source_url": "https://runescape.wiki/w/Throne_of_Miscellania",
-      "source_revision": 37111949,
-      "source_revision_timestamp": "2026-07-21T05:55:14Z",
+      "source_revision": 37124915,
+      "source_revision_timestamp": "2026-07-27T05:44:58Z",
       "direct_prerequisites": [
         "The Fremennik Trials"
       ],

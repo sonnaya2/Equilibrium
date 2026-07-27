@@ -138,7 +138,8 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Port Phasmatys", [3680, 3485]],
   // Surface cave entrance into the hive (wiki Object map Cave 91557).
   ["Araxyte Hive", [3699, 3421]],
-  ["Araxxor", [3699, 3421]],
+  // Boss pin next to the cave mouth (areas cannot share an exact tile).
+  ["Araxxor", [3704, 3424]],
   ["Darkmeyer", [3600, 3360]],
   ["Barrows", [3565, 3289]],
   ["Rise of the Six", [3542, 3311]],

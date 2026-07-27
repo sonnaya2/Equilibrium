@@ -29,9 +29,11 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
         onChange={setTab}
       />
 
-      <div className="min-h-0 flex-1 overflow-hidden">
+      <div className="combat-tab-stage min-h-0 flex-1 overflow-hidden">
         <WorkbenchPanel id="Quick" active={tab}>
-          <QuickCalculator />
+          <div className="h-full min-h-0 overflow-auto">
+            <QuickCalculator />
+          </div>
         </WorkbenchPanel>
         <WorkbenchPanel id="Setup" active={tab}>
           <div className="h-full min-h-0 overflow-auto">
@@ -39,12 +41,12 @@ export function CombatTabs({ reference }: { reference: ReactNode }) {
           </div>
         </WorkbenchPanel>
         <WorkbenchPanel id="Rotation" active={tab}>
-          <div className="h-full min-h-0 overflow-auto">
+          <div className="h-full min-h-0 overflow-hidden">
             <RotationPlanner />
           </div>
         </WorkbenchPanel>
         <WorkbenchPanel id="Analysis" active={tab}>
-          <div className="h-full min-h-0 overflow-auto">
+          <div className="h-full min-h-0 overflow-hidden">
             <AnalysisTab />
           </div>
         </WorkbenchPanel>

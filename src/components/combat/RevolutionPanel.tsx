@@ -16,7 +16,6 @@ import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import type { CalcStats } from "./loadoutStats";
-import { NumberField } from "./NumberField";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 
 const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
@@ -147,7 +146,7 @@ function BarGraphic({
             {slot.spec ? (
               <GameIcon
                 src={abilityIconPath(slot.spec.id, slot.spec.style)}
-                size={54}
+                size={72}
                 className="ability-bar-slot__icon"
               />
             ) : (
@@ -308,27 +307,29 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       <BarGraphic slots={slots} revoSize={revoSize} />
 
-      <div className="revo-run-controls mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
-        <div>
-          <NumberField
-            label="Duration"
+      <div className="revo-run-controls">
+        <label className="revo-duration-field">
+          <span>Duration</span>
+          <input
+            type="number"
             value={durationSeconds}
-            onChange={setDurationSeconds}
-            suffix="s"
+            min={6}
+            step={1}
+            onChange={(event) => setDurationSeconds(Number(event.target.value))}
+            className="border border-stone-750 bg-transparent px-2 py-1 font-mono text-xs text-parch-50"
           />
-          <p className="mt-1 text-[11px] text-parch-300" data-testid="revo-horizon-plan">
-            {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
-          </p>
-        </div>
-        <div>
-          <button
-            type="button"
-            onClick={run}
-            className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
-          >
-            Run revolution
-          </button>
-        </div>
+          <span>s</span>
+        </label>
+        <p className="revo-horizon-plan" data-testid="revo-horizon-plan">
+          {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
+        </p>
+        <button
+          type="button"
+          onClick={run}
+          className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
+        >
+          Run revolution
+        </button>
       </div>
 
       {result && !result.ok ? (
@@ -434,7 +435,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                         })()}
                       </span>
                     </td>
-                    <td className="py-1 pr-2 font-mono text-parch-300">{cast.adrenalineAfter}%</td>
+                    <td className="py-1 pr-2 font-mono text-parch-300">
+                      {typeof cast.adrenalineAfter === "number"
+                        ? `${Math.round(cast.adrenalineAfter * 10) / 10}%`
+                        : `${cast.adrenalineAfter}%`}
+                    </td>
                     <td className="py-1 font-mono text-parch-50">
                       {formatNumber(cast.result.expected)}
                     </td>

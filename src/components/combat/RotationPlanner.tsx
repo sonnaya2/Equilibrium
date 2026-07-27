@@ -137,7 +137,7 @@ export function RotationPlanner() {
   const inputCls = "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
 
   return (
-    <div className="rotation-layout grid gap-4 py-3 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)]">
+    <div className="rotation-layout">
       <div className="combat-frame rotation-settings">
         <CombatFrameCorners />
         <h2 className="combat-page-title text-sm font-medium text-parch-50">Rotation</h2>

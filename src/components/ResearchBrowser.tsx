@@ -37,6 +37,7 @@ import { contentRewardsFull, majorContentRows } from "@/lib/researchRewards";
 import { safeExternalHref } from "@/lib/safeHref";
 import { safeWikiPage } from "@/lib/wikiArticle";
 import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";
+import { compareLocale, type SortDir } from "./DataTableOrganize";
 import { clipProse } from "./ResearchSection";
 import { useDataRegion } from "./DataWorkbench";
 
@@ -455,10 +456,14 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                     <span className="data-upgrade-row__name">
                       {interestName(upgrade.name)}
                       <InlineSource source={upgrade.source} />
-                      {requiredRegions.length > 1 ? (
+                      {requiredRegions.length > 0 ? (
                         <span
                           className="data-upgrade-row__regions"
-                          aria-label={`Region combo: ${requiredRegions.join(" + ")}`}
+                          aria-label={
+                            requiredRegions.length > 1
+                              ? `Region combo: ${requiredRegions.join(" + ")}`
+                              : `Region: ${requiredRegions[0]}`
+                          }
                         >
                           {requiredRegions.map((regionId) => (
                             <GameIcon
@@ -617,7 +622,8 @@ export function ResearchBrowser({
   const selectedRegion = useDataRegion() ?? catalog.regions[0];
   const [query, setQuery] = useState("");
   const [skillId, setSkillId] = useState("");
-  const [sort, setSort] = useState<"catalog" | "name">("catalog");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [sortMode, setSortMode] = useState<"name" | "catalog">("name");
   const normalizedQuery = query.trim().toLowerCase();
 
   useEffect(() => setSkillId(""), [selectedRegion?.id]);
@@ -651,7 +657,14 @@ export function ResearchBrowser({
     );
     const content = normalizedQuery
       ? majorContent.filter((row) =>
-          matches([row.name, row.kind, row.detail, row.source?.title]),
+          matches([
+            row.name,
+            row.kind,
+            row.detail,
+            // Empty catalog detail is common on majors — still match reward chips.
+            contentRewardsFull(row, selectedRegion.upgrades),
+            row.source?.title,
+          ]),
         )
       : majorContent;
     const upgrades = normalizedQuery
@@ -665,14 +678,19 @@ export function ResearchBrowser({
         )
       : selectedRegion.training;
 
-    const byName = (a: string, b: string) => a.localeCompare(b);
+    const byName = (a: string, b: string) => compareLocale(a, b, sortDir);
     return {
       ...selectedRegion,
-      content: sort === "name" ? [...content].sort((a, b) => byName(a.name, b.name)) : content,
-      upgrades: sort === "name" ? [...upgrades].sort((a, b) => byName(a.name, b.name)) : upgrades,
-      training: sort === "name" ? [...training].sort((a, b) => byName(a.method, b.method)) : training,
+      content:
+        sortMode === "name" ? [...content].sort((a, b) => byName(a.name, b.name)) : content,
+      upgrades:
+        sortMode === "name" ? [...upgrades].sort((a, b) => byName(a.name, b.name)) : upgrades,
+      training:
+        sortMode === "name"
+          ? [...training].sort((a, b) => byName(a.method, b.method))
+          : training,
     };
-  }, [normalizedQuery, selectedRegion, sort]);
+  }, [normalizedQuery, selectedRegion, sortDir, sortMode]);
 
   const selectedSkillInRegion = useMemo(() => {
     if (!selectedRegion || !selectedSkill || !filteredRegion) return null;
@@ -740,14 +758,29 @@ export function ResearchBrowser({
             className="field-inset data-browser__search"
           />
           <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value as "catalog" | "name")}
-            aria-label="Sort browse data"
+            value={sortMode}
+            onChange={(event) => setSortMode(event.target.value as "name" | "catalog")}
+            aria-label="Sort mode"
             className="field-inset data-browser__sort"
           >
+            <option value="name">Name</option>
             <option value="catalog">As listed</option>
-            <option value="name">Name A–Z</option>
           </select>
+          <button
+            type="button"
+            className="data-organize__sort"
+            disabled={sortMode !== "name"}
+            onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+            aria-label={
+              sortDir === "asc" ? "Sort A to Z. Activate for Z to A." : "Sort Z to A. Activate for A to Z."
+            }
+            title={sortDir === "asc" ? "A–Z · click for Z–A" : "Z–A · click for A–Z"}
+          >
+            <span className="data-organize__sort-label">{sortDir === "asc" ? "A–Z" : "Z–A"}</span>
+            <span className="data-organize__arrow" aria-hidden>
+              {sortDir === "asc" ? "↓" : "↑"}
+            </span>
+          </button>
         </div>
       </div>
 

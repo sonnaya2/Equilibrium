@@ -1026,6 +1026,9 @@ export const UPGRADE_ICON_BY_SLUG: Record<string, string> = {
   "black-chinchompa": "skilling-production/black-chinchompa.png",
   "blade-parts": "skilling-production/blade-parts.png",
   "bloodweed-seed": "skilling-production/bloodweed-seed.png",
+  "bloodwood-logs": "permanent-unlocks/bloodwood-logs.png",
+  "saradomin-staff": "permanent-unlocks/saradomin-staff.png",
+  "zamorak-staff": "permanent-unlocks/zamorak-staff.png",
   "blueprints": "skilling-production/blueprints.png",
   "bone-rune": "skilling-production/bone-rune.png",
   "bones-to-peaches": "skilling-production/bones-to-peaches.png",
@@ -1271,6 +1274,9 @@ export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = {
   "deaths-office": "deaths-office.png",
   "deep-sea-fishing": "deep-sea-fishing.png",
   "desert-strykewyrm": "desert-strykewyrm.png",
+  "ice-strykewyrm": "ice-strykewyrm.png",
+  "lava-strykewyrm": "lava-strykewyrm.png",
+  "soulgazer": "soulgazer.png",
   "dominion-tower": "dominion-tower.png",
   "dragonkin-laboratory": "dragonkin-laboratory.png",
   "draynor-village": "draynor-village.png",
@@ -1468,7 +1474,7 @@ export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = {
   "zanaris": "zanaris.png"
 };
 
-export const BOSS_ICON_SLUGS = new Set(["abomination","amascut","ambassador","araxxi","araxxor","arch-glacor","astellarn","beastmaster-durzag","black-stone-dragon","bork","chaos-elemental","commander-zilyana","corporeal-beast","crassian-leviathan","croesus","dagannoth-kings","gate-of-elidinis","general-graardor","giant-mole","gregorovic","har-aken","helwyr","hermod","ivar","kalphite-king","kalphite-queen","kerapac","kezalam","kreearra","kril-tsutsaroth","legio-primus","legiones","magister","muspah","nakatra","nex","nex-aod","nightmare","queen-black-dragon","raksha","rasial","rex-matriarchs","rune-dragon","sanguine-crawler","seiryu","silverquill","solak","taraket","telos","tormented-demon","twin-furies","tzkal-zuk","tztok-jad","verak-lith","vermyx","vindicta-gorvek","vorago","yakamaru","zamorak","zemouregal-vorkath"]);
+export const BOSS_ICON_SLUGS = new Set(["abomination","amascut","ambassador","araxxi","araxxor","arch-glacor","astellarn","beastmaster-durzag","black-stone-dragon","bork","chaos-elemental","commander-zilyana","corporeal-beast","crassian-leviathan","croesus","dagannoth-kings","gate-of-elidinis","general-graardor","giant-mole","gregorovic","har-aken","helwyr","hermod","ice-strykewyrm","ivar","kalphite-king","kalphite-queen","kerapac","kezalam","kreearra","kril-tsutsaroth","lava-strykewyrm","legio-primus","legiones","magister","muspah","nakatra","nex","nex-aod","nightmare","queen-black-dragon","raksha","rasial","rex-matriarchs","rune-dragon","sanguine-crawler","seiryu","silverquill","solak","soulgazer","taraket","telos","tormented-demon","twin-furies","tzkal-zuk","tztok-jad","verak-lith","vermyx","vindicta-gorvek","vorago","yakamaru","zamorak","zemouregal-vorkath"]);
 
 /** Non-png boss file extensions keyed by slug (e.g. zamorak → jpg). */
 export const BOSS_ICON_EXT: Record<string, string> = {

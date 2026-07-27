@@ -100,9 +100,14 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // Legiones — dual ACB + grips.
   Legiones: "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
   "Monastery of Ascension": "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
-  // ED3 — crossbow + black stone ammo + hexhunter side drop.
-  "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow, Hexhunter bow",
-  "The Shadow Reef": "Eldritch crossbow, Black stone arrow, Hexhunter bow",
+  // ED3 — eldritch + black stone ammo. Hexhunter is Soulgazers (not Shadow Reef).
+  "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow",
+  "The Shadow Reef": "Eldritch crossbow, Black stone arrow",
+  Soulgazers: "Hexhunter bow",
+  "Soulgazer": "Hexhunter bow",
+  "Wilderness strykewyrms": "Staff of light, Focus sight, Hexcrest",
+  "Ice strykewyrm": "Staff of light",
+  "Lava strykewyrm": "Lava strykewyrm",
   // Mazcab — one piece per Achto style (melee / mage / range).
   "Beastmaster Durzag":
     "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
@@ -135,21 +140,27 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Ivar, King of Bones": "Bonecrusher maul, Magic skull mask, Colossal bone",
   "Silverquill, the Dreadhog": "Silver spines, Sanguine spines",
   "Sanguine Crawler": "Vampyrism gloves, Tainted seed, Sanguine matter",
-  // Forinthry bloodweed stack — patch is the gate; pot is the payoff.
+  // Forinthry bloodweed — pot row is the payoff; herb patch is the farm + core roll.
   "Bloodweed & aggression potions":
-    "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
-  "Wilderness herb patch":
-    "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
+    "Clean bloodweed, Searing ashes, Aggression potion",
+  "Wilderness herb patch": "Bloodweed seeds, Dark onyx core",
 
   // Forinthry majors — short reward chips, no essay.
   "Abyss Runecrafting": "Multi-altar rifts, Magical thread, Pouch repair",
   "Abyss entrance": "Multi-altar rifts, Magical thread, Pouch repair",
   "Edgeville resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
   "Edgeville Dungeon resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
-  "Wilderness bloodwood trees": "Bakriminel bolt tips",
+  "Wilderness bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
+  "Bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Black salamanders": "Black salamander, Dark onyx core",
   "Black salamanders (Boneyard Hunter)": "Black salamander, Dark onyx core",
-  "Mage Arena": "God staves, Claws of Guthix",
+  "Mage Arena":
+    "Guthix staff, Saradomin staff, Zamorak staff, Claws of Guthix, Divine Storm",
+  "Wilderness Agility Course": "Dark onyx core, Portable obelisk, Obelisk shard",
+  "Wilderness Slayer": "Wilderness assignments, Dark onyx core, Wilderness slayer chest",
+  "Charming moths": "Gold charm, Green charm, Crimson charm, Blue charm",
+  "Wilderness Chaos altars (Prayer Offer)": "Prayer Offer XP, Wilderness achievement bonus",
+  "Chaos Altar": "Prayer Offer XP, Wilderness achievement bonus",
 
   // Resource / wildy dungeons — prefer resolvable chips over essay prose.
   "Forinthry Dungeon": "Resource dungeon",
@@ -340,7 +351,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Jadinko Favour offering stone": "Favour shop · seeds / fruits / outfits",
   "Nature Grotto altar of nature": "Prayer restore + boost",
   "Kharid-et Dig Site": "Venator digs, materials, caches",
-  "Wilderness Slayer": "Wilderness assignments, bonus points",
+  // Wilderness Slayer rewards defined earlier (dark onyx core + chest).
   "Everlight Dig Site": "Icyene hotspots, caches, site bank",
   "Jadinko Lair curly roots": "Curly roots WC + FM",
   "Corrupted ore smelting loop": "Corrupted ore smithing XP",

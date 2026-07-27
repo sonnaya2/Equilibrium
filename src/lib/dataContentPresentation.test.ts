@@ -21,7 +21,11 @@ import {
   REWARD_ICON_BY_LABEL,
   resolveRewardIconLabel,
 } from "./rewardIconAliases";
-import { contentRewardsFull, majorContentRows } from "./researchRewards";
+import {
+  contentDetailOrRewards,
+  contentRewardsFull,
+  majorContentRows,
+} from "./researchRewards";
 import { getResearchCatalog } from "@/research/catalog";
 const PUBLIC = join(process.cwd(), "public");
 const catalog = getResearchCatalog();
@@ -144,6 +148,15 @@ describe("resolveRewardIcon + contentRewardIcons", () => {
     // Pure skill name must not become a skill cap chip in reward wells.
     expect(resolveRewardIcon("Mining")).toBeNull();
     expect(resolveRewardIcon("Random scenery hub")).toBeNull();
+    // Multi-MB place plates must never land as reward chips (aliases may remap to inventory).
+    expect(resolveRewardIcon("Menaphos")).toBeNull();
+    expect(resolveRewardIcon("Liberation of Mazcab")).toBeNull();
+    expect(resolveRewardIcon("Het's Oasis")).toBeNull();
+    const soul = resolveRewardIcon("Soul altar");
+    // Honest remaps OK; the multi-MB soul-altar place plate is not.
+    if (soul) expect(soul).not.toMatch(/\/soul-altar\.png$/);
+    // Small inventory permanents stay allowed.
+    expect(resolveRewardIcon("Menaphos reputation")).toMatch(/menaphos-reputation\.png$/);
     // Hermod path may map "Necromancy power armour" to deathdealer inventory art (not skill glyph).
     const necro = resolveRewardIcon("Necromancy power armour");
     if (necro) {
@@ -275,9 +288,16 @@ describe("presentContentRewards — major boss uniques", () => {
     {
       name: "GWD2",
       full:
-        "Dragon Rider lance, Wand of the Cywir elders, Orb of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora, Anima core equipment",
+        "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
       minResolved: 5,
-      srcRe: /dragon-rider-lance|cywir|shadow-glaive|blade-of|anima-core/,
+      srcRe: /dragon-rider-lance|cywir|shadow-glaive|blade-of-avaryss|blade-of-nymora/,
+    },
+    {
+      name: "Commander Zilyana",
+      full:
+        "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
+      minResolved: 4,
+      srcRe: /saradomin-sword|saradomin-godsword|armadyl-crossbow/,
     },
     {
       name: "Rise of the Six",
@@ -428,7 +448,9 @@ describe("REWARD_ICON_BY_LABEL", () => {
   });
 
   it("resolves anachronia / corp / lunar access tokens", () => {
-    expect(resolveRewardIcon("Double Surge")).toMatch(/abilities\/movement\/surge\.png$/);
+    expect(resolveRewardIcon("Double Surge")).toMatch(
+      /abilities\/movement\/surge\.png$|ability-codices\/double-surge\.png$/,
+    );
     expect(resolveRewardIcon("Dragon mattock")).toMatch(/dragon-mattock\.png$/);
     expect(resolveRewardIcon("Spirit shield")).toMatch(/spirit-shield\.png$/);
     expect(resolveRewardIcon("Lunar spellbook")).toMatch(/lunar-spellbook\.png$/);
@@ -607,6 +629,45 @@ describe("presentInterestName / presentInterestMeta", () => {
 });
 
 describe("contentRewardsFull — catalog boss packages", () => {
+  it("GWD2 Heart of Gielinor resolves five headline weapon chips", () => {
+    const { row, upgrades } = contentRow("desert", /Heart of Gielinor/);
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Dragon Rider lance/i);
+    expect(full).toMatch(/Wand of the Cywir elders/i);
+    expect(full).toMatch(/Shadow glaives/i);
+    expect(full).toMatch(/Blade of Avaryss/i);
+    expect(full).toMatch(/Blade of Nymora/i);
+    expect(full).not.toMatch(/Anima core/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /blade-of-nymora/i.test(i.src))).toBe(true);
+  });
+
+  it("Commander Zilyana resolves Saradomin / ACB uniques (not bare Godswords package)", () => {
+    const { row, upgrades } = contentRow("asgarnia", "Commander Zilyana");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Saradomin sword/i);
+    expect(full).toMatch(/Armadyl crossbow/i);
+    expect(full).not.toMatch(/^Godswords$/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(3);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /saradomin-sword/i.test(i.src))).toBe(true);
+  });
+
+  it("Empty Throne Room is dark animica (not light) with auto-cycle chips", () => {
+    const { row, upgrades } = contentRow("misthalin", /Empty Throne Room/);
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Dark animica/i);
+    expect(full).toMatch(/Auto-cycle/i);
+    expect(full).not.toMatch(/Light animica/i);
+    const p = presentContentRewards(full);
+    expect(p.icons.some((i) => /dark-animica/i.test(i.src))).toBe(true);
+    expect(p.icons.some((i) => /manual-auto-cycle|auto-cycle/i.test(i.src))).toBe(true);
+    expect(p.icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
   it("Necromantic Rune Temple shows four runes and max XP/h", () => {
     const { row, upgrades } = contentRow("misthalin", "Necromantic Rune Temple");
     const full = contentRewardsFull(row, upgrades);
@@ -635,8 +696,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(full).toMatch(/Clean bloodweed/i);
     expect(full).toMatch(/Searing ashes/i);
     expect(full).toMatch(/Aggression potion/i);
-    expect(full).toMatch(/82 Herb/i);
-    expect(full).toMatch(/17/i);
     expect(full).not.toMatch(/G\.A\.G\.|Demonic skull/i);
     const presented = presentContentRewards(full);
     expect(presented.icons.map((i) => i.label.toLowerCase())).toEqual(
@@ -786,6 +845,91 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
+  it("Zamorak LoC is Misthalin and shows Vestments, Bolg, Chaos Roar, and Lost Knowledge codices", () => {
+    // ED4 lives under Senntisten / Undercity — not the Wilderness tab.
+    expect(() => contentRow("forinthry", "Zamorak, Lord of Chaos")).toThrow();
+    const { row, upgrades } = contentRow("misthalin", "Zamorak, Lord of Chaos");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Vestments of havoc/i);
+    expect(full).toMatch(/Bow of the Last Guardian/i);
+    expect(full).toMatch(/Chaos Roar/i);
+    expect(full).toMatch(/Greater Sunshine/i);
+    expect(full).toMatch(/Greater Death'?s Swiftness/i);
+    expect(full).not.toMatch(/Chaos witch/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBe(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    const labels = presented.icons.map((i) => i.label.toLowerCase());
+    expect(labels).toEqual(
+      expect.arrayContaining([
+        "vestments of havoc",
+        "bow of the last guardian",
+        "chaos roar",
+        "greater sunshine",
+      ]),
+    );
+  });
+
+  it("Soulgazers own Hexhunter; Shadow Reef does not", () => {
+    const reef = contentRow("forinthry", /Shadow Reef/);
+    const reefFull = contentRewardsFull(reef.row, reef.upgrades);
+    expect(reefFull).toMatch(/Eldritch/i);
+    expect(reefFull).not.toMatch(/Hexhunter/i);
+    const soul = contentRow("forinthry", "Soulgazers");
+    const soulFull = contentRewardsFull(soul.row, soul.upgrades);
+    expect(soulFull).toMatch(/Hexhunter/i);
+    expect(presentContentRewards(soulFull).icons.some((i) => /hexhunter/i.test(i.src))).toBe(
+      true,
+    );
+  });
+
+  it("Bloodwoods, Agility, and Wildy Slayer chip dark onyx core", () => {
+    for (const name of [
+      "Wilderness bloodwood trees",
+      "Wilderness Agility Course",
+      "Wilderness Slayer",
+    ]) {
+      const { row, upgrades } = contentRow("forinthry", name);
+      const full = contentRewardsFull(row, upgrades);
+      expect(full, name).toMatch(/Dark onyx core/i);
+      const presented = presentContentRewards(full);
+      expect(
+        presented.icons.some((i) => /dark-onyx-core|onyx/i.test(i.src)),
+        name,
+      ).toBe(true);
+    }
+  });
+
+  it("Wilderness herb patch is not a duplicate pot stack of Bloodweed majors", () => {
+    const pot = contentRow("forinthry", "Bloodweed & aggression potions");
+    const patch = contentRow("forinthry", "Wilderness herb patch");
+    const potFull = contentRewardsFull(pot.row, pot.upgrades);
+    const patchFull = contentRewardsFull(patch.row, patch.upgrades);
+    expect(potFull).toMatch(/Aggression potion/i);
+    expect(patchFull).toMatch(/Dark onyx core|Bloodweed seed/i);
+    expect(patchFull).not.toMatch(/Aggression potion/i);
+  });
+
+  it("Infernal Source shows Ancient Summoning, contracts, tetras, and relics", () => {
+    const cases: Array<{ region: string; name: string | RegExp }> = [
+      { region: "misthalin", name: "Infernal Source Dig Site" },
+      { region: "forinthry", name: /Infernal Source Dig Site/ },
+    ];
+    for (const { region, name } of cases) {
+      const { row, upgrades } = contentRow(region, name);
+      const full = contentRewardsFull(row, upgrades);
+      expect(full, row.name).toMatch(/Ancient Summoning/i);
+      expect(full, row.name).toMatch(/Binding contract/i);
+      expect(full, row.name).toMatch(/Tetracompass/i);
+      expect(full, row.name).toMatch(/Inspire Love/i);
+      expect(full, row.name).toMatch(/Slayer Introspection/i);
+      expect(full, row.name).not.toMatch(/Hotspots/i);
+      const presented = presentContentRewards(full);
+      expect(presented.icons.length, row.name).toBe(5);
+      expect(presented.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+    }
+  });
+
   it("Fight Cave → fire cape; Fight Kiln → TokHaar-Kal", () => {
     const cave = contentRow("karamja", "TzHaar Fight Cave");
     const caveFull = contentRewardsFull(cave.row, cave.upgrades);
@@ -802,12 +946,201 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(kilnPresented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
-  it("Bandos equipment prefers Unlocks piece list over Effects prose", () => {
-    const { row, upgrades } = contentRow("asgarnia", "Bandos equipment");
+  it("Graardor owns Bandos piece list (Bandos equipment content row merged away)", () => {
+    const { row, upgrades } = contentRow("asgarnia", "General Graardor");
     const full = contentRewardsFull(row, upgrades);
     expect(full).toMatch(/Bandos helmet/i);
     expect(full).not.toMatch(/Classic T70/i);
     expect(full).not.toMatch(/densify|residual/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    // Standalone Bandos equipment content row is gone (merged into Graardor).
+    const asg = regionById("asgarnia");
+    expect(asg.content.some((c) => c.name === "Bandos equipment")).toBe(false);
+  });
+
+  it("Anachronia majors: BGH, Orthen, Ranch, Rex rings, promoted unlocks", () => {
+    const ana = regionById("anachronia");
+    expect(ana.content.some((c) => /codex lectern/i.test(c.name))).toBe(false);
+    expect(ana.content.some((c) => c.name === "Dream of Iaia")).toBe(true);
+    expect(ana.content.some((c) => c.name === "Herby Werby")).toBe(true);
+    expect(ana.content.some((c) => c.name === "Skillcape rack")).toBe(true);
+    expect(ana.content.some((c) => c.name === "Volcanic trapper outfit")).toBe(true);
+    expect(
+      ana.upgrades.some((u) =>
+        /building-by-building|structure tier|poison frog|Farmers' Market \(beans\)|elder animal|gathered produce|Fury shark|furnace core full|Superheat Form \+ smithing/i.test(
+          u.name,
+        ),
+      ),
+    ).toBe(false);
+
+    const cases: Array<{ name: string | RegExp; min: number; re: RegExp }> = [
+      {
+        name: "Anachronia Agility Course",
+        min: 2,
+        re: /Double Surge|Double Escape/i,
+      },
+      {
+        name: "Anachronia Big Game Hunter",
+        min: 3,
+        re: /Dragon mattock|Terrasaur maul|Quick traps/i,
+      },
+      {
+        name: "Orthen Dig Site",
+        min: 3,
+        re: /Orthen furnace core|Flow State|Death Note/i,
+      },
+      {
+        name: /Ranch Out of Time/,
+        min: 3,
+        re: /King of Beasts|No Fear|Armoured Hide/i,
+      },
+      { name: /Rex Matriarchs/, min: 2, re: /Occultist|Reaver|Skeka/i },
+      { name: "Raksha", min: 4, re: /Blast diffusion|Laceration|Fleeting/i },
+      { name: /Laniakea \(Anachronia/, min: 1, re: /Laniakea's spear/i },
+      { name: "Volcanic trapper outfit", min: 1, re: /Volcanic trapper/i },
+      { name: "Dream of Iaia", min: 1, re: /Dream of Iaia/i },
+      { name: "Skillcape rack", min: 1, re: /Skillcape rack/i },
+    ];
+    for (const c of cases) {
+      const { row, upgrades } = contentRow("anachronia", c.name);
+      const full = contentRewardsFull(row, upgrades);
+      expect(full, row.name).toMatch(c.re);
+      expect(full, row.name).not.toMatch(/\bpath\b/i);
+      const p = presentContentRewards(full);
+      expect(p.icons.length, row.name).toBeGreaterThanOrEqual(c.min);
+      expect(p.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+    }
+  });
+
+  it("Kandarin PoF, dig-site relics, Freneskae portal, Wizards Guild; Yanille hub gone", () => {
+    const kan = regionById("kandarin");
+    expect(kan.content.some((c) => /yanille multi/i.test(c.name))).toBe(false);
+    expect(kan.content.some((c) => /Wizards' Guild/i.test(c.name))).toBe(true);
+    expect(kan.content.some((c) => c.name === "Manor Farm animal perks")).toBe(true);
+    expect(kan.content.some((c) => /Freneskae|Nightmare creatures|Muspah|Rune dragons/i.test(c.name))).toBe(
+      true,
+    );
+
+    const pof = contentRow("kandarin", "Player-Owned Farm / Manor Farm");
+    const pofP = presentContentRewards(contentRewardsFull(pof.row, pof.upgrades));
+    expect(pofP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(pofP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(pofP.icons.some((i) => /master-farmer|beans|nopenopenope/i.test(i.src))).toBe(true);
+
+    const war = contentRow("kandarin", /Warforge Dig Site/);
+    const warP = presentContentRewards(contentRewardsFull(war.row, war.upgrades));
+    expect(warP.icons.some((i) => /imcando-mattock/i.test(i.src))).toBe(true);
+    expect(warP.icons.some((i) => /inspire-awe/i.test(i.src))).toBe(true);
+
+    const storm = contentRow("kandarin", /Stormguard/);
+    const stormP = presentContentRewards(contentRewardsFull(storm.row, storm.upgrades));
+    expect(stormP.icons.some((i) => /inspire-genius/i.test(i.src))).toBe(true);
+    expect(stormP.icons.some((i) => /ancient-invention/i.test(i.src))).toBe(true);
+
+    const fren = contentRow("kandarin", /Freneskae via World Gate/);
+    const frenP = presentContentRewards(contentRewardsFull(fren.row, fren.upgrades));
+    expect(frenP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(frenP.icons.every((i) => publicOk(i.src))).toBe(true);
+
+    const kd = contentRow("kandarin", /Kuradal's Dungeon/);
+    const kdP = presentContentRewards(contentRewardsFull(kd.row, kd.upgrades));
+    expect(kdP.icons.some((i) => /ferocious-ring/i.test(i.src))).toBe(true);
+  });
+
+  it("Asgarnia hubs: Port Sarim POP/Arc, Warriors defender, GWD1 access, safecracking", () => {
+    const port = contentRow("asgarnia", "Port Sarim docks and skilling hub");
+    const portFull = contentRewardsFull(port.row, port.upgrades);
+    expect(portFull).toMatch(/Player-owned port/i);
+    expect(portFull).toMatch(/The Arc/i);
+    const portP = presentContentRewards(portFull);
+    expect(portP.icons.length).toBeGreaterThanOrEqual(2);
+    expect(portP.icons.every((i) => publicOk(i.src))).toBe(true);
+
+    const wg = contentRow("asgarnia", "Warriors' Guild");
+    const wgFull = contentRewardsFull(wg.row, wg.upgrades);
+    expect(wgFull).toMatch(/Dragon defender/i);
+    const wgP = presentContentRewards(wgFull);
+    expect(wgP.icons.some((i) => /dragon-defender/i.test(i.src))).toBe(true);
+
+    const gwd = contentRow("asgarnia", "God Wars Dungeon 1");
+    const gwdFull = contentRewardsFull(gwd.row, gwd.upgrades);
+    expect(gwdFull).not.toMatch(/Bandos equipment|Armadyl equipment|Subjugation/i);
+    expect(gwdFull).toMatch(/killcount|God camps|altar/i);
+    const gwdP = presentContentRewards(gwdFull);
+    expect(gwdP.icons.length).toBe(0);
+
+    const safe = contentRow("asgarnia", "Safecracking route");
+    const safeP = presentContentRewards(contentRewardsFull(safe.row, safe.upgrades));
+    expect(safeP.icons.some((i) => /safe\.png$/i.test(i.src))).toBe(true);
+  });
+
+  it("K'ril Tsutsaroth presents full subjugation piece icons", () => {
+    const { row, upgrades } = contentRow("asgarnia", /K'ril/);
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Hood of subjugation/i);
+    expect(full).toMatch(/Boots of subjugation/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
+    expect(presented.icons.every((i) => /subjugation/i.test(i.src))).toBe(true);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    for (const piece of ["hood", "garb", "gown", "gloves", "boots"]) {
+      expect(
+        presented.icons.some((i) => i.src.includes(`${piece}-of-subjugation`)),
+        piece,
+      ).toBe(true);
+    }
+  });
+
+  it("expands low-icon majors: Mole, QBD, Legiones, ED3, Achto, Barrows", () => {
+    const cases: Array<{ region: string; name: string | RegExp; min: number; re: RegExp }> = [
+      { region: "asgarnia", name: "Giant Mole", min: 1, re: /Dragon 2h/i },
+      { region: "asgarnia", name: "Queen Black Dragon", min: 2, re: /Royal crossbow/i },
+      { region: "kandarin", name: "Legiones", min: 3, re: /Ascension/i },
+      { region: "forinthry", name: /Shadow Reef/, min: 2, re: /Eldritch|Black stone/i },
+      { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
+      { region: "desert", name: "Yakamaru", min: 3, re: /Achto/i },
+      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil/i },
+      { region: "kandarin", name: /Kuradal's Dungeon/, min: 1, re: /Ferocious ring/i },
+      { region: "morytania", name: /Polypore Dungeon/, min: 1, re: /Polypore staff/i },
+      { region: "anachronia", name: "Rex Matriarchs", min: 1, re: /Skeka/i },
+    ];
+    for (const c of cases) {
+      const { row, upgrades } = contentRow(c.region, c.name);
+      const full = contentRewardsFull(row, upgrades);
+      expect(full, row.name).toMatch(c.re);
+      const presented = presentContentRewards(full);
+      expect(presented.icons.length, row.name).toBeGreaterThanOrEqual(c.min);
+      expect(presented.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+    }
+  });
+
+  it("Amascut's Enchanted Gem resolves to gem inventory art not boss plate", () => {
+    expect(resolveRewardIcon("Amascut's Enchanted Gem")).toMatch(/enchanted-gem\.png$/);
+    expect(publicOk(resolveRewardIcon("Amascut's Enchanted Gem"))).toBe(true);
+  });
+
+  it("expands trailing of-set slash lists into full piece names", () => {
+    const tokens = contentRewardTokens(
+      "Hood / garb / gown / gloves / boots of subjugation, Ward of subjugation",
+    );
+    expect(tokens.some((t) => /^hood of subjugation$/i.test(t))).toBe(true);
+    expect(tokens.some((t) => /^garb of subjugation$/i.test(t))).toBe(true);
+    expect(tokens.some((t) => /^boots of subjugation$/i.test(t))).toBe(true);
+    const icons = contentRewardIcons(tokens);
+    expect(icons.length).toBeGreaterThanOrEqual(5);
+    expect(icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
+  it("Subjugation equipment / Robes of subjugation resolve as set chips", () => {
+    expect(resolveRewardIcon("Subjugation equipment")).toMatch(/subjugation/i);
+    expect(resolveRewardIcon("subjugation")).toMatch(/subjugation/i);
+    expect(resolveRewardIcon("Robes of subjugation")).toMatch(
+      /garb-of-subjugation|subjugation/,
+    );
+    expect(publicOk(resolveRewardIcon("Subjugation equipment"))).toBe(true);
+    expect(publicOk(resolveRewardIcon("Robes of subjugation"))).toBe(true);
   });
 
   it("Raksha merges ability codices and boot upgrades", () => {
@@ -833,7 +1166,12 @@ describe("contentRewardsFull — catalog boss packages", () => {
       {
         region: "desert",
         name: /Heart of Gielinor/,
-        re: /Dragon Rider lance|Cywir|Shadow glaive/i,
+        re: /Dragon Rider lance|Cywir|Shadow glaive|Blade of (Avaryss|Nymora)/i,
+      },
+      {
+        region: "asgarnia",
+        name: "Commander Zilyana",
+        re: /Saradomin sword|Saradomin godsword|Armadyl crossbow/i,
       },
       { region: "fremennik", name: "Dagannoth Kings", re: /Berserker ring|Dragon hatchet|Warrior ring|Archers/i },
       { region: "kandarin", name: "Legiones", re: /Ascension/i },
@@ -879,3 +1217,40 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(misthMajors.some((c) => c.name === "Vermyx, Brood Mother")).toBe(false);
   });
 });
+
+describe("contentDetailOrRewards — empty catalog detail fallback", () => {
+  it("prefers non-empty catalog detail over rewards", () => {
+    const row = {
+      name: "Kerapac, the bound",
+      detail: "Senntisten EGWD · Magic BiS farm",
+    };
+    expect(contentDetailOrRewards(row, [])).toBe("Senntisten EGWD · Magic BiS farm");
+  });
+
+  it("Giant Mole empty detail falls back to clipped rewards", () => {
+    const { row, upgrades } = contentRow("asgarnia", "Giant Mole");
+    expect((row.detail ?? "").trim()).toBe("");
+    const subtitle = contentDetailOrRewards(row, upgrades);
+    expect(subtitle).toMatch(/Dragon 2h sword/i);
+    expect(subtitle.length).toBeLessThanOrEqual(96);
+    expect(subtitle).not.toBe("");
+  });
+
+  it("Kerapac empty detail falls back to progression uniques", () => {
+    const { row, upgrades } = contentRow("misthalin", "Kerapac, the bound");
+    expect((row.detail ?? "").trim()).toBe("");
+    const subtitle = contentDetailOrRewards(row, upgrades);
+    expect(subtitle).toMatch(
+      /Fractured Staff|Greater Concentrated Blast|Kerapac|Scripture of Jas/i,
+    );
+    expect(subtitle.length).toBeLessThanOrEqual(96);
+    expect(subtitle).not.toMatch(/working league mapping|catalyst test data/i);
+  });
+
+  it("returns empty string when detail and rewards are both blank", () => {
+    expect(contentDetailOrRewards({ name: "Unknown Placeholder Boss", detail: "" }, [])).toBe(
+      "",
+    );
+  });
+});
+

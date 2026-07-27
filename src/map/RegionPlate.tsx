@@ -17,7 +17,7 @@
  * every misaimed poke at a marker silently rewrote persisted state.
  */
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
@@ -81,7 +81,8 @@ export function RegionPlate({
   const { build } = useBuild();
   const { focus, focusRegion } = useMapFocus();
   const invalidate = useThree((s) => s.invalidate);
-  const [hovered, setHovered] = useState(false);
+  // Ref, not useState — hover must not re-render the plate tree (Cascading Update).
+  const hovered = useRef(false);
 
   const depth = PLATE_DEPTH[id];
   const unlocked = isRegionUnlocked(build, id);
@@ -106,7 +107,7 @@ export function RegionPlate({
   useEffect(() => {
     mats.lock.value = unlocked ? 0 : 1;
     mats.dim.value = sidelined ? 1 : 0;
-    mats.focus.value = subject || hovered ? 1 : 0;
+    mats.focus.value = subject || hovered.current ? 1 : 0;
     const uv = REGION_ANCHOR_BY_ID.get(id)?.uv;
     if (uv) {
       // Shader mapUv flips V (mapUvFrom); anchor UV must match that space
@@ -115,7 +116,7 @@ export function RegionPlate({
       (mats.unlockCenter.value as { set: (u: number, v: number) => void }).set(su, sv);
     }
     invalidate();
-  }, [mats, unlocked, sidelined, subject, hovered, invalidate, id]);
+  }, [mats, unlocked, sidelined, subject, invalidate, id]);
 
   // Unlock only: sweep 1→0 expands colour from unlockCenter with a green ring.
   // Starting regions skip this so the board does not flash on every load.
@@ -184,11 +185,19 @@ export function RegionPlate({
   };
   const over = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
-    setHovered(true);
+    if (!hovered.current) {
+      hovered.current = true;
+      mats.focus.value = 1;
+      invalidate();
+    }
     document.body.style.cursor = "pointer";
   };
   const out = () => {
-    setHovered(false);
+    if (hovered.current) {
+      hovered.current = false;
+      mats.focus.value = subject ? 1 : 0;
+      invalidate();
+    }
     document.body.style.cursor = "auto";
   };
   // PointerOut can be missed when the canvas unmounts under us.

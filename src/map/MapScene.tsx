@@ -142,13 +142,16 @@ export default function MapScene() {
   }
 
   if (supported === null) {
-    // Keep the flat raster up during the adapter probe so the cell does not
-    // flash empty clear-colour before WebGPU mounts.
+    // Empty host during the adapter probe — do NOT mount FlatBoard here.
+    // FlatBoard loads world-surface-wiki.webp; mounting it then WebGPU MapTable
+    // decoded the same ~3MB albedo twice and showed up as main-thread jank /
+    // Cascading Update around route paint.
     return (
       <div className="board-sky__scene" aria-hidden="true">
-        <div className="board-sky__canvas-host">
-          <FlatBoard />
-        </div>
+        <div
+          className="board-sky__canvas-host"
+          style={{ background: `#${OCEAN_HORIZON.toString(16).padStart(6, "0")}` }}
+        />
       </div>
     );
   }

@@ -8,9 +8,9 @@
  * — it has to move at rest — so exactly one timer exists and everything else
  * that animates rides the frames it produces.
  *
- * Idle holds at MAP_IDLE_HZ (30). Pointer / camera / unlock pokes raise the
- * band to MAP_ACTIVE_HZ (120) for a short grace, then drop back. Never free-run
- * at panel refresh (that was the GPU pin).
+ * Idle holds at MAP_IDLE_HZ (30). Real interaction (drag, wheel, WASD, unlock)
+ * raises to MAP_ACTIVE_HZ (120) briefly. Hover alone does not — pointermove
+ * activity pokes kept the refresh driver awake for no reason.
  *
  * It stops for reduced motion, for an offscreen canvas, and for a hidden tab.
  */
@@ -39,30 +39,35 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   useEffect(() => {
     const element = gl.domElement;
     const update = () => {
-      running.current = !reducedMotion && onScreen.current && !document.hidden;
+      const next = !reducedMotion && onScreen.current && !document.hidden;
+      if (next === running.current) return;
+      running.current = next;
       if (running.current) invalidate();
     };
+    // Coarse observe: only care about leave/enter the viewport, not subpixel
+    // intersection churn (feeds "Update intersection observations" on scroll).
     const observer = new IntersectionObserver(
       ([entry]) => {
-        onScreen.current = entry.isIntersecting;
+        const hit = entry.isIntersecting && entry.intersectionRatio > 0;
+        if (hit === onScreen.current) return;
+        onScreen.current = hit;
         update();
       },
-      { threshold: 0.02 },
+      { threshold: 0, rootMargin: "32px" },
     );
     observer.observe(element);
     document.addEventListener("visibilitychange", update);
-    // Pointer over the board ⇒ active band (orbit prep, hover parallax).
-    const onPointer = () => pokeMapActivity();
-    element.addEventListener("pointerdown", onPointer);
-    element.addEventListener("pointermove", onPointer, { passive: true });
-    element.addEventListener("wheel", onPointer, { passive: true });
+    // Active band only on real intent — not every hover move.
+    const onDown = () => pokeMapActivity();
+    const onWheel = () => pokeMapActivity();
+    element.addEventListener("pointerdown", onDown);
+    element.addEventListener("wheel", onWheel, { passive: true });
     update();
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
-      element.removeEventListener("pointerdown", onPointer);
-      element.removeEventListener("pointermove", onPointer);
-      element.removeEventListener("wheel", onPointer);
+      element.removeEventListener("pointerdown", onDown);
+      element.removeEventListener("wheel", onWheel);
     };
   }, [gl, invalidate, reducedMotion]);
 
@@ -79,7 +84,6 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
       hzBand.current = hz;
       const period = 1000 / hz;
       if (now - last < period) return;
-      // Catch-up: don't multi-fire after a long stall.
       last = now;
       invalidate();
     };

@@ -208,28 +208,46 @@ export function CameraRig({
   }, [invalidate, want.azimuth, want.elevation, want.radius, want.target[0], want.target[2], focus, place]);
 
   // Hover parallax (not while dragging).
+  // Write pointer only — do NOT invalidate here. MotionDriver already ticks the
+  // demand loop at idle Hz; per-move invalidate + getBoundingClientRect was the
+  // "Coalesced input move flusher / Cascading Update" main-thread pin.
   useEffect(() => {
     if (reducedMotion || flags.topDown) return;
     const canvas = gl.domElement;
+    let rect = canvas.getBoundingClientRect();
+    let rectW = Math.max(1, rect.width);
+    let rectH = Math.max(1, rect.height);
+    const refreshRect = () => {
+      rect = canvas.getBoundingClientRect();
+      rectW = Math.max(1, rect.width);
+      rectH = Math.max(1, rect.height);
+    };
+    const ro =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(refreshRect)
+        : null;
+    ro?.observe(canvas);
+    window.addEventListener("scroll", refreshRect, { passive: true, capture: true });
+
     const move = (event: PointerEvent) => {
       if (user.current.mode === "orbit" || user.current.mode === "pan") return;
-      const rect = canvas.getBoundingClientRect();
-      pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
-      invalidate();
+      pointer.current.x = ((event.clientX - rect.left) / rectW) * 2 - 1;
+      pointer.current.y = ((event.clientY - rect.top) / rectH) * 2 - 1;
+      // No invalidate — next MotionDriver frame samples pointer.current.
     };
     const leave = () => {
       pointer.current.x = 0;
       pointer.current.y = 0;
-      invalidate();
     };
-    canvas.addEventListener("pointermove", move);
+    canvas.addEventListener("pointermove", move, { passive: true });
     canvas.addEventListener("pointerleave", leave);
     return () => {
+      ro?.disconnect();
+      window.removeEventListener("scroll", refreshRect, true);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerleave", leave);
     };
-  }, [gl, invalidate, reducedMotion, flags.topDown]);
+  }, [gl, reducedMotion, flags.topDown]);
 
   // Restricted drag + wheel (mouse).
   useEffect(() => {
@@ -304,6 +322,7 @@ export function CameraRig({
         u.azOff = clamp(u.azOff - dx * ORBIT_SENS, -MAX_AZ_OFF, MAX_AZ_OFF);
         u.elOff = clamp(u.elOff + dy * ORBIT_SENS, -MAX_EL_OFF, MAX_EL_OFF);
         moving.current = false; // hold designed lerp while user aims
+        pokeMapActivity();
         invalidate();
         return;
       }
@@ -319,6 +338,7 @@ export function CameraRig({
         u.txOff = clamp(u.txOff - (rightX * dx + fwdX * dy) * scale, -MAX_PAN, MAX_PAN);
         u.tzOff = clamp(u.tzOff - (rightZ * dx + fwdZ * dy) * scale, -MAX_PAN, MAX_PAN);
         moving.current = false;
+        pokeMapActivity();
         invalidate();
       }
     };
@@ -328,6 +348,7 @@ export function CameraRig({
       // Trackpads can emit large deltas — allow up to 3 steps so a flick zooms.
       const steps = Math.max(1, Math.min(3, Math.round(Math.abs(event.deltaY) / 100)));
       nudgeZoom(event.deltaY > 0 ? -steps : steps);
+      pokeMapActivity();
       invalidate();
     };
 

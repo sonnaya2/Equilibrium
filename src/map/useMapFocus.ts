@@ -120,8 +120,35 @@ export function selectPlace(place: string | null) {
 }
 
 /** The pointer. Transient, never touches the sticky selection. */
+let hoverRaf = 0;
+let hoverQueued: string | null | undefined;
+
+/**
+ * Coalesce hover emits to one per animation frame.
+ * Unthrottled pointerenter/leave across many pins was a Cascading Update storm
+ * through every useMapFocus subscriber (ledger, inspector, canvas).
+ */
 export function hoverPlace(hover: string | null) {
-  if (state.hover !== hover) emit({ ...state, hover });
+  // Clear immediately so pointer-out never leaves a sticky hover highlight.
+  if (hover === null) {
+    hoverQueued = undefined;
+    if (hoverRaf) {
+      cancelAnimationFrame(hoverRaf);
+      hoverRaf = 0;
+    }
+    if (state.hover !== null) emit({ ...state, hover: null });
+    return;
+  }
+  if (state.hover === hover) return;
+  hoverQueued = hover;
+  if (hoverRaf) return;
+  hoverRaf = requestAnimationFrame(() => {
+    hoverRaf = 0;
+    const next = hoverQueued;
+    hoverQueued = undefined;
+    if (next === undefined || state.hover === next) return;
+    emit({ ...state, hover: next });
+  });
 }
 
 /** Step the designed zoom. +1 closer, −1 wider. Clamped; keeps spherical solve. */

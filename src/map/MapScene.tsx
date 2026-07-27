@@ -127,7 +127,15 @@ export default function MapScene() {
   }, [narrow]);
 
   if (supported === null) {
-    return <div className="board-sky__scene" aria-hidden="true" />;
+    // Keep the flat raster up during the adapter probe so the cell does not
+    // flash empty clear-colour before WebGPU mounts.
+    return (
+      <div className="board-sky__scene" aria-hidden="true">
+        <div className="board-sky__canvas-host">
+          <FlatBoard />
+        </div>
+      </div>
+    );
   }
 
   if (!supported) {
@@ -157,6 +165,10 @@ export default function MapScene() {
         <Canvas
           dpr={[1, 2]}
           frameloop="demand"
+          // Printed map, not outdoor HDR. R3F defaults to ACES filmic which
+          // crushed midtones on LDR wiki albedos under the sparse light rig —
+          // FlatBoard stayed bright while the 3D path went muddy.
+          flat
           // Opens wide and a little low; CameraRig settles it onto the table
           // shot as the intro descent, or cuts straight there under reduced
           // motion. Perspective, because a straight-down orthographic board

@@ -35,13 +35,14 @@ import {
 import type { Node } from "three/webgpu";
 import { linear, mapClock, mapUvFrom } from "./shared";
 
-const DEEP = 0x22405e;
-const SHALLOW = 0x3f6a8a;
-const SKY = 0x7d9cba;
-const FOAM = 0xbdd0da;
+const DEEP = 0x2a4d6e;
+const SHALLOW = 0x4a7898;
+const SKY = 0x8aabca;
+const FOAM = 0xc5d6e0;
 /** What the sea fades to at the outer edge. The canvas clears to this too, so
- *  the plane has no rim and the board sits in one continuous field. */
-export const OCEAN_HORIZON = 0x223449;
+ *  the plane has no rim and the board sits in one continuous field. Lifted off
+ *  near-black so the Board Sky chrome and the void do not fight. */
+export const OCEAN_HORIZON = 0x2c445c;
 
 /**
  * World units of swell — a couple of game tiles, and deliberately less than
@@ -82,7 +83,9 @@ export function createWaterMaterial(
   field: THREE.Texture,
   keyDirection: THREE.Vector3,
 ): WaterMaterial {
-  const material = new THREE.MeshBasicNodeMaterial();
+  // Unlit + toneMapped false: the sea is authored colour, not a lit surface,
+  // and must not pick up any future filmic curve the land opts into.
+  const material = new THREE.MeshBasicNodeMaterial({ toneMapped: false });
   const key = uniform(keyDirection.clone().normalize());
 
   // The plane is authored flat and rotated -90 about x, so world (x, y, z) is

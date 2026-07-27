@@ -28,6 +28,7 @@ import {
   positionLocal,
   positionWorld,
   smoothstep,
+  step,
   uniform,
   uv,
   vec3,
@@ -40,7 +41,7 @@ import { linear } from "./shared";
  * roughly albedo x irradiance — so authored leaf greens come back as near-black
  * smudges unless they are brightened before lighting, exactly as the terrain is.
  */
-const FOLIAGE_GAIN = 1.9;
+const FOLIAGE_GAIN = 2.2;
 
 /** Dead wood, not stem green — the stem should disappear under the leaves. */
 const BARK_DARK = 0x241c13;
@@ -70,10 +71,13 @@ export function createVineMaterials(): VineMaterials {
     return smoothstep(float(0), float(0.13), growth.mul(1.16).sub(fromEnd));
   };
 
+  // depthWrite false while growing: a semi-transparent tip that still wrote
+  // depth punched holes through leaves and plates behind the frontier.
   const stem = new THREE.MeshStandardNodeMaterial({
     roughness: 0.94,
     metalness: 0,
     transparent: true,
+    depthWrite: false,
   });
   const grain = mx_noise_float(positionWorld.mul(220));
   const bark = mix(linear(BARK_DARK), linear(BARK), grain.mul(0.5).add(0.5));
@@ -120,13 +124,16 @@ export interface LeafMaterial {
  * a texture.
  */
 export function createLeafMaterial(): LeafMaterial {
+  // Binary alpha cut + depth write: soft opacity under alphaTest crawled under
+  // sub-pixel wind and camera motion; transparent cards without depth also
+  // reordered every frame as a hedge twinkle.
   const material = new THREE.MeshStandardNodeMaterial({
     roughness: 0.88,
     metalness: 0,
     side: THREE.DoubleSide,
     transparent: true,
-    depthWrite: false,
-    alphaTest: 0.42,
+    depthWrite: true,
+    alphaTest: 0.35,
   });
 
   const seed = (attribute("aLeaf", "vec3") as unknown as Node<"vec3">).x;
@@ -143,11 +150,12 @@ export function createLeafMaterial(): LeafMaterial {
   material.colorNode = shaded.mul(fleck.mul(0.09).add(0.955)).mul(FOLIAGE_GAIN);
 
   // Cut the quad into a leaf: pointed tip, rounded base, no card corners.
+  // Hard step keeps the alpha-test edge stable under wind.
   const shape = float(1)
     .sub(vein.pow(1.5))
     .sub(smoothstep(float(0.55), float(1), u.y).mul(0.62))
     .sub(smoothstep(float(0.35), float(0), u.y).mul(0.5));
-  material.opacityNode = smoothstep(float(0), float(0.12), shape);
+  material.opacityNode = step(float(0.02), shape);
   material.roughnessNode = float(0.86).add(fleck.mul(0.1));
 
   return {

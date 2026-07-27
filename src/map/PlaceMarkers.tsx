@@ -19,7 +19,7 @@
  * deliberately wider than the disc it paints: the extra is the click target.
  */
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame, useLoader, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
@@ -34,6 +34,11 @@ import {
 } from "./materials/MarkerMaterial";
 import { plateTopY } from "./plateHeight";
 import { useMapFocus } from "./useMapFocus";
+
+/** Same spring as RegionPlate / BorderVines so pins ride the rising plate. */
+const Y_SPEED = 6.5;
+/** Contact shadow lift — enough to clear coplanar cap z-fight. */
+const SHADOW_BIAS = 0.0018;
 
 export const POI_ATLAS_URL = "/map/poi-atlas.json";
 export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp";
@@ -158,17 +163,48 @@ export function PlaceMarkers({
     }
   }, [pins]);
 
-  const surfaceY = plateTopY(build, focus, region);
+  // Target top of the framed plate. Live y springs toward it so pins do not
+  // snap to FOCUS_LIFT while the plate is still rising (or sink into it on
+  // unframe).
+  const targetSurfaceY = plateTopY(build, focus, region);
+  const liveSurfaceY = useRef(targetSurfaceY);
+  const ySeeded = useRef(false);
+  useLayoutEffect(() => {
+    liveSurfaceY.current = targetSurfaceY;
+    ySeeded.current = true;
+  }, [region]);
+  useLayoutEffect(() => {
+    if (!ySeeded.current) {
+      liveSurfaceY.current = targetSurfaceY;
+      ySeeded.current = true;
+    }
+  }, [targetSurfaceY]);
+
   const active = focus.framed && pins.length > 0;
 
   useEffect(() => {
     invalidate();
-  }, [active, region, focus.place, focus.hover, surfaceY, invalidate]);
+  }, [active, region, focus.place, focus.hover, targetSurfaceY, invalidate]);
 
   useFrame((_, delta) => {
     const root = group.current;
     if (!root) return;
     let busy = false;
+    let matricesDirty = false;
+
+    // Spring surface with the plate — same rate as RegionPlate (6.5).
+    if (!ySeeded.current) {
+      liveSurfaceY.current = targetSurfaceY;
+      ySeeded.current = true;
+    } else if (liveSurfaceY.current !== targetSurfaceY) {
+      const y0 = liveSurfaceY.current;
+      const y1 = reducedMotion
+        ? targetSurfaceY
+        : y0 + (targetSurfaceY - y0) * (1 - Math.exp(-delta * Y_SPEED));
+      liveSurfaceY.current = Math.abs(y1 - targetSurfaceY) < 0.0004 ? targetSurfaceY : y1;
+      if (liveSurfaceY.current !== targetSurfaceY) busy = true;
+    }
+    const surfaceY = liveSurfaceY.current;
 
     // World units per screen pixel at the marker's distance. Recomputed each
     // frame because the camera is always the thing that moved.
@@ -200,6 +236,7 @@ export function PlaceMarkers({
         dummy.updateMatrix();
         shadows.current?.setMatrixAt(i, dummy.matrix);
         stems.current?.setMatrixAt(i, dummy.matrix);
+        matricesDirty = true;
         continue;
       }
 
@@ -220,7 +257,7 @@ export function PlaceMarkers({
         state.needsUpdate = true;
       }
 
-      dummy.position.set(pin.x, surfaceY + 0.0009, pin.z);
+      dummy.position.set(pin.x, surfaceY + SHADOW_BIAS, pin.z);
       dummy.rotation.set(-Math.PI / 2, 0, 0);
       dummy.scale.setScalar(world * 0.62 * reveal);
       dummy.updateMatrix();
@@ -232,10 +269,16 @@ export function PlaceMarkers({
       dummy.scale.set(1, stemLength, 1);
       dummy.updateMatrix();
       stems.current?.setMatrixAt(i, dummy.matrix);
+      matricesDirty = true;
     }
 
-    if (shadows.current) shadows.current.instanceMatrix.needsUpdate = true;
-    if (stems.current) stems.current.instanceMatrix.needsUpdate = true;
+    // Billboards re-orient every frame while any pin is visible; only flag the
+    // instance buffers when we actually wrote matrices (avoids thrash at rest
+    // with nothing framed).
+    if (matricesDirty) {
+      if (shadows.current) shadows.current.instanceMatrix.needsUpdate = true;
+      if (stems.current) stems.current.instanceMatrix.needsUpdate = true;
+    }
     if (busy) invalidate();
   });
 

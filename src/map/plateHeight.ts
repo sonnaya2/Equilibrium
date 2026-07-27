@@ -19,7 +19,7 @@
 import { isRegionUnlocked, type BuildState, type RegionId } from "@/league";
 
 /** How far a resting cap clears the water. Must exceed the ocean's SWELL. */
-export const REST_CLEARANCE = 0.004;
+export const REST_CLEARANCE = 0.007;
 /** How far the framed region rises out of the sea. */
 export const FOCUS_LIFT = 0.02;
 /** A sealed region settles just into the waterline. Barely, on purpose. */

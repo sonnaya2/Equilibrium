@@ -17,7 +17,7 @@
  * every misaimed poke at a marker silently rewrote persisted state.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
@@ -126,14 +126,18 @@ export function RegionPlate({
   // One damped number, asleep at rest. The group's y belongs to this loop alone:
   // passing `position` as a prop lets R3F reapply the target in the same commit
   // that flips it, so the plate teleports instead of rising.
+  //
+  // Seed in layout (and again on the first frame if the ref was late) so the
+  // first painted pose is already at rest — starting at y=0 buried the plate
+  // under the sea and eased it up as a mount pop.
   const group = useRef<THREE.Group>(null);
   const targetY = plateBaseY(id, unlocked, subject);
   const seeded = useRef(false);
-  useEffect(() => {
-    if (!seeded.current && group.current) {
-      group.current.position.y = targetY;
-      seeded.current = true;
-    }
+  useLayoutEffect(() => {
+    const g = group.current;
+    if (!g || seeded.current) return;
+    g.position.y = targetY;
+    seeded.current = true;
   }, [targetY]);
 
   useFrame((_, delta) => {
@@ -144,7 +148,13 @@ export function RegionPlate({
       busy = true;
     }
     const g = group.current;
-    if (g && g.position.y !== targetY) {
+    if (!g) return;
+    if (!seeded.current) {
+      g.position.y = targetY;
+      seeded.current = true;
+      return;
+    }
+    if (g.position.y !== targetY) {
       const next = reducedMotion
         ? targetY
         : g.position.y + (targetY - g.position.y) * (1 - Math.exp(-delta * 6.5));

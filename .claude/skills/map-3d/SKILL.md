@@ -112,10 +112,13 @@ unit-tested there. **Never re-normalise it.** On-screen size is a function of ca
 pixels and the camera solve, not world units.
 
 Sea level is `y = 0` and **at rest every coast meets it** — a plate's cap clears the
-water by `REST_CLEARANCE`, a couple of screen pixels, which must stay greater than the
-ocean's `SWELL` or waves wash over Gielinor. At rest the board has to read as the
-actual RuneScape world map. Only the framed region rises (`FOCUS_LIFT`), and that is
-the whole reveal; a sidelined region recedes through its material, never by sinking.
+water by `REST_CLEARANCE` (currently `0.007`), which must stay greater than the
+ocean's `SWELL` (`0.0014`) or waves wash over Gielinor. The margin also has to clear
+depth-buffer fight against the swell under the overview camera. At rest the board has
+to read as the actual RuneScape world map. Only the framed region rises (`FOCUS_LIFT`),
+and that is the whole reveal; a sidelined region recedes through its material, never by
+sinking. Seed each plate's `position.y` before the first paint (layout / first frame) —
+do not ease from `0` on mount.
 
 ## Materials
 
@@ -127,6 +130,17 @@ per-plate geometry uv.
 Albedo is brightened **before** lighting (`ALBEDO_GAIN`, `FOLIAGE_GAIN`): a lit surface
 returns roughly albedo × irradiance, so feeding it the value you want back gives you
 something much darker. That mistake is why an earlier board rendered near-black.
+
+**Canvas is `flat` (NoToneMapping).** R3F's default ACES filmic crush midtones on LDR
+wiki albedos under the sparse light rig — FlatBoard stayed bright, the 3D path went
+muddy. Do not re-enable ACES without re-tuning gains and lights.
+
+**Field texture has no mipmaps.** `asDataTexture` must stay `LinearFilter` only — trilinear
+mips on coast-distance/inland-water channels crawl as shimmering bands under camera
+motion. Albedo keeps mips; the data field does not.
+
+**Cap materials use `polygonOffset`.** Neighbouring plates share byte-identical seams at
+the same rest height; without a depth bias the caps z-fight.
 
 `ExtrudeGeometry`'s bevel is added *outside* the requested depth, so a cap's real top is
 `depth + bevelThickness`. Anything laid on a cap must clear it.

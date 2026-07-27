@@ -23,8 +23,12 @@ import { float, mix, mx_noise_float, positionLocal, positionWorld, smoothstep, s
 import { TERRAIN_WALL_DEEP, TERRAIN_WALL_ROCK, TERRAIN_WALL_SUBSOIL, TERRAIN_WALL_TOPSOIL } from "../palette";
 import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 
-/** Lit at roughly the irradiance the board's rig delivers to a flat cap. */
-const ALBEDO_GAIN = 1.55;
+/**
+ * Pre-light boost so the wiki raster survives MeshStandard Lambert (÷π) on the
+ * board's sparse rig. Tuned with Canvas `flat` (NoToneMapping); ACES would need
+ * more.
+ */
+const ALBEDO_GAIN = 2.05;
 
 export interface TerrainMaterials {
   cap: THREE.MeshStandardNodeMaterial;
@@ -61,7 +65,17 @@ export function createTerrainMaterials(
   const F = texture(field, mapUv);
 
   // ---- cap ------------------------------------------------------------------
-  const cap = new THREE.MeshStandardNodeMaterial({ roughness: 0.9, metalness: 0, wireframe: options.wireframe });
+  // polygonOffset: neighbouring plates share byte-identical seam edges at the
+  // same rest height, so without a bias the caps z-fight and shimmer under
+  // any camera motion.
+  const cap = new THREE.MeshStandardNodeMaterial({
+    roughness: 0.9,
+    metalness: 0,
+    wireframe: options.wireframe,
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1,
+  });
 
   let base = texture(albedo, mapUv).rgb.mul(float(ALBEDO_GAIN));
 

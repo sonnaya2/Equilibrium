@@ -69,8 +69,8 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group>
-      <hemisphereLight args={[0xbcd6f0, 0x5a4a30, 0.62]} />
-      <directionalLight position={keyPosition} intensity={0.92} color={0xffe9c8} />
+      <hemisphereLight args={[0xbcd6f0, 0x5a4a30, 0.78]} />
+      <directionalLight position={keyPosition} intensity={1.15} color={0xffe9c8} />
 
       {flags.water ? <Ocean field={field} keyDirection={KEY_DIRECTION} /> : null}
 

@@ -5,7 +5,7 @@
  * The clock is module-level on purpose. Water, rivers, vines and marker gems all
  * move against the same second, and a per-material clock advanced from a
  * per-material `useFrame` is how two layers end up visibly out of phase after a
- * tab has been backgrounded. `MapTable` owns the only writer.
+ * tab has been backgrounded. `MotionDriver` owns the only writer.
  */
 
 import * as THREE from "three/webgpu";
@@ -47,15 +47,21 @@ export function mapUvFrom(position: Node<"vec3">) {
  */
 export const FIELD_TEXEL = 1 / 1536;
 
-/** Prepare a texture for data use — no colour transform, no wrap bleed. */
+/**
+ * Prepare a texture for data use — no colour transform, no wrap bleed.
+ *
+ * No mipmaps: the field packs signed coast distance and inland water in linear
+ * channels. Trilinear mips blur the waterline, and as the camera moves the LOD
+ * switch crawls as shimmering bands along every coast and river.
+ */
 export function asDataTexture(tex: THREE.Texture): THREE.Texture {
   tex.colorSpace = THREE.NoColorSpace;
   tex.wrapS = THREE.ClampToEdgeWrapping;
   tex.wrapT = THREE.ClampToEdgeWrapping;
-  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.LinearFilter;
   tex.magFilter = THREE.LinearFilter;
-  tex.generateMipmaps = true;
-  tex.anisotropy = 4;
+  tex.anisotropy = 1;
   tex.needsUpdate = true;
   return tex;
 }

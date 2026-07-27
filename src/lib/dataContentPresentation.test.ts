@@ -776,8 +776,8 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       {
         name: "Dark facets",
-        must: [/Grace/i, /Luck/i, /Passage/i],
-        minIcons: 3,
+        must: [/Grace of the Elves|GOTE/i, /Dark Facet of Grace/i, /Luck/i, /Passage/i],
+        minIcons: 4,
       },
       { name: "Ruinous weapons", must: [/Ruinous rapier/i, /Ruinous staff/i] },
     ];

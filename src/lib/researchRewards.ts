@@ -312,7 +312,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Chaotic rapier, Off-hand chaotic rapier, Chaotic longsword, Off-hand chaotic longsword, Chaotic maul, Chaotic spear, Chaotic staff, Chaotic crossbow, Off-hand chaotic crossbow, Chaotic claw, Off-hand chaotic claw",
   "Ruinous weapons":
     "Ruinous rapier, Off-hand ruinous rapier, Ruinous maul, Ruinous staff, Ruinous crossbow, Off-hand ruinous crossbow, Ruinous guard, Ruinous lantern",
-  "Dark facets": "Dark Facet of Grace, Dark Facet of Luck, Dark Facet of Passage",
+  "Dark facets":
+    "Grace of the Elves, Dark Facet of Grace, Dark Facet of Luck, Dark Facet of Passage",
   // Every Wilderness brawling glove (no parentheses — tokeniser strips parentheticals).
   "Brawling gloves":
     "Melee brawling gloves, Ranged brawling gloves, Magic brawling gloves, Agility brawling gloves, Cooking brawling gloves, Firemaking brawling gloves, Fishing brawling gloves, Hunter brawling gloves, Mining brawling gloves, Prayer brawling gloves, Smithing brawling gloves, Thieving brawling gloves, Woodcutting brawling gloves",

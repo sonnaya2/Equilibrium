@@ -62,6 +62,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "dark facet of grace": perm("dark-facet-of-grace"),
   "dark facet of luck": perm("dark-facet-of-luck"),
   "dark facet of passage": perm("dark-facet-of-passage"),
+  "grace of the elves": perm("grace-of-the-elves"),
+  gote: perm("grace-of-the-elves"),
   "dark onyx core": perm("dark-onyx-core"),
   "brawling gloves": perm("brawling-gloves-melee"),
   "melee brawling gloves": perm("brawling-gloves-melee"),

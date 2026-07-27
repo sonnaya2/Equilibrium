@@ -8,7 +8,15 @@ import {
   resolveLocalAsset,
   resolveLocalAssets,
 } from "@/lib/wikiLocalAssets";
-import { WikiDropTable, type WikiDropTableRow } from "@/components/WikiDropTable";
+import {
+  notableDropsForPresentation,
+  pickHeroFacts,
+} from "@/lib/wikiDropPresentation";
+import {
+  WikiDropTable,
+  WikiNotableDrops,
+  type WikiDropTableRow,
+} from "@/components/WikiDropTable";
 import {
   WikiAssetRail,
   WikiFactStrip,
@@ -142,6 +150,7 @@ export function WikiArticleDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [pixelated, setPixelated] = useState(false);
   const [load, setLoad] = useState<LoadState>({ status: "idle" });
+  // Full drop table lives in a nested dialog — keeps the article modal short.
 
   // Resolved only from the click-set target — never from row mount / hover.
   const wiki = target?.wikiUrl ? safeWikiPage(target.wikiUrl) : null;
@@ -225,16 +234,16 @@ export function WikiArticleDialog({
       }}
     >
       {target ? (
-        <>
-          <button
-            type="button"
-            className="data-image-viewer__close"
-            onClick={() => dialogRef.current?.close()}
-          >
-            Close
-          </button>
-
-          {imageOnly ? (
+        imageOnly ? (
+          <>
+            <button
+              type="button"
+              className="data-image-viewer__close"
+              aria-label="Close"
+              onClick={() => dialogRef.current?.close()}
+            >
+              <span aria-hidden>×</span>
+            </button>
             <ImageOnlyBody
               src={target.localArtSrc}
               name={target.name}
@@ -242,19 +251,20 @@ export function WikiArticleDialog({
               pixelated={pixelated}
               setPixelated={setPixelated}
             />
-          ) : (
-            <WikiBody
-              name={target.name}
-              localArtSrc={target.localArtSrc}
-              relatedLabels={target.relatedLabels}
-              relatedIcons={target.relatedIcons}
-              pageUrl={wiki?.pageUrl ?? null}
-              load={load}
-              pixelated={pixelated}
-              setPixelated={setPixelated}
-            />
-          )}
-        </>
+          </>
+        ) : (
+          <WikiBody
+            name={target.name}
+            localArtSrc={target.localArtSrc}
+            relatedLabels={target.relatedLabels}
+            relatedIcons={target.relatedIcons}
+            pageUrl={wiki?.pageUrl ?? null}
+            load={load}
+            pixelated={pixelated}
+            setPixelated={setPixelated}
+            onClose={() => dialogRef.current?.close()}
+          />
+        )
       ) : null}
     </dialog>
   );
@@ -318,6 +328,7 @@ function WikiBody({
   load,
   pixelated,
   setPixelated,
+  onClose,
 }: {
   name: string;
   localArtSrc: string | null;
@@ -327,7 +338,10 @@ function WikiBody({
   load: LoadState;
   pixelated: boolean;
   setPixelated: (v: boolean) => void;
+  onClose: () => void;
 }) {
+  const dropsDialogRef = useRef<HTMLDialogElement>(null);
+  const [dropsOpen, setDropsOpen] = useState(false);
   const view = load.status === "ready" ? load.view : null;
   const heading = view?.title || name;
   const drops = view?.drops ?? [];
@@ -335,13 +349,23 @@ function WikiBody({
   const hasHtmlDrops = Boolean(view?.hasDrops && view.dropsHtml.trim());
   const showDrops = hasStructuredDrops || hasHtmlDrops;
 
-  // Client-side only after article loads — catalog icons first, then resolve.
+  useEffect(() => {
+    const dialog = dropsDialogRef.current;
+    if (!dialog) return;
+    if (dropsOpen && !dialog.open) dialog.showModal();
+    if (!dropsOpen && dialog.open) dialog.close();
+  }, [dropsOpen]);
+
+  // Close the nested drops window when the parent article unloads / reloads.
+  useEffect(() => {
+    setDropsOpen(false);
+  }, [pageUrl, load.status]);
+
   const iconByItem = useMemo(() => {
     if (!view) return {};
     return dropIconMap(view.drops ?? [], relatedIcons);
   }, [view, relatedIcons]);
 
-  // relatedLabels + catalog icons: click-time. Wiki drops join once ready.
   const railAssets = useMemo(() => {
     const related = relatedLabels ?? [];
     const fromIcons = (relatedIcons ?? [])
@@ -379,71 +403,116 @@ function WikiBody({
     return merged;
   }, [view, localArtSrc, name, relatedLabels, relatedIcons]);
 
-  const factChips = useMemo(
-    () => (view?.facts.length ? factsToChips(view.facts) : []),
+  const heroFacts = useMemo(
+    () => (view?.facts.length ? pickHeroFacts(view.facts, 4) : []),
     [view],
+  );
+  const factChips = useMemo(() => factsToChips(heroFacts), [heroFacts]);
+
+  const notable = useMemo(
+    () => (hasStructuredDrops ? notableDropsForPresentation(drops, 8) : []),
+    [hasStructuredDrops, drops],
   );
 
   const bodyHtml = view?.bodyHtml?.trim() ?? "";
   const leadHtml = view?.leadHtml?.trim() ?? "";
+  // Facts strip already shows combat level — don't double it under the art.
+  const showArtCaption =
+    !heroFacts.some((f) => /combat\s*level/i.test(f.label)) &&
+    Boolean(name && name !== heading);
+
+  // Notable strip + unique summary table were the same items twice (see Gate of Elidinis).
+  // Prefer the rate table when structured uniques exist; strip only when no table.
+  const showNotableStrip = notable.length > 0 && !hasStructuredDrops;
+  // Icon rail mostly repeats drop glyphs — keep only when we have no drop tables.
+  const showAssetRail = railAssets.length > 0 && !hasStructuredDrops;
 
   return (
     <div className="data-wiki-article__shell">
       <header className="data-wiki-article__header">
         <h2 className="data-wiki-article__title">{heading}</h2>
+        <button
+          type="button"
+          className="data-wiki-article__close"
+          aria-label="Close"
+          onClick={onClose}
+        >
+          <span aria-hidden>×</span>
+        </button>
       </header>
 
-      {/* 1. Large primary local art — top of shell, left-aligned */}
-      <div className="data-wiki-article__stage">
-        <div className="data-wiki-article__art-primary">
-          {localArtSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={localArtSrc}
-              alt=""
-              className={pixelated ? "is-pixel" : undefined}
-              onLoad={(event) =>
-                applyPixelScale(event.currentTarget, setPixelated, 400)
-              }
+      {/* Hero: art sized to content · summary shares the row without stretch voids. */}
+      <div className="data-wiki-article__hero">
+        <div className="data-wiki-article__stage">
+          <div className="data-wiki-article__art-primary">
+            {localArtSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={localArtSrc}
+                alt=""
+                className={
+                  pixelated
+                    ? "data-wiki-article__art-img is-pixel"
+                    : "data-wiki-article__art-img"
+                }
+                onLoad={(event) =>
+                  // Only upscale tiny inventory glyphs; boss art fills via CSS.
+                  applyPixelScale(event.currentTarget, setPixelated, 280)
+                }
+              />
+            ) : (
+              <span className="data-wiki-article__art-empty" aria-hidden />
+            )}
+            {showArtCaption ? (
+              <p className="data-wiki-article__art-name">{name}</p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="data-wiki-article__summary">
+          {load.status === "loading" ? (
+            <p className="data-wiki-article__status" aria-busy="true">
+              Loading
+            </p>
+          ) : null}
+          {load.status === "error" ? (
+            <p className="data-wiki-article__status" role="alert">
+              {load.message}
+            </p>
+          ) : null}
+
+          {leadHtml ? (
+            <div
+              className="data-wiki-article__content data-wiki-article__lead-prose"
+              dangerouslySetInnerHTML={{ __html: leadHtml }}
             />
-          ) : (
-            <span className="data-wiki-article__art-empty" aria-hidden />
-          )}
-          {name && name !== heading ? (
-            <p className="data-wiki-article__art-name">{name}</p>
+          ) : null}
+
+          {factChips.length > 0 ? <WikiFactStrip facts={factChips} /> : null}
+
+          {showNotableStrip ? (
+            <div className="data-wiki-article__modules" aria-label="Encounter">
+              <section className="data-wiki-article__module">
+                <h3 className="data-wiki-article__module-title">
+                  Notable drops
+                </h3>
+                <WikiNotableDrops rows={notable} iconByItem={iconByItem} />
+              </section>
+            </div>
           ) : null}
         </div>
       </div>
 
-      {load.status === "loading" ? (
-        <p className="data-wiki-article__status" aria-busy="true">
-          Loading
-        </p>
-      ) : null}
-      {load.status === "error" ? (
-        <p className="data-wiki-article__status" role="alert">
-          {load.message}
-        </p>
-      ) : null}
-
-      {/* 2. Short wiki top description, then compact facts */}
-      {leadHtml || factChips.length > 0 ? (
-        <section className="data-wiki-article__lead" aria-label="Summary">
-          {leadHtml ? (
-            <div
-              className="data-wiki-article__content"
-              dangerouslySetInnerHTML={{ __html: leadHtml }}
-            />
-          ) : null}
-          {factChips.length > 0 ? <WikiFactStrip facts={factChips} /> : null}
-        </section>
-      ) : null}
-
-      {/* 3. Drop tables — structured first, HTML fallback */}
+      {/* Summary drops — full table opens in a nested dialog. */}
       {showDrops ? (
         <section className="data-wiki-article__drops" aria-label="Drops">
           {hasStructuredDrops ? (
-            <WikiDropTable rows={drops} iconByItem={iconByItem} />
+            <WikiDropTable
+              rows={drops}
+              iconByItem={iconByItem}
+              variant="summary"
+              onOpenFull={() => setDropsOpen(true)}
+            />
           ) : null}
           {!hasStructuredDrops && hasHtmlDrops ? (
             <div
@@ -454,15 +523,13 @@ function WikiBody({
         </section>
       ) : null}
 
-      {/* 4. Asset rail of local icons (related / drop items) */}
-      {railAssets.length > 0 ? (
+      {showAssetRail ? (
         <WikiAssetRail
           assets={railAssets}
           primary={{ src: localArtSrc, label: name }}
         />
       ) : null}
 
-      {/* 5. Residual body last only — de-emphasized More when non-empty after strip */}
       {bodyHtml ? (
         <details className="data-wiki-article__body">
           <summary className="data-wiki-article__body-summary">More</summary>
@@ -473,7 +540,6 @@ function WikiBody({
         </details>
       ) : null}
 
-      {/* 6. Footer */}
       <footer className="data-wiki-article__footer">
         {pageUrl || view?.pageUrl ? (
           <a
@@ -489,6 +555,43 @@ function WikiBody({
           RuneScape Wiki · CC BY-NC-SA 3.0
         </span>
       </footer>
+
+      {/* Full drop table popup — separate scroll surface from the article shell. */}
+      <dialog
+        ref={dropsDialogRef}
+        className="data-wiki-drops-popup"
+        aria-label={`${heading} full drop table`}
+        onClose={() => setDropsOpen(false)}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) event.currentTarget.close();
+        }}
+      >
+        <div className="data-wiki-drops-popup__shell">
+          <header className="data-wiki-drops-popup__header">
+            <h2 className="data-wiki-drops-popup__title">
+              {heading}
+              <span className="data-wiki-drops-popup__subtitle">Drops</span>
+            </h2>
+            <button
+              type="button"
+              className="data-wiki-article__close"
+              aria-label="Close drop table"
+              onClick={() => dropsDialogRef.current?.close()}
+            >
+              <span aria-hidden>×</span>
+            </button>
+          </header>
+          <div className="data-wiki-drops-popup__body">
+            {hasStructuredDrops ? (
+              <WikiDropTable
+                rows={drops}
+                iconByItem={iconByItem}
+                variant="full"
+              />
+            ) : null}
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

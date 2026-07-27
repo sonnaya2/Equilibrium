@@ -1,7 +1,6 @@
 /**
- * Presentational chrome for the wiki article dialog — fact chips + extra asset rail.
- * Large primary art stays in WikiArticleDialog (`data-wiki-article__art`); this rail is extras only.
- * BEM under `data-wiki-article__*` — style in champion.css.
+ * Presentational chrome for the wiki article dialog — fact strip + notable helpers.
+ * Large primary art stays in WikiArticleDialog. BEM under `data-wiki-article__*`.
  */
 import { GameIcon } from "@/components/GameIcon";
 
@@ -19,12 +18,12 @@ export type WikiRailAsset = {
 
 const ASSET_DISPLAY_CAP = 16;
 
-/** Compact fact chips: muted label, cream value, optional resolved icon. */
+/** Compact horizontal stat strip (hero) — labels uppercase gold, values parchment. */
 export function WikiFactStrip({ facts }: { facts: WikiFactChip[] }) {
   if (!facts.length) return null;
 
   return (
-    <dl className="data-wiki-article__facts">
+    <dl className="data-wiki-article__facts data-wiki-article__facts--strip">
       {facts.map((fact) => (
         <div key={`${fact.label}:${fact.value}`} className="data-wiki-article__fact">
           {fact.iconSrc ? (
@@ -68,7 +67,7 @@ export function WikiAssetRail({
             role="img"
             aria-label={asset.label}
           >
-            <GameIcon src={asset.src} size={32} />
+            <GameIcon src={asset.src} size={28} />
           </span>
         </li>
       ))}

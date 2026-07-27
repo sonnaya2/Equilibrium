@@ -7,9 +7,13 @@
  * recursive required-region group; search by title.
  */
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import questsData from "#data/league/quests.json";
 import { safeExternalHref } from "@/lib/safeHref";
+import {
+  DataTableOrganizeBar,
+  useDataTableOrganize,
+} from "./DataTableOrganize";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 type Quest = (typeof questsData.quests)[number];
@@ -38,7 +42,7 @@ export function QuestBrowser() {
   const region = selectedRegion?.id ?? "";
   const [query, setQuery] = useState("");
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return QUESTS.filter((q) => {
       if (region && !touchesRegion(q, region)) return false;
@@ -46,6 +50,18 @@ export function QuestBrowser() {
       return true;
     });
   }, [region, query]);
+
+  const labelOf = useCallback((q: Quest) => q.title, []);
+  const typeOf = useCallback((q: Quest) => membersLabel(q.members), []);
+  const {
+    dir,
+    toggleDir,
+    typeOptions,
+    activeTypes,
+    toggleType,
+    clearTypes,
+    organized: rows,
+  } = useDataTableOrganize({ rows: filtered, labelOf, typeOf });
 
   return (
     <section className="data-record-view">
@@ -61,6 +77,15 @@ export function QuestBrowser() {
           placeholder="Search"
           aria-label="Search quests"
           className="field-inset data-view-search"
+        />
+        <DataTableOrganizeBar
+          dir={dir}
+          onToggleDir={toggleDir}
+          typeOptions={typeOptions}
+          activeTypes={activeTypes}
+          onToggleType={toggleType}
+          onClearTypes={clearTypes}
+          typeLabel="Access"
         />
       </DataViewHeader>
 

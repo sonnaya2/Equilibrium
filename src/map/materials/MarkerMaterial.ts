@@ -48,7 +48,8 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   const material = new THREE.MeshBasicNodeMaterial({
     transparent: true,
     depthWrite: true,
-    alphaTest: 0.45,
+    // Low — atlas cells are flattened opaque; high alphaTest was eating icons.
+    alphaTest: 0.08,
     side: THREE.FrontSide,
     toneMapped: false,
     polygonOffset: true,
@@ -73,8 +74,8 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   );
 
   const icon = texture(atlas, uv());
-  // Full chroma — no 0.96 crush, no Standard lighting wash.
-  colour = mix(colour, icon.rgb, icon.a.mul(inIcon));
+  // Always paint atlas RGB inside the icon disc (alpha no longer gates visibility).
+  colour = mix(colour, icon.rgb, inIcon);
   colour = mix(colour, linear(STONE_DARK).mul(float(0.85)), underRim);
 
   const facing = local

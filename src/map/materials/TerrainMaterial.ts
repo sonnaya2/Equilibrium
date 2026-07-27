@@ -79,10 +79,10 @@ function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
     .mul(float(2.5))
     .clamp(float(0), float(1))
     .mul(smoothstep(float(0.22), float(0.5), r));
-  // Discs retargeted onto hot-pixel centroids; radii ~ tile-scale basins only.
-  const heat = softDisc(mapUv, 0.342, 0.6995, 0.011)
-    .add(softDisc(mapUv, 0.4176, 0.3691, 0.012))
-    .add(softDisc(mapUv, 0.445, 0.3306, 0.011))
+  // Basins wide enough to read at overview; chroma/land/dry keep ocean rims cold.
+  const heat = softDisc(mapUv, 0.342, 0.6995, 0.028)
+    .add(softDisc(mapUv, 0.4176, 0.3691, 0.022))
+    .add(softDisc(mapUv, 0.445, 0.3306, 0.024))
     .clamp(float(0), float(1));
   return heat.mul(land).mul(dry).mul(hotChroma);
 }
@@ -105,7 +105,10 @@ export interface TerrainMaterials {
   lock: ReturnType<typeof uniform>;
   dim: ReturnType<typeof uniform>;
   focus: ReturnType<typeof uniform>;
+  /** 1 → 0 during unlock; drives radial colour restore + green ring. */
   sweep: ReturnType<typeof uniform>;
+  /** Map-uv centre of this region (anchor) for unlock expand. */
+  unlockCenter: ReturnType<typeof uniform>;
   dispose(): void;
 }
 
@@ -119,12 +122,45 @@ export function createTerrainMaterials(
   const dim = uniform(0);
   const focus = uniform(0);
   const sweep = uniform(0);
+  // Vector2: .value.x / .value.y set from RegionPlate anchor UV.
+  const unlockCenter = uniform(new THREE.Vector2(0.5, 0.5));
 
-  const drain = lock.mul(float(0.22)).add(dim.mul(float(0.1))).min(float(0.32));
-  const shade = float(1).sub(dim.mul(float(0.1))).sub(lock.mul(float(0.05)));
+  // Locked = colour sucked out. Unlock: colour grows from center as sweep 1→0.
+  const open = float(1).sub(lock);
+  // 0 at unlock start (sweep=1), 1 when finished (sweep=0).
+  const unlockProg = open.mul(float(1).sub(sweep));
 
   const mapUv = mapUvFrom(positionWorld);
   const F = texture(field, mapUv);
+
+  // Distance in *shader* map UV (see mapUvFrom / anchorUvToShader). Radius is
+  // generous so desert / wilderness finish full-chroma before sweep hits 0.
+  const dCenter = mapUv.sub(unlockCenter).length();
+  const front = unlockProg.mul(float(0.95)).add(float(0.001));
+  // 1 inside the growing colour disc, 0 outside (still grey during unlock).
+  const restored = float(1).sub(
+    smoothstep(front.sub(float(0.06)), front.add(float(0.012)), dCenter),
+  );
+  // Green frontier ONLY while sweep > 0 — never a permanent band at rest.
+  const ring = smoothstep(front.sub(float(0.06)), front.sub(float(0.02)), dCenter)
+    .mul(float(1).sub(smoothstep(front.sub(float(0.012)), front.add(float(0.04)), dCenter)))
+    .mul(open)
+    .mul(sweep);
+
+  // deadAmt: 1 = full grey.
+  //   locked  → grey always
+  //   unlocking → grey outside the expanding disc (radialDead * sweep)
+  //   open at rest (sweep=0) → 0 — full colour (old path left edges grey
+  //     forever because front maxed at ~0.48 and never covered big plates)
+  const radialDead = float(1).sub(restored);
+  const deadAmt = mix(radialDead.mul(sweep), float(1), lock)
+    .mul(float(0.9))
+    .add(dim.mul(float(0.12)))
+    .min(float(0.95));
+  const shade = float(1)
+    .sub(dim.mul(float(0.1)))
+    .sub(lock.mul(float(0.2)))
+    .sub(radialDead.mul(sweep).mul(open).mul(float(0.08)));
 
   const cap = new THREE.MeshStandardNodeMaterial({
     roughness: 0.82,
@@ -270,16 +306,29 @@ export function createTerrainMaterials(
   const lavaGlow = ember.mul(lavaHeat.mul(lavaPulse.mul(float(0.035)).add(float(0.022))));
   const prifGlow = linear(0x4ec4e8).mul(atmospheres.prif.mul(float(0.022)));
 
-  base = base.mul(float(1).add(focus.mul(float(0.07))));
+  // Focus lift only where colour is restored.
+  const live = float(1).sub(deadAmt);
+  base = base.mul(float(1).add(focus.mul(float(0.07)).mul(live)));
   const lum = base.x
     .mul(float(0.2126))
     .add(base.y.mul(float(0.7152)))
     .add(base.z.mul(float(0.0722)));
-  cap.colorNode = mix(base, vec3(lum, lum, lum), drain).mul(shade);
-  cap.emissiveNode = capGlow.add(lavaGlow).add(prifGlow);
+  const dead = vec3(lum, lum, lum);
+  // Grey outside the expanding disc; full chroma inside.
+  cap.colorNode = mix(base, dead, deadAmt).mul(shade);
+  // Green frontier ring + restored-area emissives only.
+  const ringGlow = linear(0x3ef07a).mul(ring.mul(float(0.75)));
+  const ringCore = linear(0x57e0ae).mul(ring.mul(float(0.35)));
+  cap.emissiveNode = capGlow
+    .add(lavaGlow)
+    .add(prifGlow)
+    .mul(live)
+    .add(ringGlow)
+    .add(ringCore);
   cap.roughnessNode = float(0.86)
-    .sub(F.b.mul(float(0.5)).mul(float(1).sub(atmospheres.desert)))
-    .sub(lavaHeat.mul(float(0.2)));
+    .sub(F.b.mul(float(0.5)).mul(float(1).sub(atmospheres.desert)).mul(live))
+    .sub(lavaHeat.mul(float(0.2)).mul(live))
+    .add(deadAmt.mul(float(0.08)));
 
   const wall = new THREE.MeshStandardNodeMaterial({
     roughness: 0.95,
@@ -302,10 +351,13 @@ export function createTerrainMaterials(
     .mul(float(0.2126))
     .add(strata.y.mul(float(0.7152)))
     .add(strata.z.mul(float(0.0722)));
-  wall.colorNode = mix(strata, vec3(strataLum, strataLum, strataLum), drain)
+  wall.colorNode = mix(strata, vec3(strataLum, strataLum, strataLum), deadAmt)
     .mul(shade)
     .mul(float(1.12));
-  wall.emissiveNode = rimWarm.mul(focus.mul(float(0.05))).add(rimGem.mul(sweep.mul(float(0.2))));
+  wall.emissiveNode = rimWarm
+    .mul(focus.mul(float(0.05)).mul(live))
+    .add(rimGem.mul(sweep.mul(float(0.15)).mul(live)))
+    .add(linear(0x3ef07a).mul(ring.mul(float(0.2))));
   wall.roughnessNode = float(0.93).add(jitter.mul(float(1.5)));
 
   return {
@@ -315,6 +367,7 @@ export function createTerrainMaterials(
     dim,
     focus,
     sweep,
+    unlockCenter,
     dispose() {
       cap.dispose();
       wall.dispose();

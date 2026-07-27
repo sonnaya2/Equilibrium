@@ -1,7 +1,6 @@
 /**
- * Where a plate sits, in world y. Shared because three things need the same
- * answer — the plate, the vines sealing its borders, and the markers standing
- * on it — and a copy that drifted would float any one of them off the surface.
+ * Where a plate sits, in world y. Shared because the plate and the markers on
+ * it need the same answer — a copy that drifted would float pins off the surface.
  *
  * Sea level is y = 0, and at rest every coast meets it. A plate's cap clears the
  * water by `REST_CLEARANCE`, which is a couple of screen pixels at the overview:

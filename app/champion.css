@@ -4406,7 +4406,8 @@
 .eq-champion .data-workbench {
   max-width: none;
   min-height: calc(100svh - 3.25rem);
-  padding: 0 clamp(1rem, 1.4vw, 1.65rem) 0.7rem;
+  /* Top/sides from .workbench-fill; keep a little bottom only. */
+  padding: 0 0 0.35rem;
   background: color-mix(in srgb, var(--echo-void) 95%, transparent);
 }
 

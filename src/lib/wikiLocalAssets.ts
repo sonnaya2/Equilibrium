@@ -12,6 +12,7 @@ import {
   slugifyIconLabel,
   upgradeIconPath,
 } from "@/lib/gameArt";
+import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import { resolveRewardIconLabel } from "@/lib/rewardIconAliases";
 
 export type LocalAsset = {
@@ -31,7 +32,7 @@ const LABEL_NOISE =
   /^(?:including|plus|source|see|also|etc|unlocks|effects|level|t\d+|none|yes|no|n\/a|varies|unknown|aggressive|passive|always|common|uncommon|rare|very rare|always drops?|rarity|quantity|examine|release|update)$/i;
 
 function cleanLabel(label: string): string {
-  return String(label ?? "")
+  return decodeHtmlEntities(String(label ?? ""))
     .replace(/\s+/g, " ")
     .trim();
 }

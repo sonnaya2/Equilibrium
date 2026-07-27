@@ -17,6 +17,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { contentDetailOrRewards } from "@/lib/researchRewards";
 import { PLACES_BY_REGION } from "./data/placeAnchors";
 import type { DetailRow, RegionDetail, TrainingRow } from "./data/regionDetail";
 import { REGION_DETAIL } from "./data/regionDetail";
@@ -64,7 +65,16 @@ function Status({ confidence }: { confidence: string }) {
   );
 }
 
-function RowTable({ rows, header }: { rows: DetailRow[]; header: string }) {
+function RowTable({
+  rows,
+  header,
+  upgrades = [],
+}: {
+  rows: DetailRow[];
+  header: string;
+  /** Region upgrades for empty-detail reward fallback on content majors. */
+  upgrades?: DetailRow[];
+}) {
   return (
     <table className="data-table">
       <thead>
@@ -75,18 +85,24 @@ function RowTable({ rows, header }: { rows: DetailRow[]; header: string }) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
-          <tr key={`${row.name}-${row.kind}`}>
-            <td className="text-parch-50">
-              {row.name}
-              {row.detail ? <span className="block text-xs text-parch-400">{row.detail}</span> : null}
-            </td>
-            <td>{row.kind || "—"}</td>
-            <td>
-              <Status confidence={row.confidence} />
-            </td>
-          </tr>
-        ))}
+        {rows.map((row) => {
+          // Empty catalog detail is common on majors — show clipped rewards under name.
+          const subtitle = contentDetailOrRewards(row, upgrades);
+          return (
+            <tr key={`${row.name}-${row.kind}`}>
+              <td className="text-parch-50">
+                {row.name}
+                {subtitle ? (
+                  <span className="block text-xs text-parch-400">{subtitle}</span>
+                ) : null}
+              </td>
+              <td>{row.kind || "—"}</td>
+              <td>
+                <Status confidence={row.confidence} />
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
@@ -161,6 +177,8 @@ export function RegionInspector({
   const skilling = [...detail.skilling, ...detail.otherContent].filter(keep);
   const gear = detail.gear.filter(keep);
   const items = detail.skillItems.filter(keep);
+  // gear + skillItems are the region's full upgrade set (name/detail for reward resolve).
+  const upgrades = [...detail.gear, ...detail.skillItems];
   const training = detail.training.filter(
     (row) =>
       !needle ||
@@ -300,8 +318,16 @@ export function RegionInspector({
       </div>
 
       <div className="panel-body max-h-96 overflow-y-auto">
-        {tab === "bosses" ? (bosses.length ? <RowTable rows={bosses} header="Boss" /> : empty) : null}
-        {tab === "skilling" ? (skilling.length ? <RowTable rows={skilling} header="Content" /> : empty) : null}
+        {tab === "bosses" ? (
+          bosses.length ? <RowTable rows={bosses} header="Boss" upgrades={upgrades} /> : empty
+        ) : null}
+        {tab === "skilling" ? (
+          skilling.length ? (
+            <RowTable rows={skilling} header="Content" upgrades={upgrades} />
+          ) : (
+            empty
+          )
+        ) : null}
         {tab === "gear" ? (gear.length ? <RowTable rows={gear} header="Upgrade" /> : empty) : null}
         {tab === "items" ? (items.length ? <RowTable rows={items} header="Skill item" /> : empty) : null}
         {tab === "training" ? (training.length ? <TrainingTable rows={training} /> : empty) : null}

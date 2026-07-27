@@ -4,23 +4,42 @@
  */
 
 import { safeExternalHref } from "./safeHref";
+import { decodeHtmlEntities } from "./htmlEntities";
 
 export const WIKI_HOST = "runescape.wiki";
 export const WIKI_ORIGIN = `https://${WIKI_HOST}`;
 export const WIKI_USER_AGENT =
   "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)";
 
-const LEAD_MAX = 520;
+/** Keep a fuller wiki intro — fills the hero summary and reduces empty plate. */
+const LEAD_MAX = 1600;
+const LEAD_PARAGRAPH_CAP = 6;
 const BODY_HTML_MAX = 48_000;
 const DROPS_HTML_MAX = 32_000;
 const DROP_ROW_CAP = 80;
+/** After loot-subpage expansion (e.g. Vorkath normal loot tables). */
+export const DROP_ROW_CAP_EXPANDED = 160;
 
 const DROP_HEADING =
-  /\b(?:drops?|loot|100\s*%\s*drops?|always\s+drops?|main\s+drops?|tertiary|rare\s+drop\s+table|unique\s+drops?)\b/i;
+  /\b(?:drops?|loot|rewards?|100\s*%\s*drops?|always\s+drops?|main\s+drops?|tertiary|secondary|rare\s+drop\s+table|uniques?(?:\s+(?:drops?|rewards?))?|common\s+drops?|elite\s+table|both\s+modes|pet\s+drop|weapon\s+and\s+armou?r|shard\s+of\b)\b/i;
 
-/** Prefer these when ordering structured drop rows (unique/main first). */
+/**
+ * Prefer these when ordering structured drop rows (unique/100%/always first).
+ * Match short wiki subheads: "Unique", "Uniques", "Unique (5 mechanics)",
+ * "Unique drops", "Unique rewards", "100%", "Always drops", plus Amascut-style
+ * chase tables ("Weapon and armour table", "Shard of Genesis Essence table").
+ * Bare "Uniques" needs uniques? — unique + optional trailing s — or the final s
+ * fails the trailing word-boundary check.
+ */
 const PREFERRED_DROP_HEADING =
-  /\b(?:unique\s+drops?|main\s+drops?|100\s*%\s*drops?|always\s+drops?)\b/i;
+  /(?:^|\b)(?:uniques?(?:\s+(?:drops?|rewards?))?|100\s*%(?:\s+drops?)?|always(?:\s+drops?)?|weapon\s+and\s+armou?r|shard\s+of\b)(?:\b|$|\s*\(|\s+table\b)/i;
+
+/**
+ * Recipe / source / mechanics prose that is not a kill-drop table.
+ * Matched on the full trimmed heading so "Rewards" (Vorkath) still counts.
+ */
+const NON_DROP_SECTION_HEADING =
+  /^(?:creation|products?|repair|item\s+sources?|drop\s+sources?|disassembly|usage\s+cost|loot\s+system|drop\s+mechanics|loot\s+sets)$/i;
 
 const DROP_TABLE_HINT =
   /\b(?:rarity|quantity|ge\s*price|ge\s*market|drop\s*rate|rarity\s*tier)\b/i;
@@ -29,9 +48,14 @@ const ITEM_HEADER = /^(?:item|name)s?$/i;
 const QTY_HEADER = /^(?:quantity|qty|amount)s?$/i;
 const RARITY_HEADER = /^(?:rarity|rate|chance|drop\s*rate)s?$/i;
 
-/** Whole sections removed (heading + content). */
+/**
+ * Whole sections removed (heading + content).
+ * Do NOT bare-match "Normal mode" / "Hard mode" / "Pet drop" — those are often
+ * drop-table subheads (TzKal-Zuk, Arch-Glacor). Strip strategy guides via the
+ * longer patterns instead. Never strip a section that isDropSection() accepts.
+ */
 const STRIP_SECTION_HEADING =
-  /\b(?:strategy|tactics|gallery|trivia|history|update\s+history|references?|external\s+links?|see\s+also|transcript|dialogue|music|sounds?|graphical\s+updates?|concepts?|development|achievements?|hard\s+mode|normal\s+mode|money\s*making(?:\s+guide)?|boss\s*pet|boss\s*log|senntisten\s+achievements?|pets?|titles?|music\s+tracks?|points?\s+of\s+interest|monsters?|mobs?|bosses|minibosses?|map|lore|credits?|spotlight|getting\s+there)\b/i;
+  /\b(?:strategy|tactics|gallery|trivia|history|update\s+history|references?|external\s+links?|see\s+also|transcript|dialogue|music|sounds?|graphical\s+updates?|concepts?|development|achievements?|(?:hard|normal)\s+mode\s+(?:guide|strategy|tactics)|money\s*making(?:\s+guide)?|boss\s*pet|boss\s*log|senntisten\s+achievements?|titles?|music\s+tracks?|points?\s+of\s+interest|monsters?|mobs?|bosses|minibosses?|map|lore|credits?|spotlight|getting\s+there|mentioned|flawless\s+run|deity\s+info)\b/i;
 
 // Whole-cell header labels only (never match "Item 12" data rows).
 const ITEM_HEADER_LOOSE = /^(?:items?|names?|drops?|loot)$/i;
@@ -50,6 +74,13 @@ export type WikiDropRow = {
    * Harvested from the drop table image column / cell img — not a local /game path.
    */
   iconUrl?: string | null;
+  /**
+   * Wiki section heading this row was harvested under (e.g. "Unique (5 mechanics)", "Charms").
+   * Presentation-only — never invent mechanics; omit when unknown.
+   */
+  group?: string | null;
+  /** True when the wiki marks the drop as noted — UI shows a note badge, not "(noted)" text. */
+  noted?: boolean;
 };
 
 export type WikiArticleView = {
@@ -122,23 +153,17 @@ export function wikiParseApiUrl(pageTitle: string): string {
 }
 
 function decodeEntities(text: string): string {
-  return text
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#x([0-9a-f]+);/gi, (_, h: string) =>
-      String.fromCodePoint(Number.parseInt(h, 16)),
-    )
-    .replace(/&#(\d+);/g, (_, n: string) =>
-      String.fromCodePoint(Number.parseInt(n, 10)),
-    );
+  return decodeHtmlEntities(text);
 }
 
 function stripTags(html: string): string {
-  return decodeEntities(html.replace(/<[^>]+>/g, " "))
+  // Drop empty italic/lang/bold shells before tag→space so they don't leave
+  // "Fire )" style tails (wiki often wraps meaning glosses in <i lang=…>).
+  let s = html.replace(
+    /<(i|em|b|strong|span)\b[^>]*>\s*<\/\1>/gi,
+    "",
+  );
+  return decodeEntities(s.replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -148,16 +173,22 @@ function clampHtml(html: string, max: number): string {
   return `${html.slice(0, max)}…`;
 }
 
-/** Keep wiki drop icons for harvest; still kill script/iframe/etc. */
+/**
+ * Keep wiki drop icons for harvest; still kill script/iframe/etc.
+ * Closers must match openers — a bare `<button>` without `</button>` in the
+ * closer set used to swallow entire articles (infobox mode toggles on Zuk/etc.).
+ */
 export function stripWikiChromeKeepImages(html: string): string {
   let out = html;
   out = out.replace(/<!--[\s\S]*?-->/g, "");
+  // Paired elements only (open + matching close).
   out = out.replace(
-    /<(?:script|style|iframe|object|embed|form|input|button|textarea|select|noscript|svg|math|video|audio|map|area|link|meta)\b[^>]*>[\s\S]*?<\/(?:script|style|iframe|object|embed|form|textarea|select|noscript|svg|math|video|audio)>/gi,
+    /<(script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|video|audio)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
+  // Void / self-closing chrome.
   out = out.replace(
-    /<(?:script|style|iframe|object|embed|form|input|button|textarea|select|noscript|svg|math|video|audio|map|area|link|meta|br)\b[^>]*\/?>/gi,
+    /<(?:input|map|area|link|meta|br)\b[^>]*\/?>/gi,
     "",
   );
   out = out.replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "");
@@ -190,26 +221,69 @@ export function absolutizeWikiIconUrl(src: string | null | undefined): string | 
   }
 }
 
-/** First inventory-looking img in a table cell. Prefers larger non-1px assets. */
+/**
+ * Wiki chrome glyphs that appear next to drop tables but are not inventory icons
+ * (High Level Alchemy, yes/no checks, skill badges).
+ */
+const NON_INVENTORY_ICON =
+  /(?:High_Level_Alchemy|Yes_check|X_mark|Coins_detail|GE_detail|graph|Coins_10000_detail|\/thumb\/(?:Attack|Strength|Defence|Ranged|Magic|Prayer|Constitution|Slayer|Summoning|Herblore|Farming|Mining|Smithing|Fishing|Cooking|Firemaking|Woodcutting|Crafting|Fletching|Runecrafting|Construction|Agility|Thieving|Hunter|Divination|Invention|Archaeology|Necromancy)-icon)/i;
+
+function imgSrcCandidates(tag: string): string[] {
+  const out: string[] = [];
+  const src = tag.match(/\bsrc=["']([^"']+)["']/i)?.[1];
+  if (src) out.push(src);
+  const dataSrc = tag.match(/\bdata-src=["']([^"']+)["']/i)?.[1];
+  if (dataSrc) out.push(dataSrc);
+  // Prefer the last (usually 2x) candidate in srcset when present.
+  const srcset = tag.match(/\bsrcset=["']([^"']+)["']/i)?.[1];
+  if (srcset) {
+    const parts = srcset
+      .split(",")
+      .map((p) => p.trim().split(/\s+/)[0])
+      .filter(Boolean) as string[];
+    out.push(...parts);
+  }
+  return out;
+}
+
+/** First inventory-looking img in a table cell. Prefers real item glyphs. */
 export function extractWikiIconFromCell(cellHtml: string): string | null {
   if (!cellHtml) return null;
-  const re = /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+  const re = /<img\b[^>]*>/gi;
   let m: RegExpExecArray | null;
   let fallback: string | null = null;
   while ((m = re.exec(cellHtml)) !== null) {
-    const abs = absolutizeWikiIconUrl(m[1]);
-    if (!abs) continue;
-    // Skip spacer / tracking pixels when a better candidate exists.
-    const isTiny =
-      /\b(?:width|height)=["']?1["']?/i.test(m[0]) ||
-      /\/1px-/i.test(abs);
-    if (isTiny) {
-      fallback = fallback ?? abs;
-      continue;
+    const tag = m[0];
+    for (const rawSrc of imgSrcCandidates(tag)) {
+      const abs = absolutizeWikiIconUrl(rawSrc);
+      if (!abs) continue;
+      // Skip spacer / tracking pixels when a better candidate exists.
+      const isTiny =
+        /\b(?:width|height)=["']?1["']?/i.test(tag) ||
+        /\/1px-/i.test(abs);
+      if (isTiny) {
+        fallback = fallback ?? abs;
+        continue;
+      }
+      // Alchemy / check / skill chrome — keep only as last-resort fallback.
+      if (NON_INVENTORY_ICON.test(abs) || NON_INVENTORY_ICON.test(tag)) {
+        fallback = fallback ?? abs;
+        continue;
+      }
+      return abs;
     }
-    return abs;
   }
   return fallback;
+}
+
+/** True when a cell is the dedicated inventory glyph column on RS drop tables. */
+function isInventoryImageCell(cellHtml: string): boolean {
+  return /\binventory-image\b|\bdrops-img\b|\bclass="[^"]*\bimage\b/i.test(cellHtml);
+}
+
+/** Skip GE price / high-alch columns — they often embed non-item icons. */
+function isMetaDropCell(cellHtml: string): boolean {
+  return /\b(?:ge-column|alch-column|drops-ge|high.?alch)\b/i.test(cellHtml);
 }
 
 /** Remove scripts, images, forms, and wiki chrome blocks. */
@@ -217,13 +291,15 @@ export function stripWikiChrome(html: string): string {
   let out = html;
   // Comments
   out = out.replace(/<!--[\s\S]*?-->/g, "");
-  // Dangerous / non-content elements (including images — body/lead stay image-free)
+  // Paired elements (open + matching close). Keep closer list aligned with openers —
+  // a mismatched pair (e.g. button → form) used to delete half the article.
   out = out.replace(
-    /<(?:script|style|iframe|object|embed|form|input|button|textarea|select|noscript|svg|math|img|picture|source|video|audio|map|area|link|meta)\b[^>]*>[\s\S]*?<\/(?:script|style|iframe|object|embed|form|textarea|select|noscript|svg|math|picture|video|audio)>/gi,
+    /<(script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|picture|video|audio)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
+  // Void / self-closing + images (lead/body stay image-free).
   out = out.replace(
-    /<(?:script|style|iframe|object|embed|form|input|button|textarea|select|noscript|svg|math|img|picture|source|video|audio|map|area|link|meta|br)\b[^>]*\/?>/gi,
+    /<(?:img|source|input|map|area|link|meta|br)\b[^>]*\/?>/gi,
     "",
   );
   // Wiki chrome by class/id
@@ -297,9 +373,33 @@ function extractSections(html: string): { lead: string; sections: Section[] } {
   return { lead, sections };
 }
 
+/** True when a section's tables look like item/qty/rarity drop tables. */
+function sectionHasDropTable(html: string): boolean {
+  if (!html || !/<table\b/i.test(html)) return false;
+  for (const table of html.match(/<table\b[\s\S]*?<\/table>/gi) ?? []) {
+    const headerRow = table.match(/<tr\b[^>]*>[\s\S]*?<\/tr>/i)?.[0];
+    if (!headerRow) continue;
+    const cells: string[] = [];
+    const cellRe = /<t[hd]\b[^>]*>([\s\S]*?)<\/t[hd]>/gi;
+    let cm: RegExpExecArray | null;
+    while ((cm = cellRe.exec(headerRow)) !== null) {
+      cells.push(stripTags(cm[1] ?? ""));
+    }
+    const map = mapDropHeaders(cells);
+    // Require item + at least one of qty/rarity so recipe GE tables stay out.
+    if (map && (map.quantity >= 0 || map.rarity >= 0)) return true;
+  }
+  return false;
+}
+
 function isDropSection(section: Section): boolean {
-  if (DROP_HEADING.test(section.heading)) return true;
-  if (DROP_TABLE_HINT.test(section.html) && /<table\b/i.test(section.html)) return true;
+  const heading = section.heading.trim();
+  if (NON_DROP_SECTION_HEADING.test(heading)) return false;
+  if (DROP_HEADING.test(heading)) return true;
+  // Table-hint path: only real drop tables, not Creation/Products GE recipes.
+  if (DROP_TABLE_HINT.test(section.html) && sectionHasDropTable(section.html)) {
+    return true;
+  }
   return false;
 }
 
@@ -307,7 +407,46 @@ function isPreferredDropSection(section: Section): boolean {
   return PREFERRED_DROP_HEADING.test(section.heading);
 }
 
+/**
+ * Preferred unique/always sections plus deeper child headings nested under them
+ * (e.g. Uniques → Weapon and armour table) so they claim DROP_ROW_CAP first.
+ * When a nested child is itself preferred by name (Shard of… table), keep the
+ * ancestor nest level so sibling tables (Devourer's Nexus) stay preferred too.
+ */
+function preferredDropSections(sections: Section[]): Section[] {
+  const out: Section[] = [];
+  let preferUnderLevel: number | null = null;
+  for (const section of sections) {
+    if (isStripSection(section) || !isDropSection(section)) {
+      if (preferUnderLevel !== null && section.level <= preferUnderLevel) {
+        preferUnderLevel = null;
+      }
+      continue;
+    }
+    if (isPreferredDropSection(section)) {
+      out.push(section);
+      // Only open/raise the nest at this section's level when shallower or new.
+      if (preferUnderLevel === null || section.level <= preferUnderLevel) {
+        preferUnderLevel = section.level;
+      }
+      continue;
+    }
+    if (preferUnderLevel !== null && section.level > preferUnderLevel) {
+      out.push(section);
+      continue;
+    }
+    if (preferUnderLevel !== null && section.level <= preferUnderLevel) {
+      preferUnderLevel = null;
+    }
+  }
+  return out;
+}
+
 function isStripSection(section: Section): boolean {
+  // Drop harvest wins: "Normal mode" / "Hard mode" under Drops keep wikitables.
+  if (isDropSection(section)) return false;
+  // Bare mode labels without drop tables are strategy stubs — drop them.
+  if (/^(?:hard|normal)\s+mode$/i.test(section.heading.trim())) return true;
   return STRIP_SECTION_HEADING.test(section.heading);
 }
 
@@ -357,16 +496,159 @@ function cellItemText(cellHtml: string): string {
   return cleanDropItemName(stripTags(cellHtml));
 }
 
-/** Strip wiki drop-cell junk so local icon resolve can hit. */
-export function cleanDropItemName(raw: string): string {
+/**
+ * Strip wiki footnote / citation markers from user-facing text.
+ * We don't render a references section, so [1] / [ 2 ] / [d 3] go nowhere.
+ *
+ * Also heals tag-strip residue: `Fire</b>)` → `Fire )` after stripTags
+ * (TzKal-Zuk meaning parenthetical). Collapse empty italic/lang shells and
+ * space-before-`)` without eating real parenthetical content.
+ */
+export function cleanWikiFootnotes(raw: string): string {
   return decodeEntities(raw)
-    .replace(/\u00a0/g, " ")
-    .replace(/\[(?:edit|citation needed)\]/gi, "")
-    .replace(/\s*\((?:noted|item|drop|untradeable|tradeable)\)\s*/gi, " ")
-    .replace(/\s+noted\b/gi, "")
-    .replace(/\s*[·•]\s*.*$/, "") // trailing meta after bullet
+    .replace(/\u00a0|\u200b|\u200c|\u200d|\ufeff/g, " ")
+    // Drop-rate footnotes: [ d 1 ], [d1], [d 2]
+    .replace(/\[\s*[dD]\s*\d+\s*\]/g, "")
+    // Generic numeric cites: [1], [ 12 ], [3]
+    .replace(/\[\s*\d+\s*\]/g, "")
+    // Letter+number cites: [a], [b 2], [m 1]
+    .replace(/\[\s*[a-zA-Z]\s*\d*\s*\]/g, "")
+    .replace(/\[\s*(?:edit|citation needed|source|note\s*\d*|m\s*\d+)\s*\]/gi, "")
+    // Residual empty brackets / double spaces around punctuation
+    .replace(/\[\s*\]/g, "")
+    .replace(/\s{2,}/g, " ")
+    // Tag-strip leaves spaces at paren edges: "Fire )" / "( meaning"
+    .replace(/\s+([,.;:!?)\]])/g, "$1")
+    .replace(/([(\[])\s+/g, "$1")
+    .replace(/\(\s*\)/g, "")
+    // Empty "meaning …" shell after lang/italic content vanished
+    .replace(/\(\s*meaning\s*\)/gi, "")
+    .replace(/([,.;:])\s*(?=[,.;:])/g, "$1")
     .replace(/\s{2,}/g, " ")
     .trim();
+}
+
+const NOTED_MARK =
+  /(?:\s*\(\s*notes?\s*\)|\s*\(\s*noted\s*\)|\s+noted\b|\s+notes\b)/gi;
+
+/** Detect wiki noted markers in item or quantity text. */
+export function hasNotedMark(raw: string): boolean {
+  return /(?:\(\s*notes?\s*\)|\(\s*noted\s*\)|\bnoted\b|\bnotes\b)/i.test(raw);
+}
+
+/** Strip wiki drop-cell junk so local icon resolve can hit. */
+export function cleanDropItemName(raw: string): string {
+  return cleanWikiFootnotes(
+    decodeEntities(raw)
+      .replace(/\u00a0/g, " ")
+      .replace(NOTED_MARK, " ")
+      .replace(/\s*\((?:item|drop|untradeable|tradeable)\)\s*/gi, " ")
+      .replace(/\s*[·•]\s*.*$/, "") // trailing meta after bullet
+      .replace(/\s{2,}/g, " ")
+      .trim(),
+  );
+}
+
+/** Quantity / rarity cell text — keep rates, kill footnote litter. Never leave "(noted)". */
+export function cleanDropCellText(raw: string): string {
+  return cleanWikiFootnotes(
+    decodeEntities(raw)
+      .replace(/\u00a0/g, " ")
+      .replace(NOTED_MARK, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim(),
+  );
+}
+
+/**
+ * Split quantity cell into clean qty + noted flag.
+ * `"7–12 (noted)"` → `{ quantity: "7–12", noted: true }`.
+ */
+export function parseDropQuantity(raw: string): { quantity: string; noted: boolean } {
+  const noted = hasNotedMark(raw);
+  return { quantity: cleanDropCellText(raw), noted };
+}
+
+/**
+ * Wiki often stubs main tables as a single "Boss loot (normal)" row that links
+ * to a subpage with the real Item/Qty/Rarity table (Vorkath, some EGWD modes).
+ */
+export function isLootContainerItem(item: string): boolean {
+  const t = item.replace(/\s+/g, " ").trim();
+  if (!t) return false;
+  if (/\bloot\s*\(/i.test(t)) return true;
+  if (/\b(?:loot|reward)\s+(?:table|chest|crate|bag|box)\b/i.test(t)) return true;
+  return false;
+}
+
+/**
+ * Prefer normal-mode loot subpages, then hard, then story, then any other shell.
+ * Returns wiki page titles (usually identical to the drop item label).
+ */
+export function pickLootExpandTitles(drops: WikiDropRow[], limit = 1): string[] {
+  const containers = drops.filter((d) => isLootContainerItem(d.item));
+  if (!containers.length) return [];
+
+  const rank = (name: string): number => {
+    if (/\(\s*normal\s*\)/i.test(name)) return 0;
+    if (/\(\s*hard\s*\)/i.test(name)) return 1;
+    if (/\(\s*story\s*\)/i.test(name)) return 2;
+    return 3;
+  };
+
+  const sorted = [...containers].sort((a, b) => {
+    const dr = rank(a.item) - rank(b.item);
+    if (dr !== 0) return dr;
+    return a.item.localeCompare(b.item);
+  });
+
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const row of sorted) {
+    const title = row.item.replace(/\s+/g, " ").trim();
+    const key = title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(title);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+function dropRowKey(row: WikiDropRow): string {
+  return `${row.item.toLowerCase()}\0${row.quantity}\0${row.rarity}\0${row.noted ? 1 : 0}`;
+}
+
+/**
+ * Merge base-page drops with loot-subpage rows. Shell "loot (mode)" rows are
+ * dropped once expansion succeeded so the UI only shows real items.
+ */
+export function mergeExpandedDrops(
+  base: WikiDropRow[],
+  expanded: WikiDropRow[],
+  cap = DROP_ROW_CAP_EXPANDED,
+): WikiDropRow[] {
+  const out: WikiDropRow[] = [];
+  const indexByKey = new Map<string, number>();
+  const push = (row: WikiDropRow) => {
+    if (expanded.length > 0 && isLootContainerItem(row.item)) return;
+    const key = dropRowKey(row);
+    const existing = indexByKey.get(key);
+    if (existing != null) {
+      // Prefer a row that actually has a live inventory icon.
+      const prev = out[existing]!;
+      if (!prev.iconUrl && row.iconUrl) out[existing] = { ...prev, iconUrl: row.iconUrl };
+      return;
+    }
+    if (out.length >= cap) return;
+    indexByKey.set(key, out.length);
+    out.push(row);
+  };
+
+  // Keep base uniques / non-shell rows first (already preferred-ordered).
+  for (const row of base) push(row);
+  for (const row of expanded) push(row);
+  return out;
 }
 
 function rowCellHtmls(rowInner: string): string[] {
@@ -382,10 +664,15 @@ function rowCellHtmls(rowInner: string): string[] {
 /**
  * Parse wikitable drop rows from HTML. Header match: Item|Name,
  * Quantity|Qty, Rarity|Rate|Chance. Caps at 80 unique rows.
+ * Optional `group` is the wiki section heading (presentation metadata).
  */
-export function extractDropRows(html: string): WikiDropRow[] {
+export function extractDropRows(
+  html: string,
+  options?: { group?: string | null },
+): WikiDropRow[] {
   const rows: WikiDropRow[] = [];
   const seen = new Set<string>();
+  const group = options?.group?.replace(/\s+/g, " ").trim() || null;
   const tables = html.match(/<table\b[\s\S]*?<\/table>/gi) ?? [];
 
   for (const table of tables) {
@@ -423,42 +710,50 @@ export function extractDropRows(html: string): WikiDropRow[] {
       if (classifyDropHeader(item) && classifyDropHeader(item) !== "image") continue;
       if (/^(?:always|common|uncommon|rare|very rare|varies)$/i.test(item)) continue;
 
-      const quantity =
-        cols.quantity >= 0
-          ? cleanDropItemName(stripTags(cellHtmls[cols.quantity] ?? ""))
-          : "";
+      const qtyRaw =
+        cols.quantity >= 0 ? stripTags(cellHtmls[cols.quantity] ?? "") : "";
+      const itemCellRaw = stripTags(cellHtmls[cols.item] ?? "");
+      const parsedQty = parseDropQuantity(qtyRaw);
+      // Noted may live on the item cell ("Coins (noted)") or the qty cell.
+      const noted = parsedQty.noted || hasNotedMark(itemCellRaw);
+      const quantity = parsedQty.quantity;
       const rarity =
         cols.rarity >= 0
-          ? cleanDropItemName(stripTags(cellHtmls[cols.rarity] ?? ""))
+          ? cleanDropCellText(stripTags(cellHtmls[cols.rarity] ?? ""))
           : "";
 
-      // Icon: dedicated image column, else any img in the item cell, else first img on the row.
+      // Icon priority: inventory-image column → item cell → other non-meta cells.
       let iconUrl: string | null = null;
-      for (let i = 0; i < cellHtmls.length; i++) {
-        const headerKind =
-          i === cols.item
-            ? "item"
-            : i === cols.quantity
-              ? "quantity"
-              : i === cols.rarity
-                ? "rarity"
-                : null;
-        // Prefer non-qty/rarity cells for icons.
-        if (headerKind === "quantity" || headerKind === "rarity") continue;
-        iconUrl = extractWikiIconFromCell(cellHtmls[i] ?? "");
-        if (iconUrl) break;
+      const tryCell = (cell: string | undefined) => {
+        if (!cell || isMetaDropCell(cell)) return null;
+        return extractWikiIconFromCell(cell);
+      };
+      for (const cell of cellHtmls) {
+        if (isInventoryImageCell(cell)) {
+          iconUrl = tryCell(cell);
+          if (iconUrl) break;
+        }
       }
+      if (!iconUrl) iconUrl = tryCell(cellHtmls[cols.item]);
       if (!iconUrl) {
-        for (const cell of cellHtmls) {
-          iconUrl = extractWikiIconFromCell(cell);
+        for (let i = 0; i < cellHtmls.length; i++) {
+          if (i === cols.quantity || i === cols.rarity) continue;
+          iconUrl = tryCell(cellHtmls[i]);
           if (iconUrl) break;
         }
       }
 
-      const key = `${item.toLowerCase()}\0${quantity}\0${rarity}`;
+      const key = `${item.toLowerCase()}\0${quantity}\0${rarity}\0${noted ? 1 : 0}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      rows.push({ item, quantity, rarity, iconUrl });
+      rows.push({
+        item,
+        quantity,
+        rarity,
+        iconUrl,
+        ...(noted ? { noted: true } : {}),
+        ...(group ? { group } : {}),
+      });
     }
   }
 
@@ -466,16 +761,20 @@ export function extractDropRows(html: string): WikiDropRow[] {
 }
 
 function extractLeadHtml(leadChunk: string): string {
-  const cleaned = stripWikiChrome(leadChunk);
-  // Prefer first paragraphs; drop huge tables from lead
+  // Prefer the image-keeping strip path: full-page stripWikiChrome can mangle
+  // long leads when void <img> tags pair across huge spans.
+  const cleaned = stripWikiChromeKeepImages(leadChunk);
   const texts: string[] = [];
   let total = 0;
   const pRe = /<p\b[^>]*>([\s\S]*?)<\/p>/gi;
   let m: RegExpExecArray | null;
   while ((m = pRe.exec(cleaned)) !== null) {
-    const text = stripTags(m[1]);
+    // Kill cite markers — we have no references panel for [1] to land on.
+    const text = cleanWikiFootnotes(stripTags(m[1]));
     if (text.length < 12) continue;
     if (/^(?:coordinates|released|update)/i.test(text)) continue;
+    // Skip pure hatnote / disambiguation crumbs.
+    if (/^this article is (?:a |about )/i.test(text) && text.length < 80) continue;
     if (total >= LEAD_MAX) break;
     const room = LEAD_MAX - total;
     if (text.length > room) {
@@ -485,14 +784,14 @@ function extractLeadHtml(leadChunk: string): string {
     }
     texts.push(text);
     total += text.length;
-    if (texts.length >= 2) break;
+    if (texts.length >= LEAD_PARAGRAPH_CAP) break;
   }
   if (texts.length) {
     return texts.map((t) => `<p>${escapeText(t)}</p>`).join("");
   }
 
-  // Fallback: plain text slice
-  const text = stripTags(cleaned);
+  // Fallback: plain text slice (still image-free, cites stripped).
+  const text = cleanWikiFootnotes(stripTags(stripWikiChrome(leadChunk)));
   if (!text) return "";
   const sliced = text.length > LEAD_MAX ? `${text.slice(0, LEAD_MAX).trim()}…` : text;
   return sliced ? `<p>${escapeText(sliced)}</p>` : "";
@@ -506,28 +805,53 @@ function escapeText(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Pull label/value pairs from the first infobox-like table in the lead. */
+/** Pull label/value pairs from the first usable infobox-like table. */
 export function extractInfoboxFacts(html: string, limit = 8): WikiFact[] {
   const cleaned = stripWikiChrome(html);
-  const tableMatch = cleaned.match(
-    /<table\b[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i,
-  );
-  if (!tableMatch) return [];
+  // Prefer monster/NPC infoboxes; fall back to any infobox table.
+  const tables =
+    cleaned.match(/<table\b[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/gi) ??
+    [];
+  if (!tables.length) return [];
+
+  const ranked = [...tables].sort((a, b) => {
+    const score = (t: string) =>
+      /infobox-monster|infobox-npc|infobox-boss/i.test(t)
+        ? 0
+        : /infobox/i.test(t)
+          ? 1
+          : 2;
+    return score(a) - score(b);
+  });
 
   const facts: WikiFact[] = [];
-  const rowRe = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
-  let row: RegExpExecArray | null;
-  while ((row = rowRe.exec(tableMatch[1])) !== null) {
-    const cells = row[1];
-    const th = cells.match(/<th\b[^>]*>([\s\S]*?)<\/th>/i);
-    const td = cells.match(/<td\b[^>]*>([\s\S]*?)<\/td>/i);
-    if (!th || !td) continue;
-    const label = stripTags(th[1]).replace(/:$/, "").trim();
-    const value = stripTags(td[1]).trim();
-    if (!label || !value) continue;
-    if (/^(?:image|icon|examine|map)$/i.test(label)) continue;
-    facts.push({ label, value });
-    if (facts.length >= limit) break;
+  const seen = new Set<string>();
+  for (const table of ranked) {
+    const body = table.replace(/^<table\b[^>]*>/i, "").replace(/<\/table>$/i, "");
+    const rowRe = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+    let row: RegExpExecArray | null;
+    while ((row = rowRe.exec(body)) !== null) {
+      const cells = row[1];
+      const th = cells.match(/<th\b[^>]*>([\s\S]*?)<\/th>/i);
+      const td = cells.match(/<td\b[^>]*>([\s\S]*?)<\/td>/i);
+      if (!th || !td) continue;
+      const label = cleanWikiFootnotes(stripTags(th[1]).replace(/:$/, "").trim());
+      let value = cleanWikiFootnotes(stripTags(td[1]).trim());
+      if (!label || !value) continue;
+      if (/^(?:image|icon|examine|map|version|id)$/i.test(label)) continue;
+      if (value.length > 100) continue;
+      if (/\{\s*"/.test(value) || /^\?\s*\(edit\)/i.test(value)) continue;
+      // Collapse multi-value junk from switch infoboxes.
+      if (/&&SPLITPOINT&&/.test(value)) {
+        value = value.split("&&SPLITPOINT&&")[0]?.trim() ?? value;
+      }
+      const key = label.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      facts.push({ label, value });
+      if (facts.length >= limit) return facts;
+    }
+    if (facts.length >= 3) break;
   }
   return facts;
 }
@@ -582,34 +906,69 @@ export function processWikiHtml(
   const { lead: leadWithImgs, sections: sectionsWithImgs } =
     extractSections(withImages);
 
-  const preferredDropHtml: string[] = [];
+  // Preferred unique sections + nested child tables first (Uniques → weapon table).
+  const preferredSections = preferredDropSections(sectionsWithImgs);
+  const preferredSet = new Set(preferredSections);
+  const preferredDropHtml: string[] = preferredSections.map((s) => s.html);
   const otherDropHtml: string[] = [];
   for (const section of sectionsWithImgs) {
-    if (isStripSection(section)) continue;
-    if (!isDropSection(section)) continue;
-    if (isPreferredDropSection(section)) preferredDropHtml.push(section.html);
-    else otherDropHtml.push(section.html);
+    if (isStripSection(section) || !isDropSection(section)) continue;
+    if (preferredSet.has(section)) continue;
+    otherDropHtml.push(section.html);
   }
   const leadDropTables: string[] = [];
   if (
     !preferredDropHtml.length &&
     !otherDropHtml.length &&
     DROP_TABLE_HINT.test(leadWithImgs) &&
-    /<table\b/i.test(leadWithImgs)
+    sectionHasDropTable(leadWithImgs)
   ) {
     for (const table of leadWithImgs.match(/<table\b[\s\S]*?<\/table>/gi) ?? []) {
-      if (DROP_TABLE_HINT.test(table)) leadDropTables.push(table);
+      if (DROP_TABLE_HINT.test(table) && sectionHasDropTable(table)) {
+        leadDropTables.push(table);
+      }
     }
   }
 
-  // Preferred (unique/main/always) first so the 80-row cap keeps them + icons.
-  const drops = extractDropRows(
-    [...preferredDropHtml, ...otherDropHtml, ...leadDropTables].join("\n"),
-  );
+  // Preferred (unique/main/always + nested chase tables) first so DROP_ROW_CAP
+  // keeps uniques before potions/supplies fill the budget.
+  // Harvest per section so `group` carries the wiki heading for presentation.
+  const drops: WikiDropRow[] = [];
+  const seenDrop = new Set<string>();
+  const pushSectionRows = (html: string, group: string | null) => {
+    for (const row of extractDropRows(html, { group })) {
+      if (drops.length >= DROP_ROW_CAP) return;
+      const key = `${row.item.toLowerCase()}\0${row.quantity}\0${row.rarity}\0${row.noted ? 1 : 0}`;
+      if (seenDrop.has(key)) continue;
+      seenDrop.add(key);
+      drops.push(row);
+    }
+  };
+  for (const section of preferredSections) {
+    pushSectionRows(section.html, section.heading);
+  }
+  for (const section of sectionsWithImgs) {
+    if (isStripSection(section) || !isDropSection(section)) continue;
+    if (preferredSet.has(section)) continue;
+    pushSectionRows(section.html, section.heading);
+  }
+  for (const table of leadDropTables) {
+    pushSectionRows(table, null);
+  }
+  // Fallback if section classifiers missed tables but blobs still hold them.
+  if (!drops.length) {
+    pushSectionRows(
+      [...preferredDropHtml, ...otherDropHtml, ...leadDropTables].join("\n"),
+      null,
+    );
+  }
 
   // Display path: strip all images from prose / fallback HTML.
+  // Facts + lead from the image-keeping pass — stripWikiChrome can mangle long
+  // leads / multi-infobox pages when void <img> tags pair across huge spans.
+  const facts = extractInfoboxFacts(withImages);
+  const leadHtml = extractLeadHtml(leadWithImgs);
   const base = stripWikiChrome(raw);
-  const facts = extractInfoboxFacts(base);
   const { lead, sections } = extractSections(base);
 
   const dropParts: string[] = [];
@@ -623,28 +982,34 @@ export function processWikiHtml(
     bodyParts.push(sectionBlock(section));
   }
 
-  if (!dropParts.length && DROP_TABLE_HINT.test(lead) && /<table\b/i.test(lead)) {
+  if (!dropParts.length && DROP_TABLE_HINT.test(lead) && sectionHasDropTable(lead)) {
     for (const table of lead.match(/<table\b[\s\S]*?<\/table>/gi) ?? []) {
-      if (DROP_TABLE_HINT.test(table)) dropParts.push(cleanFragment(table));
+      if (DROP_TABLE_HINT.test(table) && sectionHasDropTable(table)) {
+        dropParts.push(cleanFragment(table));
+      }
     }
   }
 
   let dropsHtml = clampHtml(dropParts.join("\n"), DROPS_HTML_MAX);
   let bodyHtml = clampHtml(bodyParts.join("\n"), BODY_HTML_MAX);
-  const leadHtml = extractLeadHtml(lead);
 
   dropsHtml = dropsHtml.replace(/^(?:\s|<br\s*\/?>)*$/, "");
   bodyHtml = bodyHtml.replace(/^(?:\s|<br\s*\/?>)*$/, "");
 
+  // Structured rows only — never flash empty drops chrome for Creation /
+  // Item sources / Rewards prose when extractDropRows returned nothing.
+  const hasDrops = drops.length > 0;
+
   return {
-    title: meta.title,
+    // Decode here so callers need not rely on API-route displayTitle() alone.
+    title: decodeHtmlEntities(meta.title),
     pageUrl: meta.pageUrl,
     leadHtml,
     facts,
     drops,
-    dropsHtml,
+    dropsHtml: hasDrops ? dropsHtml : "",
     bodyHtml,
-    hasDrops: Boolean(drops.length || dropsHtml.trim()),
+    hasDrops,
   };
 }
 
@@ -665,6 +1030,7 @@ export function absolutizeWikiHrefs(html: string): string {
 export function finalizeArticleHtml(view: WikiArticleView): WikiArticleView {
   return {
     ...view,
+    title: decodeHtmlEntities(view.title),
     drops: (view.drops ?? []).map((row) => ({
       ...row,
       iconUrl: absolutizeWikiIconUrl(row.iconUrl) ?? null,

@@ -95,7 +95,7 @@ test("geometry debug mode renders the boundaries it is there to prove", async ({
 test("the board still plans regions with every 3D layer switched off", async ({ page }) => {
   // The layers are independent by design; losing one must not take the planner
   // with it. This is also the cheapest smoke test for the flag plumbing.
-  const mode = await openBoard(page, "/map?no=water,vines,relief,markers,bloom");
+  const mode = await openBoard(page, "/map?no=water,relief,markers,bloom");
   test.skip(mode === "fallback", "no WebGPU in this browser");
   await expect(page.getByRole("button", { name: /^Kandarin/ })).toBeVisible();
   expect(await paletteSize(page)).toBeGreaterThan(100);

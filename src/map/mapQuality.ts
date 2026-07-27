@@ -9,7 +9,7 @@
  *
  *   /map?debugGeometry=1   plate outlines, seams, anchors, region ids
  *   /map?topDown=1         lock the camera overhead, for comparing with the raster
- *   /map?no=water,vines     drop layers (water · vines · relief · markers · bloom)
+ *   /map?no=water,relief,markers,bloom
  *   /map?wireframe=1
  */
 
@@ -18,7 +18,6 @@ export interface MapFlags {
   topDown: boolean;
   wireframe: boolean;
   water: boolean;
-  vines: boolean;
   relief: boolean;
   markers: boolean;
   bloom: boolean;
@@ -29,7 +28,6 @@ const DEFAULTS: MapFlags = {
   topDown: false,
   wireframe: false,
   water: true,
-  vines: true,
   relief: true,
   markers: true,
   bloom: true,
@@ -47,7 +45,6 @@ export function mapFlags(): MapFlags {
     topDown: params.get("topDown") === "1",
     wireframe: params.get("wireframe") === "1",
     water: !off.has("water"),
-    vines: !off.has("vines"),
     relief: !off.has("relief"),
     markers: !off.has("markers"),
     bloom: !off.has("bloom"),

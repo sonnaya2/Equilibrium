@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { ResearchRegion } from "@/research/catalog";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
@@ -9,6 +9,10 @@ import {
   presentInterestName,
 } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
+import {
+  DataTableOrganizeBar,
+  useDataTableOrganize,
+} from "./DataTableOrganize";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 export type ResearchRow = Record<string, unknown>;
@@ -934,7 +938,7 @@ export function ResearchSection({
   const blurb = (selected?.description ?? "").trim();
   const lead = (intro ?? "").trim();
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const regionalRows = selected.rows.filter((row) => researchRowMatchesRegion(row, selectedRegion));
     if (!needle) return regionalRows;
@@ -953,6 +957,22 @@ export function ResearchSection({
     });
   }, [query, selected, selectedRegion]);
 
+  const labelOf = useCallback((row: ResearchRow) => researchRowTitle(row), []);
+  const typeOf = useCallback(
+    (row: ResearchRow) =>
+      String(row.category || row.kind || row.recordType || row.type || "—").trim() || "—",
+    [],
+  );
+  const {
+    dir,
+    toggleDir,
+    typeOptions,
+    activeTypes,
+    toggleType,
+    clearTypes,
+    organized: rows,
+  } = useDataTableOrganize({ rows: filtered, labelOf, typeOf });
+
   return (
     <section className="data-record-view">
       <DataViewHeader
@@ -966,6 +986,14 @@ export function ResearchSection({
           placeholder={searchPlaceholder}
           aria-label={searchLabel}
           className="field-inset data-view-search"
+        />
+        <DataTableOrganizeBar
+          dir={dir}
+          onToggleDir={toggleDir}
+          typeOptions={typeOptions}
+          activeTypes={activeTypes}
+          onToggleType={toggleType}
+          onClearTypes={clearTypes}
         />
       </DataViewHeader>
 

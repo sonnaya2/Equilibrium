@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   getAllRegionalUniqueDrops,
   getArchaeologyCombatRelics,
@@ -18,6 +18,10 @@ import {
   presentInterestName,
 } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
+import {
+  DataTableOrganizeBar,
+  useDataTableOrganize,
+} from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 import { PROGRESSION_SYSTEM_TABS } from "./ProgressionSystemsResearch";
@@ -294,7 +298,7 @@ export function ProgressionResearch() {
   const [section, setSection] = useState("combat_training_spots");
   const [query, setQuery] = useState("");
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const source = rowsFor(section).filter((row) => researchRowMatchesRegion(row, selectedRegion));
     if (!needle) return source;
@@ -311,6 +315,25 @@ export function ProgressionResearch() {
       return hay.includes(needle);
     });
   }, [query, section, selectedRegion]);
+  const labelOf = useCallback((row: Row) => rowTitle(row), []);
+  const typeOf = useCallback(
+    (row: Row) =>
+      humanString(row.category) ||
+      humanString(row.kind) ||
+      humanString(row.recordType) ||
+      humanString(row.skill) ||
+      "—",
+    [],
+  );
+  const {
+    dir,
+    toggleDir,
+    typeOptions,
+    activeTypes,
+    toggleType,
+    clearTypes,
+    organized: rows,
+  } = useDataTableOrganize({ rows: filtered, labelOf, typeOf });
   const sectionLabel = SECTIONS.find((item) => item.key === section)?.label ?? "Progression";
 
   return (
@@ -326,6 +349,14 @@ export function ProgressionResearch() {
           placeholder="Search"
           aria-label="Search progression"
           className="field-inset data-view-search"
+        />
+        <DataTableOrganizeBar
+          dir={dir}
+          onToggleDir={toggleDir}
+          typeOptions={typeOptions}
+          activeTypes={activeTypes}
+          onToggleType={toggleType}
+          onClearTypes={clearTypes}
         />
       </DataViewHeader>
 

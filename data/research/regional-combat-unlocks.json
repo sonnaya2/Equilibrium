@@ -2817,34 +2817,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
     },
     {
-      "id": "asgarnia:luck-of-the-dwarves-combat",
-      "name": "Luck of the Dwarves (combat luck ring)",
-      "recordType": "equipment",
-      "category": "luck ring with combat/drop relevance",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Combat-adjacent permanent unlock: improves acquisition rate of other BiS rows rather than worn DPS. Prefer reaver/stalker for damage slots. · Asgarnia owns the classic dwarf luck progression geography. · Effects: Tier-4 luck for rare drop tables, Combat-relevant for farming BiS uniques faster, not a direct DPS ring · Unlocks: Luck of the Dwarves",
-      "requirements": [
-        "Asgarnia dwarf infrastructure (Lava Flow Mine / Motherlode Maw / related luck ring progression)",
-        "Ring of fortune → luck of the dwarves upgrade path"
-      ],
-      "confidence": "confirmed_wiki_region_inferred_asgarnia_dwarf_content",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Luck_of_the_dwarves",
-        "title": "Luck of the Dwarves (combat luck ring)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
-    },
-    {
       "id": "cross-region:essence-of-finality",
       "name": "Essence of Finality amulet",
       "recordType": "equipment",

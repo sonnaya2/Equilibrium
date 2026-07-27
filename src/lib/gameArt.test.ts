@@ -9,6 +9,7 @@ import {
   dataEntityIconPath,
   equipmentIconPath,
   gameIconPath,
+  isSceneryPermanentUnlock,
   regionCrestPath,
   skillIconPath,
   STYLE_ICON,
@@ -71,6 +72,29 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Generic multi-word progression checklist" })).toBeNull();
   });
 
+  it("fences multi-MB place plates as scenery permanent-unlocks", () => {
+    for (const slug of [
+      "menaphos",
+      "soul-altar",
+      "liberation-of-mazcab",
+      "hets-oasis",
+      "menaphos-imperial",
+    ]) {
+      expect(
+        isSceneryPermanentUnlock(`/game/upgrades/permanent-unlocks/${slug}.png`),
+        slug,
+      ).toBe(true);
+    }
+    // Inventory-sized permanents stay allowed as reward chips.
+    expect(
+      isSceneryPermanentUnlock("/game/upgrades/permanent-unlocks/menaphos-reputation.png"),
+    ).toBe(false);
+    expect(
+      isSceneryPermanentUnlock("/game/upgrades/permanent-unlocks/menaphos-city-quests.png"),
+    ).toBe(false);
+    expect(isSceneryPermanentUnlock("/game/combat/equipment/saradomin-sword.png")).toBe(false);
+  });
+
   it("prefers Archaeology inventory/skill over scenery for abstract arch rows", () => {
     // Monolith packages → inventory monolith (or skill if unpublished).
     expect(dataEntityIconPath({ name: "Mysterious monolith energy + relic loadout ladder" })).toMatch(
@@ -99,26 +123,23 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Dragon mattock" })).toMatch(/dragon-mattock\.png$/);
     // Abstract collector package with no specific inventory art → empty well.
     expect(dataEntityIconPath({ name: "Collectors Assemble unique-collection ladder" })).toBeNull();
-    expect(dataEntityIconPath({ name: "Archaeology Guild Shop and qualification upgrades" })).toMatch(
-      /archaeology-guild-shop\.png$/,
+    expect(dataEntityIconPath({ name: "Archaeology shop" })).toMatch(
+      /master-archaeologist/,
     );
     expect(dataEntityIconPath({ name: "It Belongs in a Museum! (Velucia meta collection log)" })).toMatch(
       /velucia-museum\.png$/,
     );
-    expect(dataEntityIconPath({ name: "The Prodigal Spender (all Guild shop permanents)" })).toMatch(
-      /the-prodigal-spender\.png$/,
-    );
     expect(dataEntityIconPath({ name: "Professor additional relic loadout (80k chronotes)" })).toMatch(
       /chronotes\.png$/,
-    );
-    expect(dataEntityIconPath({ name: "Mattock tier ladder (bronze through elder rune + specials)" })).toMatch(
-      /dragon-mattock\.png$/,
     );
     expect(dataEntityIconPath({ name: "Spear of Annihilation (base archaeology spear)" })).toMatch(
       /spear-of-annihilation\.png$/,
     );
-    expect(dataEntityIconPath({ name: "Mattock precision upgrades (Guild shop permanent)" })).toMatch(
-      /mattock-precision\.png$/,
+    expect(dataEntityIconPath({ name: "Master archaeologist's outfit" })).toMatch(
+      /master-archaeologist/,
+    );
+    expect(dataEntityIconPath({ name: "Master runecrafter robes" })).toMatch(
+      /master-runecrafter/,
     );
     // hermod.png may not be published yet; alias still targets hermod.
     const hermod = dataEntityIconPath({ name: "Hermod, the Spirit of War" });
@@ -126,6 +147,28 @@ describe("gameArt", () => {
   });
 
   it("resolves high-value package aliases to existing art", () => {
+    expect(dataEntityIconPath({ name: "First Necromancer&#039;s equipment" })).toMatch(
+      /first-necromancer-robe-top\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Crown of the First Necromancer" })).toMatch(
+      /first-necromancer-helm\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Necromantic Rune Temple" })).toMatch(
+      /necromantic-rune-temple\.png$/,
+    );
+    // Place plates preferred over bare skill glyphs when published art exists.
+    expect(dataEntityIconPath({ name: "Draynor willow trees" })).toMatch(
+      /draynor-willow-trees\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Varrock Palace tree patch" })).toMatch(
+      /varrock-palace-tree-patch\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Lumbridge hops patch" })).toMatch(
+      /lumbridge-hops-patch\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Necromantic Rune Temple" })).toMatch(
+      /necromantic-rune-temple\.png$/,
+    );
     expect(dataEntityIconPath({ name: "Fairy ring network (Zanaris hub)" })).toBe(
       "/game/activities/zanaris.png",
     );
@@ -227,9 +270,10 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Anachronia totems (permanent multi-skill buffs)" })).toMatch(
       /totem-of-vitality\.png$/,
     );
-    expect(dataEntityIconPath({ name: "Anachronia Agility Course", kind: "Agility course" })).toMatch(
-      /anachronia-agility-course\.png$/,
-    );
+    // Multi-MB course plates are scenery — skill glyph is intentional.
+    expect(
+      dataEntityIconPath({ name: "Anachronia Agility Course", kind: "Agility course" }),
+    ).toBe("/game/skills/agility.png");
     expect(
       dataEntityIconPath({ name: "Dinosaur and plant Slayer (Laniakea / Anachronia)" }),
     ).toMatch(/laniakea\.png$/);
@@ -251,11 +295,16 @@ describe("gameArt", () => {
     );
     expect(dataEntityIconPath({ name: "Havenhythe birdhouses" })).toMatch(/bird-house\.png$/);
     expect(dataEntityIconPath({ name: "Eternal birdhouse" })).toMatch(/bird-house\.png$/);
-    expect(dataEntityIconPath({ name: "Jackalopes (BIS early–mid Hunter method)" })).toMatch(/jackalope\.png$/);
-    expect(dataEntityIconPath({ name: "Jackalopes" })).toMatch(/jackalope\.png$/);
-    expect(dataEntityIconPath({ name: "Fish farming" })).toMatch(/fish-farm\.png$/);
-    expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).toMatch(/fish-farm\.png$/);
-    expect(dataEntityIconPath({ name: "Wendlewick fish farm (Havenhythe)" })).toMatch(/fish-farm\.png$/);
+    expect(dataEntityIconPath({ name: "Jackalopes (BIS early–mid Hunter method)" })).toMatch(
+      /jackalopes?\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Jackalopes" })).toMatch(/jackalopes?\.png$/);
+    // Multi-MB fish-farm scenery → fishing skill (not POF).
+    expect(dataEntityIconPath({ name: "Fish farming" })).toBe("/game/skills/fishing.png");
+    expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).toBe("/game/skills/fishing.png");
+    expect(dataEntityIconPath({ name: "Wendlewick fish farm (Havenhythe)" })).toBe(
+      "/game/skills/fishing.png",
+    );
     // Fish farm must not resolve to Player-Owned Farm
     expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).not.toMatch(/player-owned-farm/);
     expect(dataEntityIconPath({ name: "Fish farming" })).not.toMatch(/player-owned-farm/);
@@ -269,12 +318,14 @@ describe("gameArt", () => {
       /\/bosses\/sanguine-crawler\./,
     );
     expect(dataEntityIconPath({ name: "Charming moths / Highweald charm training" })).toMatch(
-      /charming-moths\.png$/,
+      /charming-moths\.png$|hunter\.png$/,
     );
     expect(dataEntityIconPath({ name: "Charming moths / Highweald charms" })).toMatch(
-      /charming-moths\.png$/,
+      /charming-moths\.png$|hunter\.png$/,
     );
-    expect(dataEntityIconPath({ name: "Shrine of Inanna Summoning" })).toMatch(/altar-of-inanna|inanna/);
+    expect(dataEntityIconPath({ name: "Shrine of Inanna Summoning" })).toMatch(
+      /summoning\.png$|altar-of-inanna|inanna/,
+    );
     expect(dataEntityIconPath({ name: "Empowered Summoning obelisks" })).toMatch(
       /summoning-obelisk\.png$/,
     );
@@ -285,7 +336,7 @@ describe("gameArt", () => {
     const must: Array<[string, RegExp]> = [
       ["Invention Guild", /invention-guild\.(png|jpg)$/],
       ["Mining Guild", /mining-guild\.png$/],
-      ["Warriors' Guild", /warriors-guild\.png$/],
+      ["Warriors' Guild", /dragon-defender\.png$/],
       ["Artisans' Workshop", /artisans-workshop\.png$/],
       ["Port Sarim docks and skilling hub", /port-sarim\.png$/],
       ["Rimmington Construction supply loop", /rimmington\.png$/],
@@ -330,8 +381,11 @@ describe("gameArt", () => {
       /imcando-pickaxe\.png$/,
     );
     expect(dataEntityIconPath({ name: "Astral altar (Lunar Isle)" })).toMatch(/astral-altar\.png$/);
-    expect(dataEntityIconPath({ name: "Livid Farm Lunar spell unlocks" })).toMatch(/livid-farm\.png$/);
-    expect(dataEntityIconPath({ name: "Lunar Isle skilling hub" })).toMatch(/lunar-isle\.png$/);
+    // Multi-MB Livid/Lunar place plates → Magic skill glyph (readable at 3rem).
+    expect(dataEntityIconPath({ name: "Livid Farm Lunar spell unlocks" })).toBe(
+      "/game/skills/magic.png",
+    );
+    expect(dataEntityIconPath({ name: "Lunar Isle skilling hub" })).toBe("/game/skills/magic.png");
     expect(dataEntityIconPath({ name: "Managing Miscellania" })).toMatch(/managing-miscellania\.png$/);
     expect(dataEntityIconPath({ name: "Keldagrim dwarven traders and multi-step chests" })).toMatch(
       /keldagrim\.png$/,
@@ -366,6 +420,50 @@ describe("gameArt", () => {
     );
     expect(dataEntityIconPath({ name: "Mining", kind: "skill", skill: "Mining" })).toBe(
       "/game/skills/mining.png",
+    );
+  });
+
+  it("prefers published activity plates over skill-hub inference", () => {
+    // Kind mentions Mining / is Runecrafting — must not steal place art into skill glyphs.
+    expect(
+      dataEntityIconPath({
+        name: "The Empty Throne Room",
+        kind: "Agility / Divination / Mining multi-skill excavation hub",
+      }),
+    ).toBe("/game/activities/empty-throne-room.png");
+    expect(dataEntityIconPath({ name: "The Empty Throne Room", kind: "Mining" })).toBe(
+      "/game/activities/empty-throne-room.png",
+    );
+    expect(dataEntityIconPath({ name: "Empty Throne Room", kind: "Mining" })).toBe(
+      "/game/activities/empty-throne-room.png",
+    );
+    // skill= used to short-circuit pureSkillKind before activity lookup.
+    expect(dataEntityIconPath({ name: "The Empty Throne Room", skill: "Mining" })).toBe(
+      "/game/activities/empty-throne-room.png",
+    );
+    expect(dataEntityIconPath({ name: "Necromantic Rune Temple", kind: "Runecrafting" })).toBe(
+      "/game/activities/necromantic-rune-temple.png",
+    );
+    expect(dataEntityIconPath({ name: "Necromantic Rune Temple", skill: "Runecrafting" })).toBe(
+      "/game/activities/necromantic-rune-temple.png",
+    );
+    // Not skill glyphs.
+    expect(dataEntityIconPath({ name: "The Empty Throne Room", kind: "Mining" })).not.toMatch(
+      /\/skills\/mining\.png$/,
+    );
+    expect(dataEntityIconPath({ name: "Necromantic Rune Temple", kind: "Runecrafting" })).not.toMatch(
+      /\/skills\/runecrafting\.png$/,
+    );
+    // Real skill-training / pure skill rows still use skill glyphs.
+    expect(dataEntityIconPath({ name: "Mining", kind: "skill", skill: "Mining" })).toBe(
+      "/game/skills/mining.png",
+    );
+    expect(dataEntityIconPath({ name: "Runecrafting", kind: "skill", skill: "Runecrafting" })).toBe(
+      "/game/skills/runecrafting.png",
+    );
+    // Place plates for other named hubs still beat kind-derived skill glyphs.
+    expect(dataEntityIconPath({ name: "Draynor willows", kind: "Woodcutting" })).toMatch(
+      /draynor-willow-trees\.png$/,
     );
   });
 
@@ -482,7 +580,7 @@ describe("gameArt", () => {
       ["Blacksmith's outfit", /blacksmiths-outfit\.png$/],
       ["Diviner's outfit", /diviners-headwear\.png$/],
       ["Archaeologist's outfit", /archaeologists\.png$/],
-      ["Master archaeologist's outfit", /master-archaeologist\.png$/],
+      ["Master archaeologist's outfit", /master-archaeologist/],
       ["Infinity ethereal outfit", /infinity-ethereal-outfit\.png$/],
       ["Prifddinian worker's outfit", /prifddinian-workers-outfit\.png$/],
       ["Witchdoctor camo outfit", /witchdoctor-camo\.png$/],

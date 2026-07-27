@@ -44,6 +44,14 @@ export function mapToUv([x, y]: MapXY): readonly [number, number] {
   ];
 }
 
+/**
+ * Anchor / place UV → shader map UV (matches `mapUvFrom` in materials/shared).
+ * Anchor v increases south; the shader flips v for flipY textures.
+ */
+export function anchorUvToShader([u, v]: readonly [number, number]): readonly [number, number] {
+  return [u, 1 - v];
+}
+
 export function uvToMap([u, v]: readonly [number, number]): MapXY {
   return [
     MAP_BOUNDS.minX + u * MAP_IMAGE.width,
@@ -61,7 +69,7 @@ const region = (
 export const REGION_ANCHORS: readonly RegionAnchor[] = [
   region("misthalin", "Misthalin", [3220, 3350], 0.95),
   region("havenhythe", "Havenhythe", [4270, 3340], 1),
-  region("karamja", "Karamja", [2850, 3000], 0.9),
+  region("karamja", "Karamja", [2860, 3080], 0.9),
   region("asgarnia", "Asgarnia", [2960, 3440], 0.95),
   region("kandarin", "Kandarin", [2600, 3370], 1),
   region("fremennik", "Fremennik Province", [2720, 3680], 0.9),

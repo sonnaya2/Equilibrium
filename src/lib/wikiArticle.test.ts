@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  cleanWikiFootnotes,
   extractDropRows,
   extractInfoboxFacts,
+  finalizeArticleHtml,
+  isLootContainerItem,
+  mergeExpandedDrops,
+  pickLootExpandTitles,
   processWikiHtml,
   safeWikiPage,
   stripWikiChrome,
@@ -173,6 +178,7 @@ describe("extractDropRows", () => {
         quantity: "1",
         rarity: "Very rare",
         iconUrl: null,
+        noted: true,
       },
     ]);
   });
@@ -205,6 +211,30 @@ describe("extractDropRows", () => {
     expect(rows[1]?.iconUrl).toBe(
       "https://runescape.wiki/images/thumb/Foo.png/30px-Foo.png",
     );
+  });
+
+  it("prefers inventory-image cell and skips alchemy chrome icons", () => {
+    const html = `
+      <table class="wikitable">
+        <tr><th></th><th>Item</th><th>Quantity</th><th>Rarity</th><th class="alch-column">High Alch</th></tr>
+        <tr>
+          <td class="inventory-image">
+            <img src="/images/Gold_charm.png?ad20e" width="32" height="29" />
+          </td>
+          <td class="item-col"><a href="/w/Gold_charm" title="Gold charm">Gold charm</a></td>
+          <td>5</td>
+          <td>Common</td>
+          <td class="alch-column">
+            <img src="/images/thumb/High_Level_Alchemy_icon.png/20px-High_Level_Alchemy_icon.png" />
+            100
+          </td>
+        </tr>
+      </table>`;
+    const rows = extractDropRows(html);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.item).toBe("Gold charm");
+    expect(rows[0]?.iconUrl).toBe("https://runescape.wiki/images/Gold_charm.png?ad20e");
+    expect(rows[0]?.iconUrl).not.toMatch(/Alchemy/i);
   });
 
   it("processWikiHtml keeps drop icons even though body strip removes imgs", () => {
@@ -244,6 +274,152 @@ describe("extractDropRows", () => {
       </table>`;
     expect(extractDropRows(html)).toHaveLength(80);
   });
+
+  it("strips [ d N ] footnote markers from rarity cells", () => {
+    const html = `
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Resonant anima of Wen</td><td>30–50</td><td>3 × Always [ d 1 ]</td></tr>
+        <tr><td>Elder Trove (Wen, T1)</td><td>1</td><td>Varies [ d 2 ] [ d 3 ] [ d 4 ]</td></tr>
+      </table>`;
+    expect(extractDropRows(html)).toEqual([
+      {
+        item: "Resonant anima of Wen",
+        quantity: "30–50",
+        rarity: "3 × Always",
+        iconUrl: null,
+      },
+      {
+        item: "Elder Trove (Wen, T1)",
+        quantity: "1",
+        rarity: "Varies",
+        iconUrl: null,
+      },
+    ] satisfies WikiDropRow[]);
+  });
+
+  it("flags noted drops and strips (noted) from quantity text", () => {
+    const html = `
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Crushed nest</td><td>7–12 (noted)</td><td>Common</td></tr>
+        <tr><td>Coins (noted)</td><td>100</td><td>Always</td></tr>
+      </table>`;
+    expect(extractDropRows(html)).toEqual([
+      {
+        item: "Crushed nest",
+        quantity: "7–12",
+        rarity: "Common",
+        iconUrl: null,
+        noted: true,
+      },
+      {
+        item: "Coins",
+        quantity: "100",
+        rarity: "Always",
+        iconUrl: null,
+        noted: true,
+      },
+    ] satisfies WikiDropRow[]);
+  });
+
+  it("attaches optional section group when provided", () => {
+    const html = `
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Scripture of Wen</td><td>1</td><td>Rare</td></tr>
+      </table>`;
+    expect(extractDropRows(html, { group: "Unique (5 mechanics)" })[0]).toEqual({
+      item: "Scripture of Wen",
+      quantity: "1",
+      rarity: "Rare",
+      iconUrl: null,
+      group: "Unique (5 mechanics)",
+    });
+  });
+});
+
+describe("cleanWikiFootnotes", () => {
+  it("removes spaced drop footnotes", () => {
+    expect(cleanWikiFootnotes("Varies [ d 2 ] [ d 3 ]")).toBe("Varies");
+  });
+
+  it("strips dead wiki citation markers from prose", () => {
+    expect(
+      cleanWikiFootnotes(
+        'the Glacor Front. [ 1 ] Like Kerapac, the bound. Hardcore Ironmen [ 2 ]; hard mode. [ 3 ]',
+      ),
+    ).toBe(
+      "the Glacor Front. Like Kerapac, the bound. Hardcore Ironmen; hard mode.",
+    );
+    expect(cleanWikiFootnotes("Always [1]")).toBe("Always");
+  });
+});
+
+describe("loot container expansion", () => {
+  it("detects shell loot rows and prefers normal mode", () => {
+    expect(isLootContainerItem("Zemouregal & Vorkath loot (normal)")).toBe(true);
+    expect(isLootContainerItem("Vorkath's spike")).toBe(false);
+    expect(
+      pickLootExpandTitles([
+        {
+          item: "Zemouregal & Vorkath loot (story)",
+          quantity: "1",
+          rarity: "Always",
+        },
+        {
+          item: "Zemouregal & Vorkath loot (hard)",
+          quantity: "1",
+          rarity: "Always",
+        },
+        {
+          item: "Zemouregal & Vorkath loot (normal)",
+          quantity: "1",
+          rarity: "Always",
+        },
+        {
+          item: "Vorkath's scale",
+          quantity: "1",
+          rarity: "1/150",
+        },
+      ]),
+    ).toEqual(["Zemouregal & Vorkath loot (normal)"]);
+  });
+
+  it("merges expanded subpage rows and drops shell containers", () => {
+    const merged = mergeExpandedDrops(
+      [
+        {
+          item: "Vorkath's scale",
+          quantity: "1",
+          rarity: "1/150",
+          group: "Unique rewards",
+        },
+        {
+          item: "Zemouregal & Vorkath loot (normal)",
+          quantity: "1",
+          rarity: "Always",
+          group: "Rewards",
+        },
+      ],
+      [
+        {
+          item: "Coins",
+          quantity: "1000–5000",
+          rarity: "Common",
+          group: "Common drops",
+        },
+        {
+          item: "Vorkath's scale",
+          quantity: "1",
+          rarity: "1/150",
+          group: "Rare drops",
+        },
+      ],
+    );
+    expect(merged.map((r) => r.item)).toEqual(["Vorkath's scale", "Coins"]);
+    expect(merged.some((r) => /loot\s*\(/i.test(r.item))).toBe(false);
+  });
 });
 
 describe("processWikiHtml", () => {
@@ -251,6 +427,19 @@ describe("processWikiHtml", () => {
     title: "Test Boss",
     pageUrl: "https://runescape.wiki/w/Test_Boss",
   };
+
+  it("decodes HTML entities on article title without relying on the API route", () => {
+    const view = processWikiHtml("<p>Lead.</p>", {
+      title: "Kree&#039;arra",
+      pageUrl: "https://runescape.wiki/w/Kree%27arra",
+    });
+    expect(view.title).toBe("Kree'arra");
+    const finalized = finalizeArticleHtml({
+      ...view,
+      title: "Artisans&#039; Workshop",
+    });
+    expect(finalized.title).toBe("Artisans' Workshop");
+  });
 
   it("promotes drop sections and caps lead waffle", () => {
     const long =
@@ -278,9 +467,17 @@ describe("processWikiHtml", () => {
     expect(view.dropsHtml).toMatch(/Coin|Rarity|Always/i);
     expect(view.dropsHtml).not.toMatch(/<img/i);
     expect(view.bodyHtml).not.toMatch(/Strategy|Trivia|sandwich/i);
-    expect(stripTagsApprox(view.leadHtml).length).toBeLessThanOrEqual(560);
+    // Fuller lead fills the modal hero; still bounded (LEAD_MAX ≈ 1600).
+    expect(stripTagsApprox(view.leadHtml).length).toBeLessThanOrEqual(1700);
+    expect(stripTagsApprox(view.leadHtml).length).toBeGreaterThan(100);
     expect(view.drops).toEqual([
-      { item: "Coin", quantity: "1", rarity: "Always", iconUrl: null },
+      {
+        item: "Coin",
+        quantity: "1",
+        rarity: "Always",
+        iconUrl: null,
+        group: "Drops",
+      },
     ]);
   });
 
@@ -304,13 +501,87 @@ describe("processWikiHtml", () => {
       quantity: "1",
       rarity: "Very rare",
       iconUrl: null,
+      group: "Unique drops",
     });
     expect(view.drops).toContainEqual({
       item: "Bones",
       quantity: "1",
       rarity: "Always",
       iconUrl: null,
+      group: "Drops",
     });
+  });
+
+  it("prefers bare Uniques + nested weapon/shard tables before commons fill the cap", () => {
+    // Amascut-shaped outline: Commons child tables first in document order,
+    // then Uniques with weapon/shard children. Cap is 80 — without preferred
+    // ordering, potions alone would crowd out chase uniques.
+    const potionRows = Array.from(
+      { length: 90 },
+      (_, i) => `<tr><td>Potion ${i}</td><td>1</td><td>Common</td></tr>`,
+    ).join("");
+    const html = `
+      <h2>Drops</h2>
+      <h3>Commons</h3>
+      <h4>Potions table</h4>
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        ${potionRows}
+      </table>
+      <h3>Uniques</h3>
+      <p>Chase items from the boss.</p>
+      <h4>Weapon and armour table</h4>
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Tumeken's Light</td><td>1</td><td>Very rare</td></tr>
+        <tr><td>Devourer's Guard</td><td>1</td><td>Very rare</td></tr>
+        <tr><td>Mask of Tumeken's resplendence</td><td>1</td><td>Very rare</td></tr>
+      </table>
+      <h4>Shard of Genesis Essence table</h4>
+      <table class="wikitable">
+        <tr><th>Item</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Shard of Genesis Essence</td><td>1</td><td>Rare</td></tr>
+      </table>`;
+    const view = processWikiHtml(html, meta);
+    expect(view.hasDrops).toBe(true);
+    const items = view.drops.map((d) => d.item);
+    expect(items).toContain("Tumeken's Light");
+    expect(items).toContain("Devourer's Guard");
+    expect(items).toContain("Mask of Tumeken's resplendence");
+    expect(items).toContain("Shard of Genesis Essence");
+    // Preferred uniques claim budget before potions; cap still 80.
+    expect(items.indexOf("Tumeken's Light")).toBeLessThan(items.indexOf("Potion 0"));
+    expect(view.drops).toHaveLength(80);
+    // Last potion slots are truncated (90 commons - only 76 fit after 4 uniques).
+    expect(items).not.toContain("Potion 89");
+  });
+
+  it("does not set hasDrops for item-page Creation / Products / Item sources chrome", () => {
+    const html = `
+      <p>A rare staff.</p>
+      <h2>Creation</h2>
+      <table class="wikitable">
+        <tr><th>Material</th><th>Quantity</th><th>Cost</th></tr>
+        <tr><td>Magic stone</td><td>1</td><td>1000</td></tr>
+      </table>
+      <h2>Products</h2>
+      <table class="wikitable">
+        <tr><th>Product</th><th>GE price</th><th>Materials</th></tr>
+        <tr><td>Dyed staff</td><td>5000</td><td>Staff</td></tr>
+      </table>
+      <h2>Item sources</h2>
+      <table class="wikitable">
+        <tr><th>Source</th><th>Level</th><th>Quantity</th><th>Rarity</th></tr>
+        <tr><td>Some boss</td><td>100</td><td>1</td><td>Very rare</td></tr>
+      </table>
+      <h2>History</h2>
+      <p>Forged long ago.</p>`;
+    const view = processWikiHtml(html, meta);
+    expect(view.drops).toEqual([]);
+    expect(view.hasDrops).toBe(false);
+    expect(view.dropsHtml.trim()).toBe("");
+    // Non-drop recipe chrome stays available under body, not drops spam.
+    expect(view.bodyHtml).not.toMatch(/Forged long ago/);
   });
 
   it("strips location/lore chrome sections while keeping Drops", () => {
@@ -412,6 +683,35 @@ describe("processWikiHtml", () => {
     expect(view.leadHtml).not.toMatch(/<img/i);
     expect(view.dropsHtml).not.toMatch(/<img/i);
     expect(view.bodyHtml).not.toMatch(/<img/i);
+  });
+
+  it("heals TzKal-Zuk-style meaning parenthetical after bold/italic strip", () => {
+    // Live wiki: <b>TzKal-Zuk</b> (meaning <b>Zuk, Champion of the Fire</b>) …
+    // stripTags used to turn Fire</b>) into "Fire )" with a space before ).
+    const html = `
+      <p><b>TzKal-Zuk</b> (meaning <b>Zuk, Champion of the Fire</b>) is a demigod warlord who leads the TzekHaar Front.</p>
+      <p>Second paragraph with enough text to stay in the lead bucket for coverage.</p>`;
+    const view = processWikiHtml(html, {
+      title: "TzKal-Zuk",
+      pageUrl: "https://runescape.wiki/w/TzKal-Zuk",
+    });
+    const lead = stripTagsApprox(view.leadHtml);
+    expect(lead).toMatch(/Champion of the Fire\) is a demigod/);
+    expect(lead).not.toMatch(/Fire\s+\)/);
+    expect(lead).toMatch(/^TzKal-Zuk \(meaning Zuk, Champion of the Fire\)/);
+  });
+
+  it("drops empty italic/lang shells without leaving space-before-paren tails", () => {
+    const html = `
+      <p><b>TzKal-Zuk</b> (meaning <i lang="tz">Zuk, Champion of the Fire</i><span lang="x"> </span>) is a demigod warlord of the kiln.</p>`;
+    const view = processWikiHtml(html, {
+      title: "TzKal-Zuk",
+      pageUrl: "https://runescape.wiki/w/TzKal-Zuk",
+    });
+    const lead = stripTagsApprox(view.leadHtml);
+    expect(lead).toContain("Champion of the Fire)");
+    expect(lead).not.toMatch(/Fire\s+\)/);
+    expect(lead).not.toMatch(/\(meaning\s*\)/);
   });
 });
 

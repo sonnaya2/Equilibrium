@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import unlockData from "../../data/reference/progression-unlocks.json";
 import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
@@ -11,6 +11,10 @@ import {
   presentInterestName,
 } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
+import {
+  DataTableOrganizeBar,
+  useDataTableOrganize,
+} from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
@@ -252,7 +256,7 @@ export function PermanentUnlockResearch() {
   const [section, setSection] = useState<SectionKey>("quest_unlocks");
   const [query, setQuery] = useState("");
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     const source = rowsFor(section).filter((row) => researchRowMatchesRegion(row, selectedRegion));
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
@@ -263,6 +267,20 @@ export function PermanentUnlockResearch() {
       return hay.includes(needle);
     });
   }, [query, section, selectedRegion]);
+  const labelOf = useCallback((row: Row) => title(row), []);
+  const typeOf = useCallback(
+    (row: Row) => humanString(row.category) || humanString(row.kind) || humanString(row.recordType) || "—",
+    [],
+  );
+  const {
+    dir,
+    toggleDir,
+    typeOptions,
+    activeTypes,
+    toggleType,
+    clearTypes,
+    organized: rows,
+  } = useDataTableOrganize({ rows: filtered, labelOf, typeOf });
   const sectionLabel = SECTIONS.find((item) => item.key === section)?.label ?? "Unlocks";
 
   return (
@@ -277,6 +295,14 @@ export function PermanentUnlockResearch() {
           placeholder="Search"
           aria-label="Search unlocks"
           className="field-inset data-view-search"
+        />
+        <DataTableOrganizeBar
+          dir={dir}
+          onToggleDir={toggleDir}
+          typeOptions={typeOptions}
+          activeTypes={activeTypes}
+          onToggleType={toggleType}
+          onClearTypes={clearTypes}
         />
       </DataViewHeader>
 

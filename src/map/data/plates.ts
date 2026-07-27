@@ -7,8 +7,8 @@
  * silhouette is `mapToUv` — there is no second coordinate system to drift from.
  *
  * A seam is a run of lattice edges shared by two regions and simplified once
- * from a canonical key, so both plates carry the same points and the vine that
- * seals a locked border is that same polyline.
+ * from a canonical key, so both plates carry the same points (no cracks at
+ * shared edges). Seams also feed MapDebug geometry proof.
  */
 
 import type { RegionId } from "@/league";

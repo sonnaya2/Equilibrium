@@ -239,11 +239,11 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "forinthry", area: "Dragonkin Laboratory", site: true },
   { region: "forinthry", area: "The Shadow Reef", site: true },
 
-  // Kharidian Desert — Kalphite lair north, Heart of Gielinor mid, Menaphos south.
+  // Kharidian Desert — Kalphite lair north, Telos / Amascut mid-south, Menaphos south.
+  // GWD2 generals live as catalog majors without separate map site pins yet.
   { region: "desert", area: "Kalphite Queen", site: true },
   { region: "desert", area: "Kalphite King", site: true },
   { region: "desert", area: "Telos", site: true },
-  { region: "desert", area: "Heart of Gielinor", site: true },
   { region: "desert", area: "Amascut", site: true },
   { region: "desert", area: "Pyramid Plunder", site: true },
   { region: "desert", area: "Shifting Tombs", site: true },

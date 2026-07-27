@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * The board: water, eleven plates cut from the HD raster, the vines sealing what
- * is still locked, and the pins for whatever is framed.
+ * The board: water, eleven plates cut from the HD raster, and pins for the
+ * framed region.
  *
  * Every texture and every ring is loaded once here and handed down, so eleven
  * plates share one raster, one field and one atlas rather than eleven copies of
@@ -17,7 +17,6 @@ import { useEffect, useMemo } from "react";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
 import { REGION_IDS, type RegionId } from "@/league";
-import { BorderVines } from "./BorderVines";
 import { MapDebug } from "./MapDebug";
 import { MotionDriver } from "./MotionDriver";
 import { Ocean } from "./Ocean";
@@ -97,7 +96,6 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
         />
       ))}
 
-      {flags.vines ? <BorderVines seams={seams} reducedMotion={reducedMotion} /> : null}
       {flags.markers ? (
         <PlaceMarkers atlasTexture={atlas} reducedMotion={reducedMotion} />
       ) : null}

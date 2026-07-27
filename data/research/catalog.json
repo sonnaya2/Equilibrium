@@ -21177,26 +21177,26 @@
         },
         {
           "name": "Everlight Dig Site",
-          "kind": "Archaeology",
-          "detail": "",
+          "kind": "Archaeology dig site",
+          "detail": "Icyene dig site. Porcelain clay mine, site bank, and Everlight relics: Inspire Effort, Sticky Fingers, Heightened Senses. Tetracompass pieces from digs.",
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Everlight_Dig_Site",
             "title": "Everlight Dig Site",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
           "name": "Slayer Tower",
           "kind": "Slayer",
-          "detail": "",
+          "detail": "Canifis Slayer Tower. Undead and abyssal floors — abyssal whip and abyssal scourge drop here among other sites.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Slayer_Tower",
             "title": "Slayer Tower",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -21297,26 +21297,26 @@
         },
         {
           "name": "Werewolf Agility Course",
-          "kind": "Agility course infrastructure",
-          "detail": "Werewolf Agility Course in Morytania.",
+          "kind": "Agility",
+          "detail": "Canifis werewolf agility course (skullball nearby).",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Werewolf_Agility_Course",
             "title": "Werewolf Agility Course",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
           "name": "Vyre combat and Sunspear progression",
-          "kind": "combat and multi-skill support infrastructure",
-          "detail": "Vyrewatch are not a Salve-amulet method. Their important progression is the Ivandis/blisterwood/Sunspear system plus corpse-cremation bonuses",
+          "kind": "Combat",
+          "detail": "Sunspear for vyre combat and cremation training.",
           "confidence": "confirmed_current_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sunspear_(melee)",
-            "title": "Vyre combat and Sunspear progression",
-            "verifiedAt": "2026-07-26"
+            "url": "https://runescape.wiki/w/Sunspear",
+            "title": "Sunspear",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -22063,7 +22063,7 @@
         {
           "name": "Everlight Dig Site",
           "category": "Archaeology dig site infrastructure",
-          "detail": "Official Equilibrium Morytania example. Heightened Senses (+10% max adrenaline from Cup of Nectar) is already tracked in permanent-unlocks / regional combat; this row is the dig-site skilling infrastructure · Guild chronotes, mattocks, and master outfit remain global Archaeology systems · Unlocks: Everlight excavation hotspots, material caches, and site bank chest / workbench / material storage, Site-specific materials (keramos, white marble, cobalt blue, and related Everlight caches), Mystery progression including Hallowed Be. and Cup of Nectar for Heightened Senses monolith relic, On-site fishing spots and Everlight porcelain clay mine as incidental gather nodes · Region status: confirmed_official_region_example",
+          "detail": "Icyene dig site with porcelain clay, site bank, and Everlight relics · Unlocks: Porcelain clay, Inspire Effort, Sticky Fingers, Heightened Senses, Tetracompass",
           "requirements": [
             "42 Archaeology for Everlight invitation",
             "Morytania access (Priest in Peril progress or Paterdomus ghoul route)"
@@ -22719,7 +22719,7 @@
         {
           "name": "Werewolf Agility Course",
           "category": "Agility course infrastructure",
-          "detail": "No invented XP/h · Unlocks: Werewolf Agility Course training method, Skullball adjacency Agility loop",
+          "detail": "Canifis werewolf agility course · Unlocks: Werewolf Agility Course",
           "requirements": [
             "Creature of Fenkenstrain for Canifis/werewolf access path",
             "60 Agility typical course gate",
@@ -22919,7 +22919,7 @@
         {
           "name": "Vyre combat and Sunspear progression",
           "category": "combat and multi-skill support infrastructure",
-          "detail": "Vyrewatch are not a Salve-amulet method. Their important progression is the Ivandis/blisterwood/Sunspear system plus corpse-cremation bonuses · Unlocks: Blisterwood/Sunspear damage access against vyres, Up to +100 Sunspear/blisterwood damage from the 500-corpse cremation progression, Automatic Prayer and Firemaking XP from Sunspear cremations, Morytania elite achievement bonus to vyre cremation Prayer and Firemaking XP",
+          "detail": "Sunspear for vyre combat and cremation · Unlocks: Sunspear",
           "requirements": [],
           "confidence": "confirmed_current_wiki",
           "source": {

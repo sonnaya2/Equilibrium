@@ -9,8 +9,7 @@
  * that animates rides the frames it produces.
  *
  * Idle holds at MAP_IDLE_HZ (30). Real interaction (drag, wheel, WASD, unlock)
- * raises to MAP_ACTIVE_HZ (120) briefly. Hover alone does not — pointermove
- * activity pokes kept the refresh driver awake for no reason.
+ * raises to MAP_ACTIVE_HZ (120) briefly. Hover alone does not.
  *
  * It stops for reduced motion, for an offscreen canvas, and for a hidden tab.
  */
@@ -31,48 +30,51 @@ export const MOTION_HZ = MAP_IDLE_HZ;
 export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   const invalidate = useThree((s) => s.invalidate);
   const gl = useThree((s) => s.gl);
-  const running = useRef(!reducedMotion);
+  const running = useRef(false);
   const onScreen = useRef(true);
   const ticks = useRef(0);
   const hzBand = useRef(MAP_IDLE_HZ);
 
   useEffect(() => {
     const element = gl.domElement;
-    const update = () => {
+    const sync = () => {
       const next = !reducedMotion && onScreen.current && !document.hidden;
-      if (next === running.current) return;
       running.current = next;
-      if (running.current) invalidate();
+      if (next) invalidate();
     };
-    // Coarse observe: only care about leave/enter the viewport, not subpixel
-    // intersection churn (feeds "Update intersection observations" on scroll).
+    // Prefer "visible until proven otherwise". A 0×0 first layout must not
+    // permanently freeze the demand loop before flex assigns size.
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const hit = entry.isIntersecting && entry.intersectionRatio > 0;
-        if (hit === onScreen.current) return;
-        onScreen.current = hit;
-        update();
+        // Only flip off when we have a real box and it is off-screen.
+        const box = entry.boundingClientRect;
+        const hasBox = box.width > 2 && box.height > 2;
+        if (!hasBox) return;
+        onScreen.current = entry.isIntersecting;
+        sync();
       },
-      { threshold: 0, rootMargin: "32px" },
+      { threshold: 0, rootMargin: "48px" },
     );
     observer.observe(element);
-    document.addEventListener("visibilitychange", update);
-    // Active band only on real intent — not every hover move.
+    document.addEventListener("visibilitychange", sync);
     const onDown = () => pokeMapActivity();
     const onWheel = () => pokeMapActivity();
     element.addEventListener("pointerdown", onDown);
     element.addEventListener("wheel", onWheel, { passive: true });
-    update();
+    sync();
+    // Kick a couple of frames after layout — canvas often 0×0 on first paint.
+    const t1 = window.setTimeout(sync, 50);
+    const t2 = window.setTimeout(sync, 250);
     return () => {
       observer.disconnect();
-      document.removeEventListener("visibilitychange", update);
+      document.removeEventListener("visibilitychange", sync);
       element.removeEventListener("pointerdown", onDown);
       element.removeEventListener("wheel", onWheel);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
     };
   }, [gl, invalidate, reducedMotion]);
 
-  // rAF-aligned throttle: setInterval drifts against the display and the water
-  // + river shaders strobe. Period follows idle/active band each tick.
   useEffect(() => {
     if (reducedMotion) return;
     let raf = 0;
@@ -91,13 +93,11 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     return () => window.cancelAnimationFrame(raf);
   }, [invalidate, reducedMotion]);
 
-  // Frames the timer asked for: advance the shared clock, ask for nothing.
   useFrame((_, delta) => {
     ticks.current++;
     if (running.current) mapClock.value = (mapClock.value as number) + Math.min(delta, 0.1);
   });
 
-  // Idle budget probe for e2e/map-ocean.spec.ts.
   useEffect(() => {
     const probe = () => ({
       ticks: ticks.current,

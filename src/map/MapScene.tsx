@@ -72,6 +72,17 @@ function InvalidateOnBuild() {
   return null;
 }
 
+/** Demand loop is silent until something invalidates — kick once on mount. */
+function KickFirstFrame() {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    invalidate();
+    const id = window.requestAnimationFrame(() => invalidate());
+    return () => window.cancelAnimationFrame(id);
+  }, [invalidate]);
+  return null;
+}
+
 export default function MapScene() {
   // Gate on a real adapter, not just the API — three would otherwise fall back
   // to WebGL2 silently, and the honest-unsupported state is the spec.
@@ -142,16 +153,13 @@ export default function MapScene() {
   }
 
   if (supported === null) {
-    // Empty host during the adapter probe — do NOT mount FlatBoard here.
-    // FlatBoard loads world-surface-wiki.webp; mounting it then WebGPU MapTable
-    // decoded the same ~3MB albedo twice and showed up as main-thread jank /
-    // Cascading Update around route paint.
+    // Flat raster during the adapter probe so the cell is never an empty void
+    // if the probe stalls. WebGPU path replaces this once the adapter resolves.
     return (
       <div className="board-sky__scene" aria-hidden="true">
-        <div
-          className="board-sky__canvas-host"
-          style={{ background: `#${OCEAN_HORIZON.toString(16).padStart(6, "0")}` }}
-        />
+        <div className="board-sky__canvas-host">
+          <FlatBoard />
+        </div>
       </div>
     );
   }
@@ -216,6 +224,8 @@ export default function MapScene() {
           />
           {mapFlags().bloom && !mapFlags().debugGeometry ? <BloomWhenNeeded /> : null}
           <InvalidateOnBuild />
+          {/* First paint after Suspense resolves — demand loop has nothing until this. */}
+          <KickFirstFrame />
         </Canvas>
       </div>
       <p className="board-sky__credit">{MAP_IMAGE.credit}</p>

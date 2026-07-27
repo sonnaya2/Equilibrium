@@ -1,0 +1,67 @@
+RS3 Equilibrium — third-party and game-content notices
+======================================================
+
+This repository contains several kinds of material under different rules.
+The root LICENSE (MIT) applies to original application code and original
+documentation text written for this project. It does not re-license Jagex
+property, RuneScape Wiki content, or third-party research.
+
+1. Original software (this project)
+-----------------------------------
+Application source under `app/`, `src/`, most of `scripts/`, tests, and
+project-authored docs that are not game-data extracts: MIT License
+(see `LICENSE`).
+
+2. RuneScape Wiki text and derived data
+---------------------------------------
+Game facts, table extracts, wiki-derived prose, and many research/JSON
+rows under `data/`, `scraped-data/`, and similar paths are based on the
+RuneScape Wiki (https://runescape.wiki/), which is licensed under
+Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported
+(CC BY-NC-SA 3.0):
+
+  https://creativecommons.org/licenses/by-nc-sa/3.0/
+
+That material remains under CC BY-NC-SA 3.0. You must retain attribution,
+keep commercial use off, and share alike when you redistribute adapted
+wiki content. Individual records also carry their own `source` /
+`SourceReference` fields where present.
+
+This project is a free, non-commercial fan tool. Do not treat the MIT
+LICENSE as permission to commercially redistribute wiki-derived JSON or
+prose.
+
+3. Jagex trademarks and game art
+--------------------------------
+RuneScape® and related marks are trademarks of Jagex Ltd.
+In-game art, icons, screenshots, and other Jagex media (including files
+under `assets/`, `public/game/`, and design references such as
+`scraped-data/jagex-build-ref/`) remain Jagex property.
+
+Use of that media is under Jagex’s Fan Content Policy (and, where assets
+were obtained via the Wiki, the wiki file page attribution). It is not
+MIT-licensed. Do not claim ownership of Jagex art or use it outside fan,
+non-commercial contexts allowed by Jagex.
+
+Provenance for harvested images is intended to live in
+`assets/source-manifest.json`, expansion manifests, and
+`assets/manifest.generated.json` (see `assets/README.md`). New icons
+should be registered there; bulk-harvested files under `public/game/`
+that are not yet listed remain Jagex/wiki-sourced and are not original
+project art.
+
+4. PvME and RS Analysis
+-----------------------
+Some research notes cite PvME (https://pvme.io/) or RS Analysis
+(https://rs-analysis.xyz/) for mechanic discovery or cross-checks. Those
+sites keep their own terms. This project does not copy their layouts,
+components, or guide prose. PvME-only discoveries are not treated as
+verified game facts until confirmed on the Wiki or by Jagex.
+
+5. Attribution in the product UI
+--------------------------------
+The live site footer credits Jagex’s Fan Content Policy and the Wiki’s
+CC BY-NC-SA 3.0 license. Keep those credits when forking the UI.
+
+Not affiliated with or endorsed by Jagex. RuneScape is a trademark of
+Jagex Ltd.

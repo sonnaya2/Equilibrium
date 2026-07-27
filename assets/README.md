@@ -18,6 +18,16 @@ This directory is the local asset archive for Equilibrium. It is intentionally s
 
 Never add an unattributed game asset. If an image cannot be tied back to a Jagex/RuneScape page, RuneScape Wiki file page, or another explicit retrieval source, leave it unresolved instead of guessing.
 
+### Provenance gap (known debt)
+
+`manifest.generated.json` currently tracks on the order of hundreds of
+files. `public/game/` and `assets/rs3/` hold thousands of icons from later
+bulk harvests that often never re-entered a `source-manifest-expansion-*.json`
+and a `npm run sync:assets` pass. Those files are still Jagex/wiki media —
+not project originals — but they lack per-file rows in the generated
+manifest until re-registered. Prefer fixing that over more untracked
+downloads. See root `NOTICE`.
+
 ## Layout
 
 ```text

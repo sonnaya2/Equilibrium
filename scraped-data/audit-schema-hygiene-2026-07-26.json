@@ -19,7 +19,9 @@
   "false_all_required": [
     {
       "id": "anachronia:asuran-arsenal-heist",
-      "regionHints": ["anachronia"],
+      "regionHints": [
+        "anachronia"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -28,7 +30,9 @@
     },
     {
       "id": "asgarnia:safecracking",
-      "regionHints": ["asgarnia"],
+      "regionHints": [
+        "asgarnia"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -37,8 +41,12 @@
     },
     {
       "id": "cross-region:spirit-weaver-relic",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (multi-source; see requirements)",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -47,7 +55,9 @@
     },
     {
       "id": "desert:dundee-crocodile-upgrades",
-      "regionHints": ["desert"],
+      "regionHints": [
+        "desert"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -56,7 +66,9 @@
     },
     {
       "id": "desert:hets-oasis-farming",
-      "regionHints": ["desert"],
+      "regionHints": [
+        "desert"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -65,7 +77,9 @@
     },
     {
       "id": "desert:pyramid-plunder",
-      "regionHints": ["desert"],
+      "regionHints": [
+        "desert"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -74,8 +88,12 @@
     },
     {
       "id": "desert:unexpected-diplomacy-relic",
-      "regionHints": ["desert"],
-      "requiredRegions": ["desert"],
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [
+        "desert"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -83,7 +101,9 @@
     },
     {
       "id": "desert:vault-of-hereditas-heist",
-      "regionHints": ["desert"],
+      "regionHints": [
+        "desert"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -92,8 +112,12 @@
     },
     {
       "id": "forinthry:inspire-love-relic",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -101,8 +125,12 @@
     },
     {
       "id": "forinthry:nexus-mod-relic",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -110,8 +138,12 @@
     },
     {
       "id": "forinthry:pouch-protector-relic",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -119,7 +151,9 @@
     },
     {
       "id": "forinthry:wilderness-herb-patch",
-      "regionHints": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -128,7 +162,9 @@
     },
     {
       "id": "fremennik:keldagrim-dwarven-traders",
-      "regionHints": ["fremennik"],
+      "regionHints": [
+        "fremennik"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -137,7 +173,9 @@
     },
     {
       "id": "kandarin:big-chinchompa-private-hunting-grounds",
-      "regionHints": ["kandarin"],
+      "regionHints": [
+        "kandarin"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -146,8 +184,12 @@
     },
     {
       "id": "kandarin:inspire-awe-relic",
-      "regionHints": ["kandarin"],
-      "requiredRegions": ["kandarin"],
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "kandarin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -155,7 +197,9 @@
     },
     {
       "id": "kandarin:pof-breeding-log-tier1-perks",
-      "regionHints": ["kandarin"],
+      "regionHints": [
+        "kandarin"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -164,8 +208,12 @@
     },
     {
       "id": "kandarin:stormguard-citadel-dig-site",
-      "regionHints": ["kandarin"],
-      "requiredRegions": ["kandarin"],
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "kandarin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -173,7 +221,9 @@
     },
     {
       "id": "karamja:calquat-patch",
-      "regionHints": ["karamja"],
+      "regionHints": [
+        "karamja"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -182,8 +232,12 @@
     },
     {
       "id": "misthalin:archaeology-research-team",
-      "regionHints": ["misthalin"],
-      "requiredRegions": ["misthalin"],
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave5-residual-b-2026-07-26.json",
@@ -191,7 +245,9 @@
     },
     {
       "id": "misthalin:ham-hideout-thieving",
-      "regionHints": ["misthalin"],
+      "regionHints": [
+        "misthalin"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -200,8 +256,12 @@
     },
     {
       "id": "misthalin:master-archaeologists-outfit-claim",
-      "regionHints": ["misthalin"],
-      "requiredRegions": ["misthalin"],
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json",
@@ -209,8 +269,12 @@
     },
     {
       "id": "misthalin:monolith-energy-research-ladder",
-      "regionHints": ["misthalin"],
-      "requiredRegions": ["misthalin"],
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json",
@@ -218,7 +282,9 @@
     },
     {
       "id": "misthalin:puro-puro-dragon-implings",
-      "regionHints": ["misthalin"],
+      "regionHints": [
+        "misthalin"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -228,8 +294,12 @@
     },
     {
       "id": "morytania:inspire-effort-relic",
-      "regionHints": ["morytania"],
-      "requiredRegions": ["morytania"],
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [
+        "morytania"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "",
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
@@ -237,7 +307,9 @@
     },
     {
       "id": "tirannwn:harmony-pillars",
-      "regionHints": ["tirannwn"],
+      "regionHints": [
+        "tirannwn"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "all_required",
       "comboLabel": "",
@@ -248,8 +320,12 @@
   "multi_prefix_weak_combo": [
     {
       "id": "cross-region:bonecrusher-necklace",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
       "isRegionCombo": true,
@@ -259,8 +335,12 @@
     },
     {
       "id": "cross-region:crystal-teleport-seed-network",
-      "regionHints": ["tirannwn"],
-      "requiredRegions": ["tirannwn"],
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn"
+      ],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
       "isRegionCombo": true,
@@ -270,8 +350,12 @@
     },
     {
       "id": "cross-region:spirit-weaver-relic",
-      "regionHints": ["forinthry"],
-      "requiredRegions": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (multi-source; see requirements)",
       "isRegionCombo": true,
@@ -281,8 +365,12 @@
     },
     {
       "id": "cross-region:thieving-crystal-mask-light-form",
-      "regionHints": ["tirannwn"],
-      "requiredRegions": ["tirannwn"],
+      "regionHints": [
+        "tirannwn"
+      ],
+      "requiredRegions": [
+        "tirannwn"
+      ],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
       "isRegionCombo": true,
@@ -292,7 +380,9 @@
     },
     {
       "id": "multi-region:slayer-helmet-ring-fuse",
-      "regionHints": ["kandarin"],
+      "regionHints": [
+        "kandarin"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
@@ -303,7 +393,9 @@
     },
     {
       "id": "multi-region:toolbelt-advanced-gold-accumulator-attach",
-      "regionHints": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
@@ -314,7 +406,9 @@
     },
     {
       "id": "multi-region:toolbelt-bonecrusher-attach",
-      "regionHints": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
@@ -325,7 +419,9 @@
     },
     {
       "id": "multi-region:toolbelt-charming-imp-attach",
-      "regionHints": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
@@ -336,7 +432,9 @@
     },
     {
       "id": "multi-region:toolbelt-herbicide-attach",
-      "regionHints": ["forinthry"],
+      "regionHints": [
+        "forinthry"
+      ],
       "requiredRegions": [],
       "regionRequirementType": "single",
       "comboLabel": "Region chain (multi-source; see requirements)",
@@ -352,7 +450,9 @@
     {
       "id": "asgarnia:extreme-invention-boost-path",
       "regionHints_len": 3,
-      "requiredRegions": ["asgarnia"],
+      "requiredRegions": [
+        "asgarnia"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): asgarnia + anachronia + kandarin",
       "note": "Not in the three hygiene buckets (required not empty; hints > 1). Combo label lists multi regions while requiredRegions is only asgarnia — schema tension for a later pass."
@@ -360,7 +460,9 @@
     {
       "id": "asgarnia:familiarisation",
       "regionHints_len": 7,
-      "requiredRegions": ["asgarnia"],
+      "requiredRegions": [
+        "asgarnia"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): asgarnia + fremennik + kandarin + morytania + tirannwn + karamja + desert",
       "note": "Same mismatch pattern: all_required label mirrors hints, requiredRegions is singleton."
@@ -368,7 +470,9 @@
     {
       "id": "cross-region:chronicle-fragment-utility",
       "regionHints_len": 5,
-      "requiredRegions": ["kandarin"],
+      "requiredRegions": [
+        "kandarin"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): kandarin + tirannwn + desert + morytania + fremennik",
       "note": "Detail text says Tirannwn optional; type/label still all_required over multi hints."
@@ -376,7 +480,9 @@
     {
       "id": "forinthry:spirit-cape",
       "regionHints_len": 2,
-      "requiredRegions": ["forinthry"],
+      "requiredRegions": [
+        "forinthry"
+      ],
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): forinthry + tirannwn",
       "note": "Detail says Tirannwn optional convenience; not empty-required hygiene."
@@ -587,7 +693,9 @@
       "id": "multi-region:slayer-helmet-ring-fuse",
       "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json",
       "field": "region_hints",
-      "from": ["kandarin"],
+      "from": [
+        "kandarin"
+      ],
       "to": "keep OR expand only with wiki-backed destination pressure — do not invent",
       "note": "Schema hygiene only: either accept multi-region: as points-global milestone id, or narrow prefix; no new regions invented here."
     },
@@ -618,14 +726,6 @@
       "field": "id_prefix_note",
       "from": "multi-region:",
       "to": "acceptable milestone prefix for global attach points; geography remains forinthry item + global points — no content change"
-    },
-    {
-      "id": "cross-region:spirit-weaver-relic",
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json",
-      "field": "id",
-      "from": "cross-region:spirit-weaver-relic",
-      "to": "forinthry:spirit-weaver-relic",
-      "note": "Optional re-id after type→single; keep cross-region only if Summoning planner linkage requires stable external id."
     }
   ],
   "apply_order": [

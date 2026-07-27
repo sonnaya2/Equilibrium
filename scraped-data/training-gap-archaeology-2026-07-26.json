@@ -15,7 +15,9 @@
       ],
       "xp_rate": null,
       "xp_rate_note": "Wiki does not publish a single XP/h for this stack; rates depend on level, hotspot, and restoration throughput.",
-      "regions": ["multi-region"],
+      "regions": [
+        "multi-region"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology"
       ],
@@ -32,7 +34,9 @@
         "Ironman guide: train using the best available excavation hotspot only if no mysteries/collections are available to complete."
       ],
       "xp_rate": null,
-      "regions": ["multi-region"],
+      "regions": [
+        "multi-region"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology"
       ],
@@ -51,10 +55,19 @@
       ],
       "xp_rate": null,
       "count_target": 46,
-      "dig_sites": ["Warforge"],
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Green_Gobbo_Goodies_I"
@@ -74,10 +87,19 @@
       ],
       "xp_rate": null,
       "count_target": 7,
-      "dig_sites": ["Stormguard Citadel"],
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "dig_sites": [
+        "Stormguard Citadel"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
       "linked_unlock": "Ancient Invention blueprints",
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
@@ -98,10 +120,19 @@
       ],
       "xp_rate": null,
       "count_target": 100,
-      "dig_sites": ["Warforge"],
-      "artifact_regions": ["kandarin"],
-      "collector_regions": ["asgarnia"],
-      "required_regions": ["kandarin", "asgarnia"],
+      "dig_sites": [
+        "Warforge"
+      ],
+      "artifact_regions": [
+        "kandarin"
+      ],
+      "collector_regions": [
+        "asgarnia"
+      ],
+      "required_regions": [
+        "kandarin",
+        "asgarnia"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Red_Rum_Relics_I"
@@ -121,8 +152,12 @@
       ],
       "xp_rate": null,
       "set_target": "70-90",
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Orcus_altar"
@@ -141,8 +176,12 @@
       ],
       "xp_rate": null,
       "set_target": "70-90",
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Armarium_debris"
@@ -161,8 +200,12 @@
       ],
       "xp_rate": null,
       "set_target": "70-90",
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Culinarum_debris"
@@ -183,8 +226,12 @@
       ],
       "xp_rate": null,
       "set_target": "70-90",
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "chronotes_per_turn_in": {
         "Museum - Zarosian III": 16744,
         "Zarosian III": 14884
@@ -207,8 +254,12 @@
         "Ironman guide: excavate Praetorian remains for a higher chance of Inquisitor staff pieces."
       ],
       "xp_rate": null,
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Praetorian_remains"
@@ -226,8 +277,14 @@
         "Ironman guide: excavate Bandos's sanctum debris for the Spear of Annihilation tip; once obtained, return to Praetorian remains."
       ],
       "xp_rate": null,
-      "dig_sites": ["Warforge", "Kharid-et"],
-      "artifact_regions": ["kandarin", "desert"],
+      "dig_sites": [
+        "Warforge",
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "kandarin",
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/Bandos%27s_sanctum_debris",
@@ -246,8 +303,12 @@
         "Ironman guide: excavate War table debris for the highest chance of Inquisitor staff pieces."
       ],
       "xp_rate": null,
-      "dig_sites": ["Kharid-et"],
-      "artifact_regions": ["desert"],
+      "dig_sites": [
+        "Kharid-et"
+      ],
+      "artifact_regions": [
+        "desert"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
         "https://runescape.wiki/w/War_table_debris"
@@ -269,8 +330,12 @@
         "Ironman Mode/Guide/Archaeology mystery/collection/training tables still omit Moonrise entirely as of this snapshot — high-value gap for ironman/league."
       ],
       "xp_rate": null,
-      "dig_sites": ["Moonrise"],
-      "artifact_regions": ["havenhythe"],
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
       "hotspot_xp_per_material": {
         "Lunar wheel debris": 17.2,
         "Arbour rubble": 18.4,
@@ -301,8 +366,12 @@
         "Ironman guide lists special research as priority #3 but does not enumerate Moonrise research rows."
       ],
       "xp_rate": null,
-      "dig_sites": ["Moonrise"],
-      "artifact_regions": ["havenhythe"],
+      "dig_sites": [
+        "Moonrise"
+      ],
+      "artifact_regions": [
+        "havenhythe"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Moonrise_Dig_Site",
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology"
@@ -323,9 +392,15 @@
         "Mysteries A New Home / A New Form / A New Age are absent from Ironman Mode/Guide/Archaeology mystery order table."
       ],
       "xp_rate": null,
-      "dig_sites": ["Daemonheim"],
-      "artifact_regions": ["wilderness"],
-      "region_aliases": ["forinthry"],
+      "dig_sites": [
+        "Daemonheim"
+      ],
+      "artifact_regions": [
+        "wilderness"
+      ],
+      "region_aliases": [
+        "forinthry"
+      ],
       "source_urls": [
         "https://runescape.wiki/w/Daemonheim_Dig_Site",
         "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology"
@@ -621,7 +696,9 @@
           "unlock_level": 20,
           "manager": "Movario",
           "equilibrium_region": "wilderness",
-          "region_aliases": ["forinthry"],
+          "region_aliases": [
+            "forinthry"
+          ],
           "wiki_league_badge": "Wilderness (expected; thematic under Wilderness, safe from PvP)",
           "location_note": "Thematically under Wilderness; players are safe from PvP. Unlocks Ancient Summoning via Dagon Bye (68).",
           "source_urls": [
@@ -695,7 +772,9 @@
           "unlock_level": 73,
           "manager": "Skaldrun",
           "equilibrium_region": "wilderness",
-          "region_aliases": ["forinthry"],
+          "region_aliases": [
+            "forinthry"
+          ],
           "wiki_league_badge": "Wilderness",
           "location_note": "Daemonheim peninsula. Wiki hotspot League region column explicitly marks Wilderness. Repo often aliases Wilderness content as forinthry.",
           "source_urls": [
@@ -771,7 +850,9 @@
             "morytania",
             "kandarin"
           ],
-          "collector_regions": ["misthalin"],
+          "collector_regions": [
+            "misthalin"
+          ],
           "required_regions_union": [
             "misthalin",
             "wilderness",
@@ -780,13 +861,41 @@
             "morytania"
           ],
           "artefacts": [
-            { "name": "Crest of Dagon", "level": 24, "dig_site": "Infernal Source" },
-            { "name": "Ikovian gerege", "level": 70, "dig_site": "Stormguard Citadel" },
-            { "name": "Necromantic focus", "level": 86, "dig_site": "Kharid-et" },
-            { "name": "Golem instruction", "level": 98, "dig_site": "Stormguard Citadel" },
-            { "name": "'The Enlightened Soul' scroll", "level": 109, "dig_site": "Everlight" },
-            { "name": "'The Eudoxian Elements' tablet", "level": 109, "dig_site": "Everlight" },
-            { "name": "'Da Boss Man' sculpture", "level": 119, "dig_site": "Warforge" }
+            {
+              "name": "Crest of Dagon",
+              "level": 24,
+              "dig_site": "Infernal Source"
+            },
+            {
+              "name": "Ikovian gerege",
+              "level": 70,
+              "dig_site": "Stormguard Citadel"
+            },
+            {
+              "name": "Necromantic focus",
+              "level": 86,
+              "dig_site": "Kharid-et"
+            },
+            {
+              "name": "Golem instruction",
+              "level": 98,
+              "dig_site": "Stormguard Citadel"
+            },
+            {
+              "name": "'The Enlightened Soul' scroll",
+              "level": 109,
+              "dig_site": "Everlight"
+            },
+            {
+              "name": "'The Eudoxian Elements' tablet",
+              "level": 109,
+              "dig_site": "Everlight"
+            },
+            {
+              "name": "'Da Boss Man' sculpture",
+              "level": 119,
+              "dig_site": "Warforge"
+            }
           ],
           "source_urls": [
             "https://runescape.wiki/w/Wise_Old_Man:_Knowledge_is_Power",
@@ -799,15 +908,45 @@
           "collection_or_relic": "Blingy Fings (Chief Tess) — multi dig-site materials farm",
           "archaeology_level": 69,
           "collector": "Chief Tess",
-          "dig_sites": ["Kharid-et", "Everlight"],
-          "artifact_regions": ["desert", "morytania"],
-          "required_regions_union": ["desert", "morytania", "asgarnia_or_collector_locale"],
+          "dig_sites": [
+            "Kharid-et",
+            "Everlight"
+          ],
+          "artifact_regions": [
+            "desert",
+            "morytania"
+          ],
+          "required_regions_union": [
+            "desert",
+            "morytania",
+            "asgarnia_or_collector_locale"
+          ],
           "artefacts": [
-            { "name": "Ancient timepiece", "level": 47, "dig_site": "Kharid-et" },
-            { "name": "Legatus pendant", "level": 47, "dig_site": "Kharid-et" },
-            { "name": "Pontifex signet ring", "level": 58, "dig_site": "Kharid-et" },
-            { "name": "Bronze Dominion medal", "level": 69, "dig_site": "Everlight" },
-            { "name": "Silver Dominion medal", "level": 69, "dig_site": "Everlight" }
+            {
+              "name": "Ancient timepiece",
+              "level": 47,
+              "dig_site": "Kharid-et"
+            },
+            {
+              "name": "Legatus pendant",
+              "level": 47,
+              "dig_site": "Kharid-et"
+            },
+            {
+              "name": "Pontifex signet ring",
+              "level": 58,
+              "dig_site": "Kharid-et"
+            },
+            {
+              "name": "Bronze Dominion medal",
+              "level": 69,
+              "dig_site": "Everlight"
+            },
+            {
+              "name": "Silver Dominion medal",
+              "level": 69,
+              "dig_site": "Everlight"
+            }
           ],
           "notes": "Not a monolith relic route by itself; flagged because ironman collections and chronotes/robust glass reward require two dig sites.",
           "source_urls": [
@@ -819,10 +958,20 @@
           "collection_or_relic": "Wise Am the Music Man → Koschei's needle → Deathless",
           "archaeology_level": 91,
           "collector": "Wise Old Man",
-          "dig_sites": ["Everlight", "Stormguard Citadel"],
-          "artifact_regions": ["morytania", "kandarin"],
-          "collector_regions": ["misthalin"],
-          "handoff_regions": ["fremennik"],
+          "dig_sites": [
+            "Everlight",
+            "Stormguard Citadel"
+          ],
+          "artifact_regions": [
+            "morytania",
+            "kandarin"
+          ],
+          "collector_regions": [
+            "misthalin"
+          ],
+          "handoff_regions": [
+            "fremennik"
+          ],
           "required_regions_union": [
             "morytania",
             "kandarin",
@@ -844,10 +993,19 @@
           "collection_or_relic": "Dragonkin VI → Pastkeeper's tapestry → Spirit Weaver",
           "archaeology_level": 87,
           "collector": "Sharrigan",
-          "dig_sites": ["Daemonheim"],
-          "artifact_regions": ["wilderness"],
-          "collector_regions": ["anachronia"],
-          "required_regions_union": ["wilderness", "anachronia"],
+          "dig_sites": [
+            "Daemonheim"
+          ],
+          "artifact_regions": [
+            "wilderness"
+          ],
+          "collector_regions": [
+            "anachronia"
+          ],
+          "required_regions_union": [
+            "wilderness",
+            "anachronia"
+          ],
           "notes": "Single dig site but collector is on Anachronia — multi-region even without multi dig-site artefacts.",
           "source_urls": [
             "https://runescape.wiki/w/Sharrigan:_Dragonkin_VI",
@@ -860,11 +1018,22 @@
           "collection_or_relic": "Saradominist I → Lock of hair → Berserker's Fury (with Amulet of the forsaken)",
           "archaeology_level": 56,
           "collector": "Sir Atcha",
-          "dig_sites": ["Everlight"],
-          "artifact_regions": ["morytania"],
-          "collector_regions": ["asgarnia"],
-          "additional_item_regions": ["morytania"],
-          "required_regions_union": ["morytania", "asgarnia"],
+          "dig_sites": [
+            "Everlight"
+          ],
+          "artifact_regions": [
+            "morytania"
+          ],
+          "collector_regions": [
+            "asgarnia"
+          ],
+          "additional_item_regions": [
+            "morytania"
+          ],
+          "required_regions_union": [
+            "morytania",
+            "asgarnia"
+          ],
           "source_urls": [
             "https://runescape.wiki/w/Sir_Atcha:_Saradominist_I"
           ],
@@ -874,11 +1043,23 @@
           "collection_or_relic": "Armadylean I → King Oberon's moonshroom spores → Pharm Ecology",
           "archaeology_level": 81,
           "collector": "Lowse",
-          "dig_sites": ["Stormguard Citadel"],
-          "artifact_regions": ["kandarin"],
-          "collector_regions": ["asgarnia"],
-          "handoff_regions": ["unresolved_zanaris"],
-          "required_regions_union": ["kandarin", "asgarnia", "unresolved_zanaris"],
+          "dig_sites": [
+            "Stormguard Citadel"
+          ],
+          "artifact_regions": [
+            "kandarin"
+          ],
+          "collector_regions": [
+            "asgarnia"
+          ],
+          "handoff_regions": [
+            "unresolved_zanaris"
+          ],
+          "required_regions_union": [
+            "kandarin",
+            "asgarnia",
+            "unresolved_zanaris"
+          ],
           "source_urls": [
             "https://runescape.wiki/w/Lowse:_Armadylean_I",
             "https://runescape.wiki/w/King_Oberon%27s_moonshroom_spores"
@@ -888,9 +1069,15 @@
         {
           "collection_or_relic": "Ring of Kayazu (equipment, not monolith relic)",
           "archaeology_level": 88,
-          "dig_sites": ["Moonrise"],
-          "artifact_regions": ["havenhythe"],
-          "extra_skill_regions": ["misthalin_or_city_of_um_taxonomy"],
+          "dig_sites": [
+            "Moonrise"
+          ],
+          "artifact_regions": [
+            "havenhythe"
+          ],
+          "extra_skill_regions": [
+            "misthalin_or_city_of_um_taxonomy"
+          ],
           "required_regions_union": [
             "havenhythe",
             "misthalin_or_city_of_um_taxonomy"
@@ -934,7 +1121,7 @@
           "impact": "Planner cannot score region-locked chronotes/blueprint/Inquisitor/Spear progression loops",
           "source_urls": [
             "https://runescape.wiki/w/Ironman_Mode/Guide/Archaeology",
-            "file://scraped-data/training-methods.json"
+            "https://runescape.wiki/w/Training"
           ]
         },
         {

@@ -119,6 +119,7 @@ scripts/_*.mjs
 scripts/_*.txt
 scraped-data/_tmp_*
 scraped-data/_run_*
+scraped-data/*.ndjson
 scraped-data/agent-*.json
 scraped-data/bulk-icon-harvest-*.json
 scraped-data/unresolved-harvest-*.json

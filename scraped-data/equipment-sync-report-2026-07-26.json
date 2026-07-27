@@ -1814,17 +1814,6 @@
       "parsePath": "table"
     },
     {
-      "id": "item:eastern-scroll",
-      "name": "Tetsu swords scroll",
-      "wikiTitle": "Eastern scroll",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 85,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
       "id": "item:tetsu-wakizashi",
       "name": "Tetsu wakizashi",
       "wikiTitle": "Tetsu wakizashi",
@@ -1992,17 +1981,6 @@
       "parsePath": "table"
     },
     {
-      "id": "item:damage",
-      "name": "damage",
-      "wikiTitle": "Damage",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 80,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
       "id": "item:goliath-gloves-black",
       "name": "Goliath gloves (black)",
       "wikiTitle": "Goliath gloves (black)",
@@ -2098,17 +2076,6 @@
       "parsePath": "table"
     },
     {
-      "id": "item:plagues-end",
-      "name": "Plague's End",
-      "wikiTitle": "Plague's End",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 80,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
       "id": "item:second-age-sword",
       "name": "Second-Age sword",
       "wikiTitle": "Second-Age sword",
@@ -2145,17 +2112,6 @@
       "parsePath": "table"
     },
     {
-      "id": "item:the-eyes-of-glouphrie",
-      "name": "The Eyes of Glouphrie",
-      "wikiTitle": "The Eyes of Glouphrie",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 80,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
       "id": "item:ancient-warriors-equipment",
       "name": "Ancient Warriors' equipment",
       "wikiTitle": "Ancient Warriors' equipment",
@@ -2187,17 +2143,6 @@
       "sourcePage": "Weapon/Melee weapons",
       "tier": 78,
       "slot": "mainhand",
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
-      "id": "item:river-of-blood",
-      "name": "River of Blood",
-      "wikiTitle": "River of Blood",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 78,
       "section": "Requirements",
       "parsePath": "table"
     },
@@ -2353,17 +2298,6 @@
       "sourcePage": "Weapon/Melee weapons",
       "tier": 75,
       "slot": "twohand",
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
-      "id": "item:the-lord-of-vampyrium",
-      "name": "The Lord of Vampyrium",
-      "wikiTitle": "The Lord of Vampyrium",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 75,
       "section": "Requirements",
       "parsePath": "table"
     },
@@ -2533,31 +2467,9 @@
       "parsePath": "table"
     },
     {
-      "id": "item:roving-elves",
-      "name": "Roving Elves",
-      "wikiTitle": "Roving Elves",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 70,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
       "id": "item:superior-dragon-weapons",
       "name": "Superior dragon weapons",
       "wikiTitle": "Superior dragon weapons",
-      "style": "melee",
-      "kind": "weapon",
-      "sourcePage": "Weapon/Melee weapons",
-      "tier": 70,
-      "section": "Requirements",
-      "parsePath": "table"
-    },
-    {
-      "id": "item:the-branches-of-darkmeyer",
-      "name": "The Branches of Darkmeyer",
-      "wikiTitle": "The Branches of Darkmeyer",
       "style": "melee",
       "kind": "weapon",
       "sourcePage": "Weapon/Melee weapons",

@@ -332,11 +332,14 @@ const owner = new Uint8Array(N);
 {
   const flat = [];
   const seedMark = new Uint8Array(N);
+  /** Which region planted the seed on this tile — an island is awarded by these. */
+  const seedOwner = new Uint8Array(N);
   for (let r = 0; r < REGIONS.length; r++) {
     for (const point of seeds[r]) {
       const [sx, sy] = mapToPx(point);
       flat.push(sx, sy, r + 1);
       seedMark[sy * W + sx] = 1;
+      seedOwner[sy * W + sx] = r + 1;
     }
   }
   const count = flat.length / 3;
@@ -627,28 +630,57 @@ const owner = new Uint8Array(N);
   console.log(`[terrain] frontier corridors forced ${forced} tiles`);
 
   /**
-   * A landmass with no seed of its own must not be sliced by a Voronoi chord
-   * drawn between two towns on other islands — an islet belongs to one region.
-   * Components that do hold a seed (the mainland) keep their internal split.
+   * Only the mainland may be split between regions. Every island is awarded whole.
+   *
+   * The partition measures straight-line distance and does not care that the line
+   * crosses open sea, so an island ends up divided between whichever mainland
+   * towns happen to lie nearest its two ends — Entrana was cut in half between
+   * Kandarin and Asgarnia, Crandor went to Asgarnia, and Karamja lost its western
+   * tip to Kandarin's pin at Port Khazard. Exempting islands that merely *contain*
+   * a seed did not help: Karamja contains sixteen and was sliced anyway.
+   *
+   * So the rule is by landmass rather than by seed. The largest component is the
+   * continent and keeps its internal frontiers; everything else goes to one
+   * region, chosen by the seeds standing on it — those are real places with
+   * sourced coordinates — falling back to pixel plurality only when it holds none.
    */
-  let uniform = 0;
+  let mainland = -1;
+  let mainlandSize = 0;
+  const islands = [];
   components(
     (i) => land[i] === 1,
     (cells) => {
-      const tally = new Int32Array(REGIONS.length + 1);
-      let hasSeed = false;
-      for (const i of cells) {
-        tally[owner[i]]++;
-        if (seedMark[i]) hasSeed = true;
+      islands.push(cells);
+      if (cells.length > mainlandSize) {
+        mainlandSize = cells.length;
+        mainland = islands.length - 1;
       }
-      if (hasSeed || cells.length > 20000) return;
-      let best = 1;
-      for (let r = 1; r <= REGIONS.length; r++) if (tally[r] > tally[best]) best = r;
-      for (const i of cells) owner[i] = best;
-      uniform++;
     },
   );
-  console.log(`[terrain] ${uniform} seedless landmasses made uniform`);
+
+  let recut = 0;
+  for (let index = 0; index < islands.length; index++) {
+    if (index === mainland) continue;
+    const cells = islands[index];
+    const bySeed = new Int32Array(REGIONS.length + 1);
+    const byPixel = new Int32Array(REGIONS.length + 1);
+    let seeded = false;
+    for (const i of cells) {
+      byPixel[owner[i]]++;
+      if (seedMark[i]) (bySeed[seedOwner[i]]++, (seeded = true));
+    }
+    const tally = seeded ? bySeed : byPixel;
+    let best = 1;
+    for (let r = 1; r <= REGIONS.length; r++) if (tally[r] > tally[best]) best = r;
+    let changed = false;
+    for (const i of cells) {
+      if (owner[i] !== best) (owner[i] = best), (changed = true);
+    }
+    if (changed) recut++;
+  }
+  console.log(
+    `[terrain] ${islands.length - 1} islands awarded whole, ${recut} of them re-cut · mainland ${Math.round(mainlandSize / 1000)}k tiles keeps its frontiers`,
+  );
 }
 
 // --------------------------------------------------------- ring tracing -----

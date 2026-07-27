@@ -121,7 +121,10 @@ export function createMarkerBeamMaterial(): MarkerMaterial {
   const brass = mix(linear(BRASS_DEEP), linear(BRASS), y.mul(0.6).add(0.2));
   const gem = mix(linear(0x1a6b52), linear(GEM), y.mul(0.5).add(0.35));
   material.colorNode = mix(brass, gem, lit).mul(core.mul(pulse));
-  material.opacityNode = core.mul(vertical).mul(mix(float(0.12), float(0.22), lit)).mul(pulse);
+  // Avoid mix(0.12, 0.22, lit): when lit folds to a literal, naga emits abstract
+  // floats inside a runtime expression and the WebGPU pipeline fails validation.
+  const opacity = float(0.12).add(lit.mul(float(0.1)));
+  material.opacityNode = core.mul(vertical).mul(opacity).mul(pulse);
 
   return {
     material,

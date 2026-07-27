@@ -141,19 +141,18 @@ export function PlaceMarkers({
 
   const footGeometry = useMemo(() => new THREE.CircleGeometry(0.5, 12), []);
   // Open tapered shaft: rTop 0.32, rBottom 1, unit height, open-ended.
-  const beamGeometry = useMemo(() => new THREE.CylinderGeometry(0.32, 1, 1, 10, 1, true), []);
+  // aLit is bound at geometry create so the first WebGPU pipeline compile sees
+  // a real instance float attribute (not a folded 0.0 abstract mix factor).
   const litAttr = useMemo(() => {
     const attr = new THREE.InstancedBufferAttribute(new Float32Array(Math.max(1, pins.length)), 1);
     attr.setUsage(THREE.DynamicDrawUsage);
     return attr;
   }, [pins.length]);
-
-  useEffect(() => {
-    beamGeometry.setAttribute("aLit", litAttr);
-    return () => {
-      beamGeometry.deleteAttribute("aLit");
-    };
-  }, [beamGeometry, litAttr]);
+  const beamGeometry = useMemo(() => {
+    const geo = new THREE.CylinderGeometry(0.32, 1, 1, 10, 1, true);
+    geo.setAttribute("aLit", litAttr);
+    return geo;
+  }, [litAttr]);
 
   useEffect(
     () => () => {

@@ -89,10 +89,10 @@ src/lib/             browser persistence
 data/combat/         canonical combat JSON
 data/league/         canonical League and generated quest data
 data/research/       normalized research and progression data
-scraped-data/        source-oriented research and unresolved notes
 assets/              sourced game media and provenance manifest
-scripts/             sync, normalization and audit jobs
+scripts/             optional research sync / normalize (needs local scraped-data/)
 ```
+
 
 ## House rules
 

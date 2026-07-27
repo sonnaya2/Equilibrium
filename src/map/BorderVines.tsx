@@ -4,17 +4,12 @@
  * Ancient growth along the borders you have not opened.
  *
  * The path is the seam itself — the same polyline both neighbouring plates were
- * cut along — so a vine sits exactly on the line it is sealing rather than near
- * it, and it follows every kink the real border has. A region is never scribbled
- * over; only its frontier is.
+ * cut along. We keep that polyline faithful (no Catmull-Rom rounding off the
+ * lattice edge) so vines hug true region borders. Leaves carry the hedge mass;
+ * the stem is thin structure under them.
  *
  * A border is overgrown while either side is still locked and withdraws as both
- * open, in about a second. Because that is a clip along the path rather than a
- * mount, the whole state is one animating number per seam.
- *
- * Wind rides frames the board is already drawing. This never asks for a frame of
- * its own — MotionDriver owns the only heartbeat, and when the sea freezes so
- * does the foliage.
+ * open. Wind rides frames the board is already drawing — never its own heartbeat.
  */
 
 import { useEffect, useMemo, useRef } from "react";
@@ -27,22 +22,23 @@ import { createLeafMaterial, createVineMaterials } from "./materials/VineMateria
 import { plateTopY } from "./plateHeight";
 import { useMapFocus } from "./useMapFocus";
 
-/** Seconds-ish rate of the growth clip. */
 const GROWTH_SPEED = 1.5;
-/** Match RegionPlate's raise spring so vines stay on the cap while it moves. */
 const Y_SPEED = 6.5;
 const CLEARANCE = 0.0022;
 
-// Thin on purpose. The stem is structure; the leaves are the thing you see.
-const STEM_RADIUS = 0.0013;
-const TENDRIL_RADIUS = 0.0006;
-/** Control points per seam. More than this and the curve is finer than the eye. */
-const MAX_NODES = 90;
-/** One leaf per this much border, so a long frontier is no sparser than a short one. */
-const LEAF_SPACING = 0.0075;
-const MAX_LEAVES_PER_SEAM = 110;
+// Thin structure under the leaf mass — fat tubes read as rubber cable.
+const STEM_RADIUS = 0.0008;
+const TENDRIL_RADIUS = 0.00035;
+const TENDRIL_WIGGLE = 0.0018;
+/** Prefer full seam fidelity; only stride when denser than this. */
+const MAX_NODES = 160;
+const LEAF_SPACING = 0.005;
+const MAX_LEAVES_PER_SEAM = 160;
+const LEAF_SIDE = 0.008;
+const LEAF_W = 0.014;
+const LEAF_H = 0.022;
+const CORNER_GAIN = 1.5;
 
-/** Deterministic 0..1 from an integer — same hedge every reload, and diffable. */
 function hash(n: number): number {
   let t = (n + 0x6d2b79f5) | 0;
   t = Math.imul(t ^ (t >>> 15), 1 | t);
@@ -60,14 +56,70 @@ interface BuiltSeam {
 interface LeafRest {
   x: number;
   z: number;
-  /** Small vertical stagger so a clump layers instead of z-fighting flat. */
   y: number;
   yaw: number;
   tilt: number;
+  roll: number;
+  ax: number;
+  az: number;
   scale: number;
   phase: number;
   along: number;
   seam: number;
+}
+
+/** Piecewise-linear path through seam nodes — no Catmull bulges off the plate edge. */
+class PolylineCurve extends THREE.Curve<THREE.Vector3> {
+  private readonly pts: THREE.Vector3[];
+  private readonly cum: number[];
+  private readonly total: number;
+
+  constructor(pts: THREE.Vector3[]) {
+    super();
+    this.pts = pts;
+    this.cum = [0];
+    let sum = 0;
+    for (let i = 1; i < pts.length; i++) {
+      sum += pts[i].distanceTo(pts[i - 1]);
+      this.cum.push(sum);
+    }
+    this.total = sum || 1;
+  }
+
+  override getPoint(t: number, optionalTarget = new THREE.Vector3()): THREE.Vector3 {
+    const d = Math.min(1, Math.max(0, t)) * this.total;
+    let i = 1;
+    while (i < this.cum.length && this.cum[i] < d) i++;
+    const i0 = Math.max(0, i - 1);
+    const i1 = Math.min(this.pts.length - 1, i);
+    const seg = this.cum[i1] - this.cum[i0] || 1;
+    const u = (d - this.cum[i0]) / seg;
+    return optionalTarget.copy(this.pts[i0]).lerp(this.pts[i1], u);
+  }
+
+  override getLength(): number {
+    return this.total;
+  }
+}
+
+function buildNodes(points: [number, number][]): THREE.Vector3[] {
+  if (points.length < 2) return [];
+  // Prefer full fidelity; only stride when denser than MAX_NODES.
+  const stride = points.length <= MAX_NODES ? 1 : Math.ceil(points.length / MAX_NODES);
+  const nodes: THREE.Vector3[] = [];
+  for (let i = 0; i < points.length; i += stride) {
+    const p = points[i];
+    const v = new THREE.Vector3(p[0], 0, p[1]);
+    if (nodes.length === 0 || nodes[nodes.length - 1].distanceToSquared(v) > 1e-12) {
+      nodes.push(v);
+    }
+  }
+  const last = points[points.length - 1];
+  const end = new THREE.Vector3(last[0], 0, last[1]);
+  if (nodes.length === 0 || nodes[nodes.length - 1].distanceToSquared(end) > 1e-12) {
+    nodes.push(end);
+  }
+  return nodes;
 }
 
 function build(seams: SeamPath[]) {
@@ -76,69 +128,124 @@ function build(seams: SeamPath[]) {
   const leafMaterial = createLeafMaterial();
 
   for (const seam of seams) {
-    const stride = Math.max(1, Math.ceil(seam.points.length / MAX_NODES));
-    const nodes: THREE.Vector3[] = [];
-    for (let i = 0; i < seam.points.length; i += stride) {
-      nodes.push(new THREE.Vector3(seam.points[i][0], 0, seam.points[i][1]));
-    }
-    const last = seam.points[seam.points.length - 1];
-    nodes.push(new THREE.Vector3(last[0], 0, last[1]));
-    if (nodes.length < 3) continue;
+    const nodes = buildNodes(seam.points);
+    if (nodes.length < 2) continue;
 
-    const curve = new THREE.CatmullRomCurve3(nodes, false, "catmullrom", 0.35);
-    const segments = Math.min(320, Math.max(32, nodes.length * 4));
-    const stem = new THREE.TubeGeometry(curve, segments, STEM_RADIUS, 6, false);
+    const curve = new PolylineCurve(nodes);
+    const length = curve.getLength();
+    const segments = Math.min(280, Math.max(24, Math.round(length / 0.004)));
+    const stem = new THREE.TubeGeometry(curve, segments, STEM_RADIUS, 4, false);
 
-    // A second, thinner strand woven off to the side — one tube reads as a
-    // cable, two reads as something that grew there.
+    // Thin second strand — small wiggle so it stays on the frontier band.
     const woven = nodes.map((p, i) => {
       const prev = nodes[Math.max(0, i - 1)];
       const next = nodes[Math.min(nodes.length - 1, i + 1)];
       const dx = next.x - prev.x;
       const dz = next.z - prev.z;
       const len = Math.hypot(dx, dz) || 1;
-      const wiggle = Math.sin(i * 0.85) * 0.0042 + Math.sin(i * 2.3) * 0.0021;
-      return new THREE.Vector3(p.x + (-dz / len) * wiggle, 0.0015, p.z + (dx / len) * wiggle);
+      const wiggle = Math.sin(i * 0.85) * TENDRIL_WIGGLE + Math.sin(i * 2.3) * (TENDRIL_WIGGLE * 0.5);
+      return new THREE.Vector3(p.x + (-dz / len) * wiggle, 0.0012, p.z + (dx / len) * wiggle);
     });
     const tendril = new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3(woven, false, "catmullrom", 0.4),
+      new PolylineCurve(woven),
       segments,
       TENDRIL_RADIUS,
-      5,
+      4,
       false,
     );
 
     const index = built.length;
     built.push({ stem, tendril, mats: createVineMaterials(), between: seam.between });
 
-    // Density follows the border's own length, and clumps: an even sprinkle
-    // reads as a dotted line, which is the drawn-on look this is escaping.
-    const count = Math.min(
+    // Sample path for density weights (clump + corner boost).
+    const S = Math.max(16, Math.min(120, segments));
+    const samples: { s: number; along: number; weight: number; t: THREE.Vector3 }[] = [];
+    let prevT: THREE.Vector3 | null = null;
+    for (let i = 0; i <= S; i++) {
+      const along = i / S;
+      const t = curve.getTangent(along).normalize();
+      let corner = 0;
+      if (prevT) {
+        const d = Math.min(1, Math.max(-1, prevT.dot(t)));
+        const kappa = Math.acos(d);
+        corner = THREE.MathUtils.smoothstep(kappa, 0.12, 0.55);
+      }
+      prevT = t.clone();
+      const clump =
+        0.25 +
+        0.55 * Math.abs(Math.sin(along * 9.3 + index * 2.1)) +
+        0.2 * Math.abs(Math.sin(along * 25 + index));
+      const weight = clump * (1 + CORNER_GAIN * corner);
+      samples.push({ s: along * length, along, weight, t });
+    }
+    // CDF
+    const cum: number[] = [0];
+    for (let i = 1; i < samples.length; i++) {
+      const ds = samples[i].s - samples[i - 1].s;
+      const w = 0.5 * (samples[i].weight + samples[i - 1].weight);
+      cum.push(cum[i - 1] + ds * w);
+    }
+    const totalW = cum[cum.length - 1] || 1;
+    const budget = Math.min(
       MAX_LEAVES_PER_SEAM,
-      Math.max(12, Math.round(curve.getLength() / LEAF_SPACING)),
+      Math.max(16, Math.round(length / LEAF_SPACING)),
     );
-    for (let i = 0; i < count; i++) {
+
+    const invCdf = (u: number) => {
+      const target = u * totalW;
+      let lo = 0;
+      let hi = cum.length - 1;
+      while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (cum[mid] < target) lo = mid + 1;
+        else hi = mid;
+      }
+      const i1 = Math.max(1, lo);
+      const i0 = i1 - 1;
+      const span = cum[i1] - cum[i0] || 1;
+      const f = (target - cum[i0]) / span;
+      return samples[i0].along + (samples[i1].along - samples[i0].along) * f;
+    };
+
+    for (let i = 0; i < budget; i++) {
       const r1 = hash(index * 7919 + i * 31);
       const r2 = hash(index * 104729 + i * 17);
       const r3 = hash(index * 15485863 + i * 7);
-      const along = Math.min(0.999, Math.max(0.001, (i + 0.5) / count + (r1 - 0.5) / count));
-      const point = curve.getPointAt(along);
-      const tangent = curve.getTangentAt(along).normalize();
-      // Off to either side of the stem, and further out for the outer leaves, so
-      // the mass has a soft edge instead of a hard ribbon boundary.
-      const side = (r2 - 0.5) * 0.019;
-      // Clumping: a slow wave along the path thins some stretches to almost
-      // nothing and doubles others, the way real overgrowth takes a fence.
-      const clump = 0.45 + 0.55 * Math.abs(Math.sin(along * 9.3 + index * 2.1));
+      const r4 = hash(index * 2246822519 + i * 13);
+      // Sparse gaps: skip ~12% of slots on thin stretches.
+      if (r4 < 0.12 && r1 < 0.55) continue;
+
+      const along = Math.min(0.999, Math.max(0.001, invCdf((i + r1) / budget)));
+      const point = curve.getPoint(along);
+      const tangent = curve.getTangent(along).normalize();
+
+      // Multi-rank lateral: core / mid / fringe.
+      const rank = r2;
+      let side = 0;
+      let rankScale = 1;
+      if (rank < 0.45) {
+        side = (r3 - 0.5) * 0.004;
+        rankScale = 0.95 + r1 * 0.3;
+      } else if (rank < 0.8) {
+        side = (r2 > 0.5 ? 1 : -1) * (0.005 + r3 * LEAF_SIDE);
+        rankScale = 0.7 + r1 * 0.35;
+      } else {
+        side = (r2 > 0.5 ? 1 : -1) * (0.01 + r3 * 0.01);
+        rankScale = 0.45 + r1 * 0.3;
+      }
+
+      const localWeight =
+        0.4 + 0.6 * Math.abs(Math.sin(along * 9.3 + index * 2.1));
       leaves.push({
         x: point.x - tangent.z * side,
         z: point.z + tangent.x * side,
-        y: r3 * 0.0026,
-        yaw: Math.atan2(tangent.x, tangent.z) + (r2 - 0.5) * 2.6,
-        // Nearly flat: the board is read from above, and a leaf on edge is a
-        // sliver of nothing.
-        tilt: (r3 - 0.5) * 0.5,
-        scale: (0.55 + r1 * 0.75) * clump,
+        y: r3 * 0.0032,
+        yaw: Math.atan2(tangent.x, tangent.z) + (r2 - 0.5) * 2.2,
+        tilt: (r3 - 0.5) * 0.45,
+        roll: (r4 - 0.5) * 0.5,
+        ax: 0.75 + r1 * 0.4,
+        az: 0.9 + r2 * 0.4,
+        scale: (0.55 + r1 * 0.7) * rankScale * (0.75 + 0.4 * localWeight),
         phase: i * 0.73 + index * 1.7,
         along,
         seam: index,
@@ -146,13 +253,12 @@ function build(seams: SeamPath[]) {
     }
   }
 
-  const leafGeometry = new THREE.PlaneGeometry(0.0125, 0.019);
-  // Per-instance seed: the leaf shader hangs colour, value and dryness off it,
-  // so a clump is a mix rather than one stamp repeated.
+  const leafGeometry = new THREE.PlaneGeometry(LEAF_W, LEAF_H);
   const seeds = new Float32Array(Math.max(1, leaves.length) * 3);
   leaves.forEach((leaf, i) => {
     seeds[i * 3] = hash(i * 2654435761);
     seeds[i * 3 + 1] = hash(i * 40503 + 11);
+    seeds[i * 3 + 2] = hash(i * 97 + leaf.seam * 13);
   });
   leafGeometry.setAttribute("aLeaf", new THREE.InstancedBufferAttribute(seeds, 3));
   const leafMesh = new THREE.InstancedMesh(
@@ -199,10 +305,12 @@ export function BorderVines({
   const growth = useRef<number[]>([]);
   const heights = useRef<number[]>([]);
   const seeded = useRef(false);
+  const forcePose = useRef(true);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   if (growth.current.length !== vines.built.length) {
     growth.current = vines.built.map(() => 1);
     heights.current = vines.built.map(() => 0);
+    forcePose.current = true;
   }
 
   const targets = useMemo(
@@ -212,8 +320,6 @@ export function BorderVines({
         const sealed = !isRegionUnlocked(buildState, a) || !isRegionUnlocked(buildState, b);
         return {
           growth: sealed ? 1 : 0,
-          // Ride whichever neighbour is higher, or a raised plate would shear
-          // its own border vine in half.
           y:
             Math.max(plateTopY(buildState, focus, a), plateTopY(buildState, focus, b)) + CLEARANCE,
         };
@@ -222,6 +328,7 @@ export function BorderVines({
   );
 
   useEffect(() => {
+    forcePose.current = true;
     invalidate();
   }, [targets, invalidate]);
 
@@ -231,6 +338,7 @@ export function BorderVines({
     const dt = Math.min(delta, 0.05);
     const t = reducedMotion ? 0 : performance.now() * 0.001;
     let busy = false;
+    let wroteLeaves = false;
 
     for (let i = 0; i < vines.built.length; i++) {
       const want = targets[i];
@@ -251,34 +359,47 @@ export function BorderVines({
 
       const child = group.children[i];
       if (child) {
-        child.position.set(reducedMotion ? 0 : Math.sin(t * 1.1 + i * 0.4) * 0.0009, y1, 0);
-        // A vine with nothing left of it should not still be drawn.
+        // Height only — no X sway (that read as a rubber rope).
+        child.position.set(0, y1, 0);
         child.visible = growth.current[i] > 0.01;
       }
     }
 
-    for (let i = 0; i < vines.leaves.length; i++) {
-      const leaf = vines.leaves[i];
-      const grown = growth.current[leaf.seam] ?? 1;
-      const fromEnd = Math.min(leaf.along, 1 - leaf.along) * 2;
-      const shown = Math.max(0, Math.min(1, (grown * 1.16 - fromEnd) / 0.14));
-      if (shown < 0.04) {
-        dummy.scale.setScalar(0.0001);
-      } else {
-        const wind = reducedMotion ? 0 : Math.sin(t * (1.5 + (leaf.phase % 1)) + leaf.phase) * 0.16;
-        const y = heights.current[leaf.seam] ?? targets[leaf.seam]?.y ?? 0;
-        dummy.position.set(leaf.x, y + leaf.y, leaf.z);
-        dummy.rotation.set(-Math.PI / 2 + leaf.tilt + wind * 0.3, leaf.yaw + wind * 0.6, 0);
-        dummy.scale.setScalar(leaf.scale * (0.5 + shown * 0.5));
+    const rewriteLeaves = forcePose.current || busy || !seeded.current;
+    if (rewriteLeaves || !reducedMotion) {
+      // Wind only when motion is allowed; still rewrite matrices for wind while
+      // MotionDriver is already ticking. Growth/height settle freezes when reduced.
+      const doWind = !reducedMotion;
+      if (rewriteLeaves || doWind) {
+        for (let i = 0; i < vines.leaves.length; i++) {
+          const leaf = vines.leaves[i];
+          const grown = growth.current[leaf.seam] ?? 1;
+          const fromEnd = Math.min(leaf.along, 1 - leaf.along) * 2;
+          const shown = Math.max(0, Math.min(1, (grown * 1.1 - fromEnd) / 0.2));
+          if (shown < 0.02) {
+            dummy.scale.setScalar(0.0001);
+          } else {
+            const wind = doWind ? Math.sin(t * (1.5 + (leaf.phase % 1)) + leaf.phase) * 0.12 : 0;
+            const y = heights.current[leaf.seam] ?? targets[leaf.seam]?.y ?? 0;
+            dummy.position.set(leaf.x, y + leaf.y, leaf.z);
+            dummy.rotation.set(
+              -Math.PI / 2 + leaf.tilt + wind * 0.25,
+              leaf.yaw + wind * 0.45,
+              leaf.roll,
+            );
+            const s = leaf.scale * (0.4 + shown * 0.6);
+            dummy.scale.set(s * leaf.ax, s * leaf.az, 1);
+          }
+          dummy.updateMatrix();
+          vines.leafMesh.setMatrixAt(i, dummy.matrix);
+        }
+        wroteLeaves = vines.leaves.length > 0;
       }
-      dummy.updateMatrix();
-      vines.leafMesh.setMatrixAt(i, dummy.matrix);
     }
-    if (vines.leaves.length > 0) vines.leafMesh.instanceMatrix.needsUpdate = true;
 
+    if (wroteLeaves) vines.leafMesh.instanceMatrix.needsUpdate = true;
+    if (!busy) forcePose.current = false;
     seeded.current = true;
-    // Growth and height settle ask for frames. Wind never does — it rides the
-    // sea's heartbeat, and stops when the sea stops.
     if (busy) invalidate();
   });
 

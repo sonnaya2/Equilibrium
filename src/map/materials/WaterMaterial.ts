@@ -35,14 +35,13 @@ import {
 import type { Node } from "three/webgpu";
 import { linear, mapClock, mapUvFrom } from "./shared";
 
-const DEEP = 0x2a4d6e;
-const SHALLOW = 0x4a7898;
-const SKY = 0x8aabca;
-const FOAM = 0xc5d6e0;
+const DEEP = 0x1e3d58;
+const SHALLOW = 0x3a6580;
+const SKY = 0x6f94b4;
+const FOAM = 0xb0c4d0;
 /** What the sea fades to at the outer edge. The canvas clears to this too, so
- *  the plane has no rim and the board sits in one continuous field. Lifted off
- *  near-black so the Board Sky chrome and the void do not fight. */
-export const OCEAN_HORIZON = 0x2c445c;
+ *  the plane has no rim and the board sits in one continuous field. */
+export const OCEAN_HORIZON = 0x1a2e42;
 
 /**
  * World units of swell — a couple of game tiles, and deliberately less than

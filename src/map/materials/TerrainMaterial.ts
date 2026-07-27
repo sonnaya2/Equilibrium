@@ -25,10 +25,10 @@ import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 
 /**
  * Pre-light boost so the wiki raster survives MeshStandard Lambert (÷π) on the
- * board's sparse rig. Tuned with Canvas `flat` (NoToneMapping); ACES would need
- * more.
+ * board's sparse rig. Tuned with Canvas `flat` (NoToneMapping) — 2.05 washed
+ * the print chalky; 1.55 was muddy under the old ACES path.
  */
-const ALBEDO_GAIN = 2.05;
+const ALBEDO_GAIN = 1.72;
 
 export interface TerrainMaterials {
   cap: THREE.MeshStandardNodeMaterial;
@@ -97,7 +97,7 @@ export function createTerrainMaterials(
   // sea cools and darkens — the shore reading a coast wants, and the only thing
   // standing in for a contact shadow on a board with no shadow maps.
   const inlandDepth = smoothstep(float(0.5), float(0.53), F.g);
-  base = mix(base.mul(0.88).mul(vec3(0.94, 0.98, 1.04)), base, inlandDepth);
+  base = mix(base.mul(0.84).mul(vec3(0.94, 0.98, 1.04)), base, inlandDepth);
 
   if (options.water) {
     // Rivers and lakes. Flow runs along the channel, which is perpendicular to

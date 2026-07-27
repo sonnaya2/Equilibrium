@@ -1,22 +1,11 @@
 /**
  * The overgrowth that seals a border you have not opened yet.
  *
- * The Wiki raster is a painted top-down map: fine, matte, olive-and-ochre, with
- * no hard outlines and no gloss anywhere. So this has to be foliage, not a
- * drawn line — an earlier pass rendered a fat even tube along each seam and it
- * read as rubber cable laid over Gielinor, which is exactly the thing the map
- * does not contain.
+ * Leaves do the visual work: dry RS-map sage and ochre, irregular silhouette,
+ * mottling. The stem is thin dead wood under the hedge — never a rubber cable.
  *
- * What does the work is leaves. The stem is deliberately thin and dark, closer
- * to dead wood than to anything green; the mass and the colour come from a few
- * hundred instanced leaf cards clumped along the border, in the same sages and
- * dry ochres the map already uses. Seen from above that reads as a hedge grown
- * across a frontier.
- *
- * Growth is a clip along the path, from both ends toward the middle, driven by
- * `uv.x` (TubeGeometry runs u along its curve). Unlocking withdraws it in about
- * a second instead of unmounting a mesh, which is what lets the whole state be
- * one animating number.
+ * Growth is a clip along the path from both ends, driven by uv.x. Leaves use
+ * binary alpha + depthWrite so the hedge does not twinkle under the demand loop.
  */
 
 import * as THREE from "three/webgpu";
@@ -31,28 +20,26 @@ import {
   step,
   uniform,
   uv,
+  vec2,
   vec3,
 } from "three/tsl";
 import type { Node } from "three/webgpu";
 import { linear } from "./shared";
 
-/**
- * Foliage is lit by the same rig as everything else, and a lit surface returns
- * roughly albedo x irradiance — so authored leaf greens come back as near-black
- * smudges unless they are brightened before lighting, exactly as the terrain is.
- */
-const FOLIAGE_GAIN = 2.2;
+/** Leaf gain under the sparse light rig. Stem uses a lower gain so wood hides. */
+const FOLIAGE_GAIN = 1.85;
+const STEM_GAIN = 1.3;
+const TENDRIL_GAIN = 1.15;
 
-/** Dead wood, not stem green — the stem should disappear under the leaves. */
-const BARK_DARK = 0x241c13;
-const BARK = 0x3a2f1f;
-const BARK_MOSS = 0x3f4a2c;
+const BARK_DARK = 0x1c1610;
+const BARK = 0x32281c;
+const BARK_MOSS = 0x3a4228;
 
-/** Sages and dry ochres, sampled to sit inside the map's own palette. */
-const LEAF_DEEP = 0x2f4526;
-const LEAF_MID = 0x4f6636;
-const LEAF_PALE = 0x76854a;
-const LEAF_DRY = 0x7a6a38;
+const LEAF_DEEP = 0x354628;
+const LEAF_MID = 0x5a6b3a;
+const LEAF_PALE = 0x8a8f52;
+const LEAF_DRY = 0x8a6e34;
+const LEAF_BURN = 0x6a4e2a;
 
 export interface VineMaterials {
   stem: THREE.MeshStandardNodeMaterial;
@@ -64,40 +51,42 @@ export interface VineMaterials {
 
 export function createVineMaterials(): VineMaterials {
   const growth = uniform(1);
-  /** Reveal from both ends inward, with a living tip at the growing edge. */
   const alive = () => {
     const along = uv().x;
     const fromEnd = along.min(along.oneMinus()).mul(2);
-    return smoothstep(float(0), float(0.13), growth.mul(1.16).sub(fromEnd));
+    return smoothstep(float(0), float(0.2), growth.mul(1.1).sub(fromEnd));
   };
 
-  // depthWrite false while growing: a semi-transparent tip that still wrote
-  // depth punched holes through leaves and plates behind the frontier.
+  // Soft tip while growing must not write depth (punches holes in leaves).
   const stem = new THREE.MeshStandardNodeMaterial({
-    roughness: 0.94,
+    roughness: 0.98,
     metalness: 0,
     transparent: true,
     depthWrite: false,
   });
-  const grain = mx_noise_float(positionWorld.mul(220));
-  const bark = mix(linear(BARK_DARK), linear(BARK), grain.mul(0.5).add(0.5));
-  const mossy = mix(bark, linear(BARK_MOSS), grain.mul(0.3).add(0.24));
-  // Round the tube: the far side of a stem should not be as lit as the near side.
-  const round = uv().y.sub(0.5).abs().mul(2);
-  stem.colorNode = mix(mossy.mul(0.7), mossy.mul(1.06), round).mul(FOLIAGE_GAIN);
-  stem.roughnessNode = float(0.9).add(grain.mul(0.08));
+  const along = uv().x;
+  const around = uv().y;
+  const grain = mx_noise_float(positionWorld.mul(vec3(180, 40, 180)));
+  // Long bark striations — not a bright circumferential cable highlight.
+  const stria = mx_noise_float(along.mul(140).add(around.mul(3)));
+  let bark = mix(linear(BARK_DARK), linear(BARK), stria.mul(0.55).add(0.35));
+  bark = mix(bark, linear(BARK_MOSS), grain.mul(0.18).add(0.08));
+  const limb = around.sub(0.5).abs().mul(2);
+  bark = mix(bark.mul(0.92), bark.mul(0.78), limb.pow(1.2));
+  stem.colorNode = bark.mul(STEM_GAIN);
+  stem.roughnessNode = float(0.96).add(stria.mul(0.03));
   stem.opacityNode = alive();
 
   const tendril = new THREE.MeshStandardNodeMaterial({
-    roughness: 0.88,
+    roughness: 0.97,
     metalness: 0,
     transparent: true,
     depthWrite: false,
   });
-  const fine = mx_noise_float(positionWorld.mul(360));
-  tendril.colorNode = mix(linear(BARK), linear(BARK_MOSS), fine.mul(0.5).add(0.5)).mul(FOLIAGE_GAIN);
-  tendril.opacityNode = alive().mul(0.85);
-  tendril.roughnessNode = float(0.88).add(fine.mul(0.1));
+  const fine = mx_noise_float(positionWorld.mul(280));
+  tendril.colorNode = mix(linear(BARK_DARK), linear(BARK), fine.mul(0.4).add(0.4)).mul(TENDRIL_GAIN);
+  tendril.opacityNode = alive().mul(0.72);
+  tendril.roughnessNode = float(0.97);
 
   return {
     stem,
@@ -116,47 +105,65 @@ export interface LeafMaterial {
 }
 
 /**
- * One shared material for every leaf card on the board.
+ * Shared leaf card material.
  *
- * `aLeaf.x` is a per-instance 0..1 seed. Colour, value and dryness all hang off
- * it, so a clump is a mix of sage, deep green and a few dead ones rather than
- * three hundred identical stamps — which is the difference between a hedge and
- * a texture.
+ * aLeaf.x colour/dryness, aLeaf.y morph, aLeaf.z value class — all sampled so a
+ * clump is a mix of sage and straw rather than one stamp.
  */
 export function createLeafMaterial(): LeafMaterial {
-  // Binary alpha cut + depth write: soft opacity under alphaTest crawled under
-  // sub-pixel wind and camera motion; transparent cards without depth also
-  // reordered every frame as a hedge twinkle.
   const material = new THREE.MeshStandardNodeMaterial({
-    roughness: 0.88,
+    roughness: 0.96,
     metalness: 0,
     side: THREE.DoubleSide,
     transparent: true,
     depthWrite: true,
-    alphaTest: 0.35,
+    alphaTest: 0.4,
   });
 
-  const seed = (attribute("aLeaf", "vec3") as unknown as Node<"vec3">).x;
+  const a = attribute("aLeaf", "vec3") as unknown as Node<"vec3">;
+  const seed = a.x;
+  const morph = a.y;
+  const grade = a.z;
   const u = uv();
-  const vein = u.x.sub(0.5).abs().mul(2);
+  const x = u.x.sub(0.5).mul(2);
+  const y = u.y;
 
-  // Three-way blend across the seed, then a little dry ochre on the oldest.
-  const young = mix(linear(LEAF_MID), linear(LEAF_PALE), smoothstep(0.45, 1, seed));
-  const body = mix(linear(LEAF_DEEP), young, smoothstep(0, 0.55, seed));
-  const dried = mix(body, linear(LEAF_DRY), smoothstep(0.86, 1, seed).mul(0.8));
-  // Darker along the spine, paler at the edge — how a leaf reads from above.
-  const shaded = mix(dried.mul(0.72), dried.mul(1.12), vein.pow(0.7));
-  const fleck = mx_noise_float(positionLocal.mul(90));
-  material.colorNode = shaded.mul(fleck.mul(0.09).add(0.955)).mul(FOLIAGE_GAIN);
+  // Asymmetric lean + tip skew from morph seed.
+  const lean = morph.sub(0.5).mul(0.22);
+  const tipSkew = morph.sub(0.5).mul(0.35);
+  const xx = x.sub(lean.mul(y)).sub(tipSkew.mul(y.mul(y)));
 
-  // Cut the quad into a leaf: pointed tip, rounded base, no card corners.
-  // Hard step keeps the alpha-test edge stable under wind.
-  const shape = float(1)
-    .sub(vein.pow(1.5))
-    .sub(smoothstep(float(0.55), float(1), u.y).mul(0.62))
-    .sub(smoothstep(float(0.35), float(0), u.y).mul(0.5));
-  material.opacityNode = step(float(0.02), shape);
-  material.roughnessNode = float(0.86).add(fleck.mul(0.1));
+  const serr = mx_noise_float(vec2(y.mul(18), morph.mul(7)).add(seed.mul(3)))
+    .mul(0.06)
+    .add(mx_noise_float(y.mul(42).add(morph.mul(11))).mul(0.03));
+
+  const width = float(0.18)
+    .add(smoothstep(float(0), float(0.35), y).mul(0.82))
+    .mul(float(1).sub(smoothstep(float(0.55), float(1.02), y).pow(1.35)))
+    .add(serr);
+
+  const inside = width.sub(xx.abs());
+  material.opacityNode = step(float(0.02), inside);
+
+  const young = mix(linear(LEAF_MID), linear(LEAF_PALE), smoothstep(0.4, 1, seed));
+  const body = mix(linear(LEAF_DEEP), young, smoothstep(0, 0.5, seed));
+  const dryAmt = smoothstep(0.72, 1, seed).mul(0.55).add(grade.mul(0.45));
+  let col = mix(body, linear(LEAF_DRY), dryAmt.mul(0.85));
+  col = mix(col, linear(LEAF_BURN), smoothstep(0.92, 1, seed).mul(grade).mul(0.55));
+
+  const rib = smoothstep(float(0.06), float(0), xx.abs());
+  col = mix(col, col.mul(0.62), rib.mul(0.55));
+
+  const blotch = mx_noise_float(positionLocal.mul(28).add(seed.mul(9)));
+  const grit = mx_noise_float(positionLocal.mul(110).add(morph.mul(13)));
+  col = col.mul(blotch.mul(0.16).add(0.92)).mul(grit.mul(0.07).add(0.965));
+
+  const tipDry = smoothstep(float(0.55), float(1), y).mul(dryAmt);
+  col = mix(col, linear(LEAF_DRY).mul(1.05), tipDry.mul(0.35));
+  col = col.mul(mix(float(0.82), float(1.08), grade));
+
+  material.colorNode = col.mul(FOLIAGE_GAIN);
+  material.roughnessNode = float(0.94).add(grit.mul(0.04)).sub(rib.mul(0.06)).add(dryAmt.mul(0.04));
 
   return {
     material,

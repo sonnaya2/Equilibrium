@@ -32,18 +32,21 @@ import { useMapFocus } from "./useMapFocus";
 const Y_SPEED = 6.5;
 
 /**
- * World-unit face widths. Physical on the board — they shrink when you pull
- * out, which is correct wartable reading (no per-frame CSS-pixel billboard).
+ * World-unit face widths. Physical on the board — no CSS-pixel billboard.
+ * Sized so the icon disc is readable under the framed table elevation.
  */
-const FACE_AREA = 0.028;
-const FACE_SITE = 0.02;
-const SHAFT_AREA = 0.014;
-const SHAFT_SITE = 0.011;
-const FOOT_AREA = 0.013;
-const FOOT_SITE = 0.01;
-/** Slight table-facing cant — not a camera billboard. */
-const FACE_TILT = -0.2;
-const HIT_OVERSIZE = 1.45;
+const FACE_AREA = 0.056;
+const FACE_SITE = 0.05;
+const SHAFT_AREA = 0.016;
+const SHAFT_SITE = 0.014;
+const FOOT_AREA = 0.015;
+const FOOT_SITE = 0.013;
+/**
+ * Easel cant toward the designed table shot (~FOCUS_ELEVATION 0.88).
+ * Near-upright (−0.2) was edge-on under that camera and collapsed every icon.
+ */
+const FACE_TILT = -0.72;
+const HIT_OVERSIZE = 1.4;
 
 export const POI_ATLAS_URL = "/map/poi-atlas.json";
 export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp";
@@ -274,8 +277,8 @@ export function PlaceMarkers({
       const shaftH = (site ? SHAFT_SITE : SHAFT_AREA) * reveal;
       const footW = (site ? FOOT_SITE : FOOT_AREA) * reveal;
 
-      // Planted pose: fixed tilt, world size — never camera.quaternion.
-      face.position.set(pin.x, surfaceY + shaftH + faceW * 0.42, pin.z);
+      // Planted easel: short pin, face tilts toward the table view — never camera.quaternion.
+      face.position.set(pin.x, surfaceY + shaftH + faceW * 0.12, pin.z);
       face.scale.setScalar(faceW);
       face.rotation.set(FACE_TILT, 0, 0);
 

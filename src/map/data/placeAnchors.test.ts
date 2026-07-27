@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { RegionId } from "@/league";
 import { getResearchCatalog } from "@/research/catalog";
 import {
+  MAP_OMITTED_AREAS,
   PLACE_ANCHORS,
   PLACES_BY_REGION,
   SITE_ANCHORS,
@@ -28,7 +29,7 @@ export function unanchoredAreasByRegion(): Map<RegionId, string[]> {
   const out = new Map<RegionId, string[]>();
   for (const [region, areas] of AREAS_BY_REGION) {
     const anchored = new Set((PLACES_BY_REGION.get(region as RegionId) ?? []).map((a) => a.area));
-    const missing = areas.filter((area) => !anchored.has(area));
+    const missing = areas.filter((area) => !anchored.has(area) && !MAP_OMITTED_AREAS.has(area));
     if (missing.length > 0) out.set(region as RegionId, missing);
   }
   return out;

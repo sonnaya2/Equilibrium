@@ -25,6 +25,12 @@ export interface PlaceAnchor {
   site?: true;
 }
 
+/**
+ * Catalog areas that deliberately get no board pin (base-camp structure,
+ * underground-only, etc.). Still valid league areas — just not on the 3D map.
+ */
+export const MAP_OMITTED_AREAS: ReadonlySet<string> = new Set(["Slayer Lodge"]);
+
 export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   // Misthalin — cities on the south half, fort and dig site north of Varrock,
   // Underworld/City of Um and the Tower sitting with the south bank.
@@ -149,7 +155,6 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "anachronia", area: "Orthen Dig Site" },
   { region: "anachronia", area: "Time altar" },
   { region: "anachronia", area: "Anachronia Agility Course" },
-  { region: "anachronia", area: "Slayer Lodge" },
   { region: "anachronia", area: "Dream of Iaia" },
   { region: "anachronia", area: "Ranch Out of Time" },
 
@@ -251,7 +256,7 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "tirannwn", area: "Solak", site: true },
   { region: "tirannwn", area: "Max Guild", site: true },
   { region: "tirannwn", area: "Hefin Agility Course", site: true },
-  { region: "tirannwn", area: "Motherlode Maw", site: true },
+
 
   // Anachronia.
   { region: "anachronia", area: "Raksha", site: true },

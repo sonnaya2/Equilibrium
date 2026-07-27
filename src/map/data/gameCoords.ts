@@ -152,6 +152,9 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Solak", [1952, 3151]],
   ["Max Guild", [2276, 3319]],
   ["Hefin Agility Course", [2181, 3423]],
+  // Dropped by accident in a06568f while the anchor row stayed in
+  // placeAnchors.ts, which took `npm test` red. Restored from 97f6f69.
+  ["Motherlode Maw", [2205, 3310]],
 
   ["Anachronia base camp", [3908, 4270]],
   ["Orthen Dig Site", [3972, 4322]],

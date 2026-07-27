@@ -678,6 +678,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
         must: [/Powder of burials/i, /Powder of penance/i, /Powder of pulverising/i],
         minIcons: 5,
       },
+      {
+        name: "Desert strykewyrm",
+        must: [/Focus sight/i],
+        minIcons: 1,
+      },
     ];
     for (const { name, must, minIcons } of cases) {
       const { row, upgrades } = contentRow("desert", name);

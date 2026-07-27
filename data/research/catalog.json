@@ -21132,6 +21132,18 @@
             "title": "Sunken Pyramid / player-owned Slayer dungeon",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Desert strykewyrm",
+          "kind": "Slayer monster",
+          "detail": "East of Al Kharid. 77 Slayer. Unique Focus sight (Ranged slayer helm component with Hexcrest for full helm).",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Desert_strykewyrm",
+            "title": "Desert strykewyrm",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -21712,8 +21724,8 @@
         },
         {
           "name": "Focus sight",
-          "category": "Slayer helmet Ranged component",
-          "detail": "Desert strykewyrms. Completes Magic+Ranged · Effects: On task: +7.5% Ranged damage and +12.5% Ranged accuracy, Required with hexcrest to upgrade slayer helmet to full slayer helmet · Region status: confirmed_wiki_league_region",
+          "category": "Slayer unique",
+          "detail": "Desert strykewyrm unique. On-task Ranged damage/accuracy. With Hexcrest unlocks full slayer helmet path.",
           "requirements": [
             "77 Slayer to fight desert strykewyrms",
             "20 Ranged and 20 Defence to wear",

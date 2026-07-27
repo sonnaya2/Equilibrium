@@ -137,6 +137,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Powder of burials, Powder of penance, Powder of pulverising, Powder of protection, Powder of item protection",
   "Agility Pyramid": "Agility XP, Menaphos reputation",
   "Agility Pyramid (Jaleustrophos)": "Agility XP, Menaphos reputation",
+  "Desert strykewyrm": "Focus sight",
 };
 
 /**

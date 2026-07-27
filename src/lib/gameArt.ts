@@ -666,6 +666,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "herby werby herb bag skilling unlock": "herby-werby",
   "hermod": "hermod",
   "hermod, the spirit of war": "hermod",
+  "desert strykewyrm": "desert-strykewyrm",
+  "focus sight": "focus-sight",
   "het's oasis": "hets-oasis",
   "het's oasis agility course": "hets-oasis-agility-course",
   "het's oasis farming (flower bushes, cactus, honeycombs)": "hets-oasis",

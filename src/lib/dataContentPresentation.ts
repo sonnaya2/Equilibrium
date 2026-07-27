@@ -649,6 +649,7 @@ export function presentInterestName(value: string): string {
   if (/^Beastmaster Durzag$/i.test(raw)) return "Beastmaster Durzag";
   if (/^Yakamaru$/i.test(raw)) return "Yakamaru";
   if (/^Vampyrism Aspect$/i.test(raw)) return "Vampyrism Aspect";
+  if (/^Desert strykewyrm$/i.test(raw)) return "Desert strykewyrm";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")

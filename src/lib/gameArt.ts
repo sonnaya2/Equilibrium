@@ -659,6 +659,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "het's oasis whirligigs and prayer powder production": "hets-oasis",
   "hets oasis": "hets-oasis",
   "hexcrest": "hexcrest",
+  "highweald / deserted mine mining access": "highweald",
   "highweald ruins mine (necrite / phasmatite / platinum / havensilver)": "highweald-ruins-mine",
   "hireable research team recruitment ladder": "archaeology-research",
   "hoardstalker ring": "hoardstalker-ring",

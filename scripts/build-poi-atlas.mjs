@@ -54,6 +54,10 @@ const ALIASES = {
   "demonic-ruins": "demonic-ruins",
   "rogues-castle": "rogues-castle",
   "araxyte-hive": "araxxor",
+  // ED2 / ED3 pins use the dungeon boss icons (not exterior plates).
+  "dragonkin-laboratory": "dragonkin-laboratory",
+  "the-shadow-reef": "the-shadow-reef",
+  "shadow-reef": "the-shadow-reef",
   "slayer-lodge": "hunter-lodge",
   "temple-of-ikov": "temple-of-ikov",
   "underground-pass": "underground-pass",

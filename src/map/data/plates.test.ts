@@ -114,6 +114,49 @@ describe("region plates", () => {
   });
 });
 
+describe("region membership against the wiki", () => {
+  /**
+   * The border gate.
+   *
+   * Every other check here is about the geometry agreeing with itself. This one
+   * is about it agreeing with the world: runescape.wiki states a `leagueRegion`
+   * on most location infoboxes, and `npm run sync:map:coords` commits what it
+   * said. If the partition drops a place inside the wrong plate, the frontier
+   * between those two regions is drawn in the wrong place — which is invisible
+   * in a screenshot and exactly the failure this route keeps having.
+   *
+   * Naming differs between the two sources; the aliases are a bridge, not a
+   * judgement. Anything they do not cover is a real disagreement.
+   */
+  const ALIASES: Record<string, string[]> = {
+    forinthry: ["wilderness", "forinthry"],
+    desert: ["desert", "kharidiandesert"],
+    fremennik: ["fremennik", "fremennikprovince", "fremenniks"],
+  };
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
+
+  const sourced = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "data/map/wiki-league-regions.json"), "utf8"),
+  ) as { places: Record<string, string> };
+
+  it("puts every place the wiki names inside that region's plate", () => {
+    const wrong: string[] = [];
+    for (const [key, stated] of Object.entries(sourced.places)) {
+      const [region, area] = [key.slice(0, key.indexOf("/")), key.slice(key.indexOf("/") + 1)];
+      // The tag itself is checked by the sync script; this is about geometry.
+      if (!(ALIASES[region] ?? [region]).includes(norm(stated))) continue;
+      const point = placeMapCoord(region as RegionId, area);
+      if (!point) continue;
+      // Sea pins and the known offshore pair are covered by their own test.
+      if (!inRegion(region, point) && Object.keys(file.regions).some((r) => inRegion(r, point))) {
+        const actual = Object.keys(file.regions).find((r) => inRegion(r, point));
+        wrong.push(`${key} is on ${actual}'s plate`);
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+});
+
 describe("shared borders", () => {
   const pointSets = new Map<string, Set<string>>(
     REGION_IDS.map((id) => [

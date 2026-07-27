@@ -161,14 +161,71 @@ for (const n of noCoord) console.log(`  ${n.region}/${n.area}`);
 console.log(`\nNO PAGE (${noPage.length}):`);
 for (const n of noPage) console.log(`  ${n.region}/${n.area}`);
 
-const mismatched = [...agreed, ...drifted, ...offSurface, ...noCoord].filter(
-  (r) => r.league && r.league.toLowerCase().replace(/[^a-z]/g, "") !== regionKey(r.region),
+/**
+ * The wiki carries a `leagueRegion` on most location infoboxes — its own answer
+ * to which League region a place belongs to. That is the closest thing to
+ * authoritative region data that exists, so it is worth diffing against our
+ * tags rather than trusting either side blindly.
+ *
+ * Names differ between the two: the wiki writes "Wilderness" for what the
+ * catalog calls forinthry, and "Desert" or "Kharidian Desert" interchangeably.
+ * The alias table is a naming bridge, not a judgement — a disagreement it does
+ * not cover is a real one.
+ */
+const ALIASES = {
+  forinthry: ["wilderness", "forinthry"],
+  desert: ["desert", "kharidiandesert"],
+  fremennik: ["fremennik", "fremennikprovince", "fremenniks"],
+  misthalin: ["misthalin"],
+  asgarnia: ["asgarnia"],
+  kandarin: ["kandarin"],
+  karamja: ["karamja"],
+  morytania: ["morytania"],
+  tirannwn: ["tirannwn"],
+  anachronia: ["anachronia"],
+  havenhythe: ["havenhythe"],
+};
+const norm = (s) => s.toLowerCase().replace(/[^a-z]/g, "");
+const withLeague = [...agreed, ...drifted, ...offSurface, ...noCoord].filter((r) => r.league);
+const mismatched = withLeague.filter(
+  (r) => !(ALIASES[r.region] ?? [r.region]).includes(norm(r.league)),
 );
-function regionKey(id) {
-  return { forinthry: "wilderness", desert: "kharidiandesert", fremennik: "fremennik" }[id] ?? id;
+console.log(
+  `\nLEAGUE REGION — wiki states one for ${withLeague.length} of ${rows.length} pins, ` +
+    `${mismatched.length} disagree with our tag:`,
+);
+for (const m of mismatched) {
+  console.log(`  ${(m.region + "/" + m.area).padEnd(40)} wiki says "${m.league}"`);
 }
-console.log(`\nLEAGUE REGION disagreements with the wiki's own field (${mismatched.length}):`);
-for (const m of mismatched) console.log(`  ${m.region}/${m.area} — wiki says "${m.league}"`);
+
+/**
+ * Commit what the wiki said, so the border gate can run offline.
+ *
+ * This is the only sourced statement of region membership that exists, and it
+ * is what makes "did the partition put this place in the right region" a test
+ * rather than an opinion. plates.test.ts reads it; nothing at runtime does.
+ */
+const LEAGUE_OUT = path.join(ROOT, "data/map/wiki-league-regions.json");
+fs.writeFileSync(
+  LEAGUE_OUT,
+  JSON.stringify(
+    {
+      note:
+        "leagueRegion as stated by each location's infobox on runescape.wiki, " +
+        "written by scripts/sync-map-coordinates.mjs. Sourced region membership: " +
+        "the board's partition must agree with it. Not league data — a check on ours.",
+      fetchedAt: new Date().toISOString().slice(0, 10),
+      places: Object.fromEntries(
+        withLeague
+          .map((r) => [`${r.region}/${r.area}`, r.league])
+          .sort((a, b) => a[0].localeCompare(b[0])),
+      ),
+    },
+    null,
+    2,
+  ) + "\n",
+);
+console.log(`\n[coords] wrote ${withLeague.length} sourced league regions to data/map/`);
 
 // ---------------------------------------------------------------- write ----
 

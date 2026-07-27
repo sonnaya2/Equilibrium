@@ -40,7 +40,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "misthalin", area: "Edgeville", uv: [0.505, 0.4] },
   { region: "misthalin", area: "Zanaris", uv: [0.515, 0.61] },
 
-  // Asgarnia — Falador central, the troll country stacked in the north-west.
+  // Asgarnia — Falador central, the asgarnia stacked in the north-west.
   { region: "asgarnia", area: "Falador", uv: [0.412, 0.472] },
   { region: "asgarnia", area: "Taverley", uv: [0.375, 0.452] },
   { region: "asgarnia", area: "Dwarven Mine", uv: [0.475, 0.428] },

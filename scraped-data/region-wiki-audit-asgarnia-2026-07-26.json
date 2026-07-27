@@ -34,11 +34,11 @@
     {
       "url": "https://runescape.wiki/w/God_Wars_Dungeon",
       "title": "God Wars Dungeon",
-      "role": "GWD approach geography (Troll Country wiki region; Burthorpe/Trollheim routes)"
+      "role": "GWD approach geography (Asgarnia wiki region; Burthorpe/Trollheim routes)"
     },
     {
       "url": "https://runescape.wiki/w/Troll_Country",
-      "title": "Troll Country",
+      "title": "Asgarnia",
       "role": "base-game region for Death Plateau / Trollheim / Stronghold / GWD (League override)"
     },
     {
@@ -89,7 +89,7 @@
       "Entrana",
       "The Arc"
     ],
-    "leagueBoundaryNote": "Base wiki places Death Plateau, Trollheim, Troll Stronghold and God Wars Dungeon in Troll Country (GWD infobox kingdom = Troll Country). Equilibrium League Areas/Asgarnia and project hardRules treat Burthorpe + northern troll approach + GWD as Asgarnia — KEEP that League override; do not invent a separate Troll Country elective region.",
+    "leagueBoundaryNote": "Base wiki places Death Plateau, Trollheim, Troll Stronghold and God Wars Dungeon in Asgarnia (GWD infobox kingdom = Asgarnia). Equilibrium League Areas/Asgarnia and project hardRules treat Burthorpe + northern troll approach + GWD as Asgarnia — KEEP that League override; do not invent a separate Asgarnia elective region.",
     "densityNote": "content.length=15 is denser than thin elective shells (e.g. Fremennik 3, Kandarin 5, Tirannwn 4) but still missing several Equilibrium combat rows. upgrades.length=122 is second-tier only to Misthalin-scale bags and includes many non-local rows.",
     "anchorsStatus": "All 9 current catalog areas have placeAnchors; relative map-uv order matches Gielinor (Falador centre, Port Sarim south, Burthorpe/Death Plateau/Troll chain NW, GWD furthest north). New proposed areas need anchors before map ship."
   },
@@ -118,7 +118,7 @@
       "id": "asg-league-troll-country-override-ok",
       "severity": "info",
       "type": "league_override_confirmed",
-      "detail": "hardRules correctly keep Burthorpe, Death Plateau, Trollheim, Troll Stronghold and GWD approach as Asgarnia. Base wiki Troll Country page must not become a selectable region. Catalog aliases (Trollheim, Troll Stronghold) support that.",
+      "detail": "hardRules correctly keep Burthorpe, Death Plateau, Trollheim, Troll Stronghold and GWD approach as Asgarnia. Base wiki Asgarnia page must not become a selectable region. Catalog aliases (Trollheim, Troll Stronghold) support that.",
       "evidence": [
         "data/league/regions.json hardRules",
         "https://runescape.wiki/w/Troll_Country",
@@ -254,7 +254,7 @@
     ],
     "doNotAdd": [
       {
-        "name": "Troll Country",
+        "name": "Asgarnia",
         "reason": "Base-game region only; League hardRules fold approach into Asgarnia"
       },
       {

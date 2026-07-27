@@ -22402,32 +22402,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Sunken Pyramid / player-owned Slayer dungeon",
-          "category": "Slayer dungeon",
-          "detail": "Slayer Codex soul system + personal Sunken Pyramid. Fourth room (3,000 points) and move-souls layout QoL (1,000 points) live under this package — not separate majors.",
-          "requirements": [
-            "99 Slayer to claim Codex from Faiza (Order of the Slayer Masters / Menaphos)",
-            "Ushabti captures placed in chest of souls or personal Slayer dungeon",
-            "50 unique souls for Sunken Pyramid teleport via Codex",
-            "Up to 117 Slayer (boostable) and 115 Dungeoneering (not boostable) for full Codex completion set"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_Codex",
-            "title": "Slayer Codex and Sunken Pyramid soul system",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Sophanem plover birds",
           "category": "Hunter",
           "detail": "73 Hunter in Sophanem. Good Menaphos reputation while catching. Near Pyramid Plunder, red sandstone, and the Slayer dungeon. Feathers of Ma'at for dungeon kills mostly come from Shifting Tombs.",

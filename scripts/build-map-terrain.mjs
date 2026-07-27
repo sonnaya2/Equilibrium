@@ -316,6 +316,182 @@ const owner = new Uint8Array(N);
   }
 
   /**
+   * Hard frontier corridors. Pure Euclidean seeds cannot hold one-tile
+   * geopolitical borders (Salve, Al Kharid wall / Dig Site, Falador–Varrock,
+   * White Wolf, Musa channel, Yanille–Brimhaven, Forinthry ditch). Boxes are
+   * surface coords from wiki landmarks. League hardRule: Fort Forinthry =
+   * misthalin (not forinthry). Desert is never stolen for Mory.
+   */
+  const mistId = REGIONS.indexOf("misthalin") + 1;
+  const moryId = REGIONS.indexOf("morytania") + 1;
+  const desertId = REGIONS.indexOf("desert") + 1;
+  const asgId = REGIONS.indexOf("asgarnia") + 1;
+  const kandId = REGIONS.indexOf("kandarin") + 1;
+  const karaId = REGIONS.indexOf("karamja") + 1;
+  const foriId = REGIONS.indexOf("forinthry") + 1;
+  const tirId = REGIONS.indexOf("tirannwn") + 1;
+  if ([mistId, moryId, desertId, asgId, kandId, karaId, foriId, tirId].some((id) => id < 1)) {
+    throw new Error("frontier region ids missing from seeds");
+  }
+  let forced = 0;
+  const force = (i, id) => {
+    if (owner[i] !== id) {
+      owner[i] = id;
+      forced++;
+    }
+  };
+  /** True when the current owner is one of the two sides of a bilateral cut. */
+  const either = (i, a, b) => owner[i] === a || owner[i] === b;
+
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const i = py * W + px;
+      if (!land[i]) continue;
+      const [gx, gy] = px2map([px, py]);
+
+      // --- Fort Forinthry campus = Misthalin (league hardRule) ---
+      // Keep [3308,3553]; do not let the fort bleed north of ~3572 into wildy.
+      if (gx >= 3288 && gx <= 3336 && gy >= 3524 && gy <= 3572) {
+        force(i, mistId);
+        continue;
+      }
+
+      // --- Forinthry ditch: S bank = Misthalin; N bank = Forinthry ---
+      // Ditch ~y 3521–3525 Edgeville→Silvarea. West of ~3065 stays Asgarnia
+      // highland (Ice Mountain / Black Knights). Skip fort (handled above).
+      if (gx >= 3075 && gx <= 3405 && gy >= 3485 && gy <= 3522) {
+        if (owner[i] === foriId || owner[i] === mistId) force(i, mistId);
+        continue;
+      }
+      // Cap x short of the Salve so Slayer Tower / north Mory stay Morytania.
+      if (gx >= 3065 && gx <= 3415 && gy >= 3526 && gy <= 3920) {
+        // Do not steal Asgarnia Trollheim / Death Plateau west fringe.
+        if (owner[i] === mistId || owner[i] === foriId) force(i, foriId);
+        continue;
+      }
+
+      // --- Salve: Paterdomus / Dig Site west bank = Misthalin; east bank = Mory ---
+      // Temple ~[3405,3488] west bank; bridge ~[3425,3485].
+      if (gx >= 3300 && gx <= 3416 && gy >= 3360 && gy <= 3535) {
+        force(i, mistId);
+        continue;
+      }
+      if (gx >= 3420 && gx <= 3560 && gy >= 3240 && gy <= 3565) {
+        if (owner[i] !== desertId) force(i, moryId);
+        continue;
+      }
+
+      // --- Dig Site south approach = Misthalin (not desert fingers) ---
+      // Dig Site [3360,3420] + SE approach [3380,3280]. Cap x short of oasis NE
+      // (3400,3280) so Het's sand stays desert.
+      if (gx >= 3240 && gx <= 3390 && gy >= 3270 && gy <= 3450) {
+        force(i, mistId);
+        continue;
+      }
+
+      // --- Burgh / Abandoned Mine / Mort Myre SW = Morytania ---
+      // Abandoned Mine [3441,3233] must not fall to desert force below.
+      if (gx >= 3430 && gx <= 3560 && gy >= 3195 && gy <= 3325) {
+        force(i, moryId);
+        continue;
+      }
+
+      // --- Al Kharid west approach = Misthalin (Lumbridge side of the gate) ---
+      // Gate desert ~[3290,3225]; Lumbridge-side land west of the wall is mist.
+      // North scrub toward Dig Site (x≥3295) stays desert until the dig band.
+      if (gx >= 3235 && gx <= 3275 && gy >= 3215 && gy <= 3275) {
+        force(i, mistId);
+        continue;
+      }
+
+      // --- Al Kharid + north oasis sand = Desert (not Misthalin wedges) ---
+      // Al Kharid [3293,3184], Het's Oasis [3360,3120]. Cap y so Dig Site stays M;
+      // cap x short of Abandoned Mine. West approach mist already continued out.
+      if (gx >= 3260 && gx <= 3425 && gy >= 2900 && gy <= 3275) {
+        force(i, desertId);
+        continue;
+      }
+
+      // --- Falador–Varrock / Draynor–Sarim: latitude-split vertical cut ---
+      // South (Draynor y≤3360): Port Sarim asg, Draynor mist — cut ~3065.
+      // Mid (Barb y 3360–3470): Barb Village [3080,3420] asg — cut ~3086.
+      // North (Edgeville y≥3470): monastery asg ≤3065, Edgeville mist ≥3070.
+      if (gy >= 3180 && gy < 3360) {
+        if (gx >= 2920 && gx <= 3062 && either(i, mistId, asgId)) {
+          force(i, asgId);
+          continue;
+        }
+        if (gx >= 3068 && gx <= 3185 && either(i, mistId, asgId)) {
+          force(i, mistId);
+          continue;
+        }
+      } else if (gy >= 3360 && gy < 3470) {
+        if (gx >= 2920 && gx <= 3085 && either(i, mistId, asgId)) {
+          force(i, asgId);
+          continue;
+        }
+        if (gx >= 3090 && gx <= 3185 && either(i, mistId, asgId)) {
+          force(i, mistId);
+          continue;
+        }
+      } else if (gy >= 3470 && gy <= 3525) {
+        if (gx >= 2920 && gx <= 3065 && either(i, mistId, asgId)) {
+          force(i, asgId);
+          continue;
+        }
+        if (gx >= 3070 && gx <= 3185 && either(i, mistId, asgId)) {
+          force(i, mistId);
+          continue;
+        }
+      }
+
+      // --- White Wolf Mountain: Asgarnia E / Kandarin W ---
+      // Summit [2870,3480] asg; Catherby [2809,3434] + NE ridge [2845,3450] kand.
+      // Cut between 2846 and 2849.
+      if (gx >= 2780 && gx <= 2846 && gy >= 3380 && gy <= 3565 && either(i, asgId, kandId)) {
+        force(i, kandId);
+        continue;
+      }
+      if (gx >= 2850 && gx <= 2925 && gy >= 3380 && gy <= 3565 && either(i, asgId, kandId)) {
+        force(i, asgId);
+        continue;
+      }
+
+      // --- Musa channel: Karamja island W / Asgarnia mainland E ---
+      // Musa Point [2950,3145] kara; Port Sarim / Mudskipper mainland asg.
+      if (gx >= 2860 && gx <= 2975 && gy >= 3100 && gy <= 3188 && either(i, asgId, karaId)) {
+        force(i, karaId);
+        continue;
+      }
+      if (gx >= 2988 && gx <= 3065 && gy >= 3100 && gy <= 3225 && either(i, asgId, karaId)) {
+        force(i, asgId);
+        continue;
+      }
+
+      // --- Yanille (Kandarin) / Brimhaven (Karamja) ---
+      if (gx >= 2520 && gx <= 2685 && gy >= 3000 && gy <= 3185 && either(i, kandId, karaId)) {
+        force(i, kandId);
+        continue;
+      }
+      if (gx >= 2720 && gx <= 2840 && gy >= 3120 && gy <= 3225 && either(i, kandId, karaId)) {
+        force(i, karaId);
+        continue;
+      }
+
+      // --- Arandar pass: Kandarin owns gate + pass; Tirannwn west of pass ---
+      // Gate [2345,3283] kand; W of pass [2305,3275] tir.
+      if (gx >= 2325 && gx <= 2380 && gy >= 3260 && gy <= 3315 && either(i, kandId, tirId)) {
+        force(i, kandId);
+        continue;
+      }
+      if (gx >= 2180 && gx <= 2315 && gy >= 3180 && gy <= 3360 && either(i, kandId, tirId)) {
+        force(i, tirId);
+      }
+    }
+  }
+  console.log(`[terrain] frontier corridors forced ${forced} tiles`);
+
+  /**
    * A landmass with no seed of its own must not be sliced by a Voronoi chord
    * drawn between two towns on other islands — an islet belongs to one region.
    * Components that do hold a seed (the mainland) keep their internal split.

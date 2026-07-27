@@ -47,7 +47,9 @@
     "sync:map:coords": "node scripts/sync-map-coordinates.mjs",
     "audit:map:anchors": "node scripts/audit-map-anchors.mjs",
     "audit:assets-provenance": "node scripts/audit-public-game-provenance.mjs",
-    "register:assets-provenance": "node scripts/register-local-assets-provenance.mjs"
+    "register:assets-provenance": "node scripts/register-local-assets-provenance.mjs",
+    "optimize:images": "node scripts/optimize-game-images.mjs",
+    "build:icon-maps": "node scripts/_build-icon-maps.mjs && node scripts/_emit-data-icon-index.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

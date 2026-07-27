@@ -219,7 +219,7 @@ export function RegionPlate({
               subject ? " is-focus" : ""
             }`}
           >
-            <img src={`/game/regions/${id}.png`} alt="" width={64} height={72} />
+            <img src={`/game/regions/${id}.webp`} alt="" width={64} height={72} />
             <span className="map-region-marker__name">{anchor?.name}</span>
           </div>
         </Html>

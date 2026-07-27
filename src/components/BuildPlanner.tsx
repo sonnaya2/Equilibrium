@@ -93,9 +93,9 @@ const LOADOUT_DOLL: Array<EquipmentSlot | "style" | null> = [
 ];
 
 const RELIC_ICON: Record<string, string> = {
-  Survivalist: "/game/relics/survivalist.png",
-  "Endless Harvest": "/game/relics/endless-harvest.png",
-  "Golden Touch": "/game/relics/golden-touch.png",
+  Survivalist: "/game/relics/survivalist.webp",
+  "Endless Harvest": "/game/relics/endless-harvest.webp",
+  "Golden Touch": "/game/relics/golden-touch.webp",
 };
 
 const RELIC_MONO: Record<string, string> = {

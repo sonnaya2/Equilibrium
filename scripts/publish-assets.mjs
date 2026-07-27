@@ -3,8 +3,8 @@ import { basename, dirname, join } from "node:path";
 
 /**
  * Publishes extracted game art from assets/ into the web-served public/game/ tree.
- * Convention: assets/rs3/<category>/<file>.png -> public/game/<category>/<file>.png,
- * which matches the existing /game/regions/<id>.png paths exactly. Reads the sync
+ * Convention: assets/rs3/<category>/<file>.webp -> public/game/<category>/<file>.webp
+ * (legacy .png still published if present). Reads the sync
  * manifest (assets/manifest.generated.json) so only real, attributed art is served,
  * and fails loudly if any manifest asset is missing from assets/.
  * Run after sync-assets: npm run sync:assets

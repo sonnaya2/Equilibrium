@@ -46,7 +46,7 @@ function looksGarbage(name: string, webPath: string, kind = ""): boolean {
   const fileTokens = file.split("-").filter((t) => t.length >= 3);
   if (!nameTokens.length || !fileTokens.length) return false;
 
-  // Intentional skill fallbacks: /game/skills/<skill>.png when name or kind names that skill.
+  // Intentional skill fallbacks: /game/skills/<skill>.webp when name or kind names that skill.
   const skillHit = webPath.match(/\/skills\/([a-z0-9-]+)\./i);
   if (skillHit) {
     const skill = skillHit[1]!;

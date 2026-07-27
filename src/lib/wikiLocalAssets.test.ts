@@ -26,12 +26,12 @@ describe("resolveLocalAsset", () => {
     expect(hit).toMatchObject({
       label: "Archaeology",
       kind: "skill",
-      src: "/game/skills/archaeology.png",
+      src: "/game/skills/archaeology.webp",
     });
     expectPublishedLocal(hit!.src, "Archaeology");
 
     const agility = resolveLocalAsset("Agility");
-    expect(agility?.src).toBe("/game/skills/agility.png");
+    expect(agility?.src).toBe("/game/skills/agility.webp");
     expect(agility?.kind).toBe("skill");
     expectPublishedLocal(agility!.src, "Agility");
   });
@@ -39,19 +39,19 @@ describe("resolveLocalAsset", () => {
   it("maps boss labels that have published plates", () => {
     const kree = resolveLocalAsset("Kree'arra");
     expect(kree?.kind).toBe("boss");
-    expect(kree?.src).toBe("/game/bosses/kreearra.png");
+    expect(kree?.src).toBe("/game/bosses/kreearra.webp");
     expectPublishedLocal(kree!.src, "Kree'arra");
 
     const glacor = resolveLocalAsset("Arch-Glacor");
     expect(glacor?.kind).toBe("boss");
-    expect(glacor?.src).toMatch(/^\/game\/bosses\/arch-glacor\.(png|gif)$/);
+    expect(glacor?.src).toMatch(/^\/game\/bosses\/arch-glacor\.(webp|png|gif)$/);
     expectPublishedLocal(glacor!.src, "Arch-Glacor");
 
     // Epithet form still hits the same plate (display label preserved).
     const kerapac = resolveLocalAsset("Kerapac, the bound");
     expect(kerapac?.kind).toBe("boss");
     expect(kerapac?.label).toBe("Kerapac, the bound");
-    expect(kerapac?.src).toMatch(/^\/game\/bosses\/kerapac\.(png|gif)$/);
+    expect(kerapac?.src).toMatch(/^\/game\/bosses\/kerapac\.(webp|png|gif)$/);
     expectPublishedLocal(kerapac!.src, "Kerapac, the bound");
   });
 
@@ -59,7 +59,7 @@ describe("resolveLocalAsset", () => {
     const hit = resolveLocalAsset("Bonecrusher");
     expect(hit).toBeTruthy();
     expect(hit!.kind).toMatch(/^(upgrade|item|other)$/);
-    expect(hit!.src).toMatch(/bonecrusher\.png$/);
+    expect(hit!.src).toMatch(/bonecrusher\.(webp|png)$/);
     expectPublishedLocal(hit!.src, "Bonecrusher");
   });
 

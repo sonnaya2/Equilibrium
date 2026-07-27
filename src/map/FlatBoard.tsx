@@ -34,7 +34,7 @@ export function FlatBoard() {
           >
             <circle cx={x} cy={y} r={48} fill="transparent" />
             <image
-              href={`/game/regions/${region.id}.png`}
+              href={`/game/regions/${region.id}.webp`}
               x={x - 32}
               y={y - 54}
               width={64}

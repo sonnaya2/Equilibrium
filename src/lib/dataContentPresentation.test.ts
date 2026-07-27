@@ -154,9 +154,9 @@ describe("resolveRewardIcon + contentRewardIcons", () => {
     expect(resolveRewardIcon("Het's Oasis")).toBeNull();
     const soul = resolveRewardIcon("Soul altar");
     // Honest remaps OK; the multi-MB soul-altar place plate is not.
-    if (soul) expect(soul).not.toMatch(/\/soul-altar\.png$/);
+    if (soul) expect(soul).not.toMatch(/\/soul-altar\.(webp|png)$/);
     // Small inventory permanents stay allowed.
-    expect(resolveRewardIcon("Menaphos reputation")).toMatch(/menaphos-reputation\.png$/);
+    expect(resolveRewardIcon("Menaphos reputation")).toMatch(/menaphos-reputation\.(webp|png)$/);
     // Hermod path may map "Necromancy power armour" to deathdealer inventory art (not skill glyph).
     const necro = resolveRewardIcon("Necromancy power armour");
     if (necro) {
@@ -435,26 +435,26 @@ describe("REWARD_ICON_BY_LABEL", () => {
   });
 
   it("resolveRewardIconLabel is case-insensitive on trim", () => {
-    expect(resolveRewardIconLabel("  Omni Guard  ")).toMatch(/omni-guard\.png$/);
+    expect(resolveRewardIconLabel("  Omni Guard  ")).toMatch(/omni-guard\.(webp|png)$/);
     expect(resolveRewardIconLabel("unknown unique xyz")).toBeNull();
   });
 
   it("resolveRewardIconLabel is apostrophe-insensitive both ways", () => {
-    expect(resolveRewardIconLabel("Kerapac's wrist wraps")).toMatch(/kerapacs-wrist-wraps\.png$/);
-    expect(resolveRewardIconLabel("Kerapacs wrist wraps")).toMatch(/kerapacs-wrist-wraps\.png$/);
-    expect(resolveRewardIconLabel("Tumeken’s Light")).toMatch(/tumekens-light\.png$/); // curly ’
-    expect(resolveRewardIconLabel("Sana's fyrtorch")).toMatch(/sanas-fyrtorch\.png$/);
-    expect(resolveRewardIconLabel("Sanas fyrtorch")).toMatch(/sanas-fyrtorch\.png$/);
+    expect(resolveRewardIconLabel("Kerapac's wrist wraps")).toMatch(/kerapacs-wrist-wraps\.(webp|png)$/);
+    expect(resolveRewardIconLabel("Kerapacs wrist wraps")).toMatch(/kerapacs-wrist-wraps\.(webp|png)$/);
+    expect(resolveRewardIconLabel("Tumeken’s Light")).toMatch(/tumekens-light\.(webp|png)$/); // curly ’
+    expect(resolveRewardIconLabel("Sana's fyrtorch")).toMatch(/sanas-fyrtorch\.(webp|png)$/);
+    expect(resolveRewardIconLabel("Sanas fyrtorch")).toMatch(/sanas-fyrtorch\.(webp|png)$/);
   });
 
   it("resolves anachronia / corp / lunar access tokens", () => {
     expect(resolveRewardIcon("Double Surge")).toMatch(
-      /abilities\/movement\/surge\.png$|ability-codices\/double-surge\.png$/,
+      /abilities\/movement\/surge\.(webp|png)$|ability-codices\/double-surge\.(webp|png)$/,
     );
-    expect(resolveRewardIcon("Dragon mattock")).toMatch(/dragon-mattock\.png$/);
-    expect(resolveRewardIcon("Spirit shield")).toMatch(/spirit-shield\.png$/);
-    expect(resolveRewardIcon("Lunar spellbook")).toMatch(/lunar-spellbook\.png$/);
-    expect(resolveRewardIcon("Pale energy")).toMatch(/pale-energy\.png$/);
+    expect(resolveRewardIcon("Dragon mattock")).toMatch(/dragon-mattock\.(webp|png)$/);
+    expect(resolveRewardIcon("Spirit shield")).toMatch(/spirit-shield\.(webp|png)$/);
+    expect(resolveRewardIcon("Lunar spellbook")).toMatch(/lunar-spellbook\.(webp|png)$/);
+    expect(resolveRewardIcon("Pale energy")).toMatch(/pale-energy\.(webp|png)$/);
   });
 });
 
@@ -1130,7 +1130,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
 
     const safe = contentRow("asgarnia", "Safecracking route");
     const safeP = presentContentRewards(contentRewardsFull(safe.row, safe.upgrades));
-    expect(safeP.icons.some((i) => /safe\.png$/i.test(i.src))).toBe(true);
+    expect(safeP.icons.some((i) => /safe\.(webp|png)$/i.test(i.src))).toBe(true);
   });
 
   it("K'ril Tsutsaroth presents full subjugation piece icons", () => {
@@ -1174,7 +1174,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
   });
 
   it("Amascut's Enchanted Gem resolves to gem inventory art not boss plate", () => {
-    expect(resolveRewardIcon("Amascut's Enchanted Gem")).toMatch(/enchanted-gem\.png$/);
+    expect(resolveRewardIcon("Amascut's Enchanted Gem")).toMatch(/enchanted-gem\.(webp|png)$/);
     expect(publicOk(resolveRewardIcon("Amascut's Enchanted Gem"))).toBe(true);
   });
 

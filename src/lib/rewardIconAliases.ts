@@ -7,19 +7,19 @@
 
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
 
-const prog = (slug: string) => `/game/upgrades/progression/${slug}.png`;
-const codex = (slug: string) => `/game/upgrades/ability-codices/${slug}.png`;
-const offhand = (slug: string) => `/game/upgrades/skilling-offhands/${slug}.png`;
-const util = (slug: string) => `/game/upgrades/combat-utility/${slug}.png`;
-const perm = (slug: string) => `/game/upgrades/permanent-unlocks/${slug}.png`;
-const equip = (slug: string) => `/game/combat/equipment/${slug}.png`;
-const rootUp = (slug: string) => `/game/upgrades/${slug}.png`;
+const prog = (slug: string) => `/game/upgrades/progression/${slug}.webp`;
+const codex = (slug: string) => `/game/upgrades/ability-codices/${slug}.webp`;
+const offhand = (slug: string) => `/game/upgrades/skilling-offhands/${slug}.webp`;
+const util = (slug: string) => `/game/upgrades/combat-utility/${slug}.webp`;
+const perm = (slug: string) => `/game/upgrades/permanent-unlocks/${slug}.webp`;
+const equip = (slug: string) => `/game/combat/equipment/${slug}.webp`;
+const rootUp = (slug: string) => `/game/upgrades/${slug}.webp`;
 
 /**
  * Explicit reward-token aliases. Keys must be unique (lowercase, trimmed).
  * Omit labels with no verified public/game asset.
  */
-const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.png`;
+const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.webp`;
 
 export const REWARD_ICON_BY_LABEL: Record<string, string> = {
 
@@ -110,7 +110,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "scroll of dexterity": perm("scroll-of-dexterity"),
   "advanced smithing autoheater": perm("advanced-smithing-autoheater"),
   "herbicide": perm("herbicide"),
-  "gem bag": "/game/upgrades/skilling-utility/gem-bag.png",
+  "gem bag": "/game/upgrades/skilling-utility/gem-bag.webp",
   "charming imp": perm("charming-imp"),
   "bonecrusher": perm("bonecrusher"),
   "chaotics": equip("chaotic-rapier"),
@@ -327,12 +327,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "crystal hatchet": rootUp("crystal-hatchet"),
   "crystal skillchompas": perm("crystal-skillchompas"),
   // "fishing" substring fences permanent-unlocks as scenery — use skilling-tools path.
-  "crystal fishing rod": "/game/upgrades/skilling-tools/crystal-fishing-rod.png",
-  "crystal urchin points": "/game/upgrades/skilling-tools/crystal-fishing-rod.png",
+  "crystal fishing rod": "/game/upgrades/skilling-tools/crystal-fishing-rod.webp",
+  "crystal urchin points": "/game/upgrades/skilling-tools/crystal-fishing-rod.webp",
   "ancient elven ritual shard": prog("ancient-elven-ritual-shard"),
-  "prifddinian worker's outfit": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.png",
-  "prifddinian workers outfit": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.png",
-  "prayer bonus": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.png",
+  "prifddinian worker's outfit": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp",
+  "prifddinian workers outfit": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp",
+  "prayer bonus": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp",
   "serenity posts": perm("serenity-posts"),
   "grenwall spikes": perm("grenwalls"),
   "grenwalls": perm("grenwalls"),
@@ -475,12 +475,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "illuminated god books": skProd("illuminated-book-of-law"),
   "illuminated god book": skProd("illuminated-book-of-law"),
   // GWD1 → One Piercing Note (Citharede) ability package
-  sacrifice: "/game/combat/abilities/constitution/sacrifice.png",
-  "sacrifice ability": "/game/combat/abilities/constitution/sacrifice.png",
-  devotion: "/game/combat/abilities/defence/devotion.png",
-  "devotion ability": "/game/combat/abilities/defence/devotion.png",
-  transfigure: "/game/combat/abilities/constitution/transfigure.png",
-  "transfigure ability": "/game/combat/abilities/constitution/transfigure.png",
+  sacrifice: "/game/combat/abilities/constitution/sacrifice.webp",
+  "sacrifice ability": "/game/combat/abilities/constitution/sacrifice.webp",
+  devotion: "/game/combat/abilities/defence/devotion.webp",
+  "devotion ability": "/game/combat/abilities/defence/devotion.webp",
+  transfigure: "/game/combat/abilities/constitution/transfigure.webp",
+  "transfigure ability": "/game/combat/abilities/constitution/transfigure.webp",
   "trade goods": perm("player-owned-port"),
   scrimshaws: perm("player-owned-port"),
   "eastern lands voyages": perm("player-owned-port"),
@@ -502,7 +502,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "dragon 2h sword": skProd("dragon-2h-sword"),
 
   // --- Access / materials (inventory or permanent-unlock art only) ---
-  "pale energy": "/game/upgrades/skilling-production/pale-energy.png",
+  "pale energy": "/game/upgrades/skilling-production/pale-energy.webp",
   monolith: perm("mysterious-monolith"),
   "mysterious monolith": perm("mysterious-monolith"),
   museum: perm("museum-donation-bin"),
@@ -571,8 +571,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "anachronia codex": perm("anachronia-codex"),
   "codex lectern": perm("anachronia-codex"),
   // ability-codices/double-* art is mislabeled; use movement ability icons
-  "double surge codex": "/game/combat/abilities/movement/surge.png",
-  "double escape codex": "/game/combat/abilities/movement/escape.png",
+  "double surge codex": "/game/combat/abilities/movement/surge.webp",
+  "double escape codex": "/game/combat/abilities/movement/escape.webp",
   "crystal mattock": prog("crystal-mattock"),
   "gemstone golem outfit": prog("gemstone-golem-outfit"),
 
@@ -639,8 +639,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "guthix staff": perm("guthix-staff"),
   "saradomin staff": perm("saradomin-staff"),
   "zamorak staff": perm("zamorak-staff"),
-  "claws of guthix": "/game/combat/abilities/magic/claws-of-guthix.png",
-  "divine storm": "/game/combat/spells/divine-storm.png",
+  "claws of guthix": "/game/combat/abilities/magic/claws-of-guthix.webp",
+  "divine storm": "/game/combat/spells/divine-storm.webp",
   "staff of light": equip("staff-of-light"),
   "steadfast boots": equip("steadfast-boots"),
   "ragefire boots": equip("ragefire-boots"),
@@ -650,8 +650,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "wyrm spike": perm("wyrm-spike"),
   "wyrm scalp": perm("wyrm-scalp"),
   "wyrm heart": perm("wyrm-heart"),
-  "portable obelisk": "/game/upgrades/skilling-utility/portable-obelisk.png",
-  "obelisk shard": "/game/upgrades/skilling-utility/portable-obelisk.png",
+  "portable obelisk": "/game/upgrades/skilling-utility/portable-obelisk.webp",
+  "obelisk shard": "/game/upgrades/skilling-utility/portable-obelisk.webp",
   // Activities paths are rejected for reward chips — use onyx core as the chest-drop signal.
   "wilderness slayer chest": perm("dark-onyx-core"),
   "gold charm": skProd("gold-charm"),
@@ -711,7 +711,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "greater sunshine": codex("greater-sunshine"),
   "greater death's swiftness": codex("greater-deaths-swiftness"),
   "greater deaths swiftness": codex("greater-deaths-swiftness"),
-  "essence of finality": `/game/upgrades/permanent-equipment/essence-of-finality.png`,
+  "essence of finality": `/game/upgrades/permanent-equipment/essence-of-finality.webp`,
   "amulet of souls": util("amulet-of-souls"),
   "reaper necklace": util("reaper-necklace"),
   "ring of death": util("ring-of-death"),
@@ -779,7 +779,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   nopenopenope: perm("nopenopenope"),
   "nope nope nope": perm("nopenopenope"),
   skillchompas: perm("skillchompas"),
-  "imcando mattock": "/game/upgrades/skilling-tools/imcando-mattock.png",
+  "imcando mattock": "/game/upgrades/skilling-tools/imcando-mattock.webp",
   "inspire awe": perm("inspire-awe"),
   "inspire genius": perm("inspire-genius"),
   endurance: perm("endurance"),
@@ -801,7 +801,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "terrasaur maul": prog("terrasaur-maul"),
   "quick traps": perm("quick-traps"),
   "volcanic trapper outfit": perm("volcanic-trapper"),
-  "orthen furnace core": "/game/upgrades/skilling-offhands/orthen-furnace-core.png",
+  "orthen furnace core": "/game/upgrades/skilling-offhands/orthen-furnace-core.webp",
   "orthen teleportation device": perm("orthen-teleportation-device"),
   "flow state": perm("flow-state"),
   "death note": perm("death-note"),
@@ -830,12 +830,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "bone offering": perm("prayer-altar"),
 
   // Archaeology Guild shop
-  "master archaeologist's outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.png",
-  "master archaeologists outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.png",
-  "soil box": "/game/upgrades/skilling-utility/soil-box.png",
-  "material storage": "/game/upgrades/skilling-utility/archaeological-soil-box.png",
-  "mattock precision": "/game/upgrades/skilling-utility/mattock-precision.png",
-  "archaeologist's tea": "/game/upgrades/skilling-production/archaeologists-tea.png",
+  "master archaeologist's outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
+  "master archaeologists outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
+  "soil box": "/game/upgrades/skilling-utility/soil-box.webp",
+  "material storage": "/game/upgrades/skilling-utility/archaeological-soil-box.webp",
+  "mattock precision": "/game/upgrades/skilling-utility/mattock-precision.webp",
+  "archaeologist's tea": "/game/upgrades/skilling-production/archaeologists-tea.webp",
 
   // Empty Throne Room — dark animica rocks (not light animica)
   "dark animica": skProd("dark-animica"),
@@ -850,8 +850,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "ancient summoning mats": perm("ancient-summoning"),
   "binding contract": perm("binding-contract"),
   "binding contracts": perm("binding-contract"),
-  tetracompass: "/game/upgrades/skilling-utility/tetracompass.png",
-  "tetracompass pieces": "/game/upgrades/skilling-utility/tetracompass.png",
+  tetracompass: "/game/upgrades/skilling-utility/tetracompass.webp",
+  "tetracompass pieces": "/game/upgrades/skilling-utility/tetracompass.webp",
   "inspire love": perm("inspire-love"),
   "ariadne's diadem": perm("inspire-love"),
   "ariadnes diadem": perm("inspire-love"),

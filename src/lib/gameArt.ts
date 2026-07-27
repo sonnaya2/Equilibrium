@@ -17,7 +17,7 @@ import equipmentIconSlugs from "../../data/combat/equipment-icon-slugs.json";
 const EQUIPMENT_OK = new Set(equipmentIconSlugs as string[]);
 
 export function gameIconPath(category: string, name: string): string {
-  return `/game/${category}/${name}.png`;
+  return `/game/${category}/${name}.webp`;
 }
 
 export const STYLE_ICON = {
@@ -32,23 +32,23 @@ export const styleIconPath = (style: keyof typeof STYLE_ICON) => gameIconPath("c
 export const regionCrestPath = (regionId: string) => gameIconPath("regions", regionId);
 
 /** Wiki World Map icon — global / multi-region task crest (CC BY-NC-SA 3.0). */
-export const worldMapIconPath = () => "/game/leagues/world-map-icon.png";
+export const worldMapIconPath = () => "/game/leagues/world-map-icon.webp";
 
 /**
  * Local equipment inventory icons (synced from the wiki, never hotlinked).
- * Path: public/game/combat/equipment/<id-without-item-prefix>.png
+ * Path: public/game/combat/equipment/<id-without-item-prefix>.webp
  * Only returns a path when the slug is in equipment-icon-slugs.json (ok:true).
  * Built by scripts/sync-equipment-icons.mjs → equipment-icons.json + equipment-icon-slugs.json.
  */
 export function equipmentIconPath(equipmentId: string): string | null {
   const slug = equipmentId.replace(/^(?:item|equipment):/, "");
   if (!EQUIPMENT_OK.has(slug)) return null;
-  return `/game/combat/equipment/${slug}.png`;
+  return `/game/combat/equipment/${slug}.webp`;
 }
 
 /**
  * Local ability icons (synced from the wiki, never hotlinked).
- * Path: public/game/combat/abilities/<style>/<id-with-underscores-as-hyphens>.png
+ * Path: public/game/combat/abilities/<style>/<id-with-underscores-as-hyphens>.webp
  * Built by scripts/sync-ability-icons.mjs → data/combat/ability-icons.json.
  */
 export function abilityIconPath(
@@ -57,7 +57,7 @@ export function abilityIconPath(
 ): string {
   const slug = abilityId.replace(/_/g, "-").toLowerCase();
   const folder = style in STYLE_ICON ? style : "melee";
-  return `/game/combat/abilities/${folder}/${slug}.png`;
+  return `/game/combat/abilities/${folder}/${slug}.webp`;
 }
 
 /**
@@ -1689,9 +1689,9 @@ export function skillIconPath(skillIdOrName: string): string | null {
   if (!raw) return null;
   const lower = raw.toLowerCase();
   const alias = DATA_ICON_ALIASES[lower];
-  if (alias && SKILL_ICON_SLUGS.has(alias)) return `/game/skills/${alias}.png`;
+  if (alias && SKILL_ICON_SLUGS.has(alias)) return `/game/skills/${alias}.webp`;
   const slug = slugifyIconLabel(raw);
-  if (SKILL_ICON_SLUGS.has(slug)) return `/game/skills/${slug}.png`;
+  if (SKILL_ICON_SLUGS.has(slug)) return `/game/skills/${slug}.webp`;
   return null;
 }
 
@@ -1699,7 +1699,7 @@ export function skillIconPath(skillIdOrName: string): string | null {
 function primaryBossIconPath(name: string): string | null {
   return firstHit(exactSlugCandidates(name), (slug) => {
     if (!BOSS_ICON_SLUGS.has(slug)) return null;
-    const ext = BOSS_ICON_EXT[slug] ?? "png";
+    const ext = BOSS_ICON_EXT[slug] ?? "webp";
     return `/game/bosses/${slug}.${ext}`;
   });
 }
@@ -1715,7 +1715,7 @@ export function bossIconPath(name: string): string | null {
   }
   return firstHit(cands, (slug) => {
     if (!BOSS_ICON_SLUGS.has(slug)) return null;
-    const ext = BOSS_ICON_EXT[slug] ?? "png";
+    const ext = BOSS_ICON_EXT[slug] ?? "webp";
     return `/game/bosses/${slug}.${ext}`;
   });
 }

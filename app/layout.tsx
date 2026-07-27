@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Cinzel } from "next/font/google";
 import "./globals.css";
-import "./champion.css";
+import "./theme.css";
 import { Nav } from "@/components/Nav";
 import { ShareImport } from "@/components/ShareImport";
 

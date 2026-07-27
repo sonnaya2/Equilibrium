@@ -59,13 +59,7 @@ function formatTime(ticks: number): string {
   return `${seconds.toFixed(1)}s`;
 }
 
-/** Horizon label: "60s · 100 ticks" (whole seconds when clean). */
-function formatHorizon(ticks: number): string {
-  if (ticks <= 0) return "—";
-  const seconds = ticksToSeconds(ticks);
-  const secLabel = Number.isInteger(seconds) ? `${seconds}s` : `${seconds.toFixed(1)}s`;
-  return `${secLabel} · ${ticks} ticks`;
-}
+
 
 function styleLabel(style: string): string {
   if (style in STYLE_LABEL) return STYLE_LABEL[style as keyof typeof STYLE_LABEL];
@@ -77,17 +71,11 @@ function barOptionLabel(bar: RevoBarView): string {
   if (bar.name) return bar.name;
 
   const style = styleLabel(bar.style);
-  const modeSegment =
-    bar.mode === "basics"
-      ? "Basics"
-      : bar.mode === "hybrid"
-        ? `Hybrid (size ${bar.revolutionSize})`
-        : "Revo++";
-  const parts = [style];
-  if (bar.setup && bar.setup !== "Any") parts.push(bar.setup);
-  parts.push(modeSegment);
-  if (bar.label) parts.push(bar.label);
-  return parts.join(" · ");
+  // Prefer the authored name; fall back to style · setup only (no PvME lecture labels).
+  if (bar.setup && bar.setup !== "Any") return `${style} · ${bar.setup}`;
+  if (bar.mode === "basics") return `${style} · Basics`;
+  if (bar.mode === "hybrid") return `${style} · Hybrid`;
+  return style;
 }
 
 /** First supported ST bar for a combat style — prefer revo++ over basics. */
@@ -329,14 +317,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       <BarGraphic slots={slots} revoSize={revoSize} />
 
-      {bar?.notes && bar.notes.length > 0 ? (
-        <ul className="revo-notes mt-2 list-inside list-disc text-xs text-parch-300">
-          {bar.notes.map((note, i) => (
-            <li key={`${i}-${note.slice(0, 24)}`}>{note}</li>
-          ))}
-        </ul>
-      ) : null}
-
       <div className="revo-run-controls mt-3 grid gap-3 sm:grid-cols-[220px_auto] sm:items-end">
         <div>
           <NumberField
@@ -346,7 +326,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             suffix="s"
           />
           <p className="mt-1 text-[11px] text-parch-300" data-testid="revo-horizon-plan">
-            Horizon {formatHorizon(plannedTicks)}
+            {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
           </p>
         </div>
         <div>
@@ -374,24 +354,24 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         <div className="mt-4">
           <dl className="revo-stat-strip grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">Horizon</dt>
+              <dt className="text-xs text-parch-300">Ticks</dt>
               <dd className="font-mono text-parch-50" data-testid="revo-horizon">
-                {formatHorizon(horizonTicks)}
+                {horizonTicks > 0 ? horizonTicks : "—"}
               </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">Casts</dt>
+              <dt className="text-xs text-parch-300">Abilities</dt>
               <dd className="font-mono text-parch-50" data-testid="revo-casts">
                 {result.casts.length}
                 <span className="text-parch-300"> · {basicCount} basic</span>
               </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">Expected</dt>
+              <dt className="text-xs text-parch-300">Damage</dt>
               <dd className="font-mono text-parch-50">{formatNumber(result.totalExpected)}</dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">DPS (horizon)</dt>
+              <dt className="text-xs text-parch-300">DPS</dt>
               <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
@@ -410,7 +390,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </dl>
 
           <section className="revo-section revo-timeline">
-            <h3 className="combat-section-title text-xs font-medium text-parch-50">Cast timeline</h3>
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>
             <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
             <table className="w-full min-w-[520px] border-collapse text-left text-xs">
               <thead className="sticky top-0 bg-stone-900 text-parch-300">
@@ -420,7 +400,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                   <th className="py-1.5 pr-2 font-medium">Time</th>
                   <th className="py-1.5 pr-2 font-medium">Ability</th>
                   <th className="py-1.5 pr-2 font-medium">Adren</th>
-                  <th className="py-1.5 font-medium">Expected</th>
+                  <th className="py-1.5 font-medium">Damage</th>
                 </tr>
               </thead>
               <tbody>
@@ -484,7 +464,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </section>
 
           <section className="revo-section revo-damage">
-            <h3 className="combat-section-title text-xs font-medium text-parch-50">Damage by ability</h3>
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">Ability damage</h3>
             <div className="revo-contributions mt-2 border-t border-stone-750">
             {contributions.map((row) => (
               <div

@@ -136,7 +136,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   // Revolution is the default Rotation mode — no need to switch away from manual.
   await expect(page.getByRole("button", { name: "Run revolution" })).toBeVisible();
   await expect(page.getByText("Run revolution for the cast log")).toBeVisible();
-  await expect(page.getByText(/Horizon 60s · 100 ticks/)).toBeVisible();
+  await expect(page.getByTestId("revo-horizon-plan")).toHaveText(/100 ticks/);
 
   // Default melee dual-wield bar is fully engine-mapped post-audit.
   // Backreference, not a literal count: the assertion is "every slot on the bar
@@ -146,10 +146,10 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
   await page.getByRole("button", { name: "Run revolution" }).click();
-  await expect(page.getByText("DPS (horizon)")).toBeVisible();
-  await expect(page.getByTestId("revo-horizon")).toHaveText(/60s · 100 ticks/);
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("revo-horizon")).toHaveText(/^100$/);
   await expect(page.getByTestId("revo-casts")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Cast timeline" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
   // Basics are auto-woven into the horizon; at least one basic row or the timeline table.
   const basics = page.locator("[data-basic='true']");
   const timeline = page.getByTestId("revo-cast-timeline");

@@ -190,7 +190,8 @@ export default function MapScene() {
           // shot as the intro descent, or cuts straight there under reduced
           // motion. Perspective, because a straight-down orthographic board
           // hides every bit of the depth this map is built out of.
-          camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.05, far: 20 }}
+          // near 0.02 — deep zoom (ZOOM_MAX 10) shortens the sphere; 0.05 clipped.
+          camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.02, far: 20 }}
           onPointerMissed={unframe}
           gl={(props) =>
             rendererFor(props as unknown as Record<string, unknown>, () => failRef.current())

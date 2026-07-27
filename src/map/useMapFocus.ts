@@ -47,7 +47,11 @@ export interface MapFocus {
 
 /** Zoom in raises this; zoom out lowers it. */
 export const ZOOM_MIN = -2;
-export const ZOOM_MAX = 4;
+/**
+ * Closer end of the designed zoom ladder. Was 4 (~2.2× radius); 10 reaches
+ * ~7× base so pins and coasts can be inspected without fighting the clamp.
+ */
+export const ZOOM_MAX = 10;
 /** Radius scale per zoom step — <1 means zoom-in shortens the shot. */
 export const ZOOM_STEP_MUL = 0.82;
 

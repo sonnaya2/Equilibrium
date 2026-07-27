@@ -324,7 +324,9 @@ export function CameraRig({
 
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
-      nudgeZoom(event.deltaY > 0 ? -1 : 1);
+      // Trackpads can emit large deltas — allow up to 3 steps so a flick zooms.
+      const steps = Math.max(1, Math.min(3, Math.round(Math.abs(event.deltaY) / 100)));
+      nudgeZoom(event.deltaY > 0 ? -steps : steps);
       invalidate();
     };
 

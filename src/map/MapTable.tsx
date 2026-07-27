@@ -31,7 +31,7 @@ export function MapTable() {
     mapTexture.needsUpdate = true;
     return new THREE.MeshBasicMaterial({
       map: mapTexture,
-      transparent: true,
+      transparent: false,
       toneMapped: false,
     });
   }, [mapTexture]);

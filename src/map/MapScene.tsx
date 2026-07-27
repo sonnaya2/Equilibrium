@@ -13,7 +13,6 @@ import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE } from "./data/regionAnchors";
 import { SURFACE_VOID } from "./palette";
 import { useMapFocus } from "./useMapFocus";
-import { VineFrame } from "./VineFrame";
 
 extend(THREE as never);
 
@@ -142,7 +141,6 @@ export default function MapScene() {
             intrinsic-SVG growth into the under ledger. */}
         <div className="board-sky__canvas-host">
           <FlatBoard />
-          <VineFrame />
         </div>
       </div>
     );
@@ -151,15 +149,14 @@ export default function MapScene() {
   return (
     <div className="board-sky__scene">
       {/* Host is sized by the board flex cell, not an aspect-ratio strip.
-          CameraRig solves radius from live aspect; absolute canvas fill keeps
+          CameraRig fits the map from live aspect; absolute canvas fill keeps
           WebGPU glued to the host so min-h-0 ancestors actually work. */}
       <div className="board-sky__canvas-host">
         <Canvas
+          orthographic
           dpr={[1, 2]}
           frameloop="demand"
-          // Starts wide and high; the rig settles to the table framing as the
-          // intro descent (a hard cut under reduced motion).
-          camera={{ position: [0.9, 2.4, 2.1], fov: 42, near: 0.05, far: 20 }}
+          camera={{ position: [0, 4, 0], near: 0.05, far: 20, up: [0, 0, -1] }}
           onPointerMissed={unframe}
           gl={(props) =>
             rendererFor(props as unknown as Record<string, unknown>, () => failRef.current())
@@ -175,9 +172,8 @@ export default function MapScene() {
           />
           <InvalidateOnBuild />
         </Canvas>
-        <VineFrame />
       </div>
-      <p className="shrink-0 px-1.5 py-1 text-xs text-parch-500">{MAP_IMAGE.credit}</p>
+      <p className="board-sky__credit">{MAP_IMAGE.credit}</p>
     </div>
   );
 }

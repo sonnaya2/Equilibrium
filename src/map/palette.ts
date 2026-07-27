@@ -2,7 +2,7 @@
  * Mirrors app/globals.css @theme for 3D scene (Editorial hybrid production).
  */
 
-export const SURFACE_VOID = 0x173742;
+export const SURFACE_VOID = 0x8293ae;
 export const SURFACE_DEEP = 0x100e0b;
 export const SURFACE_PANEL = 0x16120e;
 export const SURFACE_RAISED = 0x1f1912;

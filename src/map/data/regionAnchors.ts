@@ -64,7 +64,7 @@ export const REGION_ANCHORS: readonly RegionAnchor[] = [
   region("karamja", "Karamja", [2850, 3000], 0.9),
   region("asgarnia", "Asgarnia", [2960, 3440], 0.95),
   region("kandarin", "Kandarin", [2600, 3370], 1),
-  region("fremennik", "Fremennik Province", [2600, 3750], 0.9),
+  region("fremennik", "Fremennik Province", [2720, 3680], 0.9),
   region("forinthry", "Wilderness", [3200, 3820], 1.05),
   region("desert", "Kharidian Desert", [3300, 2880], 1),
   region("morytania", "Morytania", [3600, 3420], 0.9),

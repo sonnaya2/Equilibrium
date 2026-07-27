@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Page } from "@/components/Page";
-import { PageHeading } from "@/components/Heading";
 import { RegionPlanner } from "@/map/RegionPlanner";
 import type { PlannerRegion } from "@/map/data/plannerRegion";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
@@ -63,7 +62,6 @@ export default function MapPage() {
     // `map-shell` fills main between header and footer — flex + min-h-0 lets
     // the canvas take majority height instead of a letterboxed strip.
     <Page wide className="map-shell flex min-h-0 flex-1 flex-col">
-      <PageHeading note="Three electives · Build picks." />
       <RegionPlanner regions={plannerRegions} boundaryRules={catalog.hardRules} />
     </Page>
   );

@@ -16722,37 +16722,38 @@
     },
     {
       "id": "forinthry:wilderness-herb-patch",
-      "name": "Wilderness herb patch",
-      "category": "unique Farming herb patch",
+      "name": "Bloodweed & aggression potions",
+      "category": "Bloodweed farm + aggression potion craft",
       "region_hint": "forinthry",
       "location": "Wilderness herb patch (north of the Wilderness Crater / Chaos Temple area logistics)",
       "requirements": [
         "Wilderness level ~38 north of Wilderness Crater / canoe destination",
         "57 Farming to plant bloodweed (only patch in the game that accepts bloodweed seeds)",
+        "82 Herblore to craft aggression potions (clean bloodweed + searing ashes, unassistable)",
         "Wilderness sword 1 for unlimited herb-patch teleports; sword 3 makes the patch disease-free",
         "Wilderness / Forinthry access",
-        "Farming level matching planted herb seeds",
-        "Wilderness hard achievements for disease-free state (Wilderness sword 3+ always: patch never diseased)",
-        "Wilderness sword 1+ operate teleport to the herb patch"
+        "Wilderness hard achievements for disease-free state (Wilderness sword 3+ always: patch never diseased)"
       ],
       "unlocks": [
         "Bloodweed seed planting and grimy bloodweed harvest (Wilderness-only crop)",
+        "Aggression potion: clean bloodweed + searing ashes (82 Herblore, 185 XP)",
+        "Aggression potion: 6 minutes per dose, 17x17 AoE, 1 monster every 3 seconds, ignores tolerance",
         "Any standard herb also plantable on this patch",
         "Very rare dark onyx core / portable obelisk / obelisk shard on full manual harvest (post-16 March 2026)",
-        "Diary synergy with Wilderness achievements",
-        "Extra herb-run node on Forinthry geography",
-        "Disease-free herb growth after hard Wilderness diary",
         "Free herb-patch teleport on Wilderness sword operate (tier 1+)",
-        "Bloodweed and other Wilderness-only herb options where applicable"
+        "Disease-free herb growth after hard Wilderness diary / sword 3"
       ],
       "region_pressure": [
-        "Forinthry owns the patch and sword diary ladder.",
+        "Forinthry owns the only bloodweed patch and the sword diary ladder.",
+        "Searing ashes are a Forinthry wilderness secondary path for the potion.",
         "PvP risk remains on the surface — plan protection or safe worlds per League rules."
       ],
-      "notes": "Region-defining Farming site for bloodweed potions and onyx-core rolls. No G.A.G. gardener. Prefer Wilderness sword tele over waka canoe for repeats. Demonic skull removed 20 July 2026",
+      "notes": "Region-defining bloodweed site feeding aggression potions. No G.A.G. gardener. Prefer Wilderness sword tele over waka canoe for repeats. Demonic skull removed 20 July 2026",
       "source_urls": [
         "https://runescape.wiki/w/Herb_patch_(Wilderness)",
         "https://runescape.wiki/w/Bloodweed_seed",
+        "https://runescape.wiki/w/Aggression_potion",
+        "https://runescape.wiki/w/Searing_ashes",
         "https://runescape.wiki/w/Wilderness_sword",
         "https://runescape.wiki/w/Wilderness_achievements"
       ],

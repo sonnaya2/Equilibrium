@@ -625,6 +625,23 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
+  it("Bloodweed & aggression potions shows pot stack icons", () => {
+    const { row, upgrades } = contentRow("forinthry", "Bloodweed & aggression potions");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Clean bloodweed/i);
+    expect(full).toMatch(/Searing ashes/i);
+    expect(full).toMatch(/Aggression potion/i);
+    expect(full).toMatch(/82 Herb/i);
+    expect(full).toMatch(/17/i);
+    expect(full).not.toMatch(/G\.A\.G\.|Demonic skull/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.map((i) => i.label.toLowerCase())).toEqual(
+      expect.arrayContaining(["clean bloodweed", "searing ashes", "aggression potion"]),
+    );
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presentInterestName(row.name)).toBe("Bloodweed / aggression pots");
+  });
+
   it("Havenhythe bosses resolve unique drops with inventory icons", () => {
     const cases: Array<{ name: string; must: RegExp[] }> = [
       {

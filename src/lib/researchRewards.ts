@@ -82,6 +82,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Ivar, King of Bones": "Bonecrusher maul, Magic skull mask, Colossal bone",
   "Silverquill, the Dreadhog": "Silver spines, Sanguine spines",
   "Sanguine Crawler": "Vampyrism gloves, Tainted seed, Sanguine matter",
+  // Forinthry bloodweed stack — patch is the gate; pot is the payoff.
+  "Bloodweed & aggression potions":
+    "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
+  "Wilderness herb patch":
+    "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
 };
 
 /**

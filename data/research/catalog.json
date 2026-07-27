@@ -17773,15 +17773,15 @@
           }
         },
         {
-          "name": "Wilderness herb patch",
-          "kind": "unique Farming herb patch",
-          "detail": "Region-defining Farming site for bloodweed potions and onyx-core rolls. No G.A.G. gardener. Prefer Wilderness sword tele over waka canoe for repeats. Demonic skull removed 20 July 2026",
+          "name": "Bloodweed & aggression potions",
+          "kind": "unique Farming herb + Herblore stack",
+          "detail": "Only patch that takes bloodweed (57 Farming). Clean bloodweed + searing ashes = aggression potion (82 Herblore, 185 XP). 6 min/dose, 17x17 aggro, 1 mob/3s. Sword 1 tele; sword 3 disease-free. No gardener.",
           "confidence": "confirmed_wiki_2026_current",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Herb_patch_(Wilderness)",
-            "title": "Wilderness herb patch",
-            "verifiedAt": "2026-07-26"
+            "url": "https://runescape.wiki/w/Aggression_potion",
+            "title": "Bloodweed & aggression potions",
+            "verifiedAt": "2026-07-27"
           }
         },
         {

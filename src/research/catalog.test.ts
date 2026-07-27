@@ -94,11 +94,13 @@ describe("research catalog", () => {
       "Forinthry Dungeon",
       "Charming moths",
       "Mage of Zamorak (Abyss entrance)",
-      "Daemonheim",
+      "Daemonheim Dig Site",
       "Corporeal Beast",
       "Chaos Elemental",
       "Wilderness Agility Course",
       "Abyss entrance",
+      "Bloodweed & aggression potions",
+      "Wilderness Slayer",
     ]) {
       expect(forNames.has(name), `forinthry missing ${name}`).toBe(true);
     }

@@ -26,6 +26,16 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "flesh rune": skProd("flesh-rune"),
   "miasma rune": skProd("miasma-rune"),
 
+  // --- Bloodweed / aggression pots (Forinthry) ---
+  "clean bloodweed": skProd("clean-bloodweed"),
+  "grimy bloodweed": skProd("grimy-bloodweed"),
+  "bloodweed seed": skProd("bloodweed-seed"),
+  "bloodweed": skProd("clean-bloodweed"),
+  "searing ashes": skProd("searing-ashes"),
+  "aggression potion": skProd("aggression-potion"),
+  "aggression potions": skProd("aggression-potion"),
+  "aggression pot": skProd("aggression-potion"),
+
   // --- Havenhythe uniques ---
   "bonecrusher maul": perm("bonecrusher-maul"),
   "magic skull mask": perm("magic-skull-mask"),

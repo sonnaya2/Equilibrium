@@ -8486,7 +8486,7 @@
     },
     {
       "id": "forinthry:wilderness-herb-patch",
-      "name": "Wilderness herb patch",
+      "name": "Bloodweed & aggression potions",
       "recordType": "activity",
       "regionHints": [
         "forinthry"
@@ -8495,20 +8495,21 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "Farming permanent patch unlock",
-      "detail": "Diary tiers gate disease-free + teleport QoL · Unlocks: Extra herb-run node on Forinthry geography, Disease-free herb growth after hard Wilderness diary, Free herb-patch teleport on Wilderness sword operate (tier 1+), Bloodweed and other Wilderness-only herb options where applicable · Region pressure: Forinthry owns the patch and sword diary ladder., PvP risk remains on the surface — plan protection or safe worlds per League rules",
+      "category": "Bloodweed farm + aggression potion craft",
+      "detail": "Only herb patch that accepts bloodweed seeds (57 Farming). Clean bloodweed + searing ashes craft aggression potions (82 Herblore, 185 XP, unassistable). Each dose lasts 6 minutes and pulls monsters in a 17x17 area (1 mob every 3s), ignoring tolerance. Sword 1 teleports to the patch; sword 3 / hard diary makes it disease-free. No G.A.G. gardener. · Unlocks: Bloodweed seed plant and grimy harvest (Wilderness-only crop), Aggression potion from clean bloodweed + searing ashes, Standard herbs also plantable here, Rare dark onyx core / portable obelisk rolls on full harvest · Region pressure: Forinthry owns the only bloodweed patch; searing ashes are a Forinthry wilderness drop path",
       "requirements": [
         "Wilderness / Forinthry access",
-        "Farming level matching planted herb seeds",
-        "Wilderness hard achievements for disease-free state (Wilderness sword 3+ always: patch never diseased)",
-        "Wilderness sword 1+ operate teleport to the herb patch"
+        "57 Farming for bloodweed seeds",
+        "82 Herblore for aggression potions",
+        "Wilderness sword 1+ operate teleport to the herb patch",
+        "Wilderness hard achievements / sword 3 for disease-free growth"
       ],
       "confidence": "confirmed_wiki",
       "source": {
         "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Herb_patch_(Wilderness)",
-        "title": "Wilderness herb patch",
-        "verifiedAt": "2026-07-26"
+        "url": "https://runescape.wiki/w/Aggression_potion",
+        "title": "Bloodweed & aggression potions",
+        "verifiedAt": "2026-07-27"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json"
     },

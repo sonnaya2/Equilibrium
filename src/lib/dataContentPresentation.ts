@@ -620,6 +620,8 @@ export function presentInterestName(value: string): string {
   if (/^Woodcutters?' Grove\b/i.test(raw)) return "Woodcutters' Grove";
   if (/^Tier 3 Woodcutter's Grove\b/i.test(raw)) return "Woodcutters' Grove";
   if (/^Havenhythe canoe network$/i.test(raw)) return "Canoe network";
+  if (/^Bloodweed\s*&\s*aggression potions$/i.test(raw)) return "Bloodweed / aggression pots";
+  if (/^Wilderness herb patch$/i.test(raw)) return "Bloodweed / aggression pots";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")

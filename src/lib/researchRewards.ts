@@ -469,8 +469,9 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "Dragonkin Laboratory": "Dragonkin Laboratory",
   "The Shadow Reef (ED3)": "Eldritch crossbow",
   "The Shadow Reef": "Eldritch crossbow",
-  "Corporeal Beast": "Spirit shield",
-  "Corporeal Beast holy-elixir / spirit shield path": "Spirit shield",
+  // Corp uniques live in the early override (Spirit shield + Holy elixir + four sigils).
+  "Corporeal Beast holy-elixir / spirit shield path":
+    "Spirit shield, Holy elixir, Arcane sigil, Elysian sigil, Divine sigil, Spectral sigil",
   "Daemonheim Rewards shop (Marmaros)": "Chaotic equipment",
   "Daemonheim Rewards shop": "Chaotic equipment",
   "Chaotic weapons": "Chaotic equipment",

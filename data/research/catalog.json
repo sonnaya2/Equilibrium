@@ -21072,6 +21072,66 @@
             "title": "Liberation of Mazcab",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Beastmaster Durzag",
+          "kind": "Raid boss",
+          "detail": "Liberation of Mazcab first boss. Achto pieces and raid uniques path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Beastmaster_Durzag",
+            "title": "Beastmaster Durzag",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Yakamaru",
+          "kind": "Raid boss",
+          "detail": "Liberation of Mazcab final boss. Achto pieces and raid uniques path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Yakamaru",
+            "title": "Yakamaru",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Mazcab Emergency Merchants",
+          "kind": "combat supply shop",
+          "detail": "Kanatah / Otot / raids Goebie shop. Super combat-style pots, super restore, summoning potion, cooked eeligator. Restocks every 2 minutes; Mazcab reputation discounts 10%/25%.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mazcab_Emergency_Merchants",
+            "title": "Mazcab Emergency Merchants",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Goebie scavengers",
+          "kind": "Thieving pickpocket",
+          "detail": "102 Thieving pickpocket on Mazcab (west of raids / north of graveyard). Teci, burial charms, cooked eeligator, Mazcab reroll tokens. 2025 Thieving update high-level target.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Goebie_scavenger",
+            "title": "Goebie scavengers",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Sunken Pyramid / player-owned Slayer dungeon",
+          "kind": "Slayer dungeon",
+          "detail": "Personal Sunken Pyramid via Slayer Codex. Fourth room (3,000 Slayer points) and move-souls layout (1,000 points) are the Buy/Learn unlocks — same package.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Player-owned_slayer_dungeon",
+            "title": "Sunken Pyramid / player-owned Slayer dungeon",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -22330,9 +22390,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Slayer Codex and Sunken Pyramid soul system",
-          "category": "Slayer permanent utility and reputation",
-          "detail": "Region-important Desert endgame Slayer utility. Corrupted slayer helmet can open the Codex while worn. Fourth Sunken Pyramid room is a separate 3,000-point Buy unlock. Not a combat BiS item · Soul farm geography is multi-region by monster · Unlocks: Slayer Codex soul log, +1% Slayer XP in slayer helmet (or stand) per 20 unique souls, to +5% at 100 souls, 250 base Menaphos reputation per first soul of a type, Sunken Pyramid teleport after 50 souls, Personal Slayer dungeon (Sunken Pyramid) soul placement",
+          "name": "Sunken Pyramid / player-owned Slayer dungeon",
+          "category": "Slayer dungeon",
+          "detail": "Slayer Codex soul system + personal Sunken Pyramid. Fourth room (3,000 points) and move-souls layout QoL (1,000 points) live under this package — not separate majors.",
           "requirements": [
             "99 Slayer to claim Codex from Faiza (Order of the Slayer Masters / Menaphos)",
             "Ushabti captures placed in chest of souls or personal Slayer dungeon",
@@ -22885,67 +22945,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Sunken Pyramid fourth room (3,000 Slayer points)",
-          "category": "permanent Slayer Rewards Buy unlock — personal dungeon capacity",
-          "detail": "Hard Desert for pyramid access + Buy unlock geography. Fund 3,000 points from high masters (any region with Smoking Kills) · Unlocks: Permanent unlock of the fourth (south-western) chamber in the personal Slayer dungeon, Chamber holds up to 5 small-monster spawns (south rooms are small-only; north rooms hold large or small) · Region pressure: Desert pyramid geography, Faiza / Codex claim, and Menaphos access., Soul capture geography is multi-region by monster; fourth room only adds capacity, not new souls., Morytania optional soft pressure: ghostspeak/cramulet or",
-          "requirements": [
-            "99 Slayer for Sunken Pyramid / personal Slayer dungeon access",
-            "Partial The Jack of Spades for Menaphos approach (Portmaster Kags boat)",
-            "Eclipse of the Heart completed (wiki gate for the south-western room purchase)",
-            "3,000 unique Slayer points Buy: Fourth Room in Sunken Pyramid (any Slayer Master shop)",
-            "Slayer Codex / ushabti soul capture path for placing monsters (desert:slayer-codex-and-sunken-pyramid)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sunken_Pyramid",
-            "title": "Sunken Pyramid fourth room (3,000 Slayer points)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "morytania",
-            "forinthry",
-            "tirannwn",
-            "kandarin",
-            "anachronia"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + forinthry + tirannwn + kandarin + anachronia",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Learn to move souls in personal Slayer dungeon (1,000 Slayer points)",
-          "category": "permanent Slayer Rewards Learn unlock — dungeon layout QoL",
-          "detail": "Hard Desert for dungeon. Optional late after fourth-room capacity if points are tight · Region chain (multi-source; see requirements) · Unlocks: Permanent ability to move placed monster spawns between chambers (without recapturing souls), Removes the default one-way placement lock (spawns could not be moved after confirm without this Learn), Pairs with when reshuffling a four-room layout · Region pressure: Desert owns pyramid + Ouija board geography., Point funding is multi-master global",
-          "requirements": [
-            "99 Slayer / Sunken Pyramid access with at least one placed ushabti spawn",
-            "1,000 Slayer points Learn: Learn to move the souls in your personal slayer dungeon",
-            "Ouija board in the dungeon centre for reposition control"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sunken_Pyramid",
-            "title": "Learn to move souls in personal Slayer dungeon (1,000 Slayer points)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "Region chain (multi-source; see requirements)",
-          "isRegionCombo": true
-        },
-        {
           "name": "Hard Desert Keris upgrade",
           "category": "regional achievement weapon passive",
           "detail": "Effects: Against Kalphites and Scabarites, the Keris hit-chance bonus rises from 15% to 25%, Triple-damage chance rises from about 2.5% to 5%",
@@ -23332,8 +23331,8 @@
         },
         {
           "name": "The Magister",
-          "category": "regional boss BiS drop source",
-          "detail": "Hard Desert. Badge Desert ✓ · Effects: Gloves of passage (melee power gloves with special ), Phylactery → scraps of scripture → Blessings of Sea / Sky / Sand for khopesh of Tumeken / Elidinis upgrades, Key to the Crossing (instance re-entry economy)",
+          "category": "Slayer boss uniques",
+          "detail": "Gloves of passage, phylactery / blessings for khopesh upgrades. 115 Slayer + Key to the Crossing.",
           "requirements": [],
           "confidence": "confirmed_current_wiki_league_desert_badge",
           "source": {
@@ -23355,8 +23354,8 @@
         },
         {
           "name": "Liberation of Mazcab (Beastmaster Durzag / Yakamaru)",
-          "category": "regional boss BiS drop source",
-          "detail": "Liberation of Mazcab is Desert for Equilibrium elective planning. Achto sets, Mazcab ability codex, and teci sinks densify as Desert ironman pressure · Hard Desert. Mazcab maps to Desert elective · Effects: Achto Teralith (melee) / Tempest (ranged) / Primeval (magic) t90 tank armour sets, Mazcab ability codex (Onslaught / Storm Shards & Shatter / Natural Instinct ), Superior Teralith / Tempest / Primeval craft from Yakamaru side",
+          "category": "Raid",
+          "detail": "Beastmaster Durzag and Yakamaru. Achto armour, Mazcab ability codex, teci sinks.",
           "requirements": [],
           "confidence": "confirmed_user_rule_mazcab_desert_2026_07_26",
           "source": {
@@ -23689,33 +23688,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "The Magister (combat uniques hub)",
-          "category": "regional boss BiS drop source",
-          "detail": "Boss hub was missing from bis-boss-drops pack (20 bosses, no Magister). only — not a strategy guide · Effects: Desert-defining high Slayer boss for melee gloves + T92 khopesh craft chain, Wiki Equilibrium League badge: Desert · Unlocks: Gloves of passage, Phylacteries → scraps of scripture → Sea/Sky/Sand blessings for khopesh upgrades, Other Magister uniques as listed on wiki drop table · Region pressure: Desert hard. without replacing those item rows",
-          "requirements": [
-            "115+ Slayer for The Magister",
-            "Sophanem Slayer Dungeon access (Desert)",
-            "Keys / soul devourer infrastructure inside the dungeon"
-          ],
-          "confidence": "confirmed_current_wiki_league_desert_badge",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/The_Magister",
-            "title": "The Magister (combat uniques hub residual)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Dreadnips",
           "category": "Dominion Tower permanent combat reward",
           "detail": "Track the permanent reward gate without importing old boss-use or damage advice · Unlocks: Ability to claim and deploy Dreadnips",
@@ -23743,34 +23715,8 @@
         },
         {
           "name": "Vampyrism Aspect",
-          "category": "Aura Overhaul — Ancient Magicks combat Aspect",
-          "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
-          "requirements": [
-            "69 Magic",
-            "Ancient Magicks spellbook (Desert Treasure path)"
-          ],
-          "confidence": "confirmed_official_2026",
-          "source": {
-            "source": "jagex",
-            "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-            "title": "Patch Notes: Aura Overhaul",
-            "verifiedAt": "2026-04-13"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Vampyrism Aspect",
-          "category": "Aura Overhaul — Ancient Magicks combat Aspect",
-          "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
+          "category": "Ancient Magicks combat Aspect",
+          "detail": "Ancient Magicks Aspect (69 Magic): heal 5% of damage dealt (cap 50 LP/hit) for 12 minutes. One Aspect at a time. Replaces the old Vampyrism aura.",
           "requirements": [
             "69 Magic",
             "Ancient Magicks spellbook (Desert Treasure path)"

@@ -126,6 +126,13 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Shifting Tombs":
     "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
   "Liberation of Mazcab": "Achto armour, Raids uniques",
+  "Beastmaster Durzag": "Achto armour",
+  Yakamaru: "Achto armour",
+  "Mazcab Emergency Merchants":
+    "Super restore, Super attack, Super strength, Super defence, Super magic potion, Super ranging potion, Super necromancy, Cooked eeligator",
+  "Goebie scavengers": "Teci, Burial charms, Cooked eeligator, Mazcab reroll tokens",
+  "Sunken Pyramid / player-owned Slayer dungeon":
+    "Fourth room, Move souls layout, Slayer Codex",
   "Het's Oasis":
     "Powder of burials, Powder of penance, Powder of pulverising, Powder of protection, Powder of item protection",
   "Agility Pyramid": "Agility XP, Menaphos reputation",

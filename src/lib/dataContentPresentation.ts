@@ -643,6 +643,12 @@ export function presentInterestName(value: string): string {
   if (/^Liberation of Mazcab$/i.test(raw)) return "Liberation of Mazcab";
   if (/^Agility Pyramid\b/i.test(raw)) return "Agility Pyramid";
   if (/^Het's Oasis$/i.test(raw)) return "Het's Oasis";
+  if (/^Mazcab Emergency Merchants$/i.test(raw)) return "Mazcab potion shop";
+  if (/^Goebie scavengers$/i.test(raw)) return "Goebie scavengers";
+  if (/^Sunken Pyramid\b/i.test(raw)) return "Sunken Pyramid";
+  if (/^Beastmaster Durzag$/i.test(raw)) return "Beastmaster Durzag";
+  if (/^Yakamaru$/i.test(raw)) return "Yakamaru";
+  if (/^Vampyrism Aspect$/i.test(raw)) return "Vampyrism Aspect";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -807,6 +813,10 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent adrenaline combat progression": "Adrenaline",
     "daemonheim ring": "Daemonheim ring",
     "account passive": "Account passive",
+    "aura overhaul — ancient magicks combat aspect": "Ancient Magicks Aspect",
+    "permanent slayer rewards buy unlock — personal dungeon capacity": "Slayer dungeon",
+    "permanent slayer rewards learn unlock — dungeon layout qol": "Slayer dungeon",
+    "slayer permanent utility and reputation": "Slayer utility",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

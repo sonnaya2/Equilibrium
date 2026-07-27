@@ -55,8 +55,9 @@ type MapUv = ReturnType<typeof mapUvFrom>;
 type FieldSample = ReturnType<typeof texture>;
 
 function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
-  const d = mapUv.sub(vec2(cx, cy)).length().div(float(r));
-  return float(1).sub(d).max(float(0)).pow(1.8);
+  // float() on every scalar — bare vec2(cx, cy) can emit abstract floats in WGSL.
+  const d = mapUv.sub(vec2(float(cx), float(cy))).length().div(float(r));
+  return float(1).sub(d).max(float(0)).pow(float(1.8));
 }
 
 /**
@@ -76,13 +77,13 @@ function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
   const hotChroma = r
     .sub(g.max(b))
     .mul(2.5)
-    .clamp(0, 1)
+    .clamp(float(0), float(1))
     .mul(smoothstep(float(0.22), float(0.5), r));
   // Discs retargeted onto hot-pixel centroids; radii ~ tile-scale basins only.
   const heat = softDisc(mapUv, 0.342, 0.6995, 0.011)
     .add(softDisc(mapUv, 0.4176, 0.3691, 0.012))
     .add(softDisc(mapUv, 0.445, 0.3306, 0.011))
-    .clamp(0, 1);
+    .clamp(float(0), float(1));
   return heat.mul(land).mul(dry).mul(hotChroma);
 }
 
@@ -92,7 +93,7 @@ function regionMasks(mapUv: MapUv, F: FieldSample) {
   const desert = softDisc(mapUv, DESERT_U, DESERT_V, DESERT_R).mul(land);
   const prif = softDisc(mapUv, 0.126, 0.648, 0.055)
     .add(softDisc(mapUv, 0.149, 0.663, 0.07))
-    .clamp(0, 1)
+    .clamp(float(0), float(1))
     .mul(land);
   const mory = softDisc(mapUv, 0.589, 0.58, 0.1).mul(land);
   return { desert, prif, mory };
@@ -154,14 +155,14 @@ export function createTerrainMaterials(
   }
 
   const inlandDepth = smoothstep(float(0.5), float(0.53), F.g);
-  base = mix(base.mul(0.9).mul(vec3(0.95, 0.98, 1.03)), base, inlandDepth);
+  base = mix(base.mul(0.9).mul(vec3(float(0.95), float(0.98), float(1.03))), base, inlandDepth);
 
   const atmospheres = regionMasks(mapUv, F);
 
   if (options.water) {
     // No river FX on the Kharidian Desert — hard ellipse, not soft disc weight.
-    const dwx = mapUv.x.sub(DESERT_WET_U).div(DESERT_WET_RX);
-    const dwy = mapUv.y.sub(DESERT_WET_V).div(DESERT_WET_RY);
+    const dwx = mapUv.x.sub(float(DESERT_WET_U)).div(float(DESERT_WET_RX));
+    const dwy = mapUv.y.sub(float(DESERT_WET_V)).div(float(DESERT_WET_RY));
     const desertGate = smoothstep(float(0.9), float(1.1), dwx.mul(dwx).add(dwy.mul(dwy)));
     const t = float(FIELD_TEXEL);
     const gx = texture(field, mapUv.add(vec2(t, float(0)))).g.sub(
@@ -192,7 +193,7 @@ export function createTerrainMaterials(
     const surface = mix(shimmer, ripple, directional);
 
     const wet = F.b.mul(smoothstep(float(0.16), float(0.52), F.b)).mul(desertGate);
-    const bank = wet.mul(float(1).sub(wet)).mul(4).clamp(0, 1);
+    const bank = wet.mul(float(1).sub(wet)).mul(4).clamp(float(0), float(1));
     const glint = smoothstep(float(0.5), float(0.92), surface).mul(wet);
     base = base
       .mul(float(1).sub(wet.mul(0.16)))
@@ -206,14 +207,26 @@ export function createTerrainMaterials(
   const heatWave = mx_noise_float(vec3(mapUv.x.mul(18), mapUv.y.mul(18), mapClock.mul(0.12)))
     .mul(0.5)
     .add(0.5);
-  base = mix(base, base.mul(vec3(1.06, 0.985, 0.9)).add(linear(0xc4782a).mul(0.028)), atmospheres.desert.mul(0.38));
   base = mix(
     base,
-    base.mul(vec3(1.03, 0.99, 0.94)).add(linear(0xe8a050).mul(heatWave.mul(0.028))),
+    base.mul(vec3(float(1.06), float(0.985), float(0.9))).add(linear(0xc4782a).mul(0.028)),
+    atmospheres.desert.mul(0.38),
+  );
+  base = mix(
+    base,
+    base.mul(vec3(float(1.03), float(0.99), float(0.94))).add(linear(0xe8a050).mul(heatWave.mul(0.028))),
     atmospheres.desert.mul(0.32),
   );
-  base = mix(base, base.mul(vec3(0.94, 0.98, 1.06)).add(linear(0x3a8fbf).mul(0.028)), atmospheres.prif.mul(0.4));
-  base = mix(base, base.mul(vec3(0.95, 1.03, 0.96)).add(linear(0x3d6b45).mul(0.025)), atmospheres.mory.mul(0.36));
+  base = mix(
+    base,
+    base.mul(vec3(float(0.94), float(0.98), float(1.06))).add(linear(0x3a8fbf).mul(0.028)),
+    atmospheres.prif.mul(0.4),
+  );
+  base = mix(
+    base,
+    base.mul(vec3(float(0.95), float(1.03), float(0.96))).add(linear(0x3d6b45).mul(0.025)),
+    atmospheres.mory.mul(0.36),
+  );
 
   const lavaHeat = softLava(mapUv, F, albedoSample.rgb);
   const ember = linear(0xff6a2a);
@@ -246,7 +259,7 @@ export function createTerrainMaterials(
     wireframe: options.wireframe,
   });
   const jitter = mx_noise_float(positionWorld.mul(190)).mul(0.06);
-  const band = positionLocal.y.div(float(depth)).add(jitter).clamp(0, 1);
+  const band = positionLocal.y.div(float(depth)).add(jitter).clamp(float(0), float(1));
   const deep = linear(TERRAIN_WALL_DEEP).mul(0.8);
   const rock = mix(deep, linear(TERRAIN_WALL_ROCK), step(float(0.3), band));
   const sub = mix(rock, linear(TERRAIN_WALL_SUBSOIL), step(float(0.62), band));

@@ -124,7 +124,7 @@ export function createWaterMaterial(
   ).normalize();
 
   const view = cameraPosition.sub(positionWorld).normalize();
-  const fresnel = normal.dot(view).clamp(0, 1).oneMinus().pow(4.2);
+  const fresnel = normal.dot(view).clamp(float(0), float(1)).oneMinus().pow(float(4.2));
 
   const F = texture(field, mapUvFrom(positionWorld));
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
@@ -136,20 +136,21 @@ export function createWaterMaterial(
   water = mix(water, linear(SKY), fresnel.mul(0.055).mul(nearSea2));
 
   const reflected = normal.mul(normal.dot(key).mul(2)).sub(key);
-  const toward = reflected.dot(view).clamp(0, 1);
+  const toward = reflected.dot(view).clamp(float(0), float(1));
   // nearSea² × offshore gates far stretch + under-land UV. Residual coastal shafts
   // were the remaining path: high scale + non-zero nadir floor on glint. Tighter
   // lobe, lower weight, fresnel-led (tiny floor) keeps cartographic sparkle without
   // vertical white beams at island edges.
-  const glint = toward.pow(96).mul(fresnel.mul(0.82).add(0.015)).mul(0.11).mul(nearSea2).mul(offshore);
-  const sheen = toward.pow(22).mul(0.004).mul(nearSea2).mul(offshore);
+  const glint = toward.pow(float(96)).mul(fresnel.mul(0.82).add(0.015)).mul(0.11).mul(nearSea2).mul(offshore);
+  const sheen = toward.pow(float(22)).mul(0.004).mul(nearSea2).mul(offshore);
 
   const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.1).mul(nearSea2).mul(offshore);
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
     .mul(height.mul(0.35).add(0.65))
     .mul(0.25);
-  water = mix(water, linear(FOAM), crest.add(surf).clamp(0, 0.4));
+  // clamp edges as float() — bare 0 / 0.4 are abstract and fail WebGPU validation.
+  water = mix(water, linear(FOAM), crest.add(surf).clamp(float(0), float(0.4)));
 
   const horizon = smoothstep(float(1.15), float(2.15), vec2(px, pz).length());
   material.colorNode = mix(

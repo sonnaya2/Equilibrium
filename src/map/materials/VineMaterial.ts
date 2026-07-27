@@ -66,13 +66,13 @@ export function createVineMaterials(): VineMaterials {
   });
   const along = uv().x;
   const around = uv().y;
-  const grain = mx_noise_float(positionWorld.mul(vec3(180, 40, 180)));
+  const grain = mx_noise_float(positionWorld.mul(vec3(float(180), float(40), float(180))));
   // Long bark striations — not a bright circumferential cable highlight.
   const stria = mx_noise_float(along.mul(140).add(around.mul(3)));
   let bark = mix(linear(BARK_DARK), linear(BARK), stria.mul(0.55).add(0.35));
   bark = mix(bark, linear(BARK_MOSS), grain.mul(0.18).add(0.08));
   const limb = around.sub(0.5).abs().mul(2);
-  bark = mix(bark.mul(0.92), bark.mul(0.78), limb.pow(1.2));
+  bark = mix(bark.mul(0.92), bark.mul(0.78), limb.pow(float(1.2)));
   stem.colorNode = bark.mul(STEM_GAIN);
   stem.roughnessNode = float(0.96).add(stria.mul(0.03));
   stem.opacityNode = alive();
@@ -139,17 +139,19 @@ export function createLeafMaterial(): LeafMaterial {
 
   const width = float(0.18)
     .add(smoothstep(float(0), float(0.35), y).mul(0.82))
-    .mul(float(1).sub(smoothstep(float(0.55), float(1.02), y).pow(1.35)))
+    .mul(float(1).sub(smoothstep(float(0.55), float(1.02), y).pow(float(1.35))))
     .add(serr);
 
   const inside = width.sub(xx.abs());
   material.opacityNode = step(float(0.02), inside);
 
-  const young = mix(linear(LEAF_MID), linear(LEAF_PALE), smoothstep(0.4, 1, seed));
-  const body = mix(linear(LEAF_DEEP), young, smoothstep(0, 0.5, seed));
-  const dryAmt = smoothstep(0.72, 1, seed).mul(0.55).add(grade.mul(0.45));
+  // All smoothstep edges must be float() nodes — bare JS numbers become abstract
+  // floats in WGSL and naga rejects them when the third arg is a varying.
+  const young = mix(linear(LEAF_MID), linear(LEAF_PALE), smoothstep(float(0.4), float(1), seed));
+  const body = mix(linear(LEAF_DEEP), young, smoothstep(float(0), float(0.5), seed));
+  const dryAmt = smoothstep(float(0.72), float(1), seed).mul(0.55).add(grade.mul(0.45));
   let col = mix(body, linear(LEAF_DRY), dryAmt.mul(0.85));
-  col = mix(col, linear(LEAF_BURN), smoothstep(0.92, 1, seed).mul(grade).mul(0.55));
+  col = mix(col, linear(LEAF_BURN), smoothstep(float(0.92), float(1), seed).mul(grade).mul(0.55));
 
   const rib = smoothstep(float(0.06), float(0), xx.abs());
   col = mix(col, col.mul(0.62), rib.mul(0.55));

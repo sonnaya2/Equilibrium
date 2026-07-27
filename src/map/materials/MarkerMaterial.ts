@@ -74,7 +74,7 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   colour = mix(colour, linear(STONE_DARK).mul(0.85), underRim);
 
   const facing = local.normalize().dot(vec2(-0.62, 0.78).normalize()).mul(0.5).add(0.5);
-  const brass = mix(linear(BRASS_DEEP), linear(BRASS), facing.pow(1.3));
+  const brass = mix(linear(BRASS_DEEP), linear(BRASS), facing.pow(float(1.3)));
   colour = mix(colour, brass, inRim);
   // Site pip on the rim only when unlit; lit gem goes through emissive… but
   // Basic has no emissive, so brighten the rim with gem when lit.
@@ -165,7 +165,7 @@ export function createMarkerHitMaterial(): MarkerMaterial {
     depthTest: true,
     toneMapped: false,
   });
-  material.colorNode = vec3(0, 0, 0);
+  material.colorNode = vec3(float(0), float(0), float(0));
   return {
     material,
     dispose() {

@@ -55,14 +55,16 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Barbarian Outpost", [2520, 3570]],
   ["Catherby", [2809, 3434]],
   ["Tree Gnome Stronghold", [2460, 3440]],
-  ["Fishing Guild", [2610, 3390]],
+  ["Fishing Guild", [2601, 3411]],
   ["Ranging Guild", [2667, 3426]],
   ["Ourania Runecrafting Altar", [2465, 3245]],
   ["Ardougne", [2561, 3303]],
   ["Player-Owned Farm", [2645, 3361]],
   ["Manor Farm", [2645, 3361]],
   ["Warforge Dig Site", [2410, 2838]],
-  ["Deep Sea Fishing Hub", [2520, 3050]],
+  // Platform off the Fishing Guild coast (wiki: N of East Ardougne). Not the
+  // old [2520,3050] far-south pin — put it in the water north of the guild.
+  ["Deep Sea Fishing Hub", [2595, 3468]],
   ["Stormguard Citadel Dig Site", [2678, 3400]],
   ["Temple of Ikov", [2576, 3320]],
   ["Howl's Floating Workshop", [2700, 3360]],

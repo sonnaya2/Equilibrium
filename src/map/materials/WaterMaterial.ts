@@ -33,11 +33,14 @@ import {
   vec3,
 } from "three/tsl";
 import type { Node } from "three/webgpu";
-import { linear, mapClock, mapUvFrom } from "./shared";
+import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 
 const DEEP = 0x24506e;
 const SHALLOW = 0x4a7fa0;
 const SKY = 0x7ea8c6;
+/** River water — greener and darker than the sea it runs into. */
+const RIVER_DEEP = 0x2c4a4a;
+const RIVER_LIT = 0x4d7a72;
 const FOAM = 0xb8ccd8;
 /** Outer void — a touch darker than shallow so the board sits in a continuous
  *  field without turning the whole viewport into a black pit. */
@@ -151,9 +154,41 @@ export function createWaterMaterial(
   const view = cameraPosition.sub(positionWorld).normalize();
   const fresnel = normal.dot(view).clamp(float(0), float(1)).oneMinus().pow(float(4.2));
 
-  const F = texture(field, mapUvFrom(positionWorld));
+  const mapUv = mapUvFrom(positionWorld);
+  const F = texture(field, mapUv);
   // Open water only — cuts plate-bottom / island-underside specular shafts.
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
+
+  /**
+   * Rivers.
+   *
+   * B marks water that is narrow and a long way from open sea — the Lum, the
+   * Salve, the Elid. The Wiki paints them in the open-sea colour, so they are
+   * cut out of the plates along with the ocean, which means *this* plane is what
+   * shows through a river. Ocean swell is the wrong motion for one.
+   *
+   * Direction comes from the coast-distance field: the gradient points across
+   * the channel, so its perpendicular runs along it. Every river gets its own
+   * heading out of that, rather than the whole map scrolling one way.
+   */
+  const texel = float(FIELD_TEXEL);
+  const gx = texture(field, mapUv.add(vec2(texel, float(0)))).g.sub(
+    texture(field, mapUv.add(vec2(texel.negate(), float(0)))).g,
+  );
+  const gy = texture(field, mapUv.add(vec2(float(0), texel))).g.sub(
+    texture(field, mapUv.add(vec2(float(0), texel.negate()))).g,
+  );
+  const slope = gx.mul(gx).add(gy.mul(gy)).sqrt();
+  const flowDir = vec2(gy.negate(), gx).div(slope.add(float(0.0004)));
+  const along = mapUv.x.mul(flowDir.x).add(mapUv.y.mul(flowDir.y));
+  const drift = along.mul(float(430)).sub(mapClock.mul(float(0.85)));
+  const current = drift
+    .sin()
+    .mul(float(0.6))
+    .add(drift.mul(float(2.1)).add(float(1.7)).sin().mul(float(0.4)));
+  const isRiver = smoothstep(float(0.16), float(0.5), F.b);
+  // Swell, crests and sun glint are all ocean behaviour; a river gets none.
+  const openWater = isRiver.oneMinus();
 
   let water = mix(
     linear(SHALLOW),
@@ -189,7 +224,16 @@ export function createWaterMaterial(
     .mul(height.mul(float(0.35)).add(float(0.65)))
     .mul(float(0.28));
   // clamp edges as float() — bare 0 / 0.45 are abstract and fail WebGPU validation.
-  water = mix(water, linear(FOAM), crest.add(surf).clamp(float(0), float(0.45)));
+  water = mix(
+    water,
+    linear(FOAM),
+    crest.add(surf).clamp(float(0), float(0.45)).mul(openWater),
+  );
+
+  // River water: darker and greener than the sea it joins, with the current
+  // reading as movement along the channel rather than swell across it.
+  const riverBed = mix(linear(RIVER_DEEP), linear(RIVER_LIT), current.mul(float(0.5)).add(float(0.5)));
+  water = mix(water, riverBed, isRiver.mul(float(0.82)));
 
   // Horizon further out so the board sits in living sea, not a grey puddle.
   const horizon = smoothstep(float(1.55), float(2.65), vec2(px, pz).length());

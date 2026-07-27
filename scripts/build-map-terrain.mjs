@@ -64,6 +64,12 @@ const WATER_TOL = 15;
 const MIN_ISLET = 12;
 /** Enclosed water smaller than this is a grey courtyard, not a pond. */
 const MIN_POND = 30;
+/** Water this far from any land is open sea, not a channel. */
+const OPEN_WATER_TILES = 26;
+/** Half-width of the widest channel still treated as a river. */
+const RIVER_HALF_WIDTH = 9;
+/** A narrow notch closer than this to open water is a bay, not a river. */
+const COVE_REACH = 46;
 
 /** Game units per step of the packed signed-distance channel. */
 const SD_STEP = 1.6;
@@ -282,6 +288,41 @@ function distanceTo(isTarget) {
 console.log("[terrain] distance fields");
 const distToWater = distanceTo((i) => land[i] === 0);
 const distToLand = distanceTo((i) => land[i] === 1);
+
+/**
+ * Rivers, by shape rather than by colour or by width.
+ *
+ * The Wiki paints rivers in the open-sea colour, so the flood from the frame
+ * edge runs up the Lum and the Salve and calls them ocean — which is why the
+ * enclosed-water channel is nearly empty and nothing on the board flowed.
+ *
+ * Width alone does not separate them either: land on opposing banks within a
+ * few tiles catches the Lum and the Elid correctly and outlines every cove with
+ * them, because a bay is narrow too.
+ *
+ * What actually separates a river from a bay is how far it is from open water.
+ * A cove is a narrow notch a few tiles off the sea; a river is narrow for its
+ * whole length and runs a long way inland. So: find water open enough to be sea,
+ * measure every water tile's distance from that, and call a tile a river when it
+ * is both narrow and a long way from anywhere the sea reaches.
+ */
+const river = new Uint8Array(N);
+{
+  const openSea = (i) => land[i] === 0 && distToLand[i] > OPEN_WATER_TILES;
+  const distToOpen = distanceTo(openSea);
+  let count = 0;
+  for (let i = 0; i < N; i++) {
+    if (land[i]) continue;
+    if (distToLand[i] > RIVER_HALF_WIDTH) continue;
+    if (distToOpen[i] < COVE_REACH) continue;
+    river[i] = 1;
+    count++;
+  }
+  console.log(
+    `[terrain] ${count} river tiles (narrower than ${RIVER_HALF_WIDTH * 2} tiles, ` +
+      `over ${COVE_REACH} from open water)`,
+  );
+}
 
 // ----------------------------------------------------- region ownership -----
 
@@ -998,7 +1039,9 @@ for (let fy = 0; fy < FIELD_H; fy++) {
       for (let dx = 0; dx < 2; dx++) {
         const i = (fy * 2 + dy) * W + fx * 2 + dx;
         sumLand += land[i];
-        sumInland += inland[i];
+        // Lakes the coastline encloses, plus the rivers it does not — both are
+        // water that should flow rather than swell.
+        sumInland += inland[i] || river[i];
         sumSd += land[i] ? distToWater[i] : -distToLand[i];
       }
     }

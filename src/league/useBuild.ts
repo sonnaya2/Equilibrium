@@ -84,7 +84,17 @@ export function useBuild() {
   // loads from localStorage after mount. Share hashes are handled only by
   // ShareImport so any route can import without double-apply.
   const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
-  const [loaded, setLoaded] = useState(hydrated);
+  // Always false on the first render, never seeded from `hydrated`.
+  //
+  // That module flag is shared and mutable: ShareImport hydrates the store from
+  // the layout, so by the time a component behind a Suspense boundary hydrates,
+  // `hydrated` is already true — and seeding from it made the client's first
+  // render disagree with the server HTML that was built while it was false.
+  // React reported that as an unpatchable `disabled` mismatch on Clear picks.
+  //
+  // `build` never had this problem because useSyncExternalStore uses the server
+  // snapshot for the hydration render too. This has to match that discipline.
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     hydrateLocalBuild();

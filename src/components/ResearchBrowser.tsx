@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type {
   ResearchCatalog,
   ResearchRegion,
@@ -104,7 +99,8 @@ function interestMeta(value: string): string {
 
 function methodRate(rate: string): string {
   const value = cleanText(rate);
-  return !value || /^(?:not (?:normalized|optimizer-grade)|no[_ ]official|not[_ ]an?[_ ])/i.test(value)
+  return !value ||
+    /^(?:not (?:normalized|optimizer-grade)|no[_ ]official|not[_ ]an?[_ ])/i.test(value)
     ? "—"
     : value.replace(/\b\d{5,}\b/g, (digits) => Number(digits).toLocaleString("en-US"));
 }
@@ -184,42 +180,42 @@ function MethodTable({
               : null;
             const locationLabel = resolved?.label || fallback;
             return (
-            <tr key={method.id} className="align-top">
-              <td>
-                <div className="truncate font-medium" title={cleanText(method.method)}>
-                  {clipProse(cleanText(method.method), 90)}
-                  <InlineSource source={method.source} />
-                </div>
-                <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[13px] text-parch-100">
-                  {skillSrc ? (
-                    <span className="data-icon-well shrink-0" aria-hidden>
-                      <GameIcon src={skillSrc} size={16} />
+              <tr key={method.id} className="align-top">
+                <td>
+                  <div className="truncate font-medium" title={cleanText(method.method)}>
+                    {clipProse(cleanText(method.method), 90)}
+                    <InlineSource source={method.source} />
+                  </div>
+                  <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[13px] text-parch-100">
+                    {skillSrc ? (
+                      <span className="data-icon-well shrink-0" aria-hidden>
+                        <GameIcon src={skillSrc} size={16} />
+                      </span>
+                    ) : null}
+                    <span className="truncate">
+                      {method.skill}
+                      {method.intensity ? ` · ${method.intensity}` : ""}
                     </span>
-                  ) : null}
-                  <span className="truncate">
-                    {method.skill}
-                    {method.intensity ? ` · ${method.intensity}` : ""}
-                  </span>
-                </div>
-              </td>
-              <td>{method.levelRange || "-"}</td>
-              <td className="data-training-table__rate font-mono" title={rate}>
-                {rate}
-              </td>
-              <td className="data-training-table__location secondary" title={locationLabel}>
-                {resolved?.href ? (
-                  <a
-                    href={resolved.href}
-                    className="data-location-link"
-                    aria-label={`Open ${locationLabel} on map`}
-                  >
-                    {locationLabel}
-                  </a>
-                ) : (
-                  locationLabel
-                )}
-              </td>
-            </tr>
+                  </div>
+                </td>
+                <td>{method.levelRange || "-"}</td>
+                <td className="data-training-table__rate font-mono" title={rate}>
+                  {rate}
+                </td>
+                <td className="data-training-table__location secondary" title={locationLabel}>
+                  {resolved?.href ? (
+                    <a
+                      href={resolved.href}
+                      className="data-location-link"
+                      aria-label={`Open ${locationLabel} on map`}
+                    >
+                      {locationLabel}
+                    </a>
+                  ) : (
+                    locationLabel
+                  )}
+                </td>
+              </tr>
             );
           })}
         </tbody>
@@ -272,223 +268,220 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
       </header>
 
       <div className="data-region-detail__grid">
-      <div className="data-region-detail__primary">
-      <section className="panel data-region-panel data-region-panel--content">
-        <div className="panel-head flex items-baseline justify-between gap-3">
-          <span>Major unlocks</span>
-          <span className="font-normal text-parch-100">{region.content.length}</span>
+        <div className="data-region-detail__primary">
+          <section className="panel data-region-panel data-region-panel--content">
+            <div className="panel-head flex items-baseline justify-between gap-3">
+              <span>Major unlocks</span>
+              <span className="font-normal text-parch-100">{region.content.length}</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="data-table data-region-content-table w-full min-w-0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Rewards / access</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {region.content.map((row, index) => {
+                    // Major unlocks Name column: official boss plates when the row is a boss
+                    // (kind is often "Elder God Wars Dungeon" / place tags, not "boss").
+                    const displayName = contentName(row.name);
+                    const iconSrc =
+                      bossIconPath(row.name) ??
+                      bossIconPath(displayName) ??
+                      dataEntityIconPath({ name: row.name, kind: row.kind });
+                    // Icons from full Unlocks/Effects; +N only for capped resolved overflow.
+                    const presented = presentContentRewards(
+                      contentRewardsFull(row, region.upgrades),
+                    );
+                    const rewardIcons = presented.icons;
+                    const overflowResolved = presented.overflowResolved;
+                    const typeLabel = contentTypeLabel(row.kind, row.name);
+                    const location = isRegionId(region.id)
+                      ? resolveContentLocation(region.id, row.name, row.kind)
+                      : { label: null, place: null, href: null };
+                    const locationLabel = location.label ?? "—";
+                    return (
+                      <tr key={`${row.name}-${index}`} className="align-top">
+                        <td>
+                          <div className="data-content-name">
+                            {iconSrc ? (
+                              <button
+                                type="button"
+                                className="data-icon-well data-image-button"
+                                aria-label={
+                                  wikiUrlFromSource(row.source)
+                                    ? `Open ${displayName} wiki article`
+                                    : `View ${displayName} image`
+                                }
+                                onClick={() =>
+                                  setPreview({
+                                    localArtSrc: iconSrc,
+                                    name: displayName,
+                                    wikiUrl: wikiUrlFromSource(row.source),
+                                    relatedLabels: rewardIcons.map((item) => item.label),
+                                    relatedIcons: rewardIcons.map((item) => ({
+                                      label: item.label,
+                                      src: item.src,
+                                    })),
+                                  })
+                                }
+                              >
+                                <GameIcon src={iconSrc} size={34} />
+                              </button>
+                            ) : (
+                              <span className="data-icon-well data-icon-well--empty" aria-hidden />
+                            )}
+                            <span className="data-content-name__text">
+                              {displayName}
+                              <InlineSource source={row.source} />
+                            </span>
+                          </div>
+                        </td>
+                        <td className="data-content-rewards" title={presented.sourceText}>
+                          <div className="data-content-rewards__inner">
+                            {rewardIcons.length ? (
+                              <span className="data-reward-icons" aria-hidden="true">
+                                {rewardIcons.map((item) => (
+                                  <span
+                                    key={`${item.src}-${item.label}`}
+                                    className="data-icon-well data-reward-icons__well"
+                                    title={item.label}
+                                  >
+                                    <GameIcon src={item.src} size={22} />
+                                  </span>
+                                ))}
+                                {overflowResolved > 0 ? (
+                                  <span className="data-reward-icons__more">
+                                    +{overflowResolved}
+                                  </span>
+                                ) : null}
+                              </span>
+                            ) : null}
+                            <span className="data-content-rewards__text">
+                              {presented.displayText}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="data-content-type secondary">{typeLabel}</td>
+                        <td className="data-content-location">
+                          {location.href ? (
+                            <a
+                              href={location.href}
+                              className="data-location-link"
+                              aria-label={`Open ${locationLabel} on map`}
+                            >
+                              {locationLabel}
+                            </a>
+                          ) : (
+                            <span className="secondary">{locationLabel}</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
-        <div className="overflow-x-auto">
-          <table className="data-table data-region-content-table w-full min-w-0">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Rewards / access</th>
-                <th>Type</th>
-                <th>Location</th>
-              </tr>
-            </thead>
-            <tbody>
-              {region.content.map((row, index) => {
-                // Major unlocks Name column: official boss plates when the row is a boss
-                // (kind is often "Elder God Wars Dungeon" / place tags, not "boss").
-                const displayName = contentName(row.name);
+
+        <section className="panel data-region-panel data-region-panel--upgrades">
+          <div className="panel-head flex items-baseline justify-between gap-3">
+            <span>Points of interest</span>
+            <span className="font-normal text-parch-100">{region.upgrades.length}</span>
+          </div>
+          <div className="data-upgrades-list">
+            {region.upgrades.length ? (
+              region.upgrades.map((upgrade, index) => {
                 const iconSrc =
-                  bossIconPath(row.name) ??
-                  bossIconPath(displayName) ??
-                  dataEntityIconPath({ name: row.name, kind: row.kind });
-                // Icons from full Unlocks/Effects; +N only for capped resolved overflow.
-                const presented = presentContentRewards(
-                  contentRewardsFull(row, region.upgrades),
-                );
-                const rewardIcons = presented.icons;
-                const overflowResolved = presented.overflowResolved;
-                const typeLabel = contentTypeLabel(row.kind, row.name);
-                const location = isRegionId(region.id)
-                  ? resolveContentLocation(region.id, row.name, row.kind)
-                  : { label: null, place: null, href: null };
-                const locationLabel = location.label ?? "—";
+                  upgradeIconPath(upgrade.name) ??
+                  dataEntityIconPath({ name: upgrade.name, kind: upgrade.category });
+                const requiredRegions = [...new Set(upgrade.requiredRegions ?? [])];
+                const displayUpgradeName = interestName(upgrade.name);
+                // Category + name tokens already in memory for extra local art resolve.
+                const upgradeRelatedLabels = (() => {
+                  const seen = new Set<string>();
+                  const out: string[] = [];
+                  for (const part of [
+                    ...contentRewardTokens(upgrade.name),
+                    ...contentRewardTokens(upgrade.category ?? ""),
+                    displayUpgradeName,
+                    upgrade.category ? interestMeta(upgrade.category) : "",
+                  ]) {
+                    const label = part.replace(/\s+/g, " ").trim();
+                    if (!label) continue;
+                    const key = label.toLowerCase();
+                    if (seen.has(key)) continue;
+                    seen.add(key);
+                    out.push(label);
+                  }
+                  return out;
+                })();
                 return (
-                  <tr key={`${row.name}-${index}`} className="align-top">
-                    <td>
-                      <div className="data-content-name">
-                        {iconSrc ? (
-                          <button
-                            type="button"
-                            className="data-icon-well data-image-button"
+                  <div
+                    key={`upgrade-${index}-${upgrade.name}`}
+                    className={`data-upgrade-row ${index % 2 === 1 ? "bg-stone-zebra" : ""}`}
+                  >
+                    {iconSrc ? (
+                      <button
+                        type="button"
+                        className="data-icon-well data-image-button"
+                        aria-label={
+                          wikiUrlFromSource(upgrade.source)
+                            ? `Open ${displayUpgradeName} wiki article`
+                            : `View ${displayUpgradeName} image`
+                        }
+                        onClick={() =>
+                          setPreview({
+                            localArtSrc: iconSrc,
+                            name: displayUpgradeName,
+                            wikiUrl: wikiUrlFromSource(upgrade.source),
+                            relatedLabels: upgradeRelatedLabels,
+                          })
+                        }
+                      >
+                        <GameIcon src={iconSrc} size={28} />
+                      </button>
+                    ) : (
+                      <span className="data-icon-well data-icon-well--empty" aria-hidden />
+                    )}
+                    <span className="min-w-0">
+                      <span className="data-upgrade-row__name">
+                        {interestName(upgrade.name)}
+                        <InlineSource source={upgrade.source} />
+                        {requiredRegions.length > 0 ? (
+                          <span
+                            className="data-upgrade-row__regions"
                             aria-label={
-                              wikiUrlFromSource(row.source)
-                                ? `Open ${displayName} wiki article`
-                                : `View ${displayName} image`
-                            }
-                            onClick={() =>
-                              setPreview({
-                                localArtSrc: iconSrc,
-                                name: displayName,
-                                wikiUrl: wikiUrlFromSource(row.source),
-                                relatedLabels: rewardIcons.map((item) => item.label),
-                                relatedIcons: rewardIcons.map((item) => ({
-                                  label: item.label,
-                                  src: item.src,
-                                })),
-                              })
+                              requiredRegions.length > 1
+                                ? `Region combo: ${requiredRegions.join(" + ")}`
+                                : `Region: ${requiredRegions[0]}`
                             }
                           >
-                            <GameIcon src={iconSrc} size={34} />
-                          </button>
-                        ) : (
-                          <span className="data-icon-well data-icon-well--empty" aria-hidden />
-                        )}
-                        <span className="data-content-name__text">
-                          {displayName}
-                          <InlineSource source={row.source} />
-                        </span>
-                      </div>
-                    </td>
-                    <td className="data-content-rewards" title={presented.sourceText}>
-                      <div className="data-content-rewards__inner">
-                        {rewardIcons.length ? (
-                          <span className="data-reward-icons" aria-hidden="true">
-                            {rewardIcons.map((item) => (
-                              <span
-                                key={`${item.src}-${item.label}`}
-                                className="data-icon-well data-reward-icons__well"
-                                title={item.label}
-                              >
-                                <GameIcon src={item.src} size={22} />
-                              </span>
+                            {requiredRegions.map((regionId) => (
+                              <GameIcon key={regionId} src={regionCrestPath(regionId)} size={20} />
                             ))}
-                            {overflowResolved > 0 ? (
-                              <span className="data-reward-icons__more">+{overflowResolved}</span>
-                            ) : null}
                           </span>
                         ) : null}
-                        <span className="data-content-rewards__text">{presented.displayText}</span>
-                      </div>
-                    </td>
-                    <td className="data-content-type secondary">{typeLabel}</td>
-                    <td className="data-content-location">
-                      {location.href ? (
-                        <a
-                          href={location.href}
-                          className="data-location-link"
-                          aria-label={`Open ${locationLabel} on map`}
-                        >
-                          {locationLabel}
-                        </a>
-                      ) : (
-                        <span className="secondary">{locationLabel}</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      </div>
-
-      <section className="panel data-region-panel data-region-panel--upgrades">
-        <div className="panel-head flex items-baseline justify-between gap-3">
-          <span>Points of interest</span>
-          <span className="font-normal text-parch-100">{region.upgrades.length}</span>
-        </div>
-        <div className="data-upgrades-list">
-          {region.upgrades.length ? (
-            region.upgrades.map((upgrade, index) => {
-              const iconSrc =
-                upgradeIconPath(upgrade.name) ??
-                dataEntityIconPath({ name: upgrade.name, kind: upgrade.category });
-              const requiredRegions = [...new Set(upgrade.requiredRegions ?? [])];
-              const displayUpgradeName = interestName(upgrade.name);
-              // Category + name tokens already in memory for extra local art resolve.
-              const upgradeRelatedLabels = (() => {
-                const seen = new Set<string>();
-                const out: string[] = [];
-                for (const part of [
-                  ...contentRewardTokens(upgrade.name),
-                  ...contentRewardTokens(upgrade.category ?? ""),
-                  displayUpgradeName,
-                  upgrade.category ? interestMeta(upgrade.category) : "",
-                ]) {
-                  const label = part.replace(/\s+/g, " ").trim();
-                  if (!label) continue;
-                  const key = label.toLowerCase();
-                  if (seen.has(key)) continue;
-                  seen.add(key);
-                  out.push(label);
-                }
-                return out;
-              })();
-              return (
-                <div
-                  key={`upgrade-${index}-${upgrade.name}`}
-                  className={`data-upgrade-row ${
-                    index % 2 === 1 ? "bg-stone-zebra" : ""
-                  }`}
-                >
-                  {iconSrc ? (
-                    <button
-                      type="button"
-                      className="data-icon-well data-image-button"
-                      aria-label={
-                        wikiUrlFromSource(upgrade.source)
-                          ? `Open ${displayUpgradeName} wiki article`
-                          : `View ${displayUpgradeName} image`
-                      }
-                      onClick={() =>
-                        setPreview({
-                          localArtSrc: iconSrc,
-                          name: displayUpgradeName,
-                          wikiUrl: wikiUrlFromSource(upgrade.source),
-                          relatedLabels: upgradeRelatedLabels,
-                        })
-                      }
-                    >
-                      <GameIcon src={iconSrc} size={28} />
-                    </button>
-                  ) : (
-                    <span className="data-icon-well data-icon-well--empty" aria-hidden />
-                  )}
-                  <span className="min-w-0">
-                    <span className="data-upgrade-row__name">
-                      {interestName(upgrade.name)}
-                      <InlineSource source={upgrade.source} />
-                      {requiredRegions.length > 0 ? (
-                        <span
-                          className="data-upgrade-row__regions"
-                          aria-label={
-                            requiredRegions.length > 1
-                              ? `Region combo: ${requiredRegions.join(" + ")}`
-                              : `Region: ${requiredRegions[0]}`
-                          }
-                        >
-                          {requiredRegions.map((regionId) => (
-                            <GameIcon
-                              key={regionId}
-                              src={regionCrestPath(regionId)}
-                              size={20}
-                            />
-                          ))}
+                      </span>
+                      {upgrade.category ? (
+                        <span className="data-upgrade-row__meta">
+                          {interestMeta(upgrade.category)}
                         </span>
                       ) : null}
                     </span>
-                    {upgrade.category ? (
-                      <span className="data-upgrade-row__meta">
-                        {interestMeta(upgrade.category)}
-                      </span>
-                    ) : null}
-                  </span>
-                </div>
-              );
-            })
-          ) : (
-            <p className="px-3 py-2 text-[13px] text-parch-100">None listed.</p>
-          )}
-        </div>
-      </section>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="px-3 py-2 text-[13px] text-parch-100">None listed.</p>
+            )}
+          </div>
+        </section>
       </div>
       <WikiArticleDialog target={preview} onClose={() => setPreview(null)} />
     </article>
@@ -553,9 +546,7 @@ export function DataRegionRail({
   const unlockedIds = useMemo(() => {
     if (!loaded || !mineOnly) return null;
     return new Set(
-      catalog.regions
-        .map((r) => r.id as RegionId)
-        .filter((id) => isRegionUnlocked(build, id)),
+      catalog.regions.map((r) => r.id as RegionId).filter((id) => isRegionUnlocked(build, id)),
     );
   }, [build, catalog.regions, loaded, mineOnly]);
 
@@ -596,7 +587,9 @@ export function DataRegionRail({
             </button>
           );
         })}
-        {filteredRegions.length === 0 ? <p className="data-selector-empty">No regions match.</p> : null}
+        {filteredRegions.length === 0 ? (
+          <p className="data-selector-empty">No regions match.</p>
+        ) : null}
       </div>
       <button
         type="button"
@@ -651,10 +644,7 @@ export function ResearchBrowser({
     const matches = (values: unknown[]) =>
       values.filter(Boolean).join(" ").toLowerCase().includes(normalizedQuery);
     // Collapse multi-boss package children (Sanctum) — not place hubs (Lost Grove ≠ Solak).
-    const majorContent = majorContentRows(
-      selectedRegion.content,
-      selectedRegion.upgrades,
-    );
+    const majorContent = majorContentRows(selectedRegion.content, selectedRegion.upgrades);
     const content = normalizedQuery
       ? majorContent.filter((row) =>
           matches([
@@ -681,14 +671,11 @@ export function ResearchBrowser({
     const byName = (a: string, b: string) => compareLocale(a, b, sortDir);
     return {
       ...selectedRegion,
-      content:
-        sortMode === "name" ? [...content].sort((a, b) => byName(a.name, b.name)) : content,
+      content: sortMode === "name" ? [...content].sort((a, b) => byName(a.name, b.name)) : content,
       upgrades:
         sortMode === "name" ? [...upgrades].sort((a, b) => byName(a.name, b.name)) : upgrades,
       training:
-        sortMode === "name"
-          ? [...training].sort((a, b) => byName(a.method, b.method))
-          : training,
+        sortMode === "name" ? [...training].sort((a, b) => byName(a.method, b.method)) : training,
     };
   }, [normalizedQuery, selectedRegion, sortDir, sortMode]);
 
@@ -723,9 +710,10 @@ export function ResearchBrowser({
           {regionSkills.map((skill) => {
             const active = selectedSkill?.id === skill.id;
             const iconSrc = skillIconPath(skill.id || skill.name);
-            const methodCount = selectedRegion?.training.filter(
-              (method) => method.skill.toLowerCase() === skill.name.toLowerCase(),
-            ).length ?? 0;
+            const methodCount =
+              selectedRegion?.training.filter(
+                (method) => method.skill.toLowerCase() === skill.name.toLowerCase(),
+              ).length ?? 0;
             return (
               <button
                 key={skill.id}
@@ -772,7 +760,9 @@ export function ResearchBrowser({
             disabled={sortMode !== "name"}
             onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
             aria-label={
-              sortDir === "asc" ? "Sort A to Z. Activate for Z to A." : "Sort Z to A. Activate for A to Z."
+              sortDir === "asc"
+                ? "Sort A to Z. Activate for Z to A."
+                : "Sort Z to A. Activate for A to Z."
             }
             title={sortDir === "asc" ? "A–Z · click for Z–A" : "Z–A · click for A–Z"}
           >
@@ -785,18 +775,18 @@ export function ResearchBrowser({
       </div>
 
       <div className="data-browser__stage">
-          {selectedSkillInRegion && selectedRegion ? (
-            <SkillDetail
-              skill={selectedSkillInRegion}
-              regionName={selectedRegion.name}
-              regionId={selectedRegion.id}
-              extra={skillDetails[selectedSkillInRegion.id]}
-            />
-          ) : filteredRegion ? (
-            <RegionDetail region={filteredRegion} />
-          ) : (
-            <p className="py-6 text-[13px] text-parch-100">Pick a region.</p>
-          )}
+        {selectedSkillInRegion && selectedRegion ? (
+          <SkillDetail
+            skill={selectedSkillInRegion}
+            regionName={selectedRegion.name}
+            regionId={selectedRegion.id}
+            extra={skillDetails[selectedSkillInRegion.id]}
+          />
+        ) : filteredRegion ? (
+          <RegionDetail region={filteredRegion} />
+        ) : (
+          <p className="py-6 text-[13px] text-parch-100">Pick a region.</p>
+        )}
       </div>
     </section>
   );

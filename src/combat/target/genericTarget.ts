@@ -46,7 +46,7 @@ export interface GenericTarget {
 /** f(x) = x³/1250 + 4x + 40 (Hit chance page). */
 export function accuracyCurve(x: number): number {
   if (!Number.isFinite(x) || x < 0) throw new RangeError(`accuracyCurve: bad value ${x}`);
-  return (x ** 3) / 1250 + 4 * x + 40;
+  return x ** 3 / 1250 + 4 * x + 40;
 }
 
 export function playerAccuracy(styleLevel: number, weaponTier: number): number {
@@ -67,6 +67,7 @@ export function hitChance(accuracy: number, target: GenericTarget): number {
 
 /** Damage Potential against this target; the override wins when set. */
 export function targetDamagePotential(accuracy: number, target: GenericTarget): number {
-  if (target.damagePotentialOverride != null) return damagePotential(target.damagePotentialOverride);
+  if (target.damagePotentialOverride != null)
+    return damagePotential(target.damagePotentialOverride);
   return damagePotential(hitChance(accuracy, target));
 }

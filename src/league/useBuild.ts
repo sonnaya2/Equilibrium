@@ -88,7 +88,11 @@ export function useBuild() {
   // mutable module `hydrated` flag via useState. ShareImport can flip that
   // flag before a Suspense-delayed child hydrates; getServerSnapshot stays
   // false for the hydration pass so Clear picks `disabled` matches the HTML.
-  const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
+  const build = useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => SERVER_SNAPSHOT,
+  );
   // Per-instance, and deliberately not `useSyncExternalStore(() => hydrated)`.
   //
   // The module flag is shared: ShareImport hydrates the store from the layout,

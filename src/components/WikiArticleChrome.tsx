@@ -53,9 +53,7 @@ export function WikiAssetRail({
   if (!assets.length) return null;
 
   const shown = assets.slice(0, ASSET_DISPLAY_CAP);
-  const railLabel = primary?.label
-    ? `Related assets for ${primary.label}`
-    : "Related assets";
+  const railLabel = primary?.label ? `Related assets for ${primary.label}` : "Related assets";
 
   return (
     <ul className="data-wiki-article__asset-rail" aria-label={railLabel}>

@@ -162,10 +162,13 @@ const OVERLOADS: OverloadChoice[] = ["none", "overload", "supreme", "elder"];
 
 const clampRank = (value: unknown, max: number) =>
   Number.isFinite(value) ? Math.min(Math.max(0, Math.floor(Number(value))), max) : 0;
-const num = (value: unknown, fallback: number) => (Number.isFinite(value) ? Number(value) : fallback);
+const num = (value: unknown, fallback: number) =>
+  Number.isFinite(value) ? Number(value) : fallback;
 
 /** Non-empty string ids currently in slots (order follows EQUIPMENT_SLOTS). */
-export function equipmentIdList(slots: Partial<Record<EquipmentSlot, string | null>> | undefined): string[] {
+export function equipmentIdList(
+  slots: Partial<Record<EquipmentSlot, string | null>> | undefined,
+): string[] {
   if (!slots) return [];
   return EQUIPMENT_SLOTS.map((slot) => slots[slot]).filter(
     (id): id is string => typeof id === "string" && id.length > 0,
@@ -302,7 +305,9 @@ export function normalizeLoadout(value: unknown): Loadout {
   const rawPerks = (raw.perks ?? {}) as Partial<LoadoutPerks>;
   const rawBuffs = (raw.buffs ?? {}) as Partial<LoadoutBuffs>;
   const rawTarget = raw.target as Partial<LoadoutTarget> | null | undefined;
-  const style = STYLES.includes(raw.style as string) ? (raw.style as CombatStyle) : DEFAULT_LOADOUT.style;
+  const style = STYLES.includes(raw.style as string)
+    ? (raw.style as CombatStyle)
+    : DEFAULT_LOADOUT.style;
 
   const hasAttack = Number.isFinite(raw.attackLevel);
   const hasStrength = Number.isFinite(raw.strengthLevel);

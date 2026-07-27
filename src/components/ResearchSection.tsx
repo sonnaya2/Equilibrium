@@ -4,15 +4,9 @@ import { useCallback, useMemo, useState } from "react";
 import type { ResearchRegion } from "@/research/catalog";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
-import {
-  presentInterestMeta,
-  presentInterestName,
-} from "@/lib/dataContentPresentation";
+import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
-import {
-  DataTableOrganizeBar,
-  useDataTableOrganize,
-} from "./DataTableOrganize";
+import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 export type ResearchRow = Record<string, unknown>;
@@ -106,36 +100,6 @@ const STRUCTURAL_KEYS = new Set([
   "regions",
   "hard_region_requirement",
   "hardRegionRequirement",
-]);
-
-/** Nested object keys to strip when rendering object values. */
-const NESTED_SKIP = new Set([
-  "id",
-  "source",
-  "source_url",
-  "source_urls",
-  "sourceUrls",
-  "source_refs",
-  "secondary_source_url",
-  "secondary_source_urls",
-  "primary_source_url",
-  "region_source_url",
-  "sourceFile",
-  "source_file",
-  "source_type",
-  "sourceType",
-  "recordType",
-  "confidence",
-  "status",
-  "freshness",
-  "verified",
-  "verifiedAt",
-  "verified_at",
-  "revision",
-  "publishedAt",
-  "published_at",
-  "url",
-  "type",
 ]);
 
 /** Prefer these as bare lead sentences (no "Detail:" label). */
@@ -406,7 +370,10 @@ function isSourceRef(value: unknown): boolean {
   const row = value as ResearchRow;
   if (typeof row.url === "string" && row.url.startsWith("https://")) return true;
   // SourceKind + optional url envelope without forcing https on every fixture.
-  if (typeof row.source === "string" && ("url" in row || "verifiedAt" in row || "verified_at" in row)) {
+  if (
+    typeof row.source === "string" &&
+    ("url" in row || "verifiedAt" in row || "verified_at" in row)
+  ) {
     return true;
   }
   return false;
@@ -433,10 +400,11 @@ export function clipProse(raw: string, max = LINE_MAX): string {
   if (!s) return "";
 
   // Prefer a sentence that is not maintainance/audit meta.
-  const parts = s.split(/(?<=[.!?])\s+/).map((p) => p.trim()).filter(Boolean);
-  const human = parts.find(
-    (p) => p.length >= 24 && p.length <= max * 1.4 && !AUDIT_NOISE.test(p),
-  );
+  const parts = s
+    .split(/(?<=[.!?])\s+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const human = parts.find((p) => p.length >= 24 && p.length <= max * 1.4 && !AUDIT_NOISE.test(p));
   if (human) s = human;
   else if (AUDIT_NOISE.test(s) && parts.length > 1) {
     const next = parts.find((p) => !AUDIT_NOISE.test(p) && p.length >= 20);
@@ -583,7 +551,10 @@ function region(row: ResearchRow): string {
     return `Needs ${regionName(required[0])}`;
   }
 
-  if (Array.isArray(row.required_regions_for_collection_loop) && row.required_regions_for_collection_loop.length) {
+  if (
+    Array.isArray(row.required_regions_for_collection_loop) &&
+    row.required_regions_for_collection_loop.length
+  ) {
     return `Loop needs ${regionList(row.required_regions_for_collection_loop, " + ")}`;
   }
 
@@ -605,7 +576,9 @@ function region(row: ResearchRow): string {
 
   if (Array.isArray(row.region_options) && row.region_options.length) {
     const options = regionList(row.region_options, " / ");
-    const preferred = row.planner_default_region ? ` · prefer ${regionName(row.planner_default_region)}` : "";
+    const preferred = row.planner_default_region
+      ? ` · prefer ${regionName(row.planner_default_region)}`
+      : "";
     return `Pick ${options}${preferred}`;
   }
 
@@ -713,9 +686,7 @@ function normalizeRegionScope(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
 }
 
-function regionAliases(
-  selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases">,
-): string[] {
+function regionAliases(selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases">): string[] {
   return [selectedRegion.id, selectedRegion.name, ...selectedRegion.aliases]
     .map(normalizeRegionScope)
     .filter(Boolean);
@@ -725,13 +696,13 @@ function scopeMatchesAliases(scope: string[], aliases: string[]): boolean {
   const normalized = scope.map(normalizeRegionScope).filter(Boolean);
   const concrete = normalized.filter(
     (value) =>
-      !value.includes("global") &&
-      !value.includes("allregions") &&
-      !value.includes("anyregion"),
+      !value.includes("global") && !value.includes("allregions") && !value.includes("anyregion"),
   );
   // Pure global markers (global_once_unlocked) match every region filter.
   if (!concrete.length) return normalized.length > 0;
-  return concrete.some((value) => aliases.some((alias) => value.includes(alias) || alias.includes(value)));
+  return concrete.some((value) =>
+    aliases.some((alias) => value.includes(alias) || alias.includes(value)),
+  );
 }
 
 /**
@@ -940,7 +911,9 @@ export function ResearchSection({
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    const regionalRows = selected.rows.filter((row) => researchRowMatchesRegion(row, selectedRegion));
+    const regionalRows = selected.rows.filter((row) =>
+      researchRowMatchesRegion(row, selectedRegion),
+    );
     if (!needle) return regionalRows;
     // Title + region + clipped details only — never stringify full audit bags.
     return regionalRows.filter((row) => {
@@ -975,11 +948,7 @@ export function ResearchSection({
 
   return (
     <section className="data-record-view">
-      <DataViewHeader
-        title={heading}
-        description={blurb || lead || undefined}
-        count={rows.length}
-      >
+      <DataViewHeader title={heading} description={blurb || lead || undefined} count={rows.length}>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -997,11 +966,7 @@ export function ResearchSection({
         />
       </DataViewHeader>
 
-      <div
-        role="tablist"
-        aria-label={`${heading} sections`}
-        className="comp-seg data-record-tabs"
-      >
+      <div role="tablist" aria-label={`${heading} sections`} className="comp-seg data-record-tabs">
         {tabs.map((tab) => {
           const active = tabKey === tab.key;
           return (
@@ -1045,7 +1010,11 @@ export function ResearchSection({
                   className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
                 >
                   <div className="data-record-row__identity">
-                    <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
+                    <span
+                      className={
+                        iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"
+                      }
+                    >
                       {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
                     </span>
                     <div className="data-record-row__copy min-w-0">
@@ -1069,21 +1038,31 @@ export function ResearchSection({
                         ) : null}
                       </h3>
                       {rowSubtitle ? (
-                        <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">{rowSubtitle}</p>
+                        <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
+                          {rowSubtitle}
+                        </p>
                       ) : null}
                     </div>
                   </div>
                   <p className="data-record-row__region">{region(row)}</p>
                   <div className="data-record-row__details">
                     {rowDetails.length
-                      ? rowDetails.map((item, itemIndex) => <p key={itemIndex} className="m-0">{item}</p>)
+                      ? rowDetails.map((item, itemIndex) => (
+                          <p key={itemIndex} className="m-0">
+                            {item}
+                          </p>
+                        ))
                       : null}
                   </div>
                 </article>
               );
             })
           ) : (
-            <p className="data-empty">{query ? "Nothing matches." : `No ${selected.label.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>
+            <p className="data-empty">
+              {query
+                ? "Nothing matches."
+                : `No ${selected.label.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}
+            </p>
           )}
         </div>
       </div>

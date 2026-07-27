@@ -35,7 +35,10 @@ export function spendBloodlust(state: BloodlustState, cost: number): BloodlustSt
 /** Berserk: cap rises to 8 and grants stacks on activation. */
 export function activateBerserk(state: BloodlustState): BloodlustState {
   const next = { ...state, berserk: true };
-  return { ...next, stacks: Math.min(bloodlustCap(next), state.stacks + BERSERK_ACTIVATION_STACKS) };
+  return {
+    ...next,
+    stacks: Math.min(bloodlustCap(next), state.stacks + BERSERK_ACTIVATION_STACKS),
+  };
 }
 
 /** Window over: cap drops back and excess stacks fall off with it. */

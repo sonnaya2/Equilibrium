@@ -29,7 +29,12 @@ import {
   vec3,
 } from "three/tsl";
 import type { Node } from "three/webgpu";
-import { TERRAIN_WALL_DEEP, TERRAIN_WALL_ROCK, TERRAIN_WALL_SUBSOIL, TERRAIN_WALL_TOPSOIL } from "../palette";
+import {
+  TERRAIN_WALL_DEEP,
+  TERRAIN_WALL_ROCK,
+  TERRAIN_WALL_SUBSOIL,
+  TERRAIN_WALL_TOPSOIL,
+} from "../palette";
 import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 
 const ALBEDO_GAIN = 2.05;
@@ -56,7 +61,10 @@ type FieldSample = ReturnType<typeof texture>;
 
 function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
   // float() on every scalar — bare vec2(cx, cy) can emit abstract floats in WGSL.
-  const d = mapUv.sub(vec2(float(cx), float(cy))).length().div(float(r));
+  const d = mapUv
+    .sub(vec2(float(cx), float(cy)))
+    .length()
+    .div(float(r));
   return float(1).sub(d).max(float(0)).pow(float(1.8));
 }
 
@@ -67,7 +75,9 @@ function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
  */
 function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
   // Inland + solid land only — plate-rim ocean stays cold.
-  const land = smoothstep(float(0.53), float(0.6), F.g).mul(smoothstep(float(0.55), float(0.85), F.r));
+  const land = smoothstep(float(0.53), float(0.6), F.g).mul(
+    smoothstep(float(0.55), float(0.85), F.r),
+  );
   const dry = float(1).sub(smoothstep(float(0.1), float(0.28), F.b));
   const r = albedoRgb.x;
   const g = albedoRgb.y;
@@ -88,7 +98,9 @@ function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
 }
 
 function regionMasks(mapUv: MapUv, F: FieldSample) {
-  const land = smoothstep(float(0.5), float(0.56), F.g).mul(smoothstep(float(0.4), float(0.65), F.r));
+  const land = smoothstep(float(0.5), float(0.56), F.g).mul(
+    smoothstep(float(0.4), float(0.65), F.r),
+  );
   // Soft atmosphere disc (heat haze). Wet kill is a separate hard ellipse below.
   const desert = softDisc(mapUv, DESERT_U, DESERT_V, DESERT_R).mul(land);
   const prif = softDisc(mapUv, 0.126, 0.648, 0.055)
@@ -189,13 +201,20 @@ export function createTerrainMaterials(
     const hR = texture(field, mapUv.add(vec2(t, float(0)))).a;
     const hD = texture(field, mapUv.add(vec2(float(0), t.negate()))).a;
     const hU = texture(field, mapUv.add(vec2(float(0), t))).a;
-    const emboss = hL.sub(hR).mul(float(0.72)).add(hU.sub(hD).mul(float(0.5)));
+    const emboss = hL
+      .sub(hR)
+      .mul(float(0.72))
+      .add(hU.sub(hD).mul(float(0.5)));
     // clamp bounds as float() — bare negatives are abstract and fail naga validation.
     base = base.mul(float(1).add(emboss.mul(float(0.55)).clamp(float(-0.12), float(0.18))));
   }
 
   const inlandDepth = smoothstep(float(0.5), float(0.53), F.g);
-  base = mix(base.mul(float(0.9)).mul(vec3(float(0.95), float(0.98), float(1.03))), base, inlandDepth);
+  base = mix(
+    base.mul(float(0.9)).mul(vec3(float(0.95), float(0.98), float(1.03))),
+    base,
+    inlandDepth,
+  );
 
   const atmospheres = regionMasks(mapUv, F);
 
@@ -281,12 +300,7 @@ export function createTerrainMaterials(
   // Green frontier ring + restored-area emissives only.
   const ringGlow = linear(0x3ef07a).mul(ring.mul(float(0.75)));
   const ringCore = linear(0x57e0ae).mul(ring.mul(float(0.35)));
-  cap.emissiveNode = capGlow
-    .add(lavaGlow)
-    .add(prifGlow)
-    .mul(live)
-    .add(ringGlow)
-    .add(ringCore);
+  cap.emissiveNode = capGlow.add(lavaGlow).add(prifGlow).mul(live).add(ringGlow).add(ringCore);
   cap.roughnessNode = float(0.86)
     .sub(F.b.mul(float(0.5)).mul(float(1).sub(atmospheres.desert)).mul(live))
     .sub(lavaHeat.mul(float(0.2)).mul(live))

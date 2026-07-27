@@ -5,6 +5,7 @@
 
 import { safeExternalHref } from "./safeHref";
 import { decodeHtmlEntities } from "./htmlEntities";
+import { sanitizeWikiHtml } from "./sanitizeWikiHtml";
 
 export const WIKI_HOST = "runescape.wiki";
 export const WIKI_ORIGIN = `https://${WIKI_HOST}`;
@@ -41,8 +42,7 @@ const PREFERRED_DROP_HEADING =
 const NON_DROP_SECTION_HEADING =
   /^(?:creation|products?|repair|item\s+sources?|drop\s+sources?|disassembly|usage\s+cost|loot\s+system|drop\s+mechanics|loot\s+sets)$/i;
 
-const DROP_TABLE_HINT =
-  /\b(?:rarity|quantity|ge\s*price|ge\s*market|drop\s*rate|rarity\s*tier)\b/i;
+const DROP_TABLE_HINT = /\b(?:rarity|quantity|ge\s*price|ge\s*market|drop\s*rate|rarity\s*tier)\b/i;
 
 const ITEM_HEADER = /^(?:item|name)s?$/i;
 const QTY_HEADER = /^(?:quantity|qty|amount)s?$/i;
@@ -159,10 +159,7 @@ function decodeEntities(text: string): string {
 function stripTags(html: string): string {
   // Drop empty italic/lang/bold shells before tag→space so they don't leave
   // "Fire )" style tails (wiki often wraps meaning glosses in <i lang=…>).
-  let s = html.replace(
-    /<(i|em|b|strong|span)\b[^>]*>\s*<\/\1>/gi,
-    "",
-  );
+  const s = html.replace(/<(i|em|b|strong|span)\b[^>]*>\s*<\/\1>/gi, "");
   return decodeEntities(s.replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
     .trim();
@@ -185,23 +182,11 @@ export function stripWikiChromeKeepImages(html: string): string {
   let out = html;
   out = out.replace(/<!--[\s\S]*?-->/g, "");
   // Paired elements only (open + matching close).
-  out = out.replace(
-    new RegExp(
-      `<(${DANGEROUS_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`,
-      "gi",
-    ),
-    "",
-  );
+  out = out.replace(new RegExp(`<(${DANGEROUS_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"), "");
   // Unclosed openers left after a truncated/malformed chunk — strip the tag.
-  out = out.replace(
-    new RegExp(`<(?:${DANGEROUS_OPEN})\\b[^>]*>`, "gi"),
-    "",
-  );
+  out = out.replace(new RegExp(`<(?:${DANGEROUS_OPEN})\\b[^>]*>`, "gi"), "");
   // Void / self-closing chrome.
-  out = out.replace(
-    /<(?:input|map|area|link|meta|br)\b[^>]*\/?>/gi,
-    "",
-  );
+  out = out.replace(/<(?:input|map|area|link|meta|br)\b[^>]*\/?>/gi, "");
   out = out.replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "");
   out = out.replace(/\shref\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*')/gi, ' href="#"');
   return out.trim();
@@ -269,9 +254,7 @@ export function extractWikiIconFromCell(cellHtml: string): string | null {
       const abs = absolutizeWikiIconUrl(rawSrc);
       if (!abs) continue;
       // Skip spacer / tracking pixels when a better candidate exists.
-      const isTiny =
-        /\b(?:width|height)=["']?1["']?/i.test(tag) ||
-        /\/1px-/i.test(abs);
+      const isTiny = /\b(?:width|height)=["']?1["']?/i.test(tag) || /\/1px-/i.test(abs);
       if (isTiny) {
         fallback = fallback ?? abs;
         continue;
@@ -307,17 +290,11 @@ export function stripWikiChrome(html: string): string {
   out = out.replace(/<!--[\s\S]*?-->/g, "");
   // Paired elements (open + matching close). Keep closer list aligned with openers —
   // a mismatched pair (e.g. button → form) used to delete half the article.
-  out = out.replace(
-    new RegExp(`<(${STRIP_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"),
-    "",
-  );
+  out = out.replace(new RegExp(`<(${STRIP_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"), "");
   // Unclosed openers (truncated parse chunks, missing closers).
   out = out.replace(new RegExp(`<(?:${STRIP_OPEN})\\b[^>]*>`, "gi"), "");
   // Void / self-closing + images (lead/body stay image-free).
-  out = out.replace(
-    /<(?:img|source|input|map|area|link|meta|br)\b[^>]*\/?>/gi,
-    "",
-  );
+  out = out.replace(/<(?:img|source|input|map|area|link|meta|br)\b[^>]*\/?>/gi, "");
   // Wiki chrome by class/id
   const chromeClass =
     /(?:mw-editsection|mw-empty-elt|navbox|navbox-styles|vertical-navbox|catlinks|printfooter|toc|toctoggle|toclevel|mw-indicators|reference|references|reflist|noprint|metadata|navbox-inner|portal|sistersitebox|ambox|tmbox|ombox|cmbox|fmbox|imbox|hatnote|dablink|rellink|mainpage_|thumbinner|magnify|filehistory|fileinfotpl|licensetpl|navigation-not-searchable|mw-heading\s+mw-heading[1-6][^"]*noprint)/i;
@@ -521,31 +498,32 @@ function cellItemText(cellHtml: string): string {
  * space-before-`)` without eating real parenthetical content.
  */
 export function cleanWikiFootnotes(raw: string): string {
-  return decodeEntities(raw)
-    .replace(/\u00a0|\u200b|\u200c|\u200d|\ufeff/g, " ")
-    // Drop-rate footnotes: [ d 1 ], [d1], [d 2]
-    .replace(/\[\s*[dD]\s*\d+\s*\]/g, "")
-    // Generic numeric cites: [1], [ 12 ], [3]
-    .replace(/\[\s*\d+\s*\]/g, "")
-    // Letter+number cites: [a], [b 2], [m 1]
-    .replace(/\[\s*[a-zA-Z]\s*\d*\s*\]/g, "")
-    .replace(/\[\s*(?:edit|citation needed|source|note\s*\d*|m\s*\d+)\s*\]/gi, "")
-    // Residual empty brackets / double spaces around punctuation
-    .replace(/\[\s*\]/g, "")
-    .replace(/\s{2,}/g, " ")
-    // Tag-strip leaves spaces at paren edges: "Fire )" / "( meaning"
-    .replace(/\s+([,.;:!?)\]])/g, "$1")
-    .replace(/([(\[])\s+/g, "$1")
-    .replace(/\(\s*\)/g, "")
-    // Empty "meaning …" shell after lang/italic content vanished
-    .replace(/\(\s*meaning\s*\)/gi, "")
-    .replace(/([,.;:])\s*(?=[,.;:])/g, "$1")
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  return (
+    decodeEntities(raw)
+      .replace(/\u00a0|\u200b|\u200c|\u200d|\ufeff/g, " ")
+      // Drop-rate footnotes: [ d 1 ], [d1], [d 2]
+      .replace(/\[\s*[dD]\s*\d+\s*\]/g, "")
+      // Generic numeric cites: [1], [ 12 ], [3]
+      .replace(/\[\s*\d+\s*\]/g, "")
+      // Letter+number cites: [a], [b 2], [m 1]
+      .replace(/\[\s*[a-zA-Z]\s*\d*\s*\]/g, "")
+      .replace(/\[\s*(?:edit|citation needed|source|note\s*\d*|m\s*\d+)\s*\]/gi, "")
+      // Residual empty brackets / double spaces around punctuation
+      .replace(/\[\s*\]/g, "")
+      .replace(/\s{2,}/g, " ")
+      // Tag-strip leaves spaces at paren edges: "Fire )" / "( meaning"
+      .replace(/\s+([,.;:!?)\]])/g, "$1")
+      .replace(/([(\[])\s+/g, "$1")
+      .replace(/\(\s*\)/g, "")
+      // Empty "meaning …" shell after lang/italic content vanished
+      .replace(/\(\s*meaning\s*\)/gi, "")
+      .replace(/([,.;:])\s*(?=[,.;:])/g, "$1")
+      .replace(/\s{2,}/g, " ")
+      .trim()
+  );
 }
 
-const NOTED_MARK =
-  /(?:\s*\(\s*notes?\s*\)|\s*\(\s*noted\s*\)|\s+noted\b|\s+notes\b)/gi;
+const NOTED_MARK = /(?:\s*\(\s*notes?\s*\)|\s*\(\s*noted\s*\)|\s+noted\b|\s+notes\b)/gi;
 
 /** Detect wiki noted markers in item or quantity text. */
 export function hasNotedMark(raw: string): boolean {
@@ -682,10 +660,7 @@ function rowCellHtmls(rowInner: string): string[] {
  * Quantity|Qty, Rarity|Rate|Chance. Caps at 80 unique rows.
  * Optional `group` is the wiki section heading (presentation metadata).
  */
-export function extractDropRows(
-  html: string,
-  options?: { group?: string | null },
-): WikiDropRow[] {
+export function extractDropRows(html: string, options?: { group?: string | null }): WikiDropRow[] {
   const rows: WikiDropRow[] = [];
   const seen = new Set<string>();
   const group = options?.group?.replace(/\s+/g, " ").trim() || null;
@@ -726,17 +701,14 @@ export function extractDropRows(
       if (classifyDropHeader(item) && classifyDropHeader(item) !== "image") continue;
       if (/^(?:always|common|uncommon|rare|very rare|varies)$/i.test(item)) continue;
 
-      const qtyRaw =
-        cols.quantity >= 0 ? stripTags(cellHtmls[cols.quantity] ?? "") : "";
+      const qtyRaw = cols.quantity >= 0 ? stripTags(cellHtmls[cols.quantity] ?? "") : "";
       const itemCellRaw = stripTags(cellHtmls[cols.item] ?? "");
       const parsedQty = parseDropQuantity(qtyRaw);
       // Noted may live on the item cell ("Coins (noted)") or the qty cell.
       const noted = parsedQty.noted || hasNotedMark(itemCellRaw);
       const quantity = parsedQty.quantity;
       const rarity =
-        cols.rarity >= 0
-          ? cleanDropCellText(stripTags(cellHtmls[cols.rarity] ?? ""))
-          : "";
+        cols.rarity >= 0 ? cleanDropCellText(stripTags(cellHtmls[cols.rarity] ?? "")) : "";
 
       // Icon priority: inventory-image column → item cell → other non-meta cells.
       let iconUrl: string | null = null;
@@ -826,17 +798,12 @@ export function extractInfoboxFacts(html: string, limit = 8): WikiFact[] {
   const cleaned = stripWikiChrome(html);
   // Prefer monster/NPC infoboxes; fall back to any infobox table.
   const tables =
-    cleaned.match(/<table\b[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/gi) ??
-    [];
+    cleaned.match(/<table\b[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/gi) ?? [];
   if (!tables.length) return [];
 
   const ranked = [...tables].sort((a, b) => {
     const score = (t: string) =>
-      /infobox-monster|infobox-npc|infobox-boss/i.test(t)
-        ? 0
-        : /infobox/i.test(t)
-          ? 1
-          : 2;
+      /infobox-monster|infobox-npc|infobox-boss/i.test(t) ? 0 : /infobox/i.test(t) ? 1 : 2;
     return score(a) - score(b);
   });
 
@@ -878,8 +845,7 @@ function cleanFragment(html: string): string {
   out = out.replace(/<p\b[^>]*>\s*<\/p>/gi, "");
   // Soft-strip multi-paragraph waffle: keep tables, lists, short p
   const keep: string[] = [];
-  const tokenRe =
-    /<(table|ul|ol|dl|h[2-4]|p)\b[^>]*>[\s\S]*?<\/\1>|<p\b[^>]*\/>/gi;
+  const tokenRe = /<(table|ul|ol|dl|h[2-4]|p)\b[^>]*>[\s\S]*?<\/\1>|<p\b[^>]*\/>/gi;
   let m: RegExpExecArray | null;
   let matched = false;
   while ((m = tokenRe.exec(out)) !== null) {
@@ -919,8 +885,7 @@ export function processWikiHtml(
   const raw = rawHtml || "";
   // Keep imgs while locating drop sections so inventory icons survive harvest.
   const withImages = stripWikiChromeKeepImages(raw);
-  const { lead: leadWithImgs, sections: sectionsWithImgs } =
-    extractSections(withImages);
+  const { lead: leadWithImgs, sections: sectionsWithImgs } = extractSections(withImages);
 
   // Preferred unique sections + nested child tables first (Uniques → weapon table).
   const preferredSections = preferredDropSections(sectionsWithImgs);
@@ -973,10 +938,7 @@ export function processWikiHtml(
   }
   // Fallback if section classifiers missed tables but blobs still hold them.
   if (!drops.length) {
-    pushSectionRows(
-      [...preferredDropHtml, ...otherDropHtml, ...leadDropTables].join("\n"),
-      null,
-    );
+    pushSectionRows([...preferredDropHtml, ...otherDropHtml, ...leadDropTables].join("\n"), null);
   }
 
   // Display path: strip all images from prose / fallback HTML.
@@ -1032,18 +994,16 @@ export function processWikiHtml(
 /** Rewrite remaining wiki links to absolute https; leave external alone. */
 export function absolutizeWikiHrefs(html: string): string {
   return html
-    .replace(
-      /\shref="\/w\/([^"]+)"/gi,
-      (_m, path: string) => ` href="${WIKI_ORIGIN}/w/${path}"`,
-    )
-    .replace(
-      /\shref="\/wiki\/([^"]+)"/gi,
-      (_m, path: string) => ` href="${WIKI_ORIGIN}/w/${path}"`,
-    )
+    .replace(/\shref="\/w\/([^"]+)"/gi, (_m, path: string) => ` href="${WIKI_ORIGIN}/w/${path}"`)
+    .replace(/\shref="\/wiki\/([^"]+)"/gi, (_m, path: string) => ` href="${WIKI_ORIGIN}/w/${path}"`)
     .replace(/\shref="\/\/([^"]+)"/gi, (_m, rest: string) => ` href="https://${rest}"`);
 }
 
 export function finalizeArticleHtml(view: WikiArticleView): WikiArticleView {
+  // Allowlist sanitize after href rewrite — last boundary before API/JSON.
+  const leadHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.leadHtml));
+  const dropsHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.dropsHtml));
+  const bodyHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.bodyHtml));
   return {
     ...view,
     title: decodeHtmlEntities(view.title),
@@ -1051,8 +1011,8 @@ export function finalizeArticleHtml(view: WikiArticleView): WikiArticleView {
       ...row,
       iconUrl: absolutizeWikiIconUrl(row.iconUrl) ?? null,
     })),
-    leadHtml: absolutizeWikiHrefs(view.leadHtml),
-    dropsHtml: absolutizeWikiHrefs(view.dropsHtml),
-    bodyHtml: absolutizeWikiHrefs(view.bodyHtml),
+    leadHtml,
+    dropsHtml,
+    bodyHtml,
   };
 }

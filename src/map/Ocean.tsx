@@ -20,12 +20,15 @@ const EXTENT = MAP_WORLD.width * 3;
 /** Segments across that extent. Long swell ~1.2 units; 80 reads the same at table distance. */
 const SEGMENTS = 80;
 
-export function Ocean({ field, keyDirection }: { field: THREE.Texture; keyDirection: THREE.Vector3 }) {
+export function Ocean({
+  field,
+  keyDirection,
+}: {
+  field: THREE.Texture;
+  keyDirection: THREE.Vector3;
+}) {
   const water = useMemo(() => createWaterMaterial(field, keyDirection), [field, keyDirection]);
-  const geometry = useMemo(
-    () => new THREE.PlaneGeometry(EXTENT, EXTENT, SEGMENTS, SEGMENTS),
-    [],
-  );
+  const geometry = useMemo(() => new THREE.PlaneGeometry(EXTENT, EXTENT, SEGMENTS, SEGMENTS), []);
   useEffect(() => () => water.dispose(), [water]);
   useEffect(() => () => geometry.dispose(), [geometry]);
 

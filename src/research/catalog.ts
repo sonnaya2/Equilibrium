@@ -1,11 +1,6 @@
 import normalizedSource from "../../data/research/catalog.json";
 
-export type SourceKind =
-  | "runescape-wiki"
-  | "jagex"
-  | "rs-analysis"
-  | "pvme"
-  | "derived";
+export type SourceKind = "runescape-wiki" | "jagex" | "rs-analysis" | "pvme" | "derived";
 
 export interface SourceReference {
   source: SourceKind;

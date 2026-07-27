@@ -7,7 +7,8 @@ export type SlayerMethod =
   | (typeof collectionSource)["slayer_methods"][number]
   | (typeof edgeSource)["slayer_methods"][number];
 export type InventionComponentChain = (typeof slayerSource)["invention_component_chains"][number];
-export type ArchaeologyRelicAcquisition = (typeof slayerSource)["archaeology_relic_acquisition"][number];
+export type ArchaeologyRelicAcquisition =
+  (typeof slayerSource)["archaeology_relic_acquisition"][number];
 export type StaleMethodCorrection = (typeof slayerSource)["stale_method_corrections"][number];
 
 export function getAllSlayerMethods(): SlayerMethod[] {

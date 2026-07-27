@@ -21,9 +21,7 @@ export type WikiTaskPageImport = {
 export const EMPTY_PROGRESS: TaskProgress = { completed: [] };
 
 function htmlAttribute(tag: string, name: string): string | null {
-  const match = tag.match(
-    new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
-  );
+  const match = tag.match(new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"));
   return match ? (match[1] ?? match[2] ?? match[3] ?? null) : null;
 }
 
@@ -68,9 +66,7 @@ export function normalizeProgress(raw: unknown): TaskProgress {
   if (!Array.isArray(completed)) return { completed: [] };
   return {
     completed: [
-      ...new Set(
-        completed.filter((id): id is string => typeof id === "string" && id.length > 0),
-      ),
+      ...new Set(completed.filter((id): id is string => typeof id === "string" && id.length > 0)),
     ],
   };
 }
@@ -210,9 +206,7 @@ export function mergeWikiTaskProgress(
 ): { progress: TaskProgress; matched: number; added: number } {
   const canonicalByWikiId = new Map(
     records.flatMap((record) =>
-      typeof record.wikiTaskId === "number"
-        ? [[record.wikiTaskId, taskId(record)] as const]
-        : [],
+      typeof record.wikiTaskId === "number" ? [[record.wikiTaskId, taskId(record)] as const] : [],
     ),
   );
   const completed = new Set(state.completed);
@@ -236,10 +230,7 @@ export function mergeWikiTaskProgress(
 }
 
 /** Count completed ids; when records given, only those present in the set. */
-export function completedCount(
-  state: TaskProgress,
-  records?: readonly TaskRecord[],
-): number {
+export function completedCount(state: TaskProgress, records?: readonly TaskRecord[]): number {
   if (!records) return state.completed.length;
   const ids = new Set(records.map(taskId));
   return state.completed.filter((id) => ids.has(id)).length;
@@ -261,10 +252,7 @@ export function pointsEarned(
   return total;
 }
 
-export function pointsTotal(
-  records: readonly TaskRecord[],
-  tiers: Record<string, number>,
-): number {
+export function pointsTotal(records: readonly TaskRecord[], tiers: Record<string, number>): number {
   let total = 0;
   for (const record of records) {
     const pts = taskPoints(record, tiers);

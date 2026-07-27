@@ -23,9 +23,7 @@ describe("gameArt", () => {
   it("builds conventional public paths", () => {
     expect(gameIconPath("combat", "melee-abilities")).toBe("/game/combat/melee-abilities.webp");
     expect(regionCrestPath("karamja")).toBe("/game/regions/karamja.webp");
-    expect(equipmentIconPath("item:seismic-wand")).toBe(
-      "/game/combat/equipment/seismic-wand.webp",
-    );
+    expect(equipmentIconPath("item:seismic-wand")).toBe("/game/combat/equipment/seismic-wand.webp");
     expect(equipmentIconPath("seismic-wand")).toBe("/game/combat/equipment/seismic-wand.webp");
     expect(abilityIconPath("greater_barge", "melee")).toBe(
       "/game/combat/abilities/melee/greater-barge.webp",
@@ -38,17 +36,31 @@ describe("gameArt", () => {
   it("every style icon is published to public/game", () => {
     for (const style of Object.keys(STYLE_ICON) as Array<keyof typeof STYLE_ICON>) {
       const path = styleIconPath(style);
-      expect(existsSync(join(PUBLIC, path)), `${path} not published — run npm run sync:assets`).toBe(true);
+      expect(
+        existsSync(join(PUBLIC, path)),
+        `${path} not published — run npm run sync:assets`,
+      ).toBe(true);
     }
   });
 
   it("all 11 region crests are published", () => {
     const regions = [
-      "misthalin", "havenhythe", "karamja", "asgarnia", "kandarin", "fremennik",
-      "forinthry", "desert", "morytania", "tirannwn", "anachronia",
+      "misthalin",
+      "havenhythe",
+      "karamja",
+      "asgarnia",
+      "kandarin",
+      "fremennik",
+      "forinthry",
+      "desert",
+      "morytania",
+      "tirannwn",
+      "anachronia",
     ];
     for (const region of regions) {
-      expect(existsSync(join(PUBLIC, regionCrestPath(region))), `${region} crest missing`).toBe(true);
+      expect(existsSync(join(PUBLIC, regionCrestPath(region))), `${region} crest missing`).toBe(
+        true,
+      );
     }
   });
 
@@ -68,7 +80,9 @@ describe("gameArt", () => {
     expect(upgradeIconPath("Kerapac progression")).toBeNull();
     // Multi-word packages without a real item → empty well (not a weak skill/scenery icon).
     expect(dataEntityIconPath({ name: "Random abstract skilling package ladder" })).toBeNull();
-    expect(dataEntityIconPath({ name: "Elite package without item", kind: "elite skilling" })).toBeNull();
+    expect(
+      dataEntityIconPath({ name: "Elite package without item", kind: "elite skilling" }),
+    ).toBeNull();
     expect(dataEntityIconPath({ name: "Generic multi-word progression checklist" })).toBeNull();
   });
 
@@ -80,10 +94,9 @@ describe("gameArt", () => {
       "hets-oasis",
       "menaphos-imperial",
     ]) {
-      expect(
-        isSceneryPermanentUnlock(`/game/upgrades/permanent-unlocks/${slug}.webp`),
-        slug,
-      ).toBe(true);
+      expect(isSceneryPermanentUnlock(`/game/upgrades/permanent-unlocks/${slug}.webp`), slug).toBe(
+        true,
+      );
     }
     // Inventory-sized permanents stay allowed as reward chips.
     expect(
@@ -97,14 +110,18 @@ describe("gameArt", () => {
 
   it("prefers Archaeology inventory/skill over scenery for abstract arch rows", () => {
     // Monolith packages → inventory monolith (or skill if unpublished).
-    expect(dataEntityIconPath({ name: "Mysterious monolith energy + relic loadout ladder" })).toMatch(
+    expect(
+      dataEntityIconPath({ name: "Mysterious monolith energy + relic loadout ladder" }),
+    ).toMatch(
       /\/(upgrades\/permanent-unlocks\/mysterious-monolith|skills\/archaeology)\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Hireable research team recruitment ladder" })).toMatch(
       /archaeology-research\.(webp|png)$/,
     );
     // kind-only archaeology with no name hit → empty well (not forced skill icon).
-    expect(dataEntityIconPath({ name: "Abstract package checklist", kind: "archaeology progression" })).toBeNull();
+    expect(
+      dataEntityIconPath({ name: "Abstract package checklist", kind: "archaeology progression" }),
+    ).toBeNull();
     // Published dig-site map icons resolve via activity; unpublished dig-site aliases fall to skill.
     expect(dataEntityIconPath({ name: "Kharid-et dig site" })).toBe(
       "/game/activities/kharid-et-dig-site.webp",
@@ -123,24 +140,20 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Dragon mattock" })).toMatch(/dragon-mattock\.(webp|png)$/);
     // Abstract collector package with no specific inventory art → empty well.
     expect(dataEntityIconPath({ name: "Collectors Assemble unique-collection ladder" })).toBeNull();
-    expect(dataEntityIconPath({ name: "Archaeology shop" })).toMatch(
-      /master-archaeologist/,
-    );
-    expect(dataEntityIconPath({ name: "It Belongs in a Museum! (Velucia meta collection log)" })).toMatch(
-      /velucia-museum\.(webp|png)$/,
-    );
-    expect(dataEntityIconPath({ name: "Professor additional relic loadout (80k chronotes)" })).toMatch(
-      /chronotes\.(webp|png)$/,
-    );
+    expect(dataEntityIconPath({ name: "Archaeology shop" })).toMatch(/master-archaeologist/);
+    expect(
+      dataEntityIconPath({ name: "It Belongs in a Museum! (Velucia meta collection log)" }),
+    ).toMatch(/velucia-museum\.(webp|png)$/);
+    expect(
+      dataEntityIconPath({ name: "Professor additional relic loadout (80k chronotes)" }),
+    ).toMatch(/chronotes\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Spear of Annihilation (base archaeology spear)" })).toMatch(
       /spear-of-annihilation\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Master archaeologist's outfit" })).toMatch(
       /master-archaeologist/,
     );
-    expect(dataEntityIconPath({ name: "Master runecrafter robes" })).toMatch(
-      /master-runecrafter/,
-    );
+    expect(dataEntityIconPath({ name: "Master runecrafter robes" })).toMatch(/master-runecrafter/);
     // hermod.png may not be published yet; alias still targets hermod.
     const hermod = dataEntityIconPath({ name: "Hermod, the Spirit of War" });
     expect(hermod === null || /hermod/.test(hermod)).toBe(true);
@@ -181,9 +194,11 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Zemouregal & Vorkath progression" })).toBe(
       "/game/bosses/zemouregal-vorkath.webp",
     );
-    expect(dataEntityIconPath({ name: "Imcando tools family (pickaxe, hatchet, related craft pressure)" })).toMatch(
-      /imcando-pickaxe\.(webp|png)$/,
-    );
+    expect(
+      dataEntityIconPath({
+        name: "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+      }),
+    ).toMatch(/imcando-pickaxe\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Well of Souls talent infrastructure" })).toBe(
       "/game/activities/well-of-souls.webp",
     );
@@ -197,7 +212,9 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Deathwarden robe armour (necro tank)" })).toMatch(
       /deathwarden-robe-top\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Nex: Angel of Death progression" })).toMatch(/nex-aod\.(webp|png|jpg)$/);
+    expect(dataEntityIconPath({ name: "Nex: Angel of Death progression" })).toMatch(
+      /nex-aod\.(webp|png|jpg)$/,
+    );
     expect(dataEntityIconPath({ name: "Bandos equipment (GWD1 melee power ladder)" })).toMatch(
       /bandos-chestplate\.(webp|png)$/,
     );
@@ -207,9 +224,9 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Robes of subjugation (GWD1 magic power ladder)" })).toMatch(
       /subjugation-robe-top\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Staff of limitless family (elemental impetus craft)" })).toMatch(
-      /staff-of-limitless-fire\.(webp|png)$/,
-    );
+    expect(
+      dataEntityIconPath({ name: "Staff of limitless family (elemental impetus craft)" }),
+    ).toMatch(/staff-of-limitless-fire\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Wood box tier upgrades" })).toMatch(
       /(eternal-magic-)?wood-box\.(webp|png)$/,
     );
@@ -219,7 +236,9 @@ describe("gameArt", () => {
       "Bandos equipment (GWD1 melee power ladder)",
     ]) {
       const path = dataEntityIconPath({ name: label });
-      expect(existsSync(join(PUBLIC, path!)), `missing public file for "${label}": ${path}`).toBe(true);
+      expect(existsSync(join(PUBLIC, path!)), `missing public file for "${label}": ${path}`).toBe(
+        true,
+      );
     }
   });
 
@@ -233,10 +252,15 @@ describe("gameArt", () => {
   it("uses disk-backed non-png boss extensions and word-ish boss kinds", () => {
     expect(bossIconPath("Zamorak")).toBe("/game/bosses/zamorak.webp");
     // "elite skilling" must not force bossish routing (no random boss/activity).
-    expect(dataEntityIconPath({ name: "Augmentable gather tools research", kind: "elite skilling" })).toBeNull();
+    expect(
+      dataEntityIconPath({ name: "Augmentable gather tools research", kind: "elite skilling" }),
+    ).toBeNull();
     // Kind-only archaeology tag must not dump skill art on an abstract package name.
     expect(
-      dataEntityIconPath({ name: "Settlement hub without excavation tokens", kind: "archaeology progression" }),
+      dataEntityIconPath({
+        name: "Settlement hub without excavation tokens",
+        kind: "archaeology progression",
+      }),
     ).toBeNull();
     // Hyphenated dig-site names stay whole (not split into "kharid" alone).
     expect(dataEntityIconPath({ name: "Kharid-et dig site" })).toBe(
@@ -251,29 +275,37 @@ describe("gameArt", () => {
         kind: "permanent Anachronia base-camp skillcape passive infrastructure",
       }),
     ).toMatch(/skillcape-rack\.(webp|png)$/);
-    expect(dataEntityIconPath({ name: "Anachronia base camp" })).toMatch(/anachronia-base-camp\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Anachronia base camp" })).toMatch(
+      /anachronia-base-camp\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Dream of Iaia" })).toMatch(/dream-of-iaia\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Orthen Dig Site" })).toMatch(/orthen-dig/);
     expect(dataEntityIconPath({ name: "Ranch Out of Time (Anachronia Dinosaur Farm)" })).toMatch(
       /ranch-out-of-time\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Herby Werby herb bag skilling unlock" })).toMatch(/herby-werby\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Herby Werby herb bag skilling unlock" })).toMatch(
+      /herby-werby\.(webp|png)$/,
+    );
     expect(
       dataEntityIconPath({ name: "Laniakea (Anachronia highest standard Slayer Master)" }),
     ).toMatch(/laniakea\.(webp|png)$/);
-    expect(dataEntityIconPath({ name: "Gemstone armour" })).toMatch(/gemstone-hauberk\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Gemstone armour" })).toMatch(
+      /gemstone-hauberk\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Anachronia codex lectern (Double Surge/Escape)" })).toMatch(
       /double-surge\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Volcanic trapper outfit" })).toMatch(/volcanic-trapper\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Volcanic trapper outfit" })).toMatch(
+      /volcanic-trapper\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Reaver's ring" })).toMatch(/reavers-ring\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Anachronia totems (permanent multi-skill buffs)" })).toMatch(
       /totem-of-vitality\.(webp|png)$/,
     );
     // Multi-MB course plates are scenery — skill glyph is intentional.
-    expect(
-      dataEntityIconPath({ name: "Anachronia Agility Course", kind: "Agility course" }),
-    ).toBe("/game/skills/agility.webp");
+    expect(dataEntityIconPath({ name: "Anachronia Agility Course", kind: "Agility course" })).toBe(
+      "/game/skills/agility.webp",
+    );
     expect(
       dataEntityIconPath({ name: "Dinosaur and plant Slayer (Laniakea / Anachronia)" }),
     ).toMatch(/laniakea\.(webp|png)$/);
@@ -283,17 +315,25 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).toMatch(
       /havenhythe-big-game-hunter\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Anachronia Big Game Hunter" })).toMatch(/big-game-hunter\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Anachronia Big Game Hunter" })).toMatch(
+      /big-game-hunter\.(webp|png)$/,
+    );
     // Never reuse Anachronia dinosaur BGH art for Havenhythe
     expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).not.toMatch(
       /^\/game\/activities\/big-game-hunter\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Clockwork box traps" })).toMatch(/clockwork-box-trap\.(webp|png)$/);
-    expect(dataEntityIconPath({ name: "Moonrise Dig Site" })).toMatch(/moonrise-dig-site\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Clockwork box traps" })).toMatch(
+      /clockwork-box-trap\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Moonrise Dig Site" })).toMatch(
+      /moonrise-dig-site\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Masterwork Ranged Armour materials" })).toMatch(
       /masterwork-ranged-body\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Havenhythe birdhouses" })).toMatch(/bird-house\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Havenhythe birdhouses" })).toMatch(
+      /bird-house\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Eternal birdhouse" })).toMatch(/bird-house\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Jackalopes (BIS early–mid Hunter method)" })).toMatch(
       /jackalopes?\.(webp|png)$/,
@@ -354,7 +394,10 @@ describe("gameArt", () => {
       ["Mage Arena", /mage-arena\.(webp|png)$/],
       ["Forinthry Dungeon", /forinthry-dungeon\.(webp|png)$/],
       ["Charming moths", /charming-moths\.(webp|png)$/],
-      ["Mage of Zamorak (Abyss entrance)", /mage-of-zamorak\.(webp|png|gif)$|abyss\.(webp|gif|png)$/],
+      [
+        "Mage of Zamorak (Abyss entrance)",
+        /mage-of-zamorak\.(webp|png|gif)$|abyss\.(webp|gif|png)$/,
+      ],
       ["Daemonheim Rewards shop (Marmaros)", /daemonheim-rewards\.(webp|png)$/],
       ["Daemonheim Peninsula resource island", /daemonheim-peninsula\.(webp|png)$/],
       ["Daemonheim Dig Site", /daemonheim-dig-site\.(webp|png)$/],
@@ -362,7 +405,10 @@ describe("gameArt", () => {
       ["Wilderness runite rocks (Lava Maze north)", /wilderness-runite\.(webp|png)$/],
       ["Spirit shield + holy elixir / sigil densify", /divine-spirit-shield\.(webp|png)$/],
       ["Dark onyx core source package", /dark-onyx-core\.(webp|png)$/],
-      ["GWD2 anima core and mid-tier melee/ranged weapons", /anima-core-body-of-zaros\.(webp|png)$/],
+      [
+        "GWD2 anima core and mid-tier melee/ranged weapons",
+        /anima-core-body-of-zaros\.(webp|png)$/,
+      ],
     ];
     for (const [label, re] of must) {
       const path = upgradeIconPath(label) ?? dataEntityIconPath({ name: label });
@@ -374,24 +420,32 @@ describe("gameArt", () => {
   });
 
   it("resolves Fremennik major unlocks to published art", () => {
-    expect(dataEntityIconPath({ name: "Dragon pickaxe (Chaos Dwarf Battlefield / Chaos Giants)" })).toMatch(
-      /dragon-pickaxe\.(webp|png)$/,
+    expect(
+      dataEntityIconPath({ name: "Dragon pickaxe (Chaos Dwarf Battlefield / Chaos Giants)" }),
+    ).toMatch(/dragon-pickaxe\.(webp|png)$/);
+    expect(
+      dataEntityIconPath({ name: "Imcando pickaxe (Lava Flow Mine / Birthright path)" }),
+    ).toMatch(/imcando-pickaxe\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Astral altar (Lunar Isle)" })).toMatch(
+      /astral-altar\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Imcando pickaxe (Lava Flow Mine / Birthright path)" })).toMatch(
-      /imcando-pickaxe\.(webp|png)$/,
-    );
-    expect(dataEntityIconPath({ name: "Astral altar (Lunar Isle)" })).toMatch(/astral-altar\.(webp|png)$/);
     // Multi-MB Livid/Lunar place plates → Magic skill glyph (readable at 3rem).
     expect(dataEntityIconPath({ name: "Livid Farm Lunar spell unlocks" })).toBe(
       "/game/skills/magic.webp",
     );
     expect(dataEntityIconPath({ name: "Lunar Isle skilling hub" })).toBe("/game/skills/magic.webp");
-    expect(dataEntityIconPath({ name: "Managing Miscellania" })).toMatch(/managing-miscellania\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Managing Miscellania" })).toMatch(
+      /managing-miscellania\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Keldagrim dwarven traders and multi-step chests" })).toMatch(
       /keldagrim\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Ungael ritual site pressure" })).toMatch(/ungael-ritual\.(webp|png)$/);
-    expect(dataEntityIconPath({ name: "Yak hide and Player-Owned Farm yak babies" })).toMatch(/yak\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Ungael ritual site pressure" })).toMatch(
+      /ungael-ritual\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Yak hide and Player-Owned Farm yak babies" })).toMatch(
+      /yak\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Yak-hide armour" })).toMatch(/yak-hide/);
   });
 
@@ -403,9 +457,9 @@ describe("gameArt", () => {
       "/game/bosses/rasial.webp",
     );
     // Boss plate wins even when kind is a place/dungeon tag (Major unlocks Name column).
-    expect(dataEntityIconPath({ name: "Kerapac, the bound", kind: "Elder God Wars Dungeon" })).toMatch(
-      /\/bosses\/kerapac\./,
-    );
+    expect(
+      dataEntityIconPath({ name: "Kerapac, the bound", kind: "Elder God Wars Dungeon" }),
+    ).toMatch(/\/bosses\/kerapac\./);
     expect(dataEntityIconPath({ name: "Arch-Glacor", kind: "Elder God Wars Dungeon" })).toMatch(
       /\/bosses\/arch-glacor\./,
     );
@@ -451,9 +505,9 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "The Empty Throne Room", kind: "Mining" })).not.toMatch(
       /\/skills\/mining\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Necromantic Rune Temple", kind: "Runecrafting" })).not.toMatch(
-      /\/skills\/runecrafting\.(webp|png)$/,
-    );
+    expect(
+      dataEntityIconPath({ name: "Necromantic Rune Temple", kind: "Runecrafting" }),
+    ).not.toMatch(/\/skills\/runecrafting\.(webp|png)$/);
     // Real skill-training / pure skill rows still use skill glyphs.
     expect(dataEntityIconPath({ name: "Mining", kind: "skill", skill: "Mining" })).toBe(
       "/game/skills/mining.webp",
@@ -522,16 +576,18 @@ describe("gameArt", () => {
       expect(path, name).toBe(`/game/bosses/${slug}.${ext}`);
       expect(existsSync(join(PUBLIC, path!)), `missing ${path}`).toBe(true);
     }
-    expect(
-      dataEntityIconPath({ name: "Dragonkin Laboratory (ED2)", kind: "Elite Dungeon" }),
-    ).toBe("/game/bosses/black-stone-dragon.webp");
-    expect(
-      dataEntityIconPath({ name: "The Shadow Reef (ED3)", kind: "Elite Dungeon" }),
-    ).toBe("/game/bosses/ambassador.webp");
+    expect(dataEntityIconPath({ name: "Dragonkin Laboratory (ED2)", kind: "Elite Dungeon" })).toBe(
+      "/game/bosses/black-stone-dragon.webp",
+    );
+    expect(dataEntityIconPath({ name: "The Shadow Reef (ED3)", kind: "Elite Dungeon" })).toBe(
+      "/game/bosses/ambassador.webp",
+    );
     // Full containment still works for package labels without inventory art.
     expect(bossIconPath("Kerapac progression")).toBe("/game/bosses/kerapac.webp");
     // Inventory unique packs keep upgrade art (reward/POI chips), not boss plates.
-    expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(/ivar-uniques\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(
+      /ivar-uniques\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Scripture of Amascut" })).not.toMatch(/\/bosses\//);
   });
 

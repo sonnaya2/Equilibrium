@@ -41,12 +41,10 @@ export function OverviewCourtyard({
 
   const picks = loaded ? build.elective : [];
   const slots: (string | null)[] = Array.from({ length: ELECTIVE_CAP }, (_, i) => picks[i] ?? null);
-  const t1Relic = loaded ? build.relics["1"] ?? null : null;
-  const relicMono = t1Relic ? RELIC_MONO[t1Relic] ?? t1Relic.slice(0, 2).toUpperCase() : null;
+  const t1Relic = loaded ? (build.relics["1"] ?? null) : null;
+  const relicMono = t1Relic ? (RELIC_MONO[t1Relic] ?? t1Relic.slice(0, 2).toUpperCase()) : null;
   const taskDone = progress.completed.length;
-  const pickNames = slots
-    .filter((id): id is string => Boolean(id))
-    .map((id) => regionLabel(id));
+  const pickNames = slots.filter((id): id is string => Boolean(id)).map((id) => regionLabel(id));
   const regionsFull = picks.length >= ELECTIVE_CAP;
   const taskFig =
     taskTotal > 0 ? `${taskDone}/${taskTotal}` : taskDone > 0 ? String(taskDone) : "—";
@@ -129,7 +127,9 @@ export function OverviewCourtyard({
                       {pickNames.join(" · ")}
                     </span>
                   ) : (
-                    <span style={{ color: "var(--echo-parch-300, var(--color-parch-300))" }}>—</span>
+                    <span style={{ color: "var(--echo-parch-300, var(--color-parch-300))" }}>
+                      —
+                    </span>
                   )}
                 </dd>
                 <dt>Tasks</dt>

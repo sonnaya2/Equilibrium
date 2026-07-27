@@ -104,8 +104,14 @@ describe("ranged ability data", () => {
       "deaths_swiftness",
       "greater_deaths_swiftness",
     ]) {
-      expect(RANGED_ABILITIES.some((a) => a.id === id), id).toBe(true);
-      expect(RANGED_EFFECTS.some((e) => e.id === id), id).toBe(false);
+      expect(
+        RANGED_ABILITIES.some((a) => a.id === id),
+        id,
+      ).toBe(true);
+      expect(
+        RANGED_EFFECTS.some((e) => e.id === id),
+        id,
+      ).toBe(false);
     }
   });
 
@@ -175,7 +181,10 @@ describe("ranged ability data", () => {
       "escape",
     ];
     for (const id of removed) {
-      expect(RANGED_ABILITIES.some((a) => a.id === id), id).toBe(false);
+      expect(
+        RANGED_ABILITIES.some((a) => a.id === id),
+        id,
+      ).toBe(false);
     }
     expect(RANGED_EFFECTS.some((e) => e.id === "csm_removals")).toBe(true);
   });

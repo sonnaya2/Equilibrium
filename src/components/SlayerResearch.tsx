@@ -12,7 +12,13 @@ const methods = getAllSlayerMethods().map((row) => ({
 })) as unknown as ResearchRow[];
 
 const stale = getStaleSlayerMethodCorrections().map((row) => {
-  const loose = row as { name?: string; topic?: string; method?: string; monster?: string; id?: string };
+  const loose = row as {
+    name?: string;
+    topic?: string;
+    method?: string;
+    monster?: string;
+    id?: string;
+  };
   return {
     ...row,
     name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Old method",
@@ -21,7 +27,9 @@ const stale = getStaleSlayerMethodCorrections().map((row) => {
 
 const inventionChains = getAllInventionComponentChains().map((row) => ({
   ...row,
-  name: (row as { name?: string; component?: string }).name || (row as { component?: string }).component,
+  name:
+    (row as { name?: string; component?: string }).name ||
+    (row as { component?: string }).component,
 })) as unknown as ResearchRow[];
 
 const archRelics = getAllArchaeologyRelicAcquisitions().map((row) => {

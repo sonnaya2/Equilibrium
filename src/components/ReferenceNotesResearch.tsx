@@ -57,7 +57,13 @@ function midgameSectionRows(): ResearchRow[] {
       : null;
 
   for (const [key, value] of Object.entries(bag)) {
-    if (key === "date" || key === "name" || key === "source" || key === "source_type" || key === "sources") {
+    if (
+      key === "date" ||
+      key === "name" ||
+      key === "source" ||
+      key === "source_type" ||
+      key === "sources"
+    ) {
       continue;
     }
     if (Array.isArray(value)) {

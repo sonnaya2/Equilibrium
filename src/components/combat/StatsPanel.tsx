@@ -3,12 +3,7 @@
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { NumberField } from "./NumberField";
 import { loadoutDamageLevel, loadoutWeaponTier } from "./loadoutStats";
-import {
-  withAttackLevel,
-  withStrengthLevel,
-  withStyleLevel,
-  type Loadout,
-} from "./useLoadout";
+import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
 
 /** Manual combat stats feeding the engine until per-item bonuses are sourced. */
 export function StatsPanel({

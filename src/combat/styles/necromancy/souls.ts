@@ -43,7 +43,11 @@ export function rollSpectralScytheSoul(roll: number): boolean {
 }
 
 /** Out of combat for 6s, the souls fade. */
-export function decaySouls(state: ResidualSoulsState, tick: number, inCombat: boolean): ResidualSoulsState {
+export function decaySouls(
+  state: ResidualSoulsState,
+  tick: number,
+  inCombat: boolean,
+): ResidualSoulsState {
   if (inCombat) return { ...state, lastActiveTick: tick };
   return tick - state.lastActiveTick >= secondsToTicks(SOUL_DECAY_SECONDS)
     ? { ...state, souls: 0 }

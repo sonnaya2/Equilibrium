@@ -55,10 +55,7 @@ describe("taskId", () => {
 describe("migrateProgressIds", () => {
   it("rewrites legacy tier:name keys to wiki ids", () => {
     const legacy = {
-      completed: [
-        legacyTaskId(CATALYST_RECORDS[0]),
-        legacyTaskId(CATALYST_RECORDS[1]),
-      ],
+      completed: [legacyTaskId(CATALYST_RECORDS[0]), legacyTaskId(CATALYST_RECORDS[1])],
     };
     const migrated = migrateProgressIds(legacy, CATALYST_RECORDS);
     expect(migrated.completed).toEqual(["wiki:462", "wiki:900"]);
@@ -92,9 +89,9 @@ describe("normalizeProgress", () => {
   });
 
   it("dedupes and keeps only non-empty strings", () => {
-    expect(
-      normalizeProgress({ completed: ["a", "a", "", 3, "b", null] }),
-    ).toEqual({ completed: ["a", "b"] });
+    expect(normalizeProgress({ completed: ["a", "a", "", 3, "b", null] })).toEqual({
+      completed: ["a", "b"],
+    });
   });
 });
 
@@ -136,11 +133,7 @@ describe("saved Wiki task page import", () => {
       [462, 900, 9999, 900],
     );
     expect(result).toMatchObject({ matched: 2, added: 1 });
-    expect(result.progress.completed).toEqual([
-      "wiki:462",
-      "local-task",
-      "wiki:900",
-    ]);
+    expect(result.progress.completed).toEqual(["wiki:462", "local-task", "wiki:900"]);
   });
 });
 

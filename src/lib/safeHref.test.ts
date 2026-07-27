@@ -3,9 +3,7 @@ import { safeExternalHref } from "./safeHref";
 
 describe("safeExternalHref", () => {
   it("accepts https URLs", () => {
-    expect(safeExternalHref("https://runescape.wiki/w/Home")).toBe(
-      "https://runescape.wiki/w/Home",
-    );
+    expect(safeExternalHref("https://runescape.wiki/w/Home")).toBe("https://runescape.wiki/w/Home");
   });
 
   it("rejects javascript: URLs", () => {

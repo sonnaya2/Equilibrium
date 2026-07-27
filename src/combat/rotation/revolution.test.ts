@@ -28,7 +28,8 @@ type BarExtras = {
 type RevolutionBarWithMeta = RevolutionBarRecord & BarExtras;
 
 function barById(id: string): RevolutionBarWithMeta | undefined {
-  return combatRevolutionBars.records.find((bar) => bar.id === id) as RevolutionBarWithMeta | undefined;
+  return combatRevolutionBars.records.find((bar) => bar.id === id) as
+    RevolutionBarWithMeta | undefined;
 }
 
 /** Revo-managed slots only — hybrid bars pad beyond revolutionSize for manual tail. */
@@ -64,20 +65,32 @@ describe("resolveBar", () => {
   });
 
   it("resolves Adaptive Strike by weapon setup and Sacrifice to the bar's style", () => {
-    const dw = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "melee-dual-wield")!, ENGINE_SPECS);
+    const dw = resolveBar(
+      combatRevolutionBars.records.find((bar) => bar.id === "melee-dual-wield")!,
+      ENGINE_SPECS,
+    );
     expect(dw.find((slot) => slot.name === "Adaptive Strike")!.spec?.id).toBe("adaptive_strike_dw");
-    const th = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "melee-two-handed")!, ENGINE_SPECS);
+    const th = resolveBar(
+      combatRevolutionBars.records.find((bar) => bar.id === "melee-two-handed")!,
+      ENGINE_SPECS,
+    );
     expect(th.find((slot) => slot.name === "Adaptive Strike")!.spec?.id).toBe("adaptive_strike_2h");
 
     // PvME ranged ST has no Sacrifice; necro ST does (shared record → bar style).
-    const necro = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "necromancy")!, ENGINE_SPECS);
+    const necro = resolveBar(
+      combatRevolutionBars.records.find((bar) => bar.id === "necromancy")!,
+      ENGINE_SPECS,
+    );
     const sacrifice = necro.find((slot) => slot.name === "Sacrifice")!;
     expect(sacrifice.modelledBy).toBe("record");
     expect(sacrifice.spec?.style).toBe("necromancy");
   });
 
   it("resolves magic PvME ST damage slots via engine specs", () => {
-    const magic = resolveBar(combatRevolutionBars.records.find((bar) => bar.id === "magic")!, ENGINE_SPECS);
+    const magic = resolveBar(
+      combatRevolutionBars.records.find((bar) => bar.id === "magic")!,
+      ENGINE_SPECS,
+    );
     for (const [name, id] of [
       ["Tsunami", "tsunami"],
       ["Omnipower", "omnipower"],
@@ -111,7 +124,9 @@ describe("specFromRecord", () => {
 describe("simulateRevolution", () => {
   it("fires the first ready bar ability per slot and weaves basics through shortfalls", () => {
     const bar = combatRevolutionBars.records.find((candidate) => candidate.id === "magic")!;
-    const modelled = resolveBar(bar, ENGINE_SPECS).filter((slot) => slot.spec !== null).map((slot) => slot.spec!);
+    const modelled = resolveBar(bar, ENGINE_SPECS)
+      .filter((slot) => slot.spec !== null)
+      .map((slot) => slot.spec!);
     const s = simulateRevolution({
       ...baseInput,
       abilities: [...ENGINE_SPECS.values(), ...modelled],
@@ -167,7 +182,9 @@ describe("simulateRevolution", () => {
       durationTicks: 48,
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.slice(0, 12).every((cast) => cast.abilityId === "magic_attack" && cast.auto)).toBe(true);
+    expect(
+      s.casts.slice(0, 12).every((cast) => cast.abilityId === "magic_attack" && cast.auto),
+    ).toBe(true);
     expect(s.casts[12].abilityId).toBe("greater_sunshine");
     expect(s.casts[12].tick).toBe(36);
     // The 12th basic caps adrenaline at 100, so the 100% cost leaves nothing.
@@ -176,7 +193,9 @@ describe("simulateRevolution", () => {
 
   it("honours priority order — the same abilities in a different order cast differently", () => {
     const bar = combatRevolutionBars.records.find((candidate) => candidate.id === "magic")!;
-    const modelled = resolveBar(bar, ENGINE_SPECS).filter((slot) => slot.spec !== null).map((slot) => slot.spec!);
+    const modelled = resolveBar(bar, ENGINE_SPECS)
+      .filter((slot) => slot.spec !== null)
+      .map((slot) => slot.spec!);
     const forward = simulateRevolution({
       ...baseInput,
       abilities: [...ENGINE_SPECS.values(), ...modelled],
@@ -209,12 +228,16 @@ describe("simulateRevolution", () => {
       durationTicks: 6,
     });
     expect(s.ok).toBe(true);
-    const burnTicks = Object.keys(s.damageByTick).map(Number).filter((tick) => tick > 0);
+    const burnTicks = Object.keys(s.damageByTick)
+      .map(Number)
+      .filter((tick) => tick > 0);
     expect(Math.max(...burnTicks)).toBeGreaterThan(6);
   });
 
   it("fills a full 60s horizon with GCDs, basics, and horizon DPS", () => {
-    const bar = combatRevolutionBars.records.find((candidate) => candidate.id === "melee-dual-wield")!;
+    const bar = combatRevolutionBars.records.find(
+      (candidate) => candidate.id === "melee-dual-wield",
+    )!;
     const modelled = resolveBar(bar, ENGINE_SPECS)
       .filter((slot) => slot.spec !== null)
       .map((slot) => slot.spec!);
@@ -277,7 +300,9 @@ describe("revolution buff uptimes", () => {
     const buffed = s.casts.find((cast) => cast.abilityId === "ranged_attack" && cast.tick === 39)!;
     expect(buffed.result.expected).toBeCloseTo(1500);
     // Buff runs 37..99 (cast+1 through cast+62); basics at 102+ are unbuffed.
-    const expired = s.casts.filter((cast) => cast.abilityId === "ranged_attack" && cast.tick >= 102);
+    const expired = s.casts.filter(
+      (cast) => cast.abilityId === "ranged_attack" && cast.tick >= 102,
+    );
     expect(expired.length).toBeGreaterThan(0);
     expect(expired.every((cast) => Math.abs(cast.result.expected - 1000) < 1e-9)).toBe(true);
   });

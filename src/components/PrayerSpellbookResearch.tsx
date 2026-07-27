@@ -43,10 +43,7 @@ const prayerTabs: ResearchTab[] = books.map((book) => ({
       category: book.name,
       book_id: book.id,
       // Empty [] alone is unmapped; explicit no_region_requirement is global.
-      requiredRegions:
-        regionType === "no_region_requirement"
-          ? ["global"]
-          : required,
+      requiredRegions: regionType === "no_region_requirement" ? ["global"] : required,
       region_requirement_type: regionType,
       source_urls: urls.length ? urls : undefined,
     } as unknown as ResearchRow;

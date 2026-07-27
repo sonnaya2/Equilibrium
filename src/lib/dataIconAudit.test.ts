@@ -88,13 +88,22 @@ function looksGarbage(name: string, webPath: string, kind = ""): boolean {
   return false;
 }
 
-type Row = { surface: string; name: string; kind?: string; path?: string; file?: string; id?: string };
+type Row = {
+  surface: string;
+  name: string;
+  kind?: string;
+  path?: string;
+  file?: string;
+  id?: string;
+};
 
 describe("data icon audit", () => {
   it("writes blank/garbage report for /data entities", () => {
     const catalog = JSON.parse(readFileSync("data/research/catalog.json", "utf8"));
     const combat = JSON.parse(readFileSync("data/research/regional-combat-unlocks.json", "utf8"));
-    const skilling = JSON.parse(readFileSync("data/research/regional-skilling-unlocks.json", "utf8"));
+    const skilling = JSON.parse(
+      readFileSync("data/research/regional-skilling-unlocks.json", "utf8"),
+    );
     const unlocks = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
 
     const blank: Row[] = [];
@@ -145,7 +154,12 @@ describe("data icon audit", () => {
     for (const k of Object.keys(unlocks)) {
       if (!Array.isArray(unlocks[k])) continue;
       for (const row of unlocks[k]) {
-        audit("permanent", row.name || row.quest || row.id, k, row.id != null ? String(row.id) : null);
+        audit(
+          "permanent",
+          row.name || row.quest || row.id,
+          k,
+          row.id != null ? String(row.id) : null,
+        );
       }
     }
 

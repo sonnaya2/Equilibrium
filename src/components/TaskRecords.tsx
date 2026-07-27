@@ -3,21 +3,14 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { GameIcon } from "@/components/GameIcon";
-import { RegionCrest, RegionCrestPreload } from "@/components/RegionCrest";
-import {
-  formatCompRate,
-  TASK_PAGE_SIZE,
-  taskSkillNames,
-  useTasksDesk,
-  wikiTaskUrl,
-  type DifficultyAggregate,
-  type TaskPageStats,
-} from "@/tasks/useTasksDesk";
-import { gameIconPath, worldMapIconPath } from "@/lib/gameArt";
-import { parseWikiTaskPage } from "@/tasks/progress";
+import { RegionCrestPreload } from "@/components/RegionCrest";
+import { gameIconPath } from "@/lib/gameArt";
+import { TASK_PAGE_SIZE, useTasksDesk, type TaskPageStats } from "@/tasks/useTasksDesk";
 import type { TaskRecord, TaskRegionId, TaskTier } from "@/tasks";
-
-const MAX_WIKI_HTML_BYTES = 25 * 1024 * 1024;
+import { TaskCard, taskCardDomId } from "@/components/tasks/TaskCard";
+import { TaskSidebar } from "@/components/tasks/TaskSidebar";
+import { TaskWikiImportDialog } from "@/components/tasks/TaskWikiImportDialog";
+import "@/components/tasks/tasks.css";
 
 const TIER_LABEL: Record<TaskTier, string> = {
   easy: "Easy",
@@ -104,18 +97,14 @@ export function TaskRecords({
   } = desk;
 
   const selected = selectedId
-    ? visible.find((record) => taskId(record) === selectedId) ?? null
+    ? (visible.find((record) => taskId(record) === selectedId) ?? null)
     : null;
-  const showComp = records.some(
-    (record) => typeof record.catalystCompletionRate === "number",
-  );
+  const showComp = records.some((record) => typeof record.catalystCompletionRate === "number");
   const rangeStart = visible.length === 0 ? 0 : (page - 1) * TASK_PAGE_SIZE + 1;
   const rangeEnd = Math.min(page * TASK_PAGE_SIZE, visible.length);
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [wikiSyncNotice, setWikiSyncNotice] = useState("");
-  const [wikiHtmlFile, setWikiHtmlFile] = useState<File | null>(null);
   const wikiImportDialog = useRef<HTMLDialogElement>(null);
-  const wikiHtmlInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(max-width: 700px)").matches) setFiltersOpen(false);
@@ -126,9 +115,7 @@ export function TaskRecords({
     const handle = window.requestAnimationFrame(() => {
       document.getElementById(taskCardDomId(selectedId))?.scrollIntoView({
         block: "nearest",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       });
     });
     return () => window.cancelAnimationFrame(handle);
@@ -158,50 +145,9 @@ export function TaskRecords({
     );
   };
 
-  const importWikiHtml = async (file: File) => {
-    if (file.size > MAX_WIKI_HTML_BYTES) {
-      setWikiSyncNotice("That HTML file is too large.");
-      return;
-    }
-
-    try {
-      const parsed = parseWikiTaskPage(await file.text());
-      if (parsed.taskRows === 0) {
-        setWikiSyncNotice("That file is not a saved Wiki task page.");
-        return;
-      }
-      if (parsed.completedTaskIds.length === 0) {
-        setWikiSyncNotice("No WikiSync completions found. Run the lookup before saving.");
-        return;
-      }
-
-      const knownWikiIds = new Set(
-        records.flatMap((record) =>
-          typeof record.wikiTaskId === "number" ? [record.wikiTaskId] : [],
-        ),
-      );
-      const matched = parsed.completedTaskIds.filter((id) => knownWikiIds.has(id)).length;
-      if (matched === 0) {
-        setWikiSyncNotice("No tasks in that file match this task list.");
-        return;
-      }
-
-      const imported = onImportWikiTasks(parsed.completedTaskIds);
-      setWikiSyncNotice(
-        imported.added > 0
-          ? `${imported.added.toLocaleString()} ${imported.added === 1 ? "task" : "tasks"} imported · ${imported.matched.toLocaleString()} matched.`
-          : `All ${imported.matched.toLocaleString()} matched tasks were already complete.`,
-      );
-    } catch {
-      setWikiSyncNotice("Could not read that HTML file.");
-    }
-  };
-
   return (
     <div className="tasks-gallery tasks-page">
-      {crestRegionIds.length > 0 ? (
-        <RegionCrestPreload regionIds={crestRegionIds} />
-      ) : null}
+      {crestRegionIds.length > 0 ? <RegionCrestPreload regionIds={crestRegionIds} /> : null}
 
       <header className="tasks-page__header">
         <div className="tasks-page__heading">
@@ -281,7 +227,6 @@ export function TaskRecords({
                       type="button"
                       className="tasks-import__open"
                       onClick={() => {
-                        setWikiHtmlFile(null);
                         setWikiSyncNotice("");
                         wikiImportDialog.current?.showModal();
                       }}
@@ -331,7 +276,10 @@ export function TaskRecords({
                   {availableCategories.length > 0 ? (
                     <label className="tasks-field">
                       <span>Category</span>
-                      <select value={category} onChange={(event) => setCategory(event.target.value)}>
+                      <select
+                        value={category}
+                        onChange={(event) => setCategory(event.target.value)}
+                      >
                         <option value="all">All categories</option>
                         {availableCategories.map((option) => (
                           <option key={option}>{option}</option>
@@ -401,7 +349,8 @@ export function TaskRecords({
                 <span>{records.length.toLocaleString()} total</span>
                 {difficultyBreakdown.map((entry) => (
                   <span key={entry.tier} className={`tasks-tier tasks-tier--${entry.tier}`}>
-                    {TIER_LABEL[entry.tier]} {entry.count.toLocaleString()} ({formatPercent(entry.percentage)})
+                    {TIER_LABEL[entry.tier]} {entry.count.toLocaleString()} (
+                    {formatPercent(entry.percentage)})
                   </span>
                 ))}
               </div>
@@ -434,7 +383,9 @@ export function TaskRecords({
                         id={id}
                         record={record}
                         points={taskPoints(record)}
-                        provisional={tierConfidence[record.tier]?.startsWith("provisional") ?? false}
+                        provisional={
+                          tierConfidence[record.tier]?.startsWith("provisional") ?? false
+                        }
                         done={completed.has(id)}
                         pinned={pinned.has(id)}
                         selected={selectedId === id}
@@ -454,14 +405,21 @@ export function TaskRecords({
 
             <nav className="tasks-pagination" aria-label="Task pages">
               <span>
-                {rangeStart.toLocaleString()}–{rangeEnd.toLocaleString()} of {visible.length.toLocaleString()}
+                {rangeStart.toLocaleString()}–{rangeEnd.toLocaleString()} of{" "}
+                {visible.length.toLocaleString()}
               </span>
               <div>
                 <button type="button" disabled={page <= 1} onClick={() => goToPage(page - 1)}>
                   Previous
                 </button>
-                <strong>Page {page} of {pageCount}</strong>
-                <button type="button" disabled={page >= pageCount} onClick={() => goToPage(page + 1)}>
+                <strong>
+                  Page {page} of {pageCount}
+                </strong>
+                <button
+                  type="button"
+                  disabled={page >= pageCount}
+                  onClick={() => goToPage(page + 1)}
+                >
                   Next
                 </button>
               </div>
@@ -483,88 +441,14 @@ export function TaskRecords({
       )}
 
       {dataset.wikiSyncSupported ? (
-        <dialog
-          ref={wikiImportDialog}
-          className="tasks-import-dialog"
-          aria-labelledby="tasks-import-title"
-        >
-          <header className="tasks-import-dialog__header">
-            <h2 id="tasks-import-title">Import Wiki progress</h2>
-            <button
-              type="button"
-              className="tasks-import-dialog__close"
-              aria-label="Close import window"
-              onClick={() => wikiImportDialog.current?.close()}
-            >
-              ×
-            </button>
-          </header>
-          <div className="tasks-import-dialog__body">
-            <ol>
-              <li>
-                Open the{" "}
-                <a href={tasksWikiUrl} target="_blank" rel="noreferrer">
-                  Wiki task page
-                </a>
-                .
-              </li>
-              <li>Enter your RuneScape name in WikiSync and choose Look up.</li>
-              <li>Wait for your completed tasks to turn green.</li>
-              <li>Press Ctrl+S (⌘S on Mac) and save the page as an .html file.</li>
-              <li>Browse for that file below, then choose Upload.</li>
-            </ol>
-            <p>
-              Processed locally. Not uploaded.{" "}
-              <a
-                href="https://runescape.wiki/w/RuneScape:WikiSync"
-                target="_blank"
-                rel="noreferrer"
-              >
-                RuneScape Wiki: “publicly available to anyone”
-              </a>
-            </p>
-            {wikiSyncNotice ? (
-              <p className="tasks-import-dialog__notice" role="status">
-                {wikiSyncNotice}
-              </p>
-            ) : null}
-          </div>
-          <footer className="tasks-import-dialog__actions">
-            <input
-              ref={wikiHtmlInput}
-              hidden
-              type="file"
-              accept=".html,.htm,text/html"
-              aria-label="Choose saved Wiki page"
-              onChange={(event) => {
-                const input = event.currentTarget;
-                setWikiHtmlFile(input.files?.[0] ?? null);
-                setWikiSyncNotice("");
-                input.value = "";
-              }}
-            />
-            <button
-              type="button"
-              className="tasks-import-dialog__browse"
-              onClick={() => wikiHtmlInput.current?.click()}
-            >
-              Browse
-            </button>
-            <span className="tasks-import-dialog__file">
-              {wikiHtmlFile?.name ?? "No file selected"}
-            </span>
-            <button
-              type="button"
-              className="tasks-import-dialog__upload"
-              disabled={!wikiHtmlFile}
-              onClick={() => {
-                if (wikiHtmlFile) void importWikiHtml(wikiHtmlFile);
-              }}
-            >
-              Upload
-            </button>
-          </footer>
-        </dialog>
+        <TaskWikiImportDialog
+          dialogRef={wikiImportDialog}
+          tasksWikiUrl={tasksWikiUrl}
+          records={records}
+          onImportWikiTasks={onImportWikiTasks}
+          notice={wikiSyncNotice}
+          setNotice={setWikiSyncNotice}
+        />
       ) : null}
     </div>
   );
@@ -584,8 +468,18 @@ function TaskStatsStrip({ stats }: { stats: TaskPageStats }) {
       value: `${stats.completedPoints.toLocaleString()} / ${stats.totalPoints.toLocaleString()}`,
       hint: formatPercent(stats.pointCompletionRate),
     },
-    { kind: "completion", label: "Completion", value: formatPercent(stats.completionRate), hint: "All tasks" },
-    { kind: "filters", label: "Active filters", value: stats.activeFilterCount.toLocaleString(), hint: "Current view" },
+    {
+      kind: "completion",
+      label: "Completion",
+      value: formatPercent(stats.completionRate),
+      hint: "All tasks",
+    },
+    {
+      kind: "filters",
+      label: "Active filters",
+      value: stats.activeFilterCount.toLocaleString(),
+      hint: "Current view",
+    },
     {
       kind: "build",
       label: "In my build",
@@ -610,13 +504,7 @@ function TaskStatsStrip({ stats }: { stats: TaskPageStats }) {
   );
 }
 
-function TaskStatGlyph({
-  kind,
-  progress,
-}: {
-  kind: string;
-  progress: number;
-}) {
+function TaskStatGlyph({ kind, progress }: { kind: string; progress: number }) {
   const mark = { tasks: "✓", points: "◆", filters: "⌁", build: "⬡" }[kind];
   if (kind === "completion") {
     return (
@@ -627,253 +515,13 @@ function TaskStatGlyph({
       />
     );
   }
-  return <span className="tasks-stat__glyph" aria-hidden>{mark}</span>;
-}
-
-function TaskCard({
-  id,
-  record,
-  points,
-  provisional,
-  done,
-  pinned,
-  selected,
-  showComp,
-  tasksWikiUrl,
-  isLeagueRegionId,
-  regionLabel,
-  onToggle,
-  onPin,
-  onSelect,
-}: {
-  id: string;
-  record: TaskRecord;
-  points: number | null;
-  provisional: boolean;
-  done: boolean;
-  pinned: boolean;
-  selected: boolean;
-  showComp: boolean;
-  tasksWikiUrl: string;
-  isLeagueRegionId: (id: string) => boolean;
-  regionLabel: string;
-  onToggle: () => void;
-  onPin: () => void;
-  onSelect: () => void;
-}) {
-  const firstSkill = taskSkillNames(record)[0];
-  const wikiHref =
-    typeof record.wikiTaskId === "number"
-      ? wikiTaskUrl(tasksWikiUrl, record.wikiTaskId)
-      : null;
-  const rate = record.catalystCompletionRate;
-
   return (
-    <article
-      id={taskCardDomId(id)}
-      data-task-id={id}
-      className={`task-card${done ? " is-complete" : ""}${pinned ? " is-pinned" : ""}${selected ? " is-selected" : ""}`}
-    >
-      <div className="task-card__top">
-        <span className="task-card__icon" aria-hidden>
-          {firstSkill ? (
-            <GameIcon src={gameIconPath("skills", firstSkill.toLowerCase())} size={34} />
-          ) : record.regionId && isLeagueRegionId(record.regionId) ? (
-            <RegionCrest regionId={record.regionId} size={36} />
-          ) : (
-            <GameIcon src={worldMapIconPath()} size={34} />
-          )}
-        </span>
-        <button
-          type="button"
-          className="task-card__title"
-          title={record.name}
-          aria-expanded={selected}
-          aria-controls={selected ? "tasks-selected-detail" : undefined}
-          onClick={onSelect}
-        >
-          {record.name}
-        </button>
-        <strong className="task-card__points">
-          {points?.toLocaleString() ?? "—"}
-          {provisional ? (
-            <>
-              <span aria-hidden>*</span><span className="sr-only"> provisional</span>
-            </>
-          ) : null}
-          <small>pts</small>
-        </strong>
-      </div>
-
-      <div className="task-card__meta">
-        {showComp ? (
-          <span>
-            {typeof rate === "number" ? (
-              wikiHref ? (
-                <a href={wikiHref} target="_blank" rel="noreferrer">
-                  {formatCompRate(rate, record.catalystCompletionRateQualifier)} of players
-                </a>
-              ) : (
-                `${formatCompRate(rate, record.catalystCompletionRateQualifier)} of players`
-              )
-            ) : (
-              "Comp% unavailable"
-            )}
-          </span>
-        ) : null}
-      </div>
-
-      <div className="task-card__status-row">
-        <span className="task-card__tier-region">
-          <span className="task-card__region" aria-label={`Region: ${regionLabel}`} title={regionLabel}>
-            {record.regionId && isLeagueRegionId(record.regionId) ? (
-              <RegionCrest regionId={record.regionId} size={17} />
-            ) : (
-              <GameIcon src={worldMapIconPath()} size={15} />
-            )}
-          </span>
-          <span className={`tasks-tier tasks-tier--${record.tier}`}>{record.tier}</span>
-        </span>
-        <span className="task-card__footer-actions">
-          <button
-            type="button"
-            className="task-card__status"
-            aria-pressed={done}
-            aria-label={done ? `Mark incomplete: ${record.name}` : `Mark complete: ${record.name}`}
-            onClick={onToggle}
-          >
-            {done ? "Completed" : "Not started"}
-          </button>
-          <button
-            type="button"
-            className="task-card__pin"
-            aria-pressed={pinned}
-            aria-label={pinned ? `Unpin ${record.name}` : `Pin ${record.name}`}
-            title={pinned ? "Unpin task" : "Pin task"}
-            onClick={onPin}
-          >
-            <svg viewBox="0 0 16 16" aria-hidden>
-              <path d="M5.4 1.5h5.2l-.7 3.1L12 6.7v1H8.7V14L8 15l-.7-1V7.7H4v-1l2.1-2.1-.7-3.1Zm1.5 1 .5 2.5-1.2 1.2h3.6L8.6 5l.5-2.5H6.9Z" />
-            </svg>
-          </button>
-        </span>
-      </div>
-    </article>
-  );
-}
-
-function TaskSidebar({
-  difficulty,
-  recommendations,
-  selected,
-  tasksWikiUrl,
-  taskId,
-  taskPoints,
-  regionDisplayName,
-  onSelect,
-  onClose,
-}: {
-  difficulty: DifficultyAggregate[];
-  recommendations: TaskRecord[];
-  selected: TaskRecord | null;
-  tasksWikiUrl: string;
-  taskId: (record: TaskRecord) => string;
-  taskPoints: (record: TaskRecord) => number | null;
-  regionDisplayName: (id: TaskRegionId) => string;
-  onSelect: (record: TaskRecord) => void;
-  onClose: () => void;
-}) {
-  return (
-    <aside className="tasks-sidebar" aria-label="Task guidance">
-      {selected ? (
-        <section id="tasks-selected-detail" className="tasks-sidebar__section tasks-sidebar__detail">
-          <div className="tasks-sidebar__head">
-            <h2>Task detail</h2>
-            <button type="button" onClick={onClose}>Close</button>
-          </div>
-          <h3>{selected.name}</h3>
-          <p className="tasks-sidebar__meta">
-            {selected.regionId ? regionDisplayName(selected.regionId) : "Unknown region"} · {selected.tier} · {taskPoints(selected) ?? "—"} pts
-          </p>
-          {selected.description ? <p>{selected.description}</p> : null}
-          {selected.requirements ? <p><strong>Requires:</strong> {selected.requirements}</p> : null}
-          {typeof selected.wikiTaskId === "number" ? (
-            <a href={wikiTaskUrl(tasksWikiUrl, selected.wikiTaskId)} target="_blank" rel="noreferrer">
-              Open source task
-            </a>
-          ) : null}
-        </section>
-      ) : null}
-
-      <section className="tasks-sidebar__section">
-        <h2>Recommended next</h2>
-        {recommendations.length > 0 ? (
-          <ol className="tasks-recommendations">
-            {recommendations.map((record) => (
-              <li key={taskId(record)}>
-                <button type="button" onClick={() => onSelect(record)}>
-                  <span className="tasks-recommendations__icon" aria-hidden>
-                    <GameIcon
-                      src={taskRecordIconPath(record)}
-                      size={28}
-                    />
-                  </span>
-                  <span>{record.name}</span>
-                  <strong>{taskPoints(record) ?? "—"} pts</strong>
-                </button>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p>No unfinished tasks match this view.</p>
-        )}
-      </section>
-
-      <section className="tasks-sidebar__section">
-        <h2>Difficulty breakdown</h2>
-        <div className="tasks-difficulty-track" aria-hidden>
-          {difficulty.map((entry) => (
-            <span
-              key={entry.tier}
-              className={`tasks-tier-fill--${entry.tier}`}
-              style={{ width: `${entry.percentage}%` }}
-            />
-          ))}
-        </div>
-        <dl className="tasks-difficulty-list">
-          {difficulty.map((entry) => (
-            <div key={entry.tier}>
-              <dt className={`tasks-tier tasks-tier--${entry.tier}`}>{TIER_LABEL[entry.tier]}</dt>
-              <dd className="tasks-difficulty__tasks">
-                {entry.count.toLocaleString()} <small>tasks</small>
-              </dd>
-              <dd className="tasks-difficulty__points">
-                {entry.pointsPerTask.toLocaleString()} <small>pts</small>
-              </dd>
-              <dd className="tasks-difficulty__percent">{formatPercent(entry.percentage)}</dd>
-              <dd className="tasks-difficulty-meter" aria-hidden>
-                <span
-                  className={`tasks-tier-fill--${entry.tier}`}
-                  style={{ width: `${entry.percentage}%` }}
-                />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-    </aside>
+    <span className="tasks-stat__glyph" aria-hidden>
+      {mark}
+    </span>
   );
 }
 
 function formatPercent(value: number): string {
   return `${value.toFixed(1)}%`;
-}
-
-function taskRecordIconPath(record: TaskRecord): string {
-  const skill = taskSkillNames(record)[0];
-  return skill ? gameIconPath("skills", skill.toLowerCase()) : worldMapIconPath();
-}
-
-function taskCardDomId(id: string): string {
-  return `task-card-${id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 }

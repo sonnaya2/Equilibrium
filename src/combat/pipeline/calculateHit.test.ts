@@ -54,7 +54,11 @@ describe("calculateHit", () => {
       apply: (s) => ({ ...s, damage: mulFloor(s.damage, 1.75) }),
       source: { source: "derived", url: "test", verifiedAt: "2026-07-24" },
     };
-    const r = calculateHit({ ...baseInput, modifiers: [berserk], crit: { chance: 0, guaranteed: true } });
+    const r = calculateHit({
+      ...baseInput,
+      modifiers: [berserk],
+      crit: { chance: 0, guaranteed: true },
+    });
     // floor(1100 * 1.75) = 1925 -> crit floor(1925 * 1.5) = 2887
     expect(r.critMin).toBe(2887);
   });

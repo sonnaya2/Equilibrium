@@ -28,9 +28,7 @@ export function DataViewHeader({
     <header className="data-view-head">
       <div className="data-view-head__copy">
         <h2>{title}</h2>
-        <p className="data-view-head__region">
-          {region ? region.name : "All regions"}
-        </p>
+        <p className="data-view-head__region">{region ? region.name : "All regions"}</p>
         {description ? <p className="data-view-head__description">{description}</p> : null}
       </div>
       <div className="data-view-head__count" aria-label={`${count} ${countLabel}`}>
@@ -94,16 +92,36 @@ export function DataWorkbench({
 
       <DataRegionContext.Provider value={region}>
         <div className="data-workbench__panels flex min-h-0 flex-1 flex-col overflow-hidden">
-          <WorkbenchPanel id="browse" active={tab} clip>{browse}</WorkbenchPanel>
-          <WorkbenchPanel id="quests" active={tab}>{quests}</WorkbenchPanel>
-          <WorkbenchPanel id="progression" active={tab}>{progression}</WorkbenchPanel>
-          <WorkbenchPanel id="unlocks" active={tab}>{unlocks}</WorkbenchPanel>
-          <WorkbenchPanel id="regional" active={tab}>{regional}</WorkbenchPanel>
-          <WorkbenchPanel id="combatBis" active={tab}>{combatBis}</WorkbenchPanel>
-          <WorkbenchPanel id="combos" active={tab}>{combos}</WorkbenchPanel>
-          <WorkbenchPanel id="slayer" active={tab}>{slayer}</WorkbenchPanel>
-          <WorkbenchPanel id="invention" active={tab}>{invention}</WorkbenchPanel>
-          <WorkbenchPanel id="consumables" active={tab}>{consumables}</WorkbenchPanel>
+          <WorkbenchPanel id="browse" active={tab} clip>
+            {browse}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="quests" active={tab}>
+            {quests}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="progression" active={tab}>
+            {progression}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="unlocks" active={tab}>
+            {unlocks}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="regional" active={tab}>
+            {regional}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="combatBis" active={tab}>
+            {combatBis}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="combos" active={tab}>
+            {combos}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="slayer" active={tab}>
+            {slayer}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="invention" active={tab}>
+            {invention}
+          </WorkbenchPanel>
+          <WorkbenchPanel id="consumables" active={tab}>
+            {consumables}
+          </WorkbenchPanel>
         </div>
       </DataRegionContext.Provider>
     </div>

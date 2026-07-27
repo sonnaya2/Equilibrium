@@ -24,7 +24,10 @@ export function gainNecrosis(state: NecrosisState, base: number): NecrosisState 
 }
 
 export function fingerOfDeathDiscountPct(state: NecrosisState): number {
-  return Math.min(state.stacks, FINGER_OF_DEATH_MAX_STACKS) * FINGER_OF_DEATH_COST_REDUCTION_PER_STACK_PCT;
+  return (
+    Math.min(state.stacks, FINGER_OF_DEATH_MAX_STACKS) *
+    FINGER_OF_DEATH_COST_REDUCTION_PER_STACK_PCT
+  );
 }
 
 /** Finger of Death spends exactly the stacks its discount used. */

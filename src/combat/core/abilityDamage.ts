@@ -20,7 +20,8 @@ export interface BandResult {
 
 export function bandOf(base: number, band: DamageBand): BandResult {
   if (base < 0 || !Number.isFinite(base)) throw new RangeError(`bandOf: bad base ${base}`);
-  if (band.minPct > band.maxPct) throw new RangeError(`bandOf: inverted band ${band.minPct}-${band.maxPct}`);
+  if (band.minPct > band.maxPct)
+    throw new RangeError(`bandOf: inverted band ${band.minPct}-${band.maxPct}`);
   const min = percentFloor(base, band.minPct);
   const max = percentFloor(base, band.maxPct);
   return { min, max, expected: (min + max) / 2 };
@@ -66,9 +67,14 @@ export function baseAbilityDamage(
   level: number,
   hand:
     | { kind: "mainhand"; weapon: WeaponProfile; offhand?: WeaponProfile }
-    | { kind: "twohand"; weapon: WeaponProfile; style: "melee" | "ranged" | "magic" | "necromancy" },
+    | {
+        kind: "twohand";
+        weapon: WeaponProfile;
+        style: "melee" | "ranged" | "magic" | "necromancy";
+      },
 ): number {
-  if (!Number.isFinite(level) || level < 1) throw new RangeError(`baseAbilityDamage: bad level ${level}`);
+  if (!Number.isFinite(level) || level < 1)
+    throw new RangeError(`baseAbilityDamage: bad level ${level}`);
   if (hand.kind === "mainhand") {
     const mh = mainHandTerm(level, hand.weapon);
     if (!hand.offhand) return mh;

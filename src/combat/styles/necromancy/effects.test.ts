@@ -17,12 +17,7 @@ import {
   residualSoulCapFor,
   resolveNecromancyAbility,
 } from "./effects";
-import {
-  CONJURE_UNTIL_OFFSET_TICKS,
-  conjureActive,
-  newConjures,
-  summonConjure,
-} from "./conjures";
+import { CONJURE_UNTIL_OFFSET_TICKS, conjureActive, newConjures, summonConjure } from "./conjures";
 import { NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } from "./necrosis";
 import { RESIDUAL_SOUL_CAP } from "./souls";
 

@@ -20,9 +20,9 @@ describe("slayerPlanner loaders", () => {
   it("filters by region option", () => {
     const forinthry = getSlayerMethodsByRegion("forinthry");
     expect(forinthry.length).toBeGreaterThan(0);
-    expect(forinthry.every((m) => m.region_options.some((r) => r.toLowerCase() === "forinthry"))).toBe(
-      true,
-    );
+    expect(
+      forinthry.every((m) => m.region_options.some((r) => r.toLowerCase() === "forinthry")),
+    ).toBe(true);
   });
 
   it("exposes invention chains, archaeology relics, and stale corrections", () => {

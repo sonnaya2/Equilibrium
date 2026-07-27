@@ -138,10 +138,7 @@ function effectiveBrowseStyle(
 }
 
 /** Show style tag when item is hybrid, mismatched, or browsing all styles. */
-function styleRowTag(
-  record: EquipmentRecord,
-  referenceStyle: CombatStyle | null,
-): string | null {
+function styleRowTag(record: EquipmentRecord, referenceStyle: CombatStyle | null): string | null {
   if (!record.style) return null;
   if (record.style === "hybrid") return "hybrid";
   if (referenceStyle == null) return record.style;
@@ -195,7 +192,9 @@ function EquipmentSlotButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      title={disabled ? `${SLOT_LABELS[slot]} unavailable while Two-hand is equipped` : SLOT_LABELS[slot]}
+      title={
+        disabled ? `${SLOT_LABELS[slot]} unavailable while Two-hand is equipped` : SLOT_LABELS[slot]
+      }
       className={`equipment-slot${selected ? " is-selected" : ""}${empty ? " is-empty" : " is-filled"}${disabled ? " is-disabled" : ""}`}
     >
       <span className="equipment-slot__label">{SLOT_LABELS[slot]}</span>
@@ -249,17 +248,11 @@ export function GearPanel({
 
   /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
-    () =>
-      combatEquipment.records.filter(
-        (r) => r.slot != null && r.unlock?.type !== "removed",
-      ),
+    () => combatEquipment.records.filter((r) => r.slot != null && r.unlock?.type !== "removed"),
     [],
   );
   const unlocks = useMemo(
-    () =>
-      combatEquipment.records.filter(
-        (r) => r.slot == null && r.unlock?.type !== "removed",
-      ),
+    () => combatEquipment.records.filter((r) => r.slot == null && r.unlock?.type !== "removed"),
     [],
   );
 
@@ -295,13 +288,9 @@ export function GearPanel({
 
   // Cap only on full unfiltered catalogue. Region / search / active slot filters
   // must not hide lower-tier matches under tier sort (All styles + weapon = 160+).
-  const pickerFiltered =
-    regionFilter !== "all" || search.trim().length > 0 || activeSlot != null;
-  const wearablesCapped =
-    !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
-  const visiblePickerRows = wearablesCapped
-    ? pickerRows.slice(0, WEARABLE_CAP)
-    : pickerRows;
+  const pickerFiltered = regionFilter !== "all" || search.trim().length > 0 || activeSlot != null;
+  const wearablesCapped = !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
+  const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
 
   const unlockRows = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -352,7 +341,11 @@ export function GearPanel({
         <CombatFrameCorners />
         <h2 className="combat-section-title text-sm font-medium text-parch-50">Loadout</h2>
 
-        <div className="paper-doll-grid mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="Equipment slots">
+        <div
+          className="paper-doll-grid mt-3 grid grid-cols-3 gap-1.5"
+          role="group"
+          aria-label="Equipment slots"
+        >
           {DOLL_LAYOUT.flatMap((row, rowIdx) =>
             row.map((slot, colIdx) => {
               if (!slot) {
@@ -409,7 +402,9 @@ export function GearPanel({
           if (sets.length === 0) return null;
           return (
             <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
-              <div className="text-[11px] uppercase tracking-wide text-parch-300">Set pieces equipped</div>
+              <div className="text-[11px] uppercase tracking-wide text-parch-300">
+                Set pieces equipped
+              </div>
               <ul className="mt-1 space-y-0.5 text-parch-100">
                 {sets.map((s) => (
                   <li key={s.setId}>
@@ -418,9 +413,7 @@ export function GearPanel({
                   </li>
                 ))}
               </ul>
-              <p className="mt-1 text-[11px] text-parch-300">
-                Set crit is included.
-              </p>
+              <p className="mt-1 text-[11px] text-parch-300">Set crit is included.</p>
             </div>
           );
         })()}
@@ -433,9 +426,7 @@ export function GearPanel({
               {activeItem.tier != null ? (
                 <span className="font-mono text-parch-100">T{activeItem.tier}</span>
               ) : null}
-              {activeSlotLabel ? (
-                <span className="text-parch-300">{activeSlotLabel}</span>
-              ) : null}
+              {activeSlotLabel ? <span className="text-parch-300">{activeSlotLabel}</span> : null}
             </div>
             {hasSourcedBonuses(activeItem) ? (
               <p className="mt-0.5 text-parch-100">
@@ -479,7 +470,6 @@ export function GearPanel({
             {unlockPins.size === 1 ? "" : "s"}
           </span>
         </div>
-
       </div>
 
       <div className="combat-frame wearables-browser">
@@ -528,9 +518,7 @@ export function GearPanel({
             <input
               type="checkbox"
               checked={matchStyle}
-              onChange={(event) =>
-                setStyleBrowseAndReset(event.target.checked ? "setup" : "all")
-              }
+              onChange={(event) => setStyleBrowseAndReset(event.target.checked ? "setup" : "all")}
             />
             Match style
           </label>
@@ -544,7 +532,7 @@ export function GearPanel({
                   setShowAllWearables(false);
                 }}
                 aria-pressed={sortKey === key}
-            className={`combat-button border px-2 py-1 capitalize ${
+                className={`combat-button border px-2 py-1 capitalize ${
                   sortKey === key
                     ? "border-stone-750 bg-stone-850 text-parch-50"
                     : "border-stone-750 text-parch-100 hover:text-parch-50"
@@ -601,8 +589,8 @@ export function GearPanel({
         </div>
         {styleBrowse === "setup" ? (
           <p className="mt-1 text-[11px] text-parch-300">
-            Loadout filter shows {STYLE_LABELS[loadout.style]} and hybrid gear only — pick All styles
-            if an expected item is missing.
+            Loadout filter shows {STYLE_LABELS[loadout.style]} and hybrid gear only — pick All
+            styles if an expected item is missing.
           </p>
         ) : null}
 
@@ -614,9 +602,7 @@ export function GearPanel({
         </div>
         <div className="wearables-list mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
-            <p className="px-2 py-2 text-xs text-parch-300">
-              {emptyPickerCopy(activeSlotLabel)}
-            </p>
+            <p className="px-2 py-2 text-xs text-parch-300">{emptyPickerCopy(activeSlotLabel)}</p>
           ) : (
             <>
               {visiblePickerRows.map((record) => {
@@ -635,18 +621,12 @@ export function GearPanel({
                     }`}
                   >
                     <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <GameIcon
-                        src={equipmentIconPath(record.id)}
-                        size={20}
-                        className="shrink-0"
-                      />
+                      <GameIcon src={equipmentIconPath(record.id)} size={20} className="shrink-0" />
                       <span>{record.name}</span>
                       {record.tier != null ? (
                         <span className="font-mono text-parch-100">T{record.tier}</span>
                       ) : null}
-                      <span className="text-[11px] text-parch-300">
-                        {SLOT_SHORT[record.slot!]}
-                      </span>
+                      <span className="text-[11px] text-parch-300">{SLOT_SHORT[record.slot!]}</span>
                       {styleTag ? (
                         <span className="text-[11px] capitalize text-parch-300">{styleTag}</span>
                       ) : null}
@@ -685,9 +665,7 @@ export function GearPanel({
             <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
               Unlocks &amp; materials · {unlockRows.length}
             </h3>
-            <span className="text-xs text-gem-400">
-              {unlocksOpen ? "Hide pins" : "Show pins"}
-            </span>
+            <span className="text-xs text-gem-400">{unlocksOpen ? "Hide pins" : "Show pins"}</span>
           </button>
           <p className="mt-1 text-xs text-parch-300">
             Materials and codices can be pinned, not equipped.
@@ -695,9 +673,7 @@ export function GearPanel({
           {unlocksOpen ? (
             <div className="mt-1 max-h-48 overflow-y-auto border-t border-stone-750">
               {unlockRows.length === 0 ? (
-                <p className="px-2 py-2 text-xs text-parch-300">
-                  No unlocks match region/search
-                </p>
+                <p className="px-2 py-2 text-xs text-parch-300">No unlocks match region/search</p>
               ) : (
                 unlockRows.map((record) => {
                   const pinned = unlockPins.has(record.id);

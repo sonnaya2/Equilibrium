@@ -2,12 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { peekBuildFromLocation, stripShareHash } from "@/league/share";
-import {
-  applyBuild,
-  buildHasContent,
-  buildsEqual,
-  hydrateLocalBuild,
-} from "@/league/useBuild";
+import { applyBuild, buildHasContent, buildsEqual, hydrateLocalBuild } from "@/league/useBuild";
 import type { BuildState } from "@/league/index";
 
 /**

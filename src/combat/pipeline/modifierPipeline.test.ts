@@ -23,7 +23,11 @@ describe("modifierPipeline", () => {
     });
     runPipeline(
       { damage: 100 },
-      [spy(mod("late", "onHit", 0)), spy(mod("base-p20", "base", 20)), spy(mod("base-p10", "base", 10))],
+      [
+        spy(mod("late", "onHit", 0)),
+        spy(mod("base-p20", "base", 20)),
+        spy(mod("base-p10", "base", 10)),
+      ],
       { style: "melee" },
     );
     expect(log).toEqual(["base-p10", "base-p20", "late"]);

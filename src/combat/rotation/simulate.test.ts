@@ -51,9 +51,13 @@ describe("simulate", () => {
     const s = simulate({
       ...baseInput,
       rotation: rotationOf(
-        "attack", "attack", "attack",
+        "attack",
+        "attack",
+        "attack",
         "assault",
-        "attack", "attack", "attack",
+        "attack",
+        "attack",
+        "attack",
         "assault",
       ),
     });
@@ -339,7 +343,12 @@ describe("simulate — meteor_strike", () => {
     // GCD still accrues Meteor passive (+4.5 x 3) after the spend.
     const s = simulate({
       ...baseInput,
-      rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", ...Array(3).fill("attack"), "assault"),
+      rotation: rotationOf(
+        ...Array(7).fill("attack"),
+        "meteor_strike",
+        ...Array(3).fill("attack"),
+        "assault",
+      ),
     });
     expect(s.ok).toBe(true);
     const assault = s.casts.at(-1)!;
@@ -438,7 +447,13 @@ describe("simulate — ranged", () => {
   it("searing winds adds its bonus hit inside the window only", () => {
     const s = simulate({
       ...rangedInput,
-      rotation: rotationOf("galeshot", "ranged_attack", "ranged_attack", "ranged_attack", "ranged_attack"),
+      rotation: rotationOf(
+        "galeshot",
+        "ranged_attack",
+        "ranged_attack",
+        "ranged_attack",
+        "ranged_attack",
+      ),
     });
     expect(s.casts[1].result.expected).toBeCloseTo(1000 + 200);
     expect(s.casts[2].result.expected).toBeCloseTo(1000 + 200);
@@ -484,7 +499,11 @@ describe("simulate — ranged", () => {
   });
 
   it("shadow tendrils crits guaranteed even at 0% crit chance", () => {
-    const s = simulate({ ...rangedInput, crit: { chance: 0 }, rotation: rotationOf("shadow_tendrils") });
+    const s = simulate({
+      ...rangedInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("shadow_tendrils"),
+    });
     expect(s.casts[0].result.expected).toBeCloseTo(2200 * 1.5);
   });
 });
@@ -544,11 +563,7 @@ describe("simulate — magic", () => {
   });
 
   it("greater sunshine multiplies magic damage for the longer window", () => {
-    const setup = [
-      ...Array(12).fill("magic_attack"),
-      "greater_sunshine",
-      "magic_attack",
-    ];
+    const setup = [...Array(12).fill("magic_attack"), "greater_sunshine", "magic_attack"];
     const s = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     expect(s.ok).toBe(true);
     const gs = s.casts.find((c) => c.abilityId === "greater_sunshine")!;
@@ -585,11 +600,7 @@ describe("simulate — magic", () => {
   });
 
   it("Planted Feet does not extend Greater Sunshine", () => {
-    const setup = [
-      ...Array(12).fill("magic_attack"),
-      "greater_sunshine",
-      "magic_attack",
-    ];
+    const setup = [...Array(12).fill("magic_attack"), "greater_sunshine", "magic_attack"];
     const plain = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     const pf = simulate({
       ...magicInput,
@@ -597,10 +608,14 @@ describe("simulate — magic", () => {
       rotation: rotationOf(...setup),
     });
     const plainNext = plain.casts.find(
-      (c) => c.abilityId === "magic_attack" && c.tick > plain.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
+      (c) =>
+        c.abilityId === "magic_attack" &&
+        c.tick > plain.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
     )!;
     const pfNext = pf.casts.find(
-      (c) => c.abilityId === "magic_attack" && c.tick > pf.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
+      (c) =>
+        c.abilityId === "magic_attack" &&
+        c.tick > pf.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
     )!;
     expect(plainNext.result.expected).toBeCloseTo(pfNext.result.expected);
   });
@@ -656,14 +671,22 @@ describe("simulate auto-weave", () => {
   });
 
   it("weaves through cooldown gaps and builds Bloodlust from the woven basics", () => {
-    const s = simulate({ ...baseInput, autoWeave: true, rotation: rotationOf("assault", "assault") });
+    const s = simulate({
+      ...baseInput,
+      autoWeave: true,
+      rotation: rotationOf("assault", "assault"),
+    });
     expect(s.ok).toBe(true);
     // Second assault's cooldown ends at 19, mid-GCD after the tick-18 basic — it
     // fires on the next grid slot, exactly as in game.
     expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
-      "attack@0", "attack@3", "attack@6",
+      "attack@0",
+      "attack@3",
+      "attack@6",
       "assault@9",
-      "attack@12", "attack@15", "attack@18",
+      "attack@12",
+      "attack@15",
+      "attack@18",
       "assault@21",
     ]);
     // First assault at 3 stacks uses the base band; the second, at 6, is empowered.
@@ -715,11 +738,23 @@ describe("simulate — necromancy resources", () => {
 
   it("Soul Sap builds residual souls and Soul Strike spends one", () => {
     const ctx = createCastContext(necroInput);
-    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!, 0, false);
+    ctx.performCast(
+      NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!,
+      0,
+      false,
+    );
     expect(ctx.getState().necro.residualSouls).toBe(1);
-    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!, 3, false);
+    ctx.performCast(
+      NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!,
+      3,
+      false,
+    );
     expect(ctx.getState().necro.residualSouls).toBe(2);
-    ctx.performCast(NECROMANCY_ABILITIES.find((a) => a.id === "soul_strike")!, 6, false);
+    ctx.performCast(
+      NECROMANCY_ABILITIES.find((a) => a.id === "soul_strike")!,
+      6,
+      false,
+    );
     expect(ctx.getState().necro.residualSouls).toBe(1);
   });
 
@@ -792,7 +827,9 @@ describe("simulate — necromancy resources", () => {
     for (let i = 0; i < 7; i++) ctx.performCast(basic, 48 + i * 3, false);
     const dsTick = 48 + 7 * 3;
     ctx.performCast(ds, dsTick, false);
-    expect(ctx.getState().cooldowns["death_skulls"]).toBe(dsTick + DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS);
+    expect(ctx.getState().cooldowns["death_skulls"]).toBe(
+      dsTick + DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
+    );
   });
 
   it("Living Death multiplies Finger of Death damage in the full sim path", () => {
@@ -878,7 +915,10 @@ describe("simulate — necromancy resources", () => {
     const ctx = createCastContext(necroInput);
     const army = NECROMANCY_ABILITIES.find((a) => a.id === "conjure_undead_army")!;
     ctx.performCast(army, 0, false);
-    const ids = ctx.getState().conjures.spirits.map((s) => s.id).sort();
+    const ids = ctx
+      .getState()
+      .conjures.spirits.map((s) => s.id)
+      .sort();
     expect(ids).toEqual(["putrid_zombie", "skeleton_warrior", "vengeful_ghost"]);
 
     const s = simulate({

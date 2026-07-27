@@ -139,7 +139,9 @@ export function CameraRig({
       const pin = PLACES_BY_REGION.get(region.id)?.find((entry) => entry.area === place);
       if (pin) uv = rasterPlaceUv(pin);
     }
-    let [rawX, rawZ] = anchorWorld(uv);
+    const anchored = anchorWorld(uv);
+    const rawX = anchored[0];
+    let rawZ = anchored[1];
     // Southern anchors (desert, islands) leave a huge empty ocean band under
     // the plate when the look-at sits on the crest. Nudge inland so the shot
     // keeps land in frame instead of pure south sea (clipboard desert crop).
@@ -205,7 +207,16 @@ export function CameraRig({
     user.current.tzOff = 0;
     moving.current = true;
     invalidate();
-  }, [invalidate, want.azimuth, want.elevation, want.radius, want.target[0], want.target[2], focus, place]);
+  }, [
+    invalidate,
+    want.azimuth,
+    want.elevation,
+    want.radius,
+    want.target[0],
+    want.target[2],
+    focus,
+    place,
+  ]);
 
   // Hover parallax (not while dragging).
   // Write pointer only — do NOT invalidate here. MotionDriver already ticks the
@@ -222,10 +233,7 @@ export function CameraRig({
       rectW = Math.max(1, rect.width);
       rectH = Math.max(1, rect.height);
     };
-    const ro =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(refreshRect)
-        : null;
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(refreshRect) : null;
     ro?.observe(canvas);
     window.addEventListener("scroll", refreshRect, { passive: true, capture: true });
 
@@ -274,9 +282,7 @@ export function CameraRig({
     const onDown = (event: PointerEvent) => {
       // LMB orbit · RMB / MMB / shift+LMB pan. Ignore other buttons.
       const pan =
-        event.button === 2 ||
-        event.button === 1 ||
-        (event.button === 0 && event.shiftKey);
+        event.button === 2 || event.button === 1 || (event.button === 0 && event.shiftKey);
       const orbit = event.button === 0 && !event.shiftKey;
       if (!orbit && !pan) return;
       if (flags.topDown && orbit) return; // top-down: pan + zoom only
@@ -301,8 +307,7 @@ export function CameraRig({
       if (u.mode === "pending") {
         const total = Math.hypot(event.clientX - u.startX, event.clientY - u.startY);
         if (total < DRAG_THRESHOLD) return;
-        const pan =
-          u.button === 2 || u.button === 1 || (u.button === 0 && event.shiftKey);
+        const pan = u.button === 2 || u.button === 1 || (u.button === 0 && event.shiftKey);
         u.mode = pan || flags.topDown ? "pan" : "orbit";
         try {
           canvas.setPointerCapture(event.pointerId);

@@ -92,9 +92,7 @@ function RowTable({
             <tr key={`${row.name}-${row.kind}`}>
               <td className="text-parch-50">
                 {row.name}
-                {subtitle ? (
-                  <span className="block text-xs text-parch-400">{subtitle}</span>
-                ) : null}
+                {subtitle ? <span className="block text-xs text-parch-400">{subtitle}</span> : null}
               </td>
               <td>{row.kind || "—"}</td>
               <td>
@@ -125,7 +123,9 @@ function TrainingTable({ rows }: { rows: TrainingRow[] }) {
           <tr key={row.id}>
             <td className="text-parch-50">
               {row.method}
-              {row.warning ? <span className="block text-xs text-parch-400">{row.warning}</span> : null}
+              {row.warning ? (
+                <span className="block text-xs text-parch-400">{row.warning}</span>
+              ) : null}
             </td>
             <td>{row.skill}</td>
             <td>{row.levelRange || "—"}</td>
@@ -229,10 +229,7 @@ export function RegionInspector({
           </p>
           <div className="board-sky__pin-track" aria-hidden="true">
             {Array.from({ length: pinSegs }).map((_, i) => (
-              <span
-                key={i}
-                className={`board-sky__pin-seg${i < pinLit ? " is-on" : ""}`}
-              />
+              <span key={i} className={`board-sky__pin-seg${i < pinLit ? " is-on" : ""}`} />
             ))}
           </div>
         </div>
@@ -319,7 +316,11 @@ export function RegionInspector({
 
       <div className="panel-body max-h-96 overflow-y-auto">
         {tab === "bosses" ? (
-          bosses.length ? <RowTable rows={bosses} header="Boss" upgrades={upgrades} /> : empty
+          bosses.length ? (
+            <RowTable rows={bosses} header="Boss" upgrades={upgrades} />
+          ) : (
+            empty
+          )
         ) : null}
         {tab === "skilling" ? (
           skilling.length ? (
@@ -328,43 +329,49 @@ export function RegionInspector({
             empty
           )
         ) : null}
-        {tab === "gear" ? (gear.length ? <RowTable rows={gear} header="Upgrade" /> : empty) : null}
-        {tab === "items" ? (items.length ? <RowTable rows={items} header="Skill item" /> : empty) : null}
-        {tab === "training" ? (training.length ? <TrainingTable rows={training} /> : empty) : null}
-        {tab === "places"
-          ? places.length
-            ? (
-                <div className="flex flex-wrap gap-1.5 py-1">
-                  {/* Hovering a place lights its marker on the board, and the
+        {tab === "gear" ? gear.length ? <RowTable rows={gear} header="Upgrade" /> : empty : null}
+        {tab === "items" ? (
+          items.length ? (
+            <RowTable rows={items} header="Skill item" />
+          ) : (
+            empty
+          )
+        ) : null}
+        {tab === "training" ? training.length ? <TrainingTable rows={training} /> : empty : null}
+        {tab === "places" ? (
+          places.length ? (
+            <div className="flex flex-wrap gap-1.5 py-1">
+              {/* Hovering a place lights its marker on the board, and the
                       marker lights this back. That link is the point of the route. */}
-                  {places.map((area) => {
-                    const pinned = anchored.has(area);
-                    const on = focus.place === area;
-                    const lit = pinned && focus.hover === area;
-                    return (
-                      <span
-                        key={area}
-                        onPointerEnter={() => pinned && hoverPlace(area)}
-                        onPointerLeave={() => hoverPlace(null)}
-                        onClick={() => (pinned ? selectPlace(on ? null : area) : undefined)}
-                        className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
-                          on
-                            ? "bg-stone-800 text-gem-300"
-                            : lit
-                              ? "text-parch-50"
-                              : pinned
-                                ? "text-parch-100"
-                                : "text-parch-500"
-                        }`}
-                      >
-                        {area}
-                      </span>
-                    );
-                  })}
-                </div>
-              )
-            : empty
-          : null}
+              {places.map((area) => {
+                const pinned = anchored.has(area);
+                const on = focus.place === area;
+                const lit = pinned && focus.hover === area;
+                return (
+                  <span
+                    key={area}
+                    onPointerEnter={() => pinned && hoverPlace(area)}
+                    onPointerLeave={() => hoverPlace(null)}
+                    onClick={() => (pinned ? selectPlace(on ? null : area) : undefined)}
+                    className={`rounded-sm px-2 py-1 text-sm transition-colors duration-150 ${
+                      on
+                        ? "bg-stone-800 text-gem-300"
+                        : lit
+                          ? "text-parch-50"
+                          : pinned
+                            ? "text-parch-100"
+                            : "text-parch-500"
+                    }`}
+                  >
+                    {area}
+                  </span>
+                );
+              })}
+            </div>
+          ) : (
+            empty
+          )
+        ) : null}
       </div>
 
       {detail.warnings.length > 0 ? (

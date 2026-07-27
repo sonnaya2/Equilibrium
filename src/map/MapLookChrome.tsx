@@ -8,12 +8,7 @@
  */
 
 import { useMemo, useState } from "react";
-import {
-  activityIconPath,
-  bossIconPath,
-  regionCrestPath,
-  upgradeIconPath,
-} from "@/lib/gameArt";
+import { activityIconPath, bossIconPath, regionCrestPath, upgradeIconPath } from "@/lib/gameArt";
 import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";
 import { REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
 import { useMapFocus, ZOOM_MAX, ZOOM_MIN } from "./useMapFocus";
@@ -46,10 +41,7 @@ export function MapLookChrome() {
       ? "Region framed"
       : "Table overview";
 
-  const art = useMemo(
-    () => localArtFor(lookingAt, focus.region),
-    [lookingAt, focus.region],
-  );
+  const art = useMemo(() => localArtFor(lookingAt, focus.region), [lookingAt, focus.region]);
 
   const openWiki = () => {
     setWiki({
@@ -109,7 +101,11 @@ export function MapLookChrome() {
           >
             {focus.flat ? "2D" : "3D"}
           </button>
-          <button type="button" className="board-sky__look-btn board-sky__look-btn--gem" onClick={openWiki}>
+          <button
+            type="button"
+            className="board-sky__look-btn board-sky__look-btn--gem"
+            onClick={openWiki}
+          >
             Wiki
           </button>
         </div>

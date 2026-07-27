@@ -136,12 +136,7 @@ export function ultimatumsPerkModifier(rank: number, castCategory: string): Comb
 }
 
 /** Engine and record ids both accepted (adapter uses either form). */
-const LUNGING_ABILITY_IDS = new Set([
-  "dismember",
-  "melee:dismember",
-  "combust",
-  "magic:combust",
-]);
+const LUNGING_ABILITY_IDS = new Set(["dismember", "melee:dismember", "combust", "magic:combust"]);
 
 /** Lunging: Combust/Dismember rank 1 +13%; +3% per rank (R4 +22%). */
 export function lungingDamageBonus(rank: number): number {
@@ -263,9 +258,18 @@ export const CRACKLING_COOLDOWN_SECONDS = 60;
  * Continuous EV approximation over a horizon: fraction * base * (H / 60s CD).
  * Rank 0 / non-positive horizon => 0 (no throw).
  */
-export function expectedCracklingDamage(rank: number, base: number, horizonSeconds: number): number {
+export function expectedCracklingDamage(
+  rank: number,
+  base: number,
+  horizonSeconds: number,
+): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) return 0;
-  if (!Number.isFinite(base) || base <= 0 || !Number.isFinite(horizonSeconds) || horizonSeconds <= 0) {
+  if (
+    !Number.isFinite(base) ||
+    base <= 0 ||
+    !Number.isFinite(horizonSeconds) ||
+    horizonSeconds <= 0
+  ) {
     return 0;
   }
   return cracklingDamageFraction(rank) * base * (horizonSeconds / CRACKLING_COOLDOWN_SECONDS);
@@ -338,11 +342,7 @@ export const RELENTLESS_INTERNAL_CD_SECONDS = 30;
  * overstates real EV slightly when costs fire more often than once per CD.
  * Rank 0 / non-positive cost => 0.
  */
-export function expectedRelentlessRefund(
-  cost: number,
-  rank: number,
-  level20Gear = false,
-): number {
+export function expectedRelentlessRefund(cost: number, rank: number, level20Gear = false): number {
   if (!Number.isFinite(cost) || cost <= 0) return 0;
   if (!Number.isInteger(rank) || rank < 1 || rank > 5) return 0;
   return cost * relentlessProcChance(rank, level20Gear);

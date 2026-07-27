@@ -44,7 +44,10 @@ function critModifier(multiplier: number): CombatModifier {
 }
 
 function runPass(damage: number, critMult: number | null, input: HitInput): number {
-  const modifiers = critMult === null ? (input.modifiers ?? []) : [...(input.modifiers ?? []), critModifier(critMult)];
+  const modifiers =
+    critMult === null
+      ? (input.modifiers ?? [])
+      : [...(input.modifiers ?? []), critModifier(critMult)];
   const state = runPipeline({ damage }, modifiers, input.context ?? { style: "melee" });
   const scaled = applyDamagePotential(state.damage, input.accuracy);
   return applyHitCap(Math.floor(scaled), input.cap ?? standardHitCap);
@@ -59,7 +62,8 @@ function runPass(damage: number, critMult: number | null, input: HitInput): numb
 export function calculateHit(input: HitInput): HitResult {
   const band = bandOf(input.base, input.band);
   const p = critProbability(input.crit);
-  const critMult = p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
+  const critMult =
+    p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
 
   const min = runPass(band.min, null, input);
   const max = runPass(band.max, null, input);

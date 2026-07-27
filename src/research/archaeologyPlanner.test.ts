@@ -13,7 +13,9 @@ import museumMatrixSource from "../../data/research/planner-expansions-archaeolo
 describe("archaeologyPlanner loaders", () => {
   it("filters the stale guildmaster second-loadout claim", () => {
     const system = getRelicSystemProgression();
-    expect(system.some((row) => row.id === guildSource.stale_data_correction.target_id)).toBe(false);
+    expect(system.some((row) => row.id === guildSource.stale_data_correction.target_id)).toBe(
+      false,
+    );
   });
 
   it("returns collection routes and loadout ladder", () => {

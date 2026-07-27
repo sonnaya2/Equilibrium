@@ -6,19 +6,27 @@ import activePerkSource from "../../data/research/planner-expansions-invention-a
 import coverageSource from "../../data/research/planner-expansions-invention-component-coverage.json";
 import bottleneckSource from "../../data/research/planner-expansions-invention-material-bottlenecks.json";
 
-export type AncientInventionMaterial = (typeof archaeologySource)["ancient_invention_materials"][number];
-export type ArchaeologyDisassemblyBand = (typeof archaeologySource)["archaeology_disassembly_bands"][number];
-export type CurrentWeaponPerkDependency = (typeof archaeologySource)["current_perk_component_dependencies"][number];
+export type AncientInventionMaterial =
+  (typeof archaeologySource)["ancient_invention_materials"][number];
+export type ArchaeologyDisassemblyBand =
+  (typeof archaeologySource)["archaeology_disassembly_bands"][number];
+export type CurrentWeaponPerkDependency =
+  (typeof archaeologySource)["current_perk_component_dependencies"][number];
 export type RareComponentRoute = (typeof archaeologySource)["rare_component_routes"][number];
-export type New2026ComponentRoute = (typeof invention2026Source)["new_2026_component_routes"][number];
-export type Current2026PerkDependency = (typeof invention2026Source)["current_2026_perk_dependencies"][number];
-export type AccountComponentRoute = (typeof invention2026Source)["account_component_routes"][number];
+export type New2026ComponentRoute =
+  (typeof invention2026Source)["new_2026_component_routes"][number];
+export type Current2026PerkDependency =
+  (typeof invention2026Source)["current_2026_perk_dependencies"][number];
+export type AccountComponentRoute =
+  (typeof invention2026Source)["account_component_routes"][number];
 export type ArmourPerkRecipe = (typeof perkSource)["current_armour_perk_recipes"][number];
 export type UtilityPerkRecipe = (typeof utilityPerkSource)["utility_perk_recipes"][number];
 export type ActiveInventionPerk = (typeof activePerkSource)["active_perks"][number];
 export type PerkComponentSupplyRoute = (typeof perkSource)["component_supply_routes"][number];
-export type GlobalOrAccountComponentRoute = (typeof perkSource)["global_or_account_component_routes"][number];
-export type RemainingRareComponentRoute = (typeof coverageSource)["remaining_component_routes"][number];
+export type GlobalOrAccountComponentRoute =
+  (typeof perkSource)["global_or_account_component_routes"][number];
+export type RemainingRareComponentRoute =
+  (typeof coverageSource)["remaining_component_routes"][number];
 export type PerkMaterialBottleneck = (typeof bottleneckSource)["materials"][number];
 
 export function getAncientInventionMaterials(): AncientInventionMaterial[] {

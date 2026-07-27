@@ -41,14 +41,30 @@ export interface TaskRecord {
 }
 
 export function asTaskRecords(value: unknown): TaskRecord[] {
+  // Boundary validation — drop incomplete rows rather than casting through.
   if (!Array.isArray(value)) return [];
-  return value.filter(
-    (r): r is TaskRecord =>
-      typeof r === "object" &&
-      r !== null &&
-      typeof (r as { name?: unknown }).name === "string" &&
-      typeof (r as { tier?: unknown }).tier === "string",
-  );
+  const out: TaskRecord[] = [];
+  for (const row of value) {
+    if (
+      typeof row !== "object" ||
+      row === null ||
+      typeof (row as { name?: unknown }).name !== "string" ||
+      typeof (row as { tier?: unknown }).tier !== "string"
+    ) {
+      continue;
+    }
+    const r = row as TaskRecord & Record<string, unknown>;
+    const rate = r.catalystCompletionRate;
+    out.push({
+      ...r,
+      name: r.name,
+      tier: r.tier,
+      // Preserve real 0%; only drop non-finite rates.
+      catalystCompletionRate:
+        typeof rate === "number" && Number.isFinite(rate) ? rate : r.catalystCompletionRate,
+    });
+  }
+  return out;
 }
 
 /** Record points win; the tier table is the fallback while records carry none. */

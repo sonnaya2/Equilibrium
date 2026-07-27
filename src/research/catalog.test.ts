@@ -13,18 +13,13 @@ describe("research catalog", () => {
 
   it("derives dataset counts from live arrays", () => {
     const catalog = getResearchCatalog();
-    const methodCount = catalogSource.skills.reduce(
-      (n, skill) => n + skill.methods.length,
-      0,
-    );
+    const methodCount = catalogSource.skills.reduce((n, skill) => n + skill.methods.length, 0);
     expect(catalog.datasets.regions).toBe(11);
     expect(catalog.datasets.regions).toBe(catalog.regions.length);
     expect(catalog.datasets.skills).toBe(catalog.skills.length);
     expect(catalog.datasets.trainingMethods).toBe(methodCount);
     expect(catalog.datasets.trainingMethods).toBe(
-      new Set(
-        catalogSource.skills.flatMap((skill) => skill.methods.map((m) => m.id)),
-      ).size,
+      new Set(catalogSource.skills.flatMap((skill) => skill.methods.map((m) => m.id))).size,
     );
   });
 
@@ -47,8 +42,9 @@ describe("research catalog", () => {
       "4,000–5,000 XP/h",
     );
     expect(
-      divination?.methods.find((method) => method.method === "Gate of Elidinis corrupt shard cleansing")
-        ?.xpRate,
+      divination?.methods.find(
+        (method) => method.method === "Gate of Elidinis corrupt shard cleansing",
+      )?.xpRate,
     ).toBe("285,000 XP/h at 99");
   });
 

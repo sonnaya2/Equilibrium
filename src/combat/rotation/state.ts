@@ -15,10 +15,7 @@ import {
 } from "../styles/ranged/onHit";
 import { newDeathsSwiftness, type DeathsSwiftnessState } from "../styles/ranged/effects";
 import { newRunicCharge, type RunicChargeState } from "../styles/magic/runicCharge";
-import {
-  newNecroRotationState,
-  type NecroRotationState,
-} from "../styles/necromancy/effects";
+import { newNecroRotationState, type NecroRotationState } from "../styles/necromancy/effects";
 import { newConjures, type ConjureState } from "../styles/necromancy/conjures";
 
 export type { NecroRotationState, ConjureState };

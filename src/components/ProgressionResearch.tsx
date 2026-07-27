@@ -13,15 +13,9 @@ import {
 } from "@/research/plannerExpansions";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
-import {
-  presentInterestMeta,
-  presentInterestName,
-} from "@/lib/dataContentPresentation";
+import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
-import {
-  DataTableOrganizeBar,
-  useDataTableOrganize,
-} from "./DataTableOrganize";
+import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 import { PROGRESSION_SYSTEM_TABS } from "./ProgressionSystemsResearch";
@@ -103,11 +97,7 @@ function text(value: unknown): string {
     return String(value);
   }
   if (Array.isArray(value)) {
-    return value
-      .slice(0, 4)
-      .map(text)
-      .filter(Boolean)
-      .join(" · ");
+    return value.slice(0, 4).map(text).filter(Boolean).join(" · ");
   }
   if (typeof value === "object") {
     if (isSourceRef(value)) return "";
@@ -124,7 +114,10 @@ function text(value: unknown): string {
 }
 function regionName(value: unknown): string {
   const raw = String(value ?? "").toLowerCase();
-  return REGION_LABELS[raw] ?? raw.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return (
+    REGION_LABELS[raw] ??
+    raw.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
+  );
 }
 
 function rowRegionLabel(row: Row): string {
@@ -261,7 +254,10 @@ function rowDetails(row: Row): string[] {
   const lines: string[] = [];
   for (const { key, label } of DETAIL_FIELDS) {
     if (lines.length >= 2) break;
-    if (key === "support_item_effect" && humanString(row.support_item_effect) === rowSubtitle(row)) {
+    if (
+      key === "support_item_effect" &&
+      humanString(row.support_item_effect) === rowSubtitle(row)
+    ) {
       continue;
     }
     if (key === "effect_summary" && humanString(row.effect_summary) === rowSubtitle(row)) {
@@ -273,7 +269,10 @@ function rowDetails(row: Row): string[] {
       typeof row[key] === "string" && rendered.length > 48 ? rendered : `${label}: ${rendered}`,
     );
   }
-  return lines.map((l) => clipProse(l)).filter(Boolean).slice(0, 2);
+  return lines
+    .map((l) => clipProse(l))
+    .filter(Boolean)
+    .slice(0, 2);
 }
 
 function rowsFor(section: string): Row[] {
@@ -338,11 +337,7 @@ export function ProgressionResearch() {
 
   return (
     <section className="data-progression">
-      <DataViewHeader
-        title="Progression"
-        count={rows.length}
-        countLabel="routes"
-      >
+      <DataViewHeader title="Progression" count={rows.length} countLabel="routes">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -360,7 +355,11 @@ export function ProgressionResearch() {
         />
       </DataViewHeader>
 
-      <div role="tablist" aria-label="Progression sections" className="comp-seg data-progression__tabs">
+      <div
+        role="tablist"
+        aria-label="Progression sections"
+        className="comp-seg data-progression__tabs"
+      >
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -386,60 +385,76 @@ export function ProgressionResearch() {
         </div>
 
         <div className="data-progression__list">
-          {rows.length ? rows.map((row, index) => {
-            const rowLinks = sourceLinks(row);
-            const details = rowDetails(row);
-            const subtitle = rowSubtitle(row);
-            const heading = rowTitle(row);
-            const rawName =
-              humanString(row.name) ||
-              humanString(row.method) ||
-              humanString(row.unlock) ||
-              (heading !== "—" ? heading : "");
-            const iconSrc = dataEntityIconPath({
-              name: rawName || null,
-              kind: String(row.recordType || row.category || row.kind || ""),
-              id: row.id != null ? String(row.id) : null,
-            });
-            return (
-              <article
-                key={String(row.id || `${heading}-${index}`)}
-                className={`data-progression__row${index % 2 === 1 ? " is-zebra" : ""}`}
-              >
-                <div className="data-progression__identity data-record-row__identity">
-                  <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
-                    {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
-                  </span>
-                  <div className="data-record-row__copy min-w-0">
-                    <h4>
-                      {heading}
-                      {rowLinks.length ? (
-                        <span className="ml-1.5 font-normal">
-                          {rowLinks.map((url, linkIndex) => (
-                            <a
-                              key={url}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-gem-300 hover:underline"
-                            >
-                              {linkIndex > 0 ? " · " : "· "}
-                              {sourceName(url)}
-                            </a>
-                          ))}
-                        </span>
-                      ) : null}
-                    </h4>
-                    {subtitle ? <p>{subtitle}</p> : null}
+          {rows.length ? (
+            rows.map((row, index) => {
+              const rowLinks = sourceLinks(row);
+              const details = rowDetails(row);
+              const subtitle = rowSubtitle(row);
+              const heading = rowTitle(row);
+              const rawName =
+                humanString(row.name) ||
+                humanString(row.method) ||
+                humanString(row.unlock) ||
+                (heading !== "—" ? heading : "");
+              const iconSrc = dataEntityIconPath({
+                name: rawName || null,
+                kind: String(row.recordType || row.category || row.kind || ""),
+                id: row.id != null ? String(row.id) : null,
+              });
+              return (
+                <article
+                  key={String(row.id || `${heading}-${index}`)}
+                  className={`data-progression__row${index % 2 === 1 ? " is-zebra" : ""}`}
+                >
+                  <div className="data-progression__identity data-record-row__identity">
+                    <span
+                      className={
+                        iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"
+                      }
+                    >
+                      {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
+                    </span>
+                    <div className="data-record-row__copy min-w-0">
+                      <h4>
+                        {heading}
+                        {rowLinks.length ? (
+                          <span className="ml-1.5 font-normal">
+                            {rowLinks.map((url, linkIndex) => (
+                              <a
+                                key={url}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-gem-300 hover:underline"
+                              >
+                                {linkIndex > 0 ? " · " : "· "}
+                                {sourceName(url)}
+                              </a>
+                            ))}
+                          </span>
+                        ) : null}
+                      </h4>
+                      {subtitle ? <p>{subtitle}</p> : null}
+                    </div>
                   </div>
-                </div>
-                <p className="data-progression__region">{rowRegionLabel(row)}</p>
-                <div className="data-progression__details">
-                  {details.map((detail, detailIndex) => <p key={detailIndex} className="m-0">{detail}</p>)}
-                </div>
-              </article>
-            );
-          }) : <p className="data-empty">{query ? "Nothing matches." : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>}
+                  <p className="data-progression__region">{rowRegionLabel(row)}</p>
+                  <div className="data-progression__details">
+                    {details.map((detail, detailIndex) => (
+                      <p key={detailIndex} className="m-0">
+                        {detail}
+                      </p>
+                    ))}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <p className="data-empty">
+              {query
+                ? "Nothing matches."
+                : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}
+            </p>
+          )}
         </div>
       </div>
     </section>

@@ -60,7 +60,8 @@ describe("toggleElective", () => {
 
   it("rejects a fourth elective pick", () => {
     let state = emptyBuild();
-    for (const id of ["desert", "morytania", "tirannwn"] as const) state = toggleElective(state, id);
+    for (const id of ["desert", "morytania", "tirannwn"] as const)
+      state = toggleElective(state, id);
     const rejected = toggleElective(state, "asgarnia");
     expect(rejected).toBe(state);
     expect(canSelectElective(state, "asgarnia")).toBe(false);
@@ -99,9 +100,9 @@ describe("normalizeBuild", () => {
     expect(normalizeBuild(null)).toEqual(emptyBuild());
     expect(normalizeBuild("junk")).toEqual(emptyBuild());
     expect(normalizeBuild({ elective: "desert" })).toEqual(emptyBuild());
-    expect(
-      normalizeBuild({ elective: ["desert", "not-a-region", "misthalin", "desert"] }),
-    ).toEqual({ elective: ["desert"], relics: {}, blessingPicks: [], blessingResetsUsed: 0 });
+    expect(normalizeBuild({ elective: ["desert", "not-a-region", "misthalin", "desert"] })).toEqual(
+      { elective: ["desert"], relics: {}, blessingPicks: [], blessingResetsUsed: 0 },
+    );
     expect(
       normalizeBuild({ elective: ["asgarnia", "kandarin", "desert", "tirannwn", "fremennik"] }),
     ).toEqual({

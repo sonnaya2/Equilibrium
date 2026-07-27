@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  OVERLOAD_FORMULAS,
-  overloadBoostedLevel,
-  overloadLevelBoost,
-} from "./potions";
+import { OVERLOAD_FORMULAS, overloadBoostedLevel, overloadLevelBoost } from "./potions";
 
 describe("overload level boosts", () => {
   it("matches the wiki table for regular overload (15% + 3)", () => {

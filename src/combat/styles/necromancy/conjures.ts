@@ -131,7 +131,11 @@ function autoProfile(id: ConjureId): {
 } | null {
   switch (id) {
     case "skeleton_warrior":
-      return { first: SKELETON_FIRST_AUTO_TICKS, interval: SKELETON_AUTO_INTERVAL, band: SKELETON_AUTO_BAND };
+      return {
+        first: SKELETON_FIRST_AUTO_TICKS,
+        interval: SKELETON_AUTO_INTERVAL,
+        band: SKELETON_AUTO_BAND,
+      };
     case "putrid_zombie":
       return {
         first: ZOMBIE_FIRST_AUTO_TICKS,
@@ -140,7 +144,11 @@ function autoProfile(id: ConjureId): {
         poison: { first: ZOMBIE_POISON_FIRST_TICKS, interval: ZOMBIE_POISON_INTERVAL },
       };
     case "vengeful_ghost":
-      return { first: GHOST_FIRST_AUTO_TICKS, interval: GHOST_AUTO_INTERVAL, band: GHOST_AUTO_BAND };
+      return {
+        first: GHOST_FIRST_AUTO_TICKS,
+        interval: GHOST_AUTO_INTERVAL,
+        band: GHOST_AUTO_BAND,
+      };
     case "phantom_guardian":
       return null;
   }
@@ -219,7 +227,11 @@ export function processSpiritAutos(
     const profile = autoProfile(s.id);
 
     if (profile) {
-      while (s.nextAutoTick > fromTick && s.nextAutoTick <= toTick && s.nextAutoTick < s.untilTick) {
+      while (
+        s.nextAutoTick > fromTick &&
+        s.nextAutoTick <= toTick &&
+        s.nextAutoTick < s.untilTick
+      ) {
         const mult = s.id === "skeleton_warrior" ? skeletonRageMult(s.rageStacks) : 1;
         events.push({
           tick: s.nextAutoTick,
@@ -241,7 +253,11 @@ export function processSpiritAutos(
 
     if (s.id === "putrid_zombie" && s.nextPoisonTick > 0) {
       const poisonEnd = s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
-      while (s.nextPoisonTick > fromTick && s.nextPoisonTick <= toTick && s.nextPoisonTick <= poisonEnd) {
+      while (
+        s.nextPoisonTick > fromTick &&
+        s.nextPoisonTick <= toTick &&
+        s.nextPoisonTick <= poisonEnd
+      ) {
         events.push({
           tick: s.nextPoisonTick,
           abilityId: SPIRIT_POISON_ABILITY_ID,

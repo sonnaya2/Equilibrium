@@ -96,9 +96,7 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
         />
       ))}
 
-      {flags.markers ? (
-        <PlaceMarkers atlasTexture={atlas} reducedMotion={reducedMotion} />
-      ) : null}
+      {flags.markers ? <PlaceMarkers atlasTexture={atlas} reducedMotion={reducedMotion} /> : null}
 
       <MotionDriver reducedMotion={reducedMotion} />
     </group>

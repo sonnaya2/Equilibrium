@@ -54,7 +54,7 @@ export default async function TasksPage() {
     : baseRecords;
 
   const sourceUrl = useCatalystStandIn
-    ? testFallback?.url ?? CATALYST_TASKS_URL
+    ? (testFallback?.url ?? CATALYST_TASKS_URL)
     : tasksData.source.url;
 
   return (
@@ -67,9 +67,7 @@ export default async function TasksPage() {
           tasksWikiUrl={useCatalystStandIn ? CATALYST_TASKS_URL : tasksData.source.url}
           completionLive={completion.live}
           dataset={{
-            label: useCatalystStandIn
-              ? testFallback?.league ?? "Catalyst League"
-              : "Equilibrium",
+            label: useCatalystStandIn ? (testFallback?.league ?? "Catalyst League") : "Equilibrium",
             testingOnly: useCatalystStandIn && testFallback?.testingOnly === true,
             provisional: useCatalystStandIn,
             sourceUrl,

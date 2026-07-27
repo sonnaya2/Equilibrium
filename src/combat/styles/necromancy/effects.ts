@@ -17,15 +17,8 @@ import {
   volleyOfSouls,
   type NecromancyAbilitySpec,
 } from "./abilities";
-import {
-  FINGER_OF_DEATH_MAX_STACKS,
-  NECROSIS_CAP,
-  TOUCH_OF_DEATH_NECROSIS,
-} from "./necrosis";
-import {
-  RESIDUAL_SOUL_CAP,
-  SOULBOUND_LANTERN_BONUS_CAP,
-} from "./souls";
+import { FINGER_OF_DEATH_MAX_STACKS, NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } from "./necrosis";
+import { RESIDUAL_SOUL_CAP, SOULBOUND_LANTERN_BONUS_CAP } from "./souls";
 import {
   applyConjureCast,
   COMMAND_REQUIRES_CONJURE,
@@ -95,7 +88,10 @@ export function livingDeathActive(necro: NecroRotationState, tick: number): bool
   return necro.livingDeathUntilTick > 0 && tick < necro.livingDeathUntilTick;
 }
 
-export function activateLivingDeath(necro: NecroRotationState, castTick: number): NecroRotationState {
+export function activateLivingDeath(
+  necro: NecroRotationState,
+  castTick: number,
+): NecroRotationState {
   return {
     ...necro,
     livingDeathUntilTick: castTick + secondsToTicks(LIVING_DEATH_DURATION_SECONDS),
@@ -136,7 +132,11 @@ export function resolveNecromancyAbility(
 }
 
 /** Adrenaline cost with FoD Necrosis discount (and LD-resolved FoD). */
-export function necroAdrenalineCost(ability: AbilitySpec, necro: NecroRotationState, tick: number): number {
+export function necroAdrenalineCost(
+  ability: AbilitySpec,
+  necro: NecroRotationState,
+  tick: number,
+): number {
   if (ability.style !== "necromancy") return ability.adrenaline?.cost ?? 0;
   if (ability.id === "finger_of_death") {
     return (

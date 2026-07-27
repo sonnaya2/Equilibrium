@@ -76,10 +76,14 @@ export function getRegionalUniqueDrops(region: string): RegionalUniqueDrop[] {
 
 export function getInventionComponentsByRegion(region: string): InventionComponentSource[] {
   const needle = region.trim().toLowerCase();
-  return plannerSource.invention_component_sources.filter((entry) => entry.region.toLowerCase() === needle);
+  return plannerSource.invention_component_sources.filter(
+    (entry) => entry.region.toLowerCase() === needle,
+  );
 }
 
 export function getArchaeologyProgressionByRegion(region: string): ArchaeologyProgression[] {
   const needle = region.trim().toLowerCase();
-  return plannerSource.archaeology_progression.filter((entry) => entry.region.toLowerCase() === needle);
+  return plannerSource.archaeology_progression.filter(
+    (entry) => entry.region.toLowerCase() === needle,
+  );
 }

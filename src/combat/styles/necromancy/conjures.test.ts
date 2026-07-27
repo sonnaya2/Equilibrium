@@ -109,7 +109,11 @@ describe("conjures", () => {
     const { events } = processSpiritAutos(state, 0, 20);
     const autos = events.filter((e) => e.abilityId === SPIRIT_AUTO_ABILITY_ID.putrid_zombie);
     const poison = events.filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID);
-    expect(autos.map((e) => e.tick)).toEqual([7, 7 + ZOMBIE_AUTO_INTERVAL, 7 + 2 * ZOMBIE_AUTO_INTERVAL]);
+    expect(autos.map((e) => e.tick)).toEqual([
+      7,
+      7 + ZOMBIE_AUTO_INTERVAL,
+      7 + 2 * ZOMBIE_AUTO_INTERVAL,
+    ]);
     expect(poison[0]!.tick).toBe(ZOMBIE_POISON_FIRST_TICKS);
     expect(poison.every((e) => e.critEligible === false)).toBe(true);
   });

@@ -10,10 +10,7 @@
 import { useCallback, useMemo, useState } from "react";
 import questsData from "#data/league/quests.json";
 import { safeExternalHref } from "@/lib/safeHref";
-import {
-  DataTableOrganizeBar,
-  useDataTableOrganize,
-} from "./DataTableOrganize";
+import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 type Quest = (typeof questsData.quests)[number];
@@ -34,7 +31,10 @@ function membersLabel(value: string): string {
 function touchesRegion(quest: Quest, region: string): boolean {
   if (quest.primary_region === region) return true;
   const required = quest.required_regions ?? [];
-  return required.includes(region) || (quest.primary_region === "global" && required.every((id) => id === "global"));
+  return (
+    required.includes(region) ||
+    (quest.primary_region === "global" && required.every((id) => id === "global"))
+  );
 }
 
 export function QuestBrowser() {
@@ -65,11 +65,7 @@ export function QuestBrowser() {
 
   return (
     <section className="data-record-view">
-      <DataViewHeader
-        title="Quests"
-        count={rows.length}
-        countLabel="quests"
-      >
+      <DataViewHeader title="Quests" count={rows.length} countLabel="quests">
         <input
           type="search"
           value={query}
@@ -89,65 +85,67 @@ export function QuestBrowser() {
         />
       </DataViewHeader>
 
-        <div className="panel data-record-surface data-quest-surface overflow-auto">
-          <table className="data-table data-quest-table">
-            <thead className="sticky top-0 bg-stone-850">
+      <div className="panel data-record-surface data-quest-surface overflow-auto">
+        <table className="data-table data-quest-table">
+          <thead className="sticky top-0 bg-stone-850">
+            <tr>
+              <th>Quest</th>
+              <th>Primary</th>
+              <th>Series</th>
+              <th>Access</th>
+              <th>Needs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 ? (
               <tr>
-                <th>Quest</th>
-                <th>Primary</th>
-                <th>Series</th>
-                <th>Access</th>
-                <th>Needs</th>
+                <td colSpan={5} className="text-parch-300">
+                  {query
+                    ? "Nothing matches."
+                    : `No quests in ${selectedRegion?.name ?? "this region"}.`}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-parch-300">
-                    {query ? "Nothing matches." : `No quests in ${selectedRegion?.name ?? "this region"}.`}
-                  </td>
-                </tr>
-              ) : (
-                rows.map((q) => {
-                  const required = q.required_regions ?? [];
-                  const extra = required.filter((r) => r !== q.primary_region);
-                  const sourceHref = safeExternalHref(q.source_url);
-                  return (
-                    <tr key={q.title}>
-                      <td className="text-parch-50">
-                        {sourceHref ? (
-                          <a
-                            href={sourceHref}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-gem-300 hover:underline"
-                          >
-                            {q.title}
-                          </a>
-                        ) : (
-                          q.title
-                        )}
-                        {q.cross_region ? (
-                          <span className="ml-1.5 text-[12px] text-parch-400">cross-region</span>
-                        ) : null}
-                      </td>
-                      <td>{regionLabel(q.primary_region)}</td>
-                      <td>{q.series || "—"}</td>
-                      <td>{membersLabel(q.members)}</td>
-                      <td className="text-parch-300">
-                        {required.length === 0
-                          ? "—"
-                          : extra.length === 0
-                            ? regionLabel(q.primary_region)
-                            : `${regionLabel(q.primary_region)} + ${extra.map(regionLabel).join(", ")}`}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+            ) : (
+              rows.map((q) => {
+                const required = q.required_regions ?? [];
+                const extra = required.filter((r) => r !== q.primary_region);
+                const sourceHref = safeExternalHref(q.source_url);
+                return (
+                  <tr key={q.title}>
+                    <td className="text-parch-50">
+                      {sourceHref ? (
+                        <a
+                          href={sourceHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gem-300 hover:underline"
+                        >
+                          {q.title}
+                        </a>
+                      ) : (
+                        q.title
+                      )}
+                      {q.cross_region ? (
+                        <span className="ml-1.5 text-[12px] text-parch-400">cross-region</span>
+                      ) : null}
+                    </td>
+                    <td>{regionLabel(q.primary_region)}</td>
+                    <td>{q.series || "—"}</td>
+                    <td>{membersLabel(q.members)}</td>
+                    <td className="text-parch-300">
+                      {required.length === 0
+                        ? "—"
+                        : extra.length === 0
+                          ? regionLabel(q.primary_region)
+                          : `${regionLabel(q.primary_region)} + ${extra.map(regionLabel).join(", ")}`}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

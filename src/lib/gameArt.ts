@@ -27,7 +27,8 @@ export const STYLE_ICON = {
   necromancy: "necromancy-abilities",
 } as const;
 
-export const styleIconPath = (style: keyof typeof STYLE_ICON) => gameIconPath("combat", STYLE_ICON[style]);
+export const styleIconPath = (style: keyof typeof STYLE_ICON) =>
+  gameIconPath("combat", STYLE_ICON[style]);
 
 export const regionCrestPath = (regionId: string) => gameIconPath("regions", regionId);
 
@@ -79,13 +80,13 @@ export function abilityCategoryLabel(
 const DATA_ICON_ALIASES: Record<string, string> = {
   "abandoned mine salve shard mining": "salve-amulet-e",
   "salve amulet (e)": "salve-amulet-e",
-  "abyss": "abyss",
+  abyss: "abyss",
   "abyss access": "abyss",
   "abyss entrance": "abyss",
   "abyss runecrafting": "abyss",
   "abyss runecrafting stack": "abyss",
-  "abomination": "abomination",
-  "amascut": "amascut",
+  abomination: "abomination",
+  amascut: "amascut",
   "amascut, the devourer": "amascut",
   // Gem → inventory, never the boss plate.
   "amascut's enchanted gem": "enchanted-gem",
@@ -169,7 +170,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "anachronia totems (permanent multi-skill buffs)": "totem-of-vitality",
   "ancient components discovery (classic / historic / vintage / timeworn)": "historic-components",
   "ancient curses (the temple at senntisten)": "ancient-curses",
-  "ancient enhanced tools (enhanced hammer-tron / pyro-matic / rod-o-matic)": "enhanced-hammer-tron",
+  "ancient enhanced tools (enhanced hammer-tron / pyro-matic / rod-o-matic)":
+    "enhanced-hammer-tron",
   "ancient invention": "ancient-invention",
   "ancient invention blueprints (howl's workshop)": "ancient-invention",
   "ancient summoning binding contracts": "binding-contract",
@@ -178,8 +180,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "antipoison totem": "antipoison-totem",
   "apex hide → masterwork ranged craft path": "apex-hide-body",
   "apex hide armour": "apex-hide-body",
-  "araxxi": "araxxi",
-  "araxxor": "araxxor",
+  araxxi: "araxxi",
+  araxxor: "araxxor",
   "arc journal (permanent arc travel tracker)": "arc-journal",
   "arc journal teletabs feature unlock": "arc-journal",
   "arch glacor": "arch-glacor",
@@ -199,7 +201,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "archaeology research system": "archaeology-research",
   "archaeology research team permanent (guildmaster)": "archaeology-research",
   "arctic pine woodcutting (neitiznot)": "arctic-pine",
-  "ardougne": "ardougne",
+  ardougne: "ardougne",
   "ardougne cloak (ourania rune output)": "ardougne-cloak-4",
   "ardougne cloak 1-4": "ardougne-cloak-4",
   "ardougne cloak 1–4": "ardougne-cloak-4",
@@ -226,10 +228,11 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "augmentable gather tools research (pickaxe / hatchet / mattock)": "dragon-pickaxe",
   "austin's place and ritualist's outfit": "austins-place",
   "auto disassembler / mk. ii (invention guild machine)": "auto-disassembler",
-  "auto-burn woodcutting paths (superheat form vs always adze vs partial outfit/adze)": "always-adze",
+  "auto-burn woodcutting paths (superheat form vs always adze vs partial outfit/adze)":
+    "always-adze",
   "auto-sanctifier (dwarven tech prayer device)": "auto-sanctifier",
   "auto-screener v1.080": "auto-screener-v1080",
-  "autoheater": "autoheater",
+  autoheater: "autoheater",
   "automatic / optimised hide tanner (invention guild)": "optimised-hide-tanner",
   "ava's device chain (attractor / accumulator / alerter)": "avas-alerter",
   "azure skillchompas (rellekka hunter area)": "azure-skillchompas",
@@ -241,7 +244,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "barbarian outpost": "barbarian-outpost",
   "barbarian outpost agility course": "barbarian-outpost-agility-course",
   "barbarian training (otto multi-skill package)": "barbarian-training",
-  "barrows": "barrows",
+  barrows: "barrows",
   "barrows chest diary skilling utility": "barrows-chest",
   "barrows defenders / shields progression": "barrows",
   "barrows: rise of the six": "barrows-rise-of-the-six",
@@ -253,7 +256,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "binding contract (ancient summoning) craft + bind loop": "binding-contract",
   "bird house": "bird-house",
   "bird houses": "bird-house",
-  "birdhouses": "bird-house",
+  birdhouses: "bird-house",
   "black chinchompas": "black-chinchompa",
   "black ibis outfit": "black-ibis-outfit",
   "black mask": "black-mask",
@@ -272,7 +275,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "blisterwood and sunspear weapon chain": "blisterwood",
   "blood altar": "blood-altar",
   "blood altar runecrafting": "blood-altar",
-  "bonecrusher": "bonecrusher",
+  bonecrusher: "bonecrusher",
   "bonecrusher + demon horn necklace prayer stack": "bonecrusher",
   "bonecrusher auto-pickup upgrade (waiko / boni)": "bonecrusher",
   "botanist's amulet": "botanists-amulet",
@@ -296,7 +299,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "canifis farming and slayer tower hub": "canifis",
   "canifis-mort'ton trapdoor shortcut": "canifis",
   "canifis–mort'ton trapdoor shortcut": "canifis",
-  "catherby": "catherby",
+  catherby: "catherby",
   "catherby fishing and farming hub": "catherby",
   "certificates of qualification (poh display permanents)": "certificates-of-qualification",
   "champion's tackle box": "champions-tackle-box",
@@ -372,7 +375,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "curly roots firemaking ceiling stack (jadinko + all fired up gear)": "curly-root",
   "custom-fit trimmed masterwork (elof / master crafter)": "trimmed-masterwork-platebody",
   // Peninsula / castle activity art only for pure DG floor labels — dig site majors use dig-site icon.
-  "daemonheim": "daemonheim-dig-site",
+  daemonheim: "daemonheim-dig-site",
   "daemonheim area tasks passive rewards": "daemonheim",
   "daemonheim dig site": "daemonheim-dig-site",
   "misthalin wisp colonies": "divination",
@@ -396,8 +399,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "dark facets": "dark-onyx-core",
   "ice strykewyrm": "ice-strykewyrm",
   "lava strykewyrm": "lava-strykewyrm",
-  "soulgazers": "soulgazer",
-  "soulgazer": "soulgazer",
+  soulgazers: "soulgazer",
+  soulgazer: "soulgazer",
   "wilderness strykewyrms": "lava-strykewyrm",
   "bloodwood logs": "bloodwood-logs",
   "brawling gloves": "brawling-gloves-melee",
@@ -443,7 +446,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "dark ice -> dark shard/sliver of leng": "dark-shard-of-leng",
   "dark ice → dark shard/sliver of leng": "dark-shard-of-leng",
   "dark onyx core source package": "dark-onyx-core",
-  "darkmeyer": "darkmeyer",
+  darkmeyer: "darkmeyer",
   "darkmeyer thieving and ring of vitur": "ring-of-vitur",
   "deadliest catch skilling deposit boxes": "deadliest-catch",
   "death altar (temple of light runecrafting)": "death-altar",
@@ -476,7 +479,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "desert treasure": "desert-treasure",
   "dig site pendant": "dig-site-pendant",
   "dinosaur and plant slayer (laniakea / anachronia)": "laniakea",
-  "dive": "dive",
+  dive: "dive",
   "divine charge crafting loop (energy → charge pack / machines / gote fuel)": "divine-charge",
   "divine conversion (cres framework)": "divine-conversion",
   "divine rage prayer codex": "divine-rage-prayer-codex",
@@ -510,8 +513,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "god wars dungeon 2": "vindicta-gorvek",
   "dragonkin potion recipe fragments (orthen)": "orthen-dig-site",
   "draynor village skilling hub": "draynor-village",
-  "dreadnip": "dreadnip",
-  "dreadnips": "dreadnip",
+  dreadnip: "dreadnip",
+  dreadnips: "dreadnip",
   "dream mentor": "dream-mentor",
   "dream of iaia": "dream-of-iaia",
   "drygore weapon set": "drygore-mace",
@@ -522,7 +525,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "dwarven traders": "keldagrim",
   "eastfold farm (sheep and spinning)": "eastfold-farm",
   "eclipsed soul prayer codex": "eclipsed-soul-prayer-codex",
-  "ectofuntus": "ectofuntus",
+  ectofuntus: "ectofuntus",
   "ectofuntus and first age prayer outfit": "ectofuntus",
   "ectofuntus pool of slime (slime pit)": "ectofuntus",
   "ectofuntus prayer worship": "ectofuntus",
@@ -576,7 +579,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "explorer's ring 1-4": "explorers-ring-4",
   "explorer's ring 1–4": "explorers-ring-4",
   "explorer's ring 4": "explorers-ring-4",
-  "extinction": "extinction",
+  extinction: "extinction",
   "extreme invention potion boost path": "extreme-invention-potion",
   "extreme invention supply combo (guild + webbing + herblore)": "extreme-invention",
   "extreme prayer potion": "extreme-prayer-potion",
@@ -733,7 +736,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "harmony moss": "harmony-moss",
   "hatchet of bloom and blight": "hatchet-of-bloom-and-blight",
   "hatchet of ember and glade": "hatchet-of-ember-and-glade",
-  "hatchet progression checklist (dragon → imcando → crystal → ember and glade → bloom and blight)": "hatchet-of-ember-and-glade",
+  "hatchet progression checklist (dragon → imcando → crystal → ember and glade → bloom and blight)":
+    "hatchet-of-ember-and-glade",
   "havenhythe big game hunter": "havenhythe-big-game-hunter",
   "havenhythe birdhouses": "bird-house",
   "havenhythe canoe network": "canoe-station-havenhythe",
@@ -760,12 +764,12 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "herb bag progression": "herb-bag",
 
   "herb protector (invention farming device)": "herb-protector",
-  "herbicide": "herbicide",
+  herbicide: "herbicide",
   "herblore habitat": "herblore-habitat",
   "herby werby": "herby-werby",
   "herby werby / ranch out of time": "herby-werby",
   "herby werby herb bag skilling unlock": "herby-werby",
-  "hermod": "hermod",
+  hermod: "hermod",
   "hermod, the spirit of war": "hermod",
   "desert strykewyrm": "desert-strykewyrm",
   "het's oasis": "hets-oasis",
@@ -773,7 +777,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "het's oasis farming (flower bushes, cactus, honeycombs)": "hets-oasis",
   "het's oasis whirligigs and prayer powder production": "hets-oasis",
   "hets oasis": "hets-oasis",
-  "hexcrest": "hexcrest",
+  hexcrest: "hexcrest",
   "highweald / deserted mine mining access": "highweald",
   "highweald ruins mine (necrite / phasmatite / platinum / havensilver)": "highweald-ruins-mine",
   "hireable research team recruitment ladder": "archaeology-research",
@@ -819,7 +823,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "ivar, king of bones uniques": "ivar-uniques",
   "jackalope familiar (archaeology soil bob)": "jackalope-familiar",
   "jackalope hunting (antler tertiary)": "jackalope",
-  "jackalopes": "jackalope",
+  jackalopes: "jackalope",
   "jackalopes (bis early-mid hunter method)": "jackalope",
   "jackalopes (bis early–mid hunter method)": "jackalope",
   "jadinko favour offering stone": "jadinko-favour",
@@ -855,7 +859,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "king black dragon": "king-black-dragon",
   "king of beasts bomb-conservation perk": "king-of-beasts",
   "kree'arra": "kreearra",
-  "kreearra": "kreearra",
+  kreearra: "kreearra",
   "kril tsutsaroth": "kril-tsutsaroth",
   "kuradal (ancient cavern slayer master)": "kuradal",
   "kuradal's dungeon and ferocious ring hub": "ferocious-ring",
@@ -868,7 +872,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "rune dragons": "rune-dragon",
   "rune dragon": "rune-dragon",
   "kwuarm incense sticks": "kwuarm-incense-sticks",
-  "laniakea": "laniakea",
+  laniakea: "laniakea",
   "laniakea (anachronia highest standard slayer master)": "laniakea",
   "laniakea's spear": "laniakeas-spear",
   "large summoning obelisk production network": "summoning-obelisk",
@@ -880,7 +884,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "learn to move souls in personal slayer dungeon (1,000 slayer points)": "slayer-codex",
   "legends' guild totem jewellery recharge": "legends-guild",
   // Inventory crossbow — boss plate + multi-MB monastery dump crop poorly in name wells.
-  "legiones": "ascension-crossbow",
+  legiones: "ascension-crossbow",
   "legiones (monastery of ascension)": "ascension-crossbow",
   "leng artefact": "leng-artefact",
   "liberation of mazcab (beastmaster durzag / yakamaru)": "liberation-of-mazcab",
@@ -894,7 +898,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "livid farm": "livid-farm",
   "livid farm lunar spell unlocks": "livid-farm",
   "living rock caverns": "living-rock-caverns",
-  "lorehound": "lorehound",
+  lorehound: "lorehound",
   "lorehound (pet)": "lorehound",
   "lorehound pet": "lorehound",
   "lost grove": "lost-grove",
@@ -948,7 +952,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "masterwork ranged armour": "masterwork-ranged-body",
   "masterwork ranged armour (anachronia + wildy + kandarin)": "masterwork-ranged-body",
   "masterwork ranged armour (havenhythe / anachronia material pressure)": "masterwork-ranged-body",
-  "masterwork ranged armour material pressure (havenhythe/anachronia hunter)": "masterwork-ranged-body",
+  "masterwork ranged armour material pressure (havenhythe/anachronia hunter)":
+    "masterwork-ranged-body",
   "masterwork ranged armour materials": "masterwork-ranged-body",
   "material manuals (guild shop archaeology boost)": "material-manual",
   "mattock of time and space": "mattock-of-time-and-space",
@@ -968,7 +973,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "memorial to guthix": "memorial-to-guthix",
   "memorial to guthix echo boons": "memorial-to-guthix",
   "memory dowser": "memory-dowser",
-  "menaphos": "menaphos",
+  menaphos: "menaphos",
   "menaphos city quests (reputation engine)": "menaphos-city-quests",
   "menaphos imperial acadia woodcutting": "menaphos-imperial",
   "menaphos merchant marketeers and stalls": "menaphos",
@@ -980,7 +985,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "mining guild": "mining-guild",
   "mining guild metal-bank smithing loop": "mining-guild",
   "mining guild resource dungeon": "mining-guild-resource-dungeon",
-  "miscellania": "managing-miscellania",
+  miscellania: "managing-miscellania",
   "misthalin runecrafting altars (water, earth) and essence access": "water-altar",
   "modified blacksmith's helmet": "modified-blacksmiths-helmet",
   "modified botanist's mask": "modified-botanists-mask",
@@ -1021,7 +1026,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "neitiznot yak crafting and cooking loop": "yak",
   "neitiznot yaks": "yak",
   "new varrock achievements (varrock armour doubling)": "varrock-armour-4",
-  "nex": "nex",
+  nex: "nex",
   "nex aod": "nex-aod",
   "nex equipment": "nex",
   "nex t80 power armour (torva / pernix / virtus)": "torva-platebody",
@@ -1060,7 +1065,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "papa mambo's shop (herblore habitat)": "papa-mambos-shop",
   "partial potion producer / dx (invention guild)": "partial-potion-producer-dx",
   "passage of the abyss (compacted jewellery pocket)": "passage-of-the-abyss",
-  "penance": "penance",
+  penance: "penance",
   "penance aspect (ex-aura)": "penance-aspect",
   "penguin agility course (iceberg)": "penguin-agility-course",
   "perfect juju potion production path": "perfect-juju",
@@ -1071,7 +1076,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "pharm ecology (queen mab's moonstone)": "pharm-ecology",
   "pickaxe of earth and song": "pickaxe-of-earth-and-song",
   "pickaxe of life and death": "pickaxe-of-life-and-death",
-  "pickaxe progression checklist (dragon → imcando → crystal → earth and song → life and death)": "pickaxe-of-earth-and-song",
+  "pickaxe progression checklist (dragon → imcando → crystal → earth and song → life and death)":
+    "pickaxe-of-earth-and-song",
   "pikkupstix summoning shop and large obelisk (taverley)": "taverley",
   "piscatoris fishing colony": "piscatoris-fishing-colony",
   "piscatoris hunter area": "piscatoris-hunter-area",
@@ -1124,7 +1130,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "prayer training infrastructure stack (altars + powders + books)": "gilded-altar",
   "prayer-book switch network (zaros / fort / elven / war)": "god-books",
   "prehistoric potterington's 'accidental' fletching and firemaking": "accidental-fletching",
-  "prifddinas": "prifddinas",
+  prifddinas: "prifddinas",
   "prifddinas city access": "prifddinas",
   "prifddinas skilling hub": "prifddinas",
   "prifddinas spirit tree + glouron three-tree unlock": "prifddinas-spirit-tree",
@@ -1144,7 +1150,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "pyro-matic": "pyro-matic",
   "queen black dragon": "queen-black-dragon",
   "quick traps (bgh permanent trap speed)": "quick-traps",
-  "raksha": "raksha",
+  raksha: "raksha",
   "raksha ability upgrades": "raksha",
   "raksha boot upgrades": "raksha",
   "raksha, the shadow colossus": "raksha",
@@ -1164,7 +1170,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "research team size ladder (assistant → guildmaster)": "archaeology-research",
   "resource dungeon unlock map (dungeoneering permanent access)": "resource-dungeon",
   "rex matriarchs": "rex-matriarchs",
-  "rimmington": "rimmington",
+  rimmington: "rimmington",
   "rimmington construction supply loop": "rimmington",
   "ring of fire": "ring-of-fire",
   "ring of fortune": "ring-of-fortune",
@@ -1196,7 +1202,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "rune dragon boot-upgrade glands residual": "blast-diffusion-boots",
   "rune pouch craft ladder (large → grasping + expansive essence path)": "grasping-rune-pouch",
   "runecrafting essence pouches (small → massive)": "expansive-essence-pouch",
-  "runespan": "runespan",
+  runespan: "runespan",
   "runespan portals at wizards' tower": "runespan",
   "runespan reward shop and master runecrafter robes": "master-runecrafter-robes",
   "runic attuner": "runic-attuner",
@@ -1233,7 +1239,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "sealed small rune pouch (combat rune storage)": "sealed-small-rune-pouch",
   "seasinger (ports / arc)": "seasingers-robe-top",
   "seasinger residual (ports / arc)": "seasingers-robe-top",
-  "seedicide": "seedicide",
+  seedicide: "seedicide",
   "seedicide collector upgrade": "seedicide-collector-upgrade",
   "seer's headband": "seers-headband-4",
   "seer's headband 1-4": "seers-headband-4",
@@ -1283,7 +1289,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "skillcape rack (player lodge t3 passive perk)": "skillcape-rack",
   "skillchompa hunter and player-owned farm supply": "skillchompas",
   "skillchompa supply hub (wild + pof ladder)": "skillchompas",
-  "skillchompas": "skillchompas",
+  skillchompas: "skillchompas",
   "skilling scrimshaw craft package (player-owned port)": "scrimshaw-crafter",
   "skull sceptre": "skull-sceptre",
   "slayer codex": "slayer-codex",
@@ -1298,9 +1304,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "smoking kills (full slayer points unlock)": "smoking-kills",
   "soil box + material storage capacity ladders": "archaeological-soil-box",
   "sojobo arc contracts hub (waiko)": "waiko-contracts",
-  "solak": "solak",
+  solak: "solak",
   "solak / lost grove rewards": "solak",
-  "sophanem": "sophanem",
+  sophanem: "sophanem",
   "sophanem plover birds and slayer support skilling": "sophanem",
   "sophanem plover birds": "sophanem",
   "sophanem plovers": "sophanem",
@@ -1351,7 +1357,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "tagga's corehammer": "taggas-corehammer",
   "tai bwo wannai cleanup and trading sticks": "tai-bwo-wannai",
   "tai bwo wannai cleanup": "tai-bwo-wannai",
-  "taverley": "taverley",
+  taverley: "taverley",
   "taverley / burthorpe early-mid skilling hub": "taverley",
   "taverley / burthorpe early–mid skilling hub": "taverley",
   "taverley dungeon": "taverley-dungeon",
@@ -1437,7 +1443,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "ungael ritual site pressure": "ungael-ritual",
   "ungeal ritual site": "ungael-ritual",
   "urn enhancer (permanent invention device)": "urn-enhancer",
-  "vampyrism": "vampyrism-aspect",
+  vampyrism: "vampyrism-aspect",
   "vampyrism aspect": "vampyrism-aspect",
   "vampyrism aspect (ex-aura)": "vampyrism-aspect",
   "varrock armour 1-4": "varrock-armour-4",
@@ -1452,7 +1458,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "velucia museum collection chronote tiers (225% set bonus)": "velucia",
   "vermyx, brood mother": "vermyx",
   "vestments of havoc (t95 melee glass cannon)": "vestments-of-havoc-robe-top",
-  "vindicta": "vindicta-gorvek",
+  vindicta: "vindicta-gorvek",
   "vindicta & gorvek": "vindicta-gorvek",
   "virtus equipment and praesulic essence": "virtus-robe-top",
   "virtus equipment and praesulic essence residual": "virtus-robe-top",
@@ -1460,11 +1466,11 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "voice of seren": "seren-stones",
   "volatile chinchompas": "volatile-chinchompas",
   "volcanic trapper outfit": "volcanic-trapper",
-  "vorago": "vorago",
+  vorago: "vorago",
   "vorago progression": "vorago",
   "vyre combat and sunspear progression": "sunspear",
   "vyres / sunspear multi-skill training": "sunspear",
-  "sunspear": "sunspear",
+  sunspear: "sunspear",
   "waiko commodity sell permanent upgrades": "waiko",
   "waiko contracts-per-day permanent upgrades": "waiko-contracts",
   "waiko grill (permanent arc cooking station)": "waiko-grill",
@@ -1488,7 +1494,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   // Prefer defender inventory look over multi-MB guild plate for name wells.
   "warriors guild": "dragon-defender",
   "warriors' guild": "dragon-defender",
-  "safecracking": "safe",
+  safecracking: "safe",
   "safecracking route": "safe",
   "asgarnia safecracking circuit": "safe",
   "wars retreat": "wars-retreat-hub",
@@ -1536,11 +1542,11 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "yak hide / pof babies": "yak",
   "yak hide and player-owned farm yak babies": "yak",
   "yak-hide armour": "yak-hide-armour",
-  "yanille": "yanille",
+  yanille: "yanille",
   "yanille multi-skill hub": "yanille",
   "zamorakian sliver enchantments": "zamorak",
   "zamorakian undercity ability codices": "zamorakian-undercity",
-  "zamorak": "zamorak",
+  zamorak: "zamorak",
   "zamorak, lord of chaos": "zamorak",
   "zamorak, lord of chaos (undercity)": "zamorak",
   "zemouregal & vorkath": "zemouregal-vorkath",
@@ -1643,10 +1649,7 @@ export function iconSlugCandidates(name: string): string[] {
   return out;
 }
 
-function firstHit(
-  candidates: string[],
-  lookup: (slug: string) => string | null,
-): string | null {
+function firstHit(candidates: string[], lookup: (slug: string) => string | null): string | null {
   for (const slug of candidates) {
     const path = lookup(slug);
     if (path) return path;
@@ -1900,7 +1903,10 @@ function skillHubIconFromBag(bag: string): string | null {
     return hit("agility");
   }
   // Named masters keep portrait art via upgrade path — only abstract slayer rows use the skill.
-  if (/\bslayer master\b/i.test(bag) && !/\b(?:kuradal|morvran|sumona|duradel|laniakea|konar)\b/i.test(bag)) {
+  if (
+    /\bslayer master\b/i.test(bag) &&
+    !/\b(?:kuradal|morvran|sumona|duradel|laniakea|konar)\b/i.test(bag)
+  ) {
     return hit("slayer");
   }
   // Box-trap / birdhouse inventory art is better when published — skill only for bare areas.
@@ -2006,7 +2012,8 @@ export function dataEntityIconPath(input: {
   // ("Mining") have no activity hit and keep the skill glyph.
   const pureSkillKind =
     Boolean(input.skill) ||
-    (/^(skill|skills)\b/.test(kind) && !/skillcape|skilling|outfit|infrastructure|package|codex/i.test(kind));
+    (/^(skill|skills)\b/.test(kind) &&
+      !/skillcape|skilling|outfit|infrastructure|package|codex/i.test(kind));
   if (pureSkillKind) {
     if (name) {
       const placePlate = activityIconPath(name);

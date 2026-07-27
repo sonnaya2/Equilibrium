@@ -163,24 +163,64 @@ describe("task page view model", () => {
   });
 
   it("sorts and counts active filters", () => {
-    expect(sortTasks(FILTER_RECORDS, "points", {}).map(taskId)).toEqual([
-      "boss",
-      "global",
-      "fish",
-    ]);
-    expect(sortTasks(FILTER_RECORDS, "rarest", {}).map(taskId)).toEqual([
-      "boss",
-      "fish",
-      "global",
-    ]);
+    expect(sortTasks(FILTER_RECORDS, "points", {}).map(taskId)).toEqual(["boss", "global", "fish"]);
+    expect(sortTasks(FILTER_RECORDS, "rarest", {}).map(taskId)).toEqual(["boss", "fish", "global"]);
     expect(
       countActiveFilters({ ...BASE_FILTERS, search: "boss", tier: "master", buildOnly: true }),
     ).toBe(3);
   });
 
+  it("treats completion rate 0 as real, not missing", () => {
+    const records = asTaskRecords([
+      { id: "zero", name: "Zero", tier: "easy", catalystCompletionRate: 0 },
+      { id: "high", name: "High", tier: "easy", catalystCompletionRate: 50 },
+      { id: "missing", name: "Missing", tier: "easy" },
+      { id: "decimal", name: "Decimal", tier: "easy", catalystCompletionRate: 0.5 },
+      { id: "full", name: "Full", tier: "easy", catalystCompletionRate: 100 },
+    ]);
+
+    // Highest completion first; 0 is valid and before missing.
+    expect(sortTasks(records, "completion", {}).map(taskId)).toEqual([
+      "full",
+      "high",
+      "decimal",
+      "zero",
+      "missing",
+    ]);
+
+    // Rarest first: 0% is rarest real rate; missing last.
+    expect(sortTasks(records, "rarest", {}).map(taskId)).toEqual([
+      "zero",
+      "decimal",
+      "high",
+      "full",
+      "missing",
+    ]);
+  });
+
+  it("keeps equal completion rates stable by name", () => {
+    const records = asTaskRecords([
+      { id: "b", name: "Bravo", tier: "easy", catalystCompletionRate: 10 },
+      { id: "a", name: "Alpha", tier: "easy", catalystCompletionRate: 10 },
+    ]);
+    expect(sortTasks(records, "completion", {}).map(taskId)).toEqual(["a", "b"]);
+  });
+
+  it("does not treat 0 as missing in points secondary sort", () => {
+    const records = asTaskRecords([
+      { id: "zero", name: "Zero", tier: "easy", points: 10, catalystCompletionRate: 0 },
+      { id: "high", name: "High", tier: "easy", points: 10, catalystCompletionRate: 80 },
+      { id: "none", name: "None", tier: "easy", points: 10 },
+    ]);
+    // Same points: higher completion first; 0 before missing.
+    expect(sortTasks(records, "points", {}).map(taskId)).toEqual(["high", "zero", "none"]);
+  });
+
   it("puts pinned tasks first in pin order", () => {
-    expect(
-      prioritizePinnedTasks(FILTER_RECORDS, ["global", "fish"]).map(taskId),
-    ).toEqual(["global", "fish", "boss"]);
+    expect(prioritizePinnedTasks(FILTER_RECORDS, ["global", "fish"]).map(taskId)).toEqual([
+      "global",
+      "fish",
+      "boss",
+    ]);
   });
 });

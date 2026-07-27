@@ -3,10 +3,7 @@
  * Pure (no React) so unit tests can pin boss → package mapping.
  */
 
-import {
-  clipRewardDisplay,
-  contentRewardsSource,
-} from "./dataContentPresentation";
+import { clipRewardDisplay, contentRewardsSource } from "./dataContentPresentation";
 
 export type RewardUpgrade = { name: string; detail?: string | null };
 export type RewardContentRow = { name: string; detail?: string | null };
@@ -106,7 +103,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow",
   "The Shadow Reef": "Eldritch crossbow, Black stone arrow",
   Soulgazers: "Hexhunter bow",
-  "Soulgazer": "Hexhunter bow",
+  Soulgazer: "Hexhunter bow",
   "Wilderness strykewyrms": "Staff of light, Focus sight, Hexcrest",
   "Ice strykewyrm": "Staff of light",
   "Ice strykewyrms": "Staff of light",
@@ -115,14 +112,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   Glacors: "Steadfast boots, Ragefire boots, Glaiven boots",
   "Acheron mammoths": "Mammoth tusk, Pack mammoth",
   // Mazcab — one piece per Achto style (melee / mage / range).
-  "Beastmaster Durzag":
-    "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  "Beastmaster Durzag": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   Yakamaru: "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
-  "Liberation of Mazcab":
-    "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  "Liberation of Mazcab": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   // Barrows brothers — five headline weapons.
-  Barrows:
-    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail",
+  Barrows: "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail",
   // Slayer hubs / resource dungeons with resolvable chips.
   "Kuradal's Dungeon and ferocious ring hub": "Ferocious ring",
   "Polypore Dungeon (spore and stick resources)": "Polypore staff",
@@ -140,15 +134,13 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // Necrotic altars — four runes + max RC rate (20 XP/ess Miasma · ~2.5k ess/h pouches).
   "Necromantic Rune Temple":
     "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
-  "Necrotic altars":
-    "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
+  "Necrotic altars": "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
   // Havenhythe bosses — packages were stubs without Unlocks lists.
   "Ivar, King of Bones": "Bonecrusher maul, Magic skull mask, Colossal bone",
   "Silverquill, the Dreadhog": "Silver spines, Sanguine spines",
   "Sanguine Crawler": "Vampyrism gloves, Tainted seed, Sanguine matter",
   // Forinthry bloodweed — pot row is the payoff; herb patch is the farm + core roll.
-  "Bloodweed & aggression potions":
-    "Clean bloodweed, Searing ashes, Aggression potion",
+  "Bloodweed & aggression potions": "Clean bloodweed, Searing ashes, Aggression potion",
   "Wilderness herb patch": "Bloodweed seeds, Dark onyx core",
 
   // Forinthry majors — short reward chips, no essay.
@@ -168,8 +160,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Black salamanders": "Black salamander, Dark onyx core",
   "Black salamanders (Boneyard Hunter)": "Black salamander, Dark onyx core",
-  "Mage Arena":
-    "Guthix staff, Saradomin staff, Zamorak staff, Claws of Guthix, Divine Storm",
+  "Mage Arena": "Guthix staff, Saradomin staff, Zamorak staff, Claws of Guthix, Divine Storm",
   "Wilderness Agility Course": "Dark onyx core, Portable obelisk, Obelisk shard",
   "Wilderness Slayer": "Wilderness assignments, Dark onyx core, Wilderness slayer chest",
   "Charming moths": "Gold charm, Green charm, Crimson charm, Blue charm",
@@ -208,11 +199,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Hefin serenity posts (AFK Agility)": "AFK Agility posts",
   "Kuradal (Ancient Cavern Slayer Master)": "Slayer points, personal dungeon",
   "Memorial to Guthix": "Engrams, echo buffs, prestige",
-  "Stormguard Citadel Dig Site (Armadylean)":
-    "Inspire Genius, Ancient Invention, Howl's workshop",
+  "Stormguard Citadel Dig Site (Armadylean)": "Inspire Genius, Ancient Invention, Howl's workshop",
   "Stormguard Citadel Dig Site": "Inspire Genius, Ancient Invention, Howl's workshop",
-  "Orthen Dig Site":
-    "Orthen furnace core, Flow State, Death Note, Orthen teleportation device",
+  "Orthen Dig Site": "Orthen furnace core, Flow State, Death Note, Orthen teleportation device",
   "Herblore Habitat": "Jadinko patches, vine herbs, Papa Mambo",
   "Burgh de Rott skilling hub": "Bank near Barrows / Shades / Tarn",
   "Rimmington Construction supply loop": "House portal, workbench, supplies",
@@ -223,10 +212,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Catherby fishing and farming hub": "Fishing spots, patches, bank",
   "Manor Farm (Farming Guild) and reputation rewards":
     "Master farmer outfit, Beans, Skillchompas, NopeNopeNope",
-  "Player-Owned Farm / Manor Farm":
-    "Master farmer outfit, Beans, NopeNopeNope, Skillchompas",
-  "Manor Farm animal perks":
-    "NopeNopeNope, Master farmer outfit, Beans, Skillchompas",
+  "Player-Owned Farm / Manor Farm": "Master farmer outfit, Beans, NopeNopeNope, Skillchompas",
+  "Manor Farm animal perks": "NopeNopeNope, Master farmer outfit, Beans, Skillchompas",
   "Falador farm allotment / flower / herb patches": "Allotment, flower, herb patches",
   "Troll Stronghold disease-free herb patch": "Disease-free herb patch",
   "Ardougne farming patches and Manor Farm": "Ardougne patches · Manor Farm access",
@@ -261,7 +248,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Skillcape rack": "Skillcape rack",
   "Skillcape shop": "Skillcape stand, Max cape",
   "Volcanic trapper outfit": "Volcanic trapper outfit",
-  "Laniakea": "Highest standard Slayer master",
+  Laniakea: "Highest standard Slayer master",
   "Time altar": "Time rune",
   "Max Guild": "Max cape, Skillcape stand",
   "Hefin Agility Course": "Prifddinian worker's outfit, Prayer bonus, Serenity posts",
@@ -273,9 +260,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Gleaming wisp colony": "Gleaming wisps / energy",
   // Pyramid Plunder full chips defined under Desert block (ibis + sceptres).
   "Soul altar": "Soul runes",
-  "Slayer Tower":
-    "Abyssal scourge, Abyssal whip, Ghost hunter gear, Cremation",
-  "Darkmeyer": "Vyres, bank, shops",
+  "Slayer Tower": "Abyssal scourge, Abyssal whip, Ghost hunter gear, Cremation",
+  Darkmeyer: "Vyres, bank, shops",
   "Vyre combat and Sunspear progression": "Sunspear",
   "Vyres / Sunspear multi-skill training": "Sunspear",
   "Sunspear vyre cremation multi-skill training": "Sunspear",
@@ -304,14 +290,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Hunter Mark Shop (Irwinsson)": "Quick traps, Hunter marks",
   "Anachronia totems": "Totem of Vitality, Totem of Treasure, Totem of Navigation",
 
-
-
   "Always Adze": "Always Adze",
   "Accidental Fletching and Firemaking": "Farm peninsula skilling",
   "Asuran Arsenal heist": "High Thieving heist XP",
   "Ranch Out of Time": "King of Beasts, No Fear, Armoured Hide, Beans",
-  "Ranch Out of Time (Anachronia Dinosaur Farm)":
-    "King of Beasts, No Fear, Armoured Hide, Beans",
+  "Ranch Out of Time (Anachronia Dinosaur Farm)": "King of Beasts, No Fear, Armoured Hide, Beans",
   "Herby Werby": "Herb bag",
   "Big Game Hunter": "Dragon mattock, Terrasaur maul, Quick traps",
   "Laniakea (Anachronia highest standard Slayer Master)": "Laniakea's spear, Slayer points",
@@ -353,8 +336,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
   "Mazcab Emergency Merchants":
     "Super restore, Super attack, Super strength, Super defence, Super magic potion, Super ranging potion, Super necromancy, Cooked eeligator",
-  "Pyramid Plunder":
-    "Black ibis outfit, Sceptre of the gods, Pharaoh's sceptre",
+  "Pyramid Plunder": "Black ibis outfit, Sceptre of the gods, Pharaoh's sceptre",
   "Pyramid Plunder (Jalsavrah / Sophanem)":
     "Black ibis outfit, Sceptre of the gods, Pharaoh's sceptre",
   "Goebie scavengers": "Teci, Burial charms, Cooked eeligator, Mazcab reroll tokens",
@@ -364,16 +346,12 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Agility Pyramid": "Agility XP, Menaphos reputation",
   "Agility Pyramid (Jaleustrophos)": "Agility XP, Menaphos reputation",
   "Desert strykewyrm": "Focus sight",
-  "Player-owned port":
-    "Trade goods, Scrimshaws, Eastern lands voyages, Ports resources",
-  Menaphos:
-    "City quests, VIP area, Acadia trees, Marketeers, Port fishing, Soul altar",
+  "Player-owned port": "Trade goods, Scrimshaws, Eastern lands voyages, Ports resources",
+  Menaphos: "City quests, VIP area, Acadia trees, Marketeers, Port fishing, Soul altar",
   "Mage Training Arena": "Bones to Peaches, Infinity robes",
-  "Mage Training Arena (bones to peaches + reward shop)":
-    "Bones to Peaches, Infinity robes",
+  "Mage Training Arena (bones to peaches + reward shop)": "Bones to Peaches, Infinity robes",
   // GWD1 ability drops moved here (18 Aug 2025) via One Piercing Note.
-  "Citharede Abbey":
-    "Sacrifice, Devotion, Transfigure, Illuminated god books",
+  "Citharede Abbey": "Sacrifice, Devotion, Transfigure, Illuminated god books",
   "Citharede Abbey illuminated god books":
     "Sacrifice, Devotion, Transfigure, Illuminated god books",
 
@@ -382,8 +360,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Ourania Runecrafting Altar": "1.5× RC XP, random runes",
   "Jadinko Favour offering stone": "Favour shop · seeds / fruits / outfits",
   "Nature Grotto altar of nature": "Prayer restore + boost",
-  "Kharid-et Dig Site":
-    "Pontifex observation ring, Tetracompass, Inquisitor staff",
+  "Kharid-et Dig Site": "Pontifex observation ring, Tetracompass, Inquisitor staff",
   "Pontifex observation ring": "Pontifex observation ring",
   "Vampyrism Aspect": "Vampyrism Aspect",
   "Vault of Hereditas": "Vault of Hereditas",
@@ -408,7 +385,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "The Lost Grove": "Cinderbane gloves",
   Solak:
     "Blightbound crossbow, Off-hand Blightbound crossbow, Erethdor's grimoire, Cinderbane gloves",
-  "Grenwalls": "Grenwall spikes",
+  Grenwalls: "Grenwall spikes",
   "Ancient elven ritual shard": "Ancient elven ritual shard",
   "Seren spells and prayers":
     "Crystallise, Crystal Mask, Light Form, Superheat Form, Chronicle Attraction",
@@ -606,8 +583,7 @@ function keyEmbeddedInName(nameLower: string, keyLower: string): boolean {
     if (idx < 0) return false;
     const beforeOk = idx === 0 || /[\s,(/\-']/.test(nameLower[idx - 1]!);
     const afterIdx = idx + keyLower.length;
-    const afterOk =
-      afterIdx >= nameLower.length || /[\s,)(/\-':]/.test(nameLower[afterIdx]!);
+    const afterOk = afterIdx >= nameLower.length || /[\s,)(/\-':]/.test(nameLower[afterIdx]!);
     if (beforeOk && afterOk) return true;
     from = idx + 1;
   }
@@ -634,9 +610,7 @@ function packageStem(keyLower: string): string {
 /** True when name looks like a sibling package of the same boss stem (ability + boots). */
 function isSiblingPackage(nameLower: string, stem: string): boolean {
   if (stem.length < 4 || !nameLower.startsWith(stem)) return false;
-  return /\b(uniques?|equipment|progression|upgrades?|ability|boot|weapons?)\b/i.test(
-    nameLower,
-  );
+  return /\b(uniques?|equipment|progression|upgrades?|ability|boot|weapons?)\b/i.test(nameLower);
 }
 
 /**
@@ -664,15 +638,13 @@ export function contentRewardsFull(
   upgrades: readonly RewardUpgrade[],
 ): string {
   const baseName = contentRewardBaseName(row.name);
-  const override =
-    CONTENT_REWARD_OVERRIDES[row.name] ?? CONTENT_REWARD_OVERRIDES[baseName];
+  const override = CONTENT_REWARD_OVERRIDES[row.name] ?? CONTENT_REWARD_OVERRIDES[baseName];
   if (override) return override;
 
   const access = CONTENT_ACCESS[row.name] ?? CONTENT_ACCESS[baseName];
   if (access) return access;
 
-  const explicit =
-    CONTENT_REWARD_KEYS[row.name] ?? CONTENT_REWARD_KEYS[baseName];
+  const explicit = CONTENT_REWARD_KEYS[row.name] ?? CONTENT_REWARD_KEYS[baseName];
   const fallback = contentRewardBaseName(row.name)
     .replace(/^The\s+/i, "")
     .replace(/,.*/, "")
@@ -718,9 +690,7 @@ export function contentRewardsFull(
       }
       return { name, detail, score, rank };
     })
-    .filter(
-      (x): x is { name: string; detail: string; score: number; rank: number } => x != null,
-    )
+    .filter((x): x is { name: string; detail: string; score: number; rank: number } => x != null)
     .sort((a, b) => b.score - a.score);
 
   if (matches.length) {
@@ -771,7 +741,10 @@ export function contentRewardsFull(
   }
 
   const detail = cleanRewardText(row.detail ?? "");
-  if (detail && !/(?:working league mapping|catalyst|unannounced|locality boundary)/i.test(detail)) {
+  if (
+    detail &&
+    !/(?:working league mapping|catalyst|unannounced|locality boundary)/i.test(detail)
+  ) {
     return withRewardAppend(row.name, detail);
   }
   return withRewardAppend(row.name, "—");
@@ -779,8 +752,7 @@ export function contentRewardsFull(
 
 function withRewardAppend(rowName: string, base: string): string {
   const extra =
-    CONTENT_REWARD_APPEND[rowName] ??
-    CONTENT_REWARD_APPEND[contentRewardBaseName(rowName)];
+    CONTENT_REWARD_APPEND[rowName] ?? CONTENT_REWARD_APPEND[contentRewardBaseName(rowName)];
   if (!extra) return base;
   if (!base || base === "—") return extra;
   // Dedupe tokens already present in the primary list.
@@ -803,10 +775,7 @@ function withRewardAppend(rowName: string, base: string): string {
  * Parent rows that own multi-boss unique packages (Sanctum, EGWD fronts…).
  * Place hubs (Lost Grove, City of Um) must NOT collapse their boss (Solak, Rasial).
  */
-export function isMajorCollapseParent(parent: {
-  name: string;
-  kind?: string | null;
-}): boolean {
+export function isMajorCollapseParent(parent: { name: string; kind?: string | null }): boolean {
   const k = `${parent.kind ?? ""} ${parent.name}`.toLowerCase();
   return (
     /\bboss(?:es|ing)?\b/.test(k) ||
@@ -841,9 +810,7 @@ export function majorContentRows<T extends { name: string; kind?: string | null 
         ) {
           return false;
         }
-        return (
-          contentRewardsFull(parent, upgrades) === contentRewardsFull(row, upgrades)
-        );
+        return contentRewardsFull(parent, upgrades) === contentRewardsFull(row, upgrades);
       }),
   );
 }

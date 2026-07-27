@@ -9,13 +9,7 @@ import { cleanWikiFootnotes, hasNotedMark, parseDropQuantity } from "./wikiArtic
 import { resolveLocalAsset } from "./wikiLocalAssets";
 
 export type DropRarityTier =
-  | "always"
-  | "common"
-  | "uncommon"
-  | "rare"
-  | "very-rare"
-  | "varies"
-  | "unknown";
+  "always" | "common" | "uncommon" | "rare" | "very-rare" | "varies" | "unknown";
 
 export type DropGroupId = "unique" | "valuable" | "common";
 
@@ -52,8 +46,7 @@ export const DROP_GROUP_PREVIEW_LIMIT = 12;
  * Live wiki inventory glyph used as the noted-drop badge.
  * Magic notepaper is the familiar RS3 "this is a note" mark.
  */
-export const NOTED_BADGE_ICON_URL =
-  "https://runescape.wiki/images/Magic_notepaper.png";
+export const NOTED_BADGE_ICON_URL = "https://runescape.wiki/images/Magic_notepaper.png";
 
 const GROUP_LABEL: Record<DropGroupId, string> = {
   unique: "Unique drops",
@@ -65,8 +58,7 @@ const GROUP_LABEL: Record<DropGroupId, string> = {
 const UNIQUE_HEADING =
   /(?:^|\b)(?:unique|100\s*%|always(?:\s+drops?)?|rare\s+drop\s+table|chase)(?:\b|$)/i;
 /** Charms / secondary only — Main is high-volume filler and belongs under common. */
-const VALUABLE_HEADING =
-  /(?:^|\b)(?:charms?|secondary|valuable)(?:\b|$)/i;
+const VALUABLE_HEADING = /(?:^|\b)(?:charms?|secondary|valuable)(?:\b|$)/i;
 const COMMON_HEADING =
   /(?:^|\b)(?:main(?:\s+drops?)?|tertiary|seed|herb|suppl(?:y|ies)|common|miscellaneous|misc|material|salvage|alchem)(?:\b|$)/i;
 
@@ -157,8 +149,7 @@ export function presentDrop(row: WikiDropRow): PresentedDrop {
     hasNotedMark(row.quantity ?? "");
   // Prefer live wiki glyph; when the table cell had no img, try local inventory art.
   const wikiIcon = row.iconUrl?.trim() || null;
-  const iconUrl =
-    wikiIcon ?? resolveLocalAsset(row.item)?.src ?? null;
+  const iconUrl = wikiIcon ?? resolveLocalAsset(row.item)?.src ?? null;
   return {
     item: row.item,
     quantity: parsed.quantity,
@@ -171,9 +162,7 @@ export function presentDrop(row: WikiDropRow): PresentedDrop {
 }
 
 /** Parse a qty cell into numeric bounds for merge (`7–12`, `3-5`, `2`). */
-export function parseQtyBounds(
-  qty: string,
-): { min: number; max: number } | null {
+export function parseQtyBounds(qty: string): { min: number; max: number } | null {
   const t = qty.replace(/,/g, "").replace(/\s+/g, " ").trim();
   if (!t) return null;
   const range = t.match(/^(\d+(?:\.\d+)?)\s*[–\-—~to]+\s*(\d+(?:\.\d+)?)$/i);
@@ -244,10 +233,8 @@ export function mergeDropVariants(rows: PresentedDrop[]): PresentedDrop[] {
       existing.rates.push(row.rate);
     }
     if (bounds) {
-      existing.min =
-        existing.min == null ? bounds.min : Math.min(existing.min, bounds.min);
-      existing.max =
-        existing.max == null ? bounds.max : Math.max(existing.max, bounds.max);
+      existing.min = existing.min == null ? bounds.min : Math.min(existing.min, bounds.min);
+      existing.max = existing.max == null ? bounds.max : Math.max(existing.max, bounds.max);
     } else if (row.quantity && !existing.opaque.includes(row.quantity)) {
       existing.opaque.push(row.quantity);
     }
@@ -255,8 +242,7 @@ export function mergeDropVariants(rows: PresentedDrop[]): PresentedDrop[] {
 
   return order.map((key) => {
     const acc = map.get(key)!;
-    const rate =
-      acc.rates.length > 1 ? acc.rates.join(" · ") : (acc.rates[0] ?? acc.row.rate);
+    const rate = acc.rates.length > 1 ? acc.rates.join(" · ") : (acc.rates[0] ?? acc.row.rate);
     if (acc.min != null && acc.max != null && acc.opaque.length === 0) {
       return {
         ...acc.row,
@@ -310,10 +296,7 @@ export function groupDropsForPresentation(rows: WikiDropRow[]): PresentedDropGro
  * Chase / unique strip for the hero modules — prefer unique bucket, then rare tiers.
  * Cap keeps the strip small.
  */
-export function notableDropsForPresentation(
-  rows: WikiDropRow[],
-  cap = 8,
-): PresentedDrop[] {
+export function notableDropsForPresentation(rows: WikiDropRow[], cap = 8): PresentedDrop[] {
   if (!rows.length) return [];
   const presented = rows.map(presentDrop).filter((r) => r.item);
   const uniqueFirst = presented.filter((r) => {

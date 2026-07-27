@@ -12,50 +12,42 @@ const CREDITS = [
     url: "https://runescape.wiki",
     license: "CC BY-NC-SA 3.0",
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/3.0/",
-    note:
-      "Primary game-data source. Wiki text and authored data are adapted under Creative Commons Attribution-NonCommercial-ShareAlike 3.0. Per Weird Gloop policy we credit the Wiki, link cited pages via SourceReference fields, and mark that wording/structure are adapted for this tool. Host policy: meta.weirdgloop.org/w/Licensing. Non-text media keep separate file-page terms.",
+    note: "Primary game-data source. Wiki text and authored data are adapted under Creative Commons Attribution-NonCommercial-ShareAlike 3.0. Per Weird Gloop policy we credit the Wiki, link cited pages via SourceReference fields, and mark that wording/structure are adapted for this tool. Host policy: meta.weirdgloop.org/w/Licensing. Non-text media keep separate file-page terms.",
   },
   {
     name: "PvM Encyclopedia (PvME)",
     url: "https://pvme.io",
     license: "CC BY-NC-SA 4.0",
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    note:
-      "Guides and research notes (github.com/pvme/pvme-guides) are CC BY-NC-SA 4.0. This project uses PvME for mechanics discovery and limited research citations — not a mirror of their guides, Discord, or UI. Adapted PvME material stays under CC BY-NC-SA 4.0. PvME-only figures are not marked verified until re-checked on the Wiki or against Jagex.",
+    note: "Guides and research notes (github.com/pvme/pvme-guides) are CC BY-NC-SA 4.0. This project uses PvME for mechanics discovery and limited research citations — not a mirror of their guides, Discord, or UI. Adapted PvME material stays under CC BY-NC-SA 4.0. PvME-only figures are not marked verified until re-checked on the Wiki or against Jagex.",
   },
   {
     name: "RS Analysis",
     url: "https://rs-analysis.xyz",
     license: "Site terms",
     licenseUrl: "https://rs-analysis.xyz",
-    note:
-      "Combat math and model cross-check only. No bulk copy of their UI, code, or guide layout. Rows tagged rs-analysis keep that citation.",
+    note: "Combat math and model cross-check only. No bulk copy of their UI, code, or guide layout. Rows tagged rs-analysis keep that citation.",
   },
   {
     name: "Jagex Ltd.",
     url: "https://legal.jagex.com/docs/policies/fan-content-policy",
     license: "Fan Content Policy",
     licenseUrl: "https://legal.jagex.com/docs/policies/fan-content-policy",
-    note:
-      "RuneScape assets, names, and other game IP remain Jagex property. Used non-commercially under the Fan Content Policy. Not endorsed by or affiliated with Jagex. Icons and art under assets/ and public/game/ are not MIT-licensed.",
+    note: "RuneScape assets, names, and other game IP remain Jagex property. Used non-commercially under the Fan Content Policy. Not endorsed by or affiliated with Jagex. Icons and art under assets/ and public/game/ are not MIT-licensed.",
   },
   {
     name: "Equilibrium source code",
     url: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
     license: "MIT",
     licenseUrl: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
-    note:
-      "Original application code only. Wiki- and PvME-derived data and Jagex media keep the terms above — see repository NOTICE.",
+    note: "Original application code only. Wiki- and PvME-derived data and Jagex media keep the terms above — see repository NOTICE.",
   },
 ];
 
 export default function SourcesPage() {
   return (
     <Page>
-      <PageHeading
-        title="Sources"
-        note="Where the data comes from and the terms that cover it."
-      />
+      <PageHeading title="Sources" note="Where the data comes from and the terms that cover it." />
 
       <section
         id="licenses"

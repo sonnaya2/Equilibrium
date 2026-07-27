@@ -1,14 +1,6 @@
 import type { ReactNode } from "react";
 
-export function Stat({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: ReactNode;
-  hint?: string;
-}) {
+export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
   return (
     <div>
       <dt className="text-xs uppercase tracking-[0.08em] text-parch-300">{label}</dt>

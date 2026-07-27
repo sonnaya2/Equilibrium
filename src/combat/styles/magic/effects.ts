@@ -75,14 +75,17 @@ export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTic
  * `greater` selects Greater Sunshine timings.
  * `plantedFeet` extends base Sunshine only (wiki: 63 ticks); ignored for greater.
  */
-export function activateSunshine(tick: number, greater = false, plantedFeet = false): SunshineState {
+export function activateSunshine(
+  tick: number,
+  greater = false,
+  plantedFeet = false,
+): SunshineState {
   if (greater) {
     return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
   }
-  const duration =
-    plantedFeet
-      ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
-      : SUNSHINE_DURATION_TICKS;
+  const duration = plantedFeet
+    ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
+    : SUNSHINE_DURATION_TICKS;
   return { startsAtTick: tick + 1, expiresAtTick: tick + duration };
 }
 

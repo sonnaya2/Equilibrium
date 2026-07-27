@@ -4,7 +4,8 @@ import guildSource from "../../data/research/planner-expansions-archaeology-guil
 import utilitySource from "../../data/research/planner-expansions-archaeology-utilities.json";
 import museumCollectionMatrix from "../../data/research/planner-expansions-archaeology-museum-collections-matrix.json";
 
-export type ArchaeologyQualificationMilestone = (typeof collectionSource)["qualification_milestones"][number];
+export type ArchaeologyQualificationMilestone =
+  (typeof collectionSource)["qualification_milestones"][number];
 export type RelicSystemProgression = (typeof collectionSource)["relic_system_progression"][number];
 export type RelicLoadoutProgression = (typeof guildSource)["relic_loadout_progression"][number];
 export type ArchaeologyGuildShopProgression = (typeof guildSource)["shop_progression"][number];
@@ -20,7 +21,8 @@ export type ArchaeologyCollectionCompletionTool =
 export type ArchaeologyDataCorrection =
   | (typeof collectionSource)["existing_data_corrections"][number]
   | (typeof guildSource)["stale_data_correction"];
-export type CurrentArchaeologyRelicAddition = (typeof collectionSource)["current_2026_relic_additions"][number];
+export type CurrentArchaeologyRelicAddition =
+  (typeof collectionSource)["current_2026_relic_additions"][number];
 
 export function getArchaeologyQualificationMilestones(): ArchaeologyQualificationMilestone[] {
   return collectionSource.qualification_milestones;
@@ -61,7 +63,9 @@ export function getRepeatableCollectionRewards(): RepeatableCollectionReward[] {
   ];
 }
 
-export function getRepeatableCollectionRewardsByRegion(region: string): RepeatableCollectionReward[] {
+export function getRepeatableCollectionRewardsByRegion(
+  region: string,
+): RepeatableCollectionReward[] {
   const needle = region.trim().toLowerCase();
   return getRepeatableCollectionRewards().filter((route) =>
     route.required_regions.some((candidate) => candidate.toLowerCase() === needle),
@@ -76,10 +80,7 @@ export function getArchaeologyCollectionCompletionTools(): ArchaeologyCollection
 }
 
 export function getArchaeologyDataCorrections(): ArchaeologyDataCorrection[] {
-  return [
-    ...collectionSource.existing_data_corrections,
-    guildSource.stale_data_correction,
-  ];
+  return [...collectionSource.existing_data_corrections, guildSource.stale_data_correction];
 }
 
 export function getCurrentArchaeologyRelicAdditions(): CurrentArchaeologyRelicAddition[] {
@@ -87,8 +88,7 @@ export function getCurrentArchaeologyRelicAdditions(): CurrentArchaeologyRelicAd
 }
 
 /** Full Velucia + dig-site collector matrix with region combos and unobtainable flags. */
-export type MuseumCollectionMatrixRow =
-  (typeof museumCollectionMatrix)["collections"][number];
+export type MuseumCollectionMatrixRow = (typeof museumCollectionMatrix)["collections"][number];
 
 export function getMuseumCollectionMatrix(): MuseumCollectionMatrixRow[] {
   return museumCollectionMatrix.collections ?? [];

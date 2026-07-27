@@ -4,7 +4,11 @@ import { damagePerLevel } from "./damagePerLevel";
 
 describe("abilityDamage", () => {
   it("applies percent bands with floored ends", () => {
-    expect(bandOf(1000, { minPct: 110, maxPct: 130 })).toEqual({ min: 1100, max: 1300, expected: 1200 });
+    expect(bandOf(1000, { minPct: 110, maxPct: 130 })).toEqual({
+      min: 1100,
+      max: 1300,
+      expected: 1200,
+    });
   });
 
   it("rejects inverted bands and bad bases", () => {
@@ -25,7 +29,10 @@ describe("baseAbilityDamage", () => {
   });
 
   it("adds the style bonus inside the weapon-term floor", () => {
-    const withBonus = baseAbilityDamage(90, { kind: "mainhand", weapon: { tier: 90, styleBonus: 12.7 } });
+    const withBonus = baseAbilityDamage(90, {
+      kind: "mainhand",
+      weapon: { tier: 90, styleBonus: 12.7 },
+    });
     const without = baseAbilityDamage(90, { kind: "mainhand", weapon: t90 });
     expect(withBonus - without).toBe(Math.floor(9.6 * 90 + 12.7) - Math.floor(9.6 * 90));
   });
@@ -48,7 +55,9 @@ describe("baseAbilityDamage", () => {
     const level = 99;
     const expected =
       Math.floor(damagePerLevel(level)) + Math.floor(1.25 * level) + Math.floor(14.4 * 90);
-    expect(baseAbilityDamage(level, { kind: "twohand", weapon: t90, style: "magic" })).toBe(expected);
+    expect(baseAbilityDamage(level, { kind: "twohand", weapon: t90, style: "magic" })).toBe(
+      expected,
+    );
   });
 
   it("caps the weapon tier at the spell/ammo tier cap", () => {

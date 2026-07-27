@@ -13,11 +13,7 @@ export function compareLocale(a: string, b: string, dir: SortDir = "asc"): numbe
   return dir === "asc" ? c : -c;
 }
 
-export function sortByLabel<T>(
-  rows: readonly T[],
-  label: (row: T) => string,
-  dir: SortDir,
-): T[] {
+export function sortByLabel<T>(rows: readonly T[], label: (row: T) => string, dir: SortDir): T[] {
   return [...rows].sort((a, b) => compareLocale(label(a), label(b), dir));
 }
 
@@ -53,10 +49,7 @@ export function useDataTableOrganize<T>({
   /** null = all types */
   const [activeTypes, setActiveTypes] = useState<Set<string> | null>(null);
 
-  const typeOptions = useMemo(
-    () => (typeOf ? uniqueTypes(rows, typeOf) : []),
-    [rows, typeOf],
-  );
+  const typeOptions = useMemo(() => (typeOf ? uniqueTypes(rows, typeOf) : []), [rows, typeOf]);
 
   const organized = useMemo(() => {
     const typed = typeOf ? filterByType(rows, typeOf, activeTypes) : [...rows];
@@ -118,7 +111,9 @@ export function DataTableOrganizeBar({
         type="button"
         className="data-organize__sort"
         onClick={onToggleDir}
-        aria-label={dir === "asc" ? "Sort A to Z. Activate for Z to A." : "Sort Z to A. Activate for A to Z."}
+        aria-label={
+          dir === "asc" ? "Sort A to Z. Activate for Z to A." : "Sort Z to A. Activate for A to Z."
+        }
         title={dir === "asc" ? "A–Z · click for Z–A" : "Z–A · click for A–Z"}
       >
         <span className="data-organize__sort-label">{dir === "asc" ? "A–Z" : "Z–A"}</span>

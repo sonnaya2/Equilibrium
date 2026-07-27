@@ -13,14 +13,7 @@ export interface SourceReference {
 export type CombatStyle = "melee" | "ranged" | "magic" | "necromancy";
 
 export type ModifierStage =
-  | "base"
-  | "ability"
-  | "onCast"
-  | "roll"
-  | "critical"
-  | "onHit"
-  | "target"
-  | "postHit";
+  "base" | "ability" | "onCast" | "roll" | "critical" | "onHit" | "target" | "postHit";
 
 /** Shapes below are the contract from AGENTS.md; fields fill in as the engine lands. */
 export interface CombatContext {

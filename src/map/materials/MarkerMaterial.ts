@@ -67,11 +67,7 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   const underRim = step(float(R_ICON), r).mul(step(r, float(R_RIM_IN)));
 
   const lift = local.y.mul(float(0.5)).add(float(0.5));
-  let colour = mix(
-    linear(STONE_DARK),
-    linear(STONE),
-    lift.mul(float(0.55)).add(float(0.25)),
-  );
+  let colour = mix(linear(STONE_DARK), linear(STONE), lift.mul(float(0.55)).add(float(0.25)));
 
   const icon = texture(atlas, uv());
   // Always paint atlas RGB inside the icon disc (alpha no longer gates visibility).
@@ -87,11 +83,7 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   colour = mix(colour, brass, inRim);
   // Site pip on the rim only when unlit; lit gem goes through emissive… but
   // Basic has no emissive, so brighten the rim with gem when lit.
-  colour = mix(
-    colour,
-    linear(GEM),
-    inRim.mul(state.y.mul(float(1)).add(state.x.mul(float(0.3)))),
-  );
+  colour = mix(colour, linear(GEM), inRim.mul(state.y.mul(float(1)).add(state.x.mul(float(0.3)))));
   // Lit faces punch harder so small pins still read as selected.
   colour = colour.mul(float(1).add(state.y.mul(float(0.22))));
 

@@ -242,7 +242,11 @@ export function useMapHashSync() {
 }
 
 export function useMapFocus() {
-  const focus = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
+  const focus = useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => SERVER_SNAPSHOT,
+  );
   // Module-level actions stay identity-stable for effect deps (PlaceRail hover clear).
   return {
     focus,

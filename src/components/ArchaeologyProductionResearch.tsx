@@ -110,9 +110,7 @@ const museumRows = museumMatrix.map((row) => {
   const required = (loose.required_regions ?? loose.requiredRegions ?? []) as string[];
   const artifacts = (loose.artifact_regions ?? []) as string[];
   const collectors = (loose.collector_regions ?? []) as string[];
-  const combo =
-    loose.comboLabel ||
-    (required.length > 1 ? required.join(" + ") : "");
+  const combo = loose.comboLabel || (required.length > 1 ? required.join(" + ") : "");
   const status = String(loose.status || "obtainable");
   const reason = loose.unobtainable_reason ? ` · ${loose.unobtainable_reason}` : "";
   const chronotesFirst = loose.chronotes_first;

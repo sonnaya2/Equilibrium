@@ -30,17 +30,13 @@ export function BuffsPanel({
   // Prefer same-style curses, but keep the active pick visible even if style mismatched.
   const curseOptions = CURSE_OPTIONS.filter(
     (opt) =>
-      opt.value === "none" ||
-      opt.style === loadout.style ||
-      opt.value === loadout.buffs.styleCurse,
+      opt.value === "none" || opt.style === loadout.style || opt.value === loadout.buffs.styleCurse,
   );
 
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
-      <p className="mt-1 text-xs text-parch-300">
-        Overloads affect accuracy only.
-      </p>
+      <p className="mt-1 text-xs text-parch-300">Overloads affect accuracy only.</p>
       <div className="loadout-fields mt-3">
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
           <input

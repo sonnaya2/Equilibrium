@@ -8,12 +8,7 @@
 
 import regionsData from "#data/league/regions.json";
 import relicsData from "#data/league/relics.json";
-import {
-  BLESSING_PATHS,
-  BLESSING_RESET_COUNT,
-  PATH_TIERS,
-  type BlessingPath,
-} from "./blessings";
+import { BLESSING_PATHS, BLESSING_RESET_COUNT, PATH_TIERS, type BlessingPath } from "./blessings";
 
 /** Revealed tiers with published choices only — unrevealed empty tiers stay open. */
 const REVEALED_RELIC_NAMES_BY_TIER: ReadonlyMap<string, ReadonlySet<string>> = (() => {
@@ -90,7 +85,8 @@ export function normalizeBuild(value: unknown): BuildState {
   const elective = (value as { elective?: unknown }).elective;
   if (Array.isArray(elective)) {
     const valid = elective.filter(
-      (id): id is RegionId => isRegionId(id) && (ELECTIVE_REGIONS as readonly string[]).includes(id),
+      (id): id is RegionId =>
+        isRegionId(id) && (ELECTIVE_REGIONS as readonly string[]).includes(id),
     );
     base.elective = [...new Set(valid)].slice(0, ELECTIVE_CAP);
   }

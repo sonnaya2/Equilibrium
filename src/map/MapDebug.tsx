@@ -111,7 +111,12 @@ export function MapDebug({
       ))}
 
       {places.map((place) => (
-        <mesh key={place.key} geometry={dot} position={[place.x, Y_SEAM, place.z]} raycast={() => null}>
+        <mesh
+          key={place.key}
+          geometry={dot}
+          position={[place.x, Y_SEAM, place.z]}
+          raycast={() => null}
+        >
           <meshBasicMaterial color={place.site ? 0xffb020 : 0x20ffe0} toneMapped={false} />
         </mesh>
       ))}

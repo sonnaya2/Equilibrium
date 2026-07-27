@@ -15,11 +15,7 @@ export function WorkbenchTabs<T extends string>({
   "aria-label": string;
 }) {
   return (
-    <div
-      role="tablist"
-      aria-label={ariaLabel}
-      className="comp-seg shrink-0 overflow-x-auto"
-    >
+    <div role="tablist" aria-label={ariaLabel} className="comp-seg shrink-0 overflow-x-auto">
       {tabs.map((tab) => {
         const selected = tab.id === active;
         return (

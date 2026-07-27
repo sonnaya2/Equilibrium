@@ -137,12 +137,8 @@ describe("classifyDropGroup", () => {
     ]);
     const unique = groups.find((g) => g.id === "unique");
     expect(unique?.rows).toHaveLength(2);
-    expect(unique?.rows.find((r) => r.item === "Scripture of Ful")?.rate).toMatch(
-      /1\/100/,
-    );
-    expect(unique?.rows.find((r) => r.item === "Scripture of Ful")?.rate).toMatch(
-      /1\/50/,
-    );
+    expect(unique?.rows.find((r) => r.item === "Scripture of Ful")?.rate).toMatch(/1\/100/);
+    expect(unique?.rows.find((r) => r.item === "Scripture of Ful")?.rate).toMatch(/1\/50/);
   });
 
   it("falls back to item / rate heuristics", () => {
@@ -379,12 +375,7 @@ describe("pickHeroFacts", () => {
       { label: "Weakness", value: "None" },
       { label: "Style", value: "Magic" },
     ]);
-    expect(facts.map((f) => f.label)).toEqual([
-      "Combat level",
-      "Weakness",
-      "Style",
-      "Location",
-    ]);
+    expect(facts.map((f) => f.label)).toEqual(["Combat level", "Weakness", "Style", "Location"]);
   });
 
   it("skips bare Level when Combat level is already present", () => {
@@ -394,13 +385,7 @@ describe("pickHeroFacts", () => {
       { label: "Life points", value: "65,000" },
       { label: "League region", value: "Misthalin ✓" },
     ]);
-    expect(facts.map((f) => f.label)).toEqual([
-      "Combat level",
-      "Life points",
-      "League region",
-    ]);
-    expect(facts.find((f) => f.label === "League region")?.value).toBe(
-      "Misthalin",
-    );
+    expect(facts.map((f) => f.label)).toEqual(["Combat level", "Life points", "League region"]);
+    expect(facts.find((f) => f.label === "League region")?.value).toBe("Misthalin");
   });
 });

@@ -173,7 +173,10 @@ describe("magic ability data", () => {
       "claws_of_guthix",
     ]) {
       expect(noteIds.has(id), id).toBe(false);
-      expect(MAGIC_ABILITIES.some((a) => a.id === id), id).toBe(true);
+      expect(
+        MAGIC_ABILITIES.some((a) => a.id === id),
+        id,
+      ).toBe(true);
     }
   });
 });

@@ -266,10 +266,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Hurricane",
     style: "melee",
     category: "enhanced",
-    hits: [
-      { band: { minPct: 135, maxPct: 165 } },
-      { band: { minPct: 155, maxPct: 185 } },
-    ],
+    hits: [{ band: { minPct: 135, maxPct: 165 } }, { band: { minPct: 155, maxPct: 185 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
     bloodlustExtraHits: {

@@ -1,10 +1,6 @@
 import type { SourceReference } from "../../types";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import {
-  MODERNISATION_WIKI,
-  NECROSIS_WIKI,
-  RESIDUAL_SOUL_WIKI,
-} from "../../data/sources";
+import { MODERNISATION_WIKI, NECROSIS_WIKI, RESIDUAL_SOUL_WIKI } from "../../data/sources";
 import {
   DEATH_GRASP_DAMAGE_PER_STACK_PCT,
   FINGER_OF_DEATH_COST_REDUCTION_PER_STACK_PCT,
@@ -421,10 +417,12 @@ export function volleyOfSouls(soulCount: number): NecromancyAbilitySpec {
  * Finger of Death with Necrosis discount and optional Living Death 1.5× band.
  * Consumes up to 6 Necrosis stacks (−10% adrenaline each from a 60% base).
  */
-export function fingerOfDeath(opts: {
-  necrosisStacks?: number;
-  livingDeath?: boolean;
-} = {}): NecromancyAbilitySpec {
+export function fingerOfDeath(
+  opts: {
+    necrosisStacks?: number;
+    livingDeath?: boolean;
+  } = {},
+): NecromancyAbilitySpec {
   const stacks = Math.max(0, Math.min(opts.necrosisStacks ?? 0, FINGER_OF_DEATH_MAX_STACKS));
   const cost = Math.max(
     0,
@@ -580,13 +578,15 @@ export const NECROMANCY_EFFECTS = [
   {
     id: "spectral_scythe",
     name: "Spectral Scythe",
-    notes: "25% chance to generate a Residual Soul per target hit on casts 1–2. Cast 3 scales with missing HP.",
+    notes:
+      "25% chance to generate a Residual Soul per target hit on casts 1–2. Cast 3 scales with missing HP.",
     source: RESIDUAL_SOUL_WIKI,
   },
   {
     id: "soul_strike",
     name: "Soul Strike",
-    notes: "Spends 1 Residual Soul; primary 135–165% + stun/bind; splash 90–110% (splash unmodelled).",
+    notes:
+      "Spends 1 Residual Soul; primary 135–165% + stun/bind; splash 90–110% (splash unmodelled).",
     source: RESIDUAL_SOUL_WIKI,
   },
   {
@@ -620,7 +620,8 @@ export const NECROMANCY_EFFECTS = [
   {
     id: "darkness",
     name: "Darkness",
-    notes: "Incantation / Aspect of Evasion: 20% dodge for 12 minutes. No damage band — not modelled as an ability.",
+    notes:
+      "Incantation / Aspect of Evasion: 20% dodge for 12 minutes. No damage band — not modelled as an ability.",
     source: wiki("Darkness", "Darkness"),
   },
   {

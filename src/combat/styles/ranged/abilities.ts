@@ -61,10 +61,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Piercing Shot",
     style: "ranged",
     category: "basic",
-    hits: [
-      { band: { minPct: 45, maxPct: 55 } },
-      { band: { minPct: 45, maxPct: 55 } },
-    ],
+    hits: [{ band: { minPct: 45, maxPct: 55 } }, { band: { minPct: 45, maxPct: 55 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 3,
     source: wiki("Piercing Shot", "Piercing_Shot"),
@@ -132,10 +129,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Snap Shot",
     style: "ranged",
     category: "enhanced",
-    hits: [
-      { band: { minPct: 135, maxPct: 155 } },
-      { band: { minPct: 135, maxPct: 155 } },
-    ],
+    hits: [{ band: { minPct: 135, maxPct: 155 } }, { band: { minPct: 135, maxPct: 155 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 1.8,
     source: wiki("Snap Shot", "Snap_Shot"),
@@ -271,8 +265,7 @@ export const RANGED_EFFECTS = [
   {
     id: "shadow_tendrils_self_damage",
     name: "Shadow Tendrils recoil",
-    notes:
-      "Self-damage 100–135% ability damage (wiki 2026-07-26). Not rolled as an outgoing hit.",
+    notes: "Self-damage 100–135% ability damage (wiki 2026-07-26). Not rolled as an outgoing hit.",
     source: wiki("Shadow Tendrils", "Shadow_Tendrils"),
   },
   {

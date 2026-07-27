@@ -6,21 +6,21 @@ import supportItems from "../../data/reference/progression-support-items-2026-07
 import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
-import {
-  presentInterestMeta,
-  presentInterestName,
-} from "@/lib/dataContentPresentation";
+import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
-import {
-  DataTableOrganizeBar,
-  useDataTableOrganize,
-} from "./DataTableOrganize";
+import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
-
 type Row = Record<string, unknown>;
-type SectionKey = "quest_unlocks" | "ability_unlocks" | "prayer_unlocks" | "account_unlocks" | "activity_unlocks" | "equipment_models" | "consumable_unlocks";
+type SectionKey =
+  | "quest_unlocks"
+  | "ability_unlocks"
+  | "prayer_unlocks"
+  | "account_unlocks"
+  | "activity_unlocks"
+  | "equipment_models"
+  | "consumable_unlocks";
 
 const SECTIONS: Array<{ key: SectionKey; label: string }> = [
   { key: "quest_unlocks", label: "Quests" },
@@ -66,11 +66,7 @@ function format(value: unknown): string {
     return String(value);
   }
   if (Array.isArray(value)) {
-    return value
-      .slice(0, 4)
-      .map(format)
-      .filter(Boolean)
-      .join(" · ");
+    return value.slice(0, 4).map(format).filter(Boolean).join(" · ");
   }
   if (typeof value === "object") {
     if (isSourceRef(value)) return "";
@@ -228,7 +224,10 @@ function details(row: Row): string[] {
       typeof row[key] === "string" && rendered.length > 48 ? rendered : `${label}: ${rendered}`,
     );
   }
-  return lines.map((l) => clipProse(l)).filter(Boolean).slice(0, 2);
+  return lines
+    .map((l) => clipProse(l))
+    .filter(Boolean)
+    .slice(0, 2);
 }
 
 function mapKey(row: Row, index: number, prefix: string): string {
@@ -261,15 +260,14 @@ export function PermanentUnlockResearch() {
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
     return source.filter((row) => {
-      const hay = [title(row), region(row), ...details(row), ...links(row)]
-        .join(" ")
-        .toLowerCase();
+      const hay = [title(row), region(row), ...details(row), ...links(row)].join(" ").toLowerCase();
       return hay.includes(needle);
     });
   }, [query, section, selectedRegion]);
   const labelOf = useCallback((row: Row) => title(row), []);
   const typeOf = useCallback(
-    (row: Row) => humanString(row.category) || humanString(row.kind) || humanString(row.recordType) || "—",
+    (row: Row) =>
+      humanString(row.category) || humanString(row.kind) || humanString(row.recordType) || "—",
     [],
   );
   const {
@@ -285,10 +283,7 @@ export function PermanentUnlockResearch() {
 
   return (
     <section className="data-record-view">
-      <DataViewHeader
-        title="Unlocks"
-        count={rows.length}
-      >
+      <DataViewHeader title="Unlocks" count={rows.length}>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -331,59 +326,77 @@ export function PermanentUnlockResearch() {
           <span>Notes</span>
         </div>
         <div>
-          {rows.length ? rows.map((row, index) => {
-            const sourceLinks = links(row);
-            const rowDetails = details(row);
-            const categoryRaw = humanString(row.category);
-            const category = categoryRaw ? presentInterestMeta(categoryRaw, 64) : "";
-            const rowTitle = title(row);
-            const rawName = humanString(row.name) || (rowTitle !== "Unlock" ? rowTitle : "");
-            const iconSrc = dataEntityIconPath({
-              name: rawName || null,
-              kind: String(row.recordType || row.category || row.kind || ""),
-              id: row.id != null ? String(row.id) : null,
-            });
-            return (
-              <article
-                key={mapKey(row, index, "row")}
-                className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
-              >
-                <div className="data-record-row__identity">
-                  <span className={iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"}>
-                    {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
-                  </span>
-                  <div className="data-record-row__copy min-w-0">
-                    <h3 className="m-0 text-[15px] font-medium text-parch-50">
-                      {rowTitle}
-                      {sourceLinks.length ? (
-                        <span className="ml-1.5 font-normal">
-                          {sourceLinks.map((url, i) => (
-                            <a
-                              key={url}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-gem-300 hover:underline"
-                            >
-                              {i > 0 ? " · " : "· "}
-                              {sourceLabel(url)}
-                            </a>
-                          ))}
-                        </span>
+          {rows.length ? (
+            rows.map((row, index) => {
+              const sourceLinks = links(row);
+              const rowDetails = details(row);
+              const categoryRaw = humanString(row.category);
+              const category = categoryRaw ? presentInterestMeta(categoryRaw, 64) : "";
+              const rowTitle = title(row);
+              const rawName = humanString(row.name) || (rowTitle !== "Unlock" ? rowTitle : "");
+              const iconSrc = dataEntityIconPath({
+                name: rawName || null,
+                kind: String(row.recordType || row.category || row.kind || ""),
+                id: row.id != null ? String(row.id) : null,
+              });
+              return (
+                <article
+                  key={mapKey(row, index, "row")}
+                  className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
+                >
+                  <div className="data-record-row__identity">
+                    <span
+                      className={
+                        iconSrc ? "data-icon-well" : "data-icon-well data-icon-well--empty"
+                      }
+                    >
+                      {iconSrc ? <GameIcon src={iconSrc} size={24} /> : null}
+                    </span>
+                    <div className="data-record-row__copy min-w-0">
+                      <h3 className="m-0 text-[15px] font-medium text-parch-50">
+                        {rowTitle}
+                        {sourceLinks.length ? (
+                          <span className="ml-1.5 font-normal">
+                            {sourceLinks.map((url, i) => (
+                              <a
+                                key={url}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-gem-300 hover:underline"
+                              >
+                                {i > 0 ? " · " : "· "}
+                                {sourceLabel(url)}
+                              </a>
+                            ))}
+                          </span>
+                        ) : null}
+                      </h3>
+                      {category ? (
+                        <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">
+                          {category}
+                        </p>
                       ) : null}
-                    </h3>
-                    {category ? <p className="m-0 mt-0.5 text-[13px] leading-5 text-parch-300">{category}</p> : null}
+                    </div>
                   </div>
-                </div>
-                <p className="data-record-row__region">{region(row)}</p>
-                <div className="data-record-row__details">
-                  {rowDetails.map((item, i) => (
-                    <p key={i} className="m-0">{item}</p>
-                  ))}
-                </div>
-              </article>
-            );
-          }) : <p className="data-empty">{query ? "Nothing matches." : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}</p>}
+                  <p className="data-record-row__region">{region(row)}</p>
+                  <div className="data-record-row__details">
+                    {rowDetails.map((item, i) => (
+                      <p key={i} className="m-0">
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <p className="data-empty">
+              {query
+                ? "Nothing matches."
+                : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}
+            </p>
+          )}
         </div>
       </div>
     </section>

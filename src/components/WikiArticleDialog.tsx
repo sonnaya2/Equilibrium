@@ -1,104 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { WikiArticleView, WikiFact } from "@/lib/wikiArticle";
+import type { WikiFact } from "@/lib/wikiArticle";
 import { safeWikiPage } from "@/lib/wikiArticle";
+import { collectArticleAssets, resolveLocalAsset, resolveLocalAssets } from "@/lib/wikiLocalAssets";
+import { notableDropsForPresentation, pickHeroFacts } from "@/lib/wikiDropPresentation";
+import { WikiDropTable, WikiNotableDrops } from "@/components/WikiDropTable";
+import { WikiAssetRail, WikiFactStrip, type WikiFactChip } from "@/components/WikiArticleChrome";
 import {
-  collectArticleAssets,
-  resolveLocalAsset,
-  resolveLocalAssets,
-} from "@/lib/wikiLocalAssets";
-import {
-  notableDropsForPresentation,
-  pickHeroFacts,
-} from "@/lib/wikiDropPresentation";
-import {
-  WikiDropTable,
-  WikiNotableDrops,
-  type WikiDropTableRow,
-} from "@/components/WikiDropTable";
-import {
-  WikiAssetRail,
-  WikiFactStrip,
-  type WikiFactChip,
-} from "@/components/WikiArticleChrome";
+  applyPixelScale,
+  isWikiView,
+  type WikiArticleTarget,
+  type WikiDropRow,
+  type WikiLoadState,
+} from "@/components/wiki/wikiArticleModel";
+import "@/components/wiki/wiki-article.css";
 
-export type WikiArticleTarget = {
-  /** Local public/game art — never a wiki image URL. */
-  localArtSrc: string | null;
-  name: string;
-  /** Existing catalog source URL; wrapper opens only when this is a wiki page. */
-  wikiUrl?: string | null;
-  /** Extra local asset labels (reward names, etc.) already in memory — not wiki-fetched. */
-  relatedLabels?: string[];
-  /** Pre-resolved local icons from catalog rewards — used for drop table rows. */
-  relatedIcons?: { label: string; src: string }[];
-};
-
-/** Optional structured drops (server may start emitting these). */
-export type WikiDropRow = WikiDropTableRow;
-
-/** Client view: base contract + optional structured drops from future API. */
-type WikiArticleClientView = WikiArticleView & {
-  drops?: WikiDropRow[];
-};
-
-type LoadState =
-  | { status: "idle" }
-  | { status: "loading" }
-  | { status: "ready"; view: WikiArticleClientView }
-  | { status: "error"; message: string; pageUrl: string | null };
-
-function isWikiView(data: unknown): data is WikiArticleClientView {
-  if (!data || typeof data !== "object") return false;
-  const v = data as Record<string, unknown>;
-  if (
-    typeof v.title !== "string" ||
-    typeof v.pageUrl !== "string" ||
-    typeof v.leadHtml !== "string" ||
-    typeof v.dropsHtml !== "string" ||
-    typeof v.bodyHtml !== "string" ||
-    typeof v.hasDrops !== "boolean" ||
-    !Array.isArray(v.facts)
-  ) {
-    return false;
-  }
-  // Reject non-wiki / non-https pageUrl (defense-in-depth vs API drift).
-  if (!safeWikiPage(v.pageUrl)) return false;
-  // Optional structured drops — tolerate missing; reject wrong shape.
-  if (v.drops != null && !Array.isArray(v.drops)) return false;
-  return true;
-}
-
-function applyPixelScale(
-  img: HTMLImageElement,
-  setPixelated: (v: boolean) => void,
-  maxCanvas: number,
-) {
-  const nw = img.naturalWidth;
-  const nh = img.naturalHeight;
-  const maxEdge = Math.max(nw, nh);
-  const isGlyph = maxEdge > 0 && maxEdge <= 96;
-  setPixelated(isGlyph);
-  if (isGlyph) {
-    const scale = Math.min(
-      maxCanvas >= 400 ? 8 : 6,
-      Math.max(maxCanvas >= 400 ? 4 : 3, Math.floor(maxCanvas / maxEdge)),
-    );
-    img.style.width = `${nw * scale}px`;
-    img.style.height = `${nh * scale}px`;
-  } else {
-    img.style.width = "";
-    img.style.height = "";
-  }
-}
+export type { WikiArticleTarget, WikiDropRow };
 
 function factsToChips(facts: WikiFact[]): WikiFactChip[] {
   return facts.map((f) => {
-    const icon =
-      resolveLocalAsset(f.value) ??
-      resolveLocalAsset(f.label) ??
-      null;
+    const icon = resolveLocalAsset(f.value) ?? resolveLocalAsset(f.label) ?? null;
     return { label: f.label, value: f.value, iconSrc: icon?.src ?? null };
   });
 }
@@ -151,7 +73,7 @@ export function WikiArticleDialog({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [pixelated, setPixelated] = useState(false);
-  const [load, setLoad] = useState<LoadState>({ status: "idle" });
+  const [load, setLoad] = useState<WikiLoadState>({ status: "idle" });
   // Full drop table lives in a nested dialog — keeps the article modal short.
 
   // Resolved only from the click-set target — never from row mount / hover.
@@ -209,8 +131,7 @@ export function WikiArticleDialog({
         if (controller.signal.aborted) return;
         setLoad({
           status: "error",
-          message:
-            error instanceof Error ? error.message : "Could not load article",
+          message: error instanceof Error ? error.message : "Could not load article",
           pageUrl: fetchPageUrl,
         });
       });
@@ -218,17 +139,12 @@ export function WikiArticleDialog({
     return () => controller.abort();
   }, [fetchPageUrl]);
 
-  const title =
-    load.status === "ready" ? load.view.title : (target?.name ?? "Article");
+  const title = load.status === "ready" ? load.view.title : (target?.name ?? "Article");
 
   return (
     <dialog
       ref={dialogRef}
-      className={
-        imageOnly || !target
-          ? "data-image-viewer"
-          : "data-image-viewer data-wiki-article"
-      }
+      className={imageOnly || !target ? "data-image-viewer" : "data-image-viewer data-wiki-article"}
       aria-label={target ? `${title} article` : "Article"}
       onClose={onClose}
       onClick={(event) => {
@@ -302,9 +218,7 @@ function ImageOnlyBody({
             src={src}
             alt={name}
             className={pixelated ? "is-pixel" : undefined}
-            onLoad={(event) =>
-              applyPixelScale(event.currentTarget, setPixelated, 480)
-            }
+            onLoad={(event) => applyPixelScale(event.currentTarget, setPixelated, 480)}
           />
         ) : (
           <span className="data-wiki-article__art-empty" aria-hidden />
@@ -312,10 +226,7 @@ function ImageOnlyBody({
       </div>
       <p className="data-wiki-article__image-only-name">{name}</p>
       {railAssets.length > 0 ? (
-        <WikiAssetRail
-          assets={railAssets}
-          primary={{ src, label: name }}
-        />
+        <WikiAssetRail assets={railAssets} primary={{ src, label: name }} />
       ) : null}
     </div>
   );
@@ -337,7 +248,7 @@ function WikiBody({
   relatedLabels?: string[];
   relatedIcons?: { label: string; src: string }[];
   pageUrl: string | null;
-  load: LoadState;
+  load: WikiLoadState;
   pixelated: boolean;
   setPixelated: (v: boolean) => void;
   onClose: () => void;
@@ -351,9 +262,7 @@ function WikiBody({
   const hasHtmlDrops = Boolean(view?.hasDrops && view.dropsHtml.trim());
   // Prefer click-time safe URL; re-validate view.pageUrl before external nav.
   const externalWikiHref =
-    pageUrl ??
-    (view?.pageUrl ? safeWikiPage(view.pageUrl)?.pageUrl : null) ??
-    null;
+    pageUrl ?? (view?.pageUrl ? safeWikiPage(view.pageUrl)?.pageUrl : null) ?? null;
   const showDrops = hasStructuredDrops || hasHtmlDrops;
 
   useEffect(() => {
@@ -410,10 +319,7 @@ function WikiBody({
     return merged;
   }, [view, localArtSrc, name, relatedLabels, relatedIcons]);
 
-  const heroFacts = useMemo(
-    () => (view?.facts.length ? pickHeroFacts(view.facts, 4) : []),
-    [view],
-  );
+  const heroFacts = useMemo(() => (view?.facts.length ? pickHeroFacts(view.facts, 4) : []), [view]);
   const factChips = useMemo(() => factsToChips(heroFacts), [heroFacts]);
 
   const notable = useMemo(
@@ -425,8 +331,7 @@ function WikiBody({
   const leadHtml = view?.leadHtml?.trim() ?? "";
   // Facts strip already shows combat level — don't double it under the art.
   const showArtCaption =
-    !heroFacts.some((f) => /combat\s*level/i.test(f.label)) &&
-    Boolean(name && name !== heading);
+    !heroFacts.some((f) => /combat\s*level/i.test(f.label)) && Boolean(name && name !== heading);
 
   // Notable strip + unique summary table were the same items twice (see Gate of Elidinis).
   // Prefer the rate table when structured uniques exist; strip only when no table.
@@ -458,9 +363,7 @@ function WikiBody({
                 src={localArtSrc}
                 alt=""
                 className={
-                  pixelated
-                    ? "data-wiki-article__art-img is-pixel"
-                    : "data-wiki-article__art-img"
+                  pixelated ? "data-wiki-article__art-img is-pixel" : "data-wiki-article__art-img"
                 }
                 onLoad={(event) =>
                   // Only upscale tiny inventory glyphs; boss art fills via CSS.
@@ -470,9 +373,7 @@ function WikiBody({
             ) : (
               <span className="data-wiki-article__art-empty" aria-hidden />
             )}
-            {showArtCaption ? (
-              <p className="data-wiki-article__art-name">{name}</p>
-            ) : null}
+            {showArtCaption ? <p className="data-wiki-article__art-name">{name}</p> : null}
           </div>
         </div>
 
@@ -500,9 +401,7 @@ function WikiBody({
           {showNotableStrip ? (
             <div className="data-wiki-article__modules" aria-label="Encounter">
               <section className="data-wiki-article__module">
-                <h3 className="data-wiki-article__module-title">
-                  Notable drops
-                </h3>
+                <h3 className="data-wiki-article__module-title">Notable drops</h3>
                 <WikiNotableDrops rows={notable} iconByItem={iconByItem} />
               </section>
             </div>
@@ -531,10 +430,7 @@ function WikiBody({
       ) : null}
 
       {showAssetRail ? (
-        <WikiAssetRail
-          assets={railAssets}
-          primary={{ src: localArtSrc, label: name }}
-        />
+        <WikiAssetRail assets={railAssets} primary={{ src: localArtSrc, label: name }} />
       ) : null}
 
       {bodyHtml ? (
@@ -558,9 +454,7 @@ function WikiBody({
             Open on Wiki
           </a>
         ) : null}
-        <span className="data-wiki-article__credit">
-          RuneScape Wiki · CC BY-NC-SA 3.0
-        </span>
+        <span className="data-wiki-article__credit">RuneScape Wiki · CC BY-NC-SA 3.0</span>
       </footer>
 
       {/* Full drop table popup — separate scroll surface from the article shell. */}
@@ -590,11 +484,7 @@ function WikiBody({
           </header>
           <div className="data-wiki-drops-popup__body">
             {hasStructuredDrops ? (
-              <WikiDropTable
-                rows={drops}
-                iconByItem={iconByItem}
-                variant="full"
-              />
+              <WikiDropTable rows={drops} iconByItem={iconByItem} variant="full" />
             ) : null}
           </div>
         </div>

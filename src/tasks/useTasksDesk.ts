@@ -15,11 +15,7 @@ import {
   type TaskRegionId,
   type TaskTier,
 } from "@/tasks";
-import {
-  isLeagueRegionId,
-  regionDisplayName,
-  TASK_LEAGUE_REGION_IDS,
-} from "@/tasks/regionMap";
+import { isLeagueRegionId, regionDisplayName, TASK_LEAGUE_REGION_IDS } from "@/tasks/regionMap";
 import {
   EMPTY_PROGRESS,
   loadProgress,
@@ -149,21 +145,20 @@ export function taskSkillNames(record: TaskRecord): string[] {
   );
 }
 
-export function taskInBuild(
-  record: TaskRecord,
-  unlocked: ReadonlySet<string>,
-): boolean {
+export function taskInBuild(record: TaskRecord, unlocked: ReadonlySet<string>): boolean {
   return record.regionId === "global" || Boolean(record.regionId && unlocked.has(record.regionId));
 }
 
 export function countActiveFilters(filters: TaskPageFilters): number {
-  return Number(Boolean(filters.search.trim())) +
+  return (
+    Number(Boolean(filters.search.trim())) +
     Number(filters.tier !== "all") +
     Number(filters.region !== "all") +
     Number(filters.category !== "all") +
     Number(filters.skill !== "all") +
     Number(filters.buildOnly) +
-    Number(filters.status !== "all");
+    Number(filters.status !== "all")
+  );
 }
 
 export function filterTaskPage(
@@ -186,12 +181,33 @@ export function filterTaskPage(
   });
 }
 
+/** Missing rates sort last; valid 0 must not collapse to "missing". */
+function completionRateOrMissing(record: TaskRecord): number {
+  const raw = record.catalystCompletionRate;
+  if (raw == null) return Number.NaN;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : Number.NaN;
+}
+
+/** Compare two completion rates: higher first for "completion", lower first for "rarest". Missing last. */
+function compareCompletionRates(
+  aRate: number,
+  bRate: number,
+  mode: "completion" | "rarest",
+): number {
+  const aMissing = Number.isNaN(aRate);
+  const bMissing = Number.isNaN(bRate);
+  if (aMissing && bMissing) return 0;
+  if (aMissing) return 1;
+  if (bMissing) return -1;
+  return mode === "completion" ? bRate - aRate : aRate - bRate;
+}
+
 export function sortTasks(
   records: readonly TaskRecord[],
   sort: TaskSort,
   tiers: Record<string, number>,
 ): TaskRecord[] {
-  const completion = (record: TaskRecord) => record.catalystCompletionRate ?? Number.NaN;
   const compareName = (a: TaskRecord, b: TaskRecord) => a.name.localeCompare(b.name);
 
   return [...records].sort((a, b) => {
@@ -199,17 +215,20 @@ export function sortTasks(
     if (sort === "points") {
       const pointDelta = (taskPoints(b, tiers) ?? -1) - (taskPoints(a, tiers) ?? -1);
       if (pointDelta) return pointDelta;
-      const rateDelta = (completion(b) || -1) - (completion(a) || -1);
+      const rateDelta = compareCompletionRates(
+        completionRateOrMissing(a),
+        completionRateOrMissing(b),
+        "completion",
+      );
       return rateDelta || compareName(a, b);
     }
 
-    const aRate = completion(a);
-    const bRate = completion(b);
-    if (Number.isNaN(aRate) && Number.isNaN(bRate)) return compareName(a, b);
-    if (Number.isNaN(aRate)) return 1;
-    if (Number.isNaN(bRate)) return -1;
-    const delta = sort === "completion" ? bRate - aRate : aRate - bRate;
-    return delta || compareName(a, b);
+    const rateDelta = compareCompletionRates(
+      completionRateOrMissing(a),
+      completionRateOrMissing(b),
+      sort === "completion" ? "completion" : "rarest",
+    );
+    return rateDelta || compareName(a, b);
   });
 }
 
@@ -229,9 +248,11 @@ export function prioritizePinnedTasks(
 
 function normalizePinnedTaskIds(raw: unknown): string[] {
   if (!Array.isArray(raw)) return [];
-  return [...new Set(raw.filter(
-    (id): id is string => typeof id === "string" && id.length > 0 && id.length <= 200,
-  ))].slice(0, 1_000);
+  return [
+    ...new Set(
+      raw.filter((id): id is string => typeof id === "string" && id.length > 0 && id.length <= 200),
+    ),
+  ].slice(0, 1_000);
 }
 
 const percentage = (part: number, whole: number) => (whole > 0 ? (part / whole) * 100 : 0);
@@ -304,17 +325,13 @@ export function recommendTasks(
       if (buildDelta) return buildDelta;
       const pointDelta = (taskPoints(b, tiers) ?? -1) - (taskPoints(a, tiers) ?? -1);
       if (pointDelta) return pointDelta;
-      const rateDelta =
-        (b.catalystCompletionRate ?? -1) - (a.catalystCompletionRate ?? -1);
+      const rateDelta = (b.catalystCompletionRate ?? -1) - (a.catalystCompletionRate ?? -1);
       return rateDelta || a.name.localeCompare(b.name);
     })
     .slice(0, limit);
 }
 
-export function useTasksDesk(
-  raw: unknown[],
-  tiers: Record<string, number>,
-) {
+export function useTasksDesk(raw: unknown[], tiers: Record<string, number>) {
   const records = useMemo(() => asTaskRecords(raw), [raw]);
   const { build } = useBuild();
   const unlocked = useMemo(() => unlockedRegions(build), [build]);
@@ -381,10 +398,11 @@ export function useTasksDesk(
   );
 
   const visible = useMemo(
-    () => prioritizePinnedTasks(
-      sortTasks(filterTaskPage(records, filters, completed, unlockedSet), sort, tiers),
-      pinnedIds,
-    ),
+    () =>
+      prioritizePinnedTasks(
+        sortTasks(filterTaskPage(records, filters, completed, unlockedSet), sort, tiers),
+        pinnedIds,
+      ),
     [records, filters, completed, unlockedSet, sort, tiers, pinnedIds],
   );
   const buildRecords = useMemo(
@@ -416,7 +434,14 @@ export function useTasksDesk(
     [regionRail],
   );
   const availableCategories = useMemo(
-    () => [...new Set(records.map((record) => record.category).filter((value): value is string => Boolean(value)))].sort(),
+    () =>
+      [
+        ...new Set(
+          records
+            .map((record) => record.category)
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ].sort(),
     [records],
   );
   const availableSkills = useMemo(
@@ -431,7 +456,10 @@ export function useTasksDesk(
     return counts;
   }, [records]);
   const quickSkills = useMemo(
-    () => [...availableSkills].sort((a, b) => (skillCounts.get(b) ?? 0) - (skillCounts.get(a) ?? 0)).slice(0, 6),
+    () =>
+      [...availableSkills]
+        .sort((a, b) => (skillCounts.get(b) ?? 0) - (skillCounts.get(a) ?? 0))
+        .slice(0, 6),
     [availableSkills, skillCounts],
   );
   const unlockLabel = useMemo(

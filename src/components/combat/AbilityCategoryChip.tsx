@@ -19,10 +19,7 @@ export function AbilityCategoryChip({
             : "utility";
 
   return (
-    <span
-      className={`ability-cat-chip ability-cat-chip--${kind}`}
-      data-category={kind}
-    >
+    <span className={`ability-cat-chip ability-cat-chip--${kind}`} data-category={kind}>
       {label}
     </span>
   );

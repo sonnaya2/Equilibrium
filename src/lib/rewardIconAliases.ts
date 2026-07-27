@@ -22,7 +22,6 @@ const rootUp = (slug: string) => `/game/upgrades/${slug}.webp`;
 const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.webp`;
 
 export const REWARD_ICON_BY_LABEL: Record<string, string> = {
-
   // --- Necrotic runes (Necromantic Rune Temple) ---
   "spirit rune": skProd("spirit-rune"),
   "bone rune": skProd("bone-rune"),
@@ -33,7 +32,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "clean bloodweed": skProd("clean-bloodweed"),
   "grimy bloodweed": skProd("grimy-bloodweed"),
   "bloodweed seed": skProd("bloodweed-seed"),
-  "bloodweed": skProd("clean-bloodweed"),
+  bloodweed: skProd("clean-bloodweed"),
   "searing ashes": skProd("searing-ashes"),
   "aggression potion": skProd("aggression-potion"),
   "aggression potions": skProd("aggression-potion"),
@@ -109,11 +108,11 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "scroll of proficiency": perm("scroll-of-proficiency"),
   "scroll of dexterity": perm("scroll-of-dexterity"),
   "advanced smithing autoheater": perm("advanced-smithing-autoheater"),
-  "herbicide": perm("herbicide"),
+  herbicide: perm("herbicide"),
   "gem bag": "/game/upgrades/skilling-utility/gem-bag.webp",
   "charming imp": perm("charming-imp"),
-  "bonecrusher": perm("bonecrusher"),
-  "chaotics": equip("chaotic-rapier"),
+  bonecrusher: perm("bonecrusher"),
+  chaotics: equip("chaotic-rapier"),
   "ruinous weapons": equip("ruinous-rapier"),
 
   // --- Havenhythe uniques ---
@@ -335,7 +334,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "prayer bonus": "/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp",
   "serenity posts": perm("serenity-posts"),
   "grenwall spikes": perm("grenwalls"),
-  "grenwalls": perm("grenwalls"),
+  grenwalls: perm("grenwalls"),
   "corrupted ore": skProd("corrupted-ore"),
   "afk mining": perm("seren-stones"),
   "elder overload": perm("elder-overload"),
@@ -663,7 +662,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "inspire effort": perm("inspire-effort"),
   "sticky fingers": perm("sticky-fingers"),
   "heightened senses": perm("heightened-senses"),
-  "sunspear": perm("sunspear"),
+  sunspear: perm("sunspear"),
   "salve amulet (e)": util("salve-amulet-e"),
   "salve amulet e": util("salve-amulet-e"),
   "salve amulet": util("salve-amulet-e"),
@@ -736,7 +735,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   // --- Permanent unlocks / access tokens (honest inventory or unlock art) ---
   "artificer's measure": perm("artificers-measure"),
   "artificers measure": perm("artificers-measure"),
-  "hexcrest": perm("hexcrest"),
+  hexcrest: perm("hexcrest"),
   "focus sight": perm("focus-sight"),
   "luck of the dwarves": perm("luck-of-the-dwarves"),
   "always adze": perm("always-adze"),
@@ -830,8 +829,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "bone offering": perm("prayer-altar"),
 
   // Archaeology Guild shop
-  "master archaeologist's outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
-  "master archaeologists outfit": "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
+  "master archaeologist's outfit":
+    "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
+  "master archaeologists outfit":
+    "/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp",
   "soil box": "/game/upgrades/skilling-utility/soil-box.webp",
   "material storage": "/game/upgrades/skilling-utility/archaeological-soil-box.webp",
   "mattock precision": "/game/upgrades/skilling-utility/mattock-precision.webp",

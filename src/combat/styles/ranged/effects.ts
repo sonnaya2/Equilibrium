@@ -1,4 +1,3 @@
-import { secondsToTicks } from "../../rotation/timeline";
 import { MODERNISATION_WIKI } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import type { SourceReference } from "../../types";
@@ -23,7 +22,10 @@ export interface DeathsSwiftnessState {
   expiresAtTick: number;
 }
 
-export const newDeathsSwiftness = (): DeathsSwiftnessState => ({ startsAtTick: 0, expiresAtTick: 0 });
+export const newDeathsSwiftness = (): DeathsSwiftnessState => ({
+  startsAtTick: 0,
+  expiresAtTick: 0,
+});
 
 /**
  * Activate Death's Swiftness.
@@ -35,7 +37,9 @@ export function activateDeathsSwiftness(
   greater = false,
   plantedFeet = false,
 ): DeathsSwiftnessState {
-  let duration = greater ? GREATER_DEATHS_SWIFTNESS_DURATION_TICKS : DEATHS_SWIFTNESS_DURATION_TICKS;
+  let duration = greater
+    ? GREATER_DEATHS_SWIFTNESS_DURATION_TICKS
+    : DEATHS_SWIFTNESS_DURATION_TICKS;
   if (!greater && plantedFeet) {
     duration = Math.round(DEATHS_SWIFTNESS_DURATION_TICKS * PLANTED_FEET_DURATION_MULT);
   }

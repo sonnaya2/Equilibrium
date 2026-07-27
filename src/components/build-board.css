@@ -21,11 +21,7 @@
   overflow: auto;
   box-sizing: border-box;
   background:
-    radial-gradient(
-      ellipse at 50% 16%,
-      transparent 0 52%,
-      rgb(0 0 0 / 36%) 100%
-    ),
+    radial-gradient(ellipse at 50% 16%, transparent 0 52%, rgb(0 0 0 / 36%) 100%),
     radial-gradient(
       ellipse at 50% 16%,
       color-mix(in srgb, var(--color-stone-raised) 32%, transparent),
@@ -36,11 +32,7 @@
       color-mix(in srgb, var(--color-gold-500) 5%, transparent),
       transparent 15rem
     ),
-    repeating-linear-gradient(
-      104deg,
-      transparent 0 5px,
-      rgb(224 178 100 / 0.008) 5px 6px
-    ),
+    repeating-linear-gradient(104deg, transparent 0 5px, rgb(224 178 100 / 0.008) 5px 6px),
     var(--color-stone-950);
   background-attachment: fixed;
 }
@@ -107,10 +99,25 @@
     linear-gradient(var(--mc-gold-dim), var(--mc-gold-dim)) 0 0 / 1px 0.85rem no-repeat;
 }
 
-.mc__corner.is-tl { top: -0.2rem; left: -0.2rem; }
-.mc__corner.is-tr { top: -0.2rem; right: -0.2rem; transform: rotate(90deg); }
-.mc__corner.is-br { right: -0.2rem; bottom: -0.2rem; transform: rotate(180deg); }
-.mc__corner.is-bl { bottom: -0.2rem; left: -0.2rem; transform: rotate(270deg); }
+.mc__corner.is-tl {
+  top: -0.2rem;
+  left: -0.2rem;
+}
+.mc__corner.is-tr {
+  top: -0.2rem;
+  right: -0.2rem;
+  transform: rotate(90deg);
+}
+.mc__corner.is-br {
+  right: -0.2rem;
+  bottom: -0.2rem;
+  transform: rotate(180deg);
+}
+.mc__corner.is-bl {
+  bottom: -0.2rem;
+  left: -0.2rem;
+  transform: rotate(270deg);
+}
 
 /* ── Seal bar ── */
 .mc__seal {
@@ -123,14 +130,12 @@
   padding: 0.55rem 2rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 42%, var(--color-stone-850)),
-      var(--color-stone-850)
-    );
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--mc-gold) 8%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 42%, var(--color-stone-850)),
+    var(--color-stone-850)
+  );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--mc-gold) 8%, transparent);
 }
 
 .mc__title {
@@ -185,12 +190,11 @@
   padding: 0.3rem 0.8rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-800)),
-      var(--color-stone-800)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-800)),
+    var(--color-stone-800)
+  );
   color: var(--color-parch-100);
   font-size: 0.875rem;
   cursor: pointer;
@@ -223,14 +227,12 @@
   padding: 0.8rem 0.75rem 0.75rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 12%, var(--color-stone-900)) 0%,
-      var(--color-stone-900) 28%
-    );
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 12%, var(--color-stone-900)) 0%,
+    var(--color-stone-900) 28%
+  );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent);
 }
 
 .mc__zone[aria-label="Regions"] {
@@ -321,12 +323,11 @@
   padding: 0.45rem 0.2rem 0.3rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 32%, var(--color-stone-800)),
-      var(--color-stone-800)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 32%, var(--color-stone-800)),
+    var(--color-stone-800)
+  );
   color: var(--color-parch-100);
   cursor: pointer;
   text-align: center;
@@ -379,12 +380,11 @@
 
 .mc__crest.is-on {
   border-color: var(--mc-gem);
-  background:
-    linear-gradient(
-      165deg,
-      color-mix(in srgb, var(--color-gem-600) 32%, var(--color-stone-raised)) 0%,
-      color-mix(in srgb, var(--color-gem-600) 15%, var(--color-stone-800)) 72%
-    );
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--color-gem-600) 32%, var(--color-stone-raised)) 0%,
+    color-mix(in srgb, var(--color-gem-600) 15%, var(--color-stone-800)) 72%
+  );
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 48%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 22%, transparent);
@@ -427,12 +427,11 @@
   padding: 0.32rem 0.45rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 13%, var(--color-stone-950)),
-      color-mix(in srgb, var(--color-stone-950) 58%, var(--color-stone-900))
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 13%, var(--color-stone-950)),
+    color-mix(in srgb, var(--color-stone-950) 58%, var(--color-stone-900))
+  );
   box-shadow:
     inset 0 0 0 1px var(--color-stone-950),
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 20%, transparent);
@@ -471,12 +470,11 @@
   padding: 0.2rem 0.3rem;
   border: 1px solid var(--mc-line);
   border-radius: var(--radius-sm);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-800)),
-      var(--color-stone-800)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-800)),
+    var(--color-stone-800)
+  );
   color: var(--color-parch-100);
   cursor: pointer;
   text-align: center;
@@ -603,8 +601,12 @@
   border-top: 1px solid var(--mc-gold);
 }
 
-.mc__tier-mark::before { right: calc(100% + 0.12rem); }
-.mc__tier-mark::after { left: calc(100% + 0.12rem); }
+.mc__tier-mark::before {
+  right: calc(100% + 0.12rem);
+}
+.mc__tier-mark::after {
+  left: calc(100% + 0.12rem);
+}
 
 /* Hover tip */
 .mc__tip {
@@ -961,12 +963,11 @@
 }
 
 .mc__lat-cell.is-on .mc__lat-fill {
-  background:
-    linear-gradient(
-      165deg,
-      color-mix(in srgb, var(--color-gem-500) 52%, var(--color-stone-800)) 0%,
-      color-mix(in srgb, var(--color-gem-600) 78%, var(--color-stone-950)) 100%
-    );
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--color-gem-500) 52%, var(--color-stone-800)) 0%,
+    color-mix(in srgb, var(--color-gem-600) 78%, var(--color-stone-950)) 100%
+  );
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 35%, transparent);
 }
 

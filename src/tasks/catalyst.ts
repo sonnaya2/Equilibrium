@@ -1,10 +1,5 @@
 import type { TaskRecord, TaskTier } from "./index";
-import {
-  CATALYST_LOCALITY_TO_REGION,
-  CATALYST_TASKS_URL,
-  mapCatalystLocality,
-  regionDisplayName,
-} from "./regionMap";
+import { mapCatalystLocality, regionDisplayName } from "./regionMap";
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import snapshot from "#data/league/catalyst-tasks-snapshot.json";
 
@@ -75,10 +70,9 @@ function localityLabelFromCell(localityHtml: string): string | undefined {
   return text || undefined;
 }
 
-function parseCompletionRate(value: string): Pick<
-  CatalystTaskRecord,
-  "catalystCompletionRate" | "catalystCompletionRateQualifier"
-> {
+function parseCompletionRate(
+  value: string,
+): Pick<CatalystTaskRecord, "catalystCompletionRate" | "catalystCompletionRateQualifier"> {
   const match = value.match(/(<)?\s*(\d+(?:\.\d+)?)\s*%/);
   if (!match) return {};
 
@@ -103,7 +97,8 @@ export function parseCatalystTasksHtml(html: string): CatalystTaskRecord[] {
     if (rawCells.length < 6) return [];
 
     const wikiTaskIdRaw = attr(row, "data-taskid") ?? attr(row, "id");
-    const wikiTaskId = wikiTaskIdRaw && /^\d+$/.test(wikiTaskIdRaw) ? Number(wikiTaskIdRaw) : undefined;
+    const wikiTaskId =
+      wikiTaskIdRaw && /^\d+$/.test(wikiTaskIdRaw) ? Number(wikiTaskIdRaw) : undefined;
     const localityKey = attr(row, "data-tbz-area-for-filtering")?.toLowerCase();
 
     const [localityHtml, taskHtml, informationHtml, requirementsHtml, pointsHtml, completionHtml] =
@@ -205,8 +200,7 @@ export function applyCompletionRates(
     const rate = raw;
     // Wiki HTML shows "<0.1%" for tiny positive rates; module stores the number.
     const qualifier =
-      (rate > 0 && rate < 0.1) ||
-      (rate === 0 && record.catalystCompletionRateQualifier === "<")
+      (rate > 0 && rate < 0.1) || (rate === 0 && record.catalystCompletionRateQualifier === "<")
         ? ("<" as const)
         : undefined;
     if (record.catalystCompletionRate === rate) {

@@ -5,15 +5,12 @@ import type { PlannerRegion } from "@/map/data/plannerRegion";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { REGION_METRICS_BY_ID } from "@/map/data/regionMetrics";
 import { getResearchCatalog } from "@/research/catalog";
+import { isCombatUpgradeCategory } from "@/research/combatClassification";
 import type { RegionId } from "@/league";
 
 export const metadata: Metadata = {
   title: "Map",
 };
-
-/** Category matches combat gear / BiS / boss drop / wearables for planner counts. */
-const COMBAT_CATEGORY_RE =
-  /combat|BiS|boss|weapon|armour|armor|relic|undead|cape|ring|amulet/i;
 
 export default function MapPage() {
   const catalog = getResearchCatalog();
@@ -25,11 +22,10 @@ export default function MapPage() {
       ...(u.requiredRegions?.length ? { requiredRegions: u.requiredRegions } : {}),
       ...(u.isRegionCombo ? { isRegionCombo: true as const } : {}),
     }));
-    const combatUnlocks = upgrades.filter((u) => COMBAT_CATEGORY_RE.test(u.kind)).length;
+    const combatUnlocks = upgrades.filter((u) => isCombatUpgradeCategory(u.kind)).length;
     const multiRegionUnlocks = upgrades.filter(
       (u) =>
-        u.isRegionCombo === true ||
-        (u.requiredRegions != null && u.requiredRegions.length > 1),
+        u.isRegionCombo === true || (u.requiredRegions != null && u.requiredRegions.length > 1),
     ).length;
 
     return {

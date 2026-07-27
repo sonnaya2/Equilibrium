@@ -2,7 +2,11 @@ import type { CritLayers } from "../core/critical";
 import type { HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_PATCH_2, MODERNISATION_WIKI } from "../data/sources";
-import { calculateAbility, type AbilityResult, type AbilitySpec } from "../pipeline/calculateAbility";
+import {
+  calculateAbility,
+  type AbilityResult,
+  type AbilitySpec,
+} from "../pipeline/calculateAbility";
 import { calculateHit } from "../pipeline/calculateHit";
 import {
   activateBerserk,
@@ -21,10 +25,7 @@ import {
   METEOR_STRIKE_DURATION_SECONDS,
   METEOR_STRIKE_PASSIVE_ADREN_PER_TICK,
 } from "../styles/melee/effects";
-import {
-  activateDeathsSwiftness,
-  deathsSwiftnessMultiplier,
-} from "../styles/ranged/effects";
+import { activateDeathsSwiftness, deathsSwiftnessMultiplier } from "../styles/ranged/effects";
 import {
   activateInstability,
   activateSunshine,
@@ -66,10 +67,7 @@ import {
   SPIRIT_POISON_ABILITY_ID,
   type SpiritAutoEvent,
 } from "../styles/necromancy/conjures";
-import {
-  expectedAftershockDamage,
-  expectedCracklingDamage,
-} from "../shared/perks";
+import { expectedAftershockDamage, expectedCracklingDamage } from "../shared/perks";
 import type { CombatContext, CombatModifier, SourceReference } from "../types";
 import type { RotationAction } from "./actions";
 import {
@@ -203,9 +201,13 @@ export interface CastContext {
  * evaluation, the single cast path, and summary assembly. Behaviour is identical
  * for queued and priority-driven rotations — only the driver differs.
  */
-export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoWeave">): CastContext {
+export function createCastContext(
+  input: Omit<SimulateInput, "rotation" | "autoWeave">,
+): CastContext {
   const byId = new Map(input.abilities.map((a) => [a.id, a]));
-  const basicByStyle = new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]));
+  const basicByStyle = new Map(
+    input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]),
+  );
   const casts: CastRecord[] = [];
   const perAbility: Record<string, number> = {};
   const damageByTick: Record<number, number> = {};
@@ -233,13 +235,11 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
         level: input.level,
         accuracy: input.accuracy,
         crit: { chance: 0, eligible: false },
-        modifiers:
-          typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+        modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
         context: input.context,
         cap: input.cap,
       });
-      const scale =
-        ev.abilityId === SPIRIT_POISON_ABILITY_ID ? 1 : setMult;
+      const scale = ev.abilityId === SPIRIT_POISON_ABILITY_ID ? 1 : setMult;
       const min = hit.min * scale;
       const max = hit.max * scale;
       const expected = hit.expected * scale;
@@ -278,11 +278,7 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
 
     let totalExpected = abilityExpected;
     // Crackling: continuous EV ≈ fraction * base * (H / 60). Mid-horizon tick for chart.
-    const crackling = expectedCracklingDamage(
-      input.procs?.cracklingRank ?? 0,
-      input.base,
-      seconds,
-    );
+    const crackling = expectedCracklingDamage(input.procs?.cracklingRank ?? 0, input.base, seconds);
     if (crackling > 0) {
       totalExpected += crackling;
       perAbility.crackling = (perAbility.crackling ?? 0) + crackling;
@@ -324,7 +320,10 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       return necroAdrenalineCost(ability, state.necro, state.tick);
     }
     const listed = ability.adrenaline?.cost ?? 0;
-    return listed > 0 && ability.style === "ranged" && input.ammo === "deathspore" && deathsporeReady(state.ranged.deathspore)
+    return listed > 0 &&
+      ability.style === "ranged" &&
+      input.ammo === "deathspore" &&
+      deathsporeReady(state.ranged.deathspore)
       ? 0
       : listed;
   }
@@ -352,7 +351,10 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     const melee = ability.style === "melee" ? (ability as MeleeAbilitySpec) : null;
     let working: AbilitySpec =
       melee?.bloodlustScale && state.melee.stacks >= melee.bloodlustScale.threshold
-        ? { ...ability, hits: ability.hits.map((h) => ({ ...h, band: melee.bloodlustScale!.band })) }
+        ? {
+            ...ability,
+            hits: ability.hits.map((h) => ({ ...h, band: melee.bloodlustScale!.band })),
+          }
         : ability;
     // FoD (Necrosis cost + Living Death 1.5×), Death Grasp stacks, Volley soul count.
     if (ability.style === "necromancy") {
@@ -423,11 +425,14 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       state = { ...state, furyCritBonus: false };
     }
     if (ability.style === "melee" && readyTick < state.berserkUntilTick) {
-      modifiers.push(buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2));
+      modifiers.push(
+        buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2),
+      );
     }
     if (ability.style === "ranged") {
       const mult = deathsSwiftnessMultiplier(state.ranged.swiftness, readyTick);
-      if (mult !== 1) modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));
+      if (mult !== 1)
+        modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));
       const bonusPct = searingWindsBonusPct(state.ranged.searingWinds, readyTick);
       if (bonusPct > 0 && working.hits.length > 0) {
         // ponytail: the bonus hit's crit behaviour is unsourced — modelled ineligible.
@@ -435,7 +440,11 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
           ...working,
           hits: working.hits.flatMap((h) => [
             h,
-            { band: { minPct: bonusPct, maxPct: bonusPct }, critEligible: false, tickOffset: h.tickOffset },
+            {
+              band: { minPct: bonusPct, maxPct: bonusPct },
+              critEligible: false,
+              tickOffset: h.tickOffset,
+            },
           ]),
         };
       }
@@ -448,9 +457,7 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       ...input.crit,
       chance: input.crit.chance + (furyBonus ? FURY_CRIT_CHANCE_BONUS : 0),
       guaranteed:
-        furyCrit ||
-        (ability as RangedAbilitySpec).guaranteedCrit ||
-        input.crit.guaranteed,
+        furyCrit || (ability as RangedAbilitySpec).guaranteedCrit || input.crit.guaranteed,
     };
 
     let result: AbilityResult =
@@ -610,8 +617,13 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
       };
     }
     // Greater Flurry: each hit extends active Berserk by 0.6s (1 tick).
-    if (ability.appliesBuff === "greater_flurry" && state.melee.berserk && readyTick < state.berserkUntilTick) {
-      const extendTicks = working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
+    if (
+      ability.appliesBuff === "greater_flurry" &&
+      state.melee.berserk &&
+      readyTick < state.berserkUntilTick
+    ) {
+      const extendTicks =
+        working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
       state = { ...state, berserkUntilTick: state.berserkUntilTick + extendTicks };
     }
     // pulverise: target -25% outgoing + on-kill adren — not modelled (defensive / kill-gated).
@@ -623,10 +635,14 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
 
     if (ability.style === "ranged") {
       if (input.ammo === "deathspore") {
-        state = patchRanged(state, { deathspore: onRangedHit(state.ranged.deathspore, working.hits.length) });
+        state = patchRanged(state, {
+          deathspore: onRangedHit(state.ranged.deathspore, working.hits.length),
+        });
       }
       if (ability.id === "shadow_tendrils") {
-        state = patchRanged(state, { shadowImbued: extendShadowImbued(state.ranged.shadowImbued, readyTick) });
+        state = patchRanged(state, {
+          shadowImbued: extendShadowImbued(state.ranged.shadowImbued, readyTick),
+        });
       }
       const perHit = shadowImbuedAdrenalinePerHit(state.ranged.shadowImbued, readyTick);
       if (perHit > 0 && working.hits.length > 0) {
@@ -640,7 +656,13 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     const gcdEnd = readyTick + GLOBAL_COOLDOWN_TICKS;
     // Passive adren across the GCD the cast occupies (buff may start this cast).
     grantMeteorPassive(readyTick, gcdEnd);
-    casts.push({ tick: readyTick, abilityId: ability.id, result, adrenalineAfter: state.adrenaline, ...(auto ? { auto: true as const } : {}) });
+    casts.push({
+      tick: readyTick,
+      abilityId: ability.id,
+      result,
+      adrenalineAfter: state.adrenaline,
+      ...(auto ? { auto: true as const } : {}),
+    });
     perAbility[ability.id] = (perAbility[ability.id] ?? 0) + result.expected;
     state = { ...state, tick: gcdEnd };
     // Spirit autos that land during this GCD (e.g. first skeleton hit at cast+7).
@@ -652,7 +674,12 @@ export function createCastContext(input: Omit<SimulateInput, "rotation" | "autoW
     if (ability.buff === "runic_charge") {
       state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
     }
-    casts.push({ tick: state.tick, abilityId: ability.id, result: EMPTY_RESULT, adrenalineAfter: state.adrenaline });
+    casts.push({
+      tick: state.tick,
+      abilityId: ability.id,
+      result: EMPTY_RESULT,
+      adrenalineAfter: state.adrenaline,
+    });
     endTick = Math.max(endTick, state.tick + 1);
   }
 
@@ -697,15 +724,26 @@ export function simulate(input: SimulateInput): RotationSummary {
         basic &&
         (ctx.firstLegalTick(ability.id) > ctx.getState().tick ||
           ctx.costOf(ability) > ctx.getState().adrenaline ||
-          !necroCanCast(ability, ctx.getState().necro, ctx.getState().conjures, ctx.getState().tick))
+          !necroCanCast(
+            ability,
+            ctx.getState().necro,
+            ctx.getState().conjures,
+            ctx.getState().tick,
+          ))
       ) {
-        if (++guard > 200) return ctx.finish(`${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`);
+        if (++guard > 200)
+          return ctx.finish(
+            `${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`,
+          );
         ctx.performCast(basic, ctx.getState().tick, true);
       }
     }
 
     const readyTick = ctx.firstLegalTick(ability.id);
-    if ((ability as MagicAbilitySpec).requiresAnima && !animaCharged(ctx.getState().magic, readyTick)) {
+    if (
+      (ability as MagicAbilitySpec).requiresAnima &&
+      !animaCharged(ctx.getState().magic, readyTick)
+    ) {
       return ctx.finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
     }
     if (!necroCanCast(ability, ctx.getState().necro, ctx.getState().conjures, readyTick)) {

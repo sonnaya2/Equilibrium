@@ -40,10 +40,7 @@ export interface SetEffect {
 }
 
 /** Effect kinds that feed crit chance or damage modifiers. */
-export type SetEffectKind =
-  | "critChancePerPiece"
-  | "damageMult"
-  | "damageMultPerPiece";
+export type SetEffectKind = "critChancePerPiece" | "damageMult" | "damageMultPerPiece";
 
 export type SetEffectRequires = "sunshine";
 
@@ -160,11 +157,7 @@ export function effectiveTumekenPieces(
   return Math.max(gear, perk);
 }
 
-function effectActive(
-  effect: EquipmentSetEffectDef,
-  pieces: number,
-  ctx: SetCritContext,
-): boolean {
+function effectActive(effect: EquipmentSetEffectDef, pieces: number, ctx: SetCritContext): boolean {
   if (pieces < effect.minPieces) return false;
   if (effect.requires === "sunshine" && !ctx.insideSunshine) return false;
   return true;
@@ -263,15 +256,18 @@ export function firstNecromancerConjureDamageMult(pieces: number): number {
 }
 
 /** Equipped first-necromancer piece count → conjure basic mult (1 if none / <2). */
-export function loadoutFirstNecromancerConjureDamageMult(
-  loadout: LoadoutEquipmentView,
-): number {
+export function loadoutFirstNecromancerConjureDamageMult(loadout: LoadoutEquipmentView): number {
   return firstNecromancerConjureDamageMult(
     equippedSetCounts(loadout).get("first-necromancer") ?? 0,
   );
 }
 
-function setCritChance(id: string, pieces: number, perPiece: number, source: SourceReference): SetEffect {
+function setCritChance(
+  id: string,
+  pieces: number,
+  perPiece: number,
+  source: SourceReference,
+): SetEffect {
   if (!Number.isInteger(pieces) || pieces < 0 || pieces > 5) {
     throw new RangeError(`${id}: bad piece count ${pieces}`);
   }
@@ -280,14 +276,24 @@ function setCritChance(id: string, pieces: number, perPiece: number, source: Sou
 
 /** Tectonic armour: +1% crit chance per piece; elite tectonic +2% per piece (27 May 2025). */
 export const tectonicSet = (pieces: number, elite = false) =>
-  setCritChance(elite ? "elite_tectonic" : "tectonic", pieces, elite ? 0.02 : 0.01, MASTERWORK_WEAPONS_WIKI_2025_05_27);
+  setCritChance(
+    elite ? "elite_tectonic" : "tectonic",
+    pieces,
+    elite ? 0.02 : 0.01,
+    MASTERWORK_WEAPONS_WIKI_2025_05_27,
+  );
 
 /**
  * Tumeken's resplendence set(3): +1.5% crit chance per piece while inside Sunshine
  * (29 Sep 2025 rebalance). Wiki requires ≥3 pieces for the crit effect.
  */
 export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): SetEffect {
-  const effect = setCritChance("tumekens_resplendence", pieces, 0.015, AMASCUT_MASTERIES_WIKI_2025_09_29);
+  const effect = setCritChance(
+    "tumekens_resplendence",
+    pieces,
+    0.015,
+    AMASCUT_MASTERIES_WIKI_2025_09_29,
+  );
   if (!insideSunshine || pieces < 3) return { ...effect, critChanceBonus: 0 };
   return effect;
 }

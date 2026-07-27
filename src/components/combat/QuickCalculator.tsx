@@ -90,7 +90,10 @@ export function QuickCalculator() {
 
   // Quick is for damaging casts; buff-only records (e.g. Living Death) live on Rotation.
   // Necromancy: full post-CSM kit + Volley scaled by Residual Souls.
-  const palette = style === "necromancy" ? necroPalette(souls) : STYLE_ABILITIES[style].filter((a) => a.hits.length > 0);
+  const palette =
+    style === "necromancy"
+      ? necroPalette(souls)
+      : STYLE_ABILITIES[style].filter((a) => a.hits.length > 0);
   const ability = palette.find((a) => a.id === abilityId) ?? palette[0];
   const selectedId = ability?.id;
 
@@ -141,7 +144,12 @@ export function QuickCalculator() {
             <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
             <NumberField label="Base ability damage" value={base} onChange={setBase} />
             <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
-            <NumberField label="Crit chance" value={critChance} onChange={setCritChance} suffix="%" />
+            <NumberField
+              label="Crit chance"
+              value={critChance}
+              onChange={setCritChance}
+              suffix="%"
+            />
             {style === "necromancy" && selectedId === "volley_of_souls" ? (
               <NumberField
                 label="Residual Souls"
@@ -204,108 +212,112 @@ export function QuickCalculator() {
           </div>
         </section>
 
-      {ability && result ? (
-        <div className="combat-frame combat-detail panel panel--facet min-w-0">
-          <CombatFrameCorners />
-          <div className="panel-head flex flex-wrap items-center justify-between gap-2">
-            <h3 className="m-0 flex min-w-0 items-center gap-2 text-inherit font-medium">
-              <GameIcon
-                src={abilityIconPath(ability.id, ability.style)}
-                size={22}
-                className="shrink-0"
-              />
-              <span className="min-w-0 truncate">{ability.name}</span>
-              <AbilityCategoryChip category={ability.category} />
-            </h3>
-            <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
-              {hitBandLabel(ability)}
-            </span>
-          </div>
-          <div className="panel-body space-y-3">
-            <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability)}</p>
-
-            <div className="flex flex-wrap items-end gap-x-6 gap-y-2 border-b border-stone-750 pb-3">
-              <div>
-                <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">Expected</div>
-                <div className="stat-key mt-1">{formatNumber(result.expected)}</div>
-              </div>
-              <div>
-                <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">Min – max</div>
-                <div className="mt-1 font-mono text-lg text-parch-50">
-                  {formatNumber(result.min)} – {formatNumber(result.max)}
-                </div>
-              </div>
+        {ability && result ? (
+          <div className="combat-frame combat-detail panel panel--facet min-w-0">
+            <CombatFrameCorners />
+            <div className="panel-head flex flex-wrap items-center justify-between gap-2">
+              <h3 className="m-0 flex min-w-0 items-center gap-2 text-inherit font-medium">
+                <GameIcon
+                  src={abilityIconPath(ability.id, ability.style)}
+                  size={22}
+                  className="shrink-0"
+                />
+                <span className="min-w-0 truncate">{ability.name}</span>
+                <AbilityCategoryChip category={ability.category} />
+              </h3>
+              <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
+                {hitBandLabel(ability)}
+              </span>
             </div>
+            <div className="panel-body space-y-3">
+              <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability)}</p>
 
-            <dl className="text-sm">
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                <dt className="text-parch-300">Crit min – max</dt>
-                <dd className="text-right font-mono text-parch-50">
-                  {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
-                  {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
-                </dd>
+              <div className="flex flex-wrap items-end gap-x-6 gap-y-2 border-b border-stone-750 pb-3">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">
+                    Expected
+                  </div>
+                  <div className="stat-key mt-1">{formatNumber(result.expected)}</div>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.1em] text-parch-300">
+                    Min – max
+                  </div>
+                  <div className="mt-1 font-mono text-lg text-parch-50">
+                    {formatNumber(result.min)} – {formatNumber(result.max)}
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                <dt className="text-parch-300">Damage Potential</dt>
-                <dd className="text-right font-mono text-parch-50">
-                  {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
-                </dd>
-              </div>
-              <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                <dt className="text-parch-300">Adrenaline after cast</dt>
-                <dd className="text-right font-mono text-parch-50">
-                  {result.adrenalineDelta >= 0 ? "+" : ""}
-                  {result.adrenalineDelta}%
-                </dd>
-              </div>
-              {(ability as MeleeAbilitySpec).bloodlustGain ? (
+
+              <dl className="text-sm">
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                  <dt className="text-parch-300">Bloodlust</dt>
+                  <dt className="text-parch-300">Crit min – max</dt>
                   <dd className="text-right font-mono text-parch-50">
-                    +{(ability as MeleeAbilitySpec).bloodlustGain} stack
-                    {(ability as MeleeAbilitySpec).bloodlustGain! > 1 ? "s" : ""}
+                    {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
+                    {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
                   </dd>
                 </div>
-              ) : null}
-              {(ability as MeleeAbilitySpec).bloodlustScale ? (
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                  <dt className="text-parch-300">
-                    At {(ability as MeleeAbilitySpec).bloodlustScale!.threshold} Bloodlust
-                  </dt>
+                  <dt className="text-parch-300">Damage Potential</dt>
                   <dd className="text-right font-mono text-parch-50">
-                    {(ability as MeleeAbilitySpec).bloodlustScale!.band.minPct}–
-                    {(ability as MeleeAbilitySpec).bloodlustScale!.band.maxPct}% per hit
+                    {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                   </dd>
                 </div>
-              ) : null}
-            </dl>
+                <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                  <dt className="text-parch-300">Adrenaline after cast</dt>
+                  <dd className="text-right font-mono text-parch-50">
+                    {result.adrenalineDelta >= 0 ? "+" : ""}
+                    {result.adrenalineDelta}%
+                  </dd>
+                </div>
+                {(ability as MeleeAbilitySpec).bloodlustGain ? (
+                  <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                    <dt className="text-parch-300">Bloodlust</dt>
+                    <dd className="text-right font-mono text-parch-50">
+                      +{(ability as MeleeAbilitySpec).bloodlustGain} stack
+                      {(ability as MeleeAbilitySpec).bloodlustGain! > 1 ? "s" : ""}
+                    </dd>
+                  </div>
+                ) : null}
+                {(ability as MeleeAbilitySpec).bloodlustScale ? (
+                  <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                    <dt className="text-parch-300">
+                      At {(ability as MeleeAbilitySpec).bloodlustScale!.threshold} Bloodlust
+                    </dt>
+                    <dd className="text-right font-mono text-parch-50">
+                      {(ability as MeleeAbilitySpec).bloodlustScale!.band.minPct}–
+                      {(ability as MeleeAbilitySpec).bloodlustScale!.band.maxPct}% per hit
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </div>
           </div>
-        </div>
-      ) : ability && ability.hits.length === 0 ? (
-        <div className="combat-frame combat-detail panel panel--facet min-w-0">
-          <CombatFrameCorners />
-          <div className="panel-head">
-            <h3 className="m-0 flex items-center gap-2 text-inherit font-medium">
-              <GameIcon
-                src={abilityIconPath(ability.id, ability.style)}
-                size={22}
-                className="shrink-0"
-              />
-              <span>{ability.name}</span>
-              <AbilityCategoryChip category={ability.category} />
-            </h3>
+        ) : ability && ability.hits.length === 0 ? (
+          <div className="combat-frame combat-detail panel panel--facet min-w-0">
+            <CombatFrameCorners />
+            <div className="panel-head">
+              <h3 className="m-0 flex items-center gap-2 text-inherit font-medium">
+                <GameIcon
+                  src={abilityIconPath(ability.id, ability.style)}
+                  size={22}
+                  className="shrink-0"
+                />
+                <span>{ability.name}</span>
+                <AbilityCategoryChip category={ability.category} />
+              </h3>
+            </div>
+            <div className="panel-body">
+              <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
+              <p className="mt-2 text-sm text-parch-300">No damage hits. Summon or buff only.</p>
+            </div>
           </div>
-          <div className="panel-body">
-            <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
-            <p className="mt-2 text-sm text-parch-300">No damage hits. Summon or buff only.</p>
+        ) : (
+          <div className="combat-frame combat-detail panel panel--facet min-w-0 p-3 text-sm text-parch-300">
+            <CombatFrameCorners />
+            Select an ability.
           </div>
-        </div>
-      ) : (
-        <div className="combat-frame combat-detail panel panel--facet min-w-0 p-3 text-sm text-parch-300">
-          <CombatFrameCorners />
-          Select an ability.
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

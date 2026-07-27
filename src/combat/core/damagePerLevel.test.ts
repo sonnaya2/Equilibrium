@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  DPL_ANCHOR_LEVEL,
-  damagePerLevel,
-  legacyDamagePerLevel,
-} from "./damagePerLevel";
+import { DPL_ANCHOR_LEVEL, damagePerLevel, legacyDamagePerLevel } from "./damagePerLevel";
 
 /** Golden table, 6dp, frozen from the AGENTS.md formula. Guards against refactor drift. */
 const GOLDEN: Array<[level: number, dpl: number]> = [
@@ -32,7 +28,10 @@ describe("damagePerLevel", () => {
   });
 
   it("meets the pre-2026 linear curve exactly at the anchor level", () => {
-    expect(damagePerLevel(DPL_ANCHOR_LEVEL)).toBeCloseTo(legacyDamagePerLevel(DPL_ANCHOR_LEVEL), 10);
+    expect(damagePerLevel(DPL_ANCHOR_LEVEL)).toBeCloseTo(
+      legacyDamagePerLevel(DPL_ANCHOR_LEVEL),
+      10,
+    );
     expect(damagePerLevel(DPL_ANCHOR_LEVEL)).toBeCloseTo(362.5, 10);
   });
 

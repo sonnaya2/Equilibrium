@@ -70,9 +70,7 @@ describe("stripWikiChrome", () => {
   });
 
   it("strips unclosed script/iframe openers", () => {
-    const out = stripWikiChrome(
-      `<p>safe</p><script>alert(1)<iframe src="x">tail`,
-    );
+    const out = stripWikiChrome(`<p>safe</p><script>alert(1)<iframe src="x">tail`);
     expect(out).not.toMatch(/<script/i);
     expect(out).not.toMatch(/<iframe/i);
     expect(out).toMatch(/safe/);
@@ -217,9 +215,7 @@ describe("extractDropRows", () => {
       rarity: "Always",
       iconUrl: "https://runescape.wiki/images/Coins_10000.png",
     });
-    expect(rows[1]?.iconUrl).toBe(
-      "https://runescape.wiki/images/thumb/Foo.png/30px-Foo.png",
-    );
+    expect(rows[1]?.iconUrl).toBe("https://runescape.wiki/images/thumb/Foo.png/30px-Foo.png");
   });
 
   it("prefers inventory-image cell and skips alchemy chrome icons", () => {
@@ -265,16 +261,15 @@ describe("extractDropRows", () => {
       title: "Test",
       pageUrl: "https://runescape.wiki/w/Test",
     });
-    expect(view.drops[0]?.iconUrl).toBe(
-      "https://runescape.wiki/images/Dragon_bones.png",
-    );
+    expect(view.drops[0]?.iconUrl).toBe("https://runescape.wiki/images/Dragon_bones.png");
     expect(view.bodyHtml).not.toMatch(/img|Old story/i);
     expect(view.dropsHtml).not.toMatch(/<img/i);
   });
 
   it("caps at 80 unique rows", () => {
-    const dataRows = Array.from({ length: 100 }, (_, i) =>
-      `<tr><td>Item ${i}</td><td>1</td><td>Common</td></tr>`,
+    const dataRows = Array.from(
+      { length: 100 },
+      (_, i) => `<tr><td>Item ${i}</td><td>1</td><td>Common</td></tr>`,
     ).join("");
     const html = `
       <table class="wikitable">
@@ -356,11 +351,9 @@ describe("cleanWikiFootnotes", () => {
   it("strips dead wiki citation markers from prose", () => {
     expect(
       cleanWikiFootnotes(
-        'the Glacor Front. [ 1 ] Like Kerapac, the bound. Hardcore Ironmen [ 2 ]; hard mode. [ 3 ]',
+        "the Glacor Front. [ 1 ] Like Kerapac, the bound. Hardcore Ironmen [ 2 ]; hard mode. [ 3 ]",
       ),
-    ).toBe(
-      "the Glacor Front. Like Kerapac, the bound. Hardcore Ironmen; hard mode.",
-    );
+    ).toBe("the Glacor Front. Like Kerapac, the bound. Hardcore Ironmen; hard mode.");
     expect(cleanWikiFootnotes("Always [1]")).toBe("Always");
   });
 });
@@ -725,5 +718,8 @@ describe("processWikiHtml", () => {
 });
 
 function stripTagsApprox(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }

@@ -58,8 +58,6 @@ function formatTime(ticks: number): string {
   return `${seconds.toFixed(1)}s`;
 }
 
-
-
 function styleLabel(style: string): string {
   if (style in STYLE_LABEL) return STYLE_LABEL[style as keyof typeof STYLE_LABEL];
   return style.charAt(0).toUpperCase() + style.slice(1);
@@ -81,10 +79,6 @@ function barOptionLabel(bar: RevoBarView): string {
 function pickBarForStyle(style: string): RevoBarView | undefined {
   const forStyle = SUPPORTED_BARS.filter((b) => b.style === style);
   return forStyle.find((b) => b.mode === "revo++") ?? forStyle[0];
-}
-
-function isHybridBar(bar: RevoBarView, slotCount: number): boolean {
-  return bar.mode === "hybrid" || slotCount > bar.revolutionSize;
 }
 
 /**
@@ -117,13 +111,7 @@ function revoManagedModelled(bar: RevoBarView): AbilitySpec[] {
     .map((slot) => slot.spec!);
 }
 
-function BarGraphic({
-  slots,
-  revoSize,
-}: {
-  slots: ResolvedSlot[];
-  revoSize: number;
-}) {
+function BarGraphic({ slots, revoSize }: { slots: ResolvedSlot[]; revoSize: number }) {
   return (
     <div className="ability-bar" role="list" aria-label="Revolution bar">
       {slots.map((slot, index) => {
@@ -191,23 +179,24 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const styleMismatch = Boolean(bar && bar.style !== loadout.style);
   const slots = useMemo(() => (bar ? resolveBar(bar, ENGINE_SPECS) : []), [bar]);
   const revoSize = bar?.revolutionSize ?? slots.length;
-  const managedSlots = useMemo(
-    () => (bar ? slots.slice(0, bar.revolutionSize) : []),
-    [bar, slots],
-  );
+  const managedSlots = useMemo(() => (bar ? slots.slice(0, bar.revolutionSize) : []), [bar, slots]);
   const modelled = useMemo(() => (bar ? revoManagedModelled(bar) : []), [bar]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
-  const hybrid = bar ? isHybridBar(bar, slots.length) : false;
+
   const nameById = useMemo(() => {
-    const map = new Map(slots.filter((slot) => slot.spec).map((slot) => [slot.spec!.id, slot.name]));
+    const map = new Map(
+      slots.filter((slot) => slot.spec).map((slot) => [slot.spec!.id, slot.name]),
+    );
     for (const spec of ENGINE_SPECS.values()) {
       if (!map.has(spec.id)) map.set(spec.id, spec.name);
     }
     return map;
   }, [slots]);
 
-  const plannedTicks = secondsToTicks(Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS));
+  const plannedTicks = secondsToTicks(
+    Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
+  );
 
   // Setup style owns the default bar; manual cross-style picks stay until Setup changes.
   useEffect(() => {
@@ -230,7 +219,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   const run = () => {
     if (!bar) return;
-    const durationTicks = secondsToTicks(Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS));
+    const durationTicks = secondsToTicks(
+      Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
+    );
     setShowAllCasts(false);
     setResult(
       runRevolution({
@@ -266,11 +257,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
-  const castLog = result
-    ? showAllCasts
-      ? result.casts
-      : result.casts.slice(0, 40)
-    : [];
+  const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
 
   return (
     <div className="revolution-panel">
@@ -308,9 +295,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             ? `All ${managedSlots.length} revo slots ready`
             : `${modelled.length} of ${managedSlots.length} revo slots ready`}
           {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-          {keybindCount > 0
-            ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
-            : ""}
+          {keybindCount > 0 ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}` : ""}
         </span>
       </div>
 
@@ -347,12 +332,13 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         </button>
       </div>
 
-      {result && !result.ok ? (
-        <p className="mt-3 text-xs text-chaos-300">{result.error}</p>
-      ) : null}
+      {result && !result.ok ? <p className="mt-3 text-xs text-chaos-300">{result.error}</p> : null}
 
       {!result ? (
-        <p className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300" data-testid="revo-empty">
+        <p
+          className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300"
+          data-testid="revo-empty"
+        >
           Hit Run to see how the bar plays out.
         </p>
       ) : null}
@@ -398,70 +384,75 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>
-            <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
-            <table className="w-full min-w-[520px] border-collapse text-left text-xs">
-              <thead className="sticky top-0 bg-stone-900 text-parch-300">
-                <tr className="border-b border-stone-750">
-                  <th className="py-1.5 pr-2 font-medium">#</th>
-                  <th className="py-1.5 pr-2 font-medium">Tick</th>
-                  <th className="py-1.5 pr-2 font-medium">Time</th>
-                  <th className="py-1.5 pr-2 font-medium">Ability</th>
-                  <th className="py-1.5 pr-2 font-medium">Adren</th>
-                  <th className="py-1.5 font-medium">Damage</th>
-                </tr>
-              </thead>
-              <tbody>
-                {castLog.map((cast, index) => (
-                  <tr
-                    key={`${cast.tick}-${cast.abilityId}-${index}`}
-                    className={
-                      cast.auto
-                        ? "border-b border-stone-750/70 bg-stone-zebra/80"
-                        : "border-b border-stone-750/70"
-                    }
-                    data-basic={cast.auto ? "true" : undefined}
-                  >
-                    <td className="py-1 pr-2 font-mono text-parch-300">{index + 1}</td>
-                    <td className="py-1 pr-2 font-mono text-parch-50">{cast.tick}</td>
-                    <td className="py-1 pr-2 font-mono text-parch-300">{formatTime(cast.tick)}</td>
-                    <td className="py-1 pr-2 text-parch-50">
-                      <span className="inline-flex min-w-0 items-center gap-1.5">
-                        {(() => {
-                          const spec = ENGINE_SPECS.get(cast.abilityId);
-                          return (
-                            <>
-                              {spec ? (
-                                <GameIcon
-                                  src={abilityIconPath(spec.id, spec.style)}
-                                  size={16}
-                                  className="shrink-0"
-                                />
-                              ) : null}
-                              <span className="min-w-0 truncate">
-                                {nameById.get(cast.abilityId) ?? cast.abilityId}
-                              </span>
-                              {spec ? (
-                                <AbilityCategoryChip category={spec.category} />
-                              ) : cast.auto ? (
-                                <AbilityCategoryChip category="basic" />
-                              ) : null}
-                            </>
-                          );
-                        })()}
-                      </span>
-                    </td>
-                    <td className="py-1 pr-2 font-mono text-parch-300">
-                      {typeof cast.adrenalineAfter === "number"
-                        ? `${Math.round(cast.adrenalineAfter * 10) / 10}%`
-                        : `${cast.adrenalineAfter}%`}
-                    </td>
-                    <td className="py-1 font-mono text-parch-50">
-                      {formatNumber(cast.result.expected)}
-                    </td>
+            <div
+              className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750"
+              data-testid="revo-cast-timeline"
+            >
+              <table className="w-full min-w-[520px] border-collapse text-left text-xs">
+                <thead className="sticky top-0 bg-stone-900 text-parch-300">
+                  <tr className="border-b border-stone-750">
+                    <th className="py-1.5 pr-2 font-medium">#</th>
+                    <th className="py-1.5 pr-2 font-medium">Tick</th>
+                    <th className="py-1.5 pr-2 font-medium">Time</th>
+                    <th className="py-1.5 pr-2 font-medium">Ability</th>
+                    <th className="py-1.5 pr-2 font-medium">Adren</th>
+                    <th className="py-1.5 font-medium">Damage</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {castLog.map((cast, index) => (
+                    <tr
+                      key={`${cast.tick}-${cast.abilityId}-${index}`}
+                      className={
+                        cast.auto
+                          ? "border-b border-stone-750/70 bg-stone-zebra/80"
+                          : "border-b border-stone-750/70"
+                      }
+                      data-basic={cast.auto ? "true" : undefined}
+                    >
+                      <td className="py-1 pr-2 font-mono text-parch-300">{index + 1}</td>
+                      <td className="py-1 pr-2 font-mono text-parch-50">{cast.tick}</td>
+                      <td className="py-1 pr-2 font-mono text-parch-300">
+                        {formatTime(cast.tick)}
+                      </td>
+                      <td className="py-1 pr-2 text-parch-50">
+                        <span className="inline-flex min-w-0 items-center gap-1.5">
+                          {(() => {
+                            const spec = ENGINE_SPECS.get(cast.abilityId);
+                            return (
+                              <>
+                                {spec ? (
+                                  <GameIcon
+                                    src={abilityIconPath(spec.id, spec.style)}
+                                    size={16}
+                                    className="shrink-0"
+                                  />
+                                ) : null}
+                                <span className="min-w-0 truncate">
+                                  {nameById.get(cast.abilityId) ?? cast.abilityId}
+                                </span>
+                                {spec ? (
+                                  <AbilityCategoryChip category={spec.category} />
+                                ) : cast.auto ? (
+                                  <AbilityCategoryChip category="basic" />
+                                ) : null}
+                              </>
+                            );
+                          })()}
+                        </span>
+                      </td>
+                      <td className="py-1 pr-2 font-mono text-parch-300">
+                        {typeof cast.adrenalineAfter === "number"
+                          ? `${Math.round(cast.adrenalineAfter * 10) / 10}%`
+                          : `${cast.adrenalineAfter}%`}
+                      </td>
+                      <td className="py-1 font-mono text-parch-50">
+                        {formatNumber(cast.result.expected)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
             {result.casts.length > 40 ? (
               <button
@@ -475,29 +466,33 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </section>
 
           <section className="revo-section revo-damage">
-            <h3 className="combat-section-title text-xs font-medium text-parch-50">Ability damage</h3>
+            <h3 className="combat-section-title text-xs font-medium text-parch-50">
+              Ability damage
+            </h3>
             <div className="revo-contributions mt-2 border-t border-stone-750">
-            {contributions.map((row) => (
-              <div
-                key={row.id}
-                className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
-              >
-                <span className="flex min-w-0 items-center gap-2 text-parch-50">
-                  {(() => {
-                    const spec = ENGINE_SPECS.get(row.id);
-                    return spec ? (
-                      <GameIcon src={abilityIconPath(spec.id, spec.style)} size={18} />
-                    ) : null;
-                  })()}
-                  <span className="truncate">
-                  {row.name}
-                  <span className="ml-1.5 font-mono text-parch-300">×{row.count}</span>
+              {contributions.map((row) => (
+                <div
+                  key={row.id}
+                  className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                >
+                  <span className="flex min-w-0 items-center gap-2 text-parch-50">
+                    {(() => {
+                      const spec = ENGINE_SPECS.get(row.id);
+                      return spec ? (
+                        <GameIcon src={abilityIconPath(spec.id, spec.style)} size={18} />
+                      ) : null;
+                    })()}
+                    <span className="truncate">
+                      {row.name}
+                      <span className="ml-1.5 font-mono text-parch-300">×{row.count}</span>
+                    </span>
                   </span>
-                </span>
-                <span className="font-mono text-parch-300">{formatNumber(row.expected)}</span>
-                <span className="font-mono text-parch-50">{Math.round(row.share * 1000) / 10}%</span>
-              </div>
-            ))}
+                  <span className="font-mono text-parch-300">{formatNumber(row.expected)}</span>
+                  <span className="font-mono text-parch-50">
+                    {Math.round(row.share * 1000) / 10}%
+                  </span>
+                </div>
+              ))}
             </div>
           </section>
         </div>

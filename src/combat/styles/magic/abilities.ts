@@ -236,10 +236,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Wild Magic",
     style: "magic",
     category: "enhanced",
-    hits: [
-      { band: { minPct: 125, maxPct: 155 } },
-      { band: { minPct: 125, maxPct: 155 } },
-    ],
+    hits: [{ band: { minPct: 125, maxPct: 155 } }, { band: { minPct: 125, maxPct: 155 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 5.4,
     source: wikiAbility("Wild Magic"),
@@ -433,7 +430,8 @@ export const MAGIC_EFFECTS = [
   {
     id: "smoke_tendrils_self",
     name: "Smoke Tendrils self-damage",
-    notes: "4 self hits of 35-40% ability damage; unaffected by damage modifiers and crit. Not modelled as target damage.",
+    notes:
+      "4 self hits of 35-40% ability damage; unaffected by damage modifiers and crit. Not modelled as target damage.",
     source: wikiAbility("Smoke Tendrils"),
   },
   {

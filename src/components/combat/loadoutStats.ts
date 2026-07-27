@@ -22,7 +22,11 @@ import {
   sumEquipmentBonuses,
   sumNonWeaponAccuracy,
 } from "@/combat/shared/equipment";
-import { prayerBoostedStyleLevel, prayerDamageModifier, styleCurseById } from "@/combat/shared/prayers";
+import {
+  prayerBoostedStyleLevel,
+  prayerDamageModifier,
+  styleCurseById,
+} from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import { equipmentById } from "@/combat/data";
@@ -133,8 +137,12 @@ export function equippedWeaponTier(loadout: Loadout): number | null {
   // Legacy flat list: first weapon-tier record.
   for (const id of loadout.equipmentIds ?? []) {
     const record = equipmentById(id);
-    if (record?.tier != null && Number.isFinite(record.tier) && record.slot &&
-        (record.slot === "mainhand" || record.slot === "twohand" || record.slot === "offhand")) {
+    if (
+      record?.tier != null &&
+      Number.isFinite(record.tier) &&
+      record.slot &&
+      (record.slot === "mainhand" || record.slot === "twohand" || record.slot === "offhand")
+    ) {
       return record.tier;
     }
   }
@@ -177,7 +185,8 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   if (curse) attackLevel = prayerBoostedStyleLevel(attackLevel, curse);
 
   const level = loadoutDamageLevel(loadout);
-  const energising = loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
+  const energising =
+    loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
   const accessoryAccuracy = nonWeaponAccuracyBonus(loadout);
   const weaponTier = loadoutWeaponTier(loadout);
 
@@ -211,9 +220,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     },
   });
   const critChance =
-    loadout.perks.equilibrium > 0
-      ? 0
-      : clamp01(loadout.critChance / 100 + biting + setCrit);
+    loadout.perks.equilibrium > 0 ? 0 : clamp01(loadout.critChance / 100 + biting + setCrit);
 
   const globalModifiers: CombatModifier[] = [];
   if (loadout.perks.equilibrium > 0) {
@@ -265,7 +272,9 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       ...(loadout.perks.ultimatums > 0
         ? [ultimatumsPerkModifier(loadout.perks.ultimatums, ability.category)]
         : []),
-      ...(loadout.perks.lunging > 0 ? [lungingPerkModifier(loadout.perks.lunging, ability.id)] : []),
+      ...(loadout.perks.lunging > 0
+        ? [lungingPerkModifier(loadout.perks.lunging, ability.id)]
+        : []),
     ],
     adrenaline,
     procs,

@@ -1,4 +1,3 @@
-import { secondsToTicks } from "../../rotation/timeline";
 import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
@@ -23,7 +22,12 @@ export function combustDurationTicks(): number {
   return COMBUST_HITS * COMBUST_INTERVAL_TICKS;
 }
 
-export function applyBurn(state: BurnState, id: string, tick: number, durationTicks: number): BurnState {
+export function applyBurn(
+  state: BurnState,
+  id: string,
+  tick: number,
+  durationTicks: number,
+): BurnState {
   return { active: { ...state.active, [id]: tick + durationTicks } };
 }
 
@@ -38,7 +42,10 @@ export function burnActive(state: BurnState, id: string, tick: number): boolean 
 
 /** Ticks with a scheduled Combust hit, relative to application (3, 6, …, 30). */
 export function combustHitTicks(fromTick: number): number[] {
-  return Array.from({ length: COMBUST_HITS }, (_, i) => fromTick + (i + 1) * COMBUST_INTERVAL_TICKS);
+  return Array.from(
+    { length: COMBUST_HITS },
+    (_, i) => fromTick + (i + 1) * COMBUST_INTERVAL_TICKS,
+  );
 }
 
 export const BURN_SOURCE: SourceReference = MODERNISATION_WIKI;

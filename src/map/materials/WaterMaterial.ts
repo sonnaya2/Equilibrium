@@ -28,7 +28,6 @@ import {
   positionWorld,
   smoothstep,
   texture,
-  uniform,
   vec2,
   vec3,
 } from "three/tsl";
@@ -67,10 +66,25 @@ type FloatNode = Node<"float">;
 function longSwell(x: FloatNode, z: FloatNode): FloatNode {
   // Slightly quicker than a still pond — cartographic life, not storm sea.
   // float() on every scalar so WGSL never sees abstract floats in the swell graph.
-  const a = x.mul(float(5.1)).add(z.mul(float(2.6))).add(mapClock.mul(float(0.88))).sin();
-  const b = z.mul(float(6.4)).sub(x.mul(float(3.1))).sub(mapClock.mul(float(0.64))).sin();
-  const c = x.mul(float(3.2)).add(z.mul(float(4.1))).add(mapClock.mul(float(0.46))).sin();
-  return a.mul(float(0.48)).add(b.mul(float(0.34))).add(c.mul(float(0.18)));
+  const a = x
+    .mul(float(5.1))
+    .add(z.mul(float(2.6)))
+    .add(mapClock.mul(float(0.88)))
+    .sin();
+  const b = z
+    .mul(float(6.4))
+    .sub(x.mul(float(3.1)))
+    .sub(mapClock.mul(float(0.64)))
+    .sin();
+  const c = x
+    .mul(float(3.2))
+    .add(z.mul(float(4.1)))
+    .add(mapClock.mul(float(0.46)))
+    .sin();
+  return a
+    .mul(float(0.48))
+    .add(b.mul(float(0.34)))
+    .add(c.mul(float(0.18)));
 }
 
 /** Long swell plus short waves that only show up in the normal. */
@@ -107,7 +121,8 @@ export function createWaterMaterial(
   // Unlit + toneMapped false: the sea is authored colour, not a lit surface,
   // and must not pick up any future filmic curve the land opts into.
   const material = new THREE.MeshBasicNodeMaterial({ toneMapped: false });
-  const key = uniform(keyDirection.clone().normalize());
+  // keyDirection retained for call-site API; specular path currently disabled.
+  void keyDirection;
 
   // The plane is authored flat and rotated -90 about x, so world (x, y, z) is
   // local (x, -z, y): the swell displaces local z, and world XZ at vertex time
@@ -157,14 +172,11 @@ export function createWaterMaterial(
   const fresnel = normal.dot(view).clamp(float(0), float(1)).oneMinus().pow(float(4.2));
   // Looking across the water (low view.y) stretches the key into god-rays under
   // islands. Overview looks down; desert/south focus is the failure case.
-  const lookDown = smoothstep(float(0.14), float(0.48), view.y);
-
   // mapUv is hoisted because the river gradient below samples it four more times.
   const mapUv = mapUvFrom(positionWorld);
   const F = texture(field, mapUv);
   // Open water only — wider than the waterline so plate rims never pick specular.
   const offshore = smoothstep(float(0.5), float(0.44), F.g);
-  const openWater = offshore.mul(offshore);
 
   /**
    * Rivers.
@@ -212,8 +224,6 @@ export function createWaterMaterial(
     fresnel.mul(float(0.11)).mul(nearSea.mul(float(0.55)).add(float(0.45))),
   );
 
-  const reflected = normal.mul(normal.dot(key).mul(float(2))).sub(key);
-  const toward = reflected.dot(view).clamp(float(0), float(1));
   // No open-ocean specular / sheen — soft shafts along wave crests read as
   // glitched green lines off the desert (Bug.png). Sparkle is gone entirely.
   const glint = float(0);
@@ -226,11 +236,7 @@ export function createWaterMaterial(
     .mul(height.mul(float(0.2)).add(float(0.55)))
     .mul(float(0.14));
   // clamp edges as float() — bare 0 / 0.45 are abstract and fail WebGPU validation.
-  water = mix(
-    water,
-    linear(FOAM),
-    surf.clamp(float(0), float(0.22)).mul(notRiver),
-  );
+  water = mix(water, linear(FOAM), surf.clamp(float(0), float(0.22)).mul(notRiver));
 
   // River water: darker and greener than the sea it joins, with the current
   // reading as movement along the channel rather than swell across it.

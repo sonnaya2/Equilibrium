@@ -64,7 +64,9 @@ describe("loadoutStats", () => {
   it("uses the manual base when set, computes from level + weapon tier otherwise", () => {
     expect(loadoutBase(base)).toBe(1000);
     const computed = loadoutBase({ ...base, base: NaN, level: 99, weaponTier: 90, style: "melee" });
-    expect(computed).toBe(baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }));
+    expect(computed).toBe(
+      baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+    );
   });
 
   it("melee Attack feeds accuracy; Strength feeds base AD / crit damage level", () => {
@@ -130,7 +132,10 @@ describe("loadoutStats", () => {
       perks: { ...base.perks, energising: 4 },
       target: { defenceLevel: 80, affinity: "same" },
     });
-    const expected = hitChance(playerAccuracy(99, 90) + 150, { defenceLevel: 80, affinity: "same" });
+    const expected = hitChance(playerAccuracy(99, 90) + 150, {
+      defenceLevel: 80,
+      affinity: "same",
+    });
     expect(withPerk.dp).toBeCloseTo(expected, 10);
     // Without a target the accuracy% input stays authoritative.
     expect(loadoutStats({ ...base, perks: { ...base.perks, energising: 4 } }).dp).toBe(1);
@@ -157,13 +162,15 @@ describe("loadoutStats", () => {
         legs: "item:tectonic-legs",
       },
     });
-    expect(equippedSetCounts({
-      equipmentSlots: {
-        helmet: "item:tectonic-helm",
-        body: "item:tectonic-body",
-        legs: "item:tectonic-legs",
-      },
-    }).get("tectonic")).toBe(3);
+    expect(
+      equippedSetCounts({
+        equipmentSlots: {
+          helmet: "item:tectonic-helm",
+          body: "item:tectonic-body",
+          legs: "item:tectonic-legs",
+        },
+      }).get("tectonic"),
+    ).toBe(3);
     expect(stats.critChance).toBeCloseTo(0.13, 10);
   });
 
@@ -317,7 +324,11 @@ describe("loadoutStats", () => {
     };
     expect(equippedWeaponTier(mainhand)).toBe(95);
 
-    const none: Loadout = { ...base, equipmentSlots: { pocket: "item:scripture-of-amascut" }, weaponTier: 90 };
+    const none: Loadout = {
+      ...base,
+      equipmentSlots: { pocket: "item:scripture-of-amascut" },
+      weaponTier: 90,
+    };
     // Pocket with tier must not win — only twohand/mainhand (or legacy weapon slots).
     expect(equippedWeaponTier(none)).toBeNull();
     expect(loadoutWeaponTier(none)).toBe(90);
@@ -411,10 +422,7 @@ describe("loadoutStats", () => {
     expect(without.dp).toBeLessThan(1);
     expect(withRing.dp).toBeGreaterThan(without.dp);
     // Tier from mock weapon (90); wiki accuracy 9999 excluded from flat accessory sum.
-    expect(without.dp).toBeCloseTo(
-      targetDamagePotential(playerAccuracy(70, 90), target),
-      10,
-    );
+    expect(without.dp).toBeCloseTo(targetDamagePotential(playerAccuracy(70, 90), target), 10);
     expect(withRing.dp).toBeCloseTo(
       targetDamagePotential(playerAccuracy(70, 90) + 100, target),
       10,
@@ -427,10 +435,7 @@ describe("loadoutStats", () => {
       perks: { ...base.perks, energising: 4 },
       equipmentSlots: { ring: "mock:acc-ring" },
     });
-    expect(withBoth.dp).toBeCloseTo(
-      hitChance(playerAccuracy(99, 90) + 150 + 100, target),
-      10,
-    );
+    expect(withBoth.dp).toBeCloseTo(hitChance(playerAccuracy(99, 90) + 150 + 100, target), 10);
   });
 
   it("Eruptive adds a global base-stage damage modifier", () => {
@@ -499,11 +504,24 @@ describe("loadoutStats", () => {
       ReturnType<typeof loadoutStats>["castModifiersFor"]
     >[0];
     expect(loadoutStats(base).castModifiersFor(ability)).toHaveLength(0);
-    const ranked = loadoutStats({ ...base, perks: { ...base.perks, equilibrium: 4, ultimatums: 4 } });
+    const ranked = loadoutStats({
+      ...base,
+      perks: { ...base.perks, equilibrium: 4, ultimatums: 4 },
+    });
     expect(ranked.globalModifiers).toHaveLength(1);
     expect(ranked.castModifiersFor(ability)).toHaveLength(2);
     const ultimate = { id: "melee:overpower", category: "ultimate" } as typeof ability;
-    expect(ranked.castModifiersFor(ultimate).find((m) => m.id.startsWith("perk:ultimatums"))?.applies({ style: "melee" })).toBe(true);
-    expect(ranked.castModifiersFor(ability).find((m) => m.id.startsWith("perk:ultimatums"))?.applies({ style: "melee" })).toBe(false);
+    expect(
+      ranked
+        .castModifiersFor(ultimate)
+        .find((m) => m.id.startsWith("perk:ultimatums"))
+        ?.applies({ style: "melee" }),
+    ).toBe(true);
+    expect(
+      ranked
+        .castModifiersFor(ability)
+        .find((m) => m.id.startsWith("perk:ultimatums"))
+        ?.applies({ style: "melee" }),
+    ).toBe(false);
   });
 });

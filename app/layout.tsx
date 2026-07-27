@@ -39,7 +39,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </main>
         <footer className="comp-foot">
           <p className="comp-foot__jagex">
-            Created using intellectual property belonging to Jagex Limited under the terms of Jagex&apos;s{" "}
+            Created using intellectual property belonging to Jagex Limited under the terms of
+            Jagex&apos;s{" "}
             <a
               href="https://legal.jagex.com/docs/policies/fan-content-policy"
               target="_blank"
@@ -50,9 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             . This content is not endorsed by or affiliated with Jagex.
           </p>
           <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-            <span>
-              RuneScape is a trademark of Jagex Ltd.
-            </span>
+            <span>RuneScape is a trademark of Jagex Ltd.</span>
             <span className="text-stone-750" aria-hidden>
               ·
             </span>

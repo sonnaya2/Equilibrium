@@ -82,13 +82,13 @@ describe("researchRowMatchesRegion", () => {
       requiredRegions: ["anachronia"],
       regionHints: ["anachronia", "tirannwn", "kandarin", "forinthry", "desert"],
     };
-    expect(researchRowMatchesRegion(row, { id: "anachronia", name: "Anachronia", aliases: [] })).toBe(
-      true,
-    );
-    expect(researchRowMatchesRegion(row, misthalin)).toBe(false);
     expect(
-      researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] }),
-    ).toBe(false);
+      researchRowMatchesRegion(row, { id: "anachronia", name: "Anachronia", aliases: [] }),
+    ).toBe(true);
+    expect(researchRowMatchesRegion(row, misthalin)).toBe(false);
+    expect(researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] })).toBe(
+      false,
+    );
   });
 
   it("does not treat invention: id prefix as every-region membership", () => {
@@ -98,9 +98,9 @@ describe("researchRowMatchesRegion", () => {
       regionHints: [] as string[],
     };
     expect(researchRowMatchesRegion(row, misthalin)).toBe(false);
-    expect(
-      researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] }),
-    ).toBe(false);
+    expect(researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] })).toBe(
+      false,
+    );
   });
 
   it("still hosts empty-req place rows via regionHints / region id prefix", () => {
@@ -125,15 +125,12 @@ describe("researchRowMatchesRegion", () => {
       region_requirement_type: "no_region_requirement",
     };
     expect(researchRowMatchesRegion(row, misthalin)).toBe(true);
-    expect(
-      researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] }),
-    ).toBe(true);
-    expect(
-      researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] }),
-    ).toBe(true);
+    expect(researchRowMatchesRegion(row, { id: "asgarnia", name: "Asgarnia", aliases: [] })).toBe(
+      true,
+    );
+    expect(researchRowMatchesRegion(row, { id: "desert", name: "Desert", aliases: [] })).toBe(true);
   });
 });
-
 
 describe("researchRowDetails", () => {
   it("leads with bare detail and labels requirements", () => {

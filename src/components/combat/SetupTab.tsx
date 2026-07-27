@@ -93,7 +93,10 @@ export function SetupTab() {
 
       <div className="setup-layout mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
         {/* Sub-tabs — vertical on lg */}
-        <nav className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col" aria-label="Loadout sections">
+        <nav
+          className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col"
+          aria-label="Loadout sections"
+        >
           <CombatFrameCorners />
           {SUB_TABS.map((tab) => (
             <button
@@ -113,7 +116,9 @@ export function SetupTab() {
         </nav>
 
         {/* Active panel */}
-        <div className={`setup-stage min-w-0${subTab === "Gear" ? "" : " combat-frame loadout-editor"}`}>
+        <div
+          className={`setup-stage min-w-0${subTab === "Gear" ? "" : " combat-frame loadout-editor"}`}
+        >
           {subTab === "Gear" ? null : <CombatFrameCorners />}
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
@@ -125,7 +130,9 @@ export function SetupTab() {
         {/* Live summary rail */}
         <aside className="combat-frame setup-summary p-3">
           <CombatFrameCorners />
-          <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">Summary</h3>
+          <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">
+            Summary
+          </h3>
           <dl className="mt-2 space-y-2 text-xs">
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
               <dt className="text-parch-300">Style</dt>

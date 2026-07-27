@@ -13,7 +13,7 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
-import { useLoadout, type Loadout } from "./useLoadout";
+import { useLoadout } from "./useLoadout";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -25,7 +25,9 @@ const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
 const DAMAGING: Array<{ style: CombatStyle; ability: AbilitySpec }> = (
   ["melee", "ranged", "magic"] as const
 ).flatMap((style) =>
-  STYLE_ABILITIES[style].filter((ability) => ability.hits.length > 0).map((ability) => ({ style, ability })),
+  STYLE_ABILITIES[style]
+    .filter((ability) => ability.hits.length > 0)
+    .map((ability) => ({ style, ability })),
 );
 
 const VOLLEY_ENTRY = { style: "necromancy" as CombatStyle, ability: volleyOfSouls(3) };
@@ -61,7 +63,8 @@ export function AnalysisTab() {
   const [souls, setSouls] = useState(3);
   const [lineB, setLineB] = useState(() => ({ ...loadout }));
 
-  const entry = ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
+  const entry =
+    ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
   const ability = entry.ability.id === "volley_of_souls" ? volleyOfSouls(souls) : entry.ability;
 
   const statsA = loadoutStats(loadout);
@@ -77,8 +80,14 @@ export function AnalysisTab() {
     ),
   };
 
-  const resultA = useMemo(() => runCast(ability, entry.style, statsA), [ability, entry.style, statsA]);
-  const resultB = useMemo(() => runCast(ability, entry.style, statsB), [ability, entry.style, statsB]);
+  const resultA = useMemo(
+    () => runCast(ability, entry.style, statsA),
+    [ability, entry.style, statsA],
+  );
+  const resultB = useMemo(
+    () => runCast(ability, entry.style, statsB),
+    [ability, entry.style, statsB],
+  );
 
   const delta =
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
@@ -108,7 +117,11 @@ export function AnalysisTab() {
         </div>
         {entry.ability.id === "volley_of_souls" ? (
           <div className="loadout-fields mt-3">
-            <NumberField label="Residual Souls spent" value={souls} onChange={(value) => setSouls(Math.min(Math.max(1, Math.floor(value)), MAX_SOULS))} />
+            <NumberField
+              label="Residual Souls spent"
+              value={souls}
+              onChange={(value) => setSouls(Math.min(Math.max(1, Math.floor(value)), MAX_SOULS))}
+            />
           </div>
         ) : null}
       </aside>
@@ -127,12 +140,14 @@ export function AnalysisTab() {
           <div className="analysis-line">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">A · Loadout</h3>
             <dl className="mt-2 text-xs">
-              {([
-                ["Level", statsA.level],
-                ["Base", statsA.base],
-                ["Damage Potential", `${Math.round(statsA.dp * 1000) / 10}%`],
-                ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
-              ] as const).map(([label, value]) => (
+              {(
+                [
+                  ["Level", statsA.level],
+                  ["Base", statsA.base],
+                  ["Damage Potential", `${Math.round(statsA.dp * 1000) / 10}%`],
+                  ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
+                ] as const
+              ).map(([label, value]) => (
                 <div key={label} className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                   <dt className="text-parch-300">{label}</dt>
                   <dd className="text-right font-mono text-parch-50">{value}</dd>
@@ -142,16 +157,40 @@ export function AnalysisTab() {
           </div>
           <div className="analysis-line">
             <div className="flex items-baseline justify-between gap-2">
-              <h3 className="combat-section-title text-xs font-medium text-parch-50">B · Comparison</h3>
-              <button type="button" onClick={() => setLineB({ ...loadout })} className="combat-button border border-stone-750 px-2 py-0.5 text-xs text-parch-300">
+              <h3 className="combat-section-title text-xs font-medium text-parch-50">
+                B · Comparison
+              </h3>
+              <button
+                type="button"
+                onClick={() => setLineB({ ...loadout })}
+                className="combat-button border border-stone-750 px-2 py-0.5 text-xs text-parch-300"
+              >
                 Reset to A
               </button>
             </div>
             <div className="mt-2">
-              <NumberField label="Level" value={lineB.level} onChange={(level) => setLineB({ ...lineB, level })} />
-              <NumberField label="Base" value={lineB.base} onChange={(base) => setLineB({ ...lineB, base })} />
-              <NumberField label="Accuracy" value={lineB.accuracy} onChange={(accuracy) => setLineB({ ...lineB, accuracy })} suffix="%" />
-              <NumberField label="Crit" value={lineB.critChance} onChange={(critChance) => setLineB({ ...lineB, critChance })} suffix="%" />
+              <NumberField
+                label="Level"
+                value={lineB.level}
+                onChange={(level) => setLineB({ ...lineB, level })}
+              />
+              <NumberField
+                label="Base"
+                value={lineB.base}
+                onChange={(base) => setLineB({ ...lineB, base })}
+              />
+              <NumberField
+                label="Accuracy"
+                value={lineB.accuracy}
+                onChange={(accuracy) => setLineB({ ...lineB, accuracy })}
+                suffix="%"
+              />
+              <NumberField
+                label="Crit"
+                value={lineB.critChance}
+                onChange={(critChance) => setLineB({ ...lineB, critChance })}
+                suffix="%"
+              />
             </div>
           </div>
         </div>
@@ -160,23 +199,46 @@ export function AnalysisTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-parch-300">
-                <th>Line</th><th className="text-right">Expected</th><th className="text-right">Min – max</th><th className="text-right">Crit min – max</th><th className="text-right">Damage Potential</th>
+                <th>Line</th>
+                <th className="text-right">Expected</th>
+                <th className="text-right">Min – max</th>
+                <th className="text-right">Crit min – max</th>
+                <th className="text-right">Damage Potential</th>
               </tr>
             </thead>
             <tbody className="font-mono">
-              {([ ["A", resultA], ["B", resultB] ] as const).map(([line, result]) => (
+              {(
+                [
+                  ["A", resultA],
+                  ["B", resultB],
+                ] as const
+              ).map(([line, result]) => (
                 <tr key={line}>
                   <td className="font-sans text-parch-300">{line}</td>
-                  <td className="text-right text-base text-parch-50">{formatNumber(result.expected)}</td>
-                  <td className="text-right text-parch-50">{formatNumber(result.min)} – {formatNumber(result.max)}</td>
-                  <td className="text-right text-parch-50">{formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} – {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}</td>
-                  <td className="text-right text-parch-50">{Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%</td>
+                  <td className="text-right text-base text-parch-50">
+                    {formatNumber(result.expected)}
+                  </td>
+                  <td className="text-right text-parch-50">
+                    {formatNumber(result.min)} – {formatNumber(result.max)}
+                  </td>
+                  <td className="text-right text-parch-50">
+                    {formatNumber(result.hits.reduce((n, h) => n + h.critMin, 0))} –{" "}
+                    {formatNumber(result.hits.reduce((n, h) => n + h.critMax, 0))}
+                  </td>
+                  <td className="text-right text-parch-50">
+                    {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
+                  </td>
                 </tr>
               ))}
               <tr className="analysis-delta">
                 <td className="font-sans text-parch-300">B − A</td>
-                <td className="text-right text-gem-300">{delta >= 0 ? "+" : ""}{Math.round(delta * 10) / 10}%</td>
-                <td colSpan={3} className="text-right font-sans text-xs text-parch-300">expected-value change</td>
+                <td className="text-right text-gem-300">
+                  {delta >= 0 ? "+" : ""}
+                  {Math.round(delta * 10) / 10}%
+                </td>
+                <td colSpan={3} className="text-right font-sans text-xs text-parch-300">
+                  expected-value change
+                </td>
               </tr>
             </tbody>
           </table>

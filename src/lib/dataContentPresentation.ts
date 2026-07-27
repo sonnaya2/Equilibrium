@@ -15,10 +15,7 @@ import {
 } from "@/lib/gameArt";
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import { pinForHighlight } from "@/map/data/placeAnchors";
-import {
-  hasRewardIconAlias,
-  resolveRewardIconLabel,
-} from "@/lib/rewardIconAliases";
+import { hasRewardIconAlias, resolveRewardIconLabel } from "@/lib/rewardIconAliases";
 
 /** Default chip cap; Chaotic/Ruinous weapon rows need room for the full set. */
 /** Chip strip capacity — high enough for full brawling-glove sets (13) + overflow. */
@@ -125,7 +122,10 @@ export function contentRewardsSource(text: string): string {
   } else if (s.includes(" · ")) {
     // No Unlocks/Effects label: prefer a middot clause that looks like a comma item list
     // (GWD2 "reputation prose · Dragon Rider lance, Cywir…").
-    const parts = s.split(/\s·\s/).map((p) => p.trim()).filter(Boolean);
+    const parts = s
+      .split(/\s·\s/)
+      .map((p) => p.trim())
+      .filter(Boolean);
     const listish = [...parts]
       .reverse()
       .find(
@@ -241,7 +241,7 @@ function cleanTokenParts(parts: string[]): string[] {
   for (const part of parts) {
     const expanded = expandSlashList(part.replace(/\s+/g, " ").trim());
     for (const piece of expanded) {
-      let label = piece.replace(/\s+/g, " ").trim();
+      const label = piece.replace(/\s+/g, " ").trim();
       if (!label || label.length > 72) continue;
       const key = label.toLowerCase();
       if (seen.has(key)) continue;
@@ -360,8 +360,7 @@ export function presentContentRewards(
   displayMax = REWARD_DISPLAY_MAX,
 ): PresentedContentRewards {
   const sourceText = contentRewardsSource(textFull);
-  const displayText =
-    sourceText === "—" ? "—" : clipRewardDisplay(sourceText, displayMax);
+  const displayText = sourceText === "—" ? "—" : clipRewardDisplay(sourceText, displayMax);
   const tokens = contentRewardTokens(sourceText);
   const resolved = contentRewardIcons(tokens, Number.MAX_SAFE_INTEGER);
   const limit = Math.max(0, cap);
@@ -572,9 +571,7 @@ function cleanInterestText(value: string): string {
  * "on-ramp hub", residual/package/infrastructure) while keeping place names.
  */
 export function presentInterestName(value: string): string {
-  const raw = cleanInterestText(value)
-    .replace(/\s+/g, " ")
-    .trim();
+  const raw = cleanInterestText(value).replace(/\s+/g, " ").trim();
   if (!raw) return "";
 
   // Exact / prefix rewrites BEFORE paren strip + generic trailing strips.
@@ -648,7 +645,8 @@ export function presentInterestName(value: string): string {
   if (/^Havenhythe canoe network$/i.test(raw)) return "Canoe network";
   if (/^Bloodweed\s*&\s*aggression potions$/i.test(raw)) return "Bloodweed / aggression pots";
   if (/^Wilderness herb patch$/i.test(raw)) return "Bloodweed / aggression pots";
-  if (/^Abyss Runecrafting$/i.test(raw) || /^Abyss entrance$/i.test(raw)) return "Abyss Runecrafting";
+  if (/^Abyss Runecrafting$/i.test(raw) || /^Abyss entrance$/i.test(raw))
+    return "Abyss Runecrafting";
   if (/^Edgeville (Dungeon )?resource dungeons$/i.test(raw)) return "Edgeville resource dungeons";
   if (/^Black salamanders\b/i.test(raw)) return "Black salamanders";
   if (/^Daemonheim Rewards shop\b/i.test(raw)) return "Daemonheim Rewards";
@@ -772,37 +770,39 @@ export function presentInterestName(value: string): string {
   if (/^Fort Forinthry Kitchen\b/i.test(name)) return "Fort Kitchen";
   if (/^Fort Forinthry Town Hall\b/i.test(name)) return "Fort Town Hall";
 
-  return name
-    .replace(
-      /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
-      "",
-    )
-    .replace(/\s+and essence access$/i, "")
-    .replace(/\s+access geography$/i, "")
-    .replace(/\s+and island skilling access$/i, "")
-    .replace(/\s+Runecrafting geography$/i, "")
-    .replace(/\s+access$/i, "")
-    .replace(/\s+pressure stack$/i, "")
-    .replace(/\s+stack$/i, "")
-    .replace(/\s+network$/i, "")
-    .replace(/\s+circuit$/i, "")
-    .replace(/\s+overview$/i, "")
-    // "Foo altar Runecrafting" → "Foo altar" (only when preceded by altar)
-    .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
-    .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
-    .replace(/\s+docks and skilling hub$/i, "")
-    .replace(/\s+early[–\-]?mid skilling hub$/i, "")
-    .replace(/\s+early skilling hub$/i, "")
-    .replace(/\s+skilling hub$/i, "")
-    .replace(/\s+multi-skill hub$/i, "")
-    .replace(/\s+production hub$/i, "")
-    .replace(/\s+on-ramp hub$/i, "")
-    .replace(/\s+skilling boss hub$/i, "")
-    .replace(/\s+hub amenities$/i, "")
-    .replace(/\s+hubs$/i, "")
-    .replace(/\s+hub$/i, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return (
+    name
+      .replace(
+        /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
+        "",
+      )
+      .replace(/\s+and essence access$/i, "")
+      .replace(/\s+access geography$/i, "")
+      .replace(/\s+and island skilling access$/i, "")
+      .replace(/\s+Runecrafting geography$/i, "")
+      .replace(/\s+access$/i, "")
+      .replace(/\s+pressure stack$/i, "")
+      .replace(/\s+stack$/i, "")
+      .replace(/\s+network$/i, "")
+      .replace(/\s+circuit$/i, "")
+      .replace(/\s+overview$/i, "")
+      // "Foo altar Runecrafting" → "Foo altar" (only when preceded by altar)
+      .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
+      .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
+      .replace(/\s+docks and skilling hub$/i, "")
+      .replace(/\s+early[–\-]?mid skilling hub$/i, "")
+      .replace(/\s+early skilling hub$/i, "")
+      .replace(/\s+skilling hub$/i, "")
+      .replace(/\s+multi-skill hub$/i, "")
+      .replace(/\s+production hub$/i, "")
+      .replace(/\s+on-ramp hub$/i, "")
+      .replace(/\s+skilling boss hub$/i, "")
+      .replace(/\s+hub amenities$/i, "")
+      .replace(/\s+hubs$/i, "")
+      .replace(/\s+hub$/i, "")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
 }
 
 /**
@@ -920,10 +920,7 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     .replace(/\bbis drop source\b/gi, "")
     .replace(/\bcross-region\b/gi, "")
     .replace(/\bfollow-on\b/gi, "")
-    .replace(
-      /\b(?:regional|permanent|global|explicit|working|canonical)\b/gi,
-      "",
-    )
+    .replace(/\b(?:regional|permanent|global|explicit|working|canonical)\b/gi, "")
     .replace(
       /\b(?:infrastructure|package|residual|pointer|densify|taxonomy|geography|portfolio|checklist)\b/gi,
       "",

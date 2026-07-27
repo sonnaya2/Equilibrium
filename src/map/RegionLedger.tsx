@@ -57,11 +57,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
         <Pips
           total={ELECTIVE_CAP}
           filled={loaded ? pickCount : 0}
-          label={
-            loaded
-              ? `${pickCount} of ${ELECTIVE_CAP} elective picks used`
-              : "Loading picks"
-          }
+          label={loaded ? `${pickCount} of ${ELECTIVE_CAP} elective picks used` : "Loading picks"}
         />
         <button
           type="button"

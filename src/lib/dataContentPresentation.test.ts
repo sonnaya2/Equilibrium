@@ -17,15 +17,8 @@ import {
   splitContentKind,
   REWARD_ICON_CAP,
 } from "./dataContentPresentation";
-import {
-  REWARD_ICON_BY_LABEL,
-  resolveRewardIconLabel,
-} from "./rewardIconAliases";
-import {
-  contentDetailOrRewards,
-  contentRewardsFull,
-  majorContentRows,
-} from "./researchRewards";
+import { REWARD_ICON_BY_LABEL, resolveRewardIconLabel } from "./rewardIconAliases";
+import { contentDetailOrRewards, contentRewardsFull, majorContentRows } from "./researchRewards";
 import { getResearchCatalog } from "@/research/catalog";
 const PUBLIC = join(process.cwd(), "public");
 const catalog = getResearchCatalog();
@@ -129,9 +122,11 @@ describe("resolveRewardIcon + contentRewardIcons", () => {
     const icons = contentRewardIcons(tokens);
     expect(icons.length).toBeGreaterThanOrEqual(3);
     expect(icons.every((i) => publicOk(i.src))).toBe(true);
-    expect(icons.some((i) => /fractured-staff|greater-concentrated|wrist-wrap|scripture-of-jas/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      icons.some((i) =>
+        /fractured-staff|greater-concentrated|wrist-wrap|scripture-of-jas/i.test(i.src),
+      ),
+    ).toBe(true);
   });
 
   it("resolves Nex Torva/Pernix/Virtus set shorthand", () => {
@@ -177,8 +172,7 @@ describe("presentContentRewards — major boss uniques", () => {
   const samples: { name: string; full: string; minResolved: number; srcRe: RegExp }[] = [
     {
       name: "Kerapac",
-      full:
-        "Fractured Staff of Armadyl components, Greater Concentrated Blast, Kerapac's wrist wraps, Scripture of Jas",
+      full: "Fractured Staff of Armadyl components, Greater Concentrated Blast, Kerapac's wrist wraps, Scripture of Jas",
       minResolved: 4,
       srcRe: /fractured-staff|greater-concentrated|wrist-wrap|scripture-of-jas/,
     },
@@ -238,8 +232,7 @@ describe("presentContentRewards — major boss uniques", () => {
     },
     {
       name: "Sanctum of Rebirth",
-      full:
-        "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
+      full: "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
       minResolved: 5,
       srcRe: /roar-of-awakening|ode-to-deceit|divine-rage|scripture-of-amascut|shard-of-genesis/,
     },
@@ -287,15 +280,13 @@ describe("presentContentRewards — major boss uniques", () => {
     },
     {
       name: "GWD2",
-      full:
-        "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
+      full: "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
       minResolved: 5,
       srcRe: /dragon-rider-lance|cywir|shadow-glaive|blade-of-avaryss|blade-of-nymora/,
     },
     {
       name: "Commander Zilyana",
-      full:
-        "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
+      full: "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
       minResolved: 4,
       srcRe: /saradomin-sword|saradomin-godsword|armadyl-crossbow/,
     },
@@ -440,8 +431,12 @@ describe("REWARD_ICON_BY_LABEL", () => {
   });
 
   it("resolveRewardIconLabel is apostrophe-insensitive both ways", () => {
-    expect(resolveRewardIconLabel("Kerapac's wrist wraps")).toMatch(/kerapacs-wrist-wraps\.(webp|png)$/);
-    expect(resolveRewardIconLabel("Kerapacs wrist wraps")).toMatch(/kerapacs-wrist-wraps\.(webp|png)$/);
+    expect(resolveRewardIconLabel("Kerapac's wrist wraps")).toMatch(
+      /kerapacs-wrist-wraps\.(webp|png)$/,
+    );
+    expect(resolveRewardIconLabel("Kerapacs wrist wraps")).toMatch(
+      /kerapacs-wrist-wraps\.(webp|png)$/,
+    );
     expect(resolveRewardIconLabel("Tumeken’s Light")).toMatch(/tumekens-light\.(webp|png)$/); // curly ’
     expect(resolveRewardIconLabel("Sana's fyrtorch")).toMatch(/sanas-fyrtorch\.(webp|png)$/);
     expect(resolveRewardIconLabel("Sanas fyrtorch")).toMatch(/sanas-fyrtorch\.(webp|png)$/);
@@ -457,7 +452,6 @@ describe("REWARD_ICON_BY_LABEL", () => {
     expect(resolveRewardIcon("Pale energy")).toMatch(/pale-energy\.(webp|png)$/);
   });
 });
-
 
 describe("splitContentKind", () => {
   it("keeps pure types as Type without location", () => {
@@ -538,9 +532,7 @@ describe("contentTypeLabel", () => {
 describe("presentInterestName / presentInterestMeta", () => {
   it("drops planner hub suffixes from place names", () => {
     expect(presentInterestName("Draynor Village skilling hub")).toBe("Draynor Village");
-    expect(presentInterestName("Edgeville skilling and Wilderness on-ramp hub")).toBe(
-      "Edgeville",
-    );
+    expect(presentInterestName("Edgeville skilling and Wilderness on-ramp hub")).toBe("Edgeville");
     expect(presentInterestName("Lumbridge early skilling hub")).toBe("Lumbridge");
     expect(presentInterestName("Port Sarim docks and skilling hub")).toBe("Port Sarim");
     expect(presentInterestName("Seers' Village skilling hub")).toBe("Seers' Village");
@@ -555,9 +547,7 @@ describe("presentInterestName / presentInterestMeta", () => {
 
   it("rewrites region-prefixed RC altar packages into player labels", () => {
     expect(
-      presentInterestName(
-        "Misthalin Runecrafting altars (Water, Earth) and essence access",
-      ),
+      presentInterestName("Misthalin Runecrafting altars (Water, Earth) and essence access"),
     ).toBe("Water & Earth altars");
     expect(presentInterestName("Asgarnia Runecrafting altars (Mind, Body, Law)")).toBe(
       "Mind, Body & Law altars",
@@ -573,19 +563,15 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestName("Soul Supplies and City of Um skilling shops")).toBe(
       "Soul Supplies",
     );
-    expect(presentInterestName("City of Um ritual site and focus storage")).toBe(
-      "Um ritual site",
+    expect(presentInterestName("City of Um ritual site and focus storage")).toBe("Um ritual site");
+    expect(presentInterestName("Selene Necromancy prayer and curse unlocks (City of Um)")).toBe(
+      "Selene prayers",
     );
-    expect(
-      presentInterestName("Selene Necromancy prayer and curse unlocks (City of Um)"),
-    ).toBe("Selene prayers");
     expect(presentInterestName("Underworld Grimoire 1-4")).toBe("Underworld Grimoire");
     expect(
       presentInterestName("Underworld Grimoire skilling milestone ladder (UG1–4 densify)"),
     ).toBe("Underworld Grimoire");
-    expect(presentInterestName("Varrock Lumber Yard sawmill operator")).toBe(
-      "Varrock sawmill",
-    );
+    expect(presentInterestName("Varrock Lumber Yard sawmill operator")).toBe("Varrock sawmill");
     expect(presentInterestName("Ring of Vigour and passive conversion")).toBe("Ring of Vigour");
     expect(presentInterestName("Ring of Vigour passive")).toBe("RoV passive");
     expect(presentInterestName("Ring of Vigour")).toBe("Ring of Vigour");
@@ -600,12 +586,10 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestMeta("regional multi-skill bank and production hub")).toBe(
       "Bank and production",
     );
-    expect(
-      presentInterestMeta("regional multi-skill transport and shop infrastructure"),
-    ).toBe("Docks and shops");
-    expect(presentInterestMeta("regional starter multi-skill infrastructure")).toBe(
-      "Starter town",
+    expect(presentInterestMeta("regional multi-skill transport and shop infrastructure")).toBe(
+      "Docks and shops",
     );
+    expect(presentInterestMeta("regional starter multi-skill infrastructure")).toBe("Starter town");
     expect(presentInterestMeta("Runecrafting geography")).toBe("Runecrafting");
     expect(presentInterestMeta("Runecrafting altar infrastructure")).toBe("Runecrafting");
     expect(presentInterestMeta("regional boss BiS drop source")).toBe("Boss uniques");
@@ -613,12 +597,8 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestMeta("Necromancy supply shops")).toBe("Necromancy shops");
     expect(presentInterestMeta("Necromancy ritual infrastructure")).toBe("Rituals");
     expect(presentInterestMeta("Prayer unlock infrastructure")).toBe("Prayer");
-    expect(presentInterestMeta("Construction plank production infrastructure")).toBe(
-      "Sawmill",
-    );
-    expect(presentInterestMeta("Magic ability codex gloves and scripture")).toBe(
-      "Magic uniques",
-    );
+    expect(presentInterestMeta("Construction plank production infrastructure")).toBe("Sawmill");
+    expect(presentInterestMeta("Magic ability codex gloves and scripture")).toBe("Magic uniques");
     expect(presentInterestMeta("combat Archaeology relic cross-region chain")).toBe(
       "Archaeology relic",
     );
@@ -643,7 +623,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       expect(full, String(name)).toMatch(re);
       const presented = presentContentRewards(full);
       expect(presented.icons.length, String(name)).toBeGreaterThanOrEqual(minIcons);
-      expect(presented.icons.every((i) => publicOk(i.src)), String(name)).toBe(true);
+      expect(
+        presented.icons.every((i) => publicOk(i.src)),
+        String(name),
+      ).toBe(true);
     }
   });
 
@@ -682,12 +665,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(full).not.toMatch(/Spirit altar \(spirit runes\)/i);
     const presented = presentContentRewards(full);
     expect(presented.icons.map((i) => i.label.toLowerCase())).toEqual(
-      expect.arrayContaining([
-        "spirit rune",
-        "bone rune",
-        "flesh rune",
-        "miasma rune",
-      ]),
+      expect.arrayContaining(["spirit rune", "bone rune", "flesh rune", "miasma rune"]),
     );
     expect(presented.icons).toHaveLength(4);
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
@@ -772,15 +750,14 @@ describe("contentRewardsFull — catalog boss packages", () => {
       for (const re of must) expect(full, name).toMatch(re);
       const presented = presentContentRewards(full);
       if (minIcons) expect(presented.icons.length, name).toBeGreaterThanOrEqual(minIcons);
-      expect(presented.icons.every((i) => publicOk(i.src)), name).toBe(true);
+      expect(
+        presented.icons.every((i) => publicOk(i.src)),
+        name,
+      ).toBe(true);
     }
-    expect(presentInterestName("Corrupted creatures & soul devourers")).toBe(
-      "Corrupted creatures",
-    );
+    expect(presentInterestName("Corrupted creatures & soul devourers")).toBe("Corrupted creatures");
     const desert = regionById("desert");
-    expect(desert.content.some((c) => /Heart of Gielinor \/ God Wars/i.test(c.name))).toBe(
-      false,
-    );
+    expect(desert.content.some((c) => /Heart of Gielinor \/ God Wars/i.test(c.name))).toBe(false);
     // Het powders must not collapse to a single generic "Prayer powders" chip.
     const het = contentRow("desert", "Het's Oasis");
     const hetPresented = presentContentRewards(contentRewardsFull(het.row, het.upgrades));
@@ -843,7 +820,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       expect(full, name).not.toMatch(/working taxonomy|densify residual|WikiCombat/i);
       const presented = presentContentRewards(full);
       if (minIcons) expect(presented.icons.length, name).toBeGreaterThanOrEqual(minIcons);
-      expect(presented.icons.every((i) => publicOk(i.src)), name).toBe(true);
+      expect(
+        presented.icons.every((i) => publicOk(i.src)),
+        name,
+      ).toBe(true);
     }
     // AI noise rows removed from majors/upgrades surface via content list.
     const for_ = contentRow("forinthry", "Corporeal Beast");
@@ -935,9 +915,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const soul = contentRow("forinthry", "Soulgazers");
     const soulFull = contentRewardsFull(soul.row, soul.upgrades);
     expect(soulFull).toMatch(/Hexhunter/i);
-    expect(presentContentRewards(soulFull).icons.some((i) => /hexhunter/i.test(i.src))).toBe(
-      true,
-    );
+    expect(presentContentRewards(soulFull).icons.some((i) => /hexhunter/i.test(i.src))).toBe(true);
   });
 
   it("Bloodwoods, Agility, and Wildy Slayer chip dark onyx core", () => {
@@ -983,7 +961,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       expect(full, row.name).not.toMatch(/Hotspots/i);
       const presented = presentContentRewards(full);
       expect(presented.icons.length, row.name).toBe(5);
-      expect(presented.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+      expect(
+        presented.icons.every((i) => publicOk(i.src)),
+        row.name,
+      ).toBe(true);
     }
   });
 
@@ -1067,7 +1048,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       expect(full, row.name).not.toMatch(/\bpath\b/i);
       const p = presentContentRewards(full);
       expect(p.icons.length, row.name).toBeGreaterThanOrEqual(c.min);
-      expect(p.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+      expect(
+        p.icons.every((i) => publicOk(i.src)),
+        row.name,
+      ).toBe(true);
     }
   });
 
@@ -1076,9 +1060,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(kan.content.some((c) => /yanille multi/i.test(c.name))).toBe(false);
     expect(kan.content.some((c) => /Wizards' Guild/i.test(c.name))).toBe(true);
     expect(kan.content.some((c) => c.name === "Manor Farm animal perks")).toBe(true);
-    expect(kan.content.some((c) => /Freneskae|Nightmare creatures|Muspah|Rune dragons/i.test(c.name))).toBe(
-      true,
-    );
+    expect(
+      kan.content.some((c) => /Freneskae|Nightmare creatures|Muspah|Rune dragons/i.test(c.name)),
+    ).toBe(true);
 
     const pof = contentRow("kandarin", "Player-Owned Farm / Manor Farm");
     const pofP = presentContentRewards(contentRewardsFull(pof.row, pof.upgrades));
@@ -1169,7 +1153,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       expect(full, row.name).toMatch(c.re);
       const presented = presentContentRewards(full);
       expect(presented.icons.length, row.name).toBeGreaterThanOrEqual(c.min);
-      expect(presented.icons.every((i) => publicOk(i.src)), row.name).toBe(true);
+      expect(
+        presented.icons.every((i) => publicOk(i.src)),
+        row.name,
+      ).toBe(true);
     }
   });
 
@@ -1193,9 +1180,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
   it("Subjugation equipment / Robes of subjugation resolve as set chips", () => {
     expect(resolveRewardIcon("Subjugation equipment")).toMatch(/subjugation/i);
     expect(resolveRewardIcon("subjugation")).toMatch(/subjugation/i);
-    expect(resolveRewardIcon("Robes of subjugation")).toMatch(
-      /garb-of-subjugation|subjugation/,
-    );
+    expect(resolveRewardIcon("Robes of subjugation")).toMatch(/garb-of-subjugation|subjugation/);
     expect(publicOk(resolveRewardIcon("Subjugation equipment"))).toBe(true);
     expect(publicOk(resolveRewardIcon("Robes of subjugation"))).toBe(true);
   });
@@ -1251,7 +1236,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
         name: "Commander Zilyana",
         re: /Saradomin sword|Saradomin godsword|Armadyl crossbow/i,
       },
-      { region: "fremennik", name: "Dagannoth Kings", re: /Berserker ring|Dragon hatchet|Warrior ring|Archers/i },
+      {
+        region: "fremennik",
+        name: "Dagannoth Kings",
+        re: /Berserker ring|Dragon hatchet|Warrior ring|Archers/i,
+      },
       { region: "kandarin", name: "Legiones", re: /Ascension/i },
       { region: "tirannwn", name: "Solak", re: /Blightbound|Erethdor/i },
       { region: "forinthry", name: /Dragonkin Laboratory/, re: /Greater Fury|Draconic energy/i },
@@ -1360,9 +1349,6 @@ describe("contentDetailOrRewards — empty catalog detail fallback", () => {
   });
 
   it("returns empty string when detail and rewards are both blank", () => {
-    expect(contentDetailOrRewards({ name: "Unknown Placeholder Boss", detail: "" }, [])).toBe(
-      "",
-    );
+    expect(contentDetailOrRewards({ name: "Unknown Placeholder Boss", detail: "" }, [])).toBe("");
   });
 });
-

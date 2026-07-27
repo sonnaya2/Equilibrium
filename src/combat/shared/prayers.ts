@@ -150,6 +150,9 @@ export function prayerDamageModifier(curse: StyleCurseBoost): CombatModifier {
   };
 }
 
-export function prayerBoostedStyleLevel(baseLevel: number, curse: StyleCurseBoost | null | undefined): number {
+export function prayerBoostedStyleLevel(
+  baseLevel: number,
+  curse: StyleCurseBoost | null | undefined,
+): number {
   return baseLevel + (curse?.accuracyLevels ?? 0);
 }

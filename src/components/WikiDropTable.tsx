@@ -50,12 +50,9 @@ function resolveIcon(
 ): { primary: string | null; fallback: string | null } {
   // Live wiki glyph wins; local /game path is fallback (presentDrop + catalog map).
   const wiki = row.iconUrl && isWikiIconUrl(row.iconUrl) ? row.iconUrl : null;
-  const localFromRow =
-    row.iconUrl && isLocalGamePath(row.iconUrl) ? row.iconUrl : null;
+  const localFromRow = row.iconUrl && isLocalGamePath(row.iconUrl) ? row.iconUrl : null;
   const localMapped = iconByItem?.[row.item];
-  const local =
-    localFromRow ??
-    (localMapped && isLocalGamePath(localMapped) ? localMapped : null);
+  const local = localFromRow ?? (localMapped && isLocalGamePath(localMapped) ? localMapped : null);
   if (wiki) return { primary: wiki, fallback: local };
   if (local) return { primary: local, fallback: null };
   return { primary: null, fallback: null };
@@ -82,8 +79,7 @@ function DropIcon({
   const [failed, setFailed] = useState(false);
   const [fallbackFailed, setFallbackFailed] = useState(false);
   const showPrimary = !failed;
-  const showFallback =
-    failed && fallbackSrc && isLocalGamePath(fallbackSrc) && !fallbackFailed;
+  const showFallback = failed && fallbackSrc && isLocalGamePath(fallbackSrc) && !fallbackFailed;
 
   if (!showPrimary && !showFallback) {
     return <span className="data-wiki-article__drop-table-icon is-empty" aria-hidden />;
@@ -109,11 +105,7 @@ function DropIcon({
         />
       ) : null}
       {showFallback ? (
-        <GameIcon
-          src={fallbackSrc!}
-          size={28}
-          onLoadFailed={() => setFallbackFailed(true)}
-        />
+        <GameIcon src={fallbackSrc!} size={28} onLoadFailed={() => setFallbackFailed(true)} />
       ) : null}
     </span>
   );
@@ -121,11 +113,7 @@ function DropIcon({
 
 function NotedBadge() {
   return (
-    <span
-      className="data-wiki-article__noted-badge"
-      title="Noted"
-      aria-label="Noted"
-    >
+    <span className="data-wiki-article__noted-badge" title="Noted" aria-label="Noted">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={NOTED_BADGE_ICON_URL}
@@ -150,9 +138,7 @@ function DropGroupTable({
   /** Full popup: never collapse groups. */
   forceOpen?: boolean;
 }) {
-  const [collapsed, setCollapsed] = useState(
-    forceOpen ? false : group.collapsedByDefault,
-  );
+  const [collapsed, setCollapsed] = useState(forceOpen ? false : group.collapsedByDefault);
   const [showAll, setShowAll] = useState(Boolean(forceOpen));
 
   const count = group.rows.length;
@@ -206,14 +192,9 @@ function DropGroupTable({
                       {icon.primary ? (
                         <DropIcon src={icon.primary} fallbackSrc={icon.fallback} />
                       ) : (
-                        <span
-                          className="data-wiki-article__drop-table-icon is-empty"
-                          aria-hidden
-                        />
+                        <span className="data-wiki-article__drop-table-icon is-empty" aria-hidden />
                       )}
-                      <span className="data-wiki-article__drop-table-name">
-                        {row.item}
-                      </span>
+                      <span className="data-wiki-article__drop-table-name">{row.item}</span>
                       {row.noted ? <NotedBadge /> : null}
                     </td>
                     <td className="data-wiki-article__drop-table-qty font-mono tabular-nums">
@@ -275,9 +256,7 @@ export function WikiDropTable({
 
   const hiddenCount = isFull
     ? 0
-    : allGroups
-        .filter((g) => g.id === "common")
-        .reduce((n, g) => n + g.rows.length, 0);
+    : allGroups.filter((g) => g.id === "common").reduce((n, g) => n + g.rows.length, 0);
 
   if (!rows.length || !allGroups.length) return null;
 
@@ -294,9 +273,7 @@ export function WikiDropTable({
       }
     >
       <div className="data-wiki-article__drop-board-head">
-        <h3 className="data-wiki-article__drop-board-title">
-          {isFull ? "All drops" : "Drops"}
-        </h3>
+        <h3 className="data-wiki-article__drop-board-title">{isFull ? "All drops" : "Drops"}</h3>
         <div className="data-wiki-article__drop-board-actions">
           <span className="data-wiki-article__drop-board-meta">
             {total} item{total === 1 ? "" : "s"}
@@ -308,9 +285,7 @@ export function WikiDropTable({
               className="data-wiki-article__drop-open-full"
               onClick={onOpenFull}
             >
-              {hiddenCount > 0 || total > DROP_GROUP_PREVIEW_LIMIT
-                ? `Full table`
-                : `Open table`}
+              {hiddenCount > 0 || total > DROP_GROUP_PREVIEW_LIMIT ? `Full table` : `Open table`}
             </button>
           ) : null}
         </div>
@@ -346,27 +321,15 @@ export function WikiNotableDrops({
     <ul className="data-wiki-article__notable" aria-label="Notable drops">
       {rows.map((row) => {
         const icon = resolveIcon(row, iconByItem);
-        const tip = [
-          row.item,
-          row.noted ? "noted" : null,
-          row.quantity,
-          row.rate,
-        ]
+        const tip = [row.item, row.noted ? "noted" : null, row.quantity, row.rate]
           .filter(Boolean)
           .join(" · ");
         return (
-          <li
-            key={row.item}
-            className="data-wiki-article__notable-item"
-            title={tip}
-          >
+          <li key={row.item} className="data-wiki-article__notable-item" title={tip}>
             {icon.primary ? (
               <DropIcon src={icon.primary} fallbackSrc={icon.fallback} />
             ) : (
-              <span
-                className="data-wiki-article__drop-table-icon is-empty"
-                aria-hidden
-              />
+              <span className="data-wiki-article__drop-table-icon is-empty" aria-hidden />
             )}
             <span className="data-wiki-article__notable-name">{row.item}</span>
             {row.noted ? <NotedBadge /> : null}

@@ -23,11 +23,7 @@ export function patchThreeClock(): void {
 
   const prev = getConsoleFunction();
   setConsoleFunction((type, message, ...params) => {
-    if (
-      type === "warn" &&
-      typeof message === "string" &&
-      CLOCK_DEPRECATION.test(message)
-    ) {
+    if (type === "warn" && typeof message === "string" && CLOCK_DEPRECATION.test(message)) {
       return;
     }
     if (prev) {
@@ -35,7 +31,8 @@ export function patchThreeClock(): void {
       return;
     }
     // Mirror three's default path for stack-trace objects and plain messages.
-    const stackTrace = params[0] as { isStackTrace?: boolean; getError?: (m: string) => unknown } | undefined;
+    const stackTrace = params[0] as
+      { isStackTrace?: boolean; getError?: (m: string) => unknown } | undefined;
     if (stackTrace?.isStackTrace && typeof stackTrace.getError === "function") {
       const out = stackTrace.getError(message as string);
       if (type === "error") console.error(out);

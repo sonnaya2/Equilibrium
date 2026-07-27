@@ -11,6 +11,7 @@ import {
   type WikiDropRow,
 } from "@/lib/wikiArticle";
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
+import { log } from "@/lib/log";
 
 export const runtime = "nodejs";
 
@@ -31,22 +32,50 @@ type ParsePayload = {
 function displayTitle(raw: string | undefined, fallback: string): string {
   if (!raw) return fallback;
   // Wiki often emits First Necromancer&#039;s equipment in displaytitle.
-  return (
-    decodeHtmlEntities(raw.replace(/<[^>]+>/g, "")).trim() || fallback
-  );
+  return decodeHtmlEntities(raw.replace(/<[^>]+>/g, "")).trim() || fallback;
 }
 
-async function fetchWikiParse(
-  pageTitle: string,
-  signal: AbortSignal,
-): Promise<ParsePayload | null> {
-  const response = await fetch(wikiParseApiUrl(pageTitle), {
-    headers: { "User-Agent": WIKI_USER_AGENT, Accept: "application/json" },
-    signal,
-    next: { revalidate: 3600 },
-  });
-  if (!response.ok) return null;
-  return (await response.json()) as ParsePayload;
+type FetchWikiResult =
+  | { ok: true; payload: ParsePayload }
+  | {
+      ok: false;
+      kind: "upstream_status" | "malformed_json" | "aborted" | "timeout" | "network";
+      detail?: string;
+    };
+
+async function fetchWikiParse(pageTitle: string, signal: AbortSignal): Promise<FetchWikiResult> {
+  try {
+    const response = await fetch(wikiParseApiUrl(pageTitle), {
+      headers: { "User-Agent": WIKI_USER_AGENT, Accept: "application/json" },
+      signal,
+      next: { revalidate: 3600 },
+    });
+    if (!response.ok) {
+      return { ok: false, kind: "upstream_status", detail: String(response.status) };
+    }
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      return { ok: false, kind: "malformed_json" };
+    }
+    if (!payload || typeof payload !== "object") {
+      return { ok: false, kind: "malformed_json" };
+    }
+    return { ok: true, payload: payload as ParsePayload };
+  } catch (error) {
+    if (signal.aborted) {
+      return { ok: false, kind: "timeout" };
+    }
+    if (error instanceof Error && error.name === "AbortError") {
+      return { ok: false, kind: "aborted" };
+    }
+    return {
+      ok: false,
+      kind: "network",
+      detail: error instanceof Error ? error.message : "network",
+    };
+  }
 }
 
 /**
@@ -77,13 +106,30 @@ async function expandLootContainers(
         .join("/");
       const safe = safeWikiPage(`https://runescape.wiki/w/${path}`);
       if (!safe) continue;
-      const payload = await fetchWikiParse(safe.pageTitle, signal);
-      const html = payload?.parse?.text;
+      const fetched = await fetchWikiParse(safe.pageTitle, signal);
+      if (!fetched.ok) {
+        log.warn("wiki.expand", "loot subpage fetch failed", {
+          title: safe.pageTitle,
+          kind: fetched.kind,
+          detail: fetched.detail,
+        });
+        continue;
+      }
+      const html = fetched.payload.parse?.text;
       if (!html || typeof html !== "string") continue;
-      const sub = processWikiHtml(html, {
-        title: safe.pageTitle,
-        pageUrl: safe.pageUrl,
-      });
+      let sub: WikiArticleView;
+      try {
+        sub = processWikiHtml(html, {
+          title: safe.pageTitle,
+          pageUrl: safe.pageUrl,
+        });
+      } catch (error) {
+        log.warn("wiki.expand", "loot subpage sanitizer/parse failed", {
+          title: safe.pageTitle,
+          detail: error instanceof Error ? error.message : "unknown",
+        });
+        continue;
+      }
       const modeLabel = /\(([^)]+)\)\s*$/.exec(title)?.[1]?.trim();
       for (const row of sub.drops) {
         expanded.push({
@@ -91,11 +137,15 @@ async function expandLootContainers(
           group:
             row.group && modeLabel && !groupAlreadyHasMode(row.group, modeLabel)
               ? `${row.group} (${modeLabel})`
-              : row.group ?? (modeLabel ? `Loot (${modeLabel})` : null),
+              : (row.group ?? (modeLabel ? `Loot (${modeLabel})` : null)),
         });
       }
-    } catch {
+    } catch (error) {
       // Bad subpage / parse must not drop the primary article response.
+      log.warn("wiki.expand", "loot expansion hop failed", {
+        title,
+        detail: error instanceof Error ? error.message : "unknown",
+      });
       continue;
     }
   }
@@ -144,40 +194,57 @@ export async function GET(request: Request) {
     const timeout = setTimeout(() => controller.abort(), 18_000);
 
     try {
-      const payload = await fetchWikiParse(pageTitle, controller.signal);
-      if (!payload) {
-        return NextResponse.json(
-          { error: "RuneScape Wiki request failed" },
-          { status: 502 },
-        );
+      const fetched = await fetchWikiParse(pageTitle, controller.signal);
+      if (!fetched.ok) {
+        log.warn("wiki.article", "upstream fetch failed", {
+          pageTitle,
+          kind: fetched.kind,
+          detail: fetched.detail,
+        });
+        if (fetched.kind === "timeout" || fetched.kind === "aborted") {
+          return NextResponse.json({ error: "RuneScape Wiki request timed out" }, { status: 504 });
+        }
+        if (fetched.kind === "upstream_status" && fetched.detail === "404") {
+          return NextResponse.json({ error: "Wiki page not found" }, { status: 404 });
+        }
+        return NextResponse.json({ error: "RuneScape Wiki request failed" }, { status: 502 });
       }
+      const payload = fetched.payload;
       if (payload.error?.info) {
-        return NextResponse.json(
-          { error: payload.error.info },
-          { status: 404 },
-        );
+        return NextResponse.json({ error: "Wiki page not found" }, { status: 404 });
       }
 
       const text = payload.parse?.text;
       if (typeof text !== "string" || !text.trim()) {
+        log.warn("wiki.article", "malformed wiki response — no HTML", {
+          pageTitle,
+        });
         return NextResponse.json(
           { error: "Wiki response did not include article HTML" },
           { status: 502 },
         );
       }
 
-      const title = displayTitle(
-        payload.parse?.displaytitle ?? payload.parse?.title,
-        pageTitle,
-      );
+      const title = displayTitle(payload.parse?.displaytitle ?? payload.parse?.title, pageTitle);
 
-      let view: WikiArticleView = finalizeArticleHtml(
-        processWikiHtml(text, { title, pageUrl }),
-      );
+      let view: WikiArticleView;
+      try {
+        view = finalizeArticleHtml(processWikiHtml(text, { title, pageUrl }));
+      } catch (error) {
+        log.error("wiki.article", "sanitizer or process failure", {
+          pageTitle,
+          detail: error instanceof Error ? error.message : "unknown",
+        });
+        return NextResponse.json({ error: "Unable to process wiki article" }, { status: 502 });
+      }
       try {
         view = await expandLootContainers(view, controller.signal);
-      } catch {
+      } catch (error) {
         // Expansion is best-effort; base article still ships.
+        log.warn("wiki.article", "optional loot expansion failed", {
+          pageTitle,
+          detail: error instanceof Error ? error.message : "unknown",
+        });
       }
 
       return NextResponse.json(view, {
@@ -189,8 +256,9 @@ export async function GET(request: Request) {
       clearTimeout(timeout);
     }
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to load wiki article";
-    return NextResponse.json({ error: message }, { status: 504 });
+    log.error("wiki.article", "unhandled wiki route error", {
+      detail: error instanceof Error ? error.message : "unknown",
+    });
+    return NextResponse.json({ error: "Unable to load wiki article" }, { status: 504 });
   }
 }

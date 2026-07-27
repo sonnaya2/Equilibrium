@@ -71,12 +71,10 @@ describe("filterTasks", () => {
 
   it("intersects single-region pick with the build unlock set", () => {
     const allowed = new Set(["karamja", "misthalin"]);
-    expect(
-      filterTasks(RECORDS, "all", "", "karamja", { allowedRegions: allowed }),
-    ).toHaveLength(2);
-    expect(
-      filterTasks(RECORDS, "all", "", "global", { allowedRegions: allowed }),
-    ).toEqual([RECORDS[2]]);
+    expect(filterTasks(RECORDS, "all", "", "karamja", { allowedRegions: allowed })).toHaveLength(2);
+    expect(filterTasks(RECORDS, "all", "", "global", { allowedRegions: allowed })).toEqual([
+      RECORDS[2],
+    ]);
   });
 
   it("searches name, description, region, and skills", () => {

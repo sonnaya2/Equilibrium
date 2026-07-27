@@ -1,11 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import {
-  collectArticleAssets,
-  resolveLocalAsset,
-  resolveLocalAssets,
-} from "./wikiLocalAssets";
+import { collectArticleAssets, resolveLocalAsset, resolveLocalAssets } from "./wikiLocalAssets";
 
 const PUBLIC = join(process.cwd(), "public");
 
@@ -14,10 +10,9 @@ function expectPublishedLocal(src: string | null | undefined, label: string) {
   expect(src, `${label} should resolve`).toBeTruthy();
   expect(src!.startsWith("/game/"), `${label} must be local /game/ path`).toBe(true);
   expect(src!.includes("://"), `${label} must not be remote`).toBe(false);
-  expect(
-    existsSync(join(PUBLIC, src!)),
-    `${src} not published — run npm run sync:assets`,
-  ).toBe(true);
+  expect(existsSync(join(PUBLIC, src!)), `${src} not published — run npm run sync:assets`).toBe(
+    true,
+  );
 }
 
 describe("resolveLocalAsset", () => {
@@ -70,18 +65,13 @@ describe("resolveLocalAsset", () => {
     expect(resolveLocalAsset("1–500")).toBeNull();
     expect(resolveLocalAsset("42%")).toBeNull();
     // Abstract package — prefer empty over a weak skill/scenery hit.
-    expect(
-      resolveLocalAsset("Random abstract skilling package ladder"),
-    ).toBeNull();
+    expect(resolveLocalAsset("Random abstract skilling package ladder")).toBeNull();
   });
 });
 
 describe("resolveLocalAssets / collectArticleAssets", () => {
   it("dedupes by src and respects cap", () => {
-    const assets = resolveLocalAssets(
-      ["Archaeology", "Archaeology", "Agility", "Kree'arra"],
-      2,
-    );
+    const assets = resolveLocalAssets(["Archaeology", "Archaeology", "Agility", "Kree'arra"], 2);
     expect(assets).toHaveLength(2);
     const srcs = assets.map((a) => a.src);
     expect(new Set(srcs).size).toBe(2);

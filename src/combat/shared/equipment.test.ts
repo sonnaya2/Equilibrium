@@ -109,9 +109,7 @@ describe("shared/equipment set effects", () => {
         legs: "item:tectonic-legs",
       },
     });
-    expect(summary).toEqual([
-      { setId: "tectonic", pieces: 3, label: "Tectonic (Fracture Point)" },
-    ]);
+    expect(summary).toEqual([{ setId: "tectonic", pieces: 3, label: "Tectonic (Fracture Point)" }]);
     expect(setEffectsSummary({ equipmentSlots: {} })).toEqual([]);
   });
 

@@ -9,11 +9,7 @@
  * that already sanitize do not double-gate. Without a normalizer, non-object
  * values (and null) fall back; arrays count as objects and pass through.
  */
-export function loadState<T>(
-  key: string,
-  fallback: T,
-  normalize?: (raw: unknown) => T,
-): T {
+export function loadState<T>(key: string, fallback: T, normalize?: (raw: unknown) => T): T {
   if (typeof window === "undefined") return fallback;
   try {
     const raw = window.localStorage.getItem(key);

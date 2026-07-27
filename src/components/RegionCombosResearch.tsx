@@ -28,9 +28,7 @@ function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
   const artifacts = (row.artifact_regions ?? []) as string[];
   const collectors = (row.collector_regions ?? []) as string[];
   const status = String(row.status || "obtainable");
-  const combo =
-    row.comboLabel ||
-    (required.length > 1 ? `Needs ${required.join(" + ")}` : "");
+  const combo = row.comboLabel || (required.length > 1 ? `Needs ${required.join(" + ")}` : "");
   const reason = row.unobtainable_reason ? ` · ${row.unobtainable_reason}` : "";
   return {
     id: row.id,

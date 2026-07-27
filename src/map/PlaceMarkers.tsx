@@ -266,9 +266,7 @@ export function PlaceMarkers({
       const wantLit = lit ? 1 : 0;
       const wanted = active && (!pin.place.site || focus.place !== null || lit) ? 1 : 0;
       const from = shown.current[i] ?? 0;
-      const next = reducedMotion
-        ? wanted
-        : from + (wanted - from) * (1 - Math.exp(-delta * 9));
+      const next = reducedMotion ? wanted : from + (wanted - from) * (1 - Math.exp(-delta * 9));
       const reveal = Math.abs(next - wanted) < 0.004 ? wanted : next;
       const revealBusy = reveal !== wanted;
       shown.current[i] = reveal;

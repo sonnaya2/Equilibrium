@@ -256,9 +256,9 @@ describe("gameArt", () => {
     // Fish farm must not resolve to Player-Owned Farm
     expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).not.toMatch(/player-owned-farm/);
     expect(dataEntityIconPath({ name: "Fish farming" })).not.toMatch(/player-owned-farm/);
-    // Boss plates win Name wells (same official art as Kerapac / Arch-Glacor).
+    // Content boss rows use official plates; "… uniques" packages keep inventory art.
     expect(dataEntityIconPath({ name: "Ivar, King of Bones" })).toMatch(/\/bosses\/ivar\./);
-    expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(/\/bosses\/ivar\./);
+    expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(/ivar-uniques/);
     expect(dataEntityIconPath({ name: "Silverquill, the Dreadhog" })).toMatch(
       /\/bosses\/silverquill\./,
     );

@@ -54,8 +54,9 @@ export const CONTENT_ACCESS: Record<string, string> = {
  * Cap-5 chip order for Zuk: weapon, ability, scripture, BiS cape, one style cape.
  */
 export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
+  // Capes next to Zuk: BiS igneous set (style stones) after the weapon/ability/scripture.
   "TzKal-Zuk":
-    "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk, Igneous Kal-Ket",
+    "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk, Igneous Kal-Ket, Igneous Kal-Mej, Igneous Kal-Xil, Igneous Kal-Mor",
   "TzHaar Fight Cave": "Fire cape",
   "Fight Kiln": "TokHaar-Kal-Ket, TokHaar-Kal-Xil, TokHaar-Kal-Mej, TokHaar-Kal-Mor",
 };

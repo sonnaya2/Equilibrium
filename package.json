@@ -4,6 +4,9 @@
   "private": true,
   "license": "SEE LICENSE IN NOTICE",
   "homepage": "https://github.com/sonnaya2/Equilibrium",
+  "bugs": {
+    "url": "https://github.com/sonnaya2/Equilibrium/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sonnaya2/Equilibrium.git"

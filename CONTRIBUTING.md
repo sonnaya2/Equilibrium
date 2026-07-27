@@ -12,14 +12,19 @@ Not affiliated with Jagex.
 | PvME-derived research notes | **CC BY-NC-SA 4.0** (pvme-guides) — not MIT |
 | Jagex art/icons/screenshots (`assets/`, `public/game/`, refs) | Jagex property / Fan Content Policy — not MIT |
 
-Details: root **`NOTICE`** (authoritative). Do not commercially redistribute wiki or PvME
-adapted material under MIT. Keep footer + `/sources` attribution when forking the UI.
+Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, with scope limit).
+
+**Hard bans**
+- Do not sell or commercially package `assets/`, `public/game/`, or other Jagex media.
+- Do not re-label wiki (CC BY-NC-SA 3.0) or PvME (CC BY-NC-SA 4.0) material as MIT-only.
+- Do not strip footer / `/sources` / `SourceReference` fields when forking.
 
 ### When adding data
 - Prefer RuneScape Wiki URLs on every external fact (`SourceReference`).
 - If a fact came from PvME, tag source `pvme` and re-verify on the Wiki before `verified: true`.
 - Never strip source URLs to “clean” a row.
 - Never copy PvME / RS Analysis guide prose or UI.
+- New icons: register provenance (`assets/source-manifest*.json`) — see `assets/README.md`.
 
 ## Data ownership
 

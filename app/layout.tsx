@@ -121,7 +121,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   >
                     Fan Content Policy
                   </a>
-                  . Individual Wiki files may carry separate terms.
+                  . Not for sale. Do not commercially redistribute game art from this site.
+                  Individual Wiki files may carry separate terms.
                 </p>
                 <p>
                   <strong>Site code:</strong>{" "}
@@ -131,8 +132,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     rel="noreferrer noopener"
                   >
                     MIT License
-                  </a>
-                  . External data is not MIT — see{" "}
+                  </a>{" "}
+                  for original code only. Wiki/PvME data and Jagex assets are not MIT — see{" "}
                   <a
                     href="https://github.com/sonnaya2/Equilibrium/blob/main/NOTICE"
                     target="_blank"

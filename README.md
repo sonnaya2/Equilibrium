@@ -132,15 +132,17 @@ Data and research come from the [RuneScape Wiki](https://runescape.wiki/),
 [RS Analysis](https://rs-analysis.xyz/), [PvME](https://pvme.io/) and official
 [Jagex](https://www.jagex.com/) material. Individual records keep their own source where possible.
 
-- **Code:** MIT (`LICENSE`)
+- **Code:** MIT for original software only (`LICENSE` has an explicit scope limit)
 - **Wiki-derived content:** [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)
-  (Weird Gloop / [RuneScape Wiki](https://runescape.wiki/)) — adapted; share-alike; non-commercial
+  (Weird Gloop / [RuneScape Wiki](https://runescape.wiki/)) — adapted; share-alike; **non-commercial**
 - **PvME research notes:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-  ([pvme-guides](https://github.com/pvme/pvme-guides)) — discovery only, not a guide mirror
+  ([pvme-guides](https://github.com/pvme/pvme-guides)) — discovery only, not a guide mirror; **non-commercial**
 - **Jagex art / marks:** Jagex property under the
-  [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy)
+  [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy) — **not for sale**
 
-Authoritative split: [`NOTICE`](./NOTICE). Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+**Do not sell redistributions whose value is game art or wiki/PvME data.** MIT on code is not a
+licence to commercialize Jagex media. Authoritative split: [`NOTICE`](./NOTICE).
+Map of URIs: [`licenses/README.md`](./licenses/README.md). Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 On-site credits: [/sources](https://equilibrium-ruddy.vercel.app/sources).
 
 Unofficial, non-commercial fan project. Not affiliated with or endorsed by Jagex. RuneScape is a

@@ -1,16 +1,41 @@
-MIT License
+MIT License — original application code only
+============================================
 
-Copyright (c) 2026 sonnaya2
+Copyright (c) 2026 sonnaya2 and contributors
 
-NOTE: This MIT grant covers original application code only.
+IMPORTANT SCOPE LIMITATION
+--------------------------
+This MIT License applies **only** to original application software and
+original documentation authored for the RS3 Equilibrium project
+(primarily `app/`, `src/`, product `scripts/` excluding pure research
+dumps, automated tests, and project-authored docs that are not game-data
+extracts).
 
-Game data adapted from the RuneScape Wiki is CC BY-NC-SA 3.0. Research
-notes adapted from PvME (pvme-guides) are CC BY-NC-SA 4.0. Jagex
-trademarks and game art remain Jagex property under the Fan Content
-Policy. None of those layers are re-licensed as MIT.
+It does **NOT** apply to, and does **NOT** grant any rights in:
 
-See NOTICE for the full attribution, ShareAlike, and NonCommercial
-requirements.
+  • Jagex Ltd. trademarks, trade dress, game names, or in-game media
+    (including icons, art, screenshots under `assets/`, `public/game/`,
+    and similar paths)
+  • Text, tables, or data adapted from the RuneScape Wiki
+    (CC BY-NC-SA 3.0 — see NOTICE)
+  • Research notes adapted from PvM Encyclopedia / pvme-guides
+    (CC BY-NC-SA 4.0 — see NOTICE)
+  • Third-party research from RS Analysis or other sites (see NOTICE)
+
+Those materials remain under their own terms. **Selling, paid
+redistribution, or commercial packaging of Jagex game assets, or of
+wiki/PvME adapted data as if it were MIT-licensed, is not permitted
+by this grant.**
+
+Authoritative multi-layer rights split, attribution duties, ShareAlike
+and NonCommercial rules: **NOTICE** (repository root).
+Also: CONTRIBUTING.md, /sources on the live site, and licenses/README.md.
+
+If NOTICE and this file conflict on third-party material, NOTICE wins.
+
+
+MIT License text (applies only as limited above)
+------------------------------------------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +44,9 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice, this permission notice, and the scope limitation
+in this file shall be included in all copies or substantial portions of the
+Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

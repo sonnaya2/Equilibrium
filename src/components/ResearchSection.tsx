@@ -4,6 +4,10 @@ import { useMemo, useState } from "react";
 import type { ResearchRegion } from "@/research/catalog";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
+import {
+  presentInterestMeta,
+  presentInterestName,
+} from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
@@ -499,7 +503,7 @@ const TITLE_KEYS = [
   "id",
 ] as const;
 
-/** Unit-testable row title — never stringifies a source object. */
+/** Unit-testable raw row title — never stringifies a source object. Icons use this. */
 export function researchRowTitle(row: ResearchRow): string {
   for (const key of TITLE_KEYS) {
     const title = scalarTitle(row[key]);
@@ -508,14 +512,22 @@ export function researchRowTitle(row: ResearchRow): string {
   return "—";
 }
 
+/** Display title only — presentInterestName trims planner hub suffixes; icons stay on raw. */
 function title(row: ResearchRow): string {
-  return researchRowTitle(row);
+  const raw = researchRowTitle(row);
+  if (raw === "—") return raw;
+  return presentInterestName(raw) || raw;
 }
 
 function subtitle(row: ResearchRow): string {
   const head = researchRowTitle(row);
+  const presented = title(row);
+  // Category is meta chrome — presentInterestMeta before other candidates.
+  if (typeof row.category === "string" && row.category.trim()) {
+    const meta = presentInterestMeta(row.category, 80);
+    if (meta && meta !== head && meta !== presented) return meta;
+  }
   const candidates: unknown[] = [
-    row.category,
     row.location,
     row.effect_summary,
     row.support_item_effect,
@@ -526,7 +538,7 @@ function subtitle(row: ResearchRow): string {
   ];
   for (const candidate of candidates) {
     const value = text(candidate);
-    if (value && value !== head) return value;
+    if (value && value !== head && value !== presented) return value;
   }
   return "";
 }
@@ -992,14 +1004,16 @@ export function ResearchSection({
               const rowDetails = details(row);
               const rowSubtitle = clipProse(subtitle(row), 80);
               const rowTitle = title(row);
+              // Icon resolve from RAW title keys — never presentInterestName output.
+              const rawTitle = researchRowTitle(row);
               const iconSrc = dataEntityIconPath({
-                name: rowTitle !== "—" ? rowTitle : typeof row.name === "string" ? row.name : null,
+                name: rawTitle !== "—" ? rawTitle : typeof row.name === "string" ? row.name : null,
                 kind: String(row.recordType || row.category || row.kind || ""),
                 id: row.id != null ? String(row.id) : null,
               });
               return (
                 <article
-                  key={String(row.id || `${rowTitle}-${index}`)}
+                  key={String(row.id || `${rawTitle}-${index}`)}
                   className={`data-record-row${index % 2 === 1 ? " is-zebra" : ""}`}
                 >
                   <div className="data-record-row__identity">

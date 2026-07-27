@@ -559,7 +559,47 @@ function cleanInterestText(value: string): string {
  * "on-ramp hub", residual/package/infrastructure) while keeping place names.
  */
 export function presentInterestName(value: string): string {
-  const name = cleanInterestText(value)
+  const raw = cleanInterestText(value)
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!raw) return "";
+
+  // Exact / prefix rewrites BEFORE paren strip + generic trailing strips.
+  // Icons still resolve from raw names elsewhere.
+  // RC / altars
+  if (/^Misthalin Runecrafting altars\b/i.test(raw)) return "Water & Earth altars";
+  if (/^Asgarnia Runecrafting altars\b/i.test(raw)) return "Mind, Body & Law altars";
+  if (/^Entrana Law altar\b/i.test(raw)) return "Law altar (Entrana)";
+  if (/^Blood altar Runecrafting$/i.test(raw)) return "Blood altar";
+  if (/^Death altar\b/i.test(raw)) return "Death altar";
+  if (/^Ourania Runecrafting Altar\b/i.test(raw)) return "Ourania altar (ZMI)";
+  if (/^Astral altar\b/i.test(raw)) return "Astral altar";
+  if (/^Soul altar\b/i.test(raw)) return "Soul altar";
+  if (/^Necromantic Rune Temple$/i.test(raw)) return "Necrotic altars";
+  if (/^Runecrafting essence pouches\b/i.test(raw)) return "Essence pouches";
+  if (/^Abyss Runecrafting stack$/i.test(raw)) return "Abyss Runecrafting";
+
+  // Access / geography dumps
+  if (/^Ardougne farming patches\b/i.test(raw)) return "Ardougne farm patches";
+  if (/^Highweald\s*\/\s*Deserted Mine mining access$/i.test(raw)) return "Highweald mines";
+  if (/^The Arc skilling destinations\b/i.test(raw)) return "The Arc islands";
+  if (/^Player-owned ports skilling rewards\b/i.test(raw)) {
+    return "Ports skilling rewards";
+  }
+
+  // Package / densify leftovers
+  if (/^Decorated and exquisite urn craft infrastructure$/i.test(raw)) {
+    return "Urn crafting";
+  }
+  if (/^Spirit shield \+ holy elixir \/ sigil densify$/i.test(raw)) {
+    return "Spirit shields";
+  }
+  if (/^Games necklace teleport package$/i.test(raw)) return "Games necklace";
+  if (/^Plague's End Prifddinas unlock package$/i.test(raw)) return "Plague's End";
+  if (/^Seren skilling prayers package\b/i.test(raw)) return "Seren prayers";
+  if (/^Allotment patch hub package$/i.test(raw)) return "Allotment patches";
+
+  const name = raw
     .replace(/\s*\([^)]*\)/g, "")
     .replace(/\s+progression$/i, "")
     .replace(/\s+/g, " ")
@@ -648,6 +688,18 @@ export function presentInterestName(value: string): string {
       /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
       "",
     )
+    .replace(/\s+and essence access$/i, "")
+    .replace(/\s+access geography$/i, "")
+    .replace(/\s+and island skilling access$/i, "")
+    .replace(/\s+Runecrafting geography$/i, "")
+    .replace(/\s+access$/i, "")
+    .replace(/\s+pressure stack$/i, "")
+    .replace(/\s+stack$/i, "")
+    .replace(/\s+network$/i, "")
+    .replace(/\s+circuit$/i, "")
+    .replace(/\s+overview$/i, "")
+    // "Foo altar Runecrafting" → "Foo altar" (only when preceded by altar)
+    .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
     .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
     .replace(/\s+docks and skilling hub$/i, "")
     .replace(/\s+early[–\-]?mid skilling hub$/i, "")
@@ -695,17 +747,52 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "rested experience and fort bank infrastructure": "Rested XP",
     "cooking infrastructure and range hub": "Cooking",
     "slayer infrastructure": "Slayer",
+    "runecrafting geography": "Runecrafting",
+    "runecrafting altar infrastructure": "Runecrafting",
+    "runecrafting altar and island infrastructure": "Runecrafting",
+    "runecrafting altar and lunar spellbook switch": "Runecrafting",
+    "runecrafting altar and catalytic supply": "Runecrafting",
+    "regional runecrafting altar infrastructure": "Runecrafting",
+    "runecrafting altar infrastructure for necrotic runes": "Runecrafting",
+    "runecrafting access infrastructure": "Runecrafting",
+    "runecrafting access and efficiency stack": "Runecrafting",
+    "runecrafting guild and portal infrastructure": "Runecrafting",
+    "permanent multi-region rc essence-storage ladder": "Essence storage",
+    "permanent endgame rc essence-storage pouch": "Essence storage",
+    "regional boss bis drop source": "Boss uniques",
+    "regional boss bis drop source residual": "Boss uniques",
+    "invention guild machine infrastructure": "Invention machines",
+    "achievement diary acquisition frame": "Diary rewards",
+    "construction teleport and housing infrastructure": "POH",
+    "invention production infrastructure": "Invention",
+    "farming patch network infrastructure": "Farming patches",
+    "farming patch infrastructure": "Farming patches",
+    "prayer training infrastructure": "Prayer training",
+    "permanent multi-skill urn production package": "Urn production",
+    "multi-region elite skilling outfit portfolio package": "Elite outfits",
+    "permanent multi-style slayer helmet ladder": "Slayer helm",
+    "permanent infinite-rune staff craft ladder": "Rune staff",
+    "cooking brewery infrastructure": "Brewery",
+    "fishing permanent perk infrastructure": "Fishing perks",
+    "regional mining infrastructure": "Mining",
+    "regional mining infrastructure residual": "Mining",
+    "necromancy ritual geography": "Necromancy",
+    "magic guild infrastructure and rune-essence logistics": "Magic Guild",
   };
   if (exact[lower]) return exact[lower];
 
   s = s
     .replace(/\bfollow-on chain\b/gi, "")
+    .replace(/\bacquisition frame\b/gi, "")
+    .replace(/\bbis drop source\b/gi, "")
+    .replace(/\bcross-region\b/gi, "")
+    .replace(/\bfollow-on\b/gi, "")
     .replace(
       /\b(?:regional|permanent|global|explicit|working|canonical)\b/gi,
       "",
     )
     .replace(
-      /\b(?:infrastructure|package|residual|pointer|densify|taxonomy)\b/gi,
+      /\b(?:infrastructure|package|residual|pointer|densify|taxonomy|geography|portfolio|checklist)\b/gi,
       "",
     )
     .replace(/\bmulti-skill\b/gi, "")

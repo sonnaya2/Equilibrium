@@ -531,6 +531,22 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestName("Fort Forinthry Kitchen")).toBe("Fort Kitchen");
   });
 
+  it("rewrites region-prefixed RC altar packages into player labels", () => {
+    expect(
+      presentInterestName(
+        "Misthalin Runecrafting altars (Water, Earth) and essence access",
+      ),
+    ).toBe("Water & Earth altars");
+    expect(presentInterestName("Asgarnia Runecrafting altars (Mind, Body, Law)")).toBe(
+      "Mind, Body & Law altars",
+    );
+    expect(presentInterestName("Entrana Law altar and island skilling access")).toBe(
+      "Law altar (Entrana)",
+    );
+    expect(presentInterestName("Blood altar Runecrafting")).toBe("Blood altar");
+    expect(presentInterestName("Abyss Runecrafting stack")).toBe("Abyss Runecrafting");
+  });
+
   it("rewrites multi-skill category taxonomy into short meta", () => {
     expect(presentInterestMeta("regional multi-skill bank and production hub")).toBe(
       "Bank and production",
@@ -541,6 +557,10 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestMeta("regional starter multi-skill infrastructure")).toBe(
       "Starter town",
     );
+    expect(presentInterestMeta("Runecrafting geography")).toBe("Runecrafting");
+    expect(presentInterestMeta("Runecrafting altar infrastructure")).toBe("Runecrafting");
+    expect(presentInterestMeta("regional boss BiS drop source")).toBe("Boss uniques");
+    expect(presentInterestMeta("achievement diary acquisition frame")).toBe("Diary rewards");
   });
 });
 

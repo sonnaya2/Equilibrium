@@ -345,6 +345,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "move souls layout": perm("sunken-pyramid"),
   "slayer codex": perm("sunken-pyramid"),
   "focus sight": skProd("focus-sight"),
+  "trade goods": perm("player-owned-port"),
+  scrimshaws: perm("player-owned-port"),
+  "eastern lands voyages": perm("player-owned-port"),
+  "ports resources": perm("player-owned-port"),
   // Drygore / KQ uniques live under skilling-production so reward chips pass acceptRewardPath
   // (equipmentIconPath closed set rejects brand-new combat/equipment slugs).
   "drygore rapier": skProd("drygore-rapier"),

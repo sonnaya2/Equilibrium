@@ -138,6 +138,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Agility Pyramid": "Agility XP, Menaphos reputation",
   "Agility Pyramid (Jaleustrophos)": "Agility XP, Menaphos reputation",
   "Desert strykewyrm": "Focus sight",
+  "Player-owned port":
+    "Trade goods, Scrimshaws, Eastern lands voyages, Ports resources",
 };
 
 /**

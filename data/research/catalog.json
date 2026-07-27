@@ -8348,6 +8348,18 @@
             "title": "Bandos equipment",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Player-owned port",
+          "kind": "Minigame",
+          "detail": "Port Sarim hub (also Menaphos / Prif portals). 90 in a ports skill to voyage. Trade goods, scrimshaws, Eastern lands / Arc materials, Tetsu / Death Lotus / Seasinger craft path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Player-owned_port",
+            "title": "Player-owned port",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -22173,31 +22185,6 @@
           "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Player-owned port",
-          "category": "Ports voyage economy and Eastern lands gate",
-          "detail": "Player-owned port hub · Primary Desert/Menaphos. Asgarnia Arc shops support only · Unlocks: Player-owned port voyage interface and trade goods, Eastern lands / Arc voyage gate materials, Ports resources for scroll of proficiency and related crafts",
-          "requirements": [
-            "Ports access via Menaphos / Port district portal",
-            "Captain and crew progression for voyage success"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Player-owned_port",
-            "title": "Player-owned port (first-class hub)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "asgarnia"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / asgarnia",
           "isRegionCombo": false
         },
         {

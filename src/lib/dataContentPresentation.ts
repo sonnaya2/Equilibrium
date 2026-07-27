@@ -651,6 +651,8 @@ export function presentInterestName(value: string): string {
   if (/^Vampyrism Aspect$/i.test(raw)) return "Vampyrism Aspect";
   if (/^Desert strykewyrm$/i.test(raw)) return "Desert strykewyrm";
   if (/^Sophanem plover birds\b/i.test(raw)) return "Sophanem plovers";
+  if (/^Player-owned port$/i.test(raw)) return "Player-owned port";
+  if (/^Player-owned ports\b/i.test(raw)) return "Player-owned port";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -820,6 +822,7 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent slayer rewards learn unlock — dungeon layout qol": "Slayer dungeon",
     "slayer permanent utility and reputation": "Slayer utility",
     "hunter activity and slayer supply adjacency": "Hunter",
+    "ports voyage economy and eastern lands gate": "Ports",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

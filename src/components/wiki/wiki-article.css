@@ -1,9 +1,3 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Image viewer + wiki article dialog
-   Editorial stone panel: borders, raised, subtle inset. No glass / glow / SaaS.
-   Native <dialog> is display:none when closed — flex ONLY on [open].
-   ═══════════════════════════════════════════════════════════════════════════ */
-
 .eq-champion .data-image-viewer {
   position: relative;
   box-sizing: border-box;
@@ -12,17 +6,16 @@
   max-height: 92vh;
   margin: auto;
   padding: 2.75rem 1.75rem 1.5rem;
-  border: 1px solid var(--echo-border);
   overflow: hidden;
+  border: 1px solid var(--echo-border);
   background: var(--echo-shell);
-  color: var(--echo-parch-50);
-  text-align: center;
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 55%, transparent),
     0 12px 40px color-mix(in srgb, var(--echo-void) 72%, transparent);
+  color: var(--echo-parch-50);
+  text-align: center;
 }
 
-/* Flex only when open — never force display on the closed dialog. */
 .eq-champion .data-image-viewer[open] {
   display: flex;
   flex-direction: column;
@@ -35,7 +28,6 @@
   background: color-mix(in srgb, var(--echo-void) 88%, transparent);
 }
 
-/* Direct children: image-only mode (bare <img> + caption). */
 .eq-champion .data-image-viewer > img {
   display: block;
   box-sizing: border-box;
@@ -45,11 +37,11 @@
   max-height: min(72vh, 40rem);
   margin: 0 auto;
   padding: 0.75rem;
-  object-fit: contain;
-  image-rendering: auto;
   border: 1px solid var(--echo-border);
   background: var(--echo-inset);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+  object-fit: contain;
+  image-rendering: auto;
 }
 
 .eq-champion .data-image-viewer > img.is-pixel {
@@ -73,21 +65,20 @@
   padding: 0.4rem 0.7rem;
   border: 1px solid var(--echo-border);
   background: var(--echo-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
   color: var(--echo-parch-50);
   font-size: 0.8125rem;
   line-height: 1.2;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
 }
 
 .eq-champion .data-image-viewer__close:hover,
 .eq-champion .data-image-viewer__close:focus-visible {
   border-color: var(--echo-gem-deep);
-  color: var(--echo-gem-bright);
   background: color-mix(in srgb, var(--echo-raised) 88%, var(--echo-void));
+  color: var(--echo-gem-bright);
 }
 
-/* Image-only plate — local art stack + optional rail (class variants). */
 .eq-champion .data-image-viewer .data-wiki-article__image-only {
   display: flex;
   flex-direction: column;
@@ -119,11 +110,11 @@
   height: auto;
   max-width: min(78vw, 22rem);
   max-height: min(58vh, 22rem);
-  object-fit: contain;
-  image-rendering: auto;
   padding: 0.25rem;
   border: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
   background: var(--echo-inset);
+  object-fit: contain;
+  image-rendering: auto;
 }
 
 .eq-champion .data-image-viewer .data-wiki-article__image-only-well img.is-pixel {
@@ -145,76 +136,23 @@
   font-weight: 600;
   line-height: 1.3;
   text-align: center;
-  word-break: normal;
   overflow-wrap: break-word;
+  word-break: normal;
 }
-
-.eq-champion .data-image-viewer .data-wiki-article__image-only-rail {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.45rem 0.55rem;
-  max-width: 100%;
-  margin: 0.15rem 0 0;
-  padding: 0.55rem 0 0;
-  border-top: 1px solid var(--echo-border);
-  list-style: none;
-}
-
-.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  width: 3.75rem;
-  min-width: 0;
-}
-
-.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-item img {
-  display: block;
-  box-sizing: border-box;
-  width: 2rem;
-  height: 2rem;
-  max-width: 2rem;
-  max-height: 2rem;
-  padding: 0.2rem;
-  object-fit: contain;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-inset);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
-}
-
-.eq-champion .data-image-viewer .data-wiki-article__image-only-rail-label {
-  display: block;
-  max-width: 100%;
-  color: var(--echo-parch-400);
-  font-size: 0.625rem;
-  line-height: 1.2;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* ── Live wiki article (coexists with .data-image-viewer) ──────────────────
-   Hero: art | summary. Multi-column drops. Single scroll region.
-   Echo tokens only — no glass, glow, or brand gradients. */
 
 .eq-champion .data-wiki-article {
   position: relative;
-  width: min(96vw, 87.5rem); /* ~1400px */
+  width: min(96vw, 87.5rem);
   max-width: 96vw;
   max-height: calc(100vh - 2.5rem);
   padding: 0;
-  text-align: left;
   overflow: hidden;
-  background: var(--echo-void);
   border-color: var(--echo-border);
+  background: var(--echo-void);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 42%, transparent),
     0 16px 48px color-mix(in srgb, var(--echo-void) 78%, transparent);
+  text-align: left;
 }
 
 .eq-champion .data-wiki-article[open] {
@@ -225,32 +163,30 @@
   gap: 0;
 }
 
-/* Shell — one intentional scroll. */
 .eq-champion .data-wiki-article__shell {
   display: flex;
-  flex-direction: column;
   flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.5rem;
   min-height: 0;
   max-height: calc(100vh - 2.5rem);
-  gap: 0.5rem;
   padding: 0 0 0.15rem;
   overflow-x: hidden;
   overflow-y: auto;
   background: var(--echo-void);
-  scrollbar-width: thin;
   scrollbar-color: var(--echo-border) transparent;
+  scrollbar-width: thin;
 }
 
-/* Sticky header: title + compact × */
 .eq-champion .data-wiki-article__header {
   position: sticky;
   top: 0;
   z-index: 3;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  flex: 0 0 auto;
   margin: 0;
   padding: 0.7rem 0.85rem 0.55rem 1.15rem;
   border-bottom: 1px solid var(--echo-border);
@@ -271,70 +207,65 @@
 }
 
 .eq-champion .data-wiki-article__close {
-  flex: 0 0 auto;
   display: grid;
+  flex: 0 0 auto;
   place-items: center;
   width: 2.15rem;
   height: 2.15rem;
   padding: 0;
   border: 1px solid var(--echo-border);
   background: var(--echo-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
   color: var(--echo-parch-100);
   font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
 }
 
 .eq-champion .data-wiki-article__close:hover,
 .eq-champion .data-wiki-article__close:focus-visible {
   border-color: var(--echo-gem-deep);
-  color: var(--echo-gem-bright);
   background: color-mix(in srgb, var(--echo-raised) 88%, var(--echo-void));
+  color: var(--echo-gem-bright);
   outline: 1px solid var(--echo-gem);
   outline-offset: 2px;
 }
 
-/* Hide legacy absolute Close when article mode owns the header control. */
 .eq-champion .data-wiki-article > .data-image-viewer__close {
   display: none;
 }
 
-/* ── Hero: larger art | lead+facts clamped to the same height ─────────────
-   Art sets the height band; summary never runs past it (facts stay with art). */
-
 .eq-champion .data-wiki-article__hero {
   --wiki-hero-h: min(44vh, 22rem);
   display: grid;
+  flex: 0 0 auto;
   grid-template-columns: minmax(15rem, 18.5rem) minmax(0, 1fr);
   gap: 0.5rem 0.7rem;
   align-items: stretch;
-  flex: 0 0 auto;
-  padding: 0 1.15rem;
   max-height: var(--wiki-hero-h);
+  padding: 0 1.15rem;
   overflow: hidden;
 }
 
-.eq-champion .data-wiki-article__stage,
-.eq-champion .data-wiki-article__art {
+.eq-champion .data-wiki-article__stage {
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
   gap: 0;
-  box-sizing: border-box;
   width: 100%;
   min-width: 0;
   min-height: 0;
   height: var(--wiki-hero-h);
   max-height: var(--wiki-hero-h);
   padding: 0.35rem;
+  overflow: hidden;
   border: 1px solid var(--echo-border);
   background: var(--echo-raised);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 48%, transparent),
     inset 0 -1px 0 color-mix(in srgb, var(--echo-void) 35%, transparent);
-  overflow: hidden;
 }
 
 .eq-champion .data-wiki-article__art-primary {
@@ -352,8 +283,7 @@
 
 .eq-champion .data-wiki-article__stage img,
 .eq-champion .data-wiki-article__art-primary img,
-.eq-champion .data-wiki-article__art-img,
-.eq-champion .data-wiki-article__art > img {
+.eq-champion .data-wiki-article__art-img {
   display: block;
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -362,18 +292,17 @@
   max-width: 100%;
   max-height: 100%;
   min-height: 0;
-  object-fit: contain;
-  object-position: center;
-  image-rendering: auto;
   padding: 0.1rem;
   border: 1px solid color-mix(in srgb, var(--echo-border) 85%, transparent);
   background: var(--echo-inset);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+  object-fit: contain;
+  object-position: center;
+  image-rendering: auto;
 }
 
 .eq-champion .data-wiki-article__stage img.is-pixel,
-.eq-champion .data-wiki-article__art-primary img.is-pixel,
-.eq-champion .data-wiki-article__art > img.is-pixel {
+.eq-champion .data-wiki-article__art-primary img.is-pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
@@ -388,19 +317,17 @@
   background: color-mix(in srgb, var(--echo-inset) 88%, var(--echo-void));
 }
 
-.eq-champion .data-wiki-article__art-name,
-.eq-champion .data-wiki-article__art-meta {
+.eq-champion .data-wiki-article__art-name {
   margin: 0;
   width: 100%;
   color: var(--echo-parch-300);
   font-size: 0.625rem;
+  letter-spacing: 0.03em;
   line-height: 1.2;
   text-align: center;
-  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
-/* Summary: lead fills remaining space; facts pinned under it inside hero height. */
 .eq-champion .data-wiki-article__summary {
   display: flex;
   flex-direction: column;
@@ -413,15 +340,14 @@
 }
 
 .eq-champion .data-wiki-article__lead-prose {
-  flex: 1 1 auto;
-  min-height: 0;
-  margin: 0;
-  overflow: hidden;
-  /* Dense wiki intro clamped to the art band. */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 14;
   line-clamp: 14;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 .eq-champion .data-wiki-article__lead-prose :where(p) {
@@ -435,10 +361,9 @@
   margin-bottom: 0;
 }
 
-/* Fact strip — compact, locked under the lead inside the art height. */
 .eq-champion .data-wiki-article__facts {
-  flex: 0 0 auto;
   display: grid;
+  flex: 0 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
   gap: 0;
   margin: 0;
@@ -475,8 +400,8 @@
   color: var(--echo-gold);
   font-size: 0.5625rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .eq-champion .data-wiki-article__fact-value,
@@ -488,7 +413,6 @@
   line-height: 1.2;
 }
 
-/* Modules panel */
 .eq-champion .data-wiki-article__modules {
   display: flex;
   flex-direction: column;
@@ -505,8 +429,8 @@
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.07em;
-  text-transform: uppercase;
   line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .eq-champion .data-wiki-article__notable {
@@ -522,8 +446,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  max-width: 100%;
   min-width: 0;
+  max-width: 100%;
   padding: 0.15rem 0.3rem 0.15rem 0.15rem;
   border: 1px solid color-mix(in srgb, var(--echo-border) 75%, transparent);
   background: var(--echo-inset);
@@ -531,10 +455,10 @@
 
 .eq-champion .data-wiki-article__notable-name {
   min-width: 0;
-  color: var(--echo-parch-50);
+  overflow: hidden;
+  color: var(--color-parch-50);
   font-size: 0.75rem;
   line-height: 1.2;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -547,13 +471,11 @@
 }
 
 .eq-champion .data-wiki-article__status[role="alert"] {
-  color: var(--echo-parch-100);
   padding: 0.45rem 0.55rem;
   border: 1px solid var(--echo-border);
   background: color-mix(in srgb, var(--echo-inset) 80%, var(--echo-void));
+  color: var(--echo-parch-100);
 }
-
-/* ── Multi-column drops ──────────────────────────────────────────────────── */
 
 .eq-champion .data-wiki-article__drops {
   flex: 0 1 auto;
@@ -628,8 +550,8 @@
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .eq-champion .data-wiki-article__drop-group-count {
@@ -671,7 +593,7 @@
   border: 0;
   border-top: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
   background: color-mix(in srgb, var(--echo-raised) 55%, var(--echo-stage));
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
   font-size: 0.6875rem;
   letter-spacing: 0.03em;
   line-height: 1.2;
@@ -687,8 +609,8 @@
 }
 
 .eq-champion .data-wiki-article__noted-badge {
-  flex: 0 0 auto;
   display: grid;
+  flex: 0 0 auto;
   place-items: center;
   width: 0.95rem;
   height: 0.95rem;
@@ -700,9 +622,9 @@
 }
 
 .eq-champion .data-wiki-article__noted-badge img {
-  display: block !important;
-  width: 0.75rem !important;
-  height: 0.75rem !important;
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
   max-width: none;
   max-height: none;
   object-fit: contain;
@@ -718,24 +640,16 @@
   width: 100%;
   margin: 0;
   border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 0.8125rem; /* 13px densest floor */
   background: transparent;
-}
-
-.eq-champion .data-wiki-article__drop-table-caption {
-  caption-side: top;
-  padding: 0 0 0.35rem;
-  color: var(--echo-gold);
-  font-size: 0.9rem;
-  text-align: left;
+  font-size: 0.8125rem;
+  table-layout: fixed;
 }
 
 .eq-champion .data-wiki-article__drop-table-th {
   padding: 0.22rem 0.35rem;
   border-bottom: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
-  color: var(--echo-parch-400);
   background: color-mix(in srgb, var(--echo-raised) 70%, var(--echo-stage));
+  color: var(--echo-parch-400);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -752,8 +666,8 @@
 }
 
 .eq-champion .data-wiki-article__drop-table-row td {
+  height: 2.15rem;
   padding: 0.22rem 0.35rem;
-  height: 2.15rem; /* ~34px row target */
   border-bottom: 1px solid color-mix(in srgb, var(--echo-border) 70%, transparent);
   color: var(--echo-parch-50);
   font-variant-numeric: tabular-nums;
@@ -777,10 +691,10 @@
 }
 
 .eq-champion .data-wiki-article__drop-table-icon {
-  flex: 0 0 auto;
   display: grid;
-  place-items: center;
   box-sizing: border-box;
+  flex: 0 0 auto;
+  place-items: center;
   width: 1.75rem;
   height: 1.75rem;
   padding: 0.1rem;
@@ -790,15 +704,15 @@
 }
 
 .eq-champion .data-wiki-article__drop-table-icon.is-empty {
-  background: color-mix(in srgb, var(--echo-inset) 70%, var(--echo-void));
   border-style: dashed;
+  background: color-mix(in srgb, var(--echo-inset) 70%, var(--echo-void));
 }
 
 .eq-champion .data-wiki-article__drop-table-icon img,
 .eq-champion .data-wiki-article__drop-table-icon .game-icon {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
+  display: block;
+  width: 100%;
+  height: 100%;
   max-width: none;
   max-height: none;
   object-fit: contain;
@@ -807,17 +721,12 @@
   image-rendering: crisp-edges;
 }
 
-/* Nested full-drops dialog is still under body.eq-champion. */
-.eq-champion .data-wiki-drops-popup .data-wiki-article__drop-table-icon img {
-  display: block !important;
-}
-
 .eq-champion .data-wiki-article__drop-table-name {
   min-width: 0;
+  overflow: hidden;
   color: var(--echo-parch-50);
   font-size: 0.8125rem;
   line-height: 1.25;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -874,7 +783,6 @@
   background: color-mix(in srgb, var(--echo-gem) 55%, var(--echo-parch-400));
 }
 
-/* Asset rail */
 .eq-champion .data-wiki-article__asset-rail {
   display: flex;
   flex-wrap: wrap;
@@ -903,7 +811,6 @@
   max-height: 1.85rem;
 }
 
-/* Body — collapsible more, no nested scroll trap */
 .eq-champion .data-wiki-article__body {
   flex: 0 1 auto;
   min-height: 0;
@@ -913,13 +820,13 @@
 }
 
 .eq-champion .data-wiki-article__body-summary {
-  cursor: pointer;
   padding: 0.45rem 0;
   color: var(--echo-parch-300);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   list-style: none;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .eq-champion .data-wiki-article__body-summary::-webkit-details-marker {
@@ -936,10 +843,10 @@
 
 .eq-champion .data-wiki-article__footer {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.45rem 1rem;
-  flex: 0 0 auto;
   margin-top: auto;
   padding: 0.55rem 1.15rem 0.75rem;
   border-top: 1px solid var(--echo-border);
@@ -963,8 +870,6 @@
   color: var(--echo-parch-400);
 }
 
-/* ── Wiki HTML skin ──────────────────────────────────────────────────────── */
-
 .eq-champion .data-wiki-article__content {
   color: var(--echo-parch-50);
   font-size: 0.875rem;
@@ -977,8 +882,8 @@
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: 0.9rem;
   font-weight: 600;
-  line-height: 1.25;
   letter-spacing: 0.015em;
+  line-height: 1.25;
 }
 
 .eq-champion .data-wiki-article__content :where(h2):first-child,
@@ -1020,10 +925,10 @@
 .eq-champion .data-wiki-article__content :where(table) {
   width: 100%;
   margin: 0 0 0.65rem;
-  border-collapse: collapse;
   border: 1px solid var(--echo-border);
-  font-size: 0.8125rem;
+  border-collapse: collapse;
   background: var(--echo-stage);
+  font-size: 0.8125rem;
 }
 
 .eq-champion .data-wiki-article__content :where(th, td) {
@@ -1034,10 +939,10 @@
 }
 
 .eq-champion .data-wiki-article__content :where(th) {
-  color: var(--echo-parch-100);
   background: var(--echo-raised);
-  font-weight: 600;
+  color: var(--echo-parch-100);
   font-size: 0.625rem;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1056,9 +961,8 @@
   font-size: 0.8125rem;
 }
 
-/* Prose: no remote wiki art. Drop-table icons allowed separately. */
 .eq-champion .data-wiki-article__content :where(img, picture, video, svg, figure) {
-  display: none !important;
+  display: none;
 }
 
 .eq-champion .data-wiki-article__drop-board-actions {
@@ -1077,14 +981,14 @@
   padding: 0.28rem 0.55rem;
   border: 1px solid var(--echo-border);
   background: var(--echo-raised);
-  color: var(--echo-parch-50);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 35%, transparent);
+  color: var(--color-parch-50);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.2;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 35%, transparent);
 }
 
 .eq-champion .data-wiki-article__drop-open-full:hover,
@@ -1095,11 +999,9 @@
   outline-offset: 2px;
 }
 
-/* Summary: full-width stacked groups, no empty second column. */
 .eq-champion
   .data-wiki-article__drop-board--summary
   .data-wiki-article__drop-columns[data-cols="1"] {
-  grid-template-columns: minmax(0, 1fr);
   gap: 0.4rem;
 }
 
@@ -1107,7 +1009,6 @@
   max-width: 100%;
 }
 
-/* Full drop table nested dialog */
 .eq-champion .data-wiki-drops-popup {
   position: relative;
   width: min(96vw, 90rem);
@@ -1115,13 +1016,13 @@
   max-height: calc(100vh - 1.5rem);
   margin: auto;
   padding: 0;
+  overflow: hidden;
   border: 1px solid var(--echo-border);
   background: var(--echo-void);
-  color: var(--echo-parch-50);
-  overflow: hidden;
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent),
     0 18px 52px color-mix(in srgb, var(--echo-void) 80%, transparent);
+  color: var(--echo-parch-50);
 }
 
 .eq-champion .data-wiki-drops-popup[open] {
@@ -1143,10 +1044,10 @@
 
 .eq-champion .data-wiki-drops-popup__header {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  flex: 0 0 auto;
   padding: 0.7rem 0.85rem 0.55rem 1.15rem;
   border-bottom: 1px solid var(--echo-border);
   background: color-mix(in srgb, var(--echo-void) 92%, var(--echo-stage));
@@ -1182,8 +1083,8 @@
   padding: 0.75rem 1rem 1rem;
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-width: thin;
   scrollbar-color: var(--echo-border) transparent;
+  scrollbar-width: thin;
 }
 
 .eq-champion .data-wiki-article__drop-board--full .data-wiki-article__drop-columns[data-cols="3"] {
@@ -1194,8 +1095,6 @@
   max-height: none;
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
-
 @media (max-width: 960px) {
   .eq-champion .data-wiki-article__drop-columns[data-cols="3"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1204,7 +1103,6 @@
 
 @media (max-width: 720px) {
   .eq-champion .data-wiki-article {
-    width: min(96vw, 87.5rem);
     max-height: calc(100vh - 1.25rem);
   }
 
@@ -1219,8 +1117,7 @@
     padding: 0 0.85rem;
   }
 
-  .eq-champion .data-wiki-article__stage,
-  .eq-champion .data-wiki-article__art {
+  .eq-champion .data-wiki-article__stage {
     width: min(14rem, 100%);
     height: auto;
     max-height: 16rem;
@@ -1239,8 +1136,7 @@
 
   .eq-champion .data-wiki-article__stage img,
   .eq-champion .data-wiki-article__art-primary img,
-  .eq-champion .data-wiki-article__art-img,
-  .eq-champion .data-wiki-article__art > img {
+  .eq-champion .data-wiki-article__art-img {
     max-height: 15rem;
   }
 
@@ -1253,10 +1149,6 @@
 
   .eq-champion .data-wiki-article__drops {
     padding: 0 0.85rem;
-  }
-
-  .eq-champion .data-wiki-article__asset-rail {
-    margin: 0 0.85rem;
   }
 
   .eq-champion .data-wiki-article__footer {

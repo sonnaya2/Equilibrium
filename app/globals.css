@@ -54,7 +54,7 @@
     The header is locked to this from `md` up; below that its links wrap and it
     is allowed to grow, which is why the tall shell is also `md`-and-up only.
   */
-  --header-h: 3rem;
+  --header-h: 3.25rem;
 }
 
 html {

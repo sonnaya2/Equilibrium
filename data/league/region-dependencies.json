@@ -12,7 +12,7 @@
         "Troll Stronghold",
         "God Wars Dungeon approach"
       ],
-      "planner_rule": "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
+      "planner_rule": "Burthorpe, Death Plateau, Trollheim, Troll Stronghold, and the God Wars approach are Asgarnia — not a separate region pick.",
       "confidence": "official_equilibrium_plus_historical_league_taxonomy",
       "source_urls": [
         "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",
@@ -107,7 +107,7 @@
         "Troll Stronghold"
       ],
       "hard_requirement": true,
-      "planner_rule": "Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary.",
+      "planner_rule": "Those northern sites stay Asgarnia unless a later Equilibrium source redraws the boundary.",
       "confidence": "official_equilibrium_plus_historical_league_taxonomy",
       "source_urls": [
         "https://secure.runescape.com/m=news/countdown-to-leagues-ii-equilibrium",

@@ -33,8 +33,7 @@
     "boss_specific_guides": "intentionally excluded; unique rewards and progression dependencies may be indexed without copying boss strategies"
   },
   "hardRules": [
-    "Daemonheim and Dungeoneering require the Forinthry/Wilderness (Wildy) region pick.",
-    "Asgarnia includes Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach; these are not separate region picks."
+    "Daemonheim and Dungeoneering require the Forinthry/Wilderness (Wildy) region pick."
   ],
   "datasets": {
     "regions": 11,
@@ -11110,12 +11109,12 @@
         "invention:ancient-gizmo-manufacture-timeworn-components"
       ],
       "hardRules": [
-        "Treat Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach as Asgarnia. Do not expose them as another selectable region.",
-        "Burthorpe, Death Plateau, Trollheim and Troll Stronghold resolve to Asgarnia unless a later Equilibrium source explicitly changes the boundary."
+        "Burthorpe, Death Plateau, Trollheim, Troll Stronghold, and the God Wars approach are Asgarnia — not a separate region pick.",
+        "Those northern sites stay Asgarnia unless a later Equilibrium source redraws the boundary."
       ],
       "warnings": [
-        "Confirm all Equilibrium-specific quest auto-completions for the northern Asgarnia route before launch.",
-        "Use Asgarnia for Falador, Taverley, Burthorpe, Death Plateau, Trollheim, Troll Stronghold and the God Wars Dungeon approach. Equilibrium explicitly places God Wars Dungeon in Asgarnia; Catalyst also grouped Burthorpe, the Troll Stronghold herb patch and God Wars Dungeon tasks under Asgarnia."
+        "Confirm Equilibrium quest auto-completions on the northern Asgarnia route before launch.",
+        "God Wars Dungeon is Asgarnia on the official Equilibrium list. Burthorpe and the Troll Stronghold herb patch follow the same Asgarnia map."
       ],
       "source": {
         "source": "jagex",

@@ -73,8 +73,8 @@ export function createTerrainMaterials(
     metalness: 0,
     wireframe: options.wireframe,
     polygonOffset: true,
-    polygonOffsetFactor: 1,
-    polygonOffsetUnits: 1,
+    polygonOffsetFactor: 2,
+    polygonOffsetUnits: 2,
   });
 
   let base = texture(albedo, mapUv).rgb.mul(float(ALBEDO_GAIN));
@@ -116,20 +116,22 @@ export function createTerrainMaterials(
     const flow = vec2(gy.negate(), gx).div(slope.add(0.0004));
 
     const along = mapUv.x.mul(flow.x).add(mapUv.y.mul(flow.y));
-    const drift = along.mul(520).sub(mapClock.mul(1.15));
-    const ripple = drift.sin().mul(0.6).add(drift.mul(2.13).add(1.7).sin().mul(0.4));
+    // Lower spatial freq + slower clock: high-frequency sin under a 30Hz demand
+    // loop read as sparkle/flicker on every lake and river.
+    const drift = along.mul(220).sub(mapClock.mul(0.55));
+    const ripple = drift.sin().mul(0.6).add(drift.mul(1.7).add(1.7).sin().mul(0.4));
     const shimmer = mx_noise_float(
-      vec3(mapUv.x.mul(340), mapUv.y.mul(340), mapClock.mul(0.22)),
+      vec3(mapUv.x.mul(160), mapUv.y.mul(160), mapClock.mul(0.12)),
     );
     const directional = smoothstep(float(0.0006), float(0.004), slope);
     const surface = mix(shimmer, ripple, directional);
 
     const wet = F.b.mul(smoothstep(float(0.18), float(0.55), F.b));
-    const glint = smoothstep(float(0.45), float(0.95), surface).mul(wet);
+    const glint = smoothstep(float(0.55), float(0.95), surface).mul(wet);
     base = base
-      .mul(float(1).sub(wet.mul(0.12)))
-      .add(linear(0xbfe4e2).mul(glint.mul(0.16)))
-      .add(linear(0x1d3f4e).mul(wet.mul(surface.mul(0.5).add(0.5)).mul(0.07)));
+      .mul(float(1).sub(wet.mul(0.1)))
+      .add(linear(0xbfe4e2).mul(glint.mul(0.09)))
+      .add(linear(0x1d3f4e).mul(wet.mul(surface.mul(0.4).add(0.6)).mul(0.05)));
   }
 
   // Nothing is emissive at rest: both terms sit on uniforms that stay at 0 until

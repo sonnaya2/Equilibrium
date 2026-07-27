@@ -31,7 +31,9 @@ export function Effects() {
     const rp = new THREE.RenderPipeline(renderer);
     const scenePass = pass(scene, camera);
     scenePass.setMRT(mrt({ output, emissive }));
-    const bloomPass = bloom(scenePass.getTextureNode("emissive"), 0.36, 0.5, 0.9);
+    // High threshold: only unlock-sweep / marker gem emissive should bloom.
+    // A lower floor picks up MRT noise and reads as full-board sparkle.
+    const bloomPass = bloom(scenePass.getTextureNode("emissive"), 0.28, 0.45, 0.96);
     rp.outputNode = scenePass.getTextureNode("output").add(bloomPass);
     return { rp, scenePass, bloomPass };
   }, [gl, scene, camera]);

@@ -112,7 +112,7 @@ unit-tested there. **Never re-normalise it.** On-screen size is a function of ca
 pixels and the camera solve, not world units.
 
 Sea level is `y = 0` and **at rest every coast meets it** — a plate's cap clears the
-water by `REST_CLEARANCE` (currently `0.007`), which must stay greater than the
+water by `REST_CLEARANCE` (currently `0.009`), which must stay greater than the
 ocean's `SWELL` (`0.0014`) or waves wash over Gielinor. The margin also has to clear
 depth-buffer fight against the swell under the overview camera. At rest the board has
 to read as the actual RuneScape world map. Only the framed region rises (`FOCUS_LIFT`),

@@ -62,6 +62,10 @@ export function asDataTexture(tex: THREE.Texture): THREE.Texture {
   tex.minFilter = THREE.LinearFilter;
   tex.magFilter = THREE.LinearFilter;
   tex.anisotropy = 1;
+  // Loader cache can leave a mip chain from an earlier configure; clear it so
+  // the GPU re-uploads only the base level (HMR / remount otherwise keeps the
+  // shimmering waterline).
+  tex.mipmaps = [];
   tex.needsUpdate = true;
   return tex;
 }

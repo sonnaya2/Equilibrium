@@ -163,7 +163,9 @@ export default function MapScene() {
           WebGPU glued to the host so min-h-0 ancestors actually work. */}
       <div className="board-sky__canvas-host">
         <Canvas
-          dpr={[1, 2]}
+          // Cap dpr: 2x on a 4k display multiplies subpixel z-fight and coast
+          // aliasing into visible shimmer under the demand loop.
+          dpr={[1, 1.5]}
           frameloop="demand"
           // Printed map, not outdoor HDR. R3F defaults to ACES filmic which
           // crushed midtones on LDR wiki albedos under the sparse light rig —
@@ -173,7 +175,7 @@ export default function MapScene() {
           // shot as the intro descent, or cuts straight there under reduced
           // motion. Perspective, because a straight-down orthographic board
           // hides every bit of the depth this map is built out of.
-          camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.02, far: 24 }}
+          camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.05, far: 20 }}
           onPointerMissed={unframe}
           gl={(props) =>
             rendererFor(props as unknown as Record<string, unknown>, () => failRef.current())

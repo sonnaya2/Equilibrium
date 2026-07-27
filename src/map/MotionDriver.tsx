@@ -54,12 +54,22 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     };
   }, [gl, invalidate, reducedMotion]);
 
+  // rAF-aligned throttle: setInterval drifts against the display and the water
+  // + river shaders strobe. Still ~MOTION_HZ invalidates/s for the e2e budget.
   useEffect(() => {
     if (reducedMotion) return;
-    const id = window.setInterval(() => {
-      if (running.current) invalidate();
-    }, 1000 / MOTION_HZ);
-    return () => window.clearInterval(id);
+    let raf = 0;
+    let last = performance.now();
+    const period = 1000 / MOTION_HZ;
+    const tick = (now: number) => {
+      raf = window.requestAnimationFrame(tick);
+      if (!running.current) return;
+      if (now - last < period) return;
+      last = now;
+      invalidate();
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
   }, [invalidate, reducedMotion]);
 
   // Frames the timer asked for: advance the shared clock, ask for nothing.

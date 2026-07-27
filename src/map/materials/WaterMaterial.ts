@@ -140,8 +140,9 @@ export function createWaterMaterial(
   const toward = reflected.dot(view).clamp(0, 1);
   // Gated by fresnel, so the sun answers from the far half of the sea where you
   // are looking across it and not from the water directly under the camera.
-  const glint = toward.pow(150).mul(fresnel.mul(0.7).add(0.08)).mul(0.3);
-  const sheen = toward.pow(20).mul(0.012);
+  // Softened: a hard specular under 30Hz demand frames strobes as flicker.
+  const glint = toward.pow(90).mul(fresnel.mul(0.55).add(0.06)).mul(0.18);
+  const sheen = toward.pow(16).mul(0.008);
 
   // Foam, and very little of it: a thread along the crests, and a soft line
   // where the water actually meets a coast.

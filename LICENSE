@@ -2,10 +2,15 @@ MIT License
 
 Copyright (c) 2026 sonnaya2
 
-NOTE: This MIT grant covers original application code only. Game data
-derived from the RuneScape Wiki (CC BY-NC-SA 3.0), Jagex trademarks and
-art, and third-party research notes are described in NOTICE and are not
-re-licensed as MIT.
+NOTE: This MIT grant covers original application code only.
+
+Game data adapted from the RuneScape Wiki is CC BY-NC-SA 3.0. Research
+notes adapted from PvME (pvme-guides) are CC BY-NC-SA 4.0. Jagex
+trademarks and game art remain Jagex property under the Fan Content
+Policy. None of those layers are re-licensed as MIT.
+
+See NOTICE for the full attribution, ShareAlike, and NonCommercial
+requirements.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

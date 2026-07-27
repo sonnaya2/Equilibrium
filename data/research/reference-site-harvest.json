@@ -35,8 +35,10 @@
   "policy": {
     "noCopy": "Summaries are original project notes. No source code, UI, guide prose or calculator presentation is copied.",
     "dedupe": "One normalized record per mechanic/dependency concept. Overlapping sources are merged into a single sources array.",
-    "pvme": "Discovery source by default. Re-verify values and changed mechanics against current Wiki/Jagex or another current explicit source before marking verified.",
-    "rsAnalysis": "Math/validation reference. Current exposed state/interactions may be explicit-source evidence; configured output numbers are not imported as universal base values.",
+    "pvme": "Discovery source by default. Upstream guides are CC BY-NC-SA 4.0 (https://github.com/pvme/pvme-guides/blob/master/LICENSE). Re-verify values against current Wiki/Jagex before marking verified. Adapted PvME notes stay under CC BY-NC-SA 4.0 — not MIT.",
+    "pvmeLicense": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "rsAnalysis": "Math/validation reference only. Current exposed state/interactions may be explicit-source evidence; configured output numbers are not imported as universal base values. No bulk redistribution of their site content.",
+    "wiki": "Canonical game facts default to RuneScape Wiki under CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/). Adapted material is share-alike and non-commercial.",
     "bossGuides": "Boss-specific rotations, presets, phase guides, kill rates and enrage calculators are excluded."
   },
   "records": [

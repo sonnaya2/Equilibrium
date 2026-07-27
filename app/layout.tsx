@@ -66,7 +66,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <summary>Licenses</summary>
               <div className="comp-foot__license-copy">
                 <p>
-                  <strong>Wiki text and data:</strong>{" "}
+                  <strong>Wiki text and data:</strong> adapted from the{" "}
+                  <a href="https://runescape.wiki/" target="_blank" rel="noreferrer noopener">
+                    RuneScape Wiki
+                  </a>{" "}
+                  under{" "}
                   <a
                     href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
                     target="_blank"
@@ -74,7 +78,39 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   >
                     CC BY-NC-SA 3.0
                   </a>
-                  . Source links credit RuneScape Wiki contributors; wording and structure are adapted here.
+                  . Non-commercial; share-alike for adapted material; source links credit cited
+                  pages. Host policy:{" "}
+                  <a
+                    href="https://meta.weirdgloop.org/w/Licensing"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Weird Gloop licensing
+                  </a>
+                  .
+                </p>
+                <p>
+                  <strong>PvME research notes:</strong>{" "}
+                  <a href="https://pvme.io/" target="_blank" rel="noreferrer noopener">
+                    PvM Encyclopedia
+                  </a>{" "}
+                  /{" "}
+                  <a
+                    href="https://github.com/pvme/pvme-guides"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    pvme-guides
+                  </a>{" "}
+                  under{" "}
+                  <a
+                    href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    CC BY-NC-SA 4.0
+                  </a>
+                  . Discovery only; not a guide mirror.
                 </p>
                 <p>
                   <strong>RuneScape assets and names:</strong> Jagex property used under the{" "}
@@ -95,6 +131,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     rel="noreferrer noopener"
                   >
                     MIT License
+                  </a>
+                  . External data is not MIT — see{" "}
+                  <a
+                    href="https://github.com/sonnaya2/Equilibrium/blob/main/NOTICE"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    NOTICE
                   </a>
                   . <Link href="/sources#licenses">Full attribution</Link>.
                 </p>

@@ -14,6 +14,17 @@ test("home renders nav and footer", async ({ page }) => {
   await expect(footer).toContainText("RuneScape is a trademark of Jagex Ltd.");
   await footer.getByText("Licenses", { exact: true }).click();
   await expect(footer.getByText("CC BY-NC-SA 3.0", { exact: true })).toBeVisible();
+  await expect(footer.getByText("CC BY-NC-SA 4.0", { exact: true })).toBeVisible();
+  await expect(footer.getByRole("link", { name: "PvM Encyclopedia" })).toBeVisible();
+});
+
+test("sources page states wiki and PvME Creative Commons terms", async ({ page }) => {
+  await page.goto("/sources");
+  await expect(page.getByRole("heading", { name: "Sources", exact: true })).toBeVisible();
+  await expect(page.locator("#licenses")).toContainText("CC BY-NC-SA 3.0");
+  await expect(page.locator("#licenses")).toContainText("CC BY-NC-SA 4.0");
+  await expect(page.getByRole("link", { name: /RuneScape Wiki/i }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /PvM Encyclopedia/i }).first()).toBeVisible();
 });
 
 test("all routes respond", async ({ page }) => {

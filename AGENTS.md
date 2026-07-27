@@ -137,6 +137,11 @@ it shows and keep derived art under the same terms. Extracted game art (the regi
 `public/game/`) is the identity — use more of it, not less. Procedural and script-generated
 textures are fine too; only gen-AI imagery is banned.
 
+*Licensing is load-bearing.* Original code is MIT; wiki-adapted data is CC BY-NC-SA 3.0; PvME-adapted
+notes are CC BY-NC-SA 4.0; Jagex art/marks stay under the Fan Content Policy. Authoritative split:
+root `NOTICE`. Never re-label wiki/PvME JSON as MIT-only, never strip `SourceReference`, never drop
+footer or `/sources` attribution. PvME is discovery only until Wiki/Jagex re-verify.
+
 *Copying another tool's design is the ban.* pvme.io, rs-analysis.xyz and leagues.build are for facts
 and lessons. Never their layout, component structure, class names, or wording — if a screen would be
 recognisable as theirs, it is wrong.

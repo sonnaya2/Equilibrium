@@ -24,11 +24,21 @@ When in doubt: change `scraped-data/` + re-run the named sync script, or edit ca
 
 ## Source rules
 
-RuneScape Wiki is the default source for settled game data. Rows explicitly sourced from PvME or RS Analysis keep that source. Jagex posts stay attached when they are the actual source for a new League reveal or patch value.
+RuneScape Wiki is the default source for settled game data (**CC BY-NC-SA 3.0** —
+https://creativecommons.org/licenses/by-nc-sa/3.0/). Adapted wiki material in this tree stays under
+that licence (attribution, non-commercial, share-alike). See root `NOTICE`.
 
-PvME can supply current combat-practice routes and measured throughput. Old combat XP/hour figures are not treated as current after the 2026 combat changes unless they are rechecked.
+Rows explicitly sourced from PvME keep that source. Upstream PvME guides are **CC BY-NC-SA 4.0**
+(https://github.com/pvme/pvme-guides/blob/master/LICENSE). Adapted PvME notes are not MIT.
+Jagex posts stay attached when they are the actual source for a new League reveal or patch value.
 
-The PvME / RS Analysis crawl is a research index, not another game-constants table. It keeps mechanic and dependency discoveries, architecture notes and source warnings. It does not copy their UI, code, boss rotations, presets or guide prose, and PvME-only discoveries are not promoted to verified facts just because they were crawled.
+PvME can supply current combat-practice routes and measured throughput. Old combat XP/hour figures
+are not treated as current after the 2026 combat changes unless they are rechecked. PvME-only
+discoveries are not promoted to verified facts until re-checked on the Wiki or against Jagex.
+
+The PvME / RS Analysis crawl is a research index, not another game-constants table. It keeps mechanic
+and dependency discoveries, architecture notes and source warnings. It does not copy their UI, code,
+boss rotations, presets or guide prose.
 
 Historical Catalyst region labels can be useful evidence for ambiguous League localities, but they are marked as precedent rather than presented as an Equilibrium confirmation. A transport/departure point is not enough to assign the destination to that region: external or split areas stay explicit unresolved boundary cases until Equilibrium publishes the rule.
 

@@ -133,10 +133,15 @@ Data and research come from the [RuneScape Wiki](https://runescape.wiki/),
 [Jagex](https://www.jagex.com/) material. Individual records keep their own source where possible.
 
 - **Code:** MIT (`LICENSE`)
-- **Wiki-derived content:** [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) — see `NOTICE`
-- **Jagex art / marks:** Jagex property; fan non-commercial use only — see `NOTICE`
+- **Wiki-derived content:** [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+  (Weird Gloop / [RuneScape Wiki](https://runescape.wiki/)) — adapted; share-alike; non-commercial
+- **PvME research notes:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+  ([pvme-guides](https://github.com/pvme/pvme-guides)) — discovery only, not a guide mirror
+- **Jagex art / marks:** Jagex property under the
+  [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy)
 
-Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Authoritative split: [`NOTICE`](./NOTICE). Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+On-site credits: [/sources](https://equilibrium-ruddy.vercel.app/sources).
 
 Unofficial, non-commercial fan project. Not affiliated with or endorsed by Jagex. RuneScape is a
 trademark of Jagex Ltd.

@@ -9,9 +9,17 @@ Not affiliated with Jagex.
 |---|---|
 | Original app code (`app/`, `src/`, most `scripts/`) | MIT — see `LICENSE` |
 | Wiki-derived data/prose (`data/`, much of `scraped-data/`) | **CC BY-NC-SA 3.0** — not MIT |
-| Jagex art/icons/screenshots (`assets/`, `public/game/`, refs) | Jagex property / fan policy — not MIT |
+| PvME-derived research notes | **CC BY-NC-SA 4.0** (pvme-guides) — not MIT |
+| Jagex art/icons/screenshots (`assets/`, `public/game/`, refs) | Jagex property / Fan Content Policy — not MIT |
 
-Details: root **`NOTICE`**. Do not commercially redistribute wiki JSON or game art under MIT.
+Details: root **`NOTICE`** (authoritative). Do not commercially redistribute wiki or PvME
+adapted material under MIT. Keep footer + `/sources` attribution when forking the UI.
+
+### When adding data
+- Prefer RuneScape Wiki URLs on every external fact (`SourceReference`).
+- If a fact came from PvME, tag source `pvme` and re-verify on the Wiki before `verified: true`.
+- Never strip source URLs to “clean” a row.
+- Never copy PvME / RS Analysis guide prose or UI.
 
 ## Data ownership
 

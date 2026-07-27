@@ -610,7 +610,20 @@ export function presentInterestName(value: string): string {
   if (/^Games necklace teleport package$/i.test(raw)) return "Games necklace";
   if (/^Plague's End Prifddinas unlock package$/i.test(raw)) return "Plague's End";
   if (/^Seren skilling prayers package\b/i.test(raw)) return "Seren prayers";
+  if (/^Seren spells and prayers$/i.test(raw)) return "Seren spells & prayers";
   if (/^Allotment patch hub package$/i.test(raw)) return "Allotment patches";
+  if (/^Harmony pillars\b/i.test(raw)) return "Harmony moss";
+  if (/^Seren stones and corrupted ore$/i.test(raw)) return "Seren stones";
+  if (/^Ithell harmonium harps\b/i.test(raw)) return "Ithell harps";
+  if (/^Meilyr Recipe Shop and combination potions$/i.test(raw)) {
+    return "Meilyr Recipe Shop";
+  }
+  if (/^Waterfall Fishing and Fishing Shop$/i.test(raw)) return "Waterfall Fishing";
+  if (/^Crystal skillchompas\b/i.test(raw)) return "Crystal skillchompas";
+  if (/^Perfect juju potion production path$/i.test(raw)) return "Perfect juju potions";
+  if (/^Prifddinian worker's outfit\b/i.test(raw)) return "Prifddinian worker's outfit";
+  if (/^Hefin Agility Course$/i.test(raw)) return "Hefin Agility Course";
+  if (/^Skillcape shop$/i.test(raw)) return "Skillcape shop";
 
   // City of Um / Necromancy / prayer
   if (/^Soul Supplies\b/i.test(raw)) return "Soul Supplies";

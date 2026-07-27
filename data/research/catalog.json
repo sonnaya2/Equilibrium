@@ -23394,13 +23394,13 @@
         {
           "name": "Prifddinas",
           "kind": "high-level hub",
-          "detail": "Jagex says region quest completion is designed to provide immediate access.",
-          "confidence": "confirmed_official",
+          "detail": "Elven city after Plague's End. Clan districts, Max Guild, crystal tools, spirit trees, and high-level skilling.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Prifddinas",
             "title": "Prifddinas",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -23416,87 +23416,63 @@
           }
         },
         {
-          "name": "Crystal equipment and Prifddinas skilling content",
-          "kind": "progression",
-          "detail": "",
-          "confidence": "inferred_region",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crystal_equipment",
-            "title": "Crystal equipment and Prifddinas skilling content",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
           "name": "The Lost Grove",
-          "kind": "Slayer/combat",
-          "detail": "",
-          "confidence": "confirmed_official",
+          "kind": "Slayer / combat",
+          "detail": "Lost Grove island west of Isafdar. Vinecrawler, bulbous crawler, and moss golem Slayer creatures drop cinderbane gloves. Solak is the island boss.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/The_Lost_Grove",
             "title": "The Lost Grove",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
           "name": "Solak",
-          "kind": "The Lost Grove",
-          "detail": "",
-          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
+          "kind": "Boss",
+          "detail": "Lost Grove guardian. Blightbound crossbows, Erethdor's grimoire, and cinderbane gloves.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Solak",
             "title": "Solak",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
-          "name": "Harmony pillars (Meilyr harmony moss)",
-          "kind": "Farming special patch and perfect-juju supply",
-          "detail": "Region-defining Prif Farming infrastructure. Remote Farm works on pillars. Reroll attunement costs 10 vis wax. Distinct from standard herb/bush patches",
+          "name": "Harmony moss",
+          "kind": "Farming",
+          "detail": "Meilyr harmony pillars grow skill-attuned moss for perfect juju potions. 75 Farming to plant; Remote Farm works. Reroll attunement costs 10 vis wax.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Harmony_pillar",
-            "title": "Harmony pillars (Meilyr harmony moss)",
-            "verifiedAt": "2026-07-26"
+            "url": "https://runescape.wiki/w/Harmony_moss",
+            "title": "Harmony moss",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
           "name": "Hefin Agility Course",
-          "kind": "Agility course and incidental Prayer",
-          "detail": "Teleports blocked mid-lap. Collector's insignia does not stack with Hefin VoS. Perfect juju agility increases shortcut frequency. XP/hour tables on wiki are illustrative; keep training rates out of this unlock row",
+          "kind": "Agility course",
+          "detail": "Prif Hefin course. Prayer bonus, serenity posts nearby, and Prifddinian worker's outfit unique.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hefin_Agility_Course",
             "title": "Hefin Agility Course",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
-          "name": "Corrupted ore smelting loop",
-          "kind": "Smithing from Seren-stone Mining",
-          "detail": "Companion detail row to (Mining side). Seren stones use 1.2x Mining XP multiplier without rockertunities. Corrupted ore does not grant Artisans' Workshop respect. Pair Superheat Form with Orthen furnace core or Grace of the elves for drain management",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Corrupted_ore",
-            "title": "Corrupted ore smelting loop",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Seren stones and corrupted ore",
-          "kind": "AFK Mining and Smithing supply loop",
-          "detail": "Seren stones are a durable Prifddinas skilling unlock even when they are not the absolute fastest Mining route. They matter for low-input training and self-supplied Smithing experience",
+          "name": "Seren stones",
+          "kind": "Mining",
+          "detail": "Prif Trahaearn Seren stones. AFK Mining into corrupted ore for Smithing XP. 1.2× Mining XP without rockertunities.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Seren_stone",
-            "title": "Seren stones and corrupted ore",
-            "verifiedAt": "2026-07-26"
+            "title": "Seren stones",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -23512,39 +23488,15 @@
           }
         },
         {
-          "name": "Voice of Seren district rotations",
-          "kind": "city-wide skilling blessing",
-          "detail": "Player must stand in the illuminated district to receive that clan's effects. Two-hour cool-down per clan after its hour ends. Cadarn/Iorwerth Voice rows are combat XP side-effects, not skilling unlocks",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Voice_of_Seren",
-            "title": "Voice of Seren district rotations",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Trahaearn Mining and Smithing hub",
-          "kind": "district Mining/Smithing infrastructure",
-          "detail": "Hub package around already-indexed seren-stones and corrupted-ore-smithing rows. Pair Superheat Form + Orthen furnace core for AFK smelt sustain without re-emitting those ids here",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Trahaearn_Clan",
-            "title": "Trahaearn Mining and Smithing hub",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Waterfall Fishing and Fishing Shop",
-          "kind": "Fishing activity and permanent tool unlock",
-          "detail": "The crystal fishing rod is 5% more likely to catch fish and can be augmented. This makes Waterfall Fishing a permanent tool unlock as well as a training activity",
+          "name": "Waterfall Fishing",
+          "kind": "Fishing",
+          "detail": "Prif waterfall fishing. Crystal urchin points buy the crystal fishing rod (augmentable, +5% catch).",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Waterfall_Fishing",
-            "title": "Waterfall Fishing and Fishing Shop",
-            "verifiedAt": "2026-07-26"
+            "title": "Waterfall Fishing",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -23556,18 +23508,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Serenity_posts",
             "title": "Hefin serenity posts (AFK Agility)",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Amlodd Summoning and Divination hub",
-          "kind": "Summoning and Divination district infrastructure",
-          "detail": "Core conversion of 15 of each shadow core type for Lord Amlodd's 50k Divination lamp is a completionist-style milestone, not required for basic hub value. Fairy ring DJS sits in the district",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Amlodd_Clan",
-            "title": "Amlodd Summoning and Divination hub",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -23596,27 +23536,27 @@
           }
         },
         {
-          "name": "Ithell harmonium harps (harmonic dust)",
-          "kind": "Crafting and Construction harmonic-dust activity",
-          "detail": "Four harps around the Ithell statue. Rolls every 5 ticks; detune chance only on failed dust rolls (40% base, 20% with Ithell Voice of Seren or artificer's measure). Artificer's measure permanently applies the Ithell harp VoS benefit and is redundant with active Ithell VoS. Wiki d",
+          "name": "Ithell harps",
+          "kind": "Crafting / Construction",
+          "detail": "Four harps around the Ithell statue. Harmonic dust for crystal tools, armour, and singing-bowl crafts.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Harp",
-            "title": "Ithell harmonium harps (harmonic dust)",
-            "verifiedAt": "2026-07-26"
+            "title": "Ithell harps",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
-          "name": "Meilyr Recipe Shop and combination potions",
-          "kind": "Herblore recipe and shop infrastructure",
-          "detail": "Some combination-potion recipes are purchased directly once requirements are met; others first need recipe discovery from Daemonheim or another source",
+          "name": "Meilyr Recipe Shop",
+          "kind": "Herblore",
+          "detail": "Lady Meilyr combination-potion recipes. Overloads, elder overloads, and flask crafts once unlocked.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Recipe_Shop",
-            "title": "Meilyr Recipe Shop and combination potions",
-            "verifiedAt": "2026-07-26"
+            "url": "https://runescape.wiki/w/Lady_Meilyr",
+            "title": "Meilyr Recipe Shop",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -23633,14 +23573,14 @@
         },
         {
           "name": "Edimmu resource dungeon",
-          "kind": "high-level resource dungeon access",
-          "detail": "remains the historical hub pointer and",
-          "confidence": "confirmed_wiki_2026_dailyscape",
+          "kind": "Resource dungeon",
+          "detail": "Prif resource dungeon (115 Dungeoneering). Edimmu drop blood necklace shard. Crystal sandstone rocks inside.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Edimmu_resource_dungeon",
             "title": "Edimmu resource dungeon",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -23653,6 +23593,102 @@
             "url": "https://runescape.wiki/w/Corrupted_Seren_Stone",
             "title": "Corrupted Seren Stone cleansing (Hefin Cathedral)",
             "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Grenwalls",
+          "kind": "Hunter",
+          "detail": "Isafdar box traps (77 Hunter). Grenwall spikes for extreme ranging / herblore self-supply.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Grenwall",
+            "title": "Grenwalls",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Max Guild",
+          "kind": "hub",
+          "detail": "Prif Max Guild. Skill portals, skillcape stand, and high-level player hub after maxing.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Max_Guild",
+            "title": "Max Guild",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Skillcape shop",
+          "kind": "shop",
+          "detail": "Max Guild skillcape stand / cape purchases for 99 skills. Ironman self-supply of skillcapes.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Cape_of_Accomplishment",
+            "title": "Skillcape shop",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Ancient elven ritual shard",
+          "kind": "combat utility",
+          "detail": "Solak / Lost Grove rare. Prayer restore on a cooldown — ironman combat sustain with GOTE.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ancient_elven_ritual_shard",
+            "title": "Ancient elven ritual shard",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Seren spells and prayers",
+          "kind": "Magic / Prayer",
+          "detail": "The Light Within unlocks. Crystallise, Crystal Mask, Light Form, Superheat Form, Chronicle Attraction.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Light_Within",
+            "title": "Seren spells and prayers",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Crystal tools",
+          "kind": "skilling tools",
+          "detail": "Lady Ithell crystal pickaxe, hatchet, and mattock from dragon/Imcando bases + harmonic dust.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_pickaxe",
+            "title": "Crystal tools",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Crystal skillchompas",
+          "kind": "Hunter",
+          "detail": "Isafdar crystal skillchompas (97 Hunter). Top-tier gather XP tools; also POF produce path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_skillchompa",
+            "title": "Crystal skillchompas",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Perfect juju potions",
+          "kind": "Herblore",
+          "detail": "Harmony moss upgrades base jujus into perfect juju (1-hour doses). Farming, WC, Mining, Fishing, and more.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Perfect_juju_farming_potion",
+            "title": "Perfect juju potions",
+            "verifiedAt": "2026-07-27"
           }
         }
       ],
@@ -23681,20 +23717,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Crystal_sandstone",
             "title": "Crystal sandstone",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "tirannwn"
-        },
-        {
-          "name": "Solak / Lost Grove rewards",
-          "category": "high-end combat upgrades",
-          "detail": "The Lost Grove is an official Tirannwn Equilibrium example; Solak's current wiki drop table contains these rewards · Blightbound crossbow, Off-hand Blightbound crossbow, Erethdor's grimoire, Torn grimoire pages",
-          "requirements": [],
-          "confidence": "confirmed_official_region_example_plus_confirmed_wiki_drops",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Solak",
-            "title": "Solak",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "tirannwn"
@@ -23769,37 +23791,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Crystal fishing rod + Prif waterfall + Fury shark stack",
-          "category": "cross-region late Fishing tool and method stack",
-          "detail": "Bait and Switch does not cook crystal urchins (uncookable). Stack is pure Fishing XP/QoL, not Cooking dual-train · Region combo (all required): tirannwn + kandarin · Unlocks: Crystal rod: acts as fishing / fly / barbarian rod; +8% catch chance on rod-required spots; stacks with fury shark +7% catch, Waterfall fishing: 93/95/97 Fishing tiered crystal urchin spots; urchin points buy rod unlock, teleports, XP lamps, perfect juju fishing, harmonic dust, Fury shark: +7% catch, +10% extra fish (no XP), bait save, living-rock aggression removal; extra-fish procs work at Prif waterfall without extra Invention XP, Combined late-game ironman Fishing stack: Prif method + best rod + elite outfit catch QoL · Region pressure: Tirannwn hard: waterfall method + crystal rod unlock/craft., Kandarin hard: fury shark outfit acquisition / Deep Sea fragment volume",
-          "requirements": [
-            "Prifddinas Waterfall Fishing access: Plague's End; climb + grapple (90 Agility / Strength / Ranged, boostable) or waterfall teleports / Max Guild portal / GOTE portal",
-            "Crystal fishing rod unlock: 3,000 crystal urchin points from Prifddinas Waterfall Fishing Shop (indirectly 93+ Fishing for points); craft from crystal tool seed + 150 harmonic dust (80 Smithing singing bowl) or NPC enchant",
-            "Fury shark outfit full set (Kandarin Deep Sea fragment path + Invention craft)",
-            "Optional perks: Honed / Furnace on augmented crystal rod; perfect juju fishing; whopper-baiting scrimshaw"
-          ],
-          "confidence": "confirmed_wiki_cross_region_stack",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crystal_fishing_rod",
-            "title": "Crystal fishing rod + Prif waterfall + Fury shark stack",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn",
-            "kandarin",
-            "asgarnia"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "kandarin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + kandarin",
-          "isRegionCombo": true
-        },
-        {
           "name": "Crystal teleport seed Tirannwn travel network",
           "category": "permanent regional travel infrastructure package",
           "detail": "Hard Tirannwn travel backbone for Prif district hopping and Lletya · Region chain (multi-source; see requirements) · Unlocks: Teleport crystal with up to 8 charges to Lletya, Temple of Light exterior, and all eight Prif clan districts, Prif option opens district submenu (Amlodd/Cadarn/Crwys/Hefin/Iorwerth/Ithell/Meilyr/Trahaearn), Ironman re-obtain: Lletya elf warriors only (25/128 uncharged); elves elsewhere · Region pressure: Tirannwn owns all destinations and recharge elves. Kandarin quest pressure for Prisoner of Glouphrie alternate obtain is optional only",
@@ -23824,40 +23815,6 @@
           ],
           "regionRequirementType": "single",
           "comboLabel": "Region chain (multi-source; see requirements)",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Crystal tools (dragon base + Prifddinas conversion)",
-          "category": "cross-region crystal tool progression family",
-          "detail": "Prifddinas conversion. Tag dragon-base sources as optional pressure unless League disables GE/trade and the player must self-source a specific base · Effects: Augmentable crystal pickaxe, hatchet, mattock feed Earth and Song / Ember and Glade / Mattock of Time and Space, Crystal hammer: +1% double smithing progress; pairs with Orthen furnace core stacks, Crystal tinderbox: high-end Firemaking tool side of furnace-core stacks, Crystal fishing rod: +5% catch chance; augmentable Waterfall Fishing tool · Region pressure: Tirannwn is the only hard required region for the conversion infrastructure",
-          "requirements": [
-            "Prifddinas / Lady Ithell or crystal-singing infrastructure (Plague's End in normal game)",
-            "Harmonic dust for dragon-base conversions and tool-seed singing",
-            "Dragon pickaxe or hatchet base for crystal pickaxe / crystal hatchet (4,000 harmonic dust each)",
-            "Dragon mattock (or Imcando mattock) base for crystal mattock (4,000 harmonic dust)",
-            "Crystal tool seed + harmonic dust (or NPC seed enchant) for crystal hammer, tinderbox, knife, chisel, saw paths",
-            "Crystal fishing rod via 3,000 crystal urchin points from Waterfall Fishing shop (not a dragon-base conversion)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crystal_pickaxe",
-            "title": "Crystal tools (dragon base + Prifddinas conversion)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn",
-            "fremennik",
-            "anachronia",
-            "forinthry",
-            "asgarnia"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): tirannwn / fremennik / anachronia / forinthry / asgarnia",
           "isRegionCombo": true
         },
         {
@@ -24156,76 +24113,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Player-owned house portal towns and Construction utilities",
-          "category": "Construction teleport and housing infrastructure",
-          "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock · Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
-          "requirements": [
-            "Construction tutorial / house owned",
-            "Portal location Con levels: Rimmington/Taverley 1, Pollnivneach 20, Rellekka 30, Brimhaven 40, Yanille 50, Menaphos 50 + Jack of Spades, Otot 60 + 1,750 Mazcab reputation, Prifddinas 75 + Plague's End",
-            "Post-13 Jul 2026 POH rework: houses accessible from any portal the player qualifies for; estate agent sets default exit only"
-          ],
-          "confidence": "confirmed_wiki_with_2026_current_rule",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/House_portal",
-            "title": "Player-owned house portal towns and Construction utilities",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "asgarnia",
-            "kandarin",
-            "karamja",
-            "fremennik",
-            "desert",
-            "tirannwn",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "asgarnia",
-            "kandarin",
-            "karamja",
-            "fremennik",
-            "desert",
-            "tirannwn",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Signs of the porter (Divination supply system)",
-          "category": "Divination bank-transport supply chain",
-          "detail": "GOTE assembly is a separate chain row. This is the Divination sign craft supply system · Kandarin energy + Tirannwn GOTE are the hard stack ends · Region combo (all required): kandarin + tirannwn · Unlocks: Craftable signs of the porter for auto bank deposit while gathering, Energy-tier ladder powering GOTE and gathering transport",
-          "requirements": [
-            "Divination levels for sign of the porter tiers",
-            "Divine energy of appropriate tier to craft signs",
-            "Grace of the elves or other high-tier porters for capacity"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sign_of_the_porter",
-            "title": "Signs of the porter (Divination supply system)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "kandarin",
-            "tirannwn",
-            "asgarnia",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "kandarin",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): kandarin + tirannwn",
-          "isRegionCombo": true
-        },
-        {
           "name": "Crystal Mask + Light Form thieving stack",
           "category": "cross-region Thieving stack",
           "detail": "Planner stack companion called out by region-combo audit. Surface Tirannwn when valuing high-level pickpocket AFK. Use post-February-2026 15%/30% numbers only · Single-region Tirannwn stack in practice; keep region_hints tirannwn-only unless diary/relic partners are explicitly valued · Region chain (multi-source; see requirements) · Effects: Crystal Mask +15% pickpocket success for 5 minutes; +30% with Light Form, Crystal Mask recast resets pickpocket target awareness (post-19-Feb-2026), Light Form also doubles Crystallise and other Seren skilling spell effects when used outside pure thieving, Exoskeleton: 25% chance to avoid stun and damage on failed pickpockets · Region pressure: Tirannwn owns Light Within Seren spells/prayers and Prif worker targets., Hard Ardougne diary and Sticky Fingers are optional non-Tirannwn multipliers, not required to name this core stack",
@@ -24250,41 +24137,6 @@
           ],
           "regionRequirementType": "single",
           "comboLabel": "Region chain (multi-source; see requirements)",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Perfect juju potion production path",
-          "category": "Herblore perfect-juju production infrastructure",
-          "detail": "Hard Karamja + hard Tirannwn for self-sufficient perfect juju production. Karamja alone yields base jujus only; Tirannwn alone yields moss/flask/blossom without Habitat bases. Perfect plus still needs Forinthry recipe + 99 Herblore · Region combo (all required): karamja + tirannwn · Unlocks: ironman production path for perfect juju woodcutting / farming / mining / smithing / agility / prayer / herblore / dungeoneering / fishing, Upgrade loop: Habitat 3-dose juju base + Tirannwn harmony moss (or dust×10 for fishing) → perfect juju (3), 1-hour dose duration per perfect juju (perfect juju dungeoneering lasts 4 hours); jadinko farm perk can add +30 seconds, Decant into potion flasks for 6-dose perfect juju flasks, Bridge into perfect plus (all perfect juju effects for 4 hours per dose) via crystal tree blossom + crystal flask + overload · Region pressure: Karamja Herblore Habitat vine herbs, base juju craft geography, and Papa Mambo seed/supply loop., Tirannwn harmony moss (Meilyr pillars), crystal tree blossom (Prif crystal tree, 94 Farming), and crystal flask infrastructure for combination / perfect plus., Prifddinas is the Tirannwn city face of moss / blossom / flask supply (not a separate league region token)., Forinthry optional pressure for permanent perfect plus recipe (Daemonheim) — mixing still needs Tirannwn crystal components",
-          "requirements": [
-            "Herblore Habitat access (south-east Karamja) for vine herbs and base juju / god-blessing secondaries",
-            "Herblore 75–92 matching each perfect juju recipe (boostable where allowed); 99 Herblore for perfect plus",
-            "3-dose base juju or Habitat god potion as primary (juju woodcutting/farming/mining/hunter/fishing, scentless, Saradomin's blessing, Guthix's gift, Zamorak's favour)",
-            "Harmony moss secondary for most perfect jujus (Meilyr harmony pillars, 75 Farming to plant; unique XP-attuned growth)",
-            "Perfect juju fishing uses harmony dust ×10 instead of harmony moss (waterfall / Prif dust supply)",
-            "Optional six-dose containers: potion flasks (standard) or crystal flasks (combination / perfect plus path)",
-            "Perfect plus end chain: overload (4) + harmony moss + crystal tree blossom + crystal flask after permanent recipe unlock"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Perfect_juju_potion",
-            "title": "Perfect juju potion production path",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "karamja",
-            "tirannwn",
-            "anachronia",
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): karamja + tirannwn",
           "isRegionCombo": true
         },
         {
@@ -24328,108 +24180,6 @@
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): desert + tirannwn + fremennik + asgarnia + kandarin",
           "isRegionCombo": true
-        },
-        {
-          "name": "Amlodd Summoning and Divination hub",
-          "category": "Summoning and Divination district infrastructure",
-          "detail": "Core conversion of 15 of each shadow core type for Lord Amlodd's 50k Divination lamp is a completionist-style milestone, not required for basic hub value. Fairy ring DJS sits in the district · Tirannwn owns the Amlodd hub. Charm supply and spirit shards remain multi-region pressures · Unlocks: Bank-adjacent Summoning obelisk and Lord Amlodd shard-swap / Summoning shop, Light rift shadow-creature cores converted for Divination XP and light cores, Light creature familiar path from light cores (Tears of Guthix / Ancient Guthix Temple teleports, memory auto-convert passive), Daffyd impling checklist rewards (thinker robes/trousers, Hunter XP, toggleable impling XP or loot boost outside Puro-Puro), Amlodd Voice of Seren: +20% Summoning pouch/scroll XP and extra scrolls; +20% Divination XP on shadow cores",
-          "requirements": [
-            "Prifddinas Amlodd district access"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Amlodd_Clan",
-            "title": "Amlodd Summoning and Divination hub",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Amlodd district Divination and Summoning hub",
-          "category": "district skilling hub infrastructure",
-          "detail": "Continue2 district parity. Wiki features are obelisk/rift/Daffyd — not a generic elder-wisp claim. Combat shadow kills are method pressure for cores only · Hard Tirannwn for Amlodd district · Unlocks: Summoning obelisk next to bank adjacency (west side near Lord Amlodd); Lord Amlodd pouch→spirit-shard swap at Bogrog rates + Summoning Supplies shop, Light rift: convert truthful / blissful / manifest shadow cores for Divination XP with light-core chance; 15 of each core type → one-time 50,000 Divination XP lamp from Lord Amlodd (comp cape ), Light cores feed light creature familiar (memory auto-convert passive + Tears of Guthix / Ancient Guthix Temple teleports), Fairy ring DJS in south-west corner; Clan Amlodd cape from Amlodd herald, Daffyd full-impling checklist → thinker robes/trousers + 50,000 Hunter XP + toggleable impling XP/loot enhancement (surface only) · Region pressure: Hard Tirannwn for Amlodd district Summoning/Divination infrastructure",
-          "requirements": [
-            "Plague's End / Amlodd district access",
-            "94 Thieving for Amlodd worker pickpocket",
-            "Divination/Summoning levels for light-rift core convert and pouch craft as wiki gates per product"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Amlodd_Clan",
-            "title": "Amlodd district Divination and Summoning hub residual",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Cadarn Magic/Ranged and Max Guild hub",
-          "category": "district skilling and utility hub",
-          "detail": "Skilling-utility focus; combat Cadarn Voice of Seren is not a skilling unlock. Grimoire boost resets on leaving Prifddinas · Hard Tirannwn. Max Guild portals still gate individual destinations by skill requirements · Unlocks: Max Guild geography in southeast Cadarn (skill portals, garden, marketplace), Haf's Battlestaves + Elven grimoire (swap standard/Ancient Magicks and standard prayers/Ancient Curses; +5 Defence/Ranged/Magic while remaining in Prif; Lunar swap with Region pressure: Tirannwn owns Cadarn district and Max Guild location",
-          "requirements": [
-            "Plague's End / Cadarn district access",
-            "93 Thieving for Cadarn workers",
-            "Max Guild garden features still need skill/cape gates as documented on Max Guild"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Cadarn_Clan",
-            "title": "Cadarn Magic/Ranged and Max Guild hub",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Corrupted ore smelting loop",
-          "category": "Smithing from Seren-stone Mining",
-          "detail": "Companion detail row to (Mining side). Seren stones use 1.2x Mining XP multiplier without rockertunities. Corrupted ore does not grant Artisans' Workshop respect. Pair Superheat Form with Orthen furnace core or Grace of the elves for drain management · Tirannwn Mining-to-Smithing AFK loop. Keep separate from pure XP/hour rankings · Unlocks: Stackable corrupted ore that cannot enter the metal bank, 160 Smithing XP per ore base; 192 during Trahaearn Voice of Seren, Superheat Form reduces smelt time by 1 tick (wiki: up to 2,000 ore/hour theoretical vs 1,500 base), Lady Trahaearn 50,000 Smithing XP lamp after first 100 ores smelted, Augmented crystal hammer or hammer-tron equipment XP while smelting",
-          "requirements": [
-            "89 Mining for Seren stones",
-            "89 Smithing to smelt (boostable)",
-            "Trahaearn district / furnace access"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Corrupted_ore",
-            "title": "Corrupted ore smelting loop",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
         },
         {
           "name": "Crwys Farming and Woodcutting hub",
@@ -24501,30 +24251,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Crystal-flecked_sandstone",
             "title": "Crystal sandstone and crystal flasks",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Crystal tool and harmonic dust infrastructure",
-          "category": "skilling tool progression",
-          "detail": "Lady Ithell upgrades several dragon-tier tools with harmonic dust. Crystal pickaxes, hatchets, mattocks, fishing rods, tinderboxes and hammers also feed augmentable skilling progression · Unlocks: Crystal pickaxe, Crystal hatchet, Crystal mattock, Crystal tool-seed utility, Attuned crystal teleport seed, Harmonium harps as a low-attention harmonic-dust source",
-          "requirements": [
-            "Prifddinas access",
-            "Harmonic dust for crystal-tool upgrades"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crystal_tool",
-            "title": "Crystal tool and harmonic dust infrastructure",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "tirannwn",
@@ -24637,33 +24363,6 @@
             "tirannwn"
           ],
           "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Harmonic dust economy (harps + Ithell thieving)",
-          "category": "crystal-tool currency supply package",
-          "detail": "Distinct from harmony dust (waterfall urchin grind) and harmony moss (Meilyr). Meg POP can gift dust rarely — not a plan source · Hard Tirannwn currency for crystal infrastructure. Budget dust for untradeable tools before gear · Unlocks: Primary harmonic dust from four Ithell harps (1 dust + 80 Crafting XP per successful note; VoS/artificer's measure halves detune), Secondary dust from Ithell worker pickpocket (~350 dust/hour continuous with Crystal Mask post-2026 rebalance — illustrative only), 1,000 dust one-time from elite Tirannwn diary (Elen Anterth) — diary itself needs dust spent on attuned weapon first, Spend sinks: 4,000 dust per crystal pick/hatchet/mattock; 4,000 attuned teleport seed; 150 binding rod / crystal tools from tool seeds; 5,000 blessed flask shell · Region pressure: Tirannwn owns all primary dust sources and spend sinks",
-          "requirements": [
-            "75 Crafting to play Ithell harps; 75 Construction to retune",
-            "92 Thieving for Ithell worker dust path (post-2026 continuous pickpocket with Crystal Mask upkeep)",
-            "Plague's End / Ithell access"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Harmonic_dust",
-            "title": "Harmonic dust economy (harps + Ithell thieving)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -24828,31 +24527,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Ithell harmonium harps (harmonic dust)",
-          "category": "Crafting and Construction harmonic-dust activity",
-          "detail": "Four harps around the Ithell statue. Rolls every 5 ticks; detune chance only on failed dust rolls (40% base, 20% with Ithell Voice of Seren or artificer's measure). Artificer's measure permanently applies the Ithell harp VoS benefit and is redundant with active Ithell VoS. Wiki dust/hour simulations favour retuning around 20% out-of-tune without VoS · Tirannwn owns harps and dust. Crystal tool seed bases still pull dragon-tier tools from other regions · Unlocks: Harmonic dust production for crystal tools and crystal-related crafts, 80 Crafting XP and 1 harmonic dust per successful note, 50 Construction XP per 10% retune when out of tune, Low-attention Crafting loop that feeds crystal pickaxe/hatchet/mattock/hammer/tinderbox/rod infrastructure",
-          "requirements": [
-            "75 Crafting to play",
-            "75 Construction to retune",
-            "Prifddinas Ithell district access"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Harp",
-            "title": "Ithell harmonium harps (harmonic dust)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Meilyr district Herblore and Dungeoneering hub",
           "category": "district skilling hub infrastructure",
           "detail": "Missing Meilyr district hub. Harmony moss ≠ harmonic dust · Hard Tirannwn Meilyr hub. Recipe discovery may optionally pressure Forinthry for some combos only · Unlocks: District hub uniting Lady Meilyr Recipe Shop, harmony pillars, fruit tree patch, Meilyr workers (98 Thieving), and dual resource dungeons, Gorajo resource dungeon (95 DG): bloodwood tree, pawya/grenwall, implings, Gorajo hoardstalker cards, Edimmu resource dungeon (115 DG): Meilyr crystal sandstone + edimmu (Edimmu resource dungeon), Gnome glider (Captain Muggin) to Grand Tree; Meilyr Clan Store / harmony pillar farmers, Meilyr Voice of Seren: +20% Farming on fruit tree and harmony pillars; +20% Herblore on combination potions · Region pressure: Tirannwn owns Meilyr district geography and shops",
@@ -24882,87 +24556,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Meilyr harmony pillars (harmony moss)",
-          "category": "Farming and perfect-juju supply infrastructure",
-          "detail": "Hard Tirannwn perfect-juju supply. Schedule high-XP methods in the attuned skill to advance pillars · Unlocks: Four harmony pillars that grow harmony moss attuned to a skill chosen at plant time, Unique growth: each of 4 stages advances only after 50,000 base XP (no bonus XP) in the attuned skill — 200,000 total base XP to fully grow, 1,133.3 Farming XP per moss harvested; all moss collected at once on pick, Harmony moss ingredient for perfect juju potions (farming/mining/smithing/woodcutting/herblore/prayer/agility/dungeoneering) and perfect plus (99 Herblore + crystal tree blossom + crystal flask), Perfect juju farming: chance of harmony moss from normal patches + 25% chance of double moss from pillars; Tirannwn quiver 3/4 adds 10% extra moss chance; 10 vis wax re-roll per pillar; Remote Farm works · Region pressure: Tirannwn owns the only harmony pillars (Meilyr)",
-          "requirements": [
-            "75 Farming",
-            "Plague's End / Meilyr district access",
-            "Harmony moss seeds planted on four Meilyr harmony pillars"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Harmony_pillar",
-            "title": "Meilyr harmony pillars (harmony moss)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Meilyr Recipe Shop and combination potions",
-          "category": "Herblore recipe and shop infrastructure",
-          "detail": "Some combination-potion recipes are purchased directly once requirements are met; others first need recipe discovery from Daemonheim or another source · Tirannwn is the shop and production hub. Recipe-specific discovery dependencies remain separate · Unlocks: Combination-potion recipes, Recipe Shop purchase step, Access to Meilyr Herblore services · Region status: confirmed_base_game_geography",
-          "requirements": [],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Recipe_Shop",
-            "title": "Meilyr Recipe Shop and combination potions",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Prifddinas spirit tree + Glouron three-tree unlock",
-          "category": "cross-region Farming travel infrastructure",
-          "detail": "all_required combo: without both regions the full Glouron package cannot complete. Base spirit-tree network already as — this row is the Prif destination + three-tree permanent upgrade only · Region combo (all required): tirannwn + kandarin · Unlocks: Ability to plant three spirit trees simultaneously (was one / two depending on prior chain), Teleport destination to Prifddinas Crwys spirit tree from any network tree, One-time 50,000 Farming XP lamp from Glouron after planting three spirit trees, checking health, and speaking to him again, Prif spirit tree requests Brimhaven / Etceteria / Manor Farm plantings as reconnection flavour (lamp reward path) · Region pressure: Tirannwn: physical Prif tree and Glouron NPC live in Crwys., Kandarin: Prisoner of Glouphrie + Tree Gnome Stronghold spirit-tree network ownership ( is the base network row)",
-          "requirements": [
-            "Plague's End / Prifddinas Crwys access to the permanent Prif spirit tree",
-            "The Prisoner of Glouphrie completed (Kandarin gnome quest chain)",
-            "89 Farming",
-            "Talk to Glouron next to the Prif spirit tree to unlock planting three spirit trees at once and teleport-to-Prif on the network"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Spirit_Tree_(Prifddinas)",
-            "title": "Prifddinas spirit tree + Glouron three-tree unlock",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn",
-            "kandarin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "kandarin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + kandarin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Prifddinian worker's outfit (Hefin course)",
+          "name": "Prifddinian worker's outfit",
           "category": "Agility course permanent outfit",
-          "detail": "Hefin previously only footnoted inside hefin-agility-course unlock list. Cosmetic focus — Prefer course row for training; this row for reward-path scoring · Hard Tirannwn Hefin. Low priority vs crystal tools / VoS methods · Unlocks: Cosmetic Prifddinian worker's outfit pieces from Hefin course lap rewards, Outfit tied to Hefin course completionist path alongside Hefin emotes and course multipliers, Planner marker for Hefin course long-tail rewards beyond XP · Region pressure: Hard Tirannwn Hefin course for all pieces",
+          "detail": "Hefin Agility Course unique. Full outfit XP and skilling bonuses for Prif workers.",
           "requirements": [
             "Hefin Agility Course access (77 Agility unboostable, Plague's End)",
             "Lap rewards until outfit pieces drop (wiki random lap rewards; light creature special increases reward frequency)"
@@ -24981,29 +24577,6 @@
           "requiredRegions": [
             "tirannwn"
           ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Seren stones and corrupted ore",
-          "category": "AFK Mining and Smithing supply loop",
-          "detail": "Seren stones are a durable Prifddinas skilling unlock even when they are not the absolute fastest Mining route. They matter for low-input training and self-supplied Smithing experience · Keep this as a utility and AFK route, separate from pure XP/hour rankings · Unlocks: Corrupted ore, High-attention-free Mining route, Corrupted-ore Smithing experience",
-          "requirements": [
-            "89 Mining for Seren stones"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Seren_stone",
-            "title": "Seren stones and corrupted ore",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -25036,27 +24609,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Prifddinas skilling hub",
-          "category": "regional skilling infrastructure",
-          "detail": "Prifddinas is far more than one training method. Treat it as a bundle of tool, shop, production, and high-level skilling unlocks when valuing Tirannwn · Equilibrium explicitly advertises Prifddinas as Tirannwn content and says region quest completion is intended to provide immediate access. Keep any individual item skill requirements · Unlocks: Ithell harmonium harps and harmonic dust, Trahaearn Seren stones and corrupted ore, Meilyr combination-potion infrastructure, Waterfall Fishing and crystal fishing rod shop, district skilling services and Voice of Seren rotations · Region status: confirmed_official_region_example",
-          "requirements": [],
-          "confidence": "confirmed_wiki_plus_official_region_example",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Prifddinas",
-            "title": "Prifddinas skilling hub",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Supreme overload potion recipe (Meilyr)",
           "category": "permanent Herblore combination recipe",
           "detail": "Meilyr shop hub is thin (generic combination-potion bullets). Perfect plus already has; promote supreme overload the same way. Combat boost numbers are recipe identity, not a combat gear catalog · Hard Tirannwn for Meilyr shop · Unlocks: Permanent account recipe: craft supreme overload (16%+4 combat boost, 6-dose flask, 6 min/dose), Required intermediate for elder overload and supreme overload salve ladders · Region pressure: Tirannwn Meilyr Recipe Shop purchase",
@@ -25083,136 +24635,6 @@
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): tirannwn + forinthry",
           "isRegionCombo": true
-        },
-        {
-          "name": "Trahaearn Mining and Smithing hub",
-          "category": "district Mining/Smithing infrastructure",
-          "detail": "Hub package around already-indexed seren-stones and corrupted-ore-smithing rows. Pair Superheat Form + Orthen furnace core for AFK smelt sustain without re-emitting those ids here · Hard Tirannwn Mining/Smithing destination · Unlocks: Seren stones producing corrupted ore under Lady Trahaearn ( · Region pressure: Tirannwn owns Trahaearn mine, stones, and furnace",
-          "requirements": [
-            "Plague's End / Trahaearn district access",
-            "89 Mining for Seren stones; 89 Smithing to smelt corrupted ore (boostable)",
-            "95 Thieving for Trahaearn workers"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Trahaearn_Clan",
-            "title": "Trahaearn Mining and Smithing hub",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Trahaearn district Mining and Smithing hub",
-          "category": "district skilling hub infrastructure",
-          "detail": "Continue2 district parity. Mining/Smithing focus; Trahaearn automata combat stays out of scope · Hard Tirannwn for Trahaearn district · Unlocks: Seren stones: mine corrupted ore; 100 corrupted ore → 'of the Trahaearn' title; smelt 100 corrupted ore → one-time 50,000 Smithing XP lamp, District mine north of tower: mithril / adamantite / coal / runite rocks; Prifddinas gem rocks east of mine, Voice of Seren on district: rocks may become light/dark animica; mine can also yield corrupted ore while VoS active, Anvil + furnace south-east of Seren stones; tree patch (Eifion / Tiwlip); bank chest + Clan Trahaearn cape in tower · Region pressure: Hard Tirannwn for Trahaearn district Mining/Smithing geography",
-          "requirements": [
-            "Plague's End / Trahaearn district access",
-            "89 Mining for Seren stones (corrupted ore; ivy-like)",
-            "95 Thieving for Trahaearn worker pickpocket",
-            "Smithing for smelting corrupted ore / using district furnace and anvil"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Trahaearn_Clan",
-            "title": "Trahaearn district Mining and Smithing hub residual",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Voice of Seren district rotations",
-          "category": "city-wide skilling blessing",
-          "detail": "Player must stand in the illuminated district to receive that clan's effects. Two-hour cool-down per clan after its hour ends. Cadarn/Iorwerth Voice rows are combat XP side-effects, not skilling unlocks · Schedule VoS-sensitive methods (harps, corrupted ore, Hefin, Meilyr combos, clan thieving) as flexible rather than fixed-time dependencies · Unlocks: Hourly two-clan Voice of Seren blessing across Prifddinas (same on all worlds), Universal: +20% base XP pickpocketing that clan's workers; higher golden-rock chance in clan skills; crystal-impling spawn chance at affected heralds, Amlodd: +20% Summoning pouch/scroll XP and +20% scrolls per pouch; +20% Divination XP converting shadow cores, Crwys: +20% Woodcutting XP on ivy/magic/yew with nests replaced by crystal geodes; +20% Farming XP on bush/herb/elder; growth-skip chance, Hefin: +20% Agility on the Hefin course, doubled velocity gain, +25% of Agility XP as Prayer while lapping, +20% Prayer from Corrupted Seren Stone cleansing, more course shortcuts, Ithell: +20% Crafting/Construction on harps and lower detune chance; +20% Crafting on crystal flasks; soft clay bank chance; doubled Construction Supplies stock, Meilyr: +20% Farming on fruit tree and harmony pillars; +20% Herblore on combination potions, Trahaearn: +20% Smithing XP smelting corrupted ore; chance for dark/light animica rock replacements; +20% extra ore chance mining in district; +20% tree-patch Farming",
-          "requirements": [
-            "Plague's End / Prifddinas access in the normal game"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Voice_of_Seren",
-            "title": "Voice of Seren district rotations",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Prifddinas Waterfall Fishing depth (tiers, events, points)",
-          "category": "high-level Fishing activity depth",
-          "detail": "Depth companion. Harmony dust from urchin grind is not harmonic dust · Hard Tirannwn Fishing flagship once 90 grapple triad or shop teleports resolve · Unlocks: Three fishing tiers: small (93), medium (95, bank chest platform), large (97) crystal urchins, Crystal urchin points (1/2/3 per size) spent at Mhistyll's Prifddinas Waterfall Fishing Shop — shop row already, Distractions: big urchin co-op pull (300 Fish+Str XP + 100 points), leaping urchin click (300 Fish+Agi XP + 100 points), geyser scatter stacks, Max Guild skill portal attune to tier-2 bank platform (99 skill or Quest Cape garden; 90 Agi/Str/Range unboosted to attune), Hermit crab pet chance; prawn balls; fishing urns and strange rocks work; Voice of Seren does not boost waterfall XP · Region pressure: Tirannwn owns the waterfall and reward shop",
-          "requirements": [
-            "Plague's End / Prif waterfall between Meilyr and Crwys",
-            "90 Agility + 90 Strength + 90 Ranged (boostable) for grapple shortcut, or Waterfall fishing teleports from shop (no 90s once owned)",
-            "93 / 95 / 97 Fishing for small / medium / large crystal urchin tiers",
-            "Enhanced grappling hook or mithril grapple + crossbow, or built hidey-hole"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Prifddinas_Waterfall_Fishing",
-            "title": "Prifddinas Waterfall Fishing depth (tiers, events, points)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Waterfall Fishing and Fishing Shop",
-          "category": "Fishing activity and permanent tool unlock",
-          "detail": "The crystal fishing rod is 5% more likely to catch fish and can be augmented. This makes Waterfall Fishing a permanent tool unlock as well as a training activity · Keep the rod unlock even if Equilibrium XP multipliers make another fishing method faster · Unlocks: Crystal urchin points, Ability to make the crystal fishing rod for 3,000 crystal urchin points",
-          "requirements": [
-            "93 Fishing for the high-level Waterfall Fishing route",
-            "90 Agility, Ranged and Strength for the waterfall route in the normal game"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Waterfall_Fishing",
-            "title": "Waterfall Fishing and Fishing Shop",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
         },
         {
           "name": "Ancient elven ritual shard",
@@ -25453,7 +24875,7 @@
           "isRegionCombo": false
         },
         {
-          "name": "Crystal skillchompas (Isafdar catch + POF produce)",
+          "name": "Crystal skillchompas",
           "category": "consumable multi-skill gatherer tools",
           "detail": "Hard Tirannwn for wild supply. Kandarin POF is optional sustain · Unlocks: Highest skillchompa tier: +10% XP on success; 5% of success XP on failed actions (Fishing/WC/Div/Arch), Mining: crystal-pickaxe-equivalent with 70 bonus crit damage on critical swings only (consumed on crit), Divination: +22.5% enriched memory chance; Fishing: +5% catch chance, WC/Mining/Archaeology operate as crystal hatchet/pickaxe/mattock equivalents while consumed, POF chinchompa perk can save skillchompas (up to 5% not consumed) · Region pressure: Tirannwn owns wild crystal skillchompa catch site (wiki League badge)., Kandarin POF is the durable ironman reproduce path once crystal chinchompas are obtained",
           "requirements": [
@@ -25733,32 +25155,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Max Guild (Prifddinas skill portals)",
-          "category": "endgame skilling teleport hub",
-          "detail": "Combat boss portal is out of skilling scope — record skill portals only. Portal use still requires the destination skill/quest; Max Guild is a Tirannwn routing hub, not a free unlock of every destination region · Individual portal destinations may still require their home regions when those regions are locked · Unlocks: Two garden skill portals (second portal at 15 skills at 99): free first tune; retune fee starts 100k coins and falls 10k per five 99s to a 50k floor, Skilling destinations include: active crystal tree, Jadinko Lair, Lava Flow Mine, Living Rock Caverns, brilliant/radiant/luminous/incandescent wisp colonies, Runespan upper floor, Tree Gnome Stronghold, Zanaris fairy ring, Puro-Puro, Prifddinas Waterfall, Invention Guild, Menaphos VIP skilling area, Deep Sea Fishing hub, overgrown idols, Anachronia Dinosaur Farm (5,000 beans market unlock), Elen Anterth cape shop (all skillcapes + max cape) and max-cape teleport garden/tower toggle, Rhodri Dail potion/flask decanting and crystal enchant inside the tower, Crystal acorn gift on first tower entry for crystal tree growth",
-          "requirements": [
-            "Plague's End for Prifddinas access",
-            "Garden: any level 99 or wearable Quest Cape",
-            "Tower interior: max cape",
-            "Destination-specific skill/quest gates for each portal tune"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Max_Guild",
-            "title": "Max Guild (Prifddinas skill portals)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Max guild Teleport (free spell)",
           "category": "permanent free Magic teleport unlock",
           "detail": "Max-guild row already lists portal destinations and cape-shop geography but not the free spell as its own permanent unlock. High skilling QoL (bank + portal staging). Do not re-list portal destinations here · Hard Tirannwn. Unlock still needs total-level max + one Max Guild entry · Unlocks: Free Magic spell in all spellbooks: Max guild Teleport — no runes, no Magic level gate once unlocked, Default arrival in Max Guild garden next to skill portals; toggle to tower interior via Elen Anterth after wearing max/comp cape once, Fast bank / Grand Exchange / skill-portal hub teleport without consuming cape inventory action, Distinct from portal tunes and from right-click tele — spell is account Magic unlock · Region pressure: Hard Tirannwn for Max Guild entry and usable destination under region lock",
@@ -25820,61 +25216,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Plague's End Prifddinas unlock package",
-          "category": "quest city-access skilling gate",
-          "detail": "Equilibrium markets Prifddinas as Tirannwn content with intended immediate access after region quest completion — keep individual item skill requirements. Exoskeleton effect detail lives on the existing equipment row; this row is the city-gate unlock package · Resolve through Equilibrium quest auto-completion before treating Plague's End as a manual multi-skill grind · Unlocks: Full Prifddinas city access and district skilling hubs, Trahaearn exoskeleton set (",
-          "requirements": [
-            "Plague's End completed in the normal game (or Equilibrium auto-quest overlay)",
-            "Normal-game skill gates include 75 in Agility, Construction, Crafting, Dungeoneering, Herblore, Mining, Prayer, Ranged, Summoning, Woodcutting"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Plague%27s_End",
-            "title": "Plague's End Prifddinas unlock package",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Seren skilling prayers package (The Light Within)",
-          "category": "Tirannwn Seren skilling prayer unlock package",
-          "detail": "Audit suggested. Superheat Form and Light Form already exist as individual rows — this package links the skilling subset for region scoring without re-emitting combat Seren curses. Single-region → region_requirement_type single · Hard Tirannwn only. Sustain items may pull Forinthry/Asgarnia/Anachronia but are not required to unlock the prayer package · Unlocks: Light Form: doubles many Seren skilling effect chances (Crystallise XP bonuses, Crystal Mask pickpocket success 15%→30%, aurora ability procs framing), Superheat Form: auto-burn chopped logs for FM XP; faster smelting; low smithing heat treated as medium and medium as high, Chronicle Attraction: auto-collect chronicle fragments while training Divination (drain pair with GOTE), Package framing for planners: one Tirannwn quest unlock opens the skilling-prayer subset used across Thieving, Divination, Woodcutting, Firemaking, and Smithing stacks · Region pressure: Tirannwn hard: The Light Within + Prifddinas is the exclusive unlock geography for Seren skilling prayers",
-          "requirements": [
-            "The Light Within completed (Prifddinas / Tirannwn quest chain after Plague's End)",
-            "Ancient Curses prayer book unlocked (The Temple at Senntisten path in normal game)",
-            "Prayer levels per curse: Light Form 80; Superheat Form 91; Chronicle Attraction 91; other Seren curses per wiki (Dark Form 80 combat-adjacent; support curses as listed on Ancient Curses)",
-            "Optional sustain: grace of the elves / Dark Facet of Grace / ancient elven ritual shard / Orthen furnace core (Superheat smithing)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/The_Light_Within",
-            "title": "Seren skilling prayers package (The Light Within)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn",
-            "forinthry",
-            "asgarnia",
-            "anachronia"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "Region chain (support pressure): tirannwn / forinthry / asgarnia / anachronia",
-          "isRegionCombo": false
-        },
-        {
           "name": "Superheat Form (Seren prayer)",
           "category": "skilling prayer unlock",
           "detail": "This is a Seren / The Light Within skilling unlock, not a combat prayer. Drain is 100 prayer points per minute unless offset. Orthen furnace core fully negates Superheat Form drain when equipped before activating the prayer. Always Adze is a separate monolith alternative for log-burning without prayer drain · Tirannwn owns the Light Within / Seren prayer unlock. Pair with Anachronia for Orthen furnace core when valuing sustained Superheat Form AFK smithing and firemaking · Unlocks: Superheat Form curse, Auto-burn chopped logs for Firemaking XP while Woodcutting, Smelting 0.6 seconds / 1 game tick faster (including corrupted ore), Smithing low heat treated as medium heat and medium heat treated as high heat",
@@ -25918,29 +25259,6 @@
             "tirannwn"
           ],
           "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Tirannwn combat achievement rewards",
-          "category": "regional achievement combat passives",
-          "detail": "Rewards: 5% increased damage against shadow creatures in Prifddinas, 5% increased damage against elves in Prifddinas, 5% increased damage against dark beasts, 5% chance not to consume an attuned crystal bow or ward charge",
-          "requirements": [],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Tirannwn_achievements",
-            "title": "Tirannwn combat achievement rewards",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "tirannwn"
-          ],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -26047,34 +25365,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Sirenic → elite sirenic armour",
-          "category": "best-in-slot ranged power armour craft chain",
-          "detail": "NOT a clean single-region lock. Surface as support pressure: scale farms and optional ED/lab materials. Prefer listing regional scale-dense activities as hints rather than fabricating all_required · Effects: Ranged equivalent of trimmed masterwork / elite tectonic, Degrades; dyes available unlike trimmed masterwork · Unlocks: Sirenic armour T90 ranged power, Elite sirenic armour T92 ranged power",
-          "requirements": [
-            "Sirenic scales (multiple monster sources; not single-region hard)",
-            "Ancient scales for elite upgrade",
-            "92 Defence to wear elite sirenic",
-            "Draconic energy adjacency for related elite power armour families is Forinthry Dragonkin Laboratory — do not force it if only sirenic is crafted"
-          ],
-          "confidence": "confirmed_wiki_distributed_material_chain",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Elite_sirenic_armour",
-            "title": "Sirenic → elite sirenic armour",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "forinthry",
-            "kandarin",
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): forinthry / kandarin / tirannwn",
-          "isRegionCombo": false
-        },
-        {
           "name": "Masterwork staff",
           "category": "tier-100 runecrafted two-handed magic weapon",
           "detail": "Region combo Asgarnia + Desert + Tirannwn. Abyss synapse is Forinthry-soft support · Region combo (all required): asgarnia + desert + tirannwn · Effects: T100 craft staff path when FSoA / praesul / seismic worn sets are unavailable, Shares Masterworked Mending with MW 2h / MW bow · Unlocks: Masterwork staff (T100 Magic 2h), Masterworked Mending passive · Region pressure: Asgarnia + Desert + Tirannwn hard for seismic / Cywir / attuned crystal essence self-supply",
@@ -26135,6 +25425,78 @@
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
+        },
+        {
+          "name": "Blood necklace shard",
+          "category": "combat",
+          "detail": "Edimmu rare. Craft blood amulet of fury or style blood necklaces at 80 Crafting.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Blood_necklace_shard",
+            "title": "Blood necklace shard",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Perfect juju potions",
+          "category": "Herblore",
+          "detail": "Harmony moss upgrade path from base jujus.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Perfect_juju_farming_potion",
+            "title": "Perfect juju potions",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Max Guild",
+          "category": "hub",
+          "detail": "Prif skill portals and skillcape stand.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Max_Guild",
+            "title": "Max Guild",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Harmony moss",
+          "category": "Farming",
+          "detail": "Meilyr pillars — perfect juju secondary.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Harmony_moss",
+            "title": "Harmony moss",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Harmonic dust",
+          "category": "material",
+          "detail": "Ithell harps. Crystal tool and craft fuel.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Harmonic_dust",
+            "title": "Harmonic dust",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Crystal fishing rod",
+          "category": "skilling tool",
+          "detail": "Waterfall Fishing shop for crystal urchin points.",
+          "requirements": [],
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crystal_fishing_rod",
+            "title": "Crystal fishing rod",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "trainingMethodIds": [

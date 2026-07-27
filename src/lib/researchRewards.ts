@@ -164,18 +164,18 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
 
   // Resource / wildy dungeons — prefer resolvable chips over essay prose.
   "Forinthry Dungeon": "Resource dungeon",
-  "Edimmu resource dungeon": "Crystal sandstone, Resource dungeon",
 
   // Hub / activity majors — short chips instead of Unlocks essays.
   "Invention Guild": "Workbenches, machines, blueprints, generators",
-  Prifddinas: "Spirit trees ×3, crystal tools, clan districts, Max Guild",
-  "Voice of Seren district rotations": "Hourly clan XP + skilling buffs",
+  Prifddinas: "Max cape, Crystal pickaxe, Crystal hatchet, Crystal mattock",
   "Empowered Summoning obelisks": "Spirit Plane Connection XP / mat save",
   "Deep Sea Fishing Hub": "Frenzy, sailfish, swarm, Travelling Merchant",
-  "Ithell harmonium harps (harmonic dust)": "Harmonic dust, crystal crafts",
+  "Ithell harps": "Harmonic dust, Crystal tools",
+  "Ithell harmonium harps (harmonic dust)": "Harmonic dust, Crystal tools",
   "Port Phasmatys": "Brewery vat, ecto-tokens, docks",
   Ectofuntus: "4× bury XP, ecto-tokens, First age outfit",
-  "Harmony pillars (Meilyr harmony moss)": "Harmony moss per skill",
+  "Harmony moss": "Harmony moss, Perfect juju potions",
+  "Harmony pillars (Meilyr harmony moss)": "Harmony moss, Perfect juju potions",
   Canifis: "Mushroom patch, Mazchna",
   "Ranging Guild": "Ranged shops, skillcape, tickets",
   "Port Sarim docks and skilling hub": "Player-owned port, The Arc, Ports portal",
@@ -195,7 +195,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Stormguard Citadel Dig Site": "Inspire Genius, Ancient Invention, Howl's workshop",
   "Orthen Dig Site":
     "Orthen furnace core, Flow State, Death Note, Orthen teleportation device",
-  "Amlodd Summoning and Divination hub": "Obelisk, shard shop, light rift",
   "Herblore Habitat": "Jadinko patches, vine herbs, Papa Mambo",
   "Burgh de Rott skilling hub": "Bank near Barrows / Shades / Tarn",
   "Rimmington Construction supply loop": "House portal, workbench, supplies",
@@ -242,11 +241,12 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Anachronia Big Game Hunter": "Dragon mattock, Terrasaur maul, Quick traps",
   "Dream of Iaia": "Dream of Iaia stations",
   "Skillcape rack": "Skillcape rack",
+  "Skillcape shop": "Skillcape stand, Max cape",
   "Volcanic trapper outfit": "Volcanic trapper outfit",
   "Laniakea": "Highest standard Slayer master",
   "Time altar": "Time rune",
-  "Max Guild": "Prif hub, portals, skillcape stand",
-  "Hefin Agility Course": "Course, prayer bonus, serenity",
+  "Max Guild": "Max cape, Skillcape stand",
+  "Hefin Agility Course": "Prifddinian worker's outfit, Prayer bonus, Serenity posts",
   "Morvran (Prifddinas Slayer Master)": "Slayer points, vip room",
   "TzHaar City skilling hub": "Banks, furnace, TokKul shops",
   "Musa Point fishing dock and Stiles": "Lobster/swordfish, note fish",
@@ -363,7 +363,23 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Everlight Dig Site":
     "Porcelain clay, Inspire Effort, Sticky Fingers, Heightened Senses, Tetracompass",
   "Jadinko Lair curly roots": "Curly roots WC + FM",
-  "Corrupted ore smelting loop": "Corrupted ore smithing XP",
+  "Seren stones": "Corrupted ore, AFK Mining",
+  "Seren stones and corrupted ore": "Corrupted ore, AFK Mining",
+  "Waterfall Fishing": "Crystal fishing rod, Crystal urchin points",
+  "Waterfall Fishing and Fishing Shop": "Crystal fishing rod, Crystal urchin points",
+  "Meilyr Recipe Shop": "Elder overload, Combination potions",
+  "Meilyr Recipe Shop and combination potions": "Elder overload, Combination potions",
+  "Edimmu resource dungeon": "Blood necklace shard, Crystal sandstone",
+  "The Lost Grove": "Cinderbane gloves",
+  Solak:
+    "Blightbound crossbow, Off-hand Blightbound crossbow, Erethdor's grimoire, Cinderbane gloves",
+  "Grenwalls": "Grenwall spikes",
+  "Ancient elven ritual shard": "Ancient elven ritual shard",
+  "Seren spells and prayers":
+    "Crystallise, Crystal Mask, Light Form, Superheat Form, Chronicle Attraction",
+  "Crystal tools": "Crystal pickaxe, Crystal hatchet, Crystal mattock",
+  "Crystal skillchompas": "Crystal skillchompas",
+  "Perfect juju potions": "Perfect juju potions, Harmony moss",
   "Death altar (Temple of Light Runecrafting)": "Death runes",
   "Artisans' Workshop": "Burial smithing, burial XP",
   "Tai Bwo Wannai Cleanup and trading sticks": "Trading sticks, Hardwood Grove fee",
@@ -480,9 +496,6 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   // —— Morytania ——
   "Araxxor / Araxxi": "Noxious weapons",
   "Barrows: Rise of the Six": "Rise of the Six progression",
-
-  // —— Tirannwn ——
-  Solak: "Solak",
 
   // —— Anachronia ——
   Raksha: "Raksha ability upgrades",

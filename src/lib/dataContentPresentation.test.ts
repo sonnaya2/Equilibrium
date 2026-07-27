@@ -1216,6 +1216,40 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(misthMajors.some((c) => c.name === "Sanctum of Rebirth")).toBe(true);
     expect(misthMajors.some((c) => c.name === "Vermyx, Brood Mother")).toBe(false);
   });
+
+  it("Tirannwn Solak and Lost Grove expose cinderbanes; Edimmu has blood shard", () => {
+    const { row: solak, upgrades } = contentRow("tirannwn", "Solak");
+    expect(contentRewardsFull(solak, upgrades)).toMatch(/Cinderbane/i);
+    expect(contentRewardsFull(solak, upgrades)).toMatch(/Blightbound|Erethdor/i);
+
+    const { row: grove } = contentRow("tirannwn", "The Lost Grove");
+    expect(contentRewardsFull(grove, upgrades)).toMatch(/Cinderbane/i);
+    expect(contentRewardsFull(grove, upgrades)).not.toMatch(/Blightbound/i);
+
+    const { row: edimmu } = contentRow("tirannwn", "Edimmu resource dungeon");
+    expect(contentRewardsFull(edimmu, upgrades)).toMatch(/Blood necklace shard/i);
+  });
+
+  it("Tirannwn renames clutter hubs and adds hunter/tools majors", () => {
+    const region = regionById("tirannwn");
+    const names = region.content.map((c) => c.name);
+    expect(names).toContain("Harmony moss");
+    expect(names).toContain("Seren stones");
+    expect(names).toContain("Ithell harps");
+    expect(names).toContain("Grenwalls");
+    expect(names).toContain("Crystal tools");
+    expect(names).toContain("Crystal skillchompas");
+    expect(names).toContain("Perfect juju potions");
+    expect(names).toContain("Max Guild");
+    expect(names).not.toContain("Crystal equipment and Prifddinas skilling content");
+    expect(names).not.toContain("Trahaearn Mining and Smithing hub");
+    expect(names).not.toContain("Voice of Seren district rotations");
+    expect(names).not.toContain("Amlodd Summoning and Divination hub");
+    expect(names).not.toContain("Corrupted ore smelting loop");
+
+    const { row: hefin, upgrades } = contentRow("tirannwn", "Hefin Agility Course");
+    expect(contentRewardsFull(hefin, upgrades)).toMatch(/Prifddinian worker/i);
+  });
 });
 
 describe("contentDetailOrRewards — empty catalog detail fallback", () => {

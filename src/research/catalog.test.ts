@@ -93,14 +93,18 @@ describe("research catalog", () => {
       "Mage Arena",
       "Forinthry Dungeon",
       "Charming moths",
-      "Mage of Zamorak (Abyss entrance)",
       "Daemonheim Dig Site",
       "Corporeal Beast",
       "Chaos Elemental",
       "Wilderness Agility Course",
-      "Abyss entrance",
+      "Abyss Runecrafting",
       "Bloodweed & aggression potions",
       "Wilderness Slayer",
+      "Chaotic weapons",
+      "Ruinous weapons",
+      "Dark facets",
+      "Brawling gloves",
+      "Daemonheim Rewards shop",
     ]) {
       expect(forNames.has(name), `forinthry missing ${name}`).toBe(true);
     }

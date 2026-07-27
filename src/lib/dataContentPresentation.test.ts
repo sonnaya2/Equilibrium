@@ -642,6 +642,42 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presentInterestName(row.name)).toBe("Bloodweed / aggression pots");
   });
 
+  it("Forinthry majors: Abyss, Chaotics, Corp shields, Dark facets", () => {
+    const cases: Array<{ name: string; must: RegExp[]; minIcons?: number }> = [
+      { name: "Abyss Runecrafting", must: [/Magical thread/i, /Multi-altar/i] },
+      {
+        name: "Chaotic weapons",
+        must: [/Chaotic rapier/i, /Chaotic staff/i, /Chaotic maul/i],
+        minIcons: 8,
+      },
+      {
+        name: "Corporeal Beast",
+        must: [/Spirit shield/i, /Holy elixir/i, /sigil/i],
+        minIcons: 4,
+      },
+      {
+        name: "Dark facets",
+        must: [/Grace/i, /Luck/i, /Passage/i],
+        minIcons: 3,
+      },
+      { name: "Ruinous weapons", must: [/Ruinous rapier/i, /Ruinous staff/i] },
+    ];
+    for (const { name, must, minIcons } of cases) {
+      const { row, upgrades } = contentRow("forinthry", name);
+      const full = contentRewardsFull(row, upgrades);
+      for (const re of must) expect(full, name).toMatch(re);
+      expect(full, name).not.toMatch(/working taxonomy|densify residual|WikiCombat/i);
+      const presented = presentContentRewards(full);
+      if (minIcons) expect(presented.icons.length, name).toBeGreaterThanOrEqual(minIcons);
+      expect(presented.icons.every((i) => publicOk(i.src)), name).toBe(true);
+    }
+    // AI noise rows removed from majors/upgrades surface via content list.
+    const for_ = contentRow("forinthry", "Corporeal Beast");
+    expect(
+      for_.upgrades.some((u) => /holy-elixir supply|Resource dungeon unlock map/i.test(u.name)),
+    ).toBe(false);
+  });
+
   it("Havenhythe bosses resolve unique drops with inventory icons", () => {
     const cases: Array<{ name: string; must: RegExp[] }> = [
       {

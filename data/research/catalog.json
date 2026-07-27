@@ -17701,15 +17701,15 @@
           }
         },
         {
-          "name": "Abyss entrance",
+          "name": "Abyss Runecrafting",
           "kind": "Runecrafting",
-          "detail": "Mage of Zamorak teleports into the Abyss for multi-altar Runecrafting under Forinthry.",
-          "confidence": "inferred_region",
+          "detail": "Mage of Zamorak north of Edgeville. Multi-altar rifts, free pouch repair at the Dark Mage, magical thread rolls (diary rates). Not an XP buff after the 2025 Abyss rework.",
+          "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Abyss",
-            "title": "Abyss entrance",
-            "verifiedAt": "2026-07-25"
+            "title": "Abyss Runecrafting",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -17739,7 +17739,7 @@
         {
           "name": "The Shadow Reef (ED3)",
           "kind": "Elite Dungeon",
-          "detail": "Accessed from the eastern shore of Daemonheim; contains the Crassian Leviathan, Taraket and the Ambassador.",
+          "detail": "ED3 from Daemonheim shore. Crassian Leviathan, Taraket, Ambassador. Eldritch crossbow uniques.",
           "confidence": "confirmed_wiki_daemonheim_access",
           "source": {
             "source": "runescape-wiki",
@@ -17750,8 +17750,8 @@
         },
         {
           "name": "Corporeal Beast",
-          "kind": "Wilderness",
-          "detail": "Corporeal Beast spirit-shield / holy elixir path under Forinthry.",
+          "kind": "Wilderness boss",
+          "detail": "Spirit shields, holy elixir, and sigil path. Cavern entrance is Wilderness (Forinthry).",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
@@ -17799,7 +17799,7 @@
         {
           "name": "Wilderness bloodwood trees",
           "kind": "Woodcutting bakriminel supply",
-          "detail": "Forinthry owns the three free Wilderness trees. Non-Wilderness trees exist but are not this row. Infernal Puzzle Box tier 5+ massively improves logs-per-tree",
+          "detail": "Three free Wilderness bloodwood trees for bakriminel bolt tips. Infernal Puzzle Box tier 5+ helps logs-per-tree. Forinthry-owned; non-Wilderness trees are elsewhere.",
           "confidence": "confirmed_wiki_2026_current",
           "source": {
             "source": "runescape-wiki",
@@ -17809,39 +17809,27 @@
           }
         },
         {
-          "name": "Edgeville Dungeon resource dungeons",
-          "kind": "Dungeoneering resource dungeons (chaos druids + hill giants)",
-          "detail": "Chaos-druid RD (10 DG): 12 chaos druids + grimy marrentill/irit/harralander/ranarr spawns; 1,100 first-entry XP; Hill-giant RD (20 DG): 11 hill giants + 4 limpwurt root spawns; 1,600 first-entry XP; Early herb and limpwurt self-supply density for iron Herblore/Summoning secondari",
+          "name": "Edgeville resource dungeons",
+          "kind": "Dungeoneering resource dungeons",
+          "detail": "Two early DG rooms off Edgeville Dungeon: chaos druids (10 DG) for herb spawns, hill giants (20 DG) for limpwurt. First-entry DG XP; early iron herb/secondary supply under Forinthry.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Edgeville_Dungeon_chaos_druids_dungeon",
-            "title": "Edgeville Dungeon resource dungeons",
-            "verifiedAt": "2026-07-26"
+            "title": "Edgeville resource dungeons",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
-          "name": "Black salamanders (Boneyard Hunter)",
-          "kind": "Hunter net-trap method and onyx-core source",
-          "detail": "Black salamander weapon catches (517 Hunter XP per catch); Wilderness achievement requirement progress for salamander catch; Very rare dark onyx core, portable obelisk, and obelisk shard rolls (rates adjusted 17 March 2026; sources redistributed 16 March 2026)",
+          "name": "Black salamanders",
+          "kind": "Hunter",
+          "detail": "Boneyard net traps. Salamander weapon + Wilderness achievement progress. Rare dark onyx core / portable obelisk rolls.",
           "confidence": "confirmed_wiki_2026_current",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Black_salamander_(Hunter)",
-            "title": "Black salamanders (Boneyard Hunter)",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Wilderness runite rocks (Lava Maze north)",
-          "kind": "high-level Mining ore site",
-          "detail": "Dense Wilderness runite rock cluster (classic multi-rock site north of Lava Maze); Ironman runite ore self-source under Forinthry when safer sites are contested or unavailable; Natural pairing with nearby Wilderness content loops (obelisks, flash events, Mandrith travel)",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Runite_rock",
-            "title": "Wilderness runite rocks (Lava Maze north)",
-            "verifiedAt": "2026-07-26"
+            "url": "https://runescape.wiki/w/Black_salamander",
+            "title": "Black salamanders",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -17871,7 +17859,7 @@
         {
           "name": "Mage Arena",
           "kind": "Wilderness Magic hub",
-          "detail": "Wilderness Mage Arena — god staves, Claws of Guthix, and arena combat access.",
+          "detail": "Deep Wilderness Mage Arena. God staves and Claws of Guthix unlocks; arena combat under Forinthry risk.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -17889,18 +17877,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Forinthry_Dungeon",
             "title": "Forinthry Dungeon",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Mage of Zamorak (Abyss entrance)",
-          "kind": "Runecrafting access",
-          "detail": "Mage of Zamorak teleports into the Abyss for multi-altar Runecrafting under Forinthry.",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Mage_of_Zamorak",
-            "title": "Mage of Zamorak (Abyss entrance)",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -17930,6 +17906,114 @@
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
+        },
+        {
+          "name": "Daemonheim Rewards shop",
+          "kind": "Dungeoneering token shop",
+          "detail": "Marmaros token shop. Chaotics, scrolls, cleaners, gem bag, autoheater, and related permanents.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Daemonheim_Rewards",
+            "title": "Daemonheim Rewards shop",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Chaotic weapons",
+          "kind": "Dungeoneering reward weapons",
+          "detail": "T80 chaotic weapon set from Daemonheim Rewards tokens. Melee, ranged, and magic options.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chaotic_equipment",
+            "title": "Chaotic weapons",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Ruinous weapons",
+          "kind": "Dungeoneering reward weapons",
+          "detail": "T90 ruinous weapon set from Daemonheim Rewards (post-remaster). Successor ladder past chaotics.",
+          "confidence": "confirmed_official",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Ruinous_Weapons",
+            "title": "Ruinous weapons",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Dark facets",
+          "kind": "permanent enchantments",
+          "detail": "Dark Facet of Grace (GOTE charges/drain), Luck (LotD), and Passage (Abyss infinite charges). Craft from dark onyx cores.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dark_Facet_of_Grace",
+            "title": "Dark facets",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Brawling gloves",
+          "kind": "Wilderness XP gloves",
+          "detail": "Revenants, Chaos Elemental, and Wilderness shared loot table. +50% XP in the matching skill (charges).",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Brawling_gloves",
+            "title": "Brawling gloves",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Balarak's sash brush",
+          "kind": "Archaeology skilling off-hand",
+          "detail": "Warped Depths pieces (Forinthry); restore with Sharrigan on Anachronia. +excavation success / precision.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Balarak%27s_sash_brush",
+            "title": "Balarak's sash brush",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Skeka's hypnowand",
+          "kind": "Hunter skilling off-hand",
+          "detail": "Aged journal gate in Warped Depths, then Anachronia piece farms. Speeds Big Game Hunter trap times.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Skeka%27s_hypnowand",
+            "title": "Skeka's hypnowand",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Daemonheim Divination",
+          "kind": "Divination + Dungeoneering",
+          "detail": "Time-Worn Memories (Memorial to Guthix / Kandarin) ×4 Div XP converting in Daemonheim. Pair Scroll of gathering + kinship gatherer. Best with Kandarin for the engram hub.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Time-Worn_Memories",
+            "title": "Daemonheim Divination",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Primal ores",
+          "kind": "Mining",
+          "detail": "Level 100+ primal ores on the Daemonheim peninsula resource island. Smithing 110 core metal tier.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Primal_iron_ore",
+            "title": "Primal ores",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -17948,9 +18032,9 @@
           "regionId": "forinthry"
         },
         {
-          "name": "Chaotic equipment",
+          "name": "Chaotic weapons",
           "category": "Dungeoneering reward gear",
-          "detail": "Catalyst treated chaotic equipment as Wilderness: Daemonheim content; the Equilibrium reveal independently confirms Daemonheim belongs to Forinthry · Chaotic weapons, Chaotic kiteshield",
+          "detail": "T80 chaotic weapon family from Daemonheim Rewards. See Major unlocks row for the full set.",
           "requirements": [
             "80 Dungeoneering and relevant combat skill requirements"
           ],
@@ -17959,34 +18043,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Chaotic_equipment",
             "title": "Chaotic equipment",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "forinthry"
-        },
-        {
-          "name": "Primal ore / high-level Mining",
-          "category": "skilling progression",
-          "detail": "Level 100+ Mining · Source: Daemonheim Peninsula and Daemonheim",
-          "requirements": [],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Primal_ore",
-            "title": "Primal ore",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "forinthry"
-        },
-        {
-          "name": "Abyss access",
-          "category": "Runecrafting/combat training access",
-          "detail": "The Abyss entrance is in the Wilderness; exact Equilibrium teleport exceptions still need launch validation",
-          "requirements": [],
-          "confidence": "inferred_region",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Abyss",
-            "title": "Abyss",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "forinthry"
@@ -18001,20 +18057,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Dragonkin_Laboratory",
             "title": "Dragonkin Laboratory upgrades",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "forinthry"
-        },
-        {
-          "name": "Shadow Reef progression",
-          "category": "Ranged weapon / elite dungeon rewards",
-          "detail": "Eldritch crossbow components",
-          "requirements": [],
-          "confidence": "confirmed_wiki_daemonheim_access",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/The_Shadow_Reef",
-            "title": "Shadow Reef progression",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "forinthry"
@@ -18513,30 +18555,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Abyss entrance (Mage of Zamorak)",
-          "category": "Runecrafting access infrastructure",
-          "detail": "Inside the Abyss the player is not in the Wilderness. As of 29 September 2025 the Abyss no longer grants a Runecrafting XP buff; XP scaling was moved into base Runecrafting levels. Magical thread chance still improves with Wilderness achievement tiers (easy 5%, medium 10%, hard 15%, elite 33%). Wilderness sword 3/4 can chance-teleport to the inner ring. Necromantic and Ourania altars are excluded from Abyss rifts · Forinthry owns the Wilderness entrance. Individual altar quest gates (Lost City, Lunar Diplomacy, MEP2, Legacy of Seergaze, 'Phite Club, Making/Meeting History for Time) remain separate · Unlocks: Teleport into the Abyss outer ring, Rifts to nearly all standard Runecrafting altars without talisman/tiara, Free runecrafting pouch repair from the Dark Mage in the inner ring, Increased magical thread chance when crafting via the Abyss · Region status: confirmed_official",
-          "requirements": [
-            "Enter the Abyss miniquest completed",
-            "Travel through low-level Wilderness (roughly levels 4-6) to the Mage of Zamorak north of Edgeville"
-          ],
-          "confidence": "confirmed_wiki_2025_2026_current",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Abyss",
-            "title": "Abyss entrance (Mage of Zamorak)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Abyss Runecrafting stack",
           "category": "Runecrafting access and efficiency stack",
           "detail": "Stack row pending from Necromantic and Ourania altars excluded from Abyss rifts. Demonic skull no longer boosts thread (post-2025) · Hard Forinthry for entrance + diary rate stack. Individual altar quest gates remain separate · Unlocks: Unified planner stack: Abyss outer/inner ring rifts to nearly all standard altars without talisman, Free pouch repair at Dark Mage (inner ring), Magical thread farm rates scaling with Wilderness diary (easy 5% / medium 10% / hard 15% / elite 33.3%) feeding sealed/grasping pouch crafts, Post-29-Sep-2025: no Abyss RC XP buff (XP is base RC level); thread odds remain the diary pressure · Region pressure: Forinthry: Mage of Zamorak entrance, Abyss, Wilderness sword diary tiers",
@@ -18663,7 +18681,7 @@
           "isRegionCombo": false
         },
         {
-          "name": "Black salamanders (Boneyard Hunter)",
+          "name": "Black salamanders",
           "category": "Hunter net-trap method and onyx-core source",
           "detail": "Unlocks: Black salamander weapon catches (517 Hunter XP per catch), Wilderness achievement requirement progress for salamander catch, Very rare dark onyx core, portable obelisk, and obelisk shard rolls (rates adjusted 17 March 2026; sources redistributed 16 March 2026)",
           "requirements": [
@@ -18965,9 +18983,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Edgeville Dungeon resource dungeons",
+          "name": "Edgeville resource dungeons",
           "category": "Dungeoneering resource dungeons (chaos druids + hill giants)",
-          "detail": "Primary Forinthry; Misthalin is travel support · Unlocks: Chaos-druid RD (10 DG): 12 chaos druids + grimy marrentill/irit/harralander/ranarr spawns; 1,100 first-entry XP, Hill-giant RD (20 DG): 11 hill giants + 4 limpwurt root spawns; 1,600 first-entry XP, Early herb and limpwurt self-supply density for iron Herblore/Summoning secondaries · Region pressure: Forinthry owns Wilderness-adjacent Edgeville Dungeon taxonomy and DG progression framing",
+          "detail": "Chaos-druid room (10 DG) and hill-giant room (20 DG) for early herb and limpwurt self-supply. First-entry DG XP.",
           "requirements": [
             "10 Dungeoneering for chaos-druid resource dungeon; 20 for hill-giant resource dungeon",
             "Edgeville Dungeon access (Edgeville well / Wilderness ditch approaches)"
@@ -19228,37 +19246,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Magical thread (material)",
-          "category": "permanent RC material — combat + essence pouch crafts",
-          "detail": "Equipment/material for planners that filter equipment ids. Activity supply package remains. Prefer the activity id for rate/diary scoring; this id for ownership/craft-sink bookkeeping beside sealed pouch products · Hard Forinthry. Kandarin optional for Ourania synapse convert path only · Effects: Craft material checklist: 30 thread → sealed small combat pouch; 100 → sealed large; +15 → grasping upgrade; 100 → expansive pouch cord, Does not re-author Abyss farm rates — links as the rate package, Protean essence never yields thread; post-29-Sep-2025 demonic skull no longer boosts thread chance",
-          "requirements": [
-            "Abyss Runecrafting access (forinthry:abyss-entrance)",
-            "Wilderness achievement tiers for thread chance when sword worn/carried: easy 5% / medium 10% / hard 15% / elite 33.3% (forinthry:area-tasks-wilderness-sword)",
-            "Optional: abyssal runic synapse at Ourania for guaranteed thread convert (Kandarin Ourania)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Magical_thread",
-            "title": "Magical thread (material residual)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry",
-            "kandarin"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): forinthry / kandarin",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Magical thread (Abyss RC + Wilderness diary rates)",
+          "name": "Magical thread",
           "category": "permanent Runecrafting pouch-economy supply package",
-          "detail": "Hard Forinthry for Abyss + Wilderness diary rate package. Ourania is Kandarin support · Unlocks: Magical thread material for sealed small rune pouch (30 thread, 55 RC), sealed large rune pouch (100 thread, 90 RC), grasping upgrade (+15 thread + Croesus flakes), and expansive pouch cord (100 thread), Ironman RC inventory economy without GE thread — Abyss + sword 4 is the primary farm, Free pouch repair remains Dark Mage in Abyss inner ring ( side effect) · Region pressure: Forinthry: Abyss entrance + Wilderness sword diary tiers own the rate ladder (post-2025 demonic skull no longer boosts thread)",
+          "detail": "Abyss Runecrafting material for combat and essence pouches. Wilderness diary tiers raise thread chance (5% → 33%).",
           "requirements": [
             "Abyss entrance access (forinthry:abyss-entrance — Mage of Zamorak Wilderness)",
             "Wilderness Area Tasks for thread-rate tiers via Wilderness sword worn or backpack (easy 5% / medium 10% / hard 15% / elite 33.3% cumulative chance boost)",
@@ -19338,9 +19328,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Perfect plus potion recipe (Daemonheim)",
+          "name": "Perfect plus potion recipe",
           "category": "Herblore combination recipe permanent unlock",
-          "detail": "Combo on top of. Recipe unlock is the permanent account state; doses remain consumable · Hard Forinthry for recipe drop. Mixing still needs high Herblore and multi-region ingredients · Unlocks: Permanent recipe knowledge for perfect plus potion, One dose grants all perfect juju effects simultaneously for 4 hours, Endgame Herblore consumable that collapses multi-juju inventory pressure · Region pressure: Forinthry Daemonheim recipe acquisition., Karamja / Tirannwn optional for overload secondaries and perfect-juju ingredient chains once mixing., Crystal flask / blossom pressure Tirannwn Prif",
+          "detail": "Recipe drops in Daemonheim or from Daemonheim Rewards via Lady Meilyr (Prif / Tirannwn). Craft needs overload + harmony moss + crystal tree blossom + crystal flask (Tirannwn materials) at 99 Herblore. Recipe unlock is Forinthry; full craft path wants Tirannwn.",
           "requirements": [
             "Find the perfect plus potion recipe (unreadable page) inside Daemonheim",
             "99 Herblore to mix",
@@ -19350,8 +19340,8 @@
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Perfect_plus_potion",
-            "title": "Perfect plus potion recipe (Daemonheim)",
-            "verifiedAt": "2026-07-26"
+            "title": "Perfect plus potion recipe",
+            "verifiedAt": "2026-07-27"
           },
           "regionId": "forinthry",
           "regionHints": [
@@ -19395,9 +19385,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Primal ores (Daemonheim peninsula Mining)",
+          "name": "Primal ores",
           "category": "high-level Mining supply",
-          "detail": "Level-100 Mining core tier introduced with Mining & Smithing 110 (12 August 2024). Rocks are on the Daemonheim peninsula surface and are tagged Wilderness in Equilibrium League region data. Distinct from in-dungeon Dungeoneering ore variants · Unlocks: Surface primal ore rocks: novite, bathus, marmaros, kratonium, fractite, zephyrium, argonite, katagon, gorgonite, promethium, Shared primal stone spirits across the primal tier, Prime Time achievement path (mine all 10 surface ores under 5 minutes) · Region status: confirmed_official",
+          "detail": "Daemonheim peninsula level-100+ ores for the primal smithing tier.",
           "requirements": [
             "100 Mining for all surface primal ores (novite through promethium)",
             "Daemonheim peninsula access"
@@ -19416,40 +19406,6 @@
           "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Resource dungeon unlock map (Dungeoneering permanent access)",
-          "category": "permanent Dungeoneering gather infrastructure package",
-          "detail": "Hard Forinthry for DG progression framing. Destination dungeons still need their surface regions unlocked to enter · Unlocks: Permanent surface resource-dungeon access package for ironman gather planning (ores, trees, herbs, monster camps), Key skilling rooms: Dwarven Mine phasmatite (15), Mining Guild luminite/drakolith (45), Al Kharid necrite/gem rocks (75), Asgarnian Ice frost dragons (85), Varrock Sewers magic trees (65), Brimhaven metal dragons (80), Kal'gerion rare gems (90), Slayer Tower dark beasts/abyssals (100), Edimmu crystal sandstone (115), Hoardstalker ring / DG cape teleports to many resource dungeons after unlock, Very Resourceful achievement checklist of named dungeons · Region pressure: Forinthry owns Daemonheim level progression + peninsula island (30) and is the account-state home for DG tokens/rewards that fund related tools., Asgarnia: Mining Guild RD, Taverley hellhound/blue dragon RDs, Asgarnian Ice frost dragons., Misthalin: Edgeville chaos-druid / hill-giant RDs, Varrock Sewers., Karamja: volcano lesser-demon RD + Brimhaven metal-dragon RD., Tirannwn: Gorajo + Edimmu (Plague's End)., Individual rows already exist for Mining Guild and Edimmu — this package is the remaining map checklist",
-          "requirements": [
-            "Dungeoneering level gates per dungeon (boosts cannot bypass entry level)",
-            "Quest gates where listed: Waterfall Quest (Baxtorian), A Clockwork Syringe (Braindeath 'Rum'-geon), One of a Kind (Dragontooth), Plague's End (Gorajo + Edimmu)",
-            "First-time entry grants fixed DG XP on most dungeons (total ~282,600 members XP if fully cleared historically; free-to-play subset lower)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Resource_dungeon",
-            "title": "Resource dungeon unlock map (Dungeoneering permanent access)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry",
-            "asgarnia",
-            "misthalin",
-            "karamja",
-            "kandarin",
-            "morytania",
-            "desert",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): forinthry / asgarnia / misthalin / karamja / kandarin / morytania / desert / tirannwn",
           "isRegionCombo": false
         },
         {
@@ -19882,7 +19838,7 @@
         {
           "name": "Warped Depths (Daemonheim Depths excavation)",
           "category": "high-level Archaeology site",
-          "detail": "Named high-level Daemonheim Archaeology floor, not a generic dig-site blob. Wiki League region tags hotspots as Wilderness. Cross-links existing forinthry+anachronia Daemonheim Dragonkin collection pressure without replacing those collection rows · Anachronia remains required only for specific collection hand-ins, not site entry · Unlocks: Daemonheim - Depths excavation site (Warped Depths), Dragonkin VII artefacts (projection attuner, golden projection 'needle', comfort gatestone, Halak's cube, portable portal generator, warped trinket), Aged-journal / brush-piece gates for late Archaeology tool chains that also pressure Anachronia hand-ins · Region status: confirmed_official",
+          "detail": "High-level Daemonheim Archaeology floors (Warped Depths). Dragonkin hotspots, Balarak pieces, aged journal for Skeka.",
           "requirements": [
             "Daemonheim Dig Site access",
             "Research On the Threshold of the Mind completed",
@@ -19995,31 +19951,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Herb_patch_(Wilderness)",
             "title": "Wilderness herb patch",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Wilderness runite rocks (Lava Maze north)",
-          "category": "high-level Mining ore site",
-          "detail": "Unlocks: Dense Wilderness runite rock cluster (classic multi-rock site north of Lava Maze), Ironman runite ore self-source under Forinthry when safer sites are contested or unavailable, Natural pairing with nearby Wilderness content loops (obelisks, flash events, Mandrith travel)",
-          "requirements": [
-            "50 Mining historically for runite (post-rework use current runite level gate from Mining skill guide)",
-            "Deep Wilderness travel near Lava Maze / level ~45 band",
-            "PvP risk awareness for contested rocks"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Runite_rock",
-            "title": "Wilderness runite rocks (Lava Maze north)",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "forinthry",
@@ -20309,29 +20240,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "The Shadow Reef / Ambassador (ED3)",
-          "category": "regional boss BiS drop source",
-          "detail": "Hard Forinthry via Daemonheim access (official Equilibrium Forinthry example) · Effects: Eldritch crossbow components (t90+ ranged special weapon), Ambassador unique table (dungeon final boss)",
-          "requirements": [],
-          "confidence": "confirmed_wiki_daemonheim_access",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/The_Shadow_Reef",
-            "title": "The Shadow Reef / Ambassador (ED3)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Draconic energy Magic",
           "category": "Magic armour material",
           "detail": "Forinthry side of the elite tectonic chain. Dragonkin Laboratory is Wilderness/Daemonheim geography under Forinthry · Effects: Mandatory material for elite tectonic armour and repair patches, Also used with tectonic energy + summerdown wool + black stone hearts for repair-patch crafts · Unlocks: Draconic energy stock for elite tectonic crafts and elite tectonic repair patches",
@@ -20412,63 +20320,9 @@
           "isRegionCombo": false
         },
         {
-          "name": "Chaotic melee and ranged weapons",
-          "category": "tier-80 Dungeoneering combat weapons",
-          "detail": "Forinthry infrastructure row for both styles. Confirmed Equilibrium Daemonheim locality · Forinthry hard for token self-source · Effects: Strong early-league / early-region T80 weapons when boss uniques are unavailable · Unlocks: Chaotic melee weapons and off-hands, Chaotic crossbow + off-hand, Chaotic kiteshield / eagle-eye / farseer adjacency",
-          "requirements": [
-            "Daemonheim / Dungeoneering (official Forinthry)",
-            "Token costs for chaotic rapier/longsword/maul/crossbow/etc.",
-            "Relevant combat + Dungeoneering levels"
-          ],
-          "confidence": "confirmed_wiki_historical_plus_official_region_mapping",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Chaotic_equipment",
-            "title": "Chaotic melee and ranged weapons",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Spirit shield + holy elixir / sigil densify",
-          "category": "tank shield / Corporeal Beast chain",
-          "detail": "Hard Forinthry for Corp self-supply. Pair with existing holy elixir · Effects: Divine spirit shield remains a top damage-reduction tank shield option, Arcane is the classic magic-offensive spirit shield, Densifies the shield ladder that holy-elixir row only partially names · Unlocks: Blessed spirit shield intermediate, Arcane / divine / elysian / spectral spirit shields (sigil completion) · Region pressure: Forinthry hard for Corporeal Beast cavern entrance / primary self-supply framing (matches existing holy elixir )",
-          "requirements": [
-            "Spirit shield base from Corporeal Beast (or related sources)",
-            "Holy elixir to bless into blessed spirit shield (forinthry:corporeal-beast-holy-elixir already first-class for elixir geography)",
-            "Arcane / divine / elysian / spectral sigils from Corporeal Beast to complete named spirit shields"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Spirit_shield",
-            "title": "Spirit shield + holy elixir / sigil residual densify",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Corporeal Beast",
           "category": "regional boss BiS drop source",
-          "detail": "Wilderness cavern entrance → Forinthry elective. Lair itself is not dangerous Wilderness PvP but region access is · Hard Forinthry (Wilderness → forinthry). Wiki leagueRegion Wilderness · Effects: Divine / Elysian / Spectral / Arcane sigil → spirit shield upgrades (tank/utility BiS ), Holy elixir (primary practical self-supply; tormented wraith alternate), Spirit shield base drop",
+          "detail": "Spirit shields, holy elixir, and sigils. Forinthry Wilderness cavern entrance.",
           "requirements": [],
           "confidence": "confirmed_wiki_wilderness_forinthry_mapping",
           "source": {
@@ -20794,33 +20648,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Chaotic staff",
-          "category": "tier-80 two-handed Magic weapon",
-          "detail": "Hard Forinthry · Effects: Strong early-league / early-region T80 Magic 2h when boss uniques are unavailable, Completes the chaotic weapon ladder — intentionally omitted Magic staff · Unlocks: Chaotic staff (T80 2h Magic) · Region pressure: Forinthry hard for Dungeoneering token self-source",
-          "requirements": [
-            "80 Magic and 80 Dungeoneering to claim",
-            "Daemonheim Rewards trader token purchase (Forinthry Daemonheim taxonomy)",
-            "Token cost self-source inside Daemonheim"
-          ],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Chaotic_staff",
-            "title": "Chaotic staff",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Rune dragon boot-upgrade glands",
           "category": "T90 glacor-boot upgrade material",
           "detail": "Support for the T90 glacor boot row. Not a worn BiS item itself · Hard Forinthry support row · Effects: Primary non-Arc gland source that makes completable inside Equilibrium electives, ED2/ED3 alternate routes remain Forinthry-adjacent for wing-tips / glands · Unlocks: Planner-visible self-supply path for emberkeen / hailfire / flarefrost without Arc Aminishi · Region pressure: Forinthry hard for rune-dragon / ED gland self-supply when Arc is unavailable",
@@ -20898,31 +20725,6 @@
             "forinthry"
           ],
           "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Corporeal Beast holy-elixir supply",
-          "category": "combat-support and Blessed flask ingredient supply",
-          "detail": "The Corporeal Beast cavern entrance is in the Wilderness. The lair itself is not dangerous Wilderness territory, but Forinthry is the useful region dependency for entering the normal self-supply chain. Holy elixir can also come from the tormented wraith, so this row describes the primary practical regional source rather than claiming Corp is the only source · Unlocks: Holy elixir drop source, Spirit shield and sigil progression, Necrite and phasmatite stone-spirit supply relevant to Blessed flask crafting",
-          "requirements": [
-            "Summer's End for the normal-game Corporeal Beast progression"
-          ],
-          "confidence": "confirmed_current_wiki_region_geography",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Corporeal_Beast",
-            "title": "Corporeal Beast holy-elixir supply",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "forinthry"
-          ],
-          "regionRequirementType": "normal_self_supply_region",
           "comboLabel": "",
           "isRegionCombo": false
         }

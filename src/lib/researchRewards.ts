@@ -87,6 +87,33 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
   "Wilderness herb patch":
     "Clean bloodweed, Searing ashes, Aggression potion · 82 Herb · 6 min/dose · 17×17 aggro",
+
+  // Forinthry majors — short reward chips, no essay.
+  "Abyss Runecrafting": "Multi-altar rifts, Magical thread, Pouch repair",
+  "Abyss entrance": "Multi-altar rifts, Magical thread, Pouch repair",
+  "Edgeville resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
+  "Edgeville Dungeon resource dungeons": "Chaos druids, Hill giants, Herb spawns, Limpwurt roots",
+  "Wilderness bloodwood trees": "Bakriminel bolt tips",
+  "Black salamanders": "Black salamander, Dark onyx core",
+  "Black salamanders (Boneyard Hunter)": "Black salamander, Dark onyx core",
+  "Mage Arena": "God staves, Claws of Guthix",
+  "Corporeal Beast":
+    "Spirit shield, Holy elixir, Arcane sigil, Elysian sigil, Divine sigil, Spectral sigil",
+  "The Shadow Reef (ED3)": "Eldritch crossbow",
+  "Daemonheim Rewards shop": "Chaotics, Ruinous weapons, Scrolls, Cleaners",
+  "Chaotic weapons":
+    "Chaotic rapier, Off-hand chaotic rapier, Chaotic longsword, Off-hand chaotic longsword, Chaotic maul, Chaotic spear, Chaotic staff, Chaotic crossbow, Off-hand chaotic crossbow, Chaotic claw, Off-hand chaotic claw",
+  "Chaotic equipment":
+    "Chaotic rapier, Off-hand chaotic rapier, Chaotic longsword, Off-hand chaotic longsword, Chaotic maul, Chaotic spear, Chaotic staff, Chaotic crossbow, Off-hand chaotic crossbow, Chaotic claw, Off-hand chaotic claw",
+  "Ruinous weapons":
+    "Ruinous rapier, Off-hand ruinous rapier, Ruinous maul, Ruinous staff, Ruinous crossbow, Off-hand ruinous crossbow, Ruinous guard, Ruinous lantern",
+  "Dark facets": "Dark Facet of Grace, Dark Facet of Luck, Dark Facet of Passage",
+  "Brawling gloves": "Brawling gloves",
+  "Balarak's sash brush": "Balarak's sash brush",
+  "Skeka's hypnowand": "Skeka's hypnowand",
+  "Daemonheim Divination": "Time-Worn Memories, Scroll of gathering · Kandarin Memorial hub",
+  "Primal ores": "Primal ores",
+  "Daemonheim Dig Site": "Dragonkin collections, Aged journal, Balarak pieces",
 };
 
 /**
@@ -129,11 +156,14 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   // —— Forinthry / ED / Corp ——
   "Dragonkin Laboratory (ED2)": "Dragonkin Laboratory",
   "Dragonkin Laboratory": "Dragonkin Laboratory",
-  "The Shadow Reef (ED3)": "Shadow Reef",
-  "The Shadow Reef": "Shadow Reef",
+  "The Shadow Reef (ED3)": "Eldritch crossbow",
+  "The Shadow Reef": "Eldritch crossbow",
   "Corporeal Beast": "Spirit shield",
   "Corporeal Beast holy-elixir / spirit shield path": "Spirit shield",
   "Daemonheim Rewards shop (Marmaros)": "Chaotic equipment",
+  "Daemonheim Rewards shop": "Chaotic equipment",
+  "Chaotic weapons": "Chaotic equipment",
+  "Ruinous weapons": "Ruinous",
 
   // —— Fremennik ——
   "Dagannoth Kings": "Dagannoth Kings uniques",

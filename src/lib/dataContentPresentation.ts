@@ -18,7 +18,8 @@ import {
   resolveRewardIconLabel,
 } from "@/lib/rewardIconAliases";
 
-export const REWARD_ICON_CAP = 5;
+/** Default chip cap; Chaotic/Ruinous weapon rows need room for the full set. */
+export const REWARD_ICON_CAP = 12;
 /** Display clip for Rewards/access prose — icons always resolve from full source. */
 export const REWARD_DISPLAY_MAX = 96;
 
@@ -622,6 +623,16 @@ export function presentInterestName(value: string): string {
   if (/^Havenhythe canoe network$/i.test(raw)) return "Canoe network";
   if (/^Bloodweed\s*&\s*aggression potions$/i.test(raw)) return "Bloodweed / aggression pots";
   if (/^Wilderness herb patch$/i.test(raw)) return "Bloodweed / aggression pots";
+  if (/^Abyss Runecrafting$/i.test(raw) || /^Abyss entrance$/i.test(raw)) return "Abyss Runecrafting";
+  if (/^Edgeville (Dungeon )?resource dungeons$/i.test(raw)) return "Edgeville resource dungeons";
+  if (/^Black salamanders\b/i.test(raw)) return "Black salamanders";
+  if (/^Daemonheim Rewards shop\b/i.test(raw)) return "Daemonheim Rewards";
+  if (/^Chaotic weapons$/i.test(raw) || /^Chaotic equipment$/i.test(raw)) return "Chaotic weapons";
+  if (/^Ruinous weapons$/i.test(raw)) return "Ruinous weapons";
+  if (/^Dark facets$/i.test(raw)) return "Dark facets";
+  if (/^Daemonheim Divination$/i.test(raw)) return "Daemonheim Divination";
+  if (/^Primal ores?$/i.test(raw)) return "Primal ores";
+  if (/^Wilderness bloodwood trees$/i.test(raw)) return "Bloodwood trees";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")

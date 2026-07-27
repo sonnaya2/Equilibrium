@@ -303,6 +303,8 @@ describe("gameArt", () => {
       ["Mage of Zamorak (Abyss entrance)", /mage-of-zamorak\.(png|gif)$|abyss\.(gif|png)$/],
       ["Daemonheim Rewards shop (Marmaros)", /daemonheim-rewards\.png$/],
       ["Daemonheim Peninsula resource island", /daemonheim-peninsula\.png$/],
+      ["Daemonheim Dig Site", /daemonheim-dig-site\.png$/],
+      ["Daemonheim Dig Site (Dragonkin mini-site)", /daemonheim-dig-site\.png$/],
       ["Wilderness runite rocks (Lava Maze north)", /wilderness-runite\.png$/],
       ["Spirit shield + holy elixir / sigil densify", /divine-spirit-shield\.png$/],
       ["Dark onyx core source package", /dark-onyx-core\.png$/],
@@ -407,13 +409,24 @@ describe("gameArt", () => {
       ["Zamorak, Lord of Chaos (Undercity)", "zamorak"],
       ["The Magister", "magister"],
       ["Ambassador (ED3)", "ambassador"],
+      // Elite dungeon content rows → final boss plates (not activity scenery).
+      ["Dragonkin Laboratory (ED2)", "black-stone-dragon"],
+      ["Dragonkin Laboratory", "black-stone-dragon"],
+      ["The Shadow Reef (ED3)", "ambassador"],
+      ["The Shadow Reef", "ambassador"],
     ];
     for (const [name, slug] of cases) {
-      const path = bossIconPath(name) ?? dataEntityIconPath({ name });
+      const path = bossIconPath(name) ?? dataEntityIconPath({ name, kind: "Elite Dungeon" });
       const ext = slug === "zamorak" ? "jpg" : "png";
       expect(path, name).toBe(`/game/bosses/${slug}.${ext}`);
       expect(existsSync(join(PUBLIC, path!)), `missing ${path}`).toBe(true);
     }
+    expect(
+      dataEntityIconPath({ name: "Dragonkin Laboratory (ED2)", kind: "Elite Dungeon" }),
+    ).toBe("/game/bosses/black-stone-dragon.png");
+    expect(
+      dataEntityIconPath({ name: "The Shadow Reef (ED3)", kind: "Elite Dungeon" }),
+    ).toBe("/game/bosses/ambassador.png");
     // Full containment still works for package labels without inventory art.
     expect(bossIconPath("Kerapac progression")).toBe("/game/bosses/kerapac.png");
     // Inventory unique packs keep upgrade art (reward/POI chips), not boss plates.

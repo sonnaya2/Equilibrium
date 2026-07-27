@@ -505,26 +505,46 @@
       ]
     },
     {
-      "id": "passive:ring-of-vigour-and-passive-conversion",
-      "name": "Ring of Vigour and passive conversion",
+      "id": "passive:ring-of-vigour",
+      "name": "Ring of Vigour",
       "kind": "passive",
       "facts": [
-        "permanent adrenaline combat progression",
-        "Forinthry is the normal base-ring source. Treat Extinction as a separate quest-auto-completion dependency rather than a second elective region. · Effects: Retains 10% adrenaline after using an ultimate ability, Warped-gem conversion makes the effect permanently active without equipping the ring"
+        "Daemonheim ring",
+        "50,000 Dungeoneering tokens at Daemonheim Rewards. Keep 10% adrenaline after ultimates and 10% cheaper specials while worn."
       ],
       "unlock": {
         "type": "activity",
-        "requirement": "Ring of Vigour and passive conversion",
-        "regions": [
-          "forinthry"
-        ]
+        "requirement": "Ring of Vigour",
+        "regions": ["forinthry"]
       },
       "sources": [
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Ring_of_vigour",
-          "title": "Ring of Vigour and passive conversion",
-          "verifiedAt": "2026-07-26"
+          "title": "Ring of Vigour",
+          "verifiedAt": "2026-07-27"
+        }
+      ]
+    },
+    {
+      "id": "passive:ring-of-vigour-passive",
+      "name": "Ring of Vigour passive",
+      "kind": "passive",
+      "facts": [
+        "account passive",
+        "Warped gem from Vicendithas (Anachronia) after Extinction permanently unlocks the RoV effect without wearing the ring. Needs Forinthry + Anachronia."
+      ],
+      "unlock": {
+        "type": "activity",
+        "requirement": "Ring of Vigour passive",
+        "regions": ["forinthry", "anachronia"]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ring_of_vigour",
+          "title": "Ring of Vigour passive",
+          "verifiedAt": "2026-07-27"
         }
       ]
     },

@@ -122,3 +122,9 @@ scraped-data/_run_*
 scraped-data/agent-*.json
 scraped-data/bulk-icon-harvest-*.json
 scraped-data/unresolved-harvest-*.json
+
+# Untracked render of the map terrain partition (npm run build:map)
+scripts/.map-terrain-debug.png
+
+# Untracked render of the map terrain partition (npm run build:map)
+scripts/.map-terrain-debug.png

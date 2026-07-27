@@ -37,14 +37,11 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "aggression pot": skProd("aggression-potion"),
 
   // --- Forinthry chaotics / ruinous / corp / dark facets ---
-  "chaotic rapier": equip("chaotic-rapier"),
   "off-hand chaotic rapier": equip("off-hand-chaotic-rapier"),
   "chaotic longsword": equip("chaotic-longsword"),
   "off-hand chaotic longsword": equip("off-hand-chaotic-longsword"),
   "chaotic maul": equip("chaotic-maul"),
   "chaotic spear": equip("chaotic-spear"),
-  "chaotic staff": equip("chaotic-staff"),
-  "chaotic crossbow": equip("chaotic-crossbow"),
   "off-hand chaotic crossbow": equip("off-hand-chaotic-crossbow"),
   "chaotic claw": equip("chaotic-claw"),
   "off-hand chaotic claw": equip("off-hand-chaotic-claw"),
@@ -56,8 +53,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "off-hand ruinous crossbow": equip("off-hand-ruinous-crossbow"),
   "ruinous guard": equip("ruinous-guard"),
   "ruinous lantern": equip("ruinous-lantern"),
-  "spirit shield": equip("arcane-spirit-shield"),
-  "holy elixir": skProd("holy-elixir"),
   "arcane sigil": equip("arcane-spirit-shield"),
   "elysian sigil": equip("elysian-spirit-shield"),
   "divine sigil": equip("divine-spirit-shield"),
@@ -68,15 +63,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "brawling gloves": perm("brawling-gloves"),
   "balarak's sash brush": offhand("balaraks-sash-brush"),
   "balaraks sash brush": offhand("balaraks-sash-brush"),
-  "skeka's hypnowand": offhand("skekas-hypnowand"),
-  "skekas hypnowand": offhand("skekas-hypnowand"),
   "black salamander": equip("black-salamander"),
   "bakriminel bolt tips": skProd("bakriminel-bolts"),
   "magical thread": perm("magical-thread"),
   "pouch repair": perm("magical-thread"),
   "multi-altar rifts": perm("passage-of-the-abyss"),
   "primal ores": perm("primal-ores"),
-  "eldritch crossbow": prog("eldritch-crossbow"),
 
   // --- Havenhythe uniques ---
   "bonecrusher maul": perm("bonecrusher-maul"),
@@ -237,9 +229,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
 
   // --- Kalphite King ---
   "drygore weapons": perm("drygore-weapons"),
-  "drygore mace": prog("drygore-mace"),
-  "drygore longsword": equip("drygore-longsword"),
-  "drygore rapier": equip("drygore-rapier"),
 
   // --- Amascut, the Devourer ---
   "devourer's guard": prog("devourers-guard"),
@@ -310,10 +299,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "corrupted gem": skProd("corrupted-gem"),
   "corrupted gems": skProd("corrupted-gem"),
   "corrupted magic logs": skProd("corrupted-magic-logs"),
-  "khopesh of the kharidian": equip("khopesh-of-the-kharidian"),
-  "off-hand khopesh of the kharidian": equip("khopesh-of-the-kharidian"),
-  "khopesh of tumeken": equip("khopesh-of-tumeken"),
-  "khopesh of elidinis": equip("khopesh-of-tumeken"),
   "feather of ma'at": skProd("feather-of-maat"),
   "feathers of ma'at": skProd("feather-of-maat"),
   "menaphos reputation": perm("menaphos-reputation"),
@@ -343,8 +328,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "super necromancy": skProd("super-restore"),
   "fourth room": perm("sunken-pyramid"),
   "move souls layout": perm("sunken-pyramid"),
-  "slayer codex": perm("sunken-pyramid"),
-  "focus sight": skProd("focus-sight"),
   "illuminated book of law": skProd("illuminated-book-of-law"),
   "illuminated book of war": skProd("illuminated-book-of-war"),
   "illuminated book of balance": skProd("illuminated-book-of-balance"),
@@ -365,11 +348,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   // Drygore / KQ uniques live under skilling-production so reward chips pass acceptRewardPath
   // (equipmentIconPath closed set rejects brand-new combat/equipment slugs).
   "drygore rapier": skProd("drygore-rapier"),
-  "off-hand drygore rapier": skProd("off-hand-drygore-rapier"),
   "drygore longsword": skProd("drygore-longsword"),
-  "off-hand drygore longsword": skProd("off-hand-drygore-longsword"),
   "drygore mace": skProd("drygore-mace"),
-  "off-hand drygore mace": skProd("off-hand-drygore-mace"),
   "dragon chainbody": skProd("dragon-chainbody"),
   "kalphite queen head": skProd("kalphite-queen-head"),
   "dragon 2h sword": skProd("dragon-2h-sword"),

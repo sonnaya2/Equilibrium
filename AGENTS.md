@@ -61,9 +61,17 @@ of `app/globals.css`.
 
 **Worktrees start without `node_modules`.** Run `npm ci` in a fresh one.
 
-**The 3D map is a wartable of original geometry** (`MapTable` / region slabs), not a photo plate —
-there is no served `public/map/league-map.jpg`. Do not reintroduce a Regions-tab screenshot as the
-board texture (it doubles Jagex markers and fights the slab model).
+**The 3D map's geometry is generated from the HD Wiki raster and committed.** `npm run build:map`
+cuts `public/map/world-surface-wiki.webp` into region plates, a terrain field and a POI atlas; the
+app never does that work at runtime. Re-run it after editing `data/map/region-seeds.json` or
+swapping the raster, and commit the outputs. Never hand-author region polygons — a previous set,
+authored in uv against an older base image, ended up drawing borders in open ocean. See the
+`map-3d` skill.
+
+**Headless Chromium has no WebGPU adapter**, so `npm run test:e2e` skips every 3D assertion and the
+board goes unverified. `npx playwright test -c playwright.webgpu.config.ts e2e/map-board.spec.ts`
+runs the same specs in a headed off-screen Edge on port 3101, where the adapter is real. Use
+Playwright for browser work here, and do not leave a dev server running in the background.
 
 **`npm run sync:league:disabled` (was `sync:league`) exits 1** — it used to write a blessings/relics
 envelope the app cannot read. League planner JSON is produced by `npm run normalize:data`.

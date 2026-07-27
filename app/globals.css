@@ -1050,11 +1050,11 @@ textarea:focus-visible {
     border: 0;
     color: var(--color-parch-50);
     background: transparent;
-    cursor: pointer;
+    /* The plate under it owns the pointer; this is a caption, not a control. */
+    pointer-events: none;
     filter: drop-shadow(0 1px 2px rgb(0 0 0 / 88%));
     transition: transform 140ms ease, opacity 140ms ease;
   }
-  .map-region-marker:hover,
   .map-region-marker.is-focus {
     z-index: 2;
     transform: translateY(-1px) scale(1.04);
@@ -1128,43 +1128,9 @@ textarea:focus-visible {
     font-size: 8px;
   }
 
-  .map-poi-marker {
-    position: relative;
-    display: grid;
-    width: 22px;
-    height: 22px;
-    place-items: center;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-  }
-  .map-poi-marker__dot {
-    width: 8px;
-    height: 8px;
-    border: 1px solid rgb(234 222 189 / 88%);
-    border-radius: 50%;
-    background: rgb(7 26 25 / 92%);
-    box-shadow:
-      0 1px 2px rgb(0 0 0 / 90%),
-      0 0 0 2px rgb(8 18 20 / 45%);
-    transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
-  }
-  .map-poi-marker.is-site .map-poi-marker__dot {
-    border-color: rgb(211 175 94 / 92%);
-  }
-  .map-poi-marker:hover .map-poi-marker__dot,
-  .map-poi-marker.is-selected .map-poi-marker__dot {
-    transform: scale(1.2);
-    background: var(--color-gem-400);
-    box-shadow:
-      0 1px 3px rgb(0 0 0 / 92%),
-      0 0 0 2px rgb(46 203 143 / 22%);
-  }
-  .map-poi-marker__label {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
+  /* The medallion itself is geometry now (see materials/MarkerMaterial.ts).
+     All that is left in the DOM is the name, and only while a pin is lit. */
+  .map-poi-label {
     padding: 2px 6px;
     color: var(--color-parch-50);
     font-family: var(--font-display);
@@ -1174,9 +1140,12 @@ textarea:focus-visible {
     white-space: nowrap;
     text-shadow: 0 1px 2px #000;
     background: rgb(7 11 12 / 92%);
-    border-bottom: 1px solid var(--color-gem-500);
-    transform: translateX(-50%);
+    border-bottom: 1px solid var(--color-gem-600);
     pointer-events: none;
+  }
+  .map-poi-label.is-selected {
+    color: var(--color-gem-100);
+    border-bottom-color: var(--color-gem-400);
   }
 
   .stat-strip {

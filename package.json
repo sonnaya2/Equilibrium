@@ -33,7 +33,8 @@
     "sync:quests": "node scripts/sync-quest-regions.mjs",
     "sync:quests:auto": "node scripts/sync-equilibrium-auto-quests.mjs",
     "sync:planner": "node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs",
-    "sync:planner:supplements": "node scripts/sync-planner-supplements.mjs"
+    "sync:planner:supplements": "node scripts/sync-planner-supplements.mjs",
+    "build:map": "node --max-old-space-size=6144 scripts/build-map-terrain.mjs && node scripts/build-poi-atlas.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

@@ -1,0 +1,78 @@
+{
+  "note": "Supplemental region seeds for the 3D board's plate partition, in RuneScape surface coordinates (x east, y north) — the same space as src/map/data/gameCoords.ts. These are rendering hints, never league data. Every place anchor already seeds its own region; these only cover stretches of land no anchor is near, so the partition does not hand an empty moor to whichever town happens to be closest across a mountain range. Run `npm run build:map` after editing.",
+  "seeds": {
+    "misthalin": [
+      [3150, 3480],
+      [3320, 3460],
+      [3120, 3300],
+      [3260, 3280],
+      [3380, 3380]
+    ],
+    "asgarnia": [
+      [2950, 3300],
+      [2870, 3480],
+      [3000, 3560],
+      [2930, 3620]
+    ],
+    "kandarin": [
+      [2570, 3200],
+      [2430, 3560],
+      [2620, 3570],
+      [2350, 3480],
+      [2760, 3300],
+      [2540, 3420],
+      [2680, 3050],
+      [2450, 2980]
+    ],
+    "fremennik": [
+      [2700, 3730],
+      [2820, 3660],
+      [2450, 3720],
+      [2210, 3830],
+      [2960, 3620]
+    ],
+    "forinthry": [
+      [3060, 3600],
+      [3180, 3600],
+      [3300, 3660],
+      [2980, 3760],
+      [3220, 3840],
+      [3400, 3760]
+    ],
+    "morytania": [
+      [3560, 3450],
+      [3660, 3300],
+      [3470, 3320],
+      [3720, 3560],
+      [3520, 3200]
+    ],
+    "desert": [
+      [3350, 2960],
+      [3180, 3020],
+      [3450, 3180],
+      [3120, 2830],
+      [3400, 2700]
+    ],
+    "tirannwn": [
+      [2180, 3400],
+      [2250, 3200],
+      [2130, 3260],
+      [2280, 3450]
+    ],
+    "karamja": [
+      [2900, 3100],
+      [2800, 2960],
+      [2960, 3040]
+    ],
+    "anachronia": [
+      [3780, 4180],
+      [4050, 4200],
+      [3880, 4400]
+    ],
+    "havenhythe": [
+      [4240, 3400],
+      [4300, 3250],
+      [4200, 3520]
+    ]
+  }
+}

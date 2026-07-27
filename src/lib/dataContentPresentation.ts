@@ -789,7 +789,6 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "regional multi-skill bank and production hub": "Bank and production",
     "regional multi-skill transport and shop infrastructure": "Docks and shops",
     "regional multi-skill settlement infrastructure": "Settlement",
-    "regional skilling infrastructure": "Skilling",
     "regional starter multi-skill infrastructure": "Starter town",
     "regional city bank, furnace, and tokkul shop infrastructure": "Bank, furnace, TokKul",
     "coastal skilling hub": "Coastal skilling",

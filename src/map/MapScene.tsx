@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three/webgpu";
 // Side-effect: Timer-backed THREE.Clock before R3F constructs its store.
 import "./patchThreeClock";
@@ -8,10 +8,12 @@ import { Canvas, extend, useThree } from "@react-three/fiber";
 import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
+import { Effects } from "./Effects";
 import { FlatBoard } from "./FlatBoard";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE } from "./data/regionAnchors";
-import { SURFACE_VOID } from "./palette";
+import { mapFlags } from "./mapQuality";
+import { OCEAN_HORIZON } from "./materials/WaterMaterial";
 import { useMapFocus } from "./useMapFocus";
 
 extend(THREE as never);
@@ -153,23 +155,32 @@ export default function MapScene() {
           WebGPU glued to the host so min-h-0 ancestors actually work. */}
       <div className="board-sky__canvas-host">
         <Canvas
-          orthographic
           dpr={[1, 2]}
           frameloop="demand"
-          camera={{ position: [0, 4, 0], near: 0.05, far: 20, up: [0, 0, -1] }}
+          // Opens wide and a little low; CameraRig settles it onto the table
+          // shot as the intro descent, or cuts straight there under reduced
+          // motion. Perspective, because a straight-down orthographic board
+          // hides every bit of the depth this map is built out of.
+          camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.02, far: 24 }}
           onPointerMissed={unframe}
           gl={(props) =>
             rendererFor(props as unknown as Record<string, unknown>, () => failRef.current())
           }
         >
-          <color attach="background" args={[SURFACE_VOID]} />
+          <color attach="background" args={[OCEAN_HORIZON]} />
 
-          <MapTable />
+          {/* The raster, the field, the atlas and the plate rings all suspend.
+              Without a boundary inside the canvas that throw escapes to the
+              route and takes the whole page down instead of the board. */}
+          <Suspense fallback={null}>
+            <MapTable reducedMotion={reducedMotion} />
+          </Suspense>
           <CameraRig
             focus={focus.framed ? focus.region : null}
             place={focus.place}
             reducedMotion={reducedMotion}
           />
+          {mapFlags().bloom && !mapFlags().debugGeometry ? <Effects /> : null}
           <InvalidateOnBuild />
         </Canvas>
       </div>

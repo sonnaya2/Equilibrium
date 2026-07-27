@@ -166,7 +166,8 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Orthen Dig Site", [3780, 4330]],
   ["Time altar", [3813, 4468]],
   ["Anachronia Agility Course", [3896, 4219]],
-  ["Dream of Iaia", [3915, 4265]],
+  // Just N of base camp over the ruins (was SE of camp at 3915,4265).
+  ["Dream of Iaia", [3905, 4298]],
   ["Ranch Out of Time", [3646, 4294]],
   ["Raksha", [4141, 4077]],
   ["Rex Matriarchs", [3900, 4100]],

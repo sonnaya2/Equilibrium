@@ -123,6 +123,17 @@ scraped-data/*.ndjson
 scraped-data/agent-*.json
 scraped-data/bulk-icon-harvest-*.json
 scraped-data/unresolved-harvest-*.json
+scraped-data/public-game-provenance-gap.json
+scraped-data/archive/
+# One-shot audit dumps (durable research stays tracked)
+scraped-data/audit-status-*.json
+scraped-data/audit-final-*.json
+scraped-data/audit-still-*.txt
+scraped-data/audit-longtail-*.json
+scraped-data/audit-phantom-*.json
+scraped-data/audit-wave*.json
+scraped-data/equipment-sync-report-*.json
+scraped-data/audit-schema-hygiene-*.json
 
 # Untracked render of the map terrain partition (npm run build:map)
 scripts/.map-terrain-debug.png

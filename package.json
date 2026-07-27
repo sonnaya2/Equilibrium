@@ -36,7 +36,9 @@
     "sync:planner:supplements": "node scripts/sync-planner-supplements.mjs",
     "build:map": "node --max-old-space-size=6144 scripts/build-map-terrain.mjs && node scripts/build-poi-atlas.mjs",
     "sync:map:coords": "node scripts/sync-map-coordinates.mjs",
-    "audit:map:anchors": "node scripts/audit-map-anchors.mjs"
+    "audit:map:anchors": "node scripts/audit-map-anchors.mjs",
+    "audit:assets-provenance": "node scripts/audit-public-game-provenance.mjs",
+    "register:assets-provenance": "node scripts/register-local-assets-provenance.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

@@ -22,6 +22,7 @@ const rootUp = (slug: string) => `/game/upgrades/${slug}.png`;
 const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.png`;
 
 export const REWARD_ICON_BY_LABEL: Record<string, string> = {
+
   // --- Necrotic runes (Necromantic Rune Temple) ---
   "spirit rune": skProd("spirit-rune"),
   "bone rune": skProd("bone-rune"),
@@ -64,7 +65,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "dark facet of passage": perm("dark-facet-of-passage"),
   "grace of the elves": perm("grace-of-the-elves"),
   gote: perm("grace-of-the-elves"),
-  "dark onyx core": perm("dark-onyx-core"),
   "brawling gloves": perm("brawling-gloves-melee"),
   "melee brawling gloves": perm("brawling-gloves-melee"),
   "ranged brawling gloves": perm("brawling-gloves-ranged"),
@@ -95,7 +95,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "balarak's sash brush": offhand("balaraks-sash-brush"),
   "balaraks sash brush": offhand("balaraks-sash-brush"),
   "black salamander": equip("black-salamander"),
-  "bakriminel bolt tips": skProd("bakriminel-bolts"),
   "magical thread": perm("magical-thread"),
   "pouch repair": perm("magical-thread"),
   "multi-altar rifts": perm("passage-of-the-abyss"),
@@ -139,7 +138,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "enhanced kerapac's wrist wraps": equip("enhanced-kerapacs-wrist-wraps"),
   "enhanced kerapacs wrist wraps": equip("enhanced-kerapacs-wrist-wraps"),
   "leng gloves": prog("leng-artefact"),
-  "leng artefact": prog("leng-artefact"),
   "scripture of jas": prog("scripture-of-jas"),
 
   // --- Arch-Glacor / Leng ---
@@ -327,7 +325,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "crystal tools": perm("crystal-pickaxe"),
   "crystal pickaxe": perm("crystal-pickaxe"),
   "crystal hatchet": rootUp("crystal-hatchet"),
-  "crystal mattock": prog("crystal-mattock"),
   "crystal skillchompas": perm("crystal-skillchompas"),
   // "fishing" substring fences permanent-unlocks as scenery — use skilling-tools path.
   "crystal fishing rod": "/game/upgrades/skilling-tools/crystal-fishing-rod.png",
@@ -360,7 +357,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   divert: codex("divert"),
   "fleeting boots": prog("fleeting-boots"),
   "laceration boots": prog("laceration-boots"),
-  "blast diffusion boots": prog("blast-diffusion-boots"),
   "shadow spike": prog("shadow-spike"),
   "shadow spike upgrades to tier 90": prog("shadow-spike"),
 
@@ -434,8 +430,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "barrows equipment": perm("barrows"),
 
   // Giant Mole — claw/skin have no local inventory art; 2h/chainbody have production art.
-  "dragon 2h sword": "/game/upgrades/skilling-production/dragon-2h-sword.png",
-  "dragon chainbody": "/game/upgrades/skilling-production/dragon-chainbody.png",
   "amascut's enchanted gem": perm("enchanted-gem"),
   "amascuts enchanted gem": perm("enchanted-gem"),
   "enchanted gem": perm("enchanted-gem"),
@@ -558,19 +552,14 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   // --- Rex Matriarchs / Osseous ---
   "skeka's hypnowand": offhand("skekas-hypnowand"),
   "skekas hypnowand": offhand("skekas-hypnowand"),
-  "occultist's ring": equip("occultists-ring"),
-  "occultists ring": equip("occultists-ring"),
   "champion's ring": util("champions-ring"),
   "champions ring": util("champions-ring"),
   "channeler's ring": util("channelers-ring"),
   "channelers ring": util("channelers-ring"),
-  "reaver's ring": util("reavers-ring"),
-  "reavers ring": util("reavers-ring"),
   "stalker's ring": util("stalkers-ring"),
   "stalkers ring": util("stalkers-ring"),
 
   // --- Anachronia (gemstone / terrasaur / totems / mattock / double surge) ---
-  "dragon mattock": prog("dragon-mattock"),
   // inventory under upgrades/progression (equipment/ copies not published)
   "gemstone helm": prog("gemstone-helm"),
   "gemstone hauberk": prog("gemstone-hauberk"),
@@ -578,16 +567,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "terrasaur maul components": prog("terrasaur-maul"),
   "anachronia totems": perm("anachronia-totem"),
   "anachronia totem": perm("anachronia-totem"),
-  "totem of vitality": perm("totem-of-vitality"),
   "totem of summoning": perm("totem-of-summoning"),
   "anachronia codex": perm("anachronia-codex"),
   "codex lectern": perm("anachronia-codex"),
   // ability-codices/double-* art is mislabeled; use movement ability icons
-  "double surge": "/game/combat/abilities/movement/surge.png",
-  "double escape": "/game/combat/abilities/movement/escape.png",
   "double surge codex": "/game/combat/abilities/movement/surge.png",
   "double escape codex": "/game/combat/abilities/movement/escape.png",
-  "imcando mattock": perm("imcando-mattock"),
   "crystal mattock": prog("crystal-mattock"),
   "gemstone golem outfit": prog("gemstone-golem-outfit"),
 
@@ -644,7 +629,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "fire cape": prog("fire-cape"),
 
   // --- QBD / nightmare ---
-  "nightmare gauntlets": equip("nightmare-gauntlets"),
   "enhanced nightmare gauntlets": equip("enhanced-nightmare-gauntlets"),
 
   // --- Other high-profile combat uniques ---
@@ -679,7 +663,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "inspire effort": perm("inspire-effort"),
   "sticky fingers": perm("sticky-fingers"),
   "heightened senses": perm("heightened-senses"),
-  "tetracompass": "/game/upgrades/skilling-utility/tetracompass.png",
   "sunspear": perm("sunspear"),
   "salve amulet (e)": util("salve-amulet-e"),
   "salve amulet e": util("salve-amulet-e"),
@@ -698,8 +681,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "limpwurt roots": skProd("limpwurt-root"),
   "limpwurt root": skProd("limpwurt-root"),
   "grimy ranarr": skProd("grimy-ranarr"),
-  "chaos druids": skProd("grimy-ranarr"),
-  "hill giants": skProd("limpwurt-root"),
   "herb spawns": skProd("grimy-ranarr"),
   "green dragonhide": skProd("green-dragonhide"),
   "dragon bones": skProd("dragon-bones"),
@@ -720,7 +701,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "polypore staff": equip("polypore-staff"),
   "ganodermic armour": equip("ganodermic-poncho"),
   "ganodermic poncho": equip("ganodermic-poncho"),
-  "terrasaur maul": prog("terrasaur-maul"),
   "bow of the last guardian": prog("bow-of-the-last-guardian"),
   bolg: prog("bow-of-the-last-guardian"),
   // ED4 Zamorak, Lord of Chaos
@@ -752,13 +732,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "chaotic kiteshield": prog("chaotic-kiteshield"),
   "masuta's warspear": equip("masutas-warspear"),
   "masutas warspear": equip("masutas-warspear"),
-  "laniakea's spear": equip("laniakeas-spear"),
-  "laniakeas spear": equip("laniakeas-spear"),
 
   // --- Permanent unlocks / access tokens (honest inventory or unlock art) ---
   "artificer's measure": perm("artificers-measure"),
   "artificers measure": perm("artificers-measure"),
-  "ferocious ring": perm("ferocious-ring"),
   "hexcrest": perm("hexcrest"),
   "focus sight": perm("focus-sight"),
   "luck of the dwarves": perm("luck-of-the-dwarves"),
@@ -775,7 +752,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "dream of iaia stations": perm("dream-of-iaia"),
   "dream of iaia": perm("dream-of-iaia"),
   "hunter lodge": perm("hunter-lodge"),
-  "volcanic trapper outfit": perm("volcanic-trapper"),
   "slayer codex": perm("slayer-codex"),
   "resource dungeon": perm("resource-dungeon"),
   "resource dungeons": perm("resource-dungeon"),

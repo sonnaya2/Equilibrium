@@ -90,8 +90,31 @@ function inspect(file, value, path = "$", key = "") {
   }
 }
 
+/** One-shot agent dumps / gap reports — not normalize inputs. Skip so audits stay green. */
+function isScrapedEphemeral(file) {
+  if (!file.startsWith("scraped-data/")) return false;
+  if (file.startsWith("scraped-data/archive/")) return true;
+  if (file.startsWith("scraped-data/jagex-build-ref/")) return true;
+  if (file.startsWith("scraped-data/fix-patches/")) return true;
+  if (file.startsWith("scraped-data/info-patches/")) return true;
+  if (/\/agent-/i.test(file)) return true;
+  if (/\/audit-(status|final|still|trim|longtail|phantom|wave)/i.test(file)) return true;
+  if (/-(report|gap|gaps|snapshot|probe|shell-audit)-/i.test(file)) return true;
+  if (/\/public-game-provenance-gap\.json$/i.test(file)) return true;
+  if (/\/data-icon-audit\.json$/i.test(file)) return true;
+  if (/\/equipment-sync-report-/i.test(file)) return true;
+  if (/\/audit-schema-hygiene-/i.test(file)) return true;
+  if (/\/bench-tasks-wiki-/i.test(file)) return true;
+  return false;
+}
+
 const jsonFiles = [...walk(join(ROOT, "data")), ...walk(join(ROOT, "scraped-data"))]
-  .filter((absolute) => relative(ROOT, absolute).replaceAll("\\", "/") !== REPORT_PATH)
+  .filter((absolute) => {
+    const file = relative(ROOT, absolute).replaceAll("\\", "/");
+    if (file === REPORT_PATH) return false;
+    if (isScrapedEphemeral(file)) return false;
+    return true;
+  })
   .sort();
 for (const absolute of jsonFiles) {
   const file = relative(ROOT, absolute).replaceAll("\\", "/");

@@ -126,11 +126,17 @@ planner.
 Pushes to `main` deploy straight to Vercel production, so there is no staging net. No backend and no
 accounts either: game data ships as checked-in JSON and your progress lives in `localStorage`.
 
-## Credits
+## Credits and licenses
 
 Data and research come from the [RuneScape Wiki](https://runescape.wiki/),
 [RS Analysis](https://rs-analysis.xyz/), [PvME](https://pvme.io/) and official
 [Jagex](https://www.jagex.com/) material. Individual records keep their own source where possible.
+
+- **Code:** MIT (`LICENSE`)
+- **Wiki-derived content:** [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) — see `NOTICE`
+- **Jagex art / marks:** Jagex property; fan non-commercial use only — see `NOTICE`
+
+Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 Unofficial, non-commercial fan project. Not affiliated with or endorsed by Jagex. RuneScape is a
 trademark of Jagex Ltd.

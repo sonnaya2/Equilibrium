@@ -18,15 +18,82 @@ This directory is the local asset archive for Equilibrium. It is intentionally s
 
 Never add an unattributed game asset. If an image cannot be tied back to a Jagex/RuneScape page, RuneScape Wiki file page, or another explicit retrieval source, leave it unresolved instead of guessing.
 
-### Provenance gap (known debt)
+### Provenance gap (closing)
 
-`manifest.generated.json` currently tracks on the order of hundreds of
-files. `public/game/` and `assets/rs3/` hold thousands of icons from later
-bulk harvests that often never re-entered a `source-manifest-expansion-*.json`
-and a `npm run sync:assets` pass. Those files are still Jagex/wiki media —
-not project originals — but they lack per-file rows in the generated
-manifest until re-registered. Prefer fixing that over more untracked
-downloads. See root `NOTICE`.
+Bulk harvests left many files on disk without per-path rows in
+`manifest.generated.json`. Path match is authoritative; basename-only soft
+matches can false-positive across categories.
+
+#### Audit (report only, exit 0)
+
+```bash
+node scripts/audit-public-game-provenance.mjs
+# -> scraped-data/public-game-provenance-gap.json
+```
+
+Counts from the 2026-07-27 path-level audit (re-run after harvest to refresh):
+
+| Tree | Total | Path-matched | Soft-only | Path-unmatched |
+|------|------:|-------------:|----------:|---------------:|
+| `public/game` | 2565 | 2095 | 457 | **470** |
+| `assets/rs3` | 2539 | 2099 | 440 | 440 |
+| `assets/leagues` | 88 | 72 | 16 | 16 |
+
+`manifest.generated.json` at audit time: **2170** rows.
+
+Priority path-gaps under `public/game` (subset of the 470): permanent-unlocks
+~247, skilling-production ~57, combat/equipment ~49, progression ~41, other
+inventory buckets smaller; ~45 non-priority (leagues promo, terrain, etc.).
+
+#### Local registration (no re-download)
+
+```bash
+node scripts/register-local-assets-provenance.mjs
+```
+
+Registers existing `assets/rs3/**` (and leagues) files into
+`manifest.generated.json` and writes
+`source-manifest-expansion-bulk-local-2026-07-27.json`. Wiki `File:` titles
+are **slug guesses** — re-verify high-value icons with a real wiki resolve
+when convenient. Note: that bulk filename is **not** picked up by
+`scripts/sync-assets-expanded.mjs` (regex is `source-manifest-expansion(-N)?\.json`
+only); it is applied by the local register script itself.
+
+#### Expansion 42 (inventory path-gaps)
+
+`source-manifest-expansion-42.json` — **271** inventory-style path-gap entries
+(permanent-unlocks, combat/equipment, progression, skilling-*), kebab slug
+guesses for `canonicalPage` / `sourcePage` / `fileTitle`. Skips activity-place
+dumps misfiled under permanent-unlocks when the stem is also under
+`activities/` and does not look item-like. Cap was 400; 271 after filters.
+
+After expansion 42 is harvested into the generated manifest, expect roughly
+**~200 remaining path-unmatched** under `public/game` (mostly place/activity
+dumps under permanent-unlocks, leagues promo art, terrain, and other
+non-inventory leftovers). Re-run the audit to get the exact residual.
+
+#### Complete the harvest (prefer single-expansion)
+
+Do **not** run full `npm run sync:assets` just to absorb expansion 42 — it
+re-resolves/re-downloads the whole catalog and can take hours.
+
+```bash
+# Preferred: one expansion only (wiki resolve + download for missing/changed)
+node scripts/_sync-expansion.mjs 42
+
+# Then publish attributed rows into public/game (manifest-driven copy)
+node scripts/publish-assets.mjs
+
+# Refresh gap report
+node scripts/audit-public-game-provenance.mjs
+```
+
+If files already sit on disk under the expansion `path` and you only need
+manifest rows, prefer extending/using `register-local-assets-provenance.mjs`
+rather than re-fetching. Full `npm run sync:assets` remains for intentional
+catalog rebuilds.
+
+See root `NOTICE` for license carve-outs.
 
 ## Layout
 

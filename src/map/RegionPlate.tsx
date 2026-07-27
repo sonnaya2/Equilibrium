@@ -23,9 +23,8 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three/webgpu";
 import { isRegionUnlocked, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
-import { MAP_WORLD, REGION_ANCHOR_BY_ID } from "./data/regionAnchors";
+import { MAP_WORLD, REGION_ANCHOR_BY_ID, anchorUvToShader } from "./data/regionAnchors";
 import type { PlateRing } from "./data/plates";
-import { REGION_METRICS_BY_ID } from "./data/regionMetrics";
 import { createTerrainMaterials } from "./materials/TerrainMaterial";
 import type { MapFlags } from "./mapQuality";
 import { BEVEL, PLATE_DEPTH, plateBaseY } from "./plateHeight";
@@ -33,8 +32,8 @@ import { useMapFocus } from "./useMapFocus";
 
 /** Chamfer on the top edge — a fabricated relief map, not a cut of foamboard. */
 const BEVEL_SIZE = 0.0012;
-/** Ember-to-gem unlock sweep, seconds. */
-const SWEEP_SECONDS = 0.75;
+/** Unlock: grey peels out from centre with a green ring — seconds for full cover. */
+const SWEEP_SECONDS = 3.2;
 /** Rings under this world area are lattice dust; drawing them costs more than they read. */
 const MIN_RING_AREA = 2e-6;
 
@@ -107,21 +106,30 @@ export function RegionPlate({
     mats.lock.value = unlocked ? 0 : 1;
     mats.dim.value = sidelined ? 1 : 0;
     mats.focus.value = subject || hovered ? 1 : 0;
+    const uv = REGION_ANCHOR_BY_ID.get(id)?.uv;
+    if (uv) {
+      // Shader mapUv flips V (mapUvFrom); anchor UV must match that space
+      // or the expand disc lands off-plate and electives look like a no-op.
+      const [su, sv] = anchorUvToShader(uv);
+      (mats.unlockCenter.value as { set: (u: number, v: number) => void }).set(su, sv);
+    }
     invalidate();
-  }, [mats, unlocked, sidelined, subject, hovered, invalidate]);
+  }, [mats, unlocked, sidelined, subject, hovered, invalidate, id]);
 
-  // The unlock sweep fires on the transition into unlocked only. On mount the
-  // starting regions are already open, and the whole board would light up on
-  // every page load.
+  // Unlock only: sweep 1→0 expands colour from unlockCenter with a green ring.
+  // Starting regions skip this so the board does not flash on every load.
   const sweep = useRef(0);
   const wasUnlocked = useRef<boolean | null>(null);
   useEffect(() => {
     if (wasUnlocked.current !== null && unlocked && !wasUnlocked.current && !reducedMotion) {
       sweep.current = 1;
+      mats.sweep.value = 1;
+      // Colour restore runs while lock is already 0 — grey peels via sweep.
+      mats.lock.value = 0;
       invalidate();
     }
     wasUnlocked.current = unlocked;
-  }, [unlocked, reducedMotion, invalidate]);
+  }, [unlocked, reducedMotion, invalidate, mats]);
 
   // One damped number, asleep at rest. The group's y belongs to this loop alone:
   // passing `position` as a prop lets R3F reapply the target in the same commit
@@ -199,10 +207,11 @@ export function RegionPlate({
         // second match here is a Playwright strict-mode failure, so this is
         // aria-hidden and never takes a pointer.
         <Html
-          position={[label[0], depth + BEVEL + 0.004, label[1]]}
+          position={[label[0], depth + BEVEL + 0.006, label[1]]}
           center
           zIndexRange={[12, 0]}
-          style={{ pointerEvents: "none" }}
+          // Screen-space size (no distance shrink) so region crests stay readable.
+          style={{ pointerEvents: "none", transform: "translate3d(0,0,0)" }}
         >
           <div
             aria-hidden="true"
@@ -210,11 +219,8 @@ export function RegionPlate({
               subject ? " is-focus" : ""
             }`}
           >
-            <img src={`/game/regions/${id}.png`} alt="" />
+            <img src={`/game/regions/${id}.png`} alt="" width={64} height={72} />
             <span className="map-region-marker__name">{anchor?.name}</span>
-            <span className="map-region-marker__count">
-              {REGION_METRICS_BY_ID.get(id)?.quests ?? 0} quests
-            </span>
           </div>
         </Html>
       ) : null}

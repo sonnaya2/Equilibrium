@@ -11,6 +11,17 @@ This folder is the app-facing data store.
 - The app reads `data/` directly. It does not read `scraped-data/` at runtime.
 - Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
 
+### Hand-owned vs generated (do not clobber)
+
+| Path | Ownership |
+|---|---|
+| `research/catalog.json` | **Curated.** Region major unlocks and points-of-interest rows are edited for the Data browser. `normalize:data` may enrich related research files — re-check catalog majors after a full normalize before committing. |
+| `league/regions.json`, `relics.json`, `blessings.json`, `tasks.json` | **Normalize-owned** from scraped-data (plus official empty/provisional shells). |
+| `research/planner-expansions*.json`, many `reference/*` | **Sync scripts** from scraped-data / research passes. |
+| `combat/*` | Combat sync scripts + hand review; keep engine records sourced. |
+
+When in doubt: change `scraped-data/` + re-run the named sync script, or edit catalog majors only with an explicit non-normalize commit.
+
 ## Source rules
 
 RuneScape Wiki is the default source for settled game data. Rows explicitly sourced from PvME or RS Analysis keep that source. Jagex posts stay attached when they are the actual source for a new League reveal or patch value.

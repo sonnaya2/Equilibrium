@@ -19077,18 +19077,6 @@
           }
         },
         {
-          "name": "Red sandstone and potion flasks",
-          "kind": "Herblore flask infrastructure",
-          "detail": "Red sandstone at Oo'glog and Sophanem feeds potion-flask production. The 2026 DailyScape overhaul removed the old daily cap, and July 2026 reduced rock hitpoints",
-          "confidence": "confirmed_wiki_and_2026_current_rule",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Red_sandstone",
-            "title": "Red sandstone and potion flasks",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
           "name": "Sumona (Pollnivneach Slayer Master)",
           "kind": "regional Slayer master hub",
           "detail": "Mid-hard master bridge when combat/Slayer is too low for Duradel. NPC Contact (Lunar Diplomacy) and ring of slaying / desert amulet / Pollnivneach teleports are logistics, not region gates",
@@ -19291,37 +19279,117 @@
             "title": "Pontifex observation ring",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Vampyrism Aspect",
+          "kind": "Ancient Magicks",
+          "detail": "Ancient Magicks combat Aspect from Desert content. Life-steal style combat utility.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vampyrism_Aspect",
+            "title": "Vampyrism Aspect",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Vault of Hereditas",
+          "kind": "Thieving heist",
+          "detail": "Post-2025 Desert Thieving heist. High-level safecracking / heist rewards under Menaphos–Kharid-et geography.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vault_of_Hereditas",
+            "title": "Vault of Hereditas",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Spectral lens",
+          "kind": "Slayer",
+          "detail": "Slayer helmet Necromancy component. Completes full-style on-task helmet coverage with ensouled lens path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Spectral_lens",
+            "title": "Spectral lens",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Farmer's outfit",
+          "kind": "Farming outfit",
+          "detail": "Desert-accessible Farming XP outfit path (Thaler / activity stock). Stacks toward master farmer bonuses.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farmer%27s_outfit",
+            "title": "Farmer's outfit",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Crimson skillchompas",
+          "kind": "Hunter",
+          "detail": "Desert Quarry wild skillchompa catch site. Crimson tier consumable gather tools.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Crimson_skillchompa",
+            "title": "Crimson skillchompas",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Unexpected Diplomacy",
+          "kind": "Quest reward",
+          "detail": "Newer Desert quest reward path. Seal of the Praefectus Praetorio permanent unlock.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Unexpected_Diplomacy",
+            "title": "Unexpected Diplomacy",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Dundee's Crocodile Upgrades",
+          "kind": "Quest reward",
+          "detail": "Post-crocodile quest Hunter upgrades shop. Permanent crocodile-related Hunter QoL.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Dundee%27s_Crocodile_Upgrades",
+            "title": "Dundee's Crocodile Upgrades",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Hard Desert Keris upgrade",
+          "kind": "Quest / diary reward",
+          "detail": "Desert Keris upgrade path from hard Desert achievements and related desert quest pressure.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Keris",
+            "title": "Keris",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Desert amulet",
+          "kind": "Diary reward",
+          "detail": "Desert achievements amulet 1–4. Teleports and desert QoL permanent unlock ladder.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Desert_amulet",
+            "title": "Desert amulet",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
-        {
-          "name": "God Wars Dungeon 2 weapon and anima-core progression",
-          "category": "combat gear",
-          "detail": "Best GWD2 boss drop rates are now available immediately; reputation no longer gates drop rates and the reputation cap is 2,000 · Dragon Rider lance, Wand of the Cywir elders, Orb of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora, Anima core equipment",
-          "requirements": [],
-          "confidence": "confirmed_wiki_and_official_archive",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Heart_of_Gielinor",
-            "title": "Heart of Gielinor",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "desert"
-        },
-        {
-          "name": "Telos weapon progression",
-          "category": "high-end combat weapons",
-          "detail": "Location: Heart of Gielinor · Seren godbow, Staff of Sliske, Zaros godsword",
-          "requirements": [],
-          "confidence": "confirmed_wiki_content_region_inferred",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Telos,_the_Warden",
-            "title": "Telos, the Warden",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "desert"
-        },
         {
           "name": "Drygore weapons",
           "category": "tier-90 melee weapons",
@@ -19332,20 +19400,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Drygore_weapons",
             "title": "Drygore weapons",
-            "verifiedAt": "2026-07-25"
-          },
-          "regionId": "desert"
-        },
-        {
-          "name": "Red sandstone",
-          "category": "flask/Herblore infrastructure",
-          "detail": "daily cap removed in the DailyScape Overhaul, rock hitpoints reduced 50% in the July Mid-Game Rebalance · Locations: Oo'glog, Sophanem",
-          "requirements": [],
-          "confidence": "confirmed_wiki_and_official_archive",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Red_sandstone",
-            "title": "Red sandstone",
             "verifiedAt": "2026-07-25"
           },
           "regionId": "desert"
@@ -19365,69 +19419,6 @@
             "verifiedAt": "2026-07-25"
           },
           "regionId": "desert"
-        },
-        {
-          "name": "Player-owned house portal towns and Construction utilities",
-          "category": "Construction teleport and housing infrastructure",
-          "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock · Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
-          "requirements": [
-            "Construction tutorial / house owned",
-            "Portal location Con levels: Rimmington/Taverley 1, Pollnivneach 20, Rellekka 30, Brimhaven 40, Yanille 50, Menaphos 50 + Jack of Spades, Otot 60 + 1,750 Mazcab reputation, Prifddinas 75 + Plague's End",
-            "Post-13 Jul 2026 POH rework: houses accessible from any portal the player qualifies for; estate agent sets default exit only"
-          ],
-          "confidence": "confirmed_wiki_with_2026_current_rule",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/House_portal",
-            "title": "Player-owned house portal towns and Construction utilities",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "asgarnia",
-            "kandarin",
-            "karamja",
-            "fremennik",
-            "desert",
-            "tirannwn",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "asgarnia",
-            "kandarin",
-            "karamja",
-            "fremennik",
-            "desert",
-            "tirannwn",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Agility Pyramid (Jaleustrophos)",
-          "category": "Agility course and Menaphos reputation supply",
-          "detail": "Dual-purpose Desert Agility training and Menaphos reputation farm via Simon. Pets and familiars banned on the pyramid. Pyramid tops are not stackable and weigh 11 kg — sell before next ascent · Elite diary coin boost is Desert achievements ownership, not a second region · Unlocks: Agility course ending in a pyramid top artefact per successful top claim + doorway exit, Simon Templeton exchange: 1,000 coins and 200 Menaphos reputation per pyramid top (10,000 coins per top with elite Desert achievements), 1,500 Agility XP per clean full lap (700 XP at doorway) as course infrastructure, Fast access via Pharaoh's sceptre / Sceptre of the gods Jaleustrophos teleport or Desert amulet 2+ Nardah run",
-          "requirements": [
-            "30 Agility",
-            "Desert heat mitigation until Crocodile Tears heat immunity (waterskins, enchanted water tiara, or robes)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Agility_Pyramid",
-            "title": "Agility Pyramid (Jaleustrophos)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
         },
         {
           "name": "Desert amulet 1-4",
@@ -19504,107 +19495,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Desert cactus Farming patches",
-          "category": "Farming patch infrastructure",
-          "detail": "Anachronia northern totem cactus is separate region geography — Menaphos patch is the Imperial-district build, not VIP · Anachronia patch is Anachronia pressure only · Unlocks: Three Desert cactus patches (Al Kharid gardener Ayesha; Menaphos Imperial gardener Zahra; Het's Oasis gardener Grouch), Cactus spines, potato cactus, dragonfruit, and related produce for Herblore and secondary uses",
-          "requirements": [
-            "55 Farming for cactus seeds (higher seeds: prickly pear 76, potato cactus 86, dragonfruit 95, golden dragonfruit 116)",
-            "Menaphos Imperial cactus: mine sandstone boulder and give Zahra 12 unnoted acadia logs to build (~10 minutes)",
-            "Hard Desert achievements for disease-free + double spines / potato cactus on Al Kharid, Menaphos, and Het's Oasis patches"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Cactus_patch",
-            "title": "Desert cactus Farming patches",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Crimson skillchompas (Desert Quarry Hunter site)",
-          "category": "Hunter skillchompa supply",
-          "detail": "Continue2 closing the skillchompa ladder between cobalt/azure/crystal sites and the desert crimson tier. No invented trap rates · Hard Desert for wild site. PoF produce is Kandarin support · Unlocks: Stackable crimson skillchompa tools: dragon/orikalkum-equivalent hatchet, pickaxe, and mattock where applicable, Shared skillchompa effects: +10% XP on successful actions (except Mining crit model); 5% of successful XP on failed attempts; one consumed per XP grant, Mining: consumed on critical swing for +60 bonus crit damage, Divination: +15% enriched memory chance; Fishing: +4% catch chance, Player-owned farm crimson chinchompa produce path is Kandarin support, not a second hard gate for the wild site · Region pressure: Hard Desert under League Desert badge for Desert Quarry wild catches",
-          "requirements": [
-            "89 Hunter to catch crimson skillchompas in the Desert Quarry Hunter area",
-            "61 in the relevant gather skill to wield/use as tool (Fishing, Mining, Woodcutting, Divination, Archaeology)",
-            "Optional: 94 Agility for guaranteed minimum 2 catches per successful trap action (wiki drop-source note)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crimson_skillchompa",
-            "title": "Crimson skillchompas (Desert Quarry Hunter site)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "kandarin"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / kandarin",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Crocodile Tears desert heat immunity",
-          "category": "permanent desert logistics unlock",
-          "detail": "The permanent skilling logistics prize of the Crondis quest is heat immunity plus reputation multiplier — not the combat fight itself. Enchanted water tiara remains useful only before this quest · Skill gates remain even if Menaphos access is league-granted early · Unlocks: Permanent immunity to desert heat (re-log if heat still applies after quest complete), Menaphos reputation gain increased to 150%, Relic of Crondis for a chosen Menaphos faction reputation dump, Access to Crondis tomb (Nekhakha, Crondis mask, first-visit Constitution XP), Makes waterskins / enchanted water tiara obsolete for heat mitigation",
-          "requirements": [
-            "Crocodile Tears completed (Menaphos-era Crondis quest chain through Jack of Spades / Spirits of the Elid / Missing My Mummy / Dealing with Scabaras path)",
-            "Skill gates on the quest: 30 Agility, 72 Fishing, 73 Hunter, 47 Woodcutting (plus combat for Ukunduka)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Crocodile_Tears",
-            "title": "Crocodile Tears desert heat immunity",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Dundee's Crocodile Upgrades",
-          "category": "permanent Hunter upgrade shop",
-          "detail": "Permanent account upgrades tracked by lifetime scarabs caught. Distinct from powder crafting and flower Farming rows. Achievement The Crocodile Hunter / Golden Crocodile Hunter track non-cosmetic / full unlocks · Unlocks: Increased catch rate (+10% success) at 250 scarabs, 25% double loot chance at 500, 25% flower-save chance at 1,000, +5% scarab XP at 1,500, Automatic shell looting at 2,500, Increased scarab click-stack size to 5 at 3,000, Golden crocodile cosmetic at 5,000 · Region pressure: Desert owns Dundee shop and crocodile Hunter ponds., Pairs with prayer powder production for full oasis Hunter value",
-          "requirements": [
-            "Het's Oasis scarab / whirligig Hunter activity access",
-            "Lifetime scarabs caught thresholds (not consumed currency): 250 / 500 / 1,000 / 1,500 / 2,500 / 3,000 / 5,000"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Dundee%27s_Crocodile_Upgrades",
-            "title": "Dundee's Crocodile Upgrades",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Enchanted water tiara",
           "category": "permanent desert heat headgear tool",
           "detail": "Pre–Crocodile Tears desert logistics staple for granite/sandstone quarry, necrite Uzer, crimson skillchompas, and Agility Pyramid. Becomes obsolete after Crocodile Tears heat immunity. Only one enchanted water tiara may be owned; falling below 50 RC reverts it to a normal water tiara. Cannot be used on the wicked hood · After Crocodile Tears, prefer heat immunity over charging this tiara · Unlocks: Head-slot replacement for waterskins while worn — 1 charge consumed per desert heat drink trigger, Up to 500,000 stored charges for multi-hour desert Mining / Hunter / Agility without waterskin inventory, Prayer bonus 2 as minor side stat, Destroyed form returns water tiara + unused water runes to the floor",
@@ -19618,30 +19508,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Enchanted_water_tiara",
             "title": "Enchanted water tiara",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Farmer's outfit",
-          "category": "Farming XP outfit",
-          "detail": "Equipment split from activity unlocks list. Distinct from (POF beans + fragments) · Keep separate from Kandarin master farmer · Effects: 1% Farming XP per worn piece, +1% set bonus when all five pieces worn (6% total), Modified farmer's hat path (seed-save chance and teleports) when add-on applied, XP bonus is the base layer inherited by master farmer elite set once farmer outfit worn",
-          "requirements": [
-            "Sydekix's Shop of Balance (Garden of Kharid): 10,000 Crux Eqal favour per piece (50,000 full set)",
-            "Alternate historical: Cabbage Facepunch Bonanza renown (not League default)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Farmer%27s_outfit",
-            "title": "Farmer's outfit",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
@@ -19725,31 +19591,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Kharid-et Dig Site",
-          "category": "Archaeology dig site progression",
-          "detail": "Canonical Desert dig site in league mapping (Kharid-et → desert). Pylon charge is a shared world state; batteries are unbankable hand-ins. Robust-glass Archaeology collections that include Kharid-et artefacts are multi-region production rows elsewhere · Inquisitor staff and heist are Desert pressures, not global freebies · Unlocks: Early-to-late Archaeology ladder on Desert geography (venator remains through praetorian content), Pylon battery turn-ins for Protection of Zaros (+10% Archaeology XP, +5% mattock precision while charged), Shadow anchors and praetorium access for inquisitor staff piece rolls, Vault of Hereditas heist entrance (95 Thieving) as Desert Archaeology/Thieving crossover, Zarosian materials and artefacts feeding collections and production research",
-          "requirements": [
-            "5 Archaeology to begin exterior excavation",
-            "What Lies Beneath? mystery / Dr Nabanik entry path for fortress progression",
-            "Higher-level hotspots through prison, chapel, vault, and praetorium (up to 107+)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Kharid-et_Dig_Site",
-            "title": "Kharid-et Dig Site",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Menaphos soul obelisks (daily reputation + RC/Prayer)",
           "category": "permanent Menaphos daily reputation and Runecrafting/Prayer infrastructure",
           "detail": "Primary daily Menaphos reputation spike called out only as a footnote under VIP. Distinct from (Imperial fountain charge-and-craft) · Hard Desert daily infrastructure for VIP / district tier unlocks · Unlocks: World soul-obelisk spawns in Imperial, Merchant, Worker, or Port (~45–80 minutes between spawns; one active per world), Daily hard-capped interactions (236) granting overall + district reputation, Runecrafting XP, and Prayer XP (Prayer below 50 doubles RC instead), Base ~85 reputation per 4.8s tick; Menaphos quest chain multiplies daily reputation ceiling through Pharaoh's Folly, Unexpected Diplomacy relic applies +10% to soul-obelisk reputation ( · Region pressure: Hard Desert / Menaphos: all four spawn sites and the reputation interface are city geography., Leela's favour / Shifting Tombs district teleports are same-region travel QoL only",
@@ -19772,30 +19613,6 @@
           "requiredRegions": [
             "desert"
           ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos mineral deposits (Worker + VIP sandstone)",
-          "category": "Mining activity and Crafting glass supply",
-          "detail": "Often called concentrated sandstone in community guides; wiki primary page is mineral deposit. Distinct from red sandstone rocks used for potion flasks at Sophanem / Oo'glog. Worker tier 8 reputation improves mining damage on these deposits · Desert midgame Mining spike. Keep separate from red-sandstone flask infrastructure · Unlocks: Sandstone from mineral deposits (Worker quarry and VIP), Midgame Mining training loop with Worker-district furnace / pottery adjacency, Sandstone stockpile for glass and related Crafting / Construction pressure",
-          "requirements": [
-            "50 Mining for mineral deposits",
-            "Menaphos Worker district access (VIP deposits need overall reputation tier 7)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Mineral_deposit",
-            "title": "Menaphos mineral deposits (Worker + VIP sandstone)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -19840,29 +19657,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Elidinis_Statuette",
             "title": "Nardah Elidinis Statuette",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Pontifex observation ring",
-          "category": "Divination XP and chronicle utility ring",
-          "detail": "Desert/quest archaeology pressure; strong Divination permanent · Effects: Divination XP boost, Increased chronicle fragment spawn rate, Upgradeable after Extinction",
-          "requirements": [
-            "Azzanadra's Quest path / archaeology-related upgrades as wiki"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pontifex_observation_ring",
-            "title": "Pontifex observation ring",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
@@ -19954,56 +19748,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Pyramid Plunder (Jalsavrah / Sophanem)",
-          "category": "Thieving minigame infrastructure",
-          "detail": "minigame package. Does NOT add a separate sceptre equipment row — sceptre/SotG are rewards and teleports inside this activity; amulet diary already tracks SotG charge caps. Prefer room 7–8 urn focus for XP; room gates are hard level checks · Link for outfit XP bonuses · Unlocks: Five-minute Thieving minigame across eight rooms (urns, grand gold chests, sarcophagi, spear traps, tomb doors), Pharaoh's sceptre rare drop from grand gold chests / sarcophagi — Jalsavrah teleport loop for re-entry, Sceptre of the gods rare from engraved sarcophagus (room 8: 91 Thieving + 75 Runecrafting) — more urns while equipped and improved black-ibis odds, Artefacts for Simon Templeton coin path; Menaphyrite gem chance from urns, Black ibis outfit pieces from urns / chests / sarcophagi ( · Region pressure: Desert owns Sophanem / Jalsavrah and all loot geography., Tirannwn optional ceiling: Crystal Mask + Light Form success stack on urns., Desert amulet 3+ permanent (not worn) reduces spawns and doubles sceptre recharge charges",
-          "requirements": [
-            "Sophanem access (started Icthlarin's Little Helper in the normal game)",
-            "21 Thieving for room 1; +10 Thieving per room through room 8 at 91 (boosts cannot open higher rooms)",
-            "Optional: Contact! for Sophanem bank; hard Desert achievements reduce mummy/scarab spawns and double sceptre charges"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Pyramid_Plunder",
-            "title": "Pyramid Plunder (Jalsavrah / Sophanem)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Red sandstone and potion flasks",
-          "category": "Herblore flask infrastructure",
-          "detail": "Red sandstone at Sophanem and Oo'glog feeds potion-flask production. The 2026 DailyScape overhaul removed the old daily mining cap; July 2026 mid-game rebalance reduced rock hitpoints. Crystal flasks for combination potions remain a separate Tirannwn unlock. Sophanem is the pure Desert half of the supply · Desert owns Sophanem rocks; Oo'glog is Kandarin pressure for a second rock set. Enriched overwrite of the 2026-07-25 row · Unlocks: Robust glass from red sandstone, Potion flasks (six-dose standard potions)",
-          "requirements": [
-            "Access to red sandstone rocks at Sophanem (Desert) and/or Oo'glog (Kandarin geography pressure)",
-            "Crafting level to blow robust glass into potion flasks in the normal game"
-          ],
-          "confidence": "confirmed_wiki_and_2026_current_rule",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Red_sandstone",
-            "title": "Red sandstone and potion flasks",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "kandarin"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / kandarin",
-          "isRegionCombo": false
-        },
-        {
           "name": "Sceptre of the gods",
           "category": "permanent Pyramid Plunder tool and desert teleport network",
           "detail": "Superior ironman sibling of the tradeable Pharaoh's sceptre. Camouflage outfit no longer boosts sceptre chance (2026). Keep separate from combat wand claims — this is the desert teleport + Plunder QoL tool · Diary charge caps require Desert Area Tasks ownership · Unlocks: Untradeable sceptre with teleports: Jalsavrah (Pyramid Plunder), Jaleustrophos (Agility Pyramid), Jaldraocht (Azzanadra's pyramid), Jalkabir (Menaphos Golden Palace), Charge caps: 10 base, 20 with medium Desert achievements, 60 with",
@@ -20016,31 +19760,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sceptre_of_the_gods",
             "title": "Sceptre of the gods",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Shifting Tombs (Menaphos supply and multi-skill XP)",
-          "category": "skilling minigame and regional supply",
-          "detail": "Core Desert multi-skill minigame and reputation engine. Must exit via rope before the timer for completion rewards; timed-out runs grant no completion XP/reputation/fragments. Overall reputation tier 5 improves feather/gold rewards · Unlocks: Selectable primary XP: Dungeoneering, Agility, Thieving, Construction (or coins if all statues off), Selectable secondary XP: Crafting, Runecrafting, Prayer, Divination, Menaphos reputation on successful timed exits, Feathers of Ma'at from treasure chests (Sophanem Slayer supply), Soul talisman chance (1/200) from sarcophagi — safer ironman soul-altar path than feline akhs, Camouflage fragments for master camouflage outfit at ~5x normal Thieving fragment rate on full clears, District Shifting Tombs entrances as Menaphos quick-travel",
-          "requirements": [
-            "The Jack of Spades completed for access",
-            "Tier 1: 50+ Dungeoneering, Agility, Thieving, Construction",
-            "Tier 2: 70+ in primary and secondary skills; Tier 3: 90+ (boosts do not work)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Shifting_Tombs",
-            "title": "Shifting Tombs (Menaphos supply and multi-skill XP)",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
@@ -20076,57 +19795,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Soul altar (Menaphos Imperial)",
-          "category": "Runecrafting altar infrastructure",
-          "detail": "Soul altar is Menaphos Imperial geography. Abyss route still pressures Forinthry for high-throughput essence ferry if using Wilderness entrance — pure essence supply is global. Soul talismans can come from Shifting Tombs sarcophagi. Protean/unstable essence skip charging · Abyss ferry remains optional multi-region pressure, not a second Desert claim · Unlocks: Soul rune production via charger + altar (unique charge workflow vs standard altars), Soul runes for high-level Magic, Summoning-adjacent costs, and skilling spells that demand souls, Fairy ring CKQ near Imperial fountain for local access; Imperial tier 6 bank chest near Grand Library for charger loops",
-          "requirements": [
-            "'Phite Club completed to access soul ruins under the Imperial fountain",
-            "90 Runecrafting to craft soul runes (boostable from lower levels for first crafts)",
-            "Soul talisman / tiara / omni / wicked hood path or Abyss access to enter",
-            "Pure essence supply for the charge-and-craft mechanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Soul_altar",
-            "title": "Soul altar (Menaphos Imperial)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Spectral lens",
-          "category": "Slayer helmet Necromancy component",
-          "detail": "Necromancy-style counterpart to hexcrest/focus sight. Ensouled form attaches to full+ helmets so all four styles share one worn helm. Ritual is 80 Necromancy at a tier-2 ritual site (City of Um / Misthalin pressure for ensoul step, not for the drop) · Desert owns the drop. Misthalin/City of Um owns the practical ensoul ritual site for ironman · Effects: On task: +7.5% Necromancy damage and +12.5% Necromancy accuracy, Transforms via ensoul spectral lens ritual into ensouled spectral lens for attachment to full slayer helmet or better · Region status: confirmed_wiki_league_region",
-          "requirements": [
-            "Profane Scabarite / Elite Profane Scabarite kills (Desert)",
-            "20 Necromancy, 20 Defence, Necromancy! quest to wear",
-            "On-task (Profane Scabarites or Scabarites) improves drop rate"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Spectral_lens",
-            "title": "Spectral lens",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Statue of Het (oasis skilling XP blessing)",
           "category": "permanent Het's Oasis skilling buff infrastructure",
           "detail": "Hard Desert Het for oasis training throughput · Unlocks: Fully repaired Statue of Het in the oasis centre, Blessing of Het (status): +10% skilling XP while training at Het's Oasis, No further Pieces of Het after full repair · Region pressure: Hard Desert: statue, piece drops from oasis skilling, and the +10% buff are all Het's Oasis-local",
@@ -20149,91 +19817,6 @@
           "requiredRegions": [
             "desert"
           ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Sumona (Pollnivneach Slayer Master)",
-          "category": "regional Slayer master hub",
-          "detail": "Mid-hard master bridge when combat/Slayer is too low for Duradel. NPC Contact (Lunar Diplomacy) and ring of slaying / desert amulet / Pollnivneach teleports are logistics, not region gates · Hard Desert master. Score task geography separately when ranking region picks · Unlocks: 12 Slayer points per task with Smoking Kills (6 without); 60/180 on 10th/50th; long-term avg ~19.2, Task list similar to Duradel but typically lower quantities, Late unlocks can include corrupted creatures when quest gates met, Slayer Rewards shop + equipment stock; 5 co-op Slayer points on social tasks · Region pressure: Desert owns the master NPC and Pollnivneach / smoke-dungeon tasks., Task monsters still scatter across Karamja, Morytania, Forinthry, Kandarin, etc. — master region ≠ task region (combo:slayer-masters-vs-task-regions) · Region status: confirmed_wiki_league_region",
-          "requirements": [
-            "Smoking Kills completed",
-            "Combat level 90 and 35 Slayer to take assignments",
-            "Pollnivneach house (central Pollnivneach)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Sumona",
-            "title": "Sumona (Pollnivneach Slayer Master)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "karamja",
-            "morytania",
-            "forinthry",
-            "kandarin",
-            "tirannwn",
-            "anachronia"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / karamja / morytania / forinthry / kandarin / tirannwn / anachronia",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Unexpected Diplomacy (Seal of the Praefectus Praetorio)",
-          "category": "Archaeology monolith relic power",
-          "detail": "Cheap energy (50) early reputation accelerator — high League value for Menaphos VIP / district unlocks · Hard Desert via Kharid-et Zarosian I · Unlocks: Unexpected Diplomacy relic power, +10% reputation gains at Heart of Gielinor, Farming Guild (Manor Farm), Menaphos, and Mazcab, Applies to crystal/gift-offering/burial-charm style reputation dumps as well as normal gains · Region pressure: Desert: Kharid-et Zarosian I is the artefact gate; Menaphos reputation is a primary beneficiary., Farming Guild reputation is Kandarin optional value; Heart/Mazcab are multi-region destinations",
-          "requirements": [
-            "Zarosian I collection for Soran → Seal of the Praefectus Praetorio",
-            "25 Archaeology (boostable); 1,000 chronotes and 50 monolith energy to harness"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Unexpected_Diplomacy",
-            "title": "Unexpected Diplomacy (Seal of the Praefectus Praetorio)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Vault of Hereditas heist",
-          "category": "Thieving heist activity (post-2025)",
-          "detail": "Logging out resets progress and deletes loot. json · Archaeology mystery gate remains Desert dig-site progress · Unlocks: Primary 95–108 Thieving heist loop after the November 2025 Heists update, Loot-point exit XP (base 400 per loot point with rare chest looted; half without rare chest), Heist supply / reward path distinct from Pyramid Plunder and safecracking, Cross-skill pressure into Kharid-et Archaeology logistics · Region pressure: Desert owns Kharid-et vault entrance and heist instance., Sticky Fingers / Crystal Mask / Light Form / Ring of Vitur are optional multi-region success stacks for dead-legionary pickpockets inside",
-          "requirements": [
-            "95 Thieving (not boostable for entry)",
-            "Breaking the Seal Archaeology mystery completed",
-            "72 Agility recommended for crevices",
-            "102 Thieving recommended for safes (98 with abyssal lurker scroll; 101 with Thieving cape boost)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Vault_of_Hereditas",
-            "title": "Vault of Hereditas heist",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -20317,179 +19900,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Ring of slaying (equipment)",
-          "category": "permanent Slayer teleport jewellery equipment",
-          "detail": "Equipment for (Learn-only row). Teleports pressure Desert, Morytania, Fremennik, and Haunted Mine (Morytania/Misthalin boundary). Not a combat BiS ring · Global points for Learn/buy. Destination regions matter for task logistics scoring · Effects: 8 teleports per ring: Sumona (Pollnivneach), Slayer Tower, Fremennik Slayer Dungeon entrance, Tarn's Lair, Right-click contact Slayer Masters / check task kills remaining / check Slayer points without spending charges, Social Slayer invite by using ring on partner (same task or both free), Depleted ring collapses to enchanted gem; fusable into full slayer helmet",
-          "requirements": [
-            "multi-region:ring-of-slaying-craft (300 Slayer points Learn) for self-craft path",
-            "OR buy finished rings for 75 Slayer points each from any Slayer Rewards shop",
-            "75 Crafting at a furnace (boostable / Assist if Learn owned): enchanted gem + gold bar → 8-charge ring",
-            "Haunted Mine for Tarn's Lair teleport destination",
-            "Enchanted gem stock from Slayer Masters (shared daily stock; Turael/Spria hold a separate Burthorpe stock)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ring_of_slaying",
-            "title": "Ring of slaying (equipment residual)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "morytania",
-            "fremennik",
-            "asgarnia"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / morytania / fremennik / misthalin / asgarnia",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Ring of slaying (craft unlock)",
-          "category": "permanent Slayer teleport jewellery unlock",
-          "detail": "Core midgame teleport QoL. Enchanted gem stock is daily-limited from Slayer Masters (including Turael/Spria separate stock). Compacted ring exists via teleportation compactor (Invention) · Craft unlock is global points. Teleport destinations pressure Desert, Morytania, Fremennik, and Morytania/Misthalin for Tarn's Lair quest gate · Region combo (all required): desert + morytania + fremennik + misthalin · Effects: 8 teleports per crafted ring: Sumona (Pollnivneach), Slayer Tower, Fremennik Slayer Dungeon, Tarn's Lair (Haunted Mine), Contact Slayer Masters / check task and points without spending charges (enchanted-gem functions), Social Slayer invite via use-on-player, Fusable into full slayer helmet",
-          "requirements": [
-            "300 Slayer points: Learn how to craft rings of slaying",
-            "75 Crafting at a furnace (boostable / Assist allowed if unlock owned)",
-            "Enchanted gem + gold bar per ring",
-            "Alternate: buy finished rings for 75 points each without craft unlock"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ring_of_slaying",
-            "title": "Ring of slaying (craft unlock)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "morytania",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "desert",
-            "morytania",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + fremennik",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Learn broad arrow / bolt fletching (300 Slayer points)",
-          "category": "permanent Slayer Rewards Learn unlock",
-          "detail": "Trimmed completionist path includes this Learn set with helmet craft and quick killing blows. Distinct from buying finished broads in the Buy tab · Global permanent unlock; fund with any region's point-capable masters after Smoking Kills · Unlocks: Permanent ability to fletch broad arrows and broad-tipped bolts from purchased unfinished broad tips + headless arrows / feathers, Self-sufficient ironman ammo for broad-ammo-only tasks (e.g. kurasks, warped terrorbirds pathing) without GE finished ammo, Points can still buy finished broad packs (35 points per tiered packs) as a temporary bridge before the Learn unlock · Region pressure: Point farm follows high masters (Desert/Karamja/Kandarin/Tirannwn/Anachronia)., Fletching skill training is multi-region and not gated by this unlock",
-          "requirements": [
-            "300 Slayer points (unique Learn purchase at any Slayer Rewards shop)",
-            "52 Fletching for broad arrows; 55 Fletching for broad-tipped bolts",
-            "Assist System usable for the fletch levels"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_Rewards",
-            "title": "Learn broad arrow / bolt fletching (300 Slayer points)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "karamja",
-            "kandarin",
-            "tirannwn",
-            "anachronia",
-            "misthalin",
-            "morytania",
-            "forinthry"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): desert / karamja / kandarin / tirannwn / anachronia / misthalin / morytania / forinthry",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Hard Desert Keris upgrade",
-          "category": "regional achievement weapon passive",
-          "detail": "Effects: Against Kalphites and Scabarites, the Keris hit-chance bonus rises from 15% to 25%, Triple-damage chance rises from about 2.5% to 5%",
-          "requirements": [
-            "Contact! for the base Keris in the normal game"
-          ],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Keris",
-            "title": "Hard Desert Keris upgrade",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Anima core armour (GWD2 T80 power)",
-          "category": "mid-high power armour / GWD2",
-          "detail": "Strong League bridge set when Desert is unlocked before Asgarnia Nex. 2026 GWD2 change: best drop rates available immediately; reputation no longer gates drop rates (cap 2,000) · Hard Desert for GWD2 self-supply · Effects: Style-split T80 power sets: Zaros melee, Zamorak ranged, Seren magic, hybrid Sliske, Non-degrading base anima core (no prayer or LP bonuses unlike Torva family), Stats comparable to Nex T80 power armour without Nex access · Region pressure: Desert Heart of Gielinor / GWD2 crests and dormant cores",
-          "requirements": [
-            "80 Defence to wear",
-            "Dormant anima core pieces + Crest of Zaros / Zamorak / Seren / Sliske from Heart of Gielinor (GWD2)",
-            "Combine dormant core with the matching crest"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
-            "title": "Anima core armour (GWD2 T80 power)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Refined anima core armour (GWD2)",
-          "category": "mid-high power armour upgrade / GWD2",
-          "detail": "Refined is a pure Desert continuation of anima core — no second elective region. Useful when GWD2 is the only high combat region online · Hard Desert. Reputation unlocks stay Desert-local · Effects: Upgraded anima core stats (still style-split power armour), Degrades after 100,000 charges back to unrefined; re-refine with more essences, Body and legs augmentable · Region pressure: Desert all four essence types and the reputation unlocks inside Heart of Gielinor",
-          "requirements": [
-            "Base anima core piece of the matching style",
-            "Serenic, Sliskean, Zamorakian, and Zarosian essences (1/2/3 of each for helm/legs/body)",
-            "Unlock refined craft by earning 750 reputation with the matching GWD2 faction (e.g. Zarosian for refined Zaros)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
-            "title": "Refined anima core armour (GWD2)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Achto raids armour (Mazcab)",
           "category": "residual tank armour / raids",
           "detail": "Achto tank sets from Liberation of Mazcab. Hard Desert under Equilibrium Mazcab=Desert mapping. Prefer Cryptbloom / refined anima / style tanks when Desert is not unlocked · Hard Desert. Mazcab maps to Desert elective · Effects: Tier 90 tank sets per style (Primeval magic, Tempest ranged, Teralith melee), Achto set: off-hand shield damage contribution scaling with pieces; chance to reset defensive ability cooldowns when damaged at 3+ pieces, Does not degrade inside Raids; degrades outside and repairs for coins / POH armour stand · Region pressure: Desert owns Liberation of Mazcab / Achto under Equilibrium Mazcab=Desert mapping., Cryptbloom (Misthalin Croesus) remains the elective-region magic-tank alternative path",
@@ -20503,75 +19913,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Primeval_equipment",
             "title": "Achto raids armour residual (Mazcab)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Telos, the Warden",
-          "category": "regional boss BiS drop source",
-          "detail": "Effects: Zaros godsword (t92 melee 2h special), Seren godbow (t92 ranged 2h special), Staff of Sliske (t92 magic 2h special), Reprisal ability codex, Dormant anima-core / orb of pure anima for anima-core upgrades",
-          "requirements": [],
-          "confidence": "confirmed_wiki_content_region_inferred",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Telos,_the_Warden",
-            "title": "Telos, the Warden",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "God Wars Dungeon 2 (Heart of Gielinor)",
-          "category": "regional boss BiS drop source",
-          "detail": "Heart of Gielinor family (Helwyr, Twin Furies, Vindicta, Gregorovic) — Desert, not Asgarnia/Fremennik. 2026: best GWD2 drop rates available immediately; reputation no longer gates rates (cap 2,000). Ironman midgame all-style weapon ladder · Effects: Dragon Rider lance (t85+ melee polearm still used for mobility specials), Wand of the Cywir elders + Orb of the Cywir elders, Shadow glaives (dual ranged), Blade of Avaryss + Blade of Nymora (twin blades), Anima core of Seren / Zaros / Zamorak / Sliske armour paths",
-          "requirements": [],
-          "confidence": "confirmed_wiki_and_official_archive",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Heart_of_Gielinor",
-            "title": "God Wars Dungeon 2 (Heart of Gielinor)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Amascut, the Devourer",
-          "category": "regional boss BiS drop source",
-          "detail": "Menaphos Imperial district. Catalyst labelled Desert: Menaphos. Ironman Necromancy/Magic endgame alongside Sanctum; requires Eclipse of the Heart in the normal game · Hard Desert. Quest auto-completion may soften Eclipse gates but not the Menaphos geography · Effects: Devourer's Guard (t95 Necromancy shield / tank ), Tumeken's Light (t95 Necromancy light source ), Tumeken's resplendence equipment, Shard of Genesis Essence (shared endgame +5 t95 upgrade economy with Sanctum HM)",
-          "requirements": [],
-          "confidence": "historical_catalyst_desert_menaphos_mapping_current_wiki_rewards",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Amascut,_the_Devourer",
-            "title": "Amascut, the Devourer",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",
@@ -20692,33 +20033,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "GWD2 anima core and mid-tier melee/ranged weapons",
-          "category": "tier-80/85 combat gear region package",
-          "detail": "Desert package that feeds both styles and Invention perk economy. Reputation no longer gates best drop rates (2026) · Single Desert acquisition region for GWD2 uniques · Effects: Strong midgame power armour before malevolent / sirenic / masterwork, Anima core legs of Zaros disassembly is a major Aftershock component source for all styles · Unlocks: Anima core of Zaros armour (melee power T80), Anima core of Zamorak armour (ranged power T80), Dragon Rider lance, Shadow glaives (T85* ranged, no ammo), Ilujankan components from Zaros anima for Aftershock perk family",
-          "requirements": [
-            "Heart of Gielinor / God Wars Dungeon 2 access",
-            "Anima core of Zaros (melee) / Zamorak (ranged) cores + dormant anima core armour",
-            "Dragon Rider lance (T85* halberd), Blades of Nymora/Avaryss, Shadow glaives"
-          ],
-          "confidence": "confirmed_wiki_and_official_archive_region",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Anima_core_of_Zaros_armour",
-            "title": "GWD2 anima core and mid-tier melee/ranged weapons",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Seren godbow",
           "category": "tier-92 two-handed ranged weapon and EoF special",
           "detail": "Desert ranged crown jewel from Telos. Bolg rather than being fully replaced for special-attack purposes · Hard Desert self-source under current GWD2/Telos mapping · Effects: Crystal Rain remains one of the highest-value ranged specials even after Bolg, Often sacrificed into Essence of Finality while a higher bow is wielded · Unlocks: Seren godbow T92, Crystal Rain special (high value on large targets; common EoF store)",
@@ -20773,75 +20087,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Kalphite King",
-          "category": "regional boss BiS drop source",
-          "detail": "Exiled Kalphite Hive south of Jaldraocht. Wiki Equilibrium badge: Desert. Ironman t90 DW melee self-source before Leng / higher duals · Hard Desert elective. Badge Desert ✓ · Effects: Drygore longsword / mace / rapier + off-hands (t90 melee DW — sole source), Perfect chitin → t90 defender assembly with off-hand drygore / ascension / seismic OH, Damaged chitin (always)",
-          "requirements": [],
-          "confidence": "confirmed_current_wiki_league_desert_badge",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Kalphite_King",
-            "title": "Kalphite King",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "The Magister",
-          "category": "Slayer boss uniques",
-          "detail": "Gloves of passage, phylactery / blessings for khopesh upgrades. 115 Slayer + Key to the Crossing.",
-          "requirements": [],
-          "confidence": "confirmed_current_wiki_league_desert_badge",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/The_Magister",
-            "title": "The Magister",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Liberation of Mazcab (Beastmaster Durzag / Yakamaru)",
-          "category": "Raid",
-          "detail": "Beastmaster Durzag and Yakamaru. Achto armour, Mazcab ability codex, teci sinks.",
-          "requirements": [],
-          "confidence": "confirmed_user_rule_mazcab_desert_2026_07_26",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Liberation_of_Mazcab",
-            "title": "Liberation of Mazcab (Beastmaster Durzag / Yakamaru)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Devourer's Guard",
           "category": "tier-95 Necromancy main-hand weapon",
           "detail": "Hard Desert. Pair with Misthalin soulbound lantern for full DW if Rasial is unlocked · Effects: Tied with omni guard for strongest MH Necromancy weapon, Does not degrade in unaugmented state, Desert Amascut path alternative to Misthalin Rasial omni guard package · Unlocks: Devourer's Guard (T95 MH Necromancy siphon), Soul Crush special + Soul Reave passive -soul generation · Region pressure: Desert Amascut drop (wiki League Desert badge on all enrage tables)",
@@ -20868,39 +20113,6 @@
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
-        },
-        {
-          "name": "Masterwork 2h sword",
-          "category": "tier-99/100 smithable two-handed melee weapon",
-          "detail": "Missing high-end smithable 2h. Distinct from and trimmed masterwork armour · Region combo Asgarnia + Desert + Forinthry for self-source. GE essence does not erase ironman geography · Region combo (all required): asgarnia + desert + forinthry · Effects: Cheaper T100-stat 2h melee path vs EZK / Tumeken's Light when boss drops are region-locked, No DPS special — competes on stats + sustain passive, Shares essence-break economy with other masterwork style weapons · Unlocks: Masterwork 2h sword (T99 weapon with T100 stats), Masterworked Mending passive (2% heal of damage dealt) · Region pressure: Asgarnia + Desert + Forinthry all hard for full ironman self-source (smith hub + drygore/fury + chaotic)",
-          "requirements": [
-            "99 Attack to wield; 110 Smithing + It Still Should Have Been Called Aetherium",
-            "Forinthry: 2 chaotic melee weapons → chaotic essence (Daemonheim tokens)",
-            "Desert: 2 drygore weapons → kalphite essence; 2 Twin Furies blades (Nymora/Avaryss) → demonic essence",
-            "Asgarnia: Artisans' Workshop / smithing hub pressure for glorious/primal chain and dragon-forge essence break-downs",
-            "Primed glorious bars, primal bars, moonstone chaos-infuse, undead dragon leather grip"
-          ],
-          "confidence": "confirmed_current_wiki_cross_region_chain",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Masterwork_2h_sword",
-            "title": "Masterwork 2h sword",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "asgarnia",
-            "desert",
-            "forinthry"
-          ],
-          "requiredRegions": [
-            "asgarnia",
-            "desert",
-            "forinthry"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): asgarnia + desert + forinthry",
-          "isRegionCombo": true
         },
         {
           "name": "Masterwork staff",
@@ -21050,110 +20262,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Dragon Rider lance",
-          "category": "GWD2 two-handed melee polearm",
-          "detail": "Effects: Halberd-range T85* melee with strong mobility special still used in many rotations, Midgame 2h ladder piece before scythe / Ek-ZekKil / Tumeken's Light · Unlocks: Dragon Rider lance · Region pressure: Desert GWD2 Vindicta self-supply",
-          "requirements": [
-            "85 Attack to wield (tier-85* accuracy polearm)",
-            "Vindicta / Gorvek in Heart of Gielinor (GWD2)"
-          ],
-          "confidence": "confirmed_wiki_and_official_archive_region",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Dragon_Rider_lance",
-            "title": "Dragon Rider lance",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Wand / Orb of the Cywir elders",
-          "category": "GWD2 dual-wield Magic weapons",
-          "detail": "Magic missing from magic-necro pack (that pack focused FSoA/seismic/praesul/roar). only lists Cywir in effects · Effects: T85* accuracy Magic DW pair with strong midgame performance before seismic / praesul / FSoA, Common ironman Magic bridge when Asgarnia Nex/Vorago is locked · Unlocks: Wand of the Cywir elders, Orb of the Cywir elders · Region pressure: Desert Helwyr Cywir self-supply",
-          "requirements": [
-            "85 Magic to wield",
-            "Helwyr in Heart of Gielinor (GWD2)"
-          ],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Wand_of_the_Cywir_elders",
-            "title": "Wand / Orb of the Cywir elders",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Shadow glaives",
-          "category": "GWD2 dual-wield Ranged weapons",
-          "detail": "Effects: T85* accuracy / T80 damage dual thrown weapons; no ammo, Strong midgame ranged DW before blightbound / ascension / Bolg · Unlocks: Shadow glaive + off-hand shadow glaive · Region pressure: Desert Gregorovic glaive self-supply",
-          "requirements": [
-            "85 Ranged to wield",
-            "Gregorovic in Heart of Gielinor (GWD2)"
-          ],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Shadow_glaive",
-            "title": "Shadow glaives",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Blade of Avaryss / Blade of Nymora",
-          "category": "GWD2 dual-wield melee weapons",
-          "detail": "Not khopeshes. densify under thin GWD2 weapon package · Effects: T85* accuracy dual blades midgame melee DW before drygore / Leng / khopesh T92, GWD2 melee weapon distinct from Dragon Rider lance 2h path · Unlocks: Blade of Avaryss, Blade of Nymora · Region pressure: Desert Twin Furies self-supply",
-          "requirements": [
-            "85 Attack to wield",
-            "Twin Furies (Avaryss + Nymora) in Heart of Gielinor (GWD2)"
-          ],
-          "confidence": "confirmed_current_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Blade_of_Avaryss",
-            "title": "Blade of Avaryss / Blade of Nymora",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Dreadnips",
           "category": "Dominion Tower permanent combat reward",
           "detail": "Track the permanent reward gate without importing old boss-use or damage advice · Unlocks: Ability to claim and deploy Dreadnips",
@@ -21167,32 +20275,6 @@
             "url": "https://runescape.wiki/w/Dreadnip",
             "title": "Dreadnips",
             "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Vampyrism Aspect",
-          "category": "Ancient Magicks combat Aspect",
-          "detail": "Ancient Magicks Aspect (69 Magic): heal 5% of damage dealt (cap 50 LP/hit) for 12 minutes. One Aspect at a time. Replaces the old Vampyrism aura.",
-          "requirements": [
-            "69 Magic",
-            "Ancient Magicks spellbook (Desert Treasure path)"
-          ],
-          "confidence": "confirmed_official_2026",
-          "source": {
-            "source": "jagex",
-            "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-            "title": "Patch Notes: Aura Overhaul",
-            "verifiedAt": "2026-04-13"
           },
           "regionId": "desert",
           "regionHints": [

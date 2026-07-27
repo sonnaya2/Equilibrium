@@ -384,6 +384,15 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Kharid-et Dig Site":
     "Pontifex observation ring, Tetracompass, Inquisitor staff",
   "Pontifex observation ring": "Pontifex observation ring",
+  "Vampyrism Aspect": "Vampyrism Aspect",
+  "Vault of Hereditas": "Vault of Hereditas",
+  "Spectral lens": "Spectral lens",
+  "Farmer's outfit": "Farmer's outfit",
+  "Crimson skillchompas": "Crimson skillchompas",
+  "Unexpected Diplomacy": "Seal of the Praefectus Praetorio",
+  "Dundee's Crocodile Upgrades": "Crocodile upgrades",
+  "Hard Desert Keris upgrade": "Keris",
+  "Desert amulet": "Desert amulet",
   // Wilderness Slayer rewards defined earlier (dark onyx core + chest).
   "Everlight Dig Site":
     "Porcelain clay, Inspire Effort, Sticky Fingers, Heightened Senses, Tetracompass",

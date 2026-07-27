@@ -22457,19 +22457,18 @@
           "isRegionCombo": false
         },
         {
-          "name": "Sophanem plover birds and Slayer support skilling",
-          "category": "Hunter activity and Slayer supply adjacency",
-          "detail": "Skilling-focused Sophanem pointer. Combat drops from the dungeon and The Magister are combat-pass concerns; feathers of Ma'at and plover reputation are the skilling hooks · Unlocks: Plover bird Hunter method with elevated Menaphos reputation gain, Sophanem as twin-city support for Pyramid Plunder, red sandstone, and Slayer dungeon logistics",
+          "name": "Sophanem plover birds",
+          "category": "Hunter",
+          "detail": "73 Hunter in Sophanem. Good Menaphos reputation while catching. Near Pyramid Plunder, red sandstone, and the Slayer dungeon. Feathers of Ma'at for dungeon kills mostly come from Shifting Tombs.",
           "requirements": [
-            "73 Hunter for plover birds in Sophanem",
-            "Feathers of Ma'at for Sophanem dungeon kills (sourced from Shifting Tombs chests among other places)"
+            "73 Hunter for plover birds in Sophanem"
           ],
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Plover_bird",
-            "title": "Sophanem plover birds and Slayer support skilling",
-            "verifiedAt": "2026-07-26"
+            "title": "Sophanem plover birds",
+            "verifiedAt": "2026-07-27"
           },
           "regionId": "desert",
           "regionHints": [

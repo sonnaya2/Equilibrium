@@ -5,6 +5,7 @@ import {
   mapCatalystLocality,
   regionDisplayName,
 } from "./regionMap";
+import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import snapshot from "#data/league/catalyst-tasks-snapshot.json";
 
 export {
@@ -46,18 +47,6 @@ export interface CatalystTaskLoadResult {
   records: CatalystTaskRecord[];
   error?: string;
   fromSnapshot?: boolean;
-}
-
-function decodeHtmlEntities(value: string): string {
-  return value
-    .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCodePoint(Number.parseInt(code, 16)))
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">");
 }
 
 function textFromHtml(value: string): string {

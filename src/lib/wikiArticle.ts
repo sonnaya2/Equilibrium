@@ -178,12 +178,23 @@ function clampHtml(html: string, max: number): string {
  * Closers must match openers — a bare `<button>` without `</button>` in the
  * closer set used to swallow entire articles (infobox mode toggles on Zuk/etc.).
  */
+const DANGEROUS_OPEN =
+  "script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|video|audio";
+
 export function stripWikiChromeKeepImages(html: string): string {
   let out = html;
   out = out.replace(/<!--[\s\S]*?-->/g, "");
   // Paired elements only (open + matching close).
   out = out.replace(
-    /<(script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|video|audio)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    new RegExp(
+      `<(${DANGEROUS_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`,
+      "gi",
+    ),
+    "",
+  );
+  // Unclosed openers left after a truncated/malformed chunk — strip the tag.
+  out = out.replace(
+    new RegExp(`<(?:${DANGEROUS_OPEN})\\b[^>]*>`, "gi"),
     "",
   );
   // Void / self-closing chrome.
@@ -286,6 +297,9 @@ function isMetaDropCell(cellHtml: string): boolean {
   return /\b(?:ge-column|alch-column|drops-ge|high.?alch)\b/i.test(cellHtml);
 }
 
+const STRIP_OPEN =
+  "script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|picture|video|audio";
+
 /** Remove scripts, images, forms, and wiki chrome blocks. */
 export function stripWikiChrome(html: string): string {
   let out = html;
@@ -294,9 +308,11 @@ export function stripWikiChrome(html: string): string {
   // Paired elements (open + matching close). Keep closer list aligned with openers —
   // a mismatched pair (e.g. button → form) used to delete half the article.
   out = out.replace(
-    /<(script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|picture|video|audio)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    new RegExp(`<(${STRIP_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"),
     "",
   );
+  // Unclosed openers (truncated parse chunks, missing closers).
+  out = out.replace(new RegExp(`<(?:${STRIP_OPEN})\\b[^>]*>`, "gi"), "");
   // Void / self-closing + images (lead/body stay image-free).
   out = out.replace(
     /<(?:img|source|input|map|area|link|meta|br)\b[^>]*\/?>/gi,

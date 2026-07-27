@@ -45,8 +45,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # data/ is the shipped store. normalize:data needs a local scraped-data/ checkout
-      # (gitignored) and is manual-only — see normalize-data.yml.
+      # data/ is the shipped store. audit:data is the CI gate (schema / IDs / sources).
+      # normalize:data needs a local scraped-data/ checkout (gitignored) and is
+      # manual-only — see normalize-data.yml. Before large research PRs, run
+      # normalize + git diff -- data/ locally so generated files stay committed.
       - name: Audit shipped data/
         run: npm run audit:data
       - run: npm run typecheck

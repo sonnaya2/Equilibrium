@@ -88,10 +88,10 @@ describe("research catalog", () => {
       expect(karNames.has(name), `karamja missing ${name}`).toBe(true);
     }
 
+    // Forinthry Dungeon is an areas pin, not a content major (see dataContentPresentation).
     const forNames = new Set((for_?.content ?? []).map((c) => c.name));
     for (const name of [
       "Mage Arena",
-      "Forinthry Dungeon",
       "Charming moths",
       "Daemonheim Dig Site",
       "Corporeal Beast",

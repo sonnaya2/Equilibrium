@@ -63,6 +63,8 @@ function isWikiView(data: unknown): data is WikiArticleClientView {
   ) {
     return false;
   }
+  // Reject non-wiki / non-https pageUrl (defense-in-depth vs API drift).
+  if (!safeWikiPage(v.pageUrl)) return false;
   // Optional structured drops — tolerate missing; reject wrong shape.
   if (v.drops != null && !Array.isArray(v.drops)) return false;
   return true;
@@ -347,6 +349,11 @@ function WikiBody({
   const drops = view?.drops ?? [];
   const hasStructuredDrops = drops.length > 0;
   const hasHtmlDrops = Boolean(view?.hasDrops && view.dropsHtml.trim());
+  // Prefer click-time safe URL; re-validate view.pageUrl before external nav.
+  const externalWikiHref =
+    pageUrl ??
+    (view?.pageUrl ? safeWikiPage(view.pageUrl)?.pageUrl : null) ??
+    null;
   const showDrops = hasStructuredDrops || hasHtmlDrops;
 
   useEffect(() => {
@@ -541,9 +548,9 @@ function WikiBody({
       ) : null}
 
       <footer className="data-wiki-article__footer">
-        {pageUrl || view?.pageUrl ? (
+        {externalWikiHref ? (
           <a
-            href={view?.pageUrl ?? pageUrl ?? undefined}
+            href={externalWikiHref}
             target="_blank"
             rel="noreferrer"
             className="data-wiki-article__external"

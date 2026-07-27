@@ -53,6 +53,11 @@ async function fetchWikiParse(
  * Vorkath-style pages only list uniques + a "loot (normal)" shell row.
  * Follow the preferred loot subpage and merge its real drop table.
  */
+function groupAlreadyHasMode(group: string, modeLabel: string): boolean {
+  // Plain substring — never RegExp(modeLabel); wiki tails can hold metacharacters.
+  return group.toLowerCase().includes(modeLabel.toLowerCase());
+}
+
 async function expandLootContainers(
   view: WikiArticleView,
   signal: AbortSignal,
@@ -63,30 +68,35 @@ async function expandLootContainers(
 
   const expanded: WikiDropRow[] = [];
   for (const title of titles) {
-    // Encode path so `&` in titles (Zemouregal & Vorkath…) is not a query sep.
-    const path = title
-      .replace(/ /g, "_")
-      .split("/")
-      .map((seg) => encodeURIComponent(seg))
-      .join("/");
-    const safe = safeWikiPage(`https://runescape.wiki/w/${path}`);
-    if (!safe) continue;
-    const payload = await fetchWikiParse(safe.pageTitle, signal);
-    const html = payload?.parse?.text;
-    if (!html || typeof html !== "string") continue;
-    const sub = processWikiHtml(html, {
-      title: safe.pageTitle,
-      pageUrl: safe.pageUrl,
-    });
-    const modeLabel = /\(([^)]+)\)\s*$/.exec(title)?.[1]?.trim();
-    for (const row of sub.drops) {
-      expanded.push({
-        ...row,
-        group:
-          row.group && modeLabel && !new RegExp(modeLabel, "i").test(row.group)
-            ? `${row.group} (${modeLabel})`
-            : row.group ?? (modeLabel ? `Loot (${modeLabel})` : null),
+    try {
+      // Encode path so `&` in titles (Zemouregal & Vorkath…) is not a query sep.
+      const path = title
+        .replace(/ /g, "_")
+        .split("/")
+        .map((seg) => encodeURIComponent(seg))
+        .join("/");
+      const safe = safeWikiPage(`https://runescape.wiki/w/${path}`);
+      if (!safe) continue;
+      const payload = await fetchWikiParse(safe.pageTitle, signal);
+      const html = payload?.parse?.text;
+      if (!html || typeof html !== "string") continue;
+      const sub = processWikiHtml(html, {
+        title: safe.pageTitle,
+        pageUrl: safe.pageUrl,
       });
+      const modeLabel = /\(([^)]+)\)\s*$/.exec(title)?.[1]?.trim();
+      for (const row of sub.drops) {
+        expanded.push({
+          ...row,
+          group:
+            row.group && modeLabel && !groupAlreadyHasMode(row.group, modeLabel)
+              ? `${row.group} (${modeLabel})`
+              : row.group ?? (modeLabel ? `Loot (${modeLabel})` : null),
+        });
+      }
+    } catch {
+      // Bad subpage / parse must not drop the primary article response.
+      continue;
     }
   }
 
@@ -164,7 +174,11 @@ export async function GET(request: Request) {
       let view: WikiArticleView = finalizeArticleHtml(
         processWikiHtml(text, { title, pageUrl }),
       );
-      view = await expandLootContainers(view, controller.signal);
+      try {
+        view = await expandLootContainers(view, controller.signal);
+      } catch {
+        // Expansion is best-effort; base article still ships.
+      }
 
       return NextResponse.json(view, {
         headers: {

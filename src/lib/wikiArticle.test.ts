@@ -68,6 +68,15 @@ describe("stripWikiChrome", () => {
     expect(out).not.toMatch(/navbox/i);
     expect(out).toMatch(/Keep me/);
   });
+
+  it("strips unclosed script/iframe openers", () => {
+    const out = stripWikiChrome(
+      `<p>safe</p><script>alert(1)<iframe src="x">tail`,
+    );
+    expect(out).not.toMatch(/<script/i);
+    expect(out).not.toMatch(/<iframe/i);
+    expect(out).toMatch(/safe/);
+  });
 });
 
 describe("extractInfoboxFacts", () => {

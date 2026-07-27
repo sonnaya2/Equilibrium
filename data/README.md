@@ -6,6 +6,10 @@ Research scrapes used to live in `scraped-data/` (gitignored, not shipped). Mean
 inputs were normalized into `data/` before release. To re-run the pipeline you need a
 local research checkout and `npm run normalize:data` (workflow is manual-only).
 
+**CI gate:** `npm run audit:data` only — it does not re-normalize or fail on
+`git diff -- data/`. After a research regenerate, run `normalize:data` and commit any
+`data/` changes yourself so the ship store stays self-consistent.
+
 | Script | Role |
 |---|---|
 | `scripts/normalize-scraped-data.mjs` | League planner shells from research inputs |

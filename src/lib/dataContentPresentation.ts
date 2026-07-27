@@ -645,6 +645,7 @@ export function presentInterestName(value: string): string {
   if (/^Daemonheim Divination$/i.test(raw)) return "Daemonheim Divination";
   if (/^Primal ores?$/i.test(raw)) return "Primal ores";
   if (/^Wilderness bloodwood trees$/i.test(raw)) return "Bloodwood trees";
+  if (/^Abandoned Mine salve shard mining$/i.test(raw)) return "Salve amulet (e)";
   if (/^Ring of Vigour and passive conversion$/i.test(raw)) return "Ring of Vigour";
   if (/^Ring of Vigour passive$/i.test(raw)) return "RoV passive";
   if (/^Ring of Vigour$/i.test(raw)) return "Ring of Vigour";

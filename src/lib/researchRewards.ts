@@ -264,6 +264,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Sunspear Vyre prayer sustain (ex-aura)": "Sunspear",
   "Werewolf Agility Course": "Werewolf Agility Course",
   "Abandoned Mine": "Salve shards, haunted mine",
+  "Abandoned Mine salve shard mining": "Salve amulet (e)",
   "Shades of Mort'ton": "Cremation, temples",
   "Temple Trekking": "Burgh rewards",
   "Managing Miscellania": "Daily kingdom resources",

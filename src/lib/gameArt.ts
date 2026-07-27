@@ -77,7 +77,8 @@ export function abilityCategoryLabel(
 
 /** Explicit name / label → published slug. Wrong icon is worse than none. */
 const DATA_ICON_ALIASES: Record<string, string> = {
-  "abandoned mine salve shard mining": "abandoned-mine",
+  "abandoned mine salve shard mining": "salve-amulet-e",
+  "salve amulet (e)": "salve-amulet-e",
   "abyss": "abyss",
   "abyss access": "abyss",
   "abyss entrance": "abyss",

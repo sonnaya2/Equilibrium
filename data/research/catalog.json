@@ -15833,37 +15833,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Master camouflage outfit",
-          "category": "Thieving elite skilling outfit",
-          "detail": "Auto-pickpocket removed November 2022. Fragment grind pressures Desert Shifting Tombs heavily; teleports pull Tirannwn/Fremennik/Misthalin hubs · Cross-region elite. Prefer Invention fragments + black ibis desert grind; skip TH · Region combo (all required): desert + tirannwn + fremennik · Effects: Unlimited teleports to thieving hubs (Prif clan districts, Pyramid Plunder, Keldagrim Consortium, Lletya, Thieves' Guild, Pollnivneach) when full set worn, 7% chance to double pickpocket loot (no extra XP), 7% chance to avoid stun on failed pickpocket, 7% better chance to avoid Pyramid Plunder snake bites; acts as lockpick in Pyramid Plunder, Acts as Trahaearn exoskeleton after Plague's End (gloves-of-silence style effect with full set + 75 Hunter/Thieving rules per wiki), Inherits black ibis XP if owned and worn once, As of 16 Feb 2026 early-game rebalance: no longer boosts Sceptre of the Gods or black ibis piece rates",
-          "requirements": [
-            "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
-            "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
-            "Black ibis outfit worn once to inherit Thieving XP (up to 5%)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Master_camouflage_outfit",
-            "title": "Master camouflage outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "fremennik",
-          "regionHints": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + tirannwn + fremennik",
-          "isRegionCombo": true
-        },
-        {
           "name": "Pickaxe of Earth and Song",
           "category": "cross-region augmentable Mining tool",
           "detail": "Hard self-sufficient chain is Fremennik Imcando + Tirannwn crystal. Resolve WGS / Birthright / Plague's End / Relight My Fire through Equilibrium auto-quest overlay. Surface Ancient Cavern as Kandarin craft pressure, not a silent hard gate · Region combo (all required): fremennik + tirannwn · Effects: Level-90 augmentable pickaxe with elder rune +5 mining stats, Feeds Pickaxe of Life and Death tier-100 upgrade at Ramarno · Region pressure: Fremennik owns Keldagrim / Lava Flow Mine Imcando pickaxe progression and the Blast Furnace Foreman shop for the blast fusion hammer., Tirannwn owns Prifddinas crystal-pickaxe conversion (Lady Ithell + harmonic dust) and the dragon-pickaxe base conversion step., Kandarin pressure: finished smithing is at the Dragon forge dragonkin anvil south of Kuradal in the Ancient Cavern (post-2024-12-09; Relight My Fire)., Dragon pickaxe self-source is commonly Fremennik Dagannoth Kings; tradeable base is not a hard second Fremennik lock if League allows other sources · Invention workbench craft is global (not region-locked)",
@@ -21042,37 +21011,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Master camouflage outfit",
-          "category": "Thieving elite skilling outfit",
-          "detail": "Auto-pickpocket removed November 2022. Fragment grind pressures Desert Shifting Tombs heavily; teleports pull Tirannwn/Fremennik/Misthalin hubs · Cross-region elite. Prefer Invention fragments + black ibis desert grind; skip TH · Region combo (all required): desert + tirannwn + fremennik · Effects: Unlimited teleports to thieving hubs (Prif clan districts, Pyramid Plunder, Keldagrim Consortium, Lletya, Thieves' Guild, Pollnivneach) when full set worn, 7% chance to double pickpocket loot (no extra XP), 7% chance to avoid stun on failed pickpocket, 7% better chance to avoid Pyramid Plunder snake bites; acts as lockpick in Pyramid Plunder, Acts as Trahaearn exoskeleton after Plague's End (gloves-of-silence style effect with full set + 75 Hunter/Thieving rules per wiki), Inherits black ibis XP if owned and worn once, As of 16 Feb 2026 early-game rebalance: no longer boosts Sceptre of the Gods or black ibis piece rates",
-          "requirements": [
-            "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
-            "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
-            "Black ibis outfit worn once to inherit Thieving XP (up to 5%)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Master_camouflage_outfit",
-            "title": "Master camouflage outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + tirannwn + fremennik",
-          "isRegionCombo": true
-        },
-        {
           "name": "Player-owned house portal towns and Construction utilities",
           "category": "Construction teleport and housing infrastructure",
           "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock · Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
@@ -26027,37 +25965,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): tirannwn + misthalin + fremennik",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Master camouflage outfit",
-          "category": "Thieving elite skilling outfit",
-          "detail": "Auto-pickpocket removed November 2022. Fragment grind pressures Desert Shifting Tombs heavily; teleports pull Tirannwn/Fremennik/Misthalin hubs · Cross-region elite. Prefer Invention fragments + black ibis desert grind; skip TH · Region combo (all required): desert + tirannwn + fremennik · Effects: Unlimited teleports to thieving hubs (Prif clan districts, Pyramid Plunder, Keldagrim Consortium, Lletya, Thieves' Guild, Pollnivneach) when full set worn, 7% chance to double pickpocket loot (no extra XP), 7% chance to avoid stun on failed pickpocket, 7% better chance to avoid Pyramid Plunder snake bites; acts as lockpick in Pyramid Plunder, Acts as Trahaearn exoskeleton after Plague's End (gloves-of-silence style effect with full set + 75 Hunter/Thieving rules per wiki), Inherits black ibis XP if owned and worn once, As of 16 Feb 2026 early-game rebalance: no longer boosts Sceptre of the Gods or black ibis piece rates",
-          "requirements": [
-            "20 Invention; camouflage fragments from Thieving (Shifting Tombs ~5× fragment rate on full clears)",
-            "54,000 camouflage fragments to craft Keldagrim + Prifddinas + desert camouflage tiers then combine",
-            "Black ibis outfit worn once to inherit Thieving XP (up to 5%)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Master_camouflage_outfit",
-            "title": "Master camouflage outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "desert",
-            "tirannwn",
-            "fremennik"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + tirannwn + fremennik",
           "isRegionCombo": true
         },
         {

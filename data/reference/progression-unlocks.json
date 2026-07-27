@@ -35785,7 +35785,7 @@
       "id": "cross-region:volcanic-trapper-outfit",
       "name": "Volcanic trapper outfit",
       "category": "Hunter elite skilling outfit",
-      "region_hint": "cross-region",
+      "region_hint": "anachronia",
       "region_hints": [
         "anachronia",
         "desert",
@@ -35818,7 +35818,7 @@
         "https://runescape.wiki/w/Hunter_mark_shop"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH",
+      "league_treatment": "Hard Anachronia only.",
       "links_existing_ids": [
         "asgarnia:hunters-outfit",
         "kandarin:enhanced-yaktwee-stick"

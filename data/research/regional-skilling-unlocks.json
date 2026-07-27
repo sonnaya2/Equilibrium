@@ -5520,26 +5520,16 @@
       "name": "Volcanic trapper outfit",
       "recordType": "equipment",
       "regionHints": [
-        "anachronia",
-        "desert",
-        "kandarin",
-        "fremennik",
-        "karamja",
-        "tirannwn"
+        "anachronia"
       ],
       "requiredRegions": [
-        "anachronia",
-        "desert",
-        "kandarin",
-        "fremennik",
-        "karamja",
-        "tirannwn"
+        "anachronia"
       ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
-      "isRegionCombo": true,
-      "category": "Hunter elite skilling outfit",
-      "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Hunter elite outfit",
+      "detail": "Anachronia Hunter outfit. Blueprint and hunter marks on the island; full set for trap XP/QoL. League: Anachronia-only — not a multi-region fragment combo.",
       "requirements": [
         "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
         "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",

@@ -7006,43 +7006,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
-          "requirements": [
-            "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
-            "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
-            "54,000 trapper fragments total then combine three outfits into volcanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
-            "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "karamja",
-          "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
-          "isRegionCombo": true
-        },
-        {
           "name": "Area Tasks (achievement diaries) skilling overview",
           "category": "achievement diary acquisition frame",
           "detail": "Planner multi-host frame for all classic diary regions (user KEEP). Each diary is completed in its own geography; required_regions lists every diary-owning region so hosts + comboLabel stay in sync. Prefer per-region equipment rows below for stacking · Multi-ok on every classic Area Tasks region with matching all_required list. Achievement/quest gates follow Equilibrium auto-quest overlays. Per-region reward items still live on dedicated area-tasks equipment rows · Region combo (all required): misthalin + karamja + asgarnia + kandarin + fremennik + forinthry + desert + morytania + tirannwn · Unlocks: One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire), Task Master emote after completing all Area Tasks achievements, Daemonheim Area Tasks benefits are passive (aura items removed)",
@@ -13132,43 +13095,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
-          "requirements": [
-            "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
-            "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
-            "54,000 trapper fragments total then combine three outfits into volcanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
-            "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "kandarin",
-          "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
-          "isRegionCombo": true
-        },
-        {
           "name": "Area Tasks (achievement diaries) skilling overview",
           "category": "achievement diary acquisition frame",
           "detail": "Planner multi-host frame for all classic diary regions (user KEEP). Each diary is completed in its own geography; required_regions lists every diary-owning region so hosts + comboLabel stay in sync. Prefer per-region equipment rows below for stacking · Multi-ok on every classic Area Tasks region with matching all_required list. Achievement/quest gates follow Equilibrium auto-quest overlays. Per-region reward items still live on dedicated area-tasks equipment rows · Region combo (all required): misthalin + karamja + asgarnia + kandarin + fremennik + forinthry + desert + morytania + tirannwn · Unlocks: One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire), Task Master emote after completing all Area Tasks achievements, Daemonheim Area Tasks benefits are passive (aura items removed)",
@@ -16210,43 +16136,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
-          "requirements": [
-            "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
-            "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
-            "54,000 trapper fragments total then combine three outfits into volcanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
-            "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "fremennik",
-          "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
           "isRegionCombo": true
         },
         {
@@ -21422,43 +21311,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): misthalin + asgarnia + kandarin + desert + fremennik",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
-          "requirements": [
-            "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
-            "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
-            "54,000 trapper fragments total then combine three outfits into volcanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
-            "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
           "isRegionCombo": true
         },
         {
@@ -26669,43 +26521,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
-          "requirements": [
-            "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
-            "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
-            "54,000 trapper fragments total then combine three outfits into volcanic"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
-            "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
-          "isRegionCombo": true
-        },
-        {
           "name": "Area Tasks (achievement diaries) skilling overview",
           "category": "achievement diary acquisition frame",
           "detail": "Planner multi-host frame for all classic diary regions (user KEEP). Each diary is completed in its own geography; required_regions lists every diary-owning region so hosts + comboLabel stay in sync. Prefer per-region equipment rows below for stacking · Multi-ok on every classic Area Tasks region with matching all_required list. Achievement/quest gates follow Equilibrium auto-quest overlays. Per-region reward items still live on dedicated area-tasks equipment rows · Region combo (all required): misthalin + karamja + asgarnia + kandarin + fremennik + forinthry + desert + morytania + tirannwn · Unlocks: One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire), Task Master emote after completing all Area Tasks achievements, Daemonheim Area Tasks benefits are passive (aura items removed)",
@@ -30437,8 +30252,8 @@
         },
         {
           "name": "Volcanic trapper outfit",
-          "category": "Hunter elite skilling outfit",
-          "detail": "Cross-region fragment craft. Prefer Anachronia for marks/blueprint pressure; skip TH · Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn · Effects: 5 daily teleports to a large Hunter location list (tracking, netting, box, bird, pitfall, deadfall, falconry, Habitat, charm sprites, tortles, Big Chinchompa, scarab pools, etc.) — Tirannwn destinations need Regicide, 7% increased Hunter success chance (not on protean traps), 10% chance of double loot with XP on the extra catch (not on divine locations or Big Game Hunter), Chance of double loot from implings including jars (3/day; stacks with Daffyd checklist to triple), Increased chance of rarer charm sprites; 50% better Big Chinchompa point conversion, Deploy one extra trap (max 6; deadfall limit unchanged), 30% chance to instantly deploy/pick up traps (not protean), Auto-reapplies juju hunter potion in Herblore Habitat, Inherits Hunter's outfit XP (up to +6%) after those pieces worn once, even while banked/destroyed, Functions as hunter's Catalyst fragment if that fragment is owned",
+          "category": "Hunter elite outfit",
+          "detail": "Anachronia Hunter outfit. Blueprint and hunter marks on the island; full set for trap XP/QoL. Not multi-region for League planning — treat as Anachronia-only.",
           "requirements": [
             "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
             "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
@@ -30449,28 +30264,18 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Volcanic_trapper_outfit",
             "title": "Volcanic trapper outfit",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           },
           "regionId": "anachronia",
           "regionHints": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
+            "anachronia"
           ],
           "requiredRegions": [
-            "anachronia",
-            "desert",
-            "kandarin",
-            "fremennik",
-            "karamja",
-            "tirannwn"
+            "anachronia"
           ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): anachronia + desert + kandarin + fremennik + karamja + tirannwn",
-          "isRegionCombo": true
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
         },
         {
           "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",

@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { pokeMapActivity } from "./mapPerf";
 import * as THREE from "three/webgpu";
 import type { RegionId } from "@/league";
 import { PLACES_BY_REGION, rasterPlaceUv } from "./data/placeAnchors";
@@ -502,7 +503,10 @@ export function CameraRig({
       camera.fov = state.fov;
       camera.updateProjectionMatrix();
     }
-    if (moving.current || drifting || driving) invalidate();
+    if (moving.current || drifting || driving) {
+      pokeMapActivity();
+      invalidate();
+    }
   });
 
   return null;

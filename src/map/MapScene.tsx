@@ -8,7 +8,7 @@ import { Canvas, extend, useThree } from "@react-three/fiber";
 import { useBuild } from "@/league/useBuild";
 import { MapTable } from "./MapTable";
 import { CameraRig } from "./CameraRig";
-import { Effects } from "./Effects";
+import { BloomWhenNeeded } from "./Effects";
 import { FlatBoard } from "./FlatBoard";
 import { useReducedMotion } from "./useReducedMotion";
 import { MAP_IMAGE } from "./data/regionAnchors";
@@ -211,7 +211,7 @@ export default function MapScene() {
             zoom={focus.zoom}
             reducedMotion={reducedMotion}
           />
-          {mapFlags().bloom && !mapFlags().debugGeometry ? <Effects /> : null}
+          {mapFlags().bloom && !mapFlags().debugGeometry ? <BloomWhenNeeded /> : null}
           <InvalidateOnBuild />
         </Canvas>
       </div>

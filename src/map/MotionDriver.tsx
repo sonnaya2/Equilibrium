@@ -8,12 +8,9 @@
  * — it has to move at rest — so exactly one timer exists and everything else
  * that animates rides the frames it produces.
  *
- * The throttle is a timer and not a frame accumulator. Accumulating delta inside
- * `useFrame` and invalidating when it crossed 1/30 looks equivalent and is not:
- * under demand a frame only happens because something asked for one, so the sea
- * was the only thing keeping the sea awake, and the frame its own invalidate
- * produced arrived one rAF later — far short of 1/30 on a fast panel — so it
- * returned without asking again and the loop slept for good.
+ * Idle holds at MAP_IDLE_HZ (30). Pointer / camera / unlock pokes raise the
+ * band to MAP_ACTIVE_HZ (120) for a short grace, then drop back. Never free-run
+ * at panel refresh (that was the GPU pin).
  *
  * It stops for reduced motion, for an offscreen canvas, and for a hidden tab.
  */
@@ -21,9 +18,15 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { mapClock } from "./materials/shared";
+import {
+  MAP_ACTIVE_HZ,
+  MAP_IDLE_HZ,
+  mapActivityHz,
+  pokeMapActivity,
+} from "./mapPerf";
 
-/** Shared board cadence — 60Hz-safe with rAF throttle (e2e maps tick band). */
-export const MOTION_HZ = 60;
+/** @deprecated Prefer MAP_IDLE_HZ — kept for Ocean comments / external imports. */
+export const MOTION_HZ = MAP_IDLE_HZ;
 
 export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   const invalidate = useThree((s) => s.invalidate);
@@ -31,6 +34,7 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   const running = useRef(!reducedMotion);
   const onScreen = useRef(true);
   const ticks = useRef(0);
+  const hzBand = useRef(MAP_IDLE_HZ);
 
   useEffect(() => {
     const element = gl.domElement;
@@ -47,24 +51,35 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     );
     observer.observe(element);
     document.addEventListener("visibilitychange", update);
+    // Pointer over the board ⇒ active band (orbit prep, hover parallax).
+    const onPointer = () => pokeMapActivity();
+    element.addEventListener("pointerdown", onPointer);
+    element.addEventListener("pointermove", onPointer, { passive: true });
+    element.addEventListener("wheel", onPointer, { passive: true });
     update();
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
+      element.removeEventListener("pointerdown", onPointer);
+      element.removeEventListener("pointermove", onPointer);
+      element.removeEventListener("wheel", onPointer);
     };
   }, [gl, invalidate, reducedMotion]);
 
   // rAF-aligned throttle: setInterval drifts against the display and the water
-  // + river shaders strobe. Still ~MOTION_HZ invalidates/s for the e2e budget.
+  // + river shaders strobe. Period follows idle/active band each tick.
   useEffect(() => {
     if (reducedMotion) return;
     let raf = 0;
     let last = performance.now();
-    const period = 1000 / MOTION_HZ;
     const tick = (now: number) => {
       raf = window.requestAnimationFrame(tick);
       if (!running.current) return;
+      const hz = mapActivityHz();
+      hzBand.current = hz;
+      const period = 1000 / hz;
       if (now - last < period) return;
+      // Catch-up: don't multi-fire after a long stall.
       last = now;
       invalidate();
     };
@@ -78,11 +93,15 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     if (running.current) mapClock.value = (mapClock.value as number) + Math.min(delta, 0.1);
   });
 
-  // The idle budget is invisible in a screenshot and has regressed in both
-  // directions — a frozen sea, and a reduced-motion path pinned at the refresh
-  // rate. e2e/map-ocean.spec.ts counts these.
+  // Idle budget probe for e2e/map-ocean.spec.ts.
   useEffect(() => {
-    const probe = () => ({ ticks: ticks.current, running: running.current });
+    const probe = () => ({
+      ticks: ticks.current,
+      running: running.current,
+      hz: hzBand.current,
+      idleHz: MAP_IDLE_HZ,
+      activeHz: MAP_ACTIVE_HZ,
+    });
     (window as unknown as { __mapDiag?: typeof probe }).__mapDiag = probe;
     return () => {
       delete (window as unknown as { __mapDiag?: typeof probe }).__mapDiag;

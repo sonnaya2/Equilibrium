@@ -29,6 +29,7 @@ import { createTerrainMaterials } from "./materials/TerrainMaterial";
 import type { MapFlags } from "./mapQuality";
 import { BEVEL, PLATE_DEPTH, plateBaseY } from "./plateHeight";
 import { useMapFocus } from "./useMapFocus";
+import { pokeMapActivity, pokeMapBloom } from "./mapPerf";
 
 /** Chamfer on the top edge — a fabricated relief map, not a cut of foamboard. */
 const BEVEL_SIZE = 0.0012;
@@ -126,6 +127,8 @@ export function RegionPlate({
       mats.sweep.value = 1;
       // Colour restore runs while lock is already 0 — grey peels via sweep.
       mats.lock.value = 0;
+      // Bloom MRT only while the green frontier runs (~SWEEP_SECONDS).
+      pokeMapBloom(SWEEP_SECONDS * 1000 + 400);
       invalidate();
     }
     wasUnlocked.current = unlocked;
@@ -169,7 +172,10 @@ export function RegionPlate({
       g.position.y = Math.abs(next - targetY) < 0.0004 ? targetY : next;
       busy = true;
     }
-    if (busy) invalidate();
+    if (busy) {
+      pokeMapActivity();
+      invalidate();
+    }
   });
 
   const click = (event: ThreeEvent<MouseEvent>) => {

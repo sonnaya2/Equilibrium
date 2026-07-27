@@ -54,9 +54,9 @@ test("sea animates at rest without pinning the frameloop", async ({ page }) => {
   test.skip(!(await settle(page)), "no WebGPU / dev probe (production build)");
   const ticks = await idleTicks(page);
   expect(await movesAtRest(page), "sea should move with no pointer input").toBe(true);
-  // ~60Hz by design. Near full refresh (120+) means the demand loop is pinned.
-  expect(ticks).toBeGreaterThan(40);
-  expect(ticks).toBeLessThan(80);
+  // ~30Hz idle by design. Near full refresh (90+) means the demand loop is pinned.
+  expect(ticks).toBeGreaterThan(20);
+  expect(ticks).toBeLessThan(45);
 });
 
 test("reduced motion is completely still", async ({ page }) => {

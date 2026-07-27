@@ -6,8 +6,8 @@
  * Long swell displaces the mesh, so the plane is subdivided just enough to carry
  * it — the short detail is normal-only and costs no vertices. Everything else
  * about how it looks lives in WaterMaterial; everything about when it is allowed
- * to move lives in MotionDriver, which owns the single MOTION_HZ (60) heartbeat
- * the whole board shares.
+ * to move lives in MotionDriver (30 idle / 120 active), the whole board's one
+ * heartbeat.
  */
 
 import { useEffect, useMemo } from "react";
@@ -17,8 +17,8 @@ import { createWaterMaterial } from "./materials/WaterMaterial";
 
 /** Wide enough that the swell never shows an edge inside any legal framing. */
 const EXTENT = MAP_WORLD.width * 3;
-/** Segments across that extent. The long swell is ~1.2 units; this is ample. */
-const SEGMENTS = 112;
+/** Segments across that extent. Long swell ~1.2 units; 80 reads the same at table distance. */
+const SEGMENTS = 80;
 
 export function Ocean({ field, keyDirection }: { field: THREE.Texture; keyDirection: THREE.Vector3 }) {
   const water = useMemo(() => createWaterMaterial(field, keyDirection), [field, keyDirection]);

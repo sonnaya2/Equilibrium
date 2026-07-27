@@ -57,8 +57,8 @@ function pinScale(place: PlaceAnchor) {
   return { face: FACE_AREA, beamH: BEAM_H_AREA, beamR: BEAM_R_BASE_AREA, foot: FOOT_AREA };
 }
 
-export const POI_ATLAS_URL = "/map/poi-atlas.json?v=wiki200";
-export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp?v=wiki200";
+export const POI_ATLAS_URL = "/map/poi-atlas.json?v=wiki201";
+export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp?v=wiki201";
 
 export interface AtlasIndex {
   cell: number;

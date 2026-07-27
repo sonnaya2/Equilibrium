@@ -639,6 +639,9 @@ export function presentInterestName(value: string): string {
   if (/^Deep Sea Fishing hub\b/i.test(name)) {
     return /methods|boosts/i.test(name) ? "Deep Sea Fishing methods" : "Deep Sea Fishing";
   }
+  if (/^Fort Forinthry Guardhouse\b/i.test(name)) return "Fort Guardhouse";
+  if (/^Fort Forinthry Kitchen\b/i.test(name)) return "Fort Kitchen";
+  if (/^Fort Forinthry Town Hall\b/i.test(name)) return "Fort Town Hall";
 
   return name
     .replace(
@@ -687,6 +690,11 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "passive multi-skill xp stations": "Passive XP stations",
     "regional summoning production hub pointer": "Summoning hub",
     "herblore perfect-juju production hub": "Perfect juju recipes",
+    "fort bank, construction tiers, and rested xp": "Bank, tiers, rested XP",
+    "fort construction building infrastructure": "Construction hub",
+    "rested experience and fort bank infrastructure": "Rested XP",
+    "cooking infrastructure and range hub": "Cooking",
+    "slayer infrastructure": "Slayer",
   };
   if (exact[lower]) return exact[lower];
 

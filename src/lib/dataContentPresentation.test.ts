@@ -522,6 +522,13 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestName("Lumbridge early skilling hub")).toBe("Lumbridge");
     expect(presentInterestName("Port Sarim docks and skilling hub")).toBe("Port Sarim");
     expect(presentInterestName("Seers' Village skilling hub")).toBe("Seers' Village");
+    expect(presentInterestName("Fort Forinthry Town Hall (full T1–T3 building hub)")).toBe(
+      "Fort Town Hall",
+    );
+    expect(presentInterestName("Fort Forinthry Guardhouse and Raptor Slayer hub")).toBe(
+      "Fort Guardhouse",
+    );
+    expect(presentInterestName("Fort Forinthry Kitchen")).toBe("Fort Kitchen");
   });
 
   it("rewrites multi-skill category taxonomy into short meta", () => {

@@ -32,6 +32,8 @@ const overrides = new Map([
   ["activity-god-wars-dungeon", { fileTitle: "God Wars Dungeon.png", search: "God Wars Dungeon location image" }],
   ["activity-artisans-workshop", { fileTitle: "Artisans' Workshop.png", search: "Artisans Workshop location image" }],
   ["place-cooks-guild", { fileTitle: "Cooking Guild.png", search: "Cooking Guild exterior location image" }],
+  ["place-fort-kitchen", { fileTitle: "Kitchen (Fort Forinthry, tier 3).png", search: "Fort Forinthry Kitchen interior" }],
+  ["place-fort-guardhouse", { fileTitle: "Guardhouse (tier 3, exterior).png", search: "Fort Forinthry Guardhouse exterior" }],
   ["activity-everlight-dig-site", { fileTitle: "Everlight.png", search: "Everlight Dig Site location image" }],
   ["activity-barrows", { fileTitle: "Barrows Scenery.png", search: "Barrows scenery minigame location image" }],
   ["activity-rise-of-the-six", { fileTitle: "Well (Barrows Rise of the Six).png", search: "Rise of the Six entrance well boss activity image" }],

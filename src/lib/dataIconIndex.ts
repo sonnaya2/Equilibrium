@@ -1203,6 +1203,7 @@ export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = {
   "forinthry-dungeon": "forinthry-dungeon.png",
   "fort-forinthry-chapel": "fort-forinthry-chapel.png",
   "fort-forinthry-command-centre": "fort-forinthry-command-centre.png",
+  "fort-forinthry-guardhouse": "fort-forinthry-guardhouse.png",
   "fort-forinthry-kitchen": "fort-forinthry-kitchen.png",
   "fort-forinthry-town-hall": "fort-forinthry-town-hall.png",
   "fort-forinthry-workshop": "fort-forinthry-workshop.png",

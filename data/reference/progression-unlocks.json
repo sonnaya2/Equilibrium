@@ -10015,8 +10015,8 @@
     },
     {
       "id": "misthalin:fort-town-hall",
-      "name": "Fort Forinthry Town Hall (full T1–T3 building hub)",
-      "category": "Fort Construction building infrastructure",
+      "name": "Fort Forinthry Town Hall",
+      "category": "Fort bank, Construction tiers, and rested XP",
       "region_hint": "misthalin",
       "region_hints": [
         "misthalin"
@@ -10034,17 +10034,19 @@
         "Blueprint progress at Fort Forinthry blueprints: base 200 / 396 / 840 batches for T1 / T2 / T3"
       ],
       "unlocks": [
-        "Parent building hub for rested experience infrastructure — detailed rested math lives on misthalin:fort-town-hall-rested-xp (do not restate full RS/100 formula here)",
-        "Tier 1: bank chest + Copperpot banker in fort centre; Zoe seasonal tree decor; rested XP collect while offline or skilling in fort (cap 500)",
-        "Tier 2: fort skilling rested rate doubled (2 per 3 minutes); held rested cap 1,000",
-        "Tier 3: fort skilling rested rate tripled (3 per 3 minutes); held rested cap 1,500",
-        "Rested points trade to Aster for bonus XP (all accumulated points redeem at once)"
+        "Bank chest and Copperpot banker in the fort centre; Zoe seasonal tree decor",
+        "Rested XP while offline (1 per 15 minutes) or skilling in fort — Woodcutters' Grove counts as in-fort",
+        "Tier 1: 1 rested XP every 3 minutes skilling in fort; held cap 500",
+        "Tier 2: 2 rested XP every 3 minutes; held cap 1,000",
+        "Tier 3: 3 rested XP every 3 minutes; held cap 1,500",
+        "Trade rested points with Aster for bonus XP (redeems all held points at once)",
+        "Town Hall tier gates matching-tier Fort buildings"
       ],
       "region_pressure": [
         "Misthalin hard-owns Fort Forinthry Construction taxonomy under working map.",
         "Frame/plank material ladder is sibling misthalin:fort-construction-materials-ladder — do not re-emit materials here."
       ],
-      "notes": "Continue2. already as rested-XP slice only — this row is the full T1–T3 building cascade (banker, bank chest, Zoe, caps, Construction gates). Link rested sibling; do not twin-score identical rested bullets",
+      "notes": "Single Town Hall POI — bank, building tiers, and rested XP together. Not a separate rested row.",
       "source_urls": [
         "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
         "https://runescape.wiki/w/Fort_Forinthry",

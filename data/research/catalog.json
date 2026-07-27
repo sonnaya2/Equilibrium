@@ -2129,21 +2129,19 @@
           "isRegionCombo": false
         },
         {
-          "name": "Fort Forinthry Town Hall (full T1–T3 building hub)",
-          "category": "Fort Construction building infrastructure",
-          "detail": "Continue2. already as rested-XP slice only — this row is the full T1–T3 building cascade (banker, bank chest, Zoe, caps, Construction gates). Link rested sibling; do not twin-score identical rested bullets · Hard Misthalin for Fort building geography · Unlocks: Parent building hub for rested experience infrastructure — detailed rested math lives · Region pressure: Misthalin Fort Forinthry Construction taxonomy under working map., Frame/plank material ladder is sibling",
+          "name": "Fort Forinthry Town Hall",
+          "category": "Fort bank, Construction tiers, and rested XP",
+          "detail": "Town Hall is the fort bank, Construction tier gate, and rested XP source. Woodcutters' Grove counts as in-fort for rested gain. Unlocks: bank chest + Copperpot banker; Zoe seasonal tree decor; rested XP while offline (1 per 15 min) or skilling in fort (1/2/3 per 3 min at T1/T2/T3); caps 500 / 1,000 / 1,500; spend rested points with Aster for bonus XP (redeems all at once). Tier buildings unlock at matching Town Hall tier.",
           "requirements": [
             "New Foundations completed for full fort construction access",
-            "Construction 10 for Town Hall tier 1 (10 oak frames + 6 stone wall segments)",
-            "Construction 45 for Town Hall tier 2 (22 maple frames + 6 stone wall segments)",
-            "Construction 80 for Town Hall tier 3 (60 magic frames + 6 stone wall segments)",
+            "Construction 10 / 45 / 80 for Town Hall tiers 1 / 2 / 3",
             "Blueprint progress at Fort Forinthry blueprints: base 200 / 396 / 840 batches for T1 / T2 / T3"
           ],
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
-            "title": "Fort Forinthry Town Hall (full T1–T3 building hub)",
+            "title": "Fort Forinthry Town Hall",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "misthalin",
@@ -2153,30 +2151,6 @@
           "requiredRegions": [
             "misthalin"
           ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Fort Forinthry Town Hall rested experience",
-          "category": "rested experience and fort bank infrastructure",
-          "detail": "Rested XP is fort-wide QoL that stacks with every Fort skilling building. Woodcutters' Grove counts as in-fort for rested gain · Treat as starting-region fort infrastructure under the Misthalin working map · Unlocks: Rested experience while offline or skilling in the fort, convertible to bonus experience, Tier 1: 1 rested XP per 15 minutes logged out; 1 rested XP every 3 minutes skilling in fort; 500 cap, Tier 2: 2 rested XP every 3 minutes skilling in fort; 1,000 cap, Tier 3: 3 rested XP every 3 minutes skilling in fort; 1,500 cap, Copperpot banker and courtyard bank chest access with Town Hall · Region status: historical_fort_working_taxonomy",
-          "requirements": [
-            "New Foundations completed for full fort construction access",
-            "Construction 10 / 45 / 80 for Town Hall tiers 1 / 2 / 3"
-          ],
-          "confidence": "confirmed_wiki_method_working_league_taxonomy",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
-            "title": "Fort Forinthry Town Hall rested experience",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "misthalin"
-          ],
-          "requiredRegions": [],
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
@@ -17829,14 +17803,14 @@
           }
         },
         {
-          "name": "Daemonheim",
-          "kind": "Dungeoneering",
+          "name": "Daemonheim Dig Site",
+          "kind": "Archaeology dig site",
           "detail": "Hard planner dependency: Dungeoneering/Daemonheim requires the Forinthry/Wilderness pick. Dungeoneering was refreshed in 2026 with floor XP and progression changes.",
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Daemonheim",
-            "title": "Daemonheim",
+            "url": "https://runescape.wiki/w/Daemonheim_Dig_Site",
+            "title": "Daemonheim Dig Site",
             "verifiedAt": "2026-07-25"
           }
         },

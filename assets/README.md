@@ -78,10 +78,10 @@ Do **not** run full `npm run sync:assets` just to absorb expansion 42 — it
 re-resolves/re-downloads the whole catalog and can take hours.
 
 ```bash
-# Preferred: one expansion only (wiki resolve + download for missing/changed)
-node scripts/_sync-expansion.mjs 42
+# After editing source-manifest-expansion-N.json (wiki resolve + download)
+node scripts/sync-assets-expanded.mjs
 
-# Then publish attributed rows into public/game (manifest-driven copy)
+# Publish attributed rows into public/game (manifest-driven copy)
 node scripts/publish-assets.mjs
 
 # Refresh gap report

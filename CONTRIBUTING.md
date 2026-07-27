@@ -40,7 +40,7 @@ Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, wit
 
 - Prefer documented npm scripts in `package.json`.
 - `sync:league:disabled` exits 1 on purpose (wrong schema).
-- One-shot `scripts/_*.mjs` and root `tmp-*.mjs` are agent scratch — do not treat as product API.
+- Product scripts live under `scripts/` and are wired from `package.json` or CI. One-shot agent passes are not kept in the tree.
 
 ## House rules
 

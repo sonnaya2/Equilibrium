@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIELD = path.join(ROOT, "public/map/terrain-field.webp");
 const PLATES = path.join(ROOT, "public/map/region-plates.json");
+const RASTER_FOR_HOLES = path.join(ROOT, "public/map/world-surface-wiki.webp");
 const ANCHORS_TS = path.join(ROOT, "src/map/data/placeAnchors.ts");
 
 /** Land coverage below this is water. The channel is antialiased 0..255. */
@@ -109,10 +110,37 @@ for (const pin of pins) {
   stacked.set(key, [...(stacked.get(key) ?? []), pin]);
 }
 
+/**
+ * The raster has a few solid black discs — areas the Wiki map simply does not
+ * draw. A pin on one is wrong whatever its coordinate says, because there is no
+ * art under it to be right about; the Araxyte Hive sits on the Morytania one.
+ * Cheap to detect and impossible to see in the field texture, which only knows
+ * land from water.
+ */
+/** Nearest, not cubic — resampling blends a disc edge back up into terrain. */
+const artwork = await sharp(RASTER_FOR_HOLES)
+  .resize(SPAN_X, SPAN_Y, { kernel: "nearest" })
+  .removeAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
+/** The discs read exactly rgb(24,24,24); allow a little webp drift around it. */
+const UNMAPPED_MAX = 30;
+const unmapped = ([x, y]) => {
+  const px = Math.max(0, Math.min(SPAN_X - 1, Math.round(x - B.minX)));
+  const py = Math.max(0, Math.min(SPAN_Y - 1, Math.round(B.maxY - y)));
+  const o = (py * SPAN_X + px) * 3;
+  return (
+    artwork.data[o] <= UNMAPPED_MAX &&
+    artwork.data[o + 1] <= UNMAPPED_MAX &&
+    artwork.data[o + 2] <= UNMAPPED_MAX
+  );
+};
+
 const findings = [];
 for (const pin of pins) {
   const flags = [];
   const f = sampleField(pin.point);
+  if (unmapped(pin.point)) flags.push("UNMAPPED");
   if (f.land < LAND_MIN) flags.push("SEA");
   else if (f.coast < 128 + SHORE_STEPS) flags.push("SHORE");
 
@@ -137,7 +165,7 @@ for (const pin of pins) {
 
 // --------------------------------------------------------------- report ----
 
-const order = ["SEA", "OFF-PLATE", "FOREIGN", "OUTLIER", "STACKED", "SHORE"];
+const order = ["UNMAPPED", "SEA", "OFF-PLATE", "FOREIGN", "OUTLIER", "STACKED", "SHORE"];
 const rank = (f) => Math.min(...f.flags.map((x) => order.findIndex((o) => x.startsWith(o))));
 findings.sort((a, b) => rank(a) - rank(b) || a.region.localeCompare(b.region));
 

@@ -160,6 +160,8 @@ const PROBES = [
   ["Fort Forinthry keep", 3308, 3553, "misthalin"],
   ["Fort SE approach", 3320, 3535, "misthalin"],
   ["Fort W wildy fringe", 3280, 3565, "forinthry"], // outside fort footprint
+  // Just N of campus max y 3558 — must be Forinthry, not a mist finger.
+  ["Fort N campus edge", 3308, 3562, "forinthry"],
   ["Fort N wildy", 3308, 3580, "forinthry"],
   ["Fort N+40 wildy", 3308, 3600, "forinthry"],
   ["Chaos Temple wildy", 3235, 3620, "forinthry"],
@@ -451,7 +453,8 @@ const GRIDS = [
     name: "Wildy ditch + Fort",
     x0: 3065, x1: 3365, y0: 3485, y1: 3600, step: 10,
     expect: (x, y) => {
-      if (x >= 3288 && x <= 3336 && y >= 3524 && y <= 3572) return "misthalin";
+      // Fort campus only — not a tall wildy finger (max y 3558).
+      if (x >= 3292 && x <= 3330 && y >= 3522 && y <= 3558) return "misthalin";
       if (y <= 3522 && x >= 3075) return "misthalin";
       if (y >= 3526) return "forinthry";
       return null;

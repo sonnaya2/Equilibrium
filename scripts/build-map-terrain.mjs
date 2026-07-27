@@ -351,8 +351,10 @@ const owner = new Uint8Array(N);
       const [gx, gy] = px2map([px, py]);
 
       // --- Fort Forinthry campus = Misthalin (league hardRule) ---
-      // Keep [3308,3553]; do not let the fort bleed north of ~3572 into wildy.
-      if (gx >= 3288 && gx <= 3336 && gy >= 3524 && gy <= 3572) {
+      // Keep/campus [3308,3553]. Prior y≤3572 painted the fort plate too far
+      // into wildy north — cap at ~3558. Stay joined to ditch S bank (y≤3522)
+      // so mist is one body, not a wildy island.
+      if (gx >= 3292 && gx <= 3330 && gy >= 3522 && gy <= 3558) {
         force(i, mistId);
         continue;
       }

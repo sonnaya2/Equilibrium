@@ -90,6 +90,10 @@ const PROBES = [
   ["Musa Point", 2950, 3145, "karamja"],
   ["Brimhaven", 2760, 3170, "karamja"],
   ["TzHaar", 2845, 3172, "karamja"],
+  ["Crandor centre", 2835, 3255, "karamja"],
+  ["Crandor N", 2835, 3275, "karamja"],
+  ["Crandor S", 2835, 3240, "karamja"],
+  ["Entrana (not Crandor)", 2834, 3335, "asgarnia"],
 
   // ── Tirannwn ─────────────────────────────────────────────────────────────
   ["Prifddinas", 2235, 3340, "tirannwn"],

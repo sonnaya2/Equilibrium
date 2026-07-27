@@ -396,6 +396,21 @@ const owner = new Uint8Array(N);
         continue;
       }
 
+      // --- Mory ↔ Desert river/sand contact ---
+      // High band (Dig Site latitudes): mist west of Salve, mory east — no desert wedges.
+      if (gy >= 3300 && gy <= 3365 && gx >= 3388 && gx <= 3455) {
+        if (gx <= 3416) force(i, mistId);
+        else force(i, moryId);
+        continue;
+      }
+      // Low sand belt (oasis NE → Burgh approach): desert west of ~3428, mory east.
+      // Keeps [3400,3280] desert while Dig Site SE [3380,3280] stays mist via dig box.
+      if (gy >= 3120 && gy < 3300 && gx >= 3392 && gx <= 3520) {
+        if (gx < 3428) force(i, desertId);
+        else force(i, moryId);
+        continue;
+      }
+
       // --- Al Kharid west approach = Misthalin (Lumbridge side of the gate) ---
       // Gate desert ~[3290,3225]; Lumbridge-side land west of the wall is mist.
       // North scrub toward Dig Site (x≥3295) stays desert until the dig band.
@@ -406,8 +421,8 @@ const owner = new Uint8Array(N);
 
       // --- Al Kharid + north oasis sand = Desert (not Misthalin wedges) ---
       // Al Kharid [3293,3184], Het's Oasis [3360,3120]. Cap y so Dig Site stays M;
-      // cap x short of Abandoned Mine. West approach mist already continued out.
-      if (gx >= 3260 && gx <= 3425 && gy >= 2900 && gy <= 3275) {
+      // cap x short of the mory-desert contact cut (~3428).
+      if (gx >= 3260 && gx <= 3426 && gy >= 2900 && gy <= 3275) {
         force(i, desertId);
         continue;
       }
@@ -454,6 +469,14 @@ const owner = new Uint8Array(N);
       }
       if (gx >= 2850 && gx <= 2925 && gy >= 3380 && gy <= 3565 && either(i, asgId, kandId)) {
         force(i, asgId);
+        continue;
+      }
+
+      // --- Crandor (volcanic islet N of Musa / W of Rimmington) = Karamja ---
+      // Without a seed, Entrana/Rimmington Asgarnia Voronoi steals the whole island.
+      // Crandor center ~[2835,3255]; keep Entrana [2834,3335] (asg) outside this box.
+      if (gx >= 2805 && gx <= 2875 && gy >= 3220 && gy <= 3295) {
+        force(i, karaId);
         continue;
       }
 

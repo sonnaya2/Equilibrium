@@ -26,18 +26,17 @@ const GROWTH_SPEED = 1.5;
 const Y_SPEED = 6.5;
 const CLEARANCE = 0.0022;
 
-// Thin structure under the leaf mass — fat tubes read as rubber cable.
-const STEM_RADIUS = 0.0008;
-const TENDRIL_RADIUS = 0.00035;
-const TENDRIL_WIGGLE = 0.0018;
-/** Prefer full seam fidelity; only stride when denser than this. */
+// Fine scrub on the seam — giant bright cards read as stickers, not foliage.
+const STEM_RADIUS = 0.0005;
+const TENDRIL_RADIUS = 0.00028;
+const TENDRIL_WIGGLE = 0.0014;
 const MAX_NODES = 160;
-const LEAF_SPACING = 0.005;
-const MAX_LEAVES_PER_SEAM = 160;
-const LEAF_SIDE = 0.008;
-const LEAF_W = 0.014;
-const LEAF_H = 0.022;
-const CORNER_GAIN = 1.5;
+const LEAF_SPACING = 0.004;
+const MAX_LEAVES_PER_SEAM = 180;
+const LEAF_SIDE = 0.0028;
+const LEAF_W = 0.0038;
+const LEAF_H = 0.0058;
+const CORNER_GAIN = 1.4;
 
 function hash(n: number): number {
   let t = (n + 0x6d2b79f5) | 0;
@@ -224,14 +223,14 @@ function build(seams: SeamPath[]) {
       let side = 0;
       let rankScale = 1;
       if (rank < 0.45) {
-        side = (r3 - 0.5) * 0.004;
-        rankScale = 0.95 + r1 * 0.3;
+        side = (r3 - 0.5) * 0.0025;
+        rankScale = 0.45 + r1 * 0.2;
       } else if (rank < 0.8) {
-        side = (r2 > 0.5 ? 1 : -1) * (0.005 + r3 * LEAF_SIDE);
-        rankScale = 0.7 + r1 * 0.35;
+        side = (r2 > 0.5 ? 1 : -1) * (0.003 + r3 * LEAF_SIDE);
+        rankScale = 0.32 + r1 * 0.18;
       } else {
-        side = (r2 > 0.5 ? 1 : -1) * (0.01 + r3 * 0.01);
-        rankScale = 0.45 + r1 * 0.3;
+        side = (r2 > 0.5 ? 1 : -1) * (0.005 + r3 * 0.004);
+        rankScale = 0.22 + r1 * 0.14;
       }
 
       const localWeight =
@@ -239,13 +238,13 @@ function build(seams: SeamPath[]) {
       leaves.push({
         x: point.x - tangent.z * side,
         z: point.z + tangent.x * side,
-        y: r3 * 0.0032,
+        y: r3 * 0.0018,
         yaw: Math.atan2(tangent.x, tangent.z) + (r2 - 0.5) * 2.2,
-        tilt: (r3 - 0.5) * 0.45,
-        roll: (r4 - 0.5) * 0.5,
-        ax: 0.75 + r1 * 0.4,
-        az: 0.9 + r2 * 0.4,
-        scale: (0.55 + r1 * 0.7) * rankScale * (0.75 + 0.4 * localWeight),
+        tilt: (r3 - 0.5) * 0.4,
+        roll: (r4 - 0.5) * 0.45,
+        ax: 0.7 + r1 * 0.35,
+        az: 0.85 + r2 * 0.35,
+        scale: (0.2 + r1 * 0.18) * rankScale * (0.8 + 0.3 * localWeight),
         phase: i * 0.73 + index * 1.7,
         along,
         seam: index,

@@ -26,20 +26,20 @@ import {
 import type { Node } from "three/webgpu";
 import { linear } from "./shared";
 
-/** Leaf gain under the key-heavy desk lamp. Stem stays darker under the mass. */
-const FOLIAGE_GAIN = 2.0;
-const STEM_GAIN = 1.35;
-const TENDRIL_GAIN = 1.2;
+/** Fine dark scrub — gain and card size kept low (CEO competitive pass). */
+const FOLIAGE_GAIN = 0.94;
+const STEM_GAIN = 1.05;
+const TENDRIL_GAIN = 1.0;
 
-const BARK_DARK = 0x1c1610;
-const BARK = 0x32281c;
-const BARK_MOSS = 0x3a4228;
+const BARK_DARK = 0x16120e;
+const BARK = 0x2a2218;
+const BARK_MOSS = 0x2e3622;
 
-const LEAF_DEEP = 0x354628;
-const LEAF_MID = 0x5a6b3a;
-const LEAF_PALE = 0x8a8f52;
-const LEAF_DRY = 0x8a6e34;
-const LEAF_BURN = 0x6a4e2a;
+const LEAF_DEEP = 0x24331c;
+const LEAF_MID = 0x3d4a28;
+const LEAF_PALE = 0x5a5e36;
+const LEAF_DRY = 0x5c4a28;
+const LEAF_BURN = 0x4a381c;
 
 export interface VineMaterials {
   stem: THREE.MeshStandardNodeMaterial;

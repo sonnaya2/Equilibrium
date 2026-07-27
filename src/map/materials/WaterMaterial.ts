@@ -93,69 +93,59 @@ export function createWaterMaterial(
   // local (x, -z, y): the swell displaces local z, and world XZ at vertex time
   // has to be read off local x / -local y rather than from positionWorld, which
   // is the very thing being computed here.
-  const vx = positionLocal.x;
-  const vz = positionLocal.y.negate();
-  material.positionNode = positionLocal.add(vec3(float(0), float(0), longSwell(vx, vz).mul(SWELL)));
-
   const px = positionWorld.x;
   const pz = positionWorld.z;
+  // Distance from board centre — far sea calms so the bottom of the frame
+  // does not show stretched swell / specular god-rays under islands.
+  const far = smoothstep(float(0.9), float(2.2), vec2(px, pz).length());
+  const nearSea = float(1).sub(far);
+  // Squared falloff kills far stretch + plate-bottom specular shafts (clipboard).
+  const nearSea2 = nearSea.mul(nearSea);
 
-  // A slow warp so the crossed sines never resolve into stripes when you happen
-  // to look along a crest.
-  // High frequency, low amplitude. A slow *large* warp marbles the whole sea into
-  // swirls, which is an oil slick, not water.
-  const warp = mx_noise_float(vec3(px.mul(7.5), pz.mul(7.5), mapClock.mul(0.09))).mul(0.06);
+  const vx = positionLocal.x;
+  const vz = positionLocal.y.negate();
+  const swellAmp = float(SWELL).mul(nearSea.mul(0.85).add(0.15));
+  material.positionNode = positionLocal.add(vec3(float(0), float(0), longSwell(vx, vz).mul(swellAmp)));
+
+  const warp = mx_noise_float(vec3(px.mul(7.5), pz.mul(7.5), mapClock.mul(0.09))).mul(0.06).mul(nearSea2);
   const wx = px.add(warp);
   const wz = pz.sub(warp.mul(0.8));
 
   const height = surfaceHeight(wx, wz);
-  // Central differences over the same function: three extra evaluations, and it
-  // cannot drift out of step with the displaced vertices the way a hand-derived
-  // gradient does the moment a frequency changes.
   const e = float(0.004);
   const slopeX = surfaceHeight(wx.add(e), wz).sub(surfaceHeight(wx.sub(e), wz)).div(e.mul(2));
   const slopeZ = surfaceHeight(wx, wz.add(e)).sub(surfaceHeight(wx, wz.sub(e))).div(e.mul(2));
+  const normalRelief = float(NORMAL_RELIEF).mul(nearSea2.mul(0.7).add(0.3));
   const normal = vec3(
-    slopeX.mul(NORMAL_RELIEF).negate(),
+    slopeX.mul(normalRelief).negate(),
     float(1),
-    slopeZ.mul(NORMAL_RELIEF).negate(),
+    slopeZ.mul(normalRelief).negate(),
   ).normalize();
 
   const view = cameraPosition.sub(positionWorld).normalize();
   const fresnel = normal.dot(view).clamp(0, 1).oneMinus().pow(4.2);
 
-  // Coast proximity comes from the generated field, so the shore band follows
-  // the real waterline rather than a guessed offset from a polygon.
   const F = texture(field, mapUvFrom(positionWorld));
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
 
-  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.1)));
-  // Darker right against the land. The board has no shadow maps, and this is
-  // what gives every coast its contact edge.
+  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.08).mul(nearSea)));
   water = water.mul(mix(float(0.78), float(1), offshore));
-  water = mix(water, linear(SKY), fresnel.mul(0.13));
+  water = mix(water, linear(SKY), fresnel.mul(0.1).mul(nearSea2));
 
-  // Reflect the key about the surface by hand — two lines, and nothing to go
-  // stale against an import.
   const reflected = normal.mul(normal.dot(key).mul(2)).sub(key);
   const toward = reflected.dot(view).clamp(0, 1);
-  // Gated by fresnel, so the sun answers from the far half of the sea where you
-  // are looking across it and not from the water directly under the camera.
-  const glint = toward.pow(70).mul(fresnel.mul(0.6).add(0.08)).mul(0.32);
-  const sheen = toward.pow(14).mul(0.016);
+  // nearSea² × offshore: no god-rays under island bottoms or far stretch.
+  const glint = toward.pow(70).mul(fresnel.mul(0.55).add(0.06)).mul(0.22).mul(nearSea2).mul(offshore);
+  const sheen = toward.pow(14).mul(0.01).mul(nearSea2).mul(offshore);
 
-  // Crest threads + shore line — cartographic, not storm seas.
-  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.15);
+  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.12).mul(nearSea2);
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
     .mul(height.mul(0.35).add(0.65))
-    .mul(0.3);
-  water = mix(water, linear(FOAM), crest.add(surf).clamp(0, 0.45));
+    .mul(0.25);
+  water = mix(water, linear(FOAM), crest.add(surf).clamp(0, 0.4));
 
-  // Dissolve into the page toward the outer void, so the plane has no hard rim.
-  // Complete before the plane's own edge (EXTENT/2 in Ocean.tsx), or the last
-  // band of water reads as a hard rim across the far sea.
-  const horizon = smoothstep(float(1.6), float(2.7), vec2(px, pz).length());
+  const horizon = smoothstep(float(1.15), float(2.15), vec2(px, pz).length());
   material.colorNode = mix(
     water.add(linear(0xfff0d2).mul(glint.add(sheen))),
     linear(OCEAN_HORIZON),

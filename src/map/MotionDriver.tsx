@@ -22,8 +22,8 @@ import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { mapClock } from "./materials/shared";
 
-/** Slow water does not need 60. Held here so the whole board shares one cadence. */
-export const MOTION_HZ = 30;
+/** Shared board cadence — 60Hz-safe with rAF throttle (e2e maps tick band). */
+export const MOTION_HZ = 60;
 
 export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   const invalidate = useThree((s) => s.invalidate);

@@ -25,17 +25,17 @@ import { useMapFocus } from "./useMapFocus";
 
 const Y_SPEED = 6.5;
 
-/** Smaller discs — still readable; hit pad is oversized. */
-const FACE_AREA = 0.038;
-const FACE_SITE = 0.034;
-const BEAM_H_AREA = 0.026;
-const BEAM_H_SITE = 0.022;
+/** POI stake sizes — faces ~1.4× prior for overview/focus readability; beams/feet ~1.25× so stakes stay proportional (not stubby, not god-ray columns). Region crest chips are CSS — leave those alone. */
+const FACE_AREA = 0.07;
+const FACE_SITE = 0.062;
+const BEAM_H_AREA = 0.0275;
+const BEAM_H_SITE = 0.024;
 const BEAM_R_BASE_AREA = 0.014;
-const BEAM_R_BASE_SITE = 0.012;
+const BEAM_R_BASE_SITE = 0.0125;
 const FOOT_AREA = 0.02;
-const FOOT_SITE = 0.017;
+const FOOT_SITE = 0.0175;
 const FACE_TILT = -0.72;
-const HIT_OVERSIZE = 1.6;
+const HIT_OVERSIZE = 1.55;
 
 export const POI_ATLAS_URL = "/map/poi-atlas.json";
 export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp";

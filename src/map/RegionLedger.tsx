@@ -37,7 +37,11 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
   const regionById = new Map(regions.map((r) => [r.id, r]));
   const pickCount = build.elective.length;
   const counterLabel = loaded ? `${pickCount}/${ELECTIVE_CAP}` : `…/${ELECTIVE_CAP}`;
-  const hasElectives = pickCount > 0;
+  // Native `disabled` must be a real boolean on every render. Do not gate on
+  // `loaded` — build is empty on the server snapshot and the hydration pass
+  // (useSyncExternalStore), so SSR HTML and the first client paint both see
+  // clearDisabled=true. After mount, picks flip it to false.
+  const clearDisabled = Boolean(pickCount === 0);
 
   return (
     <section className="board-sky__regions" aria-busy={!loaded}>
@@ -58,7 +62,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
         />
         <button
           type="button"
-          disabled={!loaded || !hasElectives}
+          disabled={clearDisabled}
           onClick={clearElectives}
           className="board-sky__clear"
         >
@@ -73,7 +77,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
           const selectable = canSelectElective(build, id);
           const selected = build.elective.includes(id);
           const fixed = region.availability !== "elective";
-          const pickBlocked = !fixed && (!loaded || !selectable);
+          const pickBlocked = Boolean(!fixed && (!loaded || !selectable));
           const focusOn = focus.region === id;
           const picked = selected || fixed;
           return (
@@ -81,7 +85,9 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
               <button
                 type="button"
                 aria-pressed={picked}
-                aria-disabled={pickBlocked || undefined}
+                // Omit when false so SSR/client both lack the attr when open;
+                // only emit the literal true when blocked (e2e pins that).
+                aria-disabled={pickBlocked ? true : undefined}
                 data-locked={unlocked ? undefined : "true"}
                 onClick={() => {
                   focusRegion(id);

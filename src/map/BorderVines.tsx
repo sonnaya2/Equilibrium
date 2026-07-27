@@ -24,19 +24,22 @@ import { useMapFocus } from "./useMapFocus";
 
 const GROWTH_SPEED = 1.5;
 const Y_SPEED = 6.5;
-const CLEARANCE = 0.0022;
+/** Sit clearly above plate emboss / depth write so cards aren't z-clipped. */
+const CLEARANCE = 0.0035;
 
-// Fine scrub on the seam — giant bright cards read as stickers, not foliage.
-const STEM_RADIUS = 0.0005;
-const TENDRIL_RADIUS = 0.00028;
-const TENDRIL_WIGGLE = 0.0014;
+// Thin structure under the leaf mass — fat tubes read as rubber cable.
+// Competitive crush pushed leaves under a pixel; size is tuned so overview still
+// reads a hedge without sticker cards (verified with a solid-color nuclear pass).
+const STEM_RADIUS = 0.00075;
+const TENDRIL_RADIUS = 0.00032;
+const TENDRIL_WIGGLE = 0.0016;
 const MAX_NODES = 160;
-const LEAF_SPACING = 0.0036;
-const MAX_LEAVES_PER_SEAM = 180;
-const LEAF_SIDE = 0.003;
-const LEAF_W = 0.0044;
-const LEAF_H = 0.0066;
-const CORNER_GAIN = 1.4;
+const LEAF_SPACING = 0.0048;
+const MAX_LEAVES_PER_SEAM = 170;
+const LEAF_SIDE = 0.006;
+const LEAF_W = 0.016;
+const LEAF_H = 0.024;
+const CORNER_GAIN = 1.45;
 
 function hash(n: number): number {
   let t = (n + 0x6d2b79f5) | 0;
@@ -223,14 +226,14 @@ function build(seams: SeamPath[]) {
       let side = 0;
       let rankScale = 1;
       if (rank < 0.45) {
-        side = (r3 - 0.5) * 0.0025;
-        rankScale = 0.45 + r1 * 0.2;
+        side = (r3 - 0.5) * 0.004;
+        rankScale = 0.95 + r1 * 0.3;
       } else if (rank < 0.8) {
-        side = (r2 > 0.5 ? 1 : -1) * (0.003 + r3 * LEAF_SIDE);
-        rankScale = 0.32 + r1 * 0.18;
+        side = (r2 > 0.5 ? 1 : -1) * (0.005 + r3 * LEAF_SIDE);
+        rankScale = 0.7 + r1 * 0.35;
       } else {
-        side = (r2 > 0.5 ? 1 : -1) * (0.005 + r3 * 0.004);
-        rankScale = 0.22 + r1 * 0.14;
+        side = (r2 > 0.5 ? 1 : -1) * (0.01 + r3 * 0.01);
+        rankScale = 0.45 + r1 * 0.3;
       }
 
       const localWeight =
@@ -238,13 +241,13 @@ function build(seams: SeamPath[]) {
       leaves.push({
         x: point.x - tangent.z * side,
         z: point.z + tangent.x * side,
-        y: r3 * 0.0018,
+        y: r3 * 0.0032,
         yaw: Math.atan2(tangent.x, tangent.z) + (r2 - 0.5) * 2.2,
-        tilt: (r3 - 0.5) * 0.4,
-        roll: (r4 - 0.5) * 0.45,
-        ax: 0.7 + r1 * 0.35,
-        az: 0.85 + r2 * 0.35,
-        scale: (0.2 + r1 * 0.18) * rankScale * (0.8 + 0.3 * localWeight),
+        tilt: (r3 - 0.5) * 0.45,
+        roll: (r4 - 0.5) * 0.5,
+        ax: 0.75 + r1 * 0.4,
+        az: 0.9 + r2 * 0.4,
+        scale: (0.55 + r1 * 0.7) * rankScale * (0.75 + 0.4 * localWeight),
         phase: i * 0.73 + index * 1.7,
         along,
         seam: index,
@@ -253,13 +256,18 @@ function build(seams: SeamPath[]) {
   }
 
   const leafGeometry = new THREE.PlaneGeometry(LEAF_W, LEAF_H);
+  // Bind aLeaf before InstancedMesh + first WebGPU pipeline compile (same
+  // pattern as PlaceMarkers aLit). Missing attr folds to abstract 0 and naga
+  // rejects the leaf fragment stage.
   const seeds = new Float32Array(Math.max(1, leaves.length) * 3);
   leaves.forEach((leaf, i) => {
     seeds[i * 3] = hash(i * 2654435761);
     seeds[i * 3 + 1] = hash(i * 40503 + 11);
     seeds[i * 3 + 2] = hash(i * 97 + leaf.seam * 13);
   });
-  leafGeometry.setAttribute("aLeaf", new THREE.InstancedBufferAttribute(seeds, 3));
+  const leafAttr = new THREE.InstancedBufferAttribute(seeds, 3);
+  leafAttr.setUsage(THREE.StaticDrawUsage);
+  leafGeometry.setAttribute("aLeaf", leafAttr);
   const leafMesh = new THREE.InstancedMesh(
     leafGeometry,
     leafMaterial.material,
@@ -268,6 +276,7 @@ function build(seams: SeamPath[]) {
   leafMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   leafMesh.count = leaves.length;
   leafMesh.frustumCulled = false;
+  leafMesh.renderOrder = 2;
   leafMesh.raycast = () => null;
 
   return {
@@ -330,6 +339,36 @@ export function BorderVines({
     forcePose.current = true;
     invalidate();
   }, [targets, invalidate]);
+
+  // Dev probe (mirrors MotionDriver.__mapDiag) — e2e / local FX checks.
+  useEffect(() => {
+    const probe = () => {
+      const m = new THREE.Matrix4();
+      const p = new THREE.Vector3();
+      const q = new THREE.Quaternion();
+      const s = new THREE.Vector3();
+      let sample: { x: number; y: number; z: number; sx: number; sy: number } | null = null;
+      if (vines.leafMesh.count > 0) {
+        vines.leafMesh.getMatrixAt(0, m);
+        m.decompose(p, q, s);
+        sample = { x: p.x, y: p.y, z: p.z, sx: s.x, sy: s.y };
+      }
+      return {
+        seams: vines.built.length,
+        leaves: vines.leaves.length,
+        count: vines.leafMesh.count,
+        growth: growth.current.slice(),
+        targets: targets.map((t) => t.growth),
+        visible: growth.current.filter((g) => g > 0.01).length,
+        sample,
+        matType: vines.leafMesh.material?.type ?? null,
+      };
+    };
+    (window as unknown as { __vineDiag?: typeof probe }).__vineDiag = probe;
+    return () => {
+      delete (window as unknown as { __vineDiag?: typeof probe }).__vineDiag;
+    };
+  }, [vines, targets]);
 
   useFrame((_, delta) => {
     const group = root.current;

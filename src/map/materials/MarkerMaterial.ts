@@ -57,7 +57,7 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   });
 
   const state = attribute("aState", "vec3") as unknown as Node<"vec3">;
-  const local = vec2(positionLocal.x, positionLocal.y).mul(2);
+  const local = vec2(positionLocal.x, positionLocal.y).mul(float(2));
   const r = local.length();
 
   const disc = step(r, float(R_EDGE));
@@ -65,21 +65,34 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   const inRim = step(float(R_RIM_IN), r).mul(step(r, float(R_RIM_OUT)));
   const underRim = step(float(R_ICON), r).mul(step(r, float(R_RIM_IN)));
 
-  const lift = local.y.mul(0.5).add(0.5);
-  let colour = mix(linear(STONE_DARK), linear(STONE), lift.mul(0.55).add(0.25));
+  const lift = local.y.mul(float(0.5)).add(float(0.5));
+  let colour = mix(
+    linear(STONE_DARK),
+    linear(STONE),
+    lift.mul(float(0.55)).add(float(0.25)),
+  );
 
   const icon = texture(atlas, uv());
   // Full chroma — no 0.96 crush, no Standard lighting wash.
   colour = mix(colour, icon.rgb, icon.a.mul(inIcon));
-  colour = mix(colour, linear(STONE_DARK).mul(0.85), underRim);
+  colour = mix(colour, linear(STONE_DARK).mul(float(0.85)), underRim);
 
-  const facing = local.normalize().dot(vec2(-0.62, 0.78).normalize()).mul(0.5).add(0.5);
+  const facing = local
+    .normalize()
+    .dot(vec2(float(-0.62), float(0.78)).normalize())
+    .mul(float(0.5))
+    .add(float(0.5));
   const brass = mix(linear(BRASS_DEEP), linear(BRASS), facing.pow(float(1.3)));
   colour = mix(colour, brass, inRim);
   // Site pip on the rim only when unlit; lit gem goes through emissive… but
   // Basic has no emissive, so brighten the rim with gem when lit.
-  colour = mix(colour, linear(GEM), inRim.mul(state.y.mul(0.85).add(state.x.mul(0.25))));
-  colour = colour.mul(float(1).add(state.y.mul(0.12)));
+  colour = mix(
+    colour,
+    linear(GEM),
+    inRim.mul(state.y.mul(float(1)).add(state.x.mul(float(0.3)))),
+  );
+  // Lit faces punch harder so small pins still read as selected.
+  colour = colour.mul(float(1).add(state.y.mul(float(0.22))));
 
   material.colorNode = colour;
   material.opacityNode = disc;
@@ -113,17 +126,21 @@ export function createMarkerBeamMaterial(): MarkerMaterial {
 
   const lit = attribute("aLit", "float") as unknown as Node<"float">;
   // Unit cylinder: y −0.5..0.5, radius ~1 at base of our open frustum.
-  const y = positionLocal.y.add(0.5); // 0 base → 1 top
+  const y = positionLocal.y.add(float(0.5)); // 0 base → 1 top
   const radial = vec2(positionLocal.x, positionLocal.z).length();
-  const core = float(1).sub(smoothstep(float(0.15), float(0.95), radial));
-  const vertical = smoothstep(float(0), float(0.12), y).mul(float(1).sub(smoothstep(float(0.75), float(1), y)));
-  const pulse = mapClock.mul(1.7).sin().mul(0.12).add(0.88);
-  const brass = mix(linear(BRASS_DEEP), linear(BRASS), y.mul(0.6).add(0.2));
-  const gem = mix(linear(0x1a6b52), linear(GEM), y.mul(0.5).add(0.35));
+  const core = float(1).sub(smoothstep(float(0.12), float(0.92), radial));
+  const vertical = smoothstep(float(0), float(0.1), y).mul(
+    float(1).sub(smoothstep(float(0.7), float(1), y)),
+  );
+  // Stronger pulse so small stakes still read as living glow, not static sticks.
+  const pulse = mapClock.mul(float(1.9)).sin().mul(float(0.18)).add(float(0.82));
+  const brass = mix(linear(BRASS_DEEP), linear(BRASS), y.mul(float(0.6)).add(float(0.2)));
+  const gem = mix(linear(0x1a6b52), linear(GEM), y.mul(float(0.5)).add(float(0.35)));
   material.colorNode = mix(brass, gem, lit).mul(core.mul(pulse));
-  // Avoid mix(0.12, 0.22, lit): when lit folds to a literal, naga emits abstract
+  // Avoid mix(a, b, lit): when lit folds to a literal, naga emits abstract
   // floats inside a runtime expression and the WebGPU pipeline fails validation.
-  const opacity = float(0.12).add(lit.mul(float(0.1)));
+  // Opacity lifted so glow survives the smaller face/beam scale.
+  const opacity = float(0.2).add(lit.mul(float(0.18)));
   material.opacityNode = core.mul(vertical).mul(opacity).mul(pulse);
 
   return {
@@ -145,10 +162,10 @@ export function createMarkerFootMaterial(): MarkerMaterial {
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -2,
   });
-  const r = vec2(positionLocal.x, positionLocal.y).mul(2).length();
-  const fall = float(1).sub(smoothstep(float(0.15), float(1), r));
-  material.colorNode = mix(linear(BRASS_DEEP), linear(BRASS), fall.mul(0.5));
-  material.opacityNode = fall.mul(0.14);
+  const r = vec2(positionLocal.x, positionLocal.y).mul(float(2)).length();
+  const fall = float(1).sub(smoothstep(float(0.12), float(1), r));
+  material.colorNode = mix(linear(BRASS_DEEP), linear(BRASS), fall.mul(float(0.55)));
+  material.opacityNode = fall.mul(float(0.2));
   return {
     material,
     dispose() {

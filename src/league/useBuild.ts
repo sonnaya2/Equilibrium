@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
 import {
   emptyBuild,
@@ -80,25 +80,19 @@ export function getBuildState(): BuildState {
 }
 
 export function useBuild() {
-  // Server snapshot stays the empty build so hydration matches; real state
-  // loads from localStorage after mount. Share hashes are handled only by
-  // ShareImport so any route can import without double-apply.
+  // Server snapshots keep SSR HTML and the hydration pass identical. Real
+  // state loads from localStorage after mount. Share hashes are handled only
+  // by ShareImport so any route can import without double-apply.
+  //
+  // Both build and loaded use useSyncExternalStore — never seed from the
+  // mutable module `hydrated` flag via useState. ShareImport can flip that
+  // flag before a Suspense-delayed child hydrates; getServerSnapshot stays
+  // false for the hydration pass so Clear picks `disabled` matches the HTML.
   const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
-  // Always false on the first render, never seeded from `hydrated`.
-  //
-  // That module flag is shared and mutable: ShareImport hydrates the store from
-  // the layout, so by the time a component behind a Suspense boundary hydrates,
-  // `hydrated` is already true — and seeding from it made the client's first
-  // render disagree with the server HTML that was built while it was false.
-  // React reported that as an unpatchable `disabled` mismatch on Clear picks.
-  //
-  // `build` never had this problem because useSyncExternalStore uses the server
-  // snapshot for the hydration render too. This has to match that discipline.
-  const [loaded, setLoaded] = useState(false);
+  const loaded = useSyncExternalStore(subscribe, () => hydrated, () => false);
 
   useEffect(() => {
     hydrateLocalBuild();
-    setLoaded(true);
   }, []);
 
   return {

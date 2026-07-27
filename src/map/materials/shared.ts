@@ -22,8 +22,10 @@ export const mapClock = uniform(0);
  * r185 typings. 2.2 is the sRGB decode `color()` would have applied.
  */
 export function linear(hex: number) {
+  // float() each channel — bare JS numbers into vec3 can emit abstract floats
+  // when naga types a JoinNode path; concrete f32 nodes stay valid in mix().
   const ch = (shift: number) => Math.pow(((hex >> shift) & 255) / 255, 2.2);
-  return vec3(ch(16), ch(8), ch(0));
+  return vec3(float(ch(16)), float(ch(8)), float(ch(0)));
 }
 
 /**
@@ -35,8 +37,8 @@ export function linear(hex: number) {
  */
 export function mapUvFrom(position: Node<"vec3">) {
   return vec2(
-    position.x.div(float(MAP_WORLD.width)).add(0.5),
-    position.z.div(float(MAP_WORLD.height)).add(0.5).oneMinus(),
+    position.x.div(float(MAP_WORLD.width)).add(float(0.5)),
+    position.z.div(float(MAP_WORLD.height)).add(float(0.5)).oneMinus(),
   );
 }
 

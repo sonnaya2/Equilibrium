@@ -62,18 +62,33 @@ type FloatNode = Node<"float">;
 /** The long waves the mesh actually follows. */
 function longSwell(x: FloatNode, z: FloatNode): FloatNode {
   // Slightly quicker than a still pond — cartographic life, not storm sea.
-  const a = x.mul(5.1).add(z.mul(2.6)).add(mapClock.mul(0.88)).sin();
-  const b = z.mul(6.4).sub(x.mul(3.1)).sub(mapClock.mul(0.64)).sin();
-  const c = x.mul(3.2).add(z.mul(4.1)).add(mapClock.mul(0.46)).sin();
-  return a.mul(0.48).add(b.mul(0.34)).add(c.mul(0.18));
+  // float() on every scalar so WGSL never sees abstract floats in the swell graph.
+  const a = x.mul(float(5.1)).add(z.mul(float(2.6))).add(mapClock.mul(float(0.88))).sin();
+  const b = z.mul(float(6.4)).sub(x.mul(float(3.1))).sub(mapClock.mul(float(0.64))).sin();
+  const c = x.mul(float(3.2)).add(z.mul(float(4.1))).add(mapClock.mul(float(0.46))).sin();
+  return a.mul(float(0.48)).add(b.mul(float(0.34))).add(c.mul(float(0.18)));
 }
 
 /** Long swell plus short waves that only show up in the normal. */
 function surfaceHeight(x: FloatNode, z: FloatNode): FloatNode {
   return longSwell(x, z)
-    .mul(0.62)
-    .add(x.mul(23).add(z.mul(17)).add(mapClock.mul(1.55)).sin().mul(0.24))
-    .add(z.mul(31).sub(x.mul(12)).sub(mapClock.mul(1.08)).sin().mul(0.14));
+    .mul(float(0.62))
+    .add(
+      x
+        .mul(float(23))
+        .add(z.mul(float(17)))
+        .add(mapClock.mul(float(1.55)))
+        .sin()
+        .mul(float(0.24)),
+    )
+    .add(
+      z
+        .mul(float(31))
+        .sub(x.mul(float(12)))
+        .sub(mapClock.mul(float(1.08)))
+        .sin()
+        .mul(float(0.14)),
+    );
 }
 
 export interface WaterMaterial {
@@ -96,27 +111,37 @@ export function createWaterMaterial(
   // is the very thing being computed here.
   const px = positionWorld.x;
   const pz = positionWorld.z;
-  // Distance from board centre — far sea calms so the bottom of the frame
-  // does not show stretched swell / specular god-rays under islands.
-  const far = smoothstep(float(0.9), float(2.2), vec2(px, pz).length());
+  // Soft far falloff only — squared nearSea killed all glint/sheen on the board
+  // when agents tried to erase island god-rays. Keep life under the plates;
+  // gate specular with offshore so land UVs never pick it up.
+  const far = smoothstep(float(1.35), float(2.45), vec2(px, pz).length());
   const nearSea = float(1).sub(far);
-  // Squared falloff kills far stretch + plate-bottom specular shafts (clipboard).
-  const nearSea2 = nearSea.mul(nearSea);
 
   const vx = positionLocal.x;
   const vz = positionLocal.y.negate();
-  const swellAmp = float(SWELL).mul(nearSea.mul(0.85).add(0.15));
-  material.positionNode = positionLocal.add(vec3(float(0), float(0), longSwell(vx, vz).mul(swellAmp)));
+  const swellAmp = float(SWELL).mul(nearSea.mul(float(0.55)).add(float(0.45)));
+  material.positionNode = positionLocal.add(
+    vec3(float(0), float(0), longSwell(vx, vz).mul(swellAmp)),
+  );
 
-  const warp = mx_noise_float(vec3(px.mul(7.5), pz.mul(7.5), mapClock.mul(0.09))).mul(0.06).mul(nearSea2);
+  const warp = mx_noise_float(
+    vec3(px.mul(float(7.5)), pz.mul(float(7.5)), mapClock.mul(float(0.09))),
+  )
+    .mul(float(0.06))
+    .mul(nearSea.mul(float(0.5)).add(float(0.5)));
   const wx = px.add(warp);
-  const wz = pz.sub(warp.mul(0.8));
+  const wz = pz.sub(warp.mul(float(0.8)));
 
   const height = surfaceHeight(wx, wz);
   const e = float(0.004);
-  const slopeX = surfaceHeight(wx.add(e), wz).sub(surfaceHeight(wx.sub(e), wz)).div(e.mul(2));
-  const slopeZ = surfaceHeight(wx, wz.add(e)).sub(surfaceHeight(wx, wz.sub(e))).div(e.mul(2));
-  const normalRelief = float(NORMAL_RELIEF).mul(nearSea2.mul(0.7).add(0.3));
+  const slopeX = surfaceHeight(wx.add(e), wz)
+    .sub(surfaceHeight(wx.sub(e), wz))
+    .div(e.mul(float(2)));
+  const slopeZ = surfaceHeight(wx, wz.add(e))
+    .sub(surfaceHeight(wx, wz.sub(e)))
+    .div(e.mul(float(2)));
+  // Full NORMAL_RELIEF on-board; only ease far sea so the horizon stays calm.
+  const normalRelief = float(NORMAL_RELIEF).mul(nearSea.mul(float(0.35)).add(float(0.65)));
   const normal = vec3(
     slopeX.mul(normalRelief).negate(),
     float(1),
@@ -127,32 +152,47 @@ export function createWaterMaterial(
   const fresnel = normal.dot(view).clamp(float(0), float(1)).oneMinus().pow(float(4.2));
 
   const F = texture(field, mapUvFrom(positionWorld));
+  // Open water only — cuts plate-bottom / island-underside specular shafts.
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
 
-  // Height tint keeps troughs readable without relying on specular wash.
-  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.1).mul(nearSea)));
+  let water = mix(
+    linear(SHALLOW),
+    linear(DEEP),
+    offshore.mul(float(0.85)).add(height.mul(float(0.1))),
+  );
   water = water.mul(mix(float(0.78), float(1), offshore));
-  // Quiet sky rim — grazing fresnel under plate rims was reading as soft white shafts.
-  water = mix(water, linear(SKY), fresnel.mul(0.055).mul(nearSea2));
+  // Sky rim restored (was crushed to 0.055×nearSea² — read as dead pond).
+  water = mix(water, linear(SKY), fresnel.mul(float(0.12)).mul(nearSea.mul(float(0.4)).add(float(0.6))));
 
-  const reflected = normal.mul(normal.dot(key).mul(2)).sub(key);
+  const reflected = normal.mul(normal.dot(key).mul(float(2))).sub(key);
   const toward = reflected.dot(view).clamp(float(0), float(1));
-  // nearSea² × offshore gates far stretch + under-land UV. Residual coastal shafts
-  // were the remaining path: high scale + non-zero nadir floor on glint. Tighter
-  // lobe, lower weight, fresnel-led (tiny floor) keeps cartographic sparkle without
-  // vertical white beams at island edges.
-  const glint = toward.pow(float(96)).mul(fresnel.mul(0.82).add(0.015)).mul(0.11).mul(nearSea2).mul(offshore);
-  const sheen = toward.pow(float(22)).mul(0.004).mul(nearSea2).mul(offshore);
+  // Cartographic sparkle: near fd79a83 weights, fresnel-led, offshore-gated.
+  // Keep a small nadir floor so troughs still catch sun without vertical shafts.
+  const glint = toward
+    .pow(float(72))
+    .mul(fresnel.mul(float(0.62)).add(float(0.07)))
+    .mul(float(0.28))
+    .mul(nearSea.mul(float(0.35)).add(float(0.65)))
+    .mul(offshore);
+  const sheen = toward
+    .pow(float(15))
+    .mul(float(0.014))
+    .mul(nearSea.mul(float(0.4)).add(float(0.6)))
+    .mul(offshore);
 
-  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.1).mul(nearSea2).mul(offshore);
+  const crest = smoothstep(float(0.78), float(0.96), height.abs())
+    .mul(float(0.14))
+    .mul(nearSea.mul(float(0.5)).add(float(0.5)))
+    .mul(offshore);
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
-    .mul(height.mul(0.35).add(0.65))
-    .mul(0.25);
-  // clamp edges as float() — bare 0 / 0.4 are abstract and fail WebGPU validation.
-  water = mix(water, linear(FOAM), crest.add(surf).clamp(float(0), float(0.4)));
+    .mul(height.mul(float(0.35)).add(float(0.65)))
+    .mul(float(0.28));
+  // clamp edges as float() — bare 0 / 0.45 are abstract and fail WebGPU validation.
+  water = mix(water, linear(FOAM), crest.add(surf).clamp(float(0), float(0.45)));
 
-  const horizon = smoothstep(float(1.15), float(2.15), vec2(px, pz).length());
+  // Horizon further out so the board sits in living sea, not a grey puddle.
+  const horizon = smoothstep(float(1.55), float(2.65), vec2(px, pz).length());
   material.colorNode = mix(
     water.add(linear(0xfff0d2).mul(glint.add(sheen))),
     linear(OCEAN_HORIZON),

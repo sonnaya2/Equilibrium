@@ -287,7 +287,8 @@ export function BuildPlanner({
             <button
               type="button"
               className="mc__btn"
-              disabled={!loaded || picks.length === 0}
+              // Elective count only (empty server snapshot) — same as RegionLedger.
+              disabled={Boolean(picks.length === 0)}
               onClick={clearElectives}
             >
               Clear picks
@@ -295,7 +296,7 @@ export function BuildPlanner({
             <button
               type="button"
               className="mc__btn mc__btn--gem"
-              disabled={!loaded}
+              disabled={Boolean(!loaded)}
               onClick={copyShareLink}
             >
               {copyLabel}
@@ -303,7 +304,7 @@ export function BuildPlanner({
             <button
               type="button"
               className="mc__btn"
-              disabled={!loaded}
+              disabled={Boolean(!loaded)}
               onClick={resetBuild}
             >
               Reset build
@@ -341,7 +342,7 @@ export function BuildPlanner({
                   type="button"
                   className={cls}
                   aria-pressed={isOn}
-                  aria-disabled={blocked || undefined}
+                  aria-disabled={blocked ? true : undefined}
                   aria-label={`${region.name}, ${status}`}
                   onClick={() => {
                     if (elective && loaded && selectable) {

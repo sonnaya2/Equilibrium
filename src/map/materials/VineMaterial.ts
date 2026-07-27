@@ -14,32 +14,31 @@ import {
   float,
   mix,
   mx_noise_float,
-  positionLocal,
   positionWorld,
   smoothstep,
   step,
   uniform,
   uv,
-  vec2,
   vec3,
 } from "three/tsl";
 import type { Node } from "three/webgpu";
 import { linear } from "./shared";
 
-/** Fine dark scrub — small presence uptick after competitive crush (still scrub, not stickers). */
-const FOLIAGE_GAIN = 1.05;
-const STEM_GAIN = 1.05;
+/** Unlit leaf gain — Basic has no π-divide, keep near 1 so sage stays map-like. */
+const FOLIAGE_GAIN = 1.12;
+const STEM_GAIN = 1.08;
 const TENDRIL_GAIN = 1.0;
 
 const BARK_DARK = 0x16120e;
 const BARK = 0x2a2218;
 const BARK_MOSS = 0x2e3622;
 
-const LEAF_DEEP = 0x283820;
-const LEAF_MID = 0x42522c;
-const LEAF_PALE = 0x62663c;
-const LEAF_DRY = 0x64522c;
-const LEAF_BURN = 0x503c20;
+// Slightly lifted sage so the hedge separates from the wiki print under unlit Basic.
+const LEAF_DEEP = 0x354a28;
+const LEAF_MID = 0x4e6334;
+const LEAF_PALE = 0x6e7444;
+const LEAF_DRY = 0x746034;
+const LEAF_BURN = 0x5a4426;
 
 export interface VineMaterials {
   stem: THREE.MeshStandardNodeMaterial;
@@ -53,8 +52,8 @@ export function createVineMaterials(): VineMaterials {
   const growth = uniform(1);
   const alive = () => {
     const along = uv().x;
-    const fromEnd = along.min(along.oneMinus()).mul(2);
-    return smoothstep(float(0), float(0.2), growth.mul(1.1).sub(fromEnd));
+    const fromEnd = along.min(along.oneMinus()).mul(float(2));
+    return smoothstep(float(0), float(0.2), growth.mul(float(1.1)).sub(fromEnd));
   };
 
   // Soft tip while growing must not write depth (punches holes in leaves).
@@ -68,13 +67,17 @@ export function createVineMaterials(): VineMaterials {
   const around = uv().y;
   const grain = mx_noise_float(positionWorld.mul(vec3(float(180), float(40), float(180))));
   // Long bark striations — not a bright circumferential cable highlight.
-  const stria = mx_noise_float(along.mul(140).add(around.mul(3)));
-  let bark = mix(linear(BARK_DARK), linear(BARK), stria.mul(0.55).add(0.35));
-  bark = mix(bark, linear(BARK_MOSS), grain.mul(0.18).add(0.08));
-  const limb = around.sub(0.5).abs().mul(2);
-  bark = mix(bark.mul(0.92), bark.mul(0.78), limb.pow(float(1.2)));
-  stem.colorNode = bark.mul(STEM_GAIN);
-  stem.roughnessNode = float(0.96).add(stria.mul(0.03));
+  const stria = mx_noise_float(along.mul(float(140)).add(around.mul(float(3))));
+  let bark = mix(
+    linear(BARK_DARK),
+    linear(BARK),
+    stria.mul(float(0.55)).add(float(0.35)),
+  );
+  bark = mix(bark, linear(BARK_MOSS), grain.mul(float(0.18)).add(float(0.08)));
+  const limb = around.sub(float(0.5)).abs().mul(float(2));
+  bark = mix(bark.mul(float(0.92)), bark.mul(float(0.78)), limb.pow(float(1.2)));
+  stem.colorNode = bark.mul(float(STEM_GAIN));
+  stem.roughnessNode = float(0.96).add(stria.mul(float(0.03)));
   stem.opacityNode = alive();
 
   const tendril = new THREE.MeshStandardNodeMaterial({
@@ -83,9 +86,14 @@ export function createVineMaterials(): VineMaterials {
     transparent: true,
     depthWrite: false,
   });
-  const fine = mx_noise_float(positionWorld.mul(280));
-  tendril.colorNode = mix(linear(BARK_DARK), linear(BARK), fine.mul(0.4).add(0.4)).mul(TENDRIL_GAIN);
-  tendril.opacityNode = alive().mul(0.72);
+  // Bare positionWorld.mul(N) → abstract scale in some naga builds; wrap.
+  const fine = mx_noise_float(positionWorld.mul(float(280)));
+  tendril.colorNode = mix(
+    linear(BARK_DARK),
+    linear(BARK),
+    fine.mul(float(0.4)).add(float(0.4)),
+  ).mul(float(TENDRIL_GAIN));
+  tendril.opacityNode = alive().mul(float(0.72));
   tendril.roughnessNode = float(0.97);
 
   return {
@@ -100,7 +108,7 @@ export function createVineMaterials(): VineMaterials {
 }
 
 export interface LeafMaterial {
-  material: THREE.MeshStandardNodeMaterial;
+  material: THREE.MeshBasicNodeMaterial;
   dispose(): void;
 }
 
@@ -111,36 +119,43 @@ export interface LeafMaterial {
  * clump is a mix of sage and straw rather than one stamp.
  */
 export function createLeafMaterial(): LeafMaterial {
-  const material = new THREE.MeshStandardNodeMaterial({
-    roughness: 0.96,
-    metalness: 0,
+  // Unlit Basic — Standard on flat cards under the desk lamp went near-black and
+  // read as "no vines". Authored sage/ochre must stay at map chroma.
+  // depthTest false temporarily avoided: cards must still occlude correctly under
+  // camera pitch; polygonOffset + clearance keep them above the plate instead.
+  const material = new THREE.MeshBasicNodeMaterial({
     side: THREE.DoubleSide,
     transparent: true,
     depthWrite: true,
-    alphaTest: 0.4,
+    alphaTest: 0.35,
+    toneMapped: false,
+    polygonOffset: true,
+    polygonOffsetFactor: -2,
+    polygonOffsetUnits: -2,
   });
 
+  // aLeaf must exist on the InstancedMesh geometry before first compile (see
+  // BorderVines bind) — missing attrs fold to abstract 0 and kill the pipeline.
   const a = attribute("aLeaf", "vec3") as unknown as Node<"vec3">;
   const seed = a.x;
   const morph = a.y;
   const grade = a.z;
   const u = uv();
-  const x = u.x.sub(0.5).mul(2);
+  const x = u.x.sub(float(0.5)).mul(float(2));
   const y = u.y;
 
   // Asymmetric lean + tip skew from morph seed.
-  const lean = morph.sub(0.5).mul(0.22);
-  const tipSkew = morph.sub(0.5).mul(0.35);
+  const lean = morph.sub(float(0.5)).mul(float(0.22));
+  const tipSkew = morph.sub(float(0.5)).mul(float(0.35));
   const xx = x.sub(lean.mul(y)).sub(tipSkew.mul(y.mul(y)));
 
-  const serr = mx_noise_float(vec2(y.mul(18), morph.mul(7)).add(seed.mul(3)))
-    .mul(0.06)
-    .add(mx_noise_float(y.mul(42).add(morph.mul(11))).mul(0.03));
-
-  const width = float(0.18)
-    .add(smoothstep(float(0), float(0.35), y).mul(0.82))
-    .mul(float(1).sub(smoothstep(float(0.55), float(1.02), y).pow(float(1.35))))
-    .add(serr);
+  // Leaf silhouette: width envelope only (no mx_noise) — noise paths have been
+  // a naga rejection source; variation comes from aLeaf + morph lean.
+  const taper = float(1).sub(smoothstep(float(0.55), float(1.02), y).pow(float(1.35)));
+  const width = float(0.22)
+    .add(smoothstep(float(0), float(0.32), y).mul(float(0.78)))
+    .mul(taper)
+    .mul(float(1).add(morph.sub(float(0.5)).mul(float(0.18))));
 
   const inside = width.sub(xx.abs());
   material.opacityNode = step(float(0.02), inside);
@@ -149,23 +164,23 @@ export function createLeafMaterial(): LeafMaterial {
   // floats in WGSL and naga rejects them when the third arg is a varying.
   const young = mix(linear(LEAF_MID), linear(LEAF_PALE), smoothstep(float(0.4), float(1), seed));
   const body = mix(linear(LEAF_DEEP), young, smoothstep(float(0), float(0.5), seed));
-  const dryAmt = smoothstep(float(0.72), float(1), seed).mul(0.55).add(grade.mul(0.45));
-  let col = mix(body, linear(LEAF_DRY), dryAmt.mul(0.85));
-  col = mix(col, linear(LEAF_BURN), smoothstep(float(0.92), float(1), seed).mul(grade).mul(0.55));
+  const dryAmt = smoothstep(float(0.72), float(1), seed)
+    .mul(float(0.55))
+    .add(grade.mul(float(0.45)));
+  let col = mix(body, linear(LEAF_DRY), dryAmt.mul(float(0.85)));
+  col = mix(
+    col,
+    linear(LEAF_BURN),
+    smoothstep(float(0.92), float(1), seed).mul(grade).mul(float(0.55)),
+  );
 
-  const rib = smoothstep(float(0.06), float(0), xx.abs());
-  col = mix(col, col.mul(0.62), rib.mul(0.55));
-
-  const blotch = mx_noise_float(positionLocal.mul(28).add(seed.mul(9)));
-  const grit = mx_noise_float(positionLocal.mul(110).add(morph.mul(13)));
-  col = col.mul(blotch.mul(0.16).add(0.92)).mul(grit.mul(0.07).add(0.965));
-
+  const rib = smoothstep(float(0.08), float(0), xx.abs());
+  col = mix(col, col.mul(float(0.72)), rib.mul(float(0.4)));
   const tipDry = smoothstep(float(0.55), float(1), y).mul(dryAmt);
-  col = mix(col, linear(LEAF_DRY).mul(1.05), tipDry.mul(0.35));
-  col = col.mul(mix(float(0.82), float(1.08), grade));
+  col = mix(col, linear(LEAF_DRY).mul(float(1.06)), tipDry.mul(float(0.3)));
+  col = col.mul(mix(float(0.9), float(1.14), grade));
 
-  material.colorNode = col.mul(FOLIAGE_GAIN);
-  material.roughnessNode = float(0.94).add(grit.mul(0.04)).sub(rib.mul(0.06)).add(dryAmt.mul(0.04));
+  material.colorNode = col.mul(float(FOLIAGE_GAIN));
 
   return {
     material,

@@ -668,6 +668,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "hermod, the spirit of war": "hermod",
   "desert strykewyrm": "desert-strykewyrm",
   "focus sight": "focus-sight",
+  "citharede abbey": "citharede-abbey",
+  "citharede abbey illuminated god books": "citharede-abbey",
   "het's oasis": "hets-oasis",
   "het's oasis agility course": "hets-oasis-agility-course",
   "het's oasis farming (flower bushes, cactus, honeycombs)": "hets-oasis",

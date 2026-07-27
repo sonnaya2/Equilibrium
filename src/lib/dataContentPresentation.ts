@@ -651,6 +651,7 @@ export function presentInterestName(value: string): string {
   if (/^Vampyrism Aspect$/i.test(raw)) return "Vampyrism Aspect";
   if (/^Desert strykewyrm$/i.test(raw)) return "Desert strykewyrm";
   if (/^Sophanem plover birds\b/i.test(raw)) return "Sophanem plovers";
+  if (/^Citharede Abbey\b/i.test(raw)) return "Citharede Abbey";
   if (/^Player-owned port$/i.test(raw)) return "Player-owned port";
   if (/^Player-owned ports\b/i.test(raw)) return "Player-owned port";
   if (/^Mage Training Arena\b/i.test(raw)) return "Mage Training Arena";
@@ -838,6 +839,7 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent desert agility infrastructure": "Agility",
     "farming activity and pof supply infrastructure": "Farming",
     "hunter and prayer training supply": "Hunter / Prayer",
+    "permanent prayer crafting upgrade infrastructure": "Prayer / Crafting",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

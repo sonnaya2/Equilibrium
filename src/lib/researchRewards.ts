@@ -145,6 +145,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Mage Training Arena": "Bones to Peaches, Infinity robes",
   "Mage Training Arena (bones to peaches + reward shop)":
     "Bones to Peaches, Infinity robes",
+  "Citharede Abbey":
+    "Illuminated Book of Law, Illuminated Book of War, Illuminated Book of Balance, Illuminated Book of Wisdom, Illuminated Book of Chaos",
+  "Citharede Abbey illuminated god books":
+    "Illuminated Book of Law, Illuminated Book of War, Illuminated Book of Balance, Illuminated Book of Wisdom, Illuminated Book of Chaos",
 };
 
 /**

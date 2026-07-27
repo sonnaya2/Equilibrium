@@ -21168,6 +21168,18 @@
             "title": "Mage Training Arena",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Citharede Abbey",
+          "kind": "Prayer / Crafting",
+          "detail": "Book-making table after One Piercing Note. Illuminate completed god books (60 Crafting + 60 Prayer): Law, War, Balance, Wisdom, Chaos, Ancient. First illumination each book grants 10k Crafting + 10k Prayer XP.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Illuminated_god_book",
+            "title": "Citharede Abbey",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [
@@ -21561,32 +21573,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Cactus_patch",
             "title": "Desert cactus Farming patches",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Citharede Abbey illuminated god books",
-          "category": "permanent Prayer Crafting upgrade infrastructure",
-          "detail": "Desert infrastructure for the god-book upgrade path — base books are Horror from the Deep (Fremennik / lighthouse). Original completed book is preserved; illumination creates a separate illuminated copy with zero charges. Steps in order: copy text → embellish initial capitals → add colour → add gold leaf. Pair with desert heat logistics and Al Kharid access, not as a second claim on Horror from the Deep · God-book page supply and Horror from the Deep remain multi-region pressure, not Desert-only · Unlocks: Illuminated god books (Law, War, Balance, Wisdom, Chaos, Ancient) via book-making table south-east of abbey entrance, First-time illumination per book: 10,000 Crafting XP and 10,000 Prayer XP (reward XP; not boosted by XP outfits), Illuminated pocket-slot books with same combat passive effects as base books, rechargeable with matching god pages (45 minutes per page, max 24 hours / 32 pages), POH bookcase reclaim of illuminated books for 120,000 coins if lost, Cosmetic illuminated god-book overrides after each completion (full set unlocks extra recolours)",
-          "requirements": [
-            "One Piercing Note completed for book-making table access",
-            "60 Crafting and 60 Prayer",
-            "Completed god book (Horror from the Deep damaged book + all four matching pages)",
-            "Enough prayer points for four illumination steps (each step drains 200 prayer; abbey altar recharges)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Illuminated_god_book",
-            "title": "Citharede Abbey illuminated god books",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",

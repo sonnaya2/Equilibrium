@@ -653,6 +653,11 @@ export function presentInterestName(value: string): string {
   if (/^Sophanem plover birds\b/i.test(raw)) return "Sophanem plovers";
   if (/^Player-owned port$/i.test(raw)) return "Player-owned port";
   if (/^Player-owned ports\b/i.test(raw)) return "Player-owned port";
+  if (/^Mage Training Arena\b/i.test(raw)) return "Mage Training Arena";
+  if (/^Menaphos$/i.test(raw)) return "Menaphos";
+  if (/^Menaphos\b/i.test(raw) && /hub|reputation|VIP|district/i.test(raw)) {
+    return "Menaphos";
+  }
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -823,6 +828,13 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "slayer permanent utility and reputation": "Slayer utility",
     "hunter activity and slayer supply adjacency": "Hunter",
     "ports voyage economy and eastern lands gate": "Ports",
+    "magic utility minigame and permanent unlock shop": "Magic minigame",
+    "permanent menaphos reputation and supply activity": "Menaphos",
+    "woodcutting activity and reputation supply": "Woodcutting",
+    "thieving activity and summoning utility": "Thieving",
+    "fishing and cooking supply infrastructure": "Fishing",
+    "regional reputation skilling unlocks": "Reputation",
+    "regional skilling infrastructure": "Skilling hub",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

@@ -20871,14 +20871,14 @@
       "content": [
         {
           "name": "Menaphos",
-          "kind": "city/skilling hub",
-          "detail": "",
-          "confidence": "confirmed_official",
+          "kind": "city hub",
+          "detail": "Four districts: Worker, Merchant, Port, Imperial. City quests for reputation, VIP area, acadia WC, marketeers, port fish/cook, soul altar, Shifting Tombs. Main Desert skilling city.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Menaphos",
             "title": "Menaphos",
-            "verifiedAt": "2026-07-25"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -21154,6 +21154,18 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Desert_strykewyrm",
             "title": "Desert strykewyrm",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Mage Training Arena",
+          "kind": "Magic minigame",
+          "detail": "North of Al Kharid / Duel Arena. Pizazz points for Bones to Peaches unlock and infinity robe shop.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Mage_Training_Arena",
+            "title": "Mage Training Arena",
             "verifiedAt": "2026-07-27"
           }
         }
@@ -21898,182 +21910,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Kharid-et_Dig_Site",
             "title": "Kharid-et Dig Site",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Mage Training Arena (bones to peaches + reward shop)",
-          "category": "Magic utility minigame and permanent unlock shop",
-          "detail": "Bones to Peaches is the ironman-facing permanent. No invented room XP/h · Unlocks: Bones to Peaches spell permanent unlock, Infinity robes and wand progression shop, Mid-game Magic utility rewards",
-          "requirements": [
-            "Mage Training Arena access north of Al Kharid / Duel Arena",
-            "Magic levels for Telekinetic, Alchemist, Enchantment, and Graveyard rooms",
-            "Pizazz points for reward shop purchases"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Mage_Training_Arena",
-            "title": "Mage Training Arena (bones to peaches + reward shop)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos City Quests (reputation engine)",
-          "category": "permanent Menaphos reputation and supply activity",
-          "detail": "Buried inside as a one-line earn method · Hard Desert. VIP tier grind without re-emitting · Unlocks: Repeatable City Quest loop: accept one active three-task quest at a time from district citizens, 2,000 faction reputation per full completion plus small/medium/large Menaphite gift offerings, Cooldown scales with overall Menaphos reputation: ~15–20 min default → none at overall tier 8, Chance at idocrase / hauyne Jewels of the Elid if not already owned, Optional Menaphos city quest enhancer to speed task progress · Region pressure: Hard Desert / Menaphos: assigners, map markers, reputation bank, and gift-offering economy are city-local",
-          "requirements": [
-            "The Jack of Spades completed for Menaphos access and reputation start",
-            "Urluk (Merchant) or world-map Menaphos Quest markers to find the active citizen",
-            "Stock common delivery items (seeds, logs, fish, bones, bars, sandstone 1kg, desert goat horns, etc.) for three-task runs"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/City_Quest",
-            "title": "Menaphos City Quests (reputation engine)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [
-            "desert"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos Imperial acadia Woodcutting",
-          "category": "Woodcutting activity and reputation supply",
-          "detail": "WC row for the Menaphos acadia loop already named inside — this is the checklist unlock for ironman WC + reputation. Het's Oasis and Uzer acadia stands are secondary Desert sites · VIP trees still need overall reputation tier 7 · Unlocks: Acadia trees at 80 WC XP per log; multiple logs per cut possible, 5.6 Menaphos reputation per Imperial acadia chop, Eight Imperial district acadia trees plus four VIP trees (VIP depletes at half rate), Imperial tier 8 permanent. Woodcutting success boost (also applies inside VIP), Acadia logs as Construction/Firemaking supply and cactus-patch build payment for Zahra",
-          "requirements": [
-            "50 Woodcutting",
-            "Menaphos access (The Jack of Spades / Desert region access)",
-            "VIP acadia trees need overall Menaphos reputation tier 7"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Acadia_tree",
-            "title": "Menaphos Imperial acadia Woodcutting",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos Merchant marketeers and stalls",
-          "category": "Thieving activity and Summoning utility",
-          "detail": "Primary open-world Thieving reputation loop inside Menaphos. Pyramid Plunder black ibis and Shifting Tombs camouflage-fragment rates rather than replacing them · Desert Thieving path alongside Pyramid Plunder and Shifting Tombs · Unlocks: Menaphite marketeer pickpocketing with Merchant reputation gain, Market stalls (silk, gem, lamp, fish, bread) as secondary thieve targets, Merchant district Summoning obelisk for pouch making without leaving the city, Merchant tier 8 permanent. Thieving success boost on marketeers",
-          "requirements": [
-            "46 Thieving for marketeers / lamp stalls (and related market content)",
-            "Merchant district access"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Menaphite_marketeer",
-            "title": "Menaphos Merchant marketeers and stalls",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos Port fish and local cook loop",
-          "category": "Fishing and Cooking supply infrastructure",
-          "detail": "Ironman / no-trade midgame food loop: fish in Port or VIP, cook on district ranges. Better League food synergy than pure Bake Pie when Desert is unlocked. Port tier 8 reputation permanently improves catch success on the three Menaphos fish · Surface as Desert food + Fishing progression, not only XP training · Unlocks: Self-sufficient midgame food from desert sole, catfish, and beltfish, Local ranges and Port/VIP bank deposit-all-fish QoL, Meena's Fishing Shop and Port production furniture (furnace, anvil, spinning wheel, loom)",
-          "requirements": [
-            "52 Fishing / Cooking for desert sole",
-            "60 Fishing / Cooking for catfish",
-            "72 Fishing / Cooking for beltfish",
-            "Port district fishing spots; VIP fish spots after overall reputation tier 7"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Menaphos_Port_district",
-            "title": "Menaphos Port fish and local cook loop",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos reputation and VIP skilling area",
-          "category": "regional reputation skilling unlocks",
-          "detail": "VIP is the high-value midgame Desert gather hub once overall tier 7 is banked. Reputation is earned from city skilling, Shifting Tombs, City Quests, soul obelisks, and related desert activities — not spent · VIP is a permanent gather QoL unlock, not a one-off shop purchase · Unlocks: VIP skilling area (Imperial): 4 acadia trees, 3 mineral deposits, 3 Menaphos fish spots, bank chest with Deposit all fish; resources deplete at half the outside rate, Overall tier 5: improved Shifting Tombs feather of Ma'at and gold rewards, District tier 8 permanent success/damage boosts: Imperial Woodcutting, Port Fishing, Merchant Thieving (marketeers), Worker Mining damage on sandstone deposits (also applies inside VIP), City-quest cooldown reductions scaling with overall reputation (none at overall tier 8+), Quest multipliers on reputation gain up to x2.5 after Pharaoh's Folly",
-          "requirements": [
-            "Menaphos access and a selected reputation faction",
-            "Tier 7 overall Menaphos reputation for VIP skilling area access",
-            "District tiers for deposit boxes (tier 2), teleports (tier 4), bank chests (tier 6), and district skilling boosts (tier 8)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Reputation_(Menaphos)",
-            "title": "Menaphos reputation and VIP skilling area",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "desert"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Menaphos skilling hub (four districts)",
-          "category": "regional skilling infrastructure",
-          "detail": "Treat Menaphos like Prifddinas: a bundle of gather, production, minigame, and reputation infrastructure rather than one training method. Local fish + ranges form the midgame food cook loop (desert sole / catfish / beltfish). Sophanem is the twin city for Pyramid Plunder, plover birds, and Slayer dungeon — not a separate league region · Desert official examples include Menaphos and Het's Oasis. Keep skill requirements on VIP, soul altar, Shifting Tombs tiers, and individual resources · Unlocks: Imperial district: acadia trees (50 Woodcutting), VIP skilling gate, Grand Library, soul ruins / soul altar path, Imperial cactus patch construction, Merchant district: Menaphite marketeers and stalls (46+ Thieving), Summoning obelisk, GE/bank access after Jack of Spades, Port district: desert sole / catfish / beltfish spots (52/60/72 Fishing), furnaces, anvils, spinning wheels, looms, Player-owned port portal, Portmaster Kags desert ferry, Worker district: mineral deposits (50 Mining), clay, furnace, anvil, bonfire, pottery oven, ranges, Shifting Tombs entrances in every district (district quick-travel), Menaphos reputation factions tied to each district plus overall city tiers · Region status: confirmed_official_region_example",
-          "requirements": [
-            "Partial completion of The Jack of Spades for city access in the normal game",
-            "Equilibrium intends Desert region unlock to provide near-immediate Menaphos access — keep skill gates on individual activities"
-          ],
-          "confidence": "confirmed_wiki_plus_official_region_example",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Menaphos",
-            "title": "Menaphos skilling hub (four districts)",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "desert",

@@ -349,6 +349,14 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   scrimshaws: perm("player-owned-port"),
   "eastern lands voyages": perm("player-owned-port"),
   "ports resources": perm("player-owned-port"),
+  "bones to peaches": skProd("bones-to-peaches"),
+  "infinity robes": skProd("infinity-robes"),
+  "city quests": perm("menaphos"),
+  "vip area": perm("menaphos"),
+  "acadia trees": perm("menaphos"),
+  marketeers: perm("menaphos"),
+  "port fishing": perm("menaphos"),
+  "soul altar": perm("soul-altar"),
   // Drygore / KQ uniques live under skilling-production so reward chips pass acceptRewardPath
   // (equipmentIconPath closed set rejects brand-new combat/equipment slugs).
   "drygore rapier": skProd("drygore-rapier"),

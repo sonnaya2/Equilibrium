@@ -801,6 +801,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "mage of zamorak": "mage-of-zamorak",
   "mage of zamorak (abyss entrance)": "mage-of-zamorak",
   "mage training arena (bones to peaches + reward shop)": "mage-training-arena",
+  "mage training arena": "mage-training-arena",
   "magic cape": "magic-cape",
   "magic cape residual": "magic-cape",
   "magic golem outfit": "magic-golem-outfit",

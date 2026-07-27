@@ -140,6 +140,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Desert strykewyrm": "Focus sight",
   "Player-owned port":
     "Trade goods, Scrimshaws, Eastern lands voyages, Ports resources",
+  Menaphos:
+    "City quests, VIP area, Acadia trees, Marketeers, Port fishing, Soul altar",
+  "Mage Training Arena": "Bones to Peaches, Infinity robes",
+  "Mage Training Arena (bones to peaches + reward shop)":
+    "Bones to Peaches, Infinity robes",
 };
 
 /**

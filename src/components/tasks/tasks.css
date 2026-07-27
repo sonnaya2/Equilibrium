@@ -1,4 +1,3 @@
-/* Tasks — reference-led League browser. */
 @layer components {
   .tasks-page {
     --tasks-ground: var(--color-stone-950);
@@ -14,14 +13,11 @@
     --tasks-tier-master: #b9574c;
 
     display: flex;
-    flex: 1 0 auto;
+    flex: 1;
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
-    min-height: auto;
-    margin: 0 auto;
-    overflow: visible;
-    padding: 0;
+    min-height: 0;
     background: var(--tasks-ground);
     color: var(--color-parch-50);
     font-size: 0.9375rem;
@@ -74,10 +70,6 @@
     font-size: 0.8125rem;
   }
 
-  .tasks-page__source a {
-    color: var(--color-gem-300);
-  }
-
   .tasks-page__source strong {
     padding: 0.32rem 0.55rem;
     border: 1px solid var(--tasks-line);
@@ -98,14 +90,15 @@
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
+    color: var(--color-gem-300);
     text-underline-offset: 3px;
   }
 
   .tasks-stats {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    margin: 0;
     gap: 0.75rem;
+    margin: 0;
     border: 0;
     background: transparent;
   }
@@ -213,7 +206,6 @@
     display: grid;
   }
 
-  .tasks-toolbar__primary,
   .tasks-toolbar__secondary {
     display: flex;
     flex-wrap: wrap;
@@ -223,13 +215,13 @@
   }
 
   .tasks-toolbar__primary {
-    border-bottom: 1px solid var(--tasks-line);
-    /* One control row: search grows, region + toggles share one baseline. */
     display: grid;
     grid-template-columns: minmax(12rem, 1fr) minmax(9.5rem, 12rem) auto auto;
     align-items: end;
     column-gap: 0.75rem;
     row-gap: 0.55rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--tasks-line);
   }
 
   .tasks-toolbar__wikisync-note {
@@ -267,8 +259,8 @@
   .tasks-field input,
   .tasks-field select,
   .tasks-results__sort select {
-    min-height: 2.5rem;
     width: 100%;
+    min-height: 2.5rem;
     padding: 0.45rem 0.65rem;
     border: 1px solid var(--tasks-line);
     border-radius: var(--radius-sm);
@@ -299,8 +291,8 @@
   .tasks-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
     justify-self: start;
+    gap: 0.4rem;
   }
 
   .tasks-import__open {
@@ -602,24 +594,29 @@
     width: 0.42rem;
     height: 0.42rem;
     margin-right: 0.3rem;
+    background: var(--tasks-tier-color);
     content: "";
     transform: rotate(45deg);
   }
 
-  .tasks-tier--easy::before {
-    background: var(--tasks-tier-easy);
+  .tasks-tier--easy {
+    --tasks-tier-color: var(--tasks-tier-easy);
   }
-  .tasks-tier--medium::before {
-    background: var(--tasks-tier-medium);
+
+  .tasks-tier--medium {
+    --tasks-tier-color: var(--tasks-tier-medium);
   }
-  .tasks-tier--hard::before {
-    background: var(--tasks-tier-hard);
+
+  .tasks-tier--hard {
+    --tasks-tier-color: var(--tasks-tier-hard);
   }
-  .tasks-tier--elite::before {
-    background: var(--tasks-tier-elite);
+
+  .tasks-tier--elite {
+    --tasks-tier-color: var(--tasks-tier-elite);
   }
-  .tasks-tier--master::before {
-    background: var(--tasks-tier-master);
+
+  .tasks-tier--master {
+    --tasks-tier-color: var(--tasks-tier-master);
   }
 
   .tasks-grid-wrap {
@@ -640,7 +637,6 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    /* Shared card height so footers line up across a row. */
     min-height: 11.5rem;
     height: 100%;
     border: 1px solid var(--tasks-line-soft);
@@ -740,9 +736,14 @@
   }
 
   .task-card__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     min-width: 0;
+    min-height: calc(1.35em * 3);
     margin: 0;
     padding: 0;
+    overflow: hidden;
     border: 0;
     background: transparent;
     color: var(--color-parch-50);
@@ -751,12 +752,6 @@
     line-height: 1.35;
     text-align: left;
     cursor: pointer;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-    /* Reserve three lines so points columns align across cards. */
-    min-height: calc(1.35em * 3);
   }
 
   .task-card__title:hover {
@@ -809,10 +804,10 @@
 
   .task-card__status-row {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    flex: 0 0 auto;
     min-height: 2.35rem;
     margin-top: 0;
     padding: 0.4rem 0.65rem;
@@ -921,12 +916,11 @@
   }
 
   .tasks-sidebar h2 {
-    color: var(--color-parch-100);
+    color: var(--color-gold-300);
     font-family: var(--font-display);
     font-size: 1rem;
     font-weight: 650;
     letter-spacing: 0.03em;
-    color: var(--color-gold-300);
   }
 
   .tasks-sidebar h3 {
@@ -1048,15 +1042,19 @@
   .tasks-tier-fill--easy {
     background: var(--tasks-tier-easy);
   }
+
   .tasks-tier-fill--medium {
     background: var(--tasks-tier-medium);
   }
+
   .tasks-tier-fill--hard {
     background: var(--tasks-tier-hard);
   }
+
   .tasks-tier-fill--elite {
     background: var(--tasks-tier-elite);
   }
+
   .tasks-tier-fill--master {
     background: var(--tasks-tier-master);
   }
@@ -1083,6 +1081,7 @@
   .tasks-difficulty__tasks {
     color: var(--color-parch-50);
   }
+
   .tasks-difficulty__points,
   .tasks-difficulty__percent {
     color: var(--color-parch-300);
@@ -1112,9 +1111,11 @@
     .tasks-workspace {
       grid-template-columns: minmax(0, 1fr);
     }
+
     .tasks-sidebar {
       position: static;
     }
+
     .tasks-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -1125,29 +1126,34 @@
       flex-direction: column;
       gap: 0.75rem;
     }
+
     .tasks-page__source {
       justify-items: start;
-    }
-    .tasks-page__source {
       min-width: 0;
       border-left: 0;
     }
+
     .tasks-stats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .tasks-stats > div {
       border-bottom: 1px solid var(--tasks-line);
     }
+
     .tasks-stats > div:nth-child(even) {
       border-right: 0;
     }
+
     .tasks-stats > div:last-child {
       grid-column: 1 / -1;
       border-bottom: 0;
     }
+
     .tasks-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .tasks-results {
       align-items: flex-start;
       flex-direction: column;
@@ -1158,43 +1164,54 @@
     .tasks-page {
       gap: 0.5rem;
     }
+
     .tasks-toolbar > summary {
       display: block;
     }
+
     .tasks-toolbar:not([open]) > .tasks-toolbar__panel {
       display: none;
     }
+
     .tasks-toolbar[open] > summary {
       border-bottom: 1px solid var(--tasks-line);
     }
+
     .tasks-toolbar__primary,
     .tasks-toolbar__secondary {
       align-items: stretch;
       flex-direction: column;
     }
+
     .tasks-field,
     .tasks-field--search {
+      flex: auto;
       width: 100%;
       min-width: 0;
-      flex: auto;
     }
+
     .tasks-skill-filter {
       align-items: stretch;
       flex-direction: column;
     }
+
     .tasks-skill-filter__quick {
       flex-wrap: wrap;
     }
+
     .tasks-toolbar__clear {
       margin-left: 0;
     }
+
     .tasks-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .tasks-pagination {
       align-items: flex-start;
       flex-direction: column;
     }
+
     .tasks-pagination > div {
       width: 100%;
       justify-content: space-between;
@@ -1205,33 +1222,41 @@
     .tasks-page__source {
       grid-template-columns: 1fr;
     }
+
     .tasks-page__source span,
     .tasks-page__source a {
       grid-column: 1;
       grid-row: auto;
     }
+
     .tasks-stats {
       grid-template-columns: 1fr 1fr;
     }
+
     .tasks-stats > div {
       grid-template-columns: 2.3rem minmax(0, 1fr);
       gap: 0.5rem;
       padding: 0.7rem;
     }
+
     .tasks-stat__glyph,
     .tasks-stat__ring {
       width: 2.25rem;
       height: 2.25rem;
     }
+
     .tasks-stats dd:nth-of-type(1) {
       font-size: 0.95rem;
     }
+
     .tasks-grid {
       grid-template-columns: minmax(0, 1fr);
     }
+
     .tasks-results__counts .tasks-tier {
       display: none;
     }
+
     .tasks-pagination strong {
       min-width: 0;
     }
